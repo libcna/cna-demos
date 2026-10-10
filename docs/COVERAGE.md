@@ -6,11 +6,11 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**201 demos** in 8 categories. Kinds: console 87, game 113, standalone 1. Automation: automated 197, manual 1, smoke-only 3.
+**209 demos** in 8 categories. Kinds: console 93, game 115, standalone 1. Automation: automated 203, manual 2, smoke-only 4.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
-| audio | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
+| audio | 9 | 7 | 1 | 1 | 8 / 0 / 0 | 8 / 0 / 0 |
 | content | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | game | 25 | 22 | 2 | 1 | 21 / 3 / 0 | 24 / 0 / 0 |
@@ -21,15 +21,15 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 122 of 329** (37.1 %).
-- **Methods, properties, constructors and events named by a demo: 515 of 2326** (22.1 %).
-- Fields and enum values named by a demo: 111 of 753 (reported separately: a demo per enum value is not a goal).
+- **Types with at least one demo: 129 of 329** (39.2 %).
+- **Methods, properties, constructors and events named by a demo: 555 of 2326** (23.9 %).
+- Fields and enum values named by a demo: 116 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 35 / 42 | 268 / 643 | 34 / 78 |
-| `Microsoft.Xna.Framework.Audio` | 1 / 19 | 2 / 121 | 0 / 11 |
-| `Microsoft.Xna.Framework.Content` | 1 / 11 | 2 / 48 | 0 / 0 |
+| `Microsoft.Xna.Framework.Audio` | 8 / 19 | 41 / 121 | 5 / 11 |
+| `Microsoft.Xna.Framework.Content` | 1 / 11 | 3 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 0 / 13 | 0 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 0 / 52 | 0 / 244 | 0 / 223 |
 | `Microsoft.Xna.Framework.Graphics` | 65 / 99 | 199 / 550 | 77 / 192 |
@@ -45,7 +45,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 - `Microsoft.Xna.Framework`: DisplayOrientation, FrameworkDispatcher, IDrawable, IGameComponent, IGraphicsDeviceManager, IUpdateable, PlayerIndex
-- `Microsoft.Xna.Framework.Audio`: AudioCategory, AudioChannels, AudioEmitter, AudioEngine, AudioListener, AudioStopOptions, Cue, DynamicSoundEffectInstance, InstancePlayLimitException, Microphone, MicrophoneState, NoAudioHardwareException, NoMicrophoneConnectedException, RendererDetail, SoundBank, SoundEffectInstance, SoundState, WaveBank
+- `Microsoft.Xna.Framework.Audio`: AudioCategory, AudioEngine, AudioStopOptions, Cue, InstancePlayLimitException, MicrophoneState, NoAudioHardwareException, NoMicrophoneConnectedException, RendererDetail, SoundBank, WaveBank
 - `Microsoft.Xna.Framework.Content`: ContentLoadException, ContentReader, ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute, ContentTypeReader, ContentTypeReaderManager, ResourceContentManager
 - `Microsoft.Xna.Framework.Design`: BoundingBoxConverter, BoundingSphereConverter, ColorConverter, MathTypeConverter, MatrixConverter, PlaneConverter, PointConverter, QuaternionConverter, RayConverter, RectangleConverter, Vector2Converter, Vector3Converter, Vector4Converter
 - `Microsoft.Xna.Framework.GamerServices`: Achievement, AchievementCollection, AvatarAnimation, AvatarAnimationPreset, AvatarBodyType, AvatarBone, AvatarDescription, AvatarExpression, AvatarEye, AvatarEyebrow, AvatarMouth, AvatarRenderer, AvatarRendererState, ControllerSensitivity, FriendCollection, FriendGamer, GameDefaults, GameDifficulty, GameUpdateRequiredException, Gamer, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPresence, GamerPresenceMode, GamerPrivilegeException, GamerPrivilegeSetting, GamerPrivileges, GamerProfile, GamerServicesComponent, GamerServicesDispatcher, GamerServicesNotAvailableException, GamerZone, Guide, GuideAlreadyVisibleException, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardEntry, LeaderboardIdentity, LeaderboardKey, LeaderboardOutcome, LeaderboardReader, LeaderboardWriter, MessageBoxIcon, NetworkException, NetworkNotAvailableException, NotificationPosition, PropertyDictionary, RacingCameraAngle, SignedInEventArgs, SignedInGamer, SignedInGamerCollection, SignedOutEventArgs

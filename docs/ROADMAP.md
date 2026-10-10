@@ -133,13 +133,13 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
 - `content.content_reader.*`: custom `ContentTypeReader`, `ResourceContentManager`,
   `ContentManifestEntry`. ≈ 20
 
-## Phase 9 -- audio and media ⬜ (1 pilot demo)
-- `audio.sound_effect.*`: `Play` overloads (volume, pitch, pan), `MasterVolume`, `Duration`,
-  PCM buffer constructor, loop points, `GetSampleDuration`/`GetSampleSizeInBytes`.
-- `audio.sound_effect_instance.*`: volume, pitch, pan, `IsLooped`, pause/resume/stop, `State`.
-- `audio.positional.*`: `AudioListener`/`AudioEmitter`, `Apply3D`, `DistanceScale`, `DopplerScale`.
-- `audio.dynamic_sound_effect_instance.*`: generated sine, `BufferNeeded`, pending buffers.
-- `audio.microphone.*` (manual), `audio.xact.*` (AudioEngine/WaveBank/SoundBank/Cue; CNA's own
+## Phase 9 -- audio and media 🟨 (audio: 8 demos; XACT and media open)
+- ✅ `audio.sound_effect.*`: Play, Play(volume, pitch, pan), MasterVolume, PCM buffer
+  constructor, GetSampleDuration/GetSampleSizeInBytes. Remaining: loop points.
+- ✅ `audio.sound_effect_instance.*`: playback state, looping, volume/pitch/pan, Apply3D
+  (smoke-only: hearing is the check).
+- ✅ `audio.dynamic_sound_effect_instance.streaming`: generated tone, BufferNeeded, pending buffers.
+- ✅ `audio.microphone.input_level` (manual). Remaining: `audio.xact.*` (AudioEngine/WaveBank/SoundBank/Cue; CNA's own
   example generates the XACT files at runtime).
 - `media.*`: `Song` + `MediaPlayer` (play, pause, volume, repeat, state events), `MediaLibrary`,
   `Video`/`VideoPlayer` (needs `CNA_ENABLE_VIDEO`). ≈ 25
