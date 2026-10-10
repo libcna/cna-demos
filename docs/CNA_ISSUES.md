@@ -79,6 +79,63 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   that XNA's measured behaviour wins over FNA. CNA has no unit test that evaluates a Step curve.
 - **Status:** open; minimal reproduction above; not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-003 -- `SpriteBatch` does not leave its texture in `GraphicsDevice::Textures[0]`
+
+- **Area:** graphics -- `Microsoft::Xna::Framework::Graphics::SpriteBatch`
+  (`modules/graphics/src/Xna/SpriteBatch.cpp`): sprites are submitted through the renderer's own
+  sprite path, which never assigns the device's `TextureCollection`.
+- **Demo:** `graphics.texture2d.set_data_rectangle` follows the XNA rule (it unsets `Textures[0]`
+  before `SetData`) and checks that `SetData` on a bound texture throws -- which CNA implements --
+  but it cannot show the situation XNA programmers actually run into.
+- **Reproduction:**
+  ```cpp
+  spriteBatch.Begin();
+  spriteBatch.Draw(canvas, Vector2::Zero, Color::White);
+  spriteBatch.End();
+  device.getTexturesProperty()[0];             // nullptr in CNA
+  canvas.SetData(pixels.data(), count);       // succeeds in CNA
+  ```
+- **Observed:** `Textures[0]` is null after `End` (SOFTWARE and OPENGLES3), so a following
+  `SetData` on the last drawn texture succeeds.
+- **Expected:** XNA 4.0's SpriteBatch assigns `GraphicsDevice.Textures[0]` for every batch it
+  draws (CNA's own comment in `SpriteBatch.cpp` says "XNA assigns Textures[0] after the pass"), so
+  after `End` the last sprite texture is still set on the device and `SetData` on it throws
+  `InvalidOperationException` ("You may not call SetData on a resource while it is actively set on
+  the GraphicsDevice") until the program unsets it. CNA's `Texture::ThrowIfDataTransferResourceInUseEXT`
+  implements that throw for textures set explicitly.
+- **Impact:** low. XNA programs keep working on CNA (they already unset the texture). Programs
+  written against CNA can call `SetData` where XNA would throw, and code that reads
+  `Textures[0]` after drawing sprites sees null.
+- **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3 renderers.
+- **Status:** open; observed behaviour above; not reported upstream yet.
+
+### CNA-DEMOS-ISSUE-004 -- Immediate `SpriteBatch` ignores sampler states set between `Draw` calls
+
+- **Area:** graphics -- `SpriteBatch` with `SpriteSortMode::Immediate`
+  (`modules/graphics/src/Xna/SpriteBatch.cpp`, `Begin`): the batch's `SamplerState` is passed to the
+  sprite renderer once, in `Begin` (`renderer_->SetSamplerState(...)`), and `flushSingle` draws
+  each sprite with it without consulting `GraphicsDevice::SamplerStates`.
+- **Demo:** `graphics.sprite_batch.immediate_mode.sampler_state` (marked `knownIssue`); its sibling
+  `graphics.sprite_batch.immediate_mode.blend_state` passes.
+- **Reproduction:**
+  ```cpp
+  spriteBatch.Begin(SpriteSortMode::Immediate, &BlendState::Opaque, &SamplerState::PointClamp,
+                    nullptr, nullptr);
+  spriteBatch.Draw(checker, Rectangle(20, 40, 370, 370), Color::White);
+  device.getSamplerStatesProperty()(0, SamplerState::LinearClamp);
+  spriteBatch.Draw(checker, Rectangle(410, 40, 370, 370), Color::White);   // still point-sampled
+  spriteBatch.End();
+  ```
+- **Observed:** both sprites are point-sampled (only the checker's two colours along a row) on
+  SOFTWARE and OPENGLES3. A `BlendState` set on the device between the same two calls *is*
+  honoured, so the problem is specific to sampler state.
+- **Expected:** XNA 4.0, `SpriteSortMode.Immediate` (xna4-spec `SpriteSortMode.xml`): *"Begin will
+  apply new graphics device settings, and sprites will be drawn within each Draw call."* Each Draw
+  therefore draws with the device's current state, so the second sprite is filtered linearly --
+  changing states or effect parameters between sprites is what Immediate mode is for.
+- **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3 renderers.
+- **Status:** open; minimal reproduction above; not reported upstream yet.
+
 ---
 
 ## Resolved

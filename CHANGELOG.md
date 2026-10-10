@@ -53,6 +53,14 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   SupportsCapability and the capability report (CNAEXT), GraphicsAdapter display modes and
   format queries, GraphicsResource lifetime events (ResourceCreated/Destroyed, Name, Tag).
 - `CnaDemos/GraphicsNames.hpp`: names of graphics enums for demo output.
+- Texture2D demos (7): procedural SetData, rectangle SetData on a canvas (and XNA's rule that a
+  texture set on the device cannot be written), per-pixel collision with GetData, mipmap levels,
+  16-bit surface formats, FromStream (as stored, fitted, zoomed), SaveAsPng/SaveAsJpeg round trips.
+- SpriteBatch demos (5): SpriteSortMode::Texture, Immediate mode with device states changed between
+  Draws (blend state; sampler state is CNA-DEMOS-ISSUE-004), several batches per frame, Begin/End
+  rules.
+- CNA-DEMOS-ISSUE-003 (SpriteBatch leaves Textures[0] unset) and CNA-DEMOS-ISSUE-004 (Immediate
+  SpriteBatch ignores sampler states set between Draws) recorded.
 - Screenshots of a demo running under Reach are reported as unavailable instead of failing the run.
 - `tools/contact_sheet.py`: captures Game demos on a renderer into one labelled image for review.
 - `deterministic` now means "identical capture on every machine"; GameTime-driven animation is

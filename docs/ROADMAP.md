@@ -61,7 +61,7 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   `GraphicsProfile` Reach vs HiDef. ≈ 8
 - `LaunchParameters`, `TitleContainer.OpenStream`, `TitleLocation`. ≈ 3
 
-## Phase 4 -- 2D graphics 🟨 (SpriteBatch and device batches done)
+## Phase 4 -- 2D graphics 🟨 (SpriteBatch, device and Texture2D done; SpriteFont open)
 - ✅ `graphics.device.*`, `graphics.viewport.*`, `graphics.graphics_adapter.*`,
   `graphics.graphics_resource.*` (13): `Clear`/`ClearOptions`, split-screen viewports, `Viewport`
   properties and `Project`/`Unproject`, `ScissorRectangle`, `PresentationParameters`,
@@ -69,18 +69,19 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   display modes, format queries, resource lifetime events. Remaining: `Present` with rectangles
   (CNAEXT, SOFTWARE/HEADLESS only), `Reset` with new parameters, `DeviceLost` (never raised on
   desktop).
-- `graphics.sprite_batch.*`: every `Draw` overload family (position, destination rectangle,
+- ✅ (19 demos) `graphics.sprite_batch.*`: every `Draw` overload family (position, destination rectangle,
   source rectangle, rotation+origin, scale float/vector, `SpriteEffects` flips, layer depth),
   tinting, `Begin` overloads: `SpriteSortMode` (Deferred, Immediate, Texture, BackToFront,
   FrontToBack), `BlendState` (AlphaBlend, Additive, NonPremultiplied, Opaque), `SamplerState`
   (PointClamp, LinearWrap...), `DepthStencilState`, `RasterizerState`, transform matrix, custom
-  `Effect`; sprite sheets; many Begin/End pairs per frame. ≈ 20
+  `Effect`; sprite sheets; many Begin/End pairs per frame. ≈ 20 -- custom `Effect` in `Begin` moves
+  to Phase 6 (needs effects).
 - `graphics.sprite_font.*`: loading a SpriteFont (XNB / CNJ / build-time CNB), `DrawString`,
   `MeasureString`, `LineSpacing`, `Spacing`, `DefaultCharacter`, `Characters`, scaled/rotated text,
   the CNAEXT glyph constructor. ≈ 8 (needs a font asset decision -- see PLAN.md)
-- `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
-  `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg`, `LevelCount`, premultiplied
-  alpha. ≈ 10
+- ✅ (7 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
+  `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg`, `LevelCount`. Remaining:
+  float/HDR formats, DXT (needs compressed data), CNAEXT `DDSFromStreamEXT`, copy semantics.
 
 ## Phase 5 -- render states, buffers, primitives, render targets ⬜ (1 pilot demo)
 - `graphics.blend_state.*`, `graphics.depth_stencil_state.*`, `graphics.rasterizer_state.*`,
