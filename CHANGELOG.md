@@ -82,6 +82,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   per-pixel lighting, material colours, fog, alpha; AlphaTestEffect cut-outs; DualTextureEffect
   light map (two texture-coordinate sets); EnvironmentMapEffect with a TextureCube and Fresnel;
   SkinnedEffect with two bones; Effect parameters/techniques and Clone; CNA's PbrEffect.
+- Custom shader demos (2): toon shading with a GLSL `ShaderEffect`, a grayscale sprite shader
+  through `SpriteBatch::Begin`; `ColorMatrixEffect` sepia/negative on SOFTWARE.
+- CNA-DEMOS-ISSUE-007 recorded: GPU renderers silently ignore `ColorMatrixEffect`.
 - `CnaDemos/Geometry.hpp`: sphere and cube meshes with normals and UVs for 3D demos.
 - Screenshots are saved opaque (what the window shows): XNA's SaveAsPng, which CNA matches,
   stores fully transparent pixels as (0, 0, 0, 0).

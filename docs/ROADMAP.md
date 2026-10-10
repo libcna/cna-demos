@@ -107,8 +107,11 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   per-pixel lighting, material colours, fog, alpha), `AlphaTestEffect` cut-outs,
   `DualTextureEffect` light map, `EnvironmentMapEffect` with a `TextureCube` and Fresnel,
   `SkinnedEffect` with two bones. Remaining: BasicEffect vertex colour + lighting combined.
-- 🟨 CNA effects: ✅ `PbrEffect` metallic/roughness. Remaining: PBR maps (normal, emissive,
-  occlusion), `SkinnedPbrEffect`, `ColorMatrixEffect`, `SpriteEffect`, image-based lighting.
+- 🟨 CNA effects: ✅ `PbrEffect` metallic/roughness, ✅ `ColorMatrixEffect` (SOFTWARE). Remaining:
+  PBR maps (normal, emissive, occlusion), `SkinnedPbrEffect`, image-based lighting.
+- 🟨 Custom shaders: ✅ `ShaderEffect` in 3D (toon shading) and in `SpriteBatch::Begin`
+  (grayscale), GLSL chosen from `GetShaderDialectEXT()`. Remaining: compiled XNA `.fx` effects
+  (needs a CNA build with `CNA_<RENDERER>_COMPILED_EFFECTS`), other dialects.
 - ✅ Effect API (2): parameters/techniques/passes reflection (properties reach parameters on
   Apply), `Effect::Clone`.
 - Custom shaders: `ShaderEffect` per shader language (ask `RendererCapabilityProfile`), compiled

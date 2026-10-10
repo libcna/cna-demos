@@ -6,7 +6,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**198 demos** in 8 categories. Kinds: console 87, game 110, standalone 1. Automation: automated 194, manual 1, smoke-only 3.
+**201 demos** in 8 categories. Kinds: console 87, game 113, standalone 1. Automation: automated 197, manual 1, smoke-only 3.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -14,7 +14,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | content | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | game | 25 | 22 | 2 | 1 | 21 / 3 / 0 | 24 / 0 / 0 |
-| graphics | 96 | 96 | 0 | 0 | 94 / 1 / 1 | 93 / 2 / 1 |
+| graphics | 99 | 99 | 0 | 0 | 95 / 3 / 1 | 95 / 3 / 1 |
 | input | 1 | 0 | 1 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | math | 72 | 72 | 0 | 0 | 71 / 0 / 1 | 71 / 0 / 1 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
@@ -71,15 +71,21 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::getVersionPatch` -- core.version.version_string
 - `CNA::getVersionString` -- core.version.version_string
 - `CNA::isPreReleaseVersion` -- core.version.version_string
+- `ColorMatrixEffect::ColorMatrixEffect` -- graphics.color_matrix_effect.sepia_and_invert
+- `ColorMatrixEffect::SetColorMatrix` -- graphics.color_matrix_effect.sepia_and_invert
+- `ColorMatrixEffect::SetColorOffset` -- graphics.color_matrix_effect.sepia_and_invert
+- `Effect::Apply` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading
 - `Game::RunFrameEXT` -- game.lifecycle.host_driven_loop
 - `GameComponentCollection::Add` -- game.components.game_component
 - `GameComponentCollection::Contains` -- game.components.collection_events
 - `GameComponentCollection::IndexOf` -- game.components.collection_events
 - `GameComponentCollection::Remove` -- game.components.collection_events
+- `GraphicsDevice::ExecutesShaderEffectSourceEXT` -- graphics.shader_effect.toon_shading
 - `GraphicsDevice::GetGraphicsRendererName` -- graphics.device.supports_capability, platform.renderer_selection.set_preferred
 - `GraphicsDevice::GetMaxTextureDimension` -- graphics.device.capability_report
 - `GraphicsDevice::GetRendererCapabilityReportEXT` -- graphics.device.capability_report
 - `GraphicsDevice::GetRendererLimitEXT` -- graphics.device.capability_report
+- `GraphicsDevice::GetShaderDialectEXT` -- graphics.shader_effect.toon_shading
 - `GraphicsDevice::SupportsCapability` -- graphics.device.supports_capability
 - `LaunchParameters::ContainsKey` -- game.launch_parameters.parse
 - `PbrEffect::DiffuseColor` -- graphics.pbr_effect.metallic_roughness
@@ -88,6 +94,11 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `PbrEffect::PbrEffect` -- graphics.pbr_effect.metallic_roughness
 - `PbrEffect::RoughnessFactor` -- graphics.pbr_effect.metallic_roughness
 - `PreparingDeviceSettingsEventArgs::getGraphicsDeviceInformationEXT` -- game.graphics_device_manager.preparing_device_settings
+- `ShaderEffect::GetCompileErrorEXT` -- graphics.shader_effect.toon_shading
+- `ShaderEffect::IsEffectValid` -- graphics.shader_effect.toon_shading
+- `ShaderEffect::SetUniformFloat` -- graphics.shader_effect.sprite_shader
+- `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading
+- `ShaderEffect::ShaderEffect` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading
 - `SpriteFont::SpriteFont` -- graphics.sprite_font.glyph_constructor
 - `VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned` -- graphics.skinned_effect.two_bones
 

@@ -193,6 +193,29 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   name there.
 - **Status:** open (low impact); not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-007 -- `ColorMatrixEffect` is silently ignored by GPU renderers
+
+- **Area:** graphics -- `ColorMatrixEffect` (CNAEXT) passed to `SpriteBatch::Begin` on a GPU
+  renderer; EasyGL's `EasyGLSpriteBatchRenderer::SetCustomEffect` stores it and the sprite flush
+  draws with the stock sprite shader.
+- **Demo:** `graphics.color_matrix_effect.sepia_and_invert` (runs on SOFTWARE; skips elsewhere).
+- **Reproduction:** on OPENGLES3,
+  ```cpp
+  ColorMatrixEffect sepia(device);
+  sepia.SetColorMatrix(/* sepia */);
+  spriteBatch.Begin(SpriteSortMode::Deferred, &BlendState::Opaque, nullptr, nullptr, nullptr, &sepia);
+  spriteBatch.Draw(texture, destination, Color::White);
+  spriteBatch.End();
+  ```
+- **Observed:** no exception; the sprite is drawn with its original colours.
+- **Expected:** the header documents ColorMatrixEffect as "unsupported by GPU renderers unless they
+  explicitly add the same contract", and its own rationale is that a renderer should not "silently
+  ignore" what it cannot do. CNA refuses other unsupported requests explicitly (e.g. compiled
+  effects throw `NotSupportedException` where `CompiledEffects` is false). A refusal (or a
+  capability flag) would let programs fall back, e.g. to a `ShaderEffect`.
+- **Environment:** CNA 0.1.0, Linux, OPENGLES3 (EasyGL) under Xvfb.
+- **Status:** open; not reported upstream yet.
+
 ---
 
 ## Resolved
