@@ -19,9 +19,9 @@ their notices.
 
 ## Assets
 
-Every file under `assets/` is original cna-demos content, generated deterministically by
-[`tools/generate_assets.py`](tools/generate_assets.py) from code in this repository. No external
-images, sounds, fonts or models are included.
+Every file under `assets/` and `content/` is original cna-demos content, generated
+deterministically by [`tools/generate_assets.py`](tools/generate_assets.py) from code in this
+repository. No external images, sounds, fonts or models are included.
 
 | Path | Content | Origin |
 |---|---|---|
@@ -32,6 +32,7 @@ images, sounds, fonts or models are included.
 | `assets/textures/sprite_strip.png` | 128x32 strip of four animation frames | generated, original |
 | `assets/sounds/tone_440.wav` | 0.5 s 440 Hz sine, 22050 Hz mono PCM16 | generated, original |
 | `assets/sounds/tone_660.wav` | 0.25 s 660 Hz sine, 22050 Hz mono PCM16 | generated, original |
+| `content/fonts/pixel_font.png` | pixel font (printable ASCII, 5x9 grid at 2x) as an XNA font-texture sheet; glyph shapes in `tools/pixel_font.py` | drawn for cna-demos, original |
 
 When a non-original asset is ever added, list it here with its source, author, licence and the
 exact licence text location, and keep the licence file next to the asset.

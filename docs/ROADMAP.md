@@ -61,7 +61,7 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   `GraphicsProfile` Reach vs HiDef. ≈ 8
 - `LaunchParameters`, `TitleContainer.OpenStream`, `TitleLocation`. ≈ 3
 
-## Phase 4 -- 2D graphics 🟨 (SpriteBatch, device and Texture2D done; SpriteFont open)
+## Phase 4 -- 2D graphics ✅ (46 + 7 SpriteFont demos; small remainders listed per line)
 - ✅ `graphics.device.*`, `graphics.viewport.*`, `graphics.graphics_adapter.*`,
   `graphics.graphics_resource.*` (13): `Clear`/`ClearOptions`, split-screen viewports, `Viewport`
   properties and `Project`/`Unproject`, `ScissorRectangle`, `PresentationParameters`,
@@ -76,9 +76,10 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   (PointClamp, LinearWrap...), `DepthStencilState`, `RasterizerState`, transform matrix, custom
   `Effect`; sprite sheets; many Begin/End pairs per frame. ≈ 20 -- custom `Effect` in `Begin` moves
   to Phase 6 (needs effects).
-- `graphics.sprite_font.*`: loading a SpriteFont (XNB / CNJ / build-time CNB), `DrawString`,
-  `MeasureString`, `LineSpacing`, `Spacing`, `DefaultCharacter`, `Characters`, scaled/rotated text,
-  the CNAEXT glyph constructor. ≈ 8 (needs a font asset decision -- see PLAN.md)
+- ✅ (7 demos) `graphics.sprite_font.*`: build-time CNB font (generated font-texture sheet),
+  `DrawString`, `MeasureString`, `LineSpacing`, `Spacing`, `DefaultCharacter`, `Characters`,
+  scaled/rotated/mirrored text, `StringBuilder`, the CNAEXT glyph constructor. Remaining: loading
+  an XNB font (Phase 8, content), TrueType `.spritefont` (needs FreeType and a licensed font).
 - ✅ (7 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg`, `LevelCount`. Remaining:
   float/HDR formats, DXT (needs compressed data), CNAEXT `DDSFromStreamEXT`, copy semantics.

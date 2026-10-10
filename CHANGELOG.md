@@ -59,6 +59,13 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - SpriteBatch demos (5): SpriteSortMode::Texture, Immediate mode with device states changed between
   Draws (blend state; sampler state is CNA-DEMOS-ISSUE-004), several batches per frame, Begin/End
   rules.
+- Compiled content: `content/` is built at build time by CNA's `cna-content` (`cna_add_content`)
+  into `bin/assets`; `CNA_DEMOS_CONTENT_EXECUTABLE` names a host tool for cross builds.
+- Original pixel font (`tools/pixel_font.py`), generated as an XNA font-texture sheet and compiled
+  with `CNA.FontTextureProcessor` into `fonts/pixel_font`.
+- SpriteFont demos (7): DrawString, MeasureString (centring, alignment, line rules), rotated/scaled/
+  mirrored text, Spacing/LineSpacing, Characters/DefaultCharacter, StringBuilder text, and a font
+  built in code with the CNAEXT SpriteFont constructor.
 - CNA-DEMOS-ISSUE-003 (SpriteBatch leaves Textures[0] unset) and CNA-DEMOS-ISSUE-004 (Immediate
   SpriteBatch ignores sampler states set between Draws) recorded.
 - Screenshots of a demo running under Reach are reported as unavailable instead of failing the run.

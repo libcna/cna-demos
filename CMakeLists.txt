@@ -79,6 +79,26 @@ add_custom_target(cna_demos_assets ALL
     VERBATIM)
 
 # -----------------------------------------------------------------------------
+# Compiled content: content/ is built by CNA's own content pipeline (cna-content,
+# the counterpart of an XNA content project) into the same assets directory, so
+# a demo loads it as any XNA game would: Content.Load<SpriteFont>("fonts/pixel_font").
+# cna-content only deletes files its own manifest records, so the copied loose
+# assets beside its output are safe. When cross-compiling, name a host
+# cna-content with CNA_DEMOS_CONTENT_EXECUTABLE.
+# -----------------------------------------------------------------------------
+set(CNA_DEMOS_CONTENT_EXECUTABLE "" CACHE FILEPATH
+    "Host cna-content executable (required when cross-compiling; empty = build CNA's)")
+set(_cna_demos_content_tool)
+if(CNA_DEMOS_CONTENT_EXECUTABLE)
+    set(_cna_demos_content_tool CONTENT_EXECUTABLE "${CNA_DEMOS_CONTENT_EXECUTABLE}")
+endif()
+cna_add_content(TARGET cna_demos_content
+    SOURCE_DIR content
+    OUTPUT_DIR "${CNA_DEMOS_OUTPUT_DIR}/assets"
+    ${_cna_demos_content_tool}
+    QUIET)
+
+# -----------------------------------------------------------------------------
 # The cna-demos executable: CLI + interactive terminal browser.
 # -----------------------------------------------------------------------------
 add_executable(cna-demos
@@ -90,7 +110,7 @@ target_link_libraries(cna-demos PRIVATE cna_demos_framework ${CNA_DEMOS_CATEGORY
 set_target_properties(cna-demos PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CNA_DEMOS_OUTPUT_DIR}")
 cna_demos_apply_warnings(cna-demos)
 cna_demos_finalize_executable(cna-demos)
-add_dependencies(cna-demos cna_demos_assets)
+add_dependencies(cna-demos cna_demos_assets cna_demos_content)
 
 # -----------------------------------------------------------------------------
 # Standalone demos (standalone/<demo-id>/), the documented exception.

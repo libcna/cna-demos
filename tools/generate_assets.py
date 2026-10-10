@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MS-PL
-"""Regenerates the original procedural assets under assets/.
+"""Regenerates the original procedural assets under assets/ and content/.
+
+assets/ holds files demos load as they are (PNG, WAV). content/ holds sources that CNA's content
+pipeline compiles at build time (cna_add_content), such as the pixel-font sheet.
 
 Every file this script writes is original cna-demos content (no third-party
 input), so it is covered by the project's own licence. The generated files are
@@ -20,15 +23,18 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
+import pixel_font
+
 ROOT = Path(__file__).resolve().parent.parent / "assets"
+CONTENT_ROOT = Path(__file__).resolve().parent.parent / "content"
 
 
-def save_png(image: Image.Image, relative: str) -> None:
-    path = ROOT / relative
+def save_png(image: Image.Image, relative: str, root: Path = ROOT) -> None:
+    path = root / relative
     path.parent.mkdir(parents=True, exist_ok=True)
     # optimize=False and no metadata keep the bytes stable across Pillow runs.
     image.save(path, format="PNG", optimize=False)
-    print(f"wrote {path.relative_to(ROOT.parent)} ({image.width}x{image.height})")
+    print(f"wrote {path.relative_to(root.parent)} ({image.width}x{image.height})")
 
 
 def checker(size: int, cell: int, a, b) -> Image.Image:
@@ -91,6 +97,30 @@ def sprite_strip(frame: int, frames: int) -> Image.Image:
     return image
 
 
+def font_sheet(scale: int, columns: int = 16) -> Image.Image:
+    """The pixel font as an XNA "sprite font texture": one cell per character from U+0020 on,
+    left to right and top to bottom, cells separated by 1-pixel magenta lines. A cell is the
+    glyph's advance: ink (white) plus transparent padding -- one empty column to the right and one
+    empty row below each glyph -- which the processor keeps as cropping."""
+    characters = [chr(code) for code in range(32, 127)]
+    cell_w = (pixel_font.WIDTH + 1) * scale
+    cell_h = (pixel_font.HEIGHT + 1) * scale
+    rows = (len(characters) + columns - 1) // columns
+    magenta = (255, 0, 255, 255)
+    image = Image.new("RGBA", (columns * (cell_w + 1) + 1, rows * (cell_h + 1) + 1), magenta)
+    pixels = image.load()
+    for index, character in enumerate(characters):
+        left = 1 + (index % columns) * (cell_w + 1)
+        top = 1 + (index // columns) * (cell_h + 1)
+        glyph = pixel_font.rows(character)
+        for y in range(cell_h):
+            for x in range(cell_w):
+                gx, gy = x // scale, y // scale
+                ink = gx < pixel_font.WIDTH and gy < pixel_font.HEIGHT and glyph[gy][gx] == "#"
+                pixels[left + x, top + y] = (255, 255, 255, 255) if ink else (0, 0, 0, 0)
+    return image
+
+
 def tone(relative: str, frequency: float, seconds: float, rate: int = 22050, volume: float = 0.5) -> None:
     path = ROOT / relative
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -115,6 +145,7 @@ def main() -> None:
     save_png(gradient(128, 128), "textures/gradient.png")
     save_png(soft_circle(64), "textures/soft_circle.png")
     save_png(sprite_strip(32, 4), "textures/sprite_strip.png")
+    save_png(font_sheet(2), "fonts/pixel_font.png", CONTENT_ROOT)
     tone("sounds/tone_440.wav", 440.0, 0.5)
     tone("sounds/tone_660.wav", 660.0, 0.25)
 

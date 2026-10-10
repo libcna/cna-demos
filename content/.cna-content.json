@@ -1,0 +1,9 @@
+{
+  "format": "CNA.ContentPipeline.Config",
+  "version": 1,
+  "assets": {
+    "fonts/pixel_font.png": {
+      "processor": "CNA.FontTextureProcessor"
+    }
+  }
+}
