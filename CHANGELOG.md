@@ -47,6 +47,13 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - SpriteBatch demos (14): destination/source rectangles, sprite-sheet animation, tint and fade,
   rotation/origin, scale, SpriteEffects flips, layer depth and sort modes, blend states, straight-alpha
   loose PNGs (NonPremultiplied), point/linear sampling, wrap tiling, transform-matrix camera.
+- Graphics device demos (12): ClearOptions (and the error for a missing plane), split screen with
+  viewports (XNA 4.0's Clear ignores the viewport), Viewport properties and Project/Unproject
+  picking, scissor rectangle, PresentationParameters, GetBackBufferData (whole/region),
+  SupportsCapability and the capability report (CNAEXT), GraphicsAdapter display modes and
+  format queries, GraphicsResource lifetime events (ResourceCreated/Destroyed, Name, Tag).
+- `CnaDemos/GraphicsNames.hpp`: names of graphics enums for demo output.
+- Screenshots of a demo running under Reach are reported as unavailable instead of failing the run.
 - `tools/contact_sheet.py`: captures Game demos on a renderer into one labelled image for review.
 - `deterministic` now means "identical capture on every machine"; GameTime-driven animation is
   excluded (catch-up Updates make game time at frame N machine-dependent).

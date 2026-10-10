@@ -61,10 +61,14 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   `GraphicsProfile` Reach vs HiDef. ≈ 8
 - `LaunchParameters`, `TitleContainer.OpenStream`, `TitleLocation`. ≈ 3
 
-## Phase 4 -- 2D graphics ⬜ (3 pilot demos)
-- `graphics.device.*`: `Clear` overloads (colour, `ClearOptions`, depth/stencil), `Viewport`,
-  `ScissorRectangle`, `PresentationParameters`, `GraphicsAdapter`/`DisplayMode` queries,
-  `SupportsCapability` (CNAEXT), `GetBackBufferData`. ≈ 10
+## Phase 4 -- 2D graphics 🟨 (SpriteBatch and device batches done)
+- ✅ `graphics.device.*`, `graphics.viewport.*`, `graphics.graphics_adapter.*`,
+  `graphics.graphics_resource.*` (13): `Clear`/`ClearOptions`, split-screen viewports, `Viewport`
+  properties and `Project`/`Unproject`, `ScissorRectangle`, `PresentationParameters`,
+  `GetBackBufferData`, `SupportsCapability` and the capability report (CNAEXT), adapters and
+  display modes, format queries, resource lifetime events. Remaining: `Present` with rectangles
+  (CNAEXT, SOFTWARE/HEADLESS only), `Reset` with new parameters, `DeviceLost` (never raised on
+  desktop).
 - `graphics.sprite_batch.*`: every `Draw` overload family (position, destination rectangle,
   source rectangle, rotation+origin, scale float/vector, `SpriteEffects` flips, layer depth),
   tinting, `Begin` overloads: `SpriteSortMode` (Deferred, Immediate, Texture, BackToFront,

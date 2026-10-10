@@ -7,6 +7,7 @@
 #include "CNA/Platform/NativeWindowSystem.hpp"
 #include "CnaDemos/Metadata.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsProfile.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Input/GamePad.hpp"
 #include "Microsoft/Xna/Framework/Input/Keyboard.hpp"
@@ -130,6 +131,14 @@ namespace CnaDemos
     void DemoGame::CaptureScreenshot()
     {
         GraphicsDevice& device = getGraphicsDeviceProperty();
+        // XNA refuses back-buffer readback under Reach. A demo about Reach still runs; it just
+        // cannot be photographed this way.
+        if (device.getGraphicsProfileProperty() == GraphicsProfile::Reach)
+        {
+            context_.Out() << "  screenshot: not available, the demo runs under the Reach profile "
+                              "(GetBackBufferData is HiDef only)\n";
+            return;
+        }
         const auto& parameters = device.getPresentationParametersProperty();
         const int width = parameters.getBackBufferWidthProperty();
         const int height = parameters.getBackBufferHeightProperty();

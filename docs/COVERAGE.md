@@ -6,7 +6,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**124 demos** in 8 categories. Kinds: console 83, game 40, standalone 1. Automation: automated 120, manual 1, smoke-only 3.
+**136 demos** in 8 categories. Kinds: console 87, game 48, standalone 1. Automation: automated 132, manual 1, smoke-only 3.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -14,25 +14,25 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | content | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | game | 25 | 22 | 2 | 1 | 21 / 3 / 0 | 24 / 0 / 0 |
-| graphics | 22 | 22 | 0 | 0 | 22 / 0 / 0 | 22 / 0 / 0 |
+| graphics | 34 | 34 | 0 | 0 | 34 / 0 / 0 | 34 / 0 / 0 |
 | input | 1 | 0 | 1 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | math | 72 | 72 | 0 | 0 | 71 / 0 / 1 | 71 / 0 / 1 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 69 of 329** (21.0 %).
-- **Methods, properties, constructors and events named by a demo: 333 of 2326** (14.3 %).
-- Fields and enum values named by a demo: 50 of 753 (reported separately: a demo per enum value is not a goal).
+- **Types with at least one demo: 77 of 329** (23.4 %).
+- **Methods, properties, constructors and events named by a demo: 378 of 2326** (16.3 %).
+- Fields and enum values named by a demo: 53 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
-| `Microsoft.Xna.Framework` | 35 / 42 | 267 / 643 | 34 / 78 |
+| `Microsoft.Xna.Framework` | 35 / 42 | 268 / 643 | 34 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 1 / 19 | 2 / 121 | 0 / 11 |
 | `Microsoft.Xna.Framework.Content` | 1 / 11 | 2 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 0 / 13 | 0 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 0 / 52 | 0 / 244 | 0 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 12 / 99 | 18 / 550 | 16 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 20 / 99 | 62 / 550 | 19 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 2 / 17 | 3 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 0 / 8 | 0 / 48 | 0 / 15 |
@@ -49,7 +49,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 - `Microsoft.Xna.Framework.Content`: ContentLoadException, ContentReader, ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute, ContentTypeReader, ContentTypeReaderManager, ResourceContentManager
 - `Microsoft.Xna.Framework.Design`: BoundingBoxConverter, BoundingSphereConverter, ColorConverter, MathTypeConverter, MatrixConverter, PlaneConverter, PointConverter, QuaternionConverter, RayConverter, RectangleConverter, Vector2Converter, Vector3Converter, Vector4Converter
 - `Microsoft.Xna.Framework.GamerServices`: Achievement, AchievementCollection, AvatarAnimation, AvatarAnimationPreset, AvatarBodyType, AvatarBone, AvatarDescription, AvatarExpression, AvatarEye, AvatarEyebrow, AvatarMouth, AvatarRenderer, AvatarRendererState, ControllerSensitivity, FriendCollection, FriendGamer, GameDefaults, GameDifficulty, GameUpdateRequiredException, Gamer, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPresence, GamerPresenceMode, GamerPrivilegeException, GamerPrivilegeSetting, GamerPrivileges, GamerProfile, GamerServicesComponent, GamerServicesDispatcher, GamerServicesNotAvailableException, GamerZone, Guide, GuideAlreadyVisibleException, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardEntry, LeaderboardIdentity, LeaderboardKey, LeaderboardOutcome, LeaderboardReader, LeaderboardWriter, MessageBoxIcon, NetworkException, NetworkNotAvailableException, NotificationPosition, PropertyDictionary, RacingCameraAngle, SignedInEventArgs, SignedInGamer, SignedInGamerCollection, SignedOutEventArgs
-- `Microsoft.Xna.Framework.Graphics`: AlphaTestEffect, BasicEffect, Blend, BlendFunction, BufferUsage, ClearOptions, ColorWriteChannels, CompareFunction, CubeMapFace, CullMode, DepthFormat, DepthStencilState, DeviceLostException, DeviceNotResetException, DirectionalLight, DisplayMode, DisplayModeCollection, DualTextureEffect, DynamicIndexBuffer, DynamicVertexBuffer, Effect, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectParameter, EffectParameterClass, EffectParameterCollection, EffectParameterType, EffectPass, EffectPassCollection, EffectTechnique, EffectTechniqueCollection, EnvironmentMapEffect, FillMode, GraphicsAdapter, GraphicsDeviceStatus, IEffectFog, IEffectLights, IEffectMatrices, IGraphicsDeviceService, IVertexType, IndexBuffer, IndexElementSize, Model, ModelBone, ModelBoneCollection, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMesh, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPart, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, OcclusionQuery, PrimitiveType, RasterizerState, RenderTargetBinding, RenderTargetCube, RenderTargetUsage, ResourceCreatedEventArgs, ResourceDestroyedEventArgs, SamplerStateCollection, SetDataOptions, SkinnedEffect, SpriteFont, StencilOperation, SurfaceFormat, Texture, Texture3D, TextureAddressMode, TextureCollection, TextureCube, TextureFilter, VertexBuffer, VertexBufferBinding, VertexDeclaration, VertexElement, VertexElementFormat, VertexElementUsage, VertexPositionColor, VertexPositionColorTexture, VertexPositionNormalTexture, VertexPositionTexture, Viewport
+- `Microsoft.Xna.Framework.Graphics`: AlphaTestEffect, BasicEffect, Blend, BlendFunction, BufferUsage, ColorWriteChannels, CompareFunction, CubeMapFace, CullMode, DepthFormat, DepthStencilState, DeviceLostException, DeviceNotResetException, DirectionalLight, DualTextureEffect, DynamicIndexBuffer, DynamicVertexBuffer, Effect, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectParameter, EffectParameterClass, EffectParameterCollection, EffectParameterType, EffectPass, EffectPassCollection, EffectTechnique, EffectTechniqueCollection, EnvironmentMapEffect, FillMode, GraphicsDeviceStatus, IEffectFog, IEffectLights, IEffectMatrices, IGraphicsDeviceService, IVertexType, IndexBuffer, IndexElementSize, Model, ModelBone, ModelBoneCollection, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMesh, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPart, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, OcclusionQuery, PrimitiveType, RenderTargetBinding, RenderTargetCube, RenderTargetUsage, SamplerStateCollection, SetDataOptions, SkinnedEffect, SpriteFont, StencilOperation, SurfaceFormat, Texture, Texture3D, TextureAddressMode, TextureCollection, TextureCube, TextureFilter, VertexBuffer, VertexBufferBinding, VertexDeclaration, VertexElement, VertexElementFormat, VertexElementUsage, VertexPositionColor, VertexPositionColorTexture, VertexPositionNormalTexture, VertexPositionTexture
 - `Microsoft.Xna.Framework.Input`: ButtonState, Buttons, GamePad, GamePadButtons, GamePadCapabilities, GamePadDPad, GamePadDeadZone, GamePadState, GamePadThumbSticks, GamePadTriggers, GamePadType, KeyState, Keys, Mouse, MouseState
 - `Microsoft.Xna.Framework.Input.Touch`: GestureSample, GestureType, TouchCollection, TouchCollection.Enumerator, TouchLocation, TouchLocationState, TouchPanel, TouchPanelCapabilities
 - `Microsoft.Xna.Framework.Media`: Album, AlbumCollection, Artist, ArtistCollection, Genre, GenreCollection, MediaLibrary, MediaPlayer, MediaQueue, MediaSource, MediaSourceType, MediaState, Picture, PictureAlbum, PictureAlbumCollection, PictureCollection, Playlist, PlaylistCollection, Song, SongCollection, Video, VideoPlayer, VideoSoundtrackType, VisualizationData
@@ -60,10 +60,12 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 API names in demo metadata that are not documented XNA 4.0 members: CNA extensions (`CNA::...`, `...EXT` members) and anything misspelled. Review this list when adding demos -- a misspelled XNA name silently lowers the numbers above.
 
+- `CNA::GraphicsCapability` -- graphics.device.supports_capability
 - `CNA::GraphicsRendererSelection::GetActive` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::GetAvailable` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::IsLatched` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::SetPreferred` -- platform.renderer_selection.set_preferred
+- `CNA::RendererLimit` -- graphics.device.capability_report
 - `CNA::getVersionMajor` -- core.version.version_string
 - `CNA::getVersionMinor` -- core.version.version_string
 - `CNA::getVersionPatch` -- core.version.version_string
@@ -74,7 +76,11 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GameComponentCollection::Contains` -- game.components.collection_events
 - `GameComponentCollection::IndexOf` -- game.components.collection_events
 - `GameComponentCollection::Remove` -- game.components.collection_events
-- `GraphicsDevice::GetGraphicsRendererName` -- platform.renderer_selection.set_preferred
+- `GraphicsDevice::GetGraphicsRendererName` -- graphics.device.supports_capability, platform.renderer_selection.set_preferred
+- `GraphicsDevice::GetMaxTextureDimension` -- graphics.device.capability_report
+- `GraphicsDevice::GetRendererCapabilityReportEXT` -- graphics.device.capability_report
+- `GraphicsDevice::GetRendererLimitEXT` -- graphics.device.capability_report
+- `GraphicsDevice::SupportsCapability` -- graphics.device.supports_capability
 - `LaunchParameters::ContainsKey` -- game.launch_parameters.parse
 - `PreparingDeviceSettingsEventArgs::getGraphicsDeviceInformationEXT` -- game.graphics_device_manager.preparing_device_settings
 
