@@ -154,7 +154,7 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
 - `TextInputEXT`, `CNA::Input::Joysticks`, `Haptics`, `Sensors`, `Power`, `Clipboard`. ≈ 25
   Mostly smoke-only; logic-only parts (dead-zone maths, state comparison) are automated.
 
-## Phase 11 -- storage ⬜
+## Phase 11 -- storage ✅ (7 demos)
 `StorageDevice` selector and containers, create/open/delete files and directories, `FileExists`,
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)

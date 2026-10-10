@@ -267,6 +267,36 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, GCC 14.2, Linux.
 - **Status:** open; not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-010 -- Storage reports errors with C++ standard exceptions, not XNA's types
+
+- **Area:** storage -- `StorageContainer` and `StorageDevice::DeleteContainer`. Argument errors
+  (empty names, paths that leave the container) throw `std::invalid_argument`; a failing
+  filesystem operation such as `DeleteDirectory` on a non-empty directory lets
+  `std::filesystem::filesystem_error` escape. Neither derives from `System::Exception`.
+  (Other parts of CNA, for example `StorageContainer::OpenFile` with `FileMode::CreateNew`, do
+  throw `System::IO::IOException`; across CNA's modules both conventions occur.)
+- **Demos:** `storage.storage_container.path_rules` and `storage.storage_container.directories`
+  catch `std::exception`, the common base, and say why.
+- **Reproduction:**
+  ```cpp
+  container->CreateDirectory("replays");
+  (void)container->CreateFile("replays/race1.rpl");
+  try { container->DeleteDirectory("replays"); }
+  catch (const System::IO::IOException&) { /* XNA's type -- not reached */ }
+  // terminates with std::filesystem::filesystem_error
+  try { (void)container->FileExists(""); }
+  catch (const System::ArgumentException&) { /* not reached: std::invalid_argument */ }
+  ```
+- **Observed:** `filesystem error: cannot remove: Directory not empty [<absolute path>]` and
+  `Parameter file must contain a value.` as `std::invalid_argument`.
+- **Expected:** XNA reports these as `IOException` and `ArgumentNullException`/`ArgumentException`
+  (FNA: `Directory.Delete`, `ArgumentNullException`), and CNA mirrors the .NET hierarchy in
+  sharp-runtime (`System::IO::IOException`, `System::ArgumentException`). Code ported from XNA
+  that catches those types misses these errors. The containment refusals are a deliberate CNA
+  hardening (documented in the source); their exception type could still be `ArgumentException`.
+- **Environment:** CNA 0.1.0, GCC 14.2, Linux.
+- **Status:** open (low impact); not reported upstream yet.
+
 ---
 
 ## Resolved

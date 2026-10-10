@@ -99,6 +99,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   touchpad, trigger vibration, paddles and the share button.
 - CNA-DEMOS-ISSUE-009 recorded: `HapticDevice`'s inline default constructor needs a complete
   platform type, so user code cannot create a closed device.
+- Storage demos (7): StorageDevice selector (async pattern, free/total space), save and load a game
+  with BinaryWriter/BinaryReader, FileMode/FileAccess, directories and search patterns, container
+  lifetime (Disposing), where saves are stored and the per-player layout (CNAEXT), and CNA's rule
+  that container paths stay inside the container.
+- CNA-DEMOS-ISSUE-010 recorded: storage reports argument and filesystem errors with
+  `std::invalid_argument`/`std::filesystem::filesystem_error` instead of XNA's exception types.
 - `CnaDemos/InputNames.hpp`: names of input enums (keys, buttons, gestures) for demo output.
 - CNA-DEMOS-ISSUE-008 recorded: sharp-runtime's `Prop.hpp`, reached from CNA's public headers,
   defines macros named `YES`, `NO`, `nothing` and similar.
