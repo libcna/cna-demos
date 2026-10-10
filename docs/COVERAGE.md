@@ -6,7 +6,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**268 demos** in 9 categories. Kinds: console 110, game 157, standalone 1. Automation: automated 238, manual 2, smoke-only 28.
+**275 demos** in 10 categories. Kinds: console 115, game 159, standalone 1. Automation: automated 244, manual 2, smoke-only 29.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -17,18 +17,19 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | graphics | 99 | 99 | 0 | 0 | 95 / 3 / 1 | 95 / 3 / 1 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
 | math | 72 | 72 | 0 | 0 | 71 / 0 / 1 | 71 / 0 / 1 |
+| media | 7 | 6 | 1 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | storage | 7 | 7 | 0 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 145 of 329** (44.1 %).
-- **Methods, properties, constructors and events named by a demo: 692 of 2326** (29.8 %).
+- **Types with at least one demo: 152 of 329** (46.2 %).
+- **Methods, properties, constructors and events named by a demo: 737 of 2326** (31.7 %).
 - Fields and enum values named by a demo: 116 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
-| `Microsoft.Xna.Framework` | 35 / 42 | 269 / 643 | 34 / 78 |
+| `Microsoft.Xna.Framework` | 36 / 42 | 270 / 643 | 34 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 8 / 19 | 41 / 121 | 5 / 11 |
 | `Microsoft.Xna.Framework.Content` | 1 / 11 | 7 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 0 / 13 | 0 / 51 | 0 / 2 |
@@ -37,7 +38,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 11 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 5 / 8 | 30 / 48 | 0 / 15 |
-| `Microsoft.Xna.Framework.Media` | 0 / 24 | 0 / 192 | 0 / 8 |
+| `Microsoft.Xna.Framework.Media` | 6 / 24 | 44 / 192 | 0 / 8 |
 | `Microsoft.Xna.Framework.Net` | 0 / 23 | 0 / 127 | 0 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
 
@@ -45,7 +46,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
-- `Microsoft.Xna.Framework`: DisplayOrientation, FrameworkDispatcher, IDrawable, IGameComponent, IGraphicsDeviceManager, IUpdateable, PlayerIndex
+- `Microsoft.Xna.Framework`: DisplayOrientation, IDrawable, IGameComponent, IGraphicsDeviceManager, IUpdateable, PlayerIndex
 - `Microsoft.Xna.Framework.Audio`: AudioCategory, AudioEngine, AudioStopOptions, Cue, InstancePlayLimitException, MicrophoneState, NoAudioHardwareException, NoMicrophoneConnectedException, RendererDetail, SoundBank, WaveBank
 - `Microsoft.Xna.Framework.Content`: ContentLoadException, ContentReader, ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute, ContentTypeReader, ContentTypeReaderManager, ResourceContentManager
 - `Microsoft.Xna.Framework.Design`: BoundingBoxConverter, BoundingSphereConverter, ColorConverter, MathTypeConverter, MatrixConverter, PlaneConverter, PointConverter, QuaternionConverter, RayConverter, RectangleConverter, Vector2Converter, Vector3Converter, Vector4Converter
@@ -53,7 +54,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 - `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, DynamicIndexBuffer, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectParameterClass, EffectParameterType, EffectPassCollection, GraphicsDeviceStatus, IEffectFog, IEffectLights, IEffectMatrices, IGraphicsDeviceService, IVertexType, Model, ModelBone, ModelBoneCollection, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMesh, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPart, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, OcclusionQuery, RenderTargetBinding, RenderTargetCube, Texture3D, VertexBufferBinding, VertexPositionColorTexture
 - `Microsoft.Xna.Framework.Input`: ButtonState, Buttons, GamePadDeadZone, GamePadType, KeyState, Keys
 - `Microsoft.Xna.Framework.Input.Touch`: GestureType, TouchCollection.Enumerator, TouchLocationState
-- `Microsoft.Xna.Framework.Media`: Album, AlbumCollection, Artist, ArtistCollection, Genre, GenreCollection, MediaLibrary, MediaPlayer, MediaQueue, MediaSource, MediaSourceType, MediaState, Picture, PictureAlbum, PictureAlbumCollection, PictureCollection, Playlist, PlaylistCollection, Song, SongCollection, Video, VideoPlayer, VideoSoundtrackType, VisualizationData
+- `Microsoft.Xna.Framework.Media`: Album, AlbumCollection, Artist, ArtistCollection, Genre, GenreCollection, MediaSourceType, MediaState, Picture, PictureAlbum, PictureAlbumCollection, PictureCollection, Playlist, PlaylistCollection, SongCollection, Video, VideoPlayer, VideoSoundtrackType
 - `Microsoft.Xna.Framework.Net`: AvailableNetworkSession, AvailableNetworkSessionCollection, GameEndedEventArgs, GameStartedEventArgs, GamerJoinedEventArgs, GamerLeftEventArgs, HostChangedEventArgs, LocalNetworkGamer, NetworkGamer, NetworkMachine, NetworkSession, NetworkSessionEndReason, NetworkSessionEndedEventArgs, NetworkSessionJoinError, NetworkSessionJoinException, NetworkSessionProperties, NetworkSessionState, NetworkSessionType, PacketReader, PacketWriter, QualityOfService, SendDataOptions, WriteLeaderboardsEventArgs
 - `Microsoft.Xna.Framework.Storage`: StorageDeviceNotConnectedException
 
@@ -207,6 +208,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `LaunchParameters::ContainsKey` -- game.launch_parameters.parse
 - `LooseFileContentTypeReader::GetExtensions` -- content.custom.loose_file_reader
 - `LooseFileContentTypeReader::Read` -- content.custom.loose_file_reader
+- `MediaState` -- media.media_player.play_song
 - `Mouse::ClickedEXT` -- input.mouse.clicked_event
 - `Mouse::IsRelativeMouseModeEXT` -- input.mouse.relative_mode
 - `Mouse::SetCursor` -- input.mouse.cursors
@@ -237,6 +239,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ShaderEffect::SetUniformFloat` -- graphics.shader_effect.sprite_shader
 - `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading
 - `ShaderEffect::ShaderEffect` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading
+- `SongCollection` -- media.media_player.queue_and_repeat
 - `SpriteFont::SpriteFont` -- graphics.sprite_font.glyph_constructor
 - `StorageDevice::GetStorageRootEXT` -- storage.storage_device.storage_root
 - `StorageDevice::SetAppNameEXT` -- storage.storage_device.show_selector, storage.storage_device.storage_root
@@ -250,6 +253,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `TextInputEXT::TextInput` -- input.text_input.composition, input.text_input.typing
 - `Texture2D::Format` -- content.xnb.dxt_texture
 - `Texture2D::LevelCount` -- content.texture_processor.mipmaps
+- `TitleLocation::Path` -- media.media_player.play_song
 - `TouchLocationState` -- input.touch.get_state
 - `TouchPanel::EnqueueGesture` -- input.touch.gesture_queue
 - `TouchPanel::MouseTouchEmulationEnabledEXT` -- input.touch.get_state

@@ -108,10 +108,15 @@ namespace CnaDemos
         ++framesDrawn_;
         const bool lastFrame = frameLimit_ > 0 && framesDrawn_ >= frameLimit_;
 
-        // Read the frame back before Game::EndDraw() presents it.
-        if (lastFrame && !context_.Options().screenshotPath.empty())
+        // Read the frame back before Game::EndDraw() presents it. Every frame is kept, so a demo
+        // that ends itself early (Exit() once its checks are done) is captured as well.
+        if (!context_.Options().screenshotPath.empty())
         {
-            CaptureScreenshot();
+            ReadBackFrame();
+            if (lastFrame)
+            {
+                SaveScreenshot();
+            }
         }
 
         Game::EndDraw();
@@ -128,35 +133,69 @@ namespace CnaDemos
         }
     }
 
-    void DemoGame::CaptureScreenshot()
+    void DemoGame::EndRun()
+    {
+        // The demo ended before its frame limit: save the last frame it drew.
+        if (!context_.Options().screenshotPath.empty())
+        {
+            SaveScreenshot();
+        }
+        Game::EndRun();
+    }
+
+    void DemoGame::ReadBackFrame()
     {
         GraphicsDevice& device = getGraphicsDeviceProperty();
         // XNA refuses back-buffer readback under Reach. A demo about Reach still runs; it just
         // cannot be photographed this way.
         if (device.getGraphicsProfileProperty() == GraphicsProfile::Reach)
         {
-            context_.Out() << "  screenshot: not available, the demo runs under the Reach profile "
-                              "(GetBackBufferData is HiDef only)\n";
+            return;
+        }
+        const auto& parameters = device.getPresentationParametersProperty();
+        const std::size_t count = static_cast<std::size_t>(parameters.getBackBufferWidthProperty()) *
+                                  static_cast<std::size_t>(parameters.getBackBufferHeightProperty());
+        screenshot_.resize(count);
+        device.GetBackBufferData(screenshot_.data(), static_cast<int>(count));
+        screenshotFrame_ = framesDrawn_;
+    }
+
+    void DemoGame::SaveScreenshot()
+    {
+        if (screenshotSaved_)
+        {
+            return;
+        }
+        screenshotSaved_ = true;
+        GraphicsDevice& device = getGraphicsDeviceProperty();
+        if (screenshot_.empty())
+        {
+            context_.Out() << (device.getGraphicsProfileProperty() == GraphicsProfile::Reach
+                                   ? "  screenshot: not available, the demo runs under the Reach profile "
+                                     "(GetBackBufferData is HiDef only)\n"
+                                   : "  screenshot: no frame was drawn\n");
             return;
         }
         const auto& parameters = device.getPresentationParametersProperty();
         const int width = parameters.getBackBufferWidthProperty();
         const int height = parameters.getBackBufferHeightProperty();
-
-        std::vector<Color> pixels(static_cast<std::size_t>(width) * static_cast<std::size_t>(height));
-        device.GetBackBufferData(pixels.data(), static_cast<int>(pixels.size()));
+        if (screenshot_.size() != static_cast<std::size_t>(width) * static_cast<std::size_t>(height))
+        {
+            context_.Out() << "  screenshot: not saved, the back buffer changed size after the last frame\n";
+            return;
+        }
         // A window shows only RGB. Make the copy opaque so the PNG shows the same: XNA's SaveAsPng
         // (and CNA's, which matches it) stores fully transparent pixels as (0, 0, 0, 0), which
         // would turn e.g. white-with-alpha-0 back-buffer pixels black in the screenshot.
-        for (Color& pixel : pixels)
+        for (Color& pixel : screenshot_)
         {
             pixel.setAProperty(255);
         }
 
         Texture2D image(device, width, height);
-        image.SetData(pixels.data(), static_cast<int>(pixels.size()));
+        image.SetData(screenshot_.data(), static_cast<int>(screenshot_.size()));
         image.SaveAsPng(context_.Options().screenshotPath);
         context_.Out() << "  screenshot: " << context_.Options().screenshotPath << " (" << width << "x"
-                       << height << ", frame " << framesDrawn_ << ")\n";
+                       << height << ", frame " << screenshotFrame_ << ")\n";
     }
 }

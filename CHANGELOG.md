@@ -115,6 +115,14 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   calls an OpenStream override) and CNA-DEMOS-ISSUE-013 (the manifest lists the pipeline's
   bookkeeping files) and CNA-DEMOS-ISSUE-014 (before CNA's platform exists, the content root is the
   working directory) recorded; ISSUE-010 extended to ContentManager::Load after Dispose.
+- Media demos (7): play a song and follow PlayPosition to its end, MediaPlayer events raised by
+  FrameworkDispatcher::Update without a Game, playlists (Queue, MoveNext/MovePrevious, IsRepeating,
+  IsShuffled), volume and mute, a spectrum/waveform visualizer, Song properties, MediaLibrary
+  collections; two short generated tunes in `assets/music/`.
+- `--screenshot` captures the last frame drawn even when a demo ends itself with `Exit()` before
+  its frame limit (the frame is kept each frame and saved in `EndRun`).
+- CNA-DEMOS-ISSUE-015 recorded: `Song::FromUri` resolves relative paths against the working
+  directory, not the title location (FNA's behaviour).
 - `CnaDemos/InputNames.hpp`: names of input enums (keys, buttons, gestures) for demo output.
 - CNA-DEMOS-ISSUE-008 recorded: sharp-runtime's `Prop.hpp`, reached from CNA's public headers,
   defines macros named `YES`, `NO`, `nothing` and similar.

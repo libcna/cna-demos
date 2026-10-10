@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MS-PL
 #pragma once
 
+#include <vector>
+
 #include "CnaDemos/DemoContext.hpp"
+#include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Game.hpp"
 #include "Microsoft/Xna/Framework/GameTime.hpp"
 #include "Microsoft/Xna/Framework/GraphicsDeviceManager.hpp"
@@ -43,14 +46,20 @@ namespace CnaDemos
 
         void Initialize() override;
         void EndDraw() override;
+        void EndRun() override;
 
     private:
         void CheckNeeds();
-        void CaptureScreenshot();
+        void ReadBackFrame();
+        void SaveScreenshot();
 
         DemoContext& context_;
         Microsoft::Xna::Framework::GraphicsDeviceManager graphics_;
         int framesDrawn_ = 0;
         int frameLimit_ = 0;
+        // --screenshot: the latest frame, kept so a demo that calls Exit() early is captured too.
+        std::vector<Microsoft::Xna::Framework::Color> screenshot_;
+        int screenshotFrame_ = 0;
+        bool screenshotSaved_ = false;
     };
 }

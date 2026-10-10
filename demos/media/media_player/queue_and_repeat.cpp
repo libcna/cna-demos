@@ -1,0 +1,80 @@
+// SPDX-License-Identifier: MS-PL
+// A playlist: MediaPlayer::Play(SongCollection), the Queue, MoveNext/MovePrevious and IsRepeating.
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "CnaDemos/Demo.hpp"
+#include "Microsoft/Xna/Framework/FrameworkDispatcher.hpp"
+#include "Microsoft/Xna/Framework/Media/MediaPlayer.hpp"
+#include "Microsoft/Xna/Framework/Media/MediaQueue.hpp"
+#include "Microsoft/Xna/Framework/Media/MediaState.hpp"
+#include "Microsoft/Xna/Framework/Media/Song.hpp"
+#include "Microsoft/Xna/Framework/Media/SongCollection.hpp"
+#include "Microsoft/Xna/Framework/TitleLocation.hpp"
+
+using namespace Microsoft::Xna::Framework;
+using namespace Microsoft::Xna::Framework::Media;
+
+namespace
+{
+    std::string Active()
+    {
+        const Song* song = MediaPlayer::getQueueProperty().getActiveSongProperty();
+        return song != nullptr ? song->getNameProperty() : "(none)";
+    }
+
+    void QueueAndRepeat(CnaDemos::DemoContext& ctx)
+    {
+        const std::unique_ptr<Song> rising(Song::FromUri("Rising", TitleLocation::Path() + "/assets/music/rising.wav"));
+        const std::unique_ptr<Song> falling(Song::FromUri("Falling", TitleLocation::Path() + "/assets/music/falling.wav"));
+        const SongCollection playlist({rising.get(), falling.get()});
+
+        // Playing a collection fills MediaPlayer's Queue; the index picks the first song.
+        MediaPlayer::Play(playlist, 0);
+        const MediaQueue& queue = MediaPlayer::getQueueProperty();
+        ctx.Print("queue: {} songs, active #{} {}", queue.getCountProperty(), queue.getActiveSongIndexProperty(), Active());
+        ctx.Check(queue.getCountProperty() == 2 && Active() == "Rising", "the queue holds the playlist, starting at Rising");
+
+        MediaPlayer::MoveNext();
+        ctx.Print("MoveNext: #{} {}", queue.getActiveSongIndexProperty(), Active());
+        ctx.Check(Active() == "Falling" && MediaPlayer::getStateProperty() == MediaState::Playing,
+                  "MoveNext plays the next song");
+
+        // At the end of the queue: with IsRepeating it wraps around to the first song.
+        MediaPlayer::setIsRepeatingProperty(true);
+        MediaPlayer::MoveNext();
+        ctx.Print("MoveNext past the end, IsRepeating: #{} {}", queue.getActiveSongIndexProperty(), Active());
+        ctx.Check(Active() == "Rising", "with IsRepeating the queue wraps around");
+
+        // MovePrevious steps back; on the first song it stays there (no backward wrap).
+        MediaPlayer::MovePrevious();
+        ctx.Check(Active() == "Rising", "MovePrevious on the first song stays on it");
+        MediaPlayer::MoveNext();
+        MediaPlayer::MovePrevious();
+        ctx.Print("MoveNext, MovePrevious: #{} {}", queue.getActiveSongIndexProperty(), Active());
+        ctx.Check(Active() == "Rising", "MovePrevious returns to the song before");
+
+        // IsShuffled makes the next song a random one from the queue.
+        MediaPlayer::setIsShuffledProperty(true);
+        ctx.Check(MediaPlayer::getIsShuffledProperty(), "IsShuffled reads back");
+
+        MediaPlayer::Stop();
+        FrameworkDispatcher::Update();
+        MediaPlayer::setIsShuffledProperty(false);
+        MediaPlayer::setIsRepeatingProperty(false);
+    }
+}
+
+CNA_DEMOS_CONSOLE(QueueAndRepeat, {
+    .id = "media.media_player.queue_and_repeat",
+    .title = "Playlists and repeat",
+    .description = "Plays a SongCollection of two tunes, walks the MediaPlayer Queue with MoveNext and MovePrevious, "
+                   "and shows IsRepeating wrapping around the ends (IsShuffled for random order).",
+    .apis = {"MediaPlayer::Play", "MediaPlayer::Queue", "MediaPlayer::MoveNext", "MediaPlayer::MovePrevious",
+             "MediaPlayer::IsRepeating", "MediaPlayer::IsShuffled", "MediaQueue::ActiveSong",
+             "MediaQueue::ActiveSongIndex", "MediaQueue::Count", "SongCollection"},
+    .tags = {"media", "music", "playlist", "queue", "repeat", "shuffle"},
+    .needs = CnaDemos::Need::Audio,
+    .assets = {"music/rising.wav", "music/falling.wav"},
+})

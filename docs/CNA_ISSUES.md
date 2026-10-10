@@ -385,6 +385,24 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, GCC 14.2, Linux.
 - **Status:** open (low impact); not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-015 -- `Song::FromUri` resolves a relative path against the working directory
+
+- **Area:** media -- `Song::FromUri` (`Song.cpp`) uses a scheme-less path as it is, so a relative
+  one is opened relative to the process's working directory. Its comment notes that FNA combines
+  a relative URI with `TitleLocation.Path` but says CNA "has no such content-root concept for
+  Song" -- yet CNA has `TitleLocation::Path()` (and resolves `ContentManager` and `TitleContainer`
+  paths against the title directory).
+- **Demos:** every `media.*` demo builds an absolute path from `TitleLocation::Path()` and says why.
+- **Reproduction (program started from another directory than its executable's):**
+  ```cpp
+  Song::FromUri("Rising", "assets/music/rising.wav");
+  // throws: Could not find file 'assets/music/rising.wav'.
+  ```
+- **Expected:** the same resolution as FNA (and as CNA's own content paths): relative to the title
+  location, so a game finds its music however it was started (desktop shortcut, launcher, IDE).
+- **Environment:** CNA 0.1.0, Linux.
+- **Status:** open (low impact); not reported upstream yet.
+
 ---
 
 ## Resolved

@@ -90,6 +90,10 @@ limit, Escape-to-exit and screenshots. If you override `Initialize()` or `EndDra
 
 Do not present the frame yourself: `Game::EndDraw()` presents once per frame, as in XNA.
 
+A demo that waits for something in real time (a song to end, a timer) may call `Exit()` itself once
+its checks are done, when `Context().Automated()` is true -- an interactive run keeps the window
+open. `--screenshot` still captures the last frame it drew.
+
 ## 5. Metadata reference
 
 | Field | Required | Meaning |

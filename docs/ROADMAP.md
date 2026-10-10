@@ -139,7 +139,7 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
 - `content.content_reader.*`: custom `ContentTypeReader`, `ResourceContentManager`,
   `ContentManifestEntry`. ≈ 20
 
-## Phase 9 -- audio and media 🟨 (audio: 8 demos; XACT and media open)
+## Phase 9 -- audio and media 🟨 (audio: 8 demos, media: 7; XACT and video open)
 - ✅ `audio.sound_effect.*`: Play, Play(volume, pitch, pan), MasterVolume, PCM buffer
   constructor, GetSampleDuration/GetSampleSizeInBytes. Remaining: loop points.
 - ✅ `audio.sound_effect_instance.*`: playback state, looping, volume/pitch/pan, Apply3D
@@ -147,8 +147,12 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
 - ✅ `audio.dynamic_sound_effect_instance.streaming`: generated tone, BufferNeeded, pending buffers.
 - ✅ `audio.microphone.input_level` (manual). Remaining: `audio.xact.*` (AudioEngine/WaveBank/SoundBank/Cue; CNA's own
   example generates the XACT files at runtime).
-- `media.*`: `Song` + `MediaPlayer` (play, pause, volume, repeat, state events), `MediaLibrary`,
-  `Video`/`VideoPlayer` (needs `CNA_ENABLE_VIDEO`). ≈ 25
+- ✅ `media.*` (7): play a song (State, PlayPosition, end), events through FrameworkDispatcher
+  without a Game, playlists with Queue/MoveNext/MovePrevious/IsRepeating/IsShuffled, volume and
+  mute, visualization data, Song properties, MediaLibrary collections. Songs are generated WAVs
+  played from files (`Song::FromUri`, ISSUE-015). Remaining: `Video`/`VideoPlayer` (needs
+  `CNA_ENABLE_VIDEO`/FFmpeg), compiled songs (`CNA.SongProcessor` takes .ogg/.mp3 -- needs an
+  encoder), pictures (`SavePicture`).
 
 ## Phase 10 -- input ✅ (39 demos: keyboard, mouse, text input, clipboard, gamepad, touch, CNAEXT devices)
 - Keyboard: state, edge detection (pressed this frame), modifiers, `GetPressedKeys`.
