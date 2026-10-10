@@ -20,3 +20,14 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   (`tools/generate_assets.py`).
 - Pilot demos in seven categories (math, core, graphics, content, audio, input, platform),
   including one standalone demo.
+- Math demos: Vector2/Vector3/Vector4 (constants, arithmetic, dot, cross, normalize, distance,
+  lerp, smooth step, Catmull-Rom, Hermite, barycentric, clamp/min/max, reflect, transforms,
+  by-reference overloads, equality/ToString, homogeneous coordinates), Matrix (identity, SRT,
+  axis rotations, axis-angle, yaw/pitch/roll, look-at, perspective, orthographic, invert,
+  transpose, determinant, decompose, world/direction properties, billboards, reflection/shadow,
+  element-wise operations, quaternion transform), Quaternion (axis-angle, matrix conversion,
+  concatenate, slerp/lerp, inverse/conjugate, normalize), MathHelper (angles, scalar helpers,
+  curves).
+- `--log-level` option (CNA's logger defaults to `warn` in cna-demos).
+- `tools/validate.sh`: build, validate, ctest, smoke reports and coverage in one command.
+- `CnaDemos/MathChecks.hpp`: tolerance helpers for matrix/quaternion checks.

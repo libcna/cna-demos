@@ -6,27 +6,27 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**22 demos** in 7 categories. Kinds: console 15, game 6, standalone 1. Automation: automated 21, smoke-only 1.
+**56 demos** in 7 categories. Kinds: console 49, game 6, standalone 1. Automation: automated 55, smoke-only 1.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
-| audio | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 0 / 1 / 0 |
+| audio | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | content | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | graphics | 3 | 3 | 0 | 0 | 3 / 0 / 0 | 3 / 0 / 0 |
 | input | 1 | 0 | 1 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
-| math | 14 | 14 | 0 | 0 | 14 / 0 / 0 | 14 / 0 / 0 |
+| math | 48 | 48 | 0 | 0 | 48 / 0 / 0 | 48 / 0 / 0 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 14 of 329** (4.3 %).
-- **Methods, properties, constructors and events named by a demo: 60 of 2326** (2.6 %).
-- Fields and enum values named by a demo: 0 of 753 (reported separately: a demo per enum value is not a goal).
+- **Types with at least one demo: 18 of 329** (5.5 %).
+- **Methods, properties, constructors and events named by a demo: 139 of 2326** (6.0 %).
+- Fields and enum values named by a demo: 8 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
-| `Microsoft.Xna.Framework` | 5 / 42 | 42 / 643 | 0 / 78 |
+| `Microsoft.Xna.Framework` | 9 / 42 | 121 / 643 | 8 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 1 / 19 | 2 / 121 | 0 / 11 |
 | `Microsoft.Xna.Framework.Content` | 1 / 11 | 2 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 0 / 13 | 0 / 51 | 0 / 2 |
@@ -43,7 +43,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
-- `Microsoft.Xna.Framework`: BoundingBox, BoundingFrustum, BoundingSphere, ContainmentType, Curve, CurveContinuity, CurveKey, CurveKeyCollection, CurveLoopType, CurveTangent, DisplayOrientation, DrawableGameComponent, FrameworkDispatcher, GameComponent, GameComponentCollection, GameComponentCollectionEventArgs, GameServiceContainer, GameTime, GameWindow, GraphicsDeviceInformation, GraphicsDeviceManager, IDrawable, IGameComponent, IGraphicsDeviceManager, IUpdateable, LaunchParameters, Matrix, Plane, PlaneIntersectionType, PlayerIndex, Point, PreparingDeviceSettingsEventArgs, Quaternion, Ray, Rectangle, TitleContainer, Vector4
+- `Microsoft.Xna.Framework`: BoundingBox, BoundingFrustum, BoundingSphere, ContainmentType, Curve, CurveContinuity, CurveKey, CurveKeyCollection, CurveLoopType, CurveTangent, DisplayOrientation, DrawableGameComponent, FrameworkDispatcher, GameComponent, GameComponentCollection, GameComponentCollectionEventArgs, GameServiceContainer, GameTime, GameWindow, GraphicsDeviceInformation, GraphicsDeviceManager, IDrawable, IGameComponent, IGraphicsDeviceManager, IUpdateable, LaunchParameters, PlaneIntersectionType, PlayerIndex, Point, PreparingDeviceSettingsEventArgs, Ray, Rectangle, TitleContainer
 - `Microsoft.Xna.Framework.Audio`: AudioCategory, AudioChannels, AudioEmitter, AudioEngine, AudioListener, AudioStopOptions, Cue, DynamicSoundEffectInstance, InstancePlayLimitException, Microphone, MicrophoneState, NoAudioHardwareException, NoMicrophoneConnectedException, RendererDetail, SoundBank, SoundEffectInstance, SoundState, WaveBank
 - `Microsoft.Xna.Framework.Content`: ContentLoadException, ContentReader, ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute, ContentTypeReader, ContentTypeReaderManager, ResourceContentManager
 - `Microsoft.Xna.Framework.Design`: BoundingBoxConverter, BoundingSphereConverter, ColorConverter, MathTypeConverter, MatrixConverter, PlaneConverter, PointConverter, QuaternionConverter, RayConverter, RectangleConverter, Vector2Converter, Vector3Converter, Vector4Converter

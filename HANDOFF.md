@@ -13,8 +13,8 @@ capability has a demo. See docs/PROJECT.md.
 ## 2. Current phase
 
 * Phase 0 (research) and Phase 1 (infrastructure + pilot) are **complete**.
-* **Phase 2 -- math** is in progress: Vector3 batch 1 done (13 demos); next the rest of the
-  vector batch, then Matrix (see "Next task").
+* **Phase 2 -- math** is in progress: vectors, Matrix, Quaternion and MathHelper done
+  (48 math demos); next Point/Rectangle, bounding volumes, Plane/Ray, Curve, Color, packed vectors.
 
 ## 3. Architecture in 10 lines
 
@@ -41,7 +41,7 @@ capability has a demo. See docs/PROJECT.md.
 * DemoGame: need checks → SKIPPED, automated frame limit, Escape/Back exit, `--screenshot`.
 * CTest integration and CI workflow (`.github/workflows/ci.yml`, windowless preset).
 * Docs: README, PLAN, CLAUDE, CONTRIBUTING, CHANGELOG, THIRD_PARTY_NOTICES, docs/*.
-* Pilot demos (9) and math batch 1 (13 Vector3 demos): see section 6.
+* Pilot demos (9) and math batches (vectors, Matrix, Quaternion, MathHelper): see section 6.
 
 ## 5. Partially complete / known gaps
 
@@ -52,8 +52,8 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 6. Demo counts
 
-22 demos: math 14, graphics 3, core 1, content 1, audio 1, input 1, platform 1 (standalone).
-Coverage (docs/COVERAGE.md): 14/329 XNA types, 60/2326 XNA members named by a demo.
+56 demos: math 48, graphics 3, core 1, content 1, audio 1, input 1, platform 1 (standalone).
+Coverage (docs/COVERAGE.md): 18/329 XNA types, 139/2326 XNA members named by a demo.
 Categories declared but empty: game, media, storage, diagnostics, devices, phone, design, cnaext,
 net, gamer_services. Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
@@ -63,9 +63,10 @@ net, gamer_services. Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 |---|---|
 | Configure + build `linux-full` (8 renderers, CNA as libcna.so) | ✅ |
 | `cna-demos --validate` | ✅ 0 problems |
-| `ctest` (15 CLI tests + 22 demos on SOFTWARE, dummy audio) | ✅ 37/37 |
-| `--smoke` on SOFTWARE (no display) | ✅ 22 passed |
-| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2) | ✅ 21 passed, 1 skipped (audio: no ALSA device without the dummy driver -- correct) |
+| `tools/validate.sh` (build, validate, ctest, smoke SOFTWARE + OPENGLES3/Xvfb, coverage) | ✅ |
+| `ctest` (15 CLI tests + 56 demos on SOFTWARE, dummy audio) | ✅ 71/71 |
+| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 56 passed |
+| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ✅ 56 passed (without the dummy driver the audio demo is SKIPPED: no ALSA device -- correct) |
 | Screenshots inspected (SOFTWARE, OPENGLES3): draw_texture, render_target2d | ✅ correct, identical across both |
 | CMake 3.28.3 (distro) with CNA_SHARED_LIBRARY=ON | ❌ CNA-DEMOS-ISSUE-001; cna-demos now defaults to static there |
 
@@ -75,6 +76,7 @@ net, gamer_services. Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 # siblings: ../cna ../sharp-runtime ../easy-gl ../meta-gl (+ cna submodules)
 cmake --preset linux-full -DCMAKE_CXX_COMPILER=g++-14 -DCMAKE_C_COMPILER=gcc-14
 cmake --build --preset linux-full -j4
+tools/validate.sh                       # the standard end-of-batch check (all of the below)
 export XDG_RUNTIME_DIR=/tmp/xdg-runtime; mkdir -p -m 700 $XDG_RUNTIME_DIR
 build/linux-full/bin/cna-demos --validate
 ctest --test-dir build/linux-full -j4
@@ -123,11 +125,10 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Phase 2, vector batch part 2**: `math.vector3.transform` (Matrix), `transform_normal`,
-`transform_quaternion`, `transform_array`, `by_reference_overloads`, `equality_and_string`,
-`math.vector2.transform` (2D rotation), `math.vector4.homogeneous_transform` (perspective divide).
-Then Matrix, Quaternion, MathHelper, Rectangle/Point,
-bounding volumes, Curve, Color, packed vectors. Each: read the header in
+**Phase 2, remaining math**: `math.point.*`, `math.rectangle.*` (Contains, Intersects, Intersect,
+Union, Inflate, Offset, Center, IsEmpty), `math.bounding_box/bounding_sphere/bounding_frustum/
+plane/ray.*`, `math.curve.*`, `math.color.*`, `graphics.packed_vector.*` (ROADMAP Phase 2).
+Then Phase 3 (game lifecycle). Each: read the header in
 `../cna/modules/math/include/Microsoft/Xna/Framework/`, write console demos with checks, build,
 validate, ctest, regenerate COVERAGE.md, update this file, commit.
 

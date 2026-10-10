@@ -12,6 +12,8 @@
 #include <vector>
 
 #include "CNA/GraphicsRendererSelection.hpp"
+#include "CNA/LogLevel.hpp"
+#include "CNA/Logger.hpp"
 #include "CNA/ProjectGraphicsProfile.hpp"
 #include "CnaDemos/Catalog.hpp"
 #include "CnaDemos/Process.hpp"
@@ -51,6 +53,7 @@ Run options:
   --renderer <name>    Use this renderer (equivalent to CNA_GRAPHICS_RENDERER=<name>).
   --quiet              Suppress the demos' own output (failures are still printed).
   --report <file>      Write the results of a run as JSON.
+  --log-level <level>  CNA's own log output: fatal, error, warn (default), info, debug, trace.
 
 Exit status: 0 passed, 1 failed, 2 usage error, 77 skipped (a documented requirement is
 missing in this environment).
@@ -63,6 +66,7 @@ missing in this environment).
             RunOptions run;
             std::string renderer;
             std::string reportPath;
+            std::string logLevel = "warn";
         };
 
         std::optional<int> ParseInt(std::string_view text)
@@ -126,7 +130,7 @@ missing in this environment).
                         args.run.seed = static_cast<std::uint32_t>(*number);
                     }
                 }
-                else if (arg == "--screenshot" || arg == "--renderer" || arg == "--report")
+                else if (arg == "--screenshot" || arg == "--renderer" || arg == "--report" || arg == "--log-level")
                 {
                     const auto value = needValue(arg);
                     if (!value)
@@ -135,7 +139,8 @@ missing in this environment).
                     }
                     (arg == "--screenshot" ? args.run.screenshotPath
                      : arg == "--renderer" ? args.renderer
-                                           : args.reportPath) = std::string(*value);
+                     : arg == "--report"   ? args.reportPath
+                                           : args.logLevel) = std::string(*value);
                 }
                 else if (const auto command = commands.find(arg); command != commands.end())
                 {
@@ -172,6 +177,16 @@ missing in this environment).
                 }
             }
             return std::nullopt;
+        }
+
+        std::optional<CNA::LogLevel> ParseLogLevel(std::string_view name)
+        {
+            static const std::map<std::string_view, CNA::LogLevel> levels = {
+                {"fatal", CNA::LogLevel::FATAL}, {"error", CNA::LogLevel::ERROR}, {"warn", CNA::LogLevel::WARN},
+                {"info", CNA::LogLevel::INFO},   {"debug", CNA::LogLevel::DEBUG}, {"trace", CNA::LogLevel::TRACE},
+            };
+            const auto level = levels.find(name);
+            return level == levels.end() ? std::nullopt : std::optional(level->second);
         }
 
         void SetEnvironment(const char* name, const std::string& value)
@@ -274,6 +289,15 @@ missing in this environment).
         {
             return *error;
         }
+
+        // CNA logs at TRACE level in debug builds; demo output stays readable unless asked for.
+        const auto logLevel = ParseLogLevel(args.logLevel);
+        if (!logLevel)
+        {
+            std::cerr << "cna-demos: unknown log level '" << args.logLevel << "' (see --help)\n";
+            return UsageExitCode;
+        }
+        CNA::Logger::SetMinimumLevel(*logLevel);
 
         try
         {
