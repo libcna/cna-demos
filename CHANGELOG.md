@@ -94,6 +94,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   buttons, dead-zone modes, vibration, keyboard emulation and device information (CNAEXT); touch
   state with mouse emulation, capabilities and coordinate space, gestures, TouchLocation and
   TouchCollection values, the gesture queue with the CNAEXT EnqueueGesture.
+- CNAEXT device demos (12): raw joystick state, hot-plug events, device lists, force-feedback
+  rumble and effects, device motion sensors, battery state; controller light bar, motion sensors,
+  touchpad, trigger vibration, paddles and the share button.
+- CNA-DEMOS-ISSUE-009 recorded: `HapticDevice`'s inline default constructor needs a complete
+  platform type, so user code cannot create a closed device.
 - `CnaDemos/InputNames.hpp`: names of input enums (keys, buttons, gestures) for demo output.
 - CNA-DEMOS-ISSUE-008 recorded: sharp-runtime's `Prop.hpp`, reached from CNA's public headers,
   defines macros named `YES`, `NO`, `nothing` and similar.

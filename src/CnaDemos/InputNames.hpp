@@ -5,7 +5,10 @@
 
 #include "CNA/Input/GamePadButtonLabel.hpp"
 #include "CNA/Input/GamePadConnectionState.hpp"
+#include "CNA/Input/JoystickHatPosition.hpp"
+#include "CNA/Input/JoystickType.hpp"
 #include "CNA/Input/PowerState.hpp"
+#include "CNA/Input/Sensors.hpp"
 #include "Microsoft/Xna/Framework/Input/ButtonState.hpp"
 #include "Microsoft/Xna/Framework/Input/Buttons.hpp"
 #include "Microsoft/Xna/Framework/Input/GamePadType.hpp"
@@ -327,6 +330,59 @@ namespace CnaDemos
         case Circle: return "Circle";
         case Square: return "Square";
         case Triangle: return "Triangle";
+        }
+        return "?";
+    }
+
+    [[nodiscard]] constexpr std::string_view Name(CNA::Input::JoystickTypeEXT value)
+    {
+        using enum CNA::Input::JoystickTypeEXT;
+        switch (value)
+        {
+        case Unknown: return "Unknown";
+        case Gamepad: return "Gamepad";
+        case Wheel: return "Wheel";
+        case ArcadeStick: return "ArcadeStick";
+        case FlightStick: return "FlightStick";
+        case DancePad: return "DancePad";
+        case Guitar: return "Guitar";
+        case DrumKit: return "DrumKit";
+        case ArcadePad: return "ArcadePad";
+        case Throttle: return "Throttle";
+        }
+        return "?";
+    }
+
+    [[nodiscard]] constexpr std::string_view Name(CNA::Input::JoystickHatPositionEXT value)
+    {
+        using enum CNA::Input::JoystickHatPositionEXT;
+        switch (value)
+        {
+        case Centered: return "Centered";
+        case Up: return "Up";
+        case Right: return "Right";
+        case Down: return "Down";
+        case Left: return "Left";
+        case RightUp: return "RightUp";
+        case RightDown: return "RightDown";
+        case LeftUp: return "LeftUp";
+        case LeftDown: return "LeftDown";
+        }
+        return "?";
+    }
+
+    [[nodiscard]] constexpr std::string_view Name(CNA::Input::SensorTypeEXT value)
+    {
+        using enum CNA::Input::SensorTypeEXT;
+        switch (value)
+        {
+        case Unknown: return "Unknown";
+        case Accelerometer: return "Accelerometer";
+        case Gyroscope: return "Gyroscope";
+        case AccelerometerLeft: return "AccelerometerLeft";
+        case GyroscopeLeft: return "GyroscopeLeft";
+        case AccelerometerRight: return "AccelerometerRight";
+        case GyroscopeRight: return "GyroscopeRight";
         }
         return "?";
     }

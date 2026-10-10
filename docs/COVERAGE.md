@@ -6,7 +6,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**235 demos** in 8 categories. Kinds: console 98, game 136, standalone 1. Automation: automated 215, manual 2, smoke-only 18.
+**247 demos** in 8 categories. Kinds: console 99, game 147, standalone 1. Automation: automated 217, manual 2, smoke-only 28.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -15,7 +15,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | game | 25 | 22 | 2 | 1 | 21 / 3 / 0 | 24 / 0 / 0 |
 | graphics | 99 | 99 | 0 | 0 | 95 / 3 / 1 | 95 / 3 / 1 |
-| input | 27 | 12 | 15 | 0 | 22 / 5 / 0 | 27 / 0 / 0 |
+| input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
 | math | 72 | 72 | 0 | 0 | 71 / 0 / 1 | 71 / 0 / 1 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 
@@ -62,6 +62,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 
 - `ButtonState` -- input.mouse.click_detection, input.mouse.get_state
 - `Buttons` -- input.gamepad.state_values
+- `Buttons::Misc1EXT` -- input.gamepad.extra_buttons
+- `Buttons::Paddle1EXT` -- input.gamepad.extra_buttons
+- `Buttons::Paddle2EXT` -- input.gamepad.extra_buttons
+- `Buttons::Paddle3EXT` -- input.gamepad.extra_buttons
+- `Buttons::Paddle4EXT` -- input.gamepad.extra_buttons
+- `Buttons::TouchPadEXT` -- input.gamepad.touchpad
 - `CNA::GraphicsCapability` -- graphics.device.supports_capability
 - `CNA::GraphicsRendererSelection::GetActive` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::GetAvailable` -- platform.renderer_selection.set_preferred
@@ -79,8 +85,52 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Input::Clipboard::SetTextEXT` -- input.clipboard.text
 - `CNA::Input::GamePadButtonLabelEXT` -- input.gamepad.device_info
 - `CNA::Input::GamePadConnectionStateEXT` -- input.gamepad.device_info
+- `CNA::Input::HapticDevice::CreateEffectEXT` -- input.haptics.effects
+- `CNA::Input::HapticDevice::DestroyEffectEXT` -- input.haptics.effects
+- `CNA::Input::HapticDevice::Dispose` -- input.haptics.rumble
+- `CNA::Input::HapticDevice::GetCapabilitiesEXT` -- input.haptics.effects, input.haptics.rumble
+- `CNA::Input::HapticDevice::GetEffectStatusEXT` -- input.haptics.effects
+- `CNA::Input::HapticDevice::GetNameEXT` -- input.haptics.rumble
+- `CNA::Input::HapticDevice::InitRumbleEXT` -- input.haptics.rumble
+- `CNA::Input::HapticDevice::IsEffectSupportedEXT` -- input.haptics.effects
+- `CNA::Input::HapticDevice::IsOpenEXT` -- input.haptics.rumble
+- `CNA::Input::HapticDevice::PlayRumbleEXT` -- input.haptics.rumble
+- `CNA::Input::HapticDevice::RunEffectEXT` -- input.haptics.effects
+- `CNA::Input::HapticDevice::SetGainEXT` -- input.haptics.effects
+- `CNA::Input::HapticDevice::StopAllEffectsEXT` -- input.haptics.effects
+- `CNA::Input::HapticDevice::StopRumbleEXT` -- input.haptics.rumble
+- `CNA::Input::HapticEffectEXT` -- input.haptics.effects
+- `CNA::Input::HapticEffectTypeEXT` -- input.haptics.effects
+- `CNA::Input::HapticFeatureEXT` -- input.haptics.effects
+- `CNA::Input::Haptics::GetHapticsEXT` -- input.devices.list, input.haptics.rumble
+- `CNA::Input::Haptics::IsMouseHapticEXT` -- input.devices.list, input.haptics.rumble
+- `CNA::Input::Haptics::OpenEXT` -- input.haptics.rumble
+- `CNA::Input::Haptics::OpenFromMouseEXT` -- input.haptics.rumble
+- `CNA::Input::InputDeviceInfoEXT` -- input.devices.list
+- `CNA::Input::InputDevices::GetKeyboardsEXT` -- input.devices.list
+- `CNA::Input::InputDevices::GetMiceEXT` -- input.devices.list
+- `CNA::Input::InputDevices::GetTouchDevicesEXT` -- input.devices.list
+- `CNA::Input::InputDevices::KeyboardConnectedEXT` -- input.devices.hot_plug
+- `CNA::Input::InputDevices::KeyboardDisconnectedEXT` -- input.devices.hot_plug
+- `CNA::Input::InputDevices::MouseConnectedEXT` -- input.devices.hot_plug
+- `CNA::Input::InputDevices::MouseDisconnectedEXT` -- input.devices.hot_plug
+- `CNA::Input::JoystickCapabilitiesEXT` -- input.joystick.raw_state
+- `CNA::Input::JoystickHatPositionEXT` -- input.joystick.raw_state
+- `CNA::Input::JoystickInfoEXT` -- input.joystick.raw_state
+- `CNA::Input::JoystickStateEXT` -- input.joystick.raw_state
+- `CNA::Input::JoystickTypeEXT` -- input.joystick.raw_state
+- `CNA::Input::Joysticks::ConnectedEXT` -- input.devices.hot_plug
+- `CNA::Input::Joysticks::DisconnectedEXT` -- input.devices.hot_plug
+- `CNA::Input::Joysticks::GetCapabilitiesEXT` -- input.joystick.raw_state
+- `CNA::Input::Joysticks::GetJoysticksEXT` -- input.devices.list, input.joystick.raw_state
+- `CNA::Input::Joysticks::GetStateEXT` -- input.joystick.raw_state
 - `CNA::Input::KeyModifiersEXT` -- input.keyboard.modifiers
-- `CNA::Input::PowerStateEXT` -- input.gamepad.device_info
+- `CNA::Input::Power::GetInfoEXT` -- input.power.battery
+- `CNA::Input::PowerStateEXT` -- input.gamepad.device_info, input.power.battery
+- `CNA::Input::SensorInfoEXT` -- input.devices.list
+- `CNA::Input::Sensors::GetAccelerometerEXT` -- input.sensors.motion
+- `CNA::Input::Sensors::GetGyroscopeEXT` -- input.sensors.motion
+- `CNA::Input::Sensors::GetSensorsEXT` -- input.devices.list, input.sensors.motion
 - `CNA::RendererLimit` -- graphics.device.capability_report
 - `CNA::getVersionMajor` -- core.version.version_string
 - `CNA::getVersionMinor` -- core.version.version_string
@@ -97,18 +147,37 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GameComponentCollection::IndexOf` -- game.components.collection_events
 - `GameComponentCollection::Remove` -- game.components.collection_events
 - `GamePad::ExcludeAxisDeadZone` -- input.gamepad.dead_zones
+- `GamePad::GetAccelerometerEXT` -- input.gamepad.motion_sensors
 - `GamePad::GetButtonLabelEXT` -- input.gamepad.device_info
 - `GamePad::GetConnectionStateEXT` -- input.gamepad.device_info
 - `GamePad::GetFirmwareVersionEXT` -- input.gamepad.device_info
 - `GamePad::GetGUIDEXT` -- input.gamepad.device_info
+- `GamePad::GetGyroEXT` -- input.gamepad.motion_sensors
 - `GamePad::GetNameEXT` -- input.gamepad.device_info
+- `GamePad::GetPathEXT` -- input.gamepad.device_info
 - `GamePad::GetPlayerIndexEXT` -- input.gamepad.device_info
 - `GamePad::GetPowerInfoEXT` -- input.gamepad.device_info
 - `GamePad::GetSerialEXT` -- input.gamepad.device_info
+- `GamePad::GetSteamHandleEXT` -- input.gamepad.device_info
+- `GamePad::GetTouchpadCountEXT` -- input.gamepad.touchpad
+- `GamePad::GetTouchpadFingerCountEXT` -- input.gamepad.touchpad
+- `GamePad::GetTouchpadFingerEXT` -- input.gamepad.touchpad
 - `GamePad::KeyboardEmulationEnabledEXT` -- input.gamepad.keyboard_emulation
 - `GamePad::LeftDeadZone` -- input.gamepad.dead_zones
 - `GamePad::RightDeadZone` -- input.gamepad.dead_zones
+- `GamePad::SetLightBarEXT` -- input.gamepad.light_bar
+- `GamePad::SetTriggerVibrationEXT` -- input.gamepad.trigger_vibration
 - `GamePad::TriggerThreshold` -- input.gamepad.dead_zones
+- `GamePadCapabilities::HasAccelerometerEXT` -- input.gamepad.motion_sensors
+- `GamePadCapabilities::HasGyroEXT` -- input.gamepad.motion_sensors
+- `GamePadCapabilities::HasLightBarEXT` -- input.gamepad.light_bar
+- `GamePadCapabilities::HasMisc1EXT` -- input.gamepad.extra_buttons
+- `GamePadCapabilities::HasPaddle1EXT` -- input.gamepad.extra_buttons
+- `GamePadCapabilities::HasPaddle2EXT` -- input.gamepad.extra_buttons
+- `GamePadCapabilities::HasPaddle3EXT` -- input.gamepad.extra_buttons
+- `GamePadCapabilities::HasPaddle4EXT` -- input.gamepad.extra_buttons
+- `GamePadCapabilities::HasTouchPadEXT` -- input.gamepad.touchpad
+- `GamePadCapabilities::HasTriggerVibrationMotorsEXT` -- input.gamepad.trigger_vibration
 - `GamePadDeadZone` -- input.gamepad.dead_zones
 - `GamePadType` -- input.gamepad.capabilities
 - `GestureSample::GestureSample` -- input.touch.gesture_queue

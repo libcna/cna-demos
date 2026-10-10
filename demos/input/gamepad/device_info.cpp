@@ -49,6 +49,8 @@ namespace
             "  serial \"" + GamePad::GetSerialEXT(player) + "\", firmware " +
                 std::to_string(GamePad::GetFirmwareVersionEXT(player)) + ", LED index " +
                 std::to_string(GamePad::GetPlayerIndexEXT(player)),
+            "  path " + GamePad::GetPathEXT(player) + ", Steam handle " +
+                std::to_string(GamePad::GetSteamHandleEXT(player)),
             "  " + labels,
         };
     }
@@ -109,7 +111,8 @@ CNA_DEMOS_GAME(DeviceInfoDemo, {
                    "GetButtonLabelEXT for the face buttons (Cross, Circle, ... on PlayStation pads).",
     .apis = {"GamePad::GetNameEXT", "GamePad::GetGUIDEXT", "GamePad::GetConnectionStateEXT",
              "GamePad::GetPowerInfoEXT", "GamePad::GetSerialEXT", "GamePad::GetFirmwareVersionEXT",
-             "GamePad::GetPlayerIndexEXT", "GamePad::GetButtonLabelEXT", "CNA::Input::GamePadButtonLabelEXT",
+             "GamePad::GetPlayerIndexEXT", "GamePad::GetPathEXT", "GamePad::GetSteamHandleEXT",
+             "GamePad::GetButtonLabelEXT", "CNA::Input::GamePadButtonLabelEXT",
              "CNA::Input::GamePadConnectionStateEXT", "CNA::Input::PowerStateEXT"},
     .tags = {"gamepad", "controller", "battery", "playstation", "button-prompts", "cnaext"},
     .automation = CnaDemos::Automation::SmokeOnly,

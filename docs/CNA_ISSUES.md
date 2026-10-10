@@ -243,6 +243,30 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0 with sharp-runtime 0.1.0 (`c20373b`), GCC 14.2, Linux.
 - **Status:** open (low impact, compile-time only); not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-009 -- `HapticDevice`'s default constructor cannot be used outside CNA
+
+- **Area:** input -- `CNA::Input::HapticDevice` (CNAEXT, `CNA/Input/HapticDevice.hpp`). The class
+  holds `std::unique_ptr<CNA::Platform::IPlatformHapticDevice>`, an incomplete type in the public
+  header, and declares `HapticDevice() = default;` inline. The destructor and the move operations
+  are defined in `HapticDevice.cpp`, where the type is complete; the default constructor is not.
+- **Demos:** `input.haptics.rumble`, `input.haptics.effects` hold the device in
+  `std::optional<HapticDevice>` (filled from `Haptics::OpenEXT`) and say why in a comment.
+- **Reproduction:**
+  ```cpp
+  #include "CNA/Input/HapticDevice.hpp"
+  int main() { CNA::Input::HapticDevice device; return device.IsOpenEXT() ? 1 : 0; }
+  ```
+- **Observed:** GCC 14: `invalid application of 'sizeof' to incomplete type
+  'CNA::Platform::IPlatformHapticDevice'` (`~unique_ptr` is needed by the inline constructor); the
+  same for a class with a `HapticDevice` member. The header documents the constructor as
+  "Constructs a closed haptic device".
+- **Expected:** a closed `HapticDevice` can be created by user code (for example as a member that
+  `Haptics::OpenEXT` later fills), like `MouseCursor`, whose default constructor is out of line.
+- **Suggested fix (low risk):** declare `HapticDevice();` in the header and define
+  `HapticDevice::HapticDevice() = default;` in `HapticDevice.cpp`.
+- **Environment:** CNA 0.1.0, GCC 14.2, Linux.
+- **Status:** open; not reported upstream yet.
+
 ---
 
 ## Resolved
