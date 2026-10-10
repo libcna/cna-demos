@@ -47,7 +47,10 @@ capability has a demo. See docs/PROJECT.md.
 
 * No SpriteFont asset yet → no on-screen text in demos (decision pending, PLAN.md §2).
 * Visual regression: screenshots exist, reference comparison not implemented (AUTOMATION.md §5).
-* CI workflow written but **not yet observed running on GitHub** (no run result available here).
+* CI on GitHub (ubuntu-24.04, `windowless` preset): runs 1-2 configured, built, validated and
+  smoke-ran every demo successfully; the CTest step failed because the discovery script used
+  `if(IN_LIST)` (needs CMP0057, unset in ctest script mode on CMake 3.x). Fixed with `list(FIND)`;
+  verified locally with ctest 3.28. Check the next run's result.
 * `windowless` preset: see build status below.
 
 ## 6. Demo counts

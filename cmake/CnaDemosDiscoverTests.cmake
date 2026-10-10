@@ -32,7 +32,10 @@ endif()
 
 string(REPLACE "\n" ";" _lines "${_output}")
 foreach(_renderer IN LISTS CNA_DEMOS_TEST_RENDERERS)
-    if(_renderer IN_LIST CNA_DEMOS_WINDOWLESS_RENDERERS)
+    # list(FIND), not if(IN_LIST): this script runs inside ctest, where CMake 3.x leaves policy
+    # CMP0057 (IN_LIST) unset.
+    list(FIND CNA_DEMOS_WINDOWLESS_RENDERERS "${_renderer}" _windowless_index)
+    if(NOT _windowless_index EQUAL -1)
         set(_display_label headless)
     else()
         set(_display_label display)
