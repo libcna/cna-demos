@@ -105,6 +105,16 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   that container paths stay inside the container.
 - CNA-DEMOS-ISSUE-010 recorded: storage reports argument and filesystem errors with
   `std::invalid_argument`/`std::filesystem::filesystem_error` instead of XNA's exception types.
+- Content demos (15): TextureProcessor parameters (colour key, premultiplied alpha against a loose
+  PNG, mipmaps, resize to a power of two), XNB textures with DXT compression, a Curve from CNJ, a
+  compiled WAV, ContentManager cache and Unload, one manager per level, missing assets, the CNAEXT
+  manifest, a custom LooseFileContentTypeReader, an OpenStream override and Unload disposal (the last
+  two expected failures).
+- `content_xnb/` and the `cna_demos_content_xnb` target: content compiled into XNA's XNB format.
+- CNA-DEMOS-ISSUE-011 (Unload does not dispose loaded assets), CNA-DEMOS-ISSUE-012 (Load<T> never
+  calls an OpenStream override) and CNA-DEMOS-ISSUE-013 (the manifest lists the pipeline's
+  bookkeeping files) and CNA-DEMOS-ISSUE-014 (before CNA's platform exists, the content root is the
+  working directory) recorded; ISSUE-010 extended to ContentManager::Load after Dispose.
 - `CnaDemos/InputNames.hpp`: names of input enums (keys, buttons, gestures) for demo output.
 - CNA-DEMOS-ISSUE-008 recorded: sharp-runtime's `Prop.hpp`, reached from CNA's public headers,
   defines macros named `YES`, `NO`, `nothing` and similar.

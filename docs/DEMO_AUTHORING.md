@@ -137,7 +137,10 @@ or document a third-party file in `THIRD_PARTY_NOTICES.md`. List it in `.assets`
 
 Content that XNA would compile first (SpriteFonts, and later effects or models) goes under
 `content/` and is built by CNA's `cna-content` into the same assets directory; choose a processor
-in `content/.cna-content.json` when the file extension does not imply it. Load it by name like any
+in `content/.cna-content.json` when the file extension does not imply it, and set processor
+parameters there (for textures: `colorKey`, `premultiplyAlpha`, `generateMipmaps`,
+`resizeToPowerOfTwo`; see the `content.texture_processor.*` demos). Sources that must be compiled to
+XNA's XNB format instead go under `content_xnb/` and load as `xnb/<name>`. Load it by name like any
 XNA game (`Content.Load<SpriteFont>("fonts/pixel_font")`) and list the *compiled* file in
 `.assets` (`"fonts/pixel_font.cnb"`). The shared font for on-screen text is `fonts/pixel_font`
 (printable ASCII, LineSpacing 18, crisp with `SamplerState::PointClamp`).

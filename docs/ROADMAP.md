@@ -125,7 +125,13 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   targets (`MorphTargetEXT`), glTF cameras and punctual lights, `GltfImportReportEXT`. ≈ 15
   Uses CNA's own Ms-PL glTF corpus files (decide asset policy first, see PLAN.md).
 
-## Phase 8 -- content ⬜ (1 pilot demo)
+## Phase 8 -- content 🟨 (16 demos; remaining below)
+- ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
+  DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
+  managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
+  manifest, custom loose-file reader. Remaining: XNB SpriteFont/SoundEffect/Curve, CNJ texture and
+  sprite font, `.contentproj` import (`CONTENT_PROJECT`), custom pipeline components and
+  `RegisterCnbLoaderEXT`, `ContentReader`/`ContentTypeReader` details.
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
   managers, `ContentLoadException`, loose files vs XNB vs CNB vs CNJ lookup order.
 - `content.xnb.*`: Texture2D, SoundEffect, SpriteFont, Model, Effect, TextureCube, Curve XNBs.

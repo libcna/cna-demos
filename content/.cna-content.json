@@ -4,6 +4,21 @@
   "assets": {
     "fonts/pixel_font.png": {
       "processor": "CNA.FontTextureProcessor"
+    },
+    "textures/keyed_ship.png": {
+      "parameters": {
+        "colorKey": { "type": "string", "value": "255,0,255" }
+      }
+    },
+    "textures/odd_size.png": {
+      "parameters": {
+        "resizeToPowerOfTwo": { "type": "bool", "value": true }
+      }
+    },
+    "textures/mipmapped_checker.png": {
+      "parameters": {
+        "generateMipmaps": { "type": "bool", "value": true }
+      }
     }
   }
 }

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MS-PL
-"""Regenerates the original procedural assets under assets/ and content/.
+"""Regenerates the original procedural assets under assets/, content/ and content_xnb/.
 
 assets/ holds files demos load as they are (PNG, WAV). content/ holds sources that CNA's content
-pipeline compiles at build time (cna_add_content), such as the pixel-font sheet.
+pipeline compiles at build time (cna_add_content) into CNA's own CNB format, such as the pixel-font
+sheet; content_xnb/ holds sources compiled into XNA's XNB format instead.
 
 Every file this script writes is original cna-demos content (no third-party
 input), so it is covered by the project's own licence. The generated files are
@@ -27,6 +28,7 @@ import pixel_font
 
 ROOT = Path(__file__).resolve().parent.parent / "assets"
 CONTENT_ROOT = Path(__file__).resolve().parent.parent / "content"
+CONTENT_XNB_ROOT = Path(__file__).resolve().parent.parent / "content_xnb"
 
 
 def save_png(image: Image.Image, relative: str, root: Path = ROOT) -> None:
@@ -81,6 +83,40 @@ def soft_circle(size: int) -> Image.Image:
     return image
 
 
+def keyed_ship(size: int) -> Image.Image:
+    """A small ship on a magenta (255, 0, 255) background -- the colour XNA's texture processor
+    keys out by default -- for the colour-key demo."""
+    image = Image.new("RGBA", (size, size), (255, 0, 255, 255))
+    draw = ImageDraw.Draw(image)
+    s = size / 64.0
+    draw.polygon([(32 * s, 4 * s), (56 * s, 56 * s), (32 * s, 44 * s), (8 * s, 56 * s)], fill=(200, 210, 230, 255))
+    draw.ellipse([26 * s, 20 * s, 38 * s, 34 * s], fill=(60, 140, 230, 255))
+    draw.rectangle([20 * s, 52 * s, 44 * s, 58 * s], fill=(255, 140, 40, 255))
+    return image
+
+
+def framed_gradient(width: int, height: int) -> Image.Image:
+    """A gradient with a one-pixel white frame: resizing shows in the frame's thickness."""
+    image = gradient(width, height)
+    draw = ImageDraw.Draw(image)
+    draw.rectangle([0, 0, width - 1, height - 1], outline=(255, 255, 255, 255))
+    return image
+
+
+def colour_wheel(size: int) -> Image.Image:
+    """Hues around the centre, white towards it: smooth colour that block compression approximates."""
+    image = Image.new("RGBA", (size, size))
+    pixels = image.load()
+    centre = (size - 1) / 2.0
+    for y in range(size):
+        for x in range(size):
+            angle = math.atan2(y - centre, x - centre)
+            radius = min(1.0, math.hypot(x - centre, y - centre) / centre)
+            channel = [0.5 + 0.5 * math.cos(angle - k * 2.0 * math.pi / 3.0) for k in range(3)]
+            pixels[x, y] = tuple(int(round(255 * (1.0 - radius + radius * c))) for c in channel) + (255,)
+    return image
+
+
 def sprite_strip(frame: int, frames: int) -> Image.Image:
     """A horizontal strip of `frames` square frames; frame i shows i + 1 vertical bars, so the
     current animation frame is readable on screen."""
@@ -121,8 +157,9 @@ def font_sheet(scale: int, columns: int = 16) -> Image.Image:
     return image
 
 
-def tone(relative: str, frequency: float, seconds: float, rate: int = 22050, volume: float = 0.5) -> None:
-    path = ROOT / relative
+def tone(relative: str, frequency: float, seconds: float, rate: int = 22050, volume: float = 0.5,
+         root: Path = ROOT) -> None:
+    path = root / relative
     path.parent.mkdir(parents=True, exist_ok=True)
     frames = int(rate * seconds)
     fade = int(rate * 0.01)  # 10 ms fade in/out avoids clicks
@@ -136,7 +173,28 @@ def tone(relative: str, frequency: float, seconds: float, rate: int = 22050, vol
         out.setsampwidth(2)
         out.setframerate(rate)
         out.writeframes(bytes(samples))
-    print(f"wrote {path.relative_to(ROOT.parent)} ({frequency} Hz, {seconds} s, {rate} Hz mono)")
+    print(f"wrote {path.relative_to(root.parent)} ({frequency} Hz, {seconds} s, {rate} Hz mono)")
+
+
+def melody(relative: str, notes, note_seconds: float, rate: int = 22050, volume: float = 0.4) -> None:
+    """A short tune: each MIDI note number is a sine with a plucked (decaying) envelope."""
+    path = ROOT / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    per_note = int(rate * note_seconds)
+    attack = int(rate * 0.005)
+    samples = bytearray()
+    for note in notes:
+        frequency = 440.0 * 2.0 ** ((note - 69) / 12.0)
+        for i in range(per_note):
+            envelope = min(1.0, i / attack) * math.exp(-3.0 * i / per_note) * min(1.0, (per_note - 1 - i) / attack)
+            value = volume * envelope * math.sin(2.0 * math.pi * frequency * i / rate)
+            samples += struct.pack("<h", int(value * 32767))
+    with wave.open(str(path), "wb") as out:
+        out.setnchannels(1)
+        out.setsampwidth(2)
+        out.setframerate(rate)
+        out.writeframes(bytes(samples))
+    print(f"wrote {path.relative_to(ROOT.parent)} ({len(notes)} notes, {len(notes) * note_seconds} s)")
 
 
 def main() -> None:
@@ -146,8 +204,17 @@ def main() -> None:
     save_png(soft_circle(64), "textures/soft_circle.png")
     save_png(sprite_strip(32, 4), "textures/sprite_strip.png")
     save_png(font_sheet(2), "fonts/pixel_font.png", CONTENT_ROOT)
+    save_png(keyed_ship(64), "textures/keyed_ship.png", CONTENT_ROOT)
+    save_png(soft_circle(64), "textures/soft_circle_compiled.png", CONTENT_ROOT)
+    save_png(framed_gradient(100, 60), "textures/odd_size.png", CONTENT_ROOT)
+    save_png(checker(128, 8, (255, 255, 255, 255), (20, 20, 20, 255)), "textures/mipmapped_checker.png", CONTENT_ROOT)
+    save_png(colour_wheel(128), "textures/colour_wheel.png", CONTENT_XNB_ROOT)
+    save_png(colour_wheel(128), "textures/colour_wheel_dxt.png", CONTENT_XNB_ROOT)
+    tone("sounds/chime.wav", 880.0, 0.3, root=CONTENT_ROOT)
     tone("sounds/tone_440.wav", 440.0, 0.5)
     tone("sounds/tone_660.wav", 660.0, 0.25)
+    melody("music/rising.wav", [60, 64, 67, 72, 64, 67, 72, 76], 0.25)   # C major, upwards
+    melody("music/falling.wav", [81, 76, 72, 69, 76, 72, 69, 64], 0.25)  # A minor, downwards
 
 
 if __name__ == "__main__":

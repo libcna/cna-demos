@@ -6,12 +6,12 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**254 demos** in 9 categories. Kinds: console 106, game 147, standalone 1. Automation: automated 224, manual 2, smoke-only 28.
+**268 demos** in 9 categories. Kinds: console 110, game 157, standalone 1. Automation: automated 238, manual 2, smoke-only 28.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
 | audio | 9 | 7 | 1 | 1 | 8 / 0 / 0 | 8 / 0 / 0 |
-| content | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
+| content | 15 | 15 | 0 | 0 | 13 / 0 / 2 | 13 / 0 / 2 |
 | core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | game | 25 | 22 | 2 | 1 | 21 / 3 / 0 | 24 / 0 / 0 |
 | graphics | 99 | 99 | 0 | 0 | 95 / 3 / 1 | 95 / 3 / 1 |
@@ -23,14 +23,14 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 145 of 329** (44.1 %).
-- **Methods, properties, constructors and events named by a demo: 687 of 2326** (29.5 %).
+- **Methods, properties, constructors and events named by a demo: 692 of 2326** (29.8 %).
 - Fields and enum values named by a demo: 116 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
-| `Microsoft.Xna.Framework` | 35 / 42 | 268 / 643 | 34 / 78 |
+| `Microsoft.Xna.Framework` | 35 / 42 | 269 / 643 | 34 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 8 / 19 | 41 / 121 | 5 / 11 |
-| `Microsoft.Xna.Framework.Content` | 1 / 11 | 3 / 48 | 0 / 0 |
+| `Microsoft.Xna.Framework.Content` | 1 / 11 | 7 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 0 / 13 | 0 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 0 / 52 | 0 / 244 | 0 / 223 |
 | `Microsoft.Xna.Framework.Graphics` | 65 / 99 | 199 / 550 | 77 / 192 |
@@ -141,6 +141,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ColorMatrixEffect::ColorMatrixEffect` -- graphics.color_matrix_effect.sepia_and_invert
 - `ColorMatrixEffect::SetColorMatrix` -- graphics.color_matrix_effect.sepia_and_invert
 - `ColorMatrixEffect::SetColorOffset` -- graphics.color_matrix_effect.sepia_and_invert
+- `ContentLoadException` -- content.content_manager.missing_assets, content.content_manager.open_stream_override, content.custom.loose_file_reader
+- `ContentManager::GetContentManifest` -- content.content_manager.manifest
+- `ContentManager::GetXnbReaderUsageSummary` -- content.content_manager.manifest
+- `ContentManager::RegisterTypeReader` -- content.custom.loose_file_reader
+- `ContentManifestEntry` -- content.content_manager.manifest
+- `ContentManifestReaderUsage` -- content.content_manager.manifest
 - `Effect::Apply` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading
 - `FileAccess` -- storage.storage_container.file_modes
 - `FileMode` -- storage.storage_container.file_modes
@@ -199,6 +205,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Keyboard::GetScancodeFromNameEXT` -- input.keyboard.key_names
 - `Keyboard::GetScancodeNameEXT` -- input.keyboard.key_names
 - `LaunchParameters::ContainsKey` -- game.launch_parameters.parse
+- `LooseFileContentTypeReader::GetExtensions` -- content.custom.loose_file_reader
+- `LooseFileContentTypeReader::Read` -- content.custom.loose_file_reader
 - `Mouse::ClickedEXT` -- input.mouse.clicked_event
 - `Mouse::IsRelativeMouseModeEXT` -- input.mouse.relative_mode
 - `Mouse::SetCursor` -- input.mouse.cursors
@@ -232,6 +240,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `SpriteFont::SpriteFont` -- graphics.sprite_font.glyph_constructor
 - `StorageDevice::GetStorageRootEXT` -- storage.storage_device.storage_root
 - `StorageDevice::SetAppNameEXT` -- storage.storage_device.show_selector, storage.storage_device.storage_root
+- `SurfaceFormat` -- content.xnb.dxt_texture
 - `TextInputEXT::IsTextInputActive` -- input.text_input.typing
 - `TextInputEXT::SetInputRectangle` -- input.text_input.composition
 - `TextInputEXT::StartTextInput` -- input.text_input.composition, input.text_input.typing
@@ -239,6 +248,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `TextInputEXT::TextEditing` -- input.text_input.composition
 - `TextInputEXT::TextEditingCandidatesEXT` -- input.text_input.composition
 - `TextInputEXT::TextInput` -- input.text_input.composition, input.text_input.typing
+- `Texture2D::Format` -- content.xnb.dxt_texture
+- `Texture2D::LevelCount` -- content.texture_processor.mipmaps
 - `TouchLocationState` -- input.touch.get_state
 - `TouchPanel::EnqueueGesture` -- input.touch.gesture_queue
 - `TouchPanel::MouseTouchEmulationEnabledEXT` -- input.touch.get_state

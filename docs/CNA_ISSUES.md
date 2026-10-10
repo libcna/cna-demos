@@ -294,6 +294,94 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   sharp-runtime (`System::IO::IOException`, `System::ArgumentException`). Code ported from XNA
   that catches those types misses these errors. The containment refusals are a deliberate CNA
   hardening (documented in the source); their exception type could still be `ArgumentException`.
+- **Same pattern in `ContentManager`:** `Load<T>` on a disposed manager throws
+  `std::runtime_error("ContentManager has been disposed.")`, while XNA (and CNA's own
+  `ReadAsset<T>`) throws `ObjectDisposedException`.
+- **Environment:** CNA 0.1.0, GCC 14.2, Linux.
+- **Status:** open (low impact); not reported upstream yet.
+
+### CNA-DEMOS-ISSUE-011 -- `ContentManager::Unload` does not dispose loaded assets
+
+- **Area:** content -- `ContentManager::Unload()` (`ContentManager.cpp`) only clears the cache
+  (`loadedAssets_.clear()`). Its header says it "unloads all cached assets and frees the associated
+  resources". A texture handle the game still holds stays alive and usable.
+- **Demo:** `content.content_manager.unload_disposes` (knownIssue; expected failure).
+  `content.content_manager.cache_and_unload` shows the part that works: after `Unload`, the next
+  `Load` reads the file again.
+- **Reproduction:**
+  ```cpp
+  ContentManager level(&game.getServicesProperty(), "assets");
+  const Texture2D checker = level.Load<Texture2D>("textures/checker");
+  level.Unload();
+  checker.getIsDisposedProperty();   // false in CNA; true in XNA
+  ```
+- **Expected (XNA 4.0):** "Disposes all data that was loaded by this ContentManager" -- every
+  `IDisposable` asset it loaded is disposed, whether or not the game still references it. XNA
+  games rely on it to release a level's textures and sounds in one call; in CNA the memory is only
+  released when the game drops every handle (CNA's `Texture2D` copies are handles to one texture).
+  A related consequence of the handle model: two `Load` calls return two handles that share the
+  texture but not `GraphicsResource::Name`/`Tag`, where XNA returns the same object.
+- **Environment:** CNA 0.1.0, GCC 14.2, Linux, SOFTWARE and OPENGLES3.
+- **Status:** open; not reported upstream yet.
+
+### CNA-DEMOS-ISSUE-012 -- `ContentManager::Load<T>` never calls an `OpenStream` override
+
+- **Area:** content -- `ContentManager::Load<T>` (header template) resolves `.xnb`, `.cnb` and
+  registered loose-file readers directly on the filesystem (`TryReadAssetBytes`). Only the protected
+  `ReadAsset<T>` goes through the virtual `OpenStream`, and `Load<T>` (not virtual in C++) never
+  calls it. `ResourceContentManager` overrides only `OpenStream`, so its `Load<T>` does not read
+  resources either.
+- **Demo:** `content.content_manager.open_stream_override` (knownIssue; expected failure): a
+  derived manager serving an XNB texture from memory; `ReadAsset` works, `Load` does not.
+- **Reproduction:**
+  ```cpp
+  class PackContentManager : public ContentManager {
+      std::unique_ptr<System::IO::Stream> OpenStream(const std::string& name) override; // memory
+  };
+  pack.Load<Texture2D>("wheel");   // ContentLoadException: Failed to load image: pack/wheel
+                                   // (OpenStream is not called)
+  ```
+- **Expected (XNA 4.0):** `Load<T>` -> `ReadAsset<T>` -> `OpenStream`, so overriding `OpenStream`
+  is the documented way to load from pack files, archives, encrypted or network content, and
+  `ResourceContentManager.Load` reads embedded resources.
+- **Suggestion:** let `Load<T>` fall back to (or, for derived managers, prefer) `ReadAsset<T>`
+  through `OpenStream` when the filesystem tiers find nothing; the tier ladder could stay as the
+  base class's `OpenStream` behaviour.
+- **Environment:** CNA 0.1.0, GCC 14.2, Linux.
+- **Status:** open; not reported upstream yet.
+
+### CNA-DEMOS-ISSUE-013 -- The content manifest lists the content pipeline's bookkeeping files
+
+- **Area:** content -- `ContentManager::GetContentManifest()` (CNAEXT) reports
+  `.cna-content` (`.lock`) and `.cna-content-manifest` (`.json`), the files `cna-content` writes
+  into every output directory, as if they were assets.
+- **Demo:** `content.content_manager.manifest` prints them (and says so in a comment).
+- **Expected:** only loadable assets; tools that walk the manifest (mod loaders, content checks)
+  otherwise have to know and filter CNA's internal file names.
+- **Environment:** CNA 0.1.0, Linux.
+- **Status:** open (low impact); not reported upstream yet.
+
+### CNA-DEMOS-ISSUE-014 -- Before the platform exists, the content root is the working directory
+
+- **Area:** content -- `ContentManager::TitleRootedDirectory()` resolves a relative
+  `RootDirectory` against the title path, else against the current platform's base path -- but
+  only if a platform already exists (`HasCurrentPlatform()`); otherwise against the working
+  directory. Nothing creates the platform until some call needs it (the first `Load` does, as a
+  side effect).
+- **Found by:** `content.content_manager.manifest`, first written as a console demo, which passed
+  when started from `bin/` and failed under CTest (another working directory). It is now a Game
+  demo, the context where a platform always exists.
+- **Reproduction (console program started from another directory):**
+  ```cpp
+  ContentManager content(nullptr, "assets");
+  content.GetContentManifest().size();      // 0 -- scanned <cwd>/assets
+  (void)content.Load<Curve>("curves/bounce"); // works; creates the platform
+  content.RefreshContentManifest();
+  content.GetContentManifest().size();      // 21 -- now <executable dir>/assets
+  ```
+- **Expected:** the same root for every call, independent of call order -- XNA resolves content
+  under `TitleContainer`/`TitleLocation.Path` (CNA's own comment says so) regardless of what ran
+  before. Tools and tests that use a `ContentManager` without a `Game` are affected.
 - **Environment:** CNA 0.1.0, GCC 14.2, Linux.
 - **Status:** open (low impact); not reported upstream yet.
 

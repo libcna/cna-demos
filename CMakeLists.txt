@@ -97,6 +97,14 @@ cna_add_content(TARGET cna_demos_content
     OUTPUT_DIR "${CNA_DEMOS_OUTPUT_DIR}/assets"
     ${_cna_demos_content_tool}
     QUIET)
+# content_xnb/ is compiled into XNA 4.0's own XNB format (what an XNA content project produced),
+# for the demos about XNB interoperability; ContentManager loads both formats by asset name.
+cna_add_content(TARGET cna_demos_content_xnb
+    SOURCE_DIR content_xnb
+    OUTPUT_DIR "${CNA_DEMOS_OUTPUT_DIR}/assets/xnb"
+    FORMAT xnb
+    ${_cna_demos_content_tool}
+    QUIET)
 
 # -----------------------------------------------------------------------------
 # The cna-demos executable: CLI + interactive terminal browser.
@@ -110,7 +118,7 @@ target_link_libraries(cna-demos PRIVATE cna_demos_framework ${CNA_DEMOS_CATEGORY
 set_target_properties(cna-demos PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CNA_DEMOS_OUTPUT_DIR}")
 cna_demos_apply_warnings(cna-demos)
 cna_demos_finalize_executable(cna-demos)
-add_dependencies(cna-demos cna_demos_assets cna_demos_content)
+add_dependencies(cna-demos cna_demos_assets cna_demos_content cna_demos_content_xnb)
 
 # -----------------------------------------------------------------------------
 # Standalone demos (standalone/<demo-id>/), the documented exception.
