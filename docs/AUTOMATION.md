@@ -49,9 +49,11 @@ cna-demos --smoke --renderer SOFTWARE         # windowless CPU rasteriser, no di
 disables Escape handling; `--frames N` overrides the limit. Determinism inputs:
 
 * `--seed N` (default 12345) is the only seed demos use (`Context().Seed()`).
-* Game demos keep XNA's default fixed time step (60 Hz `TargetElapsedTime`), so `GameTime` advances
-  by the same amount every update regardless of machine speed. Demos animate from `GameTime` or
-  frame counts, never from the wall clock.
+* Game demos keep XNA's default fixed time step (60 Hz `TargetElapsedTime`), so every Update advances
+  `GameTime` by the same step. The number of Updates per drawn frame is **not** fixed, though: when
+  a frame is late the loop runs catch-up Updates, so the game time reached at frame N depends on
+  machine speed. Animated demos are therefore not `deterministic` (verified: the same rotation
+  demo captured at frame 20 shows different angles on SOFTWARE and OPENGLES3).
 * No demo uses the network or user files unless that is the demonstrated feature (and then it is
   classified accordingly).
 
@@ -121,7 +123,11 @@ for each deterministic demo D and renderer R:
 Design decisions already taken to keep this cheap:
 
 * the capture frame is the demo's `frames` value, fixed in metadata;
-* fixed time step + seeded randomness make the frame reproducible;
+* only demos marked `deterministic` (static scenes, seeded randomness) are compared; making
+  GameTime-driven animation comparable would need a virtual clock -- e.g. a CNA
+  `CNA::Platform::IPlatform` decorator passed to `Game(std::unique_ptr<IPlatform>)` whose
+  performance counter advances exactly one step per Update. Not built: it depends on the
+  internals of `Game::Tick`'s waiting loop and is worth doing only with CNA's maintainers;
 * references are per renderer (renderers legitimately differ in rasterisation details);
 * the comparison tool can be a small CNA-free program or script; references belong in a separate
   directory (`references/<renderer>/<id>.png`) with a README describing how they were approved.

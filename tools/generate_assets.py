@@ -61,6 +61,36 @@ def gradient(width: int, height: int) -> Image.Image:
     return image
 
 
+def soft_circle(size: int) -> Image.Image:
+    """White disc whose alpha falls off smoothly towards the edge (straight, not premultiplied,
+    alpha -- what an image editor saves)."""
+    image = Image.new("RGBA", (size, size))
+    pixels = image.load()
+    centre = (size - 1) / 2.0
+    for y in range(size):
+        for x in range(size):
+            d = math.hypot(x - centre, y - centre) / (size / 2.0)
+            alpha = max(0.0, min(1.0, (1.0 - d) * 2.0))
+            pixels[x, y] = (255, 255, 255, int(round(alpha * 255)))
+    return image
+
+
+def sprite_strip(frame: int, frames: int) -> Image.Image:
+    """A horizontal strip of `frames` square frames; frame i shows i + 1 vertical bars, so the
+    current animation frame is readable on screen."""
+    image = Image.new("RGBA", (frame * frames, frame), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    colors = [(230, 80, 80, 255), (80, 200, 90, 255), (80, 120, 230, 255), (230, 200, 60, 255)]
+    for i in range(frames):
+        x0 = i * frame
+        draw.rectangle([x0 + 1, 1, x0 + frame - 2, frame - 2], outline=colors[i % len(colors)], width=2)
+        bar = max(2, frame // 10)
+        for b in range(i + 1):
+            bx = x0 + 6 + b * (bar * 2)
+            draw.rectangle([bx, 8, bx + bar - 1, frame - 9], fill=colors[i % len(colors)])
+    return image
+
+
 def tone(relative: str, frequency: float, seconds: float, rate: int = 22050, volume: float = 0.5) -> None:
     path = ROOT / relative
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -83,6 +113,8 @@ def main() -> None:
     save_png(checker(64, 8, (255, 255, 255, 255), (72, 61, 139, 255)), "textures/checker.png")
     save_png(arrow(64), "textures/arrow.png")
     save_png(gradient(128, 128), "textures/gradient.png")
+    save_png(soft_circle(64), "textures/soft_circle.png")
+    save_png(sprite_strip(32, 4), "textures/sprite_strip.png")
     tone("sounds/tone_440.wav", 440.0, 0.5)
     tone("sounds/tone_660.wav", 660.0, 0.25)
 

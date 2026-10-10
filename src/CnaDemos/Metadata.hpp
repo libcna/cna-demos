@@ -120,8 +120,10 @@ namespace CnaDemos
          */
         int frames = 0;
         /**
-         * True when the picture at a given frame number depends only on that number (no wall
-         * clock, no unseeded randomness): such a demo is a candidate for screenshot regression.
+         * True when the captured frame is identical on every run and machine: a candidate for
+         * screenshot regression. Static scenes qualify; animation driven by GameTime does not,
+         * because the fixed-step loop runs extra catch-up Updates whenever a frame is late, so
+         * the game time reached at frame N depends on machine speed.
          */
         bool deterministic = false;
         /** Files the demo loads, relative to assets/. Validated to exist. */

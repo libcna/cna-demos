@@ -28,6 +28,8 @@ images, sounds, fonts or models are included.
 | `assets/textures/checker.png` | 64x64 checkerboard | generated, original |
 | `assets/textures/arrow.png` | 64x64 arrow with an orientation marker | generated, original |
 | `assets/textures/gradient.png` | 128x128 colour gradient | generated, original |
+| `assets/textures/soft_circle.png` | 64x64 white disc, soft straight-alpha edge | generated, original |
+| `assets/textures/sprite_strip.png` | 128x32 strip of four animation frames | generated, original |
 | `assets/sounds/tone_440.wav` | 0.5 s 440 Hz sine, 22050 Hz mono PCM16 | generated, original |
 | `assets/sounds/tone_660.wav` | 0.25 s 660 Hz sine, 22050 Hz mono PCM16 | generated, original |
 

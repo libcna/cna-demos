@@ -44,6 +44,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   PreparingDeviceSettings, device events, Reach/HiDef profile, vertical sync, full screen (manual),
   window title/client bounds/resizing, IsMouseVisible/InactiveSleepTime, LaunchParameters,
   TitleContainer.
+- SpriteBatch demos (14): destination/source rectangles, sprite-sheet animation, tint and fade,
+  rotation/origin, scale, SpriteEffects flips, layer depth and sort modes, blend states, straight-alpha
+  loose PNGs (NonPremultiplied), point/linear sampling, wrap tiling, transform-matrix camera.
+- `tools/contact_sheet.py`: captures Game demos on a renderer into one labelled image for review.
+- `deterministic` now means "identical capture on every machine"; GameTime-driven animation is
+  excluded (catch-up Updates make game time at frame N machine-dependent).
 - The runner calls `Dispose()` after `Run()` (XNA's `using` pattern), so demos' `UnloadContent`
   runs while the demo object is alive.
 - CNA-DEMOS-ISSUE-002 recorded: `Curve::Evaluate` with Step keys compares the absolute position

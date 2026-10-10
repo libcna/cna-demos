@@ -102,7 +102,7 @@ Do not present the frame yourself: `Game::EndDraw()` presents once per frame, as
 | `automation` | no (`Automated`) | `Automated`: an unattended run checks the feature. `SmokeOnly`: an unattended run only proves start-up/shutdown (input demos). `Manual`: cannot run unattended (needs hardware, a service, a person from the start) |
 | `needs` | no | `Need::ThreeD`, `Need::Audio`, `Need::Window`, ... combined with `|`. Unmet graphics needs and missing audio hardware end the run as SKIPPED with a reason. Input needs document that a person is required |
 | `frames` | no (60) | frames an automated Game run draws |
-| `deterministic` | no (false) | the image at frame N depends only on N -- a screenshot-regression candidate. Animate from frame counts or `GameTime` under the fixed time step, never from the wall clock |
+| `deterministic` | no (false) | the captured frame is identical on every run and machine -- a screenshot-regression candidate. True for static scenes; **not** for GameTime-driven animation (catch-up Updates make game time at frame N machine-dependent). Never derive images from the wall clock or unseeded randomness |
 | `assets` | no | files under `assets/` the demo loads (validated) |
 | `restrictions` | no | renderer/platform restrictions and *why* |
 | `knownIssue` | no | `CNA-DEMOS-ISSUE-NNN` when a recorded CNA defect makes the demo fail (section 11) |
