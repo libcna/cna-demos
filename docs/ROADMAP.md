@@ -144,7 +144,7 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
 - `media.*`: `Song` + `MediaPlayer` (play, pause, volume, repeat, state events), `MediaLibrary`,
   `Video`/`VideoPlayer` (needs `CNA_ENABLE_VIDEO`). ≈ 25
 
-## Phase 10 -- input ⬜ (1 pilot demo)
+## Phase 10 -- input 🟨 (15 demos: keyboard, mouse, text input, clipboard; gamepad and touch next)
 - Keyboard: state, edge detection (pressed this frame), modifiers, `GetPressedKeys`.
 - Mouse: position, buttons, scroll wheel (vertical/horizontal CNAEXT), `SetPosition`,
   `MouseCursor`, relative mode (CNAEXT).

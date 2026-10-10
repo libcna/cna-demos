@@ -85,6 +85,14 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - Audio demos (7): SoundEffect from PCM, Play with volume/pitch/pan and MasterVolume, instance
   playback state, looping, volume/pitch/pan ranges, Apply3D panning (smoke-only),
   DynamicSoundEffectInstance streaming, microphone input level (manual).
+- Input demos (14): key pressed/released by state comparison, KeyboardState values and replay,
+  key names and layouts (CNAEXT), modifier and lock keys (CNAEXT); mouse state, clicks and
+  dragging, SetPosition and mouse look, relative mode, cursor shapes and a cursor from a texture,
+  the ClickedEXT event; typing with TextInputEXT, input-method composition; clipboard text and
+  MIME data formats (CNAEXT).
+- `CnaDemos/InputNames.hpp`: names of input enums (keys, buttons, gestures) for demo output.
+- CNA-DEMOS-ISSUE-008 recorded: sharp-runtime's `Prop.hpp`, reached from CNA's public headers,
+  defines macros named `YES`, `NO`, `nothing` and similar.
 - Custom shader demos (2): toon shading with a GLSL `ShaderEffect`, a grayscale sprite shader
   through `SpriteBatch::Begin`; `ColorMatrixEffect` sepia/negative on SOFTWARE.
 - CNA-DEMOS-ISSUE-007 recorded: GPU renderers silently ignore `ColorMatrixEffect`.

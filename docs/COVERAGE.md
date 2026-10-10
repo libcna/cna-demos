@@ -6,7 +6,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**209 demos** in 8 categories. Kinds: console 93, game 115, standalone 1. Automation: automated 203, manual 2, smoke-only 4.
+**223 demos** in 8 categories. Kinds: console 95, game 127, standalone 1. Automation: automated 208, manual 2, smoke-only 13.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -15,14 +15,14 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | game | 25 | 22 | 2 | 1 | 21 / 3 / 0 | 24 / 0 / 0 |
 | graphics | 99 | 99 | 0 | 0 | 95 / 3 / 1 | 95 / 3 / 1 |
-| input | 1 | 0 | 1 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
+| input | 15 | 5 | 10 | 0 | 10 / 5 / 0 | 15 / 0 / 0 |
 | math | 72 | 72 | 0 | 0 | 71 / 0 / 1 | 71 / 0 / 1 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 129 of 329** (39.2 %).
-- **Methods, properties, constructors and events named by a demo: 555 of 2326** (23.9 %).
+- **Types with at least one demo: 131 of 329** (39.8 %).
+- **Methods, properties, constructors and events named by a demo: 571 of 2326** (24.5 %).
 - Fields and enum values named by a demo: 116 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
@@ -34,7 +34,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.GamerServices` | 0 / 52 | 0 / 244 | 0 / 223 |
 | `Microsoft.Xna.Framework.Graphics` | 65 / 99 | 199 / 550 | 77 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
-| `Microsoft.Xna.Framework.Input` | 2 / 17 | 3 / 113 | 0 / 202 |
+| `Microsoft.Xna.Framework.Input` | 4 / 17 | 19 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 0 / 8 | 0 / 48 | 0 / 15 |
 | `Microsoft.Xna.Framework.Media` | 0 / 24 | 0 / 192 | 0 / 8 |
 | `Microsoft.Xna.Framework.Net` | 0 / 23 | 0 / 127 | 0 / 22 |
@@ -50,7 +50,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 - `Microsoft.Xna.Framework.Design`: BoundingBoxConverter, BoundingSphereConverter, ColorConverter, MathTypeConverter, MatrixConverter, PlaneConverter, PointConverter, QuaternionConverter, RayConverter, RectangleConverter, Vector2Converter, Vector3Converter, Vector4Converter
 - `Microsoft.Xna.Framework.GamerServices`: Achievement, AchievementCollection, AvatarAnimation, AvatarAnimationPreset, AvatarBodyType, AvatarBone, AvatarDescription, AvatarExpression, AvatarEye, AvatarEyebrow, AvatarMouth, AvatarRenderer, AvatarRendererState, ControllerSensitivity, FriendCollection, FriendGamer, GameDefaults, GameDifficulty, GameUpdateRequiredException, Gamer, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPresence, GamerPresenceMode, GamerPrivilegeException, GamerPrivilegeSetting, GamerPrivileges, GamerProfile, GamerServicesComponent, GamerServicesDispatcher, GamerServicesNotAvailableException, GamerZone, Guide, GuideAlreadyVisibleException, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardEntry, LeaderboardIdentity, LeaderboardKey, LeaderboardOutcome, LeaderboardReader, LeaderboardWriter, MessageBoxIcon, NetworkException, NetworkNotAvailableException, NotificationPosition, PropertyDictionary, RacingCameraAngle, SignedInEventArgs, SignedInGamer, SignedInGamerCollection, SignedOutEventArgs
 - `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, DynamicIndexBuffer, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectParameterClass, EffectParameterType, EffectPassCollection, GraphicsDeviceStatus, IEffectFog, IEffectLights, IEffectMatrices, IGraphicsDeviceService, IVertexType, Model, ModelBone, ModelBoneCollection, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMesh, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPart, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, OcclusionQuery, RenderTargetBinding, RenderTargetCube, Texture3D, VertexBufferBinding, VertexPositionColorTexture
-- `Microsoft.Xna.Framework.Input`: ButtonState, Buttons, GamePad, GamePadButtons, GamePadCapabilities, GamePadDPad, GamePadDeadZone, GamePadState, GamePadThumbSticks, GamePadTriggers, GamePadType, KeyState, Keys, Mouse, MouseState
+- `Microsoft.Xna.Framework.Input`: ButtonState, Buttons, GamePad, GamePadButtons, GamePadCapabilities, GamePadDPad, GamePadDeadZone, GamePadState, GamePadThumbSticks, GamePadTriggers, GamePadType, KeyState, Keys
 - `Microsoft.Xna.Framework.Input.Touch`: GestureSample, GestureType, TouchCollection, TouchCollection.Enumerator, TouchLocation, TouchLocationState, TouchPanel, TouchPanelCapabilities
 - `Microsoft.Xna.Framework.Media`: Album, AlbumCollection, Artist, ArtistCollection, Genre, GenreCollection, MediaLibrary, MediaPlayer, MediaQueue, MediaSource, MediaSourceType, MediaState, Picture, PictureAlbum, PictureAlbumCollection, PictureCollection, Playlist, PlaylistCollection, Song, SongCollection, Video, VideoPlayer, VideoSoundtrackType, VisualizationData
 - `Microsoft.Xna.Framework.Net`: AvailableNetworkSession, AvailableNetworkSessionCollection, GameEndedEventArgs, GameStartedEventArgs, GamerJoinedEventArgs, GamerLeftEventArgs, HostChangedEventArgs, LocalNetworkGamer, NetworkGamer, NetworkMachine, NetworkSession, NetworkSessionEndReason, NetworkSessionEndedEventArgs, NetworkSessionJoinError, NetworkSessionJoinException, NetworkSessionProperties, NetworkSessionState, NetworkSessionType, PacketReader, PacketWriter, QualityOfService, SendDataOptions, WriteLeaderboardsEventArgs
@@ -60,11 +60,23 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 API names in demo metadata that are not documented XNA 4.0 members: CNA extensions (`CNA::...`, `...EXT` members) and anything misspelled. Review this list when adding demos -- a misspelled XNA name silently lowers the numbers above.
 
+- `ButtonState` -- input.mouse.click_detection, input.mouse.get_state
 - `CNA::GraphicsCapability` -- graphics.device.supports_capability
 - `CNA::GraphicsRendererSelection::GetActive` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::GetAvailable` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::IsLatched` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::SetPreferred` -- platform.renderer_selection.set_preferred
+- `CNA::Input::Clipboard::GetDataEXT` -- input.clipboard.data_formats
+- `CNA::Input::Clipboard::GetMimeTypesEXT` -- input.clipboard.data_formats
+- `CNA::Input::Clipboard::GetPrimarySelectionTextEXT` -- input.clipboard.text
+- `CNA::Input::Clipboard::GetTextEXT` -- input.clipboard.data_formats, input.clipboard.text, input.text_input.typing
+- `CNA::Input::Clipboard::HasDataEXT` -- input.clipboard.data_formats
+- `CNA::Input::Clipboard::HasPrimarySelectionTextEXT` -- input.clipboard.text
+- `CNA::Input::Clipboard::HasTextEXT` -- input.clipboard.data_formats, input.clipboard.text
+- `CNA::Input::Clipboard::SetDataEXT` -- input.clipboard.data_formats
+- `CNA::Input::Clipboard::SetPrimarySelectionTextEXT` -- input.clipboard.text
+- `CNA::Input::Clipboard::SetTextEXT` -- input.clipboard.text
+- `CNA::Input::KeyModifiersEXT` -- input.keyboard.modifiers
 - `CNA::RendererLimit` -- graphics.device.capability_report
 - `CNA::getVersionMajor` -- core.version.version_string
 - `CNA::getVersionMinor` -- core.version.version_string
@@ -87,7 +99,31 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GraphicsDevice::GetRendererLimitEXT` -- graphics.device.capability_report
 - `GraphicsDevice::GetShaderDialectEXT` -- graphics.shader_effect.toon_shading
 - `GraphicsDevice::SupportsCapability` -- graphics.device.supports_capability
+- `Keyboard::GetKeyFromNameEXT` -- input.keyboard.key_names
+- `Keyboard::GetKeyFromScancodeEXT` -- input.keyboard.key_names
+- `Keyboard::GetKeyNameEXT` -- input.keyboard.key_names
+- `Keyboard::GetModStateEXT` -- input.keyboard.modifiers
+- `Keyboard::GetScancodeFromNameEXT` -- input.keyboard.key_names
+- `Keyboard::GetScancodeNameEXT` -- input.keyboard.key_names
 - `LaunchParameters::ContainsKey` -- game.launch_parameters.parse
+- `Mouse::ClickedEXT` -- input.mouse.clicked_event
+- `Mouse::IsRelativeMouseModeEXT` -- input.mouse.relative_mode
+- `Mouse::SetCursor` -- input.mouse.cursors
+- `MouseCursor::Arrow` -- input.mouse.cursors
+- `MouseCursor::Crosshair` -- input.mouse.cursors
+- `MouseCursor::Dispose` -- input.mouse.cursors
+- `MouseCursor::FromTexture2D` -- input.mouse.cursors
+- `MouseCursor::Hand` -- input.mouse.cursors
+- `MouseCursor::IBeam` -- input.mouse.cursors
+- `MouseCursor::No` -- input.mouse.cursors
+- `MouseCursor::SizeAll` -- input.mouse.cursors
+- `MouseCursor::SizeNESW` -- input.mouse.cursors
+- `MouseCursor::SizeNS` -- input.mouse.cursors
+- `MouseCursor::SizeNWSE` -- input.mouse.cursors
+- `MouseCursor::SizeWE` -- input.mouse.cursors
+- `MouseCursor::Wait` -- input.mouse.cursors
+- `MouseCursor::WaitArrow` -- input.mouse.cursors
+- `MouseState::HorizontalScrollWheelValueEXT` -- input.mouse.get_state
 - `PbrEffect::DiffuseColor` -- graphics.pbr_effect.metallic_roughness
 - `PbrEffect::DirectionalLight0` -- graphics.pbr_effect.metallic_roughness
 - `PbrEffect::MetallicFactor` -- graphics.pbr_effect.metallic_roughness
@@ -100,6 +136,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading
 - `ShaderEffect::ShaderEffect` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading
 - `SpriteFont::SpriteFont` -- graphics.sprite_font.glyph_constructor
+- `TextInputEXT::IsTextInputActive` -- input.text_input.typing
+- `TextInputEXT::SetInputRectangle` -- input.text_input.composition
+- `TextInputEXT::StartTextInput` -- input.text_input.composition, input.text_input.typing
+- `TextInputEXT::StopTextInput` -- input.text_input.composition, input.text_input.typing
+- `TextInputEXT::TextEditing` -- input.text_input.composition
+- `TextInputEXT::TextEditingCandidatesEXT` -- input.text_input.composition
+- `TextInputEXT::TextInput` -- input.text_input.composition, input.text_input.typing
 - `VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned` -- graphics.skinned_effect.two_bones
 
 ## How these numbers are computed

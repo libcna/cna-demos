@@ -216,6 +216,33 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux, OPENGLES3 (EasyGL) under Xvfb.
 - **Status:** open; not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-008 -- Public headers leak unprefixed macros (`YES`, `NO`, `nothing`, ...)
+
+- **Area:** sharp-runtime (CNA's C#-runtime dependency) -- `SharpRuntime/Prop.hpp` defines
+  object-like macros with ordinary names at global scope: `YES`, `NO`, `nothing`, `static0`,
+  `static1`, `ref0`, `ref1`, `getter0`, `getter1`, `setter0`, `setter1`, `member0`, `member1`,
+  `constret0`, `constret1`, `constmet0`, `constmet1`, `IF_0`, `IF_1`, `DDATA`, `DGETTER`, ...
+  CNA's public `Microsoft/Xna/Framework/Content/ContentManager.hpp` includes it, so every
+  translation unit of a game (through `Game.hpp`) receives them.
+- **Demo:** found while writing `input.keyboard.state_values`, whose local variable `nothing`
+  (an empty `KeyboardState`) expanded to nothing; the variable was renamed.
+- **Reproduction:**
+  ```cpp
+  #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
+  enum class Answer { YES, NO };        // error: expected identifier before numeric constant
+  int main() { int nothing = 0; return nothing; }   // error: expected unqualified-id
+  ```
+- **Observed:** ordinary identifiers in user code fail to compile with confusing diagnostics
+  (GCC 14: "declaration does not declare anything", "expected identifier before numeric
+  constant"). An identifier used where an empty token sequence is still valid C++ would change
+  meaning silently.
+- **Expected:** a library's public headers should not reserve common words; XNA (C#) has no
+  macros at all, so ported code freely uses names such as `YES`/`NO` in enums.
+- **Suggestion:** prefix the helper macros (e.g. `SHARP_PROP_YES`) or keep them in an internal
+  header that public headers do not include, and `#undef` the helpers after use where possible.
+- **Environment:** CNA 0.1.0 with sharp-runtime 0.1.0 (`c20373b`), GCC 14.2, Linux.
+- **Status:** open (low impact, compile-time only); not reported upstream yet.
+
 ---
 
 ## Resolved

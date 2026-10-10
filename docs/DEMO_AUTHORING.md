@@ -118,6 +118,13 @@ Do not present the frame yourself: `Game::EndDraw()` presents once per frame, as
 * Use `ctx.Print()`/`Context().Print()` for output (`--quiet` silences it); avoid `std::cout`.
 * Randomness: seed from `Context().Seed()`. Time: prefer `GameTime` or frame counts.
 * Anonymous namespace for everything in the file; `final` on demo classes.
+* Batch runs execute many demos in one process. Undo process-wide changes in `UnloadContent`:
+  remove handlers from static events (`Mouse::ClickedEXT`, `TextInputEXT::TextInput`, ...) by
+  token, and restore global input state (cursor shape, relative mouse mode, gamepad keyboard
+  emulation, clipboard contents).
+* Shared helpers in `src/CnaDemos/` cover boilerplate only: `GraphicsNames.hpp` and
+  `InputNames.hpp` (enum names for output), `PixelChecks.hpp` (back-buffer pixel checks),
+  `MathChecks.hpp` (tolerances), `Geometry.hpp` (sphere and cube meshes).
 * No placeholders, no TODO demos, no "coming soon". A demo exists when it works.
 * English everywhere, except text that is itself the subject of a localisation/Unicode demo --
   mark those as intentional.
