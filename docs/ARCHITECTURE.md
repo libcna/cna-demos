@@ -1,0 +1,250 @@
+# Architecture
+
+This document describes how cna-demos is built and how it runs, in enough detail to change it
+safely. The rules for writing one demo are in [DEMO_AUTHORING.md](DEMO_AUTHORING.md); automation
+is in [AUTOMATION.md](AUTOMATION.md).
+
+## 1. Overview
+
+```text
+cna-demos (one executable)
+├── src/app/          main(), command line (Cli.cpp), terminal browser (Browser.cpp)
+├── src/framework/    registry, metadata, runner, DemoGame, catalog/JSON, validation, process helpers
+├── demos/<category>/ one OBJECT library per category, one small .cpp per demo
+└── standalone/<id>/  metadata.cpp compiled into cna-demos; main.cpp built as its own executable
+                          │
+                          ▼ links
+                     CNA (`CNA` umbrella target from a CNA source checkout, add_subdirectory)
+```
+
+* **One user-facing executable**, `cna-demos`, contains every in-process demo.
+* A demo is **one `.cpp` file** that registers itself with a macro. There is no central list of
+  demos to edit and no generated registry.
+* The **stable identity** of a demo is its textual ID (`graphics.sprite_batch.draw_texture`).
+  Numbers shown by the browser are positions in a menu and mean nothing else.
+* A few demos must own their process (renderer selection, process start-up, the C API, ...).
+  They are **standalone executables**, the documented exception.
+
+## 2. Repository layout
+
+| Path | Contents |
+|---|---|
+| `CMakeLists.txt`, `CMakePresets.json` | top-level build, presets |
+| `cmake/CnaDemosCna.cmake` | locating and adding CNA |
+| `cmake/CnaDemosCategories.cmake` | `cna_demos_add_category()`, `cna_demos_add_standalone()`, warnings, packaging |
+| `cmake/CnaDemosTests.cmake`, `CnaDemosDiscoverTests.cmake`, `CnaDemosCheckCatalog.cmake` | CTest integration |
+| `src/CnaDemos/*.hpp` | the framework API demos include (`CnaDemos/Demo.hpp` is the only one a demo needs) |
+| `src/framework/*.cpp` | framework implementation (static library `cna_demos_framework`) |
+| `src/app/*.cpp` | the executable's command line and browser |
+| `demos/CMakeLists.txt` | the list of top-level categories |
+| `demos/<category>/<subcategory...>/<name>.cpp` | the demos |
+| `standalone/<demo-id>/` | standalone demos (`metadata.cpp`, `main.cpp`, `CMakeLists.txt`) |
+| `assets/` | shared demo assets, copied next to the executables at build time |
+| `tools/` | developer tools (Python): asset generator, coverage report |
+| `docs/` | documentation; `docs/COVERAGE.md` is generated |
+
+The project never needs `src/` or `include/` restrictions from CNA: since CNA 0.1.0 its module
+validator is anchored on CNA's own root (the bug cna-template once worked around is fixed).
+
+## 3. CNA integration
+
+CNA exports no CMake package. Like cna-template and cna-examples, cna-demos adds a CNA **source
+checkout** with `add_subdirectory()` and links the `CNA` INTERFACE umbrella, which carries every
+framework module, the selected renderer(s), Sharp Runtime, include paths and definitions.
+
+* Location: `CNA_ROOT_DIR` (cache variable or environment variable), default `../cna`. CNA in turn
+  needs `../sharp-runtime` and, for the GL renderers, `../easy-gl` and `../meta-gl`, and its
+  submodules `third_party/SDL`, `SDL_image`, `SDL_mixer`, `draco`. CNA reports each missing piece
+  itself; cna-demos only checks that the CNA checkout exists.
+* CNA is added `EXCLUDE_FROM_ALL` (only what cna-demos links is built) and, with CMake >= 3.25,
+  `SYSTEM` (CNA headers do not trigger cna-demos' own warning flags).
+* Forced CNA options: `CNA_BUILD_TESTS=OFF`, `CNA_BUILD_EXAMPLES=OFF` (and easy-gl's). Defaults
+  changed by cna-demos: `CNA_CNAEXT=ON`, `CNA_DEVICES=ON` -- a demo collection wants the optional
+  modules. Each can be turned off; dependent categories then disappear.
+* Modules outside the umbrella (`CNA::Net`, `CNA::GamerServices`, `CNA::Phone`, `CNA::Design`)
+  are linked by the categories that need them (`demos/CMakeLists.txt`).
+* `CNA_SHARED_LIBRARY`: CNA links its runtime as `libcna.so` by default on Linux. With CMake older
+  than 3.29 that link fails (see [CNA_ISSUES.md](CNA_ISSUES.md) CNA-DEMOS-ISSUE-001), so
+  cna-demos defaults it to OFF there.
+
+### Renderers
+
+Renderer choice is CNA's own interface and is passed through untouched:
+
+* `CNA_GRAPHICS_RENDERER` -- the default renderer of the build;
+* `CNA_GRAPHICS_RENDERERS` -- optional list compiled into one binary (multi-renderer mode).
+
+At run time `cna-demos --renderer NAME` calls `CNA::GraphicsRendererSelection::SetPreferred()`
+before any device exists and exports `CNA_GRAPHICS_RENDERER=NAME` so standalone demos inherit it.
+Without the option CNA's own precedence applies (environment variable, then build default).
+
+CNA **latches** the renderer when the first `GraphicsDevice` of a process is created; one
+process therefore uses one renderer. Running demos on several renderers means several processes
+(the CTest per-demo tests do exactly that). Demos never branch on the renderer name; they ask
+`GraphicsDevice::SupportsCapability()` or declare a `Need` (section 6).
+
+### Graphics profile
+
+`main()` calls `CNA::SetProjectGraphicsProfileEXT(GraphicsProfile::HiDef)`, CNA's counterpart of an
+XNA project's "Graphics Profile" property. Demos therefore run under HiDef and the whole API is
+available (`GetBackBufferData`, used by `--screenshot`, is refused under Reach). A demo about the
+Reach profile selects it itself with `GraphicsDeviceManager::setGraphicsProfileProperty()`.
+
+## 4. Process model and demo kinds
+
+| Kind | Registered with | Runs | Use for |
+|---|---|---|---|
+| Console | `CNA_DEMOS_CONSOLE(Function, {...})` | `void Function(DemoContext&)` in-process, no Game, no window | math, content data, storage, logging, anything without a frame loop |
+| Game | `CNA_DEMOS_GAME(Class, {...})` | a `DemoGame` subclass, constructed, `Run()`, destroyed, in-process | everything that needs a GraphicsDevice or a frame loop |
+| Standalone | `CNA_DEMOS_STANDALONE({...})` in `standalone/<id>/metadata.cpp` | a separate executable started as a child process | process-wide state: renderer selection, start-up, custom entry points, the C API |
+
+In-process Game demos rely on CNA supporting several complete `Game` lifecycles one after another
+in one process (CNA tests this: `GameTest.UnloadContentWorksAcrossRepeatedGameInstancesInOneProcess`).
+The browser and `--run-all` therefore run Game demos back to back in one process and return to
+the menu afterwards. A crash (not an exception) still ends the process; CTest runs each demo in
+its own process for isolation.
+
+## 5. Registry and metadata
+
+### Registration
+
+`CnaDemos/Demo.hpp` defines the three macros. Each expands to a `const` registrar object in an
+anonymous namespace whose constructor adds a `RegisteredDemo` to `Registry::Instance()` during
+static initialisation. The registry is a function-local static, so initialisation order between
+translation units does not matter; registration order is unspecified and every query returns
+demos sorted by ID.
+
+Demo sources are compiled into **OBJECT libraries** (one per category, plus
+`cna_demos_standalone_metadata`). Object files are always linked, so the registrars cannot be
+dropped by the linker the way unreferenced members of a static library would be.
+
+### Metadata
+
+`CnaDemos::DemoInfo` (in `src/CnaDemos/Metadata.hpp`) is written by the author with designated
+initializers. Fields: `id`, `title`, `description`, `apis`, `tags`, `automation`, `needs`, `frames`,
+`deterministic`, `assets`, `restrictions`. Nothing is written twice:
+
+* **category** = first ID segment; **subcategory** = the segments between first and last;
+* **kind** = which macro registered the demo;
+* **source** = `__FILE__`, made repository-relative;
+* **executable** (standalone) = `cna-demo-` + ID with `.` replaced by `-`, the same rule in C++
+  (`StandaloneExecutableName`) and CMake (`cna_demos_add_standalone`).
+
+### ID rules (enforced by `cna-demos --validate`)
+
+* two or more `lower_snake_case` segments joined by `.`;
+* unique;
+* matches the source path: `demos/a/b/c.cpp` registers `a.b.c` or `a.b.c.<name>` (several closely
+  related demos may share one file); standalone demos register exactly their directory name;
+* a leaf: no demo ID is also the group of another demo (`a.b` and `a.b.c` cannot both be demos);
+* title without trailing period, description of at least 20 characters ending with a period, at
+  least one API, lower-case tags, existing assets.
+
+## 6. Demo lifecycle
+
+### Console demo
+
+`RunDemo()` creates a `DemoContext`, installs it as `DemoContext::Current()` and calls the
+function. The demo prints with `ctx.Print(...)`/`ctx.Out()` and records expectations with
+`ctx.Check(condition, "...")`.
+
+### Game demo
+
+1. The runner installs the context and calls the registered factory, which constructs the demo
+   class. `DemoGame`'s constructor reads `DemoContext::Current()`, creates the
+   `GraphicsDeviceManager`, sets `Content.RootDirectory = "assets"` and the window title.
+2. `Game::Run()` creates the device and calls `Initialize()`. `DemoGame::Initialize()` checks the
+   demo's declared `needs` against `GraphicsDevice::SupportsCapability()` (and, for `Need::Window`,
+   whether the renderer has a native window). An unmet need throws `SkipDemo`: the run ends as
+   **SKIPPED** with the reason, before `LoadContent()`.
+3. The demo's own `LoadContent()/Update()/Draw()` run as in any XNA game.
+4. `DemoGame::EndDraw()` counts frames. With a frame limit (automated runs, or `--frames`) it
+   saves the screenshot on the last frame if one was requested, presents, and calls `Exit()`.
+   Interactive runs end with Escape, gamepad Back, or closing the window.
+5. `Run()` returns, `UnloadContent()` has run, and the runner destroys the game. Destruction is
+   part of every run, so cleanup defects show up as failures or crashes.
+
+Exceptions from anywhere in this sequence end the run as **FAILED** with the message --
+except `SkipDemo`, and `NoAudioHardwareException` from a demo that declared `Need::Audio`
+(SKIPPED, because the environment truly lacks the documented requirement).
+
+### Standalone demo
+
+The runner starts `<exe-dir>/cna-demo-<id>` with `--automated` and `--frames N` as applicable
+and maps its exit code: 0 passed, 77 skipped, anything else failed. A missing executable (built
+with `CNA_DEMOS_BUILD_STANDALONE=OFF`) is NOT RUN, not passed.
+
+### Results and exit codes
+
+`RunStatus` is Passed, Failed, Skipped or NotRun. A single-demo run exits 0 / 1 / 77 / 1; batch
+runs exit 1 if anything failed. Usage errors exit 2.
+
+## 7. Categories and the CMake architecture
+
+```text
+cna_demos_framework (STATIC)  ← src/framework/*.cpp, links CNA
+cna_demos_cat_<category> (OBJECT, one per category) ← demos/<category>/**/*.cpp (GLOB_RECURSE CONFIGURE_DEPENDS)
+cna_demos_standalone_metadata (OBJECT) ← standalone/*/metadata.cpp
+cna-demos (EXECUTABLE) ← src/app/*.cpp + all of the above
+cna-demo-<id> (EXECUTABLE, one per standalone demo)
+cna_demos_assets (custom target) copies assets/ to <build>/bin/assets
+```
+
+* Categories are declared once each in `demos/CMakeLists.txt`, optionally with `REQUIRES <option>`
+  (e.g. `CNA_ENABLE_NET`) and `LIBRARIES <CNA target>`. A category whose requirement is off is
+  skipped with a status message and its demos are absent from that build's catalog.
+* Sources are found with `file(GLOB_RECURSE ... CONFIGURE_DEPENDS)`: sorted, deterministic,
+  re-checked on every build. Adding a demo never requires editing CMake.
+* There is exactly one `add_executable()` for all in-process demos, however many there are.
+* Everything is written to `<build>/bin/`, so the executable, standalone demos and `assets/` sit
+  together (CNA resolves content relative to the executable's directory, via
+  `TitleLocation`/SDL's base path).
+
+Scaling notes: the per-demo cost is one small translation unit. Build parallelism comes from
+Ninja; category OBJECT libraries keep per-target command lines short. Precompiled headers and
+unity builds are deliberately not used (unity builds would merge the anonymous namespaces that
+keep demos independent). Revisit with measurements when the collection is in the thousands.
+
+## 8. Assets
+
+* `assets/` holds shared, small, original assets organised by purpose (`textures/`, `sounds/`, ...).
+  A demo lists what it loads in `.assets`; `--validate` checks the files exist.
+* All current assets are generated by `tools/generate_assets.py` (deterministic output, committed).
+  Third-party assets are only allowed with licence and attribution in `THIRD_PARTY_NOTICES.md`.
+* Prefer procedural data inside the demo when the demo is not about loading; prefer a shared
+  asset over duplicating one.
+
+## 9. Command line, browser, catalog
+
+* `src/app/Cli.cpp` parses options (no third-party parser) and dispatches. `--help` is the
+  reference for the commands.
+* `src/app/Browser.cpp` builds the category tree from the IDs on every screen (no separate tree
+  data): Category → Subcategory → ... → Demo → information → run. It also offers `/search` and
+  typing an ID directly. Display names come from the ID segments with a small table of spellings
+  (`gltf` → `glTF`, `sprite_batch` → `SpriteBatch`).
+* `--catalog-json` writes schema `cna-demos-catalog/1`: versions, compiled-in renderers, and per
+  demo every metadata field plus derived category, subcategory, kind, source and executable.
+  It is the input of the coverage report and of any future documentation generator.
+* `--report FILE` writes schema `cna-demos-results/1` with one status per demo run.
+
+## 10. Extension points
+
+| To add | Do this |
+|---|---|
+| a demo | one `.cpp` under `demos/` ([DEMO_AUTHORING.md](DEMO_AUTHORING.md)) |
+| a category | a directory under `demos/` and one `cna_demos_add_category()` line |
+| a standalone demo | `standalone/<id>/` with `metadata.cpp`, `main.cpp`, `CMakeLists.txt` |
+| a metadata field | `DemoInfo`, catalog writer, `--info`, validation, docs -- in one change |
+| a `Need` | `Need` enum + `AllNeeds()` name; map it in `DemoGame::CheckNeeds()` if the device can answer |
+| screenshot regression | see [AUTOMATION.md](AUTOMATION.md) section 5 |
+| binding demos (C) | standalone demos (one C game per process); see [ROADMAP.md](ROADMAP.md) |
+
+## 11. Generated files
+
+Nothing generated is committed except:
+
+* `docs/COVERAGE.md` -- regenerate with `tools/coverage_report.py` (see the file's header);
+* `assets/*` -- regenerate with `tools/generate_assets.py`.
+
+Build-time generated files live only in the build tree (the CTest discovery wrapper
+`cna_demos_discover_tests.cmake`).

@@ -1,0 +1,90 @@
+# Builds cna-demos against the pinned CNA release with the windowless renderers
+# (SOFTWARE/HEADLESS/STUB) and runs the CLI tests and every demo on SOFTWARE.
+# No GPU and no display server are needed. See docs/AUTOMATION.md section 6.
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  # The CNA release cna-demos is built and tested against (HANDOFF.md "Dependencies").
+  CNA_REF: 10a4ef1cb4cd832f761536d77588000104947f8d             # CNA 0.1.0
+  SHARP_RUNTIME_REF: c20373bae5be1f02d1fe2fa33c4cbba8ad05e4a0   # sharp-runtime 0.1.0
+
+jobs:
+  windowless:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out cna-demos
+        uses: actions/checkout@v4
+        with:
+          path: cna-demos
+
+      - name: Check out CNA
+        uses: actions/checkout@v4
+        with:
+          repository: libcna/cna
+          ref: ${{ env.CNA_REF }}
+          path: cna
+
+      - name: Check out sharp-runtime
+        uses: actions/checkout@v4
+        with:
+          repository: libcna/sharp-runtime
+          ref: ${{ env.SHARP_RUNTIME_REF }}
+          path: sharp-runtime
+
+      - name: CNA submodules
+        run: git -C cna submodule update --init --depth 1 third_party/SDL third_party/SDL_image third_party/SDL_mixer third_party/draco
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build pkg-config ccache g++-14 \
+            libavcodec-dev libavformat-dev libavutil-dev libswresample-dev \
+            libcurl4-openssl-dev nlohmann-json3-dev libzstd-dev \
+            libx11-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxfixes-dev \
+            libxss-dev libxtst-dev libwayland-dev wayland-protocols libxkbcommon-dev \
+            libgl1-mesa-dev libegl-dev libasound2-dev libpulse-dev
+
+      - name: Configure
+        working-directory: cna-demos
+        run: cmake --preset windowless -DCMAKE_C_COMPILER=gcc-14 -DCMAKE_CXX_COMPILER=g++-14
+
+      - name: Build
+        working-directory: cna-demos
+        run: cmake --build --preset windowless -j4
+
+      - name: Validate the registry
+        working-directory: cna-demos
+        run: build/windowless/bin/cna-demos --validate
+
+      - name: Test
+        working-directory: cna-demos
+        env:
+          XDG_RUNTIME_DIR: /tmp/xdg-runtime
+        run: |
+          mkdir -p -m 700 "$XDG_RUNTIME_DIR"
+          ctest --preset windowless
+
+      - name: Smoke run report and catalog
+        if: always()
+        working-directory: cna-demos
+        env:
+          XDG_RUNTIME_DIR: /tmp/xdg-runtime
+          SDL_AUDIO_DRIVER: dummy
+        run: |
+          build/windowless/bin/cna-demos --smoke --quiet --renderer SOFTWARE --report results-software.json || true
+          build/windowless/bin/cna-demos --catalog-json > catalog.json
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cna-demos-results
+          path: |
+            cna-demos/results-software.json
+            cna-demos/catalog.json

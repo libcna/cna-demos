@@ -1,0 +1,240 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: MS-PL
+"""Generates docs/COVERAGE.md from the demo catalog.
+
+Developer tool -- not needed to build or run cna-demos. Inputs:
+
+  * the catalog, from the built executable (`cna-demos --catalog-json`);
+  * CNA's own inventory of the documented XNA 4.0 runtime surface,
+    <cna>/docs/xna-4-runtime-member-coverage.json (3627 members of 331 types);
+  * optionally, one or more run reports (`cna-demos --smoke --report FILE`),
+    each recorded for a renderer, to show which demos were actually executed.
+
+Usage:
+    python3 tools/coverage_report.py --exe build/bin/cna-demos \\
+        --cna-root ../cna [--results SOFTWARE=results-software.json ...] \\
+        [--output docs/COVERAGE.md]
+
+How demo metadata is matched against the XNA inventory is documented in
+docs/COVERAGE.md itself (section "How these numbers are computed").
+"""
+
+import argparse
+import collections
+import datetime
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+
+def load_catalog(exe: str) -> dict:
+    output = subprocess.run([exe, "--catalog-json"], check=True, capture_output=True, text=True).stdout
+    return json.loads(output)
+
+
+def strip_arity(name: str) -> str:
+    # "Load``1" -> "Load", "GamerCollection`1" -> "GamerCollection"
+    return name.split("`", 1)[0]
+
+
+def load_xna_inventory(cna_root: Path):
+    """Returns {type full name: {"members": {name: category}, "namespace": ns}}."""
+    path = cna_root / "docs" / "xna-4-runtime-member-coverage.json"
+    data = json.loads(path.read_text())
+    findings = data["member_coverage"]["findings"]
+    declared = {".".join(strip_arity(p) for p in f["declaring_type"].split(".")) for f in findings}
+
+    def namespace_of(full: str) -> str:
+        # Nested types appear as Outer.Inner; walk up while the prefix is itself a type.
+        parts = full.split(".")
+        while len(parts) > 1:
+            parts = parts[:-1]
+            if ".".join(parts) not in declared:
+                return ".".join(parts)
+        return full
+
+    types = {}
+    for finding in findings:
+        declaring = ".".join(strip_arity(p) for p in finding["declaring_type"].split("."))
+        entry = types.setdefault(declaring, {"members": {}, "namespace": namespace_of(declaring)})
+        # Overloads collapse into one member name; a constructor is "#ctor".
+        entry["members"].setdefault(strip_arity(finding["name"]), finding["category"])
+    return types
+
+
+def short_type(full: str) -> str:
+    # "Microsoft.Xna.Framework.Graphics.SpriteBatch" -> "SpriteBatch"; nested "A.B" -> "B"
+    return full.rsplit(".", 1)[-1]
+
+
+def demonstrated_members(catalog: dict, inventory: dict):
+    """Maps (type full name, member name) -> [demo ids] for every catalog API that names a
+    documented XNA member. Returns that map plus the API strings that matched nothing."""
+    by_short = collections.defaultdict(list)
+    for full in inventory:
+        by_short[short_type(full)].append(full)
+
+    hits = collections.defaultdict(list)
+    unmatched = collections.defaultdict(list)
+    for demo in catalog["demos"]:
+        for api in demo["apis"]:
+            if "::" not in api or api.startswith("CNA::"):
+                unmatched[api].append(demo["id"])
+                continue
+            type_name, member = api.rsplit("::", 1)
+            type_name = type_name.split("::")[-1]
+            matched = False
+            for full in by_short.get(type_name, []):
+                members = inventory[full]["members"]
+                candidate = "#ctor" if member == type_name else member
+                if candidate in members:
+                    hits[(full, candidate)].append(demo["id"])
+                    matched = True
+            if not matched:
+                unmatched[api].append(demo["id"])
+    return hits, unmatched
+
+
+def load_results(specs):
+    results = {}
+    for spec in specs or []:
+        renderer, _, path = spec.partition("=")
+        data = json.loads(Path(path).read_text())
+        results[renderer] = {r["id"]: r["status"] for r in data["results"]}
+    return results
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--exe", required=True, help="path to the built cna-demos executable")
+    parser.add_argument("--cna-root", required=True, help="path to the CNA source checkout")
+    parser.add_argument("--results", action="append", metavar="RENDERER=FILE",
+                        help="a run report written with --report, recorded for RENDERER")
+    parser.add_argument("--output", default="docs/COVERAGE.md")
+    args = parser.parse_args()
+
+    catalog = load_catalog(args.exe)
+    inventory = load_xna_inventory(Path(args.cna_root))
+    hits, unmatched = demonstrated_members(catalog, inventory)
+    results = load_results(args.results)
+    demos = catalog["demos"]
+
+    lines = []
+    add = lines.append
+    add("# CNA Demos coverage")
+    add("")
+    add("<!-- Generated by tools/coverage_report.py. Do not edit by hand; re-run the tool. -->")
+    add("")
+    add(f"Generated {datetime.date.today().isoformat()} from cna-demos {catalog['cnaDemosVersion']} "
+        f"built against CNA {catalog['cnaVersion']} (renderers compiled in: {', '.join(catalog['renderers'])}).")
+    add("")
+
+    # --- Demo counts ---------------------------------------------------------------
+    add("## Demos")
+    add("")
+    by_category = collections.Counter(d["category"] for d in demos)
+    by_automation = collections.Counter(d["automation"] for d in demos)
+    by_kind = collections.Counter(d["kind"] for d in demos)
+    add(f"**{len(demos)} demos** in {len(by_category)} categories. "
+        f"Kinds: " + ", ".join(f"{k} {v}" for k, v in sorted(by_kind.items())) + ". "
+        f"Automation: " + ", ".join(f"{k} {v}" for k, v in sorted(by_automation.items())) + ".")
+    add("")
+    header = "| Category | Demos | Automated | Smoke-only | Manual |"
+    if results:
+        header += "".join(f" Run on {r} (passed / skipped / failed) |" for r in results)
+    add(header)
+    add("|" + "---|" * (5 + len(results)))
+    for category in sorted(by_category):
+        members = [d for d in demos if d["category"] == category]
+        row = (f"| {category} | {len(members)} | "
+               f"{sum(d['automation'] == 'automated' for d in members)} | "
+               f"{sum(d['automation'] == 'smoke-only' for d in members)} | "
+               f"{sum(d['automation'] == 'manual' for d in members)} |")
+        for renderer, statuses in results.items():
+            got = collections.Counter(statuses.get(d["id"], "NOT IN REPORT") for d in members)
+            row += f" {got['PASSED']} / {got['SKIPPED']} / {got['FAILED']} |"
+        add(row)
+    add("")
+
+    # --- XNA surface ------------------------------------------------------------------
+    add("## XNA 4.0 API surface demonstrated")
+    add("")
+    namespaces = collections.defaultdict(lambda: {"types": 0, "types_hit": 0, "members": 0, "members_hit": 0,
+                                                  "fields": 0, "fields_hit": 0})
+    type_rows = []
+    for full, entry in sorted(inventory.items()):
+        ns = namespaces[entry["namespace"]]
+        ns["types"] += 1
+        hit_members = [m for m in entry["members"] if (full, m) in hits]
+        if hit_members:
+            ns["types_hit"] += 1
+        for member, category in entry["members"].items():
+            key = "fields" if category == "field" else "members"
+            ns[key] += 1
+            if (full, member) in hits:
+                ns[key + "_hit"] += 1
+        type_rows.append((full, entry, hit_members))
+
+    total = {k: sum(ns[k] for ns in namespaces.values()) for k in
+             ("types", "types_hit", "members", "members_hit", "fields", "fields_hit")}
+    add(f"- **Types with at least one demo: {total['types_hit']} of {total['types']}** "
+        f"({100.0 * total['types_hit'] / total['types']:.1f} %).")
+    add(f"- **Methods, properties, constructors and events named by a demo: {total['members_hit']} of "
+        f"{total['members']}** ({100.0 * total['members_hit'] / total['members']:.1f} %).")
+    add(f"- Fields and enum values named by a demo: {total['fields_hit']} of {total['fields']} "
+        f"(reported separately: a demo per enum value is not a goal).")
+    add("")
+    add("| Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |")
+    add("|---|---|---|---|")
+    for name in sorted(namespaces):
+        ns = namespaces[name]
+        add(f"| `{name}` | {ns['types_hit']} / {ns['types']} | {ns['members_hit']} / {ns['members']} | "
+            f"{ns['fields_hit']} / {ns['fields']} |")
+    add("")
+
+    add("### Types without a demo yet")
+    add("")
+    add("The backlog this report derives from CNA's own inventory. Grouped by namespace.")
+    add("")
+    missing = collections.defaultdict(list)
+    for full, entry, hit_members in type_rows:
+        if not hit_members:
+            missing[entry["namespace"]].append(full[len(entry["namespace"]) + 1:])
+    for name in sorted(missing):
+        add(f"- `{name}`: " + ", ".join(sorted(missing[name])))
+    add("")
+
+    # --- Non-XNA APIs -----------------------------------------------------------------------
+    add("## CNA-specific and unmatched API names")
+    add("")
+    add("API names in demo metadata that are not documented XNA 4.0 members: CNA extensions (`CNA::...`, "
+        "`...EXT` members) and anything misspelled. Review this list when adding demos -- a misspelled "
+        "XNA name silently lowers the numbers above.")
+    add("")
+    for api in sorted(unmatched):
+        add(f"- `{api}` -- {', '.join(sorted(unmatched[api]))}")
+    add("")
+
+    # --- Method -----------------------------------------------------------------------
+    add("## How these numbers are computed")
+    add("")
+    add("- The inventory is CNA's `docs/xna-4-runtime-member-coverage.json`: every documented member of the "
+        "XNA 4.0 runtime assemblies. Overloads count once per member name.")
+    add("- A member counts as demonstrated when at least one demo lists it in its `.apis` metadata as "
+        "`Type::Member` (a constructor as `Type::Type`). The type is matched by its short name, so a short "
+        "name shared by two namespaces credits both.")
+    add("- \"Demonstrated\" means a demo exists and claims to show the member. Whether that demo has been "
+        "executed is the separate \"Run on\" column above, taken from `--report` files of real runs.")
+    add("- No percentage here measures CNA's correctness, and none is weighted by importance.")
+    add("")
+
+    Path(args.output).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output).write_text("\n".join(lines) + "\n")
+    print(f"wrote {args.output}: {len(demos)} demos, {total['types_hit']}/{total['types']} types, "
+          f"{total['members_hit']}/{total['members']} members")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

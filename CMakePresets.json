@@ -1,0 +1,81 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": { "major": 3, "minor": 23, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "default",
+      "inherits": "base",
+      "displayName": "CNA's default renderer for this platform",
+      "description": "One renderer: OPENGLES3 on Linux, SDL_RENDERER on Windows/macOS. Needs ../cna, ../sharp-runtime (and ../easy-gl, ../meta-gl on Linux)."
+    },
+    {
+      "name": "windowless",
+      "inherits": "base",
+      "displayName": "Windowless renderers (SOFTWARE default) - CI, no display needed",
+      "description": "SOFTWARE;HEADLESS;STUB. Runs every demo without a display server and without the GL siblings.",
+      "cacheVariables": {
+        "CNA_GRAPHICS_RENDERER": "SOFTWARE",
+        "CNA_GRAPHICS_RENDERERS": "SOFTWARE;HEADLESS;STUB"
+      }
+    },
+    {
+      "name": "linux-multi",
+      "inherits": "base",
+      "displayName": "Linux: GL, SDL_RENDERER and the windowless renderers in one binary",
+      "description": "OPENGLES3 (default);OPENGL33;SDL_RENDERER;SOFTWARE;HEADLESS;STUB. Choose at runtime with --renderer.",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "cacheVariables": {
+        "CNA_GRAPHICS_RENDERER": "OPENGLES3",
+        "CNA_GRAPHICS_RENDERERS": "OPENGLES3;OPENGL33;SDL_RENDERER;SOFTWARE;HEADLESS;STUB"
+      }
+    },
+    {
+      "name": "linux-full",
+      "inherits": "base",
+      "displayName": "Linux: every Linux renderer including VULKAN and SDL_GPU",
+      "description": "Adds VULKAN (Vulkan loader + headers) and SDL_GPU (libshaderc) to linux-multi.",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "cacheVariables": {
+        "CNA_GRAPHICS_RENDERER": "OPENGLES3",
+        "CNA_GRAPHICS_RENDERERS": "OPENGLES3;OPENGL33;SDL_RENDERER;VULKAN;SDL_GPU;SOFTWARE;HEADLESS;STUB"
+      }
+    },
+    {
+      "name": "linux-full-release",
+      "inherits": "linux-full",
+      "displayName": "linux-full, Release",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "default", "configurePreset": "default" },
+    { "name": "windowless", "configurePreset": "windowless" },
+    { "name": "linux-multi", "configurePreset": "linux-multi" },
+    { "name": "linux-full", "configurePreset": "linux-full" },
+    { "name": "linux-full-release", "configurePreset": "linux-full-release" }
+  ],
+  "testPresets": [
+    {
+      "name": "windowless",
+      "configurePreset": "windowless",
+      "output": { "outputOnFailure": true },
+      "execution": { "jobs": 4 }
+    },
+    {
+      "name": "linux-full",
+      "configurePreset": "linux-full",
+      "output": { "outputOnFailure": true },
+      "execution": { "jobs": 4 }
+    }
+  ]
+}

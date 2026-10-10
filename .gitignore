@@ -1,0 +1,44 @@
+# Build trees (any name starting with build or cmake-build)
+/build*/
+/cmake-build*/
+/out/
+CMakeUserPresets.json
+
+# Logs written by local build commands
+/*.log
+
+# CMake / CTest leftovers when configured in-source by mistake
+CMakeCache.txt
+CMakeFiles/
+CTestTestfile.cmake
+Testing/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+
+# Caches
+.cache/
+.ccache/
+__pycache__/
+*.pyc
+
+# Editors and IDEs
+.idea/
+.vscode/
+.vs/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.code-workspace
+
+# Crash dumps and core files (root only: demos/core/ is a real directory)
+/core
+/core.[0-9]*
+*.dmp
+vgcore.*
+
+# Screenshots and reports produced by local runs (keep approved references elsewhere)
+/screenshots/
+/results*.json
