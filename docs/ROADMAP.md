@@ -44,7 +44,8 @@ Console demos with checks; each shows one operation family.
   Bgra5551, Byte4, HalfSingle/Vector2/Vector4, NormalizedByte2/4, NormalizedShort2/4, Rg32,
   Rgba1010102, Rgba64, Short2/4) -- one demo per format family, not per method. ≈ 8
 
-## Phase 3 -- game lifecycle (`game.*`) ⬜
+## Phase 3 -- game lifecycle (`game.*`) 🟨 (25 demos; remaining: Activated/Deactivated events,
+ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime constructors)
 - Game: method order (`Initialize`→`LoadContent`→`BeginRun`→Update/Draw→`EndRun`→`UnloadContent`),
   `IsFixedTimeStep` and `TargetElapsedTime`, variable time step, `IsRunningSlowly`, `ResetElapsedTime`,
   `SuppressDraw`, `Exit`, `Exiting`/`Activated`/`Deactivated` events, `IsMouseVisible`,

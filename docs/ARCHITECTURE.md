@@ -161,7 +161,8 @@ function. The demo prints with `ctx.Print(...)`/`ctx.Out()` and records expectat
 4. `DemoGame::EndDraw()` counts frames. With a frame limit (automated runs, or `--frames`) it
    saves the screenshot on the last frame if one was requested, presents, and calls `Exit()`.
    Interactive runs end with Escape, gamepad Back, or closing the window.
-5. `Run()` returns, `UnloadContent()` has run, and the runner destroys the game. Destruction is
+5. `Run()` returns; the runner calls `Dispose()` -- XNA's `using (game) game.Run();` pattern, which
+   is what invokes `UnloadContent()` -- and then destroys the game. Disposal and destruction are
    part of every run, so cleanup defects show up as failures or crashes.
 
 Exceptions from anywhere in this sequence end the run as **FAILED** with the message --

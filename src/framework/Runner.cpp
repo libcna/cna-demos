@@ -111,10 +111,14 @@ namespace CnaDemos
                     break;
                 case DemoKind::Game:
                 {
-                    // The game is destroyed before the result is reported, so a demo's cleanup
-                    // (Dispose, UnloadContent, destructors) is part of what a run exercises.
+                    // XNA's "using (var game = new Game1()) game.Run();": Dispose after Run is what
+                    // calls UnloadContent (through the device's disposal), so it must happen while
+                    // the demo object is still alive. The game is then destroyed before the result
+                    // is reported, so cleanup is part of what every run exercises.
                     std::unique_ptr<DemoGame> game = demo.game();
                     game->Run();
+                    game->Dispose();
+                    game.reset();
                     break;
                 }
                 case DemoKind::Standalone:

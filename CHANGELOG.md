@@ -38,5 +38,13 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   wide unorm, IPackedVector).
 - `knownIssue` metadata: demos that fail because of a recorded CNA defect are expected failures in
   batch runs and CTest (`WILL_FAIL`), and an unexpected pass is reported.
+- Game lifecycle demos (25): method order, Exit/Exiting, RunOneFrame, host-driven RunFrameEXT,
+  fixed/variable time step, IsRunningSlowly, SuppressDraw, GameComponent, DrawableGameComponent,
+  UpdateOrder/DrawOrder, component collection events, GameServiceContainer, back-buffer size,
+  PreparingDeviceSettings, device events, Reach/HiDef profile, vertical sync, full screen (manual),
+  window title/client bounds/resizing, IsMouseVisible/InactiveSleepTime, LaunchParameters,
+  TitleContainer.
+- The runner calls `Dispose()` after `Run()` (XNA's `using` pattern), so demos' `UnloadContent`
+  runs while the demo object is alive.
 - CNA-DEMOS-ISSUE-002 recorded: `Curve::Evaluate` with Step keys compares the absolute position
   with 1.0.

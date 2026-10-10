@@ -14,7 +14,8 @@ capability has a demo. See docs/PROJECT.md.
 
 * Phase 0 (research) and Phase 1 (infrastructure + pilot) are **complete**.
 * **Phase 2 -- math** is complete (72 math demos, 6 packed-vector demos).
-* Next: **Phase 3 -- game lifecycle** (see "Next task").
+* **Phase 3 -- game lifecycle** is mostly complete (25 demos; small remainder in ROADMAP).
+* Next: **Phase 4 -- 2D graphics** (see "Next task").
 
 ## 3. Architecture in 10 lines
 
@@ -55,8 +56,9 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 6. Demo counts
 
-86 demos: math 72, graphics 9 (6 packed vector), core 1, content 1, audio 1, input 1, platform 1 (standalone).
-Coverage (docs/COVERAGE.md): 50/329 XNA types, 264/2326 XNA members named by a demo.
+111 demos: math 72, game 25, graphics 9 (6 packed vector), core 1, content 1, audio 1, input 1,
+platform 1 (standalone).
+Coverage (docs/COVERAGE.md): 65/329 XNA types, 333/2326 XNA members named by a demo.
 Known-issue demos: 1 (`math.curve.step_continuity`, CNA-DEMOS-ISSUE-002).
 Categories declared but empty: game, media, storage, diagnostics, devices, phone, design, cnaext,
 net, gamer_services. Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
@@ -68,9 +70,9 @@ net, gamer_services. Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 | Configure + build `linux-full` (8 renderers, CNA as libcna.so) | ✅ |
 | `cna-demos --validate` | ✅ 0 problems |
 | `tools/validate.sh` (build, validate, ctest, smoke SOFTWARE + OPENGLES3/Xvfb, coverage) | ✅ |
-| `ctest` (15 CLI tests + 86 demos on SOFTWARE, dummy audio) | ✅ 101/101 (1 expected failure via WILL_FAIL) |
-| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 85 passed, 1 expected failure (known issue) |
-| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ✅ 85 passed, 1 expected failure (without the dummy driver the audio demo is SKIPPED: no ALSA device -- correct) |
+| `ctest` (CLI tests + 111 demos on SOFTWARE, dummy audio) | ✅ 125/125 (1 expected failure via WILL_FAIL, 1 manual demo disabled) |
+| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 106 passed, 1 expected failure, 3 skipped (window demos: SOFTWARE has no window), 1 not run (manual) |
+| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ✅ 109 passed, 1 expected failure, 1 not run (manual) |
 | Screenshots inspected (SOFTWARE, OPENGLES3): draw_texture, render_target2d | ✅ correct, identical across both |
 | CMake 3.28.3 (distro) with CNA_SHARED_LIBRARY=ON | ❌ CNA-DEMOS-ISSUE-001; cna-demos now defaults to static there |
 
@@ -130,11 +132,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Phase 3 -- game lifecycle** (`demos/game/`): Game method order, fixed/variable time step,
-TargetElapsedTime, IsRunningSlowly, Exit/Exiting, components (GameComponent,
-DrawableGameComponent, UpdateOrder/DrawOrder), GameServiceContainer, GameWindow (title,
-ClientBounds, resizing), GraphicsDeviceManager (back buffer, ApplyChanges, profile, events),
-LaunchParameters, TitleContainer -- see docs/ROADMAP.md Phase 3. Then Phase 4 (2D graphics). Each: read the header in
+**Phase 4 -- 2D graphics** (`demos/graphics/`): `graphics.device.*` (Clear overloads with
+ClearOptions, Viewport, ScissorRectangle, PresentationParameters, GraphicsAdapter/DisplayMode,
+SupportsCapability), `graphics.sprite_batch.*` (every Draw overload family, SpriteEffects,
+layer depth + SpriteSortMode, BlendState/SamplerState in Begin, transform matrix, sprite sheet),
+`graphics.texture2d.*` (SetData/GetData, mipmaps, SurfaceFormat, FromStream, SaveAsPng/Jpeg),
+then SpriteFont (needs the font asset decision in PLAN.md). Verify graphical demos with
+--screenshot on SOFTWARE and OPENGLES3 and look at the images. Each: read the header in
 `../cna/modules/math/include/Microsoft/Xna/Framework/`, write console demos with checks, build,
 validate, ctest, regenerate COVERAGE.md, update this file, commit.
 
