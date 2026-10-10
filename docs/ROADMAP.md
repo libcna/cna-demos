@@ -84,16 +84,19 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg`, `LevelCount`. Remaining:
   float/HDR formats, DXT (needs compressed data), CNAEXT `DDSFromStreamEXT`, copy semantics.
 
-## Phase 5 -- render states, buffers, primitives, render targets ⬜ (1 pilot demo)
-- `graphics.blend_state.*`, `graphics.depth_stencil_state.*`, `graphics.rasterizer_state.*`,
-  `graphics.sampler_state.*`: built-in objects and custom states, one concept each
-  (blend functions, colour write channels, depth compare, stencil masking, cull modes, wireframe,
-  depth bias, scissor test, filter and address modes, anisotropy, mip LOD bias). ≈ 25
-- `graphics.vertex_buffer.*`, `graphics.index_buffer.*`, `graphics.dynamic_vertex_buffer.*`:
-  creation, `SetData` options, `VertexDeclaration` (built-in vertex types and a custom one),
-  16/32-bit indices, `SetDataOptions.Discard/NoOverwrite`. ≈ 8
-- `graphics.primitives.*`: `DrawPrimitives`, `DrawIndexedPrimitives`, `DrawUserPrimitives`,
-  `DrawUserIndexedPrimitives`, each `PrimitiveType`, instancing (`DrawInstancedPrimitives`). ≈ 8
+## Phase 5 -- render states, buffers, primitives, render targets 🟨 (17 done; render targets next)
+- 🟨 (9) `graphics.blend_state.*` (blend functions, colour write channels, blend factor, bound
+  states are immutable), `graphics.sampler_state.address_modes`, `graphics.rasterizer_state.*`
+  (cull mode, wireframe), `graphics.depth_stencil_state.*` (depth buffer, stencil mask). Remaining:
+  depth compare functions and DepthRead, stencil operations (increment, two-sided), depth bias,
+  anisotropy and mip LOD bias (3D), MaxMipLevel.
+- ✅ (5) `graphics.vertex_buffer.*` (static buffer + DrawPrimitives, DynamicVertexBuffer with
+  Discard and ContentLost), `graphics.index_buffer.*` (indexed cube, 32-bit indices),
+  `graphics.vertex_declaration.custom_vertex`. Remaining: `NoOverwrite` ring buffer,
+  DynamicIndexBuffer, `VertexBuffer::GetData`, `SetVertexBuffers` with several streams.
+- ✅ (3) `graphics.primitives.*`: DrawUserPrimitives, DrawUserIndexedPrimitives, all four
+  PrimitiveTypes. Remaining: instancing (`DrawInstancedPrimitives`, needs a custom effect or a
+  CNAEXT path).
 - `graphics.render_target.*`: `RenderTarget2D` formats, depth formats, `RenderTargetUsage`
   (Discard/Preserve), multisampling, `RenderTargetCube`, multiple render targets, mipmapped
   targets, `GetData` readback. ≈ 8

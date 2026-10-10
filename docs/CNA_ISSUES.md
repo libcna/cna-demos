@@ -136,6 +136,39 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3 renderers.
 - **Status:** open; minimal reproduction above; not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-005 -- `Color` is polymorphic, so XNA-style custom vertex structs silently break
+
+- **Area:** math/graphics -- `Microsoft::Xna::Framework::Color` derives from
+  `PackedVector::IPackedVectorT<UInt32>`, whose `getPackedValueProperty`/`setPackedValueProperty`
+  are virtual, so a `Color` object is 16 bytes (vtable pointer + packed value) instead of XNA's
+  4-byte value. The other packed vectors share the design. `GraphicsDevice::DrawUserPrimitives`
+  with a `VertexDeclaration` passes a caller's non-polymorphic struct through as raw bytes and
+  only rejects a struct that is itself polymorphic -- not one that *contains* a polymorphic member.
+- **Demo:** `graphics.vertex_declaration.custom_vertex` stores the colour as its packed
+  `std::uint32_t` and says why (`restrictions`).
+- **Reproduction:**
+  ```cpp
+  struct MyVertex { Vector3 Position; float Glow; Color Tint; };   // XNA: 20 bytes; CNA: 40
+  VertexDeclaration decl{
+      VertexElement(0, VertexElementFormat::Vector3, VertexElementUsage::Position, 0),
+      VertexElement(12, VertexElementFormat::Single, VertexElementUsage::TextureCoordinate, 1),
+      VertexElement(offsetof(MyVertex, Tint), VertexElementFormat::Color, VertexElementUsage::Color, 0)};
+  device.DrawUserPrimitives(PrimitiveType::TriangleList, vertices, 0, count, decl);
+  ```
+- **Observed:** `sizeof(MyVertex)` is 40 and `offsetof(MyVertex, Tint)` 16, while the declaration's
+  computed stride is 20; the draw reads every vertex at the wrong stride (and the colour element
+  would read the vtable pointer) and renders garbage -- no exception, on SOFTWARE and OPENGLES3.
+- **Expected:** XNA's `Color` is a 4-byte struct (its `PackedValue` is the whole object), and
+  embedding it in custom vertex structures is the standard XNA pattern (vertex colours alongside
+  positions and normals). Porting such code to CNA should work, or fail loudly.
+- **Possible directions (for CNA's maintainers):** make `Color` a 4-byte standard-layout type that
+  satisfies the packed-vector contract without virtual dispatch; or, at least, reject vertex
+  types that are not trivially copyable in the raw `DrawUserPrimitives`/`VertexBuffer::SetData`
+  templates (`std::is_trivially_copyable_v` is false for a struct containing a `Color`), turning
+  silent garbage into a compile-time error.
+- **Environment:** CNA 0.1.0, GCC 14.2, Linux x86_64 (sizes are ABI-dependent but never 4).
+- **Status:** open; reproduced as above; not reported upstream yet.
+
 ---
 
 ## Resolved

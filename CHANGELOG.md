@@ -66,6 +66,15 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - SpriteFont demos (7): DrawString, MeasureString (centring, alignment, line rules), rotated/scaled/
   mirrored text, Spacing/LineSpacing, Characters/DefaultCharacter, StringBuilder text, and a font
   built in code with the CNAEXT SpriteFont constructor.
+- Render-state demos (9): custom blend functions (multiply, screen, subtract, min, max), colour
+  write channels, blend factor, bound states are immutable, texture address modes, wireframe
+  sprites, back-face culling, depth testing, 2D stencil masking.
+- 3D primitive and buffer demos (8): hello triangle with BasicEffect, primitive types, indexed
+  triangles, VertexBuffer + DrawPrimitives, DynamicVertexBuffer with Discard, indexed cube,
+  32-bit indices (90,000-vertex grid), custom vertex declaration.
+- `CnaDemos/PixelChecks.hpp`: back-buffer pixel checks for Game demos.
+- CNA-DEMOS-ISSUE-005 recorded: CNA's `Color` is polymorphic (16 bytes), so XNA-style custom
+  vertex structs containing a `Color` silently draw garbage.
 - CNA-DEMOS-ISSUE-003 (SpriteBatch leaves Textures[0] unset) and CNA-DEMOS-ISSUE-004 (Immediate
   SpriteBatch ignores sampler states set between Draws) recorded.
 - Screenshots of a demo running under Reach are reported as unavailable instead of failing the run.
