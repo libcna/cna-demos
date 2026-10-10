@@ -84,12 +84,12 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg`, `LevelCount`. Remaining:
   float/HDR formats, DXT (needs compressed data), CNAEXT `DDSFromStreamEXT`, copy semantics.
 
-## Phase 5 -- render states, buffers, primitives, render targets 🟨 (17 done; render targets next)
-- 🟨 (9) `graphics.blend_state.*` (blend functions, colour write channels, blend factor, bound
-  states are immutable), `graphics.sampler_state.address_modes`, `graphics.rasterizer_state.*`
-  (cull mode, wireframe), `graphics.depth_stencil_state.*` (depth buffer, stencil mask). Remaining:
-  depth compare functions and DepthRead, stencil operations (increment, two-sided), depth bias,
-  anisotropy and mip LOD bias (3D), MaxMipLevel.
+## Phase 5 -- render states, buffers, primitives, render targets ✅ (29 demos; small remainders below)
+- ✅ (16) `graphics.blend_state.*` (blend functions, colour write channels, blend factor, bound
+  states are immutable), `graphics.sampler_state.*` (address modes, anisotropic, MaxMipLevel, LOD
+  bias), `graphics.rasterizer_state.*` (cull mode, wireframe, depth bias),
+  `graphics.depth_stencil_state.*` (depth buffer, DepthRead transparency, depth function X-ray,
+  stencil mask, stencil counting). Remaining: two-sided stencil (stencil shadow volumes).
 - ✅ (5) `graphics.vertex_buffer.*` (static buffer + DrawPrimitives, DynamicVertexBuffer with
   Discard and ContentLost), `graphics.index_buffer.*` (indexed cube, 32-bit indices),
   `graphics.vertex_declaration.custom_vertex`. Remaining: `NoOverwrite` ring buffer,
@@ -97,9 +97,9 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
 - ✅ (3) `graphics.primitives.*`: DrawUserPrimitives, DrawUserIndexedPrimitives, all four
   PrimitiveTypes. Remaining: instancing (`DrawInstancedPrimitives`, needs a custom effect or a
   CNAEXT path).
-- `graphics.render_target.*`: `RenderTarget2D` formats, depth formats, `RenderTargetUsage`
-  (Discard/Preserve), multisampling, `RenderTargetCube`, multiple render targets, mipmapped
-  targets, `GetData` readback. ≈ 8
+- ✅ (6) `graphics.render_target.*`: render to texture, `RenderTargetUsage` Discard/Preserve,
+  read back with GetData, own depth buffer, mipmapped target, multisampling. Remaining: float/HDR
+  formats, `RenderTargetCube` and multiple render targets (with effects, Phase 6).
 - `graphics.texture_cube.*`, `graphics.texture3d.*`, `graphics.occlusion_query.*`. ≈ 5
 
 ## Phase 6 -- effects and shaders ⬜

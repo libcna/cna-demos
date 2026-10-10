@@ -73,6 +73,13 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   triangles, VertexBuffer + DrawPrimitives, DynamicVertexBuffer with Discard, indexed cube,
   32-bit indices (90,000-vertex grid), custom vertex declaration.
 - `CnaDemos/PixelChecks.hpp`: back-buffer pixel checks for Game demos.
+- Render-target demos (5): Discard/Preserve usage, reading a target back, a target with its own
+  depth buffer, mipmapped target, multisampled target.
+- More render-state demos (7): DepthRead for transparency, depth-function X-ray silhouette, stencil
+  overlap counting, depth bias for decals, MaxMipLevel, LOD bias (skipped on GL ES), anisotropic
+  filtering.
+- CNA-DEMOS-ISSUE-006 recorded: no capability query tells a program that GL ES renderers ignore
+  `MipMapLevelOfDetailBias` (documented CNA/FNA3D limitation).
 - CNA-DEMOS-ISSUE-005 recorded: CNA's `Color` is polymorphic (16 bytes), so XNA-style custom
   vertex structs containing a `Color` silently draw garbage.
 - CNA-DEMOS-ISSUE-003 (SpriteBatch leaves Textures[0] unset) and CNA-DEMOS-ISSUE-004 (Immediate

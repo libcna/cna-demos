@@ -169,6 +169,26 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, GCC 14.2, Linux x86_64 (sizes are ABI-dependent but never 4).
 - **Status:** open; reproduced as above; not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-006 -- No way to ask whether the renderer applies `MipMapLevelOfDetailBias`
+
+- **Area:** graphics -- `SamplerState::MipMapLevelOfDetailBias` on the OpenGL ES renderers
+  (`OPENGLES3`, `WEBGL2`), and the capability API (`CNA::RendererFeature`,
+  `GraphicsDevice::SupportsCapability`).
+- **Demo:** `graphics.sampler_state.mip_level_control.lod_bias` (skips on GL ES renderers, detected
+  through `RendererFeature::ShaderDialectGlslEs` as a proxy).
+- **Observed:** on OPENGLES3 a LOD bias of +1 has no effect (copies drawn at 1x, 1/2 and 1/4 size
+  read mip levels 0, 1, 2 instead of 1, 2, 3); no exception and no log message. SOFTWARE applies it.
+- **Documented by CNA:** `docs/sampler-state-support.md` -- "OpenGL ES has no
+  `GL_TEXTURE_LOD_BIAS`", and the parity ledger: "LOD bias is unavailable on GL ES exactly as in
+  FNA3D". So the behaviour itself is a known platform limitation, not a defect.
+- **The gap:** XNA always honours the bias (Direct3D 9 sampler state), and CNA exposes many
+  per-renderer facts through `RendererFeature`/`GraphicsCapability`, but none for this one, so a
+  program cannot adapt (for example by biasing in its own shader) without hard-coding renderer
+  names.
+- **Suggestion:** a `RendererFeature` (or `GraphicsCapability`) entry for sampler LOD bias,
+  reported `Unsupported` on GL ES; optionally a one-time warning when a non-zero bias is set there.
+- **Status:** open (low impact); not reported upstream yet.
+
 ---
 
 ## Resolved
