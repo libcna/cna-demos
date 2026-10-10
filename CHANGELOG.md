@@ -90,6 +90,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   dragging, SetPosition and mouse look, relative mode, cursor shapes and a cursor from a texture,
   the ClickedEXT event; typing with TextInputEXT, input-method composition; clipboard text and
   MIME data formats (CNAEXT).
+- Gamepad and touch demos (12): gamepad state, capabilities, GamePadState values and virtual
+  buttons, dead-zone modes, vibration, keyboard emulation and device information (CNAEXT); touch
+  state with mouse emulation, capabilities and coordinate space, gestures, TouchLocation and
+  TouchCollection values, the gesture queue with the CNAEXT EnqueueGesture.
 - `CnaDemos/InputNames.hpp`: names of input enums (keys, buttons, gestures) for demo output.
 - CNA-DEMOS-ISSUE-008 recorded: sharp-runtime's `Prop.hpp`, reached from CNA's public headers,
   defines macros named `YES`, `NO`, `nothing` and similar.

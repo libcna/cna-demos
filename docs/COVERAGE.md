@@ -6,7 +6,7 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**223 demos** in 8 categories. Kinds: console 95, game 127, standalone 1. Automation: automated 208, manual 2, smoke-only 13.
+**235 demos** in 8 categories. Kinds: console 98, game 136, standalone 1. Automation: automated 215, manual 2, smoke-only 18.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -15,14 +15,14 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | game | 25 | 22 | 2 | 1 | 21 / 3 / 0 | 24 / 0 / 0 |
 | graphics | 99 | 99 | 0 | 0 | 95 / 3 / 1 | 95 / 3 / 1 |
-| input | 15 | 5 | 10 | 0 | 10 / 5 / 0 | 15 / 0 / 0 |
+| input | 27 | 12 | 15 | 0 | 22 / 5 / 0 | 27 / 0 / 0 |
 | math | 72 | 72 | 0 | 0 | 71 / 0 / 1 | 71 / 0 / 1 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 131 of 329** (39.8 %).
-- **Methods, properties, constructors and events named by a demo: 571 of 2326** (24.5 %).
+- **Types with at least one demo: 143 of 329** (43.5 %).
+- **Methods, properties, constructors and events named by a demo: 665 of 2326** (28.6 %).
 - Fields and enum values named by a demo: 116 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
@@ -34,8 +34,8 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.GamerServices` | 0 / 52 | 0 / 244 | 0 / 223 |
 | `Microsoft.Xna.Framework.Graphics` | 65 / 99 | 199 / 550 | 77 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
-| `Microsoft.Xna.Framework.Input` | 4 / 17 | 19 / 113 | 0 / 202 |
-| `Microsoft.Xna.Framework.Input.Touch` | 0 / 8 | 0 / 48 | 0 / 15 |
+| `Microsoft.Xna.Framework.Input` | 11 / 17 | 83 / 113 | 0 / 202 |
+| `Microsoft.Xna.Framework.Input.Touch` | 5 / 8 | 30 / 48 | 0 / 15 |
 | `Microsoft.Xna.Framework.Media` | 0 / 24 | 0 / 192 | 0 / 8 |
 | `Microsoft.Xna.Framework.Net` | 0 / 23 | 0 / 127 | 0 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 0 / 3 | 0 / 25 | 0 / 0 |
@@ -50,8 +50,8 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 - `Microsoft.Xna.Framework.Design`: BoundingBoxConverter, BoundingSphereConverter, ColorConverter, MathTypeConverter, MatrixConverter, PlaneConverter, PointConverter, QuaternionConverter, RayConverter, RectangleConverter, Vector2Converter, Vector3Converter, Vector4Converter
 - `Microsoft.Xna.Framework.GamerServices`: Achievement, AchievementCollection, AvatarAnimation, AvatarAnimationPreset, AvatarBodyType, AvatarBone, AvatarDescription, AvatarExpression, AvatarEye, AvatarEyebrow, AvatarMouth, AvatarRenderer, AvatarRendererState, ControllerSensitivity, FriendCollection, FriendGamer, GameDefaults, GameDifficulty, GameUpdateRequiredException, Gamer, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPresence, GamerPresenceMode, GamerPrivilegeException, GamerPrivilegeSetting, GamerPrivileges, GamerProfile, GamerServicesComponent, GamerServicesDispatcher, GamerServicesNotAvailableException, GamerZone, Guide, GuideAlreadyVisibleException, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardEntry, LeaderboardIdentity, LeaderboardKey, LeaderboardOutcome, LeaderboardReader, LeaderboardWriter, MessageBoxIcon, NetworkException, NetworkNotAvailableException, NotificationPosition, PropertyDictionary, RacingCameraAngle, SignedInEventArgs, SignedInGamer, SignedInGamerCollection, SignedOutEventArgs
 - `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, DynamicIndexBuffer, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectParameterClass, EffectParameterType, EffectPassCollection, GraphicsDeviceStatus, IEffectFog, IEffectLights, IEffectMatrices, IGraphicsDeviceService, IVertexType, Model, ModelBone, ModelBoneCollection, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMesh, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPart, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, OcclusionQuery, RenderTargetBinding, RenderTargetCube, Texture3D, VertexBufferBinding, VertexPositionColorTexture
-- `Microsoft.Xna.Framework.Input`: ButtonState, Buttons, GamePad, GamePadButtons, GamePadCapabilities, GamePadDPad, GamePadDeadZone, GamePadState, GamePadThumbSticks, GamePadTriggers, GamePadType, KeyState, Keys
-- `Microsoft.Xna.Framework.Input.Touch`: GestureSample, GestureType, TouchCollection, TouchCollection.Enumerator, TouchLocation, TouchLocationState, TouchPanel, TouchPanelCapabilities
+- `Microsoft.Xna.Framework.Input`: ButtonState, Buttons, GamePadDeadZone, GamePadType, KeyState, Keys
+- `Microsoft.Xna.Framework.Input.Touch`: GestureType, TouchCollection.Enumerator, TouchLocationState
 - `Microsoft.Xna.Framework.Media`: Album, AlbumCollection, Artist, ArtistCollection, Genre, GenreCollection, MediaLibrary, MediaPlayer, MediaQueue, MediaSource, MediaSourceType, MediaState, Picture, PictureAlbum, PictureAlbumCollection, PictureCollection, Playlist, PlaylistCollection, Song, SongCollection, Video, VideoPlayer, VideoSoundtrackType, VisualizationData
 - `Microsoft.Xna.Framework.Net`: AvailableNetworkSession, AvailableNetworkSessionCollection, GameEndedEventArgs, GameStartedEventArgs, GamerJoinedEventArgs, GamerLeftEventArgs, HostChangedEventArgs, LocalNetworkGamer, NetworkGamer, NetworkMachine, NetworkSession, NetworkSessionEndReason, NetworkSessionEndedEventArgs, NetworkSessionJoinError, NetworkSessionJoinException, NetworkSessionProperties, NetworkSessionState, NetworkSessionType, PacketReader, PacketWriter, QualityOfService, SendDataOptions, WriteLeaderboardsEventArgs
 - `Microsoft.Xna.Framework.Storage`: StorageContainer, StorageDevice, StorageDeviceNotConnectedException
@@ -61,6 +61,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 API names in demo metadata that are not documented XNA 4.0 members: CNA extensions (`CNA::...`, `...EXT` members) and anything misspelled. Review this list when adding demos -- a misspelled XNA name silently lowers the numbers above.
 
 - `ButtonState` -- input.mouse.click_detection, input.mouse.get_state
+- `Buttons` -- input.gamepad.state_values
 - `CNA::GraphicsCapability` -- graphics.device.supports_capability
 - `CNA::GraphicsRendererSelection::GetActive` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::GetAvailable` -- platform.renderer_selection.set_preferred
@@ -76,7 +77,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Input::Clipboard::SetDataEXT` -- input.clipboard.data_formats
 - `CNA::Input::Clipboard::SetPrimarySelectionTextEXT` -- input.clipboard.text
 - `CNA::Input::Clipboard::SetTextEXT` -- input.clipboard.text
+- `CNA::Input::GamePadButtonLabelEXT` -- input.gamepad.device_info
+- `CNA::Input::GamePadConnectionStateEXT` -- input.gamepad.device_info
 - `CNA::Input::KeyModifiersEXT` -- input.keyboard.modifiers
+- `CNA::Input::PowerStateEXT` -- input.gamepad.device_info
 - `CNA::RendererLimit` -- graphics.device.capability_report
 - `CNA::getVersionMajor` -- core.version.version_string
 - `CNA::getVersionMinor` -- core.version.version_string
@@ -92,6 +96,23 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GameComponentCollection::Contains` -- game.components.collection_events
 - `GameComponentCollection::IndexOf` -- game.components.collection_events
 - `GameComponentCollection::Remove` -- game.components.collection_events
+- `GamePad::ExcludeAxisDeadZone` -- input.gamepad.dead_zones
+- `GamePad::GetButtonLabelEXT` -- input.gamepad.device_info
+- `GamePad::GetConnectionStateEXT` -- input.gamepad.device_info
+- `GamePad::GetFirmwareVersionEXT` -- input.gamepad.device_info
+- `GamePad::GetGUIDEXT` -- input.gamepad.device_info
+- `GamePad::GetNameEXT` -- input.gamepad.device_info
+- `GamePad::GetPlayerIndexEXT` -- input.gamepad.device_info
+- `GamePad::GetPowerInfoEXT` -- input.gamepad.device_info
+- `GamePad::GetSerialEXT` -- input.gamepad.device_info
+- `GamePad::KeyboardEmulationEnabledEXT` -- input.gamepad.keyboard_emulation
+- `GamePad::LeftDeadZone` -- input.gamepad.dead_zones
+- `GamePad::RightDeadZone` -- input.gamepad.dead_zones
+- `GamePad::TriggerThreshold` -- input.gamepad.dead_zones
+- `GamePadDeadZone` -- input.gamepad.dead_zones
+- `GamePadType` -- input.gamepad.capabilities
+- `GestureSample::GestureSample` -- input.touch.gesture_queue
+- `GestureType` -- input.touch.gesture_queue, input.touch.gestures
 - `GraphicsDevice::ExecutesShaderEffectSourceEXT` -- graphics.shader_effect.toon_shading
 - `GraphicsDevice::GetGraphicsRendererName` -- graphics.device.supports_capability, platform.renderer_selection.set_preferred
 - `GraphicsDevice::GetMaxTextureDimension` -- graphics.device.capability_report
@@ -129,6 +150,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `PbrEffect::MetallicFactor` -- graphics.pbr_effect.metallic_roughness
 - `PbrEffect::PbrEffect` -- graphics.pbr_effect.metallic_roughness
 - `PbrEffect::RoughnessFactor` -- graphics.pbr_effect.metallic_roughness
+- `PlayerIndex` -- input.gamepad.get_state
 - `PreparingDeviceSettingsEventArgs::getGraphicsDeviceInformationEXT` -- game.graphics_device_manager.preparing_device_settings
 - `ShaderEffect::GetCompileErrorEXT` -- graphics.shader_effect.toon_shading
 - `ShaderEffect::IsEffectValid` -- graphics.shader_effect.toon_shading
@@ -143,6 +165,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `TextInputEXT::TextEditing` -- input.text_input.composition
 - `TextInputEXT::TextEditingCandidatesEXT` -- input.text_input.composition
 - `TextInputEXT::TextInput` -- input.text_input.composition, input.text_input.typing
+- `TouchLocationState` -- input.touch.get_state
+- `TouchPanel::EnqueueGesture` -- input.touch.gesture_queue
+- `TouchPanel::MouseTouchEmulationEnabledEXT` -- input.touch.get_state
 - `VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned` -- graphics.skinned_effect.two_bones
 
 ## How these numbers are computed
