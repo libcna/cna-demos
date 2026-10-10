@@ -90,6 +90,7 @@ namespace CnaDemos
     {
         RunResult result;
         result.id = std::string(demo.entry.info.id);
+        result.knownIssue = std::string(demo.entry.info.knownIssue);
 
         if (options.automated && demo.entry.info.automation == Automation::Manual)
         {
@@ -171,6 +172,8 @@ namespace CnaDemos
         std::vector<RunResult> results;
         results.reserve(demos.size());
         int counts[4] = {};
+        int expectedFailures = 0;
+        int unexpectedPasses = 0;
 
         for (const RegisteredDemo* demo : demos)
         {
@@ -189,6 +192,17 @@ namespace CnaDemos
                 out << ": " << result.message;
             }
             out << '\n';
+            if (result.ExpectedFailure())
+            {
+                ++expectedFailures;
+                out << "   (expected: known CNA issue " << result.knownIssue << ", docs/CNA_ISSUES.md)\n";
+            }
+            else if (result.UnexpectedPass())
+            {
+                ++unexpectedPasses;
+                out << "   (UNEXPECTED PASS: known issue " << result.knownIssue
+                    << " did not reproduce -- check whether CNA fixed it and update the demo)\n";
+            }
             results.push_back(std::move(result));
         }
 
@@ -197,11 +211,20 @@ namespace CnaDemos
             << counts[static_cast<int>(RunStatus::Failed)] << " failed, "
             << counts[static_cast<int>(RunStatus::Skipped)] << " skipped, "
             << counts[static_cast<int>(RunStatus::NotRun)] << " not run\n";
+        if (expectedFailures > 0 || unexpectedPasses > 0)
+        {
+            out << "Known CNA issues: " << expectedFailures << " expected failure(s), " << unexpectedPasses
+                << " unexpected pass(es)\n";
+        }
         for (const RunResult& result : results)
         {
-            if (result.status == RunStatus::Failed)
+            if (result.status == RunStatus::Failed && !result.ExpectedFailure())
             {
                 out << "  FAILED " << result.id << ": " << result.message << '\n';
+            }
+            else if (result.UnexpectedPass())
+            {
+                out << "  UNEXPECTED PASS " << result.id << " (" << result.knownIssue << ")\n";
             }
         }
         return results;
@@ -221,6 +244,7 @@ namespace CnaDemos
             out << "    {\"id\": \"" << JsonEscape(result.id) << "\", \"status\": \""
                 << JsonEscape(ToString(result.status)) << "\", \"checks\": " << result.checks
                 << ", \"seconds\": " << std::fixed << std::setprecision(3) << result.seconds
+                << ", \"knownIssue\": \"" << JsonEscape(result.knownIssue) << "\""
                 << ", \"message\": \"" << JsonEscape(result.message) << "\"}";
         }
         out << "\n  ]\n}\n";

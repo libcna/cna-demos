@@ -52,6 +52,33 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   WHOLE_ARCHIVE list in `cmake/SharedRuntimeLibrary.cmake` so cycle repetition cannot occur.
 - **Status:** documented; not yet reported upstream.
 
+### CNA-DEMOS-ISSUE-002 -- `Curve::Evaluate` with Step keys compares the absolute position with 1.0
+
+- **Area:** math -- `Microsoft::Xna::Framework::Curve` (`modules/math/src/Curve.cpp`, the
+  `CurveContinuity::Step` branch of the in-range evaluation, around line 288).
+- **Demo:** `math.curve.step_continuity` (marked `knownIssue`).
+- **Reproduction:**
+  ```cpp
+  Curve c;
+  c.getKeysProperty().Add(CurveKey(1.0f, 10.0f, 0.0f, 0.0f, CurveContinuity::Step));
+  c.getKeysProperty().Add(CurveKey(2.0f, 20.0f, 0.0f, 0.0f, CurveContinuity::Step));
+  c.Evaluate(1.5f);   // returns 20
+  ```
+- **Observed:** 20 -- the *next* key's value. The implementation returns `next.Value` whenever
+  `position >= 1.0f` and `prev.Value` otherwise, i.e. it compares the absolute curve position with
+  1.0 instead of the position's fraction within the segment. Segments that lie entirely below
+  position 1.0 behave as documented (keys at 0 and 0.5: `Evaluate(0.25)` returns the first key's
+  value), which is why the problem only appears for curves whose keys extend past 1.0.
+- **Expected:** 10. The XNA 4.0 documentation of `CurveContinuity.Step` (xna4-spec,
+  `Microsoft.Xna.Framework/CurveContinuity.xml`): *"Interpolation cannot be used between this
+  CurveKey and the next. Specifying a position between the two points returns this point."*
+- **Environment:** platform-independent (pure math); CNA 0.1.0.
+- **Notes:** the code has the shape of FNA's `Curve.GetCurvePosition`, which CNA ports; FNA's source
+  was not available in this environment to confirm it carries the same test. Whether genuine XNA 4.0
+  (its IL) behaves like its documentation has **not** been verified here either; CNA's policy is
+  that XNA's measured behaviour wins over FNA. CNA has no unit test that evaluates a Step curve.
+- **Status:** open; minimal reproduction above; not reported upstream yet.
+
 ---
 
 ## Resolved

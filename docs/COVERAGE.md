@@ -6,33 +6,33 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**56 demos** in 7 categories. Kinds: console 49, game 6, standalone 1. Automation: automated 55, smoke-only 1.
+**86 demos** in 7 categories. Kinds: console 79, game 6, standalone 1. Automation: automated 85, smoke-only 1.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
 | audio | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | content | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
-| graphics | 3 | 3 | 0 | 0 | 3 / 0 / 0 | 3 / 0 / 0 |
+| graphics | 9 | 9 | 0 | 0 | 9 / 0 / 0 | 9 / 0 / 0 |
 | input | 1 | 0 | 1 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
-| math | 48 | 48 | 0 | 0 | 48 / 0 / 0 | 48 / 0 / 0 |
+| math | 72 | 72 | 0 | 0 | 71 / 0 / 1 | 71 / 0 / 1 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 18 of 329** (5.5 %).
-- **Methods, properties, constructors and events named by a demo: 139 of 2326** (6.0 %).
-- Fields and enum values named by a demo: 8 of 753 (reported separately: a demo per enum value is not a goal).
+- **Types with at least one demo: 50 of 329** (15.2 %).
+- **Methods, properties, constructors and events named by a demo: 264 of 2326** (11.3 %).
+- Fields and enum values named by a demo: 34 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
-| `Microsoft.Xna.Framework` | 9 / 42 | 121 / 643 | 8 / 78 |
+| `Microsoft.Xna.Framework` | 23 / 42 | 205 / 643 | 34 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 1 / 19 | 2 / 121 | 0 / 11 |
 | `Microsoft.Xna.Framework.Content` | 1 / 11 | 2 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 0 / 13 | 0 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 0 / 52 | 0 / 244 | 0 / 223 |
 | `Microsoft.Xna.Framework.Graphics` | 5 / 99 | 11 / 550 | 0 / 192 |
-| `Microsoft.Xna.Framework.Graphics.PackedVector` | 0 / 18 | 0 / 164 | 0 / 0 |
+| `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 2 / 17 | 3 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 0 / 8 | 0 / 48 | 0 / 15 |
 | `Microsoft.Xna.Framework.Media` | 0 / 24 | 0 / 192 | 0 / 8 |
@@ -43,13 +43,12 @@ Generated 2026-10-10 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
-- `Microsoft.Xna.Framework`: BoundingBox, BoundingFrustum, BoundingSphere, ContainmentType, Curve, CurveContinuity, CurveKey, CurveKeyCollection, CurveLoopType, CurveTangent, DisplayOrientation, DrawableGameComponent, FrameworkDispatcher, GameComponent, GameComponentCollection, GameComponentCollectionEventArgs, GameServiceContainer, GameTime, GameWindow, GraphicsDeviceInformation, GraphicsDeviceManager, IDrawable, IGameComponent, IGraphicsDeviceManager, IUpdateable, LaunchParameters, PlaneIntersectionType, PlayerIndex, Point, PreparingDeviceSettingsEventArgs, Ray, Rectangle, TitleContainer
+- `Microsoft.Xna.Framework`: DisplayOrientation, DrawableGameComponent, FrameworkDispatcher, GameComponent, GameComponentCollection, GameComponentCollectionEventArgs, GameServiceContainer, GameTime, GameWindow, GraphicsDeviceInformation, GraphicsDeviceManager, IDrawable, IGameComponent, IGraphicsDeviceManager, IUpdateable, LaunchParameters, PlayerIndex, PreparingDeviceSettingsEventArgs, TitleContainer
 - `Microsoft.Xna.Framework.Audio`: AudioCategory, AudioChannels, AudioEmitter, AudioEngine, AudioListener, AudioStopOptions, Cue, DynamicSoundEffectInstance, InstancePlayLimitException, Microphone, MicrophoneState, NoAudioHardwareException, NoMicrophoneConnectedException, RendererDetail, SoundBank, SoundEffectInstance, SoundState, WaveBank
 - `Microsoft.Xna.Framework.Content`: ContentLoadException, ContentReader, ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute, ContentTypeReader, ContentTypeReaderManager, ResourceContentManager
 - `Microsoft.Xna.Framework.Design`: BoundingBoxConverter, BoundingSphereConverter, ColorConverter, MathTypeConverter, MatrixConverter, PlaneConverter, PointConverter, QuaternionConverter, RayConverter, RectangleConverter, Vector2Converter, Vector3Converter, Vector4Converter
 - `Microsoft.Xna.Framework.GamerServices`: Achievement, AchievementCollection, AvatarAnimation, AvatarAnimationPreset, AvatarBodyType, AvatarBone, AvatarDescription, AvatarExpression, AvatarEye, AvatarEyebrow, AvatarMouth, AvatarRenderer, AvatarRendererState, ControllerSensitivity, FriendCollection, FriendGamer, GameDefaults, GameDifficulty, GameUpdateRequiredException, Gamer, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPresence, GamerPresenceMode, GamerPrivilegeException, GamerPrivilegeSetting, GamerPrivileges, GamerProfile, GamerServicesComponent, GamerServicesDispatcher, GamerServicesNotAvailableException, GamerZone, Guide, GuideAlreadyVisibleException, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardEntry, LeaderboardIdentity, LeaderboardKey, LeaderboardOutcome, LeaderboardReader, LeaderboardWriter, MessageBoxIcon, NetworkException, NetworkNotAvailableException, NotificationPosition, PropertyDictionary, RacingCameraAngle, SignedInEventArgs, SignedInGamer, SignedInGamerCollection, SignedOutEventArgs
 - `Microsoft.Xna.Framework.Graphics`: AlphaTestEffect, BasicEffect, Blend, BlendFunction, BlendState, BufferUsage, ClearOptions, ColorWriteChannels, CompareFunction, CubeMapFace, CullMode, DepthFormat, DepthStencilState, DeviceLostException, DeviceNotResetException, DirectionalLight, DisplayMode, DisplayModeCollection, DualTextureEffect, DynamicIndexBuffer, DynamicVertexBuffer, Effect, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectParameter, EffectParameterClass, EffectParameterCollection, EffectParameterType, EffectPass, EffectPassCollection, EffectTechnique, EffectTechniqueCollection, EnvironmentMapEffect, FillMode, GraphicsAdapter, GraphicsDeviceStatus, GraphicsProfile, IEffectFog, IEffectLights, IEffectMatrices, IGraphicsDeviceService, IVertexType, IndexBuffer, IndexElementSize, Model, ModelBone, ModelBoneCollection, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMesh, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPart, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, OcclusionQuery, PresentInterval, PresentationParameters, PrimitiveType, RasterizerState, RenderTargetBinding, RenderTargetCube, RenderTargetUsage, ResourceCreatedEventArgs, ResourceDestroyedEventArgs, SamplerState, SamplerStateCollection, SetDataOptions, SkinnedEffect, SpriteEffects, SpriteFont, SpriteSortMode, StencilOperation, SurfaceFormat, Texture, Texture3D, TextureAddressMode, TextureCollection, TextureCube, TextureFilter, VertexBuffer, VertexBufferBinding, VertexDeclaration, VertexElement, VertexElementFormat, VertexElementUsage, VertexPositionColor, VertexPositionColorTexture, VertexPositionNormalTexture, VertexPositionTexture, Viewport
-- `Microsoft.Xna.Framework.Graphics.PackedVector`: Alpha8, Bgr565, Bgra4444, Bgra5551, Byte4, HalfSingle, HalfVector2, HalfVector4, IPackedVector, NormalizedByte2, NormalizedByte4, NormalizedShort2, NormalizedShort4, Rg32, Rgba1010102, Rgba64, Short2, Short4
 - `Microsoft.Xna.Framework.Input`: ButtonState, Buttons, GamePad, GamePadButtons, GamePadCapabilities, GamePadDPad, GamePadDeadZone, GamePadState, GamePadThumbSticks, GamePadTriggers, GamePadType, KeyState, Keys, Mouse, MouseState
 - `Microsoft.Xna.Framework.Input.Touch`: GestureSample, GestureType, TouchCollection, TouchCollection.Enumerator, TouchLocation, TouchLocationState, TouchPanel, TouchPanelCapabilities
 - `Microsoft.Xna.Framework.Media`: Album, AlbumCollection, Artist, ArtistCollection, Genre, GenreCollection, MediaLibrary, MediaPlayer, MediaQueue, MediaSource, MediaSourceType, MediaState, Picture, PictureAlbum, PictureAlbumCollection, PictureCollection, Playlist, PlaylistCollection, Song, SongCollection, Video, VideoPlayer, VideoSoundtrackType, VisualizationData

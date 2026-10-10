@@ -38,7 +38,7 @@ Usage:
   cna-demos --run-all                Run every demo, one after another.
   cna-demos --smoke                  Same as --run-all --automated.
   cna-demos --catalog-json           Print the machine-readable catalog (JSON).
-  cna-demos --list-ids               Print "<id> <kind> <automation> <needs>" per demo (for scripts).
+  cna-demos --list-ids               Print "<id> <kind> <automation> <needs> <known-issue>" per demo.
   cna-demos --validate               Check the registry: IDs, metadata, source paths, assets.
   cna-demos --renderers              List the renderers compiled into this build.
   cna-demos --version                Print versions.
@@ -237,7 +237,7 @@ missing in this environment).
             }
             for (const RunResult& result : results)
             {
-                if (result.status == RunStatus::Failed)
+                if (result.IsProblem())
                 {
                     return 1;
                 }
@@ -273,6 +273,10 @@ missing in this environment).
                 std::cout << ": " << result.message;
             }
             std::cout << '\n';
+            if (result.ExpectedFailure())
+            {
+                std::cout << "== (known CNA issue " << result.knownIssue << ", see docs/CNA_ISSUES.md)\n";
+            }
             if (!args.reportPath.empty())
             {
                 std::ofstream report(args.reportPath);
@@ -359,9 +363,10 @@ missing in this environment).
                 {
                     needList += (needList.empty() ? "" : ",") + std::string(need);
                 }
+                const std::string_view knownIssue = demo.entry.info.knownIssue;
                 std::cout << demo.entry.info.id << ' ' << ToString(demo.entry.kind) << ' '
-                          << ToString(demo.entry.info.automation) << ' ' << (needList.empty() ? "-" : needList)
-                          << '\n';
+                          << ToString(demo.entry.info.automation) << ' ' << (needList.empty() ? "-" : needList) << ' '
+                          << (knownIssue.empty() ? "-" : knownIssue) << '\n';
             }
             return 0;
         }

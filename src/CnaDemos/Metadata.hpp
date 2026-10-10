@@ -128,6 +128,13 @@ namespace CnaDemos
         std::vector<std::string_view> assets = {};
         /** Renderer/platform restrictions and the reason for them, if any. */
         std::string_view restrictions = {};
+        /**
+         * ID of an entry in docs/CNA_ISSUES.md ("CNA-DEMOS-ISSUE-NNN") when the demo is known to fail
+         * because of a recorded CNA defect. The demo still checks the documented behaviour and
+         * still reports FAILED; batch runs and CTest treat that failure as expected, and a PASS as
+         * a signal that the issue may be fixed (see docs/AUTOMATION.md).
+         */
+        std::string_view knownIssue = {};
     };
 
     /** A registered demo: the author's metadata plus what the registry derived. */

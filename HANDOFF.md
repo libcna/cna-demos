@@ -13,8 +13,8 @@ capability has a demo. See docs/PROJECT.md.
 ## 2. Current phase
 
 * Phase 0 (research) and Phase 1 (infrastructure + pilot) are **complete**.
-* **Phase 2 -- math** is in progress: vectors, Matrix, Quaternion and MathHelper done
-  (48 math demos); next Point/Rectangle, bounding volumes, Plane/Ray, Curve, Color, packed vectors.
+* **Phase 2 -- math** is complete (72 math demos, 6 packed-vector demos).
+* Next: **Phase 3 -- game lifecycle** (see "Next task").
 
 ## 3. Architecture in 10 lines
 
@@ -52,8 +52,9 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 6. Demo counts
 
-56 demos: math 48, graphics 3, core 1, content 1, audio 1, input 1, platform 1 (standalone).
-Coverage (docs/COVERAGE.md): 18/329 XNA types, 139/2326 XNA members named by a demo.
+86 demos: math 72, graphics 9 (6 packed vector), core 1, content 1, audio 1, input 1, platform 1 (standalone).
+Coverage (docs/COVERAGE.md): 50/329 XNA types, 264/2326 XNA members named by a demo.
+Known-issue demos: 1 (`math.curve.step_continuity`, CNA-DEMOS-ISSUE-002).
 Categories declared but empty: game, media, storage, diagnostics, devices, phone, design, cnaext,
 net, gamer_services. Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
@@ -64,9 +65,9 @@ net, gamer_services. Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 | Configure + build `linux-full` (8 renderers, CNA as libcna.so) | ✅ |
 | `cna-demos --validate` | ✅ 0 problems |
 | `tools/validate.sh` (build, validate, ctest, smoke SOFTWARE + OPENGLES3/Xvfb, coverage) | ✅ |
-| `ctest` (15 CLI tests + 56 demos on SOFTWARE, dummy audio) | ✅ 71/71 |
-| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 56 passed |
-| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ✅ 56 passed (without the dummy driver the audio demo is SKIPPED: no ALSA device -- correct) |
+| `ctest` (15 CLI tests + 86 demos on SOFTWARE, dummy audio) | ✅ 101/101 (1 expected failure via WILL_FAIL) |
+| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 85 passed, 1 expected failure (known issue) |
+| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ✅ 85 passed, 1 expected failure (without the dummy driver the audio demo is SKIPPED: no ALSA device -- correct) |
 | Screenshots inspected (SOFTWARE, OPENGLES3): draw_texture, render_target2d | ✅ correct, identical across both |
 | CMake 3.28.3 (distro) with CNA_SHARED_LIBRARY=ON | ❌ CNA-DEMOS-ISSUE-001; cna-demos now defaults to static there |
 
@@ -98,7 +99,8 @@ Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untest
 
 ## 10. Known CNA issues
 
-See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-001 (libcna.so link with CMake 3.27/3.28).
+See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-001 (libcna.so link with CMake 3.27/3.28),
+CNA-DEMOS-ISSUE-002 (Curve Step keys evaluated against absolute position 1.0).
 
 ## 11. Dependencies (pinned for CI; same as cna-template's dependencies.lock)
 
@@ -125,10 +127,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Phase 2, remaining math**: `math.point.*`, `math.rectangle.*` (Contains, Intersects, Intersect,
-Union, Inflate, Offset, Center, IsEmpty), `math.bounding_box/bounding_sphere/bounding_frustum/
-plane/ray.*`, `math.curve.*`, `math.color.*`, `graphics.packed_vector.*` (ROADMAP Phase 2).
-Then Phase 3 (game lifecycle). Each: read the header in
+**Phase 3 -- game lifecycle** (`demos/game/`): Game method order, fixed/variable time step,
+TargetElapsedTime, IsRunningSlowly, Exit/Exiting, components (GameComponent,
+DrawableGameComponent, UpdateOrder/DrawOrder), GameServiceContainer, GameWindow (title,
+ClientBounds, resizing), GraphicsDeviceManager (back buffer, ApplyChanges, profile, events),
+LaunchParameters, TitleContainer -- see docs/ROADMAP.md Phase 3. Then Phase 4 (2D graphics). Each: read the header in
 `../cna/modules/math/include/Microsoft/Xna/Framework/`, write console demos with checks, build,
 validate, ctest, regenerate COVERAGE.md, update this file, commit.
 

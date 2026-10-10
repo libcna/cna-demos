@@ -135,6 +135,7 @@ namespace CnaDemos
                                                : info.frames > 0 ? info.frames : DefaultAutomatedFrames);
             out << ",\n      \"deterministic\": " << (info.deterministic ? "true" : "false");
             out << ",\n      \"restrictions\": \"" << JsonEscape(info.restrictions) << "\"";
+            out << ",\n      \"knownIssue\": \"" << JsonEscape(info.knownIssue) << "\"";
             out << ",\n      \"source\": \"" << JsonEscape(entry.source) << "\"";
             if (entry.kind == DemoKind::Standalone)
             {
@@ -187,6 +188,10 @@ namespace CnaDemos
         if (!info.restrictions.empty())
         {
             out << "  Restrictions: " << info.restrictions << '\n';
+        }
+        if (!info.knownIssue.empty())
+        {
+            out << "  Known issue : " << info.knownIssue << " (docs/CNA_ISSUES.md) -- expected to fail\n";
         }
         out << "  Source      : " << entry.source << '\n';
         out << "  Run         : cna-demos " << info.id << '\n';

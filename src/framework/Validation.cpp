@@ -171,6 +171,16 @@ namespace CnaDemos
             {
                 report(id, "no runnable body registered");
             }
+            if (!info.knownIssue.empty())
+            {
+                const std::string_view prefix = "CNA-DEMOS-ISSUE-";
+                const auto number = info.knownIssue.substr(std::min(prefix.size(), info.knownIssue.size()));
+                if (!info.knownIssue.starts_with(prefix) || number.size() != 3
+                    || !std::ranges::all_of(number, [](unsigned char c) { return std::isdigit(c); }))
+                {
+                    report(id, "knownIssue must be an ID like CNA-DEMOS-ISSUE-001");
+                }
+            }
             for (const std::string_view asset : info.assets)
             {
                 const std::filesystem::path path = std::filesystem::path(assetRoot) / std::string(asset);

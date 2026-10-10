@@ -22,6 +22,18 @@ Status words used everywhere (CLI, reports, coverage):
   to hide a failure: an exception that is not a declared missing requirement is FAILED.
 * **NOT RUN** -- manual demo in an unattended batch, or a standalone executable that was not built.
 
+### Known CNA issues (expected failures)
+
+A demo whose `knownIssue` names an entry of `docs/CNA_ISSUES.md` checks the documented behaviour
+and fails because of that recorded CNA defect. It is never turned into SKIPPED or PASSED:
+
+* a single run prints FAILED and names the issue; the exit code is 1;
+* batch runs list it as an expected failure and do not fail the batch for it -- but a known-issue
+  demo that **passes** is reported as "UNEXPECTED PASS" and fails the batch;
+* CTest registers it with `WILL_FAIL` and the label `known-issue`, so CI stays green while the
+  defect exists and turns red when it disappears (time to remove the marker);
+* `cna_demos.cli.catalog_json_parses` checks that every `knownIssue` has an entry in CNA_ISSUES.md.
+
 ## 2. Running unattended
 
 ```bash

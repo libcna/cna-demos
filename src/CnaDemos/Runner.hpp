@@ -32,6 +32,18 @@ namespace CnaDemos
         std::string message;
         int checks = 0;
         double seconds = 0.0;
+        /** The demo's knownIssue metadata (empty when none). */
+        std::string knownIssue;
+
+        /** A failure explained by a recorded CNA issue. */
+        [[nodiscard]] bool ExpectedFailure() const { return status == RunStatus::Failed && !knownIssue.empty(); }
+        /** A pass of a demo marked with a known issue: the issue may have been fixed. */
+        [[nodiscard]] bool UnexpectedPass() const { return status == RunStatus::Passed && !knownIssue.empty(); }
+        /** What a batch run counts as a problem: a new failure, or an unexpected pass. */
+        [[nodiscard]] bool IsProblem() const
+        {
+            return (status == RunStatus::Failed && knownIssue.empty()) || UnexpectedPass();
+        }
     };
 
     /** Runs one demo in this process (or, for a standalone demo, as a child process). */

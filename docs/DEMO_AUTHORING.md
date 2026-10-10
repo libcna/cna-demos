@@ -105,6 +105,7 @@ Do not present the frame yourself: `Game::EndDraw()` presents once per frame, as
 | `deterministic` | no (false) | the image at frame N depends only on N -- a screenshot-regression candidate. Animate from frame counts or `GameTime` under the fixed time step, never from the wall clock |
 | `assets` | no | files under `assets/` the demo loads (validated) |
 | `restrictions` | no | renderer/platform restrictions and *why* |
+| `knownIssue` | no | `CNA-DEMOS-ISSUE-NNN` when a recorded CNA defect makes the demo fail (section 11) |
 
 ## 6. Style
 
@@ -167,6 +168,8 @@ Look at the screenshot. A demo that runs but draws the wrong thing is not done.
 
 ## 11. When the demo exposes a CNA bug
 
-Do not work around it silently. Minimise it, add an entry to [CNA_ISSUES.md](CNA_ISSUES.md), and
-either leave the demo failing visibly or state the issue ID in `restrictions`. Fix CNA only for an
+Do not work around it silently. Minimise it, add an entry to [CNA_ISSUES.md](CNA_ISSUES.md), keep
+the demo checking the **documented** behaviour, and set `.knownIssue = "CNA-DEMOS-ISSUE-NNN"`. The
+demo then still reports FAILED (with the issue named), while batch runs and CTest count it as an
+expected failure; if it ever passes, CTest fails so the stale marker is noticed. Fix CNA only for an
 obvious, low-risk, well-understood defect, in CNA's own repository, separately from demo work.

@@ -31,3 +31,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - `--log-level` option (CNA's logger defaults to `warn` in cna-demos).
 - `tools/validate.sh`: build, validate, ctest, smoke reports and coverage in one command.
 - `CnaDemos/MathChecks.hpp`: tolerance helpers for matrix/quaternion checks.
+- Math demos: Point, Rectangle (edges, contains, intersect/union, inflate/offset), BoundingBox,
+  BoundingSphere, BoundingFrustum culling, Plane, Ray, Curve (evaluate, tangents, loop types, step
+  continuity, key collection), Color (construction, premultiplied alpha, lerp/vectors, packed
+  value); packed vector formats (compact colour, half precision, signed normalized, integer,
+  wide unorm, IPackedVector).
+- `knownIssue` metadata: demos that fail because of a recorded CNA defect are expected failures in
+  batch runs and CTest (`WILL_FAIL`), and an unexpected pass is reported.
+- CNA-DEMOS-ISSUE-002 recorded: `Curve::Evaluate` with Step keys compares the absolute position
+  with 1.0.

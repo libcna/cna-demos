@@ -16,7 +16,7 @@ plan written.
 CMake integration, registry, metadata, runner, DemoGame, browser, CLI, catalog JSON, validation,
 CTest discovery, screenshots, coverage report, CI, pilot demos in 7 categories.
 
-## Phase 2 -- math (`math.*`) 🟨 (48 demos: vectors, Matrix, Quaternion, MathHelper done)
+## Phase 2 -- math (`math.*`) ✅ (72 math demos + 6 packed-vector demos)
 Console demos with checks; each shows one operation family.
 - `math.vector2.*`, `math.vector3.*`, `math.vector4.*`: construction and constants, arithmetic
   operators, `Dot`, `Cross` (Vector3), `Normalize`, `Distance`/`DistanceSquared`, `Lerp`,
