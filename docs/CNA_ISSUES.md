@@ -187,6 +187,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   names.
 - **Suggestion:** a `RendererFeature` (or `GraphicsCapability`) entry for sampler LOD bias,
   reported `Unsupported` on GL ES; optionally a one-time warning when a non-zero bias is set there.
+- **Same gap, second case:** `PbrEffect` (CNAEXT) is documented in its header as rendered "as an
+  untextured/unlit fallback" on SOFTWARE, HEADLESS and the native 2D renderer, and no
+  `RendererFeature` reports it either; `graphics.pbr_effect.metallic_roughness` skips by renderer
+  name there.
 - **Status:** open (low impact); not reported upstream yet.
 
 ---

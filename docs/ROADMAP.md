@@ -102,11 +102,15 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   formats, `RenderTargetCube` and multiple render targets (with effects, Phase 6).
 - `graphics.texture_cube.*`, `graphics.texture3d.*`, `graphics.occlusion_query.*`. ≈ 5
 
-## Phase 6 -- effects and shaders ⬜
-- Stock effects, one concept per demo: `BasicEffect` (vertex colour, texture, default lighting,
-  directional lights, per-pixel lighting, fog, alpha), `AlphaTestEffect`, `DualTextureEffect`,
-  `EnvironmentMapEffect`, `SkinnedEffect`. ≈ 18
-- CNA effects: `PbrEffect`, `SkinnedPbrEffect`, `ColorMatrixEffect`, `SpriteEffect`. ≈ 5
+## Phase 6 -- effects and shaders 🟨 (14 demos: stock effects, effect API, PbrEffect)
+- ✅ Stock effects (11): `BasicEffect` (texture, default lighting, three directional lights,
+  per-pixel lighting, material colours, fog, alpha), `AlphaTestEffect` cut-outs,
+  `DualTextureEffect` light map, `EnvironmentMapEffect` with a `TextureCube` and Fresnel,
+  `SkinnedEffect` with two bones. Remaining: BasicEffect vertex colour + lighting combined.
+- 🟨 CNA effects: ✅ `PbrEffect` metallic/roughness. Remaining: PBR maps (normal, emissive,
+  occlusion), `SkinnedPbrEffect`, `ColorMatrixEffect`, `SpriteEffect`, image-based lighting.
+- ✅ Effect API (2): parameters/techniques/passes reflection (properties reach parameters on
+  Apply), `Effect::Clone`.
 - Custom shaders: `ShaderEffect` per shader language (ask `RendererCapabilityProfile`), compiled
   XNA effect bytecode (`Effect(GraphicsDevice&, bytes)`), `EffectParameter`/`EffectTechnique`/
   `EffectPass` reflection and parameter setting. ≈ 8

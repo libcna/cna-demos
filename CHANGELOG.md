@@ -78,6 +78,13 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - More render-state demos (7): DepthRead for transparency, depth-function X-ray silhouette, stencil
   overlap counting, depth bias for decals, MaxMipLevel, LOD bias (skipped on GL ES), anisotropic
   filtering.
+- Effect demos (14): BasicEffect texture, default lighting, three coloured directional lights,
+  per-pixel lighting, material colours, fog, alpha; AlphaTestEffect cut-outs; DualTextureEffect
+  light map (two texture-coordinate sets); EnvironmentMapEffect with a TextureCube and Fresnel;
+  SkinnedEffect with two bones; Effect parameters/techniques and Clone; CNA's PbrEffect.
+- `CnaDemos/Geometry.hpp`: sphere and cube meshes with normals and UVs for 3D demos.
+- Screenshots are saved opaque (what the window shows): XNA's SaveAsPng, which CNA matches,
+  stores fully transparent pixels as (0, 0, 0, 0).
 - CNA-DEMOS-ISSUE-006 recorded: no capability query tells a program that GL ES renderers ignore
   `MipMapLevelOfDetailBias` (documented CNA/FNA3D limitation).
 - CNA-DEMOS-ISSUE-005 recorded: CNA's `Color` is polymorphic (16 bytes), so XNA-style custom

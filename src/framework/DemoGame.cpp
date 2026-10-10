@@ -145,6 +145,13 @@ namespace CnaDemos
 
         std::vector<Color> pixels(static_cast<std::size_t>(width) * static_cast<std::size_t>(height));
         device.GetBackBufferData(pixels.data(), static_cast<int>(pixels.size()));
+        // A window shows only RGB. Make the copy opaque so the PNG shows the same: XNA's SaveAsPng
+        // (and CNA's, which matches it) stores fully transparent pixels as (0, 0, 0, 0), which
+        // would turn e.g. white-with-alpha-0 back-buffer pixels black in the screenshot.
+        for (Color& pixel : pixels)
+        {
+            pixel.setAProperty(255);
+        }
 
         Texture2D image(device, width, height);
         image.SetData(pixels.data(), static_cast<int>(pixels.size()));
