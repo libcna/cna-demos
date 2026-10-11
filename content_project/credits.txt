@@ -1,0 +1,2 @@
+cna-demos content project
+Ship, grid and blip: original procedural assets (tools/generate_assets.py).

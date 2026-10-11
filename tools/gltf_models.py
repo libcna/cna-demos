@@ -435,6 +435,65 @@ def paint_toy(path: Path) -> None:
     doc.save(path)
 
 
+def painted_column(path: Path) -> None:
+    """The bending strip's rig and "Bend" clip on a square column (0.5 wide, 4 high, 8 segments,
+    flat-shaded sides) with an orange painted (dielectric) metallic-roughness material and no unlit
+    extension: skinned + PBR is what CNA maps to its SkinnedPbrEffect. No lights in the file, so the
+    importer enables the default lighting. (A metal would look dark here: with no environment to
+    reflect, it shows only its highlights.)"""
+    doc = Document()
+    positions, normals, joints, weights, indices = [], [], [], [], []
+    segments = 8
+    # Outward normal and the direction to the right as seen from outside, per side.
+    sides = [((0.0, 0.0, 1.0), (1.0, 0.0, 0.0)), ((1.0, 0.0, 0.0), (0.0, 0.0, -1.0)),
+             ((0.0, 0.0, -1.0), (-1.0, 0.0, 0.0)), ((-1.0, 0.0, 0.0), (0.0, 0.0, 1.0))]
+    for normal, right in sides:
+        first = len(positions)
+        for row in range(segments + 1):
+            y = 4.0 * row / segments
+            tip = min(1.0, max(0.0, (y - 1.5) / 1.0))
+            for side in (-1.0, 1.0):
+                positions.append((0.25 * normal[0] + 0.25 * side * right[0], y,
+                                  0.25 * normal[2] + 0.25 * side * right[2]))
+                normals.append(normal)
+                joints.append((0, 1, 0, 0))
+                weights.append((1.0 - tip, tip, 0.0, 0.0))
+        for row in range(segments):
+            a = first + row * 2
+            indices += [a, a + 1, a + 3, a, a + 3, a + 2]  # counter-clockwise from outside (glTF)
+    mesh = {"name": "ColumnMesh", "primitives": [{
+        "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True),
+                       "NORMAL": doc.accessor(normals, "VEC3"),
+                       "JOINTS_0": doc.accessor(joints, "VEC4", UNSIGNED_BYTE),
+                       "WEIGHTS_0": doc.accessor(weights, "VEC4")},
+        "indices": doc.accessor(indices, "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+        "material": 0}]}
+    doc.gltf["materials"] = [{"name": "OrangePaint", "pbrMetallicRoughness": {
+        "baseColorFactor": [0.9, 0.42, 0.12, 1.0], "metallicFactor": 0.0, "roughnessFactor": 0.5}}]
+    doc.gltf["meshes"].append(mesh)
+    doc.gltf["nodes"] = [
+        {"name": "Column", "mesh": 0, "skin": 0},
+        {"name": "LowerJoint", "children": [2]},
+        {"name": "UpperJoint", "translation": [0.0, 2.0, 0.0]},
+    ]
+    identity = [1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0]
+    tip_inverse = [1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0, 0, 0, -2.0, 0, 1.0]
+    doc.gltf["skins"] = [{"name": "ColumnRig", "joints": [1, 2], "skeleton": 1,
+                          "inverseBindMatrices": doc.accessor([identity, tip_inverse], "MAT4", target=None)}]
+    times = [0.0, 0.5, 1.0, 1.5, 2.0]
+    angles = [0.0, 50.0, 0.0, -50.0, 0.0]
+    rotations = [(0.0, 0.0, math.sin(math.radians(a) / 2), math.cos(math.radians(a) / 2)) for a in angles]
+    doc.gltf["animations"] = [{"name": "Bend",
+                               "samplers": [{"input": doc.accessor(times, "SCALAR", target=None, minmax=False),
+                                             "output": doc.accessor(rotations, "VEC4", target=None),
+                                             "interpolation": "LINEAR"}],
+                               "channels": [{"sampler": 0, "target": {"node": 2, "path": "rotation"}}]}]
+    doc.gltf["accessors"][doc.gltf["animations"][0]["samplers"][0]["input"]].update({"min": [0.0], "max": [2.0]})
+    doc.gltf["scenes"] = [{"name": "PaintedColumn", "nodes": [0, 1]}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
 def lit_sphere(path: Path) -> None:
     """A white sphere with a metallic-roughness material (so CNA gives it a PbrEffect) and two
     KHR_lights_punctual directional lights: "Warm" (1, 0.35, 0.2) shining from the left (towards
@@ -489,6 +548,7 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     textured_crate(content_root / "models" / "textured_crate.gltf")
     lit_sphere(content_root / "models" / "lit_sphere.gltf")
     slide_rig(content_root / "models" / "slide_rig.gltf")
+    painted_column(content_root / "models" / "painted_column.gltf")
     # The same arm as a loose file: CNA can also load glTF at run time, without the pipeline.
     robot_arm(assets_root / "models" / "loose_robot_arm.gltf")
     # Loose copies of the camera rig and the textured crate: the compiled models lose the cameras

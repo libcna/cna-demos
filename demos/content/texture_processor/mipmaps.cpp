@@ -76,7 +76,7 @@ CNA_DEMOS_GAME(MipmapsDemo, {
     .title = "Mipmaps built by the content pipeline",
     .description = "Loads a checkerboard compiled with the TextureProcessor parameter generateMipmaps: LevelCount is 8 "
                    "and the last level is the average grey; shrinking copies fade smoothly with linear filtering.",
-    .apis = {"ContentManager::Load", "Texture2D::LevelCount", "Texture2D::GetData", "SamplerState::LinearClamp"},
+    .apis = {"ContentManager::Load", "Texture::LevelCount", "Texture2D::GetData", "SamplerState::LinearClamp"},
     .tags = {"content", "pipeline", "mipmaps", "filtering", "texture"},
     .frames = 3,
     .deterministic = true,

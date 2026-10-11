@@ -77,7 +77,7 @@ CNA_DEMOS_GAME(DxtTextureDemo, {
     .title = "XNB textures and DXT compression",
     .description = "Loads two textures compiled into XNA's XNB format: one as SurfaceFormat::Color, one with the "
                    "TextureProcessor's DxtCompressed output (Dxt1), drawn side by side and zoomed to show the blocks.",
-    .apis = {"ContentManager::Load", "Texture2D::Format", "SurfaceFormat"},
+    .apis = {"ContentManager::Load", "Texture::Format", "SurfaceFormat"},
     .tags = {"content", "xnb", "dxt", "compression", "s3tc", "texture"},
     .frames = 3,
     .assets = {"fonts/pixel_font.cnb", "xnb/textures/colour_wheel.xnb", "xnb/textures/colour_wheel_dxt.xnb"},

@@ -44,7 +44,7 @@ Console demos with checks; each shows one operation family.
   Bgra5551, Byte4, HalfSingle/Vector2/Vector4, NormalizedByte2/4, NormalizedShort2/4, Rg32,
   Rgba1010102, Rgba64, Short2/4) -- one demo per format family, not per method. ≈ 8
 
-## Phase 3 -- game lifecycle (`game.*`) 🟨 (32 demos; remaining: ScreenDeviceName)
+## Phase 3 -- game lifecycle (`game.*`) ✅ (33 demos; ScreenDeviceName: `game.window.screen_device_name`)
 - Game: method order (`Initialize`→`LoadContent`→`BeginRun`→Update/Draw→`EndRun`→`UnloadContent`),
   `IsFixedTimeStep` and `TargetElapsedTime`, variable time step, `IsRunningSlowly`, `ResetElapsedTime`,
   `SuppressDraw`, `Exit`, `Exiting`/`Activated`/`Deactivated` events, `IsMouseVisible`,
@@ -108,14 +108,16 @@ Console demos with checks; each shows one operation family.
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
   `graphics.texture_cube.*` beyond the environment-map demo (render to a `RenderTargetCube`).
 
-## Phase 6 -- effects and shaders 🟨 (14 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (15 demos: stock effects, effect API, PbrEffect)
 - ✅ Stock effects (11): `BasicEffect` (texture, default lighting, three directional lights,
   per-pixel lighting, material colours, fog, alpha), `AlphaTestEffect` cut-outs,
   `DualTextureEffect` light map, `EnvironmentMapEffect` with a `TextureCube` and Fresnel,
   `SkinnedEffect` with two bones, ✅ `graphics.basic_effect.vertex_color_lighting` (vertex colour
   and lighting together).
-- 🟨 CNA effects: ✅ `PbrEffect` metallic/roughness, ✅ `ColorMatrixEffect` (SOFTWARE). Remaining:
-  PBR maps (normal, emissive, occlusion), `SkinnedPbrEffect`, image-based lighting.
+- 🟨 CNA effects: ✅ `PbrEffect` metallic/roughness, ✅ `ColorMatrixEffect` (SOFTWARE), ✅
+  `graphics.pbr_effect.texture_maps` (normal map with a Vector4 vertex tangent, emissive map,
+  occlusion map on ambient light), ✅ `SkinnedPbrEffect` (`graphics.model.skinned_pbr`). Remaining:
+  image-based lighting.
 - 🟨 Custom shaders: ✅ `ShaderEffect` in 3D (toon shading), a heightmap read in the vertex shader
   (`graphics.shader_effect.vertex_displacement`) and in `SpriteBatch::Begin`
   (grayscale), GLSL chosen from `GetShaderDialectEXT()`. Remaining: compiled XNA `.fx` effects
@@ -126,7 +128,7 @@ Console demos with checks; each shows one operation family.
   XNA effect bytecode (`Effect(GraphicsDevice&, bytes)`), `EffectParameter`/`EffectTechnique`/
   `EffectPass` reflection and parameter setting. ≈ 8
 
-## Phase 7 -- models, animation, glTF 🟨 (11 demos)
+## Phase 7 -- models, animation, glTF 🟨 (15 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -142,17 +144,21 @@ Console demos with checks; each shows one operation family.
   CNA-DEMOS-ISSUE-031: all play as LINEAR).
 - ✅ `graphics.model.material_variants` (KHR_materials_variants, run-time import: CNA's content
   pipeline refuses variants, which the compiled model format cannot carry).
-- Remaining: `SkinnedPbrEffect`, `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
+- ✅ `graphics.model.skinned_pbr` (skinned + metallic-roughness imports as SkinnedPbrEffect).
+- Remaining: `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
 
-## Phase 8 -- content 🟨 (18 demos; remaining below)
+## Phase 8 -- content 🟨 (20 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
   manifest, custom loose-file reader, the same SpriteFont/SoundEffect/Curve as CNB and XNB.
   ✅ `content.xnb.custom_type_reader` (ContentTypeReader<T> + AddTypeCreator for the game's own
   type), ✅ `content.content_manager.resource_content_manager` (content embedded as resources;
-  ISSUE-012). Remaining: CNJ texture and sprite font, `.contentproj` import (`CONTENT_PROJECT`),
-  custom pipeline components and `RegisterCnbLoaderEXT`.
+  ISSUE-012), ✅ `content.cnj.sprite_font` (a bitmap font authored as CNJ: atlas, glyph rectangles,
+  cropping, kerning), ✅ `content.content_project.xna_content_project` (an XNA `.contentproj` built
+  as it is, `CONTENT_PROJECT`). A CNJ texture repeats the texture processor demos (the same
+  parameters in JSON). Remaining: custom pipeline components, `RegisterCnbLoaderEXT` and
+  `RegisterCnjLoader` (a game's own asset type; see HANDOFF "Next").
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
   managers, `ContentLoadException`, loose files vs XNB vs CNB vs CNJ lookup order.
 - `content.xnb.*`: Texture2D, SoundEffect, SpriteFont, Model, Effect, TextureCube, Curve XNBs.
@@ -235,7 +241,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032 and -033).
 - Remaining net: voice (manual).
 
-## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (17 demos)
+## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (18 demos)
 - ✅ `devices.*` (4): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
   AccelerometerFailedException, Environment::DeviceType), CNAEXT keyboard-emulated accelerometer,
   VibrateController, CNA::Devices SystemInfo/Locale/PowerInfo, ✅ DisplayInfo (content scale, safe
@@ -250,8 +256,10 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   scopes and trace recording (need a CNA build with `CNA_DIAGNOSTICS=FULL`).
 - ✅ `cnaext.*` (4): AsciiPostProcessEffect (every renderer), CRTEffect and DepthEffect (shader
   renderers), DebugDraw.
-- `platform.*`: platform capabilities, native window handle, renderer selection with fallback
-  chain (standalone), renderer capability profiles.
+- `platform.*`: ✅ renderer selection with fallback chain (standalone), ✅
+  `platform.window.native_handle` (GameWindow::Handle, typed NativeWindowHandle); renderer
+  capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
+  (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
 ## Phase 14 -- bindings 🟨 (13 C API demos)
 C API demos as standalone C programs (one C game per process), built only with

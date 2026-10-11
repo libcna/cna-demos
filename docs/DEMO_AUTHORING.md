@@ -159,7 +159,10 @@ parameters there (for textures: `colorKey`, `premultiplyAlpha`, `generateMipmaps
 `resizeToPowerOfTwo`; see the `content.texture_processor.*` demos). Sources that must be compiled to
 XNA's XNB format instead go under `content_xnb/` and load as `xnb/<name>`; videos and
 compressed audio go under `content_media/` and load as `media/<name>` (declare `Need::Video`: they
-are compiled only when CNA has its FFmpeg backend). Load it by name like any
+are compiled only when CNA has its FFmpeg backend). A demo about XNA content projects adds an
+item to `content_project/Game.contentproj` and loads it as `contentproj/<folder>/<Name>`; CNJ
+documents (`.cnj`: curves, sprite fonts with their atlas) go under `content/` like any source.
+Load it by name like any
 XNA game (`Content.Load<SpriteFont>("fonts/pixel_font")`) and list the *compiled* file in
 `.assets` (`"fonts/pixel_font.cnb"`). The shared font for on-screen text is `fonts/pixel_font`
 (printable ASCII, LineSpacing 18, crisp with `SamplerState::PointClamp`).

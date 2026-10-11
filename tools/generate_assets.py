@@ -4,7 +4,8 @@
 
 assets/ holds files demos load as they are (PNG, WAV). content/ holds sources that CNA's content
 pipeline compiles at build time (cna_add_content) into CNA's own CNB format, such as the pixel-font
-sheet; content_xnb/ holds sources compiled into XNA's XNB format instead.
+sheet; content_xnb/ holds sources compiled into XNA's XNB format instead; content_project/ holds the
+sources of an XNA content project (.contentproj) built as it is.
 
 Every file this script writes is original cna-demos content (no third-party
 input), so it is covered by the project's own licence. The generated files are
@@ -17,6 +18,7 @@ standard library. Output is deterministic: running it twice yields identical
 bytes, so an unchanged asset produces no Git diff.
 """
 
+import json
 import math
 import struct
 import wave
@@ -33,6 +35,7 @@ ROOT = Path(__file__).resolve().parent.parent / "assets"
 CONTENT_ROOT = Path(__file__).resolve().parent.parent / "content"
 CONTENT_XNB_ROOT = Path(__file__).resolve().parent.parent / "content_xnb"
 CONTENT_MEDIA_ROOT = Path(__file__).resolve().parent.parent / "content_media"
+CONTENT_PROJECT_ROOT = Path(__file__).resolve().parent.parent / "content_project"
 
 
 def save_png(image: Image.Image, relative: str, root: Path = ROOT) -> None:
@@ -161,6 +164,56 @@ def font_sheet(scale: int, columns: int = 16) -> Image.Image:
     return image
 
 
+# Seven-segment digits for a score display: segment name -> rectangle (x, y, w, h) in a 10x16 cell.
+SEGMENTS = {
+    "a": (2, 0, 6, 2), "b": (8, 2, 2, 5), "c": (8, 9, 2, 5), "d": (2, 14, 6, 2),
+    "e": (0, 9, 2, 5), "f": (0, 2, 2, 5), "g": (2, 7, 6, 2),
+}
+DIGIT_SEGMENTS = ["abcdef", "bc", "abged", "abgcd", "fgbc", "afgcd", "afgedc", "abc", "abcdefg", "abcdfg"]
+SEGMENT_CELL = (10, 16)
+
+
+def score_digits(relative_png: str, relative_cnj: str, root: Path) -> None:
+    """A bitmap font drawn by hand rather than rasterised: the digits 0-9 and ':' of a
+    seven-segment display, scaled 2x, in one atlas row, plus the CNJ document that names each
+    glyph's rectangle in the atlas, its cropping and its kerning (left bearing, width, right
+    bearing) -- what CNA's content pipeline compiles into a SpriteFont."""
+    scale = 2
+    cell_w, cell_h = SEGMENT_CELL[0] * scale, SEGMENT_CELL[1] * scale
+    colon_w = 2 * scale
+    width = 10 * cell_w + colon_w
+    image = Image.new("RGBA", (width, cell_h), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    glyphs = []
+    for digit, segments in enumerate(DIGIT_SEGMENTS):
+        left = digit * cell_w
+        for name in segments:
+            x, y, w, h = SEGMENTS[name]
+            draw.rectangle([left + x * scale, y * scale, left + (x + w) * scale - 1, (y + h) * scale - 1],
+                           fill=(255, 255, 255, 255))
+        glyphs.append({"char": ord("0") + digit, "source": [left, 0, cell_w, cell_h], "crop": [0, 0, cell_w, cell_h],
+                       "kerning": [scale, cell_w, scale]})
+    colon_left = 10 * cell_w
+    for y in (4, 10):
+        draw.rectangle([colon_left, y * scale, colon_left + colon_w - 1, (y + 2) * scale - 1], fill=(255, 255, 255, 255))
+    glyphs.append({"char": ord(":"), "source": [colon_left, 0, colon_w, cell_h], "crop": [0, 0, colon_w, cell_h],
+                   "kerning": [scale, colon_w, scale]})
+    save_png(image, relative_png, root)
+    document = {"cnjVersion": 1, "type": "SpriteFont", "texture": Path(relative_png).name,
+                "lineSpacing": cell_h + 2 * scale, "spacing": 0.0, "defaultCharacter": "0", "glyphs": glyphs}
+    path = root / relative_cnj
+    lines = ["{"]
+    for key in ("cnjVersion", "type", "texture", "lineSpacing", "spacing", "defaultCharacter"):
+        lines.append(f"  {json.dumps(key)}: {json.dumps(document[key])},")
+    lines.append('  "glyphs": [')
+    lines.extend(f"    {json.dumps(glyph)}," for glyph in glyphs)
+    lines[-1] = lines[-1].rstrip(",")
+    lines.append("  ]")
+    lines.append("}")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"wrote {path.relative_to(root.parent)}")
+
+
 def tone(relative: str, frequency: float, seconds: float, rate: int = 22050, volume: float = 0.5,
          root: Path = ROOT) -> None:
     path = root / relative
@@ -251,6 +304,7 @@ def main() -> None:
     save_png(soft_circle(64), "textures/soft_circle.png")
     save_png(sprite_strip(32, 4), "textures/sprite_strip.png")
     save_png(font_sheet(2), "fonts/pixel_font.png", CONTENT_ROOT)
+    score_digits("fonts/score_digits_atlas.png", "fonts/score_digits.cnj", CONTENT_ROOT)
     save_png(keyed_ship(64), "textures/keyed_ship.png", CONTENT_ROOT)
     save_png(soft_circle(64), "textures/soft_circle_compiled.png", CONTENT_ROOT)
     save_png(framed_gradient(100, 60), "textures/odd_size.png", CONTENT_ROOT)
@@ -268,6 +322,10 @@ def main() -> None:
     melody("music/rising.wav", [60, 64, 67, 72, 64, 67, 72, 76], 0.25)   # C major, upwards
     melody("music/falling.wav", [81, 76, 72, 69, 76, 72, 69, 64], 0.25)  # A minor, downwards
     custom_level_xnb("levels/castle.xnb")
+    # The sources of the XNA content project content_project/Game.contentproj (written by hand).
+    save_png(keyed_ship(64), "Textures/ship_source.png", CONTENT_PROJECT_ROOT)
+    save_png(checker(64, 4, (255, 255, 255, 255), (30, 30, 30, 255)), "Textures/grid.png", CONTENT_PROJECT_ROOT)
+    tone("Sounds/blip.wav", 1320.0, 0.15, root=CONTENT_PROJECT_ROOT)
 
 
 if __name__ == "__main__":

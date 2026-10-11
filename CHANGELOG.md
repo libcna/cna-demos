@@ -156,6 +156,20 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   `net.network_session.join_refused` (standalone, two processes: NetworkSessionJoinException for a
   game in progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032: the refusal
   reads SessionNotFound, and ISSUE-033: the late joiner's session stays in Lobby).
+- `graphics.pbr_effect.texture_maps` (NormalMap with a Vector4 vertex tangent, EmissiveMap,
+  OcclusionMap darkening ambient light only; GL renderers), `graphics.model.skinned_pbr` (a skinned
+  glTF with a metallic-roughness material imports as SkinnedPbrEffect; tools/gltf_models.py writes
+  painted_column.gltf), `content.cnj.sprite_font` (a seven-segment bitmap font authored as CNJ: atlas
+  plus per-glyph rectangles, cropping and kerning; tools/generate_assets.py writes both),
+  `game.window.screen_device_name` (ScreenDeviceName, ScreenDeviceNameChanged, the adapter's
+  DeviceName), `platform.window.native_handle` (GameWindow::Handle and the typed
+  NativeWindowHandle accessors).
+- `c_api.game.components` takes one step a second when a person watches.
+- `content.content_project.xna_content_project`: an XNA Game Studio `.contentproj`
+  (`content_project/`) built as it is by `cna_add_content(... CONTENT_PROJECT ...)` into XNB:
+  item names, the default colour key, a per-item processor parameter, a copied None item.
+- Coverage: `Texture::Format` and `Texture::LevelCount` are named on XNA's base class `Texture`
+  (they were credited to nothing as `Texture2D::...`).
 - `graphics.model.gltf_lights` (two KHR_lights_punctual lights become the PbrEffect's
   DirectionalLight0/1) and `graphics.model.clip_interpolation` (STEP, LINEAR and CUBICSPLINE
   samplers; expected failure CNA-DEMOS-ISSUE-031: CNA plays all three as LINEAR) and

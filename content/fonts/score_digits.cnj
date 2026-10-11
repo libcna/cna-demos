@@ -1,0 +1,21 @@
+{
+  "cnjVersion": 1,
+  "type": "SpriteFont",
+  "texture": "score_digits_atlas.png",
+  "lineSpacing": 36,
+  "spacing": 0.0,
+  "defaultCharacter": "0",
+  "glyphs": [
+    {"char": 48, "source": [0, 0, 20, 32], "crop": [0, 0, 20, 32], "kerning": [2, 20, 2]},
+    {"char": 49, "source": [20, 0, 20, 32], "crop": [0, 0, 20, 32], "kerning": [2, 20, 2]},
+    {"char": 50, "source": [40, 0, 20, 32], "crop": [0, 0, 20, 32], "kerning": [2, 20, 2]},
+    {"char": 51, "source": [60, 0, 20, 32], "crop": [0, 0, 20, 32], "kerning": [2, 20, 2]},
+    {"char": 52, "source": [80, 0, 20, 32], "crop": [0, 0, 20, 32], "kerning": [2, 20, 2]},
+    {"char": 53, "source": [100, 0, 20, 32], "crop": [0, 0, 20, 32], "kerning": [2, 20, 2]},
+    {"char": 54, "source": [120, 0, 20, 32], "crop": [0, 0, 20, 32], "kerning": [2, 20, 2]},
+    {"char": 55, "source": [140, 0, 20, 32], "crop": [0, 0, 20, 32], "kerning": [2, 20, 2]},
+    {"char": 56, "source": [160, 0, 20, 32], "crop": [0, 0, 20, 32], "kerning": [2, 20, 2]},
+    {"char": 57, "source": [180, 0, 20, 32], "crop": [0, 0, 20, 32], "kerning": [2, 20, 2]},
+    {"char": 58, "source": [200, 0, 4, 32], "crop": [0, 0, 4, 32], "kerning": [2, 4, 2]}
+  ]
+}

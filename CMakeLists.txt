@@ -118,10 +118,18 @@ cna_add_content(TARGET cna_demos_content_xnb
     FORMAT xnb
     ${_cna_demos_content_tool}
     QUIET)
+# content_project/ is an XNA Game Studio content project (.contentproj) built as it is: the project
+# names its own platform, profile, per-item importer/processor/parameters and copied files, and
+# produces XNB files, as XNA's own build did (content.content_project.xna_content_project).
+cna_add_content(TARGET cna_demos_content_project
+    CONTENT_PROJECT content_project/Game.contentproj
+    OUTPUT_DIR "${CNA_DEMOS_OUTPUT_DIR}/assets/contentproj"
+    ${_cna_demos_content_tool}
+    QUIET)
 # content_media/ holds sources whose import needs CNA's FFmpeg backend (CNA_ENABLE_VIDEO): videos,
 # whose size, frame rate and duration the pipeline probes, and compressed audio. Compiled only
 # when CNA has that backend; the demos that load them then skip (Need::Video).
-set(_cna_demos_content_targets cna_demos_content cna_demos_content_xnb)
+set(_cna_demos_content_targets cna_demos_content cna_demos_content_xnb cna_demos_content_project)
 if(TARGET cna_video_ffmpeg)
     cna_add_content(TARGET cna_demos_content_media
         SOURCE_DIR content_media
