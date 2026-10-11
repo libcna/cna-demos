@@ -56,6 +56,13 @@ disables Escape handling; `--frames N` overrides the limit. Determinism inputs:
   demo captured at frame 20 shows different angles on SOFTWARE and OPENGLES3).
 * No demo uses the network or user files unless that is the demonstrated feature (and then it is
   classified accordingly).
+* Gamer services demos run offline -- `CnaDemos::GamerServicesDemo` overrides CNA's service
+  configuration, so a CNA service configured for the user's games is never contacted -- with the
+  demos' own profile store and the local profile "Demo Player" signed in automatically
+  (`CNA_GAMER_SERVICES_PROFILES_DIR` and `CNA_GAMER_SERVICES_AUTO_SIGN_IN` override both). They
+  run in a process of their own (`ownProcess` metadata, see ARCHITECTURE.md section 4), answer the
+  Guide through CNA's `Simulate...EXT` calls and type through `TextInputEXT`. Achievements CNA keeps
+  offline persist between runs; the demos' checks hold on the first run and on every later one.
 
 ## 3. CTest
 

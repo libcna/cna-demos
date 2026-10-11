@@ -34,6 +34,11 @@ namespace CnaDemos
         std::string screenshotPath;
         /** Suppress the demo's own informational output. */
         bool quiet = false;
+        /**
+         * This process was started to run this one demo (`cna-demos <id>`), so a demo whose
+         * metadata asks for its own process (DemoInfo::ownProcess) runs here directly.
+         */
+        bool freshProcess = false;
     };
 
     /**

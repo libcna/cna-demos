@@ -42,6 +42,7 @@ cna-demos (one executable)
 | `assets/` | shared demo assets, copied next to the executables at build time |
 | `content/` | content-pipeline sources (e.g. the font sheet) compiled by CNA's `cna-content` into the same assets directory (CNB format) |
 | `content_xnb/` | content-pipeline sources compiled into XNA's XNB format, into `assets/xnb/` |
+| `title/` | files CNA reads by a fixed path in the title directory (the offline achievement catalog), copied next to the executables |
 | `tools/` | developer tools (Python): asset generator, coverage report |
 | `docs/` | documentation; `docs/COVERAGE.md` is generated |
 
@@ -67,7 +68,10 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
   are linked by the categories that need them (`demos/CMakeLists.txt`).
 * `CNA_SHARED_LIBRARY`: CNA links its runtime as `libcna.so` by default on Linux. With CMake older
   than 3.29 that link fails (see [CNA_ISSUES.md](CNA_ISSUES.md) CNA-DEMOS-ISSUE-001), so
-  cna-demos defaults it to OFF there.
+  cna-demos defaults it to OFF there. With a shared CNA, `cna-demos` names the `libcna.so` file
+  first on its link line: `CNA::GamerServices`/`CNA::Net` are static and link CNA's module
+  archives, and ahead of libcna.so they would put a second CNA into the executable
+  (CNA-DEMOS-ISSUE-016).
 
 ### Renderers
 
@@ -105,6 +109,14 @@ in one process (CNA tests this: `GameTest.UnloadContentWorksAcrossRepeatedGameIn
 The browser and `--run-all` therefore run Game demos back to back in one process and return to
 the menu afterwards. A crash (not an exception) still ends the process; CTest runs each demo in
 its own process for isolation.
+
+The exception is state CNA (like XNA) sets up once per process: `GamerServicesDispatcher` refuses
+a second initialization, so a demo with a `GamerServicesComponent` cannot follow another one in
+the same process. Such a demo sets `ownProcess` in its metadata; batch runs and the browser then
+start `cna-demos <id> --batch-child --report <tmp>` and take the result from that report (status,
+message, checks). `cna-demos <id>` itself is such a process and runs the demo directly. The demo
+stays an ordinary in-process Game demo in every other respect (one source file, the shared
+executable).
 
 ## 5. Registry and metadata
 
@@ -193,6 +205,7 @@ cna-demo-<id> (EXECUTABLE, one per standalone demo)
 cna_demos_assets (custom target) copies assets/ to <build>/bin/assets
 cna_demos_content (cna_add_content) compiles content/ into <build>/bin/assets (CNB files)
 cna_demos_content_xnb (cna_add_content FORMAT xnb) compiles content_xnb/ into <build>/bin/assets/xnb
+cna_demos_title_files (custom target) copies title/ to <build>/bin
 ```
 
 * Categories are declared once each in `demos/CMakeLists.txt`, optionally with `REQUIRES <option>`
@@ -227,6 +240,9 @@ keep demos independent). Revisit with measurements when the collection is in the
   Third-party assets are only allowed with licence and attribution in `THIRD_PARTY_NOTICES.md`.
 * Prefer procedural data inside the demo when the demo is not about loading; prefer a shared
   asset over duplicating one.
+* `title/` holds files CNA opens by a fixed title-relative path (`TitleContainer`), not through
+  `Content`: `GamerServices/Achievements.json`, the offline achievement catalog. It is copied into
+  `bin/` itself.
 
 ## 9. Command line, browser, catalog
 

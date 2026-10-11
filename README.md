@@ -115,7 +115,8 @@ cd build/linux-multi/bin
 ```
 
 In the browser, type a number to open a group or demo, `b` to go back, `/text` to search, an ID to
-jump to a demo, `q` to quit. Demos run inside the browser process and return to it when closed.
+jump to a demo, `q` to quit. Demos run inside the browser process and return to it when closed
+(gamer services demos, which CNA can set up only once per process, start a fresh `cna-demos`).
 
 ## How demos are organised
 
@@ -127,6 +128,8 @@ jump to a demo, `q` to quit. Demos run inside the browser process and return to 
 * Most demos run inside `cna-demos`. The few that need their own process (for example selecting
   the renderer, which CNA latches per process) are separate executables under `standalone/`;
   the browser lists and launches them like any other demo.
+* Gamer services demos run offline with local profiles kept apart from your own CNA profiles
+  (the local profile "Demo Player" is signed in for them); they never contact a CNA service.
 
 ## Adding a demo
 

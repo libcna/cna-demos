@@ -6,7 +6,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**287 demos** in 10 categories. Kinds: console 120, game 166, standalone 1. Automation: automated 255, manual 2, smoke-only 30.
+**297 demos** in 11 categories. Kinds: console 120, game 176, standalone 1. Automation: automated 265, manual 2, smoke-only 30.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -14,6 +14,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | content | 15 | 15 | 0 | 0 | 13 / 0 / 2 | 13 / 0 / 2 |
 | core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | game | 25 | 22 | 2 | 1 | 21 / 3 / 0 | 24 / 0 / 0 |
+| gamer_services | 10 | 10 | 0 | 0 | 9 / 0 / 1 | 9 / 0 / 1 |
 | graphics | 106 | 106 | 0 | 0 | 102 / 3 / 1 | 102 / 3 / 1 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
 | math | 72 | 72 | 0 | 0 | 71 / 0 / 1 | 71 / 0 / 1 |
@@ -23,8 +24,8 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 161 of 329** (48.9 %).
-- **Methods, properties, constructors and events named by a demo: 785 of 2326** (33.7 %).
+- **Types with at least one demo: 173 of 329** (52.6 %).
+- **Methods, properties, constructors and events named by a demo: 852 of 2326** (36.6 %).
 - Fields and enum values named by a demo: 116 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
@@ -33,7 +34,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Audio` | 13 / 19 | 71 / 121 | 5 / 11 |
 | `Microsoft.Xna.Framework.Content` | 1 / 11 | 7 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 0 / 13 | 0 / 51 | 0 / 2 |
-| `Microsoft.Xna.Framework.GamerServices` | 0 / 52 | 0 / 244 | 0 / 223 |
+| `Microsoft.Xna.Framework.GamerServices` | 12 / 52 | 67 / 244 | 0 / 223 |
 | `Microsoft.Xna.Framework.Graphics` | 69 / 99 | 217 / 550 | 77 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 11 / 17 | 83 / 113 | 0 / 202 |
@@ -50,7 +51,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 - `Microsoft.Xna.Framework.Audio`: AudioStopOptions, InstancePlayLimitException, MicrophoneState, NoAudioHardwareException, NoMicrophoneConnectedException, RendererDetail
 - `Microsoft.Xna.Framework.Content`: ContentLoadException, ContentReader, ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute, ContentTypeReader, ContentTypeReaderManager, ResourceContentManager
 - `Microsoft.Xna.Framework.Design`: BoundingBoxConverter, BoundingSphereConverter, ColorConverter, MathTypeConverter, MatrixConverter, PlaneConverter, PointConverter, QuaternionConverter, RayConverter, RectangleConverter, Vector2Converter, Vector3Converter, Vector4Converter
-- `Microsoft.Xna.Framework.GamerServices`: Achievement, AchievementCollection, AvatarAnimation, AvatarAnimationPreset, AvatarBodyType, AvatarBone, AvatarDescription, AvatarExpression, AvatarEye, AvatarEyebrow, AvatarMouth, AvatarRenderer, AvatarRendererState, ControllerSensitivity, FriendCollection, FriendGamer, GameDefaults, GameDifficulty, GameUpdateRequiredException, Gamer, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPresence, GamerPresenceMode, GamerPrivilegeException, GamerPrivilegeSetting, GamerPrivileges, GamerProfile, GamerServicesComponent, GamerServicesDispatcher, GamerServicesNotAvailableException, GamerZone, Guide, GuideAlreadyVisibleException, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardEntry, LeaderboardIdentity, LeaderboardKey, LeaderboardOutcome, LeaderboardReader, LeaderboardWriter, MessageBoxIcon, NetworkException, NetworkNotAvailableException, NotificationPosition, PropertyDictionary, RacingCameraAngle, SignedInEventArgs, SignedInGamer, SignedInGamerCollection, SignedOutEventArgs
+- `Microsoft.Xna.Framework.GamerServices`: AvatarAnimation, AvatarAnimationPreset, AvatarBodyType, AvatarBone, AvatarDescription, AvatarExpression, AvatarEye, AvatarEyebrow, AvatarMouth, AvatarRenderer, AvatarRendererState, ControllerSensitivity, FriendCollection, FriendGamer, GameDifficulty, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPresenceMode, GamerPrivilegeException, GamerPrivilegeSetting, GamerServicesComponent, GamerServicesNotAvailableException, GamerZone, GuideAlreadyVisibleException, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardEntry, LeaderboardIdentity, LeaderboardKey, LeaderboardOutcome, LeaderboardReader, LeaderboardWriter, MessageBoxIcon, NetworkException, NetworkNotAvailableException, NotificationPosition, PropertyDictionary, RacingCameraAngle, SignedOutEventArgs
 - `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, DynamicIndexBuffer, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectParameterClass, EffectParameterType, EffectPassCollection, GraphicsDeviceStatus, IEffectFog, IEffectLights, IEffectMatrices, IGraphicsDeviceService, IVertexType, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPart, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, OcclusionQuery, RenderTargetBinding, RenderTargetCube, Texture3D, VertexBufferBinding, VertexPositionColorTexture
 - `Microsoft.Xna.Framework.Input`: ButtonState, Buttons, GamePadDeadZone, GamePadType, KeyState, Keys
 - `Microsoft.Xna.Framework.Input.Touch`: GestureType, TouchCollection.Enumerator, TouchLocationState
@@ -196,6 +197,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GamePadCapabilities::HasTriggerVibrationMotorsEXT` -- input.gamepad.trigger_vibration
 - `GamePadDeadZone` -- input.gamepad.dead_zones
 - `GamePadType` -- input.gamepad.capabilities
+- `GamerPresenceMode` -- gamer_services.signed_in_gamer.presence
+- `GamerPrivilegeSetting` -- gamer_services.signed_in_gamer.privileges
+- `GamerServicesComponent` -- gamer_services.signed_in_gamer.automatic_sign_in
+- `GamerServicesNotAvailableException` -- gamer_services.achievement.award
 - `GestureSample::GestureSample` -- input.touch.gesture_queue
 - `GestureType` -- input.touch.gesture_queue, input.touch.gestures
 - `GltfImportDiagnosticEXT` -- graphics.model.import_report
@@ -207,6 +212,17 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GraphicsDevice::GetRendererLimitEXT` -- graphics.device.capability_report
 - `GraphicsDevice::GetShaderDialectEXT` -- graphics.shader_effect.toon_shading
 - `GraphicsDevice::SupportsCapability` -- graphics.device.supports_capability
+- `Guide::GetPendingKeyboardInputDisplayTextForTestingEXT` -- gamer_services.guide.keyboard_input
+- `Guide::HasPendingKeyboardInputEXT` -- gamer_services.guide.keyboard_input
+- `Guide::HasPendingMessageBoxEXT` -- gamer_services.guide.message_box
+- `Guide::ResetPendingKeyboardInputForTestingEXT` -- gamer_services.guide.keyboard_input
+- `Guide::ResetPendingMessageBoxForTestingEXT` -- gamer_services.guide.message_box
+- `Guide::SimulateKeyboardInputCancelEXT` -- gamer_services.guide.keyboard_input, gamer_services.guide.sign_in_screen
+- `Guide::SimulateMessageBoxClickEXT` -- gamer_services.guide.message_box
+- `Guide::WasKeyboardInputCanceledEXT` -- gamer_services.guide.keyboard_input
+- `GuideAlreadyVisibleException` -- gamer_services.guide.message_box
+- `IAsyncResult::AsyncState` -- gamer_services.guide.message_box
+- `IAsyncResult::IsCompleted` -- gamer_services.guide.keyboard_input
 - `Keyboard::GetKeyFromNameEXT` -- input.keyboard.key_names
 - `Keyboard::GetKeyFromScancodeEXT` -- input.keyboard.key_names
 - `Keyboard::GetKeyNameEXT` -- input.keyboard.key_names
@@ -217,6 +233,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `LooseFileContentTypeReader::GetExtensions` -- content.custom.loose_file_reader
 - `LooseFileContentTypeReader::Read` -- content.custom.loose_file_reader
 - `MediaState` -- media.media_player.play_song
+- `MessageBoxIcon` -- gamer_services.guide.message_box
 - `Model::GltfImportReportEXT` -- graphics.model.import_report
 - `Mouse::ClickedEXT` -- input.mouse.clicked_event
 - `Mouse::IsRelativeMouseModeEXT` -- input.mouse.relative_mode
@@ -254,6 +271,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `StorageDevice::GetStorageRootEXT` -- storage.storage_device.storage_root
 - `StorageDevice::SetAppNameEXT` -- storage.storage_device.show_selector, storage.storage_device.storage_root
 - `SurfaceFormat` -- content.xnb.dxt_texture
+- `TextInputEXT::INTERNAL_OnTextInput` -- gamer_services.guide.keyboard_input
 - `TextInputEXT::IsTextInputActive` -- input.text_input.typing
 - `TextInputEXT::SetInputRectangle` -- input.text_input.composition
 - `TextInputEXT::StartTextInput` -- input.text_input.composition, input.text_input.typing

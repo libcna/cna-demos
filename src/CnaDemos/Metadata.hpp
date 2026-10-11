@@ -137,6 +137,13 @@ namespace CnaDemos
          * a signal that the issue may be fixed (see docs/AUTOMATION.md).
          */
         std::string_view knownIssue = {};
+        /**
+         * True when the demo sets up state that CNA allows only once per process -- gamer
+         * services (GamerServicesComponent initializes GamerServicesDispatcher, which XNA and
+         * CNA refuse to initialize twice). Batch runs and the browser start such a demo in a
+         * fresh cna-demos process; `cna-demos <id>` already is one and runs it directly.
+         */
+        bool ownProcess = false;
     };
 
     /** A registered demo: the author's metadata plus what the registry derived. */

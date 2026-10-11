@@ -171,6 +171,10 @@ namespace CnaDemos
             {
                 report(id, "no runnable body registered");
             }
+            if (info.ownProcess && entry.kind == DemoKind::Standalone)
+            {
+                report(id, "ownProcess is for in-process demos; a standalone demo always has its own process");
+            }
             if (!info.knownIssue.empty())
             {
                 const std::string_view prefix = "CNA-DEMOS-ISSUE-";

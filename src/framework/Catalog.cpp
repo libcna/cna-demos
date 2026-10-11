@@ -136,6 +136,7 @@ namespace CnaDemos
             out << ",\n      \"deterministic\": " << (info.deterministic ? "true" : "false");
             out << ",\n      \"restrictions\": \"" << JsonEscape(info.restrictions) << "\"";
             out << ",\n      \"knownIssue\": \"" << JsonEscape(info.knownIssue) << "\"";
+            out << ",\n      \"ownProcess\": " << (info.ownProcess ? "true" : "false");
             out << ",\n      \"source\": \"" << JsonEscape(entry.source) << "\"";
             if (entry.kind == DemoKind::Standalone)
             {
@@ -192,6 +193,10 @@ namespace CnaDemos
         if (!info.knownIssue.empty())
         {
             out << "  Known issue : " << info.knownIssue << " (docs/CNA_ISSUES.md) -- expected to fail\n";
+        }
+        if (info.ownProcess)
+        {
+            out << "  Process     : its own (once-per-process CNA state); batch runs start a new cna-demos\n";
         }
         out << "  Source      : " << entry.source << '\n';
         out << "  Run         : cna-demos " << info.id << '\n';

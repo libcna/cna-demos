@@ -78,6 +78,15 @@ add_custom_target(cna_demos_assets ALL
     COMMENT "Copying demo assets to ${CNA_DEMOS_OUTPUT_DIR}/assets"
     VERBATIM)
 
+# Title files: what CNA reads by a fixed path in the title's own directory (the
+# executable's), not through Content -- GamerServices/Achievements.json, the
+# offline achievement catalog, is one. Copied next to the executables.
+add_custom_target(cna_demos_title_files ALL
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory
+            "${CMAKE_CURRENT_SOURCE_DIR}/title" "${CNA_DEMOS_OUTPUT_DIR}"
+    COMMENT "Copying title files to ${CNA_DEMOS_OUTPUT_DIR}"
+    VERBATIM)
+
 # -----------------------------------------------------------------------------
 # Compiled content: content/ is built by CNA's own content pipeline (cna-content,
 # the counterpart of an XNA content project) into the same assets directory, so
@@ -114,11 +123,22 @@ add_executable(cna-demos
     src/app/Cli.cpp
     src/app/Browser.cpp
 )
-target_link_libraries(cna-demos PRIVATE cna_demos_framework ${CNA_DEMOS_CATEGORY_TARGETS})
+# libcna.so first. In a shared CNA build (CNA_SHARED_LIBRARY, CNA's default on
+# Linux) the static CNA libraries some categories add -- CNA_GamerServices,
+# CNA_Net -- otherwise come first on the link line, and the CNA module archives
+# they depend on then supply a second copy of CNA inside the executable: two
+# copies of every static object, destroyed twice at exit. CNA's own examples
+# link CNA ahead of CNA_GamerServices for the same reason. Naming the `CNA`
+# umbrella first is not enough here: CMake places its libcna.so after the
+# dependency closure of those static libraries, so the file itself is named.
+# Without a shared CNA the generator expression is empty.
+target_link_libraries(cna-demos PRIVATE
+    "$<$<TARGET_EXISTS:cna_shared>:$<TARGET_FILE:cna_shared>>"
+    cna_demos_framework ${CNA_DEMOS_CATEGORY_TARGETS})
 set_target_properties(cna-demos PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CNA_DEMOS_OUTPUT_DIR}")
 cna_demos_apply_warnings(cna-demos)
 cna_demos_finalize_executable(cna-demos)
-add_dependencies(cna-demos cna_demos_assets cna_demos_content cna_demos_content_xnb)
+add_dependencies(cna-demos cna_demos_assets cna_demos_title_files cna_demos_content cna_demos_content_xnb)
 
 # -----------------------------------------------------------------------------
 # Standalone demos (standalone/<demo-id>/), the documented exception.

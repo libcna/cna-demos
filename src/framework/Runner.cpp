@@ -1,16 +1,27 @@
 // SPDX-License-Identifier: MS-PL
 #include "CnaDemos/Runner.hpp"
 
+#include <charconv>
 #include <chrono>
 #include <exception>
 #include <filesystem>
+#include <fstream>
 #include <iomanip>
+#include <iterator>
+#include <optional>
 #include <ostream>
 
 #include "CnaDemos/Catalog.hpp"
 #include "CnaDemos/DemoGame.hpp"
 #include "CnaDemos/Process.hpp"
+#include "CNA/Logger.hpp"
 #include "Microsoft/Xna/Framework/Audio/NoAudioHardwareException.hpp"
+
+#if defined(_WIN32)
+#  include <process.h>
+#else
+#  include <unistd.h>
+#endif
 
 namespace CnaDemos
 {
@@ -86,6 +97,129 @@ namespace CnaDemos
         }
     }
 
+    namespace
+    {
+        std::string_view LogLevelName(CNA::LogLevel level)
+        {
+            switch (level)
+            {
+                case CNA::LogLevel::FATAL: return "fatal";
+                case CNA::LogLevel::ERROR: return "error";
+                case CNA::LogLevel::WARN: return "warn";
+                case CNA::LogLevel::INFO: return "info";
+                case CNA::LogLevel::DEBUG: return "debug";
+                case CNA::LogLevel::TRACE: return "trace";
+                default: return "warn";
+            }
+        }
+
+        // Reads the string value of "key" from the first result of a report written by
+        // WriteResultsJson (whose escapes are \", \\, \n, \r, \t and \u00XX).
+        std::optional<std::string> ReportString(const std::string& json, std::string_view key)
+        {
+            const std::string marker = "\"" + std::string(key) + "\": \"";
+            std::size_t i = json.find(marker);
+            if (i == std::string::npos)
+            {
+                return std::nullopt;
+            }
+            std::string value;
+            for (i += marker.size(); i < json.size() && json[i] != '"'; ++i)
+            {
+                if (json[i] != '\\' || i + 1 >= json.size())
+                {
+                    value += json[i];
+                    continue;
+                }
+                const char escaped = json[++i];
+                switch (escaped)
+                {
+                    case 'n': value += '\n'; break;
+                    case 'r': value += '\r'; break;
+                    case 't': value += '\t'; break;
+                    case 'u':
+                    {
+                        unsigned code = 0;
+                        if (i + 4 < json.size())
+                        {
+                            std::from_chars(json.data() + i + 1, json.data() + i + 5, code, 16);
+                        }
+                        value += static_cast<char>(code);
+                        i += 4;
+                        break;
+                    }
+                    default: value += escaped; break;
+                }
+            }
+            return value;
+        }
+
+        // DemoInfo::ownProcess: runs the demo as `cna-demos <id>` and takes its result from the
+        // report that child process writes.
+        void RunInOwnProcess(const RunOptions& options, RunResult& result, std::ostream& out)
+        {
+            std::filesystem::path program = ExecutableDirectory() / "cna-demos";
+#ifdef _WIN32
+            program += ".exe";
+            const int pid = _getpid();
+#else
+            const int pid = static_cast<int>(getpid());
+#endif
+            const std::filesystem::path report = std::filesystem::temp_directory_path()
+                / ("cna-demos-" + std::to_string(pid) + "-" + result.id + ".json");
+
+            std::vector<std::string> arguments = {result.id, "--batch-child", "--report", report.string(),
+                                                  "--seed", std::to_string(options.seed),
+                                                  "--log-level", std::string(LogLevelName(CNA::Logger::GetMinimumLevel()))};
+            if (options.automated)
+            {
+                arguments.emplace_back("--automated");
+            }
+            if (options.frames >= 0)
+            {
+                arguments.emplace_back("--frames");
+                arguments.emplace_back(std::to_string(options.frames));
+            }
+            if (!options.screenshotPath.empty())
+            {
+                arguments.emplace_back("--screenshot");
+                arguments.emplace_back(options.screenshotPath);
+            }
+            if (options.quiet)
+            {
+                arguments.emplace_back("--quiet");
+            }
+
+            out.flush();
+            const int exitCode = RunProcess(program, arguments);
+
+            std::ifstream file(report);
+            const std::string json((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            file.close();
+            std::error_code ignored;
+            std::filesystem::remove(report, ignored);
+
+            const auto status = ReportString(json, "status");
+            if (!status)
+            {
+                result.status = RunStatus::Failed;
+                result.message = "own-process run of " + result.id + " exited with code "
+                    + std::to_string(exitCode) + " without a report";
+                return;
+            }
+            result.status = *status == "PASSED"    ? RunStatus::Passed
+                            : *status == "SKIPPED" ? RunStatus::Skipped
+                            : *status == "NOT RUN" ? RunStatus::NotRun
+                                                   : RunStatus::Failed;
+            result.message = ReportString(json, "message").value_or("");
+            if (const std::size_t at = json.find("\"checks\": "); at != std::string::npos)
+            {
+                const char* begin = json.data() + at + 10;
+                std::from_chars(begin, json.data() + json.size(), result.checks);
+            }
+        }
+    }
+
     RunResult RunDemo(const RegisteredDemo& demo, const RunOptions& options, std::ostream& out)
     {
         RunResult result;
@@ -100,6 +234,12 @@ namespace CnaDemos
         }
 
         const auto start = std::chrono::steady_clock::now();
+        if (demo.entry.info.ownProcess && !options.freshProcess)
+        {
+            RunInOwnProcess(options, result, out);
+            result.seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
+            return result;
+        }
         DemoContext context(demo.entry, options, out);
         try
         {

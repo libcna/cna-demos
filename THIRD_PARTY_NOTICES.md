@@ -19,9 +19,9 @@ their notices.
 
 ## Assets
 
-Every file under `assets/`, `content/` and `content_xnb/` is original cna-demos content, generated
+Every file under `assets/`, `content/`, `content_xnb/` and `title/` is original cna-demos content, generated
 deterministically by [`tools/generate_assets.py`](tools/generate_assets.py) from code in this
-repository or written by hand for it (`.cnj`, `.level`, `.cna-content.json`). No external images,
+repository or written by hand for it (`.cnj`, `.level`, `.cna-content.json`, `.json`). No external images,
 sounds, fonts or models are included.
 
 | Path | Content | Origin |
@@ -46,6 +46,7 @@ sounds, fonts or models are included.
 | `content/sounds/chime.wav` | 0.3 s 880 Hz sine, 22050 Hz mono PCM16 | generated, original |
 | `content/curves/bounce.cnj` | a three-key bounce curve in CNA's JSON content format | written for cna-demos, original |
 | `content_xnb/textures/colour_wheel.png`, `colour_wheel_dxt.png` | 128x128 hue wheel (XNB Color and DXT sources) | generated, original |
+| `title/GamerServices/Achievements.json` | offline achievement catalog: three achievements with names, descriptions and scores | written for cna-demos, original |
 
 When a non-original asset is ever added, list it here with its source, author, licence and the
 exact licence text location, and keep the licence file next to the asset.

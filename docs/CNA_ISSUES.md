@@ -403,6 +403,53 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux.
 - **Status:** open (low impact); not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-016 -- Linking `CNA_GamerServices` after another library duplicates CNA in the executable
+
+- **Area:** build system -- `CNA_GamerServices` and `CNA_Net` with a shared CNA
+  (`CNA_SHARED_LIBRARY`, `cmake/SharedRuntimeLibrary.cmake`).
+- **Demos:** every `gamer_services.*` demo (the first one to exist exposed it); the fix is in
+  cna-demos' top-level `CMakeLists.txt`, with a comment pointing here.
+- **Environment:** CMake 4.4 (pip), GCC 14, lld, Linux, `CNA_SHARED_LIBRARY=ON` (CNA's default here).
+- **Reproduction:** an executable links a static library `framework` that links `CNA`, plus an
+  OBJECT library that links `framework` and `CNA::GamerServices` (the usual shape of a project
+  with more than one target). Run any program that adds a `GamerServicesComponent` and exits.
+- **Observed:** `double free or corruption (!prev)` at exit, in the destructor of
+  `SamplerState::PointWrap` (`GraphicsResource::~GraphicsResource`), run once by the executable
+  and once by `libcna.so`. `CNA_GamerServices` is not inside `libcna.so` and links CNA's module
+  archives (`cna_runtime`, `cna_storage`, ...) directly; CMake places it ahead of `libcna.so` on the
+  link line, so the linker takes CNA's graphics, runtime and storage objects from those archives:
+  the executable carries a second CNA (3,225 `Graphics` symbols in `cna-demos`) whose static objects
+  libcna.so's own references then bind to. Naming the `CNA` umbrella first does not help -- it is
+  an INTERFACE library and CMake orders its `libcna.so` after the archives' dependency closure.
+  CNA's examples avoid it only because each links exactly `CNA CNA_GamerServices` (their CMake
+  comment says the duplicate runtime "aborted every one of these demos at device creation").
+- **Workaround in cna-demos:** the executable names the `libcna.so` file itself first on its link
+  line (`$<TARGET_FILE:cna_shared>`), so the archives behind it contribute only what libcna.so
+  lacks (0 duplicated code symbols afterwards).
+- **Expected:** a consumer cannot get two copies of CNA by linking CNA's own targets in any order.
+  Possible fixes: link the `CNA` umbrella (not the module archives) from `CNA_GamerServices` and
+  `CNA_Net` when CNA is shared, or build them into `libcna.so` too.
+- **Status:** open (medium: a silent ODR violation that crashes at exit); not reported upstream yet.
+
+### CNA-DEMOS-ISSUE-017 -- `Achievement::EarnedOnline` is always true
+
+- **Area:** gamer services -- `Achievement` (`Achievement.cpp` sets `earnedOnline_(true)` in its
+  only constructor; nothing changes it).
+- **Demos:** `gamer_services.achievement.award` (expected failure).
+- **Reproduction:** sign in a local offline profile (no CNA service), award an achievement from
+  the title's offline catalog, read it back with `GetAchievements`:
+  ```cpp
+  player->AwardAchievement("first_steps");
+  // Find(player->GetAchievements(), "first_steps")->getEarnedOnlineProperty() == true
+  ```
+  Unearned achievements report `true` as well.
+- **Expected:** XNA documents `EarnedOnline` as whether the achievement was earned while signed
+  in to the online service; an achievement earned by a local offline profile was not (and an
+  unearned one was not earned at all). The offline store already records how it was earned
+  (`SaveEarnedAchievementEXT`), so the value is available.
+- **Environment:** CNA 0.1.0, Linux, offline gamer services.
+- **Status:** open (low impact); not reported upstream yet.
+
 ---
 
 ## Resolved

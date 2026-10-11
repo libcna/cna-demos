@@ -54,6 +54,8 @@ Run options:
   --quiet              Suppress the demos' own output (failures are still printed).
   --report <file>      Write the results of a run as JSON.
   --log-level <level>  CNA's own log output: fatal, error, warn (default), info, debug, trace.
+  --batch-child        Internal: how a batch run or the browser starts a demo that needs a
+                       process of its own (gamer services); omits the "==" header lines.
 
 Exit status: 0 passed, 1 failed, 2 usage error, 77 skipped (a documented requirement is
 missing in this environment).
@@ -67,6 +69,7 @@ missing in this environment).
             std::string renderer;
             std::string reportPath;
             std::string logLevel = "warn";
+            bool batchChild = false;
         };
 
         std::optional<int> ParseInt(std::string_view text)
@@ -111,6 +114,10 @@ missing in this environment).
                 else if (arg == "--quiet")
                 {
                     args.run.quiet = true;
+                }
+                else if (arg == "--batch-child")
+                {
+                    args.batchChild = true;
                 }
                 else if (arg == "--frames" || arg == "--seed")
                 {
@@ -262,20 +269,26 @@ missing in this environment).
                 }
                 return UsageExitCode;
             }
-            if (!args.run.quiet)
+            if (!args.run.quiet && !args.batchChild)
             {
                 std::cout << "== " << demo->entry.info.id << ": " << demo->entry.info.title << '\n';
             }
-            const RunResult result = RunDemo(*demo, args.run, std::cout);
-            std::cout << "== " << ToString(result.status);
-            if (!result.message.empty())
+            // This process exists for this one demo, so a demo that needs its own process runs here.
+            RunOptions options = args.run;
+            options.freshProcess = true;
+            const RunResult result = RunDemo(*demo, options, std::cout);
+            if (!args.batchChild)
             {
-                std::cout << ": " << result.message;
-            }
-            std::cout << '\n';
-            if (result.ExpectedFailure())
-            {
-                std::cout << "== (known CNA issue " << result.knownIssue << ", see docs/CNA_ISSUES.md)\n";
+                std::cout << "== " << ToString(result.status);
+                if (!result.message.empty())
+                {
+                    std::cout << ": " << result.message;
+                }
+                std::cout << '\n';
+                if (result.ExpectedFailure())
+                {
+                    std::cout << "== (known CNA issue " << result.knownIssue << ", see docs/CNA_ISSUES.md)\n";
+                }
             }
             if (!args.reportPath.empty())
             {

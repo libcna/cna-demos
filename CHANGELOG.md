@@ -131,6 +131,20 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - XACT demos (5): AudioEngine/WaveBank/SoundBank with a cue played by name, Cue states, categories
   (volume, pause, stop), global variables, positioned cues; `tools/xact_files.py` writes the
   `.xgs`/`.xwb`/`.xsb` files (original tones) in the layout of CNA's own XACT example.
+- Gamer services demos (10): signed-in gamers and the SignedIn event, Guide message box and keyboard
+  input (password mode, cancel), trial mode with SimulateTrialMode, the Guide's sign-in screen for a
+  second player, achievements from an offline title catalog, GamerProfile, rich presence,
+  GameDefaults and GamerPrivileges -- offline, with local profiles.
+- `ownProcess` metadata and `--batch-child`: demos that set up once-per-process CNA state (gamer
+  services) run as `cna-demos <id>` in a process of their own from batch runs and the browser.
+- `CnaDemos/GamerServicesDemo.hpp` (offline configuration, the demos' own profile store, "Demo
+  Player" signed in, the `GamerServicesComponent`) and `CnaDemos/GamerServicesNames.hpp`.
+- `title/` and the `cna_demos_title_files` target: files CNA reads by a fixed title-relative path,
+  starting with the offline achievement catalog `GamerServices/Achievements.json`.
+- `cna-demos` names `libcna.so` first on its link line, so CNA's static gamer services library
+  cannot pull a second copy of CNA into the executable (CNA-DEMOS-ISSUE-016, double free at exit).
+- CNA-DEMOS-ISSUE-016 (linking `CNA_GamerServices` after another library duplicates CNA) and
+  CNA-DEMOS-ISSUE-017 (`Achievement::EarnedOnline` is always true) recorded.
 - `CnaDemos/InputNames.hpp`: names of input enums (keys, buttons, gestures) for demo output.
 - CNA-DEMOS-ISSUE-008 recorded: sharp-runtime's `Prop.hpp`, reached from CNA's public headers,
   defines macros named `YES`, `NO`, `nothing` and similar.

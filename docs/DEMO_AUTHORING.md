@@ -110,6 +110,7 @@ open. `--screenshot` still captures the last frame it drew.
 | `assets` | no | files under `assets/` the demo loads (validated) |
 | `restrictions` | no | renderer/platform restrictions and *why* |
 | `knownIssue` | no | `CNA-DEMOS-ISSUE-NNN` when a recorded CNA defect makes the demo fail (section 11) |
+| `ownProcess` | no (false) | the demo sets up state CNA allows once per process (gamer services); batch runs and the browser start it as `cna-demos <id>` in a new process. Every `GamerServicesDemo` sets it |
 
 ## 6. Style
 
@@ -126,9 +127,20 @@ open. `--screenshot` still captures the last frame it drew.
   remove handlers from static events (`Mouse::ClickedEXT`, `TextInputEXT::TextInput`, ...) by
   token, and restore global input state (cursor shape, relative mouse mode, gamepad keyboard
   emulation, clipboard contents).
-* Shared helpers in `src/CnaDemos/` cover boilerplate only: `GraphicsNames.hpp` and
-  `InputNames.hpp` (enum names for output), `PixelChecks.hpp` (back-buffer pixel checks),
-  `MathChecks.hpp` (tolerances), `Geometry.hpp` (sphere and cube meshes).
+* Shared helpers in `src/CnaDemos/` cover boilerplate only: `GraphicsNames.hpp`,
+  `InputNames.hpp` and `GamerServicesNames.hpp` (enum names for output), `PixelChecks.hpp`
+  (back-buffer pixel checks), `MathChecks.hpp` (tolerances), `Geometry.hpp` (sphere and cube
+  meshes), `GamerServicesDemo.hpp` (below).
+* Gamer services (`gamer_services`, `net`): derive from `CnaDemos::GamerServicesDemo` instead of
+  `DemoGame` and set `.ownProcess = true`. Its constructor adds the `GamerServicesComponent` (as
+  an XNA game's constructor does) after selecting CNA's offline mode -- no service is ever
+  contacted -- with the demos' own profile store (`profiles` in the cna-demos storage root, unless
+  `CNA_GAMER_SERVICES_PROFILES_DIR` is set) and the local profile "Demo Player" signed in at start
+  (unless `CNA_GAMER_SERVICES_AUTO_SIGN_IN` names others). It appears in `Gamer::SignedInGamers`
+  in the first Update. Unattended runs answer the Guide with `Guide::SimulateMessageBoxClickEXT`
+  / `SimulateKeyboardInputCancelEXT` and type with `TextInputEXT::INTERNAL_OnTextInput`. What
+  CNA keeps offline (profiles, achievements, leaderboards) persists between runs: write checks
+  that hold on a second run too.
 * No placeholders, no TODO demos, no "coming soon". A demo exists when it works.
 * English everywhere, except text that is itself the subject of a localisation/Unicode demo --
   mark those as intentional.
@@ -148,6 +160,10 @@ XNA's XNB format instead go under `content_xnb/` and load as `xnb/<name>`. Load 
 XNA game (`Content.Load<SpriteFont>("fonts/pixel_font")`) and list the *compiled* file in
 `.assets` (`"fonts/pixel_font.cnb"`). The shared font for on-screen text is `fonts/pixel_font`
 (printable ASCII, LineSpacing 18, crisp with `SamplerState::PointClamp`).
+
+Files CNA reads by a fixed path relative to the title's directory rather than through `Content`
+go under `title/`, which is copied next to the executables: `title/GamerServices/Achievements.json`
+is the offline achievement catalog the `gamer_services.achievement.*` demos use.
 
 ## 8. Standalone demos
 

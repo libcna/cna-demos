@@ -1,0 +1,26 @@
+[
+  {
+    "key": "first_steps",
+    "name": "First Steps",
+    "description": "Signed in and earned a first achievement.",
+    "howToEarn": "Run the achievement demo.",
+    "score": 10,
+    "display": true
+  },
+  {
+    "key": "explorer",
+    "name": "Explorer",
+    "description": "Looked at every achievement this title defines.",
+    "howToEarn": "Read the list of achievements.",
+    "score": 20,
+    "display": true
+  },
+  {
+    "key": "hidden_door",
+    "name": "Hidden Door",
+    "description": "Opened the door nobody mentions.",
+    "howToEarn": "A secret until earned.",
+    "score": 30,
+    "display": false
+  }
+]
