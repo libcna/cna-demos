@@ -1099,6 +1099,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Final labeled reproduction:** `/tmp/cna-434-asset-final-{SOFTWARE,OPENGLES3}.{json,log}`
   keeps all 14 checks and the same one failure with ISSUE-045. Both temporary directories were
   verified removed after exit. Its WILL_FAIL CTest passes along with the other 20 targeted tests.
+  Full 434 at 652398e passed all 447 enabled CTests and both complete smoke runs. ORIGINAL
+  comparisons to 433 require review only for this new failure and the two passing demo extensions;
+  all older failed assertions are retained (27/28 -> 28/29). Original evidence and exact reviews:
+  `reports/checkpoint-434-{SOFTWARE,OPENGLES3}*`.
 - **Handling:** retain the failing expectation with its issue identifier. The negative probe
   explicitly catches EndOfStreamException solely so independent priority/cache/repair checks
   continue; it does not relabel the exception or fall back to a lower-priority asset. Temporary

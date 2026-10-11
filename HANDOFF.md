@@ -95,26 +95,26 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **433-demo checkpoint passed**
-through cna-demos revision `a01ab68`; `tools/validate.sh` exited 0 under private Xvfb
-(`/tmp/cna-demos-433-validation.log`). CNA C API changes were externally authored; no atomic
-dependency source snapshot is claimed. `reports/checkpoint-433-binaries.json` hashes all 19
-exercised artifacts. No binary was rebuilt during runtime phases.
-Both ORIGINAL comparisons to 432 correctly request review only for existing_objects increasing
-12 -> 13 checks and its additional implicit ReadRawObject ISSUE-043 assertion. Original
-GetTypeReader failure retained; all other statuses/check counts/assertions unchanged.
-Exact reviews/hashes accompany both unmodified reports/stdout/stderr; raw failures 26/27 -> 27/28.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **434-demo checkpoint passed**
+through cna-demos revision `652398e`; `tools/validate.sh` exited 0 under private Xvfb
+(`/tmp/cna-demos-434-validation.log`). CNA C API changes were externally authored over
+9e340c876; no atomic dependency source snapshot is claimed. `reports/checkpoint-434-binaries.json`
+hashes all 19 exercised artifacts. No binary was rebuilt during runtime phases.
+Both ORIGINAL comparisons to 433 require review exactly for new asset_precedence ISSUE-045,
+cnj_loader 7 -> 11 passing checks, and multiple_batches 0 -> 6 passing checks. All older
+statuses and failed assertions are retained. Exact reviews/hashes accompany unmodified
+reports/stdout/stderr; raw failures 27/28 -> 28/29.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets `--validate` | 433 demos, 0 problems |
+| Metadata/assets `--validate` | 434 demos, 0 problems |
 | `tools/validate.sh` | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 421 passed (including 19 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 386 passed, 19 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 407 passed, 20 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | Exactly one additional ISSUE-043 assertion; all older failures retained |
-| New XNB checks | 17 passing reader-version checks; existing-object 11 passes plus 2 ISSUE-043 failures |
+| CTest | 422 passed (including 20 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 386 passed, 20 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 407 passed, 21 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | Exactly one new ISSUE-045 assertion; all older failures retained |
+| Screenshots | Both multiple_batches captures inspected; max cross-renderer channel delta one |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -229,12 +229,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** run full 434 validation, then archive/compare ORIGINAL checkpoint-433.
-Expected SOFTWARE 386/20/25/3, OPENGLES3 407/21/3/3; 447 enabled CTests (422 passed including
-20 WILL_FAIL, 25 skipped; three disabled). Only new asset_precedence should add an ISSUE-045
-failure (raw 27/28 -> 28/29); older cnj_loader checks 7 -> 11 and multiple_batches 0 -> 6.
-Review these exact changes without rewriting original logs or weakening comparison rules.
-Continue with remaining semantic member/behavior work after this checkpoint, not a completed phase.
+**Immediate next action:** apply the two existing XML tool extensions below, build and run
+both renderer selections, investigate failures and update docs. Full 434 is complete and archived;
+use ORIGINAL checkpoint-434 as baseline. Since these extensions add no demo, name their eventual
+full archive checkpoint-434-xml (do not overwrite checkpoint-434). Then continue with the separate
+polymorphic XML candidate or the next semantic gap. Do not restart completed phases.
 
 433 targeted evidence:
 - reader_versions passes 17 console checks per renderer selection WITHOUT DISPLAY/WAYLAND;
@@ -256,6 +255,12 @@ Continue with remaining semantic member/behavior work after this checkpoint, not
 - All /tmp reader-version and raw-extension drafts are now applied and stale; use repo sources.
 
 434 batch (built and targeted validation complete):
+- Full 434 passed all 447 enabled CTests and both complete renderer runs. ORIGINAL comparisons
+  to 433 require review only for new ISSUE-045 and passing cnj_loader 7 -> 11 / multiple_batches
+  0 -> 6 checks. No older failed assertion removed or changed (27/28 -> 28/29); original logs,
+  exact review/hashes and all 19 binary hashes archived. SOFTWARE stderr byte-identical;
+  GL remains 3 ERROR/3 INFO/84 X protocol lines with volatile serials.
+
 - asset_precedence: original same-name XNB/CNB/CNJ/native values 400/300/200/100, private files,
   cache/fresh-manager/Unload behavior, invalid compiled-file refusal without fallback, repair
   and retry, explicit native filename. Both fresh displayless renderer selections have 14
@@ -275,16 +280,59 @@ Continue with remaining semantic member/behavior work after this checkpoint, not
 - Both `/tmp/cna-434-build.log` and `/tmp/cna-434-labeled-build.log` are clean. All 21 targeted
   CTests pass, including all 16 C ABI demos (`/tmp/cna-434-targeted-ctest.log`). Metadata 434/0;
   coverage 293/329 types, 1354/2326 named members, 158/3210 C routes. Runtime columns still
-  use complete checkpoint 433. External CNA source changed again during preparation, so the
+  now include all 434 IDs. External CNA source changed again during preparation, so the
   label build recompiled C API too. Observed HEAD 9e340c876f6426218e2f82651fcb0b086de25e15
   with additional externally edited C API implementation files. Do not edit/revert CNA or claim
   an atomic source snapshot. Post-build source patch/hashes `/tmp/cna-434-dependency{.patch,-files.json}`
   are read-only evidence, not an atomic record of every compiled input. Archive final binary
-  hashes after full 434; do not rebuild during runtime phases. Full 433 remains the completed baseline.
+  hashes are archived with full 434; no rebuild occurred during its runtime phases.
 - All /tmp precedence/CNJ/sprite drafts are now applied and stale; use repository sources.
 
+Next prepared extensions during immutable full 434 (NOT applied/built/run):
+`/tmp/cna-intermediate-cycles.cpp` and `/tmp/cna-intermediate-cycles-metadata.cpp`, based on
+CURRENT intermediate_shared_resources sources. Adds a SharedResource fallback edge to LootTable;
+keeps the existing acyclic/null/malformed-ID checks, then serializes two resources linked in a
+cycle under a separate LevelLoot root. Proposed six added checks (10 -> 16 child checks): exactly
+two resource records, loaded forward/backward closure and alias identity, fresh values, shared
+mutation, and expired weak handles after explicitly unlinking BOTH authored and loaded cycles.
+Scoped cleanup owns both nodes and breaks their shared_ptr edges even on early return/throw;
+no claim that XML or shared_ptr automatically collects cycles. Runtime-root-as-resource identity,
+malformed cyclic graphs and external references remain separate.
+Additional source-only audit decision: descriptor RuntimeType/TypeVersion currently only store
+metadata; no getter consumer was found in content/content-pipeline, and local XML reference
+fixtures do not substitute runtime names or emit versions. The audit now intentionally defers
+standalone getter/setter demos and keeps polymorphic XML dispatch as a separate real gap.
+No oracle execution or runtime coverage is claimed from this inspection.
+Companion `/tmp/cna-intermediate-null-policy.cpp` and `/tmp/cna-intermediate-null-policy-metadata.cpp`
+extend the CURRENT intermediate_serializer: nullable C++ Objective field with AllowNull(false),
+valid round trip plus refusal on XML read and write (expected 9 -> 11 child checks). Existing
+Hint remains optional/nullable. This applies actual authored-data policy, not one demo per flag.
+Both XML extensions preserve stable IDs and add no demos; archive their eventual complete
+checkpoint under a distinct suffix (for example checkpoint-434-xml), not over checkpoint-434. Full 434 is now archived/reviewed; apply these two extensions next. Do not apply older /tmp shared-resource drafts.
+Later focused candidate (also NOT applied/built/run): `/tmp/cna-intermediate-polymorphism.cpp`,
+`/tmp/cna-intermediate-polymorphism-metadata.cpp`, `/tmp/cna-intermediate-polymorphism-CMakeLists.txt`.
+A new standalone content.custom.intermediate_polymorphism would demonstrate an abstract Spawn
+list with EnemySpawn/TreasureSpawn, explicit TypeSerializerFor registration, inherited and derived
+fields, actual XML Type attributes inspected through public XmlReader, null elements, fresh
+concrete objects/virtual dispatch and unknown/unrelated/abstract-type refusal (proposed 9 child
+checks). Unlike the two extensions above this would be one meaningful new demo. Keep it for
+AFTER the two existing XML extensions unless a concrete blocker changes priority. No fixture,
+XNB, oracle run or runtime validation is claimed from this draft.
 
-**Latest complete checkpoint (2026-10-11):** 433 at a01ab68, tools/validate.sh exit 0.
+
+**Latest complete checkpoint (2026-10-11):** 434 at 652398e, tools/validate.sh exit 0.
+SOFTWARE 386/20/25/3, OPENGLES3 407/21/3/3; 447 enabled CTests, 434/0 metadata.
+Archives: `reports/checkpoint-434-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`,
+`checkpoint-434-{build,ctest,validation}.log`, both renderer-specific `-review.json` files,
+and `checkpoint-434-binaries.json` (19 artifacts). Exact reviews cover new ISSUE-045 plus
+cnj_loader 7 -> 11 and multiple_batches 0 -> 6 checks. All other older statuses/check counts
+and failed assertions unchanged. Raw failures 28/29. SOFTWARE stderr byte-identical to 433;
+GL remains 3 ERROR/3 INFO/84 X protocol lines (volatile serials). Coverage 293/329 types,
+1354/2326 named members, 158/3210 C routes; all runtime columns complete.
+Use ORIGINAL checkpoint-434 as next baseline.
+
+Historical 433 checkpoint:
+**Completed checkpoint (2026-10-11):** 433 at a01ab68, tools/validate.sh exit 0.
 SOFTWARE 386/19/25/3, OPENGLES3 407/20/3/3; 446 enabled CTests, 433/0 metadata.
 Archives: `reports/checkpoint-433-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`,
 `checkpoint-433-{build,ctest,validation}.log`, both renderer-specific `-review.json` files,
