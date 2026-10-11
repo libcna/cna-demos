@@ -6,7 +6,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**423 demos** in 18 categories. Kinds: console 151, game 244, standalone 28. Automation: automated 387, manual 3, smoke-only 33.
+**425 demos** in 18 categories. Kinds: console 152, game 245, standalone 28. Automation: automated 389, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 134 | 134 | 0 | 0 | 121 / 8 / 5 / 0 / 0 | 125 / 3 / 6 / 0 / 0 |
+| graphics | 136 | 136 | 0 | 0 | 121 / 8 / 5 / 0 / 2 | 125 / 3 / 6 / 0 / 2 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 11 | 10 | 1 | 0 | 10 / 0 / 1 / 0 / 0 | 10 / 0 / 1 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `graphics.model.palette_sampling`, `graphics.model.skinned_manifest`.
+- OPENGLES3: absent from report: `graphics.model.palette_sampling`, `graphics.model.skinned_manifest`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -115,6 +117,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ActivatedEventArgs::IsApplicationInstancePreserved` -- phone.phone_application_service.lifecycle
 - `AnimationClip` -- graphics.model.skinned_animation
 - `AnimationClipEXT` -- graphics.model.clip_interpolation, graphics.model.node_animation
+- `AnimationPlayer::CurrentClip` -- graphics.model.skinned_animation
+- `AnimationPlayer::CurrentPosition` -- graphics.model.skinned_animation
+- `AnimationPlayer::GetBoneTransforms` -- graphics.model.skinned_animation
 - `AnimationPlayer::GetSkinTransforms` -- graphics.model.skinned_animation, graphics.model.skinned_pbr
 - `AnimationPlayer::GetWorldTransforms` -- graphics.model.skinned_animation
 - `AnimationPlayer::StartClip` -- graphics.model.skinned_animation, graphics.model.skinned_pbr
@@ -418,12 +423,19 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize` -- content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize` -- content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateWriter::Xml` -- content.custom.intermediate_type_serializer
+- `Microsoft::Xna::Framework::Graphics::AnimationClipEXT` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::BoneTrackEXT` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::KeyframeEXT` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::ModelMeshPart::PrimitiveTypeEXT` -- graphics.model.mesh_parts
 - `Microsoft::Xna::Framework::Graphics::ModelMeshPart::SamplerStatesEXT` -- graphics.model.part_sampler_state
 - `Microsoft::Xna::Framework::Graphics::ModelMeshPart::setSamplerStateEXTProperty` -- graphics.model.part_sampler_state
+- `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT` -- graphics.model.skinned_manifest
 - `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::AddPartEXT` -- graphics.model.skinned_parts
 - `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::AttachPartEXT` -- graphics.model.skinned_parts
-- `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::ComputeBoneTransformsEXT` -- graphics.model.skinned_parts
+- `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::BindPoseLocal` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::ComputeBoneTransformsEXT` -- graphics.model.palette_sampling, graphics.model.skinned_manifest, graphics.model.skinned_parts
+- `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::InverseBindPoseGlobal` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::ParentBoneIndices` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::RemovePartEXT` -- graphics.model.skinned_parts
 - `Microsoft::Xna::Framework::Graphics::VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned` -- graphics.model.skinned_parts
 - `Model::GltfImportReportEXT` -- graphics.model.import_report

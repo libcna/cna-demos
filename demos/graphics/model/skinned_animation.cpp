@@ -36,12 +36,39 @@ namespace
 
             // As in XNA's Skinned Model sample, the skeleton and clips travel in Model.Tag.
             const auto* skinning = dynamic_cast<const SkinningData*>(strip_->getTagProperty());
-            Context().Check(skinning != nullptr && skinning->BoneCount == 2, "Model.Tag holds SkinningData for two joints");
+            if (!Context().Check(skinning != nullptr && skinning->BoneCount == 2 && skinning->AnimationClips.contains("Bend"),
+                                  "Model.Tag holds SkinningData for two joints and the Bend clip")) return;
             const AnimationClip& bend = skinning->AnimationClips.at("Bend");
             Context().Print("clip Bend: {} s, {} bone tracks", bend.Duration.getTotalSecondsProperty(), bend.Tracks.size());
 
             player_.emplace(*skinning);
+            Context().Check(player_->getCurrentClipProperty() == nullptr &&
+                            player_->getCurrentPositionProperty() == System::TimeSpan::Zero &&
+                            player_->GetBoneTransforms() == skinning->BindPose,
+                            "before StartClip the player has no active clip and retains local bind transforms");
             player_->StartClip(bend);
+            Context().Check(player_->getCurrentClipProperty() == &bend &&
+                            player_->getCurrentPositionProperty() == System::TimeSpan::Zero,
+                            "StartClip borrows the selected clip and starts at zero");
+            // The model owns SkinningData and its clips for the entire player lifetime.
+            player_->Update(System::TimeSpan::FromSeconds(.25), true, false);
+            player_->Update(System::TimeSpan::FromSeconds(.25), true, false);
+            const auto advanced = player_->GetSkinTransforms();
+            Context().Check(player_->getCurrentPositionProperty() == System::TimeSpan::FromSeconds(.5),
+                            "two relative quarter-second updates accumulate to half a second");
+            player_->Update(System::TimeSpan::FromSeconds(.5), false, false);
+            Context().Check(player_->GetSkinTransforms() == advanced,
+                            "an absolute half-second seek produces the same skin palette as relative advances");
+            player_->Update(bend.Duration + System::TimeSpan::FromSeconds(.5), false, true);
+            Context().Check(player_->getCurrentPositionProperty() == System::TimeSpan::FromSeconds(.5) &&
+                            player_->GetSkinTransforms() == advanced,
+                            "looping wraps a complete duration back to the same checked pose");
+            player_->Update(bend.Duration + System::TimeSpan::FromSeconds(1), false, false);
+            Context().Check(player_->getCurrentPositionProperty() == bend.Duration,
+                            "non-looping playback clamps at the clip's end");
+            player_->StartClip(bend);
+            Context().Check(player_->getCurrentPositionProperty() == System::TimeSpan::Zero,
+                            "restarting the same clip resets its playback position");
             // Jump to 0.5 s, where a key turns the upper joint +50 degrees about Z.
             player_->Update(System::TimeSpan::FromSeconds(0.5), false);
             const Matrix upper = player_->GetWorldTransforms()[1];
@@ -67,6 +94,7 @@ namespace
         {
             GraphicsDevice& device = getGraphicsDeviceProperty();
             device.Clear(Color::DarkSlateGray);
+            if (!player_) { Game::Draw(gameTime); return; }
             device.setDepthStencilStateProperty(DepthStencilState::Default);
             device.setRasterizerStateProperty(RasterizerState::CullNone);  // the strip is seen from both sides
 
@@ -113,10 +141,11 @@ CNA_DEMOS_GAME(SkinnedAnimationDemo, {
     .id = "graphics.model.skinned_animation",
     .title = "Skinned animation",
     .description = "Plays the \"Bend\" clip of a skinned glTF strip: SkinningData from Model.Tag, AnimationPlayer "
-                   "(StartClip, Update, GetSkinTransforms) feeding SkinnedEffect::SetBoneTransforms; the pose at 0.5 s "
-                   "is checked.",
+                   "(start, advance, seek, loop, clamp and restart) feeding SkinnedEffect::SetBoneTransforms; the pose at 0.5 s "
+                   "is checked numerically and with pixels.",
     .apis = {"AnimationPlayer::StartClip", "AnimationPlayer::Update", "AnimationPlayer::GetSkinTransforms",
-             "AnimationPlayer::GetWorldTransforms", "SkinningData", "AnimationClip", "Model::Tag",
+             "AnimationPlayer::GetWorldTransforms", "AnimationPlayer::GetBoneTransforms",
+             "AnimationPlayer::CurrentClip", "AnimationPlayer::CurrentPosition", "SkinningData", "AnimationClip", "Model::Tag",
              "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::EnableDefaultLighting", "ModelMesh::Draw",
              "Model::Meshes", "ModelMesh::Effects", "SkinnedEffect::View", "SkinnedEffect::Projection"},
     .tags = {"model", "skinning", "animation", "skeleton", "gltf", "3d"},

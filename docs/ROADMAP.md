@@ -141,7 +141,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (18 demos)
+## Phase 7 -- models, animation, glTF 🟨 (20 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -167,8 +167,14 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.skinned_parts`: the distinct SkinnedModelEXT owns/transfers/replaces named
   parts, rejects mismatched bone counts, removes a temporary part and feeds a sampled inverse-bind
   palette to actual SkinnedEffect drawing after donor destruction.
-- Remaining: imported topology/specular slots, XNB models, SkinnedModelEXT manifest loading and
-  deeper hierarchy/clip behaviors (member decisions in COVERAGE_AUDIT.md).
+- ✅ `graphics.model.palette_sampling`: three-bone parent composition, untracked bind pose,
+  scale/rotation/translation interpolation, inverse binds, loop/clamp boundaries and invalid-data guards.
+- ✅ `graphics.model.skinned_manifest`: original nested skeleton/mesh/texture/clip sidecars load
+  through ContentManager, a truncated skeleton is refused and actual animated pixels are checked.
+- ✅ Existing skinned_animation now checks player state, relative versus absolute time, looping,
+  clamping and restart before its original rendered pose check (10 checks).
+- Remaining: imported topology/specular slots, XNB models, scene-root prefixes and multi-skin
+  behavior (member decisions and evidence limits in COVERAGE_AUDIT.md).
 
 ## Phase 8 -- content 🟨 (30 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB

@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 18), 8 (content, 30), 9 (audio 21 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 20), 8 (content, 30), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 16 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,10 +64,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-423 demos: math 78, game 33, graphics 134 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
+425 demos: math 78, game 33, graphics 136 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 18 model), audio 21 (9 XACT), core 3 (2 logger),
+effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 20 model), audio 21 (9 XACT), core 3 (2 logger),
 content 30 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
@@ -287,17 +287,37 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** checkpoint 423 is complete. Apply and validate the prepared next
-model batch: `/tmp/cna-palette-sampling.cpp`, `/tmp/cna-skinned-manifest.cpp`,
-`/tmp/cna-skinned-bundles.py`, and `/tmp/cna-skinned-animation.cpp` (extends the existing demo).
-The first two introduce focused palette/hierarchy and loose manifest workflows; the last adds
-AnimationPlayer start/relative/absolute/loop/clamp/restart assertions plus a null-data guard.
-Integrate the bundle generator in tools/generate_assets.py and regenerate its eight sidecars.
-`/tmp/cna-skinned-bundle-fixture` was regenerated twice byte-identically; lengths, joint weights,
-indices and manifest-relative paths were independently checked. These drafts have NOT yet been
-compiled/run. Expected catalog count after applying both new IDs: 425. Build/targeted runtime,
-inspect manifest and existing-animation screenshots, update semantic coverage and run full validation.
-Do not mistake previously applied older /tmp drafts for newer repository sources.
+**Immediate next action:** the final 425 batch is built and targeted checks pass. Commit this
+batch and run full tools/validate.sh, then archive/compare against ORIGINAL checkpoint-423.
+Expected: SOFTWARE 379/18/25/3, OPENGLES3 400/19/3/3, 438 enabled CTests; no new failed assertions
+(expected raw 25/26 unchanged). Current coverage runtime columns still use complete 423 reports.
+
+New/changed behavior:
+- palette_sampling: 14 checks without DISPLAY under both renderer selections. A three-bone
+  hierarchy samples translation/scale/quaternion rotation, preserves an untracked local bind pose,
+  composes parents and inverse binds, compares positive/negative loop versus clamp and refuses
+  missing clips, self-parenting and truncated arrays without changing caller output. CPU evidence.
+- skinned_manifest: 12 checks per renderer. An original eight-file nested bundle loads through
+  Load<shared_ptr<SkinnedModelEXT>>, preserves geometry/texture/skeleton/clip data, refuses the
+  truncated skeleton, then draws stationary red and shifted green patches with a clear old position.
+  First-frame screenshots inspected, RGBA-identical. Generator reruns and byte layouts verified.
+- existing skinned_animation: 3 -> 10 checks. Borrowed clip/state, relative versus absolute sample,
+  loop/clamp/restart checks plus a null-data guard; original bent-tip pixel validation retained.
+  Before/after captures from original ff31f00 and final source have IDENTICAL RGBA pixels on each
+  renderer. Cross-renderer silhouettes match; 8,216 pixels differ in lighting by up to 38 levels,
+  already present before this change. No cross-renderer lighting equivalence claim.
+The temporary old animation source was RESTORED; final build `/tmp/cna-425-restored-build.log`
+is clean, metadata 425/0 and five targeted CTests pass (`/tmp/cna-425-restored-ctest.log`).
+Evidence: `/tmp/cna-palette-sampling-{SOFTWARE,OPENGLES3}.{json,log}` and
+`/tmp/cna-425-{skinned_manifest,skinned_animation}-{SOFTWARE,OPENGLES3}.{json,log,png}`; original
+animation captures `/tmp/cna-skinned-animation-before-{SOFTWARE,OPENGLES3}.*`.
+Coverage remains 293/329 XNA types, 1342/2326 named members, 158/3210 C routes: these CNA extension
+behaviors add real evidence without inflating the XNA inventory. No new CNA bug established.
+CNA was bf0cde63f2f3ca11276d47a4c6a4ea870223455b at build start; modules/CMake source paths
+had no additional diff from a796ef491. All /tmp model drafts are now applied/stale.
+After the full checkpoint, the next concrete model/content gap is an original `.x` asset through
+existing content_xnb (CNA.XImporter -> CNA.XnaModelProcessor -> XNB ModelReader), then deeper
+skin root-prefix/multi-skin behavior. The source route was audited but no XNB model draft is applied.
 
 423 targeted evidence: part_sampler_state passes 10 checks on both renderers, including actual
 glTF NEAREST/CLAMP metadata, owned texture and preserved out-of-range UVs; captures inspected,

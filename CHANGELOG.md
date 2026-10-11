@@ -39,6 +39,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Hierarchical palette example checks parent composition, untracked bind pose, interpolated
+  translation/scale/rotation, inverse binds, loop/clamp time and rejected invalid skeleton requests.
+- Loose skinned manifest example loads original relative sidecars, rejects truncated skeleton data
+  and verifies the imported animation with actual pixels on SOFTWARE and OPENGLES3.
+- Existing skinned animation now checks borrowed player state, relative versus absolute time,
+  looping, clamping and restart; before/after first-frame images remain identical per renderer.
 - Isolated picture-library example verifies saves, albums, original image bytes, generated thumbnail
   and reindexing; valid short reads expose CNA-DEMOS-ISSUE-041. Stale thumbnail comments are ISSUE-040.
 - Existing sampler example now loads an authored glTF to verify NEAREST/CLAMP import, preserved

@@ -1,0 +1,18 @@
+{
+  "skeleton": "rig.skeleton.bin",
+  "parts": [
+    {
+      "name": "Patches",
+      "vertices": "patches.vertices.bin",
+      "indices": "patches.indices.bin",
+      "vertexStride": 52,
+      "texture": "patches.png"
+    }
+  ],
+  "animations": [
+    {
+      "name": "Slide",
+      "clip": "slide.clip.bin"
+    }
+  ]
+}

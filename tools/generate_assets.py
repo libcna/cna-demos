@@ -27,6 +27,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 import gltf_models
+import skinned_bundles
 import media_files
 import xact_files
 import pixel_font
@@ -340,6 +341,7 @@ def main() -> None:
     tone("sounds/chime.wav", 880.0, 0.3, root=CONTENT_XNB_ROOT)
     tone("sounds/chime.wav", 880.0, 0.3, root=CONTENT_ROOT)
     gltf_models.write_all(CONTENT_ROOT, ROOT)
+    skinned_bundles.write_all(ROOT)
     xact_files.write_all(ROOT)
     media_files.write_all(CONTENT_MEDIA_ROOT)
     tone("sounds/tone_440.wav", 440.0, 0.5)
