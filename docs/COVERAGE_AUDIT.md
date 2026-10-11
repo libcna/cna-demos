@@ -1,0 +1,111 @@
+# Coverage audit
+
+Phase 15 of [ROADMAP.md](ROADMAP.md): for every XNA 4.0 type that
+[COVERAGE.md](COVERAGE.md) lists under "Types without a demo yet", a decision -- a demo, part of
+another demo, or not independently meaningful -- with the reason. COVERAGE.md is generated; this
+file is maintained by hand and should be revisited whenever that list changes.
+
+Decisions:
+
+* **demo** -- a demo exists or is planned (ROADMAP names it).
+* **shown in** -- an existing demo already uses the type; its `.apis` names it (audit pass 1 added
+  the names that were missing), so it drops off the list at the next coverage run.
+* **environment** -- the type only appears when the environment lacks something (no audio
+  device, no graphics adapter, a removed storage device, a lost device): it cannot be shown on
+  demand, and cna-demos reports the situation as SKIPPED where it applies.
+* **service** -- needs the CNA online service or another machine; a manual demo at most.
+* **not meaningful** -- C#-only machinery with no C++ use of its own.
+
+## Microsoft.Xna.Framework
+
+| Type | Decision |
+|---|---|
+| DisplayOrientation | shown in `input.touch.capabilities` |
+| IGameComponent | shown in `game.components.collection_events` |
+| IGraphicsDeviceManager | demo: `game.services.graphics_device_service` |
+| IDrawable, IUpdateable | not meaningful on their own: the interfaces of `DrawableGameComponent`/`GameComponent`, whose members the `game.components.*` demos show through the classes |
+
+## Microsoft.Xna.Framework.Audio
+
+| Type | Decision |
+|---|---|
+| MicrophoneState | shown in `audio.microphone.input_level` |
+| NoAudioHardwareException | environment: thrown without an audio device; the runner turns it into SKIPPED for demos that declare `Need::Audio` |
+| NoMicrophoneConnectedException | environment (no microphone); `audio.microphone.input_level` is manual |
+| InstancePlayLimitException | candidate: XNA's per-platform cap on playing instances -- check whether CNA enforces one before writing a demo |
+| RendererDetail | candidate: `AudioEngine::RendererDetails` in an XACT demo |
+
+## Microsoft.Xna.Framework.Content
+
+| Type | Decision |
+|---|---|
+| ContentReader, ContentTypeReader, ContentTypeReaderManager | demo: `content.xnb.custom_type_reader` |
+| ResourceContentManager | demo: `content.content_manager.resource_content_manager` (expected failure, CNA-DEMOS-ISSUE-012) |
+| ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute | not meaningful: .NET attributes that steer the XNA IntermediateSerializer at build time; C++ has no attributes and CNA's pipeline does not read them |
+
+## Microsoft.Xna.Framework.Design
+
+| Type | Decision |
+|---|---|
+| RectangleConverter | shown in `design.type_converter.string_round_trip` |
+| PlaneConverter, RayConverter, Vector4Converter | candidate: the same round trip for the remaining math converters |
+
+## Microsoft.Xna.Framework.GamerServices
+
+| Type | Decision |
+|---|---|
+| AvatarBodyType | shown in `gamer_services.avatar.animation_presets` |
+| ControllerSensitivity, GameDifficulty, RacingCameraAngle | shown in `gamer_services.signed_in_gamer.game_defaults` |
+| GamerZone | shown in `gamer_services.gamer_profile.get_profile` |
+| GamerPrivilegeException | candidate: needs CNA's online service configured (offline, `net.network_session.online_session_types` shows GamerServicesNotAvailableException first) |
+| GamerCollection, GamerCollection.GamerCollectionEnumerator | shown by the `net.*` demos (AllGamers, LocalGamers); the enumerator is C#'s `foreach` machinery (C++ range-for) |
+| IAvatarAnimation | candidate: a custom animation class implementing it (the avatar demos use the stock `AvatarAnimation`) |
+| NotificationPosition | candidate: `Guide::NotificationPosition` |
+| LeaderboardOutcome | candidate: leaderboard paging/columns (ROADMAP Phase 12) |
+| SignedOutEventArgs | candidate: `SignedInGamer::SignedOut` if a local profile can be signed out offline |
+| FriendCollection, FriendGamer, InviteAcceptedEventArgs, GameUpdateRequiredException | service |
+| NetworkException, NetworkNotAvailableException | environment / CNA-DEMOS-ISSUE-018 (System Link failures surface as `std::runtime_error`) |
+
+## Microsoft.Xna.Framework.Graphics
+
+| Type | Decision |
+|---|---|
+| IEffectFog, IEffectLights, IEffectMatrices | demo: `graphics.effect.effect_interfaces` |
+| IGraphicsDeviceService | demo: `game.services.graphics_device_service` |
+| EffectParameterClass, EffectParameterType, EffectPassCollection | shown in `graphics.effect.parameters_and_techniques` |
+| ModelMeshCollection, ModelMeshPartCollection, ModelEffectCollection | shown in `graphics.model.draw`, `graphics.model.morph_targets`, `graphics.model.mesh_effects`; their enumerators are C#'s `foreach` machinery |
+| RenderTargetBinding | candidate: multiple render targets (needs a custom effect; ROADMAP Phase 5) |
+| VertexPositionColorTexture, IVertexType | candidate: the stock vertex types and the interface that names their declaration |
+| EffectAnnotation, EffectAnnotationCollection, EffectMaterial | candidate: need compiled XNA effects (`.fx` built with `CNA_<RENDERER>_COMPILED_EFFECTS`) or XNB models |
+| DeviceLostException, DeviceNotResetException, GraphicsDeviceStatus, NoSuitableGraphicsDeviceException | environment: device loss does not happen on CNA's desktop renderers; no adapter means no demos at all |
+
+## Microsoft.Xna.Framework.Input
+
+| Type | Decision |
+|---|---|
+| Keys, KeyState | shown in `input.keyboard.state_values` |
+| TouchCollection.Enumerator | not meaningful: C#'s `foreach` machinery (C++ range-for) |
+
+## Microsoft.Xna.Framework.Media
+
+| Type | Decision |
+|---|---|
+| MediaSourceType | shown in `media.media_library.collections` |
+| VideoSoundtrackType | shown in `media.video_player.play_video` |
+| AlbumCollection, ArtistCollection, GenreCollection, PlaylistCollection, PictureCollection | shown (counts) in `media.media_library.collections`; their contents depend on the machine's library |
+| Album, Artist, Genre, Playlist, Picture, PictureAlbum, PictureAlbumCollection | environment: the user's own library (empty on CI); a manual demo at most |
+
+## Microsoft.Xna.Framework.Net
+
+| Type | Decision |
+|---|---|
+| GameStartedEventArgs, GameEndedEventArgs | shown in `net.network_session.game_flow` |
+| AvailableNetworkSession, AvailableNetworkSessionCollection, QualityOfService, NetworkSessionJoinError, NetworkSessionJoinException | candidate: Find/Join between two processes (a standalone demo, ROADMAP Phase 12) |
+| GamerLeftEventArgs, HostChangedEventArgs, NetworkSessionEndReason, NetworkSessionEndedEventArgs | candidate: with the two-process demo -- in one process CNA's sessions have no remote gamer to leave or host to change |
+| WriteLeaderboardsEventArgs | candidate: leaderboard writes at the end of a game (Phase 12) |
+
+## Microsoft.Xna.Framework.Storage
+
+| Type | Decision |
+|---|---|
+| StorageDeviceNotConnectedException | environment: a removed storage device |

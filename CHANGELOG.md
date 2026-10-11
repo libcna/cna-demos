@@ -139,6 +139,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   DynamicIndexBuffer with Discard, Texture3D sub-box data, glTF node-animation clips
   (ModelAnimationsEXT, ApplyClipToBonesEXT) on a generated turntable model, and the same font, sound
   and curve compiled to CNB and to XNB.
+- `game.services.graphics_device_service` (a component reaches the device through
+  IGraphicsDeviceService) and `net.network_session.online_session_types` (Local vs PlayerMatch and
+  Ranked without the online service).
+- docs/COVERAGE_AUDIT.md: a decision for every XNA type without a demo (demo, shown in, environment,
+  service, not meaningful); audit pass 2 names more types the demos already used (collections,
+  converters, event arguments, MediaSourceType, VideoSoundtrackType).
 - `graphics.effect.effect_interfaces`: IEffectMatrices, IEffectLights and IEffectFog on five stock
   effects; scene settings applied through the interfaces alone.
 - Coverage audit, first pass: demos that already show an enumeration or type now name it in

@@ -6,7 +6,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**356 demos** in 18 categories. Kinds: console 135, game 213, standalone 8. Automation: automated 321, manual 2, smoke-only 33.
+**358 demos** in 18 categories. Kinds: console 135, game 215, standalone 8. Automation: automated 323, manual 2, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -18,51 +18,51 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 | 4 / 0 / 0 |
 | devices | 4 | 4 | 0 | 0 | 4 / 0 / 0 | 4 / 0 / 0 |
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 | 2 / 0 / 0 |
-| game | 29 | 24 | 4 | 1 | 22 / 5 / 1 | 27 / 0 / 1 |
+| game | 30 | 25 | 4 | 1 | 23 / 5 / 1 | 28 / 0 / 1 |
 | gamer_services | 15 | 15 | 0 | 0 | 14 / 0 / 1 | 14 / 0 / 1 |
 | graphics | 119 | 119 | 0 | 0 | 113 / 3 / 3 | 112 / 3 / 4 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
 | math | 72 | 72 | 0 | 0 | 71 / 0 / 1 | 71 / 0 / 1 |
 | media | 10 | 9 | 1 | 0 | 10 / 0 / 0 | 10 / 0 / 0 |
-| net | 6 | 6 | 0 | 0 | 6 / 0 / 0 | 6 / 0 / 0 |
+| net | 7 | 7 | 0 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | storage | 7 | 7 | 0 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 250 of 329** (76.0 %).
-- **Methods, properties, constructors and events named by a demo: 1004 of 2326** (43.2 %).
-- Fields and enum values named by a demo: 120 of 753 (reported separately: a demo per enum value is not a goal).
+- **Types with at least one demo: 266 of 329** (80.9 %).
+- **Methods, properties, constructors and events named by a demo: 1014 of 2326** (43.6 %).
+- Fields and enum values named by a demo: 123 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
-| `Microsoft.Xna.Framework` | 38 / 42 | 276 / 643 | 34 / 78 |
+| `Microsoft.Xna.Framework` | 40 / 42 | 276 / 643 | 34 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 15 / 19 | 71 / 121 | 5 / 11 |
 | `Microsoft.Xna.Framework.Content` | 4 / 11 | 10 / 48 | 0 / 0 |
-| `Microsoft.Xna.Framework.Design` | 9 / 13 | 19 / 51 | 0 / 2 |
+| `Microsoft.Xna.Framework.Design` | 10 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 39 / 52 | 102 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 80 / 99 | 247 / 550 | 79 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 84 / 99 | 250 / 550 | 79 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
-| `Microsoft.Xna.Framework.Media` | 10 / 24 | 60 / 192 | 1 / 8 |
-| `Microsoft.Xna.Framework.Net` | 11 / 23 | 43 / 127 | 0 / 22 |
+| `Microsoft.Xna.Framework.Media` | 17 / 24 | 67 / 192 | 1 / 8 |
+| `Microsoft.Xna.Framework.Net` | 13 / 23 | 43 / 127 | 3 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
 
 ### Types without a demo yet
 
 The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
-- `Microsoft.Xna.Framework`: IDrawable, IGameComponent, IGraphicsDeviceManager, IUpdateable
+- `Microsoft.Xna.Framework`: IDrawable, IUpdateable
 - `Microsoft.Xna.Framework.Audio`: InstancePlayLimitException, NoAudioHardwareException, NoMicrophoneConnectedException, RendererDetail
 - `Microsoft.Xna.Framework.Content`: ContentReader, ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute, ContentTypeReaderManager
-- `Microsoft.Xna.Framework.Design`: PlaneConverter, RayConverter, RectangleConverter, Vector4Converter
+- `Microsoft.Xna.Framework.Design`: PlaneConverter, RayConverter, Vector4Converter
 - `Microsoft.Xna.Framework.GamerServices`: FriendCollection, FriendGamer, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPrivilegeException, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardOutcome, NetworkException, NetworkNotAvailableException, NotificationPosition, SignedOutEventArgs
-- `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectPassCollection, GraphicsDeviceStatus, IGraphicsDeviceService, IVertexType, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, RenderTargetBinding, VertexPositionColorTexture
+- `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, GraphicsDeviceStatus, IVertexType, ModelBoneCollection.Enumerator, ModelEffectCollection.Enumerator, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, RenderTargetBinding, VertexPositionColorTexture
 - `Microsoft.Xna.Framework.Input.Touch`: TouchCollection.Enumerator
-- `Microsoft.Xna.Framework.Media`: Album, AlbumCollection, Artist, ArtistCollection, Genre, GenreCollection, MediaSourceType, Picture, PictureAlbum, PictureAlbumCollection, PictureCollection, Playlist, PlaylistCollection, VideoSoundtrackType
-- `Microsoft.Xna.Framework.Net`: AvailableNetworkSession, AvailableNetworkSessionCollection, GameEndedEventArgs, GameStartedEventArgs, GamerLeftEventArgs, HostChangedEventArgs, NetworkSessionEndReason, NetworkSessionEndedEventArgs, NetworkSessionJoinError, NetworkSessionJoinException, QualityOfService, WriteLeaderboardsEventArgs
+- `Microsoft.Xna.Framework.Media`: Album, Artist, Genre, Picture, PictureAlbum, PictureAlbumCollection, Playlist
+- `Microsoft.Xna.Framework.Net`: AvailableNetworkSession, AvailableNetworkSessionCollection, GamerLeftEventArgs, HostChangedEventArgs, NetworkSessionEndReason, NetworkSessionEndedEventArgs, NetworkSessionJoinError, NetworkSessionJoinException, QualityOfService, WriteLeaderboardsEventArgs
 - `Microsoft.Xna.Framework.Storage`: StorageDeviceNotConnectedException
 
 ## CNA C ABI routes demonstrated
@@ -295,6 +295,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GamePadCapabilities::HasTriggerVibrationMotorsEXT` -- input.gamepad.trigger_vibration
 - `GameWindow::FileDropEXT` -- game.window.file_drop
 - `GameWindow::TextDropEXT` -- game.window.file_drop
+- `GamerCollection::Count` -- net.network_session.local_session
+- `GamerCollection::Item` -- net.network_session.local_session
 - `GestureSample::GestureSample` -- input.touch.gesture_queue
 - `GltfImportDiagnosticEXT` -- graphics.model.import_report
 - `GltfImportReportEXT` -- graphics.model.import_report
@@ -329,6 +331,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Model::getCamerasEXTProperty` -- graphics.model.gltf_cameras
 - `ModelAnimationsEXT` -- graphics.model.node_animation
 - `ModelCameraEXT` -- graphics.model.gltf_cameras
+- `ModelMeshCollection::Count` -- graphics.model.draw
 - `MorphTargetDataEXT` -- graphics.model.morph_targets
 - `MorphWeightTrackEXT` -- graphics.model.morph_targets
 - `Motion::IsSupported` -- devices.sensors.availability

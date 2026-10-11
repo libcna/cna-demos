@@ -16,6 +16,7 @@
 #include "Microsoft/Xna/Framework/Media/MediaState.hpp"
 #include "Microsoft/Xna/Framework/Media/Video/Video.hpp"
 #include "Microsoft/Xna/Framework/Media/Video/VideoPlayer.hpp"
+#include "Microsoft/Xna/Framework/Media/VideoSoundtrackType.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 
@@ -40,8 +41,13 @@ namespace
             media_ = std::make_unique<Microsoft::Xna::Framework::Content::ContentManager>(&getServicesProperty(),
                                                                                           "assets/media");
             video_.emplace(media_->Load<Video>("videos/bounce"));
-            ctx.Print("video: {}x{}, {:.1f} fps, {:.2f} s", video_->getWidthProperty(), video_->getHeightProperty(),
-                      video_->getFramesPerSecondProperty(), video_->getDurationProperty().getTotalSecondsProperty());
+            const VideoSoundtrackType soundtrack = video_->getVideoSoundtrackTypeProperty();
+            ctx.Print("video: {}x{}, {:.1f} fps, {:.2f} s, soundtrack {}", video_->getWidthProperty(),
+                      video_->getHeightProperty(), video_->getFramesPerSecondProperty(),
+                      video_->getDurationProperty().getTotalSecondsProperty(),
+                      soundtrack == VideoSoundtrackType::Music    ? "Music"
+                      : soundtrack == VideoSoundtrackType::Dialog ? "Dialog"
+                                                                  : "MusicAndDialog");
             ctx.Check(video_->getWidthProperty() == 160 && video_->getHeightProperty() == 120 &&
                           video_->getFramesPerSecondProperty() == 15.0f,
                       "the metadata describes the 160x120, 15 fps clip");
@@ -130,7 +136,8 @@ CNA_DEMOS_GAME(PlayVideoDemo, {
                    "with a VideoPlayer and draws VideoPlayer::GetTexture each frame until it stops at the end.",
     .apis = {"Video::Width", "Video::Height", "Video::FramesPerSecond", "Video::Duration", "VideoPlayer::VideoPlayer",
              "VideoPlayer::Play", "VideoPlayer::GetTexture", "VideoPlayer::State", "VideoPlayer::PlayPosition",
-             "VideoPlayer::Video", "VideoPlayer::Stop", "MediaState"},
+             "VideoPlayer::Video", "VideoPlayer::Stop", "MediaState",
+             "Video::VideoSoundtrackType", "VideoSoundtrackType"},
     .tags = {"media", "video", "cutscene", "texture"},
     .needs = CnaDemos::Need::Video | CnaDemos::Need::Audio,
     .frames = 600,

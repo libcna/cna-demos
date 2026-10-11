@@ -52,7 +52,8 @@ CNA_DEMOS_GAME(CollectionEventsDemo, {
                    "Contains, IndexOf and Remove.",
     .apis = {"GameComponentCollection::ComponentAdded", "GameComponentCollection::ComponentRemoved",
              "GameComponentCollection::Contains", "GameComponentCollection::IndexOf", "GameComponentCollection::Remove",
-             "GameComponentCollectionEventArgs::GameComponent"},
+             "GameComponentCollectionEventArgs::GameComponent",
+             "IGameComponent"},
     .tags = {"component", "event"},
     .frames = 3,
 })

@@ -106,7 +106,8 @@ CNA_DEMOS_GAME(MorphTargetsDemo, {
                    "the mesh part's Tag, checks BlendMorphTargetsEXT and EvaluateMorphWeightsEXT, and animates the "
                    "shape by re-blending the part with SetMorphWeightsEXT every frame.",
     .apis = {"MorphTargetDataEXT", "MorphWeightTrackEXT", "BlendMorphTargetsEXT", "EvaluateMorphWeightsEXT",
-             "SetMorphWeightsEXT", "ModelMeshPart::Tag", "Model::Draw"},
+             "SetMorphWeightsEXT", "ModelMeshPart::Tag", "Model::Draw",
+             "ModelMeshPartCollection"},
     .tags = {"3d", "model", "gltf", "morph", "blend-shapes", "cnaext"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 40,

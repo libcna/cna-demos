@@ -90,7 +90,8 @@ CNA_DEMOS_GAME(ModelDrawDemo, {
     .title = "Draw a model",
     .description = "Loads a three-part robot arm compiled from glTF by CNA's content pipeline and draws it with "
                    "Model::Draw(world, view, projection); a pixel on the upper arm is checked.",
-    .apis = {"ContentManager::Load", "Model::Draw", "Model::Meshes", "Model::Bones", "Viewport::Project"},
+    .apis = {"ContentManager::Load", "Model::Draw", "Model::Meshes", "Model::Bones", "Viewport::Project",
+             "ModelMeshCollection::Count"},
     .tags = {"model", "3d", "mesh", "gltf", "content"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

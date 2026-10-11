@@ -205,6 +205,8 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   flow, NetworkSessionProperties, BeginCreate/EndCreate, Gamer::Tag, PacketWriter/PacketReader
   round trip in a System Link session (`Need::Network`). CNA's Local sessions open no sockets and
   deliver no packets, so packets need System Link.
+- ✅ `net.network_session.online_session_types`: Local works offline; PlayerMatch and Ranked need
+  the online service (GamerServicesNotAvailableException in CNA's offline mode).
 - Remaining net: `SimulatedLatency`/`SimulatedPacketLoss` (if they apply to local delivery),
   `AddLocalGamer`, `GamerLeft`/`HostChanged`/`SessionEnded`, `AllowJoinInProgress`,
   `PrivateGamerSlots`; Find/Join between two processes (a standalone demo); voice (manual).
@@ -242,9 +244,13 @@ player, gamepad -- one demo each where the C ABI differs from the C++ API in a w
 C#/.NET demos belong with the separate `cna-dotnet` binding; decide later whether to reference or
 host them.
 
-## Phase 15 -- coverage audit ⬜
+## Phase 15 -- coverage audit 🟨
 Walk COVERAGE.md's backlog and the CNA-specific headers; for each remaining type decide: demo,
-part of another demo, or not independently meaningful (record why). Add screenshot references for
+part of another demo, or not independently meaningful (record why). ✅ First passes: the
+decisions for every XNA type without a demo are in [COVERAGE_AUDIT.md](COVERAGE_AUDIT.md), demos
+that already showed a type now name it, and new demos cover the effect interfaces and the
+graphics device service. Remaining: the candidates COVERAGE_AUDIT.md lists, the CNA-specific
+headers. Add screenshot references for
 deterministic demos and run the visual-regression comparison across renderers.
 
 ## Cross-cutting work (any time)

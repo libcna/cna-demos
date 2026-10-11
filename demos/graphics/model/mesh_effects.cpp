@@ -98,7 +98,8 @@ CNA_DEMOS_GAME(MeshEffectsDemo, {
     .description = "Draws the robot arm three times, changing the BasicEffect of every mesh in between: as authored, "
                    "tinted with DiffuseColor, and see-through with Alpha; pixels on the three copies are compared.",
     .apis = {"ModelMesh::Effects", "BasicEffect::DiffuseColor", "BasicEffect::Alpha", "Model::Draw",
-             "BlendState::AlphaBlend"},
+             "BlendState::AlphaBlend",
+             "ModelEffectCollection"},
     .tags = {"model", "effect", "tint", "transparency", "3d"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

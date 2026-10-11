@@ -6,6 +6,7 @@
 #include "Microsoft/Xna/Framework/Media/GenreCollection.hpp"
 #include "Microsoft/Xna/Framework/Media/MediaLibrary.hpp"
 #include "Microsoft/Xna/Framework/Media/MediaSource.hpp"
+#include "Microsoft/Xna/Framework/Media/MediaSourceType.hpp"
 #include "Microsoft/Xna/Framework/Media/PictureCollection.hpp"
 #include "Microsoft/Xna/Framework/Media/PlaylistCollection.hpp"
 #include "Microsoft/Xna/Framework/Media/SongCollection.hpp"
@@ -20,7 +21,9 @@ namespace
         // CNA indexes the user's music and picture folders. The numbers depend on the machine,
         // so the demo only reports them (counts only -- nothing about the files themselves).
         for (const MediaSource* source : MediaSource::GetAvailableMediaSources())
-            ctx.Print("media source: {}", source->getNameProperty());
+            ctx.Print("media source: {} ({})", source->getNameProperty(),
+                      source->getMediaSourceTypeProperty() == MediaSourceType::LocalDevice ? "LocalDevice"
+                                                                                           : "WindowsMediaConnect");
 
         const MediaLibrary library;
         ctx.Print("songs {}, albums {}, artists {}, genres {}, playlists {}, pictures {}",
@@ -39,7 +42,9 @@ CNA_DEMOS_CONSOLE(Collections, {
                    "pictures of the default MediaLibrary (machine-dependent, so only reported).",
     .apis = {"MediaSource::GetAvailableMediaSources", "MediaSource::Name", "MediaLibrary::MediaLibrary",
              "MediaLibrary::Songs", "MediaLibrary::Albums", "MediaLibrary::Artists", "MediaLibrary::Genres",
-             "MediaLibrary::Playlists", "MediaLibrary::Pictures"},
+             "MediaLibrary::Playlists", "MediaLibrary::Pictures",
+             "AlbumCollection::Count", "ArtistCollection::Count", "GenreCollection::Count", "PlaylistCollection::Count", "PictureCollection::Count",
+             "MediaSource::MediaSourceType", "MediaSourceType"},
     .tags = {"media", "library", "music", "pictures"},
     .automation = CnaDemos::Automation::SmokeOnly,
 })
