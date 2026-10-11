@@ -1108,6 +1108,44 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   continue; it does not relabel the exception or fall back to a lower-priority asset. Temporary
   files belong to this demo and are removed by scoped cleanup. No CNA edits or upstream report.
 
+
+### CNA-DEMOS-ISSUE-046 -- Intermediate XML cannot read its own aliased external TargetType
+
+- **Area:** IntermediateSerializer external-reference writing/reading and namespace resolution.
+- **Demo:** `content.custom.intermediate_external_references`; ten child checks, nine passing
+  and one native emitted-XML round-trip failure. No graphics or referenced-file loading is needed.
+- **Reproduction:** describe Scene and Profile in the same `CnaDemos.External` namespace. Scene
+  has an inline Profile preview and two ExternalReference<Profile> wrappers naming one file,
+  plus a second file and a null reference. Serialize with an absolute document relocation path,
+  then feed that exact XML to Deserialize<Scene> with the same path.
+- **Observed:** the writer emits `xmlns:External="CnaDemos.External"` and
+  `TargetType="External:Profile"`. Deserialize throws InvalidContentException containing
+  `Cannot find type "External:Profile".` The embedded preview loads via the same registered
+  Profile serializer. A separately identified control using `CnaDemos.External.Profile` for the
+  two TargetType attributes succeeds, including filename relocation and wrapper/null semantics.
+- **Expected:** the serializer can deserialize its own valid namespace-qualified external
+  references, resolving their target identities in the document's namespace context. This is a
+  CNA round-trip contract check, not a genuine-XNA runtime comparison.
+- **Cause:** IntermediateWriter::WriteExternalReferences calls SpellDeclaredTypeName, which
+  uses an existing namespace alias. IntermediateReader::ReadExternalReferences instead sends
+  the raw attribute to IsKnownTypeName and stores it unchanged; CanonicalTypeName does not
+  resolve document namespace aliases. ApplyFixups also compares the stored spelling directly
+  against the canonical target name. Both lookup and comparison need the resolved identity;
+  registering a hidden global alias in the demo would obscure the defect.
+- **Evidence/environment:** fresh Linux GCC 14.2 processes WITHOUT DISPLAY/WAYLAND_DISPLAY,
+  `/tmp/cna-437-xml-external-{SOFTWARE,OPENGLES3}.{json,log}`. Each initial unlabeled run
+  has exactly this failed check and nine passing checks. CNA observed at
+  e5014ffaaec2b7f2b018b4dad1f5e299899315f7 after external C API changes; the inspected
+  content-pipeline sources have no uncommitted edits. No atomic dependency snapshot is claimed.
+- **Handling:** preserve the original XML and failing assertion with ISSUE-046. Catch only the
+  diagnosed InvalidContentException so independent controls can run; other failures propagate.
+  Canonical-name control XML is explicitly separate and does not replace the original output.
+  Referenced filenames are recorded, not imported, compiled or published by this XML tool.
+  No CNA code was changed and no upstream report was sent.
+- **Final labeled evidence:** `/tmp/cna-437-xml-external-final-{SOFTWARE,OPENGLES3}.{json,log}`
+  retains the same one failure with ISSUE-046 and nine passes. Its WILL_FAIL CTest passes with
+  the other 20 focused tests. The complete 437 checkpoint is pending.
+
 ## Resolved
 
 ### CNA-DEMOS-ISSUE-044 -- In-flight C API generation shadows a result-handle parameter

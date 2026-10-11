@@ -6,14 +6,14 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**435 demos** in 18 categories. Kinds: console 156, game 250, standalone 29. Automation: automated 399, manual 3, smoke-only 33.
+**437 demos** in 18 categories. Kinds: console 157, game 250, standalone 30. Automation: automated 401, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
 | c_api | 16 | 15 | 1 | 0 | 16 / 0 / 0 / 0 / 0 | 16 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 36 | 36 | 0 | 0 | 30 / 0 / 6 / 0 / 0 | 30 / 0 / 6 / 0 / 0 |
+| content | 38 | 38 | 0 | 0 | 30 / 0 / 6 / 0 / 2 | 30 / 0 / 6 / 0 / 2 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.content_manager.read_asset_ownership`, `content.custom.intermediate_external_references`.
+- OPENGLES3: absent from report: `content.content_manager.read_asset_ownership`, `content.custom.intermediate_external_references`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -315,7 +317,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ContentManifestReaderUsage` -- content.content_manager.manifest
 - `ContentReader::ReadInt32` -- content.xnb.custom_type_reader, content.xnb.shared_resources
 - `ContentReader::ReadString` -- content.xnb.custom_type_reader, content.xnb.shared_resources
-- `ContentTypeReaderManager::AddTypeCreator` -- content.content_manager.asset_precedence, content.xnb.custom_type_reader, content.xnb.existing_objects, content.xnb.external_references, content.xnb.reader_versions, content.xnb.shared_resources
+- `ContentTypeReaderManager::AddTypeCreator` -- content.content_manager.asset_precedence, content.content_manager.read_asset_ownership, content.xnb.custom_type_reader, content.xnb.existing_objects, content.xnb.external_references, content.xnb.reader_versions, content.xnb.shared_resources
 - `DynamicSoundEffectInstance::Stop` -- audio.dynamic_sound_effect_instance.streaming
 - `Effect::Apply` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading
 - `Environment::DeviceType` -- devices.sensors.availability
@@ -408,6 +410,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentImporterContext::AddDependency` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessor::Process` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::Convert` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::ExternalReference` -- content.custom.intermediate_external_references
+- `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::Filename` -- content.custom.intermediate_external_references
 - `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ProcessorParameterBindings::Add` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::AllowNull` -- content.custom.intermediate_serializer
@@ -425,8 +429,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentTypeSerializer::Serialize` -- content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateReader::ReadText` -- content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::AddTypeSerializer` -- content.custom.intermediate_type_serializer
-- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize` -- content.custom.intermediate_polymorphism, content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
-- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize` -- content.custom.intermediate_polymorphism, content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize` -- content.custom.intermediate_external_references, content.custom.intermediate_polymorphism, content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize` -- content.custom.intermediate_external_references, content.custom.intermediate_polymorphism, content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::TypeSerializerFor` -- content.custom.intermediate_polymorphism
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateWriter::Xml` -- content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Graphics::AnimationClipEXT` -- graphics.model.palette_sampling

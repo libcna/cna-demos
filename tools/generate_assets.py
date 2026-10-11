@@ -35,6 +35,7 @@ import xnb_loadouts
 import xnb_external_assets
 import xnb_versions
 import xnb_resolution
+import xnb_ownership
 import media_files
 import xact_files
 import pixel_font
@@ -356,6 +357,7 @@ def main() -> None:
     xnb_external_assets.write_all(ROOT)
     xnb_versions.write_all(ROOT)
     xnb_resolution.write_all(ROOT)
+    xnb_ownership.write_all(ROOT)
     xact_files.write_all(ROOT)
     media_files.write_all(CONTENT_MEDIA_ROOT)
     tone("sounds/tone_440.wav", 440.0, 0.5)

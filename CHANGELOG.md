@@ -39,6 +39,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Packed XNB ReadAsset ownership with actual nested disposable callbacks, independent reads,
+  source-stream lifetime and caller cleanup across manager Unload/Dispose (14 checks).
+- Intermediate XML external-reference relocation and identity controls. The original emitted
+  TargetType alias cannot be read back by CNA; ISSUE-046 preserves that failure beside nine
+  passing checks without substituting the separately labeled canonical-name control.
 - A polymorphic XML spawn list restores concrete enemy/treasure schemas through an abstract
   base and rejects unknown, unrelated or abstract type declarations (eight child checks).
 - Existing intermediate XML tools now round-trip a cyclic resource graph with verified C++

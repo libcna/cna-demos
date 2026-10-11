@@ -189,7 +189,7 @@ a check that all authored colors remain visible and that a blank texture row can
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (36 demos; remaining below)
+## Phase 8 -- content 🟨 (38 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -245,6 +245,13 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `content.custom.intermediate_polymorphism`: explicit concrete serializer registration, an
   abstract-base list, inherited/derived values, emitted Type attributes and nulls, plus refusal
   of unknown/unrelated/abstract declarations (eight child checks, no display needed).
+- ✅ `content.content_manager.read_asset_ownership`: callback identity for nested disposable tiles,
+  uncached repeat reads, short-read stream ownership, delegated lifetime across Unload/Dispose,
+  early refusals and explicit caller cleanup (14 checks under both displayless selections).
+- ✅ `content.custom.intermediate_external_references`: filename versus inline data, table
+  deduplication, relocation, wrapper/null identity and invalid references. Nine child checks pass;
+  native emitted TargetType alias round-trip exposes ISSUE-046. File imports/build publication
+  remain separate work; the canonical-name control is explicitly distinct from the failed XML.
 - ✅ `content.content_manager.asset_precedence`: same-name XNB/CNB/CNJ/native values,
   cache versus fresh-manager lookup, Unload, explicit native filenames, corrupt compiled-file
   refusal and repair/retry. Thirteen checks pass; truncated XNB exposes a public exception-type
