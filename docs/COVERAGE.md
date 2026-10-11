@@ -6,12 +6,12 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**419 demos** in 18 categories. Kinds: console 151, game 242, standalone 26. Automation: automated 383, manual 3, smoke-only 33.
+**421 demos** in 18 categories. Kinds: console 151, game 243, standalone 27. Automation: automated 385, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
-| c_api | 15 | 14 | 1 | 0 | 15 / 0 / 0 / 0 / 0 | 15 / 0 / 0 / 0 / 0 |
+| c_api | 16 | 15 | 1 | 0 | 15 / 0 / 0 / 0 / 1 | 15 / 0 / 0 / 0 / 1 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 30 | 30 | 0 | 0 | 26 / 0 / 4 / 0 / 0 | 26 / 0 / 4 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -20,7 +20,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 132 | 132 | 0 | 0 | 119 / 8 / 5 / 0 / 0 | 123 / 3 / 6 / 0 / 0 |
+| graphics | 133 | 133 | 0 | 0 | 119 / 8 / 5 / 0 / 1 | 123 / 3 / 6 / 0 / 1 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 10 | 9 | 1 | 0 | 10 / 0 / 0 / 0 / 0 | 10 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `c_api.game.host_frames`, `graphics.model.part_sampler_state`.
+- OPENGLES3: absent from report: `c_api.game.host_frames`, `graphics.model.part_sampler_state`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -69,7 +71,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 156 of 3210** (4.9 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 158 of 3210** (4.9 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -90,7 +92,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `media.h` | 2 / 39 |
 | `media_player.h` | 12 / 41 |
 | `render_target.h` | 3 / 12 |
-| `runtime.h` | 14 / 45 |
+| `runtime.h` | 16 / 45 |
 | `runtime_components.h` | 13 / 39 |
 | `sprite_font.h` | 2 / 9 |
 | `storage.h` | 16 / 49 |
@@ -418,6 +420,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize` -- content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize` -- content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateWriter::Xml` -- content.custom.intermediate_type_serializer
+- `Microsoft::Xna::Framework::Graphics::ModelMeshPart::SamplerStatesEXT` -- graphics.model.part_sampler_state
+- `Microsoft::Xna::Framework::Graphics::ModelMeshPart::setSamplerStateEXTProperty` -- graphics.model.part_sampler_state
 - `Model::GltfImportReportEXT` -- graphics.model.import_report
 - `Model::MaterialVariantEXT` -- graphics.model.material_variants
 - `Model::MaterialVariantNamesEXT` -- graphics.model.material_variants

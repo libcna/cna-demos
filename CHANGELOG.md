@@ -35,6 +35,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Model part sampler example distinguishes stored metadata from explicit device selection, with
+  wrap/clamp pixel checks on both renderers.
+- C host-frame example verifies copied lifecycle hooks, draw suppression, completion ordering
+  and repeated terminal calls without restarting the run.
 - Shared-buffer ModelMeshPart example checks independent index/base-vertex ranges and effects,
   material collection deduplication/removal, and both selected triangle halves with actual pixels.
 - Focused C11 foreign-thread dispatch example checks default/restored handle affinity and explicit

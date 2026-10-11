@@ -141,7 +141,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (16 demos)
+## Phase 7 -- models, animation, glTF 🟨 (17 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -161,7 +161,9 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.mesh_parts`: procedural parts share buffers with distinct index/base-vertex
   ranges and material effects; effect collection deduplication/replacement and both selected
   triangle halves are checked, including actual pixels on both renderers.
-- Remaining: model topology/sampler behaviors, XNB models, `SkinnedModelEXT` (member decisions
+- ✅ `graphics.model.part_sampler_state`: sampler metadata is selected explicitly by the application;
+  point-wrap versus point-clamp is checked with pixels on both renderers.
+- Remaining: imported sampler fixtures, mixed model topology, XNB models, `SkinnedModelEXT` (member decisions
   in COVERAGE_AUDIT.md; mesh-part basics do not imply complete coverage).
 
 ## Phase 8 -- content 🟨 (30 demos; remaining below)
@@ -313,12 +315,13 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
-## Phase 14 -- bindings 🟨 (15 C API demos)
+## Phase 14 -- bindings 🟨 (16 C API demos)
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit, expired callback device handles),
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, callback errors),
 ✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
+✅ `c_api.game.host_frames` (copied frame hooks, explicit host stepping, draw suppression and terminal exit),
 ✅ `c_api.game.foreign_thread_dispatch` (default/restored thread affinity and explicit owner pumping of worker game-property calls),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard, root-change cache behavior and visible text),
