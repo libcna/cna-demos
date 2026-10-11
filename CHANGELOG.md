@@ -30,6 +30,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Composite CNB encounter example resolves shared enemy profiles through XREF and the owning
+  ContentManager, including reference failures and retry after a missing child is supplied.
+- Bounded CNB tile-layer example distinguishes file/chunk/aggregate budgets from schema
+  array/string limits, inspects actual chunk sizes and rejects a corrupted recognizable container.
 - XNA pipeline adapter tool runs typed importer/processor registration through the real build
   coordinator, tracks an original scale sidecar, converts imported route units through another
   processor and checks compiled bounds, typed parameter isolation and contextual errors.

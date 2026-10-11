@@ -6,14 +6,14 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**413 demos** in 18 categories. Kinds: console 148, game 240, standalone 25. Automation: automated 377, manual 3, smoke-only 33.
+**415 demos** in 18 categories. Kinds: console 150, game 240, standalone 25. Automation: automated 379, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 20 | 17 | 2 | 1 | 18 / 0 / 1 / 1 / 0 | 18 / 0 / 1 / 1 / 0 |
 | c_api | 14 | 13 | 1 | 0 | 14 / 0 / 0 / 0 / 0 | 14 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 28 | 28 | 0 | 0 | 24 / 0 / 4 / 0 / 0 | 24 / 0 / 4 / 0 / 0 |
+| content | 30 | 30 | 0 | 0 | 24 / 0 / 4 / 0 / 2 | 24 / 0 / 4 / 0 / 2 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.custom.cnb_external_references`, `content.custom.cnb_read_limits`.
+- OPENGLES3: absent from report: `content.custom.cnb_external_references`, `content.custom.cnb_read_limits`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -129,13 +131,25 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Buttons::Paddle4EXT` -- input.gamepad.extra_buttons
 - `Buttons::TouchPadEXT` -- input.gamepad.touchpad
 - `CNA::Content::Cnb::CnbAssetTypeIdFromName` -- content.custom.cnb_loader
-- `CNA::Content::Cnb::CnbByteReader::ReadCount` -- content.custom.pipeline_components
-- `CNA::Content::Cnb::CnbDocument::OpenChunk` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbByteReader::ReadCount` -- content.custom.cnb_read_limits, content.custom.pipeline_components
+- `CNA::Content::Cnb::CnbByteReader::ReadString` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::ChunkAt` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::ChunkCount` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::ExternalReferenceAt` -- content.custom.cnb_external_references
+- `CNA::Content::Cnb::CnbDocument::ExternalReferences` -- content.custom.cnb_external_references
+- `CNA::Content::Cnb::CnbDocument::HasMagic` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::OpenChunk` -- content.custom.cnb_loader, content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::Parse` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::ParseFile` -- content.custom.cnb_external_references
 - `CNA::Content::Cnb::CnbDocument::RequireAsset` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbWriter::AddChunk` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbWriter::Build` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbWriter::SetExternalReferences` -- content.custom.cnb_external_references
+- `CNA::Content::Cnb::CnbWriter::SetLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetMetadata` -- content.custom.cnb_loader
-- `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
+- `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Pipeline::ContentPipeline::Build` -- content.custom.pipeline_components, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::Stage` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter` -- content.custom.pipeline_components
@@ -287,7 +301,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ContentManager::GetContentManifest` -- content.content_manager.manifest
 - `ContentManager::GetXnbReaderUsageSummary` -- content.content_manager.manifest
 - `ContentManager::RefreshContentManifest` -- content.content_manager.manifest
-- `ContentManager::RegisterCnbLoaderEXT` -- content.custom.cnb_loader, content.custom.pipeline_components
+- `ContentManager::RegisterCnbLoaderEXT` -- content.custom.cnb_external_references, content.custom.cnb_loader, content.custom.pipeline_components
 - `ContentManager::RegisterCnjLoader` -- content.custom.cnj_loader
 - `ContentManager::RegisterTypeReader` -- content.custom.loose_file_reader
 - `ContentManifestEntry` -- content.content_manager.manifest
