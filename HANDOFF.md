@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 15), 8 (content, 26), 9 (audio 20 incl. 9 XACT, media 10 incl. a
+* In progress: 7 (models/glTF, 15), 8 (content, 27), 9 (audio 20 incl. 9 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 14 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-411 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+412 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 20 (9 XACT), core 3 (2 logger),
-content 26 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 27 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 14 (standalone C programs). Every declared category has demos.
@@ -236,13 +236,20 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** the full 411 checkpoint is complete. Review/apply `/tmp/cna-intermediate-properties/`, a not-yet-built draft for
-`content.custom.intermediate_properties`: one dungeon configuration combines validated getter/
-setter dispatch, a get-only collection appending constructor defaults, inherited-member ordering
-and flattened spawn coordinates. Its planned 5 checks follow the actual public descriptor and
-ListSerializer contracts. No runtime or coverage credit yet; it links the same separate build-time
-target as the other XML tools. This advances the remaining property/read-only/flattening audit
-without one demo per formatting flag.
+**Immediate next action:** the new `content.custom.intermediate_properties` is applied and built;
+all 5 child checks pass under SOFTWARE and OPENGLES3 selections. Evidence:
+`/tmp/cna-intermediate-properties-{SOFTWARE,OPENGLES3}.{json,log}`. It verifies setter dispatch
+and rejection, get-only collection defaults/appending, inherited-member ordering and flattened
+spawn coordinates. Targeted CTest/catalog (3 tests), build and metadata (412/0) pass; no new CNA
+issue. Coverage regenerated: 290/329 XNA types, 1318/2326 members, 146/3210 C routes. The full
+reports still contain 411 IDs until the next full checkpoint. These console runs are not renderer
+or visual validation. The old /tmp draft is applied; do not copy it over later edits.
+
+Next run the complete 412 checkpoint under private Xvfb, compare ID/status maps and 24/25 raw
+failed-assertion multisets against checkpoint-411, and archive the evidence. Then continue with
+real XNA importer/processor adapters and composite asset dependency/reference behavior, or the
+remaining member gaps in COVERAGE_AUDIT.md. Runtime XNB graphs and base-typed polymorphic XML
+loading remain unclaimed by this concrete configuration example.
 
 The original 398/401 checkpoint debt is closed. Full 401 and two 404 checkpoints also passed
 this session. A subsequent 405 attempt passed all CTests but lost the inherited X connection
@@ -421,8 +428,8 @@ executable while leaving metadata discoverable. Only Linux GCC 14 runtime is val
 **Full 411 validation completed at source 82c5abc**, log `/tmp/cna-demos-411-validation.log`,
 under private Xvfb. SOFTWARE 366/17/25/3, OPENGLES3 387/18/3/3 and 423 enabled CTests passed;
 the exact 24/25 failed-assertion multisets match semantic-410. Archives are checkpoint-411.
-Continue with the prepared XML property example identified in the immediate next action above,
-then the XNA adapter/dependency or remaining C ABI member audit. Do not reset completed phases.
+The XML property example is now applied and validated as described in the immediate next action
+above; continue with the XNA adapter/dependency or remaining C ABI member audit. Do not reset completed phases.
 
 Effects constraints verified in the current sources/build: all four configured
 `CNA_*_COMPILED_EFFECTS` switches are OFF and `CNA_FXC_EXECUTABLE` is empty. PbrEffect's public

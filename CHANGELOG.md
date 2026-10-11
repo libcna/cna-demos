@@ -27,6 +27,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- XML configuration example combines validated properties, inherited-member ordering, get-only
+  collections that append to constructor defaults, and flattened nested spawn coordinates.
 - Focused C thread-local diagnostic demo interleaves two worker errors and preserves each worker's
   and the caller's result/category/message. This target alone uses C11 threads/atomics after an
   availability probe; the other C examples retain C99.

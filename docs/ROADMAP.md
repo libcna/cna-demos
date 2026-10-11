@@ -157,7 +157,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.skinned_pbr` (skinned + metallic-roughness imports as SkinnedPbrEffect).
 - Remaining: `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
 
-## Phase 8 -- content 🟨 (26 demos; remaining below)
+## Phase 8 -- content 🟨 (27 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -184,6 +184,8 @@ a check that all authored colors remain visible and that a blank texture row can
   duplicate or incompatible resource references.
   ✅ `content.custom.intermediate_type_serializer`: registered compact dice syntax at the root
   and within described fields, with round trip and lexical/domain rejection on read and write.
+  ✅ `content.custom.intermediate_properties`: inherited-member ordering, validated setter
+  dispatch, get-only collections appending constructor defaults and flattened spawn coordinates.
   Remaining: deeper serializer behaviors, custom XNA adapters and the member/behavior gaps
   in COVERAGE_AUDIT.md; this phase is not comprehensively covered.
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
