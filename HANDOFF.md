@@ -372,7 +372,20 @@ The earlier stochastic failures remain in `/tmp/cna-network-baseline-*`; no new 
 widened expected-failure marker was introduced. Build, catalog and both changed demos' CTests
 pass (4 tests, network WILL_FAIL); the raw CTest log contains only ISSUE-030's assertion.
 Final screenshots were inspected on both renderers; the wording distinguishes no arrivals
-from measured zero latency. Full validation is the next action; then extend the existing shared XML example with malformed
+from measured zero latency. **Full 410 validation is running at source revision 4994374** under
+private Xvfb, log `/tmp/cna-demos-410-validation.log`. Do not rebuild during this run. Expected
+counts: SOFTWARE 365/17/25/3, OPENGLES3 386/18/3/3; compare all raw failed assertions against
+checkpoint-409 (24/25, including prefixed child lines), not the transient semantic-409 failure.
+Archive complete evidence as checkpoint-410. Use `tools/compare_checkpoints.py` on each renderer's
+JSON/raw log pair and the current catalog: it includes child prefixes and rejects added/removed
+assertion multiplicities despite an unchanged FAILED status. Its 4 regression tests pass; it also
+correctly accepts 408->409 SOFTWARE and 409->semantic-409 OPENGLES3, while detecting the extra
+semantic-409 SOFTWARE baseline failure. The tool does not change any baseline automatically.
+
+Prepared next extension: `/tmp/cna-shared-resource-boundaries.cpp` extends the existing shared XML
+tool to 10 child checks: null shared table, missing ID, duplicate IDs with otherwise resolving
+references, and incompatible referenced type. It uses public IntermediateSerializer calls and
+original XML strings; it is not applied/built/run and has no coverage credit yet. Then extend the existing shared XML example with malformed
 resource IDs/null behavior or another audited member gap. Do not credit runtime XNB graph
 fixups from IntermediateSerializer sharing.
 

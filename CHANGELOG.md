@@ -27,6 +27,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Checkpoint comparison tool combines ID/status checks with raw failed-assertion multiplicities,
+  including child-process prefixes; regression fixtures and the archived masked failure verify it.
 - Custom intermediate XML type serializer: compact NdM dice values at the root and inside a
   described attack, registry dispatch, round trip and malformed/domain validation on both paths.
 - Existing custom XNB reader now counts actual Read calls to establish cache reuse and verifies

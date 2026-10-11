@@ -46,6 +46,26 @@ baseline as well as comparing report IDs/statuses. Match the marker anywhere in 
 including prefixed standalone output such as `host:   CHECK FAILED:`, not just at the start. A new assertion failure needs investigation even
 when the demo's overall FAILED status was already expected.
 
+`tools/compare_checkpoints.py` performs that evidence comparison once per renderer. It allows
+new non-failing IDs, reports changed check counts, and exits 1 for changed existing statuses,
+issue markers, missing IDs, or added/removed failed assertions (including multiplicities).
+Exit 2 means the evidence could not be read or did not match the supplied catalog. Investigate
+every reported change; the tool never rewrites or accepts a baseline automatically.
+
+```bash
+build/linux-full/bin/cna-demos --catalog-json > /tmp/cna-current-catalog.json
+python3 tools/compare_checkpoints.py \
+  build/linux-full/reports/checkpoint-409-SOFTWARE.json \
+  build/linux-full/reports/results-SOFTWARE.json \
+  --baseline-log build/linux-full/reports/checkpoint-409-SOFTWARE.log \
+  --current-log build/linux-full/reports/smoke-SOFTWARE.log \
+  --catalog /tmp/cna-current-catalog.json
+python3 tools/test_compare_checkpoints.py
+```
+
+Use the corresponding OPENGLES3 files for the other smoke run. This complements `validate.sh`;
+it does not prove a source revision, platform, renderer or visual outcome from filenames alone.
+
 ## 2. Running unattended
 
 ```bash
