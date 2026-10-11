@@ -273,10 +273,16 @@ also exist at the CI-pinned CNA commit (source checked; that checkout was not se
 Build, metadata (405 demos, zero problems), new CTest and catalog test passed. Coverage was
 regenerated with the preceding 404-demo reports and explicitly lists the new ID as absent.
 
-**Immediate next batch:** extend the existing Cue lifecycle demo to observe Disposing once,
-including repeated Dispose, then run the full 405-demo checkpoint. Keep callback state alive
-until after the owned Cue is destroyed; declaring counters before unique_ptr gives safe scope
-ordering even if an exception occurs. No new demo or asset is needed for this lifecycle behavior.
+**Cue lifecycle member batch completed:** existing `audio.xact.cue_states` now checks the
+Disposing sender, exactly one notification across repeated Dispose and no repeated notification
+when unique_ptr deletes the object. All 9 checks pass on SOFTWARE, as do its CTest, the catalog
+check and metadata validation (405/0). Callback counters precede the owned pointer so exceptions
+cannot leave a destructor invoking references to expired local state.
+
+**Immediate next action:** full 405-demo tools/validate.sh, log
+`/tmp/cna-demos-405-validation.log`. Until completed, section 7 still refers to the preceding
+404-demo semantic checkpoint. Coverage explicitly lists the new instance-limit ID as absent
+from those old reports. The new checkpoint must include both ownership and lifecycle changes.
 Further candidates: ContentManager cache/root/lifetime and Texture2D ownership/stream gaps. CNJ custom loading remains pending: a meaningful
 payload example needs a JSON-parser choice; do not borrow CNA's Internal parser or add a
 constant-return factory merely to increase coverage.

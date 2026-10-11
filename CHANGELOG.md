@@ -20,6 +20,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing XACT cue-state demo observes Disposing, repeated Dispose and deleting a disposed
+  object, with callback state kept alive through scope unwinding.
 - XACT category instance-limit demo: Fail and ReplaceOldest policies, paused voices retaining
   slots, category isolation and slot reuse, with generated settings and public state checks.
 - Texture rectangle demo now transfers between nonzero CPU array offsets and verifies untouched
