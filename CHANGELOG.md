@@ -32,6 +32,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Focused C11 foreign-thread dispatch example checks default/restored handle affinity and explicit
+  owner-thread pumping of worker reads/writes, with bounded completion and cleanup paths.
+- Existing C vector/matrix example distinguishes directions from positions and checks array
+  subranges, untouched guards and refusal of bad source/destination ranges before writes.
 - Focused audio instance lifetime example checks retained sound data after C++ wrapper destruction,
   moving a playing voice, idempotent disposal and explicit parent disposal of moved/idle children.
 - Existing CNB loader distinguishes valid containers from invalid game schemas: missing/duplicate

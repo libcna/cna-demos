@@ -309,17 +309,18 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
-## Phase 14 -- bindings 🟨 (14 C API demos)
+## Phase 14 -- bindings 🟨 (15 C API demos)
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit, expired callback device handles),
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, callback errors),
 ✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
+✅ `c_api.game.foreign_thread_dispatch` (default/restored thread affinity and explicit owner pumping of worker game-property calls),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard, root-change cache behavior and visible text),
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),
 ✅ `c_api.audio.sound_effect` (PCM16 effect, instance state, refused parent destruction and stale instance handles),
-✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse),
+✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse, directions and bounded array ranges with refusal before writes),
 ✅ `c_api.graphics.basic_effect_3d` (stock declaration, vertex/index buffers, BasicEffect with the
 IEffectMatrices/IEffectLights routes), ✅ `c_api.graphics.render_target` (render target, read-back,
 the target as a sprite texture), ✅ `c_api.storage.save_game` (synchronous selector and container

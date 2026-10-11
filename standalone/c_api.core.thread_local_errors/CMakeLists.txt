@@ -1,4 +1,4 @@
-# This threading example uses C11; the other C ABI examples retain their C99 baseline.
+# Focused threading examples use C11; other C ABI examples retain their C99 baseline.
 if(TARGET CNA::CApi)
     find_package(Threads QUIET)
     if(Threads_FOUND)

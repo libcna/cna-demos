@@ -82,6 +82,42 @@ int main(int argc, char** argv)
     cna_demo_check(&demo, nearly_equal(moved.x, 16.0f) && nearly_equal(moved.y, 4.0f) && nearly_equal(moved.z, -2.0f),
                    "scaled, then rotated, then translated: (16, 4, -2)");
 
+    /* TransformNormal applies the supplied linear part without translation. It does not
+       normalize: our scale of 2 leaves this direction two units long. */
+    CNA_Vector3 direction = {0.0f, 0.0f, 0.0f};
+    cna_demo_check_result(&demo, cna_vector3_transform_normal(x_axis, world, &direction),
+                          "cna_vector3_transform_normal");
+    cna_demo_check(&demo, nearly_equal(direction.x, 0.0f) && nearly_equal(direction.y, 0.0f) &&
+                   nearly_equal(direction.z, -2.0f), "a direction is scaled and rotated but not translated");
+
+    /* Transform a subrange of a vertex array into a different output subrange. Counts are
+       whole-array capacities; indices select the first element, and length selects the range. */
+    /* Each backing array has one extra guard beyond its declared count (3 and 4). Even an
+       incorrectly accepted negative case stays inside allocated storage and leaves evidence. */
+    const CNA_Vector3 source[4] = {{-99.0f, -99.0f, -99.0f}, {1.0f, 2.0f, 3.0f},
+                                  {0.0f, 0.0f, 0.0f}, {-88.0f, -88.0f, -88.0f}};
+    CNA_Vector3 destination[5] = {{-7.0f, -7.0f, -7.0f}, {-7.0f, -7.0f, -7.0f},
+                                  {-7.0f, -7.0f, -7.0f}, {-7.0f, -7.0f, -7.0f}, {-8.0f, -8.0f, -8.0f}};
+    cna_demo_check_result(&demo, cna_vector3_transform_matrix_array(source, 3, 1, world, destination, 4, 1, 2),
+                          "transform two selected vertices into the output range");
+    cna_demo_check(&demo, nearly_equal(destination[1].x, 16.0f) && nearly_equal(destination[1].y, 4.0f) &&
+                   nearly_equal(destination[1].z, -2.0f) && nearly_equal(destination[2].x, 10.0f) &&
+                   nearly_equal(destination[2].y, 0.0f) && nearly_equal(destination[2].z, 0.0f) &&
+                   destination[0].x == -7.0f && destination[0].y == -7.0f && destination[0].z == -7.0f &&
+                   destination[3].x == -7.0f && destination[3].y == -7.0f && destination[3].z == -7.0f &&
+                   destination[4].x == -8.0f && destination[4].y == -8.0f && destination[4].z == -8.0f,
+                   "only the requested output range changes to the expected world positions");
+    CNA_Vector3 before[5];
+    memcpy(before, destination, sizeof(destination));
+    cna_demo_check(&demo,
+                   cna_vector3_transform_matrix_array(source, 3, 1, world, destination, 4, 1, 3) == CNA_RESULT_INVALID_ARGUMENT &&
+                   memcmp(before, destination, sizeof(destination)) == 0,
+                   "an out-of-range source is refused before any destination byte changes");
+    cna_demo_check(&demo,
+                   cna_vector3_transform_matrix_array(source, 3, 1, world, destination, 4, 3, 2) == CNA_RESULT_INVALID_ARGUMENT &&
+                   memcmp(before, destination, sizeof(destination)) == 0,
+                   "an out-of-range destination is refused before any destination byte changes");
+
     /* The inverse undoes it. */
     cna_demo_check_result(&demo, cna_matrix_invert(world, &inverse), "cna_matrix_invert");
     cna_vector3_transform_matrix(moved, inverse, &back);

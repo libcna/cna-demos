@@ -75,9 +75,11 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
   the tool target is unavailable, and the runner reports the omitted executable as NOT RUN.
   C++ standalones use the browser's shared-library-first link workaround (ISSUE-016), preventing
   optional module archives from introducing a second runtime and duplicate static destructors.
-* C ABI examples default to C99. The focused `c_api.core.thread_local_errors` target uses C11
-  threads/atomics after a compile/link availability check and links the standard Threads target.
-  It uses only game-independent C routes; no C++ threading wrapper or Game dispatcher is involved.
+* C ABI examples default to C99. The focused `c_api.core.thread_local_errors` and
+  `c_api.game.foreign_thread_dispatch` targets use C11 threads/atomics after a compile/link
+  availability check and link the standard Threads target. The former uses game-independent
+  diagnostic routes; the latter explicitly pumps worker game-property calls on the owning thread.
+  Neither claims automatic callback pumping or graphics execution on a worker.
 * `CNA_SHARED_LIBRARY`: CNA links its runtime as `libcna.so` by default on Linux. With CMake older
   than 3.29 that link fails (see [CNA_ISSUES.md](CNA_ISSUES.md) CNA-DEMOS-ISSUE-001), so
   cna-demos defaults it to OFF there. With a shared CNA, `cna-demos` names the `libcna.so` file

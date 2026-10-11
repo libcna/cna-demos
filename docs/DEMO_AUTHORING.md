@@ -206,11 +206,13 @@ C programs written against CNA's C ABI (`../cna/modules/c-api/include/CNA/C/*.h`
 * `.apis` lists C names as they are: routes (`cna_game_create`) and structs (`CNA_SpriteCommand`).
   docs/COVERAGE.md counts the routes against every `CNA_C_API` declaration in the headers.
 
-`c_api.core.thread_local_errors` is the focused C11 exception: standard threads and atomics
-coordinate its diagnostic checks. Its own target requests C11 and probes thread/atomic support
-before building; all other C targets retain C99. Without that support the metadata stays visible
-and the executable is omitted. A renderer selection does not make this console example a
-rendering test, and it does not exercise foreign-thread Game dispatch.
+`c_api.core.thread_local_errors` and `c_api.game.foreign_thread_dispatch` are focused C11
+exceptions: standard threads and atomics coordinate their checks. Each target requests C11 and
+probes thread/atomic support before building; ordinary C targets retain C99. Without that support
+the metadata stays visible and the executable is omitted. The diagnostics example uses only
+game-independent routes; the dispatch example explicitly serves worker game-property calls on
+the owner thread with bounded waits. Neither is a rendering test, and neither demonstrates
+automatic callback pumping or queued-call cancellation merely by handling normal completion.
 
 `#include "CnaDemos/CApiDemo.h"` gives the shared scaffolding -- argument parsing
 (`cna_demo_init`), checks (`cna_demo_check`, `cna_demo_check_result`, which prints the ABI's

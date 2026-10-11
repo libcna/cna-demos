@@ -6,12 +6,12 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**417 demos** in 18 categories. Kinds: console 151, game 241, standalone 25. Automation: automated 381, manual 3, smoke-only 33.
+**418 demos** in 18 categories. Kinds: console 151, game 241, standalone 26. Automation: automated 382, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
-| c_api | 14 | 13 | 1 | 0 | 14 / 0 / 0 / 0 / 0 | 14 / 0 / 0 / 0 / 0 |
+| c_api | 15 | 14 | 1 | 0 | 14 / 0 / 0 / 0 / 1 | 14 / 0 / 0 / 0 / 1 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 30 | 30 | 0 | 0 | 26 / 0 / 4 / 0 / 0 | 26 / 0 / 4 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `c_api.game.foreign_thread_dispatch`.
+- OPENGLES3: absent from report: `c_api.game.foreign_thread_dispatch`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -69,7 +71,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 150 of 3210** (4.7 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 156 of 3210** (4.9 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -90,12 +92,12 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `media.h` | 2 / 39 |
 | `media_player.h` | 12 / 41 |
 | `render_target.h` | 3 / 12 |
-| `runtime.h` | 10 / 45 |
+| `runtime.h` | 14 / 45 |
 | `runtime_components.h` | 13 / 39 |
 | `sprite_font.h` | 2 / 9 |
 | `storage.h` | 16 / 49 |
 | `texture.h` | 1 / 21 |
-| `vectors.h` | 7 / 137 |
+| `vectors.h` | 9 / 137 |
 | `vertex_resources.h` | 5 / 24 |
 | `vertex_values.h` | 1 / 13 |
 
