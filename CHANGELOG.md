@@ -18,6 +18,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Texture rectangle demo now transfers between nonzero CPU array offsets and verifies untouched
+  destination padding alongside the adjacent texture pixel.
 - Manifest demo shows files arriving/disappearing between explicit refreshes and the independent
   asset cache; private temporary content is removed after the checks.
 - Existing curve demos now show selective/asymmetric tangent computation, negative-time loop

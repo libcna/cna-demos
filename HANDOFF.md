@@ -242,8 +242,18 @@ both renderers (`/tmp/cna-manifest-{SOFTWARE,OPENGLES3}.png`). That review found
 crossing columns: the demo now fits them with ellipses and retains full console output; fresh
 screenshots confirm the fix. No new CNA issue found.
 
-**Immediate next batch:** apply and validate `/tmp/cna-texture-rectangle.cpp` (nonzero CPU
-array offsets), then run the full checkpoint again for the revised existing demos. CNJ custom loading remains pending: a meaningful
+**Texture member batch completed:** `graphics.texture2d.set_data_rectangle` now uploads from
+CPU offset 1 and reads into offset 2, checking destination padding and the adjacent texture pixel.
+Both renderers pass all four checks; relevant CTests and metadata pass. Screenshots inspected:
+`/tmp/cna-texture-{SOFTWARE,OPENGLES3}.png`. Their stroke counts differ because painting occurs
+in Update and fixed-step catch-up can run several updates per drawn frame; no pixel-equality
+comparison is claimed. No CNA defect found.
+
+**Immediate next action:** full tools/validate.sh for these five revised demos, log
+`/tmp/cna-demos-semantic-validation.log`. Until that finishes, section 7 and coverage BASELINE
+columns still refer to the complete pre-extension 404-demo run. Then update them to fresh results.
+Next productive implementation candidates are the ContentManager cache/root/lifetime and
+Texture2D ownership/stream gaps recorded in COVERAGE_AUDIT.md. CNJ custom loading remains pending: a meaningful
 payload example needs a JSON-parser choice; do not borrow CNA's Internal parser or add a
 constant-return factory merely to increase coverage.
 

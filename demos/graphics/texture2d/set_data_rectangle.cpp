@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Texture2D::SetData with a rectangle: update part of a texture, like painting on a canvas.
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <memory>
@@ -64,15 +65,23 @@ namespace
             std::uniform_int_distribution<int> position(0, (CanvasSize - Brush) / Brush);
             const Rectangle area(position(random_) * Brush, position(random_) * Brush, Brush, Brush);
             const std::array<Color, 4> palette = {Color::Crimson, Color::DodgerBlue, Color::Gold, Color::SeaGreen};
-            const std::vector<Color> block(Brush * Brush, palette[static_cast<std::size_t>(strokes_) % palette.size()]);
-            canvas_->SetData(0, &area, block.data(), 0, static_cast<int>(block.size()));
+            const int pixelCount = Brush * Brush;
+            // startIndex selects a slice of the CPU array, independently of the texture rectangle.
+            std::vector<Color> block(pixelCount + 2, Color::Magenta);
+            std::fill(block.begin() + 1, block.end() - 1, palette[static_cast<std::size_t>(strokes_) % palette.size()]);
+            canvas_->SetData(0, &area, block.data(), 1, pixelCount);
 
             if (strokes_++ == 0)
             {
                 // GetData takes the same rectangle form: read back the stroke and a pixel beside it.
-                std::vector<Color> stroke(block.size());
-                canvas_->GetData(0, &area, stroke.data(), 0, static_cast<int>(stroke.size()));
-                Context().Check(stroke == block, "the rectangle now holds the brush colour");
+                std::vector<Color> stroke(pixelCount + 4, Color::Transparent);
+                canvas_->GetData(0, &area, stroke.data(), 2, pixelCount);
+                Context().Check(std::equal(block.begin() + 1, block.end() - 1, stroke.begin() + 2),
+                                "the CPU source slice fills the texture rectangle and the destination slice");
+                Context().Check(stroke[0] == Color::Transparent && stroke[1] == Color::Transparent &&
+                                    stroke[stroke.size() - 2] == Color::Transparent && stroke.back() == Color::Transparent,
+                                "GetData leaves destination elements outside its slice untouched");
+                Context().Print("SetData source startIndex=1; GetData destination startIndex=2; {} pixels", pixelCount);
                 const Rectangle beside(area.X == 0 ? Brush : area.X - 1, area.Y, 1, 1);
                 Color pixel;
                 canvas_->GetData(0, &beside, &pixel, 0, 1);
@@ -102,7 +111,8 @@ CNA_DEMOS_GAME(SetDataRectangleDemo, {
     .id = "graphics.texture2d.set_data_rectangle",
     .title = "Update part of a texture",
     .description = "Paints 4x4 blocks onto a canvas texture with the rectangle overload of Texture2D::SetData, one "
-                   "block per update, after unsetting it from GraphicsDevice::Textures as XNA requires.",
+                   "block per update, using nonzero CPU array offsets and preserving surrounding elements. "
+                   "Unsets the texture from GraphicsDevice::Textures before each update as XNA requires.",
     .apis = {"Texture2D::SetData", "Texture2D::GetData", "GraphicsDevice::Textures", "TextureCollection::Item"},
     .tags = {"texture", "canvas", "paint", "pixels"},
     .frames = 60,

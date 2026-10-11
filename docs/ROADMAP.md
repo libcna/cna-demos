@@ -83,7 +83,9 @@ Console demos with checks; each shows one operation family.
   an XNB font (Phase 8, content), TrueType `.spritefont` (needs FreeType and a licensed font).
 - ✅ (7 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg`, `LevelCount`. Remaining:
-  float/HDR formats, DXT (needs compressed data), CNAEXT `DDSFromStreamEXT`, copy semantics.
+  float/HDR formats, direct compressed-block data, CNAEXT `DDSFromStreamEXT`, copy semantics.
+  ✅ Existing rectangle demo now checks nonzero CPU array offsets and untouched destination padding.
+  DXT1 content loading is already shown by `content.xnb.dxt_texture`.
 
 ## Phase 5 -- render states, buffers, primitives, render targets ✅ (41 demos; small remainders below)
 - ✅ (17) `graphics.blend_state.*` (blend functions, colour write channels, blend factor, bound
