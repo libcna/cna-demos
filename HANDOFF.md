@@ -93,20 +93,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **407-demo checkpoint passed** through demo revision `b1346dc`, including the custom
-pipeline, root mutation guard and sprite pixel checks. The entire script used private Xvfb after the
-inherited desktop X server interrupted an earlier attempt (log `/tmp/cna-demos-407-validation.log`).
+The full **408-demo checkpoint passed** through demo revision `aac8745`, including intermediate
+XML serialization and the independent C content handle lifetime checks. The entire script used private Xvfb after the
+inherited desktop X server interrupted an earlier attempt (log `/tmp/cna-demos-408-validation.log`).
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 407 demos, 0 problems |
+| Metadata/assets `--validate` | 408 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 419/419 enabled tests, 3 manual disabled; 17 expected failures via WILL_FAIL |
-| SOFTWARE smoke | 362 passed, 17 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 383 passed, 18 expected failures, 3 skipped, 3 manual not run |
+| CTest | 420/420 enabled tests, 3 manual disabled; 17 expected failures via WILL_FAIL |
+| SOFTWARE smoke | 363 passed, 17 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 384 passed, 18 expected failures, 3 skipped, 3 manual not run |
 | Unexpected outcomes | None on either renderer; the earlier sign-in-screen crash did not recur in this baseline |
-| Screenshots | Manifest, texture rectangle, content root and both sprite sorting screenshots inspected on both renderers; prior broader contact-sheet review remains historical |
+| Screenshots | Manifest, texture rectangle, content root, C content and both sprite sorting screenshots inspected on both renderers; prior broader contact-sheet review remains historical |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -214,12 +214,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **407 demos**
-through demo revision `b1346dc`, including the pipeline, root guard and sprite checks. Section 7
-has the exact results. Log: `/tmp/cna-demos-407-validation.log`; named report archives:
-`reports/checkpoint-407-{SOFTWARE,OPENGLES3}.{json,log}`. Both reports match all 407 IDs, with no
-absent entries, unexpected failures or unexpected passes. Compared with 406, pipeline_components
-is new and passes; only cache_and_unload changes status, exposing ISSUE-039. Current generated coverage is
+**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **408 demos**
+through demo revision `aac8745`, including intermediate XML and C handle lifetime checks. Section 7
+has the exact results. Log: `/tmp/cna-demos-408-validation.log`; named report archives:
+`reports/checkpoint-408-{SOFTWARE,OPENGLES3}.{json,log}`. Both reports match all 408 IDs, with no
+absent entries, unexpected failures or unexpected passes. Compared with 407, intermediate_serializer
+is new and passes; every previously reported status stays unchanged. Current generated coverage is
 290/329 XNA types and 1316/2326 named members; these are metadata counts, not comprehensive
 semantic coverage. CNA remains clean at `2b15506a48e1a6202c985823131daf5856826f71`, newer than
 CI's `10a4ef1cb4cd832f761536d77588000104947f8d`.
@@ -266,7 +266,7 @@ processor parameter. All 6 checks pass on SOFTWARE and OPENGLES3, build/metadata
 its CTest/catalog pass. Reports: `/tmp/cna-pipeline-components-{SOFTWARE,OPENGLES3}.json`.
 The generator reproduces `assets/custom/patrol.route` byte-for-byte. No CNA issue was found.
 Next useful work:
-1. **New 408th demo after the full checkpoint:** `content.custom.intermediate_serializer`
+1. **408th demo included in the full checkpoint:** `content.custom.intermediate_serializer`
    is applied and built, with 6 checks passing under both renderer selections (it is a console
    build-time tool, not a rendering test). Named/optional/ignored fields, collection item names,
    XML round trip/defaults and ignored-field rejection are exercised. The separate tool links
@@ -276,6 +276,12 @@ Next useful work:
    Next content work: explicit-null/flattened/shared-resource behavior, XNA adapters and
    composite asset dependency/reference graphs. Do not credit nominal .NET attribute wrappers
    just because corresponding descriptor behavior is used.
+   A focused acyclic shared-loot-table draft is in `/tmp/cna-intermediate-shared/` (main,
+   metadata and CMake), intended ID `content.custom.intermediate_shared_resources`. It compares
+   aliases, equal-but-independent objects and inline copies across XML round trip and mutation.
+   It is not applied, built or executed; the full 408 checkpoint has completed, so
+   review/build it next before counting coverage. Reader/writer and XNA adapter member tables now
+   spell out the remaining behaviors and actual public entry points.
 2. Further ContentManager lifetime and lookup-order behaviors. The root mutation check is
    now completed in the existing cache_and_unload demo: both renderers execute 5 checks with
    exactly one failure (ISSUE-039), while original cache checks and the post-Unload root switch
@@ -298,12 +304,15 @@ Next useful work:
    the image tool's incomplete preview was disproved by the actual PNG pixels; no ISSUE-040 or
    expected-failure marker remains. Evidence: `/tmp/cna-c-content-{SOFTWARE,OPENGLES3}.{json,log,png}`.
    All diagnostic source variants were restored. Further ABI gaps are in COVERAGE_AUDIT.md.
+   A small unbuilt next extension is `/tmp/cna-c-error-boundaries.c` for existing
+   `c_api.core.error_handling`: failed diagnostic queries preserve the original failure,
+   short copies preserve every guard byte, and an exact-sized payload copy writes no extra
+   terminator. Review/apply next; update the audit only after
+   actual execution. No new demo ID is needed for these related error-boundary cases.
 
-**Full 408-demo checkpoint starting:** tools/validate.sh after these targeted checks,
-under private Xvfb; log `/tmp/cna-demos-408-validation.log`. Do not rebuild while it runs. Section 7 and checkpoint-407 archives remain the last complete run;
-generated coverage currently shows the XML ID as absent in those older reports. Expected totals
-if unchanged: 420 enabled CTests + 3 disabled; SOFTWARE 363 passed/17 expected failures/25 skipped/
-3 manual; OPENGLES3 384 passed/18 expected failures/3 skipped/3 manual. Verify, do not assume.
+**The 408 checkpoint is complete.** Continue with the shared-resource and C diagnostic drafts
+above, validating both actual behavior and the catalog. Keep the archived 408 reports as a fixed
+baseline and finish a new complete checkpoint after applying the next batch.
 
 Effects constraints verified in the current sources/build: all four configured
 `CNA_*_COMPILED_EFFECTS` switches are OFF and `CNA_FXC_EXECUTABLE` is empty. PbrEffect's public
