@@ -297,6 +297,22 @@ def custom_level_xnb(relative: str) -> None:
     print(f"wrote assets/{relative} ({len(data)} bytes)")
 
 
+def custom_enemy_cnj() -> None:
+    """Original payloads for two named CNJ factories, including one deliberate schema error."""
+    documents = {
+        "guard": {"cnjVersion": 1, "type": "CnaDemos.Enemy",
+                  "data": {"name": "Mossling", "health": 12}},
+        "elite": {"cnjVersion": 1, "type": "CnaDemos.EliteEnemy",
+                  "data": {"name": "Stone Guard", "baseHealth": 50}},
+        "missing_health": {"cnjVersion": 1, "type": "CnaDemos.Enemy",
+                           "data": {"name": "Incomplete enemy"}},
+    }
+    directory = ROOT / "custom"
+    directory.mkdir(parents=True, exist_ok=True)
+    for name, document in documents.items():
+        (directory / f"{name}.cnj").write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+
+
 def main() -> None:
     save_png(checker(64, 8, (255, 255, 255, 255), (72, 61, 139, 255)), "textures/checker.png")
     save_png(arrow(64), "textures/arrow.png")
@@ -322,6 +338,7 @@ def main() -> None:
     melody("music/rising.wav", [60, 64, 67, 72, 64, 67, 72, 76], 0.25)   # C major, upwards
     melody("music/falling.wav", [81, 76, 72, 69, 76, 72, 69, 64], 0.25)  # A minor, downwards
     custom_level_xnb("levels/castle.xnb")
+    custom_enemy_cnj()
     # The sources of the XNA content project content_project/Game.contentproj (written by hand).
     save_png(keyed_ship(64), "Textures/ship_source.png", CONTENT_PROJECT_ROOT)
     save_png(checker(64, 4, (255, 255, 255, 255), (30, 30, 30, 255)), "Textures/grid.png", CONTENT_PROJECT_ROOT)

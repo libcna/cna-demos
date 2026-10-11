@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- Full validation removes stale current smoke JSON outputs before starting, while preserving
+  named baseline archives; an interrupted process cannot leave an old report looking current.
 - Four XACT demos now own GetCue results with unique_ptr: Dispose releases playback but does not
   delete the returned C++ object. Borrowed video/leaderboard pointers retain their existing ownership.
 - Manifest paths are shortened to fit their on-screen columns; full names remain in console output.
@@ -20,6 +22,15 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Custom CNJ enemy demo with two named factories, actual JSON payload parsing, manager-local
+  registrations, Unload/cache behavior and malformed-payload diagnostics; original fixtures
+  are reproducible through the asset generator.
+- Custom CNB loader now distinguishes optional and mandatory unknown chunks and retries an
+  asset after its failed file is repaired.
+- Dynamic streaming now checks PCM size/duration, unsupported loop/release operations and
+  stop/disposal behavior. Two missing CNA disposal guards remain visible as ISSUE-038.
+- Semantic coverage audits now include content loading/binary formats, texture ownership,
+  audio/XACT and sprite/text behavior, separating exercised checks from visual-only evidence.
 - Existing XACT cue-state demo observes Disposing, repeated Dispose and deleting a disposed
   object, with callback state kept alive through scope unwinding.
 - XACT category instance-limit demo: Fail and ReplaceOldest policies, paused voices retaining

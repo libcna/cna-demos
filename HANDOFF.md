@@ -315,7 +315,9 @@ renderer selections; build, metadata (406/0), its CTest and catalog validation p
 prerequisite and 3.11.3 is installed. The content category explicitly links via CNA's existing
 `cmake/HeaderOnlyJson.cmake` / `cna_link_json_headers` helper (also present at the CI pin), which
 isolates portable headers for cross builds. Three original CNJ fixtures live
-under `assets/custom`, including an intentionally incomplete payload. No CNA Internal parser is needed.
+under `assets/custom`, including an intentionally incomplete payload. The asset generator
+reproduces all three byte-for-byte (checked in a temporary directory without rewriting other
+assets). No CNA Internal parser is needed.
 
 Effects source review: all four configured `CNA_*_COMPILED_EFFECTS` switches are OFF and
 `CNA_FXC_EXECUTABLE` is empty in the current CMake cache, confirming the compiled-FX blocker.
@@ -331,6 +333,14 @@ audio batches). The script now invalidates old current JSON outputs at startup s
 smoke cannot leave stale results looking current; named archives survive. Its three stub-based
 failure-path tests and bash syntax validation pass. The last complete archived reports still
 describe the preceding 404-demo semantic checkpoint until this run finishes.
+
+**Sprite API semantic audit added:** `docs/COVERAGE_AUDIT.md` now maps SpriteBatch/SpriteFont
+overload families to actual code, separates pixel assertions from merely successful drawing,
+and identifies useful existing-demo extensions. Highest-value small graphics follow-ups are
+layer-depth overlap checks and strengthening texture-sort checks to reject a uniform blank
+row. Drafts `/tmp/cna-layer-depth-pixels.cpp` and `/tmp/cna-texture-sort-pixels.cpp` are prepared
+but deliberately not applied while the complete checkpoint runs. This table adds no new runtime
+or screenshot validation claims.
 
 **Next**: remainders by value -- Phase 8 (custom pipeline components and further content behaviors; both custom loader hooks
 are now demonstrated); Phase 9 (category instance limits are complete; RPC curves and
