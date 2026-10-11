@@ -841,6 +841,25 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   one failure (actual 2, expected 4). All five curve demos and catalog validation passed their CTest expectations;
   metadata validation reports 404 demos and zero problems. Genuine XNA was not executed.
 
+### CNA-DEMOS-ISSUE-037 -- DynamicSoundEffectInstance header incorrectly says IsLooped is ignored
+
+- **Area:** documentation only, `DynamicSoundEffectInstance::setIsLoopedProperty` in
+  `modules/audio/include/Microsoft/Xna/Framework/Audio/DynamicSoundEffectInstance.hpp`.
+- **Related demo:** `audio.dynamic_sound_effect_instance.streaming`; it currently does not set
+  IsLooped and therefore is not marked as an expected failure for this issue.
+- **Evidence:** source review at CNA `2b15506a48e1a6202c985823131daf5856826f71`. Both setter
+  declarations say the argument is ignored/no effect. The implementation in
+  `modules/audio/src/Xna/DynamicSoundEffectInstance.cpp` first checks disposal, then throws
+  `System::InvalidOperationException` when the value is true; false is accepted. The rvalue
+  overload forwards to this same implementation.
+- **Expected:** document that dynamic instances cannot loop: setting true throws, setting false
+  is accepted, and using the setter after disposal throws ObjectDisposedException. This agrees
+  with the locally available decompilation of genuine XNA 4.0 DynamicSoundEffectInstance.IsLooped.
+- **Validation scope:** header, implementation and reference source inspected; this property was
+  not newly executed in this session, and genuine XNA was not run. This is a confirmed comment
+  contradiction, not evidence of a runtime implementation defect. No CNA source was changed.
+- **Suggested correction:** update both setter comments and their exception documentation.
+
 ## Resolved
 
 (none yet)

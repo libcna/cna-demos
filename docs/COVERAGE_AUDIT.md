@@ -3,7 +3,8 @@
 Phase 15 of [ROADMAP.md](ROADMAP.md): for every XNA 4.0 type that
 [COVERAGE.md](COVERAGE.md) lists under "Types without a demo yet", a decision -- a demo, part of
 another demo, or not independently meaningful -- with the reason. COVERAGE.md is generated; this
-file is maintained by hand and should be revisited whenever that list changes.
+file is maintained by hand and should be revisited whenever that list changes. Later sections
+review public member behavior and selected CNA-specific APIs separately from type counts.
 
 Decisions:
 
@@ -177,6 +178,27 @@ CNA `2b15506a4`; planned work is not counted as completed or runtime-validated.
 | RefreshContentManifest | `manifest` now adds/removes a private CNJ file between scans, loads the new file before refreshing, and confirms refresh does not discard the loaded asset. All seven new snapshot/cache checks pass on SOFTWARE and OPENGLES3. |
 | setGraphicsDevice, getGraphicsDeviceInternal | CNA integration helpers; normal game demos use IGraphicsDeviceService through the supplied provider. No separate demonstration unless a standalone graphics-content scenario needs explicit device injection. |
 
+### CNA binary content: writer, document and primitive cursors
+
+This initial CNA-specific review covers `CnbWriter`, `CnbDocument`, `CnbByteWriter`,
+`CnbByteReader` and their format/limit helpers. These extensions are outside the XNA member
+percentage; their presence in the unmatched-name list is not evidence of an API spelling error.
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| CnbWriter constructor, SetMetadata, AddChunk, WriteToFile; CnbAssetTypeIdFromName, MakeChunkId | `content.custom.cnb_loader` writes a game-owned rules schema and loads it through the typed registration. The canonical name and hashed ID are visible. Hash-collision/name-mismatch rejection is not exercised; the successful identity round trip alone does not establish it. |
+| Writer Build, SchemaChunkCount, deterministic output | WriteToFile uses Build internally, but the demo does not directly inspect an in-memory image or compare two generated images. A deterministic Build comparison could extend the custom-schema example. SchemaChunkCount is ordinary inspection and needs no independent demo. |
+| CnbDocument::RequireAsset | The loader checks type/schema and rejects a future schema version. Type mismatch, missing metadata and malformed container bytes remain unexercised error paths. |
+| RequireMandatoryChunksUnderstood | The current loader supplies its known chunk ID, but only receives known chunks. Extend the existing demo with an unknown optional chunk that is ignored and an unknown mandatory chunk that is refused; do not claim the fail path is covered merely because the method is called. |
+| RequireSingle, OpenChunk; primitive WriteString/WriteF32/WriteU32/Take and ReadString/ReadF32/ReadU32/RequireExhausted | The rules fields round trip through a bounded chunk cursor. Missing/duplicate payload chunks, trailing bytes and truncated fields can be demonstrated together in a focused format-diagnostics extension. The current success path does not test them. |
+| Other numeric primitive reads/writes, WriteBytes/WriteZeros, ReadBytes/Skip, cursor Size/Position/Remaining/Context, writer Size/View | Ordinary encoding/cursor mechanics; no independent example for every width or accessor. Add them only when a real asset schema needs those representations. They remain uncredited until actually used. The View/ReadBytes spans borrow storage and must not outlive their owner. |
+| ReadCount, Fail, IsWellFormedUtf8 | Schema validation helpers. Bounded array decoding and a useful contextual diagnostic deserve an authored-data example; a stand-alone UTF-8 predicate would duplicate parser tests rather than teach a CNA game concept. |
+| Parse/ParseFile, HasMagic, Origin, container versions, asset identity, ChunkCount/ChunkAt/ChunkData, FindAll/FindSingle, Metadata | A focused container-inspection/diagnostics demo could inspect a written asset and reject malformed data. Current ContentManager loading invokes parsing internally but does not meaningfully show these public inspection members. HasMagic alone is only a prefix check, not complete validation. |
+| SetExternalReferences, ExternalReferences, ExternalReferenceAt, CnbLogicalNameProblem | Pending a composite custom asset that loads another named asset through its owning manager. This deserves more than a synthetic getter round trip. Path and reference-index failures belong with that scenario. |
+| SetCompression, IsCnbCompressionSupported, CompressCnbChunk/DecompressCnbChunk | Build-dependent optional codecs. A compression example should query support and compare logical payloads, document the stored-size versus load-time tradeoff, and avoid claiming a tiny chunk must compress. Raw codec helper calls need no separate example if the writer/document path teaches the behavior. No compressed custom asset is currently demonstrated. |
+| CnbReadLimits / DefaultCnbReadLimits, writer SetLimits/Limits, document Limits | Pending a small bounded-data example with deliberately low limits, covering both writer refusal and reader refusal without large allocations. File size, per-chunk size and aggregate uncompressed size are different constraints; one rejected file does not demonstrate every limit. |
+| ChunkIdToString, IsWellFormedChunkId, IsCustomAssetTypeId, AssetTypeIdToString and format constants | Diagnostic/format plumbing; use within inspection or schema authoring when it clarifies the example. No separate enum/constant demos. |
+
 ### Texture2D (overload families and ownership)
 
 | Members / behavior | Decision and evidence |
@@ -210,7 +232,7 @@ state and buffer checks can pass there, but audible quality, panning and Doppler
 | Dynamic constructor, Play, SubmitBuffer, BufferNeeded, PendingBufferCount | `dynamic_sound_effect_instance.streaming` generates mono 16-bit PCM, prequeues buffers and refills from the game-thread event. It checks playback and event requests and reports queue counts; it does not establish exact callback counts or underrun recovery. |
 | GetSampleSizeInBytes, GetSampleDuration | Streaming uses the size helper to allocate 50 ms buffers. The inverse dynamic-instance duration helper is not shown; add a round trip there. SoundEffect's static helpers are shown in `from_pcm_buffer` but that does not name the dynamic-instance member. |
 | SubmitBuffer offset/count; SubmitFloatBufferEXT | Pending coherent buffer-format extension: sliced submissions, frame alignment and float PCM mode changes. These behaviors are not inferred from one whole-vector 16-bit submission. Avoid one demo per overload. |
-| Dynamic IsLooped / Stop(false) | Pending targeted guards in streaming: the current implementation rejects IsLooped=true, despite the public header's stale claim that the setter has no effect. Read the implementation and reference contract before adding expectations; no new runtime claim is made by this audit. Stop(false) after playback is a separate unsupported request to demonstrate. |
+| Dynamic IsLooped / Stop(false) | Pending targeted guards in streaming: the current implementation rejects IsLooped=true, despite the public header's stale claim that the setter has no effect (documentation ISSUE-037; source/reference checked, not newly executed). Read the implementation and reference contract before adding expectations; no new runtime claim is made by this audit. Stop(false) after playback is a separate unsupported request to demonstrate. |
 | QueueInitialBuffers, ClearBuffers, Update (CNA extensions) | Integration helpers. Ordinary games demonstrate the managed refill path through Game/FrameworkDispatcher. Explicit queue clearing or manual pumping needs a streaming lifecycle scenario before being credited; no isolated helper-name demos. |
 
 ### XACT engine, banks, cues and categories

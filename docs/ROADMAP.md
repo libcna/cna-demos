@@ -300,7 +300,8 @@ decisions for every XNA type without a demo are in [COVERAGE_AUDIT.md](COVERAGE_
 that already showed a type now name it, and new demos cover the effect interfaces and the
 graphics device service. Remaining: the candidates COVERAGE_AUDIT.md lists, the CNA-specific
 headers. Member/behavior audit covers initial reviews of Quaternion, EffectParameter, Curve,
-ContentManager, Texture2D and audio/XACT (including overload, ownership and output-observation limitations); this is not a comprehensive member audit. Add screenshot references for
+ContentManager, Texture2D, audio/XACT and CNA binary-content writer/document/cursor APIs
+(including overload, ownership and output-observation limitations); this is not a comprehensive member audit. Add screenshot references for
 deterministic demos and run the visual-regression comparison across renderers.
 
 ## Cross-cutting work (any time)

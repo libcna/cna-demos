@@ -179,7 +179,9 @@ for a game in progress reads `SessionNotFound`, not `SessionNotJoinable`), CNA-D
 gamer who joins a System Link game in progress sees the session in Lobby),
 CNA-DEMOS-ISSUE-034 (stock Vector4 effect parameters accept scalar getters),
 CNA-DEMOS-ISSUE-035 (SkinnedEffect Bones exposes no reflected array elements),
-CNA-DEMOS-ISSUE-036 (Linear curve post-loop reads the first outgoing tangent).
+CNA-DEMOS-ISSUE-036 (Linear curve post-loop reads the first outgoing tangent),
+CNA-DEMOS-ISSUE-037 (documentation only: dynamic IsLooped setter comments contradict the
+implementation and XNA reference; no new runtime execution or expected-failure marker).
 
 ## 11. Dependencies (pinned for CI; same as cna-template's dependencies.lock)
 
@@ -279,11 +281,14 @@ when unique_ptr deletes the object. All 9 checks pass on SOFTWARE, as do its CTe
 check and metadata validation (405/0). Callback counters precede the owned pointer so exceptions
 cannot leave a destructor invoking references to expired local state.
 
-**Immediate next action:** full 405-demo tools/validate.sh, log
+**Full 405-demo checkpoint is running:** tools/validate.sh, log
 `/tmp/cna-demos-405-validation.log`. Until completed, section 7 still refers to the preceding
 404-demo semantic checkpoint. Coverage explicitly lists the new instance-limit ID as absent
 from those old reports. The new checkpoint must include both ownership and lifecycle changes.
-Further candidates: ContentManager cache/root/lifetime and Texture2D ownership/stream gaps. CNJ custom loading remains pending: a meaningful
+Further candidates: ContentManager cache/root/lifetime, CNB optional/mandatory chunk behavior,
+and Texture2D ownership/stream gaps. The new CNA binary-content table audits writer/document/
+cursor members outside the XNA percentage. ISSUE-037 records the source-confirmed dynamic
+IsLooped comment error without claiming a runtime defect; its actual guard can extend streaming. CNJ custom loading remains pending: a meaningful
 payload example needs a JSON-parser choice; do not borrow CNA's Internal parser or add a
 constant-return factory merely to increase coverage.
 
