@@ -83,10 +83,10 @@ namespace
                 alternates = alternates && deferred[static_cast<std::size_t>(i)] == (i % 2 == 0 ? Color::Blue : Color::Red);
             Context().Check(alternates, "Deferred: every overlap shows the square drawn later");
 
-            bool same = true;
+            bool same = textured[0] == Color::Red || textured[0] == Color::Blue;
             for (const Color& c : textured)
                 same = same && c == textured[0];
-            Context().Check(same, "Texture: every overlap shows the same texture -- one group was drawn after the other");
+            Context().Check(same, "Texture: every overlap shows the same authored color -- one texture group was drawn last");
             Context().Print("Texture mode drew the {} group last (texture order is not defined)",
                             textured[0] == Color::Red ? "red" : "blue");
         }

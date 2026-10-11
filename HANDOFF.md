@@ -265,6 +265,10 @@ The generator reproduces `assets/custom/patrol.route` byte-for-byte. No CNA issu
 The complete reports in section 7 still describe revision `1bb71ac` and 406 demos until the
 next full run; coverage explicitly shows the new pipeline ID as absent in those reports.
 
+**Next full checkpoint:** tools/validate.sh under private Xvfb for the current 407 demos,
+including pipeline_components, the root guard and both sprite pixel revisions. Then continue
+with the highest-value unfinished work below.
+
 Next useful work after that:
 1. A build-time IntermediateSerializer example. The old type-audit exclusion was inaccurate:
    current IntermediateReader/Writer consume ContentSerializerAttribute, and public fluent
@@ -277,11 +281,12 @@ Next useful work after that:
    pass. Screenshots inspected on both; build/metadata (407/0), CTest and catalog checks pass.
    Reports/screenshots: `/tmp/cna-content-root-{SOFTWARE,OPENGLES3}.{json,png}`. This extension
    is newer than the last full 406 checkpoint and must be included in the next complete run.
-3. Strengthen existing sprite demos: `/tmp/cna-layer-depth-pixels.cpp` and
-   `/tmp/cna-texture-sort-pixels.cpp` are unbuilt drafts. The first checks actual overlap colors;
-   the second prevents a uniformly blank row passing the texture-grouping assertion. Inspect
-   fresh screenshots on both renderers when applying them. Other meaningful gaps are listed
-   in the new SpriteBatch/SpriteFont audit table.
+3. Further sprite/text behavior gaps in the audit. The two prepared sprite drafts have now
+   been applied: layer-depth sorting passes 4 pixel checks, and texture sorting passes 2 with
+   blank-row rejection, on SOFTWARE and OPENGLES3. All four screenshots were inspected. Build,
+   metadata (407/0), both CTests and catalog validation pass. Evidence:
+   `/tmp/cna-{layer_depth_sorting,sort_mode_texture}-{SOFTWARE,OPENGLES3}.{json,png}`.
+   No new CNA issue found. These source revisions also await the next full checkpoint.
 4. Remaining Phase 9 work: authored RPC/variation tables, cue-level limits/priorities/fades;
    category limits are already complete. Preserve ownership and distinguish state observation
    from audible evidence.

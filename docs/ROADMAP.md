@@ -87,6 +87,9 @@ Console demos with checks; each shows one operation family.
   ✅ Existing rectangle demo now checks nonzero CPU array offsets and untouched destination padding.
   DXT1 content loading is already shown by `content.xnb.dxt_texture`.
 
+The existing layer-depth and texture-sort demos now verify their rendered overlaps, including
+a check that all authored colors remain visible and that a blank texture row cannot pass.
+
 ## Phase 5 -- render states, buffers, primitives, render targets ✅ (41 demos; small remainders below)
 - ✅ (17) `graphics.blend_state.*` (blend functions, colour write channels, blend factor, bound
   states are immutable), `graphics.sampler_state.*` (address modes, anisotropic, MaxMipLevel, LOD

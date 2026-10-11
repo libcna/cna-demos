@@ -4,6 +4,7 @@
 #include <optional>
 
 #include "CnaDemos/Demo.hpp"
+#include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BlendState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
@@ -61,6 +62,22 @@ namespace
             DrawSquares(Vector2(560.0f, 120.0f));
             spriteBatch_->End();
 
+            if (FramesDrawn() == 0)
+            {
+                const CnaDemos::BackBufferPixels pixels(getGraphicsDeviceProperty());
+                Context().Check(pixels.At(140, 220) == Color::Blue,
+                                "Deferred keeps call order: the last blue sprite covers the overlap");
+                Context().Check(pixels.At(400, 220) == Color::Red,
+                                "BackToFront draws depth zero last: red covers the overlap");
+                Context().Check(pixels.At(660, 220) == Color::Blue,
+                                "FrontToBack draws depth one last: blue covers the overlap");
+                bool allColorsDrawn = true;
+                for (const int x : {40, 300, 560})
+                    allColorsDrawn = allColorsDrawn && pixels.At(x + 20, 140) == Color::Red &&
+                        pixels.At(x + 60, 260) == Color::Lime && pixels.At(x + 180, 300) == Color::Blue;
+                Context().Check(allColorsDrawn, "all three sprites remain visible outside the shared overlap in every mode");
+            }
+
             Game::Draw(gameTime);
         }
 
@@ -74,7 +91,7 @@ CNA_DEMOS_GAME(LayerDepthDemo, {
     .id = "graphics.sprite_batch.layer_depth_sorting",
     .title = "Layer depth and sort modes",
     .description = "Draws the same three overlapping sprites with SpriteSortMode Deferred, BackToFront and "
-                   "FrontToBack to show when the layerDepth argument decides what is on top.",
+                   "FrontToBack, checking pixels to show when layerDepth decides what is on top.",
     .apis = {"SpriteBatch::Begin", "SpriteBatch::Draw", "SpriteSortMode::Deferred", "SpriteSortMode::BackToFront",
              "SpriteSortMode::FrontToBack"},
     .tags = {"sprite", "sorting", "depth", "2d"},
