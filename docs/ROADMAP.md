@@ -180,10 +180,10 @@ a check that all authored colors remain visible and that a blank texture row can
   live bounds responding to a controlled distant palette before the final rendered pose (21 checks).
   ISSUE-042 records stale root-prefix comments only; the runtime workflow passes.
 - Remaining: imported topology/specular slots, more skin weighting/material variants and other
-  member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups remain
-  a separate Phase 8 gap; built-in model loading does not demonstrate every ContentReader member.
+  member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
+  in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (30 demos; remaining below)
+## Phase 8 -- content 🟨 (31 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -223,6 +223,10 @@ a check that all authored colors remain visible and that a blank texture row can
   rejection despite valid magic.
   Remaining: deeper serializer behaviors, composite asset builds and the member/behavior gaps
   in COVERAGE_AUDIT.md; this phase is not comprehensively covered.
+- ✅ `content.xnb.shared_resources`: deferred binary graph fixups, shared versus inline identity,
+  forward/weak backward edges, null references, cache/manager isolation, malformed index/type
+  refusal and released ownership (15 console checks). Direct low-level orchestration, reader
+  versions, existing-instance readers and external XNB references remain audit work.
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
   managers, `ContentLoadException`, loose files vs XNB vs CNB vs CNJ lookup order.
 - `content.xnb.*`: Texture2D, SoundEffect, SpriteFont, Model, Effect, TextureCube, Curve XNBs.

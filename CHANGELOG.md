@@ -39,6 +39,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- A runtime XNB shared-resource graph demo: deferred callbacks rebuild aliases and forward/weak
+  backward edges, distinguish inline objects, preserve cache isolation, reject incompatible
+  indices/types and release ownership (15 console checks, no graphics requirement).
 - XNB model example builds an original `.x` asset through the existing content target and checks
   restored hierarchy, shared buffer fixups, material ranges and actual rendered placements.
 - Multiple-skin example checks separate palettes despite shared authored geometry/material,

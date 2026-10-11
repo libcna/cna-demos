@@ -29,6 +29,7 @@ from PIL import Image, ImageDraw
 import gltf_models
 import skinned_bundles
 import xnb_models
+import xnb_graphs
 import media_files
 import xact_files
 import pixel_font
@@ -344,6 +345,7 @@ def main() -> None:
     gltf_models.write_all(CONTENT_ROOT, ROOT)
     skinned_bundles.write_all(ROOT)
     xnb_models.write_all(CONTENT_XNB_ROOT)
+    xnb_graphs.write_all(ROOT)
     xact_files.write_all(ROOT)
     media_files.write_all(CONTENT_MEDIA_ROOT)
     tone("sounds/tone_440.wav", 440.0, 0.5)

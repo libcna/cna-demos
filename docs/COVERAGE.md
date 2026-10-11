@@ -6,14 +6,14 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**427 demos** in 18 categories. Kinds: console 152, game 247, standalone 28. Automation: automated 391, manual 3, smoke-only 33.
+**428 demos** in 18 categories. Kinds: console 153, game 247, standalone 28. Automation: automated 392, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
 | c_api | 16 | 15 | 1 | 0 | 16 / 0 / 0 / 0 / 0 | 16 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 30 | 30 | 0 | 0 | 26 / 0 / 4 / 0 / 0 | 26 / 0 / 4 / 0 / 0 |
+| content | 31 | 31 | 0 | 0 | 26 / 0 / 4 / 0 / 1 | 26 / 0 / 4 / 0 / 1 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,18 +31,20 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.xnb.shared_resources`.
+- OPENGLES3: absent from report: `content.xnb.shared_resources`.
 
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 293 of 329** (89.1 %).
-- **Methods, properties, constructors and events named by a demo: 1344 of 2326** (57.8 %).
+- **Methods, properties, constructors and events named by a demo: 1346 of 2326** (57.9 %).
 - Fields and enum values named by a demo: 133 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 40 / 42 | 477 / 643 | 34 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 16 / 19 | 87 / 121 | 6 / 11 |
-| `Microsoft.Xna.Framework.Content` | 7 / 11 | 14 / 48 | 0 / 0 |
+| `Microsoft.Xna.Framework.Content` | 7 / 11 | 16 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
 | `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 299 / 550 | 84 / 192 |
@@ -313,9 +315,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ContentManager::RegisterTypeReader` -- content.custom.loose_file_reader
 - `ContentManifestEntry` -- content.content_manager.manifest
 - `ContentManifestReaderUsage` -- content.content_manager.manifest
-- `ContentReader::ReadInt32` -- content.xnb.custom_type_reader
-- `ContentReader::ReadString` -- content.xnb.custom_type_reader
-- `ContentTypeReaderManager::AddTypeCreator` -- content.xnb.custom_type_reader
+- `ContentReader::ReadInt32` -- content.xnb.custom_type_reader, content.xnb.shared_resources
+- `ContentReader::ReadString` -- content.xnb.custom_type_reader, content.xnb.shared_resources
+- `ContentTypeReaderManager::AddTypeCreator` -- content.xnb.custom_type_reader, content.xnb.shared_resources
 - `DynamicSoundEffectInstance::Stop` -- audio.dynamic_sound_effect_instance.streaming
 - `Effect::Apply` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading
 - `Environment::DeviceType` -- devices.sensors.availability

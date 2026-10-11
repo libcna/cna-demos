@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 22), 8 (content, 30), 9 (audio 21 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 22), 8 (content, 31), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 16 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-427 demos: math 78, game 33, graphics 138 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
+428 demos: math 78, game 33, graphics 138 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 22 model), audio 21 (9 XACT), core 3 (2 logger),
-content 30 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 31 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 16 (standalone C programs). Every declared category has demos.
@@ -311,12 +311,22 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** implement and validate the prepared runtime XNB shared-resource
-example described below. Full 427 is complete and archived; binary/asset edits may resume.
-The manifest demo increases 20 -> 26 checks because the new XNB requires six additional
-standard reader names: BasicEffectReader, IndexBufferReader, ModelReader, StringReader,
-VertexBufferReader and VertexDeclarationReader. The generated reader table and manifest loop
-were inspected; this is expected asset-driven coverage, not a regression.
+**Immediate next action:** full 428 validation is starting; do not edit/build binary or asset
+sources until it finishes. Archive both original streams and compare against 427, then continue the runtime XNB
+member audit (existing-instance/raw object reads, versioned schema and reader initialization).
+New content.xnb.shared_resources passes 15 checks in fresh processes WITHOUT DISPLAY or
+WAYLAND_DISPLAY under both renderer selections. Metadata 428/0, four targeted CTests pass.
+Evidence: `/tmp/cna-428-xnb-final-{SOFTWARE,OPENGLES3}.{json,log}`, `/tmp/cna-428-ctest.log`,
+clean build `/tmp/cna-428-final-build.log`. All three XNB fixtures regenerate byte-identically.
+This is console CPU evidence, not a visual/GPU run. Full checkpoint still 427 until 428 completes.
+The initial draft incorrectly relied on StringReader being pre-registered: CNA registers built-in
+XNB readers from Game startup, not a bare ContentManager. Corrected with an explicitly registered
+custom Label reader; no Internal bootstrap call or CNA source change. The three fixtures are now
+178 bytes each; earlier /tmp 210-byte drafts are stale and must not overwrite applied sources.
+CNA advanced externally to 2fda5389d2990b40146d06de0ae0531d05055f24; net sources rebuilt for
+comment-only edits. Inspected library/CMake differences from 8b5564f contain no runtime change.
+Expected full counts: SOFTWARE 382/18/25/3, OPENGLES3 403/19/3/3, 441 enabled CTests;
+raw failed assertions should remain 25/26. Compare ORIGINAL checkpoint-427 logs.
 
 427 targeted evidence:
 - xnb_model: 11 checks per renderer. Original `.x` -> existing FORMAT xnb content build -> actual
@@ -342,20 +352,12 @@ CNA was 8b5564f1e81196f3aaee9e9a652b8030e21f4c6c at build start; since bf0cde63 
 two doc/vendor test paths changed, not runtime implementation. Coverage is 293/329 XNA types,
 1344/2326 named members and 158/3210 C routes. All /tmp model drafts are now applied and stale.
 
-After the checkpoint, continue the deeper public API audit: the XNB model now proves built-in
-shared buffer fixups indirectly, but ContentReader::ReadSharedResource/ReadSharedResources still
-needs a focused runtime object-graph example using public reader callbacks. Existing intermediate
-XML shared-resource evidence does not establish that binary protocol. This is a productive Phase 8
-workstream. NEW unbuilt drafts: `/tmp/cna-xnb-shared-resources.cpp`, `/tmp/cna-xnb-graphs.py`,
-and `/tmp/cna-xnb-graph-fixture`. Three original XNB files regenerate byte-identically and their
-container sizes/signatures match; C++ reader behavior has NOT yet been built/run. The console
-draft uses the public platform base path for an absolute asset root, no graphics device.
-Review and apply now that 427 is complete, integrate the generator in tools/generate_assets.py, then
-validate deferred callbacks, aliasing, weak back-edge lifetime and invalid index/type refusal.
-The draft also reads an ordinary inline Item via ReadObject to contrast equal values with shared
-identity; final prepared files are now 210 bytes each (the earlier 197-byte drafts are superseded).
-Remaining model gaps include imported topology/specular slots and broader skin/material
-variants, not a reason to restart completed phases.
+The runtime XNB graph drafts are now applied and superseded by tools/xnb_graphs.py and
+content.xnb.shared_resources. It reads an ordinary inline Item alongside shared resources;
+15 checks distinguish their identities, deferred callbacks, weak-edge lifetime and failure paths.
+Continue remaining ContentReader behaviors in COVERAGE_AUDIT.md; built-in model fixups and
+this custom graph do not establish every public reader overload or versioned schema.
+Remaining model gaps include imported topology/specular slots and broader skin/material variants.
 
 425 animation investigation: final/source-before-extension first-frame pixels were identical on
 each renderer; cross-renderer lighting differences already existed (8,216 pixels, max delta 38),
