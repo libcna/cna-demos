@@ -93,20 +93,21 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **409-demo checkpoint passed** through demo revision `7a64310`, including shared XML
-resource identity and C diagnostic-query/buffer-boundary checks. The entire script used private Xvfb after the
-inherited desktop X server interrupted an earlier attempt (log `/tmp/cna-demos-409-validation.log`).
+The full **410-demo checkpoint passed** through demo revision `4994374`, including the custom
+XML codec, reader/optional-field/atlas semantic extensions and coordinated network simulation.
+The entire script used private Xvfb (`/tmp/cna-demos-410-validation.log`). Complete raw assertion
+comparison, including child-process prefixes, matches checkpoint-409: 24 SOFTWARE / 25 OPENGLES3.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 409 demos, 0 problems |
+| Metadata/assets `--validate` | 410 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 396 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 364 passed, 17 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 385 passed, 18 expected failures, 3 skipped, 3 manual not run |
-| Unexpected outcomes | None on either renderer; the earlier sign-in-screen crash did not recur in this baseline |
-| Screenshots | Manifest, texture rectangle, content root, C content and both sprite sorting screenshots inspected on both renderers; prior broader contact-sheet review remains historical |
+| CTest | 397 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 365 passed, 17 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 386 passed, 18 expected failures, 3 skipped, 3 manual not run |
+| Unexpected outcomes | None; all previous statuses and failed-assertion multisets unchanged, new XML codec passed |
+| Screenshots | Final network simulation inspected on both renderers; prior manifest/texture/content/sprite reviews remain historical evidence |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -217,21 +218,22 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **409 demos**
-through demo revision `7a64310`, including shared XML references and C diagnostic boundaries. Section 7
-has the exact results. Log: `/tmp/cna-demos-409-validation.log`; named report archives:
-`reports/checkpoint-409-{SOFTWARE,OPENGLES3}.{json,log}`. Both reports match all 409 IDs, with no
-absent entries, unexpected failures or unexpected passes. Compared with 408, intermediate_shared_resources
-is new and passes; every previously reported status stays unchanged. Build, CTest and script logs
-are also archived as `checkpoint-409-{build,ctest,validation}.log`. Current generated coverage is
-290/329 XNA types and 1318/2326 named members; these are metadata counts, not comprehensive
-semantic coverage. CNA remains clean at `2b15506a48e1a6202c985823131daf5856826f71`, newer than
-CI's `10a4ef1cb4cd832f761536d77588000104947f8d`.
+**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **410 demos**
+through demo revision `4994374`. Section 7 has the exact results. Log:
+`/tmp/cna-demos-410-validation.log`; archives:
+`reports/checkpoint-410-{SOFTWARE,OPENGLES3}.{json,log}` and
+`checkpoint-410-{build,ctest,validation}.log`. Both reports match all 410 catalog IDs exactly once.
+Compared with checkpoint-409, intermediate_type_serializer is new and passes; every old status
+is unchanged. The XNB reader's recorded checks increase from 3 to 5. Coverage is 290/329 XNA
+types and 1318/2326 named members, not comprehensive semantic coverage. CNA remains clean at
+`2b15506a48e1a6202c985823131daf5856826f71`, newer than CI's
+`10a4ef1cb4cd832f761536d77588000104947f8d`.
 
-Expected-failure detail was also compared between the full 407/408 and 408/409 raw logs: the exact
-`CHECK FAILED` message multisets are unchanged (24 SOFTWARE, 25 OPENGLES3, including
-prefixed host/joiner lines; earlier counts of 20/21 omitted those child-process assertions). WILL_FAIL is
-per-demo, so retain this assertion-level review alongside ID/status comparison for later batches.
+Raw failed-assertion multisets are unchanged across 407/408/409 and the final 410 checkpoint:
+**24 SOFTWARE / 25 OPENGLES3**, including prefixed host/joiner lines. Earlier counts of 20/21
+omitted those child-process assertions. The intermediate semantic-409 run exposed a separate
+flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
+checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
 The original 398/401 checkpoint debt is closed. Full 401 and two 404 checkpoints also passed
 this session. A subsequent 405 attempt passed all CTests but lost the inherited X connection
@@ -320,7 +322,7 @@ Next useful work:
    Thread isolation, canonical exception type/parameter diagnostics and invalid release guards
    remain the next useful C ABI work. No new CNA issue was found.
 
-**New semantic batch after the 409 checkpoint:** existing demo IDs were extended, not added.
+**Semantic extensions included in the 410 checkpoint:** existing demo IDs were extended, not added.
 - `content.xnb.custom_type_reader`: 5 checks pass on SOFTWARE/OPENGLES3, including actual Read
   invocation counts (first load once, second cache hit) and the logical AssetName/owner pointer.
   Evidence: `/tmp/cna-xnb-reader-{SOFTWARE,OPENGLES3}.{json,log}`. The prepared /tmp draft is
@@ -335,8 +337,8 @@ Next useful work:
   resulting images are pixel-identical to their pre-guard baselines. Evidence:
   `/tmp/cna-c-atlas-guard-{SOFTWARE,OPENGLES3}.{json,log,png}`.
 Build, metadata (409/0), all three targeted CTests and both catalog tests pass. No new CNA issue
-was found. Source/audit/roadmap are updated; the full named checkpoint-409 archives still describe
-revision 7a64310 before these extensions.
+was found. These extensions now have complete 410 checkpoint evidence; checkpoint-409 remains
+the historical archive of revision 7a64310 before them.
 
 **Full semantic 409 run completed at source revision ce972da:** tools/validate.sh exited 0 under
 private Xvfb (`/tmp/cna-demos-409-semantic-validation.log`); build, metadata, 421 enabled CTests
@@ -350,18 +352,17 @@ OPENGLES3 is unchanged. An isolated SOFTWARE repeat delivered 100% unreliable an
 with only ISSUE-030 failing (`/tmp/cna-network-baseline-repeat.{json,log}`).
 The public SendDataOptions::None contract explicitly allows dropped packets; the demo's >90%
 unsimulated delivery gate incorrectly treats an empirical loopback expectation as a guarantee.
-Next: correct this demo expectation while preserving actual reliable-delivery and latency/loss
-checks, then validate it with the next content batch. Do not describe the semantic-409 run as
+The 410 revision corrects both statistical gates with coordinated finite bursts and exact counts. Do not describe the semantic-409 run as
 having only the documented CNA assertion failures, or erase its original evidence. No new CNA
 bug is established by allowed unreliable loss. Runtime XNB graph fixups remain separate from
 IntermediateSerializer sharing and are not established by the reader-context checks.
 
-**410-demo batch, targeted validation complete:** new standalone
+**410-demo batch, full validation complete:** new standalone
 `content.custom.intermediate_type_serializer` builds and passes 7 child checks under SOFTWARE and
 OPENGLES3 selections (`/tmp/cna-custom-xml-codec-{SOFTWARE,OPENGLES3}.{json,log}`): compact NdM
 syntax, root shortcut, described-field dispatch, round trip and invalid input/output. Metadata
 validation reports 410/0. Coverage is regenerated (290/329 types, 1318/2326 named members);
-full-smoke evidence still covers 409 IDs until the next full run. The old /tmp draft is applied.
+full smoke now covers every 410 ID. The old /tmp draft is applied.
 
 The existing network simulated_conditions demo now uses coordinated 24-pair bursts for baseline,
 200 ms delay and complete outage, followed by one second of recovery with loss disabled. Exact
@@ -372,21 +373,22 @@ The earlier stochastic failures remain in `/tmp/cna-network-baseline-*`; no new 
 widened expected-failure marker was introduced. Build, catalog and both changed demos' CTests
 pass (4 tests, network WILL_FAIL); the raw CTest log contains only ISSUE-030's assertion.
 Final screenshots were inspected on both renderers; the wording distinguishes no arrivals
-from measured zero latency. **Full 410 validation is running at source revision 4994374** under
-private Xvfb, log `/tmp/cna-demos-410-validation.log`. Do not rebuild during this run. Expected
-counts: SOFTWARE 365/17/25/3, OPENGLES3 386/18/3/3; compare all raw failed assertions against
-checkpoint-409 (24/25, including prefixed child lines), not the transient semantic-409 failure.
-Archive complete evidence as checkpoint-410. Use `tools/compare_checkpoints.py` on each renderer's
-JSON/raw log pair and the current catalog: it includes child prefixes and rejects added/removed
-assertion multiplicities despite an unchanged FAILED status. Its 4 regression tests pass; it also
-correctly accepts 408->409 SOFTWARE and 409->semantic-409 OPENGLES3, while detecting the extra
-semantic-409 SOFTWARE baseline failure. The tool does not change any baseline automatically.
+from measured zero latency. Full validation is complete (section 7). Use
+`tools/compare_checkpoints.py` on each renderer's JSON/raw log pair and the current catalog. Its
+4 regression tests pass; real archive tests detect the masked semantic-409 failure and reject
+an old 409 report against the 410 catalog. The tool never accepts a changed baseline automatically.
 
 Prepared next extension: `/tmp/cna-shared-resource-boundaries.cpp` extends the existing shared XML
 tool to 10 child checks: null shared table, missing ID, duplicate IDs with otherwise resolving
 references, and incompatible referenced type. It uses public IntermediateSerializer calls and
-original XML strings; it is not applied/built/run and has no coverage credit yet. Then extend the existing shared XML example with malformed
-resource IDs/null behavior or another audited member gap. Do not credit runtime XNB graph
+original XML strings; it is not applied/built/run and has no coverage credit yet.
+A second unapplied draft, `/tmp/cna-c-error-canonical.c`, extends the existing C diagnostics
+example: native C argument failures have empty canonical details, rejected MasterVolume=2
+raises a canonical ArgumentOutOfRangeException with ParamName=value through the public C ABI,
+and a later invalid-handle failure clears those details. Source verification found the range
+check precedes audio initialization/global mutation. Both drafts need compilation/execution;
+do not claim audio playback, thread isolation, or new C API route coverage from these drafts.
+Apply and validate both next, then continue with another audited member gap. Do not credit runtime XNB graph
 fixups from IntermediateSerializer sharing.
 
 Effects constraints verified in the current sources/build: all four configured

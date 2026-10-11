@@ -15,7 +15,7 @@ import sys
 
 def read_results(path):
     document = json.loads(path.read_text())
-    if document.get("schema") != "cna-demos-results/1":
+    if not isinstance(document, dict) or document.get("schema") != "cna-demos-results/1":
         raise ValueError(f"{path}: unsupported results schema")
     rows = document["results"]
     results = {}
