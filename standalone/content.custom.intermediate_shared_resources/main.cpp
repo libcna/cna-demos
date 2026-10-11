@@ -1,0 +1,111 @@
+// SPDX-License-Identifier: MS-PL
+// Equal authored loot tables need not be the same shared resource.
+#include <iostream>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <vector>
+
+#include "Microsoft/Xna/Framework/Content/Pipeline/Serialization/Intermediate/IntermediateSerializer.hpp"
+#include "System/Object.hpp"
+#include "System/Xml/XmlReader.hpp"
+#include "System/Xml/XmlWriter.hpp"
+#include "System/Xml/XmlWriterSettings.hpp"
+
+using namespace Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate;
+
+namespace
+{
+    struct LootTable : System::Object
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.LootTable";
+        const std::string& GetTypeName() const override
+        {
+            static const std::string name(XnaTypeName);
+            return name;
+        }
+        std::vector<std::string> items;
+        static void DescribeContent(ContentTypeDescriptor<LootTable>& type)
+        {
+            type.Field("Items", &LootTable::items).CollectionItemName("Drop");
+        }
+    };
+
+    struct LevelLoot : System::Object
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.LevelLoot";
+        const std::string& GetTypeName() const override
+        {
+            static const std::string name(XnaTypeName);
+            return name;
+        }
+        std::shared_ptr<LootTable> guard;
+        std::shared_ptr<LootTable> patrol;
+        std::shared_ptr<LootTable> boss;
+        std::shared_ptr<LootTable> inlineFirst;
+        std::shared_ptr<LootTable> inlineSecond;
+        static void DescribeContent(ContentTypeDescriptor<LevelLoot>& type)
+        {
+            type.Field("Guard", &LevelLoot::guard).SharedResource();
+            type.Field("Patrol", &LevelLoot::patrol).SharedResource();
+            type.Field("Boss", &LevelLoot::boss).SharedResource();
+            // The same C++ reference without SharedResource is serialized inline, twice.
+            type.Field("InlineFirst", &LevelLoot::inlineFirst);
+            type.Field("InlineSecond", &LevelLoot::inlineSecond);
+        }
+    };
+}
+
+int main()
+{
+    try
+    {
+        bool passed = true;
+        const auto check = [&](bool condition, std::string_view message) {
+            std::cout << (condition ? "  check: " : "  CHECK FAILED: ") << message << '\n';
+            passed = condition && passed;
+        };
+        auto common = std::make_shared<LootTable>();
+        common->items = {"Coin", "Key"};
+        auto authored = std::make_shared<LevelLoot>();
+        authored->guard = authored->patrol = common;
+        authored->boss = std::make_shared<LootTable>();
+        authored->boss->items = common->items; // equal value, independently owned object
+        authored->inlineFirst = authored->inlineSecond = common;
+
+        System::Xml::XmlWriterSettings settings;
+        settings.Indent = true;
+        settings.NewLineChars = "\n";
+        std::unique_ptr<System::Xml::XmlWriter> writer(System::Xml::XmlWriter::CreateToString(settings));
+        IntermediateSerializer::Serialize<LevelLoot>(*writer, authored, "");
+        const auto xml = writer->ToString();
+        std::cout << xml << '\n';
+        check(xml.find("<Resources>") != std::string::npos,
+              "shared tables are emitted into the intermediate XML Resources section");
+
+        std::unique_ptr<System::Xml::XmlReader> reader(System::Xml::XmlReader::CreateFromString(xml));
+        const auto loaded = IntermediateSerializer::Deserialize<LevelLoot>(*reader, "");
+        const bool complete = loaded && loaded->guard && loaded->patrol && loaded->boss &&
+                              loaded->inlineFirst && loaded->inlineSecond;
+        check(complete, "all table references are fixed up before Deserialize returns");
+        if (!complete) return 1;
+        check(loaded->guard == loaded->patrol && loaded->guard != common,
+              "guard and patrol share one newly loaded table, not an authored pointer");
+        check(loaded->boss != loaded->guard && loaded->boss->items == loaded->guard->items,
+              "equal table values do not merge two distinct shared resources");
+        check(loaded->inlineFirst != loaded->inlineSecond && loaded->inlineFirst != loaded->guard &&
+              loaded->inlineFirst->items == common->items && loaded->inlineSecond->items == common->items,
+              "inline fields become independent objects despite sharing the authored pointer");
+        loaded->guard->items.push_back("Potion");
+        check(loaded->patrol->items.size() == 3 && loaded->boss->items.size() == 2 &&
+              loaded->inlineFirst->items.size() == 2 && common->items.size() == 2,
+              "a shared table edit reaches its alias while independent and authored tables stay unchanged");
+        // This graph is acyclic: ordinary shared_ptr scope destruction releases every table.
+        return passed ? 0 : 1;
+    }
+    catch (const std::exception& error)
+    {
+        std::cerr << "Shared-resource serialization failed: " << error.what() << '\n';
+        return 1;
+    }
+}

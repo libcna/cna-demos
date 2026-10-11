@@ -6,14 +6,14 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**408 demos** in 18 categories. Kinds: console 148, game 240, standalone 20. Automation: automated 372, manual 3, smoke-only 33.
+**409 demos** in 18 categories. Kinds: console 148, game 240, standalone 21. Automation: automated 373, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 20 | 17 | 2 | 1 | 18 / 0 / 1 / 1 / 0 | 18 / 0 / 1 / 1 / 0 |
 | c_api | 13 | 12 | 1 | 0 | 13 / 0 / 0 / 0 / 0 | 13 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 24 | 24 | 0 | 0 | 20 / 0 / 4 / 0 / 0 | 20 / 0 / 4 / 0 / 0 |
+| content | 25 | 25 | 0 | 0 | 20 / 0 / 4 / 0 / 1 | 20 / 0 / 4 / 0 / 1 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.custom.intermediate_shared_resources`.
+- OPENGLES3: absent from report: `content.custom.intermediate_shared_resources`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -377,9 +379,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Format` -- content.custom.intermediate_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Ignore` -- content.custom.intermediate_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Optional` -- content.custom.intermediate_serializer
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::SharedResource` -- content.custom.intermediate_shared_resources
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentTypeDescriptor::Field` -- content.custom.intermediate_serializer
-- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize` -- content.custom.intermediate_serializer
-- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize` -- content.custom.intermediate_serializer
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize` -- content.custom.intermediate_serializer, content.custom.intermediate_shared_resources
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize` -- content.custom.intermediate_serializer, content.custom.intermediate_shared_resources
 - `Model::GltfImportReportEXT` -- graphics.model.import_report
 - `Model::MaterialVariantEXT` -- graphics.model.material_variants
 - `Model::MaterialVariantNamesEXT` -- graphics.model.material_variants

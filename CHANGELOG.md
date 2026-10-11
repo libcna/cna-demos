@@ -22,6 +22,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Shared intermediate XML resources: forward fixups, identity-preserving aliases, equal but
+  independent loot tables and inline copies, with mutation showing the actual ownership graph.
+- Existing C error demo verifies failed diagnostic queries preserve the original error and
+  exact-sized string copies honor the payload boundary without adding a terminator.
 - Intermediate XML tool demonstrates public field descriptors and ContentSerializerAttribute:
   renamed/optional/ignored fields, collection item names, round trip and ignored-field rejection.
 - Existing C content demo checks texture pixels and font metrics after manager Unload and

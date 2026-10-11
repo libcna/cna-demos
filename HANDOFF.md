@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 15), 8 (content, 24), 9 (audio 20 incl. 9 XACT, media 10 incl. a
+* In progress: 7 (models/glTF, 15), 8 (content, 25), 9 (audio 20 incl. 9 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 13 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-408 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+409 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 20 (9 XACT), core 3 (2 logger),
-content 24 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 25 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 13 (standalone C programs). Every declared category has demos.
@@ -276,12 +276,12 @@ Next useful work:
    Next content work: explicit-null/flattened/shared-resource behavior, XNA adapters and
    composite asset dependency/reference graphs. Do not credit nominal .NET attribute wrappers
    just because corresponding descriptor behavior is used.
-   A focused acyclic shared-loot-table draft is in `/tmp/cna-intermediate-shared/` (main,
-   metadata and CMake), intended ID `content.custom.intermediate_shared_resources`. It compares
-   aliases, equal-but-independent objects and inline copies across XML round trip and mutation.
-   It is not applied, built or executed; the full 408 checkpoint has completed, so
-   review/build it next before counting coverage. Reader/writer and XNA adapter member tables now
-   spell out the remaining behaviors and actual public entry points.
+   **409th demo after the full checkpoint:** `content.custom.intermediate_shared_resources`
+   is applied and built. Its 6 child checks pass under both renderer selections: Resources
+   emission, forward fixups, aliases, equal-but-distinct resources, inline copies and mutation.
+   Evidence: `/tmp/cna-shared-xml-{SOFTWARE,OPENGLES3}.{json,log}`. Targeted CTest/catalog and
+   metadata (409/0) pass. The graph is acyclic; cycles, malformed IDs, explicit Null, flattening,
+   external references and custom serializer callbacks remain unclaimed.
 2. Further ContentManager lifetime and lookup-order behaviors. The root mutation check is
    now completed in the existing cache_and_unload demo: both renderers execute 5 checks with
    exactly one failure (ISSUE-039), while original cache checks and the post-Unload root switch
@@ -304,15 +304,19 @@ Next useful work:
    the image tool's incomplete preview was disproved by the actual PNG pixels; no ISSUE-040 or
    expected-failure marker remains. Evidence: `/tmp/cna-c-content-{SOFTWARE,OPENGLES3}.{json,log,png}`.
    All diagnostic source variants were restored. Further ABI gaps are in COVERAGE_AUDIT.md.
-   A small unbuilt next extension is `/tmp/cna-c-error-boundaries.c` for existing
-   `c_api.core.error_handling`: failed diagnostic queries preserve the original failure,
-   short copies preserve every guard byte, and an exact-sized payload copy writes no extra
-   terminator. Review/apply next; update the audit only after
-   actual execution. No new demo ID is needed for these related error-boundary cases.
+   The C error-boundary extension is now applied: failed diagnostic queries preserve the original
+   message/category; a refused type-name copy preserves all bytes; an exact-sized copy leaves
+   the following sentinel intact. All 17 child checks pass under both renderer selections;
+   reports `/tmp/cna-c-errors-{SOFTWARE,OPENGLES3}.{json,log}`, targeted CTest/catalog passed.
+   Thread isolation, canonical exception type/parameter diagnostics and invalid release guards
+   remain the next useful C ABI work. No new CNA issue was found.
 
-**The 408 checkpoint is complete.** Continue with the shared-resource and C diagnostic drafts
-above, validating both actual behavior and the catalog. Keep the archived 408 reports as a fixed
-baseline and finish a new complete checkpoint after applying the next batch.
+**Full 409-demo checkpoint starting:** tools/validate.sh under private Xvfb, log
+`/tmp/cna-demos-409-validation.log`. Section 7 and checkpoint-408 archives remain the last
+complete run. Expected (verify): 421 enabled CTests plus 3 disabled; SOFTWARE 364 passed,
+17 expected failures, 25 skipped, 3 manual; OPENGLES3 385 passed, 18 expected failures, 3 skipped,
+3 manual. Do not rebuild the binaries during the run. After it completes, continue with the
+remaining XML format/adapter/dependency behavior or another focused member gap in the audit.
 
 Effects constraints verified in the current sources/build: all four configured
 `CNA_*_COMPILED_EFFECTS` switches are OFF and `CNA_FXC_EXECUTABLE` is empty. PbrEffect's public

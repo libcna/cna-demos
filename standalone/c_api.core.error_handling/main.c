@@ -88,6 +88,25 @@ int main(int argc, char** argv)
                                                                         CNA_ERROR_CATEGORY_ARGUMENT,
                    "INVALID_ARGUMENT, category ARGUMENT");
 
+    /* Diagnostic queries have a special contract: even a bad query preserves the original
+       failure so the binding can recover and retrieve it correctly. */
+    {
+        char original[sizeof(message)];
+        strcpy(original, message);
+        result = cna_error_get_last_info(NULL);
+        cna_demo_check(&demo, result == CNA_RESULT_INVALID_ARGUMENT &&
+                       last_error(message, sizeof(message)) == CNA_ERROR_CATEGORY_ARGUMENT &&
+                       strcmp(message, original) == 0,
+                       "a null diagnostic query preserves the original argument diagnostic");
+        memset(name, '#', sizeof(name));
+        result = cna_error_copy_last_message(name, 1U, &reported);
+        cna_demo_check(&demo, result == CNA_RESULT_BUFFER_TOO_SMALL && reported > 1U && name[0] == '#',
+                       "a short diagnostic copy reports its required size without a partial write");
+        cna_demo_check(&demo, last_error(message, sizeof(message)) == CNA_ERROR_CATEGORY_ARGUMENT &&
+                       strcmp(message, original) == 0,
+                       "the failed copy also preserves the original diagnostic");
+    }
+
     /* 2. A handle that names nothing (never issued, or already destroyed): a handle failure. */
     printf("2. a handle that was never issued\n");
     result = cna_game_get_is_active(UINT64_C(0xDEADBEEF), &active);
@@ -104,10 +123,17 @@ int main(int argc, char** argv)
         last_error(message, sizeof(message));
         cna_demo_check(&demo, result == CNA_RESULT_BUFFER_TOO_SMALL && reported == needed,
                        "BUFFER_TOO_SMALL, and the required size is reported");
-        cna_demo_check(&demo, name[0] == '#', "nothing was written into the short buffer");
-        result = cna_game_copy_type_name(game, name, sizeof(name) - 1U, &reported);
-        if (cna_demo_check_result(&demo, result, "a large enough buffer succeeds")) {
-            name[reported] = '\0';
+        {
+            size_t i;
+            int unchanged = 1;
+            for (i = 0U; i < sizeof(name); ++i) unchanged = unchanged && name[i] == '#';
+            cna_demo_check(&demo, unchanged, "the refused copy leaves every destination and guard byte intact");
+        }
+        result = cna_game_copy_type_name(game, name, needed, &reported);
+        if (cna_demo_check_result(&demo, result, "an exactly sized byte buffer succeeds")) {
+            cna_demo_check(&demo, reported == needed && name[needed] == '#',
+                           "the copy reports exactly the payload bytes and writes no terminator past capacity");
+            name[needed] = '\0'; /* caller supplies the terminator outside the exact payload capacity */
             printf("    the game's type name: %s\n", name);
         }
     }
