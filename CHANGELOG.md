@@ -42,6 +42,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Embedded incremental score compiler uses the actual RunContentCompiler coordinator: component
+  counters and real manifests show unchanged skips, primary/shared dependency rebuilds, preserved
+  valid output on import failure, repair, missing output recovery and ownership-aware clean.
+- Nested builds now recognize separately scheduled sibling items without compiling duplicate
+  output, resolve them after the host's own build/publication, and reject parameter mismatches
+  for reuse (20 child checks total, retaining all fifteen prior checks).
 - A nested stage/profile build demonstrates processed values versus separately compiled child
   assets, dependency/reference metadata, duplicate requests and name collisions. Caller publication
   now connects actual parent/child bytes to runtime loading, missing-child retry, shared caches

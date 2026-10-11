@@ -75,6 +75,11 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
   the tool target is unavailable, and the runner reports the omitted executable as NOT RUN.
   C++ standalones use the browser's shared-library-first link workaround (ISSUE-016), preventing
   optional module archives from introducing a second runtime and duplicate static destructors.
+* `content.custom.incremental_compiler` links `CNA::ContentCompiler`, the same public coordinator
+  used by `cna-content`. It creates a fresh game-owned registry per invocation and lets CNA own
+  discovery, fingerprints, manifest skipping, publication and manifest-based clean. The tool's
+  temporary score inputs are original runtime fixtures, not another native build tree. This
+  build-time dependency remains isolated from the browser's runtime link closure.
 * C ABI examples default to C99. The focused `c_api.core.thread_local_errors` and
   `c_api.game.foreign_thread_dispatch` targets use C11 threads/atomics after a compile/link
   availability check and link the standard Threads target. The former uses game-independent

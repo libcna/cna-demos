@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-438 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+439 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
-content 39 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 40 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 16 (standalone C programs). Every declared category has demos.
@@ -233,13 +233,33 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** full 438-outputs is complete at e6327d2 and archived. Apply/review the
-prepared sibling-item extension and incremental-compiler tool below as the next coherent batch.
-The former keeps nested_builds's ID (15 -> 20 proposed child checks); the latter adds one focused
-ID content.custom.incremental_compiler (10 proposed checks). Build in the existing tree, execute
-both under fresh displayless renderer selections, investigate failures, update coverage/status,
-and run the next complete checkpoint against ORIGINAL checkpoint-438-outputs. These drafts have
-not been compiled or executed; no runtime success is claimed for them yet.
+**Immediate next action:** 439 batch is built and targeted validation is complete. Commit and
+run full tools/validate.sh with private Xvfb/dummy audio; compare ORIGINAL checkpoint-438-outputs.
+New incremental_compiler is PASS with ten child checks, and nested_builds remains PASS with
+20 child checks (all prior fifteen retained). Other statuses/known issues/counts and all 31/32
+failed assertions must stay unchanged. Expect SOFTWARE 388/23/25/3, OPENGLES3 409/24/3/3,
+452 enabled CTests and 439/0 metadata. Archive original streams/reviews and 26 selected binaries
+(previous 25 plus cna-demo-content-custom-incremental_compiler). Runtime columns still use the
+preceding complete checkpoint until full 439. Do not mutate source/assets or rebuild during it.
+Then deepen the remaining compiler fingerprint/ownership behavior or XML-to-XNB integration.
+
+439 targeted evidence:
+- nested_builds passes 20 child checks and incremental_compiler ten, under both fresh displayless
+  renderer selections: /tmp/cna-439-{nested_builds,incremental_compiler}-{SOFTWARE,OPENGLES3}.{json,log}.
+  All old nested checks are retained. Every printed private path is independently verified gone.
+- The new compiler actually uses RunContentCompiler's registry factory, parses its manifest and
+  checks output digests. Component counters prove unchanged skips, one-primary and shared-input
+  invalidation. Invalid score import preserves old output/manifest; repair and missing-output
+  rebuild pass. Real clean preserves an unowned note/source; final private cleanup is separate.
+  The intentional rejected import prints a contextual diagnostic; it is not a failed demo check.
+- Initial /tmp/cna-439-build.log stopped because external C API work included generated/Avatars.inc
+  before the file existed. It was present/tracked at subsequent CNA HEAD 57ddacfa2ea7ad89a1bbe2ae8672a9741f4ca63c.
+  No CNA edit, no claim clean 57ddacfa fails. Same-tree /tmp/cna-439-retry-build.log is clean.
+  Metadata 439/0 and all 21 targeted CTests pass (/tmp/cna-439-targeted-ctest.log), including all
+  16 C ABI demos and both changed tools. Source assets are unchanged; score fixtures are original
+  small runtime text files, not a native build tree or copied CNA corpus.
+- All sibling/compiler /tmp drafts are now APPLIED AND STALE. Use repository sources. No GPU,
+  genuine-XNA, crash-consistency, multi-output atomic-failure or concurrent-publisher claim.
 
 438 audio correction evidence: initial full attempt at f899d61 stopped in CTest on from_stream's
 fixed 600 ms completion assumption; no smoke began. Six unchanged isolated runs passed, with
@@ -439,38 +459,13 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
   or genuine-XNA execution claim. External CNA observed through d751cf46a with C API changes;
   no CNA edit or atomic source snapshot claim.
 
-Next sibling-item draft during immutable 438-outputs (NOT applied/built/run):
-- /tmp/cna-nested-siblings.cpp and /tmp/cna-nested-siblings-metadata.cpp extend nested_builds
-  from fifteen to twenty proposed child checks, preserving the original assertions. A typed
-  UseSiblingName parameter leaves BuildAsset's assetName empty; a matching ContentBuildSibling
-  should provide its logical name without compiling a child or creating an additional output.
-- The processed budget still reads its profile source; the draft deliberately does not claim
-  absence of all source dependencies. It checks no content-build edge/child writer schema,
-  parent-only load refusal, the host's separate profile build/publication and same-manager retry.
-  A sibling with different Scale parameters should instead produce a fresh generated child.
-- These are draft expectations based on actual public headers/bridge source, not runtime proof.
-  Apply only after 438-outputs is complete and archived. No new ID or source asset is proposed.
-
-Next compiler draft (NOT applied/built/run): /tmp/cna-incremental-compiler.cpp,
-/tmp/cna-incremental-compiler-metadata.cpp and /tmp/cna-incremental-compiler-CMakeLists.txt propose
-one focused new ID content.custom.incremental_compiler (10 proposed child checks). It links the
-actual public CNA::ContentCompiler target (defined in CNA cmake/ToolContentPipeline.cmake), uses
-RunContentCompiler's registry factory and public ContentBuildManifest::Parse/Find, and inspects
-actual score CNBs/digests. Two original temporary .score inputs share a multiplier dependency.
-Counters distinguish unchanged skips, a single primary edit and a shared dependency edit; failed
-import should preserve the prior artifact/manifest, repair should rebuild, and missing output
-should invalidate the skip. Real compiler clean should preserve an unowned note and source files;
-private RAII cleanup is separate. This executes content transformation, not a C++ build in /tmp.
-No runtime proof, crash-consistency or concurrent-publisher claim. Review/run only after full
-438-outputs. It can join the sibling extension as a coherent compiler-coordination batch.
-
-Further pipeline work: sibling-item recognition, CLI atomic publication/deployment and incremental
-caching remain gaps. Source audit confirms empty assetName can select ContentBuildSibling and
-return its logical name without compiling it, recording a runtime reference rather than a
-content-build dependency; the host must build that other item. Current nested_builds uses an
-explicit child name and does not exercise this path. Do not create a duplicate variant for
-in-memory child bytes/dependencies/names already covered. XML aliases remain ISSUE-046;
-XML-to-XNB writer integration and direct custom raw/existing-instance serialization remain gaps.
+Next meaningful compiler gaps: component-version/parameter invalidation, corrupt/missing manifest
+recovery, same-length output tampering and ownership-safe cleanup of modified outputs; choose a
+coherent extension to the new compiler tool rather than new IDs per cache variation. Actual
+multi-output/deployment publication failures and concurrent publishers remain distinct larger
+workstreams. Direct registry freezing/mutation rejection is public behavior still unexecuted.
+XML aliases remain ISSUE-046; XML-to-XNB writer integration and direct custom raw/existing-instance
+serialization are still gaps. Do not repeat the now-tested sibling recognition or basic cache route.
 
 **Latest complete checkpoint (2026-10-12):** 438-outputs at e6327d2, tools/validate.sh exit 0.
 SOFTWARE 387/23/25/3, OPENGLES3 408/24/3/3; 451 enabled CTests, 438/0 metadata.

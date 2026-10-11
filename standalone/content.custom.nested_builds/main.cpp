@@ -127,12 +127,15 @@ namespace
     class StageProcessor final : public Xna::ContentProcessor<StageSource, Stage>
     {
     public:
+        bool getUseSiblingNameProperty() const { return useSiblingName_; }
+        void setUseSiblingNameProperty(bool value) { useSiblingName_ = value; }
         bool getCompileChildProperty() const { return compileChild_; }
         void setCompileChildProperty(bool value) { compileChild_ = value; }
         bool getCollideProperty() const { return collide_; }
         void setCollideProperty(bool value) { collide_ = value; }
         static void DescribeParameters(Xna::ProcessorParameterBindings<StageProcessor>& parameters)
         {
+            parameters.Add<bool>("UseSiblingName", &StageProcessor::getUseSiblingNameProperty, &StageProcessor::setUseSiblingNameProperty);
             parameters.Add<bool>("CompileChild", &StageProcessor::getCompileChildProperty, &StageProcessor::setCompileChildProperty);
             parameters.Add<bool>("Collide", &StageProcessor::getCollideProperty, &StageProcessor::setCollideProperty);
         }
@@ -143,8 +146,9 @@ namespace
             Stage result{input.count * profile.health, {}};
             if (compileChild_)
             {
-                const auto first = context.BuildAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters, {}, ChildName);
-                const auto repeated = context.BuildAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters, {}, ChildName);
+                const std::string requestedName = useSiblingName_ ? std::string{} : ChildName;
+                const auto first = context.BuildAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters, {}, requestedName);
+                const auto repeated = context.BuildAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters, {}, requestedName);
                 if (first.getFilenameProperty() != repeated.getFilenameProperty())
                     throw Xna::InvalidContentException("Repeated identical child build returned a different filename.");
                 // This example leaves outputDirectory empty: the returned path is a relative .cnb name.
@@ -155,13 +159,13 @@ namespace
                 if (collide_)
                 {
                     parameters.SetValue<int>("Scale", 3);
-                    (void)context.BuildAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters, {}, ChildName);
+                    (void)context.BuildAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters, {}, requestedName);
                 }
             }
             return result;
         }
     private:
-        bool compileChild_ = false, collide_ = false;
+        bool compileChild_ = false, collide_ = false, useSiblingName_ = false;
     };
     class ProfileWriter final : public Pipeline::ContentTypeWriter
     {
@@ -334,6 +338,76 @@ int main()
             const auto cached = content.Load<LoadedStage>(compiled.logicalName);
             check(direct == live.profile && cached.profile == live.profile && stageReads == 2 && profileReads == 1,
                   "the parent's external load and direct runtime loads share the same manager's compiled profile cache");
+            // A matching project item owns the child build; an empty assetName lets BuildAsset recognize it.
+            const std::string scheduledName = "profiles/scheduled_guard";
+            Pipeline::ContentBuildSibling sibling;
+            sibling.source = std::filesystem::canonical(request.sourceRoot / "nested_builds/guard.profile");
+            sibling.logicalName = scheduledName; sibling.importer = "CnaDemos.NestedProfileImporter";
+            sibling.processor = ProfileProcessorName; sibling.parameters.Set("Scale", std::int64_t{2});
+            auto scheduledRequest = request;
+            scheduledRequest.logicalName = "stages/scheduled_arena";
+            scheduledRequest.parameters.Set("UseSiblingName", true);
+            scheduledRequest.siblings = std::make_shared<const std::vector<Pipeline::ContentBuildSibling>>(
+                std::vector<Pipeline::ContentBuildSibling>{sibling});
+            const int writesBefore = profileWrites.load();
+            const auto scheduled = pipeline.Build(scheduledRequest);
+            const auto scheduledDocument = Cnb::CnbDocument::Parse(scheduled.output.bytes, "stage referencing a scheduled item");
+            check(profileWrites == writesBefore && scheduled.output.additionalOutputs.empty() &&
+                  scheduled.runtimeReferences.size() == 1 && scheduled.runtimeReferences.front().logicalName == scheduledName &&
+                  scheduledDocument.ExternalReferences().size() == 1 &&
+                  scheduledDocument.ExternalReferenceAt(0, "scheduled profile").logicalName == scheduledName,
+                  "an unnamed BuildAsset recognizes the matching project item and references its name without compiling it");
+            bool profileSource = false, contentBuildDependency = false;
+            for (const auto& dependency : scheduled.dependencies)
+            {
+                profileSource |= dependency.kind == Pipeline::ContentDependencyKind::SourceFile &&
+                    dependency.identity == sibling.source.generic_string();
+                contentBuildDependency |= dependency.kind == Pipeline::ContentDependencyKind::ContentBuild;
+            }
+            check(profileSource && !contentBuildDependency && scheduled.writerSchemas.size() == 1 &&
+                  scheduled.writerSchemas.front().assetTypeName == Stage::XnaTypeName,
+                  "processed budget input retains its source dependency while the sibling reference adds no build edge or child writer schema");
+            Publish(directory, scheduled.logicalName, scheduled.output.bytes);
+            const int stagesBefore = stageReads.load(), profilesBefore = profileReads.load();
+            bool scheduledMissing = false;
+            try { (void)content.Load<LoadedStage>(scheduled.logicalName); }
+            catch (const ContentLoadException& error)
+            {
+                scheduledMissing = true;
+                std::cout << "Unpublished scheduled item refused: " << error.what() << '\n';
+            }
+            check(scheduledMissing && stageReads == stagesBefore + 1 && profileReads == profilesBefore,
+                  "publishing the referencing parent alone does not manufacture the separately scheduled item");
+            Pipeline::ContentBuildRequest childRequest;
+            childRequest.sourceRoot = request.sourceRoot; childRequest.source = sibling.source;
+            childRequest.logicalName = sibling.logicalName; childRequest.importer = sibling.importer;
+            childRequest.processor = sibling.processor; childRequest.parameters = sibling.parameters;
+            const auto builtItem = pipeline.Build(childRequest); // the host explicitly executes that other item
+            Publish(directory, builtItem.logicalName, builtItem.output.bytes);
+            const auto resolved = content.Load<LoadedStage>(scheduled.logicalName);
+            const auto scheduledDirect = content.Load<SharedProfile>(scheduledName);
+            check(profileWrites == writesBefore + 1 && resolved.healthBudget == 240 && resolved.profile &&
+                  resolved.profile->name == "Guard" && resolved.profile->health == 80 && scheduledDirect == resolved.profile &&
+                  stageReads == stagesBefore + 2 && profileReads == profilesBefore + 1,
+                  "the host's separate item build and publication enables parent retry and the scheduled profile's runtime cache");
+            sibling.parameters.Set("Scale", std::int64_t{3}); // now a different request, despite the same source/type
+            auto mismatched = scheduledRequest;
+            mismatched.siblings = std::make_shared<const std::vector<Pipeline::ContentBuildSibling>>(
+                std::vector<Pipeline::ContentBuildSibling>{sibling});
+            const auto generated = pipeline.Build(mismatched);
+            bool generatedCorrectly = false;
+            if (generated.output.additionalOutputs.size() == 1)
+            {
+                const auto& generatedChild = generated.output.additionalOutputs.front();
+                const auto generatedParent = Cnb::CnbDocument::Parse(generated.output.bytes, "stage with generated child");
+                const auto profileDocument = Cnb::CnbDocument::Parse(generatedChild.bytes, "generated profile");
+                auto data = profileDocument.OpenChunk(profileDocument.RequireSingle(DataChunk));
+                const auto name = data.ReadString(); const auto health = data.ReadU32(); data.RequireExhausted();
+                generatedCorrectly = generatedChild.logicalName != scheduledName && name == "Guard" && health == 80 &&
+                    generatedParent.ExternalReferenceAt(0, "generated profile").logicalName == generatedChild.logicalName;
+            }
+            check(generatedCorrectly && profileWrites == writesBefore + 2,
+                  "different sibling parameters prevent reuse and compile the requested profile under its own generated name");
         }
         check(!std::filesystem::exists(directory), "the private published parent and child are removed after their manager is destroyed");
         return passed ? 0 : 1;
