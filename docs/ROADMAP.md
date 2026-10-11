@@ -141,7 +141,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (20 demos)
+## Phase 7 -- models, animation, glTF 🟨 (22 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -173,8 +173,15 @@ a check that all authored colors remain visible and that a blank texture row can
   through ContentManager, a truncated skeleton is refused and actual animated pixels are checked.
 - ✅ Existing skinned_animation now checks player state, relative versus absolute time, looping,
   clamping and restart before its original rendered pose check (10 checks).
-- Remaining: imported topology/specular slots, XNB models, scene-root prefixes and multi-skin
-  behavior (member decisions and evidence limits in COVERAGE_AUDIT.md).
+- ✅ `graphics.model.xnb_model`: original `.x` compiled to XNB, restored hierarchy/shared-buffer
+  fixups, independent part ranges/materials and actual mesh placements (11 checks per renderer).
+- ✅ `graphics.model.multiple_skins`: independent palettes for shared authored geometry/material,
+  retained non-joint ancestry, ignored mesh-node placement, selective bind-pose restoration and
+  live bounds responding to a controlled distant palette before the final rendered pose (21 checks).
+  ISSUE-042 records stale root-prefix comments only; the runtime workflow passes.
+- Remaining: imported topology/specular slots, more skin weighting/material variants and other
+  member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups remain
+  a separate Phase 8 gap; built-in model loading does not demonstrate every ContentReader member.
 
 ## Phase 8 -- content 🟨 (30 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB

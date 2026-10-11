@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 20), 8 (content, 30), 9 (audio 21 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 22), 8 (content, 30), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 16 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,10 +64,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-425 demos: math 78, game 33, graphics 136 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
+427 demos: math 78, game 33, graphics 138 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 20 model), audio 21 (9 XACT), core 3 (2 logger),
+effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 22 model), audio 21 (9 XACT), core 3 (2 logger),
 content 30 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
@@ -197,7 +197,8 @@ implementation and XNA reference; no separate expected-failure marker),
 CNA-DEMOS-ISSUE-038 (dynamic PendingBufferCount/IsLooped omit disposal guards),
 CNA-DEMOS-ISSUE-039 (ContentManager accepts root changes while assets remain loaded),
 CNA-DEMOS-ISSUE-040 (documentation only: Picture thumbnail comments contradict resizing),
-CNA-DEMOS-ISSUE-041 (SavePicture ignores short reads and writes zero-padded image data).
+CNA-DEMOS-ISSUE-041 (SavePicture ignores short reads and writes zero-padded image data),
+CNA-DEMOS-ISSUE-042 (documentation only: root-prefix comments describe older mesh cancellation).
 
 ## 11. Dependencies (pinned for CI; same as cna-template's dependencies.lock)
 
@@ -299,55 +300,46 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** full 425 validation completed successfully and is archived as above.
-Apply the prepared XNB and multiple-skin drafts described below, build/validate/run both renderers,
-inspect screenshots, update coverage/status and proceed to full 427 checkpoint. No binary build
-or smoke process is still running. The next expected counts after two new passing demos are
-SOFTWARE 381/18/25/3, OPENGLES3 402/19/3/3, 440 enabled CTests; confirm rather than assume them.
+**Immediate next action:** commit the final validated 427 model batch, then run full tools/validate.sh
+and compare ORIGINAL outputs to checkpoint-425. Expected SOFTWARE 381/18/25/3, OPENGLES3
+402/19/3/3 and 440 enabled CTests; raw failed assertions should remain 25/26. Full 427 is NOT
+complete yet; coverage runtime columns still use the complete 425 reports.
 
-New/changed behavior:
-- palette_sampling: 14 checks without DISPLAY under both renderer selections. A three-bone
-  hierarchy samples translation/scale/quaternion rotation, preserves an untracked local bind pose,
-  composes parents and inverse binds, compares positive/negative loop versus clamp and refuses
-  missing clips, self-parenting and truncated arrays without changing caller output. CPU evidence.
-- skinned_manifest: 12 checks per renderer. An original eight-file nested bundle loads through
-  Load<shared_ptr<SkinnedModelEXT>>, preserves geometry/texture/skeleton/clip data, refuses the
-  truncated skeleton, then draws stationary red and shifted green patches with a clear old position.
-  First-frame screenshots inspected, RGBA-identical. Generator reruns and byte layouts verified.
-- existing skinned_animation: 3 -> 10 checks. Borrowed clip/state, relative versus absolute sample,
-  loop/clamp/restart checks plus a null-data guard; original bent-tip pixel validation retained.
-  Before/after captures from original ff31f00 and final source have IDENTICAL RGBA pixels on each
-  renderer. Cross-renderer silhouettes match; 8,216 pixels differ in lighting by up to 38 levels,
-  already present before this change. No cross-renderer lighting equivalence claim.
-The temporary old animation source was RESTORED; final build `/tmp/cna-425-restored-build.log`
-is clean, metadata 425/0 and five targeted CTests pass (`/tmp/cna-425-restored-ctest.log`).
-Evidence: `/tmp/cna-palette-sampling-{SOFTWARE,OPENGLES3}.{json,log}` and
-`/tmp/cna-425-{skinned_manifest,skinned_animation}-{SOFTWARE,OPENGLES3}.{json,log,png}`; original
-animation captures `/tmp/cna-skinned-animation-before-{SOFTWARE,OPENGLES3}.*`.
-Coverage remains 293/329 XNA types, 1342/2326 named members, 158/3210 C routes: these CNA extension
-behaviors add real evidence without inflating the XNA inventory. No new CNA bug established.
-CNA was bf0cde63f2f3ca11276d47a4c6a4ea870223455b at build start; modules/CMake source paths
-had no additional diff from a796ef491. All /tmp model drafts are now applied/stale.
-The next concrete model/content gap is an original `.x` asset through
-existing content_xnb (CNA.XImporter -> CNA.XnaModelProcessor -> XNB ModelReader), then deeper
-skin root-prefix/multi-skin behavior. The source route was audited. NEW unbuilt drafts: `/tmp/cna-xnb-model.cpp` and
-`/tmp/cna-xnb-panels.py`, with reproducible original `.x` at `/tmp/cna-xnb-panels-fixture`.
-Apply only after 425 completes; wire the generator into tools/generate_assets.py for CONTENT_XNB_ROOT.
-No XNB model source/asset is applied or runtime-validated yet.
-Also prepared NEW `/tmp/cna-multi-skin.cpp` and `/tmp/cna-multi-skin-generator.py`, with original
-reproducible glTF in `/tmp/cna-multi-skin-fixture`. Two one-joint skins share an authored quad and
-material, have non-joint ancestors at +/-0.5 and mesh nodes at +/-4, so the imported root prefixes
-must retain ancestry while skinned mesh-node placement is ignored. Source inspection corrected
-the initial draft: the loose importer parents skinned meshes to its identity root and stores
-only ancestor +/-0.5 in SkeletonRootPrefix, rather than putting inverse mesh +/-4 into it.
-The public header still describes the older cancellation representation; verify runtime before
-recording any documentation issue. The draft now checks preserved authored scene nodes and
-identity mesh parents explicitly. The draft animates the left root, deliberately
-disturbs/restores the right palette through ApplyBindPoseBoneTransformsEXT and checks isolation
-plus rendered positions. Not compiled/run. Live skinned bounds are a separate follow-up:
-coverage must not infer recomputation merely because an already-loose sphere contains a posed point. Integrate its generator into tools/gltf_models.py
-as a named function called by write_all; keep actual public CNA calls visible in the demo.
-After applying both prepared demos the catalog should be 427, pending real validation.
+427 targeted evidence:
+- xnb_model: 11 checks per renderer. Original `.x` -> existing FORMAT xnb content build -> actual
+  XNB signature, five named bones/two meshes, composed parent transforms, shared VB/IB fixups,
+  independent part ranges/materials and actual red/green placements plus clear gap.
+- multiple_skins: 21 checks per renderer. Two skins share authored mesh/material but have distinct
+  data/effect palettes; non-joint ancestry persists, authored +/-4 mesh nodes remain in the graph
+  while actual skinned mesh parents are the identity root. Prefixes are -0.5/+0.5. Animating one
+  root and restoring the other bind pose preserves isolation. Live bounds are tested with a
+  temporary pose chosen from the actual preceding bound so it is guaranteed outside it; the
+  updated sphere includes it, restoring the palette excludes it, then actual visible pixels
+  prove the final pose is restored. No claim about four-influence weighting or every bound case.
+- Both initial screenshot pairs were inspected and RGBA-identical. Final 21-check multiple-skin
+  captures are pixel-identical to the inspected 17-check scene after the temporary palette test.
+Evidence: `/tmp/cna-427-xnb_model-{SOFTWARE,OPENGLES3}.{json,log,png}` and
+`/tmp/cna-427-multiple-skins-final-{SOFTWARE,OPENGLES3}.{json,log,png}`. Earlier underscore-form
+multiple_skins reports have 17 checks; preserve but do not confuse them with the final 21.
+Final build `/tmp/cna-427-bounds-build.log` is clean; metadata 427/0. Focused final four CTests
+are recorded in `/tmp/cna-427-model-final-ctest.log`. Asset generators reproduce both source
+files byte-for-byte. XNB output is produced by CNA; no genuine-XNA-runtime interoperability run.
+ISSUE-042 records stale public root-prefix comments only; no new known-failure marker or CNA edit.
+CNA was 8b5564f1e81196f3aaee9e9a652b8030e21f4c6c at build start; since bf0cde63 only docs and
+two doc/vendor test paths changed, not runtime implementation. Coverage is 293/329 XNA types,
+1344/2326 named members and 158/3210 C routes. All /tmp model drafts are now applied and stale.
+
+After the checkpoint, continue the deeper public API audit: the XNB model now proves built-in
+shared buffer fixups indirectly, but ContentReader::ReadSharedResource/ReadSharedResources still
+needs a focused runtime object-graph example using public reader callbacks. Existing intermediate
+XML shared-resource evidence does not establish that binary protocol. This is a productive Phase 8
+workstream; remaining model gaps include imported topology/specular slots and broader skin/material
+variants, not a reason to restart completed phases.
+
+425 animation investigation: final/source-before-extension first-frame pixels were identical on
+each renderer; cross-renderer lighting differences already existed (8,216 pixels, max delta 38),
+with identical silhouettes. Original captures are `/tmp/cna-skinned-animation-before-*.png`.
+The temporary old source was restored before the final 425 build/checkpoint; do not apply it again.
 
 423 targeted evidence: part_sampler_state passes 10 checks on both renderers, including actual
 glTF NEAREST/CLAMP metadata, owned texture and preserved out-of-range UVs; captures inspected,

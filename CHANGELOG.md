@@ -39,6 +39,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- XNB model example builds an original `.x` asset through the existing content target and checks
+  restored hierarchy, shared buffer fixups, material ranges and actual rendered placements.
+- Multiple-skin example checks separate palettes despite shared authored geometry/material,
+  scene ancestry, selective bind-pose restoration and live bounds before the final visible pose.
+  CNA-DEMOS-ISSUE-042 records outdated root-prefix comments; the runtime path passes.
 - Hierarchical palette example checks parent composition, untracked bind pose, interpolated
   translation/scale/rotation, inverse binds, loop/clamp time and rejected invalid skeleton requests.
 - Loose skinned manifest example loads original relative sidecars, rejects truncated skeleton data

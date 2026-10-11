@@ -567,6 +567,35 @@ def lit_sphere(path: Path) -> None:
     doc.save(path)
 
 
+def multiple_skins(path: Path) -> None:
+    doc = Document()
+    positions = [(-.2, -.15, .5), (.2, -.15, .5), (.2, .15, .5), (-.2, .15, .5)]
+    attributes = {"POSITION": doc.accessor(positions, "VEC3", minmax=True),
+                  "NORMAL": doc.accessor([(0, 0, 1)] * 4, "VEC3"),
+                  "TEXCOORD_0": doc.accessor([(.5, .5)] * 4, "VEC2"),
+                  "JOINTS_0": doc.accessor([(0, 0, 0, 0)] * 4, "VEC4", UNSIGNED_BYTE),
+                  "WEIGHTS_0": doc.accessor([(1, 0, 0, 0)] * 4, "VEC4")}
+    doc.gltf["meshes"] = [{"name": "SharedPatch", "primitives": [{"attributes": attributes,
+                           "indices": doc.accessor([0, 1, 2, 0, 2, 3], "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+                           "material": 0}]}]
+    doc.gltf["materials"] = [{"name": "SharedWhite", "extensions": {"KHR_materials_unlit": {}}}]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+    identity = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+    inverse = doc.accessor([identity], "MAT4", target=None)
+    # Identity inverse binds leave the quad in joint space; the joint scene ancestors place it.
+    doc.gltf["skins"] = [{"name": "LeftRig", "joints": [1], "skeleton": 1, "inverseBindMatrices": inverse},
+                         {"name": "RightRig", "joints": [3], "skeleton": 3, "inverseBindMatrices": inverse}]
+    doc.gltf["nodes"] = [{"name": "LeftScene", "translation": [-.5, 0, 0], "children": [1]},
+                         {"name": "LeftJoint"},
+                         {"name": "RightScene", "translation": [.5, 0, 0], "children": [3]},
+                         {"name": "RightJoint"},
+                         {"name": "LeftMesh", "mesh": 0, "skin": 0, "translation": [4, 0, 0]},
+                         {"name": "RightMesh", "mesh": 0, "skin": 1, "translation": [-4, 0, 0]}]
+    doc.gltf["scenes"] = [{"name": "IndependentSkins", "nodes": [0, 2, 4, 5]}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
 def write_all(content_root: Path, assets_root: Path) -> None:
     robot_arm(content_root / "models" / "robot_arm.gltf")
     bending_strip(content_root / "models" / "bending_strip.gltf")
@@ -587,3 +616,4 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     # model format cannot carry them).
     paint_toy(assets_root / "models" / "loose_paint_toy.gltf")
     sampler_quad(assets_root / "models" / "loose_sampler_clamp.gltf")
+    multiple_skins(assets_root / "models" / "loose_multi_skin.gltf")

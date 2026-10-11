@@ -1,0 +1,218 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "cna-demos tools/gltf_models.py"
+ },
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -0.2,
+    -0.15,
+    0.5
+   ],
+   "max": [
+    0.2,
+    0.15,
+    0.5
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5121,
+   "count": 4,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 1,
+   "type": "MAT4"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 48,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 48,
+   "byteLength": 48,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 96,
+   "byteLength": 32,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 128,
+   "byteLength": 16,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 144,
+   "byteLength": 64,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 208,
+   "byteLength": 12,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 220,
+   "byteLength": 64
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 284,
+   "uri": "data:application/octet-stream;base64,zcxMvpqZGb4AAAA/zcxMPpqZGb4AAAA/zcxMPpqZGT4AAAA/zcxMvpqZGT4AAAA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAQACAAAAAgADAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8="
+  }
+ ],
+ "meshes": [
+  {
+   "name": "SharedPatch",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2,
+      "JOINTS_0": 3,
+      "WEIGHTS_0": 4
+     },
+     "indices": 5,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "name": "LeftScene",
+   "translation": [
+    -0.5,
+    0,
+    0
+   ],
+   "children": [
+    1
+   ]
+  },
+  {
+   "name": "LeftJoint"
+  },
+  {
+   "name": "RightScene",
+   "translation": [
+    0.5,
+    0,
+    0
+   ],
+   "children": [
+    3
+   ]
+  },
+  {
+   "name": "RightJoint"
+  },
+  {
+   "name": "LeftMesh",
+   "mesh": 0,
+   "skin": 0,
+   "translation": [
+    4,
+    0,
+    0
+   ]
+  },
+  {
+   "name": "RightMesh",
+   "mesh": 0,
+   "skin": 1,
+   "translation": [
+    -4,
+    0,
+    0
+   ]
+  }
+ ],
+ "materials": [
+  {
+   "name": "SharedWhite",
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  }
+ ],
+ "extensionsUsed": [
+  "KHR_materials_unlit"
+ ],
+ "skins": [
+  {
+   "name": "LeftRig",
+   "joints": [
+    1
+   ],
+   "skeleton": 1,
+   "inverseBindMatrices": 6
+  },
+  {
+   "name": "RightRig",
+   "joints": [
+    3
+   ],
+   "skeleton": 3,
+   "inverseBindMatrices": 6
+  }
+ ],
+ "scenes": [
+  {
+   "name": "IndependentSkins",
+   "nodes": [
+    0,
+    2,
+    4,
+    5
+   ]
+  }
+ ],
+ "scene": 0
+}

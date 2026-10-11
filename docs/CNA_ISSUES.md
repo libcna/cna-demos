@@ -995,6 +995,34 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   no loop/workaround was added around CNA's SavePicture call, no CNA source changed and no
   upstream report was sent.
 
+### CNA-DEMOS-ISSUE-042 -- Root-prefix comments describe an older mesh-cancellation representation
+
+- **Area:** documentation only, SkinningData::SkeletonRootPrefix and
+  ApplyBindPoseBoneTransformsEXT comments in `modules/graphics/include/Microsoft/Xna/Framework/Graphics/AnimationPlayer.hpp`.
+- **Related demo:** `graphics.model.multiple_skins` (passes; no expected-failure marker).
+- **Evidence:** the root-prefix comment describes non-joint ancestry and inverse mesh-node
+  cancellation as context retained in SkeletonRootPrefix. The current loose glTF loader instead
+  calls BuildSkeleton with scene ancestry alone and parents each skinned ModelMesh to its identity
+  model root. The authored mesh node remains in Model.Bones but its placement is not applied to
+  the skinned draw. The runtime result is correct; the public storage explanation is stale.
+- **Reproduction/observed:** import two one-joint skins sharing a quad and material, with non-joint
+  ancestors at X=-0.5/+0.5 and mesh nodes at X=+4/-4. The public prefixes are -0.5/+0.5, not
+  -4.5/+4.5. Both mesh parents are the identity model root, while named scene nodes retain +4/-4.
+  Animating the left root preserves its ancestor; restoring the right bind pose touches only its
+  own effect. Actual red/green positions and the vacated left position pass pixel checks.
+- **Environment/evidence:** Linux GCC 14.2, CNA 8b5564f1e81196f3aaee9e9a652b8030e21f4c6c;
+  no runtime library change since the preceding checkpoint (external documentation/test cleanup).
+  Both SOFTWARE and OPENGLES3 initially passed 17 checks; the final live-bounds extension
+  passes 21. Captures were inspected and RGBA-identical; final captures match those inspected
+  images: `/tmp/cna-427-multiple-skins-final-{SOFTWARE,OPENGLES3}.{json,log,png}`.
+- **Expected/suggested correction:** describe the current loose loader's identity mesh parent and
+  ancestor-only prefix, distinguishing the ignored mesh-node transform from a stored inverse
+  matrix. Avoid implying that every legacy/custom SkinningData carrier has this same representation.
+- **Status:** confirmed public-comment mismatch, not a rendering failure. No CNA source changed,
+  no upstream report sent and no failing check suppressed. The final demo independently verifies
+  live-bound updates with an intentionally distant palette and restoration; broader skinning
+  bounds and multi-influence cases are not implied.
+
 ## Resolved
 
 (none yet)
