@@ -12,6 +12,9 @@ assets/models/ that is loaded as a loose glTF file at run time.
 * bending_strip.gltf -- a vertical strip skinned to two joints (LowerJoint -> UpperJoint) with an
   animation "Bend" that rotates UpperJoint back and forth. It has NORMAL and COLOR_0, so CNA gives it a
   SkinnedEffect.
+* turntable.gltf, morph_flag.gltf, camera_rig.gltf, textured_crate.gltf -- node-animation clips,
+  morph targets with a weights animation, glTF cameras, an embedded base-colour texture; see
+  each function.
 """
 
 import base64
@@ -226,9 +229,144 @@ def turntable(path: Path) -> None:
     doc.save(path)
 
 
+def morph_flag(path: Path) -> None:
+    """A vertical flag (a 6x4 grid of quads, coloured by COLOR_0, unlit) with two morph targets --
+    "Stretch" lifts the top edge, "Shear" slides the upper rows sideways -- and an animation
+    "Morph" whose channel drives the mesh's weights (glTF path "weights"): (0,0) -> (1,0) -> (1,1)
+    -> (0,0) over three seconds."""
+    doc = Document()
+    columns, rows = 6, 4
+    positions, colours, stretch, shear = [], [], [], []
+    for row in range(rows + 1):
+        for column in range(columns + 1):
+            u, v = column / columns, row / rows
+            positions.append((-1.5 + 3.0 * u, 2.0 * v, 0.0))
+            colours.append((0.2 + 0.8 * u, 0.3 + 0.5 * v, 0.9 - 0.6 * u, 1.0))
+            stretch.append((0.0, 0.8 * v * v, 0.0))
+            shear.append((0.9 * v * v, 0.0, 0.0))
+    indices = []
+    for row in range(rows):
+        for column in range(columns):
+            a = row * (columns + 1) + column
+            b, c, d = a + 1, a + columns + 1, a + columns + 2
+            indices += [a, b, d, a, d, c]  # counter-clockwise seen from +Z
+    doc.gltf["meshes"] = [{"name": "FlagMesh", "weights": [0.0, 0.0],
+                           "extras": {"targetNames": ["Stretch", "Shear"]},
+                           "primitives": [{
+                               "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True),
+                                              "COLOR_0": doc.accessor(colours, "VEC4")},
+                               "targets": [{"POSITION": doc.accessor(stretch, "VEC3", minmax=True)},
+                                           {"POSITION": doc.accessor(shear, "VEC3", minmax=True)}],
+                               "indices": doc.accessor(indices, "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+                               "material": 0}]}]
+    doc.gltf["nodes"] = [{"name": "Flag", "mesh": 0}]
+    times = [0.0, 1.0, 2.0, 3.0]
+    weights = [0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0]  # one value per target per key
+    sampler_input = doc.accessor(times, "SCALAR", target=None)
+    doc.gltf["accessors"][sampler_input].update({"min": [times[0]], "max": [times[-1]]})
+    doc.gltf["animations"] = [{"name": "Morph",
+                               "samplers": [{"input": sampler_input,
+                                             "output": doc.accessor(weights, "SCALAR", target=None),
+                                             "interpolation": "LINEAR"}],
+                               "channels": [{"sampler": 0, "target": {"node": 0, "path": "weights"}}]}]
+    doc.gltf["materials"] = [{"name": "VertexColours", "doubleSided": True,
+                              "extensions": {"KHR_materials_unlit": {}}}]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+    doc.gltf["scenes"] = [{"name": "MorphFlag", "nodes": [0]}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
+def camera_rig(path: Path) -> None:
+    """Three boxes on a floor and two glTF cameras: "Front", a perspective camera (yfov 0.7 rad,
+    aspect ratio 400:480, znear 0.1, zfar 50) placed in front and tilted down 12 degrees, and
+    "Top", an orthographic camera (xmag 3, ymag 3.6) looking straight down."""
+    doc = Document()
+    parts = [
+        ("Floor", (-2.5, -0.1, -2.5), (2.5, 0.0, 2.5), (0.4, 0.42, 0.45)),
+        ("RedBox", (-1.8, 0.0, -0.4), (-1.0, 0.8, 0.4), (0.9, 0.25, 0.2)),
+        ("GreenBox", (-0.4, 0.0, -1.6), (0.4, 1.4, -0.8), (0.3, 0.8, 0.3)),
+        ("BlueBox", (1.0, 0.0, 0.6), (1.8, 0.5, 1.4), (0.25, 0.4, 0.95)),
+    ]
+    for name, lo, hi, colour in parts:
+        positions, colours, indices = box(lo, hi, colour)
+        doc.gltf["meshes"].append({"name": name + "Mesh", "primitives": [{
+            "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True),
+                           "COLOR_0": doc.accessor(colours, "VEC4")},
+            "indices": doc.accessor(indices, "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+            "material": 0}]})
+    tilt = math.radians(-12.0)
+    down = math.radians(-90.0)
+    doc.gltf["nodes"] = [{"name": name, "mesh": index} for index, (name, *_rest) in enumerate(parts)]
+    doc.gltf["nodes"] += [
+        # A glTF camera looks down its node's -Z with +Y up.
+        {"name": "FrontCameraNode", "camera": 0, "translation": [0.0, 1.8, 6.0],
+         "rotation": [math.sin(tilt / 2), 0.0, 0.0, math.cos(tilt / 2)]},
+        {"name": "TopCameraNode", "camera": 1, "translation": [0.0, 8.0, 0.0],
+         "rotation": [math.sin(down / 2), 0.0, 0.0, math.cos(down / 2)]},
+    ]
+    doc.gltf["cameras"] = [
+        {"name": "Front", "type": "perspective",
+         "perspective": {"yfov": 0.7, "aspectRatio": 400.0 / 480.0, "znear": 0.1, "zfar": 50.0}},
+        {"name": "Top", "type": "orthographic",
+         "orthographic": {"xmag": 3.0, "ymag": 3.6, "znear": 0.1, "zfar": 20.0}},
+    ]
+    doc.gltf["materials"] = [{"name": "BakedColours", "extensions": {"KHR_materials_unlit": {}}}]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+    doc.gltf["scenes"] = [{"name": "CameraRig", "nodes": list(range(len(doc.gltf["nodes"])))}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
+def crate_texture_png() -> bytes:
+    """A 64x64 crate face: wooden planks with a darker frame and a diagonal brace."""
+    import io
+    from PIL import Image, ImageDraw
+    image = Image.new("RGBA", (64, 64), (176, 122, 66, 255))
+    draw = ImageDraw.Draw(image)
+    for y in range(0, 64, 16):
+        draw.line([(0, y), (63, y)], fill=(120, 80, 40, 255), width=1)
+    draw.rectangle([0, 0, 63, 63], outline=(92, 58, 28, 255), width=6)
+    draw.line([(6, 57), (57, 6)], fill=(92, 58, 28, 255), width=6)
+    out = io.BytesIO()
+    image.save(out, format="PNG", optimize=False)
+    return out.getvalue()
+
+
+def textured_crate(path: Path) -> None:
+    """A cube with TEXCOORD_0 and a base-colour texture embedded in the file (a PNG in a buffer
+    view), unlit: CNA's importer turns the image into a Texture2D the model owns and gives the
+    part a textured BasicEffect."""
+    doc = Document()
+    positions, _colours, indices = box((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0), (1.0, 1.0, 1.0))
+    uvs = [(0.0, 1.0), (1.0, 1.0), (1.0, 0.0), (0.0, 0.0)] * 6  # each face's corners, glTF UV origin top-left
+    doc.gltf["meshes"] = [{"name": "CrateMesh", "primitives": [{
+        "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True),
+                       "TEXCOORD_0": doc.accessor(uvs, "VEC2")},
+        "indices": doc.accessor(indices, "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+        "material": 0}]}]
+    doc.gltf["nodes"] = [{"name": "Crate", "mesh": 0}]
+    doc.gltf["images"] = [{"name": "CrateFace", "mimeType": "image/png", "bufferView": doc.view(crate_texture_png())}]
+    doc.gltf["samplers"] = [{"magFilter": 9728, "minFilter": 9728}]  # NEAREST: crisp texels
+    doc.gltf["textures"] = [{"source": 0, "sampler": 0}]
+    doc.gltf["materials"] = [{"name": "Crate", "pbrMetallicRoughness": {"baseColorTexture": {"index": 0}},
+                              "extensions": {"KHR_materials_unlit": {}}}]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+    doc.gltf["scenes"] = [{"name": "TexturedCrate", "nodes": [0]}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
 def write_all(content_root: Path, assets_root: Path) -> None:
     robot_arm(content_root / "models" / "robot_arm.gltf")
     bending_strip(content_root / "models" / "bending_strip.gltf")
     turntable(content_root / "models" / "turntable.gltf")
+    morph_flag(content_root / "models" / "morph_flag.gltf")
+    camera_rig(content_root / "models" / "camera_rig.gltf")
+    textured_crate(content_root / "models" / "textured_crate.gltf")
     # The same arm as a loose file: CNA can also load glTF at run time, without the pipeline.
     robot_arm(assets_root / "models" / "loose_robot_arm.gltf")
+    # Loose copies of the camera rig and the textured crate: the compiled models lose the cameras
+    # (CNA-DEMOS-ISSUE-023) and the embedded texture (CNA-DEMOS-ISSUE-022), the run-time import keeps both.
+    camera_rig(assets_root / "models" / "loose_camera_rig.gltf")
+    textured_crate(assets_root / "models" / "loose_textured_crate.gltf")

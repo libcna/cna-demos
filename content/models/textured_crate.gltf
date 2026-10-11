@@ -1,0 +1,132 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "cna-demos tools/gltf_models.py"
+ },
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3",
+   "min": [
+    -1.0,
+    -1.0,
+    -1.0
+   ],
+   "max": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5123,
+   "count": 36,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 288,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 288,
+   "byteLength": 192,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 480,
+   "byteLength": 72,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 552,
+   "byteLength": 464
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 1016,
+   "uri": "data:application/octet-stream;base64,AACAPwAAgL8AAIA/AACAPwAAgL8AAIC/AACAPwAAgD8AAIC/AACAPwAAgD8AAIA/AACAvwAAgL8AAIC/AACAvwAAgL8AAIA/AACAvwAAgD8AAIA/AACAvwAAgD8AAIC/AACAvwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIC/AACAvwAAgD8AAIC/AACAvwAAgL8AAIC/AACAPwAAgL8AAIC/AACAPwAAgL8AAIA/AACAvwAAgL8AAIA/AACAvwAAgL8AAIA/AACAPwAAgL8AAIA/AACAPwAAgD8AAIA/AACAvwAAgD8AAIA/AACAPwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgD8AAIC/AACAPwAAgD8AAIC/AAAAAAAAgD8AAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcAiVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABl0lEQVR4nO2bPU4DMRBGXxAlNQVKnYITIKocIiVHzCEoOQEFNaJITQ8dWhDrxOufb2bWX7UrS9a8Z2tlj7Sbp8ftFyvOlboAdYYAdQHqDAHqAtS5nhs47Hc966ie4/Pbz/Nhv/v1Pk3IHfAXdg4eAgpIwf6XUAJy4SGQgBR86nsWQsBSeAggoAQenAsohQfHAmrAg1MBteAhcRJ8ef3ImqhX3k+fs2Pb25vsumcFPNzfZU3UIyUrfzw5PwrX3PbTuBDQCh4cCGgJD8YFtIYHwwJ6wINRAb3gwaCAnvBgTEBveDAkQAEPRgSo4MGAACU8iAWo4UEowAI8iARYgQdBP6D2fb40XfsBypWX9wMsbftpugiwCg8dBFiGh8YCrMNDQwEe4KGRAC/w0ECAJ3ioLMAbPFQU4BEeKgnwCg8VBHiGh0IB3uGhQEAEeFgoIAo8LOgHWLvPlyarH+B55Yv7AZ7hU7lIQFR4uEBAZHg4IyA6PCQErAEeFpwDIsFDpoBo8JAhICI8wGb8ObryDAHqAtQZAtQFqPMNKTG0EbvlzP4AAAAASUVORK5CYII="
+  }
+ ],
+ "meshes": [
+  {
+   "name": "CrateMesh",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "TEXCOORD_0": 1
+     },
+     "indices": 2,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "name": "Crate",
+   "mesh": 0
+  }
+ ],
+ "images": [
+  {
+   "name": "CrateFace",
+   "mimeType": "image/png",
+   "bufferView": 3
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9728,
+   "minFilter": 9728
+  }
+ ],
+ "textures": [
+  {
+   "source": 0,
+   "sampler": 0
+  }
+ ],
+ "materials": [
+  {
+   "name": "Crate",
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 0
+    }
+   },
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  }
+ ],
+ "extensionsUsed": [
+  "KHR_materials_unlit"
+ ],
+ "scenes": [
+  {
+   "name": "TexturedCrate",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "scene": 0
+}

@@ -532,6 +532,39 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux, Mesa llvmpipe under Xvfb (GL ES 3.2 and GL 3.3 core).
 - **Status:** open (medium for dynamic reflections on the GL renderers); not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-022 -- A compiled glTF with an embedded texture refers to a file the build never writes
+
+- **Area:** content pipeline -- `CNA.GltfImporter` + `CNA.ModelProcessor` (CNB). A glTF whose
+  base-colour image is embedded (a PNG in a `bufferView`) compiles into a model that refers to
+  `<name>_tex0.png`; the asset's manifest entry lists it under `runtimeReferences`
+  (`"textured_crate_tex0.png"`) with no `deploymentFiles`, and no such file is produced.
+- **Demos:** `graphics.model.textured_gltf` (expected failure; it draws the run-time import of the
+  same file, which works).
+- **Reproduction:** compile `content/models/textured_crate.gltf` (tools/gltf_models.py
+  `textured_crate`) with `cna_add_content`, then `Content.Load<Model>("models/textured_crate")`.
+- **Observed:** `ContentManager: could not load asset 'textured_crate_tex0.png'. ---> Failed to
+  load image: <bin>/assets/textured_crate_tex0.png`.
+- **Expected:** the model loads with its texture, as the run-time import of the same `.gltf` does
+  (`Load<Model>` of a loose `.gltf`): the image is either compiled into the model or written beside
+  it where the reference points.
+- **Environment:** CNA 0.1.0, Linux, `cna_add_content` (CNB).
+- **Status:** open (high for textured glTF models through the pipeline); not reported upstream yet.
+
+### CNA-DEMOS-ISSUE-023 -- A compiled glTF model loses its cameras
+
+- **Area:** content pipeline -- CNB model encoding. `Model::getCamerasEXTProperty()` is filled by
+  the run-time glTF import (two cameras for the demo's scene) but is empty for the same scene
+  compiled by `cna_add_content`; `CnbModelData` has no camera data.
+- **Demos:** `graphics.model.gltf_cameras` (expected failure; it uses the run-time import).
+- **Reproduction:** compile `content/models/camera_rig.gltf` (a perspective and an orthographic
+  camera) and compare `Load<Model>("models/camera_rig")` with the loose copy
+  `Load<Model>("models/loose_camera_rig")`.
+- **Observed:** 0 cameras from the compiled model, 2 from the loose file.
+- **Expected:** the same cameras either way (CNA documents `ModelCameraEXT` as imported from the
+  glTF scene, `GLTF-317`), or a build warning that the pipeline drops them.
+- **Environment:** CNA 0.1.0, Linux.
+- **Status:** open (medium); not reported upstream yet.
+
 ---
 
 ## Resolved

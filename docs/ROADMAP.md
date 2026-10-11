@@ -122,7 +122,7 @@ Console demos with checks; each shows one operation family.
   XNA effect bytecode (`Effect(GraphicsDevice&, bytes)`), `EffectParameter`/`EffectTechnique`/
   `EffectPass` reflection and parameter setting. ≈ 8
 
-## Phase 7 -- models, animation, glTF 🟨 (8 demos)
+## Phase 7 -- models, animation, glTF 🟨 (11 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -130,9 +130,12 @@ Console demos with checks; each shows one operation family.
   as a loose `.gltf` at run time, CNAEXT node-animation clips (`ModelAnimationsEXT`,
   `ApplyClipToBonesEXT`) on a turntable. Assets: original glTF written by `tools/gltf_models.py`
   (decision: generate, do not copy CNA's corpus), compiled by `cna_add_content`.
-- Remaining: PBR materials with lights (`PbrEffect`/`SkinnedPbrEffect`, GL only), textured glTF
-  (embedded PNG -> generated Texture2D children), STEP/CUBICSPLINE clips, morph targets, glTF cameras (`ModelCameraEXT`) and punctual lights,
-  material variants, `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
+- ✅ `graphics.model.morph_targets` (MorphTargetDataEXT, weights track, SetMorphWeightsEXT),
+  ✅ `graphics.model.gltf_cameras` (ModelCameraEXT; compiled models lose them, ISSUE-023),
+  ✅ `graphics.model.textured_gltf` (embedded PNG; compiled models lose it, ISSUE-022).
+- Remaining: PBR materials with lights (`PbrEffect`/`SkinnedPbrEffect`, GL only), STEP/CUBICSPLINE
+  clips, glTF punctual lights, material variants, `ModelMeshPart` details, XNB models,
+  `SkinnedModelEXT`.
 
 ## Phase 8 -- content 🟨 (17 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB

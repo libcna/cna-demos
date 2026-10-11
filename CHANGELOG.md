@@ -139,6 +139,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   DynamicIndexBuffer with Discard, Texture3D sub-box data, glTF node-animation clips
   (ModelAnimationsEXT, ApplyClipToBonesEXT) on a generated turntable model, and the same font, sound
   and curve compiled to CNB and to XNB.
+- Model demos (3): glTF morph targets driven by the file's weights animation, the cameras of a
+  glTF scene in split screen, a glTF with an embedded texture. CNA-DEMOS-ISSUE-022 (a compiled glTF
+  refers to an embedded texture file the build never writes) and ISSUE-023 (compiled models lose
+  their cameras) recorded; both demos check the compiled model and then use the run-time import.
 - Graphics demos (4): hardware instancing (DrawInstancedPrimitives with a per-instance world-matrix
   stream), several vertex streams (SetVertexBuffers), rendering into a RenderTargetCube (dynamic
   environment map), BasicEffect vertex colours with lighting.
