@@ -38,6 +38,13 @@ and fails because of that recorded CNA defect. It is never turned into SKIPPED o
   must pass like any other. `--list-ids` prints such an issue as `<issue>@R1,R2`, and CTest sets
   `WILL_FAIL` only for the listed renderers.
 
+The marker applies to the whole demo, not to each assertion. A passing CTest with WILL_FAIL
+therefore does not establish that every unrelated check still passed. When extending a known-issue
+demo, inspect all `CHECK FAILED` lines in its raw log and explain each against CNA_ISSUES.md.
+For complete checkpoints, compare those lines (including their multiplicities) with the archived
+baseline as well as comparing report IDs/statuses. A new assertion failure needs investigation even
+when the demo's overall FAILED status was already expected.
+
 ## 2. Running unattended
 
 ```bash
