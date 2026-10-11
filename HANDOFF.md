@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 15), 8 (content, 25), 9 (audio 20 incl. 9 XACT, media 10 incl. a
+* In progress: 7 (models/glTF, 15), 8 (content, 26), 9 (audio 20 incl. 9 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 13 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-409 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+410 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 20 (9 XACT), core 3 (2 logger),
-content 25 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 26 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 13 (standalone C programs). Every declared category has demos.
@@ -356,16 +356,25 @@ having only the documented CNA assertion failures, or erase its original evidenc
 bug is established by allowed unreliable loss. Runtime XNB graph fixups remain separate from
 IntermediateSerializer sharing and are not established by the reader-context checks.
 
-Next prepared focused example: `/tmp/cna-custom-xml-codec/` contains an unbuilt draft for
-standalone ID `content.custom.intermediate_type_serializer`. It uses the actual public
-ContentTypeSerializer<DiceRoll>, AddTypeSerializer, IntermediateReader::ReadText and
-IntermediateWriter::Xml APIs for compact NdM dice definitions, both root values and fields of
-a described Attack; malformed input and invalid-domain objects are rejected. It is not yet
-applied, built or executed and is not counted in coverage. Review its XML shortcut/value-carrier
-expectations after the full semantic 409 run, then compile and run it. No random dice simulation,
-Internal parser or fake build context is involved. This directly advances the custom-serializer
-gap identified by the member audit; flattened fields, custom XNA adapters, dependency graphs
-and runtime XNB graph fixups remain separate work.
+**410-demo batch, targeted validation complete:** new standalone
+`content.custom.intermediate_type_serializer` builds and passes 7 child checks under SOFTWARE and
+OPENGLES3 selections (`/tmp/cna-custom-xml-codec-{SOFTWARE,OPENGLES3}.{json,log}`): compact NdM
+syntax, root shortcut, described-field dispatch, round trip and invalid input/output. Metadata
+validation reports 410/0. Coverage is regenerated (290/329 types, 1318/2326 named members);
+full-smoke evidence still covers 409 IDs until the next full run. The old /tmp draft is applied.
+
+The existing network simulated_conditions demo now uses coordinated 24-pair bursts for baseline,
+200 ms delay and complete outage, followed by one second of recovery with loss disabled. Exact
+sent counts expose missing endpoints; wall-clock pacing avoids catch-up bursts. Both renderer
+runs pass 4 checks with only ISSUE-030 failing: 24/24 reliable baseline/delayed, 0/24 after outage
+and recovery. Evidence: `/tmp/cna-network-coordinated-{SOFTWARE,OPENGLES3}.{json,log,png}`.
+The earlier stochastic failures remain in `/tmp/cna-network-baseline-*`; no new CNA issue or
+widened expected-failure marker was introduced. Build, catalog and both changed demos' CTests
+pass (4 tests, network WILL_FAIL); the raw CTest log contains only ISSUE-030's assertion.
+Final screenshots were inspected on both renderers; the wording distinguishes no arrivals
+from measured zero latency. Full validation is the next action; then extend the existing shared XML example with malformed
+resource IDs/null behavior or another audited member gap. Do not credit runtime XNB graph
+fixups from IntermediateSerializer sharing.
 
 Effects constraints verified in the current sources/build: all four configured
 `CNA_*_COMPILED_EFFECTS` switches are OFF and `CNA_FXC_EXECUTABLE` is empty. PbrEffect's public

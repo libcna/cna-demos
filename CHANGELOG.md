@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- Network simulation now uses coordinated finite bursts for baseline, latency, complete outage
+  and recovery. Exact sent counts replace endpoint-span estimates and flaky percentage gates on
+  unreliable transport. ISSUE-030 remains visible after loss is disabled and recovery is allowed.
+- Complete-checkpoint assertion comparisons include prefixed child-process failures. This found
+  a transient baseline network assertion hidden by the whole-demo expected-failure marker.
 - Full validation removes stale current smoke JSON outputs before starting, while preserving
   named baseline archives; an interrupted process cannot leave an old report looking current.
 - Four XACT demos now own GetCue results with unique_ptr: Dispose releases playback but does not
@@ -22,6 +27,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Custom intermediate XML type serializer: compact NdM dice values at the root and inside a
+  described attack, registry dispatch, round trip and malformed/domain validation on both paths.
 - Existing custom XNB reader now counts actual Read calls to establish cache reuse and verifies
   ContentReader's logical asset name and owning ContentManager.
 - Intermediate XML format example now distinguishes absent/present/explicit-null optional fields

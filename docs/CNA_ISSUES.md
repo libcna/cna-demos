@@ -711,6 +711,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   sequence number.
 - **Observed:** about 70 % of the reliable sequence numbers arrive (68 % in one run), the same share
   as for unreliable packets.
+- **Deterministic demo revision (2026-10-11):** separate 24-pair bursts now test baseline,
+  200 ms latency, and `SimulatedPacketLoss = 1`. After the final burst settles, the receiver
+  restores loss to zero and both peers pump for another second before disconnecting. SOFTWARE
+  and OPENGLES3 each received all 24 reliable packets in the first two phases and zero from the
+  outage, even after recovery. The source still drops AppData after transport acknowledgement,
+  with no reliable retry queued there. Exact authored counts include missing endpoints.
+  The earlier short-sample percentage gates for unreliable delivery were demo assumptions,
+  not CNA guarantees; their observed fluctuations are not a new CNA issue. This is CNA runtime
+  evidence plus source inspection, not a genuine-XNA runtime comparison.
 - **Expected:** every reliable packet arrives; only unreliable ones are lost.
 - **Environment:** CNA 0.1.0, Linux, System Link (ENet).
 - **Status:** open; not reported upstream yet.

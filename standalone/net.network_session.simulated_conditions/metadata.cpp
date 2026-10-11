@@ -4,9 +4,9 @@
 CNA_DEMOS_STANDALONE({
     .id = "net.network_session.simulated_conditions",
     .title = "Simulated latency and packet loss",
-    .description = "A second process streams unreliable and reliable packets to the host, which receives them as "
-                   "they are, then with NetworkSession::SimulatedLatency (200 ms) and SimulatedPacketLoss (0.3): "
-                   "measured delay, unreliable packets lost, reliable ones delivered.",
+    .description = "A second process sends finite unreliable and reliable bursts through a baseline, "
+                   "200 ms of SimulatedLatency, and a complete SimulatedPacketLoss outage followed by recovery: "
+                   "exact delivery counts distinguish dropped packets from delayed ones.",
     .apis = {"NetworkSession::SimulatedLatency", "NetworkSession::SimulatedPacketLoss", "SendDataOptions::None",
              "SendDataOptions::Reliable", "LocalNetworkGamer::SendData", "LocalNetworkGamer::ReceiveData",
              "LocalNetworkGamer::IsDataAvailable", "PacketWriter::PacketWriter", "PacketReader::PacketReader"},
@@ -14,6 +14,7 @@ CNA_DEMOS_STANDALONE({
     .needs = CnaDemos::Need::Network,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "Standalone: a process holds one NetworkSession, so the sender is a second process (this "
-                    "program started again with --sender). Discovery uses UDP on the local network.",
+                    "program started again with --sender). Discovery uses UDP on the local network; "
+                    "temporary files coordinate local test phases independently of the impaired connection.",
     .knownIssue = "CNA-DEMOS-ISSUE-030",
 })

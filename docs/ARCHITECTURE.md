@@ -68,7 +68,8 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
   modules. Each can be turned off; dependent categories then disappear.
 * Modules outside the umbrella (`CNA::Net`, `CNA::GamerServices`, `CNA::Phone`, `CNA::Design`)
   are linked by the categories that need them (`demos/CMakeLists.txt`).
-* The standalone `content.custom.intermediate_serializer` and `intermediate_shared_resources`
+* The standalone `content.custom.intermediate_serializer`, `intermediate_shared_resources` and
+  `intermediate_type_serializer`
   tools link `CNA::ContentPipelineBuild`. Each process owns its serializer registry and dependencies;
   these stay outside the browser's runtime link closure. Metadata remains discoverable when
   the tool target is unavailable, and the runner reports the omitted executable as NOT RUN.

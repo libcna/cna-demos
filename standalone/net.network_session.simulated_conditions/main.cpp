@@ -2,21 +2,25 @@
 // NetworkSession::SimulatedLatency and SimulatedPacketLoss: test a game on a bad connection from
 // a good one. This is a complete program rather than a demo inside cna-demos: a process holds one
 // NetworkSession, so the sender is a second process -- this program started again with --sender.
-// The sender streams packets (one unreliable, one reliable per frame); the host receives them,
-// first as they are, then with 200 ms of latency and 30 % loss simulated.
+// The sender sends finite bursts: baseline, 200 ms latency, then complete simulated loss.
+// The last burst gets a recovery interval with loss disabled before checking reliable delivery.
+// Empty files coordinate phases independently of the network being deliberately impaired.
 //
-// Arguments: [--automated] [--screenshot PATH] [--log-level LEVEL] [--sender] (--frames is
+// Arguments: [--automated] [--screenshot PATH] [--log-level LEVEL] [--sender --signals DIR] (--frames is
 // accepted and ignored: the run lasts as long as the exchange takes).
 // Exit code 0 = every check passed, 1 = a check failed.
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <chrono>
 #include <cstdio>
 #include <iostream>
-#include <map>
+#include <filesystem>
+#include <fstream>
 #include <memory>
 #include <optional>
 #include <set>
+#include <stdexcept>
 #include <string>
 #include <thread>
 #include <utility>
@@ -63,16 +67,16 @@ namespace
     constexpr const char* SenderGamertag = "Second Player";
     using Clock = std::chrono::steady_clock;
     constexpr std::chrono::seconds Patience(20);
-    // The sender streams this long; the host switches the simulation on halfway.
-    constexpr std::chrono::milliseconds StreamTime(3000);
-    constexpr std::chrono::milliseconds SwitchAt(1500);
-    constexpr std::chrono::milliseconds Margin(150);
-    constexpr int Latency = 200;     // ms
-    constexpr float Loss = 0.3f;
+    constexpr int BurstPackets = 24;
+    constexpr std::chrono::milliseconds SendInterval(20);
+    constexpr std::chrono::milliseconds SettleTime(600);
+    constexpr std::chrono::milliseconds RecoveryTime(1000);
+    constexpr int Latency = 200; // ms
 
     struct Options : CnaDemos::Standalone::Arguments
     {
         bool sender = false;
+        std::filesystem::path signals;
     };
 
     // Both processes run on one machine: steady_clock is the same clock in each, so the send time
@@ -84,7 +88,7 @@ namespace
 
     struct Phase
     {
-        std::map<int, std::set<int>> received; // kind (0 unreliable, 1 reliable) -> sequence numbers
+        std::array<std::set<int>, 2> received; // kind 0: unreliable, 1: reliable
         std::vector<double> delaysMs;
 
         [[nodiscard]] double MeanDelay() const
@@ -95,16 +99,6 @@ namespace
             return delaysMs.empty() ? 0.0 : sum / static_cast<double>(delaysMs.size());
         }
 
-        // Received / sent, the sent ones being every sequence number between the first and last
-        // received of that kind.
-        [[nodiscard]] double Delivered(int kind) const
-        {
-            const auto found = received.find(kind);
-            if (found == received.end() || found->second.empty())
-                return 0.0;
-            const int span = *found->second.rbegin() - *found->second.begin() + 1;
-            return static_cast<double>(found->second.size()) / span;
-        }
     };
 
     class SimulatedConditionsGame final : public Game
@@ -127,6 +121,11 @@ namespace
             if (sender_.joinable())
             {
                 sender_.join();
+            }
+            if (!options_.sender && !options_.signals.empty())
+            {
+                std::error_code ignored;
+                std::filesystem::remove_all(options_.signals, ignored);
             }
         }
 
@@ -162,6 +161,12 @@ namespace
             }
             if (finished_ || Gamer::getSignedInGamersProperty()->getCountProperty() == 0)
             {
+                return;
+            }
+            if (Clock::now() - started_ > Patience)
+            {
+                report_.Check(false, "the coordinated packet exchange completes before its deadline");
+                finished_ = true;
                 return;
             }
             if (options_.sender)
@@ -207,12 +212,13 @@ namespace
             if (!session_)
             {
                 session_.reset(NetworkSession::Create(NetworkSessionType::SystemLink, 1, 2));
-                report_.Log("hosting; starting the sender");
-                std::vector<std::string> arguments = {"--sender", "--log-level", options_.logLevel};
-                if (options_.automated)
-                {
-                    arguments.emplace_back("--automated");
-                }
+                options_.signals = std::filesystem::temp_directory_path() /
+                    ("cna-demos-simulated-" + std::to_string(Clock::now().time_since_epoch().count()));
+                std::filesystem::create_directories(options_.signals);
+                report_.Log("hosting; starting the sender (24 packet pairs per phase)");
+                std::vector<std::string> arguments = {"--sender", "--signals", options_.signals.string(),
+                                                      "--log-level", options_.logLevel};
+                if (options_.automated) arguments.emplace_back("--automated");
                 sender_ = std::thread([this, arguments] {
                     const auto program =
                         CnaDemos::Standalone::ThisProgram("cna-demo-net-network_session-simulated_conditions");
@@ -222,19 +228,28 @@ namespace
                 return;
             }
             session_->Update();
-            if (!streamStart_ && session_->getRemoteGamersProperty().getCountProperty() > 0)
-            {
-                streamStart_ = Clock::now();
-            }
-            if (streamStart_ && !switched_ && Clock::now() - *streamStart_ > SwitchAt)
-            {
-                // A bad connection, simulated for what arrives at this machine.
-                switched_ = Clock::now();
-                session_->setSimulatedLatencyProperty(System::TimeSpan::FromMilliseconds(Latency));
-                session_->setSimulatedPacketLossProperty(Loss);
-                report_.Log("SimulatedLatency 200 ms, SimulatedPacketLoss 0.3");
-            }
             Receive();
+            if (phase_ < 0 && session_->getRemoteGamersProperty().getCountProperty() > 0)
+                BeginPhase(0);
+            if (phase_ >= 0 && Signalled("sent-" + std::to_string(phase_)))
+            {
+                if (!settling_) settling_ = Clock::now();
+                if (Clock::now() - *settling_ >= SettleTime)
+                {
+                    if (phase_ < 2)
+                        BeginPhase(phase_ + 1);
+                    else if (!recovering_)
+                    {
+                        // Keep the sender connected: reliable packets lost during the outage
+                        // must have a chance to be retransmitted after the connection recovers.
+                        session_->setSimulatedPacketLossProperty(0.0f);
+                        recovering_ = Clock::now();
+                        report_.Log("outage ended; waiting for reliable recovery");
+                    }
+                    else if (Clock::now() - *recovering_ >= RecoveryTime)
+                        Signal("complete");
+                }
+            }
             if (senderDone_)
             {
                 sender_.join();
@@ -245,6 +260,17 @@ namespace
             }
         }
 
+        void BeginPhase(int phase)
+        {
+            phase_ = phase;
+            settling_.reset();
+            session_->setSimulatedLatencyProperty(System::TimeSpan::FromMilliseconds(phase == 1 ? Latency : 0));
+            session_->setSimulatedPacketLossProperty(phase == 2 ? 1.0f : 0.0f);
+            report_.Log(phase == 0 ? "baseline: no simulated delay or loss"
+                       : phase == 1 ? "latency: 200 ms, no simulated loss" : "outage: 100% simulated loss");
+            Signal("go-" + std::to_string(phase));
+        }
+
         void Receive()
         {
             LocalNetworkGamer* me = session_->getLocalGamersProperty()[0];
@@ -253,45 +279,45 @@ namespace
                 PacketReader reader;
                 NetworkGamer* from = nullptr;
                 me->ReceiveData(reader, from);
+                const int phase = reader.ReadInt32();
                 const int kind = reader.ReadInt32();
                 const int sequence = reader.ReadInt32();
                 const long long sent = reader.ReadInt64();
-                const double delayMs = static_cast<double>(NowNanoseconds() - sent) / 1.0e6;
-                // Sorted by when the packet was sent, with a margin around the switch.
-                const Clock::time_point sentAt{std::chrono::nanoseconds(sent)};
-                Phase* phase = nullptr;
-                if (switched_ && sentAt > *switched_ + Margin)
-                    phase = &bad_;
-                else if (!switched_ || sentAt < *switched_ - Margin)
-                    phase = &good_;
-                if (phase != nullptr)
-                {
-                    phase->received[kind].insert(sequence);
-                    phase->delaysMs.push_back(delayMs);
-                }
+                if (phase < 0 || phase >= 3 || kind < 0 || kind >= 2 || sequence < 0 || sequence >= BurstPackets)
+                    throw std::runtime_error("Received an invalid packet from the demo sender");
+                auto& result = phases_[static_cast<std::size_t>(phase)];
+                result.received[static_cast<std::size_t>(kind)].insert(sequence);
+                result.delaysMs.push_back(static_cast<double>(NowNanoseconds() - sent) / 1.0e6);
             }
         }
 
         void Evaluate()
         {
-            char line[160];
-            std::snprintf(line, sizeof(line), "as is:     delay %.0f ms, unreliable %.0f %%, reliable %.0f %%",
-                          good_.MeanDelay(), good_.Delivered(0) * 100.0, good_.Delivered(1) * 100.0);
-            report_.Log(line);
-            std::snprintf(line, sizeof(line), "simulated: delay %.0f ms, unreliable %.0f %%, reliable %.0f %%",
-                          bad_.MeanDelay(), bad_.Delivered(0) * 100.0, bad_.Delivered(1) * 100.0);
-            report_.Log(line);
-            report_.Check(senderExit_ == 0, "the sender joined, streamed and left");
-            // As is, a packet waits for the next frame of each side (both draw at 60 Hz).
-            report_.Check(good_.MeanDelay() < 150.0 && good_.Delivered(0) > 0.9 && good_.Delivered(1) == 1.0,
-                          "as is, packets arrive within a few frames and (nearly) all of them");
-            const double added = bad_.MeanDelay() - good_.MeanDelay();
-            report_.Check(added > Latency - 50.0 && added < Latency + 100.0,
-                          "SimulatedLatency adds about 200 ms to every packet");
-            report_.Check(bad_.Delivered(0) > 0.5 && bad_.Delivered(0) < 0.9,
-                          "with SimulatedPacketLoss 0.3, about 70 % of the unreliable packets arrive");
-            // SendDataOptions::Reliable guarantees delivery: a lost reliable packet is sent again.
-            report_.Check(bad_.Delivered(1) == 1.0,
+            for (std::size_t phase = 0; phase < phases_.size(); ++phase)
+            {
+                const auto& result = phases_[phase];
+                char line[160];
+                if (result.delaysMs.empty())
+                    std::snprintf(line, sizeof(line), "phase %zu: no packets arrived (sent %d of each kind)",
+                                  phase, BurstPackets);
+                else
+                    std::snprintf(line, sizeof(line), "phase %zu: mean %.0f ms; unreliable %zu/%d, reliable %zu/%d",
+                                  phase, result.MeanDelay(), result.received[0].size(), BurstPackets,
+                                  result.received[1].size(), BurstPackets);
+                report_.Log(line);
+            }
+            report_.Check(senderExit_ == 0, "the sender completed all bursts and the recovery interval");
+            // None has no delivery guarantee, even on loopback. Its measured count remains
+            // visible; the exact authored denominator exposes missing first/last packets too.
+            report_.Check(!phases_[0].received[0].empty() && phases_[0].received[1].size() == BurstPackets,
+                          "baseline receives both streams and every reliable packet");
+            const auto& delayed = phases_[1];
+            report_.Check(delayed.received[1].size() == BurstPackets && !delayed.delaysMs.empty() &&
+                          std::all_of(delayed.delaysMs.begin(), delayed.delaysMs.end(),
+                                      [](double ms) { return ms >= Latency - 1.0; }),
+                          "every delayed packet waits at least the configured 200 ms");
+            report_.Check(phases_[2].received[0].empty(), "the complete outage drops all unreliable packets");
+            report_.Check(phases_[2].received[1].size() == BurstPackets,
                           "reliable packets are never lost (CNA-DEMOS-ISSUE-030: CNA drops them too)");
         }
 
@@ -308,40 +334,61 @@ namespace
                     if (sessions[i].getHostGamertagProperty() == HostGamertag)
                     {
                         session_.reset(NetworkSession::Join(&sessions[i]));
-                        report_.Log("joined; streaming for 3 s");
-                        streamStart_ = Clock::now();
+                        report_.Log("joined; waiting for the host's phases");
                     }
                 }
                 found.Dispose();
-                if (!session_ && Clock::now() - started_ > Patience)
-                {
-                    report_.Check(false, "the host's session was found");
-                    finished_ = true;
-                }
                 return;
             }
             session_->Update();
-            const auto elapsed = Clock::now() - *streamStart_;
-            if (elapsed < StreamTime && session_->getRemoteGamersProperty().getCountProperty() > 0)
+            if (Signalled("complete"))
+            {
+                session_->Dispose();
+                session_.reset();
+                finished_ = true;
+                return;
+            }
+            if (phase_ < 2 && Signalled("go-" + std::to_string(phase_ + 1)))
+            {
+                ++phase_;
+                sequence_ = 0;
+                burstFinished_.reset();
+                nextSend_ = Clock::now();
+            }
+            if (phase_ < 0) return;
+            if (sequence_ < BurstPackets && Clock::now() >= nextSend_ &&
+                session_->getRemoteGamersProperty().getCountProperty() > 0)
             {
                 LocalNetworkGamer* me = session_->getLocalGamersProperty()[0];
                 NetworkGamer* host = session_->getRemoteGamersProperty()[0];
                 for (int kind = 0; kind < 2; ++kind)
                 {
+                    writer_.Write(phase_);
                     writer_.Write(kind);
                     writer_.Write(sequence_);
                     writer_.Write(static_cast<SharpRuntime::longcs>(NowNanoseconds()));
                     me->SendData(writer_, kind == 0 ? SendDataOptions::None : SendDataOptions::Reliable, host);
                 }
                 ++sequence_;
+                // Wall-clock pacing avoids a burst of sends during fixed-step catch-up.
+                nextSend_ = Clock::now() + SendInterval;
+                if (sequence_ == BurstPackets) burstFinished_ = Clock::now();
             }
-            // Linger so the last reliable packets get through, then leave.
-            if (elapsed > StreamTime + std::chrono::milliseconds(1500))
-            {
-                session_->Dispose();
-                session_.reset();
-                finished_ = true;
-            }
+            if (burstFinished_ && Clock::now() - *burstFinished_ >= SettleTime)
+                Signal("sent-" + std::to_string(phase_));
+        }
+
+        void Signal(const std::string& name)
+        {
+            if (Signalled(name)) return;
+            std::ofstream marker(options_.signals / name);
+            marker.put('\n');
+            if (!marker) throw std::runtime_error("Cannot write phase marker: " + name);
+        }
+
+        [[nodiscard]] bool Signalled(const std::string& name) const
+        {
+            return std::filesystem::exists(options_.signals / name);
         }
 
         GraphicsDeviceManager graphics_;
@@ -349,17 +396,19 @@ namespace
         CnaDemos::Standalone::Report report_;
         std::unique_ptr<NetworkSession> session_;
         Clock::time_point started_{};
-        std::optional<Clock::time_point> streamStart_;
+        int phase_ = -1;
         // The host's side.
         std::thread sender_;
         std::atomic<bool> senderDone_{false};
         std::atomic<int> senderExit_{-1};
-        std::optional<Clock::time_point> switched_;
-        Phase good_;
-        Phase bad_;
+        std::optional<Clock::time_point> settling_;
+        std::optional<Clock::time_point> recovering_;
+        std::array<Phase, 3> phases_;
         // The sender's side.
         PacketWriter writer_;
         int sequence_ = 0;
+        Clock::time_point nextSend_{};
+        std::optional<Clock::time_point> burstFinished_;
         bool finished_ = false;
         bool captured_ = false;
         std::unique_ptr<SpriteBatch> spriteBatch_;
@@ -371,9 +420,15 @@ int main(int argc, char** argv)
 {
     Options options;
     static_cast<CnaDemos::Standalone::Arguments&>(options) = CnaDemos::Standalone::ParseArguments(argc, argv);
-    for (const std::string& argument : options.other)
+    for (std::size_t i = 0; i < options.other.size(); ++i)
     {
-        options.sender = options.sender || argument == "--sender";
+        if (options.other[i] == "--sender") options.sender = true;
+        else if (options.other[i] == "--signals" && i + 1 < options.other.size()) options.signals = options.other[++i];
+    }
+    if (options.sender && options.signals.empty())
+    {
+        std::cerr << "The sender requires --signals DIR.\n";
+        return 1;
     }
 
     try

@@ -157,7 +157,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.skinned_pbr` (skinned + metallic-roughness imports as SkinnedPbrEffect).
 - Remaining: `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
 
-## Phase 8 -- content 🟨 (25 demos; remaining below)
+## Phase 8 -- content 🟨 (26 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -181,6 +181,8 @@ a check that all authored colors remain visible and that a blank texture row can
   XML round trip and rejection of missing required or injected ignored fields.
   ✅ `content.custom.intermediate_shared_resources`: shared aliases, equal-but-distinct objects,
   inline copies and mutation after forward reference fixups.
+  ✅ `content.custom.intermediate_type_serializer`: registered compact dice syntax at the root
+  and within described fields, with round trip and lexical/domain rejection on read and write.
   Remaining: deeper serializer behaviors, custom XNA adapters and the member/behavior gaps
   in COVERAGE_AUDIT.md; this phase is not comprehensively covered.
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
@@ -262,8 +264,9 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   play), ✅ `net.network_machine.remove_from_session` (standalone: the host kicks a player,
   RemovedByHost).
 - ✅ `net.network_session.simulated_conditions` (standalone: SimulatedLatency and SimulatedPacketLoss
-  measured between two processes; expected failure, CNA-DEMOS-ISSUE-030: reliable packets are lost
-  too).
+  measured between two processes in coordinated finite bursts: baseline, delay, full outage and
+  recovery. Exact sent counts replace short-sample percentage assumptions; expected failure,
+  CNA-DEMOS-ISSUE-030: reliable packets are lost too).
 - ✅ `net.network_session.private_slots` (PrivateGamerSlots keep slots from players who just join),
   ✅ `net.network_session.join_refused` (standalone: NetworkSessionJoinException for a game in
   progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032 and -033).
