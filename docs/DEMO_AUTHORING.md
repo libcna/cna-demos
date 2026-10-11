@@ -253,3 +253,12 @@ the demo checking the **documented** behaviour, and set `.knownIssue = "CNA-DEMO
 demo then still reports FAILED (with the issue named), while batch runs and CTest count it as an
 expected failure; if it ever passes, CTest fails so the stale marker is noticed. Fix CNA only for an
 obvious, low-risk, well-understood defect, in CNA's own repository, separately from demo work.
+
+## 12. C++ ownership
+
+Check who owns a returned pointer in the actual CNA implementation. `SoundBank::GetCue` returns
+a newly allocated, caller-owned Cue: keep it in `std::unique_ptr<Cue>`. Calling `Dispose()`
+releases playback resources but does not delete that C++ object. Declare owned cues after their
+banks so scope destruction releases them first. In contrast, `VideoPlayer::GetTexture`,
+`LeaderboardWriter::GetLeaderboard` and service lookups return borrowed pointers; do not put
+those in an owning smart pointer. Preserve the CNA call in the demo source.

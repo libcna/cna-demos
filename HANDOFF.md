@@ -90,18 +90,19 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **404-demo checkpoint passed** in this session.
+The full **404-demo checkpoint passed** through demo revision `0aa8a4f`, including the curve,
+manifest and texture extensions (log `/tmp/cna-demos-semantic-validation.log`).
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
 | Metadata/assets `--validate` | 404 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 416/416 enabled tests, 3 manual disabled; 14 expected failures via WILL_FAIL |
-| SOFTWARE smoke | 362 passed, 14 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 383 passed, 15 expected failures, 3 skipped, 3 manual not run |
+| CTest | 416/416 enabled tests, 3 manual disabled; 15 expected failures via WILL_FAIL |
+| SOFTWARE smoke | 361 passed, 15 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 382 passed, 16 expected failures, 3 skipped, 3 manual not run |
 | Unexpected outcomes | None on either renderer; the earlier sign-in-screen crash did not recur in this baseline |
-| Screenshots | Prior session inspected graphics/input contact sheets; not repeated this session |
+| Screenshots | Manifest and texture-rectangle screenshots inspected on both renderers; prior broader contact-sheet review remains historical |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -232,8 +233,8 @@ SOFTWARE checks: tangents 9/9, key collection 10/10, loop types 15/16 (only ISSU
 The original loop demo expected first-key behavior; the corrected last-key expectation agrees
 with the local genuine-XNA decompilation. No upstream CNA changes were made. Incremental build,
 metadata (404/0) and six relevant CTests including catalog validation passed. Reports:
-`/tmp/cna-curves-SOFTWARE.json`. Section 7 is the full checkpoint **before** this curve change;
-coverage run columns are explicitly labeled BASELINE until the next complete validation.
+`/tmp/cna-curves-SOFTWARE.json`. The subsequent full checkpoint in section 7 includes this curve change; both renderers report
+exactly its documented failure.
 
 **Manifest batch completed:** existing demo now checks explicit refresh after adding/removing a
 private CNJ file and separates manifest snapshots from asset caching. Both SOFTWARE and OPENGLES3
@@ -249,9 +250,12 @@ Both renderers pass all four checks; relevant CTests and metadata pass. Screensh
 in Update and fixed-step catch-up can run several updates per drawn frame; no pixel-equality
 comparison is claimed. No CNA defect found.
 
-**Full checkpoint currently running:** tools/validate.sh for these five revised demos, log
-`/tmp/cna-demos-semantic-validation.log`. Until that finishes, section 7 and coverage BASELINE
-columns still refer to the complete pre-extension 404-demo run. Then update them to fresh results.
+**Full semantic checkpoint completed:** tools/validate.sh passed for all 404 demos including
+these five revisions. All 416 enabled CTests pass; SOFTWARE has 361 passes / 15 expected failures,
+OPENGLES3 382 / 16, with no unexpected outcomes. Comparison against the earlier full report
+finds only the intentional `math.curve.loop_types` status/message change. Current coverage uses
+the fresh reports (1310/2326 named members); archives are
+`reports/semantic-404-{SOFTWARE,OPENGLES3}.json`. Log: `/tmp/cna-demos-semantic-validation.log`.
 **Next priority after this checkpoint:** source audit found a demo ownership bug in four XACT
 files: GetCue allocates with new; Cue::Dispose releases playback but does not delete the C++
 object, and SoundBank only owns PlayCue's fire-and-forget objects. Prepared unique_ptr fixes are

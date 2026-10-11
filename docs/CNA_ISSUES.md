@@ -837,8 +837,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   checks remain independent. No CNA source was modified.
 - **Related upstream record:** [CNA-BUG-064](https://libcna.com/known-issues/bugs/cna-bug-064.html)
   also describes this post-loop error and the Step error already tracked here as ISSUE-002.
-- **Validation:** corrected demo executed on SOFTWARE: 16 checks, exactly one failure (actual 2,
-  expected 4). All five curve demos and catalog validation passed their CTest expectations;
+- **Validation:** corrected demo executed on SOFTWARE and OPENGLES3: 16 checks each, exactly
+  one failure (actual 2, expected 4). All five curve demos and catalog validation passed their CTest expectations;
   metadata validation reports 404 demos and zero problems. Genuine XNA was not executed.
 
 ## Resolved
