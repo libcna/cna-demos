@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-432 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+433 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
-content 33 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 34 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 16 (standalone C programs). Every declared category has demos.
@@ -348,13 +348,30 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** implement prepared content batch 433 after the completed 432
-checkpoint: `/tmp/cna-reader-versions.cpp` and `/tmp/cna-xnb-versions.py` (new
-content.xnb.reader_versions, factory ownership/schema compatibility), plus
-`/tmp/cna-existing-objects-raw-extension.cpp` (actual implicit ReadRawObject reproduction of
-ISSUE-043). These are reviewed drafts, not yet applied/built/run. Preserve the original
-GetTypeReader assertion; expect one additional failed assertion inside the same known-issue
-demo, investigate and record it explicitly. Continue with remaining semantic member gaps.
+**Immediate next action:** run full 433 validation, then archive/compare ORIGINAL checkpoint-432.
+Expected SOFTWARE 386/19/25/3, OPENGLES3 407/20/3/3; 446 enabled CTests (421 passed including
+19 WILL_FAIL, 25 skipped; three disabled). Expected assertion change is exactly the added
+ReadRawObject<T>(existing) ISSUE-043 inside existing_objects (12 -> 13 checks), raw totals
+26/27 -> 27/28. Preserve the original GetTypeReader failure and all original logs; manually
+review this precise addition rather than weakening the comparator. Continue next with same-name
+content format precedence/cache type identity or another remaining semantic member gap.
+
+433 targeted evidence:
+- reader_versions passes 17 console checks per renderer selection WITHOUT DISPLAY/WAYLAND;
+  `/tmp/cna-433-reader_versions-{SOFTWARE,OPENGLES3}.{json,log}`. Actual v0/v1 payloads,
+  pre-read refusal of unsupported versions, owned immutable factory policies, duplicate capture
+  release, scoped withdrawal, surviving created readers and cached values all verified.
+- existing_objects has 13 checks: eleven pass, two reproduce ISSUE-043. Automatic raw lookup
+  leaves the stream position unchanged before explicit-reader recovery; original failure retained.
+  `/tmp/cna-433-existing_objects-{SOFTWARE,OPENGLES3}.{json,log}`. No visual/GPU claim.
+- Three new original assets regenerate byte-identically and independently decode to exact EOF.
+  Clean build `/tmp/cna-433-build.log`, metadata 433/0, all 20 focused CTests pass including
+  all 16 C ABI demos (`/tmp/cna-433-targeted-ctest.log`). Coverage 293/329 types,
+  1354/2326 named members, 158/3210 C routes; runtime columns still use complete checkpoint 432.
+- External CNA HEAD advanced to 4d774868e97c481fbb64e52a6286ed8c0c65873f with further generated
+  C API test/tool edits uncommitted. Build includes these external changes; do not edit/revert CNA
+  or claim an atomic source snapshot. Preserve binary hashes after the full checkpoint.
+- All /tmp reader-version and raw-extension drafts are now applied and stale; use repo sources.
 
 432 targeted evidence:
 - graphics.model.imported_topology: 18 checks per renderer, exact loop-closing/strip/fan index
@@ -440,33 +457,7 @@ content.xnb.shared_resources. It reads an ordinary inline Item alongside shared 
 15 checks distinguish their identities, deferred callbacks, weak-edge lifetime and failure paths.
 Continue remaining ContentReader behaviors in COVERAGE_AUDIT.md; built-in model fixups and
 this custom graph do not establish every public reader overload or versioned schema.
-Remaining model gaps include imported topology/specular slots and broader skin/material variants.
-Companion existing-demo extension (NOT applied/run):
-`/tmp/cna-existing-objects-raw-extension.cpp` is based on the CURRENT labeled source, not the
-older stale draft. It invokes the implicit ReadRawObject<T>(existing) before the explicit-reader
-fallback, records its actual failure and permits fallback only if type lookup failed and the
-stream position did not move. It preserves the old GetTypeReader assertion and adds one separate
-ISSUE-043 assertion for automatic raw lookup. Expected 13 checks with two failures on current
-CNA, but verify rather than assume. If confirmed, update ISSUE-043 and review the added assertion
-in the next full comparison; do not collapse or suppress the existing failed check. No new asset.
-
-Next content draft prepared during immutable full 432 (NOT built/run):
-`/tmp/cna-reader-versions.cpp`, `/tmp/cna-xnb-versions.py`, `/tmp/cna-xnb-version-fixture`.
-Three original assets regenerate identically and were independently decoded (62-byte legacy,
-66-byte current/future). Actual v0 payload omits Armor, v1 includes it, v2 adds an unsupported
-field. Container version stays five. SupportsVersion is a pure predicate; payload field flags
-select the supported optional layout. The draft exercises strict/compatible policies, ignored
-duplicate registration, scoped single-key withdrawal, surviving cached assets and safe factory
-captures via owned immutable policy objects. Weak pointers verify rejected factories release
-captures and withdrawn factories release owners. It supersedes the earlier capture-free-only
-proposal in `/tmp/cna-reader-version-plan.md`. Apply after full 432 finishes, validate both
-renderer selections without display, then update docs and checkpoint before continuing.
-
-
-The DDS and imported-topology drafts are now applied and validated as described above. Use
-repository sources, not stale /tmp drafts. The reader-version proposal remains unimplemented.
-
-
+Remaining model gaps include specular slots and broader skin/material variants; imported loop/strip/fan topology is now covered.
 425 animation investigation: final/source-before-extension first-frame pixels were identical on
 each renderer; cross-renderer lighting differences already existed (8,216 pixels, max delta 38),
 with identical silhouettes. Original captures are `/tmp/cna-skinned-animation-before-*.png`.

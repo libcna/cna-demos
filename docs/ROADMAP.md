@@ -187,7 +187,7 @@ a check that all authored colors remain visible and that a blank texture row can
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (33 demos; remaining below)
+## Phase 8 -- content 🟨 (34 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -229,13 +229,16 @@ a check that all authored colors remain visible and that a blank texture row can
   in COVERAGE_AUDIT.md; this phase is not comprehensively covered.
 - ✅ `content.xnb.shared_resources`: deferred binary graph fixups, shared versus inline identity,
   forward/weak backward edges, null references, cache/manager isolation, malformed index/type
-  refusal and released ownership (15 console checks). Direct low-level orchestration, reader
-  versions remain audit work.
+  refusal and released ownership (15 console checks). Direct low-level orchestration remains
+  intentionally deferred to the loader.
 - ✅ `content.xnb.existing_objects`: indexed/raw reads into existing slots, retained runtime state,
   null fallback, two-pass initialization and safely unboxed tags (11 passing checks plus the
-  GetTypeReader target/factory-name defect, ISSUE-043).
+  GetTypeReader and implicit ReadRawObject target/factory-name failures, ISSUE-043).
 - ✅ `content.xnb.external_references`: sibling loose image/compiled label, null and unsafe/missing
   paths, typed/erased owner caches and actual shared-image rendering (11 checks per renderer).
+- ✅ `content.xnb.reader_versions`: real legacy/current schema compatibility, future-version
+  refusal before payload reads, duplicate factory policy, scoped withdrawal, owned capture
+  lifetime and cache independence (17 console checks per renderer selection).
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
   managers, `ContentLoadException`, loose files vs XNB vs CNB vs CNJ lookup order.
 - `content.xnb.*`: Texture2D, SoundEffect, SpriteFont, Model, Effect, TextureCube, Curve XNBs.

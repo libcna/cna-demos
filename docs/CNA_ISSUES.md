@@ -1027,7 +1027,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 - **Area:** ContentTypeReaderManager::GetTypeReader/CreateReaderForTargetTypeEXT and the
   constructor association in ContentTypeReader<T>.
-- **Demo:** `content.xnb.existing_objects` (one explicit known-failing lookup check; the other
+- **Demo:** `content.xnb.existing_objects` (two explicit known-failing lookup checks; the other
   eleven checks exercise independent existing-object/raw-payload behavior).
 - **Reproduction:** register a capture-free WeaponReader factory under
   `CnaDemos.LoadoutWeaponReader`, as named by the XNB reader table. Its base constructor correctly
@@ -1044,8 +1044,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   CreateReaderForTargetTypeEXT retrieves that string and passes it directly to CreateReader,
   which indexes factories by reader name. No target-to-reader-name mapping bridges them.
   ContentRuntimeContractTests uses the same string for target and factory key, so its passing
-  lookup test does not cover this distinction. By source inspection, implicit type-only
-  ReadRawObject overloads share this lookup; this demo does not claim to have executed them.
+  lookup test does not cover this distinction. The demo now directly executes implicit
+  ReadRawObject<T>(existing); it throws before consuming any payload bytes. The explicit-reader
+  fallback is guarded by unchanged stream position and the unresolved lookup; partial decode
+  failures are rethrown, not hidden.
 - **Evidence/environment:** Linux GCC 14.2, both renderer selections WITHOUT DISPLAY or
   WAYLAND_DISPLAY: `/tmp/cna-430-existing-{SOFTWARE,OPENGLES3}.{json,log}` (12 checks, exactly
   one failure before adding the issue label). CNA HEAD 2fda5389d2990b40146d06de0ae0531d05055f24
@@ -1057,7 +1059,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   added failed assertion versus 428 is this one (25/26 -> 26/27); all older states/check counts
   remain unchanged. Original logs and exact review/hashes: `reports/checkpoint-430-*`.
   Both new external-reference renders pass independently; no failure was hidden by the marker.
-- **Handling:** retain the failing lookup assertion. A clearly labeled public named-factory
+- **Extended reproduction (433 batch):** `/tmp/cna-433-existing_objects-{SOFTWARE,OPENGLES3}.{json,log}`
+  records 13 checks, exactly two failures, in fresh processes with DISPLAY/WAYLAND_DISPLAY unset.
+  The original GetTypeReader assertion is retained verbatim; the new implicit raw-read assertion
+  shares ISSUE-043. All eleven other checks still pass. CNA HEAD at build start was 4d774868e9
+  with further external C API work; the content lookup source still has the same defect.
+- **Handling:** retain both failing lookup assertions. A clearly labeled public named-factory
   fallback lets the remaining schema example run; it does not change the target name or add
   a hidden alias registration. No global registry clearing, CNA source edits or upstream report.
   A library fix should preserve the distinction between target identity and reader factory name.

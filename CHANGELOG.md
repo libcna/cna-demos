@@ -39,6 +39,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Versioned XNB reader policies with actual legacy/current records, explicit compatibility,
+  duplicate registration, scoped withdrawal and verified factory-capture ownership (17 checks).
+- Direct implicit ReadRawObject existing-instance reproduction of ISSUE-043, alongside the
+  original GetTypeReader failure; eleven independent schema checks remain passing.
 - Imported glTF loop/strip/fan topology checks and a DDS stream workflow with authored mipmaps,
   short reads, fit/crop conversion and malformed-chain refusal. Both demos check rendered pixels;
   their SOFTWARE/OPENGLES3 captures were inspected and match exactly.

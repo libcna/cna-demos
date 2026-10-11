@@ -34,6 +34,8 @@ namespace
         int constructed = 0, rootInitializations = 0, weaponInitializations = 0;
         int existingReads = 0, freshReads = 0;
         bool tableReadyBeforeInitialize = false, readerContract = false, typeLookupResolved = false;
+        bool automaticRawSucceeded = false;
+        std::string rawLookupError;
     } observed;
 
     class WeaponReader final : public ContentTypeReader<WeaponPtr>
@@ -82,7 +84,20 @@ namespace
             auto secondary = std::make_shared<Weapon>(); secondary->runtimeSlot = "secondary";
             auto fallback = std::make_shared<Weapon>(); fallback->runtimeSlot = "fallback";
             loadout.primary = input.ReadObject<WeaponPtr>(primary); // consumes the reader-table index
-            loadout.secondary = input.ReadRawObject<WeaponPtr>(*weaponReader_, secondary); // payload only
+            const auto rawStart = input.getBaseStreamProperty()->getPositionProperty();
+            try
+            {
+                loadout.secondary = input.ReadRawObject<WeaponPtr>(secondary); // infer the reader from T
+                observed.automaticRawSucceeded = true;
+            }
+            catch (const ContentLoadException& error)
+            {
+                // ISSUE-043 also affects the type-only overload. Retry by named reader only when
+                // lookup failed before touching the payload; never recover from a partial decode.
+                if (observed.typeLookupResolved || input.getBaseStreamProperty()->getPositionProperty() != rawStart) throw;
+                observed.rawLookupError = error.what();
+                loadout.secondary = input.ReadRawObject<WeaponPtr>(*weaponReader_, secondary);
+            }
             loadout.fallback = input.ReadObject<WeaponPtr>(fallback); // authored zero: retain this default
             loadout.tag = input.ReadObject(); // std::any preserves the actual produced type
             loadout.absentTag = input.ReadObject(); // authored zero: empty std::any
@@ -108,7 +123,10 @@ namespace
                   "all table readers are constructed before their one-time Initialize calls");
         ctx.Check(observed.typeLookupResolved,
                   "GetTypeReader resolves a target type whose canonical name differs from its reader factory name (CNA-DEMOS-ISSUE-043)");
-        ctx.Check(observed.readerContract && observed.constructed == 3,
+        ctx.Check(observed.automaticRawSucceeded,
+                  "ReadRawObject<T>(existing) resolves the registered reader by target type (CNA-DEMOS-ISSUE-043)");
+        if (!observed.automaticRawSucceeded) ctx.Print("Automatic raw lookup failed before consuming payload: {}", observed.rawLookupError);
+        ctx.Check(observed.readerContract && observed.constructed == (observed.automaticRawSucceeded ? 4 : 3),
                   "the dependent reader retains the correct target type and advertises existing-object support");
         if (!ctx.Check(loadout.primary && loadout.secondary && loadout.fallback, "all three loadout slots remain populated")) return;
         ctx.Check(loadout.primaryRetained && loadout.primary->name == "Sword" && loadout.primary->ammunition == 12,
@@ -136,7 +154,7 @@ namespace
 CNA_DEMOS_CONSOLE(ExistingObjects, {
     .id = "content.xnb.existing_objects",
     .title = "Fill existing XNB loadout slots",
-    .description = "Reads indexed and raw weapon payloads into existing objects, preserves runtime slot state, "
+    .description = "Reads indexed and automatic/explicit raw weapon payloads into existing objects, preserves runtime slot state, "
                    "resolves a dependent reader during initialization, and safely inspects type-erased and null tags.",
     .apis = {"ContentReader::ReadObject", "ContentReader::ReadRawObject", "ContentTypeReader::Read",
              "ContentTypeReader::Initialize", "ContentTypeReader::CanDeserializeIntoExistingObject", "ContentTypeReader::TargetType",

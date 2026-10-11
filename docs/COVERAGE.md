@@ -6,14 +6,14 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**432 demos** in 18 categories. Kinds: console 154, game 250, standalone 28. Automation: automated 396, manual 3, smoke-only 33.
+**433 demos** in 18 categories. Kinds: console 155, game 250, standalone 28. Automation: automated 397, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
 | c_api | 16 | 15 | 1 | 0 | 16 / 0 / 0 / 0 / 0 | 16 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 33 | 33 | 0 | 0 | 28 / 0 / 5 / 0 / 0 | 28 / 0 / 5 / 0 / 0 |
+| content | 34 | 34 | 0 | 0 | 28 / 0 / 5 / 0 / 1 | 28 / 0 / 5 / 0 / 1 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,18 +31,20 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.xnb.reader_versions`.
+- OPENGLES3: absent from report: `content.xnb.reader_versions`.
 
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 293 of 329** (89.1 %).
-- **Methods, properties, constructors and events named by a demo: 1353 of 2326** (58.2 %).
+- **Methods, properties, constructors and events named by a demo: 1354 of 2326** (58.2 %).
 - Fields and enum values named by a demo: 133 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 40 / 42 | 477 / 643 | 34 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 16 / 19 | 87 / 121 | 6 / 11 |
-| `Microsoft.Xna.Framework.Content` | 7 / 11 | 22 / 48 | 0 / 0 |
+| `Microsoft.Xna.Framework.Content` | 7 / 11 | 23 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
 | `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 300 / 550 | 84 / 192 |
@@ -315,7 +317,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ContentManifestReaderUsage` -- content.content_manager.manifest
 - `ContentReader::ReadInt32` -- content.xnb.custom_type_reader, content.xnb.shared_resources
 - `ContentReader::ReadString` -- content.xnb.custom_type_reader, content.xnb.shared_resources
-- `ContentTypeReaderManager::AddTypeCreator` -- content.xnb.custom_type_reader, content.xnb.existing_objects, content.xnb.external_references, content.xnb.shared_resources
+- `ContentTypeReaderManager::AddTypeCreator` -- content.xnb.custom_type_reader, content.xnb.existing_objects, content.xnb.external_references, content.xnb.reader_versions, content.xnb.shared_resources
 - `DynamicSoundEffectInstance::Stop` -- audio.dynamic_sound_effect_instance.streaming
 - `Effect::Apply` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading
 - `Environment::DeviceType` -- devices.sensors.availability
@@ -397,6 +399,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `LeaderboardEntry::RankingEXT` -- gamer_services.leaderboard.paging
 - `LooseFileContentTypeReader::GetExtensions` -- content.custom.loose_file_reader
 - `LooseFileContentTypeReader::Read` -- content.custom.loose_file_reader
+- `Microsoft::Xna::Framework::Content::ContentTypeReaderBase::SupportsVersion` -- content.xnb.reader_versions
+- `Microsoft::Xna::Framework::Content::ContentTypeReaderManager::CreateReader` -- content.xnb.reader_versions
+- `Microsoft::Xna::Framework::Content::ContentTypeReaderManager::IsRegistered` -- content.xnb.reader_versions
+- `Microsoft::Xna::Framework::Content::ContentTypeReaderManager::RemoveTypeCreatorEXT` -- content.xnb.reader_versions
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentImporter::Import` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentImporterAttribute::DefaultProcessor` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentImporterContext::AddDependency` -- content.custom.xna_pipeline_components
