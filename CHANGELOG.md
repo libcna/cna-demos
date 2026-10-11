@@ -123,6 +123,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   its frame limit (the frame is kept each frame and saved in `EndRun`).
 - CNA-DEMOS-ISSUE-015 recorded: `Song::FromUri` resolves relative paths against the working
   directory, not the title location (FNA's behaviour).
+- Model demos (7): Model::Draw, bones and their transforms, bone animation with the per-mesh drawing
+  loop, frustum culling with mesh bounding spheres, per-mesh effect settings, skinned animation with
+  AnimationPlayer and SkinnedEffect, and the CNAEXT glTF import report of a glTF loaded at run time.
+- `tools/gltf_models.py`: original glTF scenes (a robot arm with baked vertex colours, a skinned
+  strip with a bend clip) compiled by the content pipeline; one loose copy for run-time loading.
 - `CnaDemos/InputNames.hpp`: names of input enums (keys, buttons, gestures) for demo output.
 - CNA-DEMOS-ISSUE-008 recorded: sharp-runtime's `Prop.hpp`, reached from CNA's public headers,
   defines macros named `YES`, `NO`, `nothing` and similar.

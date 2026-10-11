@@ -59,8 +59,9 @@ Open decisions (to settle when the phase needs them):
 * ~~SpriteFont asset~~ -- decided (table above): generated font-texture sheet compiled by
   `cna-content`. A TrueType `.spritefont` route stays possible later (needs FreeType and a font
   with a redistributable licence).
-* **glTF/XNB test assets from CNA.** CNA's corpus files are Ms-PL; copying a few small ones with a
-  notice is allowed. Decide per asset in Phases 7-8; prefer generated assets where practical.
+* ~~glTF/XNB test assets from CNA~~ -- decided: generated. Models are written by
+  `tools/gltf_models.py` (original glTF with embedded buffers) and XNB files are built from
+  generated sources by `cna_add_content(... FORMAT xnb)`; nothing is copied from CNA's corpus.
 * **C API demos** need `CNA_BUILD_C_API=ON`; add a preset and a `c_api` standalone family in Phase 14.
 
 ## 3. How work proceeds

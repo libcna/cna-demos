@@ -118,12 +118,17 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   XNA effect bytecode (`Effect(GraphicsDevice&, bytes)`), `EffectParameter`/`EffectTechnique`/
   `EffectPass` reflection and parameter setting. ≈ 8
 
-## Phase 7 -- models, animation, glTF ⬜
-- `content.model.*`/`graphics.model.*`: load XNB model, load glTF/GLB, draw with `Model::Draw`,
-  iterate `ModelMesh`/`ModelMeshPart`, bones and `CopyAbsoluteBoneTransformsTo`, per-mesh effects.
-- Animation: `AnimationPlayer`, `SkinnedModelEXT`, glTF clips (LINEAR/STEP/CUBICSPLINE), morph
-  targets (`MorphTargetEXT`), glTF cameras and punctual lights, `GltfImportReportEXT`. ≈ 15
-  Uses CNA's own Ms-PL glTF corpus files (decide asset policy first, see PLAN.md).
+## Phase 7 -- models, animation, glTF 🟨 (7 demos)
+- ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
+  ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
+  `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
+  `Model.Tag`, `AnimationPlayer`, `SkinnedEffect`), the CNAEXT glTF import report of a model loaded
+  as a loose `.gltf` at run time. Assets: original glTF written by `tools/gltf_models.py`
+  (decision: generate, do not copy CNA's corpus), compiled by `cna_add_content`.
+- Remaining: PBR materials with lights (`PbrEffect`/`SkinnedPbrEffect`, GL only), textured glTF
+  (embedded PNG -> generated Texture2D children), node animation clips (`ApplyClipToBonesEXT`),
+  STEP/CUBICSPLINE clips, morph targets, glTF cameras (`ModelCameraEXT`) and punctual lights,
+  material variants, `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
 
 ## Phase 8 -- content 🟨 (16 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB

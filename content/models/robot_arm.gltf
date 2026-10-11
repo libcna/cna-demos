@@ -1,0 +1,245 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "cna-demos tools/gltf_models.py"
+ },
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3",
+   "min": [
+    -1.0,
+    0.0,
+    -1.0
+   ],
+   "max": [
+    1.0,
+    0.5,
+    1.0
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5123,
+   "count": 36,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3",
+   "min": [
+    -0.25,
+    0.0,
+    -0.25
+   ],
+   "max": [
+    0.25,
+    2.0,
+    0.25
+   ]
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5123,
+   "count": 36,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3",
+   "min": [
+    -0.18,
+    0.0,
+    -0.18
+   ],
+   "max": [
+    0.18,
+    1.5,
+    0.18
+   ]
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 8,
+   "componentType": 5123,
+   "count": 36,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 288,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 288,
+   "byteLength": 384,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 672,
+   "byteLength": 72,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 744,
+   "byteLength": 288,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 1032,
+   "byteLength": 384,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 1416,
+   "byteLength": 72,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 1488,
+   "byteLength": 288,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 1776,
+   "byteLength": 384,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 2160,
+   "byteLength": 72,
+   "target": 34963
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 2232,
+   "uri": "data:application/octet-stream;base64,AACAPwAAAAAAAIA/AACAPwAAAAAAAIC/AACAPwAAAD8AAIC/AACAPwAAAD8AAIA/AACAvwAAAAAAAIC/AACAvwAAAAAAAIA/AACAvwAAAD8AAIA/AACAvwAAAD8AAIC/AACAvwAAAD8AAIA/AACAPwAAAD8AAIA/AACAPwAAAD8AAIC/AACAvwAAAD8AAIC/AACAvwAAAAAAAIC/AACAPwAAAAAAAIC/AACAPwAAAAAAAIA/AACAvwAAAAAAAIA/AACAvwAAAAAAAIA/AACAPwAAAAAAAIA/AACAPwAAAD8AAIA/AACAvwAAAD8AAIA/AACAPwAAAAAAAIC/AACAvwAAAAAAAIC/AACAvwAAAD8AAIC/AACAPwAAAD8AAIC/PQrXPj0K1z7D9eg+AACAPz0K1z49Ctc+w/XoPgAAgD89Ctc+PQrXPsP16D4AAIA/PQrXPj0K1z7D9eg+AACAP8P1qD7D9ag+PQq3PgAAgD/D9ag+w/WoPj0Ktz4AAIA/w/WoPsP1qD49Crc+AACAP8P1qD7D9ag+PQq3PgAAgD+amRk/mpkZP2ZmJj8AAIA/mpkZP5qZGT9mZiY/AACAP5qZGT+amRk/ZmYmPwAAgD+amRk/mpkZP2ZmJj8AAIA/j8J1Po/CdT64HoU+AACAP4/CdT6PwnU+uB6FPgAAgD+PwnU+j8J1PrgehT4AAIA/j8J1Po/CdT64HoU+AACAP23n+z5t5/s+sHIIPwAAgD9t5/s+bef7PrByCD8AAIA/bef7Pm3n+z6wcgg/AACAP23n+z5t5/s+sHIIPwAAgD/sUbg+7FG4PhSuxz4AAIA/7FG4PuxRuD4Ursc+AACAP+xRuD7sUbg+FK7HPgAAgD/sUbg+7FG4PhSuxz4AAIA/AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcAAACAPgAAAAAAAIA+AACAPgAAAAAAAIC+AACAPgAAAEAAAIC+AACAPgAAAEAAAIA+AACAvgAAAAAAAIC+AACAvgAAAAAAAIA+AACAvgAAAEAAAIA+AACAvgAAAEAAAIC+AACAvgAAAEAAAIA+AACAPgAAAEAAAIA+AACAPgAAAEAAAIC+AACAvgAAAEAAAIC+AACAvgAAAAAAAIC+AACAPgAAAAAAAIC+AACAPgAAAAAAAIA+AACAvgAAAAAAAIA+AACAvgAAAAAAAIA+AACAPgAAAAAAAIA+AACAPgAAAEAAAIA+AACAvgAAAEAAAIA+AACAPgAAAAAAAIC+AACAvgAAAAAAAIC+AACAvgAAAEAAAIC+AACAPgAAAEAAAIC+cT0qP7gexT49Ctc9AACAP3E9Kj+4HsU+PQrXPQAAgD9xPSo/uB7FPj0K1z0AAIA/cT0qP7gexT49Ctc9AACAP4/CBT9I4Zo+w/WoPQAAgD+PwgU/SOGaPsP1qD0AAIA/j8IFP0jhmj7D9ag9AACAP4/CBT9I4Zo+w/WoPQAAgD8zM3M/zcwMP5qZGT4AAIA/MzNzP83MDD+amRk+AACAPzMzcz/NzAw/mpkZPgAAgD8zM3M/zcwMP5qZGT4AAIA/XI/CPq5HYT6PwnU9AACAP1yPwj6uR2E+j8J1PQAAgD9cj8I+rkdhPo/CdT0AAIA/XI/CPq5HYT6PwnU9AACAP4tsRz956eY+bef7PQAAgD+LbEc/eenmPm3n+z0AAIA/i2xHP3np5j5t5/s9AACAP4tsRz956eY+bef7PQAAgD+F6xE/w/WoPuxRuD0AAIA/hesRP8P1qD7sUbg9AACAP4XrET/D9ag+7FG4PQAAgD+F6xE/w/WoPuxRuD0AAIA/AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA7FE4PgAAAADsUTg+7FE4PgAAAADsUTi+7FE4PgAAwD/sUTi+7FE4PgAAwD/sUTg+7FE4vgAAAADsUTi+7FE4vgAAAADsUTg+7FE4vgAAwD/sUTg+7FE4vgAAwD/sUTi+7FE4vgAAwD/sUTg+7FE4PgAAwD/sUTg+7FE4PgAAwD/sUTi+7FE4vgAAwD/sUTi+7FE4vgAAAADsUTi+7FE4PgAAAADsUTi+7FE4PgAAAADsUTg+7FE4vgAAAADsUTg+7FE4vgAAAADsUTg+7FE4PgAAAADsUTg+7FE4PgAAwD/sUTg+7FE4vgAAwD/sUTg+7FE4PgAAAADsUTi+7FE4vgAAAADsUTi+7FE4vgAAwD/sUTi+7FE4PgAAwD/sUTi+KVwPPjMzsz5xPSo/AACAPylcDz4zM7M+cT0qPwAAgD8pXA8+MzOzPnE9Kj8AAIA/KVwPPjMzsz5xPSo/AACAP65H4T3NzIw+j8IFPwAAgD+uR+E9zcyMPo/CBT8AAIA/rkfhPc3MjD6PwgU/AACAP65H4T3NzIw+j8IFPwAAgD/NzEw+AAAAPzMzcz8AAIA/zcxMPgAAAD8zM3M/AACAP83MTD4AAAA/MzNzPwAAgD/NzEw+AAAAPzMzcz8AAIA/CtejPc3MTD5cj8I+AACAPwrXoz3NzEw+XI/CPgAAgD8K16M9zcxMPlyPwj4AAIA/CtejPc3MTD5cj8I+AACAP57vJz6F69E+i2xHPwAAgD+e7yc+hevRPotsRz8AAIA/nu8nPoXr0T6LbEc/AACAP57vJz6F69E+i2xHPwAAgD+PwvU9mpmZPoXrET8AAIA/j8L1PZqZmT6F6xE/AACAP4/C9T2amZk+hesRPwAAgD+PwvU9mpmZPoXrET8AAIA/AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"
+  }
+ ],
+ "meshes": [
+  {
+   "name": "BaseMesh",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "COLOR_0": 1
+     },
+     "indices": 2,
+     "material": 0
+    }
+   ]
+  },
+  {
+   "name": "UpperArmMesh",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 3,
+      "COLOR_0": 4
+     },
+     "indices": 5,
+     "material": 0
+    }
+   ]
+  },
+  {
+   "name": "ForearmMesh",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 6,
+      "COLOR_0": 7
+     },
+     "indices": 8,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "name": "Base",
+   "mesh": 0,
+   "children": [
+    1
+   ]
+  },
+  {
+   "name": "UpperArm",
+   "mesh": 1,
+   "translation": [
+    0.0,
+    0.5,
+    0.0
+   ],
+   "children": [
+    2
+   ]
+  },
+  {
+   "name": "Forearm",
+   "mesh": 2,
+   "translation": [
+    0.0,
+    2.0,
+    0.0
+   ]
+  }
+ ],
+ "materials": [
+  {
+   "name": "BakedColours",
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  }
+ ],
+ "extensionsUsed": [
+  "KHR_materials_unlit"
+ ],
+ "scenes": [
+  {
+   "name": "RobotArm",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "scene": 0
+}

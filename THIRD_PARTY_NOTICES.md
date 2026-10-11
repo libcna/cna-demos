@@ -34,6 +34,8 @@ sounds, fonts or models are included.
 | `assets/sounds/tone_440.wav` | 0.5 s 440 Hz sine, 22050 Hz mono PCM16 | generated, original |
 | `assets/sounds/tone_660.wav` | 0.25 s 660 Hz sine, 22050 Hz mono PCM16 | generated, original |
 | `assets/music/rising.wav`, `assets/music/falling.wav` | 2 s tunes (eight plucked sine notes, C major up / A minor down), 22050 Hz mono PCM16 | generated, original |
+| `assets/models/loose_robot_arm.gltf`, `content/models/robot_arm.gltf` | three-box robot arm (node hierarchy, baked vertex colours, unlit material), glTF 2.0 with an embedded buffer; written by `tools/gltf_models.py` | generated, original |
+| `content/models/bending_strip.gltf` | strip skinned to two joints with a "Bend" animation clip; written by `tools/gltf_models.py` | generated, original |
 | `assets/levels/level1.level` | five-line text tile map for the custom-reader demo | written for cna-demos, original |
 | `content/fonts/pixel_font.png` | pixel font (printable ASCII, 5x9 grid at 2x) as an XNA font-texture sheet; glyph shapes in `tools/pixel_font.py` | drawn for cna-demos, original |
 | `content/textures/keyed_ship.png` | 64x64 ship on a magenta background (colour-key source) | generated, original |

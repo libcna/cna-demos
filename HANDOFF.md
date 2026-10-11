@@ -66,10 +66,10 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 6. Demo counts
 
-275 demos: math 72, game 25, graphics 99 (19 SpriteBatch, 8 device, 7 texture2d, 7 sprite font,
+282 demos: math 72, game 25, graphics 106 (19 SpriteBatch, 8 device, 7 texture2d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 5 depth-stencil state, 3 primitives,
 2 vertex buffer, 2 index buffer, 1 vertex declaration, 6 render target, 7 BasicEffect, 10 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector), audio 8, core 1,
+effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 7 model), audio 8, core 1,
 content 16, input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 7, platform 1
 (standalone).
@@ -88,9 +88,9 @@ net, gamer_services. Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 | Configure + build `linux-full` (8 renderers, CNA as libcna.so) | ✅ |
 | `cna-demos --validate` | ✅ 0 problems |
 | `tools/validate.sh` (build, validate, ctest, smoke SOFTWARE + OPENGLES3/Xvfb, coverage) | ✅ |
-| `ctest` (CLI tests + 275 demos on SOFTWARE, dummy audio) | ✅ 288/288 (4 expected failures via WILL_FAIL, 2 manual demos disabled) |
-| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 257 passed, 4 expected failures, 12 skipped (9 window demos, PbrEffect fallback, 2 custom shaders: no CustomEffects), 2 not run (manual) |
-| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ✅ 266 passed, 4 expected failures, 3 skipped (wireframe, LOD bias: not on GL ES; ColorMatrixEffect: SOFTWARE only), 2 not run (manual) |
+| `ctest` (CLI tests + 282 demos on SOFTWARE, dummy audio) | ✅ 295/295 (4 expected failures via WILL_FAIL, 2 manual demos disabled) |
+| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 264 passed, 4 expected failures, 12 skipped (9 window demos, PbrEffect fallback, 2 custom shaders: no CustomEffects), 2 not run (manual) |
+| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ✅ 273 passed, 4 expected failures, 3 skipped (wireframe, LOD bias: not on GL ES; ColorMatrixEffect: SOFTWARE only), 2 not run (manual) |
 | Screenshots inspected (SOFTWARE, OPENGLES3): every graphics.* and input.* Game demo | ✅ correct; the renderers agree (except intentionally non-deterministic demos) |
 | Content build (`cna-content`, FontTextureProcessor) | ✅ builds `fonts/pixel_font.cnb`; FreeType not required |
 | CMake 3.28.3 (distro) with CNA_SHARED_LIBRARY=ON | ❌ CNA-DEMOS-ISSUE-001; cna-demos now defaults to static there |
@@ -164,15 +164,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Next: Phase 7 models (glTF)** -- generate small glTF scenes with a script in `tools/` (a cube
-and a two-bone skinned strip with an animation; glTF JSON + base64 or .bin buffers, original
-data), compile them with `cna_add_content` (`CNA.GltfImporter` -> `CNA.ModelProcessor`), and
-demo `Model`, `ModelMesh`, `ModelMeshPart`, `ModelBone` transforms (`CopyAbsoluteBoneTransformsTo`),
-`Model::Draw`, effects per part, bounding spheres, and CNA's `AnimationClipEXT`. Read
-`../cna/docs/gltf-*.md` and `model-content-pipeline-support.md` first. Alternatives if blocked:
-XACT (`audio.xact.*` -- CNA has an example that generates XACT files at runtime, see
+**Next** (Phase 7 continued or other areas): PBR glTF materials with lights (GL only; SOFTWARE has
+an unlit fallback), textured glTF, node-animation clips (`ApplyClipToBonesEXT`), glTF cameras;
+or XACT (`audio.xact.*` -- CNA has an example that generates XACT files at runtime, see
 `../cna/examples`), Phase 12 net/gamer services (`CNA_ENABLE_NET` is ON here, categories `net` and
-`gamer_services` exist), Phase 13 devices/phone/design.
+`gamer_services` exist), Phase 13 devices/phone/design/diagnostics.
+
+Model facts learned: glTF with `KHR_materials_unlit` + `COLOR_0` maps to BasicEffect (stride 24),
+skinned + unlit + COLOR_0 to SkinnedEffect (stride 56); without the unlit material a primitive
+gets PbrEffect/SkinnedPbrEffect even with vertex colours. CNA adds a synthetic root bone named
+"Root" above the scene's nodes (avoid that name for nodes). `Copy*BoneTransformsTo` need a
+destination already sized to `Bones.Count` (XNA's rule). The glTF import report is filled only for
+`.gltf`/`.glb` loaded at run time (and Model `.cnj`), not for pipeline-compiled models.
 
 Media facts learned: CNA plays music through SDL_mixer, so generated WAVs work as songs; a file
 Song's Duration is 0 without CNA's FFmpeg probe (playback still ends correctly); MediaPlayer's
