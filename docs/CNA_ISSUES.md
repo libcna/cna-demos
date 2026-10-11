@@ -1023,6 +1023,42 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   live-bound updates with an intentionally distant palette and restoration; broader skinning
   bounds and multi-influence cases are not implied.
 
+### CNA-DEMOS-ISSUE-043 -- GetTypeReader confuses the target type name with the reader factory key
+
+- **Area:** ContentTypeReaderManager::GetTypeReader/CreateReaderForTargetTypeEXT and the
+  constructor association in ContentTypeReader<T>.
+- **Demo:** `content.xnb.existing_objects` (one explicit known-failing lookup check; the other
+  eleven checks exercise independent existing-object/raw-payload behavior).
+- **Reproduction:** register a capture-free WeaponReader factory under
+  `CnaDemos.LoadoutWeaponReader`, as named by the XNB reader table. Its base constructor correctly
+  declares target `CnaDemos.LoadoutWeapon`. After the entire two-entry table has been constructed,
+  the root reader's Initialize calls GetTypeReader(System::Type::From<WeaponPtr>()).
+- **Observed:** GetTypeReader returns null although the weapon reader has already been constructed.
+  Explicit CreateReader("CnaDemos.LoadoutWeaponReader") returns the correct reader, whose public
+  target name remains `CnaDemos.LoadoutWeapon`. Indexed ReadObject, explicit-reader ReadRawObject,
+  existing slot identity/runtime state, null fallback and type-erased tags all work.
+- **Expected:** type lookup resolves the reader for that target type without requiring a data
+  type's canonical name to equal its reader class/factory name. Those names are also distinct
+  throughout CNA's built-in readers (for example System.String versus its StringReader).
+- **Cause:** ContentTypeReader<T>'s constructor associates C++ type T with the target name.
+  CreateReaderForTargetTypeEXT retrieves that string and passes it directly to CreateReader,
+  which indexes factories by reader name. No target-to-reader-name mapping bridges them.
+  ContentRuntimeContractTests uses the same string for target and factory key, so its passing
+  lookup test does not cover this distinction. By source inspection, implicit type-only
+  ReadRawObject overloads share this lookup; this demo does not claim to have executed them.
+- **Evidence/environment:** Linux GCC 14.2, both renderer selections WITHOUT DISPLAY or
+  WAYLAND_DISPLAY: `/tmp/cna-430-existing-{SOFTWARE,OPENGLES3}.{json,log}` (12 checks, exactly
+  one failure before adding the issue label). CNA HEAD 2fda5389d2990b40146d06de0ae0531d05055f24
+  with an external C API refactor in progress; the inspected C++ content reader implementation
+  is unchanged. No graphics/GPU or genuine-XNA runtime comparison is claimed.
+- **Final labeled reproduction:** `/tmp/cna-430-existing-final-{SOFTWARE,OPENGLES3}.{json,log}`
+  retains the same single failed check with the issue identifier. Its WILL_FAIL CTest passes;
+  complete-checkpoint evidence will be recorded after the current batch finishes.
+- **Handling:** retain the failing lookup assertion. A clearly labeled public named-factory
+  fallback lets the remaining schema example run; it does not change the target name or add
+  a hidden alias registration. No global registry clearing, CNA source edits or upstream report.
+  A library fix should preserve the distinction between target identity and reader factory name.
+
 ## Resolved
 
 (none yet)

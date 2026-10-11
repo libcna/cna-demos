@@ -39,6 +39,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing-object XNB loadout reads and external-reference cards: preserve runtime slot identity,
+  distinguish indexed/raw/type-erased payloads, resolve sibling PNG/XNB assets and render shared
+  cache edits. Distinct target/reader names expose CNA GetTypeReader failure (ISSUE-043), retained
+  as an explicit known-failing check with a documented named-factory fallback.
 - A runtime XNB shared-resource graph demo: deferred callbacks rebuild aliases and forward/weak
   backward edges, distinguish inline objects, preserve cache isolation, reject incompatible
   indices/types and release ownership (15 console checks, no graphics requirement).
