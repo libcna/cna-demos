@@ -136,9 +136,12 @@ Console demos with checks; each shows one operation family.
 - ✅ `graphics.model.morph_targets` (MorphTargetDataEXT, weights track, SetMorphWeightsEXT),
   ✅ `graphics.model.gltf_cameras` (ModelCameraEXT; compiled models lose them, ISSUE-023),
   ✅ `graphics.model.textured_gltf` (embedded PNG; compiled models lose it, ISSUE-022).
-- Remaining: PBR materials with lights (`PbrEffect`/`SkinnedPbrEffect`, GL only), STEP/CUBICSPLINE
-  clips, glTF punctual lights, material variants, `ModelMeshPart` details, XNB models,
-  `SkinnedModelEXT`.
+- ✅ `graphics.model.gltf_lights` (KHR_lights_punctual -> the PbrEffect's directional lights; GL
+  only), ✅ `graphics.model.clip_interpolation` (STEP/LINEAR/CUBICSPLINE samplers; expected failure,
+  CNA-DEMOS-ISSUE-031: all play as LINEAR).
+- ✅ `graphics.model.material_variants` (KHR_materials_variants, run-time import: CNA's content
+  pipeline refuses variants, which the compiled model format cannot carry).
+- Remaining: `SkinnedPbrEffect`, `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
 
 ## Phase 8 -- content 🟨 (18 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB

@@ -12,9 +12,10 @@ assets/models/ that is loaded as a loose glTF file at run time.
 * bending_strip.gltf -- a vertical strip skinned to two joints (LowerJoint -> UpperJoint) with an
   animation "Bend" that rotates UpperJoint back and forth. It has NORMAL and COLOR_0, so CNA gives it a
   SkinnedEffect.
-* turntable.gltf, morph_flag.gltf, camera_rig.gltf, textured_crate.gltf -- node-animation clips,
-  morph targets with a weights animation, glTF cameras, an embedded base-colour texture; see
-  each function.
+* turntable.gltf, morph_flag.gltf, camera_rig.gltf, textured_crate.gltf, lit_sphere.gltf,
+  slide_rig.gltf, loose_paint_toy.gltf -- node-animation clips, morph targets with a weights animation,
+  glTF cameras, an embedded base-colour texture, KHR_lights_punctual lights,
+  STEP/LINEAR/CUBICSPLINE samplers, KHR_materials_variants; see each function.
 """
 
 import base64
@@ -357,6 +358,128 @@ def textured_crate(path: Path) -> None:
     doc.save(path)
 
 
+def slide_rig(path: Path) -> None:
+    """Three boxes in rows sliding from x = -2 to 0 to 2 in two seconds, one clip "Slide" with one
+    channel per box: the top box's sampler is STEP, the middle one's LINEAR, the bottom one's
+    CUBICSPLINE with zero tangents (an ease in and out)."""
+    doc = Document()
+    rows = [("StepBox", 1.0, (0.9, 0.35, 0.3)), ("LinearBox", 0.0, (0.35, 0.8, 0.4)),
+            ("CubicBox", -1.0, (0.35, 0.5, 0.95))]
+    for name, _y, colour in rows:
+        positions, colours, indices = box((-0.3, -0.3, -0.3), (0.3, 0.3, 0.3), colour)
+        doc.gltf["meshes"].append({"name": name + "Mesh", "primitives": [{
+            "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True),
+                           "COLOR_0": doc.accessor(colours, "VEC4")},
+            "indices": doc.accessor(indices, "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+            "material": 0}]})
+    doc.gltf["nodes"] = [{"name": name, "mesh": index, "translation": [-2.0, y, 0.0]}
+                         for index, (name, y, _colour) in enumerate(rows)]
+    times = [0.0, 1.0, 2.0]
+    sampler_input = doc.accessor(times, "SCALAR", target=None)
+    doc.gltf["accessors"][sampler_input].update({"min": [times[0]], "max": [times[-1]]})
+    samplers, channels = [], []
+    for index, (_name, y, _colour) in enumerate(rows):
+        values = [(-2.0, y, 0.0), (0.0, y, 0.0), (2.0, y, 0.0)]
+        interpolation = ["STEP", "LINEAR", "CUBICSPLINE"][index]
+        if interpolation == "CUBICSPLINE":
+            zero = (0.0, 0.0, 0.0)
+            values = [v for value in values for v in (zero, value, zero)]  # in-tangent, value, out-tangent
+        samplers.append({"input": sampler_input, "output": doc.accessor(values, "VEC3", target=None),
+                         "interpolation": interpolation})
+        channels.append({"sampler": index, "target": {"node": index, "path": "translation"}})
+    doc.gltf["animations"] = [{"name": "Slide", "samplers": samplers, "channels": channels}]
+    doc.gltf["materials"] = [{"name": "BakedColours", "extensions": {"KHR_materials_unlit": {}}}]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+    doc.gltf["scenes"] = [{"name": "SlideRig", "nodes": [0, 1, 2]}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
+def paint_toy(path: Path) -> None:
+    """A toy car: a body and four wheels, unlit. The body's default material is red; the file
+    declares two KHR_materials_variants, "Ocean" (blue body) and "Gold" (gold body). The wheels
+    have no variant mapping, so they stay black whatever variant is chosen."""
+    doc = Document()
+    body_positions, _c, body_indices = box((-1.2, 0.3, -0.6), (1.2, 0.9, 0.6), (1.0, 1.0, 1.0))
+    wheel_parts = []
+    for x in (-0.75, 0.75):
+        for z in (-0.65, 0.65):
+            wheel_parts.append(box((x - 0.25, 0.0, z - 0.1), (x + 0.25, 0.5, z + 0.1), (1.0, 1.0, 1.0)))
+    doc.gltf["meshes"] = [{"name": "BodyMesh", "primitives": [{
+        "attributes": {"POSITION": doc.accessor(body_positions, "VEC3", minmax=True)},
+        "indices": doc.accessor(body_indices, "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+        "material": 0,
+        "extensions": {"KHR_materials_variants": {"mappings": [
+            {"material": 1, "variants": [0]}, {"material": 2, "variants": [1]}]}}}]}]
+    positions, indices = [], []
+    for wheel_positions, _colours, wheel_indices in wheel_parts:
+        base = len(positions)
+        positions += wheel_positions
+        indices += [base + i for i in wheel_indices]
+    doc.gltf["meshes"].append({"name": "WheelsMesh", "primitives": [{
+        "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True)},
+        "indices": doc.accessor(indices, "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+        "material": 3}]})
+    doc.gltf["nodes"] = [{"name": "Body", "mesh": 0}, {"name": "Wheels", "mesh": 1}]
+
+    def paint(name, rgb):
+        return {"name": name, "pbrMetallicRoughness": {"baseColorFactor": [*rgb, 1.0]},
+                "extensions": {"KHR_materials_unlit": {}}}
+
+    doc.gltf["materials"] = [paint("Red", (0.85, 0.12, 0.1)), paint("Blue", (0.1, 0.3, 0.9)),
+                             paint("Gold", (0.95, 0.75, 0.15)), paint("Rubber", (0.05, 0.05, 0.05))]
+    doc.gltf["extensions"] = {"KHR_materials_variants": {"variants": [{"name": "Ocean"}, {"name": "Gold"}]}}
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit", "KHR_materials_variants"]
+    doc.gltf["scenes"] = [{"name": "PaintToy", "nodes": [0, 1]}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
+def lit_sphere(path: Path) -> None:
+    """A white sphere with a metallic-roughness material (so CNA gives it a PbrEffect) and two
+    KHR_lights_punctual directional lights: "Warm" (1, 0.35, 0.2) shining from the left (towards
+    +X) and "Cool" (0.2, 0.45, 1) from the right (towards -X). A directional light shines down its
+    node's -Z."""
+    doc = Document()
+    rings, segments = 24, 48
+    positions, normals, indices = [], [], []
+    for ring in range(rings + 1):
+        phi = math.pi * ring / rings
+        for segment in range(segments + 1):
+            theta = 2.0 * math.pi * segment / segments
+            n = (math.sin(phi) * math.cos(theta), math.cos(phi), math.sin(phi) * math.sin(theta))
+            normals.append(n)
+            positions.append(n)
+    for ring in range(rings):
+        for segment in range(segments):
+            a = ring * (segments + 1) + segment
+            b = a + segments + 1
+            indices += [a, a + 1, b, a + 1, b + 1, b]
+    doc.gltf["meshes"] = [{"name": "SphereMesh", "primitives": [{
+        "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True),
+                       "NORMAL": doc.accessor(normals, "VEC3")},
+        "indices": doc.accessor(indices, "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+        "material": 0}]}]
+    def about_y(degrees):
+        half = math.radians(degrees) / 2.0
+        return [0.0, math.sin(half), 0.0, math.cos(half)]
+    doc.gltf["nodes"] = [
+        {"name": "Sphere", "mesh": 0},
+        {"name": "WarmLight", "rotation": about_y(-90.0), "extensions": {"KHR_lights_punctual": {"light": 0}}},
+        {"name": "CoolLight", "rotation": about_y(90.0), "extensions": {"KHR_lights_punctual": {"light": 1}}},
+    ]
+    doc.gltf["extensions"] = {"KHR_lights_punctual": {"lights": [
+        {"name": "Warm", "type": "directional", "color": [1.0, 0.35, 0.2], "intensity": 1.0},
+        {"name": "Cool", "type": "directional", "color": [0.2, 0.45, 1.0], "intensity": 1.0},
+    ]}}
+    doc.gltf["materials"] = [{"name": "White", "pbrMetallicRoughness": {
+        "baseColorFactor": [1.0, 1.0, 1.0, 1.0], "metallicFactor": 0.0, "roughnessFactor": 0.7}}]
+    doc.gltf["extensionsUsed"] = ["KHR_lights_punctual"]
+    doc.gltf["scenes"] = [{"name": "LitSphere", "nodes": [0, 1, 2]}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
 def write_all(content_root: Path, assets_root: Path) -> None:
     robot_arm(content_root / "models" / "robot_arm.gltf")
     bending_strip(content_root / "models" / "bending_strip.gltf")
@@ -364,9 +487,14 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     morph_flag(content_root / "models" / "morph_flag.gltf")
     camera_rig(content_root / "models" / "camera_rig.gltf")
     textured_crate(content_root / "models" / "textured_crate.gltf")
+    lit_sphere(content_root / "models" / "lit_sphere.gltf")
+    slide_rig(content_root / "models" / "slide_rig.gltf")
     # The same arm as a loose file: CNA can also load glTF at run time, without the pipeline.
     robot_arm(assets_root / "models" / "loose_robot_arm.gltf")
     # Loose copies of the camera rig and the textured crate: the compiled models lose the cameras
     # (CNA-DEMOS-ISSUE-023) and the embedded texture (CNA-DEMOS-ISSUE-022), the run-time import keeps both.
     camera_rig(assets_root / "models" / "loose_camera_rig.gltf")
     textured_crate(assets_root / "models" / "loose_textured_crate.gltf")
+    # Material variants only as a loose file: CNA's content pipeline refuses them (the compiled
+    # model format cannot carry them).
+    paint_toy(assets_root / "models" / "loose_paint_toy.gltf")

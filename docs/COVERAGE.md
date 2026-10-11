@@ -6,7 +6,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**380 demos** in 18 categories. Kinds: console 141, game 227, standalone 12. Automation: automated 344, manual 3, smoke-only 33.
+**383 demos** in 18 categories. Kinds: console 141, game 230, standalone 12. Automation: automated 347, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 | 2 / 0 / 0 |
 | game | 32 | 27 | 4 | 1 | 24 / 6 / 1 | 30 / 0 / 1 |
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 | 17 / 0 / 1 |
-| graphics | 123 | 123 | 0 | 0 | 115 / 5 / 3 | 116 / 3 / 4 |
+| graphics | 126 | 126 | 0 | 0 | 116 / 6 / 4 | 118 / 3 / 5 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
 | math | 74 | 74 | 0 | 0 | 72 / 0 / 2 | 72 / 0 / 2 |
 | media | 10 | 9 | 1 | 0 | 10 / 0 / 0 | 10 / 0 / 0 |
@@ -32,7 +32,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 287 of 329** (87.2 %).
-- **Methods, properties, constructors and events named by a demo: 1085 of 2326** (46.6 %).
+- **Methods, properties, constructors and events named by a demo: 1088 of 2326** (46.8 %).
 - Fields and enum values named by a demo: 128 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
@@ -42,7 +42,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Content` | 6 / 11 | 10 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 258 / 550 | 80 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 261 / 550 | 80 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
@@ -97,12 +97,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `AccelerometerReading::Acceleration` -- devices.sensors.keyboard_accelerometer
 - `ActivatedEventArgs::IsApplicationInstancePreserved` -- phone.phone_application_service.lifecycle
 - `AnimationClip` -- graphics.model.skinned_animation
-- `AnimationClipEXT` -- graphics.model.node_animation
+- `AnimationClipEXT` -- graphics.model.clip_interpolation, graphics.model.node_animation
 - `AnimationPlayer::GetSkinTransforms` -- graphics.model.skinned_animation
 - `AnimationPlayer::GetWorldTransforms` -- graphics.model.skinned_animation
 - `AnimationPlayer::StartClip` -- graphics.model.skinned_animation
 - `AnimationPlayer::Update` -- graphics.model.skinned_animation
-- `ApplyClipToBonesEXT` -- graphics.model.node_animation
+- `ApplyClipToBonesEXT` -- graphics.model.clip_interpolation, graphics.model.node_animation
 - `ArgumentException` -- audio.sound_effect.loop_region
 - `BlendMorphTargetsEXT` -- graphics.model.morph_targets
 - `Buttons::Misc1EXT` -- input.gamepad.extra_buttons
@@ -331,8 +331,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `LooseFileContentTypeReader::GetExtensions` -- content.custom.loose_file_reader
 - `LooseFileContentTypeReader::Read` -- content.custom.loose_file_reader
 - `Model::GltfImportReportEXT` -- graphics.model.import_report
+- `Model::MaterialVariantEXT` -- graphics.model.material_variants
+- `Model::MaterialVariantNamesEXT` -- graphics.model.material_variants
 - `Model::getCamerasEXTProperty` -- graphics.model.gltf_cameras
-- `ModelAnimationsEXT` -- graphics.model.node_animation
+- `ModelAnimationsEXT` -- graphics.model.clip_interpolation, graphics.model.node_animation
 - `ModelCameraEXT` -- graphics.model.gltf_cameras
 - `ModelMeshCollection::Count` -- graphics.model.draw
 - `MorphTargetDataEXT` -- graphics.model.morph_targets
@@ -357,6 +359,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `MouseCursor::WaitArrow` -- input.mouse.cursors
 - `MouseState::HorizontalScrollWheelValueEXT` -- input.mouse.get_state
 - `OcclusionQuery::isPixelCountPreciseEXT` -- graphics.occlusion_query.visible_pixels
+- `PbrEffect` -- graphics.model.gltf_lights
 - `PbrEffect::DiffuseColor` -- graphics.pbr_effect.metallic_roughness
 - `PbrEffect::DirectionalLight0` -- graphics.pbr_effect.metallic_roughness
 - `PbrEffect::MetallicFactor` -- graphics.pbr_effect.metallic_roughness

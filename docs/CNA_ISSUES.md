@@ -717,6 +717,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
+### CNA-DEMOS-ISSUE-031 -- glTF STEP and CUBICSPLINE animation samplers play as LINEAR
+
+- **Area:** content, glTF import -- `GltfImportCore`'s `ExtractClips` evaluates each channel
+  (STEP, LINEAR or CUBICSPLINE correctly, `EvaluateVec3Channel`/`EvaluateQuatChannel`) but only at
+  the bone's own key times, and `KeyframeEXT` has no interpolation mode: `ApplyClipToBonesEXT`
+  then interpolates linearly between those keys. A STEP channel slides instead of holding, a
+  CUBICSPLINE channel loses its tangents. glTF 2.0 §3.11 defines all three samplers. Both the
+  compiled model and the run-time import behave so (the extraction is shared; skinned clips go
+  through the same code, not checked separately).
+- **Demos:** `graphics.model.clip_interpolation` (expected failure).
+- **Reproduction:** `content/models/slide_rig.gltf` (tools/gltf_models.py: three translation
+  channels keyed `x = -2, 0, 2` at `0, 1, 2` s, samplers STEP, LINEAR, CUBICSPLINE with zero
+  tangents); `ApplyClipToBonesEXT(model, clip, 0.25 s)`.
+- **Observed:** x = -1.5 for all three.
+- **Expected:** STEP -2 (held), LINEAR -1.5, CUBICSPLINE -1.6875 (Hermite, flat tangents).
+- **Environment:** CNA 0.1.0, Linux.
+- **Status:** open; not reported upstream yet. Resampling STEP channels with a hold key just before
+  each step, and CUBICSPLINE ones densely (or carrying the mode in the clip), would keep them.
+
+---
+
 ## Resolved
 
 (none yet)

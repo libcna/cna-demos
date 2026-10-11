@@ -144,6 +144,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   (AudioEngine::RendererDetails), `math.formatting.to_string` (ToString of the math types; expected
   failure, CNA-DEMOS-ISSUE-024: BoundingBox and Ray print doubled braces); the type-converter demo
   also lists Vector4, Plane and Ray.
+- `graphics.model.gltf_lights` (two KHR_lights_punctual lights become the PbrEffect's
+  DirectionalLight0/1) and `graphics.model.clip_interpolation` (STEP, LINEAR and CUBICSPLINE
+  samplers; expected failure CNA-DEMOS-ISSUE-031: CNA plays all three as LINEAR) and
+  `graphics.model.material_variants` (KHR_materials_variants: Model::MaterialVariantEXT repaints a
+  toy car); `tools/gltf_models.py` writes `lit_sphere.gltf`, `slide_rig.gltf` and
+  `loose_paint_toy.gltf`.
 - `net.network_session.simulated_conditions` (standalone: SimulatedLatency and SimulatedPacketLoss
   measured on packets between two processes; expected failure CNA-DEMOS-ISSUE-030: the simulated
   loss drops reliable packets too).

@@ -1,0 +1,222 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "cna-demos tools/gltf_models.py"
+ },
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3",
+   "min": [
+    -1.2,
+    0.3,
+    -0.6
+   ],
+   "max": [
+    1.2,
+    0.9,
+    0.6
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5123,
+   "count": 36,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 96,
+   "type": "VEC3",
+   "min": [
+    -1.0,
+    0.0,
+    -0.75
+   ],
+   "max": [
+    1.0,
+    0.5,
+    0.75
+   ]
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 144,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 288,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 288,
+   "byteLength": 72,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 360,
+   "byteLength": 1152,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 1512,
+   "byteLength": 288,
+   "target": 34963
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 1800,
+   "uri": "data:application/octet-stream;base64,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"
+  }
+ ],
+ "meshes": [
+  {
+   "name": "BodyMesh",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "indices": 1,
+     "material": 0,
+     "extensions": {
+      "KHR_materials_variants": {
+       "mappings": [
+        {
+         "material": 1,
+         "variants": [
+          0
+         ]
+        },
+        {
+         "material": 2,
+         "variants": [
+          1
+         ]
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "WheelsMesh",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 2
+     },
+     "indices": 3,
+     "material": 3
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "name": "Body",
+   "mesh": 0
+  },
+  {
+   "name": "Wheels",
+   "mesh": 1
+  }
+ ],
+ "materials": [
+  {
+   "name": "Red",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.85,
+     0.12,
+     0.1,
+     1.0
+    ]
+   },
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  },
+  {
+   "name": "Blue",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.1,
+     0.3,
+     0.9,
+     1.0
+    ]
+   },
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  },
+  {
+   "name": "Gold",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.95,
+     0.75,
+     0.15,
+     1.0
+    ]
+   },
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  },
+  {
+   "name": "Rubber",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.05,
+     0.05,
+     0.05,
+     1.0
+    ]
+   },
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  }
+ ],
+ "extensions": {
+  "KHR_materials_variants": {
+   "variants": [
+    {
+     "name": "Ocean"
+    },
+    {
+     "name": "Gold"
+    }
+   ]
+  }
+ },
+ "extensionsUsed": [
+  "KHR_materials_unlit",
+  "KHR_materials_variants"
+ ],
+ "scenes": [
+  {
+   "name": "PaintToy",
+   "nodes": [
+    0,
+    1
+   ]
+  }
+ ],
+ "scene": 0
+}
