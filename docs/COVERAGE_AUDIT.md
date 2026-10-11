@@ -33,7 +33,7 @@ Decisions:
 | NoAudioHardwareException | environment: thrown without an audio device; the runner turns it into SKIPPED for demos that declare `Need::Audio` |
 | NoMicrophoneConnectedException | environment (no microphone); `audio.microphone.input_level` is manual |
 | InstancePlayLimitException | candidate: XNA's per-platform cap on playing instances -- check whether CNA enforces one before writing a demo |
-| RendererDetail | candidate: `AudioEngine::RendererDetails` in an XACT demo |
+| RendererDetail | demo: `audio.xact.renderer_details` |
 
 ## Microsoft.Xna.Framework.Content
 
@@ -47,8 +47,7 @@ Decisions:
 
 | Type | Decision |
 |---|---|
-| RectangleConverter | shown in `design.type_converter.string_round_trip` |
-| PlaneConverter, RayConverter, Vector4Converter | candidate: the same round trip for the remaining math converters |
+| RectangleConverter, PlaneConverter, RayConverter, Vector4Converter | shown in `design.type_converter.string_round_trip` |
 
 ## Microsoft.Xna.Framework.GamerServices
 
@@ -75,7 +74,7 @@ Decisions:
 | EffectParameterClass, EffectParameterType, EffectPassCollection | shown in `graphics.effect.parameters_and_techniques` |
 | ModelMeshCollection, ModelMeshPartCollection, ModelEffectCollection | shown in `graphics.model.draw`, `graphics.model.morph_targets`, `graphics.model.mesh_effects`; their enumerators are C#'s `foreach` machinery |
 | RenderTargetBinding | candidate: multiple render targets (needs a custom effect; ROADMAP Phase 5) |
-| VertexPositionColorTexture, IVertexType | candidate: the stock vertex types and the interface that names their declaration |
+| VertexPositionColorTexture, IVertexType | demo: `graphics.vertex_declaration.stock_vertex_types` |
 | EffectAnnotation, EffectAnnotationCollection, EffectMaterial | candidate: need compiled XNA effects (`.fx` built with `CNA_<RENDERER>_COMPILED_EFFECTS`) or XNB models |
 | DeviceLostException, DeviceNotResetException, GraphicsDeviceStatus, NoSuitableGraphicsDeviceException | environment: device loss does not happen on CNA's desktop renderers; no adapter means no demos at all |
 

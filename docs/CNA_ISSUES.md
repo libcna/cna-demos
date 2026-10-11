@@ -568,6 +568,24 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux.
 - **Status:** open (medium); not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-024 -- `BoundingBox::ToString` and `Ray::ToString` print doubled braces
+
+- **Area:** math -- `BoundingBox.cpp` and `Ray.cpp` write the literal text `{{Min:` ... `}}` and
+  `{{Position:` ... `}}`; CNA's own `BoundingBoxTests` pins FNA's string. XNA builds both with
+  `string.Format(culture, "{{Min:{0} Max:{1}}}", ...)` / `"{{Position:{0} Direction:{1}}}"`, where
+  `{{`/`}}` are format escapes that print one brace each. CNA's `BoundingSphere`, `Plane` and the
+  other math types already print single braces.
+- **Demos:** `math.formatting.to_string` (expected failure); `design.type_converter.string_round_trip`
+  shows the same text through the converters.
+- **Reproduction:** `BoundingBox(-Vector3::One, Vector3::One).ToString()`,
+  `Ray(Vector3::Zero, Vector3::Forward).ToString()`.
+- **Observed:** `{{Min:{X:-1 Y:-1 Z:-1} Max:{X:1 Y:1 Z:1}}}`,
+  `{{Position:{X:0 Y:0 Z:0} Direction:{X:0 Y:0 Z:-1}}}`.
+- **Expected:** `{Min:{X:-1 Y:-1 Z:-1} Max:{X:1 Y:1 Z:1}}`,
+  `{Position:{X:0 Y:0 Z:0} Direction:{X:0 Y:0 Z:-1}}`.
+- **Environment:** CNA 0.1.0, Linux.
+- **Status:** open (low: text only); not reported upstream yet.
+
 ---
 
 ## Resolved

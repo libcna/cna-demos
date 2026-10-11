@@ -9,11 +9,14 @@
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Design.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
+#include "Microsoft/Xna/Framework/Plane.hpp"
 #include "Microsoft/Xna/Framework/Point.hpp"
 #include "Microsoft/Xna/Framework/Quaternion.hpp"
+#include "Microsoft/Xna/Framework/Ray.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
+#include "Microsoft/Xna/Framework/Vector4.hpp"
 #include "System/ArgumentException.hpp"
 #include "System/ComponentModel/TypeDescriptor.hpp"
 #include "System/NotSupportedException.hpp"
@@ -82,7 +85,10 @@ namespace
         Show(ctx, "Point", Point(12, -7));
         Show(ctx, "Vector2", Vector2(1.5f, -2.25f));
         Show(ctx, "Vector3", position);
+        Show(ctx, "Vector4", Vector4(1.0f, 0.5f, 0.25f, 1.0f));
         Show(ctx, "Quaternion", Quaternion::Identity);
+        Show(ctx, "Plane", Plane(Vector3::Up, -2.0f));
+        Show(ctx, "Ray", Ray(Vector3::Zero, Vector3::Forward));
         Show(ctx, "Color", Color::CornflowerBlue);
         Show(ctx, "Rectangle", Rectangle(1, 2, 30, 40));
         Show(ctx, "BoundingBox", BoundingBox(Vector3(-1.0f, -1.0f, -1.0f), Vector3::One));
@@ -95,10 +101,11 @@ CNA_DEMOS_CONSOLE(StringRoundTrip, {
     .title = "Math values as text",
     .description = "Finds the Vector3Converter through TypeDescriptor, writes a Vector3 as invariant text and reads "
                    "it back, rejects malformed text, and lists which XNA math types parse text (Point, vectors, "
-                   "Quaternion, Color) and which only print (Rectangle, Matrix, bounding volumes).",
+                   "Quaternion, Color) and which only print (Rectangle, Matrix, Plane, Ray, bounding volumes).",
     .apis = {"Vector3Converter::ConvertTo", "Vector3Converter::ConvertFrom", "Vector3Converter::Vector3Converter",
              "MathTypeConverter::CanConvertFrom", "ColorConverter::ConvertFrom", "RectangleConverter::ConvertFrom",
              "PointConverter::ConvertTo", "Vector2Converter::ConvertTo", "QuaternionConverter::ConvertTo",
-             "BoundingBoxConverter::ConvertTo", "MatrixConverter::ConvertTo"},
+             "BoundingBoxConverter::ConvertTo", "MatrixConverter::ConvertTo",
+             "RectangleConverter", "Vector4Converter", "PlaneConverter", "RayConverter"},
     .tags = {"design", "type-converter", "text", "serialization", "tools"},
 })

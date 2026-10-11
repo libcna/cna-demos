@@ -139,6 +139,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   DynamicIndexBuffer with Discard, Texture3D sub-box data, glTF node-animation clips
   (ModelAnimationsEXT, ApplyClipToBonesEXT) on a generated turntable model, and the same font, sound
   and curve compiled to CNB and to XNB.
+- Audit demos (3): `graphics.vertex_declaration.stock_vertex_types` (IVertexType, the four stock
+  vertex structs, a VertexPositionColorTexture quad), `audio.xact.renderer_details`
+  (AudioEngine::RendererDetails), `math.formatting.to_string` (ToString of the math types; expected
+  failure, CNA-DEMOS-ISSUE-024: BoundingBox and Ray print doubled braces); the type-converter demo
+  also lists Vector4, Plane and Ray.
 - `game.services.graphics_device_service` (a component reaches the device through
   IGraphicsDeviceService) and `net.network_session.online_session_types` (Local vs PlayerMatch and
   Ranked without the online service).
