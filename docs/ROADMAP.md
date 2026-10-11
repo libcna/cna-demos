@@ -151,7 +151,7 @@ Console demos with checks; each shows one operation family.
 - ✅ `graphics.model.skinned_pbr` (skinned + metallic-roughness imports as SkinnedPbrEffect).
 - Remaining: `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
 
-## Phase 8 -- content 🟨 (20 demos; remaining below)
+## Phase 8 -- content 🟨 (21 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -161,8 +161,9 @@ Console demos with checks; each shows one operation family.
   ISSUE-012), ✅ `content.cnj.sprite_font` (a bitmap font authored as CNJ: atlas, glyph rectangles,
   cropping, kerning), ✅ `content.content_project.xna_content_project` (an XNA `.contentproj` built
   as it is, `CONTENT_PROJECT`). A CNJ texture repeats the texture processor demos (the same
-  parameters in JSON). Remaining: custom pipeline components, `RegisterCnbLoaderEXT` and
-  `RegisterCnjLoader` (a game's own asset type; see HANDOFF "Next").
+  parameters in JSON). ✅ `content.custom.cnb_loader` uses public CnbWriter and
+  RegisterCnbLoaderEXT for a typed asset, caching and schema rejection. Remaining: custom pipeline
+  components and `RegisterCnjLoader` (a game's own asset type; see HANDOFF "Next").
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
   managers, `ContentLoadException`, loose files vs XNB vs CNB vs CNJ lookup order.
 - `content.xnb.*`: Texture2D, SoundEffect, SpriteFont, Model, Effect, TextureCube, Curve XNBs.

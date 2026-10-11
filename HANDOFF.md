@@ -63,11 +63,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-403 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+404 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 13 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 19 (8 XACT), core 3 (2 logger),
-content 20 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 21 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 13 (standalone C programs). Every declared category has demos.
@@ -223,16 +223,23 @@ These are API-data demos, so no new visual inspection is claimed. Coverage regen
 named members; full smoke evidence is still the 401-demo baseline and explicitly shows the two
 new IDs absent. Run the next complete checkpoint after the following content batch.
 
-**Immediate next task:** implement and validate `content.custom.cnb_loader` from
-`/tmp/cna-cnb-loader.cpp`. The public CnbWriter can generate a private temporary fixture (also in
-the pinned CNA), so a custom pipeline writer is not a prerequisite. Show a typed rules asset,
-process-wide loader registration, per-manager caching and rejection of unsupported schema versions.
-Then run tools/validate.sh on the enlarged catalog, update coverage/status, and continue to the
-next valuable behavior gaps (Curve tangent/loop audit or CNJ custom loading).
+**Content extension batch completed:** `content.custom.cnb_loader` builds and passes directly
+and through CTest (5 checks). It uses public CnbWriter for a private temporary rules file,
+RegisterCnbLoaderEXT for typed loading, per-manager cache checks and unsupported-schema rejection.
+The new CnbWriter path was checked against the CI-pinned headers too. No CNA defect was found.
+Metadata validation: 404 demos, zero problems; catalog validation also passes. Coverage was
+regenerated with the 401-demo baseline reports, explicitly showing the three newer IDs absent.
+A complete 404-demo tools/validate.sh run is the immediate next action; update section 7 and
+coverage from its fresh reports before calling the enlarged checkpoint complete.
 
-**Next**: remainders by value -- Phase 8 (`RegisterCnbLoaderEXT`/`RegisterCnjLoader` for a game's
+After that, extend existing Curve demos for selective/asymmetric tangents and negative-time
+loop behavior identified by COVERAGE_AUDIT.md, validating against actual CNA headers/source.
+CNJ custom loading remains pending (requires parsing the factory's raw JSON); no new parser
+or dependency was added as part of the CNB demo.
+
+**Next**: remainders by value -- Phase 8 (`RegisterCnjLoader` for a game's
 own asset type: the CNJ hook hands the game raw JSON, and sharp-runtime's System.Text.Json is not
-part of CNA's build, so a demo would need its own parser; the CNB hook is the immediate next batch above); Phase 9 (XACT RPC curves, cue variations, instance limits -- audible only: no API
+part of CNA's build, so a demo would need its own parser; the CNB hook is now demonstrated); Phase 9 (XACT RPC curves, cue variations, instance limits -- audible only: no API
 reports a cue's volume or chosen variation, and tools/xact_files.py would need RPC and variation
 tables); Phase 6 (image-based lighting; compiled `.fx` effects need fxc); Phase 12
 (`AvatarDescription::Changed`, manual); Phase 13 (devices-ext camera, system tray, message box and
