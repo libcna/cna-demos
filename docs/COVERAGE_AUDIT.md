@@ -32,14 +32,14 @@ Decisions:
 | MicrophoneState | shown in `audio.microphone.input_level` |
 | NoAudioHardwareException | environment: thrown without an audio device; the runner turns it into SKIPPED for demos that declare `Need::Audio` |
 | NoMicrophoneConnectedException | environment (no microphone); `audio.microphone.input_level` is manual |
-| InstancePlayLimitException | candidate: XNA's per-platform cap on playing instances -- check whether CNA enforces one before writing a demo |
+| InstancePlayLimitException | not meaningful: CNA declares it but never throws it (no cap on playing instances) |
 | RendererDetail | demo: `audio.xact.renderer_details` |
 
 ## Microsoft.Xna.Framework.Content
 
 | Type | Decision |
 |---|---|
-| ContentReader, ContentTypeReader, ContentTypeReaderManager | demo: `content.xnb.custom_type_reader` |
+| ContentReader, ContentTypeReader, ContentTypeReaderManager | demo: `content.xnb.custom_type_reader` (the members it uses come from BinaryReader or are CNA's, so its `.apis` names the types) |
 | ResourceContentManager | demo: `content.content_manager.resource_content_manager` (expected failure, CNA-DEMOS-ISSUE-012) |
 | ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute | not meaningful: .NET attributes that steer the XNA IntermediateSerializer at build time; C++ has no attributes and CNA's pipeline does not read them |
 
@@ -58,10 +58,10 @@ Decisions:
 | GamerZone | shown in `gamer_services.gamer_profile.get_profile` |
 | GamerPrivilegeException | candidate: needs CNA's online service configured (offline, `net.network_session.online_session_types` shows GamerServicesNotAvailableException first) |
 | GamerCollection, GamerCollection.GamerCollectionEnumerator | shown by the `net.*` demos (AllGamers, LocalGamers); the enumerator is C#'s `foreach` machinery (C++ range-for) |
-| IAvatarAnimation | candidate: a custom animation class implementing it (the avatar demos use the stock `AvatarAnimation`) |
-| NotificationPosition | candidate: `Guide::NotificationPosition` |
-| LeaderboardOutcome | candidate: leaderboard paging/columns (ROADMAP Phase 12) |
-| SignedOutEventArgs | candidate: `SignedInGamer::SignedOut` if a local profile can be signed out offline |
+| IAvatarAnimation | demo: `gamer_services.avatar.custom_animation` |
+| NotificationPosition | demo: `gamer_services.guide.notification_position` |
+| LeaderboardOutcome | demo: `gamer_services.leaderboard.paging` (a column type) |
+| SignedOutEventArgs | candidate (manual): offline, a profile signs out only through the Guide's own menu ("Sign out"); CNA has no call a game or an unattended run can make |
 | FriendCollection, FriendGamer, InviteAcceptedEventArgs, GameUpdateRequiredException | service |
 | NetworkException, NetworkNotAvailableException | environment / CNA-DEMOS-ISSUE-018 (System Link failures surface as `std::runtime_error`) |
 
@@ -72,8 +72,8 @@ Decisions:
 | IEffectFog, IEffectLights, IEffectMatrices | demo: `graphics.effect.effect_interfaces` |
 | IGraphicsDeviceService | demo: `game.services.graphics_device_service` |
 | EffectParameterClass, EffectParameterType, EffectPassCollection | shown in `graphics.effect.parameters_and_techniques` |
-| ModelMeshCollection, ModelMeshPartCollection, ModelEffectCollection | shown in `graphics.model.draw`, `graphics.model.morph_targets`, `graphics.model.mesh_effects`; their enumerators are C#'s `foreach` machinery |
-| RenderTargetBinding | candidate: multiple render targets (needs a custom effect; ROADMAP Phase 5) |
+| ModelMeshCollection, ModelMeshPartCollection, ModelEffectCollection | shown in `graphics.model.bones` (the indexer), `graphics.model.morph_targets`, `graphics.model.mesh_effects`; their enumerators are C#'s `foreach` machinery |
+| RenderTargetBinding | demo: `graphics.render_target.multiple_render_targets` |
 | VertexPositionColorTexture, IVertexType | demo: `graphics.vertex_declaration.stock_vertex_types` |
 | EffectAnnotation, EffectAnnotationCollection, EffectMaterial | candidate: need compiled XNA effects (`.fx` built with `CNA_<RENDERER>_COMPILED_EFFECTS`) or XNB models |
 | DeviceLostException, DeviceNotResetException, GraphicsDeviceStatus, NoSuitableGraphicsDeviceException | environment: device loss does not happen on CNA's desktop renderers; no adapter means no demos at all |
@@ -101,7 +101,7 @@ Decisions:
 | GameStartedEventArgs, GameEndedEventArgs | shown in `net.network_session.game_flow` |
 | AvailableNetworkSession, AvailableNetworkSessionCollection, QualityOfService, NetworkSessionJoinError, NetworkSessionJoinException | candidate: Find/Join between two processes (a standalone demo, ROADMAP Phase 12) |
 | GamerLeftEventArgs, HostChangedEventArgs, NetworkSessionEndReason, NetworkSessionEndedEventArgs | candidate: with the two-process demo -- in one process CNA's sessions have no remote gamer to leave or host to change |
-| WriteLeaderboardsEventArgs | candidate: leaderboard writes at the end of a game (Phase 12) |
+| WriteLeaderboardsEventArgs | service: CNA raises the `Write*Leaderboard`/`WriteTrueSkill` events only for leaderboard gameplay on the CNA service |
 
 ## Microsoft.Xna.Framework.Storage
 

@@ -101,7 +101,8 @@ Console demos with checks; each shows one operation family.
 - ✅ (6) `graphics.render_target.*`: render to texture, `RenderTargetUsage` Discard/Preserve,
   read back with GetData, own depth buffer, mipmapped target, multisampling, ✅
   `graphics.render_target.render_target_cube` (dynamic environment map; ISSUE-021 on the GL
-  renderers). Remaining: float/HDR formats, multiple render targets (with effects, Phase 6).
+  renderers), ✅ `graphics.render_target.multiple_render_targets` (two targets, a two-output GLSL
+  ShaderEffect). Remaining: float/HDR formats.
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
   `graphics.texture_cube.*` beyond the environment-map demo (render to a `RenderTargetCube`).
 
@@ -187,20 +188,22 @@ Console demos with checks; each shows one operation family.
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (15 gamer services + 6 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (18 gamer services + 7 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
   (password, cancel), trial mode, sign-in screen for a second player, achievements from the offline
   catalog (`title/GamerServices/Achievements.json`), GamerProfile, presence, GameDefaults,
   GamerPrivileges.
-- ✅ `gamer_services.avatar.*` (4): AvatarRenderer + AvatarAnimation, custom pose + expression +
-  skeleton, Description bytes, preset gallery.
-- ✅ `gamer_services.leaderboard.write_and_read`: LeaderboardWriter in a LocalWithLeaderboards
-  session, LeaderboardReader (page, pivot).
-- Remaining gamer services: leaderboard paging (`PageDown`/`PageUp`) and column types,
-  `Guide::NotificationPosition`/`DelayNotifications`, `SignedOut`, `AvatarDescription::Changed`;
-  service-only features (friends, messages, gamer cards, marketplace) stay manual.
+- ✅ `gamer_services.avatar.*` (5): AvatarRenderer + AvatarAnimation, custom pose + expression +
+  skeleton, Description bytes, preset gallery, a game's own IAvatarAnimation.
+- ✅ `gamer_services.leaderboard.*` (2): LeaderboardWriter in a LocalWithLeaderboards session,
+  LeaderboardReader (page, pivot); paging with PageDown/PageUp and typed columns
+  (LeaderboardOutcome, TimeSpan; CNA-DEMOS-ISSUE-025).
+- ✅ `gamer_services.guide.notification_position`: Guide notifications moved to TopRight.
+- Remaining gamer services: `Guide::DelayNotifications`, `SignedOut` (offline only through the
+  Guide's own menu: a manual demo), `AvatarDescription::Changed`; service-only features (friends,
+  messages, gamer cards, marketplace, the WriteLeaderboards events) stay manual.
 - ✅ `net.*` (6): Local session (gamers, GamerJoined replay, host, ids, machine), lobby/ready/game
   flow, NetworkSessionProperties, BeginCreate/EndCreate, Gamer::Tag, PacketWriter/PacketReader
   round trip in a System Link session (`Need::Network`). CNA's Local sessions open no sockets and

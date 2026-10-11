@@ -144,6 +144,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   (AudioEngine::RendererDetails), `math.formatting.to_string` (ToString of the math types; expected
   failure, CNA-DEMOS-ISSUE-024: BoundingBox and Ray print doubled braces); the type-converter demo
   also lists Vector4, Plane and Ray.
+- Audit demos (4): `gamer_services.avatar.custom_animation` (a game's own IAvatarAnimation drawn
+  by AvatarRenderer), `gamer_services.guide.notification_position` (Guide notifications at
+  TopRight), `gamer_services.leaderboard.paging` (PageDown/PageUp, LeaderboardOutcome and TimeSpan
+  columns; CNA-DEMOS-ISSUE-025: offline, columns written after the rating are lost) and
+  `graphics.render_target.multiple_render_targets` (SetRenderTargets with two
+  RenderTargetBindings and a two-output GLSL ShaderEffect).
 - `game.services.graphics_device_service` (a component reaches the device through
   IGraphicsDeviceService) and `net.network_session.online_session_types` (Local vs PlayerMatch and
   Ranked without the online service).

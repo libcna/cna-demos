@@ -122,7 +122,7 @@ CNA_DEMOS_GAME(CustomTypeReaderDemo, {
                    "the file's type-reader table, and loaded with ContentManager::Load<Level>.",
     .apis = {"ContentTypeReader::Read", "ContentTypeReader::ContentTypeReader",
              "ContentTypeReaderManager::AddTypeCreator", "ContentReader::ReadString", "ContentReader::ReadInt32",
-             "ContentManager::Load"},
+             "ContentManager::Load", "ContentReader", "ContentTypeReaderManager"},
     .tags = {"content", "xnb", "custom", "reader", "level"},
     .frames = 3,
     .deterministic = true,

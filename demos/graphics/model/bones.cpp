@@ -103,7 +103,7 @@ CNA_DEMOS_GAME(BonesDemo, {
                    "ParentBone.",
     .apis = {"Model::Bones", "Model::Root", "Model::CopyBoneTransformsTo", "Model::CopyAbsoluteBoneTransformsTo",
              "ModelBone::Name", "ModelBone::Index", "ModelBone::Parent", "ModelBone::Transform",
-             "ModelBoneCollection::Item", "ModelMesh::ParentBone", "ModelMesh::Name"},
+             "ModelBoneCollection::Item", "ModelMeshCollection::Item", "ModelMesh::ParentBone", "ModelMesh::Name"},
     .tags = {"model", "bones", "hierarchy", "transforms", "skeleton"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

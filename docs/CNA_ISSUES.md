@@ -588,6 +588,25 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
+### CNA-DEMOS-ISSUE-025 -- Offline, leaderboard columns written after the rating are lost
+
+- **Area:** gamer services -- `LeaderboardWriter::GetLeaderboard` (offline: no CNA service) saves
+  an entry to the local store only from the hook `LeaderboardEntry::setRatingProperty` runs
+  (`SetOnRatingChangedHookEXT`); writing `LeaderboardEntry::Columns` saves nothing. In XNA the
+  row -- rating and columns -- is one write, whatever order the game sets them in.
+- **Demos:** `gamer_services.leaderboard.paging` sets its columns before the rating, with a comment
+  naming this issue.
+- **Reproduction:** in a `LocalWithLeaderboards` game, `entry->setRatingProperty(4200)`, then
+  `entry->getColumnsProperty().SetValue("Result", LeaderboardOutcome::Win)`; end the game and
+  `LeaderboardReader::Read(board, 0, 10)`.
+- **Observed:** the entry has rating 4200 and no columns: `GetValueOutcome("Result")` throws
+  `std::out_of_range` (`map::at`).
+- **Expected:** the entry reads back `Result = Win`.
+- **Environment:** CNA 0.1.0, Linux, offline gamer services.
+- **Status:** open; not reported upstream yet.
+
+---
+
 ## Resolved
 
 (none yet)
