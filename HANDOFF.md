@@ -96,25 +96,27 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **435-demo checkpoint passed**
-through cna-demos revision `dec89ff`; `tools/validate.sh` exited 0 under private Xvfb
-(`/tmp/cna-demos-435-validation.log`). Both ORIGINAL comparisons to checkpoint-434-xml pass:
-exactly one new PASS, all 434 older IDs/statuses/check counts and 28/29 failed assertions unchanged.
-The new standalone child stdout independently matches its eight focused passing checks.
-CNA C API changes were externally authored during preparation and runtime; observed HEAD advanced
-from c34a994bb to d49645bf480d2bb90a642a65e6a25f28719f656e with further edits. No atomic dependency
-source snapshot is claimed. `reports/checkpoint-435-binaries.json` hashes 22 selected
-main/CNA/C ABI/XML artifacts. No binary was rebuilt during runtime phases.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **437-demo checkpoint passed**
+through cna-demos revision `b697786`; the complete retry of `tools/validate.sh` exited 0 under
+private Xvfb (`/tmp/cna-demos-437-validation.log`). ORIGINAL comparisons to checkpoint-435
+require review exactly for new XML ISSUE-046; ownership passes 14 checks and XML child stdout
+has nine passes/one failure. All 435 older statuses, check counts and failed assertions remain
+unchanged (28/29 -> 29/30). Original evidence and exact renderer reviews are archived.
+The first attempt stopped before CTest on a transient staging diagnostic; its original logs
+remain as checkpoint-437-first-{build,validation}.log. No warning filter or CNA source changed.
+External CNA C API edits continued (observed through ee2b7a652); no atomic dependency source
+snapshot is claimed. `reports/checkpoint-437-binaries.json` hashes 23 selected main/CNA/C ABI/XML
+artifacts. No binary was rebuilt during runtime phases.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets `--validate` | 435 demos, 0 problems |
+| Metadata/assets `--validate` | 437 demos, 0 problems |
 | `tools/validate.sh` | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 423 passed (including 20 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 387 passed, 20 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 408 passed, 21 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | New polymorphic XML tool has eight passing child checks; old failures retained |
+| CTest | 425 passed (including 21 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 388 passed, 21 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 409 passed, 22 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | Exactly one new XML ISSUE-046 assertion; all older failures retained |
 | Screenshots | Both multiple_batches captures inspected; max cross-renderer channel delta one |
 | Content build | Passed (CNB, XNB, media, content project) |
 
@@ -230,14 +232,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** run the complete 437 checkpoint after the now-built/targeted-tested
-ownership and external XML batch. Keep source/assets immutable during the run. Compare ORIGINAL
-checkpoint-435: exactly one new PASS (ownership, 14 checks) and one new FAIL (XML, ISSUE-046,
-nine passing child checks and one failure); old 28/29 failed assertions must remain unchanged,
-new totals 29/30. Expected smoke outcomes SOFTWARE 388/21/25/3 and OPENGLES3 409/22/3/3;
-450 enabled CTests. Archive both original streams/reports, explicit review and selected binary
-hashes including all four changed/recent XML tools (23 selected artifacts). Then continue with
-real nested content builds or another semantic gap; do not restart completed phases.
+**Immediate next action:** full 437 is complete and archived. Apply the nested-build and
+ownership default-recorder extension drafts below, build them, and run both fresh without
+DISPLAY/WAYLAND under both renderer selections. Investigate the default-recorder result before
+adding a known-issue marker; the current ownership demo still passes all 14 checks. Use ORIGINAL
+checkpoint-437 as the next baseline. Do not reapply older drafts or restart completed phases.
 
 433 targeted evidence:
 - reader_versions passes 17 console checks per renderer selection WITHOUT DISPLAY/WAYLAND;
@@ -331,7 +330,20 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
   named members, 158/3210 C routes. Full runtime columns now include all 435 IDs from the complete checkpoint. External CNA C API changes required rebuilding
   affected objects; no CNA edits here and no atomic dependency source snapshot claim.
 - All /tmp polymorphism drafts are applied and stale; use repository sources.
-437 batch (built and targeted validation complete):
+437 batch (complete full validation included):
+- Full retry passed all 450 enabled CTests and both complete renderer smoke runs. Exact original
+  reviews confirm only new XML ISSUE-046 (28/29 -> 29/30 raw failures); all older states/counts
+  and failed assertions retained. Ownership has 14 passing checks; XML has nine passes and one
+  failure in child stdout. SOFTWARE stderr byte-identical; GL still 3 ERROR/3 INFO/84 X protocol
+  lines (42 request 18 / 42 request 25; volatile serials). All 23 selected binary hashes archived.
+- The first full attempt stopped before CTest because four completed content builds emitted
+  one staging warning: cna_content_stage_v1_832841_18dd85b9e2bcf493_0 was not a validated
+  current-user directory. It was already absent when inspected. The scavenger enumerates before
+  checking directory status/name/ownership, so concurrent teardown is plausible, not proven.
+  Original logs: /tmp/cna-437-full-first-build.log and /tmp/cna-demos-437-first-validation.log;
+  also reports/checkpoint-437-first-{build,validation}.log. Nothing was deleted, no warning
+  filter relaxed, no CNA edit made. The clean full retry is the completed checkpoint.
+
 - read_asset_ownership passes all 14 checks under both selections WITHOUT DISPLAY/WAYLAND:
   callback identity for an actual nested shared_ptr<IDisposable> tile buffer, null/value exclusions,
   fresh independent repeated reads, short-read source stream destruction, lifetime across
@@ -352,11 +364,37 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
 - Both `/tmp/cna-437-build.log` and `/tmp/cna-437-labeled-build.log` are clean. Metadata 437/0;
   all 21 targeted CTests pass including all 16 C ABI demos and the new WILL_FAIL XML tool
   (`/tmp/cna-437-targeted-ctest.log`). Coverage 293/329 types, 1354/2326 named members,
-  158/3210 C routes. Runtime columns still use checkpoint-435 and mark two IDs absent.
+  158/3210 C routes. Runtime columns now include the complete 437 results.
 - CNA observed e5014ffaaec2b7f2b018b4dad1f5e299899315f7; external C API changes again caused
   rebuilds. The inspected content-pipeline sources have no uncommitted changes. No CNA edits
   here, no atomic source snapshot claim; archive the actual binaries after full validation.
 - All /tmp ownership/external-reference drafts are applied and stale; use repository sources.
+
+Next ownership extension draft (NOT applied/built/run):
+`/tmp/cna-ownership-default-callback.cpp` extends the current ownership demo without adding an ID.
+All existing 14 checks remain. Two proposed checks read the identical XNB with an empty recorder,
+verify the child is initially usable, then assert Unload disposes it per ReadAsset's public
+contract. The current ContentReader fallback is deferred, so a failure related to ISSUE-011 is
+suspected but NOT runtime-proven here. Explicit cleanup follows the assertion. Do not mark the
+existing passing demo as known-failing until fresh runs establish the result; preserve checkpoint
+437 as the pre-extension baseline. Apply only after its full checkpoint closes.
+
+Next nested-build draft prepared during full 437 (NOT applied/built/run):
+- `/tmp/cna-nested-builds.cpp`, `/tmp/cna-nested-builds-metadata.cpp`,
+  `/tmp/cna-nested-builds-CMakeLists.txt` propose content.custom.nested_builds.
+  Actual XNA-shaped importers/processors run inside CNA's coordinator: BuildAndLoadAsset scales
+  an original profile before computing a stage budget; optional BuildAsset prepares the child
+  CNB twice under one explicit name. Eleven proposed checks cover processed value without child
+  output, source dependencies, one deduplicated compilation, actual child bytes, parent XREF and
+  runtime name, writer schemas, changed-processing name collision and deterministic retry.
+- `/tmp/cna-nested-build-assets.py` is the future tools/nested_build_assets.py generator for
+  assets/nested_builds/{arena.stage,guard.profile}. Integrate generate_assets.py only when applying.
+  No publication, incremental-cache, runtime-loading or genuine-XNA validation is claimed.
+- Apply only after the complete 437 checkpoint is archived and reviewed. Source contracts were
+  inspected; this draft still needs compilation, fresh targeted runs, semantic review and tests.
+  Source fixtures regenerate deterministically in /tmp: arena.stage SHA-256
+  76d0b5bc2889502f3df7a36fb7c7be4ccd8829dcc998bca3a981bcf05384b1d1; guard.profile
+  5fefa19a8106359d8329498a3f6db22bc8d15619ba8771284cf0ba8c3c2173da.
 
 Further pipeline work after ownership (source-only, no runtime claim):
 - XnaBridgeProcessorContext::BuildAndLoadAssetCore invokes ImportAndProcess, returning a typed
@@ -373,7 +411,18 @@ Further pipeline work after ownership (source-only, no runtime claim):
 
 
 
-**Latest complete checkpoint (2026-10-12):** 435 at dec89ff, tools/validate.sh exit 0.
+**Latest complete checkpoint (2026-10-12):** 437 at b697786, full retry tools/validate.sh exit 0.
+SOFTWARE 388/21/25/3, OPENGLES3 409/22/3/3; 450 enabled CTests, 437/0 metadata.
+Archives: `reports/checkpoint-437-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`,
+`checkpoint-437-{build,ctest,validation}.log`, both renderer `-review.json` files, and
+`checkpoint-437-binaries.json` (23 selected artifacts). Both exact reviews account for only
+new XML ISSUE-046; all 435 older statuses/counts/failures retained. Raw failures 29/30.
+SOFTWARE stderr byte-identical; GL same 3 ERROR/3 INFO/84 X protocol lines. First interrupted
+attempt retained separately, with cause limits above. Coverage 293/329 types, 1354/2326 named
+members, 158/3210 C routes; all runtime columns complete. Use ORIGINAL checkpoint-437 next.
+
+Historical 435 checkpoint:
+**Completed checkpoint (2026-10-12):** 435 at dec89ff, tools/validate.sh exit 0.
 SOFTWARE 387/20/25/3, OPENGLES3 408/21/3/3; 448 enabled CTests, 435/0 metadata.
 Archives: `reports/checkpoint-435-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`,
 `checkpoint-435-{build,ctest,validation}.log`, both renderer-specific `-review.json` files,

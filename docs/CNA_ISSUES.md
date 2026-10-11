@@ -1144,7 +1144,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   No CNA code was changed and no upstream report was sent.
 - **Final labeled evidence:** `/tmp/cna-437-xml-external-final-{SOFTWARE,OPENGLES3}.{json,log}`
   retains the same one failure with ISSUE-046 and nine passes. Its WILL_FAIL CTest passes with
-  the other 20 focused tests. The complete 437 checkpoint is pending.
+  the other 20 focused tests. Full 437 at b697786 passed all 450 enabled CTests and both
+  renderer smoke runs. Exact original reviews add only this failed assertion (28/29 -> 29/30),
+  retaining all older states/check counts/failures. Archives: reports/checkpoint-437-*; original
+  streams and final binary hashes are preserved. The first pre-CTest staging-warning attempt
+  remains archived separately; it was not an XML demo failure.
 
 ## Resolved
 
