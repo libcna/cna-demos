@@ -133,6 +133,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbByteReader::ReadString` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ChunkAt` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ChunkCount` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::ChunkData` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ExternalReferenceAt` -- content.custom.cnb_external_references
 - `CNA::Content::Cnb::CnbDocument::ExternalReferences` -- content.custom.cnb_external_references
 - `CNA::Content::Cnb::CnbDocument::HasMagic` -- content.custom.cnb_read_limits
@@ -143,11 +144,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbWriter::AddChunk` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbWriter::Build` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbWriter::SetCompression` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetExternalReferences` -- content.custom.cnb_external_references
 - `CNA::Content::Cnb::CnbWriter::SetLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetMetadata` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::IsCnbCompressionSupported` -- content.custom.cnb_read_limits
 - `CNA::Content::Pipeline::ContentPipeline::Build` -- content.custom.pipeline_components, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::Stage` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter` -- content.custom.pipeline_components

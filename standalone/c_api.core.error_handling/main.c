@@ -2,7 +2,7 @@
 /*
  * How the C ABI reports errors. Every fallible route returns a CNA_Result; the failing thread
  * also keeps a structured diagnostic of its last failure (cna_error_get_last_info) and a UTF-8
- * message (count, then copy). This program makes five mistakes on purpose and reads each answer.
+ * message (count, then copy). This program deliberately fails calls and queries their diagnostics.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH]. Exit code 0 passed, 1 failed.
  */
@@ -102,6 +102,25 @@ int main(int argc, char** argv)
                        last_error(message, sizeof(message)) == CNA_ERROR_CATEGORY_ARGUMENT &&
                        strcmp(message, original) == 0,
                        "a null diagnostic query preserves the original argument diagnostic");
+        /* Allocate the full C object even when describing a deliberately short layout. */
+        {
+            CNA_ErrorInfo incompatible;
+            memset(&incompatible, 0, sizeof(incompatible));
+            incompatible.struct_size = (uint32_t)sizeof(incompatible) - 1U;
+            incompatible.struct_version = UINT32_C(1);
+            result = cna_error_get_last_info(&incompatible);
+            cna_demo_check(&demo, result == CNA_RESULT_INVALID_ARGUMENT &&
+                           last_error(message, sizeof(message)) == CNA_ERROR_CATEGORY_ARGUMENT &&
+                           strcmp(message, original) == 0,
+                           "an undersized diagnostic structure is refused without replacing the original error");
+            incompatible.struct_size = (uint32_t)sizeof(incompatible);
+            incompatible.struct_version = UINT32_C(2);
+            result = cna_error_get_last_info(&incompatible);
+            cna_demo_check(&demo, result == CNA_RESULT_INVALID_ARGUMENT &&
+                           last_error(message, sizeof(message)) == CNA_ERROR_CATEGORY_ARGUMENT &&
+                           strcmp(message, original) == 0,
+                           "an unsupported diagnostic structure version preserves the original error");
+        }
         memset(name, '#', sizeof(name));
         result = cna_error_copy_last_message(name, 1U, &reported);
         cna_demo_check(&demo, result == CNA_RESULT_BUFFER_TOO_SMALL && reported > 1U && name[0] == '#',

@@ -30,6 +30,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing CNB limits example checks optional Zstd round trips and decoded-size budgets even
+  when the compressed file fits its stored-size budget; disabling compression restores the original image.
+- Existing C diagnostics example rejects short/unsupported ErrorInfo layouts while preserving
+  the original thread-local diagnostic.
 - Existing C audio example checks refused SoundEffect/game destruction while an instance lives,
   preserved sound duration/playback and INVALID_HANDLE after releasing the instance.
 - Composite CNB encounter example resolves shared enemy profiles through XREF and the owning

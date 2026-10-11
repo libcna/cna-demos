@@ -237,11 +237,21 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** apply and validate the two semantic extensions prepared below:
-`/tmp/cna-cnb-compressed-limits.cpp` and `/tmp/cna-c-diagnostic-layouts.c`. Then continue with
-the prepared texture ownership example and a complete checkpoint. Full 415 at ce4d19e is
-complete: 427 enabled CTests, SOFTWARE 370/17/25/3 and OPENGLES3 391/18/3/3, with unchanged
-24/25 raw failed assertions. The original three drafts for that batch are applied and stale.
+**Immediate next action:** apply, build and run `/tmp/cna-texture-copy-ownership.cpp` as
+`graphics.texture2d.copy_ownership`, including both renderer screenshots and pixel checks.
+Then run a full 416 checkpoint including the following semantic extensions. Last full checkpoint
+is still 415 at ce4d19e; it predates these extensions.
+
+Both semantic extensions are applied and pass: cnb_read_limits now has 11 checks with Zstd
+available on both renderer selections (`/tmp/cna-compressed-limits-{SOFTWARE,OPENGLES3}.{json,log}`).
+The 416-byte container shrinks to 328 bytes, restores identical logical chunks, keeps metadata
+uncompressed, enforces the 207-byte decoded total against a 206-byte cap, and restores the original
+image when compression is disabled. No timing/allocation measurement or unsupported-build run.
+C error_handling passes 26 child checks, including short/version-incompatible diagnostic queries
+preserving the original error (`/tmp/cna-diagnostic-layouts-{SOFTWARE,OPENGLES3}.{json,log}`).
+Build, metadata (415/0), both demos' CTests and both catalog tests pass (4 tests). No new CNA issue.
+Their /tmp drafts are stale; do not reapply. Coverage audit is updated; checkpoint-415 remains
+the historical full report before these two extensions.
 
 The two CNB drafts are applied and pass: `content.custom.cnb_external_references` has 9 checks
 and `content.custom.cnb_read_limits` has 8 under both SOFTWARE/OPENGLES3 selections. Evidence:
@@ -270,15 +280,6 @@ four new checks for early parent release refusal, preserved duration and stale i
 Build, metadata (415/0), its CTest and both catalog tests pass (3 tests). Dummy audio only;
 no audible or visual validation. No new CNA issue. Its /tmp draft is now stale.
 
-Prepared after starting the full run: `/tmp/cna-cnb-compressed-limits.cpp` extends the existing
-limits example (no new ID), but is not applied/built/run. It queries actual Zstd support, inspects
-per-chunk storage and restored logical bytes, checks a compressed image against the aggregate
-expansion budget and restores uncompressed output. Three conditional checks would bring the
-current build to 11; unsupported builds explicitly leave that path unexecuted. Full 415 has finished; verify rather than assume compression/output behavior when applying it.
-A second unapplied extension, `/tmp/cna-c-diagnostic-layouts.c`, adds two checks to existing
-C error_handling: an undersized ErrorInfo declaration and unsupported structure version both
-return INVALID_ARGUMENT while preserving the original diagnostic. It allocates the full C
-object even when declaring a short layout. Compile/runtime validation is still pending.
 
 Next after this checkpoint: remaining CNB compression/limits behaviors or C ABI handle and
 versioned-structure boundaries from COVERAGE_AUDIT.md. Keep the existing focused demos where
@@ -289,7 +290,7 @@ Later graphics draft: `/tmp/cna-texture-copy-ownership.cpp`, not applied/built/r
 `graphics.texture2d.copy_ownership`. It checks initial sharing, partial rectangle mutation versus
 SetData(Color*, int) detachment, copied-but-independent Name/Tag, sibling survival after Dispose,
 and actual rendered pixels. It needs both renderer runs and screenshot inspection before any
-visual claim. The full 415 checkpoint is complete; validate the small semantic extensions first.
+visual claim. The full 415 checkpoint and targeted semantic validation are complete; this graphics draft is next.
 
 The XML property example is included in the complete 412 checkpoint: all 5 child checks pass
 under SOFTWARE and OPENGLES3 selections (`/tmp/cna-intermediate-properties-{SOFTWARE,OPENGLES3}.{json,log}`).

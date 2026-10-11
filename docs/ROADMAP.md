@@ -192,7 +192,8 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.custom.cnb_external_references`: actual XREF tables and owner-mediated child loads,
   shared/local caches, bad references, missing child retry and unsafe-name rejection.
   ✅ `content.custom.cnb_read_limits`: container inspection, independent writer/reader byte
-  budgets, opaque schema count/string limits and checksum rejection despite valid magic.
+  budgets, opaque schema count/string limits, compressed expansion when supported, and checksum
+  rejection despite valid magic.
   Remaining: deeper serializer behaviors, composite asset builds and the member/behavior gaps
   in COVERAGE_AUDIT.md; this phase is not comprehensively covered.
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
@@ -306,7 +307,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit),
-✅ `c_api.core.error_handling` (results, categories, last message, failed-query preservation, exact-sized count/copy, canonical exception type/parameter details, callback errors),
+✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, callback errors),
 ✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard and visible text),

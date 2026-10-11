@@ -6,6 +6,7 @@
 #include <vector>
 #include "CnaDemos/Demo.hpp"
 #include "CNA/Content/Cnb/CnbByteWriter.hpp"
+#include "CNA/Content/Cnb/CnbChunkCompression.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
 
@@ -100,6 +101,54 @@ namespace
         catch (const ContentLoadException& error) { corruptionRejected = true; ctx.Print("Corruption: {}", error.what()); }
         ctx.Check(CnbDocument::HasMagic(damaged) && corruptionRejected,
                   "a recognizable CNB signature does not establish container validity");
+
+        // Compression reduces storage, not the decoded allocation budget. Keep the core example
+        // useful in builds without libzstd, and report that this additional path was not run.
+        if (!IsCnbCompressionSupported(CnbCompression::Zstd))
+        {
+            ctx.Print("Zstandard is unavailable: compressed expansion checks were not run.");
+            return;
+        }
+        writer.SetCompression(CnbCompression::Zstd);
+        const auto packed = writer.Build();
+        const auto compressed = CnbDocument::Parse(packed, "compressed tile layer");
+        bool matching = compressed.ChunkCount() == document.ChunkCount();
+        bool compressedPayload = false;
+        for (std::size_t i = 0; i < document.ChunkCount(); ++i)
+        {
+            const auto& original = document.ChunkAt(i);
+            const auto index = compressed.RequireSingle(original.type);
+            const auto& entry = compressed.ChunkAt(index);
+            const auto restored = compressed.ChunkData(index), expected = document.ChunkData(i);
+            matching = matching && std::equal(restored.begin(), restored.end(), expected.begin(), expected.end());
+            if (original.type == CnbContainerChunk::Metadata)
+                matching = matching && entry.compression == CnbCompression::None;
+            if (entry.compression != CnbCompression::None)
+            {
+                compressedPayload = true;
+                matching = matching && entry.storedSize < entry.uncompressedSize;
+            }
+            ctx.Print("{}: {} ({} stored / {} logical bytes)", ChunkIdToString(entry.type),
+                      CnbCompressionToString(entry.compression), entry.storedSize, entry.uncompressedSize);
+        }
+        ctx.Print("Compression: {} -> {} file bytes; logical chunk budget stays {}", image.size(), packed.size(), total);
+        ctx.Check(matching && compressedPayload,
+                  "compressed payloads restore identical data while container metadata stays uncompressed");
+
+        auto expansionLimits = DefaultCnbReadLimits();
+        expansionLimits.maxFileSize = packed.size(); // the stored image fits exactly
+        expansionLimits.maxTotalUncompressedSize = total - 1;
+        bool expansionReader = false, expansionWriter = false;
+        try { (void)CnbDocument::Parse(packed, "compressed expansion budget", expansionLimits); }
+        catch (const ContentLoadException& error) { expansionReader = true; ctx.Print("Reader: {}", error.what()); }
+        writer.SetLimits(expansionLimits);
+        try { (void)writer.Build(); }
+        catch (const ContentLoadException& error) { expansionWriter = true; ctx.Print("Writer: {}", error.what()); }
+        ctx.Check(expansionReader && expansionWriter,
+                  "fitting the stored-file budget does not bypass the aggregate decoded-byte budget");
+        writer.SetLimits(DefaultCnbReadLimits());
+        writer.SetCompression(CnbCompression::None);
+        ctx.Check(writer.Build() == image, "turning compression off restores the original uncompressed image");
     }
 }
 
@@ -107,12 +156,14 @@ CNA_DEMOS_CONSOLE(ReadLimits, {
     .id = "content.custom.cnb_read_limits",
     .title = "CNB container budgets and schema limits (CNAEXT)",
     .description = "Inspects a tiny tile-layer container and checks file, per-chunk and aggregate byte budgets on "
-                   "both writer and reader, then enforces schema array/string limits before allocating game data.",
+                   "both writer and reader, enforces schema array/string limits, and checks compressed expansion when Zstandard is available.",
     .apis = {"CNA::Content::Cnb::CnbWriter::SetLimits", "CNA::Content::Cnb::CnbWriter::Build",
+             "CNA::Content::Cnb::CnbWriter::SetCompression", "CNA::Content::Cnb::IsCnbCompressionSupported",
+             "CNA::Content::Cnb::CnbDocument::ChunkData",
              "CNA::Content::Cnb::CnbDocument::Parse", "CNA::Content::Cnb::CnbDocument::ChunkCount",
              "CNA::Content::Cnb::CnbDocument::ChunkAt", "CNA::Content::Cnb::CnbDocument::OpenChunk",
              "CNA::Content::Cnb::CnbDocument::HasMagic", "CNA::Content::Cnb::CnbByteReader::ReadCount",
              "CNA::Content::Cnb::CnbByteReader::ReadString", "CNA::Content::Cnb::DefaultCnbReadLimits"},
-    .tags = {"content", "custom", "cnb", "limits", "validation", "cnaext"},
-    .restrictions = "Small in-memory uncompressed fixtures; no claim of every limit, compressed expansion or allocation profiling.",
+    .tags = {"content", "custom", "cnb", "limits", "compression", "validation", "cnaext"},
+    .restrictions = "Small in-memory fixtures; compressed checks require runtime Zstandard support. No timing, allocation profiling or every-limit claim.",
 })
