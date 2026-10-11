@@ -98,18 +98,14 @@ namespace
 
             for (const Achievement& achievement : after)
             {
+                const bool shown = achievement.getIsEarnedProperty() || achievement.getDisplayBeforeEarnedProperty();
                 std::string line = achievement.getIsEarnedProperty() ? "[x] " : "[ ] ";
-                if (achievement.getIsEarnedProperty() || achievement.getDisplayBeforeEarnedProperty())
-                {
-                    line += achievement.getNameProperty() + " (" + std::to_string(achievement.getGamerScoreProperty())
-                        + ") - " + achievement.getDescriptionProperty();
-                }
-                else
-                {
-                    line += "Secret achievement - " + achievement.getHowToEarnProperty();
-                }
-                ctx.Print("{}", line);
+                line += shown ? achievement.getNameProperty() + " (" + std::to_string(achievement.getGamerScoreProperty()) + ")"
+                              : std::string("Secret achievement");
+                const std::string detail = shown ? achievement.getDescriptionProperty() : achievement.getHowToEarnProperty();
+                ctx.Print("{} - {}", line, detail);
                 lines_.push_back(line);
+                lines_.push_back("    " + detail);
             }
         }
 
@@ -122,8 +118,10 @@ namespace
             for (const std::string& line : lines_)
             {
                 spriteBatch_->DrawString(*font_, line, Vector2(30.0f, y),
-                                         line.starts_with("[x]") ? Color::Gold : Color::Gray);
-                y += 32.0f;
+                                         line.starts_with("[x]") ? Color::Gold
+                                         : line.starts_with("[ ]") ? Color::LightGray
+                                                                    : Color::Gray);
+                y += line.starts_with("    ") ? 34.0f : 22.0f;
             }
             spriteBatch_->End();
             DemoGame::Draw(gameTime); // the Guide overlay shows "Achievement unlocked" toasts

@@ -135,6 +135,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   input (password mode, cancel), trial mode with SimulateTrialMode, the Guide's sign-in screen for a
   second player, achievements from an offline title catalog, GamerProfile, rich presence,
   GameDefaults and GamerPrivileges -- offline, with local profiles.
+- Avatar demos (4): AvatarRenderer with the Wave preset and its loading state, a custom pose from
+  AvatarBone transforms with an AvatarExpression and the skeleton (ParentBones, BindPose),
+  AvatarDescription bytes round trip and invalid descriptions, six animation presets side by side.
+- Leaderboard demo: two local players write scores during a LocalWithLeaderboards session and
+  LeaderboardReader reads the board and a page around one player; the `gamer_services` category
+  links CNA::Net for it. `GamerServicesDemo` takes the names of several local players.
 - `ownProcess` metadata and `--batch-child`: demos that set up once-per-process CNA state (gamer
   services) run as `cna-demos <id>` in a process of their own from batch runs and the browser.
 - `CnaDemos/GamerServicesDemo.hpp` (offline configuration, the demos' own profile store, "Demo

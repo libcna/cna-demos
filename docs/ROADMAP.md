@@ -176,18 +176,20 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (10 gamer services demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (15 gamer services demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
   (password, cancel), trial mode, sign-in screen for a second player, achievements from the offline
   catalog (`title/GamerServices/Achievements.json`), GamerProfile, presence, GameDefaults,
   GamerPrivileges.
-- Remaining gamer services: leaderboards (`LeaderboardWriter` in a `LocalWithLeaderboards`
-  session, `LeaderboardReader` paging), `Guide::NotificationPosition`/`DelayNotifications`,
-  `SignedOut`; service-only features (friends, messages, gamer cards, marketplace) stay manual.
-- `gamer_services.avatar.*`: `AvatarDescription` (random, bytes round trip), `AvatarRenderer` with
-  the built-in catalog, `AvatarAnimation` presets, expressions, custom bone transforms. ≈ 5
+- ✅ `gamer_services.avatar.*` (4): AvatarRenderer + AvatarAnimation, custom pose + expression +
+  skeleton, Description bytes, preset gallery.
+- ✅ `gamer_services.leaderboard.write_and_read`: LeaderboardWriter in a LocalWithLeaderboards
+  session, LeaderboardReader (page, pivot).
+- Remaining gamer services: leaderboard paging (`PageDown`/`PageUp`) and column types,
+  `Guide::NotificationPosition`/`DelayNotifications`, `SignedOut`, `AvatarDescription::Changed`;
+  service-only features (friends, messages, gamer cards, marketplace) stay manual.
 - `net.*`: Local sessions (no sockets in CNA; packets are not delivered between local gamers
   there), session state and events, `NetworkSessionProperties`; SystemLink over loopback for
   `PacketWriter`/`PacketReader` and simulated latency/packet loss (`Need::Network`). ≈ 10

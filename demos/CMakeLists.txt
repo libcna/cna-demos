@@ -20,4 +20,4 @@ cna_demos_add_category(phone   LIBRARIES CNA::Phone)    # Microsoft.Phone shell 
 cna_demos_add_category(design  LIBRARIES CNA::Design)   # Microsoft.Xna.Framework.Design converters
 cna_demos_add_category(cnaext  REQUIRES CNA_CNAEXT)      # CNA graphics extensions (modules/graphics-ext)
 cna_demos_add_category(net            REQUIRES CNA_ENABLE_NET LIBRARIES CNA::Net CNA::GamerServices)
-cna_demos_add_category(gamer_services REQUIRES CNA_ENABLE_NET LIBRARIES CNA::GamerServices)
+cna_demos_add_category(gamer_services REQUIRES CNA_ENABLE_NET LIBRARIES CNA::GamerServices CNA::Net)  # Net: leaderboards are written in sessions
