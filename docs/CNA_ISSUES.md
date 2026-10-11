@@ -1229,7 +1229,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   has exactly 12 passing child checks and this one failure per fresh process. All seven original
   checks remain. Both private trees are verified gone. All 22 targeted CTests pass, including
   the expected-failure marker, both audio corrections, all 16 C ABI demos and catalog checks.
-  The complete 438-outputs checkpoint is pending.
+  The complete 438-outputs checkpoint at e6327d2 passes all 451 enabled CTests. Both original
+  checkpoint-438 comparisons retain every older failed assertion and add exactly this failure
+  (30/31 -> 31/32). Full child output has the same twelve passes/one failure as the focused runs;
+  evidence and exact reviews are archived under reports/checkpoint-438-outputs-*.
 - **Environment:** CNA checkout observed at d751cf46ae41ab49890176530dd564d05482ad32 with external
   C API work ongoing; no atomic source snapshot claimed and no CNA source edited by this task.
   These are CPU pipeline runs under renderer selections, not GPU or genuine-XNA execution.
