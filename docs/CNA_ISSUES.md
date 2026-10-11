@@ -324,6 +324,23 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, GCC 14.2, Linux, SOFTWARE and OPENGLES3.
 - **Status:** open; not reported upstream yet.
 
+- **ReadAsset default-recorder extension (438 batch):** `content.content_manager.read_asset_ownership`
+  now reads the same original packed XNB with an empty recorder after its successful delegated
+  lifetime controls. The nested shared_ptr<Tiles> implements IDisposable and initially contains
+  the correct tile bytes; holding it while calling Unload shows that Dispose was not invoked.
+  The public ReadAsset header explicitly promises manager recording when the callback is empty.
+  ContentReader::RecordDisposable's supplied-callback branch works, but its manager fallback is
+  still only a deferred TODO. This is a different route to the same missing disposal behavior,
+  not a failure of the caller-owned callback workflow or a new issue identifier.
+- **Extension evidence:** `/tmp/cna-438-ownership-{SOFTWARE,OPENGLES3}.{json,log}` in fresh
+  Linux GCC 14.2 processes without DISPLAY/WAYLAND_DISPLAY: 16 checks, fifteen passing, one
+  initially unlabeled default-recorder failure. All original fourteen checks remain. Explicit
+  cleanup follows the assertion and cannot make it pass. No CNA source was edited. Final labeled evidence
+  `/tmp/cna-438-ownership-final-{SOFTWARE,OPENGLES3}.{json,log}` retains the same one failure
+  with ISSUE-011. Its WILL_FAIL CTest and the other 20 focused tests pass. CNA observed at
+  ea41d758d9689cda348887a92a93bbe188864e8b; inspected content modules have no uncommitted
+  edits. Full 438 remains pending; no graphics/genuine-XNA execution claim.
+
 ### CNA-DEMOS-ISSUE-012 -- `ContentManager::Load<T>` never calls an `OpenStream` override
 
 - **Area:** content -- `ContentManager::Load<T>` (header template) resolves `.xnb`, `.cnb` and

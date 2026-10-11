@@ -126,7 +126,7 @@ namespace
             offset += read;
         }
         const auto sourceSize = static_cast<int>(bytes.size());
-        PackManager pack(std::move(bytes));
+        PackManager pack(bytes); // retain the same authored bytes for the default-recorder comparison
         // The caller's resource list owns the callback results after each ContentReader goes away.
         std::vector<std::shared_ptr<System::IDisposable>> owned;
         const auto record = [&](std::shared_ptr<System::IDisposable> resource) { owned.push_back(std::move(resource)); };
@@ -168,17 +168,31 @@ namespace
         ctx.Check(!firstLifetime.expired() && !secondLifetime.expired(), "the callback's list owns the resources after asset values release them");
         owned.clear();
         ctx.Check(firstLifetime.expired() && secondLifetime.expired(), "releasing the caller's list destroys both resources without hidden manager ownership");
+
+        // An empty callback delegates disposal tracking back to ContentManager by its public
+        // ReadAsset contract. Keep the loaded child alive so Unload's Dispose call is observable.
+        PackManager automatic(std::move(bytes));
+        auto managed = automatic.ReadOwned("level", {});
+        if (!ctx.Check(managed.tiles && managed.tiles->bytes == expected && !managed.tiles->disposed,
+                       "omitting the callback still decodes a fresh usable nested disposable")) return;
+        automatic.Unload();
+        ctx.Check(managed.tiles->disposed,
+                  "ReadAsset without a callback records the disposable for manager Unload (CNA-DEMOS-ISSUE-011)");
+        // Cleanup follows the assertion; it does not turn a missing manager Dispose into a pass.
+        if (!managed.tiles->disposed) managed.tiles->Dispose();
+
     }
 }
 
 CNA_DEMOS_CONSOLE(ReadAssetOwnership, {
     .id = "content.content_manager.read_asset_ownership",
-    .title = "Delegate packed asset lifetime",
+    .title = "Control packed asset lifetime",
     .description = "Reads a packed level repeatedly through ReadAsset, records its nested disposable tiles, "
-                   "and owns their lifetime across manager Unload and Dispose while releasing short-read source streams.",
+                   "and compares caller-owned lifetime with the default recorder across Unload while releasing short-read source streams.",
     .apis = {"ContentManager::ReadAsset", "ContentManager::OpenStream", "ContentManager::Unload", "ContentManager::Dispose",
              "ContentReader::ReadObject", "ContentTypeReader::Read", "ContentTypeReaderManager::AddTypeCreator"},
     .tags = {"content", "xnb", "pack-file", "lifetime", "dispose", "callback"},
     .assets = {"ownership/level.xnb"},
-    .restrictions = "Supplied callback and typed shared_ptr IDisposable children; does not establish default-manager tracking, raw/untyped reads or callback deduplication.",
+    .restrictions = "Supplied and absent callbacks with typed shared_ptr IDisposable children; default tracking reproduces ISSUE-011. Raw/untyped reads and callback deduplication remain separate contracts.",
+    .knownIssue = "CNA-DEMOS-ISSUE-011",
 })

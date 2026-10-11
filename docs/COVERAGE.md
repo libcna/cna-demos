@@ -6,14 +6,14 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**437 demos** in 18 categories. Kinds: console 157, game 250, standalone 30. Automation: automated 401, manual 3, smoke-only 33.
+**438 demos** in 18 categories. Kinds: console 157, game 250, standalone 31. Automation: automated 402, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
 | c_api | 16 | 15 | 1 | 0 | 16 / 0 / 0 / 0 / 0 | 16 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 38 | 38 | 0 | 0 | 31 / 0 / 7 / 0 / 0 | 31 / 0 / 7 / 0 / 0 |
+| content | 39 | 39 | 0 | 0 | 31 / 0 / 7 / 0 / 1 | 31 / 0 / 7 / 0 / 1 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.custom.nested_builds`.
+- OPENGLES3: absent from report: `content.custom.nested_builds`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -151,13 +153,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbWriter::AddChunk` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbWriter::Build` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetCompression` -- content.custom.cnb_read_limits
-- `CNA::Content::Cnb::CnbWriter::SetExternalReferences` -- content.custom.cnb_external_references
+- `CNA::Content::Cnb::CnbWriter::SetExternalReferences` -- content.custom.cnb_external_references, content.custom.nested_builds
 - `CNA::Content::Cnb::CnbWriter::SetLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetMetadata` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::IsCnbCompressionSupported` -- content.custom.cnb_read_limits
-- `CNA::Content::Pipeline::ContentPipeline::Build` -- content.custom.pipeline_components, content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentPipeline::Build` -- content.custom.nested_builds, content.custom.pipeline_components, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::Stage` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterProcessor` -- content.custom.pipeline_components
@@ -165,8 +167,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentProcessorParameters::Set` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentValue::Create` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentValue::Get` -- content.custom.pipeline_components
-- `CNA::Content::Pipeline::RegisterXnaImporter` -- content.custom.xna_pipeline_components
-- `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::RegisterXnaImporter` -- content.custom.nested_builds, content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Devices::DisplayInfo::ContentScale` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::DisplayInfo::SafeArea` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::Locale::PreferredLocales` -- devices.system.machine_info
@@ -407,8 +409,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentImporterAttribute::DefaultProcessor` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentImporterContext::AddDependency` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessor::Process` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::BuildAndLoadAsset` -- content.custom.nested_builds
+- `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::BuildAsset` -- content.custom.nested_builds
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::Convert` -- content.custom.xna_pipeline_components
-- `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::ExternalReference` -- content.custom.intermediate_external_references
+- `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::ExternalReference` -- content.custom.intermediate_external_references, content.custom.nested_builds
 - `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::Filename` -- content.custom.intermediate_external_references
 - `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ProcessorParameterBindings::Add` -- content.custom.xna_pipeline_components

@@ -189,7 +189,7 @@ a check that all authored colors remain visible and that a blank texture row can
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (38 demos; remaining below)
+## Phase 8 -- content 🟨 (39 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -247,7 +247,12 @@ a check that all authored colors remain visible and that a blank texture row can
   of unknown/unrelated/abstract declarations (eight child checks, no display needed).
 - ✅ `content.content_manager.read_asset_ownership`: callback identity for nested disposable tiles,
   uncached repeat reads, short-read stream ownership, delegated lifetime across Unload/Dispose,
-  early refusals and explicit caller cleanup (14 checks under both displayless selections).
+  early refusals and explicit caller cleanup. Fourteen original checks remain passing; an added
+  absent-recorder comparison exposes default tracking ISSUE-011 (16 total, 15 passing).
+- ✅ `content.custom.nested_builds`: processed child versus compiled child, typed parameter
+  propagation, source dependencies, additional CNB/XREF/runtime-name agreement, repeated-build
+  deduplication, writer schemas and changed-processing name collision (11 child checks).
+  Actual publication/runtime loading and incremental caching remain separate work.
 - ✅ `content.custom.intermediate_external_references`: filename versus inline data, table
   deduplication, relocation, wrapper/null identity and invalid references. Nine child checks pass;
   native emitted TargetType alias round-trip exposes ISSUE-046. File imports/build publication

@@ -39,6 +39,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- A nested stage/profile build demonstrates processed values versus separately compiled child
+  assets, dependency/reference metadata, duplicate requests and name collisions (11 checks).
+- Extended the packed ownership example with the absent-recorder path: fifteen checks pass,
+  while default tracking fails to dispose its child on Unload, adding direct ISSUE-011 evidence.
 - Packed XNB ReadAsset ownership with actual nested disposable callbacks, independent reads,
   source-stream lifetime and caller cleanup across manager Unload/Dispose (14 checks).
 - Intermediate XML external-reference relocation and identity controls. The original emitted

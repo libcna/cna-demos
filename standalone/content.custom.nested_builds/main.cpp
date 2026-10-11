@@ -1,0 +1,274 @@
+// SPDX-License-Identifier: MS-PL
+// A stage processor consumes a processed profile and can compile that profile as a separate asset.
+#include <atomic>
+#include <cstdint>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <vector>
+
+#include "CnaDemos/Process.hpp"
+#include "CNA/Content/Cnb/CnbByteWriter.hpp"
+#include "CNA/Content/Cnb/CnbDocument.hpp"
+#include "CNA/Content/Cnb/CnbWriter.hpp"
+#include "CNA/Content/Pipeline/XnaPipelineBridge.hpp"
+#include "Microsoft/Xna/Framework/Content/Pipeline/ExternalReference.hpp"
+#include "Microsoft/Xna/Framework/Content/Pipeline/InvalidContentException.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
+
+namespace Pipeline = CNA::Content::Pipeline;
+namespace Xna = Microsoft::Xna::Framework::Content::Pipeline;
+namespace Cnb = CNA::Content::Cnb;
+namespace
+{
+    constexpr const char* ProfileProcessorName = "CnaDemos.NestedProfileProcessor";
+    constexpr const char* StageProcessorName = "CnaDemos.NestedStageProcessor";
+    constexpr const char* ChildName = "profiles/guard";
+    constexpr auto DataChunk = Cnb::MakeChunkId('D', 'A', 'T', 'A');
+    std::atomic<int> profileWrites{0}; // observation only; registered writers may serve concurrent nodes
+    struct Profile
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.NestedProfile";
+        std::string name;
+        int health = 0;
+    };
+    struct StageSource
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.NestedStageSource";
+        int count = 0;
+        Xna::ExternalReference<Profile> profile;
+    };
+    struct Stage
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.NestedStage";
+        int healthBudget = 0;
+        std::string profileAsset;
+    };
+    class ProfileImporter final : public Xna::ContentImporter<Profile>
+    {
+    public:
+        Profile Import(const std::string& filename, Xna::ContentImporterContext&) override
+        {
+            const std::filesystem::path path(std::u8string(filename.begin(), filename.end()));
+            std::ifstream file(path);
+            Profile result;
+            if (!(file >> result.name >> result.health) || result.health < 1 || result.health > 1000)
+                throw Xna::InvalidContentException("A profile needs a name and Health in 1..1000.");
+            file >> std::ws;
+            if (!file.eof()) throw Xna::InvalidContentException("Unexpected profile fields.");
+            return result;
+        }
+    };
+    class StageImporter final : public Xna::ContentImporter<StageSource>
+    {
+    public:
+        StageSource Import(const std::string& filename, Xna::ContentImporterContext&) override
+        {
+            const std::filesystem::path path(std::u8string(filename.begin(), filename.end()));
+            std::ifstream file(path);
+            StageSource result; std::string child;
+            if (!(file >> result.count >> child) || result.count < 1 || result.count > 100)
+                throw Xna::InvalidContentException("A stage needs Count in 1..100 and a profile filename.");
+            file >> std::ws;
+            if (!file.eof()) throw Xna::InvalidContentException("Unexpected stage fields.");
+            result.profile = Xna::ExternalReference<Profile>(child, Xna::ContentIdentity(filename));
+            return result;
+        }
+    };
+    class ProfileProcessor final : public Xna::ContentProcessor<Profile, Profile>
+    {
+    public:
+        int getScaleProperty() const { return scale_; }
+        void setScaleProperty(int value)
+        {
+            if (value < 1 || value > 10) throw System::ArgumentOutOfRangeException("value");
+            scale_ = value;
+        }
+        static void DescribeParameters(Xna::ProcessorParameterBindings<ProfileProcessor>& parameters)
+        {
+            parameters.Add<int>("Scale", &ProfileProcessor::getScaleProperty, &ProfileProcessor::setScaleProperty);
+        }
+        Profile Process(const Profile& input, Xna::ContentProcessorContext&) override
+        {
+            return {input.name, input.health * scale_};
+        }
+    private:
+        int scale_ = 1;
+    };
+    class StageProcessor final : public Xna::ContentProcessor<StageSource, Stage>
+    {
+    public:
+        bool getCompileChildProperty() const { return compileChild_; }
+        void setCompileChildProperty(bool value) { compileChild_ = value; }
+        bool getCollideProperty() const { return collide_; }
+        void setCollideProperty(bool value) { collide_ = value; }
+        static void DescribeParameters(Xna::ProcessorParameterBindings<StageProcessor>& parameters)
+        {
+            parameters.Add<bool>("CompileChild", &StageProcessor::getCompileChildProperty, &StageProcessor::setCompileChildProperty);
+            parameters.Add<bool>("Collide", &StageProcessor::getCollideProperty, &StageProcessor::setCollideProperty);
+        }
+        Stage Process(const StageSource& input, Xna::ContentProcessorContext& context) override
+        {
+            Xna::OpaqueDataDictionary parameters; parameters.SetValue<int>("Scale", 2);
+            const auto profile = context.BuildAndLoadAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters);
+            Stage result{input.count * profile.health, {}};
+            if (compileChild_)
+            {
+                const auto first = context.BuildAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters, {}, ChildName);
+                const auto repeated = context.BuildAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters, {}, ChildName);
+                if (first.getFilenameProperty() != repeated.getFilenameProperty())
+                    throw Xna::InvalidContentException("Repeated identical child build returned a different filename.");
+                // This example leaves outputDirectory empty: the returned path is a relative .cnb name.
+                std::filesystem::path built(first.getFilenameProperty());
+                if (built.is_absolute() || built.extension() != ".cnb")
+                    throw Xna::InvalidContentException("Expected a relative compiled child name.");
+                result.profileAsset = built.replace_extension().generic_string();
+                if (collide_)
+                {
+                    parameters.SetValue<int>("Scale", 3);
+                    (void)context.BuildAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters, {}, ChildName);
+                }
+            }
+            return result;
+        }
+    private:
+        bool compileChild_ = false, collide_ = false;
+    };
+    class ProfileWriter final : public Pipeline::ContentTypeWriter
+    {
+    public:
+        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.NestedProfileWriter", "1"}; }
+        std::string InputType() const override { return std::string(Profile::XnaTypeName); }
+        std::vector<Pipeline::ContentWriterSchemaIdentity> OutputSchemaIdentities() const override
+        {
+            return {{Cnb::CnbAssetTypeIdFromName(InputType()), 1u, InputType(), {"CnaDemos.NestedProfileCodec", "1"}}};
+        }
+        Pipeline::ContentWriteResult Write(const Pipeline::ContentValue& input, const std::string& logicalName) const override
+        {
+            ++profileWrites;
+            const auto& profile = input.Get<Profile>();
+            Cnb::CnbByteWriter data; data.WriteString(profile.name); data.WriteU32(static_cast<std::uint32_t>(profile.health));
+            Cnb::CnbWriter writer(Cnb::CnbAssetTypeIdFromName(InputType()), 1);
+            writer.SetMetadata(InputType(), logicalName); writer.AddChunk(DataChunk, data.Take(), Cnb::CnbChunkFlags::Mandatory);
+            Pipeline::ContentWriteResult result;
+            result.bytes = writer.Build(); result.assetTypeId = Cnb::CnbAssetTypeIdFromName(InputType());
+            result.assetTypeName = InputType(); result.assetSchemaVersion = 1;
+            return result;
+        }
+    };
+    class StageWriter final : public Pipeline::ContentTypeWriter
+    {
+    public:
+        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.NestedStageWriter", "1"}; }
+        std::string InputType() const override { return std::string(Stage::XnaTypeName); }
+        std::vector<Pipeline::ContentWriterSchemaIdentity> OutputSchemaIdentities() const override
+        {
+            return {{Cnb::CnbAssetTypeIdFromName(InputType()), 1u, InputType(), {"CnaDemos.NestedStageCodec", "1"}}};
+        }
+        Pipeline::ContentWriteResult Write(const Pipeline::ContentValue& input, const std::string& logicalName) const override
+        {
+            const auto& stage = input.Get<Stage>();
+            Cnb::CnbByteWriter data; data.WriteU32(static_cast<std::uint32_t>(stage.healthBudget));
+            Cnb::CnbWriter writer(Cnb::CnbAssetTypeIdFromName(InputType()), 1);
+            writer.SetMetadata(InputType(), logicalName);
+            if (!stage.profileAsset.empty())
+                writer.SetExternalReferences({Cnb::CnbExternalReference{0u, Cnb::CnbAssetTypeIdFromName(std::string(Profile::XnaTypeName)), stage.profileAsset}});
+            writer.AddChunk(DataChunk, data.Take(), Cnb::CnbChunkFlags::Mandatory);
+            Pipeline::ContentWriteResult result;
+            result.bytes = writer.Build(); result.assetTypeId = Cnb::CnbAssetTypeIdFromName(InputType());
+            result.assetTypeName = InputType(); result.assetSchemaVersion = 1;
+            return result;
+        }
+    };
+}
+
+int main()
+{
+    try
+    {
+        bool passed = true;
+        const auto check = [&](bool condition, std::string_view message) {
+            std::cout << (condition ? "  check: " : "  CHECK FAILED: ") << message << '\n';
+            passed = condition && passed;
+        };
+        auto registry = std::make_shared<Pipeline::ContentPipelineRegistry>();
+        Xna::ContentImporterAttribute profileImporter(".profile"); profileImporter.setDefaultProcessorProperty(ProfileProcessorName);
+        Xna::ContentImporterAttribute stageImporter(".stage"); stageImporter.setDefaultProcessorProperty(StageProcessorName);
+        Pipeline::RegisterXnaImporter<ProfileImporter>(*registry, "CnaDemos.NestedProfileImporter", profileImporter);
+        Pipeline::RegisterXnaImporter<StageImporter>(*registry, "CnaDemos.NestedStageImporter", stageImporter);
+        Pipeline::RegisterXnaProcessor<ProfileProcessor>(*registry, ProfileProcessorName, Xna::ContentProcessorAttribute{});
+        Pipeline::RegisterXnaProcessor<StageProcessor>(*registry, StageProcessorName, Xna::ContentProcessorAttribute{});
+        registry->RegisterWriter(std::make_shared<ProfileWriter>()); registry->RegisterWriter(std::make_shared<StageWriter>());
+        const Pipeline::ContentPipeline pipeline(registry);
+        Pipeline::ContentBuildRequest request;
+        request.sourceRoot = CnaDemos::ExecutableDirectory() / "assets";
+        request.source = "nested_builds/arena.stage"; request.logicalName = "stages/arena";
+        const auto loaded = pipeline.Build(request);
+        const auto loadedDocument = Cnb::CnbDocument::Parse(loaded.output.bytes, "stage with processed profile");
+        auto budget = loadedDocument.OpenChunk(loadedDocument.RequireSingle(DataChunk));
+        check(budget.ReadU32() == 240, "BuildAndLoadAsset imports and scales the profile before the stage computes its health budget");
+        budget.RequireExhausted();
+        check(profileWrites == 0 && loaded.output.additionalOutputs.empty() && loaded.runtimeReferences.empty() &&
+              loadedDocument.ExternalReferences().empty(), "consuming a processed child produces no child compilation or runtime reference");
+        bool primary = false, child = false;
+        for (const auto& dependency : loaded.dependencies)
+        {
+            primary |= dependency.kind == Pipeline::ContentDependencyKind::PrimarySource && dependency.identity.ends_with("/nested_builds/arena.stage");
+            child |= dependency.kind == Pipeline::ContentDependencyKind::SourceFile && dependency.identity.ends_with("/nested_builds/guard.profile");
+        }
+        check(primary && child, "the parent records its primary source and the nested imported profile as a source-file dependency");
+        request.parameters.Set("CompileChild", true);
+        const auto compiled = pipeline.Build(request);
+        check(profileWrites == 1 && compiled.output.additionalOutputs.size() == 1,
+              "two identical BuildAsset requests compile the child once and return one additional output");
+        if (compiled.output.additionalOutputs.size() != 1) return 1;
+        const auto& output = compiled.output.additionalOutputs.front();
+        check(output.logicalName == ChildName && output.assetTypeName == Profile::XnaTypeName && output.assetSchemaVersion == 1,
+              "the additional output preserves the explicitly requested child name and schema identity");
+        const auto childDocument = Cnb::CnbDocument::Parse(output.bytes, "compiled profile");
+        childDocument.RequireAsset(Cnb::CnbAssetTypeIdFromName(std::string(Profile::XnaTypeName)), 1);
+        auto childData = childDocument.OpenChunk(childDocument.RequireSingle(DataChunk));
+        const auto childName = childData.ReadString(); const auto childHealth = childData.ReadU32(); childData.RequireExhausted();
+        check(childName == "Guard" && childHealth == 80, "the separate child bytes contain the same parameter-scaled profile used for the budget");
+        const auto parentDocument = Cnb::CnbDocument::Parse(compiled.output.bytes, "stage referencing compiled profile");
+        auto parentData = parentDocument.OpenChunk(parentDocument.RequireSingle(DataChunk));
+        check(parentData.ReadU32() == 240 && parentDocument.ExternalReferences().size() == 1,
+              "compiling the child preserves the stage budget and emits one XREF entry");
+        parentData.RequireExhausted();
+        const auto& reference = parentDocument.ExternalReferenceAt(0, "stage profile");
+        check(reference.logicalName == output.logicalName && reference.expectedAssetTypeId == output.assetTypeId &&
+              compiled.runtimeReferences.size() == 1 && compiled.runtimeReferences.front().logicalName == output.logicalName,
+              "the parent CNB reference and coordinator runtime reference identify the actual additional output");
+        bool profileSchema = false, stageSchema = false;
+        for (const auto& schema : compiled.writerSchemas)
+        {
+            profileSchema |= schema.assetTypeName == Profile::XnaTypeName;
+            stageSchema |= schema.assetTypeName == Stage::XnaTypeName;
+        }
+        check(profileSchema && stageSchema, "the combined build records both writer schema dependencies");
+        auto collision = request; collision.parameters.Set("Collide", true);
+        bool refused = false;
+        try { (void)pipeline.Build(collision); }
+        catch (const Pipeline::ContentPipelineError& error)
+        {
+            refused = error.Stage() == Pipeline::ContentPipelineStage::Process && error.Component() == StageProcessorName &&
+                      std::string(error.what()).find("already built from a different source or processing") != std::string::npos;
+            std::cout << "Refused child collision: " << error.what() << '\n';
+        }
+        check(refused, "different child processing under the same requested output name is refused in the parent process stage");
+        const auto repeated = pipeline.Build(request);
+        check(repeated.output.bytes == compiled.output.bytes && repeated.output.additionalOutputs.size() == 1 &&
+              repeated.output.additionalOutputs.front().bytes == output.bytes,
+              "a fresh valid build is deterministic after the failed conflicting request");
+        return passed ? 0 : 1;
+    }
+    catch (const std::exception& error)
+    {
+        std::cerr << "Nested content build failed: " << error.what() << '\n';
+        return 1;
+    }
+}
