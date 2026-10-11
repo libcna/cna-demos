@@ -21,7 +21,8 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 13 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
-* Started: 15 (coverage audit: docs/COVERAGE_AUDIT.md records a decision per type without a demo).
+* In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
+  comprehensive semantic coverage is not yet established).
 
 ## 3. Architecture in 10 lines
 
@@ -91,17 +92,18 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **404-demo checkpoint passed** through demo revision `0aa8a4f`, including the curve,
-manifest and texture extensions (log `/tmp/cna-demos-semantic-validation.log`).
+The full **406-demo checkpoint passed** through demo revision `1bb71ac`, including all five new
+demos and the member/ownership extensions. The entire script used private Xvfb after the
+inherited desktop X server interrupted an earlier attempt (log `/tmp/cna-demos-406-validation.log`).
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 404 demos, 0 problems |
+| Metadata/assets `--validate` | 406 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 416/416 enabled tests, 3 manual disabled; 15 expected failures via WILL_FAIL |
-| SOFTWARE smoke | 361 passed, 15 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 382 passed, 16 expected failures, 3 skipped, 3 manual not run |
+| CTest | 418/418 enabled tests, 3 manual disabled; 16 expected failures via WILL_FAIL |
+| SOFTWARE smoke | 362 passed, 16 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 383 passed, 17 expected failures, 3 skipped, 3 manual not run |
 | Unexpected outcomes | None on either renderer; the earlier sign-in-screen crash did not recur in this baseline |
 | Screenshots | Manifest and texture-rectangle screenshots inspected on both renderers; prior broader contact-sheet review remains historical |
 | Content build | Passed (CNB, XNB, media, content project) |
@@ -209,161 +211,86 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Current session checkpoint (2026-10-11):** started clean at `55cca71`. The old 398/401
-checkpoint debt is resolved: a full 401-demo baseline passed, and after three new demos a full
-**404-demo tools/validate.sh run passed** too (section 7; log `/tmp/cna-demos-404-validation.log`).
-Both smoke reports contained every ID at that checkpoint; the new 406 checkpoint below must
-replace them for the current catalog. Archived reports
-are `reports/baseline-401-{SOFTWARE,OPENGLES3}.json` and
-`reports/baseline-404-{SOFTWARE,OPENGLES3}.json`. The sibling CNA is newer than the CI pin:
-`2b15506a48e1a6202c985823131daf5856826f71`.
+**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **406 demos**
+through demo revision `1bb71ac`, including the ownership and lifecycle corrections. Section 7
+has the exact results. Log: `/tmp/cna-demos-406-validation.log`; named report archives:
+`reports/checkpoint-406-{SOFTWARE,OPENGLES3}.json`. Both reports match all current IDs, with no
+absent entries, unexpected failures or unexpected passes. Current generated coverage is
+289/329 XNA types and 1314/2326 named members; these are metadata counts, not comprehensive
+semantic coverage. CNA remains clean at `2b15506a48e1a6202c985823131daf5856826f71`, newer than
+CI's `10a4ef1cb4cd832f761536d77588000104947f8d`.
 
-Completed this session:
-- Validation tooling preserves command failures/logs; catalog validation no longer reparses the
-  entire document per field; coverage exposes IDs absent from stale reports. Failure-path and
-  catalog rejection fixtures passed.
-- `math.quaternion.double_cover`: 12 checks, sign-aligned blending and noncommuting relative
-  rotations. No quaternion CNA defect found; the lost previous source cannot be diagnosed.
-- `graphics.effect.parameter_values`: 16 checks on both renderers, exactly two expected failures
-  (ISSUE-034/035). The old handoff's inferred 4x3 Bones reflection was contradicted by the FNA
-  fixture; the demo checks 72 elements and prints shape without claiming XNA runtime evidence.
-- `content.custom.cnb_loader`: public writer, custom schema, shared registration, separate caches
-  and unsupported-schema rejection (5 checks). The APIs also exist at the CI-pinned CNA revision.
-- Initial semantic audits now cover Quaternion, EffectParameter, Curve/CurveKeyCollection,
-  ContentManager and Texture2D. This is not comprehensive member/behavior coverage.
+The original 398/401 checkpoint debt is closed. Full 401 and two 404 checkpoints also passed
+this session. A subsequent 405 attempt passed all CTests but lost the inherited X connection
+`:0` during SOFTWARE and never wrote a fresh report; it is **not** counted as completed.
+Its raw log is `/tmp/cna-demos-405-software-interrupted.log`. The isolated phone lifecycle demo
+passed under private Xvfb, and the complete 406 rerun used private Xvfb for the whole script.
+No phone-demo defect was reproduced. Validation now removes stale current JSON outputs at
+startup while preserving named archives; the failure-propagation/stale-report tests pass.
 
-**Curve member batch completed:** all three existing demos were extended, with no new IDs.
-SOFTWARE checks: tangents 9/9, key collection 10/10, loop types 15/16 (only ISSUE-036).
-The original loop demo expected first-key behavior; the corrected last-key expectation agrees
-with the local genuine-XNA decompilation. No upstream CNA changes were made. Incremental build,
-metadata (404/0) and six relevant CTests including catalog validation passed. Reports:
-`/tmp/cna-curves-SOFTWARE.json`. The subsequent full checkpoint in section 7 includes this curve change; both renderers report
-exactly its documented failure.
+Completed this session (details and issue reproductions are in CHANGELOG and CNA_ISSUES):
+- Five new focused demos: quaternion double cover, typed effect parameters, custom CNB rules,
+  XACT category instance limits, and custom CNJ enemy factories. The latter uses nlohmann-json,
+  already a README/CI dependency, explicitly linked through CNA's portable-header helper.
+- Existing curves now cover asymmetric tangents, negative loops and degenerate collections;
+  manifest shows explicit refresh independently of caching; texture rectangles use nonzero
+  CPU offsets with untouched padding. Manifest and texture screenshots were inspected on both
+  renderers; no new screenshot or audible evidence is claimed for console/audio extensions.
+- Four XACT demos own caller-allocated GetCue results; the cue lifecycle checks Disposing and
+  repeated disposal. The instance-limit demo exercises Fail/ReplaceOldest, paused slots and
+  category isolation through public cue states.
+- Custom CNB loader distinguishes optional/mandatory unknown chunks and retry after repair
+  (8 checks). Custom CNJ loader demonstrates named factories, per-manager registration, cache,
+  Unload preserving factories and payload errors (7 checks). Its three generated fixtures
+  match the committed bytes exactly.
+- Dynamic streaming exercises buffer sizing, duration, unsupported loop/release operations,
+  queue cleanup and disposal (11 checks; exactly 2 failures from ISSUE-038). Its playback check
+  now runs once despite fixed-step catch-up.
+- New CNA records: ISSUE-034/035 (stock EffectParameter getter/reflection), ISSUE-036 (Curve
+  post-loop tangent), ISSUE-038 (dynamic audio getters after Dispose); ISSUE-037 is a header
+  comment contradiction only. No CNA source was modified. XNA decompilation/spec inspection
+  is explicitly distinguished from genuine-XNA runtime execution.
+- Validation preserves command failures and full logs, catalog checking avoids repeated large
+  JSON parsing, and coverage exposes IDs missing from old reports. Member audits now include
+  content/binary formats, audio/XACT, texture ownership, sprites/text and pipeline APIs.
 
-**Manifest batch completed:** existing demo now checks explicit refresh after adding/removing a
-private CNJ file and separates manifest snapshots from asset caching. Both SOFTWARE and OPENGLES3
-pass all 20 checks; relevant CTest and metadata validation pass. Screenshots were inspected on
-both renderers (`/tmp/cna-manifest-{SOFTWARE,OPENGLES3}.png`). That review found long paths
-crossing columns: the demo now fits them with ellipses and retains full console output; fresh
-screenshots confirm the fix. No new CNA issue found.
+**Highest-priority next batch:** apply `/tmp/cna-pipeline-components.cpp` as
+`demos/content/custom/pipeline_components.cpp`. It is a prepared, **unbuilt/unexecuted** draft
+for `content.custom.pipeline_components`, using public ContentPipelineRegistry, importer,
+processor, writer and ContentPipeline::Build from `CNA/Content/Pipeline/ContentPipeline.hpp`
+(already compiled into CNA_Content). Add `assets/custom/patrol.route` containing `0 0`, `3 0`,
+`3 4` on separate lines, plus generator/attribution support. It precomputes open length 7 or
+closed length 12, writes a bounded custom CNB schema, loads it and checks typed parameter
+errors. Source APIs and upstream acceptance tests were inspected; none of its planned checks
+count as current coverage. Build, run both renderer selections, CTest/catalog, then update
+ROADMAP/coverage/this handoff and continue.
 
-**Texture member batch completed:** `graphics.texture2d.set_data_rectangle` now uploads from
-CPU offset 1 and reads into offset 2, checking destination padding and the adjacent texture pixel.
-Both renderers pass all four checks; relevant CTests and metadata pass. Screenshots inspected:
-`/tmp/cna-texture-{SOFTWARE,OPENGLES3}.png`. Their stroke counts differ because painting occurs
-in Update and fixed-step catch-up can run several updates per drawn frame; no pixel-equality
-comparison is claimed. No CNA defect found.
+Next useful work after that:
+1. A build-time IntermediateSerializer example. The old type-audit exclusion was inaccurate:
+   current IntermediateReader/Writer consume ContentSerializerAttribute, and public fluent
+   ContentTypeDescriptor/ContentMemberDescriptor APIs implement named/optional/ignored/
+   flattened fields. This needs the separate `cna_content_pipeline` build-time target, not
+   an Internal XML parser. No type-wrapper-only demos.
+2. ContentManager root/cache/lifetime behavior. Source review found that genuine-XNA's
+   RootDirectory setter refuses mutation while assets are loaded, whereas CNA's current setter
+   directly assigns the path. This is a candidate for runtime investigation, not yet a recorded
+   runtime defect or a demo expectation to copy without verifying.
+3. Strengthen existing sprite demos: `/tmp/cna-layer-depth-pixels.cpp` and
+   `/tmp/cna-texture-sort-pixels.cpp` are unbuilt drafts. The first checks actual overlap colors;
+   the second prevents a uniformly blank row passing the texture-grouping assertion. Inspect
+   fresh screenshots on both renderers when applying them. Other meaningful gaps are listed
+   in the new SpriteBatch/SpriteFont audit table.
+4. Remaining Phase 9 work: authored RPC/variation tables, cue-level limits/priorities/fades;
+   category limits are already complete. Preserve ownership and distinguish state observation
+   from audible evidence.
 
-**Full semantic checkpoint completed:** tools/validate.sh passed for all 404 demos including
-these five revisions. All 416 enabled CTests pass; SOFTWARE has 361 passes / 15 expected failures,
-OPENGLES3 382 / 16, with no unexpected outcomes. Comparison against the earlier full report
-finds only the intentional `math.curve.loop_types` status/message change. Current coverage uses
-the fresh reports (1310/2326 named members); archives are
-`reports/semantic-404-{SOFTWARE,OPENGLES3}.json`. Log: `/tmp/cna-demos-semantic-validation.log`.
-**XACT ownership correction completed:** four existing demos now hold GetCue results in
-unique_ptr. Source confirms GetCue allocates with new and Dispose does not delete the object;
-this was a demo bug, not a CNA bug. Incremental build, all eight direct SOFTWARE XACT demos,
-nine relevant CTests (including catalog) and metadata validation passed. Reports/logs:
-`/tmp/cna-xact-ownership-SOFTWARE.{json,log}` and `/tmp/cna-xact-ownership-ctest.log`.
-No memory-sanitizer or audible validation is claimed. Full report evidence remains the preceding
-404 checkpoint until the next run includes this ownership fix.
-
-**Category instance-limit batch completed:** `audio.xact.instance_limits` passes all seven
-checks on SOFTWARE and OPENGLES3, including a paused cue retaining its slot, Fail rejecting the
-next cue, ReplaceOldest stopping a paused victim, category isolation and slot reuse after Stop.
-The original tone banks are reused; only `assets/xact/limits.xgs` (159 bytes) was added by the
-updated generator. Default xgs() remains byte-identical. The implementation and ownership rules
-also exist at the CI-pinned CNA commit (source checked; that checkout was not separately built).
-Build, metadata (405 demos, zero problems), new CTest and catalog test passed. Coverage was
-regenerated with the preceding 404-demo reports and explicitly lists the new ID as absent.
-
-**Cue lifecycle member batch completed:** existing `audio.xact.cue_states` now checks the
-Disposing sender, exactly one notification across repeated Dispose and no repeated notification
-when unique_ptr deletes the object. All 9 checks pass on SOFTWARE, as do its CTest, the catalog
-check and metadata validation (405/0). Callback counters precede the owned pointer so exceptions
-cannot leave a destructor invoking references to expired local state.
-
-**Full 405-demo attempt interrupted:** tools/validate.sh, log
-`/tmp/cna-demos-405-validation.log`, passed build/metadata and all 417 enabled CTests, but
-the SOFTWARE process exited during `phone.phone_application_service.lifecycle` after an XIO
-fatal connection error on inherited display `:0`. It never wrote a fresh SOFTWARE report and
-never reached GLES. The raw smoke log is preserved as `/tmp/cna-demos-405-software-interrupted.log`.
-This is not a completed checkpoint; section 7 still refers to the preceding 404-demo semantic
-checkpoint. The isolated phone demo passes under private Xvfb
-(`/tmp/cna-phone-lifecycle-SOFTWARE.{json,log}`). No phone-demo defect was reproduced. Run the
-next entire validation under private Xvfb after the prepared batches rather than depending on
-the desktop display. A partial run cannot replace the complete archived reports. Coverage explicitly lists the new instance-limit ID as absent
-from those old reports. The new checkpoint must include both ownership and lifecycle changes.
-Further candidates: ContentManager cache/root/lifetime, CNB optional/mandatory chunk behavior,
-and Texture2D ownership/stream gaps. The new CNA binary-content table audits writer/document/
-cursor members outside the XNA percentage. The CNB optional/mandatory extension is completed: all 8 checks pass on both renderer
-selections, build/metadata and targeted CTest pass. Reports: `/tmp/cna-cnb-extensions-{SOFTWARE,OPENGLES3}.json`.
-**Dynamic stream member batch completed:** existing streaming now checks buffer size/duration,
-loop/release restrictions, queued buffers before Play and after Stop, and disposal. SOFTWARE
-and OPENGLES3 each execute 11 checks with exactly two failures: PendingBufferCount and IsLooped
-return 0/false after Dispose instead of throwing (ISSUE-038). This is a CNA bug, confirmed
-against the local spec and genuine-XNA source, not an audible check. Build, metadata (406/0),
-its CTest and catalog validation pass. Reports: `/tmp/cna-streaming-lifecycle-{SOFTWARE,OPENGLES3}.json`.
-The playback assertion now runs once even when fixed-step catch-up repeats Update before Draw.
-ISSUE-037 remains a documentation-only setter error; its real behavior is now executed.
-ISSUE-038 is the separate getter implementation defect.
-**Custom CNJ batch completed:** `content.custom.cnj_loader` uses two named factories for the
-same Enemy type, real JSON fields, per-manager registration/cache, Unload preserving factories,
-duplicate-name rejection and missing-field ContentLoadException. All 7 checks pass on both
-renderer selections; build, metadata (406/0), its CTest and catalog validation pass. Reports:
-`/tmp/cna-cnj-loader-{SOFTWARE,OPENGLES3}.json`. The CNJ parser choice is resolved: nlohmann-json 3.11 is already an explicit README/CI
-prerequisite and 3.11.3 is installed. The content category explicitly links via CNA's existing
-`cmake/HeaderOnlyJson.cmake` / `cna_link_json_headers` helper (also present at the CI pin), which
-isolates portable headers for cross builds. Three original CNJ fixtures live
-under `assets/custom`, including an intentionally incomplete payload. The asset generator
-reproduces all three byte-for-byte (checked in a temporary directory without rewriting other
-assets). No CNA Internal parser is needed.
-
-Effects source review: all four configured `CNA_*_COMPILED_EFFECTS` switches are OFF and
-`CNA_FXC_EXECUTABLE` is empty in the current CMake cache, confirming the compiled-FX blocker.
-`PbrEffect::setImageBasedLightEXT` and the three-texture `ImageBasedLightEXT` bundle do exist,
-including EasyGL rendering support. However, the EnvironmentProcessor named in CNA's audit
-placeholders is absent from the tracked source tree. An IBL demo therefore still needs an
-authored, consistent irradiance/specular/BRDF bundle or a small asset generator; do not call a
-nonexistent processor or pass arbitrary unrelated textures and claim meaningful IBL coverage.
-
-**Full 406-demo checkpoint starting:** all of tools/validate.sh under private Xvfb, log
-`/tmp/cna-demos-406-validation.log`, includes source revision `1bb71ac` (CNB, CNJ and dynamic
-audio batches). The script now invalidates old current JSON outputs at startup so an interrupted
-smoke cannot leave stale results looking current; named archives survive. Its three stub-based
-failure-path tests and bash syntax validation pass. The last complete archived reports still
-describe the preceding 404-demo semantic checkpoint until this run finishes.
-
-**Sprite API semantic audit added:** `docs/COVERAGE_AUDIT.md` now maps SpriteBatch/SpriteFont
-overload families to actual code, separates pixel assertions from merely successful drawing,
-and identifies useful existing-demo extensions. Highest-value small graphics follow-ups are
-layer-depth overlap checks and strengthening texture-sort checks to reject a uniform blank
-row. Drafts `/tmp/cna-layer-depth-pixels.cpp` and `/tmp/cna-texture-sort-pixels.cpp` are prepared
-but deliberately not applied while the complete checkpoint runs. This table adds no new runtime
-or screenshot validation claims.
-
-**Highest-priority prepared next batch:** `/tmp/cna-pipeline-components.cpp` is an unbuilt
-draft with an open-route check for `content.custom.pipeline_components`.
-It uses public ContentPipelineRegistry / importer / processor / writer / ContentPipeline::Build
-from `CNA/Content/Pipeline/ContentPipeline.hpp`, already compiled into CNA_Content. It still
-needs `assets/custom/patrol.route` with `0 0`, `3 0`, `3 4` on separate lines and generator support.
-The processor precomputes open length 7 or closed length 12, writes a bounded custom CNB schema,
-and tests runtime loading plus typed parameter diagnostics. Source APIs and their upstream
-acceptance tests were inspected; this draft has NOT been compiled or executed. Apply only after
-the full 406 checkpoint finishes, validate it, then update coverage/ROADMAP/this handoff.
-The type audit also corrected an old exclusion: ContentSerializerAttribute is consumed by
-current IntermediateReader/Writer, and fluent ContentTypeDescriptor members implement useful
-serialization attributes in C++. A separate build-time IntermediateSerializer demo is a real
-remaining gap; the blanket claim that CNA does not read those attributes was inaccurate.
-
-**Next**: remainders by value -- Phase 8 (custom pipeline components and further content behaviors; both custom loader hooks
-are now demonstrated); Phase 9 (category instance limits are complete; RPC curves and
-cue variations still need authored data and audible or supported output observation); Phase 6 (image-based lighting; compiled `.fx` effects need fxc); Phase 12
-(`AvatarDescription::Changed`, manual); Phase 13 (devices-ext camera, system tray, message box and
-file dialog are manual; `CNA::Devices::Clipboard` repeats `CNA::Input::Clipboard`); Phase 15
-(member coverage: name the XNA members existing demos already call, as audit pass 1 did for types;
-the CNA-specific headers; screenshot references for visual regression). Phase 14 has C API demos for
-every area the ROADMAP named; more only where the C ABI differs instructively.
+Effects constraints verified in the current sources/build: all four configured
+`CNA_*_COMPILED_EFFECTS` switches are OFF and `CNA_FXC_EXECUTABLE` is empty. PbrEffect's public
+ImageBasedLightEXT bundle and GraphicsDevice::SupportsImageBasedLightingEXT do exist, including
+EasyGL support, but the EnvironmentProcessor named in old CNA audit placeholders is absent from
+the tracked source tree. A meaningful IBL demo still needs a consistent authored/generated
+irradiance cube, prefiltered specular cube and BRDF table; arbitrary unrelated textures do not
+establish it. Do not restart completed phases while these focused gaps remain.
 
 Not exercised here: `gamer_services.signed_in_gamer.signed_out` is manual -- its start-up was run
 (GL, Xvfb), the sign-out itself needs a person at the Guide (no input injection in this container).
