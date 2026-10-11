@@ -62,7 +62,7 @@ Console demos with checks; each shows one operation family.
   `GraphicsProfile` Reach vs HiDef. ≈ 8
 - `LaunchParameters`, `TitleContainer.OpenStream`, `TitleLocation`. ≈ 3
 
-## Phase 4 -- 2D graphics ✅ (47 demos including 7 SpriteFont demos; small remainders listed per line)
+## Phase 4 -- 2D graphics ✅ (48 demos including 7 SpriteFont demos; small remainders listed per line)
 - ✅ `graphics.device.*`, `graphics.viewport.*`, `graphics.graphics_adapter.*`,
   `graphics.graphics_resource.*` (13): `Clear`/`ClearOptions`, split-screen viewports, `Viewport`
   properties and `Project`/`Unproject`, `ScissorRectangle`, `PresentationParameters`,
@@ -76,12 +76,14 @@ Console demos with checks; each shows one operation family.
   FrontToBack), `BlendState` (AlphaBlend, Additive, NonPremultiplied, Opaque), `SamplerState`
   (PointClamp, LinearWrap...), `DepthStencilState`, `RasterizerState`, transform matrix, custom
   `Effect`; sprite sheets; many Begin/End pairs per frame. ≈ 20 -- custom `Effect` in `Begin` moves
-  to Phase 6 (needs effects).
+  to Phase 6 (needs effects). The existing multiple_batches demo now checks deferred state
+  application/retention after End and actual camera-world versus screen-HUD pixels (six checks
+  on both renderers; captures inspected).
 - ✅ (7 demos) `graphics.sprite_font.*`: build-time CNB font (generated font-texture sheet),
   `DrawString`, `MeasureString`, `LineSpacing`, `Spacing`, `DefaultCharacter`, `Characters`,
   scaled/rotated/mirrored text, `StringBuilder`, the CNAEXT glyph constructor. Remaining: loading
   an XNB font (Phase 8, content), TrueType `.spritefont` (needs FreeType and a licensed font).
-- ✅ (8 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
+- ✅ (9 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg` (including requested output
   dimensions and unchanged source), `LevelCount`. Remaining:
   float/HDR formats and broader direct compressed-block updates.
@@ -187,7 +189,7 @@ a check that all authored colors remain visible and that a blank texture row can
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (34 demos; remaining below)
+## Phase 8 -- content 🟨 (35 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -236,6 +238,11 @@ a check that all authored colors remain visible and that a blank texture row can
   GetTypeReader and implicit ReadRawObject target/factory-name failures, ISSUE-043).
 - ✅ `content.xnb.external_references`: sibling loose image/compiled label, null and unsafe/missing
   paths, typed/erased owner caches and actual shared-image rendering (11 checks per renderer).
+- ✅ `content.content_manager.asset_precedence`: same-name XNB/CNB/CNJ/native values,
+  cache versus fresh-manager lookup, Unload, explicit native filenames, corrupt compiled-file
+  refusal and repair/retry. Thirteen checks pass; truncated XNB exposes a public exception-type
+  mismatch (ISSUE-045). `custom.cnj_loader` now separately caches Enemy and Nameplate from the
+  same name and CNJ type, including reload after Unload (11 passing checks total).
 - ✅ `content.xnb.reader_versions`: real legacy/current schema compatibility, future-version
   refusal before payload reads, duplicate factory policy, scoped withdrawal, owned capture
   lifetime and cache independence (17 console checks per renderer selection).

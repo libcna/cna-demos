@@ -1073,6 +1073,37 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   a hidden alias registration. No global registry clearing, CNA source edits or upstream report.
   A library fix should preserve the distinction between target identity and reader factory name.
 
+### CNA-DEMOS-ISSUE-045 -- Truncated XNB leaks EndOfStreamException through ContentManager::Load
+
+- **Area:** ContentManager::Load<T>/LoadXnbAsset and the low-level XNB header parser.
+- **Demo:** `content.content_manager.asset_precedence`, 14 console checks: thirteen pass and
+  one preserves the public exception-type failure. The format-priority behavior itself passes.
+- **Reproduction:** a private content directory contains valid same-name CNB, CNJ and native
+  rules files. Write a three-byte `rules.xnb` containing `XNB`, then call Load<Rules>("rules")
+  on a fresh manager. The valid compiled XNB control first loads the authored value 400.
+- **Observed:** Load throws System::IO::EndOfStreamException. Catching only the publicly
+  documented ContentLoadException would not recover. No lower-tier loader runs; repairing the
+  XNB permits the same manager to load it successfully without Unload. A three-byte CNB is
+  correctly refused as ContentLoadException, and its repair/retry also works.
+- **Expected:** failure to load an invalid XNB reaches the caller through ContentLoadException,
+  consistent with Load<T>'s public @throws contract and its wrapping of ordinary loose-reader
+  exceptions. This is a CNA contract comparison, not a genuine-XNA runtime observation.
+- **Cause:** Load dispatches directly to LoadXnbAsset, which calls ParseXnbHeader without a
+  wrapping boundary. The internal parser intentionally documents EndOfStreamException for a
+  truncated header and reads the fourth platform byte after the three magic bytes. That
+  low-level behavior escapes through the public content-loading boundary unchanged.
+- **Evidence/environment:** `/tmp/cna-434-asset_precedence-{SOFTWARE,OPENGLES3}.{json,log}`,
+  fresh Linux GCC 14.2 processes WITHOUT DISPLAY/WAYLAND_DISPLAY, exactly one failure in each
+  initial unlabeled 14-check run. CNA observed clean HEAD 9e340c876f6426218e2f82651fcb0b086de25e15
+  after build start; external C API refactors are unrelated to the inspected unchanged XNB path.
+- **Final labeled reproduction:** `/tmp/cna-434-asset-final-{SOFTWARE,OPENGLES3}.{json,log}`
+  keeps all 14 checks and the same one failure with ISSUE-045. Both temporary directories were
+  verified removed after exit. Its WILL_FAIL CTest passes along with the other 20 targeted tests.
+- **Handling:** retain the failing expectation with its issue identifier. The negative probe
+  explicitly catches EndOfStreamException solely so independent priority/cache/repair checks
+  continue; it does not relabel the exception or fall back to a lower-priority asset. Temporary
+  files belong to this demo and are removed by scoped cleanup. No CNA edits or upstream report.
+
 ## Resolved
 
 ### CNA-DEMOS-ISSUE-044 -- In-flight C API generation shadows a result-handle parameter

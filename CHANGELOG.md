@@ -39,6 +39,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Same-name compiled/source content precedence and cache lifetime checks; a truncated XNB
+  exposes an unwrapped EndOfStreamException at the public Load boundary (ISSUE-045).
+- Existing CNJ loading now distinguishes cache entries by requested C++ type, and the
+  multiple-batch sprite demo checks device-state retention and rendered world/HUD positions.
 - Versioned XNB reader policies with actual legacy/current records, explicit compatibility,
   duplicate registration, scoped withdrawal and verified factory-capture ownership (17 checks).
 - Direct implicit ReadRawObject existing-instance reproduction of ISSUE-043, alongside the
