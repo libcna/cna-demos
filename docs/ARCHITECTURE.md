@@ -73,6 +73,9 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
   tools link `CNA::ContentPipelineBuild`. Each process owns its serializer registry and dependencies;
   these stay outside the browser's runtime link closure. Metadata remains discoverable when
   the tool target is unavailable, and the runner reports the omitted executable as NOT RUN.
+* C ABI examples default to C99. The focused `c_api.core.thread_local_errors` target uses C11
+  threads/atomics after a compile/link availability check and links the standard Threads target.
+  It uses only game-independent C routes; no C++ threading wrapper or Game dispatcher is involved.
 * `CNA_SHARED_LIBRARY`: CNA links its runtime as `libcna.so` by default on Linux. With CMake older
   than 3.29 that link fails (see [CNA_ISSUES.md](CNA_ISSUES.md) CNA-DEMOS-ISSUE-001), so
   cna-demos defaults it to OFF there. With a shared CNA, `cna-demos` names the `libcna.so` file

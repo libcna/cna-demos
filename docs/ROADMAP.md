@@ -293,11 +293,12 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
-## Phase 14 -- bindings 🟨 (13 C API demos)
+## Phase 14 -- bindings 🟨 (14 C API demos)
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit),
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query preservation, exact-sized count/copy, canonical exception type/parameter details, callback errors),
+✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard and visible text),
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),

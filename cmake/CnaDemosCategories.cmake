@@ -117,7 +117,7 @@ endfunction()
 # it (CnaDemos::StandaloneExecutableName): "cna-demo-" followed by the ID with
 # every '.' replaced by '-'. IDs never contain '-', so the mapping is unique.
 #
-# C_API: the program is C (C99, no extensions) written against CNA's C ABI. It
+# C_API: the program is C (C99 by default, no extensions) written against CNA's C ABI. It
 # links CNA::CApi alone -- not the C++ libraries -- and may include the demos'
 # C scaffolding header "CnaDemos/CApiDemo.h". Without CNA::CApi (CNA configured
 # with CNA_BUILD_C_API=OFF) the executable is not built and the demo, which

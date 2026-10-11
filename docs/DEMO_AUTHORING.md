@@ -198,13 +198,19 @@ code; demos that need the network run one at a time under CTest (`RESOURCE_LOCK`
 C programs written against CNA's C ABI (`../cna/modules/c-api/include/CNA/C/*.h`, model program
 `../cna/modules/c-api/examples/c/hello_cna.c`). They are standalone demos with three differences:
 
-* `main.c` is C99 without extensions, and `CMakeLists.txt` says
+* `main.c` defaults to C99 without extensions, and `CMakeLists.txt` says
   `cna_demos_add_standalone(SOURCES main.c C_API)`: the program links `CNA::CApi` only. Without
   CNA's C API (`CNA_BUILD_C_API=OFF`; the `linux-full` preset turns it on) it is not built;
 * the metadata declares `.needs = CnaDemos::Need::CApi` (plus any other need), so such a build
   reports the demo as SKIPPED instead of NOT RUN;
 * `.apis` lists C names as they are: routes (`cna_game_create`) and structs (`CNA_SpriteCommand`).
   docs/COVERAGE.md counts the routes against every `CNA_C_API` declaration in the headers.
+
+`c_api.core.thread_local_errors` is the focused C11 exception: standard threads and atomics
+coordinate its diagnostic checks. Its own target requests C11 and probes thread/atomic support
+before building; all other C targets retain C99. Without that support the metadata stays visible
+and the executable is omitted. A renderer selection does not make this console example a
+rendering test, and it does not exercise foreign-thread Game dispatch.
 
 `#include "CnaDemos/CApiDemo.h"` gives the shared scaffolding -- argument parsing
 (`cna_demo_init`), checks (`cna_demo_check`, `cna_demo_check_result`, which prints the ABI's

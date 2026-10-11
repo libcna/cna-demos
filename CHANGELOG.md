@@ -27,6 +27,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Focused C thread-local diagnostic demo interleaves two worker errors and preserves each worker's
+  and the caller's result/category/message. This target alone uses C11 threads/atomics after an
+  availability probe; the other C examples retain C99.
 - Existing shared XML example checks null tables and rejects missing/duplicate resource IDs and
   incompatible resource types before returning the loaded graph.
 - Existing C diagnostics example distinguishes native C validation from canonical exceptions via
