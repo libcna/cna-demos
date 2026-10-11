@@ -273,6 +273,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Compass::IsSupported` -- devices.sensors.availability
 - `ContentManager::GetContentManifest` -- content.content_manager.manifest
 - `ContentManager::GetXnbReaderUsageSummary` -- content.content_manager.manifest
+- `ContentManager::RefreshContentManifest` -- content.content_manager.manifest
 - `ContentManager::RegisterCnbLoaderEXT` -- content.custom.cnb_loader
 - `ContentManager::RegisterTypeReader` -- content.custom.loose_file_reader
 - `ContentManifestEntry` -- content.content_manager.manifest

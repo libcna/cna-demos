@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: MS-PL
 // CNAEXT content manifest: what is under the content root, and in which formats.
 #include <algorithm>
+#include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <stdexcept>
+#include <system_error>
 #include <memory>
 #include <optional>
 #include <string>
@@ -8,6 +13,7 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
+#include "Microsoft/Xna/Framework/Curve.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManifestEntry.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SamplerState.hpp"
@@ -23,11 +29,48 @@ using namespace Microsoft::Xna::Framework::Graphics;
 
 namespace
 {
+    void ShowSnapshotRefresh(CnaDemos::DemoContext& ctx)
+    {
+        // Use a private directory to model a mod arriving after the initial scan.
+        const auto path = std::filesystem::temp_directory_path() /
+            ("cna-demos-manifest-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+        if (!std::filesystem::create_directory(path))
+            throw std::runtime_error("Could not create a private content directory");
+        struct Cleanup
+        {
+            std::filesystem::path path;
+            ~Cleanup() { std::error_code ignored; std::filesystem::remove_all(path, ignored); }
+        } cleanup{path};
+        ContentManager mods(nullptr, path.string());
+        ctx.Check(mods.GetContentManifest().empty(), "the first scan captures an empty content root");
+
+        std::ofstream file;
+        file.exceptions(std::ios::failbit | std::ios::badbit);
+        file.open(path / "brightness.cnj");
+        file << R"({"cnjVersion":1,"type":"Curve","keys":[{"position":0,"value":0.75}]})";
+        file.close();
+        ctx.Check(mods.GetContentManifest().empty(), "adding a file does not change the cached manifest");
+        ctx.CheckNear(mods.Load<Curve>("brightness").Evaluate(0.0f), 0.75, 1e-6,
+                      "Load finds the new file independently of the manifest snapshot");
+        mods.RefreshContentManifest();
+        const auto entries = mods.GetContentManifest();
+        ctx.Check(entries.size() == 1 && entries.front().relativePath == "brightness" && entries.front().hasCnj,
+                  "RefreshContentManifest discovers the new CNJ asset");
+        std::filesystem::remove(path / "brightness.cnj");
+        ctx.Check(mods.GetContentManifest().size() == 1, "removing a file also leaves the snapshot unchanged");
+        mods.RefreshContentManifest();
+        ctx.Check(mods.GetContentManifest().empty(), "refresh removes the deleted file from the manifest");
+        ctx.CheckNear(mods.Load<Curve>("brightness").Evaluate(0.0f), 0.75, 1e-6,
+                      "refreshing the manifest does not unload already cached assets");
+        ctx.Print("Manifest snapshots: empty -> add file -> refresh -> one entry -> remove -> refresh -> empty");
+    }
+
     class ManifestDemo final : public CnaDemos::DemoGame
     {
     protected:
         void LoadContent() override
         {
+            ShowSnapshotRefresh(Context());
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
 
@@ -50,6 +93,14 @@ namespace
                 for (const std::string& extension : entry.nativeExtensions)
                     forms += (forms.empty() ? "" : " ") + extension;
                 lines_.push_back(entry.relativePath + " " + forms);
+                // Keep long paths inside their column; the console below retains the full entry.
+                std::string& label = lines_.back();
+                if (font_->MeasureString(label).X * 0.8f > 380.0f)
+                {
+                    while (!label.empty() && font_->MeasureString(label + "...").X * 0.8f > 380.0f)
+                        label.pop_back();
+                    label += "...";
+                }
                 Context().Print("{:<36} {}", entry.relativePath, forms);
             }
 
@@ -103,8 +154,9 @@ CNA_DEMOS_GAME(ManifestDemo, {
     .title = "Content manifest (CNAEXT)",
     .description = "Lists every asset below Game::Content's root with ContentManager::GetContentManifest -- XNB, CNJ "
                    "and native forms per asset name -- and the XNA type readers the .xnb files need "
-                   "(GetXnbReaderUsageSummary).",
+                   "(GetXnbReaderUsageSummary). Demonstrates explicit refresh after files arrive or disappear.",
     .apis = {"ContentManager::GetContentManifest", "ContentManager::GetXnbReaderUsageSummary",
+             "ContentManager::RefreshContentManifest", "ContentManager::Load",
              "ContentManifestEntry", "ContentManifestReaderUsage"},
     .tags = {"content", "manifest", "tools", "modding", "xnb", "cnaext"},
     .frames = 3,

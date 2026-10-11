@@ -163,7 +163,8 @@ Console demos with checks; each shows one operation family.
   cropping, kerning), ✅ `content.content_project.xna_content_project` (an XNA `.contentproj` built
   as it is, `CONTENT_PROJECT`). A CNJ texture repeats the texture processor demos (the same
   parameters in JSON). ✅ `content.custom.cnb_loader` uses public CnbWriter and
-  RegisterCnbLoaderEXT for a typed asset, caching and schema rejection. Remaining: custom pipeline
+  RegisterCnbLoaderEXT for a typed asset, caching and schema rejection. ✅ Existing manifest demo
+  now demonstrates explicit snapshot refresh and its independence from the asset cache. Remaining: custom pipeline
   components and `RegisterCnjLoader` (a game's own asset type; see HANDOFF "Next").
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
   managers, `ContentLoadException`, loose files vs XNB vs CNB vs CNJ lookup order.

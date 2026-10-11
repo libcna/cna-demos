@@ -235,9 +235,15 @@ metadata (404/0) and six relevant CTests including catalog validation passed. Re
 `/tmp/cna-curves-SOFTWARE.json`. Section 7 is the full checkpoint **before** this curve change;
 coverage run columns are explicitly labeled BASELINE until the next complete validation.
 
-**Immediate next batch:** apply and validate `/tmp/cna-manifest.cpp` (snapshot refresh), then
-`/tmp/cna-texture-rectangle.cpp` (nonzero CPU array offsets), updating this handoff per batch.
-No visual review is claimed for these drafts. CNJ custom loading remains pending: a meaningful
+**Manifest batch completed:** existing demo now checks explicit refresh after adding/removing a
+private CNJ file and separates manifest snapshots from asset caching. Both SOFTWARE and OPENGLES3
+pass all 20 checks; relevant CTest and metadata validation pass. Screenshots were inspected on
+both renderers (`/tmp/cna-manifest-{SOFTWARE,OPENGLES3}.png`). That review found long paths
+crossing columns: the demo now fits them with ellipses and retains full console output; fresh
+screenshots confirm the fix. No new CNA issue found.
+
+**Immediate next batch:** apply and validate `/tmp/cna-texture-rectangle.cpp` (nonzero CPU
+array offsets), then run the full checkpoint again for the revised existing demos. CNJ custom loading remains pending: a meaningful
 payload example needs a JSON-parser choice; do not borrow CNA's Internal parser or add a
 constant-return factory merely to increase coverage.
 

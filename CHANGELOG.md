@@ -6,6 +6,7 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- Manifest paths are shortened to fit their on-screen columns; full names remain in console output.
 - Curve loop demo now checks the last outgoing tangent for Linear extrapolation; the former
   expectation matched a CNA defect, now recorded as CNA-DEMOS-ISSUE-036.
 - Catalog validation extracts each demo object once before checking its fields and known issue;
@@ -17,6 +18,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Manifest demo shows files arriving/disappearing between explicit refreshes and the independent
+  asset cache; private temporary content is removed after the checks.
 - Existing curve demos now show selective/asymmetric tangent computation, negative-time loop
   boundaries, and empty/single-key evaluation without adding duplicate demos.
 - Custom CNB loader demo: a game-defined rules schema, public writer, shared loader registration,
