@@ -82,6 +82,11 @@ optional and defaults to `nproc`; `SKIP_GL=1` deliberately omits GL and must be 
 handoff. Build warnings, command failures, unexpected demo failures and unexpected passes stop
 the checkpoint. Build and CTest output is retained in `build/<preset>/reports/build.log` and
 `ctest.log`; smoke output is retained as `smoke-<renderer>.log` alongside its JSON report.
+The two current JSON outputs are removed at the start; an interrupted process must not leave
+old results looking like fresh evidence. Explicitly named baseline archives are preserved.
+When the inherited desktop display is unstable, run the whole script under
+`WAYLAND_DISPLAY= xvfb-run -a -s '-screen 0 1280x1024x24' tools/validate.sh`, so CTest and SOFTWARE
+also have a private display. The script still creates its own nested Xvfb for OPENGLES3.
 `python3 tools/test_validate.py` verifies the script's failure propagation with
 command stubs, without compiling CNA.
 

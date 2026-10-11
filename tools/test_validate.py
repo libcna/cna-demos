@@ -16,6 +16,12 @@ class ValidateScriptTests(unittest.TestCase):
             (root / "tools").mkdir()
             (root / "commands").mkdir()
             (root / "build/linux-full/bin").mkdir(parents=True)
+            reports = root / "build/linux-full/reports"
+            reports.mkdir()
+            for renderer in ("SOFTWARE", "OPENGLES3"):
+                (reports / f"results-{renderer}.json").write_text("stale report")
+            archive = reports / "baseline-SOFTWARE.json"
+            archive.write_text("archived report")
             shutil.copyfile(Path(__file__).with_name("validate.sh"), root / "tools/validate.sh")
             # These are command stubs, not a build tree or compiled probe.
             command = '''#!/usr/bin/env python3
@@ -49,6 +55,11 @@ if stage == "smoke":
                        SKIP_GL="1", JOBS="1", XDG_RUNTIME_DIR=str(root / "xdg"))
             result = subprocess.run(["bash", str(root / "tools/validate.sh")], cwd=root,
                                     env=env, capture_output=True, text=True)
+            # The stubs never emit JSON. In particular, a smoke-stage crash must leave no old
+            # result behind, and SKIP_GL must not leave stale GL evidence. Archives survive.
+            for renderer in ("SOFTWARE", "OPENGLES3"):
+                self.assertFalse((reports / f"results-{renderer}.json").exists())
+            self.assertEqual(archive.read_text(), "archived report")
             return result, trace.read_text().splitlines()
 
     def test_success_reaches_coverage(self):

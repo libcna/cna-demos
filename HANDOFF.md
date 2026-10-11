@@ -212,7 +212,8 @@ process-level features; static CNA on CMake < 3.29.
 **Current session checkpoint (2026-10-11):** started clean at `55cca71`. The old 398/401
 checkpoint debt is resolved: a full 401-demo baseline passed, and after three new demos a full
 **404-demo tools/validate.sh run passed** too (section 7; log `/tmp/cna-demos-404-validation.log`).
-Both smoke reports contain every current ID; coverage has no absent entries. Archived reports
+Both smoke reports contained every ID at that checkpoint; the new 406 checkpoint below must
+replace them for the current catalog. Archived reports
 are `reports/baseline-401-{SOFTWARE,OPENGLES3}.json` and
 `reports/baseline-404-{SOFTWARE,OPENGLES3}.json`. The sibling CNA is newer than the CI pin:
 `2b15506a48e1a6202c985823131daf5856826f71`.
@@ -324,9 +325,12 @@ placeholders is absent from the tracked source tree. An IBL demo therefore still
 authored, consistent irradiance/specular/BRDF bundle or a small asset generator; do not call a
 nonexistent processor or pass arbitrary unrelated textures and claim meaningful IBL coverage.
 
-**Next checkpoint:** run all of tools/validate.sh under private Xvfb with the current 406 demos.
-The last complete reports still describe the preceding 404-demo semantic checkpoint, so they
-must not be presented as evidence for these latest source revisions.
+**Full 406-demo checkpoint starting:** all of tools/validate.sh under private Xvfb, log
+`/tmp/cna-demos-406-validation.log`, includes source revision `1bb71ac` (CNB, CNJ and dynamic
+audio batches). The script now invalidates old current JSON outputs at startup so an interrupted
+smoke cannot leave stale results looking current; named archives survive. Its three stub-based
+failure-path tests and bash syntax validation pass. The last complete archived reports still
+describe the preceding 404-demo semantic checkpoint until this run finishes.
 
 **Next**: remainders by value -- Phase 8 (custom pipeline components and further content behaviors; both custom loader hooks
 are now demonstrated); Phase 9 (category instance limits are complete; RPC curves and

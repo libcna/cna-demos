@@ -17,6 +17,9 @@ bin="$build/bin/cna-demos"
 reports="$build/reports"
 jobs="${JOBS:-$(nproc)}"
 mkdir -p "$reports"
+# A smoke process killed before writing its JSON must not leave a previous run's report
+# looking current. Keep deliberately named baseline archives; invalidate only the two outputs.
+rm -f "$reports/results-SOFTWARE.json" "$reports/results-OPENGLES3.json"
 
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/cna-demos-xdg}"
 mkdir -p -m 700 "$XDG_RUNTIME_DIR"
