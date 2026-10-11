@@ -6,7 +6,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**418 demos** in 18 categories. Kinds: console 151, game 241, standalone 26. Automation: automated 382, manual 3, smoke-only 33.
+**419 demos** in 18 categories. Kinds: console 151, game 242, standalone 26. Automation: automated 383, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 131 | 131 | 0 | 0 | 118 / 8 / 5 / 0 / 0 | 122 / 3 / 6 / 0 / 0 |
+| graphics | 132 | 132 | 0 | 0 | 118 / 8 / 5 / 0 / 1 | 122 / 3 / 6 / 0 / 1 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 10 | 9 | 1 | 0 | 10 / 0 / 0 / 0 / 0 | 10 / 0 / 0 / 0 / 0 |
@@ -31,11 +31,13 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `graphics.model.mesh_parts`.
+- OPENGLES3: absent from report: `graphics.model.mesh_parts`.
 
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 290 of 329** (88.1 %).
-- **Methods, properties, constructors and events named by a demo: 1321 of 2326** (56.8 %).
+- **Methods, properties, constructors and events named by a demo: 1327 of 2326** (57.1 %).
 - Fields and enum values named by a demo: 133 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
@@ -45,7 +47,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Content` | 7 / 11 | 14 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 290 / 550 | 84 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 296 / 550 | 84 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 44 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
@@ -424,7 +426,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Model::getCamerasEXTProperty` -- graphics.model.gltf_cameras
 - `ModelAnimationsEXT` -- graphics.model.clip_interpolation, graphics.model.node_animation
 - `ModelCameraEXT` -- graphics.model.gltf_cameras
+- `ModelMesh::ModelMesh` -- graphics.model.mesh_parts
 - `ModelMeshCollection::Count` -- graphics.model.draw
+- `ModelMeshPart::ModelMeshPart` -- graphics.model.mesh_parts
 - `MorphTargetDataEXT` -- graphics.model.morph_targets
 - `MorphWeightTrackEXT` -- graphics.model.morph_targets
 - `Motion::IsSupported` -- devices.sensors.availability

@@ -158,7 +158,11 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.material_variants` (KHR_materials_variants, run-time import: CNA's content
   pipeline refuses variants, which the compiled model format cannot carry).
 - ✅ `graphics.model.skinned_pbr` (skinned + metallic-roughness imports as SkinnedPbrEffect).
-- Remaining: `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
+- ✅ `graphics.model.mesh_parts`: procedural parts share buffers with distinct index/base-vertex
+  ranges and material effects; effect collection deduplication/replacement and both selected
+  triangle halves are checked, including actual pixels on both renderers.
+- Remaining: model topology/sampler behaviors, XNB models, `SkinnedModelEXT` (member decisions
+  in COVERAGE_AUDIT.md; mesh-part basics do not imply complete coverage).
 
 ## Phase 8 -- content 🟨 (30 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB

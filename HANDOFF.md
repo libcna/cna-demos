@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 15), 8 (content, 30), 9 (audio 21 incl. 9 XACT, media 10 incl. a
+* In progress: 7 (models/glTF, 16), 8 (content, 30), 9 (audio 21 incl. 9 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 15 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,10 +64,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-418 demos: math 78, game 33, graphics 131 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
+419 demos: math 78, game 33, graphics 132 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 21 (9 XACT), core 3 (2 logger),
+effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 16 model), audio 21 (9 XACT), core 3 (2 logger),
 content 30 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
@@ -253,10 +253,23 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** apply/build/validate `/tmp/cna-model-mesh-parts.cpp` as
-`demos/graphics/model/mesh_parts.cpp`, then run checkpoint-419, exercising the new separate-stream
-capture. The 418 run is finished and archived; rebuilding is safe. Compare SOFTWARE against the
-reviewed 418 log above and GL against its original raw log. Preserve the originals.
+**Immediate next action:** run full checkpoint-419 for the validated mesh_parts demo and the
+separate-stream capture fix. Compare SOFTWARE to checkpoint-418-SOFTWARE.reviewed.log (retain
+its raw partner/review record), GL to checkpoint-418-OPENGLES3.log and IDs to the fresh 419 catalog.
+Archive stdout AND stderr. Expected SOFTWARE 374/17/25/3, OPENGLES3 395/18/3/3, 431 enabled CTests
+and raw failed-assertion multisets 24/25. Last full checkpoint remains 418 at d2f8645.
+
+New `graphics.model.mesh_parts` passes all 8 checks on SOFTWARE/OPENGLES3:
+shared buffers, distinct triangle/index/base-vertex ranges, effect collection deduplication,
+retention/replacement, and two colored/two untouched pixel samples. Both screenshots inspected;
+RGBA data is identical. Evidence: `/tmp/cna-mesh-parts-{SOFTWARE,OPENGLES3}.{json,log,png}`.
+Build `/tmp/cna-419-mesh-build.log`, metadata 419/0 and its CTest plus two catalog checks pass
+(`/tmp/cna-419-mesh-ctest.log`). Coverage: 290/329 XNA types, 1327/2326 members, 156/3210 C routes.
+The runtime columns still show the new ID absent from the older full checkpoint. No new CNA issue.
+The /tmp mesh draft is applied and stale. Next productive Phase 7 work is per-part sampler/topology
+behavior or the distinct SkinnedModelEXT carrier; the audit separates remaining members.
+
+Previous 418 batch (included in its complete checkpoint):
 
 - New `c_api.game.foreign_thread_dispatch` passes 14 child checks under SOFTWARE/OPENGLES3:
   default THREAD refusal, opted-in explicit owner pumping of a worker's target-step read/write,
@@ -297,13 +310,11 @@ Build `/tmp/cna-417-boundaries-build.log`, metadata 417/0 and five focused CTest
 for these three changes are applied and stale; do not reapply them.
 
 
-A read-only ModelMesh/ModelMeshPart member audit is now in COVERAGE_AUDIT.md. A useful following
-Phase 7 candidate is shared-buffer mesh parts with actual StartIndex/VertexOffset pixel checks
-and Effect collection deduplication/removal. `/tmp/cna-model-mesh-parts.cpp` is now a NOT applied/
-built/run draft: distinct triangle halves make wrong StartIndex or VertexOffset visible. It owns
-the buffers/effects/parts explicitly and proposes eight checks; no runtime evidence yet.
-Imported sampler application needs investigation; the observed Draw path alone is not a confirmed
-CNA defect. SkinnedModelEXT is distinct from the already demonstrated Model/SkinningData route.
+The ModelMesh/ModelMeshPart audit is in COVERAGE_AUDIT.md and now includes the validated
+shared-buffer example above. Imported sampler application remains an investigation candidate:
+the inspected Draw path alone is not a confirmed CNA defect. SkinnedModelEXT is distinct from
+the already demonstrated Model/SkinningData route. The C runtime audit also identifies host-driven
+run_frame_ext and GameFrameHooks as unexecuted behavior; no draft exists for those yet.
 
 Prior semantic-416 extensions (included in the completed checkpoint):
 

@@ -35,6 +35,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Shared-buffer ModelMeshPart example checks independent index/base-vertex ranges and effects,
+  material collection deduplication/removal, and both selected triangle halves with actual pixels.
 - Focused C11 foreign-thread dispatch example checks default/restored handle affinity and explicit
   owner-thread pumping of worker reads/writes, with bounded completion and cleanup paths.
 - Existing C vector/matrix example distinguishes directions from positions and checks array
