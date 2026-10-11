@@ -94,25 +94,26 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **432-demo checkpoint passed**
-through cna-demos revision `9cad3a1`; `tools/validate.sh` exited 0 under private Xvfb
-(`/tmp/cna-demos-432-validation.log`). CNA's generated C API was externally changing during
-build preparation; its source state was not atomically captured. See section 14 and
-`reports/checkpoint-432-binaries.json` for hashes of all 19 exercised binary artifacts.
-No binary was rebuilt during runtime phases. Both ORIGINAL comparisons to 430 pass: only
-imported_topology and dds_stream were added, both passing; all older statuses/check counts
-and failed assertions are unchanged (26 SOFTWARE / 27 OPENGLES3).
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **433-demo checkpoint passed**
+through cna-demos revision `a01ab68`; `tools/validate.sh` exited 0 under private Xvfb
+(`/tmp/cna-demos-433-validation.log`). CNA C API changes were externally authored; no atomic
+dependency source snapshot is claimed. `reports/checkpoint-433-binaries.json` hashes all 19
+exercised artifacts. No binary was rebuilt during runtime phases.
+Both ORIGINAL comparisons to 432 correctly request review only for existing_objects increasing
+12 -> 13 checks and its additional implicit ReadRawObject ISSUE-043 assertion. Original
+GetTypeReader failure retained; all other statuses/check counts/assertions unchanged.
+Exact reviews/hashes accompany both unmodified reports/stdout/stderr; raw failures 26/27 -> 27/28.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets `--validate` | 432 demos, 0 problems |
+| Metadata/assets `--validate` | 433 demos, 0 problems |
 | `tools/validate.sh` | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 420 passed (including 19 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 385 passed, 19 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 406 passed, 20 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | None; original failure multisets unchanged |
-| Screenshots | All four new topology/DDS captures inspected; each renderer pair RGBA-identical |
+| CTest | 421 passed (including 19 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 386 passed, 19 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 407 passed, 20 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | Exactly one additional ISSUE-043 assertion; all older failures retained |
+| New XNB checks | 17 passing reader-version checks; existing-object 11 passes plus 2 ISSUE-043 failures |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -227,7 +228,68 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Latest complete checkpoint (2026-10-11):** 432 at 9cad3a1, tools/validate.sh exit 0.
+**Immediate next action:** apply and validate the next content/graphics drafts listed below.
+Full 433 is complete and archived, including the exact ISSUE-043 assertion review. Do not
+re-run or restart completed phases. Investigate the proposed truncated-XNB exception contract
+check; it has only source evidence so far. Continue semantic coverage after the next checkpoint.
+
+433 targeted evidence:
+- reader_versions passes 17 console checks per renderer selection WITHOUT DISPLAY/WAYLAND;
+  `/tmp/cna-433-reader_versions-{SOFTWARE,OPENGLES3}.{json,log}`. Actual v0/v1 payloads,
+  pre-read refusal of unsupported versions, owned immutable factory policies, duplicate capture
+  release, scoped withdrawal, surviving created readers and cached values all verified.
+- existing_objects has 13 checks: eleven pass, two reproduce ISSUE-043. Automatic raw lookup
+  leaves the stream position unchanged before explicit-reader recovery; original failure retained.
+  `/tmp/cna-433-existing_objects-{SOFTWARE,OPENGLES3}.{json,log}`. No visual/GPU claim.
+- Three new original assets regenerate byte-identically and independently decode to exact EOF.
+  Clean build `/tmp/cna-433-build.log`, metadata 433/0, all 20 focused CTests pass including
+  all 16 C ABI demos (`/tmp/cna-433-targeted-ctest.log`). Coverage 293/329 types,
+  1354/2326 named members, 158/3210 C routes; runtime columns now include all 433 demos.
+- External CNA HEAD advanced to 4d774868e97c481fbb64e52a6286ed8c0c65873f with further generated
+  C API test/tool edits uncommitted. Build includes these external changes; do not edit/revert CNA
+  or claim an atomic source snapshot. Preserve binary hashes after the full checkpoint.
+- Full 433 completed with all 446 enabled CTests and both renderer smoke runs. Both exact
+  ISSUE-043 reviews are archived; original logs are untouched. See the current checkpoint above.
+- All /tmp reader-version and raw-extension drafts are now applied and stale; use repo sources.
+
+Next content/graphics batch drafts, prepared during full 433 (NOT applied/built/run yet):
+- `/tmp/cna-asset-precedence.cpp` + `/tmp/cna-xnb-resolution.py`: one same-name Rules asset
+  present as XNB/CNB/CNJ/native text with distinct 400/300/200/100 values. Private temporary
+  copies, compiled-file refusal without silent fallback, repair/retry, cache vs fresh manager,
+  Unload and explicit native filename; expected 14 checks. Public custom XNB/CNB/loose readers
+  remain visible. No Internal bootstrap, packaged-asset or genuine-XNA claim. Generator is
+  deterministic; its original 62-byte XNB was independently decoded to EOF.
+  Source review found a potential additional defect: ContentManager::LoadXnbAsset calls the
+  low-level ParseXnbHeader without wrapping its deliberate EndOfStreamException, despite the
+  public Load contract advertising ContentLoadException. The draft separately checks refusal
+  without fallback and the public exception type for a three-byte XNB. This is NOT runtime
+  confirmed yet and has no assigned issue/known-failure marker. Investigate rather than hiding it.
+- `/tmp/cna-cnj-type-cache.cpp`: extends existing cnj_loader with a Nameplate projection from
+  the same authored Enemy CNJ. Same logical name/type string, two requested C++ types, separate
+  cached values/read counters, unsupported requested type refusal, both entries cleared by
+  Unload. Expected 11 checks (formerly 7); no new asset or separate demo for this behavior.
+- `/tmp/cna-multiple-batches-state.cpp`: extends existing multiple_batches with six proposed
+  checks: opaque/wrap state retained after background End, deferred Begin leaves it until End,
+  world End retains alpha/point-clamp/depth-none/cull state, default HUD installs linear-clamp,
+  plus actual camera-transformed arrow and screen-fixed HUD pixels. Source review confirms
+  SpriteBatch::applyRenderState runs at deferred End and does not restore prior device state.
+  Requires build, both renderer runs and screenshot inspection; no runtime claim yet.
+Full 433 is now archived/reviewed. Apply these drafts, build/run, investigate, update docs and
+run the next complete checkpoint. The repository sources remain authoritative until then.
+
+
+**Latest complete checkpoint (2026-10-11):** 433 at a01ab68, tools/validate.sh exit 0.
+SOFTWARE 386/19/25/3, OPENGLES3 407/20/3/3; 446 enabled CTests, 433/0 metadata.
+Archives: `reports/checkpoint-433-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`,
+`checkpoint-433-{build,ctest,validation}.log`, both renderer-specific `-review.json` files,
+and `checkpoint-433-binaries.json` (19 artifacts). Only the added implicit raw-read ISSUE-043
+assertion requires review; all older failures/states unchanged. Totals 27/28 raw failures.
+SOFTWARE stderr byte-identical to 432; GL has the same 3 ERROR/3 INFO/84 X protocol lines
+(with volatile serials). Coverage 293/329 types, 1354/2326 named members, 158/3210 C routes;
+all runtime columns complete. Use ORIGINAL checkpoint-433 as next baseline.
+
+Historical 432 checkpoint:
+**Completed checkpoint (2026-10-11):** 432 at 9cad3a1, tools/validate.sh exit 0.
 SOFTWARE 385/19/25/3, OPENGLES3 406/20/3/3; 445 enabled CTests, 432/0 metadata.
 Archives: `reports/checkpoint-432-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`,
 `checkpoint-432-{build,ctest,validation}.log`, and `checkpoint-432-binaries.json` (19 artifacts).
@@ -348,30 +410,6 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** run full 433 validation, then archive/compare ORIGINAL checkpoint-432.
-Expected SOFTWARE 386/19/25/3, OPENGLES3 407/20/3/3; 446 enabled CTests (421 passed including
-19 WILL_FAIL, 25 skipped; three disabled). Expected assertion change is exactly the added
-ReadRawObject<T>(existing) ISSUE-043 inside existing_objects (12 -> 13 checks), raw totals
-26/27 -> 27/28. Preserve the original GetTypeReader failure and all original logs; manually
-review this precise addition rather than weakening the comparator. Continue next with same-name
-content format precedence/cache type identity or another remaining semantic member gap.
-
-433 targeted evidence:
-- reader_versions passes 17 console checks per renderer selection WITHOUT DISPLAY/WAYLAND;
-  `/tmp/cna-433-reader_versions-{SOFTWARE,OPENGLES3}.{json,log}`. Actual v0/v1 payloads,
-  pre-read refusal of unsupported versions, owned immutable factory policies, duplicate capture
-  release, scoped withdrawal, surviving created readers and cached values all verified.
-- existing_objects has 13 checks: eleven pass, two reproduce ISSUE-043. Automatic raw lookup
-  leaves the stream position unchanged before explicit-reader recovery; original failure retained.
-  `/tmp/cna-433-existing_objects-{SOFTWARE,OPENGLES3}.{json,log}`. No visual/GPU claim.
-- Three new original assets regenerate byte-identically and independently decode to exact EOF.
-  Clean build `/tmp/cna-433-build.log`, metadata 433/0, all 20 focused CTests pass including
-  all 16 C ABI demos (`/tmp/cna-433-targeted-ctest.log`). Coverage 293/329 types,
-  1354/2326 named members, 158/3210 C routes; runtime columns still use complete checkpoint 432.
-- External CNA HEAD advanced to 4d774868e97c481fbb64e52a6286ed8c0c65873f with further generated
-  C API test/tool edits uncommitted. Build includes these external changes; do not edit/revert CNA
-  or claim an atomic source snapshot. Preserve binary hashes after the full checkpoint.
-- All /tmp reader-version and raw-extension drafts are now applied and stale; use repo sources.
 
 432 targeted evidence:
 - graphics.model.imported_topology: 18 checks per renderer, exact loop-closing/strip/fan index

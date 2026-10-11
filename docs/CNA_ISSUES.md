@@ -1064,6 +1064,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   The original GetTypeReader assertion is retained verbatim; the new implicit raw-read assertion
   shares ISSUE-043. All eleven other checks still pass. CNA HEAD at build start was 4d774868e9
   with further external C API work; the content lookup source still has the same defect.
+  Full 433 at a01ab68 passed all 446 enabled CTests and both complete smoke runs; ORIGINAL
+  comparisons to 432 require review exactly for this additional assertion and 12 -> 13 checks.
+  Raw totals 26/27 -> 27/28, no older failures removed. Exact evidence reviews/hashes are in
+  `reports/checkpoint-433-{SOFTWARE,OPENGLES3}-review.json`.
 - **Handling:** retain both failing lookup assertions. A clearly labeled public named-factory
   fallback lets the remaining schema example run; it does not change the target name or add
   a hidden alias registration. No global registry clearing, CNA source edits or upstream report.
