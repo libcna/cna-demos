@@ -14,10 +14,10 @@ capability has a demo. See docs/PROJECT.md.
 
 Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMAP.md):
 
-* Complete: Phase 0-1 (research, infrastructure), 2 (math, 72 + 6 packed vectors), 4 (2D
+* Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
-* Mostly complete: 3 (game lifecycle, 33), 6 (effects, 18).
-* In progress: 7 (models/glTF, 11), 8 (content, 18), 9 (audio 15 incl. 5 XACT, media 10 incl. a
+* Mostly complete: 6 (effects and shaders, 22).
+* In progress: 7 (models/glTF, 15), 8 (content, 21), 9 (audio 19 incl. 8 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 13 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -65,7 +65,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 404 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
-4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 13 other
+4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 19 (8 XACT), core 3 (2 logger),
 content 21 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
@@ -89,16 +89,16 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **401-demo baseline checkpoint passed** in this session.
+The full **404-demo checkpoint passed** in this session.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 401 demos, 0 problems |
+| Metadata/assets `--validate` | 404 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 413/413 enabled tests, 3 manual disabled; 13 expected failures via WILL_FAIL |
-| SOFTWARE smoke | 360 passed, 13 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 381 passed, 14 expected failures, 3 skipped, 3 manual not run |
+| CTest | 416/416 enabled tests, 3 manual disabled; 14 expected failures via WILL_FAIL |
+| SOFTWARE smoke | 362 passed, 14 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 383 passed, 15 expected failures, 3 skipped, 3 manual not run |
 | Unexpected outcomes | None on either renderer; the earlier sign-in-screen crash did not recur in this baseline |
 | Screenshots | Prior session inspected graphics/input contact sheets; not repeated this session |
 | Content build | Passed (CNB, XNB, media, content project) |
@@ -203,39 +203,38 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Current session checkpoint (2026-10-11):** started clean at `55cca71`. The full baseline for
-401 demos is now complete (section 7), including the three formerly missing math smoke results.
-`tools/validate.sh` now preserves command failures and full logs; coverage exposes absent IDs in
-stale reports. Script failure-path tests and catalog rejection fixtures passed. Semantic member
-reviews for Quaternion, EffectParameter and Curve/CurveKeyCollection are in COVERAGE_AUDIT.md.
-The sibling CNA is newer than the CI pin: `2b15506a48e1a6202c985823131daf5856826f71`.
+**Current session checkpoint (2026-10-11):** started clean at `55cca71`. The old 398/401
+checkpoint debt is resolved: a full 401-demo baseline passed, and after three new demos a full
+**404-demo tools/validate.sh run passed** too (section 7; log `/tmp/cna-demos-404-validation.log`).
+Both smoke reports contain every current ID; coverage has no absent entries. Archived reports
+are `reports/baseline-401-{SOFTWARE,OPENGLES3}.json` and
+`reports/baseline-404-{SOFTWARE,OPENGLES3}.json`. The sibling CNA is newer than the CI pin:
+`2b15506a48e1a6202c985823131daf5856826f71`.
 
-**Priority recovery batch completed:** `math.quaternion.double_cover` passes all 12 checks,
-including sign-aligned interpolation and noncommuting relative rotations. Comparison uses rotated
-vectors near equal orientations rather than an ill-conditioned acos; the lost prior demo source
-is unavailable, so its exact failed expression cannot be diagnosed. No quaternion CNA issue found.
-`graphics.effect.parameter_values` ran on SOFTWARE and OPENGLES3: 16 checks, exactly two expected
-failures (ISSUE-034 and -035), documented from runtime and source evidence. The old handoff's
-inferred reflected 4x3 Bones shape was contradicted by the stored FNA fixture (3x4); the demo checks
-72 array elements and prints dimensions without claiming genuine-XNA reflection was measured.
-Incremental build, metadata validation (403 demos), both new CTests and catalog validation passed.
-These are API-data demos, so no new visual inspection is claimed. Coverage regenerated: 1307/2326
-named members; full smoke evidence is still the 401-demo baseline and explicitly shows the two
-new IDs absent. Run the next complete checkpoint after the following content batch.
+Completed this session:
+- Validation tooling preserves command failures/logs; catalog validation no longer reparses the
+  entire document per field; coverage exposes IDs absent from stale reports. Failure-path and
+  catalog rejection fixtures passed.
+- `math.quaternion.double_cover`: 12 checks, sign-aligned blending and noncommuting relative
+  rotations. No quaternion CNA defect found; the lost previous source cannot be diagnosed.
+- `graphics.effect.parameter_values`: 16 checks on both renderers, exactly two expected failures
+  (ISSUE-034/035). The old handoff's inferred 4x3 Bones reflection was contradicted by the FNA
+  fixture; the demo checks 72 elements and prints shape without claiming XNA runtime evidence.
+- `content.custom.cnb_loader`: public writer, custom schema, shared registration, separate caches
+  and unsupported-schema rejection (5 checks). The APIs also exist at the CI-pinned CNA revision.
+- Initial semantic audits now cover Quaternion, EffectParameter, Curve/CurveKeyCollection,
+  ContentManager and Texture2D. This is not comprehensive member/behavior coverage.
 
-**Content extension batch completed:** `content.custom.cnb_loader` builds and passes directly
-and through CTest (5 checks). It uses public CnbWriter for a private temporary rules file,
-RegisterCnbLoaderEXT for typed loading, per-manager cache checks and unsupported-schema rejection.
-The new CnbWriter path was checked against the CI-pinned headers too. No CNA defect was found.
-Metadata validation: 404 demos, zero problems; catalog validation also passes. Coverage was
-regenerated with the 401-demo baseline reports, explicitly showing the three newer IDs absent.
-A complete 404-demo tools/validate.sh run is the immediate next action; update section 7 and
-coverage from its fresh reports before calling the enlarged checkpoint complete.
-
-After that, extend existing Curve demos for selective/asymmetric tangents and negative-time
-loop behavior identified by COVERAGE_AUDIT.md, validating against actual CNA headers/source.
-CNJ custom loading remains pending (requires parsing the factory's raw JSON); no new parser
-or dependency was added as part of the CNB demo.
+**Immediate next batch:** extend existing Curve demos using
+`/tmp/cna-curve-{tangents,loop_types,key_collection}.cpp` (prepared drafts, not yet built).
+The loop draft corrects a demo expectation and exposes CNA's first-key TangentOut read in
+post-loop Linear; local genuine-XNA decompiled Curve.cs uses the last key. Proposed ISSUE-036
+notes are in `/tmp/cna-issue-036.md`; verify the corrected demo before publishing the issue.
+Then apply and validate `/tmp/cna-manifest.cpp` (snapshot refresh) and
+`/tmp/cna-texture-rectangle.cpp` (nonzero CPU array offsets), updating this handoff per batch.
+No visual review is claimed for these drafts. CNJ custom loading remains pending: a meaningful
+payload example needs a JSON-parser choice; do not borrow CNA's Internal parser or add a
+constant-return factory merely to increase coverage.
 
 **Next**: remainders by value -- Phase 8 (`RegisterCnjLoader` for a game's
 own asset type: the CNJ hook hands the game raw JSON, and sharp-runtime's System.Text.Json is not

@@ -161,6 +161,40 @@ CNA `2b15506a4`; planned work is not counted as completed or runtime-validated.
 | GetEnumerator, explicit IEnumerable.GetEnumerator | C# iteration machinery; C++ uses range iteration/indexing. No independent demo. |
 | Step continuity | Existing `step_continuity` is a failing compatibility example (ISSUE-002), not a successful implementation of Step. |
 
+### ContentManager (including CNA extensions)
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Constructors, RootDirectory | `content.content_manager.several_managers` shows separate roots and caches, and `missing_assets` shows slash normalization. The CNA default constructor and nullable service provider support console data loading; they do not need independent demos. Changing RootDirectory after loading deserves an explicit cache-lifetime example before claiming that behavior covered. |
+| ServiceProvider | Several managers receive the game's services; `game.services.graphics_device_service` explains device service lookup. The getter is ordinary identity plumbing, intentionally without an independent demo; it is not currently named as a demonstrated member. |
+| Load (cache, type and name resolution) | `cache_and_unload` counts created textures, `custom.cnb_loader` counts factories, and `several_managers` distinguishes per-manager caches. `missing_assets` checks failures and backslash names. Same-name files in competing XNB/CNB/CNJ/native tiers and the cache's type key remain meaningful gaps; loading different names in `xnb.same_assets` does not establish precedence. |
+| Unload, Dispose() | `cache_and_unload` shows rereading after Unload; `unload_disposes` explicitly fails on undisposed textures (ISSUE-011). `several_managers` calls Dispose on level exit. These uses do not demonstrate the protected Dispose(bool) override hook or post-disposal errors; add those to the custom-manager example when extending it. |
+| OpenStream, ReadAsset | `open_stream_override` serves an in-memory XNB via ReadAsset, then demonstrates that Load bypasses the override (ISSUE-012). `resource_content_manager` exposes the same defect for embedded resources. The ReadAsset disposable-recording callback and uncached repeat reads remain useful extensions, not implicitly covered by one successful read. |
+| RegisterTypeReader, LooseFileContentTypeReader::Read / GetExtensions | `custom.loose_file_reader` teaches a tile-map format and checks caching. Ordinary adapter methods need no independent demos. |
+| RegisterCnbLoaderEXT | `custom.cnb_loader` shows a game-defined binary schema, process-wide registration, separate caches, mandatory chunk validation and unsupported-schema rejection. Malformed chunks and optional unknown chunks are not yet exercised; the successful call alone does not cover those failure behaviors. |
+| RegisterCnjLoader, CnjLoaderFn | Pending: unlike CNB registration, these factories belong to one manager and dispatch on both C++ type and document type name. They receive raw JSON. A meaningful payload example needs an explicit parser choice; the project currently has no public JSON-parser dependency. Do not borrow CNA's Internal parser or imply that constant-return factories demonstrate data deserialization. |
+| GetContentManifest, GetXnbReaderUsageSummary | Existing `content_manager.manifest` enumerates logical asset names, format flags and XNB reader availability. A count alone would not show these distinct fields. Pipeline bookkeeping files remain visible (ISSUE-013). |
+| RefreshContentManifest | Extend `manifest`: add/remove a private CNJ file between scans, show that Load sees a new file before the scan refreshes, and that refreshing the manifest does not discard an already loaded asset. Source confirms separate manifest and asset caches; runtime validation pending. |
+| setGraphicsDevice, getGraphicsDeviceInternal | CNA integration helpers; normal game demos use IGraphicsDeviceService through the supplied provider. No separate demonstration unless a standalone graphics-content scenario needs explicit device injection. |
+
+### Texture2D (overload families and ownership)
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Constructors, Width, Height, Bounds, inherited Format / LevelCount | `texture2d.set_data`, `surface_formats`, `mipmaps` and `from_stream` show allocated images, packed formats, mip levels and decoded bounds. Empty C++ handles are normal members in many demos; no separate constructor-per-overload demos. |
+| SetData / GetData, whole image | `set_data` round trips procedurally generated pixels; `get_data_collision` puts readback to use for collision. These show the Color path, not arbitrary element layouts. |
+| Rectangle, mip level, CPU startIndex / elementCount | `set_data_rectangle` checks a stroke and an untouched adjacent pixel; `mipmaps` writes every level and reads level 3. Nonzero CPU offsets and untouched array prefix/suffix are a meaningful extension of the rectangle demo, pending runtime validation. |
+| Packed and floating-point data overloads | `surface_formats` uploads Bgr565/Bgra4444/Bgra5551 and reads Bgr565 back. `render_target.hdr_blendable` reads HalfVector4 values past one. Other integer/normalized/float/vector layouts and mismatched element sizes remain unexercised; do not infer them from the collapsed SetData/GetData member count. Extend by useful format family, not one demo per overload. |
+| Bound-texture update restriction | `set_data_rectangle` explicitly binds the texture and checks InvalidOperationException before unbinding for updates. Invalid rectangles, short buffers and disposed handles remain error-path gaps; add only coherent diagnostics to the relevant example. |
+| FromStream, resize/crop overload | `from_stream` compares original dimensions, aspect-preserving fit and zoom/crop. `save_as_image` also decodes PNG and JPEG round trips. GIF decoding and malformed input are not thereby demonstrated. |
+| SaveAsPng / SaveAsJpeg | `save_as_image` compares lossless and lossy in-memory round trips. Filename convenience overloads need no independent example. Requested dimensions differ from source dimensions only in a future resize-contract check; the current demo passes matching sizes. |
+| DDSFromStreamEXT | Pending focused compressed-stream example. `content.xnb.dxt_texture` establishes XNB DXT1 loading and display, not DDS stream parsing or compressed block uploads. DDS resize/crop decodes to Color and deserves separate attention within that example. |
+| C++ copy / move / assignment and shared resource ownership | Existing demos routinely copy handles and the handoff describes sharing, but there is no explicit copy-and-edit/lifetime check. Add a focused ownership example that distinguishes shared pixels from per-wrapper Name/Tag before calling this behavior covered. Move syntax alone needs no demo. |
+| Dispose, inherited GraphicsResource properties/events | `graphics_resource.lifetime_events` checks explicit disposal, resource events, Name/Tag and IsDisposed. Alias disposal semantics are part of the pending ownership example. |
+| SetDataRGBA, CreateFromPixels | CNA convenience paths; ordinary uploads already show the concept. Byte layout may fit a future C/C++ interop example, but no independent demo merely for the helper name. |
+| GetRenderer / GetRendererWeak / GetCpuPixelsWeak / HasRenderer, ReconstructFromCache | Publicly exposed CNA integration and cache hooks, not ordinary game texture operations. Intentionally no independent demo unless a renderer/cache integration scenario requires them. |
+| CreateCpuOnlyForTests, CreateWithRendererForTests | Explicit test seams; intentionally not game demonstrations. GetTypeName is routine runtime type identification, not an independent texture behavior. |
+
 Remaining audit scope: other XNA public members, overload families and behaviors, CNA-specific
 headers, renderer-specific execution, and manual/service scenarios. Neither these tables
 nor the existing type decisions constitute a complete public API audit.

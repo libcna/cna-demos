@@ -27,7 +27,8 @@ Console demos with checks; each shows one operation family.
   `CreateOrthographic(OffCenter)`, `CreateWorld`, `CreateBillboard`, `CreateReflection`,
   `CreateShadow`, `Invert`, `Transpose`, `Decompose`, multiplication order, `Lerp`. ≈ 18
 - `math.quaternion.*`: axis-angle, yaw/pitch/roll, `Slerp`/`Lerp`, `Concatenate`, `Conjugate`,
-  `Inverse`, `Normalize`, rotating a vector. ≈ 8
+  `Inverse`, `Normalize`, rotating a vector. ✅ `double_cover`: sign ambiguity, stable orientation
+  comparisons, aligned blending and relative rotations. ≈ 8
 - `math.math_helper.*`: `ToRadians`/`ToDegrees`, `Clamp`, `Lerp`, `SmoothStep`, `WrapAngle`,
   `Hermite`, `CatmullRom`, `Barycentric`, `Distance`, constants. ≈ 6
 - `math.point.*`, `math.rectangle.*`: `Contains`, `Intersects`, `Intersect`, `Union`, `Inflate`,
@@ -60,7 +61,7 @@ Console demos with checks; each shows one operation family.
   `GraphicsProfile` Reach vs HiDef. ≈ 8
 - `LaunchParameters`, `TitleContainer.OpenStream`, `TitleLocation`. ≈ 3
 
-## Phase 4 -- 2D graphics ✅ (46 + 7 SpriteFont demos; small remainders listed per line)
+## Phase 4 -- 2D graphics ✅ (46 demos including 7 SpriteFont demos; small remainders listed per line)
 - ✅ `graphics.device.*`, `graphics.viewport.*`, `graphics.graphics_adapter.*`,
   `graphics.graphics_resource.*` (13): `Clear`/`ClearOptions`, split-screen viewports, `Viewport`
   properties and `Project`/`Unproject`, `ScissorRectangle`, `PresentationParameters`,
@@ -83,23 +84,23 @@ Console demos with checks; each shows one operation family.
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg`, `LevelCount`. Remaining:
   float/HDR formats, DXT (needs compressed data), CNAEXT `DDSFromStreamEXT`, copy semantics.
 
-## Phase 5 -- render states, buffers, primitives, render targets ✅ (30 demos; small remainders below)
-- ✅ (16) `graphics.blend_state.*` (blend functions, colour write channels, blend factor, bound
+## Phase 5 -- render states, buffers, primitives, render targets ✅ (41 demos; small remainders below)
+- ✅ (17) `graphics.blend_state.*` (blend functions, colour write channels, blend factor, bound
   states are immutable), `graphics.sampler_state.*` (address modes, anisotropic, MaxMipLevel, LOD
   bias), `graphics.rasterizer_state.*` (cull mode, wireframe, depth bias),
   `graphics.depth_stencil_state.*` (depth buffer, DepthRead transparency, depth function X-ray,
   stencil mask, stencil counting), ✅ `graphics.depth_stencil_state.two_sided_stencil` (a shadow
   volume counted in one draw with TwoSidedStencilMode, equal to two culled passes).
-- ✅ (5) `graphics.vertex_buffer.*` (static buffer + DrawPrimitives, DynamicVertexBuffer with
+- ✅ (9) `graphics.vertex_buffer.*` (static buffer + DrawPrimitives, DynamicVertexBuffer with
   Discard and ContentLost), `graphics.index_buffer.*` (indexed cube, 32-bit indices),
   `graphics.vertex_declaration.custom_vertex`, ✅ `graphics.vertex_buffer.get_data`,
   ✅ `graphics.index_buffer.dynamic_index_buffer`, ✅ `graphics.vertex_buffer.several_streams`
   (SetVertexBuffers). Remaining: `NoOverwrite` ring buffer (CNA accepts the hint and re-uploads the
   whole buffer).
-- ✅ (3) `graphics.primitives.*`: DrawUserPrimitives, DrawUserIndexedPrimitives, all four
+- ✅ (4) `graphics.primitives.*`: DrawUserPrimitives, DrawUserIndexedPrimitives, all four
   PrimitiveTypes, ✅ `graphics.primitives.draw_instanced_primitives` (CNA's stock effects read a
   per-instance world matrix from the instance stream).
-- ✅ (6) `graphics.render_target.*`: render to texture, `RenderTargetUsage` Discard/Preserve,
+- ✅ (9) `graphics.render_target.*`: render to texture, `RenderTargetUsage` Discard/Preserve,
   read back with GetData, own depth buffer, mipmapped target, multisampling, ✅
   `graphics.render_target.render_target_cube` (dynamic environment map; ISSUE-021 on the GL
   renderers), ✅ `graphics.render_target.multiple_render_targets` (two targets, a two-output GLSL
@@ -108,8 +109,8 @@ Console demos with checks; each shows one operation family.
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
   `graphics.texture_cube.*` beyond the environment-map demo (render to a `RenderTargetCube`).
 
-## Phase 6 -- effects and shaders 🟨 (15 demos: stock effects, effect API, PbrEffect)
-- ✅ Stock effects (11): `BasicEffect` (texture, default lighting, three directional lights,
+## Phase 6 -- effects and shaders 🟨 (22 demos: stock effects, effect API, PbrEffect)
+- ✅ Stock effects (12): `BasicEffect` (texture, default lighting, three directional lights,
   per-pixel lighting, material colours, fog, alpha), `AlphaTestEffect` cut-outs,
   `DualTextureEffect` light map, `EnvironmentMapEffect` with a `TextureCube` and Fresnel,
   `SkinnedEffect` with two bones, ✅ `graphics.basic_effect.vertex_color_lighting` (vertex colour
@@ -129,8 +130,7 @@ Console demos with checks; each shows one operation family.
   `EffectPass` reflection and parameter setting. ≈ 8
 
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
-  ISSUE-034/035 remain explicit expected failures. `math.quaternion.double_cover` covers sign
-  ambiguity, stable orientation checks, blending and relative rotations.
+  ISSUE-034/035 remain explicit expected failures.
 
 ## Phase 7 -- models, animation, glTF 🟨 (15 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
@@ -293,8 +293,8 @@ part of another demo, or not independently meaningful (record why). ✅ First pa
 decisions for every XNA type without a demo are in [COVERAGE_AUDIT.md](COVERAGE_AUDIT.md), demos
 that already showed a type now name it, and new demos cover the effect interfaces and the
 graphics device service. Remaining: the candidates COVERAGE_AUDIT.md lists, the CNA-specific
-headers. Member/behavior audit started with Quaternion and EffectParameter (including overload
-and compiled-effect limitations); this is not a comprehensive member audit. Add screenshot references for
+headers. Member/behavior audit covers initial reviews of Quaternion, EffectParameter, Curve,
+ContentManager and Texture2D (including overload and compiled-effect limitations); this is not a comprehensive member audit. Add screenshot references for
 deterministic demos and run the visual-regression comparison across renderers.
 
 ## Cross-cutting work (any time)
