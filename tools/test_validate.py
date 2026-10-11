@@ -10,7 +10,7 @@ import unittest
 
 
 class ValidateScriptTests(unittest.TestCase):
-    def run_validation(self, failure="", warning=False):
+    def run_validation(self, failure="", warning=False, split_streams=False):
         with tempfile.TemporaryDirectory(prefix="cna-validate-test-") as directory:
             root = Path(directory)
             (root / "tools").mkdir()
@@ -41,6 +41,13 @@ if name == "cmake" and os.environ["WARNING"] == "1":
 if name == "ctest":
     print("100% tests passed")
 if stage == "smoke":
+    if os.environ["SPLIT_STREAMS"] == "1":
+        sys.stdout.write("  CHECK FAILED: expected ")
+        sys.stdout.flush()
+        sys.stderr.write("[ERROR][APPLICATION] native diagnostic\\n")
+        sys.stderr.flush()
+        sys.stdout.write("assertion\\n")
+        sys.stdout.flush()
     print("Summary: stub run")
 '''
             for relative in ("commands/cmake", "commands/ctest", "build/linux-full/bin/cna-demos"):
@@ -52,6 +59,7 @@ if stage == "smoke":
             trace = root / "trace"
             env = dict(os.environ, PATH=str(root / "commands") + os.pathsep + os.environ["PATH"],
                        TRACE=str(trace), FAILURE=failure, WARNING=str(int(warning)),
+                       SPLIT_STREAMS=str(int(split_streams)),
                        SKIP_GL="1", JOBS="1", XDG_RUNTIME_DIR=str(root / "xdg"))
             result = subprocess.run(["bash", str(root / "tools/validate.sh")], cwd=root,
                                     env=env, capture_output=True, text=True)
@@ -60,12 +68,22 @@ if stage == "smoke":
             for renderer in ("SOFTWARE", "OPENGLES3"):
                 self.assertFalse((reports / f"results-{renderer}.json").exists())
             self.assertEqual(archive.read_text(), "archived report")
+            if split_streams:
+                self.assertEqual((reports / "smoke-SOFTWARE.log").read_text(),
+                                 "  CHECK FAILED: expected assertion\nSummary: stub run\n")
+                self.assertEqual((reports / "smoke-SOFTWARE.stderr.log").read_text(),
+                                 "[ERROR][APPLICATION] native diagnostic\n")
             return result, trace.read_text().splitlines()
 
     def test_success_reaches_coverage(self):
         result, stages = self.run_validation()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual(stages, ["cmake", "validate", "ctest", "smoke", "coverage"])
+
+    def test_smoke_preserves_separate_streams(self):
+        result, stages = self.run_validation(split_streams=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(stages[-1], "coverage")
 
     def test_failure_stops_at_each_stage(self):
         order = ["cmake", "validate", "ctest", "smoke"]

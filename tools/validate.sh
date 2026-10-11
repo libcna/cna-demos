@@ -18,8 +18,9 @@ reports="$build/reports"
 jobs="${JOBS:-$(nproc)}"
 mkdir -p "$reports"
 # A smoke process killed before writing its JSON must not leave a previous run's report
-# looking current. Keep deliberately named baseline archives; invalidate only the two outputs.
-rm -f "$reports/results-SOFTWARE.json" "$reports/results-OPENGLES3.json"
+# looking current. Keep deliberately named baseline archives; invalidate only current result/stderr outputs.
+rm -f "$reports/results-SOFTWARE.json" "$reports/results-OPENGLES3.json" \
+      "$reports/smoke-SOFTWARE.stderr.log" "$reports/smoke-OPENGLES3.stderr.log"
 
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/cna-demos-xdg}"
 mkdir -p -m 700 "$XDG_RUNTIME_DIR"
@@ -44,17 +45,19 @@ if ! ctest --test-dir "$build" -j"$jobs" --output-on-failure > "$reports/ctest.l
 fi
 grep -E "tests passed|tests failed|\*\*\*Failed|Not Run" "$reports/ctest.log" || true
 
+# Keep stderr separate: CNA logger writes can land inside buffered stdout assertion lines.
+# Preserve both streams verbatim; compare_checkpoints.py reads the stdout assertion log.
 results=()
 echo "== smoke: SOFTWARE"
 SDL_AUDIO_DRIVER=dummy "$bin" --smoke --quiet --renderer SOFTWARE --report "$reports/results-SOFTWARE.json" \
-    2>&1 | tee "$reports/smoke-SOFTWARE.log" | grep -A50 "^Summary"
+    2> "$reports/smoke-SOFTWARE.stderr.log" | tee "$reports/smoke-SOFTWARE.log" | grep -A50 "^Summary"
 results+=(--results "SOFTWARE=$reports/results-SOFTWARE.json")
 
 if [[ "${SKIP_GL:-0}" != "1" ]] && "$bin" --renderers | grep -qx OPENGLES3 && command -v xvfb-run >/dev/null; then
     echo "== smoke: OPENGLES3 (Xvfb)"
     SDL_AUDIO_DRIVER=dummy xvfb-run -a -s "-screen 0 1280x1024x24" \
         "$bin" --smoke --quiet --renderer OPENGLES3 --report "$reports/results-OPENGLES3.json" \
-        2>&1 | tee "$reports/smoke-OPENGLES3.log" | grep -A50 "^Summary"
+        2> "$reports/smoke-OPENGLES3.stderr.log" | tee "$reports/smoke-OPENGLES3.log" | grep -A50 "^Summary"
     results+=(--results "OPENGLES3=$reports/results-OPENGLES3.json")
 fi
 

@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- Full validation preserves smoke stdout and stderr in separate logs. A real 418 checkpoint
+  spliced native logger output into a buffered assertion; raw evidence and a narrowly reviewed
+  comparison copy are retained. A regression fixture rejects the old merged-stream script.
 - JPEG round-trip comparison now checks decoded dimensions before indexing the pixel array,
   so an incorrect decoder shape cannot turn a failed demo expectation into out-of-bounds access.
 - Standalone C++ tools now use the browser's shared-library-first link ordering. The new XNA

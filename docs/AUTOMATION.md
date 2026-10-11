@@ -50,7 +50,11 @@ when the demo's overall FAILED status was already expected.
 new non-failing IDs, reports changed check counts, and exits 1 for changed existing statuses,
 issue markers, missing IDs, or added/removed failed assertions (including multiplicities).
 Exit 2 means the evidence could not be read or did not match the supplied catalog. Investigate
-every reported change; the tool never rewrites or accepts a baseline automatically.
+every reported change; the tool never rewrites or accepts a baseline automatically. Older merged
+logs can contain stdout/stderr splices. Preserve the raw file; any manually repaired comparison
+copy must document its exact change, retain both hashes and corroborate the reconstructed
+assertion with independent evidence such as the JSON failure message. Never broadly strip
+errors or treat a changed assertion as accepted merely because its demo has a known-issue flag.
 
 ```bash
 build/linux-full/bin/cna-demos --catalog-json > /tmp/cna-current-catalog.json
@@ -109,8 +113,11 @@ latter through Xvfb when available), and regenerates coverage from those reports
 optional and defaults to `nproc`; `SKIP_GL=1` deliberately omits GL and must be noted in the
 handoff. Build warnings, command failures, unexpected demo failures and unexpected passes stop
 the checkpoint. Build and CTest output is retained in `build/<preset>/reports/build.log` and
-`ctest.log`; smoke output is retained as `smoke-<renderer>.log` alongside its JSON report.
-The two current JSON outputs are removed at the start; an interrupted process must not leave
+`ctest.log`; smoke stdout is retained as `smoke-<renderer>.log` and stderr separately as
+`smoke-<renderer>.stderr.log`, alongside the JSON report. Keep both when archiving a checkpoint.
+This prevents native logger stderr from being inserted inside a buffered stdout assertion line;
+assertion comparison uses stdout, while stderr retains native/platform diagnostics for review.
+The current JSON and stderr outputs are removed at the start; an interrupted process must not leave
 old results looking like fresh evidence. Explicitly named baseline archives are preserved.
 When the inherited desktop display is unstable, run the whole script under
 `WAYLAND_DISPLAY= xvfb-run -a -s '-screen 0 1280x1024x24' tools/validate.sh`, so CTest and SOFTWARE
