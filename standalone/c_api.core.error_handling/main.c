@@ -2,7 +2,7 @@
 /*
  * How the C ABI reports errors. Every fallible route returns a CNA_Result; the failing thread
  * also keeps a structured diagnostic of its last failure (cna_error_get_last_info) and a UTF-8
- * message (count, then copy). This program makes four mistakes on purpose and reads each answer.
+ * message (count, then copy). This program makes five mistakes on purpose and reads each answer.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH]. Exit code 0 passed, 1 failed.
  */
@@ -88,6 +88,10 @@ int main(int argc, char** argv)
                                                                         CNA_ERROR_CATEGORY_ARGUMENT,
                    "INVALID_ARGUMENT, category ARGUMENT");
 
+    cna_demo_check(&demo, cna_error_get_last_exception_type_size_ext(&needed) == CNA_RESULT_SUCCESS &&
+                   needed == 0U && cna_error_get_last_exception_param_name_size_ext(&reported) == CNA_RESULT_SUCCESS &&
+                   reported == 0U, "a C-layer argument check has no canonical exception type or parameter");
+
     /* Diagnostic queries have a special contract: even a bad query preserves the original
        failure so the binding can recover and retrieve it correctly. */
     {
@@ -107,15 +111,41 @@ int main(int argc, char** argv)
                        "the failed copy also preserves the original diagnostic");
     }
 
-    /* 2. A handle that names nothing (never issued, or already destroyed): a handle failure. */
-    printf("2. a handle that was never issued\n");
+    /* 2. A canonical argument exception has more information than its common result/category.
+       Invalid volume is rejected before audio initialization or a global volume change. */
+    printf("2. a canonical argument exception\n");
+    result = cna_sound_effect_set_master_volume(game, 2.0f);
+    cna_demo_check(&demo, result == CNA_RESULT_INVALID_ARGUMENT &&
+                   last_error(message, sizeof(message)) == CNA_ERROR_CATEGORY_ARGUMENT,
+                   "the canonical range exception also maps to INVALID_ARGUMENT, category ARGUMENT");
+    if (cna_demo_check(&demo, cna_error_get_last_exception_type_size_ext(&needed) == CNA_RESULT_SUCCESS &&
+                      needed > 0U && needed < sizeof(name), "the canonical exception type fits the caller's buffer")) {
+        result = cna_error_copy_last_exception_type_ext(name, needed, &reported);
+        if (result == CNA_RESULT_SUCCESS && reported == needed) name[needed] = '\0';
+        cna_demo_check(&demo, result == CNA_RESULT_SUCCESS && reported == needed &&
+                       strcmp(name, "System.ArgumentOutOfRangeException") == 0,
+                       "the structured type identifies ArgumentOutOfRangeException without parsing its message");
+    }
+    if (cna_demo_check(&demo, cna_error_get_last_exception_param_name_size_ext(&needed) == CNA_RESULT_SUCCESS &&
+                      needed > 0U && needed < sizeof(name), "the canonical parameter name fits the caller's buffer")) {
+        result = cna_error_copy_last_exception_param_name_ext(name, needed, &reported);
+        if (result == CNA_RESULT_SUCCESS && reported == needed) name[needed] = '\0';
+        cna_demo_check(&demo, result == CNA_RESULT_SUCCESS && reported == needed && strcmp(name, "value") == 0,
+                       "the structured parameter name is value");
+    }
+
+    /* 3. A handle that names nothing (never issued, or already destroyed): a handle failure. */
+    printf("3. a handle that was never issued\n");
     result = cna_game_get_is_active(UINT64_C(0xDEADBEEF), &active);
     cna_demo_check(&demo, result == CNA_RESULT_INVALID_HANDLE && last_error(message, sizeof(message)) ==
                                                                        CNA_ERROR_CATEGORY_HANDLE,
                    "INVALID_HANDLE, category HANDLE");
+    cna_demo_check(&demo, cna_error_get_last_exception_type_size_ext(&needed) == CNA_RESULT_SUCCESS &&
+                   needed == 0U && cna_error_get_last_exception_param_name_size_ext(&reported) == CNA_RESULT_SUCCESS &&
+                   reported == 0U, "a later C-layer failure clears the previous canonical exception details");
 
-    /* 3. Strings: ask for the size, then copy. Too small a buffer is refused without a partial write. */
-    printf("3. a buffer one byte too small\n");
+    /* 4. Strings: ask for the size, then copy. Too small a buffer is refused without a partial write. */
+    printf("4. a buffer one byte too small\n");
     if (cna_demo_check_result(&demo, cna_game_get_type_name_size(game, &needed), "cna_game_get_type_name_size") &&
         cna_demo_check(&demo, needed > 1U && needed < sizeof(name), "the type name fits the demo's buffer")) {
         memset(name, '#', sizeof(name));
@@ -138,8 +168,8 @@ int main(int argc, char** argv)
         }
     }
 
-    /* 4. A callback's failure stops the frame; the caller sees CALLBACK and the callback's message. */
-    printf("4. an update callback that fails\n");
+    /* 5. A callback's failure stops the frame; the caller sees CALLBACK and the callback's message. */
+    printf("5. an update callback that fails\n");
     cna_demo_check_result(&demo, cna_game_run_one_frame(game), "the first frame runs");
     result = cna_game_run_one_frame(game);
     cna_demo_check(&demo, result == CNA_RESULT_CALLBACK &&

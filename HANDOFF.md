@@ -378,18 +378,21 @@ from measured zero latency. Full validation is complete (section 7). Use
 4 regression tests pass; real archive tests detect the masked semantic-409 failure and reject
 an old 409 report against the 410 catalog. The tool never accepts a changed baseline automatically.
 
-Prepared next extension: `/tmp/cna-shared-resource-boundaries.cpp` extends the existing shared XML
-tool to 10 child checks: null shared table, missing ID, duplicate IDs with otherwise resolving
-references, and incompatible referenced type. It uses public IntermediateSerializer calls and
-original XML strings; it is not applied/built/run and has no coverage credit yet.
-A second unapplied draft, `/tmp/cna-c-error-canonical.c`, extends the existing C diagnostics
-example: native C argument failures have empty canonical details, rejected MasterVolume=2
-raises a canonical ArgumentOutOfRangeException with ParamName=value through the public C ABI,
-and a later invalid-handle failure clears those details. Source verification found the range
-check precedes audio initialization/global mutation. Both drafts need compilation/execution;
-do not claim audio playback, thread isolation, or new C API route coverage from these drafts.
-Apply and validate both next, then continue with another audited member gap. Do not credit runtime XNB graph
-fixups from IntermediateSerializer sharing.
+**Semantic boundary batch after checkpoint-410:** both prepared drafts are now applied and
+validated; do not copy the old /tmp files again. Existing shared XML tool passes 10 child checks
+under SOFTWARE/OPENGLES3, including null tables, missing/duplicate IDs and incompatible resource
+types (`/tmp/cna-shared-resource-boundaries-{SOFTWARE,OPENGLES3}.{json,log}`). Existing C diagnostics
+passes 24 child checks under both selections: native versus canonical argument errors, structured
+ArgumentOutOfRangeException/ParamName=value and clearing those details after an invalid handle
+(`/tmp/cna-c-error-canonical-{SOFTWARE,OPENGLES3}.{json,log}`). No new CNA issue. Invalid volume
+is rejected before mixer initialization or mutation; no audio playback or thread-isolation claim.
+Build, metadata (410/0), the two demos' CTests and both catalog checks pass (4 tests). Coverage
+is regenerated: XNA 290/329 types and 1318/2326 members, C ABI 143/3210 routes. Full checkpoint-410
+archives still describe source 4994374 before these last two extensions; a full semantic-410
+checkpoint is next. Compare every ID/status and the 24/25 failed-assertion multisets. The child
+checks appear in stdout, not the parent's JSON checks=0. Then continue with C diagnostic thread
+isolation or XML properties/flattening/XNA adapter/dependency behavior from the member audit.
+Runtime XNB fixups and graph validation remain a separate unclaimed protocol.
 
 Effects constraints verified in the current sources/build: all four configured
 `CNA_*_COMPILED_EFFECTS` switches are OFF and `CNA_FXC_EXECUTABLE` is empty. PbrEffect's public

@@ -27,6 +27,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing shared XML example checks null tables and rejects missing/duplicate resource IDs and
+  incompatible resource types before returning the loaded graph.
+- Existing C diagnostics example distinguishes native C validation from canonical exceptions via
+  structured type/parameter fields, and checks a later native failure clears those fields.
 - Checkpoint comparison tool combines ID/status checks with raw failed-assertion multiplicities,
   including child-process prefixes; regression fixtures and the archived masked failure verify it.
 - Custom intermediate XML type serializer: compact NdM dice values at the root and inside a

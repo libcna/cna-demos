@@ -2,10 +2,13 @@
 // Equal authored loot tables need not be the same shared resource.
 #include <iostream>
 #include <memory>
+#include <stdexcept>
+#include <utility>
 #include <string>
 #include <string_view>
 #include <vector>
 
+#include "Microsoft/Xna/Framework/Content/Pipeline/InvalidContentException.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/Serialization/Intermediate/IntermediateSerializer.hpp"
 #include "System/Object.hpp"
 #include "System/Xml/XmlReader.hpp"
@@ -13,6 +16,7 @@
 #include "System/Xml/XmlWriterSettings.hpp"
 
 using namespace Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate;
+using Microsoft::Xna::Framework::Content::Pipeline::InvalidContentException;
 
 namespace
 {
@@ -100,6 +104,55 @@ int main()
         check(loaded->patrol->items.size() == 3 && loaded->boss->items.size() == 2 &&
               loaded->inlineFirst->items.size() == 2 && common->items.size() == 2,
               "a shared table edit reaches its alias while independent and authored tables stay unchanged");
+        // A missing table is a null reference, not another shared resource with empty contents.
+        authored->boss.reset();
+        std::unique_ptr<System::Xml::XmlWriter> nullWriter(System::Xml::XmlWriter::CreateToString(settings));
+        IntermediateSerializer::Serialize<LevelLoot>(*nullWriter, authored, "");
+        const auto nullXml = nullWriter->ToString();
+        std::unique_ptr<System::Xml::XmlReader> nullReader(System::Xml::XmlReader::CreateFromString(nullXml));
+        const auto withoutBoss = IntermediateSerializer::Deserialize<LevelLoot>(*nullReader, "");
+        check(withoutBoss && !withoutBoss->boss && withoutBoss->guard &&
+              withoutBoss->guard == withoutBoss->patrol && nullXml.find("#Resource2") == std::string::npos,
+              "a null shared table stays null without adding a resource or breaking the other aliases");
+
+        // Corrupt only the reference graph, keeping otherwise valid authored XML. No Internal
+        // parser is needed: IntermediateSerializer must reject the bad graph before returning it.
+        const auto replaceOne = [](std::string& document, std::string_view from, std::string_view to) {
+            const auto at = document.find(from);
+            if (at == std::string::npos) throw std::runtime_error("Expected authored XML fragment missing");
+            document.replace(at, from.size(), to);
+        };
+        std::vector<std::pair<std::string, std::string>> invalidGraphs;
+        std::string missing = xml;
+        replaceOne(missing, "<Guard>#Resource1</Guard>", "<Guard>#Missing</Guard>");
+        invalidGraphs.emplace_back(std::move(missing), "a reference to a missing resource is rejected");
+        std::string duplicate = xml;
+        replaceOne(duplicate, "ID=\"#Resource2\"", "ID=\"#Resource1\"");
+        replaceOne(duplicate, "<Boss>#Resource2</Boss>", "<Boss>#Resource1</Boss>");
+        invalidGraphs.emplace_back(std::move(duplicate), "duplicate resource IDs are rejected even when every reference resolves");
+        std::string wrongType = xml;
+        const auto resourceBegin = wrongType.find("<Resource ID=\"#Resource1\"");
+        const auto resourceEnd = wrongType.find("</Resource>", resourceBegin);
+        if (resourceBegin == std::string::npos || resourceEnd == std::string::npos)
+            throw std::runtime_error("Expected authored resource missing");
+        wrongType.replace(resourceBegin, resourceEnd + std::string_view("</Resource>").size() - resourceBegin,
+                          "<Resource ID=\"#Resource1\" Type=\"string\">Coin</Resource>");
+        invalidGraphs.emplace_back(std::move(wrongType), "a resolved resource must have the declared loot-table type");
+        for (const auto& [invalidXml, message] : invalidGraphs)
+        {
+            bool rejected = false;
+            try
+            {
+                std::unique_ptr<System::Xml::XmlReader> badReader(System::Xml::XmlReader::CreateFromString(invalidXml));
+                (void)IntermediateSerializer::Deserialize<LevelLoot>(*badReader, "");
+            }
+            catch (const InvalidContentException& error)
+            {
+                rejected = true;
+                std::cout << "Rejected graph: " << error.what() << '\n';
+            }
+            check(rejected, message);
+        }
         // This graph is acyclic: ordinary shared_ptr scope destruction releases every table.
         return passed ? 0 : 1;
     }

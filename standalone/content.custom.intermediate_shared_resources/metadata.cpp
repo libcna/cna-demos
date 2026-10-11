@@ -5,7 +5,8 @@ CNA_DEMOS_STANDALONE({
     .id = "content.custom.intermediate_shared_resources",
     .title = "Shared loot tables in intermediate XML",
     .description = "Serializes shared and inline loot tables, then checks reference fixups, object identity, "
-                   "equal but independent resources and edits through an alias after loading.",
+                   "equal but independent resources, null tables and edits through an alias after loading; "
+                   "rejects missing or duplicate IDs and incompatible resource types.",
     .apis = {"Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::SharedResource"},

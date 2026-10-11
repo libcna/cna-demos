@@ -180,7 +180,8 @@ a check that all authored colors remain visible and that a blank texture row can
   tool with named/optional/ignored fields, collection item names, absent/present/null distinctions,
   XML round trip and rejection of missing required or injected ignored fields.
   ✅ `content.custom.intermediate_shared_resources`: shared aliases, equal-but-distinct objects,
-  inline copies and mutation after forward reference fixups.
+  inline copies and mutation after forward reference fixups; null tables and rejected missing,
+  duplicate or incompatible resource references.
   ✅ `content.custom.intermediate_type_serializer`: registered compact dice syntax at the root
   and within described fields, with round trip and lexical/domain rejection on read and write.
   Remaining: deeper serializer behaviors, custom XNA adapters and the member/behavior gaps
@@ -296,7 +297,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit),
-✅ `c_api.core.error_handling` (results, categories, last message, failed-query preservation, exact-sized count/copy, callback errors),
+✅ `c_api.core.error_handling` (results, categories, last message, failed-query preservation, exact-sized count/copy, canonical exception type/parameter details, callback errors),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard and visible text),
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),
