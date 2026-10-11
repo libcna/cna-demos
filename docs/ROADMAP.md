@@ -16,7 +16,7 @@ plan written.
 CMake integration, registry, metadata, runner, DemoGame, browser, CLI, catalog JSON, validation,
 CTest discovery, screenshots, coverage report, CI, pilot demos in 7 categories.
 
-## Phase 2 -- math (`math.*`) ✅ (74 math demos + 6 packed-vector demos)
+## Phase 2 -- math (`math.*`) ✅ (78 math demos + 6 packed-vector demos)
 Console demos with checks; each shows one operation family.
 - `math.vector2.*`, `math.vector3.*`, `math.vector4.*`: construction and constants, arithmetic
   operators, `Dot`, `Cross` (Vector3), `Normalize`, `Distance`/`DistanceSquared`, `Lerp`,
@@ -122,11 +122,15 @@ Console demos with checks; each shows one operation family.
   (`graphics.shader_effect.vertex_displacement`) and in `SpriteBatch::Begin`
   (grayscale), GLSL chosen from `GetShaderDialectEXT()`. Remaining: compiled XNA `.fx` effects
   (needs a CNA build with `CNA_<RENDERER>_COMPILED_EFFECTS`), other dialects.
-- ✅ Effect API (3): parameters/techniques/passes reflection (properties reach parameters on
+- ✅ Effect API (4): parameters/techniques/passes reflection (properties reach parameters on
   Apply), `Effect::Clone`, the effect interfaces (IEffectMatrices/IEffectLights/IEffectFog).
 - Custom shaders: `ShaderEffect` per shader language (ask `RendererCapabilityProfile`), compiled
   XNA effect bytecode (`Effect(GraphicsDevice&, bytes)`), `EffectParameter`/`EffectTechnique`/
   `EffectPass` reflection and parameter setting. ≈ 8
+
+- ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
+  ISSUE-034/035 remain explicit expected failures. `math.quaternion.double_cover` covers sign
+  ambiguity, stable orientation checks, blending and relative rotations.
 
 ## Phase 7 -- models, animation, glTF 🟨 (15 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,

@@ -775,6 +775,48 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
+### CNA-DEMOS-ISSUE-034 -- Stock effect parameters accept a scalar getter on a Vector4
+
+- **Area:** graphics -- `EffectParameter::GetValueSingle` in `EffectParameter.cpp` calls
+  `RequireCompiledScalarGetterShape` only for compiled storage. Stock effects use the separate
+  float-vector storage path, which returns its first component regardless of the reflected shape.
+- **Demo:** `graphics.effect.parameter_values` (expected failure; also exposes ISSUE-035).
+- **Reproduction:** take `BasicEffect.Parameters["DiffuseColor"]`, set
+  `Vector4(0.2f, 0.4f, 0.6f, 0.8f)`, then call `GetValueSingle()`.
+- **Observed:** returns 0.2 on SOFTWARE and OPENGLES3 instead of rejecting the vector-to-scalar
+  access. The parameter still reports Vector, Single, one row and four columns.
+- **Expected:** `System::InvalidCastException` for this non-array Vector parameter. CNA's own
+  `EffectTests.cpp` compiled-effect getter conformance checks require that exception, and
+  `docs/software-easygl-parity-ledger.md` SOFTWARE-270 records the recovered Microsoft IL basis.
+  The stock path should expose the same public shape contract. Genuine XNA was not run here.
+- **Environment:** CNA `2b15506a4`, GCC 14.2, Linux, SOFTWARE and OPENGLES3/private Xvfb.
+- **Status:** confirmed compatibility gap, open; not reported upstream. The stock/standalone
+  storage leniency is deliberate for C API compatibility, so an upstream fix needs to distinguish
+  reflected stock parameters from freely constructed standalone parameters.
+
+---
+
+### CNA-DEMOS-ISSUE-035 -- SkinnedEffect's Bones array has no reflected elements
+
+- **Area:** graphics -- `SkinnedEffect::CacheEffectParameters` constructs `Bones` with
+  `AddParam(params, "Bones", MaxBones, 4, Matrix, Single)` and never adds array elements.
+- **Demo:** `graphics.effect.parameter_values` (its primary known-issue marker is ISSUE-034).
+- **Reproduction:** construct a SkinnedEffect and inspect its `Bones` parameter's Elements,
+  RowCount and ColumnCount; write two matrices and read them with GetValueMatrixArray.
+- **Observed:** zero elements, 72 rows and four columns. The value-array round trip works, but a
+  reflection-driven editor cannot discover the bone entries or their true matrix shape.
+- **Expected:** 72 individual matrix elements. CNA's stock shader declares `float4x3 Bones[72]`;
+  the stored FNA reflection fixture (`tests/fixtures/compiled-effects/fna-effect-reflection.json`)
+  reports 72 elements with RowCount 3 and ColumnCount 4. The old handoff inferred reflected 4x3
+  directly from HLSL, which the fixture contradicts. The demo therefore checks the unambiguous
+  array cardinality, prints the dimensions, and does not impose an unmeasured genuine-XNA
+  row/column convention. Genuine XNA reflection was not executed in this session.
+- **Environment:** CNA `2b15506a4`, GCC 14.2, Linux, SOFTWARE and OPENGLES3/private Xvfb.
+- **Status:** confirmed stock-effect reflection defect, open (value-array access still works);
+  not reported upstream.
+
+---
+
 ## Resolved
 
 (none yet)

@@ -15,6 +15,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Quaternion double-cover/relative-turn demo and typed effect parameter round trips; confirmed
+  stock-parameter getter and Bones reflection gaps recorded as CNA-DEMOS-ISSUE-034/035.
 - Started semantic member/behavior audit tables for Quaternion, EffectParameter and Curve/CurveKeyCollection in
   `docs/COVERAGE_AUDIT.md`, with explicit outstanding work and environment limitations.
 - Project foundation: CMake integration with a CNA source checkout (`CNA_ROOT_DIR`, presets
