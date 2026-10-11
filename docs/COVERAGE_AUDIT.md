@@ -326,6 +326,26 @@ for the shared-buffer/material rows; other proposals remain unexecuted.
 | SkinnedModelEXT::ComputeBoneTransformsEXT | skinned_parts samples a one-bone linear translation at 0.5 s and verifies the nonidentity inverse-bind correction both numerically and through actual shifted geometry/vacated pixels. Multi-bone parent composition, untracked bind pose, loop-versus-clamp, scale/rotation tracks and malformed clip/skeleton guards remain separate gaps. Existing node_animation uses AnimationClipEXT data with Model rather than this evaluator; do not transfer its coverage here. |
 | SkinnedModelEXT testing counters, move-only boilerplate | GetOwned*CountForTesting explicitly exposes test instrumentation: intentionally leave direct counter assertions to CNA tests. Useful public ownership evidence should come from the moved/replaced/removed parts and rendered results. Deleted copy operations and empty construction need no standalone demo. |
 
+### AnimationPlayer, SkinningData and clip target spaces
+
+Source review: AnimationPlayer.hpp/.cpp plus existing skinned_animation/node_animation demos,
+CNA a796ef491 (library code unchanged from e60fa35f7). These are CNA extensions inspired by
+XNA's sample code, not framework types shipped by XNA. Shared keyframe aliases do not make the
+Model/SkinningData player and the separate SkinnedModelEXT evaluator the same behavior path.
+
+| Public members / behavior | Decision and evidence |
+|---|---|
+| AnimationPlayer constructor, StartClip, Update, GetSkinTransforms | skinned_animation loads SkinningData from Model.Tag, starts Bend, seeks absolutely to 0.5 seconds and validates the joint angle plus a rendered bent tip. Its later per-frame relative updates demonstrate the call, but currently do not assert relative-time accumulation, restart, looping boundaries or clamping. Extend that existing demo for these lifecycle behaviors. |
+| GetBoneTransforms / GetWorldTransforms / GetSkinTransforms | World transforms supply the checked upper-joint angle and skin transforms feed SkinnedEffect. The distinct local/world/skin outputs deserve numerical comparisons in a coherent hierarchy example; merely listing all three getters is insufficient. The prepared palette_sampling draft addresses the other evaluator, not this player. |
+| CurrentClip, CurrentPosition and reference lifetimes | StartClip retains a pointer and the player retains its SkinningData owner by reference; keep both alive. State before StartClip, reset-to-zero on restart and seek-versus-advance are useful additions to skinned_animation. Dangling-reference misuse is intentionally not demonstrated. |
+| SkeletonRootPrefix and rig-root metadata | Meaningful imported-scene gap: a root joint below a non-joint ancestor and a transformed mesh require a visible fixture. Root name/index are lookup metadata, not instructions to truncate ancestry. One ordinary flat imported skeleton cannot establish these behaviors. |
+| ApplyBindPoseBoneTransformsEXT, multiple skins | The loader may initialize palettes, but explicit application and per-skin effect isolation have no focused pixel evidence yet. Add an imported model with independently mapped skins when working on this extension. |
+| ClipTargetSpaceEXT / ApplyClipToBonesEXT | node_animation checks SceneNode and applies two clips to different nodes while an untracked bone retains its transform. Rejecting a JointPalette clip, nonzero untracked transforms, and boundary sampling remain unexecuted. The player/evaluator paths do not expose a documented target-space refusal; do not transfer ApplyClipToBonesEXT's explicit exception contract to them. |
+| Malformed arrays / parent ordering | Source contains size and topological-order guards. The prepared palette_sampling draft tests SkinnedModelEXT guards only; AnimationPlayer validation remains separate, including construction versus later changes to borrowed data. No destructive dangling-data probes are needed. |
+| Keyframe/AnimationClip aliases, GetTypeName | Aliases share the EXT data representation and need no duplicate examples. Reflection names are trivial unless used in an actual content dispatch workflow. |
+| Loose SkinnedModelEXT content bundle | Source/documentation supports Load<shared_ptr<SkinnedModelEXT>> with manifest-relative skeleton, geometry, texture and clip files; it validates truncated data. An original nested bundle and rendering draft are prepared outside the repository, not yet built/run. This is separate from the existing glTF-to-Model/SkinningData route and does not establish XNB ModelReader coverage. |
+| XNB Model source route | The existing content_xnb CMake target already requests FORMAT xnb. Source review of XnaModelSourceContentPipeline confirms `.x` resolves to CNA.XImporter and CNA.XnaModelProcessor, whose canonical model graph feeds the XNB writer. A small original `.x` hierarchy/material asset can therefore exercise runtime ModelReader through the normal build, without hand-authoring internal XNB structures. No model asset has been added to this target yet; this remains the next separate content/rendering gap. |
+
 ### SkinnedEffect (palette contracts versus rendered behavior)
 
 Read against SkinnedEffect.hpp/.cpp and the actual two_bones, skinned_animation,

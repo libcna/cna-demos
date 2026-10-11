@@ -93,25 +93,25 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The 421/422 builds used CNA
-`e60fa35f7`; its checkout has ongoing external documentation cleanup, with the inspected library
-and CMake source paths unchanged (historical provenance below).
-The full **422-demo checkpoint passed** through revision `60e994b`, including owned skinned
-parts, mixed mesh topology, palette validation and the subprocess stream-flush fix.
-tools/validate.sh exited 0 under private Xvfb (`/tmp/cna-demos-422-validation.log`). All 422 IDs
-are present. Both ORIGINAL stdout logs pass strict comparison to the reviewed 421 baseline;
-no manual repair of 422 is needed. Every old status and failure multiset remains unchanged.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. Checkpoint 423 began with CNA
+`a796ef491141b23b58a886eeb43d18f1e0227850`; library implementation remained unchanged from
+`e60fa35f7` (external documentation cleanup and an unrelated example-comment edit only).
+The full **423-demo checkpoint passed** through revision `37ad437`.
+`tools/validate.sh` exited 0 under private Xvfb (`/tmp/cna-demos-423-validation.log`). Both
+complete reports match the fresh catalog. Strict comparison to 422 correctly requests review
+for the newly demonstrated ISSUE-041 only; all older statuses and failed assertions remain
+unchanged. Per-renderer review JSON records original evidence hashes; no logs were rewritten.
 
 | Check | Result |
 |---|---|
-| Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 422 demos, 0 problems |
+| Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; current incremental build clean |
+| Metadata/assets `--validate` | 423 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 410 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 377 passed, 17 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 398 passed, 18 expected failures, 3 skipped, 3 manual not run |
-| Unexpected outcomes | None; original stdout failure multisets match 24/25 |
-| Screenshots | mesh_parts/skinned_parts RGBA-identical; two_bones same silhouette, max channel difference 1 |
+| CTest | 411 passed (including 18 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 377 passed, 18 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 398 passed, 19 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | One new ISSUE-041 failure per renderer; raw totals 25/26, older 24/25 unchanged |
+| Screenshots | Imported-sampler captures inspected and RGBA-identical; picture streams have no visual claim |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -224,6 +224,19 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
+**Latest complete checkpoint (2026-10-11):** 423 at 37ad437, tools/validate.sh exit 0.
+SOFTWARE 377/18/25/3, OPENGLES3 398/19/3/3; 436 enabled CTests, 423/0 metadata.
+Archives: `reports/checkpoint-423-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
+`checkpoint-423-{build,ctest,validation}.log`. Both original logs compare to 422 with exactly
+one new failed ID/assertion: media.media_library.save_picture / ISSUE-041. The new short-read
+reproduction intentionally adds this known failure; all older states/messages/multiplicities
+are unchanged. Review/hashes: `checkpoint-423-{SOFTWARE,OPENGLES3}-review.json`.
+Sampler checks increase 4 -> 10. Native stderr retains the old 25/3 ERROR lines and the old
+84 GL X protocol diagnostics; exactly two INFO lines opening the new picture fixture are added.
+Coverage is 293/329 XNA types, 1342/2326 named members, 158/3210 C routes. Complete runtime
+columns now include all 423 IDs. Use ORIGINAL checkpoint-423 logs as the next baseline.
+
+Historical 422 checkpoint:
 **Current session checkpoint (2026-10-11):** full `tools/validate.sh` exited 0 for all **422 demos**
 at `60e994b`. SOFTWARE 377/17/25/3, OPENGLES3 398/18/3/3, 435 enabled CTests, metadata 422/0.
 Archives: `reports/checkpoint-422-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
@@ -274,27 +287,27 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** run the complete 423-demo checkpoint, then compare ORIGINAL stdout
-against checkpoint-422. The new `media.media_library.save_picture` is intentionally failed for
-CNA-DEMOS-ISSUE-041: 14 child checks, exactly one short-read preservation failure on both renderer
-selections. The ordinary vector/stream saves, private XDG isolation, albums, image bytes,
-thumbnail sizing and reindexing pass. Final logs: `/tmp/cna-save-picture-final-{SOFTWARE,OPENGLES3}.{json,log}`.
-The library reads only 13/1666 bytes and returns a 0x0 picture. ISSUE-040 separately records
-stale thumbnail documentation; no expected-failure marker for that documentation issue.
-The extended part_sampler_state passes 10 checks on both renderers, including actual glTF
-NEAREST/CLAMP import, preserved out-of-range UVs and explicit sampler application. Captures
-were inspected and RGBA-identical (`/tmp/cna-import-sampler-final-{SOFTWARE,OPENGLES3}.{json,log,png}`).
-Final build is clean (`/tmp/cna-423-issue-build.log`); metadata 423/0, all four targeted CTests
-pass (`/tmp/cna-423-sampler-picture-final-ctest.log`, picture test uses WILL_FAIL).
-Expected full results: SOFTWARE 377/18/25/3, OPENGLES3 398/19/3/3; 436 enabled CTests.
-Strict comparison should request review ONLY for the new failed ID and its one new assertion
-(25 SOFTWARE / 26 OPENGLES3); do not relax the comparator or silently accept other changes.
-Coverage: 293/329 XNA types, 1342/2326 named members, 158/3210 C routes; current runtime columns
-still use complete 422 reports until full 423 finishes. Latest completed checkpoint remains 422.
-CNA advanced externally to ce74063e6483020835af07c4af1e3614ebc5d962; inspected modules/CMake
-source paths remain identical to e60fa35f7. No CNA implementation edits by this task.
-After validation, continue deeper model hierarchy/clip behavior or other audited public-member
-gaps. Applied /tmp drafts are stale; repository source is authoritative.
+**Immediate next action:** checkpoint 423 is complete. Apply and validate the prepared next
+model batch: `/tmp/cna-palette-sampling.cpp`, `/tmp/cna-skinned-manifest.cpp`,
+`/tmp/cna-skinned-bundles.py`, and `/tmp/cna-skinned-animation.cpp` (extends the existing demo).
+The first two introduce focused palette/hierarchy and loose manifest workflows; the last adds
+AnimationPlayer start/relative/absolute/loop/clamp/restart assertions plus a null-data guard.
+Integrate the bundle generator in tools/generate_assets.py and regenerate its eight sidecars.
+`/tmp/cna-skinned-bundle-fixture` was regenerated twice byte-identically; lengths, joint weights,
+indices and manifest-relative paths were independently checked. These drafts have NOT yet been
+compiled/run. Expected catalog count after applying both new IDs: 425. Build/targeted runtime,
+inspect manifest and existing-animation screenshots, update semantic coverage and run full validation.
+Do not mistake previously applied older /tmp drafts for newer repository sources.
+
+423 targeted evidence: part_sampler_state passes 10 checks on both renderers, including actual
+glTF NEAREST/CLAMP metadata, owned texture and preserved out-of-range UVs; captures inspected,
+RGBA-identical (`/tmp/cna-import-sampler-final-{SOFTWARE,OPENGLES3}.{json,log,png}`).
+media.media_library.save_picture has 14 child checks and exactly one ISSUE-041 failure on both
+selections (`/tmp/cna-save-picture-final-{SOFTWARE,OPENGLES3}.{json,log}`). Ordinary vector/stream
+saves, verified private XDG roots, album views, exact original bytes, generated smaller thumbnail
+and reindexing pass. No user media or visual/GPU thumbnail claim. ISSUE-040 is a separate stale
+header comment. Final build `/tmp/cna-423-issue-build.log` is clean; four targeted CTests pass.
+All these behaviors are now included in full checkpoint 423. No CNA code was edited.
 
 Current targeted evidence (both renderer selections passed):
 - mesh_parts: 10 checks, including mixed LineList/TriangleList in shared buffers; actual blue

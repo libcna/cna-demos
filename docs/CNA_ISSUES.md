@@ -987,6 +987,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   single failure; the targeted WILL_FAIL CTest passes. All filesystem work
   used verified private XDG roots; no user pictures were read or written. The normal thumbnail
   path still passed and returned 128x64. No visual/GPU validation is claimed for this file tool.
+- **Complete checkpoint:** all 423 demos validated at cna-demos 37ad437. Both original stdout
+  logs add exactly this one assertion relative to 422; all older statuses and failures are
+  unchanged. SOFTWARE 377/18/25/3, OPENGLES3 398/19/3/3; 436 enabled CTests pass including
+  this WILL_FAIL test. Archives/reviews: `build/linux-full/reports/checkpoint-423-*`.
 - **Status:** runtime-confirmed CNA bug. The demo keeps the failing byte-preservation check;
   no loop/workaround was added around CNA's SavePicture call, no CNA source changed and no
   upstream report was sent.

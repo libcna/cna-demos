@@ -23,7 +23,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | graphics | 134 | 134 | 0 | 0 | 121 / 8 / 5 / 0 / 0 | 125 / 3 / 6 / 0 / 0 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
-| media | 11 | 10 | 1 | 0 | 10 / 0 / 0 / 0 / 1 | 10 / 0 / 0 / 0 / 1 |
+| media | 11 | 10 | 1 | 0 | 10 / 0 / 1 / 0 / 0 | 10 / 0 / 1 / 0 / 0 |
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
 | platform | 2 | 2 | 0 | 0 | 1 / 1 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,6 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `media.media_library.save_picture`.
-- OPENGLES3: absent from report: `media.media_library.save_picture`.
 
 ## XNA 4.0 API surface demonstrated
 
