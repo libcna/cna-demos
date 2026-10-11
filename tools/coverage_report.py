@@ -7,6 +7,8 @@ Developer tool -- not needed to build or run cna-demos. Inputs:
   * the catalog, from the built executable (`cna-demos --catalog-json`);
   * CNA's own inventory of the documented XNA 4.0 runtime surface,
     <cna>/docs/xna-4-runtime-member-coverage.json (3627 members of 331 types);
+  * CNA's C ABI headers, <cna>/modules/c-api/include/CNA/C/*.h (every `CNA_C_API` route),
+    for the c_api demos;
   * optionally, one or more run reports (`cna-demos --smoke --report FILE`),
     each recorded for a renderer, to show which demos were actually executed.
 
@@ -23,6 +25,7 @@ import argparse
 import collections
 import datetime
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -86,6 +89,8 @@ def demonstrated_members(catalog: dict, inventory: dict):
                 for full in by_short[api]:
                     type_hits[full].append(demo["id"])
                 continue
+            if api.startswith("cna_") or api.startswith("CNA_"):
+                continue  # the C ABI, reported in its own section
             if "::" not in api or api.startswith("CNA::"):
                 unmatched[api].append(demo["id"])
                 continue
@@ -101,6 +106,17 @@ def demonstrated_members(catalog: dict, inventory: dict):
             if not matched:
                 unmatched[api].append(demo["id"])
     return hits, type_hits, unmatched
+
+
+def load_c_api_routes(cna_root: Path):
+    """Every exported route of CNA's C ABI, from its public headers: name -> header file name."""
+    routes = {}
+    header_dir = cna_root / "modules" / "c-api" / "include" / "CNA" / "C"
+    pattern = re.compile(r"CNA_C_API\s+[A-Za-z_][A-Za-z0-9_]*\s*\*?\s*(cna_[a-z0-9_]+)\s*\(")
+    for header in sorted(header_dir.glob("*.h")):
+        for name in pattern.findall(header.read_text(encoding="utf-8")):
+            routes.setdefault(name, header.name)
+    return routes
 
 
 def load_results(specs):
@@ -211,6 +227,35 @@ def main() -> int:
     for name in sorted(missing):
         add(f"- `{name}`: " + ", ".join(sorted(missing[name])))
     add("")
+
+    # --- C ABI ------------------------------------------------------------------------------
+    routes = load_c_api_routes(Path(args.cna_root))
+    if routes:
+        named = collections.defaultdict(list)
+        for demo in demos:
+            for api in demo["apis"]:
+                if api.startswith("cna_"):
+                    if api in routes:
+                        named[api].append(demo["id"])
+                    else:
+                        unmatched[api].append(demo["id"])
+        add("## CNA C ABI routes demonstrated")
+        add("")
+        add(f"- **C ABI routes named by a demo: {len(named)} of {len(routes)}** "
+            f"({100.0 * len(named) / len(routes):.1f} %), counted from the `CNA_C_API` declarations in "
+            "CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.")
+        add("")
+        per_header = collections.Counter(routes.values())
+        hit_header = collections.Counter(routes[name] for name in named)
+        add("| Header | Routes demonstrated |")
+        add("|---|---|")
+        for header in sorted(per_header):
+            if hit_header[header]:
+                add(f"| `{header}` | {hit_header[header]} / {per_header[header]} |")
+        untouched = sorted(h for h in per_header if not hit_header[h])
+        add("")
+        add("Headers without a demonstrated route: " + ", ".join(f"`{h}`" for h in untouched) + ".")
+        add("")
 
     # --- Non-XNA APIs -----------------------------------------------------------------------
     add("## CNA-specific and unmatched API names")

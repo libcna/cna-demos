@@ -20,7 +20,7 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/cna-demos-xdg}"
 mkdir -p -m 700 "$XDG_RUNTIME_DIR"
 
 echo "== build ($preset)"
-cmake --build --preset "$preset" -j"$(nproc)" 2>&1 | grep -E "error|warning:|FAILED" && { echo "build produced errors/warnings"; exit 1; } || true
+cmake --build --preset "$preset" -j"$(nproc)" 2>&1 | grep -E "error:|warning:|FAILED:" && { echo "build produced errors/warnings"; exit 1; } || true
 
 echo "== validate"
 "$bin" --validate | tail -1

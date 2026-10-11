@@ -177,6 +177,33 @@ the C API, process-global state). Create `standalone/<demo-id>/`:
   77 when a documented requirement is missing, 1 on failure;
 * `CMakeLists.txt` -- `cna_demos_add_standalone(SOURCES main.cpp)`.
 
+The runner also passes `--screenshot PATH` when one was requested and `--log-level LEVEL` (CNA's
+log output); a program that cannot use one ignores it.
+
+### C API demos (`c_api.*`)
+
+C programs written against CNA's C ABI (`../cna/modules/c-api/include/CNA/C/*.h`, model program
+`../cna/modules/c-api/examples/c/hello_cna.c`). They are standalone demos with three differences:
+
+* `main.c` is C99 without extensions, and `CMakeLists.txt` says
+  `cna_demos_add_standalone(SOURCES main.c C_API)`: the program links `CNA::CApi` only. Without
+  CNA's C API (`CNA_BUILD_C_API=OFF`; the `linux-full` preset turns it on) it is not built;
+* the metadata declares `.needs = CnaDemos::Need::CApi` (plus any other need), so such a build
+  reports the demo as SKIPPED instead of NOT RUN;
+* `.apis` lists C names as they are: routes (`cna_game_create`) and structs (`CNA_SpriteCommand`).
+  docs/COVERAGE.md counts the routes against every `CNA_C_API` declaration in the headers.
+
+`#include "CnaDemos/CApiDemo.h"` gives the shared scaffolding -- argument parsing
+(`cna_demo_init`), checks (`cna_demo_check`, `cna_demo_check_result`, which prints the ABI's
+diagnostic for a failed call), the exit code (`cna_demo_finish`, `cna_demo_skip`) and
+`cna_demo_capture` (back buffer to PNG, for `--screenshot`; it needs the HiDef profile, which
+`cna_demo_use_hidef` selects through a graphics device manager the demo destroys before its game). It wraps no CNA feature: every
+taught call stays in the demo. Follow the ABI's own rules in every demo: zero each versioned
+struct and set `struct_size`/`struct_version`; borrow the graphics device only inside a
+callback; check every `CNA_Result`; destroy owned children after `cna_game_run` returns and before
+`cna_game_destroy` (the game refuses to be destroyed while one lives, and it raises
+`unload_content` only from inside `cna_game_destroy`, so that callback cannot release them).
+
 ## 9. Validate
 
 ```bash

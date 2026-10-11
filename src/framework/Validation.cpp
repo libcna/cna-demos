@@ -175,6 +175,10 @@ namespace CnaDemos
             {
                 report(id, "ownProcess is for in-process demos; a standalone demo always has its own process");
             }
+            if (HasNeed(info.needs, Need::CApi) && entry.kind != DemoKind::Standalone)
+            {
+                report(id, "Need::CApi is for the C programs among the standalone demos");
+            }
             if (!info.knownIssue.empty())
             {
                 const std::string_view prefix = "CNA-DEMOS-ISSUE-";

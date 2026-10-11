@@ -21,6 +21,7 @@
 #include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
+#include "System/TimeSpan.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::GamerServices;
@@ -58,13 +59,18 @@ namespace
             {
                 descriptions_[i].emplace(AvatarDescription::CreateRandom(Slots[i].body));
                 renderers_[i] = std::make_unique<AvatarRenderer>(&*descriptions_[i], true);
-                renderers_[i]->setWorldProperty(Matrix::CreateTranslation(-3.4f + 1.36f * static_cast<float>(i), 0.0f, 0.0f));
+                // An avatar faces -Z: turned by pi, it faces the camera.
+                renderers_[i]->setWorldProperty(Matrix::CreateRotationY(MathHelper::Pi) *
+                                                Matrix::CreateTranslation(-3.4f + 1.36f * static_cast<float>(i), 0.0f, 0.0f));
                 renderers_[i]->setViewProperty(view);
                 renderers_[i]->setProjectionProperty(projection);
                 animations_[i] = std::make_unique<AvatarAnimation>(Slots[i].preset);
                 const double seconds = animations_[i]->getLengthProperty().getTotalSecondsProperty();
                 Context().Print("{}: {:.2f} s", Slots[i].label, seconds);
                 Context().Check(seconds > 0.0, std::string(Slots[i].label) + " has a length");
+                // Start each clip mid-gesture rather than in its neutral first pose: drawing six
+                // avatars is slow on the SOFTWARE renderer, so an automated run is only a few frames.
+                animations_[i]->setCurrentPositionProperty(System::TimeSpan::FromSeconds(seconds * 0.4));
             }
         }
 
@@ -122,10 +128,11 @@ CNA_DEMOS_GAME(AnimationPresetsDemo, {
     .description = "Six random avatars play six of the 31 standard AvatarAnimationPreset clips side by side -- clap, "
                    "celebrate, laugh, confused, an idle and a yawn -- each with its own facial expression.",
     .apis = {"AvatarAnimationPreset", "AvatarAnimation::AvatarAnimation", "AvatarAnimation::Update",
-             "AvatarAnimation::Length", "AvatarRenderer::Draw", "AvatarDescription::CreateRandom"},
+             "AvatarAnimation::Length", "AvatarAnimation::CurrentPosition", "AvatarRenderer::Draw",
+             "AvatarDescription::CreateRandom"},
     .tags = {"gamer-services", "avatar", "3d", "animation", "gallery"},
     .needs = CnaDemos::Need::ThreeD,
-    .frames = 90,
+    .frames = 12,
     .assets = {"fonts/pixel_font.cnb"},
     .ownProcess = true,
 })

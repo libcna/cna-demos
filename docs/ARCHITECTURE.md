@@ -186,9 +186,12 @@ except `SkipDemo`, and `NoAudioHardwareException` from a demo that declared `Nee
 
 ### Standalone demo
 
-The runner starts `<exe-dir>/cna-demo-<id>` with `--automated` and `--frames N` as applicable
-and maps its exit code: 0 passed, 77 skipped, anything else failed. A missing executable (built
-with `CNA_DEMOS_BUILD_STANDALONE=OFF`) is NOT RUN, not passed.
+The runner starts `<exe-dir>/cna-demo-<id>` with `--automated`, `--frames N`,
+`--screenshot PATH` and `--log-level LEVEL` as applicable (the renderer travels in `CNA_GRAPHICS_RENDERER`, which
+`--renderer` exports) and maps its exit code: 0 passed, 77 skipped, anything else failed. A
+missing executable (built with `CNA_DEMOS_BUILD_STANDALONE=OFF`) is NOT RUN, not passed. The C API
+demos (`c_api.*`, C programs linking only `CNA::CApi`) declare `Need::CApi`: in a build without
+CNA's C API they are SKIPPED without being started.
 
 ### Results and exit codes
 
@@ -202,7 +205,7 @@ cna_demos_framework (STATIC)  ← src/framework/*.cpp, links CNA
 cna_demos_cat_<category> (OBJECT, one per category) ← demos/<category>/**/*.cpp (GLOB_RECURSE CONFIGURE_DEPENDS)
 cna_demos_standalone_metadata (OBJECT) ← standalone/*/metadata.cpp
 cna-demos (EXECUTABLE) ← src/app/*.cpp + all of the above
-cna-demo-<id> (EXECUTABLE, one per standalone demo)
+cna-demo-<id> (EXECUTABLE, one per standalone demo; C_API ones are C programs linking CNA::CApi)
 cna_demos_assets (custom target) copies assets/ to <build>/bin/assets
 cna_demos_content (cna_add_content) compiles content/ into <build>/bin/assets (CNB files)
 cna_demos_content_xnb (cna_add_content FORMAT xnb) compiles content_xnb/ into <build>/bin/assets/xnb
@@ -273,7 +276,7 @@ keep demos independent). Revisit with measurements when the collection is in the
 | a metadata field | `DemoInfo`, catalog writer, `--info`, validation, docs -- in one change |
 | a `Need` | `Need` enum + `AllNeeds()` name; map it in `DemoGame::CheckNeeds()` if the device can answer |
 | screenshot regression | see [AUTOMATION.md](AUTOMATION.md) section 5 |
-| binding demos (C) | standalone demos (one C game per process); see [ROADMAP.md](ROADMAP.md) |
+| binding demos (C) | `standalone/c_api.<area>.<name>/` with `main.c`, `cna_demos_add_standalone(SOURCES main.c C_API)`, `Need::CApi`; see DEMO_AUTHORING.md §8 |
 
 ## 11. Generated files
 

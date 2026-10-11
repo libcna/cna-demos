@@ -51,6 +51,20 @@ namespace CnaDemos
 
     namespace
     {
+        std::string_view LogLevelName(CNA::LogLevel level)
+        {
+            switch (level)
+            {
+                case CNA::LogLevel::FATAL: return "fatal";
+                case CNA::LogLevel::ERROR: return "error";
+                case CNA::LogLevel::WARN: return "warn";
+                case CNA::LogLevel::INFO: return "info";
+                case CNA::LogLevel::DEBUG: return "debug";
+                case CNA::LogLevel::TRACE: return "trace";
+                default: return "warn";
+            }
+        }
+
         std::vector<std::string> StandaloneArguments(const DemoContext& context)
         {
             std::vector<std::string> arguments;
@@ -64,11 +78,27 @@ namespace CnaDemos
                 arguments.emplace_back("--frames");
                 arguments.emplace_back(std::to_string(frames));
             }
+            if (!context.Options().screenshotPath.empty())
+            {
+                arguments.emplace_back("--screenshot");
+                arguments.emplace_back(context.Options().screenshotPath);
+            }
+            arguments.emplace_back("--log-level");
+            arguments.emplace_back(LogLevelName(CNA::Logger::GetMinimumLevel()));
             return arguments;
         }
 
         void RunStandalone(const RegisteredDemo& demo, DemoContext& context, RunResult& result)
         {
+#ifndef CNA_DEMOS_C_API_AVAILABLE
+            // The c_api demos are built only when CNA has its C API (CNA_BUILD_C_API).
+            if (HasNeed(demo.entry.info.needs, Need::CApi))
+            {
+                result.status = RunStatus::Skipped;
+                result.message = "CNA was built without its C API (CNA_BUILD_C_API)";
+                return;
+            }
+#endif
             std::filesystem::path program = ExecutableDirectory() / demo.entry.Executable();
 #ifdef _WIN32
             program += ".exe";
@@ -99,20 +129,6 @@ namespace CnaDemos
 
     namespace
     {
-        std::string_view LogLevelName(CNA::LogLevel level)
-        {
-            switch (level)
-            {
-                case CNA::LogLevel::FATAL: return "fatal";
-                case CNA::LogLevel::ERROR: return "error";
-                case CNA::LogLevel::WARN: return "warn";
-                case CNA::LogLevel::INFO: return "info";
-                case CNA::LogLevel::DEBUG: return "debug";
-                case CNA::LogLevel::TRACE: return "trace";
-                default: return "warn";
-            }
-        }
-
         // Reads the string value of "key" from the first result of a report written by
         // WriteResultsJson (whose escapes are \", \\, \n, \r, \t and \u00XX).
         std::optional<std::string> ReportString(const std::string& json, std::string_view key)

@@ -29,6 +29,7 @@ namespace CnaDemos
             {Need::AnisotropicFiltering, "anisotropic-filtering"},
             {Need::IndirectDraw, "indirect-draw"},
             {Need::ComputeShaders, "compute-shaders"},
+            {Need::CApi, "c-api"},
         };
         return needs;
     }

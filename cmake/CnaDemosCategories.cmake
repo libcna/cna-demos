@@ -110,15 +110,21 @@ function(cna_demos_finalize_executable target)
 endfunction()
 
 # -----------------------------------------------------------------------------
-# cna_demos_add_standalone(SOURCES <file>... [LIBRARIES <target>...] [REQUIRES <var>...])
+# cna_demos_add_standalone(SOURCES <file>... [C_API] [LIBRARIES <target>...] [REQUIRES <var>...])
 #
 # Called from standalone/<demo-id>/CMakeLists.txt. The executable name is
 # derived from the directory name (the demo ID) exactly as the C++ side derives
 # it (CnaDemos::StandaloneExecutableName): "cna-demo-" followed by the ID with
 # every '.' replaced by '-'. IDs never contain '-', so the mapping is unique.
+#
+# C_API: the program is C (C99, no extensions) written against CNA's C ABI. It
+# links CNA::CApi alone -- not the C++ libraries -- and may include the demos'
+# C scaffolding header "CnaDemos/CApiDemo.h". Without CNA::CApi (CNA configured
+# with CNA_BUILD_C_API=OFF) the executable is not built and the demo, which
+# declares Need::CApi, is reported as skipped.
 # -----------------------------------------------------------------------------
 function(cna_demos_add_standalone)
-    cmake_parse_arguments(PARSE_ARGV 0 ARG "" "" "SOURCES;LIBRARIES;REQUIRES")
+    cmake_parse_arguments(PARSE_ARGV 0 ARG "C_API" "" "SOURCES;LIBRARIES;REQUIRES")
     get_filename_component(_id "${CMAKE_CURRENT_SOURCE_DIR}" NAME)
 
     foreach(_requirement IN LISTS ARG_REQUIRES)
@@ -127,13 +133,33 @@ function(cna_demos_add_standalone)
             return()
         endif()
     endforeach()
+    if(ARG_C_API AND NOT TARGET CNA::CApi)
+        message(STATUS "cna-demos: standalone '${_id}' skipped (CNA::CApi not built: CNA_BUILD_C_API is off)")
+        return()
+    endif()
 
     string(REPLACE "." "-" _exe "cna-demo-${_id}")
     add_executable(${_exe} ${ARG_SOURCES})
-    target_link_libraries(${_exe} PRIVATE CNA ${ARG_LIBRARIES})
+    if(ARG_C_API)
+        target_link_libraries(${_exe} PRIVATE CNA::CApi ${ARG_LIBRARIES})
+        target_include_directories(${_exe} PRIVATE "${PROJECT_SOURCE_DIR}/src")
+        set_target_properties(${_exe} PROPERTIES C_STANDARD 99 C_STANDARD_REQUIRED ON C_EXTENSIONS OFF)
+        if(UNIX AND NOT APPLE)
+            target_link_libraries(${_exe} PRIVATE m) # <math.h>
+        endif()
+    else()
+        target_link_libraries(${_exe} PRIVATE CNA ${ARG_LIBRARIES})
+    endif()
     set_target_properties(${_exe} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CNA_DEMOS_OUTPUT_DIR}")
     cna_demos_apply_warnings(${_exe})
-    cna_demos_finalize_executable(${_exe})
+    if(ARG_C_API)
+        # libcna_c_api carries CNA and SDL inside it; only the renderers' runtime payload is needed.
+        if(COMMAND cna_copy_renderer_runtime)
+            cna_copy_renderer_runtime(${_exe})
+        endif()
+    else()
+        cna_demos_finalize_executable(${_exe})
+    endif()
     add_dependencies(${_exe} cna_demos_assets)
     add_dependencies(cna-demos ${_exe})
     set_property(GLOBAL APPEND PROPERTY CNA_DEMOS_STANDALONE_TARGETS ${_exe})

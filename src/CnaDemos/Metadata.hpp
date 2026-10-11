@@ -63,6 +63,7 @@ namespace CnaDemos
         AnisotropicFiltering = 1u << 21,
         IndirectDraw = 1u << 22,
         ComputeShaders = 1u << 23,
+        CApi = 1u << 24,           ///< CNA built with its C API (CNA_BUILD_C_API): the c_api demos.
     };
 
     [[nodiscard]] constexpr Need operator|(Need a, Need b)

@@ -6,11 +6,12 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**337 demos** in 17 categories. Kinds: console 133, game 203, standalone 1. Automation: automated 303, manual 2, smoke-only 32.
+**344 demos** in 18 categories. Kinds: console 133, game 203, standalone 8. Automation: automated 309, manual 2, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
 | audio | 14 | 11 | 2 | 1 | 13 / 0 / 0 | 13 / 0 / 0 |
+| c_api | 7 | 6 | 1 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 | 4 / 0 / 0 |
 | content | 16 | 16 | 0 | 0 | 14 / 0 / 2 | 14 / 0 / 2 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 | 3 / 0 / 0 |
@@ -31,7 +32,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 231 of 329** (70.2 %).
-- **Methods, properties, constructors and events named by a demo: 980 of 2326** (42.1 %).
+- **Methods, properties, constructors and events named by a demo: 981 of 2326** (42.2 %).
 - Fields and enum values named by a demo: 118 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
@@ -40,7 +41,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Audio` | 14 / 19 | 71 / 121 | 5 / 11 |
 | `Microsoft.Xna.Framework.Content` | 2 / 11 | 7 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 9 / 13 | 19 / 51 | 0 / 2 |
-| `Microsoft.Xna.Framework.GamerServices` | 34 / 52 | 101 / 244 | 1 / 223 |
+| `Microsoft.Xna.Framework.GamerServices` | 34 / 52 | 102 / 244 | 1 / 223 |
 | `Microsoft.Xna.Framework.Graphics` | 72 / 99 | 232 / 550 | 78 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 15 / 17 | 83 / 113 | 0 / 202 |
@@ -64,6 +65,26 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 - `Microsoft.Xna.Framework.Media`: Album, AlbumCollection, Artist, ArtistCollection, Genre, GenreCollection, MediaSourceType, Picture, PictureAlbum, PictureAlbumCollection, PictureCollection, Playlist, PlaylistCollection, VideoSoundtrackType
 - `Microsoft.Xna.Framework.Net`: AvailableNetworkSession, AvailableNetworkSessionCollection, GameEndedEventArgs, GameStartedEventArgs, GamerLeftEventArgs, HostChangedEventArgs, NetworkSessionEndReason, NetworkSessionEndedEventArgs, NetworkSessionJoinError, NetworkSessionJoinException, QualityOfService, WriteLeaderboardsEventArgs
 - `Microsoft.Xna.Framework.Storage`: StorageDeviceNotConnectedException
+
+## CNA C ABI routes demonstrated
+
+- **C ABI routes named by a demo: 56 of 3210** (1.7 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+
+| Header | Routes demonstrated |
+|---|---|
+| `abi.h` | 1 / 1 |
+| `audio.h` | 9 / 74 |
+| `content.h` | 4 / 32 |
+| `core.h` | 3 / 7 |
+| `graphics.h` | 12 / 27 |
+| `input.h` | 4 / 15 |
+| `input_keyboard.h` | 1 / 17 |
+| `matrix.h` | 5 / 57 |
+| `runtime.h` | 9 / 45 |
+| `sprite_font.h` | 2 / 9 |
+| `vectors.h` | 6 / 137 |
+
+Headers without a demonstrated route: `cnb.h`, `color.h`, `content_readers.h`, `core_ext.h`, `curve.h`, `devices.h`, `display.h`, `effects.h`, `gamer_services.h`, `geometry.h`, `graphics_device.h`, `graphics_ext.h`, `graphics_resource.h`, `graphics_state.h`, `index_resources.h`, `input_cursor.h`, `input_devices.h`, `input_gamepad.h`, `input_haptics.h`, `input_joystick.h`, `input_mouse.h`, `input_text.h`, `input_touch.h`, `math.h`, `media.h`, `media_library.h`, `media_player.h`, `models.h`, `net.h`, `net_gamers.h`, `net_sessions.h`, `packed_vectors.h`, `quaternion.h`, `render_target.h`, `runtime_components.h`, `runtime_graphics_manager.h`, `runtime_window.h`, `sensors.h`, `storage.h`, `texture.h`, `texture_volume.h`, `vertex_resources.h`, `vertex_values.h`, `video.h`, `xact.h`.
 
 ## CNA-specific and unmatched API names
 
@@ -215,8 +236,6 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::getVersionPatch` -- core.version.version_string
 - `CNA::getVersionString` -- core.version.version_string
 - `CNA::isPreReleaseVersion` -- core.version.version_string
-- `CNA_DIAGNOSTICS_COUNTER_ADD` -- diagnostics.profiler.counters
-- `CNA_DIAGNOSTICS_GAUGE_SET` -- diagnostics.profiler.counters
 - `ClipTargetSpaceEXT` -- graphics.model.node_animation
 - `ColorMatrixEffect::ColorMatrixEffect` -- graphics.color_matrix_effect.sepia_and_invert
 - `ColorMatrixEffect::SetColorMatrix` -- graphics.color_matrix_effect.sepia_and_invert

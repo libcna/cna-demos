@@ -61,6 +61,10 @@ target_compile_definitions(cna_demos_framework PRIVATE
     "CNA_DEMOS_VERSION=\"${PROJECT_VERSION}\""
     "CNA_DEMOS_CNA_VERSION=\"${CNA_DEMOS_CNA_VERSION}\""
     "CNA_DEMOS_SOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
+if(TARGET CNA::CApi)
+    # The c_api standalone demos (Need::CApi) are built; without it they report SKIPPED.
+    target_compile_definitions(cna_demos_framework PRIVATE CNA_DEMOS_C_API_AVAILABLE)
+endif()
 cna_demos_apply_warnings(cna_demos_framework)
 
 # -----------------------------------------------------------------------------

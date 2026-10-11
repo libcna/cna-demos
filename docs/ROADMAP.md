@@ -219,10 +219,20 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 - `platform.*`: platform capabilities, native window handle, renderer selection with fallback
   chain (standalone), renderer capability profiles.
 
-## Phase 14 -- bindings ⬜
-C API demos as standalone C programs (one C game per process): window/loop, sprite drawing,
-input, audio, content. Built only with `CNA_BUILD_C_API=ON` (experimental in CNA). C#/.NET demos
-belong with the separate `cna-dotnet` binding; decide later whether to reference or host them.
+## Phase 14 -- bindings 🟨 (7 C API demos)
+C API demos as standalone C programs (one C game per process), built only with
+`CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
+✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit),
+✅ `c_api.core.error_handling` (results, categories, last message, count/copy, callback errors),
+✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
+✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, release order),
+✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),
+✅ `c_api.audio.sound_effect` (PCM16 effect, instance state),
+✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse).
+Remaining: 3D (vertex buffers + BasicEffect), render targets, game components, storage, media
+player, gamepad -- one demo each where the C ABI differs from the C++ API in a way worth showing.
+C#/.NET demos belong with the separate `cna-dotnet` binding; decide later whether to reference or
+host them.
 
 ## Phase 15 -- coverage audit ⬜
 Walk COVERAGE.md's backlog and the CNA-specific headers; for each remaining type decide: demo,

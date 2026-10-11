@@ -139,6 +139,15 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   DynamicIndexBuffer with Discard, Texture3D sub-box data, glTF node-animation clips
   (ModelAnimationsEXT, ApplyClipToBonesEXT) on a generated turntable model, and the same font, sound
   and curve compiled to CNB and to XNB.
+- C API demos (7, Phase 14): standalone C99 programs against CNA's C ABI (`CNA::CApi`) --
+  lifecycle callbacks and the loop, error results and diagnostics, sprites from computed pixels,
+  a ContentManager with texture and SpriteFont, keyboard/mouse state, a SoundEffect from PCM,
+  vectors and matrices. `cna_demos_add_standalone(... C_API)`, `Need::CApi` (SKIPPED without the C
+  API), the `CnaDemos/CApiDemo.h` scaffolding (checks, diagnostics, PNG capture), and the
+  `linux-full` preset now builds CNA with `CNA_BUILD_C_API=ON`. Standalone demos receive
+  `--screenshot`. docs/COVERAGE.md counts C ABI routes against CNA's C headers.
+- `gamer_services.avatar.animation_presets`: 12 frames starting mid-clip (CI timed it out at 90
+  frames on SOFTWARE under parallel load) and the avatars now face the camera.
 - Media demos (2): `media.video_player.play_video` plays a generated WMV and
   `media.song.compiled_song` a generated Ogg Vorbis tune, both compiled by the content pipeline
   (`content_media/` into `assets/media`, compiled only when CNA has its FFmpeg backend;
