@@ -87,7 +87,7 @@ CNA_DEMOS_GAME(ParametersDemo, {
              "EffectParameter::Name", "EffectParameter::ParameterClass", "EffectParameter::GetValueVector4", "EffectPass::Apply",
              "EffectTechniqueCollection::Item", "EffectTechnique::Name", "EffectTechnique::Passes",
              "EffectParameterClass", "EffectParameterType",
-             "EffectPassCollection::Count"},
+             "EffectPassCollection::Count", "EffectParameterCollection::Count", "EffectTechniqueCollection::Count"},
     .tags = {"effect", "shader", "parameters", "reflection"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 1,

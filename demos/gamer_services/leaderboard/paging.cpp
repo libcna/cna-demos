@@ -219,7 +219,7 @@ CNA_DEMOS_GAME(PagingDemo, {
              "LeaderboardReader::CanPageUp", "LeaderboardReader::PageStart", "LeaderboardReader::TotalLeaderboardSize",
              "LeaderboardReader::Read", "LeaderboardOutcome", "PropertyDictionary::GetValueOutcome",
              "PropertyDictionary::GetValueTimeSpan", "PropertyDictionary::SetValue", "LeaderboardEntry::Columns",
-             "LeaderboardEntry::RankingEXT"},
+             "LeaderboardEntry::RankingEXT", "LeaderboardReader::Entries"},
     .tags = {"gamer-services", "leaderboard", "high-score", "paging", "offline"},
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},

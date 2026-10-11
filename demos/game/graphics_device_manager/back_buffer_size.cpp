@@ -66,7 +66,8 @@ CNA_DEMOS_GAME(BackBufferSizeDemo, {
                    "at run time with GraphicsDeviceManager::ApplyChanges.",
     .apis = {"GraphicsDeviceManager::PreferredBackBufferWidth", "GraphicsDeviceManager::PreferredBackBufferHeight",
              "GraphicsDeviceManager::ApplyChanges", "PresentationParameters::BackBufferWidth",
-             "PresentationParameters::BackBufferHeight", "GraphicsDevice::Viewport"},
+             "PresentationParameters::BackBufferHeight", "GraphicsDevice::Viewport",
+             "GraphicsDevice::PresentationParameters"},
     .tags = {"resolution", "window", "device"},
     .frames = 6,
 })

@@ -53,7 +53,8 @@ CNA_DEMOS_GAME(PreparingSettingsDemo, {
                    "depth format in the PresentationParameters before the device is created.",
     .apis = {"GraphicsDeviceManager::PreparingDeviceSettings", "PreparingDeviceSettingsEventArgs::GraphicsDeviceInformation",
              "PreparingDeviceSettingsEventArgs::getGraphicsDeviceInformationEXT",
-             "GraphicsDeviceInformation::PresentationParameters", "PresentationParameters::DepthStencilFormat"},
+             "GraphicsDeviceInformation::PresentationParameters", "PresentationParameters::DepthStencilFormat",
+             "PresentationParameters::BackBufferWidth", "PresentationParameters::BackBufferHeight"},
     .tags = {"device", "settings", "event"},
     .frames = 3,
 })

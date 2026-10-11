@@ -42,7 +42,7 @@ CNA_DEMOS_CONSOLE(CurveStepContinuity, {
     .description = "Uses CurveContinuity::Step so a Curve holds each key's value until the next key (a frame index "
                    "over time), then switches a key back to Smooth.",
     .apis = {"CurveKey::CurveKey", "CurveKey::Continuity", "CurveContinuity::Step", "CurveContinuity::Smooth",
-             "CurveKeyCollection::Item"},
+             "CurveKeyCollection::Item", "CurveKeyCollection::Add"},
     .tags = {"curve", "step", "keyframe"},
     .knownIssue = "CNA-DEMOS-ISSUE-002",
 })

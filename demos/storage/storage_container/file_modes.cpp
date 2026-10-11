@@ -92,6 +92,6 @@ CNA_DEMOS_CONSOLE(FileModes, {
     .description = "Opens one file in a StorageContainer with each FileMode -- Create, Append, CreateNew (refused for "
                    "an existing file), Truncate, Open (missing file), OpenOrCreate -- and with FileAccess::Read.",
     .apis = {"StorageContainer::OpenFile", "StorageContainer::FileExists", "StorageDevice::DeleteContainer",
-             "FileMode", "FileAccess"},
+             "FileMode", "FileAccess", "StorageDevice::BeginOpenContainer", "StorageDevice::EndOpenContainer"},
     .tags = {"storage", "file", "append", "truncate", "text"},
 })

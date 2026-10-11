@@ -104,7 +104,8 @@ CNA_DEMOS_GAME(GetDataCollisionDemo, {
     .title = "Per-pixel collision",
     .description = "Copies a sprite's texels to the CPU with Texture2D::GetData and uses their alpha to tell real "
                    "overlaps from merely overlapping bounding rectangles.",
-    .apis = {"Texture2D::GetData", "Rectangle::Intersects"},
+    .apis = {"Texture2D::GetData", "Rectangle::Intersects", "Rectangle::Left", "Rectangle::Right", "Rectangle::Top",
+             "Rectangle::Bottom", "Texture2D::Width", "Texture2D::Height"},
     .tags = {"texture", "collision", "pixels", "2d"},
     .frames = 3,
     .deterministic = true,

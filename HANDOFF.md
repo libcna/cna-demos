@@ -63,7 +63,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-398 demos: math 74, game 33, graphics 129 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+401 demos: math 77, game 33, graphics 129 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 13 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 19 (8 XACT), core 3 (2 logger),
@@ -93,7 +93,7 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 | Configure + build `linux-full` (8 renderers, CNA as libcna.so, C API libcna_c_api.so) | ✅ |
 | `cna-demos --validate` | ✅ 0 problems |
 | `tools/validate.sh` (build, validate, ctest, smoke SOFTWARE + OPENGLES3/Xvfb, coverage) | ✅ |
-| `ctest` (CLI tests + 398 demos on SOFTWARE, dummy audio) | ✅ 410/410 (13 expected failures via WILL_FAIL, 3 manual demos disabled) |
+| `ctest` (CLI tests + 401 demos on SOFTWARE, dummy audio) | ✅ 413/413 (13 expected failures via WILL_FAIL, 3 manual demos disabled) |
 | `--smoke` on SOFTWARE (no display), dummy audio | ✅ 357 passed, 13 expected failures, 25 skipped (window demos, PbrEffect fallback, custom shaders and MRT: no CustomEffects), 3 not run (manual) |
 | `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ⚠️ 377 passed, 14 expected failures (ISSUE-021 on GL only), 1 unexpected: `gamer_services.guide.sign_in_screen` crashed once (exit 139, own-process child) and did not reproduce in 17 reruns nor in 3 runs of the gamer_services category -- watch for it;, 3 skipped (wireframe, LOD bias: not on GL ES; ColorMatrixEffect: SOFTWARE only), 3 not run (manual) |
 | Screenshots inspected (SOFTWARE, OPENGLES3): every graphics.* and input.* Game demo | ✅ correct; the renderers agree (except intentionally non-deterministic demos) |
@@ -192,18 +192,22 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**First, the uncommitted work of the last session** (it is in the working tree only if the container
-survived; otherwise redo it from this description):
-* Batch 5, written and syntax-checked but NOT built or run: `math.color.named_colors` (chart of the
-  141 named colours, Transparent is (0,0,0,0)), `graphics.effect.parameter_values` (typed
-  SetValue/GetValue*, InvalidCastException, SkinnedEffect's Bones array -- CNA declares Bones as one
-  72x4 matrix with no elements while XNA has 72 elements of 4x3: record it as CNA-DEMOS-ISSUE-034 and
-  set `.knownIssue` if the check fails), `math.vector2.toolbox_2d`, `math.vector4.color_math`,
-  `math.quaternion.double_cover` (q and -q, Dot sign before blending, Divide as relative rotation).
-* An audit pass (Phase 15) added 146 member names to the `.apis` of 66 existing demos (only names the
-  demo really calls and teaches; the rules and rejected candidates are in the session report, the
-  scripts in the scratchpad are gone with it). Build, `--validate`, ctest, then commit.
-After that, run tools/validate.sh, update the numbers here and in CHANGELOG/ROADMAP, commit.
+**First, two demos written in the last session that are not in the repository** (their checks
+failed and were not investigated before the session stopped; redo them from this description):
+* `graphics.effect.parameter_values`: typed `EffectParameter::SetValue`/`GetValue*` on a BasicEffect
+  (SpecularPower Single, DiffuseColor Vector4, World with GetValueMatrixTranspose, ShaderIndex
+  Int32, Texture object) and SkinnedEffect's Bones array. Observed in CNA: `GetValueSingle` on the
+  Vector4 parameter does NOT throw InvalidCastException (XNA does), and Bones is declared as one
+  72x4 matrix with 0 elements (XNA: 72 elements of 4x3; CNA's AddParam(name, rows, cols) in
+  SkinnedEffect.cpp). Both are probable CNA issues (034, 035) -- confirm against CNA's
+  EffectParameter.cpp, record, and mark the demo's `.knownIssue`.
+* `math.quaternion.double_cover`: q and -q (Negate, Dot = -1, operator== differs), the angle
+  between orientations with |Dot|, blending by Add + Normalize with a sign check, Slerp, and
+  Divide(q1, q2) as the turn from q2 to q1. Two checks failed ("with the sign check the blend is the
+  20 degree turn", "Slerp(a, b, 0.5) takes the short way") -- find out whether the demo's maths or
+  CNA is wrong before recording anything.
+Then run tools/validate.sh (the last full run covered 398 demos; the 3 demos and the metadata audit
+of the last commit were checked with build, `--validate` and ctest 413/413 only).
 
 
 **Next**: remainders by value -- Phase 8 (`RegisterCnbLoaderEXT`/`RegisterCnjLoader` for a game's

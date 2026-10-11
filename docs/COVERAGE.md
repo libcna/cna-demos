@@ -6,7 +6,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**398 demos** in 18 categories. Kinds: console 141, game 238, standalone 19. Automation: automated 362, manual 3, smoke-only 33.
+**401 demos** in 18 categories. Kinds: console 143, game 239, standalone 19. Automation: automated 365, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -22,7 +22,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 | 16 / 0 / 2 |
 | graphics | 129 | 129 | 0 | 0 | 117 / 8 / 4 | 121 / 3 / 5 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
-| math | 74 | 74 | 0 | 0 | 72 / 0 / 2 | 72 / 0 / 2 |
+| math | 77 | 77 | 0 | 0 | 72 / 0 / 2 | 72 / 0 / 2 |
 | media | 10 | 9 | 1 | 0 | 10 / 0 / 0 | 10 / 0 / 0 |
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 | 12 / 0 / 2 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
@@ -32,22 +32,22 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 289 of 329** (87.8 %).
-- **Methods, properties, constructors and events named by a demo: 1098 of 2326** (47.2 %).
+- **Methods, properties, constructors and events named by a demo: 1285 of 2326** (55.2 %).
 - Fields and enum values named by a demo: 132 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
-| `Microsoft.Xna.Framework` | 40 / 42 | 294 / 643 | 34 / 78 |
+| `Microsoft.Xna.Framework` | 40 / 42 | 465 / 643 | 34 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 16 / 19 | 80 / 121 | 5 / 11 |
 | `Microsoft.Xna.Framework.Content` | 6 / 11 | 10 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 265 / 550 | 84 / 192 |
-| `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
+| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 277 / 550 | 84 / 192 |
+| `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 44 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
 | `Microsoft.Xna.Framework.Media` | 17 / 24 | 68 / 192 | 1 / 8 |
-| `Microsoft.Xna.Framework.Net` | 22 / 23 | 70 / 127 | 7 / 22 |
+| `Microsoft.Xna.Framework.Net` | 22 / 23 | 71 / 127 | 7 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
 
 ### Types without a demo yet

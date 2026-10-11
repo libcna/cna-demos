@@ -163,7 +163,7 @@ CNA_DEMOS_GAME(InstancingDemo, {
                    "frequency 1 (SetVertexBuffers), which CNA's stock BasicEffect applies before World.",
     .apis = {"GraphicsDevice::DrawInstancedPrimitives", "GraphicsDevice::SetVertexBuffers",
              "VertexBufferBinding::VertexBufferBinding", "DynamicVertexBuffer::SetData", "SetDataOptions::Discard",
-             "VertexDeclaration::VertexDeclaration", "VertexElement::VertexElement"},
+             "VertexDeclaration::VertexDeclaration", "VertexElement::VertexElement", "GraphicsDevice::Indices"},
     .tags = {"3d", "instancing", "performance", "vertex-streams"},
     .needs = CnaDemos::Need::ThreeD | CnaDemos::Need::Instancing,
     .frames = 20,

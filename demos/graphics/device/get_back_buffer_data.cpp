@@ -75,7 +75,7 @@ CNA_DEMOS_GAME(GetBackBufferDataDemo, {
     .title = "Read back the back buffer",
     .description = "Draws a rectangle and reads the pixels back with GraphicsDevice::GetBackBufferData, once for the "
                    "whole back buffer and once for a small region.",
-    .apis = {"GraphicsDevice::GetBackBufferData"},
+    .apis = {"GraphicsDevice::GetBackBufferData", "GraphicsDevice::PresentationParameters"},
     .tags = {"readback", "screenshot", "pixels"},
     .frames = 3,
     .deterministic = true,

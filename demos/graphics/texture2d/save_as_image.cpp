@@ -94,7 +94,8 @@ CNA_DEMOS_GAME(SaveAsImageDemo, {
     .title = "Save a texture as PNG or JPEG",
     .description = "Encodes a texture into memory streams with Texture2D::SaveAsPng (lossless) and SaveAsJpeg "
                    "(lossy) and decodes both again with FromStream to compare.",
-    .apis = {"Texture2D::SaveAsPng", "Texture2D::SaveAsJpeg", "Texture2D::FromStream"},
+    .apis = {"Texture2D::SaveAsPng", "Texture2D::SaveAsJpeg", "Texture2D::FromStream", "Texture2D::Width",
+             "Texture2D::Height"},
     .tags = {"texture", "png", "jpeg", "save", "screenshot"},
     .frames = 3,
     .deterministic = true,

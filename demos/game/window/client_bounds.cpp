@@ -31,7 +31,8 @@ CNA_DEMOS_GAME(ClientBoundsDemo, {
     .title = "Window client bounds",
     .description = "Reads GameWindow::ClientBounds, the window's drawable area, and compares it with the back-buffer "
                    "size.",
-    .apis = {"GameWindow::ClientBounds", "PresentationParameters::BackBufferWidth"},
+    .apis = {"GameWindow::ClientBounds", "PresentationParameters::BackBufferWidth",
+             "PresentationParameters::BackBufferHeight"},
     .tags = {"window", "size"},
     .needs = CnaDemos::Need::Window,
     .frames = 3,

@@ -90,7 +90,8 @@ CNA_DEMOS_GAME(BlendFactorDemo, {
     .title = "Constant blend factor",
     .description = "Blends a texture over black with Blend::BlendFactor / InverseBlendFactor at four BlendFactor "
                    "values: a fixed mix that ignores alpha.",
-    .apis = {"BlendState::BlendFactor", "Blend::BlendFactor", "Blend::InverseBlendFactor", "GraphicsDevice::BlendFactor"},
+    .apis = {"BlendState::BlendFactor", "Blend::BlendFactor", "Blend::InverseBlendFactor",
+             "GraphicsDevice::BlendFactor", "BlendState::ColorSourceBlend", "BlendState::ColorDestinationBlend"},
     .tags = {"blend", "fade", "state"},
     .frames = 3,
     .deterministic = true,

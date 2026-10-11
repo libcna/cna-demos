@@ -112,7 +112,8 @@ CNA_DEMOS_GAME(ThirtyTwoBitIndicesDemo, {
     .description = "Draws a 300 x 300 height-field grid (90,000 vertices) through an IndexBuffer with "
                    "IndexElementSize::ThirtyTwoBits, which XNA allows under HiDef.",
     .apis = {"IndexElementSize::ThirtyTwoBits", "IndexBuffer::IndexBuffer", "IndexBuffer::SetData",
-             "GraphicsDevice::DrawIndexedPrimitives"},
+             "GraphicsDevice::DrawIndexedPrimitives", "GraphicsDevice::Indices", "IndexBuffer::IndexCount",
+             "IndexBuffer::IndexElementSize"},
     .tags = {"3d", "indices", "terrain", "mesh", "hidef"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 2,

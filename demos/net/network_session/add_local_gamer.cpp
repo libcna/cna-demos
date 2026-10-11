@@ -174,7 +174,7 @@ CNA_DEMOS_GAME(AddLocalGamerDemo, {
                    "AllowJoinInProgress is set.",
     .apis = {"NetworkSession::AddLocalGamer", "NetworkSession::AllowJoinInProgress", "NetworkSession::Create",
              "NetworkSession::GamerJoined", "LocalNetworkGamer::SignedInGamer", "NetworkGamer::Machine",
-             "NetworkMachine::Gamers", "NetworkSession::StartGame"},
+             "NetworkMachine::Gamers", "NetworkSession::StartGame", "NetworkSession::LocalGamers"},
     .tags = {"net", "multiplayer", "split-screen", "join"},
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},

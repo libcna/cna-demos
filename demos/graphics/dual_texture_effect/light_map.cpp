@@ -139,7 +139,8 @@ CNA_DEMOS_GAME(LightMapDemo, {
     .description = "Multiplies a repeating checker by a stretched light map with DualTextureEffect, using a vertex "
                    "with two sets of texture coordinates.",
     .apis = {"DualTextureEffect::DualTextureEffect", "DualTextureEffect::Texture", "DualTextureEffect::Texture2",
-             "VertexElementUsage::TextureCoordinate", "GraphicsDevice::SamplerStates"},
+             "VertexElementUsage::TextureCoordinate", "GraphicsDevice::SamplerStates",
+             "DualTextureEffect::Projection"},
     .tags = {"3d", "lightmap", "multitexture", "effect"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

@@ -56,6 +56,7 @@ CNA_DEMOS_CONSOLE(CurveLoopTypes, {
     .description = "Evaluates a Curve beyond its last key under every CurveLoopType set through PostLoop, and "
                    "before its first key through PreLoop.",
     .apis = {"Curve::PostLoop", "Curve::PreLoop", "CurveLoopType::Constant", "CurveLoopType::Cycle",
-             "CurveLoopType::CycleOffset", "CurveLoopType::Oscillate", "CurveLoopType::Linear"},
+             "CurveLoopType::CycleOffset", "CurveLoopType::Oscillate", "CurveLoopType::Linear", "Curve::Keys",
+             "Curve::Evaluate"},
     .tags = {"curve", "loop", "animation"},
 })

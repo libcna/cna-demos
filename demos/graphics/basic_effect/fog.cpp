@@ -109,7 +109,8 @@ CNA_DEMOS_GAME(FogDemo, {
     .title = "Linear fog",
     .description = "Draws two rows of pillars receding into BasicEffect fog (FogEnabled, FogColor, FogStart 4, "
                    "FogEnd 22): the farther a pillar, the more it takes the fog colour.",
-    .apis = {"BasicEffect::FogEnabled", "BasicEffect::FogColor", "BasicEffect::FogStart", "BasicEffect::FogEnd"},
+    .apis = {"BasicEffect::FogEnabled", "BasicEffect::FogColor", "BasicEffect::FogStart", "BasicEffect::FogEnd",
+             "BasicEffect::World", "BasicEffect::View", "BasicEffect::Projection"},
     .tags = {"3d", "fog", "atmosphere", "effect"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

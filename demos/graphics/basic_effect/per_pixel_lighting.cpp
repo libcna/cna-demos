@@ -121,7 +121,9 @@ CNA_DEMOS_GAME(PerPixelLightingDemo, {
     .description = "Lights a coarse sphere with a sharp specular highlight per vertex and with "
                    "BasicEffect::PreferPerPixelLighting; per pixel the highlight stays round and bright.",
     .apis = {"BasicEffect::PreferPerPixelLighting", "BasicEffect::SpecularColor", "BasicEffect::SpecularPower",
-             "DirectionalLight::SpecularColor"},
+             "DirectionalLight::SpecularColor", "BasicEffect::LightingEnabled", "BasicEffect::DirectionalLight0",
+             "DirectionalLight::Enabled", "DirectionalLight::Direction", "BasicEffect::World", "BasicEffect::View",
+             "BasicEffect::Projection"},
     .tags = {"3d", "lighting", "specular", "effect"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

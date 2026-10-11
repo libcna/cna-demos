@@ -109,7 +109,7 @@ CNA_DEMOS_GAME(BoneAnimationDemo, {
                    "draws every mesh with its parent bone's absolute transform from CopyAbsoluteBoneTransformsTo.",
     .apis = {"ModelBone::Transform", "Model::CopyAbsoluteBoneTransformsTo", "ModelMesh::Effects", "ModelMesh::Draw",
              "ModelMesh::ParentBone", "BasicEffect::World", "BasicEffect::View", "BasicEffect::Projection",
-             "Matrix::CreateRotationZ"},
+             "Matrix::CreateRotationZ", "Model::Bones", "Model::Meshes", "ModelBone::Index"},
     .tags = {"model", "bones", "animation", "hierarchy", "robot", "3d"},
     .needs = CnaDemos::Need::ThreeD,
 })

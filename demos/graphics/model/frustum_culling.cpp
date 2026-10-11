@@ -132,7 +132,8 @@ CNA_DEMOS_GAME(FrustumCullingDemo, {
                    "ModelMesh::BoundingSphere, moved into the world, misses the camera's BoundingFrustum; the count "
                    "of drawn meshes is shown.",
     .apis = {"ModelMesh::BoundingSphere", "BoundingSphere::Transform", "BoundingFrustum::BoundingFrustum",
-             "BoundingFrustum::Intersects", "Model::CopyAbsoluteBoneTransformsTo", "ModelMesh::Draw"},
+             "BoundingFrustum::Intersects", "Model::CopyAbsoluteBoneTransformsTo", "ModelMesh::Draw", "Model::Meshes",
+             "ModelMesh::ParentBone"},
     .tags = {"model", "culling", "frustum", "bounding-sphere", "performance", "3d"},
     .needs = CnaDemos::Need::ThreeD,
     .assets = {"fonts/pixel_font.cnb", "models/robot_arm.cnb"},

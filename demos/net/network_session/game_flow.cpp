@@ -170,7 +170,7 @@ CNA_DEMOS_GAME(GameFlowDemo, {
     .apis = {"NetworkGamer::IsReady", "NetworkSession::IsEveryoneReady", "NetworkSession::StartGame",
              "NetworkSession::EndGame", "NetworkSession::GameStarted", "NetworkSession::GameEnded",
              "NetworkSession::SessionState", "NetworkSessionState", "NetworkSession::Update",
-             "GameStartedEventArgs", "GameEndedEventArgs"},
+             "GameStartedEventArgs", "GameEndedEventArgs", "NetworkSession::LocalGamers"},
     .tags = {"net", "session", "lobby", "ready", "multiplayer"},
     .frames = 70,
     .assets = {"fonts/pixel_font.cnb"},

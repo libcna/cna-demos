@@ -170,6 +170,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   item names, the default colour key, a per-item processor parameter, a copied None item.
 - Coverage: `Texture::Format` and `Texture::LevelCount` are named on XNA's base class `Texture`
   (they were credited to nothing as `Texture2D::...`).
+- `math.color.named_colors` (chart of XNA's 141 named colours), `math.vector2.toolbox_2d`
+  (Vector2's static helpers on 2D game tasks) and `math.vector4.color_math` (Vector4 helpers as
+  RGBA colour maths).
+- Coverage audit pass 2: 146 XNA member names that 66 existing demos call and teach were added to
+  their `.apis` (effect World/View/Projection, Cue::Play, AvatarRenderer transforms, ...).
 - `graphics.model.gltf_lights` (two KHR_lights_punctual lights become the PbrEffect's
   DirectionalLight0/1) and `graphics.model.clip_interpolation` (STEP, LINEAR and CUBICSPLINE
   samplers; expected failure CNA-DEMOS-ISSUE-031: CNA plays all three as LINEAR) and

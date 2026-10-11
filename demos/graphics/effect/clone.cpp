@@ -91,7 +91,8 @@ CNA_DEMOS_GAME(CloneDemo, {
     .title = "Clone an effect",
     .description = "Configures a BasicEffect, clones it with Effect::Clone and changes only the clone's colour and "
                    "position; both draw with their own settings.",
-    .apis = {"Effect::Clone", "BasicEffect::Clone"},
+    .apis = {"Effect::Clone", "BasicEffect::Clone", "BasicEffect::DiffuseColor", "BasicEffect::World",
+             "BasicEffect::View", "BasicEffect::Projection"},
     .tags = {"effect", "material", "copy"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

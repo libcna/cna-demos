@@ -99,7 +99,7 @@ CNA_DEMOS_GAME(MeshEffectsDemo, {
                    "tinted with DiffuseColor, and see-through with Alpha; pixels on the three copies are compared.",
     .apis = {"ModelMesh::Effects", "BasicEffect::DiffuseColor", "BasicEffect::Alpha", "Model::Draw",
              "BlendState::AlphaBlend",
-             "ModelEffectCollection"},
+             "ModelEffectCollection", "Model::Meshes"},
     .tags = {"model", "effect", "tint", "transparency", "3d"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

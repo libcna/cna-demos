@@ -166,7 +166,7 @@ CNA_DEMOS_GAME(MaxMipLevelDemo, {
     .title = "Limit the mip levels a sampler reads",
     .description = "Samples a texture whose mip levels have different colours with SamplerState::MaxMipLevel 2 and "
                    "reports which level each copy used.",
-    .apis = {"SamplerState::MaxMipLevel", "TextureFilter::Point"},
+    .apis = {"SamplerState::MaxMipLevel", "TextureFilter::Point", "SamplerState::Filter"},
     .tags = {"sampler", "mipmap", "lod", "state"},
     .frames = 3,
     .deterministic = true,
@@ -178,7 +178,7 @@ CNA_DEMOS_GAME(LodBiasDemo, {
     .title = "Mip level-of-detail bias",
     .description = "Samples a texture whose mip levels have different colours with SamplerState::"
                    "MipMapLevelOfDetailBias +1 and reports which level each copy used.",
-    .apis = {"SamplerState::MipMapLevelOfDetailBias", "TextureFilter::Point"},
+    .apis = {"SamplerState::MipMapLevelOfDetailBias", "TextureFilter::Point", "SamplerState::Filter"},
     .tags = {"sampler", "mipmap", "lod", "bias", "state"},
     .frames = 3,
     .deterministic = true,

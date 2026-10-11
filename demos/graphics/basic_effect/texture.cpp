@@ -81,7 +81,8 @@ CNA_DEMOS_GAME(TextureDemo, {
     .description = "Draws a cube with BasicEffect::TextureEnabled and a Texture; each vertex carries the texture "
                    "coordinate used for its corner of the face.",
     .apis = {"BasicEffect::TextureEnabled", "BasicEffect::Texture", "VertexPositionNormalTexture::VertexPositionNormalTexture",
-             "GraphicsDevice::DrawUserIndexedPrimitives"},
+             "GraphicsDevice::DrawUserIndexedPrimitives", "BasicEffect::World", "BasicEffect::View",
+             "BasicEffect::Projection"},
     .tags = {"3d", "texture", "effect", "cube"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

@@ -143,7 +143,7 @@ CNA_DEMOS_GAME(GetProfileDemo, {
              "GamerProfile::TotalAchievements", "GamerProfile::TitlesPlayed", "GamerProfile::GamerZone",
              "GamerProfile::Reputation", "GamerProfile::Motto", "GamerProfile::Region",
              "GamerProfile::GetGamerPicture", "Gamer::GetFromGamertag",
-             "GamerZone"},
+             "GamerZone", "Gamer::SignedInGamers"},
     .tags = {"gamer-services", "profile", "gamerscore", "async", "offline"},
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},

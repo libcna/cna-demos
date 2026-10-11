@@ -101,7 +101,7 @@ CNA_DEMOS_GAME(NodeAnimationDemo, {
                    "lid opening -- by reading ModelAnimationsEXT from Model.Tag and posing the bones with "
                    "ApplyClipToBonesEXT each frame; untracked bones keep their transforms.",
     .apis = {"ApplyClipToBonesEXT", "ModelAnimationsEXT", "AnimationClipEXT", "ClipTargetSpaceEXT", "Model::Tag",
-             "Model::CopyAbsoluteBoneTransformsTo", "Model::Draw"},
+             "Model::CopyAbsoluteBoneTransformsTo", "Model::Draw", "Model::Bones"},
     .tags = {"3d", "model", "gltf", "animation", "cnaext"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 40,

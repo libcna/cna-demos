@@ -143,7 +143,8 @@ CNA_DEMOS_GAME(ImmediateBlendStateDemo, {
     .title = "Immediate mode: change blending between sprites",
     .description = "Uses SpriteSortMode::Immediate and sets GraphicsDevice::BlendState between two Draw calls: the "
                    "first sprite is drawn opaque, the second additively.",
-    .apis = {"SpriteBatch::Begin", "SpriteSortMode::Immediate", "GraphicsDevice::BlendState", "BlendState::Additive"},
+    .apis = {"SpriteBatch::Begin", "SpriteSortMode::Immediate", "GraphicsDevice::BlendState", "BlendState::Additive",
+             "SpriteBatch::Draw"},
     .tags = {"sprite", "immediate", "state", "blend"},
     .frames = 3,
     .deterministic = true,
@@ -156,7 +157,7 @@ CNA_DEMOS_GAME(ImmediateSamplerStateDemo, {
     .description = "Uses SpriteSortMode::Immediate and sets GraphicsDevice::SamplerStates[0] between two Draw calls: "
                    "the first sprite should be point-sampled, the second linearly filtered.",
     .apis = {"SpriteBatch::Begin", "SpriteSortMode::Immediate", "GraphicsDevice::SamplerStates",
-             "SamplerStateCollection::Item"},
+             "SamplerStateCollection::Item", "SpriteBatch::Draw"},
     .tags = {"sprite", "immediate", "state", "sampler"},
     .frames = 3,
     .deterministic = true,

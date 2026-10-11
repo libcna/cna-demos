@@ -47,6 +47,7 @@ CNA_DEMOS_CONSOLE(CurveKeyCollectionDemo, {
                    "position, and copies a curve with Curve::Clone.",
     .apis = {"CurveKeyCollection::Add", "CurveKeyCollection::Item", "CurveKeyCollection::IndexOf",
              "CurveKeyCollection::RemoveAt", "CurveKeyCollection::Remove", "CurveKeyCollection::Clear",
-             "CurveKeyCollection::Count", "Curve::IsConstant", "Curve::Clone", "CurveKey::Position", "CurveKey::Value"},
+             "CurveKeyCollection::Count", "Curve::IsConstant", "Curve::Clone", "CurveKey::Position", "CurveKey::Value",
+             "Curve::Keys"},
     .tags = {"curve", "collection"},
 })

@@ -76,7 +76,8 @@ CNA_DEMOS_CONSOLE(CueVariables, {
     .description = "Sets and reads the cue variable Intensity with Cue::SetVariable and Cue::GetVariable: each Cue "
                    "keeps its own value, clamped to the declared range, and cue and global variables are separate "
                    "namespaces.",
-    .apis = {"Cue::SetVariable", "Cue::GetVariable", "AudioEngine::GetGlobalVariable", "SoundBank::GetCue"},
+    .apis = {"Cue::SetVariable", "Cue::GetVariable", "AudioEngine::GetGlobalVariable", "SoundBank::GetCue",
+             "Cue::Play"},
     .tags = {"audio", "xact", "variables", "cue"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb"},

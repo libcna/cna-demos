@@ -126,7 +126,8 @@ CNA_DEMOS_GAME(KeyboardEmulationDemo, {
     .description = "Turns on GamePad::setKeyboardEmulationEnabledEXT: player one becomes a connected gamepad whose "
                    "sticks, triggers and buttons are driven by keys, shown live; emulation is switched off on unload.",
     .apis = {"GamePad::KeyboardEmulationEnabledEXT", "GamePad::GetCapabilities", "GamePad::GetState",
-             "GamePadState::IsButtonDown"},
+             "GamePadState::IsButtonDown", "GamePadState::IsConnected", "GamePadState::ThumbSticks",
+             "GamePadState::Triggers"},
     .tags = {"gamepad", "controller", "keyboard", "emulation", "testing", "cnaext"},
     .needs = CnaDemos::Need::Keyboard,
     .assets = {"fonts/pixel_font.cnb"},

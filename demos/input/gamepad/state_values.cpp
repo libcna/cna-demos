@@ -72,6 +72,7 @@ CNA_DEMOS_CONSOLE(StateValues, {
              "GamePadButtons::ToString",
              "GamePadState::op_Equality", "GamePadState::op_Inequality", "GamePadThumbSticks::GamePadThumbSticks",
              "GamePadTriggers::GamePadTriggers", "GamePadButtons::GamePadButtons", "GamePadDPad::GamePadDPad",
-             "Buttons"},
+             "Buttons", "GamePadButtons::A", "GamePadDPad::Up", "GamePadThumbSticks::Left",
+             "GamePadThumbSticks::Right", "GamePadTriggers::Left", "GamePadTriggers::Right"},
     .tags = {"gamepad", "controller", "virtual-buttons", "testing", "value"},
 })

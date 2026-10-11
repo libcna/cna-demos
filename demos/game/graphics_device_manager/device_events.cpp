@@ -91,7 +91,8 @@ CNA_DEMOS_GAME(DeviceEventsDemo, {
                    "GraphicsDevice itself raise DeviceResetting and DeviceReset.",
     .apis = {"GraphicsDeviceManager::DeviceCreated", "GraphicsDeviceManager::DeviceResetting",
              "GraphicsDeviceManager::DeviceReset", "GraphicsDeviceManager::ApplyChanges",
-             "GraphicsDevice::DeviceResetting", "GraphicsDevice::DeviceReset"},
+             "GraphicsDevice::DeviceResetting", "GraphicsDevice::DeviceReset",
+             "GraphicsDeviceManager::PreferredBackBufferWidth", "GraphicsDeviceManager::PreferredBackBufferHeight"},
     .tags = {"device", "event", "reset"},
     .frames = 5,
 })

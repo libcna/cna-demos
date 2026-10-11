@@ -56,7 +56,8 @@ CNA_DEMOS_CONSOLE(VolumePitchPan, {
     .title = "Volume, pitch and pan of a voice",
     .description = "Changes SoundEffectInstance::Volume, Pitch and Pan while the voice plays and shows the "
                    "ArgumentOutOfRangeException for values outside 0..1 and -1..1.",
-    .apis = {"SoundEffectInstance::Volume", "SoundEffectInstance::Pitch", "SoundEffectInstance::Pan"},
+    .apis = {"SoundEffectInstance::Volume", "SoundEffectInstance::Pitch", "SoundEffectInstance::Pan",
+             "SoundEffectInstance::Play"},
     .tags = {"audio", "volume", "pitch", "pan", "instance"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"sounds/tone_440.wav"},

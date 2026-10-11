@@ -113,7 +113,8 @@ CNA_DEMOS_GAME(AlphaDemo, {
     .title = "Transparent object",
     .description = "Draws a lit sphere with BasicEffect::Alpha 0.5 over a textured wall, with BlendState::AlphaBlend "
                    "and DepthStencilState::DepthRead after the opaque geometry.",
-    .apis = {"BasicEffect::Alpha", "BlendState::AlphaBlend", "DepthStencilState::DepthRead"},
+    .apis = {"BasicEffect::Alpha", "BlendState::AlphaBlend", "DepthStencilState::DepthRead", "BasicEffect::World",
+             "BasicEffect::View", "BasicEffect::Projection"},
     .tags = {"3d", "transparency", "blend", "effect"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

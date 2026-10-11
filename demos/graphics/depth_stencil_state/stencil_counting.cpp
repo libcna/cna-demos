@@ -104,7 +104,7 @@ CNA_DEMOS_GAME(StencilCountingDemo, {
                    "many covered it, with one CompareFunction::Equal pass per count.",
     .apis = {"StencilOperation::Increment", "StencilOperation::Keep", "DepthStencilState::StencilPass",
              "DepthStencilState::StencilFunction", "DepthStencilState::ReferenceStencil", "CompareFunction::Equal",
-             "CompareFunction::Always"},
+             "CompareFunction::Always", "DepthStencilState::StencilEnable"},
     .tags = {"stencil", "overlap", "count", "state", "2d"},
     .needs = CnaDemos::Need::StencilBuffer,
     .frames = 3,

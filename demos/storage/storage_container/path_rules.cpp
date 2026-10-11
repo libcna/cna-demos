@@ -70,6 +70,7 @@ CNA_DEMOS_CONSOLE(PathRules, {
                    "paths escaping with \"..\", absolute paths, empty names and DeleteContainer outside the storage "
                    "root are refused.",
     .apis = {"StorageContainer::CreateFile", "StorageContainer::OpenFile", "StorageContainer::FileExists",
-             "StorageContainer::CreateDirectory", "StorageDevice::DeleteContainer"},
+             "StorageContainer::CreateDirectory", "StorageDevice::DeleteContainer",
+             "StorageDevice::BeginOpenContainer", "StorageDevice::EndOpenContainer"},
     .tags = {"storage", "security", "path", "traversal", "file"},
 })

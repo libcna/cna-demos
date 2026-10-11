@@ -140,7 +140,7 @@ CNA_DEMOS_GAME(SeveralStreamsDemo, {
                    "attribute is updated without touching the other.",
     .apis = {"GraphicsDevice::SetVertexBuffers", "GraphicsDevice::GetVertexBuffers",
              "VertexBufferBinding::VertexBufferBinding", "DynamicVertexBuffer::SetData", "VertexElementFormat::Color",
-             "Color::PackedValue"},
+             "Color::PackedValue", "GraphicsDevice::DrawPrimitives"},
     .tags = {"3d", "vertex-streams", "buffer", "animation"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 30,

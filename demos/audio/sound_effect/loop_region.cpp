@@ -86,7 +86,7 @@ CNA_DEMOS_CONSOLE(LoopRegion, {
                    "the samples is refused.",
     .apis = {"SoundEffect::SoundEffect", "SoundEffect::Duration", "SoundEffectInstance::IsLooped",
              "SoundEffectInstance::Play", "SoundEffectInstance::State", "SoundEffectInstance::Stop",
-             "ArgumentException"},
+             "ArgumentException", "SoundEffect::CreateInstance"},
     .tags = {"audio", "sound", "loop", "engine"},
     .needs = CnaDemos::Need::Audio,
 })

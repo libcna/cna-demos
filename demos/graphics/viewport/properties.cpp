@@ -50,6 +50,6 @@ CNA_DEMOS_CONSOLE(ViewportProperties, {
     .description = "Builds a Viewport and reads its Bounds, AspectRatio, TitleSafeArea and depth range, including "
                    "what a default-constructed Viewport holds.",
     .apis = {"Viewport::Viewport", "Viewport::Bounds", "Viewport::AspectRatio", "Viewport::TitleSafeArea",
-             "Viewport::MinDepth", "Viewport::MaxDepth", "Viewport::ToString"},
+             "Viewport::MinDepth", "Viewport::MaxDepth", "Viewport::ToString", "Viewport::X", "Viewport::Width"},
     .tags = {"viewport", "aspect-ratio", "safe-area"},
 })

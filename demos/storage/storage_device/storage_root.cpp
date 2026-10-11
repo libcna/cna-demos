@@ -68,6 +68,7 @@ CNA_DEMOS_CONSOLE(StorageRoot, {
                    "layout below it: a container per display name, with AllPlayers and Player2 folders for a shared "
                    "device and one selected for player two.",
     .apis = {"StorageDevice::SetAppNameEXT", "StorageDevice::GetStorageRootEXT", "StorageDevice::BeginShowSelector",
-             "StorageDevice::EndShowSelector", "StorageDevice::DeleteContainer", "PlayerIndex"},
+             "StorageDevice::EndShowSelector", "StorageDevice::DeleteContainer", "PlayerIndex",
+             "StorageDevice::BeginOpenContainer", "StorageDevice::EndOpenContainer"},
     .tags = {"storage", "save", "folder", "path", "player", "cnaext"},
 })

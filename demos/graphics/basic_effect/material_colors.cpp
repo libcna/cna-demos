@@ -137,7 +137,8 @@ CNA_DEMOS_GAME(MaterialColorsDemo, {
     .description = "Builds a material up step by step on four spheres: DiffuseColor, then AmbientLightColor, "
                    "EmissiveColor and finally SpecularColor with SpecularPower.",
     .apis = {"BasicEffect::DiffuseColor", "BasicEffect::AmbientLightColor", "BasicEffect::EmissiveColor",
-             "BasicEffect::SpecularColor", "BasicEffect::SpecularPower"},
+             "BasicEffect::SpecularColor", "BasicEffect::SpecularPower", "BasicEffect::LightingEnabled",
+             "BasicEffect::DirectionalLight0", "BasicEffect::World", "BasicEffect::View", "BasicEffect::Projection"},
     .tags = {"3d", "lighting", "material", "effect"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

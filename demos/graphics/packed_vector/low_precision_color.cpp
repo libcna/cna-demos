@@ -45,6 +45,7 @@ CNA_DEMOS_CONSOLE(LowPrecisionColor, {
     .description = "Packs one colour into Bgr565, Bgra5551, Bgra4444 and Alpha8 and shows how much precision each "
                    "keeps after unpacking.",
     .apis = {"Bgr565::Bgr565", "Bgr565::ToVector3", "Bgr565::PackedValue", "Bgra5551::Bgra5551", "Bgra5551::ToVector4",
-             "Bgra4444::Bgra4444", "Bgra4444::ToVector4", "Alpha8::Alpha8", "Alpha8::ToAlpha", "Alpha8::PackedValue"},
+             "Bgra4444::Bgra4444", "Bgra4444::ToVector4", "Alpha8::Alpha8", "Alpha8::ToAlpha", "Alpha8::PackedValue",
+             "Bgra5551::PackedValue", "Bgra4444::PackedValue"},
     .tags = {"packed", "pixel-format", "texture", "quantization"},
 })

@@ -52,6 +52,6 @@ CNA_DEMOS_CONSOLE(FormatQueries, {
     .description = "Asks the default GraphicsAdapter which profiles it supports and which back-buffer and "
                    "render-target formats it would select for a request.",
     .apis = {"GraphicsAdapter::IsProfileSupported", "GraphicsAdapter::QueryBackBufferFormat",
-             "GraphicsAdapter::QueryRenderTargetFormat"},
+             "GraphicsAdapter::QueryRenderTargetFormat", "GraphicsAdapter::DefaultAdapter"},
     .tags = {"adapter", "format", "render-target", "profile"},
 })

@@ -85,7 +85,8 @@ CNA_DEMOS_GAME(GraphicsDeviceServiceDemo, {
                    "GraphicsDeviceManager registered, together with IGraphicsDeviceManager -- and clears the screen "
                    "through the GraphicsDevice it provides, as ContentManager finds its device.",
     .apis = {"IGraphicsDeviceService", "IGraphicsDeviceService::GraphicsDevice", "IGraphicsDeviceService::DeviceReset",
-             "IGraphicsDeviceManager", "GameServiceContainer::GetService", "GameComponent::Initialize"},
+             "IGraphicsDeviceManager", "GameServiceContainer::GetService", "GameComponent::Initialize",
+             "GameComponent::Game"},
     .tags = {"services", "graphics-device", "components", "architecture"},
     .frames = 10,
 })

@@ -112,7 +112,8 @@ CNA_DEMOS_GAME(DefaultLightingDemo, {
     .description = "Draws the same sphere unlit (a flat disc of DiffuseColor) and with BasicEffect::"
                    "EnableDefaultLighting, which turns on XNA's standard three-light rig.",
     .apis = {"BasicEffect::EnableDefaultLighting", "BasicEffect::LightingEnabled", "BasicEffect::DiffuseColor",
-             "BasicEffect::DirectionalLight0", "DirectionalLight::Enabled"},
+             "BasicEffect::DirectionalLight0", "DirectionalLight::Enabled", "BasicEffect::DirectionalLight1",
+             "BasicEffect::DirectionalLight2", "BasicEffect::World", "BasicEffect::View", "BasicEffect::Projection"},
     .tags = {"3d", "lighting", "effect", "sphere"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

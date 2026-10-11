@@ -163,7 +163,8 @@ CNA_DEMOS_GAME(PauseAndLoopDemo, {
                    "it after half a second -- PlayPosition stands still -- resumes it, and sees it start again "
                    "from the beginning at the end of the clip instead of stopping.",
     .apis = {"VideoPlayer::IsLooped", "VideoPlayer::Pause", "VideoPlayer::Resume", "VideoPlayer::Volume",
-             "VideoPlayer::IsMuted", "VideoPlayer::PlayPosition", "VideoPlayer::State", "MediaState::Paused"},
+             "VideoPlayer::IsMuted", "VideoPlayer::PlayPosition", "VideoPlayer::State", "MediaState::Paused",
+             "VideoPlayer::Play", "VideoPlayer::GetTexture"},
     .tags = {"media", "video", "pause", "loop"},
     .needs = CnaDemos::Need::Video | CnaDemos::Need::Audio,
     .frames = 900,

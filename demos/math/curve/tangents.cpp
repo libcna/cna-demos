@@ -45,6 +45,7 @@ CNA_DEMOS_CONSOLE(CurveTangents, {
     .title = "Curve tangent modes",
     .description = "Builds the same keys with Flat, Linear and Smooth tangents via Curve::ComputeTangents and "
                    "prints how each shapes the curve.",
-    .apis = {"Curve::ComputeTangents", "CurveTangent::Flat", "CurveTangent::Linear", "CurveTangent::Smooth"},
+    .apis = {"Curve::ComputeTangents", "CurveTangent::Flat", "CurveTangent::Linear", "CurveTangent::Smooth",
+             "Curve::Keys", "Curve::Evaluate"},
     .tags = {"curve", "tangent", "easing"},
 })

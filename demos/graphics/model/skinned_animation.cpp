@@ -117,7 +117,8 @@ CNA_DEMOS_GAME(SkinnedAnimationDemo, {
                    "is checked.",
     .apis = {"AnimationPlayer::StartClip", "AnimationPlayer::Update", "AnimationPlayer::GetSkinTransforms",
              "AnimationPlayer::GetWorldTransforms", "SkinningData", "AnimationClip", "Model::Tag",
-             "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::EnableDefaultLighting", "ModelMesh::Draw"},
+             "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::EnableDefaultLighting", "ModelMesh::Draw",
+             "Model::Meshes", "ModelMesh::Effects", "SkinnedEffect::View", "SkinnedEffect::Projection"},
     .tags = {"model", "skinning", "animation", "skeleton", "gltf", "3d"},
     .needs = CnaDemos::Need::ThreeD,
 })

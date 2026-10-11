@@ -43,6 +43,6 @@ CNA_DEMOS_CONSOLE(SignedNormalized, {
                    "shows NormalizedByte2/NormalizedShort2 clamping to -1..1.",
     .apis = {"NormalizedByte4::NormalizedByte4", "NormalizedByte4::ToVector4", "NormalizedShort4::NormalizedShort4",
              "NormalizedShort4::ToVector4", "NormalizedByte2::NormalizedByte2", "NormalizedByte2::ToVector2",
-             "NormalizedShort2::NormalizedShort2", "NormalizedShort2::ToVector2"},
+             "NormalizedShort2::NormalizedShort2", "NormalizedShort2::ToVector2", "NormalizedByte4::PackedValue"},
     .tags = {"packed", "normal", "snorm", "vertex-format"},
 })

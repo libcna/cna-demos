@@ -124,7 +124,8 @@ CNA_DEMOS_GAME(ViewportSplitScreenDemo, {
     .title = "Split screen with viewports",
     .description = "Sets GraphicsDevice::Viewport to each half of the window in turn: SpriteBatch draws in viewport "
                    "coordinates, clipped to the half, while Clear still clears the whole back buffer (XNA 4.0).",
-    .apis = {"GraphicsDevice::Viewport", "Viewport::Viewport", "GraphicsDevice::Clear", "SpriteBatch::Begin"},
+    .apis = {"GraphicsDevice::Viewport", "Viewport::Viewport", "GraphicsDevice::Clear", "SpriteBatch::Begin",
+             "Viewport::Width", "Viewport::Height"},
     .tags = {"viewport", "split-screen", "multiplayer", "2d"},
     .frames = 5,
     .deterministic = true,

@@ -135,7 +135,8 @@ CNA_DEMOS_GAME(TwoBonesDemo, {
     .description = "Bends a strip at a joint with SkinnedEffect: vertices carry bone indices and weights, "
                    "SetBoneTransforms rotates bone 1, and vertices near the joint blend between the bones.",
     .apis = {"SkinnedEffect::SkinnedEffect", "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::WeightsPerVertex",
-             "SkinnedEffect::Texture", "VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned"},
+             "SkinnedEffect::Texture", "VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned",
+             "SkinnedEffect::View", "SkinnedEffect::Projection"},
     .tags = {"3d", "skinning", "animation", "bones", "effect"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

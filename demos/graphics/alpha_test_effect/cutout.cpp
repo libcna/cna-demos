@@ -132,7 +132,8 @@ CNA_DEMOS_GAME(CutoutDemo, {
     .description = "Draws a white circle and, behind it, an orange one: with BasicEffect the near quad's transparent "
                    "corner is still drawn and hides the far circle, with AlphaTestEffect (alpha > 128) it is discarded.",
     .apis = {"AlphaTestEffect::AlphaTestEffect", "AlphaTestEffect::AlphaFunction", "AlphaTestEffect::ReferenceAlpha",
-             "AlphaTestEffect::Texture", "AlphaTestEffect::DiffuseColor", "CompareFunction::Greater"},
+             "AlphaTestEffect::Texture", "AlphaTestEffect::DiffuseColor", "CompareFunction::Greater",
+             "AlphaTestEffect::Projection"},
     .tags = {"3d", "alpha", "cutout", "foliage", "effect"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

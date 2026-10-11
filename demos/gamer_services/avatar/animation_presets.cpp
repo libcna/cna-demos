@@ -130,7 +130,7 @@ CNA_DEMOS_GAME(AnimationPresetsDemo, {
     .apis = {"AvatarAnimationPreset", "AvatarAnimation::AvatarAnimation", "AvatarAnimation::Update",
              "AvatarAnimation::Length", "AvatarAnimation::CurrentPosition", "AvatarRenderer::Draw",
              "AvatarDescription::CreateRandom",
-             "AvatarBodyType"},
+             "AvatarBodyType", "AvatarRenderer::World", "AvatarRenderer::View", "AvatarRenderer::Projection"},
     .tags = {"gamer-services", "avatar", "3d", "animation", "gallery"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 12,
