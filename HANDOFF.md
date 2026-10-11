@@ -342,6 +342,20 @@ row. Drafts `/tmp/cna-layer-depth-pixels.cpp` and `/tmp/cna-texture-sort-pixels.
 but deliberately not applied while the complete checkpoint runs. This table adds no new runtime
 or screenshot validation claims.
 
+**Highest-priority prepared next batch:** `/tmp/cna-pipeline-components.cpp` is an unbuilt
+draft with an open-route check for `content.custom.pipeline_components`.
+It uses public ContentPipelineRegistry / importer / processor / writer / ContentPipeline::Build
+from `CNA/Content/Pipeline/ContentPipeline.hpp`, already compiled into CNA_Content. It still
+needs `assets/custom/patrol.route` with `0 0`, `3 0`, `3 4` on separate lines and generator support.
+The processor precomputes open length 7 or closed length 12, writes a bounded custom CNB schema,
+and tests runtime loading plus typed parameter diagnostics. Source APIs and their upstream
+acceptance tests were inspected; this draft has NOT been compiled or executed. Apply only after
+the full 406 checkpoint finishes, validate it, then update coverage/ROADMAP/this handoff.
+The type audit also corrected an old exclusion: ContentSerializerAttribute is consumed by
+current IntermediateReader/Writer, and fluent ContentTypeDescriptor members implement useful
+serialization attributes in C++. A separate build-time IntermediateSerializer demo is a real
+remaining gap; the blanket claim that CNA does not read those attributes was inaccurate.
+
 **Next**: remainders by value -- Phase 8 (custom pipeline components and further content behaviors; both custom loader hooks
 are now demonstrated); Phase 9 (category instance limits are complete; RPC curves and
 cue variations still need authored data and audible or supported output observation); Phase 6 (image-based lighting; compiled `.fx` effects need fxc); Phase 12

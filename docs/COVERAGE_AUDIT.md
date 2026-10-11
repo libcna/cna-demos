@@ -42,7 +42,8 @@ Decisions:
 |---|---|
 | ContentReader, ContentTypeReader, ContentTypeReaderManager | demo: `content.xnb.custom_type_reader` (the members it uses come from BinaryReader or are CNA's, so its `.apis` names the types) |
 | ResourceContentManager | demo: `content.content_manager.resource_content_manager` (expected failure, CNA-DEMOS-ISSUE-012) |
-| ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute | not meaningful: .NET attributes that steer the XNA IntermediateSerializer at build time; C++ has no attributes and CNA's pipeline does not read them |
+| ContentSerializerAttribute | Meaningful build-time gap: current IntermediateReader/Writer consume this public format object. A focused IntermediateSerializer example should show named/optional fields and shared data. The earlier claim that CNA has no consumer was wrong for the inspected source. |
+| ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute | No independent wrapper-object demos. Current ContentTypeDescriptor/ContentMemberDescriptor APIs implement useful collection naming and ignored-field semantics explicitly in C++; investigate and demonstrate those with IntermediateSerializer. The nominal .NET attribute wrappers are not automatically credited, and their absence from `.apis` must not erase this real behavior gap. |
 
 ## Microsoft.Xna.Framework.Design
 
@@ -172,7 +173,7 @@ CNA `2b15506a4`; planned work is not counted as completed or runtime-validated.
 | Unload, Dispose() | `cache_and_unload` shows rereading after Unload; `unload_disposes` explicitly fails on undisposed textures (ISSUE-011). `several_managers` calls Dispose on level exit. These uses do not demonstrate the protected Dispose(bool) override hook or post-disposal errors; add those to the custom-manager example when extending it. |
 | OpenStream, ReadAsset | `open_stream_override` serves an in-memory XNB via ReadAsset, then demonstrates that Load bypasses the override (ISSUE-012). `resource_content_manager` exposes the same defect for embedded resources. The ReadAsset disposable-recording callback and uncached repeat reads remain useful extensions, not implicitly covered by one successful read. |
 | RegisterTypeReader, LooseFileContentTypeReader::Read / GetExtensions | `custom.loose_file_reader` teaches a tile-map format and checks caching. Ordinary adapter methods need no independent demos. |
-| RegisterCnbLoaderEXT | `custom.cnb_loader` shows a game-defined binary schema, process-wide registration, separate caches, mandatory chunk validation and unsupported-schema rejection. Malformed chunks and optional unknown chunks are not yet exercised; the successful call alone does not cover those failure behaviors. |
+| RegisterCnbLoaderEXT | `custom.cnb_loader` shows a game-defined binary schema, process-wide registration, separate caches, mandatory chunk validation and unsupported-schema rejection. Unknown optional/mandatory chunks and retry after repair are now exercised (8 checks pass on both renderer selections). Malformed chunk structure remains a separate gap. |
 | RegisterCnjLoader, CnjLoaderFn | `content.custom.cnj_loader` uses two named factories for the same Enemy type, parses authored fields with nlohmann-json (an existing README/CI prerequisite, now explicitly linked for content), rejects duplicate registration and a missing payload field, and shows manager-local registration surviving Unload. All 7 checks pass on both renderer selections. No CNA Internal parser is used; unknown type names and schema-envelope version rejection remain separate gaps. |
 | GetContentManifest, GetXnbReaderUsageSummary | Existing `content_manager.manifest` enumerates logical asset names, format flags and XNB reader availability. A count alone would not show these distinct fields. Pipeline bookkeeping files remain visible (ISSUE-013). |
 | RefreshContentManifest | `manifest` now adds/removes a private CNJ file between scans, loads the new file before refreshing, and confirms refresh does not discard the loaded asset. All seven new snapshot/cache checks pass on SOFTWARE and OPENGLES3. |
@@ -198,6 +199,24 @@ percentage; their presence in the unmatched-name list is not evidence of an API 
 | SetCompression, IsCnbCompressionSupported, CompressCnbChunk/DecompressCnbChunk | Build-dependent optional codecs. A compression example should query support and compare logical payloads, document the stored-size versus load-time tradeoff, and avoid claiming a tiny chunk must compress. Raw codec helper calls need no separate example if the writer/document path teaches the behavior. No compressed custom asset is currently demonstrated. |
 | CnbReadLimits / DefaultCnbReadLimits, writer SetLimits/Limits, document Limits | Pending a small bounded-data example with deliberately low limits, covering both writer refusal and reader refusal without large allocations. File size, per-chunk size and aggregate uncompressed size are different constraints; one rejected file does not demonstrate every limit. |
 | ChunkIdToString, IsWellFormedChunkId, IsCustomAssetTypeId, AssetTypeIdToString and format constants | Diagnostic/format plumbing; use within inspection or schema authoring when it clarifies the example. No separate enum/constant demos. |
+
+### Custom content pipeline and intermediate serialization
+
+The public experimental `CNA::Content::Pipeline` contracts live in the runtime content module;
+the XNA-shaped XML serialization/importer/processor adapters live in the separate build-time
+`cna_content_pipeline` target. Source review is not runtime coverage. The prepared patrol demo
+is described in HANDOFF and has not been added to the catalog yet.
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| ContentPipelineRegistry RegisterImporter/RegisterProcessor/RegisterWriter; ContentPipeline::Build | A focused importer-to-processor-to-writer example is the next Phase 8 batch. Use declared stable type identities and a real precomputation; do not substitute direct writer invocation and credit the coordinator. |
+| ContentValue Create/Get/StableType/CppType/RawData/Empty | Create/Get belong naturally in typed component boundaries. Stable/C++ identity differences matter for adapters, but RawData/Empty inspection needs no independent demo. Wrong stored type and declared-versus-returned type mismatches remain distinct diagnostic gaps. |
+| ContentProcessorParameters Set/Find/Values; ValidateParameters | The prepared patrol uses a boolean loop parameter and plans to reject the wrong variant type through ContentPipelineError. Missing/default parameters, unknown names and component versions affecting incremental identity remain unvalidated. |
+| ContentBuildResult output/schema/component identities and deterministic bytes | The planned example records selected components, compares identical Build outputs and loads the produced bytes. Build returning equal bytes does not establish the separate command-line compiler's incremental manifest/cache behavior. |
+| ContentPipelineError Stage/Component/Source/LogicalName | Contextual failures should be checked at a real importer/processor/writer boundary. One rejected processor parameter does not cover import, selection, write, graph or publish failures. |
+| Source dependency capabilities, runtime references, nested builds, deployment/additional outputs | Meaningful composite-asset work beyond a single schema. These need original authored dependencies and observable dependency/reference separation. Do not infer support from the compiler's use by cna_add_content alone. |
+| Registry freezing/concurrent builds, RunContentCompiler embedding, XNA component adapters | Separate tool-integration and concurrency scenarios; the current demo executable need not grow an imitation build system. A standalone build tool is appropriate where the real build-time module must be linked. No threading or external-plugin coverage is claimed. |
+| ContentSerializerAttribute, IntermediateReader/Writer, IntermediateSerializer, ContentTypeDescriptor | Real public APIs, not inert metadata. Current sources use format attributes and fluent field descriptors for element names, optional/null/ignored/flattened content and collection item names. A focused custom XML asset belongs in a build-time example; it requires the build-time target rather than borrowing an Internal XML parser. Shared-resource cycles, polymorphism and version/runtime-type metadata need their own scope decisions. |
 
 ### Texture2D (overload families and ownership)
 
