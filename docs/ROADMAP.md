@@ -83,12 +83,13 @@ Console demos with checks; each shows one operation family.
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg`, `LevelCount`. Remaining:
   float/HDR formats, DXT (needs compressed data), CNAEXT `DDSFromStreamEXT`, copy semantics.
 
-## Phase 5 -- render states, buffers, primitives, render targets ✅ (29 demos; small remainders below)
+## Phase 5 -- render states, buffers, primitives, render targets ✅ (30 demos; small remainders below)
 - ✅ (16) `graphics.blend_state.*` (blend functions, colour write channels, blend factor, bound
   states are immutable), `graphics.sampler_state.*` (address modes, anisotropic, MaxMipLevel, LOD
   bias), `graphics.rasterizer_state.*` (cull mode, wireframe, depth bias),
   `graphics.depth_stencil_state.*` (depth buffer, DepthRead transparency, depth function X-ray,
-  stencil mask, stencil counting). Remaining: two-sided stencil (stencil shadow volumes).
+  stencil mask, stencil counting), ✅ `graphics.depth_stencil_state.two_sided_stencil` (a shadow
+  volume counted in one draw with TwoSidedStencilMode, equal to two culled passes).
 - ✅ (5) `graphics.vertex_buffer.*` (static buffer + DrawPrimitives, DynamicVertexBuffer with
   Discard and ContentLost), `graphics.index_buffer.*` (indexed cube, 32-bit indices),
   `graphics.vertex_declaration.custom_vertex`, ✅ `graphics.vertex_buffer.get_data`,
@@ -195,7 +196,7 @@ Console demos with checks; each shows one operation family.
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 12 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 14 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -229,8 +230,10 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 - ✅ `net.network_session.simulated_conditions` (standalone: SimulatedLatency and SimulatedPacketLoss
   measured between two processes; expected failure, CNA-DEMOS-ISSUE-030: reliable packets are lost
   too).
-- Remaining net: `PrivateGamerSlots`, a refused join (NetworkSessionJoinException; System Link refusals surface
-  as SessionNotFound after a timeout); voice (manual).
+- ✅ `net.network_session.private_slots` (PrivateGamerSlots keep slots from players who just join),
+  ✅ `net.network_session.join_refused` (standalone: NetworkSessionJoinException for a game in
+  progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032 and -033).
+- Remaining net: voice (manual).
 
 ## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (17 demos)
 - ✅ `devices.*` (4): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
@@ -250,7 +253,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 - `platform.*`: platform capabilities, native window handle, renderer selection with fallback
   chain (standalone), renderer capability profiles.
 
-## Phase 14 -- bindings 🟨 (10 C API demos)
+## Phase 14 -- bindings 🟨 (13 C API demos)
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit),
@@ -263,9 +266,11 @@ C API demos as standalone C programs (one C game per process), built only with
 ✅ `c_api.graphics.basic_effect_3d` (stock declaration, vertex/index buffers, BasicEffect with the
 IEffectMatrices/IEffectLights routes), ✅ `c_api.graphics.render_target` (render target, read-back,
 the target as a sprite texture), ✅ `c_api.storage.save_game` (synchronous selector and container
-routes, write/read/delete a save, no game object).
-Remaining: game components, media player, gamepad -- one demo each where the C ABI differs from
-the C++ API in a way worth showing.
+routes, write/read/delete a save, no game object), ✅ `c_api.input.gamepad` (one button mask with
+derived bits, dead-zone modes, live polling), ✅ `c_api.game.components` (a component is a callback
+table; draw order, visibility, enabled, collection and component events), ✅
+`c_api.media.media_player` (song collection keeps its songs, queue view, transport, process-wide
+events). Remaining: more only where the C ABI differs from the C++ API in a way worth showing.
 C#/.NET demos belong with the separate `cna-dotnet` binding; decide later whether to reference or
 host them.
 

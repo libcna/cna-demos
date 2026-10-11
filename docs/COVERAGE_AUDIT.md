@@ -100,7 +100,7 @@ Decisions:
 |---|---|
 | GameStartedEventArgs, GameEndedEventArgs | shown in `net.network_session.game_flow` |
 | AvailableNetworkSession, AvailableNetworkSessionCollection, QualityOfService | demo: `net.network_session.find_and_join` (two processes) |
-| NetworkSessionJoinError, NetworkSessionJoinException | candidate: a join refused (full session, no join in progress) -- with the two-process demos |
+| NetworkSessionJoinError, NetworkSessionJoinException | demo: `net.network_session.join_refused` (a game in progress; expected failure, CNA-DEMOS-ISSUE-032). A full session cannot be shown: `Find` lists only sessions with room for the searcher's gamers |
 | GamerLeftEventArgs | demo: `net.network_session.find_and_join`, `net.network_session.host_leaves` |
 | HostChangedEventArgs, NetworkSessionEndReason, NetworkSessionEndedEventArgs | demo: `net.network_session.host_leaves` (two processes) |
 | WriteLeaderboardsEventArgs | service: CNA raises the `Write*Leaderboard`/`WriteTrueSkill` events only for leaderboard gameplay on the CNA service |

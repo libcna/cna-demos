@@ -147,6 +147,15 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - C API demos (3): `c_api.graphics.basic_effect_3d` (a lit cube from a vertex and an index
   buffer and a BasicEffect), `c_api.graphics.render_target` (render to texture, read back, drawn
   as a sprite) and `c_api.storage.save_game` (device, container, write/read/delete a save file).
+- C API demos (3 more): `c_api.input.gamepad` (one button mask with the derived stick and trigger
+  bits, the three dead-zone modes, live polling of player one), `c_api.game.components` (callback
+  table components: draw order, visibility, enabled, collection events) and
+  `c_api.media.media_player` (a song collection played as a queue: next, pause, resume, stop).
+- `graphics.depth_stencil_state.two_sided_stencil` (a shadow volume counted in one draw with
+  TwoSidedStencilMode), `net.network_session.private_slots` (PrivateGamerSlots) and
+  `net.network_session.join_refused` (standalone, two processes: NetworkSessionJoinException for a
+  game in progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032: the refusal
+  reads SessionNotFound, and ISSUE-033: the late joiner's session stays in Lobby).
 - `graphics.model.gltf_lights` (two KHR_lights_punctual lights become the PbrEffect's
   DirectionalLight0/1) and `graphics.model.clip_interpolation` (STEP, LINEAR and CUBICSPLINE
   samplers; expected failure CNA-DEMOS-ISSUE-031: CNA plays all three as LINEAR) and

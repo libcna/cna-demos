@@ -738,6 +738,43 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
+### CNA-DEMOS-ISSUE-032 -- a System Link join refused for a game in progress reads `SessionNotFound`
+
+- **Area:** net, System Link (`ENetBackend::HandleClientHello`, `NetworkSession::EndJoin`). A host
+  whose session is Playing with `AllowJoinInProgress == false` refuses a joiner by disconnecting the
+  peer without a reason; the joiner's `EndJoin` turns every failure into
+  `NetworkSessionJoinException(SessionNotFound)`. XNA reports `NetworkSessionJoinError::SessionNotJoinable`
+  for this case (the error exists for it), and a game shows "game in progress" rather than "not found".
+  The online binding (`OnlineSessionBinding`) does distinguish SessionFull and SessionNotJoinable.
+- **Demos:** `net.network_session.join_refused` (expected failure).
+- **Reproduction:** two processes; the second finds the host's System Link session in its lobby, the
+  host calls `StartGame` (AllowJoinInProgress false), the second calls `NetworkSession::Join`.
+- **Observed:** `NetworkSessionJoinException` "The requested network session could not be found.",
+  `JoinError` SessionNotFound.
+- **Expected:** `JoinError` SessionNotJoinable.
+- **Environment:** CNA 0.1.0, Linux, System Link (ENet).
+- **Status:** open; not reported upstream yet. A refusal message (or an ENet disconnect data value)
+  carrying the reason would let the joiner map it.
+
+---
+
+### CNA-DEMOS-ISSUE-033 -- a gamer who joins a System Link game in progress sees the session in Lobby
+
+- **Area:** net, System Link (`ENetBackend`). The host's `ServerWelcomeMessage` carries the roster and
+  the session properties but not the session state, and the state is broadcast only when it changes
+  (StartGame/EndGame). A joiner admitted while the host is Playing (`AllowJoinInProgress == true`)
+  therefore keeps `SessionState == Lobby` and never sees `GameStarted`, while the host is Playing.
+- **Demos:** `net.network_session.join_refused` (expected failure; its known issue is ISSUE-032, this
+  is the demo's second failing check).
+- **Reproduction:** as ISSUE-032, then the host sets `AllowJoinInProgress = true` and the second
+  process finds and joins again; it calls `NetworkSession::Update` for 0.5 s.
+- **Observed:** the joiner's `SessionState` is Lobby; the host's is Playing.
+- **Expected:** Playing (the joiner entered a game in progress).
+- **Environment:** CNA 0.1.0, Linux, System Link (ENet).
+- **Status:** open; not reported upstream yet. Adding the state to the welcome message would fix it.
+
+---
+
 ## Resolved
 
 (none yet)
