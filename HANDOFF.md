@@ -224,7 +224,7 @@ has the exact results. Log: `/tmp/cna-demos-409-validation.log`; named report ar
 absent entries, unexpected failures or unexpected passes. Compared with 408, intermediate_shared_resources
 is new and passes; every previously reported status stays unchanged. Build, CTest and script logs
 are also archived as `checkpoint-409-{build,ctest,validation}.log`. Current generated coverage is
-290/329 XNA types and 1316/2326 named members; these are metadata counts, not comprehensive
+290/329 XNA types and 1318/2326 named members; these are metadata counts, not comprehensive
 semantic coverage. CNA remains clean at `2b15506a48e1a6202c985823131daf5856826f71`, newer than
 CI's `10a4ef1cb4cd832f761536d77588000104947f8d`.
 
@@ -319,16 +319,31 @@ Next useful work:
    Thread isolation, canonical exception type/parameter diagnostics and invalid release guards
    remain the next useful C ABI work. No new CNA issue was found.
 
-**The 409 checkpoint is complete and no validation process remains running.** Continue with
-remaining XML format/adapter/dependency behavior or another focused member gap in the audit.
-The runtime XNB reader audit is now explicit: intermediate XML sharing does not cover
-ContentReader::ReadSharedResource's binary fixup protocol. The next small prepared extension is
-`/tmp/cna-xnb-reader-observations.cpp` for existing `content.xnb.custom_type_reader` (no new ID):
-count Read invocations to prove cache reuse, and check AssetName/owning ContentManager. It is
-not applied, built or run yet. Review/apply next and verify the logical-name expectation against
-actual runtime output. The factory stays capture-free with process-lifetime observation storage.
-Do not reapply the old /tmp XML or C drafts: their tested versions are already committed in
-standalone/. Keep the named 409 archives as a fixed baseline for the next batch.
+**New semantic batch after the 409 checkpoint:** existing demo IDs were extended, not added.
+- `content.xnb.custom_type_reader`: 5 checks pass on SOFTWARE/OPENGLES3, including actual Read
+  invocation counts (first load once, second cache hit) and the logical AssetName/owner pointer.
+  Evidence: `/tmp/cna-xnb-reader-{SOFTWARE,OPENGLES3}.{json,log}`. The prepared /tmp draft is
+  now applied; do not copy it again. Scene rendering was unchanged; no new XNB screenshot claim.
+- `content.custom.intermediate_serializer`: 9 child checks pass under both renderer selections.
+  Absent Optional preserves a nonempty constructor default, a present value overrides it,
+  explicit Null clears it, and missing required HitPoints is rejected. Evidence:
+  `/tmp/cna-xml-optional-{SOFTWARE,OPENGLES3}.{json,log}`. This remains a build-time console tool.
+- `c_api.content.content_manager`: 31 child checks with screenshots (29 without) pass on both
+  renderers. Destroying the live font's retained atlas returns INVALID_STATE; subsequent manager
+  Unload/destruction and sprite/text drawing still work. SOFTWARE screenshot inspected; both
+  resulting images are pixel-identical to their pre-guard baselines. Evidence:
+  `/tmp/cna-c-atlas-guard-{SOFTWARE,OPENGLES3}.{json,log,png}`.
+Build, metadata (409/0), all three targeted CTests and both catalog tests pass. No new CNA issue
+was found. Source/audit/roadmap are updated; the full named checkpoint-409 archives still describe
+revision 7a64310 before these extensions.
+
+**Full semantic 409 checkpoint starting:** tools/validate.sh under private Xvfb, log
+`/tmp/cna-demos-409-semantic-validation.log`. Do not rebuild during the run. Expected totals stay
+unchanged; verify every ID/status and the 20/21 SOFTWARE/OPENGLES3 failed-assertion multisets
+against checkpoint-409 before archiving as semantic-409. Then continue with remaining XML
+format/adapter/dependency behavior or the member gaps in COVERAGE_AUDIT.md. Runtime XNB graph
+fixups are separate from IntermediateSerializer sharing; neither the new context checks nor
+existing stock loaders establish ContentReader::ReadSharedResource coverage.
 
 Effects constraints verified in the current sources/build: all four configured
 `CNA_*_COMPILED_EFFECTS` switches are OFF and `CNA_FXC_EXECUTABLE` is empty. PbrEffect's public

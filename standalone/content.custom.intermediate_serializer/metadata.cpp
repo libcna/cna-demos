@@ -5,7 +5,8 @@ CNA_DEMOS_STANDALONE({
     .id = "content.custom.intermediate_serializer",
     .title = "Describe an intermediate XML asset",
     .description = "Uses public content descriptors and ContentSerializerAttribute to serialize a game-owned "
-                   "encounter with renamed, optional, collection and ignored fields, then checks deserialization.",
+                   "encounter with renamed, optional, collection and ignored fields. Distinguishes absent, "
+                   "present and explicit-null hints and rejects missing required or injected ignored fields.",
     .apis = {"ContentSerializerAttribute::ContentSerializerAttribute", "ContentSerializerAttribute::ElementName",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize",

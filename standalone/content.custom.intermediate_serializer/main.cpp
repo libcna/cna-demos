@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 #include "Microsoft/Xna/Framework/Content/ContentSerializerAttribute.hpp"
@@ -33,7 +34,7 @@ namespace
         }
         std::string name;
         std::int32_t health = 0;
-        std::optional<std::string> hint;
+        std::optional<std::string> hint = "Look for the key";
         std::vector<std::string> loot;
         std::int32_t runtimeScore = 0;
 
@@ -63,6 +64,7 @@ int main()
         auto authored = std::make_shared<Encounter>();
         authored->name = "Gatekeeper";
         authored->health = 90;
+        authored->hint.reset(); // omitted Optional restores the reader constructor default
         authored->loot = {"Coin", "Key"};
         authored->runtimeScore = 1234; // runtime-only state must never enter the source asset
 
@@ -84,26 +86,54 @@ int main()
         const auto loaded = IntermediateSerializer::Deserialize<Encounter>(*reader, "");
         check(loaded && loaded->name == "Gatekeeper" && loaded->health == 90 && loaded->loot == authored->loot,
               "the authored encounter values round trip through intermediate XML");
-        check(loaded && !loaded->hint && loaded->runtimeScore == 0,
-              "omitted fields keep their constructor defaults instead of copying runtime state");
+        check(loaded && loaded->hint == "Look for the key" && loaded->runtimeScore == 0,
+              "absent Optional keeps its constructor default and ignored runtime state is not copied");
+
+        // Absence means keep the default; an explicit Null means clear it. A present value wins.
+        const auto lootStart = xml.find("<Loot>");
+        if (lootStart == std::string::npos) throw std::runtime_error("Serialized XML has no Loot element");
+        const std::pair<std::string, std::optional<std::string>> hintCases[] = {
+            {"<Hint>Watch the doorway</Hint>", std::string("Watch the doorway")},
+            {"<Hint Null=\"true\"/>", std::nullopt}};
+        for (const auto& [element, expected] : hintCases)
+        {
+            std::string changed = xml;
+            changed.insert(lootStart, element);
+            std::unique_ptr<System::Xml::XmlReader> hintReader(System::Xml::XmlReader::CreateFromString(changed));
+            const auto withHint = IntermediateSerializer::Deserialize<Encounter>(*hintReader, "");
+            std::cout << "Authored override: " << element << '\n';
+            check(withHint && withHint->hint == expected,
+                  expected ? "a present optional hint overrides the default" : "explicit Null clears the default hint");
+        }
 
         // Ignored means neither written nor accepted, not a hidden route to inject runtime state.
         std::string invalid = xml;
         const auto end = invalid.find("</Asset>");
         if (end == std::string::npos) throw std::runtime_error("Serialized intermediate XML has no Asset closing tag");
         invalid.insert(end, "<RuntimeScore>999</RuntimeScore>");
-        bool rejected = false;
-        try
+        std::string missing = xml;
+        const std::string healthElement = "<HitPoints>90</HitPoints>";
+        const auto healthStart = missing.find(healthElement);
+        if (healthStart == std::string::npos) throw std::runtime_error("Serialized XML has no HitPoints element");
+        missing.erase(healthStart, healthElement.size());
+        const std::pair<std::string, std::string> rejectedInputs[] = {
+            {invalid, "an ignored field in authored XML is rejected"},
+            {missing, "a missing required HitPoints field is rejected despite its constructor default"}};
+        for (const auto& [input, expectation] : rejectedInputs)
         {
-            std::unique_ptr<System::Xml::XmlReader> badReader(System::Xml::XmlReader::CreateFromString(invalid));
-            (void)IntermediateSerializer::Deserialize<Encounter>(*badReader, "");
+            bool rejected = false;
+            try
+            {
+                std::unique_ptr<System::Xml::XmlReader> badReader(System::Xml::XmlReader::CreateFromString(input));
+                (void)IntermediateSerializer::Deserialize<Encounter>(*badReader, "");
+            }
+            catch (const InvalidContentException& error)
+            {
+                rejected = true;
+                std::cout << "InvalidContentException: " << error.what() << '\n';
+            }
+            check(rejected, expectation);
         }
-        catch (const InvalidContentException& error)
-        {
-            rejected = true;
-            std::cout << "Ignored field rejected: " << error.what() << '\n';
-        }
-        check(rejected, "an ignored field in authored XML is rejected with InvalidContentException");
         return passed ? 0 : 1;
     }
     catch (const std::exception& error)

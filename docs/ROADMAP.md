@@ -163,7 +163,7 @@ a check that all authored colors remain visible and that a blank texture row can
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
   manifest, custom loose-file reader, the same SpriteFont/SoundEffect/Curve as CNB and XNB.
   ✅ `content.xnb.custom_type_reader` (ContentTypeReader<T> + AddTypeCreator for the game's own
-  type), ✅ `content.content_manager.resource_content_manager` (content embedded as resources;
+  type; now checks actual reader invocation counts, cache reuse and reader context), ✅ `content.content_manager.resource_content_manager` (content embedded as resources;
   ISSUE-012), ✅ `content.cnj.sprite_font` (a bitmap font authored as CNJ: atlas, glyph rectangles,
   cropping, kerning), ✅ `content.content_project.xna_content_project` (an XNA `.contentproj` built
   as it is, `CONTENT_PROJECT`). A CNJ texture repeats the texture processor demos (the same
@@ -177,7 +177,8 @@ a check that all authored colors remain visible and that a blank texture row can
   precomputation, deterministic CNB output, runtime loading and typed parameter diagnostics.
   ✅ Existing cache/Unload demo now shows root switching after Unload and exposes CNA's missing
   loaded-root guard (ISSUE-039). ✅ `content.custom.intermediate_serializer`: a separate build-time
-  tool with named/optional/ignored fields, collection item names, XML round trip and rejection.
+  tool with named/optional/ignored fields, collection item names, absent/present/null distinctions,
+  XML round trip and rejection of missing required or injected ignored fields.
   ✅ `content.custom.intermediate_shared_resources`: shared aliases, equal-but-distinct objects,
   inline copies and mutation after forward reference fixups.
   Remaining: deeper serializer behaviors, custom XNA adapters and the member/behavior gaps
@@ -294,7 +295,7 @@ C API demos as standalone C programs (one C game per process), built only with
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit),
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query preservation, exact-sized count/copy, callback errors),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
-✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, release order),
+✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard and visible text),
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),
 ✅ `c_api.audio.sound_effect` (PCM16 effect, instance state),
 ✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse),

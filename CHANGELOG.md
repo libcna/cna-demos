@@ -22,6 +22,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing custom XNB reader now counts actual Read calls to establish cache reuse and verifies
+  ContentReader's logical asset name and owning ContentManager.
+- Intermediate XML format example now distinguishes absent/present/explicit-null optional fields
+  and checks that a missing required field is rejected even when its constructor has a default.
+- C content example rejects destroying an atlas retained by a live font and checks that text
+  still renders after the refused release and manager destruction.
 - Shared intermediate XML resources: forward fixups, identity-preserving aliases, equal but
   independent loot tables and inline copies, with mutation showing the actual ownership graph.
 - Existing C error demo verifies failed diagnostic queries preserve the original error and

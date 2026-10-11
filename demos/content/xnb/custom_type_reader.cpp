@@ -34,6 +34,15 @@ namespace
         int gems = 0;
     };
 
+    // Process-wide registration uses a capture-free factory; observations also outlive readers.
+    struct ReaderObservation
+    {
+        int calls = 0;
+        std::string assetName;
+        ContentManager* owner = nullptr;
+    };
+    ReaderObservation observed;
+
     // In XNA a ContentTypeWriter in the content pipeline wrote the .xnb and named this reader in
     // the file's type-reader table; this reads the fields back in the same order. (Here the
     // .xnb comes from tools/generate_assets.py, which writes exactly those bytes.)
@@ -48,6 +57,9 @@ namespace
     protected:
         Level Read(ContentReader& input, std::optional<Level>) override
         {
+            ++observed.calls;
+            observed.assetName = input.getAssetNameProperty();
+            observed.owner = input.getContentManagerProperty();
             Level level;
             level.name = input.ReadString();
             const int rows = input.ReadInt32();
@@ -74,7 +86,11 @@ namespace
             ContentTypeReaderManager::AddTypeCreator("CnaDemos.LevelReader",
                                                      [] { return std::make_unique<LevelReader>(); });
 
+            const int readsBefore = observed.calls;
             level_ = getContentProperty().Load<Level>("levels/castle");
+            ctx.Check(observed.calls == readsBefore + 1, "the first Load invokes the custom reader once");
+            ctx.Check(observed.assetName == "levels/castle" && observed.owner == &getContentProperty(),
+                      "ContentReader carries the logical asset name and owning manager");
             ctx.Print("level \"{}\": {} rows, {} gems", level_.name, level_.rows.size(), level_.gems);
             ctx.Check(level_.name == "Castle" && level_.rows.size() == 5, "the reader rebuilt the level from the .xnb");
             int counted = 0;
@@ -86,7 +102,8 @@ namespace
 
             // Loaded once, cached like any other asset.
             const Level again = getContentProperty().Load<Level>("levels/castle");
-            ctx.Check(again.rows == level_.rows, "a second Load returns the cached level");
+            ctx.Check(again.rows == level_.rows && observed.calls == readsBefore + 1,
+                      "a second Load returns the cached level without invoking its reader again");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -122,7 +139,8 @@ CNA_DEMOS_GAME(CustomTypeReaderDemo, {
                    "the file's type-reader table, and loaded with ContentManager::Load<Level>.",
     .apis = {"ContentTypeReader::Read", "ContentTypeReader::ContentTypeReader",
              "ContentTypeReaderManager::AddTypeCreator", "ContentReader::ReadString", "ContentReader::ReadInt32",
-             "ContentManager::Load", "ContentReader", "ContentTypeReaderManager"},
+             "ContentManager::Load", "ContentReader::AssetName", "ContentReader::ContentManager",
+             "ContentReader", "ContentTypeReaderManager"},
     .tags = {"content", "xnb", "custom", "reader", "level"},
     .frames = 3,
     .deterministic = true,

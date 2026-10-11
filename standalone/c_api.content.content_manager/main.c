@@ -83,6 +83,14 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
         cna_demo_check(state->demo, state->text_size.x > 100.0f && state->text_size.y > 5.0f,
                        "the text has a size in the font");
     }
+    /* A font retains its atlas: an early release must be refused, leaving both usable. */
+    if (state->font != CNA_INVALID_HANDLE && state->font_atlas != CNA_INVALID_HANDLE) {
+        result = cna_texture2d_destroy(state->font_atlas);
+        cna_demo_check(state->demo, result == CNA_RESULT_INVALID_STATE,
+                      "the live font prevents destroying its retained atlas");
+        if (result == CNA_RESULT_SUCCESS) state->font_atlas = CNA_INVALID_HANDLE;
+    }
+
     /* Unlike cached C++ objects, these independently owned C handles survive the manager.
        Check actual pixels and font measurement after each lifetime boundary, then draw them. */
     for (int stage = 0; stage < 2; ++stage) {
@@ -202,6 +210,16 @@ static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* con
                 cna_demo_check(state->demo, count == 800U * 480U && white.r == 255U && white.g == 255U &&
                               white.b == 255U && purple.r == 72U && purple.g == 61U && purple.b == 139U,
                               "the loaded checker remains visible in the sprite/text batch");
+                /* The text rectangle is above the checker and the clear color is dark. */
+                unsigned bright = 0U;
+                for (int y = 60; y < 100; ++y) {
+                    for (int x = 112; x < 688; ++x) {
+                        const CNA_Color pixel = pixels[y * 800 + x];
+                        if (pixel.r > 240U && pixel.g > 240U && pixel.b > 240U) ++bright;
+                    }
+                }
+                cna_demo_check(state->demo, bright > 100U,
+                              "the retained font atlas still draws visible text after the refused release");
             }
             cna_demo_capture(state->demo, graphics_device);
         }
