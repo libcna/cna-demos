@@ -67,7 +67,12 @@ namespace
             {
                 Context().Print("XNB reader {}: {} file(s), {}", usage.readerName, usage.fileCount,
                                 usage.isRegistered ? "available" : "NOT available");
-                Context().Check(usage.isRegistered, "CNA has the reader " + usage.readerName);
+                // XNA's own readers must all be there; a game's own reader (levels/castle.xnb names
+                // CnaDemos.LevelReader) is available once the game registers it.
+                if (usage.readerName.starts_with("Microsoft.Xna.Framework."))
+                {
+                    Context().Check(usage.isRegistered, "CNA has the reader " + usage.readerName);
+                }
             }
         }
 

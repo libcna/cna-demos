@@ -139,6 +139,17 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   DynamicIndexBuffer with Discard, Texture3D sub-box data, glTF node-animation clips
   (ModelAnimationsEXT, ApplyClipToBonesEXT) on a generated turntable model, and the same font, sound
   and curve compiled to CNB and to XNB.
+- `graphics.effect.effect_interfaces`: IEffectMatrices, IEffectLights and IEffectFog on five stock
+  effects; scene settings applied through the interfaces alone.
+- Coverage audit, first pass: demos that already show an enumeration or type now name it in
+  `.apis` (Keys, KeyState, EffectParameterClass/Type, DisplayOrientation, GamerZone, GameDefaults'
+  enumerations, MicrophoneState, AvatarBodyType).
+- `content.content_manager.manifest` requires XNA's own XNB readers only (a game's own reader is
+  available once the game registers it).
+- Content, audio and media demos (4): a custom ContentTypeReader<T> reading the game's own type
+  from an .xnb (`tools/generate_assets.py` writes it), a ResourceContentManager over content
+  embedded in the program (expected failure, ISSUE-012), a SoundEffect loop region, VideoPlayer
+  Pause/Resume/IsLooped/Volume/IsMuted.
 - Model demos (3): glTF morph targets driven by the file's weights animation, the cameras of a
   glTF scene in split screen, a glTF with an embedded texture. CNA-DEMOS-ISSUE-022 (a compiled glTF
   refers to an embedded texture file the build never writes) and ISSUE-023 (compiled models lose

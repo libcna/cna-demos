@@ -62,6 +62,7 @@ CNA_DEMOS_CONSOLE(StateValues, {
                    "GetPressedKeys, compares them, and counts key presses in a recorded sequence of states.",
     .apis = {"KeyboardState::KeyboardState", "KeyboardState::IsKeyDown", "KeyboardState::IsKeyUp",
              "KeyboardState::Item", "KeyboardState::GetPressedKeys", "KeyboardState::Equals",
-             "KeyboardState::op_Equality", "KeyboardState::op_Inequality"},
+             "KeyboardState::op_Equality", "KeyboardState::op_Inequality",
+             "KeyState", "Keys"},
     .tags = {"keys", "replay", "testing", "value"},
 })

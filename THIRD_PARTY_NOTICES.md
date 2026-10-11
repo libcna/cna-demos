@@ -43,6 +43,7 @@ sounds, fonts or models are included.
 | `content/models/turntable.gltf` | a display stand: base, spinning platform, crate and lid, with the node clips "Spin" and "Open"; written by `tools/gltf_models.py` | generated, original |
 | `content/models/bending_strip.gltf` | strip skinned to two joints with a "Bend" animation clip; written by `tools/gltf_models.py` | generated, original |
 | `assets/xact/demo.xgs`, `tones.xwb`, `tones.xsb` | XACT settings, a wave bank of four sine tones and a sound bank with four simple cues; written by `tools/xact_files.py`, whose byte layout follows CNA's own Ms-PL example generator (`cna/modules/audio/examples/demo_xact/src/XactFileGen.hpp`) | generated, original data |
+| `assets/levels/castle.xnb` | an XNA 4.0 .xnb holding the custom-reader demo's level (type reader `CnaDemos.LevelReader`); written by `tools/generate_assets.py` | generated, original |
 | `assets/levels/level1.level` | five-line text tile map for the custom-reader demo | written for cna-demos, original |
 | `content/fonts/pixel_font.png` | pixel font (printable ASCII, 5x9 grid at 2x) as an XNA font-texture sheet; glyph shapes in `tools/pixel_font.py` | drawn for cna-demos, original |
 | `content/textures/keyed_ship.png` | 64x64 ship on a magenta background (colour-key source) | generated, original |

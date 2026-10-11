@@ -201,6 +201,49 @@ def melody(relative: str, notes, note_seconds: float, rate: int = 22050, volume:
     print(f"wrote {path.relative_to(ROOT.parent)} ({len(notes)} notes, {len(notes) * note_seconds} s)")
 
 
+CASTLE_ROWS = [
+    "##########",
+    "#G...#..G#",
+    "#.##.#.#.#",
+    "#G.....#G#",
+    "##########",
+]
+
+
+def custom_level_xnb(relative: str) -> None:
+    """An XNA 4.0 .xnb file holding the game's own type, the way a custom ContentTypeWriter would
+    write it: the type-reader table names "CnaDemos.LevelReader, CnaDemos" (version 0), and the
+    root object (reader 1) is a name, a row count, the rows and the number of gems. Strings are
+    .NET BinaryWriter strings (7-bit encoded length + UTF-8)."""
+    def seven_bit(value: int) -> bytes:
+        out = bytearray()
+        while True:
+            byte = value & 0x7F
+            value >>= 7
+            out.append(byte | (0x80 if value else 0))
+            if not value:
+                return bytes(out)
+
+    def string(text: str) -> bytes:
+        data = text.encode("utf-8")
+        return seven_bit(len(data)) + data
+
+    body = bytearray()
+    body += seven_bit(1) + string("CnaDemos.LevelReader, CnaDemos") + struct.pack("<i", 0)  # readers
+    body += seven_bit(0)                       # shared resources
+    body += seven_bit(1)                       # root object: reader 1
+    body += string("Castle") + struct.pack("<i", len(CASTLE_ROWS))
+    for row in CASTLE_ROWS:
+        body += string(row)
+    body += struct.pack("<i", sum(row.count("G") for row in CASTLE_ROWS))
+    header = b"XNBw" + bytes([5, 0])           # Windows, XNA 4.0, not compressed, Reach
+    data = header + struct.pack("<I", len(header) + 4 + len(body)) + bytes(body)
+    path = ROOT / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+    print(f"wrote assets/{relative} ({len(data)} bytes)")
+
+
 def main() -> None:
     save_png(checker(64, 8, (255, 255, 255, 255), (72, 61, 139, 255)), "textures/checker.png")
     save_png(arrow(64), "textures/arrow.png")
@@ -224,6 +267,7 @@ def main() -> None:
     tone("sounds/tone_660.wav", 660.0, 0.25)
     melody("music/rising.wav", [60, 64, 67, 72, 64, 67, 72, 76], 0.25)   # C major, upwards
     melody("music/falling.wav", [81, 76, 72, 69, 76, 72, 69, 64], 0.25)  # A minor, downwards
+    custom_level_xnb("levels/castle.xnb")
 
 
 if __name__ == "__main__":

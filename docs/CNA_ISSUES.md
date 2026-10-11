@@ -331,8 +331,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `ReadAsset<T>` goes through the virtual `OpenStream`, and `Load<T>` (not virtual in C++) never
   calls it. `ResourceContentManager` overrides only `OpenStream`, so its `Load<T>` does not read
   resources either.
-- **Demo:** `content.content_manager.open_stream_override` (knownIssue; expected failure): a
+- **Demos:** `content.content_manager.open_stream_override` (knownIssue; expected failure): a
   derived manager serving an XNB texture from memory; `ReadAsset` works, `Load` does not.
+  `content.content_manager.resource_content_manager` (knownIssue; expected failure): a
+  `ResourceContentManager` over a resource family holding a Curve `.xnb`; `Load<Curve>("Bounce")`
+  throws "Cannot open file: Bounce" -- it looks for a file, not the resource.
 - **Reproduction:**
   ```cpp
   class PackContentManager : public ContentManager {
