@@ -97,28 +97,29 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **438-outputs checkpoint passed**
-through cna-demos revision `e6327d2`; tools/validate.sh exited 0 under private Xvfb
-(/tmp/cna-demos-438-outputs-validation.log). ORIGINAL checkpoint-438 comparisons require review
-only for the route adapter PASS -> ISSUE-047 failure. All older failed assertions remain
-(30/31 -> 31/32); other statuses/known issues/JSON check counts are unchanged. Child stdout
-retains all old checks: nested_builds 11 -> 15 passing; route adapter 7 -> 13 (12 pass/one failure).
-Both exact reviews and original stdout/stderr are archived. Stderr adds only four expected
-DEBUG asset-loading messages per renderer; no older line was removed. The 25 selected binaries
-in checkpoint-438-outputs-binaries.json match hashes taken during runtime. No runtime rebuild.
-External CNA C API work continues; no atomic dependency source snapshot is claimed.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **439 checkpoint passed**
+through cna-demos revision `d6afc7b`; tools/validate.sh completed both smoke runs and coverage
+regeneration (/tmp/cna-demos-439-validation.log). ORIGINAL checkpoint-438-outputs comparisons
+retain all older statuses/known issues and exact failed assertions (31/32). The unchanged window
+title demo performs one check per Update: OPENGLES3 recorded 11 rather than 10 passing checks;
+all other JSON counts are unchanged. All fifteen older nested checks remain among twenty passing
+checks; the new compiler passes ten child checks. Both original stdout/stderr streams and exact
+reviews are archived. Stderr adds four expected DEBUG asset loads and two intentional rejected-import
+diagnostic lines per renderer. GL retains 84 X protocol diagnostics with changed serial numbers.
+All 26 selected binary hashes match the runtime capture; no runtime rebuild or atomic dependency
+source snapshot is claimed. The first failed Guide timing attempt is archived separately.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets --validate | 438 demos, 0 problems |
+| Metadata/assets --validate | 439 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 426 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 387 passed, 23 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 408 passed, 24 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | Exactly one new output-directory ISSUE-047 failure; all older failures retained |
-| stderr | Four added DEBUG load messages per renderer; all earlier diagnostics retained |
-| Screenshots | No new GPU/visual claim for the content-output batch |
+| CTest | 427 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 388 passed, 23 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 409 passed, 24 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | All 31/32 older failed assertions retained |
+| stderr | Expected compiler rejection and sibling loads; original streams archived |
+| Screenshots | Corrected Guide notification captured and inspected on both renderers |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -233,20 +234,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** full 439 at 32c9e70 stopped in CTest on the old Guide notification
-observer. Original reports/checkpoint-439-first-{build,ctest,validation}.log and captured binary
-hashes are retained. The timing failure was reproduced unchanged and corrected as detailed below;
-six focused runs/captures, all 26 relevant CTests and five consecutive notification CTests now pass.
-Commit the correction and retry complete tools/validate.sh; the first failed attempt is not a
-checkpoint. Update /tmp/cna-archive-439.py's sourceCommit and recapture its 26 binary hashes after
-the retry build. Compare ORIGINAL checkpoint-438-outputs, preserving all old results/failures.
-New incremental_compiler is PASS with ten child checks, and nested_builds remains PASS with
-20 child checks (all prior fifteen retained). Other statuses/known issues/counts and all 31/32
-failed assertions must stay unchanged. Expect SOFTWARE 388/23/25/3, OPENGLES3 409/24/3/3,
-452 enabled CTests and 439/0 metadata. Archive original streams/reviews and 26 selected binaries
-(previous 25 plus cna-demo-content-custom-incremental_compiler). Runtime columns still use the
-preceding complete checkpoint until full 439. Do not mutate source/assets or rebuild during it.
-Then deepen the remaining compiler fingerprint/ownership behavior or XML-to-XNB integration.
+**Immediate next action:** complete 439 at d6afc7b is archived and reviewed. Apply the prepared
+compiler integrity extension below, build and run both focused renderer selections, then targeted
+CTest and a full 439-integrity checkpoint against ORIGINAL checkpoint-439. The old failed Guide
+attempt remains preserved; its corrected observer passed the full retry. All 452 enabled CTests
+passed (164.62 s); SOFTWARE 388/23/25/3 and OPENGLES3 409/24/3/3. No CNA issue was added for
+the demo's former timing assumption. Next continue XML-to-XNB integration or remaining actual
+compiler publication behavior; do not repeat basic cache or sibling recognition coverage.
 
 439 targeted evidence:
 - nested_builds passes 20 child checks and incremental_compiler ten, under both fresh displayless
@@ -464,7 +458,7 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
   or genuine-XNA execution claim. External CNA observed through d751cf46a with C API changes;
   no CNA edit or atomic source snapshot claim.
 
-439 notification investigation (full retry pending):
+439 notification investigation (full retry complete):
 - Unchanged fresh runs /tmp/cna-439-notification-original-{SOFTWARE,OPENGLES3}-{1,2}.{json,log}
   reproduce SOFTWARE failure once (7.024 s, both measured regions zero) and one pass (5.841 s,
   9882 top-right pixels); GL passes twice (~3.25 s, 9879 pixels). Four checks each.
@@ -483,7 +477,7 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
   /tmp/cna-439-notification-targeted-ctest.log. Five consecutive notification CTests pass
   in /tmp/cna-439-notification-repeat-ctest.log (13.35 s); commit and retry the complete checkpoint.
 
-Next integrity draft during immutable full 439 (NOT applied/built/run):
+Next integrity draft after complete full 439 (NOT applied/built/run):
 /tmp/cna-compiler-integrity.cpp and /tmp/cna-compiler-integrity-metadata.cpp extend the existing
 incremental_compiler ID from ten to fifteen proposed checks. The factory retains the latest
 registry only within main to check IsFrozen and specific late-registration refusal. Writer
@@ -500,18 +494,29 @@ coherent extension to the new compiler tool rather than new IDs per cache variat
 multi-output/deployment publication failures and concurrent publishers remain distinct larger
 workstreams. Direct registry freezing/mutation rejection is public behavior still unexecuted.
 XML aliases remain ISSUE-046; XML-to-XNB writer integration and direct custom raw/existing-instance
-serialization are still gaps. Do not repeat the now-tested sibling recognition or basic cache route.
+serialization are still gaps. Source-only integration notes: public XnaXmlSourceContentPipeline.hpp
+requires a shared XNA Serialization::Compiler::ContentCompiler with the game's serializer and
+AddTypeWriter<TWriter> configured before RegisterXnaXmlSourceContentPipeline. That registration
+includes pass-through processors and RegisterXnaXnbOutput; it deliberately has no arbitrary-object
+CNB route. The required container options can come from public ContentCompilerOptions::xnbContainer
+in a RunContentCompiler factory despite their internally named C++ type. A future original profile
+XML -> real custom writer -> XNB -> public runtime reader/ContentManager scenario would close the
+integration gap; no such runtime execution is claimed yet. Do not repeat the now-tested sibling recognition or basic cache route.
 
-**Latest complete checkpoint (2026-10-12):** 438-outputs at e6327d2, tools/validate.sh exit 0.
-SOFTWARE 387/23/25/3, OPENGLES3 408/24/3/3; 451 enabled CTests, 438/0 metadata.
-Archives reports/checkpoint-438-outputs-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}, both -review.json,
-checkpoint-438-outputs-{build,ctest,validation}.log and -binaries.json (25 selected artifacts).
-Exact original reviews retain every old status/count/failure except the route adapter's newly
-exposed ISSUE-047. All prior child checks retained; raw failures 31/32. Only four expected DEBUG
-load messages are added to each stderr stream; all older diagnostics retained, including 84 GL
-X protocol lines. Binary hashes match the runtime capture. Coverage remains 293/329 types,
-1354/2326 named members, 158/3210 C routes; runtime columns complete.
-Use ORIGINAL checkpoint-438-outputs next. No CLI-publication/incremental-cache execution yet.
+**Latest complete checkpoint (2026-10-12):** 439 at d6afc7b, full tools/validate.sh completed.
+SOFTWARE 388/23/25/3, OPENGLES3 409/24/3/3; 452 enabled CTests, 439/0 metadata.
+Archives reports/checkpoint-439-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}, both -review.json,
+checkpoint-439-{build,ctest,validation}.log and -binaries.json (26 selected artifacts).
+Exact original reviews retain every old status/known issue/failed assertion (31/32); OPENGLES3
+window.title has one extra passing Update check, all other JSON counts unchanged. Nested child
+checks 15 -> 20, new incremental compiler ten passing. Stderr adds four sibling DEBUG loads and
+two intentional invalid-import diagnostic lines; GL's 84 X protocol lines have changed serials.
+Binary hashes match runtime capture. Coverage 293/329 types, 1354/2326 named members,
+158/3210 C routes; both runtime columns complete. Use ORIGINAL checkpoint-439 next.
+
+Historical 438-outputs checkpoint at e6327d2 remains archived with its original reviews, binary
+hashes and logs: SOFTWARE 387/23/25/3, OPENGLES3 408/24/3/3; 451 enabled CTests. It introduced
+ISSUE-047 and extended nested runtime publication; 31/32 raw failed assertions.
 
 Historical 438 checkpoint:
 **Completed checkpoint (2026-10-12):** 438 at 973a63a, full tools/validate.sh retry exit 0.
