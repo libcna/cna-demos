@@ -397,7 +397,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `LeaderboardEntry::RankingEXT` -- gamer_services.leaderboard.paging
 - `LooseFileContentTypeReader::GetExtensions` -- content.content_manager.asset_precedence, content.custom.loose_file_reader
 - `LooseFileContentTypeReader::Read` -- content.content_manager.asset_precedence, content.custom.loose_file_reader
-- `Microsoft::Xna::Framework::Content::ContentManager::RegisterCnbLoaderEXT` -- content.content_manager.asset_precedence
+- `Microsoft::Xna::Framework::Content::ContentManager::RegisterCnbLoaderEXT` -- content.content_manager.asset_precedence, content.custom.nested_builds
 - `Microsoft::Xna::Framework::Content::ContentManager::RegisterTypeReader` -- content.content_manager.asset_precedence
 - `Microsoft::Xna::Framework::Content::ContentTypeReaderBase::SupportsVersion` -- content.xnb.reader_versions
 - `Microsoft::Xna::Framework::Content::ContentTypeReaderManager::CreateReader` -- content.xnb.reader_versions
@@ -407,6 +407,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentImporterAttribute::DefaultProcessor` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentImporterContext::AddDependency` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessor::Process` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::AddDependency` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::AddOutputFile` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::BuildAndLoadAsset` -- content.custom.nested_builds
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::BuildAsset` -- content.custom.nested_builds
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::Convert` -- content.custom.xna_pipeline_components

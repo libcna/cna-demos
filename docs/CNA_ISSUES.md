@@ -1191,3 +1191,46 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Scope:** a confirmed transient generator/build defect, not a demo defect or a new expected
   runtime-failure marker. This entry does not claim that every possible generated-name collision
   is covered or that the evolving C API has comprehensive behavioral coverage.
+
+
+### CNA-DEMOS-ISSUE-047 -- AddOutputFile refuses a generated file in the configured output directory
+
+- **Area:** XNA pipeline adapter `ContentProcessorContext::AddOutputFile`, forwarded by
+  `XnaBridgeProcessorContext` to canonical `ContentProcessorContext::AddDeploymentFile`.
+- **Demo:** `content.custom.xna_pipeline_components` (knownIssue; expected failure).
+- **Expected (public CNA contract):** the XNA-shaped header describes related files written by
+  the processor beside the compiled asset, to be deployed and cleaned with it. The public build
+  environment separately supplies outputDirectory. An existing processor-written file inside
+  that configured output directory should be recordable when source/output directories differ.
+- **Reproduction:** a real registered route processor reads its label with AddDependency, writes
+  `output/patrol.bounds.txt`, closes the file successfully, then calls AddOutputFile with its
+  absolute path. The source root is the separate sibling `source/` directory; both directories
+  belong to this demo's private temporary tree. The real ContentPipeline::Build refuses the call
+  in the Process stage with the correct processor name:
+  `deployment source '.../output/patrol.bounds.txt' is outside the primary source root and was
+  not explicitly resolved through a named external source capability.`
+- **Cause:** the adapter maps the file to a basename deployment destination, but the canonical
+  deployment path accepts only source-contained files or exact dependencies previously resolved
+  through a named external source capability. It does not recognize the configured output root
+  for generated processor files. This entry requests no relaxation for arbitrary outside paths.
+- **Controls:** the report's actual bytes contain the expected label and computed bounds before
+  registration fails. A separately identified source-contained output layout succeeds and records
+  both the processor label dependency and generated deployment file. An explicit following build
+  consumes a changed label while retaining identical compiled bounds. This control is not a
+  correction of the failed separate-output case and does not prove CLI deployment/cleanup or
+  incremental caching. All temporary files are explicitly removed by the demo.
+- **Initial evidence:** `/tmp/cna-438-outputs-xna_pipeline_components-{SOFTWARE,OPENGLES3}.{json,log}`,
+  fresh displayless Linux GCC 14.2 processes, with the same output-root refusal on both selections.
+  These initial logs also retain a separate demo diagnostic mismatch: its own missing-label
+  exception omitted the filename expected by the check. ResolveSourceDependency records a
+  contained path and does not promise an existence check; this is not a second CNA defect.
+  The demo diagnostic now names patrol.label and still verifies Source/LogicalName/Stage/Component.
+  Final labeled evidence `/tmp/cna-438-outputs-final-xna_pipeline_components-{SOFTWARE,OPENGLES3}.{json,log}`
+  has exactly 12 passing child checks and this one failure per fresh process. All seven original
+  checks remain. Both private trees are verified gone. All 22 targeted CTests pass, including
+  the expected-failure marker, both audio corrections, all 16 C ABI demos and catalog checks.
+  The complete 438-outputs checkpoint is pending.
+- **Environment:** CNA checkout observed at d751cf46ae41ab49890176530dd564d05482ad32 with external
+  C API work ongoing; no atomic source snapshot claimed and no CNA source edited by this task.
+  These are CPU pipeline runs under renderer selections, not GPU or genuine-XNA execution.
+- **Status:** open; not reported upstream.

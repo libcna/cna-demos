@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "XNA component adapters and nested conversion",
     .description = "Registers XNA-shaped importer and processor classes with CNA's coordinator, converts route "
                    "units through another processor, records a sidecar dependency and compiles padded bounds; "
-                   "checks default selection, typed parameter binding and contextual parameter errors.",
+                   "checks default selection, typed parameter binding, processor dependencies and a generated route summary.",
     .apis = {"CNA::Content::Pipeline::RegisterXnaImporter", "CNA::Content::Pipeline::RegisterXnaProcessor",
              "CNA::Content::Pipeline::ContentPipeline::Build",
              "Microsoft::Xna::Framework::Content::Pipeline::ContentImporter::Import",
@@ -14,10 +14,13 @@ CNA_DEMOS_STANDALONE({
              "Microsoft::Xna::Framework::Content::Pipeline::ContentImporterContext::AddDependency",
              "Microsoft::Xna::Framework::Content::Pipeline::ContentProcessor::Process",
              "Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::Convert",
+             "Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::AddDependency",
+             "Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::AddOutputFile",
              "Microsoft::Xna::Framework::Content::Pipeline::ProcessorParameterBindings::Add",
              "Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue"},
     .tags = {"content", "custom", "pipeline", "parameters", "dependencies", "cnaext"},
     .assets = {"custom/patrol.route", "custom/patrol.scale"},
     .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild. "
-                    "Compiled CNB bytes are inspected in memory; nested asset publication and XNB writers remain separate.",
+                    "Compiled CNB bytes are inspected in memory. Temporary source/output files are removed; explicit builds do not establish incremental caching.",
+    .knownIssue = "CNA-DEMOS-ISSUE-047",
 })

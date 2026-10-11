@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MS-PL
 // A stage processor consumes a processed profile and can compile that profile as a separate asset.
+#include <array>
 #include <atomic>
+#include <chrono>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
@@ -9,6 +11,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <system_error>
 #include <vector>
 
 #include "CnaDemos/Process.hpp"
@@ -18,11 +21,15 @@
 #include "CNA/Content/Pipeline/XnaPipelineBridge.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/ExternalReference.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/InvalidContentException.hpp"
+#include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
+#include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
 
 namespace Pipeline = CNA::Content::Pipeline;
 namespace Xna = Microsoft::Xna::Framework::Content::Pipeline;
 namespace Cnb = CNA::Content::Cnb;
+using Microsoft::Xna::Framework::Content::ContentLoadException;
+using Microsoft::Xna::Framework::Content::ContentManager;
 namespace
 {
     constexpr const char* ProfileProcessorName = "CnaDemos.NestedProfileProcessor";
@@ -48,6 +55,24 @@ namespace
         int healthBudget = 0;
         std::string profileAsset;
     };
+    using SharedProfile = std::shared_ptr<const Profile>;
+    struct LoadedStage { int healthBudget = 0; SharedProfile profile; };
+    std::atomic<int> profileReads{0}, stageReads{0};
+    struct TemporaryOutput
+    {
+        std::filesystem::path path;
+        ~TemporaryOutput() { std::error_code ignored; std::filesystem::remove_all(path, ignored); }
+    };
+    void Publish(const std::filesystem::path& root, const std::string& name, const std::vector<std::uint8_t>& bytes)
+    {
+        // The caller publishes the coordinator's returned bytes; this is not the CLI's atomic publisher.
+        const auto path = root / (name + ".cnb");
+        std::filesystem::create_directories(path.parent_path());
+        std::ofstream file(path, std::ios::binary);
+        file.write(reinterpret_cast<const char*>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
+        file.close();
+        if (!file) throw std::runtime_error("Could not publish the compiled content bytes.");
+    }
     class ProfileImporter final : public Xna::ContentImporter<Profile>
     {
     public:
@@ -264,6 +289,53 @@ int main()
         check(repeated.output.bytes == compiled.output.bytes && repeated.output.additionalOutputs.size() == 1 &&
               repeated.output.additionalOutputs.front().bytes == output.bytes,
               "a fresh valid build is deterministic after the failed conflicting request");
+        // Authoring and runtime shapes differ: the loaded stage carries its resolved profile.
+        ContentManager::RegisterCnbLoaderEXT<SharedProfile>(Cnb::CnbAssetTypeIdFromName(std::string(Profile::XnaTypeName)),
+            std::string(Profile::XnaTypeName), [](const Cnb::CnbDocument& document, ContentManager&) -> SharedProfile {
+                ++profileReads;
+                document.RequireAsset(Cnb::CnbAssetTypeIdFromName(std::string(Profile::XnaTypeName)), 1);
+                const std::array known{DataChunk}; document.RequireMandatoryChunksUnderstood(known);
+                auto data = document.OpenChunk(document.RequireSingle(DataChunk));
+                Profile profile{data.ReadString(), static_cast<int>(data.ReadU32())}; data.RequireExhausted();
+                return std::make_shared<const Profile>(std::move(profile));
+            });
+        ContentManager::RegisterCnbLoaderEXT<LoadedStage>(Cnb::CnbAssetTypeIdFromName(std::string(Stage::XnaTypeName)),
+            std::string(Stage::XnaTypeName), [](const Cnb::CnbDocument& document, ContentManager& owner) {
+                ++stageReads;
+                document.RequireAsset(Cnb::CnbAssetTypeIdFromName(std::string(Stage::XnaTypeName)), 1);
+                const std::array known{DataChunk}; document.RequireMandatoryChunksUnderstood(known);
+                auto data = document.OpenChunk(document.RequireSingle(DataChunk));
+                const auto health = static_cast<int>(data.ReadU32()); data.RequireExhausted();
+                const auto& profile = document.ExternalReferenceAt(0, "stage profile");
+                if (profile.expectedAssetTypeId != Cnb::CnbAssetTypeIdFromName(std::string(Profile::XnaTypeName)))
+                    throw ContentLoadException("The stage needs an enemy profile.");
+                return LoadedStage{health, owner.Load<SharedProfile>(profile.logicalName)};
+            });
+        const auto directory = std::filesystem::temp_directory_path() /
+            ("cna-demos-nested-output-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+        if (!std::filesystem::create_directory(directory)) throw std::runtime_error("Could not reserve a private content directory.");
+        {
+            TemporaryOutput cleanup{directory};
+            std::cout << "Private compiled content: " << directory << '\n';
+            Publish(directory, compiled.logicalName, compiled.output.bytes);
+            ContentManager content(nullptr, directory.string());
+            bool childMissing = false;
+            try { (void)content.Load<LoadedStage>(compiled.logicalName); }
+            catch (const ContentLoadException& error) { childMissing = true; std::cout << "Missing child refused: " << error.what() << '\n'; }
+            check(childMissing && stageReads == 1 && profileReads == 0,
+                  "publishing only the parent cannot load its not-yet-published compiled child");
+            for (const auto& childOutput : compiled.output.additionalOutputs)
+                Publish(directory, childOutput.logicalName, childOutput.bytes);
+            const auto live = content.Load<LoadedStage>(compiled.logicalName);
+            check(live.healthBudget == 240 && live.profile && live.profile->name == "Guard" && live.profile->health == 80 &&
+                  stageReads == 2 && profileReads == 1,
+                  "publishing the actual additional output permits parent retry without Unload and restores the processed profile");
+            const auto direct = content.Load<SharedProfile>(ChildName);
+            const auto cached = content.Load<LoadedStage>(compiled.logicalName);
+            check(direct == live.profile && cached.profile == live.profile && stageReads == 2 && profileReads == 1,
+                  "the parent's external load and direct runtime loads share the same manager's compiled profile cache");
+        }
+        check(!std::filesystem::exists(directory), "the private published parent and child are removed after their manager is destroyed");
         return passed ? 0 : 1;
     }
     catch (const std::exception& error)

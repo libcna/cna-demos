@@ -43,7 +43,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 
 ### Added
 - A nested stage/profile build demonstrates processed values versus separately compiled child
-  assets, dependency/reference metadata, duplicate requests and name collisions (11 checks).
+  assets, dependency/reference metadata, duplicate requests and name collisions. Caller publication
+  now connects actual parent/child bytes to runtime loading, missing-child retry, shared caches
+  and scoped cleanup (15 checks).
 - Extended the packed ownership example with the absent-recorder path: fifteen checks pass,
   while default tracking fails to dispose its child on Unload, adding direct ISSUE-011 evidence.
 - Packed XNB ReadAsset ownership with actual nested disposable callbacks, independent reads,
@@ -130,7 +132,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   array/string limits, inspects actual chunk sizes and rejects a corrupted recognizable container.
 - XNA pipeline adapter tool runs typed importer/processor registration through the real build
   coordinator, tracks an original scale sidecar, converts imported route units through another
-  processor and checks compiled bounds, typed parameter isolation and contextual errors.
+  processor and checks compiled bounds, typed parameter isolation and contextual errors. Its
+  processor-generated summary adds actual label/deployment dependencies, explicit changed-input
+  rebuild and cleanup; a separate output-root refusal remains visible as ISSUE-047 (12/13 pass).
 - XML configuration example combines validated properties, inherited-member ordering, get-only
   collections that append to constructor defaults, and flattened nested spawn coordinates.
 - Focused C thread-local diagnostic demo interleaves two worker errors and preserves each worker's

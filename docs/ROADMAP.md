@@ -221,7 +221,9 @@ a check that all authored colors remain visible and that a blank texture row can
   dispatch, get-only collections appending constructor defaults and flattened spawn coordinates.
   ✅ `content.custom.xna_pipeline_components`: actual XNA importer/processor adapters, default
   processor selection, typed parameter conversion/isolation, source sidecar dependency and
-  nested Convert producing compiled route bounds.
+  nested Convert producing compiled route bounds. The extension reads a processor label dependency
+  and writes a bounds summary: 12 checks pass; AddOutputFile refuses the configured separate
+  output root (ISSUE-047). Explicit rebuild/input failure and cleanup are verified; no CLI cache claim.
   ✅ `content.custom.cnb_external_references`: actual XREF tables and owner-mediated child loads,
   shared/local caches, bad references, missing child retry and unsafe-name rejection.
   ✅ `content.custom.cnb_read_limits`: container inspection, independent writer/reader byte
@@ -251,8 +253,10 @@ a check that all authored colors remain visible and that a blank texture row can
   absent-recorder comparison exposes default tracking ISSUE-011 (16 total, 15 passing).
 - ✅ `content.custom.nested_builds`: processed child versus compiled child, typed parameter
   propagation, source dependencies, additional CNB/XREF/runtime-name agreement, repeated-build
-  deduplication, writer schemas and changed-processing name collision (11 child checks).
-  Actual publication/runtime loading and incremental caching remain separate work.
+  deduplication, writer schemas and changed-processing name collision. The caller now publishes
+  actual parent/child bytes: missing-child refusal, same-manager retry, restored profile data,
+  shared runtime cache and cleanup bring this to 15 child checks. CLI atomic publication and
+  incremental caching remain separate work.
 - ✅ `content.custom.intermediate_external_references`: filename versus inline data, table
   deduplication, relocation, wrapper/null identity and invalid references. Nine child checks pass;
   native emitted TargetType alias round-trip exposes ISSUE-046. File imports/build publication
