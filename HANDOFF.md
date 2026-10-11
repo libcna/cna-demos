@@ -94,27 +94,25 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. Full 430's initial build included an
-externally changing C API refactor over CNA 2fda5389. The exact dependency source state was not
-atomically captured; do not attribute it solely to clean HEAD. See section 14 for provenance and
-`reports/checkpoint-430-binaries.json` for hashes of the main executable, both CNA/C ABI shared
-libraries and 16 C ABI executables. No binary was rebuilt during the runtime phases.
-The full **430-demo checkpoint passed** through cna-demos revision `b113bdc`.
-`tools/validate.sh` exited 0 under private Xvfb (`/tmp/cna-demos-430-validation.log`). Both
-reports match the fresh catalog. Strict ORIGINAL comparisons to 428 request review only for
-new ISSUE-043: all older statuses/check counts/assertions remain unchanged. Exact reviews and
-hashes are archived; no assertion/log was rewritten. Raw failures increase 25/26 -> 26/27.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **432-demo checkpoint passed**
+through cna-demos revision `9cad3a1`; `tools/validate.sh` exited 0 under private Xvfb
+(`/tmp/cna-demos-432-validation.log`). CNA's generated C API was externally changing during
+build preparation; its source state was not atomically captured. See section 14 and
+`reports/checkpoint-432-binaries.json` for hashes of all 19 exercised binary artifacts.
+No binary was rebuilt during runtime phases. Both ORIGINAL comparisons to 430 pass: only
+imported_topology and dds_stream were added, both passing; all older statuses/check counts
+and failed assertions are unchanged (26 SOFTWARE / 27 OPENGLES3).
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets `--validate` | 430 demos, 0 problems |
-| `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 418 passed (including 19 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 383 passed, 19 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 404 passed, 20 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | Exactly new GetTypeReader ISSUE-043; older assertion multisets unchanged |
-| Screenshots | External-reference card captures inspected, RGBA-identical; final captures match |
+| Metadata/assets `--validate` | 432 demos, 0 problems |
+| `tools/validate.sh` | Passed, both complete smoke runs and coverage regeneration |
+| CTest | 420 passed (including 19 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 385 passed, 19 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 406 passed, 20 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | None; original failure multisets unchanged |
+| Screenshots | All four new topology/DDS captures inspected; each renderer pair RGBA-identical |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -229,7 +227,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Latest complete checkpoint (2026-10-11):** 430 at b113bdc, tools/validate.sh exit 0.
+**Latest complete checkpoint (2026-10-11):** 432 at 9cad3a1, tools/validate.sh exit 0.
+SOFTWARE 385/19/25/3, OPENGLES3 406/20/3/3; 445 enabled CTests, 432/0 metadata.
+Archives: `reports/checkpoint-432-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`,
+`checkpoint-432-{build,ctest,validation}.log`, and `checkpoint-432-binaries.json` (19 artifacts).
+Strict ORIGINAL comparisons to 430 both pass; only two new passing IDs. All older statuses,
+check counts and 26/27 failed assertions unchanged. SOFTWARE stderr byte-identical; OPENGLES3
+stderr remains separately preserved. Coverage 293/329 types, 1353/2326 named members,
+158/3210 C routes, all runtime columns complete. Use ORIGINAL checkpoint-432 as next baseline.
+
+Historical 430 checkpoint:
+**Completed checkpoint (2026-10-11):** 430 at b113bdc, tools/validate.sh exit 0.
 SOFTWARE 383/19/25/3, OPENGLES3 404/20/3/3; 443 enabled CTests, 430/0 metadata.
 Archives: `reports/checkpoint-430-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`,
 `checkpoint-430-{build,ctest,validation}.log`, renderer-specific `-review.json` files and
@@ -340,12 +348,13 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** commit the validated 432 graphics batch and run complete
-`tools/validate.sh`, then archive/strictly compare ORIGINAL checkpoint-430 evidence. Expected
-SOFTWARE 385/19/25/3, OPENGLES3 406/20/3/3, 445 enabled CTests (420 passed including 19
-WILL_FAIL, 25 skipped; three disabled); raw failed assertions should stay 26/27. Then implement
-the reader-version/registry-lifecycle proposal in `/tmp/cna-reader-version-plan.md` or another
-remaining high-priority member gap. Do not stop at this checkpoint.
+**Immediate next action:** implement prepared content batch 433 after the completed 432
+checkpoint: `/tmp/cna-reader-versions.cpp` and `/tmp/cna-xnb-versions.py` (new
+content.xnb.reader_versions, factory ownership/schema compatibility), plus
+`/tmp/cna-existing-objects-raw-extension.cpp` (actual implicit ReadRawObject reproduction of
+ISSUE-043). These are reviewed drafts, not yet applied/built/run. Preserve the original
+GetTypeReader assertion; expect one additional failed assertion inside the same known-issue
+demo, investigate and record it explicitly. Continue with remaining semantic member gaps.
 
 432 targeted evidence:
 - graphics.model.imported_topology: 18 checks per renderer, exact loop-closing/strip/fan index
@@ -367,7 +376,7 @@ remaining high-priority member gap. Do not stop at this checkpoint.
   inventory `/tmp/cna-432-dependency-files.json` is NOT an atomic dependency build snapshot.
   Preserve final binary hashes with the full checkpoint as with 430; do not edit/revert CNA.
 Coverage is 293/329 types, 1353/2326 named members, 158/3210 C routes. Full runtime columns
-still use checkpoint-430 until 432 completes. All /tmp graphics drafts are applied and stale.
+now include all 432 demos. All /tmp graphics drafts are applied and stale.
 
 430 targeted evidence:
 - content.xnb.existing_objects: 12 console checks, eleven pass and one proves GetTypeReader's
@@ -432,10 +441,27 @@ content.xnb.shared_resources. It reads an ordinary inline Item alongside shared 
 Continue remaining ContentReader behaviors in COVERAGE_AUDIT.md; built-in model fixups and
 this custom graph do not establish every public reader overload or versioned schema.
 Remaining model gaps include imported topology/specular slots and broader skin/material variants.
-Later content plan (not implemented): `/tmp/cna-reader-version-plan.md` outlines a meaningful
-legacy/current optional-field schema, strict versus compatible SupportsVersion and scoped
-single-key registry replacement. Keep this behind the prepared graphics batch; do not equate
-container version with reader version or claim unexecuted compatibility behavior.
+Companion existing-demo extension (NOT applied/run):
+`/tmp/cna-existing-objects-raw-extension.cpp` is based on the CURRENT labeled source, not the
+older stale draft. It invokes the implicit ReadRawObject<T>(existing) before the explicit-reader
+fallback, records its actual failure and permits fallback only if type lookup failed and the
+stream position did not move. It preserves the old GetTypeReader assertion and adds one separate
+ISSUE-043 assertion for automatic raw lookup. Expected 13 checks with two failures on current
+CNA, but verify rather than assume. If confirmed, update ISSUE-043 and review the added assertion
+in the next full comparison; do not collapse or suppress the existing failed check. No new asset.
+
+Next content draft prepared during immutable full 432 (NOT built/run):
+`/tmp/cna-reader-versions.cpp`, `/tmp/cna-xnb-versions.py`, `/tmp/cna-xnb-version-fixture`.
+Three original assets regenerate identically and were independently decoded (62-byte legacy,
+66-byte current/future). Actual v0 payload omits Armor, v1 includes it, v2 adds an unsupported
+field. Container version stays five. SupportsVersion is a pure predicate; payload field flags
+select the supported optional layout. The draft exercises strict/compatible policies, ignored
+duplicate registration, scoped single-key withdrawal, surviving cached assets and safe factory
+captures via owned immutable policy objects. Weak pointers verify rejected factories release
+captures and withdrawn factories release owners. It supersedes the earlier capture-free-only
+proposal in `/tmp/cna-reader-version-plan.md`. Apply after full 432 finishes, validate both
+renderer selections without display, then update docs and checkpoint before continuing.
+
 
 The DDS and imported-topology drafts are now applied and validated as described above. Use
 repository sources, not stale /tmp drafts. The reader-version proposal remains unimplemented.
