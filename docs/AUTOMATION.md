@@ -42,7 +42,8 @@ The marker applies to the whole demo, not to each assertion. A passing CTest wit
 therefore does not establish that every unrelated check still passed. When extending a known-issue
 demo, inspect all `CHECK FAILED` lines in its raw log and explain each against CNA_ISSUES.md.
 For complete checkpoints, compare those lines (including their multiplicities) with the archived
-baseline as well as comparing report IDs/statuses. A new assertion failure needs investigation even
+baseline as well as comparing report IDs/statuses. Match the marker anywhere in a line,
+including prefixed standalone output such as `host:   CHECK FAILED:`, not just at the start. A new assertion failure needs investigation even
 when the demo's overall FAILED status was already expected.
 
 ## 2. Running unattended

@@ -229,7 +229,8 @@ semantic coverage. CNA remains clean at `2b15506a48e1a6202c985823131daf5856826f7
 CI's `10a4ef1cb4cd832f761536d77588000104947f8d`.
 
 Expected-failure detail was also compared between the full 407/408 and 408/409 raw logs: the exact
-`CHECK FAILED` message multisets are unchanged (20 SOFTWARE, 21 OPENGLES3). WILL_FAIL is
+`CHECK FAILED` message multisets are unchanged (24 SOFTWARE, 25 OPENGLES3, including
+prefixed host/joiner lines; earlier counts of 20/21 omitted those child-process assertions). WILL_FAIL is
 per-demo, so retain this assertion-level review alongside ID/status comparison for later batches.
 
 The original 398/401 checkpoint debt is closed. Full 401 and two 404 checkpoints also passed
@@ -337,13 +338,34 @@ Build, metadata (409/0), all three targeted CTests and both catalog tests pass. 
 was found. Source/audit/roadmap are updated; the full named checkpoint-409 archives still describe
 revision 7a64310 before these extensions.
 
-**Full semantic 409 checkpoint starting:** tools/validate.sh under private Xvfb, log
-`/tmp/cna-demos-409-semantic-validation.log`. Do not rebuild during the run. Expected totals stay
-unchanged; verify every ID/status and the 20/21 SOFTWARE/OPENGLES3 failed-assertion multisets
-against checkpoint-409 before archiving as semantic-409. Then continue with remaining XML
-format/adapter/dependency behavior or the member gaps in COVERAGE_AUDIT.md. Runtime XNB graph
-fixups are separate from IntermediateSerializer sharing; neither the new context checks nor
-existing stock loaders establish ContentReader::ReadSharedResource coverage.
+**Full semantic 409 run completed at source revision ce972da:** tools/validate.sh exited 0 under
+private Xvfb (`/tmp/cna-demos-409-semantic-validation.log`); build, metadata, 421 enabled CTests
+and both complete smoke runs passed their per-demo gates. Both 409-ID/status maps exactly match
+checkpoint-409; the XNB reader now records 5 checks instead of 3. Archives:
+`reports/semantic-409-{SOFTWARE,OPENGLES3}.{json,log}` and `{build,ctest,validation}.log`.
+However, the complete assertion review found **one additional SOFTWARE failure**: the network
+simulation demo observed 79% unreliable delivery before enabling simulated loss (68 ms mean,
+100% reliable). Raw failed-assertion totals are 25/25, against the corrected baseline 24/25.
+OPENGLES3 is unchanged. An isolated SOFTWARE repeat delivered 100% unreliable and reliable,
+with only ISSUE-030 failing (`/tmp/cna-network-baseline-repeat.{json,log}`).
+The public SendDataOptions::None contract explicitly allows dropped packets; the demo's >90%
+unsimulated delivery gate incorrectly treats an empirical loopback expectation as a guarantee.
+Next: correct this demo expectation while preserving actual reliable-delivery and latency/loss
+checks, then validate it with the next content batch. Do not describe the semantic-409 run as
+having only the documented CNA assertion failures, or erase its original evidence. No new CNA
+bug is established by allowed unreliable loss. Runtime XNB graph fixups remain separate from
+IntermediateSerializer sharing and are not established by the reader-context checks.
+
+Next prepared focused example: `/tmp/cna-custom-xml-codec/` contains an unbuilt draft for
+standalone ID `content.custom.intermediate_type_serializer`. It uses the actual public
+ContentTypeSerializer<DiceRoll>, AddTypeSerializer, IntermediateReader::ReadText and
+IntermediateWriter::Xml APIs for compact NdM dice definitions, both root values and fields of
+a described Attack; malformed input and invalid-domain objects are rejected. It is not yet
+applied, built or executed and is not counted in coverage. Review its XML shortcut/value-carrier
+expectations after the full semantic 409 run, then compile and run it. No random dice simulation,
+Internal parser or fake build context is involved. This directly advances the custom-serializer
+gap identified by the member audit; flattened fields, custom XNA adapters, dependency graphs
+and runtime XNB graph fixups remain separate work.
 
 Effects constraints verified in the current sources/build: all four configured
 `CNA_*_COMPILED_EFFECTS` switches are OFF and `CNA_FXC_EXECUTABLE` is empty. PbrEffect's public
