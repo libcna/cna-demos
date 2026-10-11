@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- Audio natural-completion checks now poll state with a steady-clock deadline. A full 438 CTest
+  caught the stream demo still playing after its fixed 600 ms sleep; the original failure is
+  archived. Both stream and playback-state demos retain six checks and leave the voice to finish.
 - The process launcher flushes C++ and C standard streams before running a child. A 421-demo
   checkpoint exposed child XML output splitting a buffered parent assertion even with stderr
   separated; raw evidence and an exact manually reviewed comparison copy are preserved.

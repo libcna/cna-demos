@@ -22,6 +22,12 @@ Status words used everywhere (CLI, reports, coverage):
   to hide a failure: an exception that is not a declared missing requirement is FAILED.
 * **NOT RUN** -- manual demo in an unattended batch, or a standalone executable that was not built.
 
+Asynchronous completion checks should observe the expected state within a finite steady-clock
+budget. For natural audio completion, leave the voice running and assert `Stopped` after the
+state transition or deadline. Nominal clip duration alone does not guarantee that the device
+worker reports completion after a fixed sleep. Preserve failure evidence when investigating
+such timing assumptions; report successful runs as state-completion evidence.
+
 ### Known CNA issues (expected failures)
 
 A demo whose `knownIssue` names an entry of `docs/CNA_ISSUES.md` checks the documented behaviour

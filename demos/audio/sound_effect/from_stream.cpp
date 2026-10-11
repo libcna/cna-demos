@@ -37,7 +37,14 @@ namespace
         SoundEffectInstance instance = tone->CreateInstance();
         instance.Play();
         ctx.Check(instance.getStateProperty() == SoundState::Playing, "it plays like any other SoundEffect");
-        std::this_thread::sleep_for(std::chrono::milliseconds(600));
+        // Audio completion follows the device worker, not a guaranteed wall-clock deadline.
+        // Keep a finite timeout so a voice that never finishes remains a failed check.
+        const auto waitStart = std::chrono::steady_clock::now();
+        const auto deadline = waitStart + std::chrono::seconds(3);
+        while (instance.getStateProperty() != SoundState::Stopped && std::chrono::steady_clock::now() < deadline)
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        ctx.Print("waited {:.3f} s for natural completion (3 s limit)",
+                  std::chrono::duration<double>(std::chrono::steady_clock::now() - waitStart).count());
         ctx.Check(instance.getStateProperty() == SoundState::Stopped, "and stops at its end");
     }
 }

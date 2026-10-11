@@ -232,8 +232,22 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** run the complete 438 checkpoint after the built/targeted-tested
-nested-build and default-recorder batch. Keep binary/asset sources immutable during the run.
+**Immediate next action:** initial full 438 at f899d61 STOPPED in CTest: from_stream's
+"and stops at its end" failed after its fixed 600 ms sleep. No renderer smoke began. Preserve
+/tmp/cna-438-first-ctest.log, /tmp/cna-438-full-first-build.log and
+/tmp/cna-demos-438-first-validation.log. Six fresh unmodified runs passed (three per selection),
+/tmp/cna-438-audio-original-{SOFTWARE,OPENGLES3}-{1,2,3}.{json,log}; the WAV source/copied bytes
+match SHA b7cb8c864d076444d0de8842373ac137c7691c0a3974f7d0ff8380fec56cf5c1. The compiled SDL3
+backend queries the asynchronous mixer track; no 600 ms completion contract was found. Exact
+scheduler delay is not proven, and no persistent CNA defect is established.
+from_stream and playback_state now poll natural completion with a steady-clock 3 s deadline;
+no Stop is used to satisfy it. Six checks per demo remain; from_stream's failed assertion text
+is unchanged. The related playback check is now named "natural completion". The timing correction is built cleanly (/tmp/cna-438-audio-build.log) and both demos pass six
+checks per fresh displayless renderer selection: /tmp/cna-438-audio-final-{from_stream,playback_state}-{SOFTWARE,OPENGLES3}.{json,log}.
+Observed waits are about 0.52/0.26 s; no audible-quality/latency claim. All 23 focused CTests pass
+(/tmp/cna-438-audio-targeted-ctest.log), plus five consecutive repetitions per audio demo
+(/tmp/cna-438-audio-repeat-ctest.log). Commit this correction and repeat the full checkpoint.
+The publication draft remains unapplied. Do not reuse the failed attempt as complete evidence.
 Compare ORIGINAL checkpoint-437: nested_builds is one new PASS (11 child checks); existing
 read_asset_ownership changes 14 PASS -> 16 FAILED with exactly one new ISSUE-011 assertion,
 while its fifteen other checks pass. All other old statuses/counts and all 29/30 failed
@@ -404,6 +418,19 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
   continuing; inspected content modules have no uncommitted changes. No CNA edit or atomic source
   snapshot claim. Archive actual binaries after validation. All /tmp drafts in this batch are
   applied and stale; use repository sources.
+
+Next extension draft during immutable full 438 (NOT applied/built/run):
+- `/tmp/cna-nested-published.cpp` and `/tmp/cna-nested-published-metadata.cpp` extend the current
+  nested_builds ID from eleven to fifteen proposed child checks. All existing checks remain.
+  The caller writes returned parent/child CNB bytes into a newly reserved private directory;
+  real RegisterCnbLoaderEXT callbacks reconstruct the runtime profile/stage through ContentManager.
+- New checks: parent-only publication refuses the missing child; publishing the actual additional
+  output permits same-manager retry without Unload; direct/parent loads share the same profile
+  cache; the manager dies before scoped removal and the private directory is verified gone.
+  Runtime registrations capture no stack state. Source fixtures are unchanged.
+- Publication is ordinary caller-owned file writing, explicitly not the CNA CLI's atomic
+  publisher or incremental cache. This draft is not runtime evidence. Apply only after full 438
+  is complete and archived; update CMake only if a concrete missing dependency is found.
 
 Further pipeline work: actual child publication/runtime loading, processor AddDependency and
 AddOutputFile, sibling-item reuse and incremental caching remain gaps. The real nested build

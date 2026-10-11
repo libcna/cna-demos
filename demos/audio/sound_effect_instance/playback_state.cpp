@@ -48,8 +48,13 @@ namespace
 
         // A non-looping voice stops by itself at the end of the sound.
         voice.Play();
-        std::this_thread::sleep_for(std::chrono::milliseconds(600));
-        expect(SoundState::Stopped, "0.6 s after Play");
+        const auto waitStart = std::chrono::steady_clock::now();
+        const auto deadline = waitStart + std::chrono::seconds(3);
+        while (voice.getStateProperty() != SoundState::Stopped && std::chrono::steady_clock::now() < deadline)
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        ctx.Print("waited {:.3f} s for natural completion (3 s limit)",
+                  std::chrono::duration<double>(std::chrono::steady_clock::now() - waitStart).count());
+        expect(SoundState::Stopped, "natural completion");
     }
 }
 
