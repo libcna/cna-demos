@@ -93,21 +93,21 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **415-demo checkpoint passed** through demo revision `ce4d19e`, including composite CNB
-references, container/schema limits and the C audio ownership extension. The script used private
-Xvfb (`/tmp/cna-demos-415-validation.log`). Complete raw assertion comparison, including
-child prefixes, matches checkpoint-413: 24 SOFTWARE / 25 OPENGLES3.
+The full **416-demo checkpoint passed** through demo revision `08caa43`, including texture copy
+ownership, compressed CNB limits and incompatible C diagnostic layouts. The script used private
+Xvfb (`/tmp/cna-demos-416-validation.log`). Complete raw assertion comparison, including
+child prefixes, matches checkpoint-415: 24 SOFTWARE / 25 OPENGLES3.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 415 demos, 0 problems |
+| Metadata/assets `--validate` | 416 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 402 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 370 passed, 17 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 391 passed, 18 expected failures, 3 skipped, 3 manual not run |
-| Unexpected outcomes | None; old statuses and failed-assertion multisets unchanged, both new CNB demos passed |
-| Screenshots | Network simulation inspected on both renderers; newer XML/C diagnostics are console checks, not visual evidence |
+| CTest | 403 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 371 passed, 17 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 392 passed, 18 expected failures, 3 skipped, 3 manual not run |
+| Unexpected outcomes | None; old statuses and failed-assertion multisets unchanged, new texture ownership demo passed |
+| Screenshots | Texture ownership inspected on both renderers; PNG files are byte-identical. Newer CNB/C diagnostics are console checks |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -218,30 +218,43 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **415 demos**
-through demo revision `ce4d19e`. Section 7 has the exact results. Log:
-`/tmp/cna-demos-415-validation.log`; archives:
-`reports/checkpoint-415-{SOFTWARE,OPENGLES3}.{json,log}` and
-`checkpoint-415-{build,ctest,validation}.log`. Both reports match all 415 catalog IDs exactly once.
-Compared with checkpoint-413, cnb_external_references and cnb_read_limits are new and pass;
-every old status and failed-assertion multiset is unchanged. Their 9/8 checks are in JSON;
-standalone C audio's 19 checks are in child stdout (parent JSON checks=0).
+**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **416 demos**
+through demo revision `08caa43`. Section 7 has the exact results. Log:
+`/tmp/cna-demos-416-validation.log`; archives:
+`reports/checkpoint-416-{SOFTWARE,OPENGLES3}.{json,log}` and
+`checkpoint-416-{build,ctest,validation}.log`. Both reports match all 416 catalog IDs exactly once.
+Compared with checkpoint-415, texture2d.copy_ownership is new and passes; every old status and
+failed-assertion multiset is unchanged. CNB limits now records 11 checks instead of 8. C diagnostic
+layouts have 26 child checks in stdout (standalone parent JSON checks=0).
 Coverage is 290/329 XNA types, 1318/2326 named members and 146/3210 C ABI routes,
 not comprehensive semantic coverage. CNA remains clean at
 `2b15506a48e1a6202c985823131daf5856826f71`, newer than CI's
 `10a4ef1cb4cd832f761536d77588000104947f8d`.
 
-Raw failed-assertion multisets are unchanged across 407/408/409 both complete 410 checkpoints and 411/412/413/415:
+Raw failed-assertion multisets are unchanged across 407/408/409 both complete 410 checkpoints and 411/412/413/415/416:
 **24 SOFTWARE / 25 OPENGLES3**, including prefixed host/joiner lines. Earlier counts of 20/21
 omitted those child-process assertions. The intermediate semantic-409 run exposed a separate
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** run the full 416 checkpoint, including the texture ownership demo
-and the CNB compression/C diagnostic-layout extensions below. Last full checkpoint is 415 at
-ce4d19e, before these additions. Compare current catalog, old statuses and 24/25 raw failed
-assertions against checkpoint-415, then archive checkpoint-416. Expected: SOFTWARE
-371/17/25/3, OPENGLES3 392/18/3/3, 428 enabled CTests.
+**Immediate next action:** apply and validate the two prepared extensions, then run the next
+full semantic checkpoint (same 416 IDs). Full 416 at 08caa43 is complete: 428 enabled CTests,
+SOFTWARE 371/17/25/3, OPENGLES3 392/18/3/3 and unchanged 24/25 failed assertions.
+
+- `/tmp/cna-c-content-root.c` and `/tmp/cna-c-content-root-metadata.cpp`: existing C content
+  example gains root setter/count/copy, caller-buffer reuse, retained checker cache hit, a new
+  sprite-strip load from the changed root, and IO for the old name after Unload. It keeps
+  checking original checker/font handles after manager boundaries. Three root routes and
+  textures/sprite_strip.png are in the metadata draft. Neither is applied/built/run yet.
+  Expected successful count: 41 with screenshots / 39 without; verify it. Compare rendering
+  against `/tmp/cna-c-atlas-guard-{SOFTWARE,OPENGLES3}.png` (those files exist).
+- `/tmp/cna-save-as-image-dimensions.cpp`: existing save_as_image gains decoded PNG/JPEG
+  64x32 exports from the 128x128 source, source immutability and labeled thumbnails. It guards
+  the JPEG error-comparison loop against a wrong decoded shape. Not applied/built/run; intended
+  count 8. Inspect both renderer screenshots before claiming visual validation.
+
+The C root setter explicitly preserves cache entries while redirecting uncached loads; do not
+transfer the C++ loaded-root guard expectation (ISSUE-039) into this different C contract.
 
 Both semantic extensions are applied and pass: cnb_read_limits now has 11 checks with Zstd
 available on both renderer selections (`/tmp/cna-compressed-limits-{SOFTWARE,OPENGLES3}.{json,log}`).
@@ -251,8 +264,8 @@ image when compression is disabled. No timing/allocation measurement or unsuppor
 C error_handling passes 26 child checks, including short/version-incompatible diagnostic queries
 preserving the original error (`/tmp/cna-diagnostic-layouts-{SOFTWARE,OPENGLES3}.{json,log}`).
 Build, metadata (415/0), both demos' CTests and both catalog tests pass (4 tests). No new CNA issue.
-Their /tmp drafts are stale; do not reapply. Coverage audit is updated; checkpoint-415 remains
-the historical full report before these two extensions.
+Their /tmp drafts are stale; do not reapply. Coverage audit is updated; these extensions are
+now included in the complete checkpoint-416. Checkpoint-415 remains the historical pre-extension report.
 
 The two CNB drafts are applied and pass: `content.custom.cnb_external_references` has 9 checks
 and `content.custom.cnb_read_limits` has 8 under both SOFTWARE/OPENGLES3 selections. Evidence:
