@@ -22,6 +22,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Intermediate XML tool demonstrates public field descriptors and ContentSerializerAttribute:
+  renamed/optional/ignored fields, collection item names, round trip and ignored-field rejection.
+- Existing C content demo checks texture pixels and font metrics after manager Unload and
+  destruction, then checks the rendered checker in the combined sprite/text batch.
 - Existing SpriteBatch layer-depth example checks overlap and unobscured colors; texture-group
   sorting now rejects a uniformly blank row as well as incorrectly grouped sprites.
 - Existing content cache demo now switches roots after Unload and exposes CNA accepting a root

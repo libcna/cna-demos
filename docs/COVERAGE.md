@@ -6,14 +6,14 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**407 demos** in 18 categories. Kinds: console 148, game 240, standalone 19. Automation: automated 371, manual 3, smoke-only 33.
+**408 demos** in 18 categories. Kinds: console 148, game 240, standalone 20. Automation: automated 372, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 20 | 17 | 2 | 1 | 18 / 0 / 1 / 1 / 0 | 18 / 0 / 1 / 1 / 0 |
 | c_api | 13 | 12 | 1 | 0 | 13 / 0 / 0 / 0 / 0 | 13 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 23 | 23 | 0 | 0 | 19 / 0 / 4 / 0 / 0 | 19 / 0 / 4 / 0 / 0 |
+| content | 24 | 24 | 0 | 0 | 19 / 0 / 4 / 0 / 1 | 19 / 0 / 4 / 0 / 1 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,18 +31,20 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.custom.intermediate_serializer`.
+- OPENGLES3: absent from report: `content.custom.intermediate_serializer`.
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 289 of 329** (87.8 %).
-- **Methods, properties, constructors and events named by a demo: 1314 of 2326** (56.5 %).
+- **Types with at least one demo: 290 of 329** (88.1 %).
+- **Methods, properties, constructors and events named by a demo: 1316 of 2326** (56.6 %).
 - Fields and enum values named by a demo: 133 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 40 / 42 | 477 / 643 | 34 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 16 / 19 | 84 / 121 | 6 / 11 |
-| `Microsoft.Xna.Framework.Content` | 6 / 11 | 10 / 48 | 0 / 0 |
+| `Microsoft.Xna.Framework.Content` | 7 / 11 | 12 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
 | `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 290 / 550 | 84 / 192 |
@@ -59,7 +61,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 - `Microsoft.Xna.Framework`: IDrawable, IUpdateable
 - `Microsoft.Xna.Framework.Audio`: InstancePlayLimitException, NoAudioHardwareException, NoMicrophoneConnectedException
-- `Microsoft.Xna.Framework.Content`: ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute
+- `Microsoft.Xna.Framework.Content`: ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute
 - `Microsoft.Xna.Framework.GamerServices`: FriendCollection, FriendGamer, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPrivilegeException, InviteAcceptedEventArgs, NetworkException, NetworkNotAvailableException
 - `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, GraphicsDeviceStatus, ModelBoneCollection.Enumerator, ModelEffectCollection.Enumerator, ModelMeshCollection.Enumerator, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException
 - `Microsoft.Xna.Framework.Input.Touch`: TouchCollection.Enumerator
@@ -69,13 +71,13 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 136 of 3210** (4.2 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 138 of 3210** (4.3 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
 | `abi.h` | 1 / 1 |
 | `audio.h` | 9 / 74 |
-| `content.h` | 4 / 32 |
+| `content.h` | 5 / 32 |
 | `core.h` | 3 / 7 |
 | `effects.h` | 8 / 290 |
 | `graphics.h` | 13 / 27 |
@@ -93,11 +95,12 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `runtime_components.h` | 13 / 39 |
 | `sprite_font.h` | 2 / 9 |
 | `storage.h` | 16 / 49 |
+| `texture.h` | 1 / 21 |
 | `vectors.h` | 6 / 137 |
 | `vertex_resources.h` | 5 / 24 |
 | `vertex_values.h` | 1 / 13 |
 
-Headers without a demonstrated route: `cnb.h`, `color.h`, `content_readers.h`, `core_ext.h`, `curve.h`, `devices.h`, `display.h`, `gamer_services.h`, `geometry.h`, `graphics_ext.h`, `graphics_resource.h`, `input_cursor.h`, `input_devices.h`, `input_haptics.h`, `input_joystick.h`, `input_mouse.h`, `input_text.h`, `input_touch.h`, `math.h`, `media_library.h`, `models.h`, `net.h`, `net_gamers.h`, `net_sessions.h`, `packed_vectors.h`, `quaternion.h`, `runtime_graphics_manager.h`, `runtime_window.h`, `sensors.h`, `texture.h`, `texture_volume.h`, `video.h`, `xact.h`.
+Headers without a demonstrated route: `cnb.h`, `color.h`, `content_readers.h`, `core_ext.h`, `curve.h`, `devices.h`, `display.h`, `gamer_services.h`, `geometry.h`, `graphics_ext.h`, `graphics_resource.h`, `input_cursor.h`, `input_devices.h`, `input_haptics.h`, `input_joystick.h`, `input_mouse.h`, `input_text.h`, `input_touch.h`, `math.h`, `media_library.h`, `models.h`, `net.h`, `net_gamers.h`, `net_sessions.h`, `packed_vectors.h`, `quaternion.h`, `runtime_graphics_manager.h`, `runtime_window.h`, `sensors.h`, `texture_volume.h`, `video.h`, `xact.h`.
 
 ## CNA-specific and unmatched API names
 
@@ -372,6 +375,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `LeaderboardEntry::RankingEXT` -- gamer_services.leaderboard.paging
 - `LooseFileContentTypeReader::GetExtensions` -- content.custom.loose_file_reader
 - `LooseFileContentTypeReader::Read` -- content.custom.loose_file_reader
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::CollectionItemName` -- content.custom.intermediate_serializer
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Format` -- content.custom.intermediate_serializer
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Ignore` -- content.custom.intermediate_serializer
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Optional` -- content.custom.intermediate_serializer
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentTypeDescriptor::Field` -- content.custom.intermediate_serializer
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize` -- content.custom.intermediate_serializer
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize` -- content.custom.intermediate_serializer
 - `Model::GltfImportReportEXT` -- graphics.model.import_report
 - `Model::MaterialVariantEXT` -- graphics.model.material_variants
 - `Model::MaterialVariantNamesEXT` -- graphics.model.material_variants

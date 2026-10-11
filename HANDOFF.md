@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 15), 8 (content, 23), 9 (audio 20 incl. 9 XACT, media 10 incl. a
+* In progress: 7 (models/glTF, 15), 8 (content, 24), 9 (audio 20 incl. 9 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 13 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-407 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+408 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 20 (9 XACT), core 3 (2 logger),
-content 23 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 24 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 13 (standalone C programs). Every declared category has demos.
@@ -220,7 +220,7 @@ has the exact results. Log: `/tmp/cna-demos-407-validation.log`; named report ar
 `reports/checkpoint-407-{SOFTWARE,OPENGLES3}.{json,log}`. Both reports match all 407 IDs, with no
 absent entries, unexpected failures or unexpected passes. Compared with 406, pipeline_components
 is new and passes; only cache_and_unload changes status, exposing ISSUE-039. Current generated coverage is
-289/329 XNA types and 1314/2326 named members; these are metadata counts, not comprehensive
+290/329 XNA types and 1316/2326 named members; these are metadata counts, not comprehensive
 semantic coverage. CNA remains clean at `2b15506a48e1a6202c985823131daf5856826f71`, newer than
 CI's `10a4ef1cb4cd832f761536d77588000104947f8d`.
 
@@ -266,16 +266,16 @@ processor parameter. All 6 checks pass on SOFTWARE and OPENGLES3, build/metadata
 its CTest/catalog pass. Reports: `/tmp/cna-pipeline-components-{SOFTWARE,OPENGLES3}.json`.
 The generator reproduces `assets/custom/patrol.route` byte-for-byte. No CNA issue was found.
 Next useful work:
-1. A build-time IntermediateSerializer example. The old type-audit exclusion was inaccurate:
-   current IntermediateReader/Writer consume ContentSerializerAttribute, and public fluent
-   ContentTypeDescriptor/ContentMemberDescriptor APIs implement named/optional/ignored/
-   flattened fields. This needs the separate `cna_content_pipeline` build-time target, not
-   an Internal XML parser. A complete unbuilt draft is prepared in `/tmp/cna-intermediate-demo/`
-   (`main.cpp`, `metadata.cpp`, `CMakeLists.txt`) for standalone ID
-   `content.custom.intermediate_serializer`. Copy to that directory under `standalone/`, build
-   and verify its XML expectations; no draft result is counted as coverage. It links
-   `CNA::ContentPipelineBuild` only in the tool process to preserve the runtime/build-time
-   boundary. The runner already reports an omitted standalone as NOT RUN. No type-wrapper-only demos.
+1. **New 408th demo after the full checkpoint:** `content.custom.intermediate_serializer`
+   is applied and built, with 6 checks passing under both renderer selections (it is a console
+   build-time tool, not a rendering test). Named/optional/ignored fields, collection item names,
+   XML round trip/defaults and ignored-field rejection are exercised. The separate tool links
+   CNA::ContentPipelineBuild; metadata stays in the runtime browser. Evidence:
+   `/tmp/cna-intermediate-{SOFTWARE,OPENGLES3}.{json,log}`. Standalone reports have checks=0;
+   the actual 6 checks are in child output. Targeted CTest/catalog/metadata (408/0) pass.
+   Next content work: explicit-null/flattened/shared-resource behavior, XNA adapters and
+   composite asset dependency/reference graphs. Do not credit nominal .NET attribute wrappers
+   just because corresponding descriptor behavior is used.
 2. Further ContentManager lifetime and lookup-order behaviors. The root mutation check is
    now completed in the existing cache_and_unload demo: both renderers execute 5 checks with
    exactly one failure (ISSUE-039), while original cache checks and the post-Unload root switch
@@ -291,12 +291,19 @@ Next useful work:
 4. Remaining Phase 9 work: authored RPC/variation tables, cue-level limits/priorities/fades;
    category limits are already complete. Preserve ownership and distinguish state observation
    from audible evidence.
-5. The new C ABI audit distinguishes its ownership and diagnostic contracts from C++.
-   A draft extension `/tmp/cna-c-content-lifetime.c` checks checker pixels and font metrics after
-   manager Unload/destruction in the existing `c_api.content.content_manager` demo. It is not
-   yet applied, built or run. Apply after the XML batch; update metadata
-   for unload/get_data and verify drawing still works. This is the documented C contract,
-   not an expectation borrowed from C++ ISSUE-011/039.
+5. The existing C content demo now checks texture pixels and font metrics after Unload and
+   manager destruction, plus checker colors in the combined sprite/text frame. Both renderers
+   pass (29 child checks with screenshots, 27 without). Images were inspected and the final GL
+   image is pixel-identical to the original pre-extension demo. A temporary suspicion based on
+   the image tool's incomplete preview was disproved by the actual PNG pixels; no ISSUE-040 or
+   expected-failure marker remains. Evidence: `/tmp/cna-c-content-{SOFTWARE,OPENGLES3}.{json,log,png}`.
+   All diagnostic source variants were restored. Further ABI gaps are in COVERAGE_AUDIT.md.
+
+**Full 408-demo checkpoint starting:** tools/validate.sh after these targeted checks,
+under private Xvfb; log `/tmp/cna-demos-408-validation.log`. Do not rebuild while it runs. Section 7 and checkpoint-407 archives remain the last complete run;
+generated coverage currently shows the XML ID as absent in those older reports. Expected totals
+if unchanged: 420 enabled CTests + 3 disabled; SOFTWARE 363 passed/17 expected failures/25 skipped/
+3 manual; OPENGLES3 384 passed/18 expected failures/3 skipped/3 manual. Verify, do not assume.
 
 Effects constraints verified in the current sources/build: all four configured
 `CNA_*_COMPILED_EFFECTS` switches are OFF and `CNA_FXC_EXECUTABLE` is empty. PbrEffect's public

@@ -68,6 +68,10 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
   modules. Each can be turned off; dependent categories then disappear.
 * Modules outside the umbrella (`CNA::Net`, `CNA::GamerServices`, `CNA::Phone`, `CNA::Design`)
   are linked by the categories that need them (`demos/CMakeLists.txt`).
+* `content.custom.intermediate_serializer` is a standalone build-time tool linked to
+  `CNA::ContentPipelineBuild`. Its process owns the serializer registry and build-time dependencies;
+  these stay outside the browser's runtime link closure. Metadata remains discoverable when
+  the tool target is unavailable, and the runner reports the omitted executable as NOT RUN.
 * `CNA_SHARED_LIBRARY`: CNA links its runtime as `libcna.so` by default on Linux. With CMake older
   than 3.29 that link fails (see [CNA_ISSUES.md](CNA_ISSUES.md) CNA-DEMOS-ISSUE-001), so
   cna-demos defaults it to OFF there. With a shared CNA, `cna-demos` names the `libcna.so` file

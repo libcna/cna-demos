@@ -3,6 +3,7 @@
  * Content from C: an owned ContentManager rooted at the demos' assets loads a PNG texture and a
  * compiled SpriteFont. A loaded font comes back as two owned handles -- the font and the atlas
  * texture it draws from -- and the font has to be destroyed before its atlas.
+ * Both resources remain usable after unloading and destroying the content manager.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH]. Exit code 0 passed, 1 failed.
  */
@@ -82,6 +83,42 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
         cna_demo_check(state->demo, state->text_size.x > 100.0f && state->text_size.y > 5.0f,
                        "the text has a size in the font");
     }
+    /* Unlike cached C++ objects, these independently owned C handles survive the manager.
+       Check actual pixels and font measurement after each lifetime boundary, then draw them. */
+    for (int stage = 0; stage < 2; ++stage) {
+        CNA_Texture2DTransfer transfer;
+        CNA_Color pixels[9];
+        CNA_Vector2 measured;
+        uint64_t required = 0U;
+        result = stage == 0 ? cna_content_manager_unload(state->content)
+                            : cna_content_manager_destroy(state->content);
+        if (!cna_demo_check_result(state->demo, result,
+                                  stage == 0 ? "unload the content manager" : "destroy the content manager")) {
+            break;
+        }
+        if (stage == 1) state->content = CNA_INVALID_HANDLE;
+        printf("  checking owned resources after manager %s\n", stage == 0 ? "Unload" : "destruction");
+        memset(&transfer, 0, sizeof(transfer));
+        transfer.struct_size = (uint32_t)sizeof(transfer);
+        transfer.struct_version = UINT32_C(1);
+        transfer.has_rectangle = CNA_TRUE;
+        transfer.rectangle.width = 9;
+        transfer.rectangle.height = 1;
+        transfer.element_count = 9U;
+        if (cna_demo_check_result(state->demo,
+                cna_texture2d_get_data(state->checker, CNA_TEXTURE_DATA_COLOR, &transfer, pixels, 9U, &required),
+                "read owned texture after the lifetime boundary")) {
+            cna_demo_check(state->demo, required == 9U && pixels[0].r == 255U && pixels[0].g == 255U &&
+                          pixels[0].b == 255U && pixels[0].a == 255U && pixels[8].r == 72U &&
+                          pixels[8].g == 61U && pixels[8].b == 139U && pixels[8].a == 255U,
+                          "both original checker colors remain intact");
+        }
+        if (cna_demo_check_result(state->demo, cna_sprite_font_measure_utf8(state->font, view(text), &measured),
+                                  "measure owned font after the lifetime boundary")) {
+            cna_demo_check(state->demo, measured.x == state->text_size.x && measured.y == state->text_size.y,
+                          "the owned font keeps its original metrics");
+        }
+    }
     return cna_sprite_batch_create(graphics_device, &state->sprite_batch);
 }
 
@@ -153,6 +190,19 @@ static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* con
     if (result == CNA_RESULT_SUCCESS && state->frames == state->demo->frames) {
         CNA_Handle graphics_device = CNA_INVALID_HANDLE;
         if (cna_game_get_graphics_device(game, &graphics_device) == CNA_RESULT_SUCCESS) {
+            static CNA_Color pixels[800 * 480];
+            uint64_t count = 0U;
+            if (cna_demo_check_result(state->demo,
+                    cna_graphics_device_get_backbuffer_data_rgba8(graphics_device, pixels, 800U * 480U, &count),
+                    "read the combined sprite/text frame")) {
+                const CNA_Color white = pixels[136 * 800 + 288];
+                const CNA_Color purple = pixels[136 * 800 + 320];
+                printf("  rendered checker: %u,%u,%u and %u,%u,%u\n",
+                       white.r, white.g, white.b, purple.r, purple.g, purple.b);
+                cna_demo_check(state->demo, count == 800U * 480U && white.r == 255U && white.g == 255U &&
+                              white.b == 255U && purple.r == 72U && purple.g == 61U && purple.b == 139U,
+                              "the loaded checker remains visible in the sprite/text batch");
+            }
             cna_demo_capture(state->demo, graphics_device);
         }
     }

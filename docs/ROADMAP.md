@@ -157,7 +157,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.skinned_pbr` (skinned + metallic-roughness imports as SkinnedPbrEffect).
 - Remaining: `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
 
-## Phase 8 -- content 🟨 (23 demos; remaining below)
+## Phase 8 -- content 🟨 (24 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -176,7 +176,9 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.custom.pipeline_components`: registered importer/processor/writer, real patrol
   precomputation, deterministic CNB output, runtime loading and typed parameter diagnostics.
   ✅ Existing cache/Unload demo now shows root switching after Unload and exposes CNA's missing
-  loaded-root guard (ISSUE-039). Remaining: build-time IntermediateSerializer/custom XNA adapters and the member/behavior gaps
+  loaded-root guard (ISSUE-039). ✅ `content.custom.intermediate_serializer`: a separate build-time
+  tool with named/optional/ignored fields, collection item names, XML round trip and rejection.
+  Remaining: deeper serializer behaviors, custom XNA adapters and the member/behavior gaps
   in COVERAGE_AUDIT.md; this phase is not comprehensively covered.
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
   managers, `ContentLoadException`, loose files vs XNB vs CNB vs CNJ lookup order.
@@ -290,7 +292,7 @@ C API demos as standalone C programs (one C game per process), built only with
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit),
 ✅ `c_api.core.error_handling` (results, categories, last message, count/copy, callback errors),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
-✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, release order),
+✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, release order),
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),
 ✅ `c_api.audio.sound_effect` (PCM16 effect, instance state),
 ✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse),
@@ -302,7 +304,7 @@ derived bits, dead-zone modes, live polling), ✅ `c_api.game.components` (a com
 table; draw order, visibility, enabled, collection and component events), ✅
 `c_api.media.media_player` (song collection keeps its songs, queue view, transport, process-wide
 events). Remaining: the diagnostics/handle/content table in COVERAGE_AUDIT.md identifies
-ABI-specific gaps (failed diagnostic queries, independent resource lifetime, borrowed handles
+ABI-specific gaps (failed diagnostic queries, invalid release guards, borrowed handles
 and thread dispatch). Extend the existing examples where practical; do not duplicate C++ scenes
 merely to increase the route count.
 C#/.NET demos belong with the separate `cna-dotnet` binding; decide later whether to reference or
