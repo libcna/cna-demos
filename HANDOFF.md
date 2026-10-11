@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-415 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+416 demos: math 78, game 33, graphics 131 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 20 (9 XACT), core 3 (2 logger),
@@ -237,10 +237,11 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** apply, build and run `/tmp/cna-texture-copy-ownership.cpp` as
-`graphics.texture2d.copy_ownership`, including both renderer screenshots and pixel checks.
-Then run a full 416 checkpoint including the following semantic extensions. Last full checkpoint
-is still 415 at ce4d19e; it predates these extensions.
+**Immediate next action:** run the full 416 checkpoint, including the texture ownership demo
+and the CNB compression/C diagnostic-layout extensions below. Last full checkpoint is 415 at
+ce4d19e, before these additions. Compare current catalog, old statuses and 24/25 raw failed
+assertions against checkpoint-415, then archive checkpoint-416. Expected: SOFTWARE
+371/17/25/3, OPENGLES3 392/18/3/3, 428 enabled CTests.
 
 Both semantic extensions are applied and pass: cnb_read_limits now has 11 checks with Zstd
 available on both renderer selections (`/tmp/cna-compressed-limits-{SOFTWARE,OPENGLES3}.{json,log}`).
@@ -272,7 +273,8 @@ The composite example resolves root-relative XREF names through its owning Conte
 checks shared versus manager-local caches, invalid index/schema type, missing child/retry and
 writer rejection of `..`. It does not establish cycles, automatic child compilation or XNB fixups.
 The 416-byte tile layer checks independent writer/reader budgets plus schema limits after Parse
-succeeds; compressed expansion and other limits remain explicitly uncovered in the member audit.
+succeeds; its later compression extension is described above. Other limits remain explicitly
+uncovered in the member audit.
 
 The existing C audio ownership extension is applied and passes all 19 child checks on both
 renderer selections (`/tmp/cna-c-audio-ownership-{SOFTWARE,OPENGLES3}.{json,log}`), including
@@ -286,11 +288,14 @@ versioned-structure boundaries from COVERAGE_AUDIT.md. Keep the existing focused
 an extension fits; no per-enum or cosmetic variants. Composite nested build publication remains
 separate from the now demonstrated runtime XREF loading.
 
-Later graphics draft: `/tmp/cna-texture-copy-ownership.cpp`, not applied/built/run, proposed
-`graphics.texture2d.copy_ownership`. It checks initial sharing, partial rectangle mutation versus
-SetData(Color*, int) detachment, copied-but-independent Name/Tag, sibling survival after Dispose,
-and actual rendered pixels. It needs both renderer runs and screenshot inspection before any
-visual claim. The full 415 checkpoint and targeted semantic validation are complete; this graphics draft is next.
+The new `graphics.texture2d.copy_ownership` is applied and fully targeted-validated. All 6
+checks pass on SOFTWARE/OPENGLES3, including actual backbuffer pixels after source disposal.
+Both screenshots were inspected, with byte-for-byte identical PNG files (all RGBA channels).
+Evidence: `/tmp/cna-texture-copy-{SOFTWARE,OPENGLES3}.{json,log,png}`. Build, metadata (416/0),
+its CTest and both catalog checks pass (3 tests, `/tmp/cna-416-texture-ctest.log`). The example
+checks copied-but-independent Name/Tag, partial shared edits, full-upload detachment and shared
+sibling survival. It does not establish every mip/raw-data overload or render-target alias.
+No new CNA issue. The /tmp draft is applied and stale; do not reapply it.
 
 The XML property example is included in the complete 412 checkpoint: all 5 child checks pass
 under SOFTWARE and OPENGLES3 selections (`/tmp/cna-intermediate-properties-{SOFTWARE,OPENGLES3}.{json,log}`).
@@ -599,8 +604,8 @@ Content facts learned: CNB schema 1 stores textures as RGBA8 only (DXT needs `--
 `content_xnb/` exists for that); compiled textures are premultiplied by default, loose PNGs are
 straight; `Texture2D` copies initially share one texture (Name/Tag are per-wrapper copied values).
 Source audit: a partial rectangle update changes that shared texture, while `SetData(Color*, int)`
-replaces only the writing wrapper's texture. This copy/edit/lifetime sequence still needs a focused
-demo; do not generalize it to every mip/raw-data overload. `ContentManager`'s
+replaces only the writing wrapper's texture. The copy_ownership demo now verifies this sequence and shared sibling survival after disposal
+with rendered pixels on both renderers; do not generalize it to every mip/raw-data overload. `ContentManager`'s
 `Load<T>` ignores `OpenStream` overrides (ISSUE-012) and `Unload` only clears the cache
 (ISSUE-011). Storage facts: demos call `StorageDevice::SetAppNameEXT("cna-demos")` and delete their
 containers; saves go to `$XDG_DATA_HOME/cna-demos` or `~/.local/share/cna-demos`.

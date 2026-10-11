@@ -30,6 +30,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Texture value-copy example distinguishes shared rectangle edits from full-upload detachment,
+  copied-but-independent Name/Tag and sibling survival after Dispose. Both renderers pass pixel
+  checks and produce identical inspected screenshots.
 - Existing CNB limits example checks optional Zstd round trips and decoded-size budgets even
   when the compressed file fits its stored-size budget; disabling compression restores the original image.
 - Existing C diagnostics example rejects short/unsupported ErrorInfo layouts while preserving

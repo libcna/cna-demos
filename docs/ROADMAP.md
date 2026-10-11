@@ -62,7 +62,7 @@ Console demos with checks; each shows one operation family.
   `GraphicsProfile` Reach vs HiDef. ≈ 8
 - `LaunchParameters`, `TitleContainer.OpenStream`, `TitleLocation`. ≈ 3
 
-## Phase 4 -- 2D graphics ✅ (46 demos including 7 SpriteFont demos; small remainders listed per line)
+## Phase 4 -- 2D graphics ✅ (47 demos including 7 SpriteFont demos; small remainders listed per line)
 - ✅ `graphics.device.*`, `graphics.viewport.*`, `graphics.graphics_adapter.*`,
   `graphics.graphics_resource.*` (13): `Clear`/`ClearOptions`, split-screen viewports, `Viewport`
   properties and `Project`/`Unproject`, `ScissorRectangle`, `PresentationParameters`,
@@ -81,9 +81,11 @@ Console demos with checks; each shows one operation family.
   `DrawString`, `MeasureString`, `LineSpacing`, `Spacing`, `DefaultCharacter`, `Characters`,
   scaled/rotated/mirrored text, `StringBuilder`, the CNAEXT glyph constructor. Remaining: loading
   an XNB font (Phase 8, content), TrueType `.spritefont` (needs FreeType and a licensed font).
-- ✅ (7 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
+- ✅ (8 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg`, `LevelCount`. Remaining:
-  float/HDR formats, direct compressed-block data, CNAEXT `DDSFromStreamEXT`, copy semantics.
+  float/HDR formats, direct compressed-block data, CNAEXT `DDSFromStreamEXT`.
+  ✅ `copy_ownership` checks partial shared edits versus full-upload detachment, Name/Tag isolation,
+  sibling survival after Dispose and actual rendered pixels.
   ✅ Existing rectangle demo now checks nonzero CPU array offsets and untouched destination padding.
   DXT1 content loading is already shown by `content.xnb.dxt_texture`.
 
