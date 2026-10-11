@@ -25,6 +25,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 import gltf_models
+import xact_files
 import pixel_font
 
 ROOT = Path(__file__).resolve().parent.parent / "assets"
@@ -213,6 +214,7 @@ def main() -> None:
     save_png(colour_wheel(128), "textures/colour_wheel_dxt.png", CONTENT_XNB_ROOT)
     tone("sounds/chime.wav", 880.0, 0.3, root=CONTENT_ROOT)
     gltf_models.write_all(CONTENT_ROOT, ROOT)
+    xact_files.write_all(ROOT)
     tone("sounds/tone_440.wav", 440.0, 0.5)
     tone("sounds/tone_660.wav", 660.0, 0.25)
     melody("music/rising.wav", [60, 64, 67, 72, 64, 67, 72, 76], 0.25)   # C major, upwards

@@ -128,6 +128,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   AnimationPlayer and SkinnedEffect, and the CNAEXT glTF import report of a glTF loaded at run time.
 - `tools/gltf_models.py`: original glTF scenes (a robot arm with baked vertex colours, a skinned
   strip with a bend clip) compiled by the content pipeline; one loose copy for run-time loading.
+- XACT demos (5): AudioEngine/WaveBank/SoundBank with a cue played by name, Cue states, categories
+  (volume, pause, stop), global variables, positioned cues; `tools/xact_files.py` writes the
+  `.xgs`/`.xwb`/`.xsb` files (original tones) in the layout of CNA's own XACT example.
 - `CnaDemos/InputNames.hpp`: names of input enums (keys, buttons, gestures) for demo output.
 - CNA-DEMOS-ISSUE-008 recorded: sharp-runtime's `Prop.hpp`, reached from CNA's public headers,
   defines macros named `YES`, `NO`, `nothing` and similar.

@@ -6,11 +6,11 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**282 demos** in 10 categories. Kinds: console 115, game 166, standalone 1. Automation: automated 251, manual 2, smoke-only 29.
+**287 demos** in 10 categories. Kinds: console 120, game 166, standalone 1. Automation: automated 255, manual 2, smoke-only 30.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
-| audio | 9 | 7 | 1 | 1 | 8 / 0 / 0 | 8 / 0 / 0 |
+| audio | 14 | 11 | 2 | 1 | 13 / 0 / 0 | 13 / 0 / 0 |
 | content | 15 | 15 | 0 | 0 | 13 / 0 / 2 | 13 / 0 / 2 |
 | core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | game | 25 | 22 | 2 | 1 | 21 / 3 / 0 | 24 / 0 / 0 |
@@ -23,14 +23,14 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 156 of 329** (47.4 %).
-- **Methods, properties, constructors and events named by a demo: 755 of 2326** (32.5 %).
+- **Types with at least one demo: 161 of 329** (48.9 %).
+- **Methods, properties, constructors and events named by a demo: 785 of 2326** (33.7 %).
 - Fields and enum values named by a demo: 116 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 36 / 42 | 270 / 643 | 34 / 78 |
-| `Microsoft.Xna.Framework.Audio` | 8 / 19 | 41 / 121 | 5 / 11 |
+| `Microsoft.Xna.Framework.Audio` | 13 / 19 | 71 / 121 | 5 / 11 |
 | `Microsoft.Xna.Framework.Content` | 1 / 11 | 7 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 0 / 13 | 0 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 0 / 52 | 0 / 244 | 0 / 223 |
@@ -47,7 +47,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 - `Microsoft.Xna.Framework`: DisplayOrientation, IDrawable, IGameComponent, IGraphicsDeviceManager, IUpdateable, PlayerIndex
-- `Microsoft.Xna.Framework.Audio`: AudioCategory, AudioEngine, AudioStopOptions, Cue, InstancePlayLimitException, MicrophoneState, NoAudioHardwareException, NoMicrophoneConnectedException, RendererDetail, SoundBank, WaveBank
+- `Microsoft.Xna.Framework.Audio`: AudioStopOptions, InstancePlayLimitException, MicrophoneState, NoAudioHardwareException, NoMicrophoneConnectedException, RendererDetail
 - `Microsoft.Xna.Framework.Content`: ContentLoadException, ContentReader, ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute, ContentTypeReader, ContentTypeReaderManager, ResourceContentManager
 - `Microsoft.Xna.Framework.Design`: BoundingBoxConverter, BoundingSphereConverter, ColorConverter, MathTypeConverter, MatrixConverter, PlaneConverter, PointConverter, QuaternionConverter, RayConverter, RectangleConverter, Vector2Converter, Vector3Converter, Vector4Converter
 - `Microsoft.Xna.Framework.GamerServices`: Achievement, AchievementCollection, AvatarAnimation, AvatarAnimationPreset, AvatarBodyType, AvatarBone, AvatarDescription, AvatarExpression, AvatarEye, AvatarEyebrow, AvatarMouth, AvatarRenderer, AvatarRendererState, ControllerSensitivity, FriendCollection, FriendGamer, GameDefaults, GameDifficulty, GameUpdateRequiredException, Gamer, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPresence, GamerPresenceMode, GamerPrivilegeException, GamerPrivilegeSetting, GamerPrivileges, GamerProfile, GamerServicesComponent, GamerServicesDispatcher, GamerServicesNotAvailableException, GamerZone, Guide, GuideAlreadyVisibleException, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardEntry, LeaderboardIdentity, LeaderboardKey, LeaderboardOutcome, LeaderboardReader, LeaderboardWriter, MessageBoxIcon, NetworkException, NetworkNotAvailableException, NotificationPosition, PropertyDictionary, RacingCameraAngle, SignedInEventArgs, SignedInGamer, SignedInGamerCollection, SignedOutEventArgs
@@ -67,6 +67,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `AnimationPlayer::GetWorldTransforms` -- graphics.model.skinned_animation
 - `AnimationPlayer::StartClip` -- graphics.model.skinned_animation
 - `AnimationPlayer::Update` -- graphics.model.skinned_animation
+- `AudioStopOptions` -- audio.xact.cue_states
 - `ButtonState` -- input.mouse.click_detection, input.mouse.get_state
 - `Buttons` -- input.gamepad.state_values
 - `Buttons::Misc1EXT` -- input.gamepad.extra_buttons
