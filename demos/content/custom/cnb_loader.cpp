@@ -113,6 +113,40 @@ namespace
         ctx.Check(repaired.name == rules.name && repaired.lives == rules.lives && reads == readsBeforeFailure + 1,
                   "the same manager retries a failed asset after its file is repaired");
 
+        // The writer validates the CNB container, not our game-owned RULE schema. These
+        // files have valid checksums/tables yet cannot describe one complete Rules value.
+        // Keep the failure at the typed-loader boundary, before a result enters the cache.
+        for (const std::string defect : {"missing", "duplicate", "truncated", "trailing"})
+        {
+            CnbWriter malformed(typeId, 1);
+            malformed.SetMetadata(RulesName, defect);
+            auto badBytes = bytes;
+            if (defect == "truncated") badBytes.pop_back(); // only three bytes of lives
+            if (defect == "trailing") badBytes.push_back(42); // undocumented schema field
+            if (defect != "missing")
+                malformed.AddChunk(RulesChunk, badBytes, CnbChunkFlags::Mandatory);
+            if (defect == "duplicate")
+                malformed.AddChunk(RulesChunk, bytes, CnbChunkFlags::Mandatory);
+            const auto filename = (path / (defect + ".cnb")).string();
+            malformed.WriteToFile(filename);
+            // Successful ParseFile proves the later refusal is schema-level, not a bad CRC.
+            const auto document = CnbDocument::ParseFile(filename);
+            const auto count = document.FindAll(RulesChunk).size();
+            const std::size_t expectedCount = defect == "missing" ? 0 : defect == "duplicate" ? 2 : 1;
+            const int completedBefore = reads;
+            bool refused = false;
+            try { (void)content.Load<Rules>(defect); }
+            catch (const ContentLoadException& error)
+            {
+                const std::string diagnostic = error.what();
+                refused = diagnostic.find(defect + ".cnb") != std::string::npos &&
+                          diagnostic.find("RULE") != std::string::npos;
+                ctx.Print("{} schema refused: {}", defect, diagnostic);
+            }
+            ctx.Check(count == expectedCount && refused && reads == completedBefore,
+                      defect + " RULE data is rejected with file/chunk context before returning a value");
+        }
+
         CnbWriter future(typeId, 2);
         future.SetMetadata(RulesName, "future");
         future.AddChunk(RulesChunk, bytes, CnbChunkFlags::Mandatory);
@@ -132,11 +166,13 @@ CNA_DEMOS_CONSOLE(CnbLoader, {
     .id = "content.custom.cnb_loader",
     .title = "A custom CNB asset schema (CNAEXT)",
     .description = "Writes a small game-rules CNB asset, registers its typed loader, checks per-manager caching "
-                   "and process-wide registration, optional versus required extensions, retry after repair and schema rejection.",
+                   "and process-wide registration, optional versus required extensions, retry after repair and invalid schema layouts.",
     .apis = {"ContentManager::RegisterCnbLoaderEXT", "ContentManager::Load",
              "CNA::Content::Cnb::CnbAssetTypeIdFromName", "CNA::Content::Cnb::CnbWriter::SetMetadata",
              "CNA::Content::Cnb::CnbWriter::AddChunk", "CNA::Content::Cnb::CnbWriter::WriteToFile",
              "CNA::Content::Cnb::CnbDocument::RequireAsset", "CNA::Content::Cnb::CnbDocument::OpenChunk",
+             "CNA::Content::Cnb::CnbDocument::ParseFile", "CNA::Content::Cnb::CnbDocument::FindAll",
+             "CNA::Content::Cnb::CnbDocument::RequireSingle", "CNA::Content::Cnb::CnbByteReader::RequireExhausted",
              "CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood"},
     .tags = {"content", "custom", "cnb", "cnaext"},
 })

@@ -32,6 +32,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Focused audio instance lifetime example checks retained sound data after C++ wrapper destruction,
+  moving a playing voice, idempotent disposal and explicit parent disposal of moved/idle children.
+- Existing CNB loader distinguishes valid containers from invalid game schemas: missing/duplicate
+  RULE chunks, a truncated integer and trailing data are rejected with file/chunk diagnostics.
+- Existing C lifecycle example checks expired callback-scoped device handles, fresh borrowing
+  in the next callback and rejection of outside-callback borrowing after Run.
 - Existing C content example checks copied root strings, preserved cache entries across root
   changes, uncached resolution under the new root and cache invalidation after Unload.
 - Existing PNG/JPEG export example verifies requested 64x32 output dimensions and an unchanged

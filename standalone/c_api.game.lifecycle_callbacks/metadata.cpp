@@ -6,9 +6,9 @@ CNA_DEMOS_STANDALONE({
     .title = "A game in C: lifecycle callbacks",
     .description = "A C program checks the C ABI version, creates a CNA game with a table of lifecycle callbacks "
                    "(load_content, update, draw, unload_content, exiting), lets cna_game_run drive a fixed 60 Hz "
-                   "loop that clears the screen, and ends it with cna_game_request_exit.",
+                   "loop that clears the screen, ends it with cna_game_request_exit, and verifies callback-scoped device borrowing.",
     .apis = {"cna_get_abi_version", "cna_game_create", "cna_game_run", "cna_game_request_exit", "cna_game_clear",
-             "cna_game_get_graphics_device", "cna_game_destroy", "CNA_GameCallbacks", "CNA_GameCreateInfo",
+             "cna_game_get_graphics_device", "cna_graphics_device_get_renderer_name_size", "cna_game_destroy", "CNA_GameCallbacks", "CNA_GameCreateInfo",
              "CNA_GameTime"},
     .tags = {"c", "binding", "game-loop", "callbacks"},
     .needs = CnaDemos::Need::CApi,

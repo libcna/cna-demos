@@ -18,6 +18,7 @@
 /* Everything the callbacks share, passed to CNA as the callback table's context pointer. */
 typedef struct GameState {
     CnaDemo* demo;
+    CNA_Handle expired_device; /* numeric value retained only for a deliberate stale-handle check */
     int loads;
     int updates;
     int draws;
@@ -34,10 +35,16 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
                                CNA_CallbackError* out_error)
 {
     GameState* state = (GameState*)context;
-    (void)game;
     (void)game_time;
     (void)out_error;
     ++state->loads;
+    /* A device borrowed here expires when this callback returns. Keep its numeric value only
+       for the negative check in Update; ordinary code must borrow again in each callback. */
+    uint64_t name_bytes = 0;
+    cna_demo_check(state->demo,
+                   cna_game_get_graphics_device(game, &state->expired_device) == CNA_RESULT_SUCCESS &&
+                   cna_graphics_device_get_renderer_name_size(state->expired_device, &name_bytes) == CNA_RESULT_SUCCESS &&
+                   name_bytes > 0, "the device borrowed in load_content is usable in that callback");
     printf("load_content\n");
     return CNA_RESULT_SUCCESS;
 }
@@ -50,6 +57,17 @@ static CNA_Result update(CNA_Handle game, const CNA_GameTime* game_time, void* c
         ++state->updates_before_load;
     }
     ++state->updates;
+    if (state->updates == 1) {
+        uint64_t name_bytes = 0;
+        CNA_Handle fresh_device = CNA_INVALID_HANDLE;
+        cna_demo_check(state->demo,
+                       cna_graphics_device_get_renderer_name_size(state->expired_device, &name_bytes) == CNA_RESULT_INVALID_HANDLE,
+                       "the preceding callback's borrowed device has expired even inside a new callback");
+        cna_demo_check(state->demo,
+                       cna_game_get_graphics_device(game, &fresh_device) == CNA_RESULT_SUCCESS &&
+                       cna_graphics_device_get_renderer_name_size(fresh_device, &name_bytes) == CNA_RESULT_SUCCESS &&
+                       name_bytes > 0, "borrowing again obtains a usable device for the current callback");
+    }
     /* XNA's Run calls Update once with zero elapsed time before its loop starts; after that, a
        fixed step advances game time by exactly the target each update. */
     if (game_time->elapsed_game_time_ticks == 0) {
@@ -172,6 +190,10 @@ int main(int argc, char** argv)
 
     /* CNA's loop: returns once the game has exited (cna_game_request_exit or the window closed). */
     cna_demo_check_result(&demo, cna_game_run(game), "cna_game_run returns after the exit request");
+    /* Once Run has begun, the owned game does not grant device access outside callbacks. */
+    CNA_Handle outside_device = CNA_INVALID_HANDLE;
+    cna_demo_check(&demo, cna_game_get_graphics_device(game, &outside_device) == CNA_RESULT_INVALID_STATE,
+                   "borrowing a device outside callbacks is refused after the run");
     printf("%d updates, %d draws, game time %.3f s\n", state.updates, state.draws,
            (double)state.last_total_ticks / 1e7);
 

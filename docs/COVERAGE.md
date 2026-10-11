@@ -6,11 +6,11 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**416 demos** in 18 categories. Kinds: console 150, game 241, standalone 25. Automation: automated 380, manual 3, smoke-only 33.
+**417 demos** in 18 categories. Kinds: console 151, game 241, standalone 25. Automation: automated 381, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
-| audio | 20 | 17 | 2 | 1 | 18 / 0 / 1 / 1 / 0 | 18 / 0 / 1 / 1 / 0 |
+| audio | 21 | 18 | 2 | 1 | 18 / 0 / 1 / 1 / 1 | 18 / 0 / 1 / 1 / 1 |
 | c_api | 14 | 13 | 1 | 0 | 14 / 0 / 0 / 0 / 0 | 14 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 30 | 30 | 0 | 0 | 26 / 0 / 4 / 0 / 0 | 26 / 0 / 4 / 0 / 0 |
@@ -31,17 +31,19 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `audio.sound_effect_instance.lifetime`.
+- OPENGLES3: absent from report: `audio.sound_effect_instance.lifetime`.
 
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 290 of 329** (88.1 %).
-- **Methods, properties, constructors and events named by a demo: 1318 of 2326** (56.7 %).
+- **Methods, properties, constructors and events named by a demo: 1321 of 2326** (56.8 %).
 - Fields and enum values named by a demo: 133 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 40 / 42 | 477 / 643 | 34 / 78 |
-| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 84 / 121 | 6 / 11 |
+| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 87 / 121 | 6 / 11 |
 | `Microsoft.Xna.Framework.Content` | 7 / 11 | 14 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
@@ -69,7 +71,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 149 of 3210** (4.6 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 150 of 3210** (4.7 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -78,7 +80,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `content.h` | 8 / 32 |
 | `core.h` | 7 / 7 |
 | `effects.h` | 8 / 290 |
-| `graphics.h` | 13 / 27 |
+| `graphics.h` | 14 / 27 |
 | `graphics_device.h` | 3 / 87 |
 | `graphics_state.h` | 2 / 14 |
 | `index_resources.h` | 3 / 10 |
@@ -131,17 +133,20 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbAssetTypeIdFromName` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbByteReader::ReadCount` -- content.custom.cnb_read_limits, content.custom.pipeline_components
 - `CNA::Content::Cnb::CnbByteReader::ReadString` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::RequireExhausted` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::ChunkAt` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ChunkCount` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ChunkData` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ExternalReferenceAt` -- content.custom.cnb_external_references
 - `CNA::Content::Cnb::CnbDocument::ExternalReferences` -- content.custom.cnb_external_references
+- `CNA::Content::Cnb::CnbDocument::FindAll` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::HasMagic` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::OpenChunk` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::Parse` -- content.custom.cnb_read_limits
-- `CNA::Content::Cnb::CnbDocument::ParseFile` -- content.custom.cnb_external_references
+- `CNA::Content::Cnb::CnbDocument::ParseFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::RequireAsset` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbDocument::RequireSingle` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbWriter::AddChunk` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbWriter::Build` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetCompression` -- content.custom.cnb_read_limits
@@ -482,6 +487,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `SkinnedPbrEffect` -- graphics.model.skinned_pbr
 - `SkinnedPbrEffect::SetBoneTransforms` -- graphics.model.skinned_pbr
 - `SkinningData` -- graphics.model.skinned_animation, graphics.model.skinned_pbr
+- `SoundEffectInstance::SoundEffectInstance` -- audio.sound_effect_instance.lifetime
 - `SpriteFont::SpriteFont` -- graphics.sprite_font.glyph_constructor
 - `StorageDevice::GetStorageRootEXT` -- storage.storage_device.storage_root
 - `StorageDevice::SetAppNameEXT` -- storage.storage_device.show_selector, storage.storage_device.storage_root

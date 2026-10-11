@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 15), 8 (content, 30), 9 (audio 20 incl. 9 XACT, media 10 incl. a
+* In progress: 7 (models/glTF, 15), 8 (content, 30), 9 (audio 21 incl. 9 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 14 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,10 +64,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-416 demos: math 78, game 33, graphics 131 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
+417 demos: math 78, game 33, graphics 131 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 20 (9 XACT), core 3 (2 logger),
+effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 21 (9 XACT), core 3 (2 logger),
 content 30 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
@@ -235,23 +235,38 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** apply and validate the prepared CNB schema-boundary, C callback
-borrowing and audio lifetime batch below. The full semantic-416 checkpoint is completed and
-archived; rebuilding is now safe. Keep the foreign-thread candidate for the following batch.
+**Immediate next action:** run full checkpoint-417 for the applied, targeted-validated batch
+below. Compare against semantic-416 and the fresh 417 catalog, including raw assertion counts
+24/25; archive checkpoint-417. Expected SOFTWARE 372/17/25/3, OPENGLES3 393/18/3/3 and 429 enabled
+CTests. Last full checkpoint remains semantic-416 at c350580 before this batch.
 
-Prepared next batch (NOT applied or built yet):
-`/tmp/cna-cnb-schema-boundaries.cpp` extends existing cnb_loader with four structurally valid
-containers refused by the typed schema (missing/duplicate RULE, truncated lives, trailing byte).
-`/tmp/cna-c-lifecycle-borrowed.c` and `-metadata.cpp` extend existing C lifecycle with expired
-callback device rejection and successful fresh borrowing. `/tmp/cna-audio-instance-lifetime.cpp`
-is a focused 78-line proposed `audio.sound_effect_instance.lifetime`: temporary-wrapper survival,
-move of a playing voice, idempotent disposal and the effect's cascade to moved/idle children.
-All APIs and relevant implementations were inspected; these drafts have NO runtime evidence yet.
-The preceding checkpoint has now been compared and archived.
-A later, separate candidate is drafted in `/tmp/cna-c-foreign-thread-dispatch.c`,
+- Existing cnb_loader passes 12 checks on both renderer selections; four new cases have valid
+  containers but missing/duplicate RULE, a truncated lives integer or trailing schema byte.
+  ParseFile succeeds before typed-load rejection, which names file/chunk and returns no value.
+  Evidence: `/tmp/cna-cnb-boundaries-{SOFTWARE,OPENGLES3}.{json,log}`.
+- Existing C lifecycle passes 18 child checks with screenshots, 16 without in CTest: valid
+  LoadContent borrow, INVALID_HANDLE in the next Update, fresh usable borrow and INVALID_STATE
+  outside callbacks after Run. Evidence: `/tmp/cna-c-borrowed-{SOFTWARE,OPENGLES3}.{json,log,png}`.
+  Both screenshots inspected (uniform game-time-dependent clear color); no fixed-color equality
+  claim. Parent JSON checks=0, child counts are in stdout.
+- New `audio.sound_effect_instance.lifetime` passes 7 checks under both renderer selections
+  with dummy audio: temporary wrapper survival, move of a playing voice, idempotent instance
+  disposal/rejected Play, and effect disposal of moved/idle children. Evidence:
+  `/tmp/cna-audio-lifetime-{SOFTWARE,OPENGLES3}.{json,log}`. No audible quality claim.
+
+Build `/tmp/cna-417-boundaries-build.log`, metadata 417/0 and five focused CTests pass
+(`/tmp/cna-417-boundaries-ctest.log`). No new CNA issue. Coverage now names 290/329 XNA types,
+1321/2326 members and 150/3210 C ABI routes; the generated runtime columns still honestly show
+one ID absent in the older full smoke reports until checkpoint-417 finishes. The /tmp drafts
+for these three changes are applied and stale; do not reapply them.
+
+Next independent candidate is drafted in `/tmp/cna-c-foreign-thread-dispatch.c`,
 `-metadata.cpp` and `-CMakeLists.txt`: explicit owner pumping for game-property reads/writes,
 default/restored thread affinity and bounded worker cleanup. It is NOT applied, compiled or run;
 automatic callback pumping, error forwarding and queued-call shutdown remain outside its scope.
+After checkpoint-417, review/apply this C11 standalone or continue another meaningful member gap.
+
+Prior semantic-416 extensions (included in the completed checkpoint):
 
 - C content root extension is applied and passes **41 child checks with screenshots** on both
   renderers (`/tmp/cna-c-content-root-{SOFTWARE,OPENGLES3}.{json,log,png}`), **39 without** in

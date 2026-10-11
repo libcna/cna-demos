@@ -175,7 +175,8 @@ a check that all authored colors remain visible and that a blank texture row can
   now demonstrates explicit snapshot refresh and its independence from the asset cache. ✅
   `content.custom.cnj_loader` uses two named JSON factories for a game-owned Enemy type, actual
   payload decoding with nlohmann-json, manager-local registration and useful error paths. The CNB
-  example also covers optional/mandatory unknown chunks and retry after a repaired file.
+  example also covers optional/mandatory unknown chunks, retry after a repaired file, and valid
+  containers whose game schema has missing/duplicate blocks, truncated fields or trailing bytes.
   ✅ `content.custom.pipeline_components`: registered importer/processor/writer, real patrol
   precomputation, deterministic CNB output, runtime loading and typed parameter diagnostics.
   ✅ Existing cache/Unload demo now shows root switching after Unload and exposes CNA's missing
@@ -206,12 +207,14 @@ a check that all authored colors remain visible and that a blank texture row can
 - `content.content_reader.*`: custom `ContentTypeReader`, `ResourceContentManager`,
   `ContentManifestEntry`. ≈ 20
 
-## Phase 9 -- audio and media 🟨 (audio: 20 demos incl. 9 XACT, media: 10 incl. video)
+## Phase 9 -- audio and media 🟨 (audio: 21 demos incl. 9 XACT, media: 10 incl. video)
 - ✅ `audio.sound_effect.*`: Play, Play(volume, pitch, pan), MasterVolume, PCM buffer
   constructor, GetSampleDuration/GetSampleSizeInBytes, ✅ `audio.sound_effect.loop_region` (loop
   points), ✅ `audio.sound_effect.from_stream` (loose WAV; ISSUE-029).
 - ✅ `audio.sound_effect_instance.*`: playback state, looping, volume/pitch/pan, Apply3D
   (smoke-only: hearing is the check).
+  ✅ `audio.sound_effect_instance.lifetime`: temporary-wrapper data retention, moving a playing
+  voice, explicit idempotent disposal, rejected replay and parent disposal of moved/idle children.
 - ✅ `audio.dynamic_sound_effect_instance.streaming`: generated tone, BufferNeeded, pending buffers,
   PCM size/duration, unsupported loop/release requests and immediate-stop cleanup. Disposed
   getters expose ISSUE-038; their checks deliberately remain visible failures.
@@ -309,7 +312,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 ## Phase 14 -- bindings 🟨 (14 C API demos)
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
-✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit),
+✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit, expired callback device handles),
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, callback errors),
 ✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
