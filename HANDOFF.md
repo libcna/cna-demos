@@ -94,25 +94,27 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The 428 batch began with CNA
-`2fda5389d2990b40146d06de0ae0531d05055f24`; inspected changes since the 427 dependency
-snapshot are documentation/test paths and comment-only edits, not runtime behavior.
-The full **428-demo checkpoint passed** through revision `0c30ba0`.
-`tools/validate.sh` exited 0 under private Xvfb (`/tmp/cna-demos-428-validation.log`). Both
-complete reports match the fresh catalog. Both ORIGINAL stdout logs pass strict comparison
-to 427: only the new passing shared_resources ID (15 checks); all older statuses and failed
-assertions remain unchanged (25 SOFTWARE / 26 OPENGLES3).
+Current environment: Linux, GCC 14.2, CMake 3.31.6. Full 430's initial build included an
+externally changing C API refactor over CNA 2fda5389. The exact dependency source state was not
+atomically captured; do not attribute it solely to clean HEAD. See section 14 for provenance and
+`reports/checkpoint-430-binaries.json` for hashes of the main executable, both CNA/C ABI shared
+libraries and 16 C ABI executables. No binary was rebuilt during the runtime phases.
+The full **430-demo checkpoint passed** through cna-demos revision `b113bdc`.
+`tools/validate.sh` exited 0 under private Xvfb (`/tmp/cna-demos-430-validation.log`). Both
+reports match the fresh catalog. Strict ORIGINAL comparisons to 428 request review only for
+new ISSUE-043: all older statuses/check counts/assertions remain unchanged. Exact reviews and
+hashes are archived; no assertion/log was rewritten. Raw failures increase 25/26 -> 26/27.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets `--validate` | 428 demos, 0 problems |
+| Metadata/assets `--validate` | 430 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 416 passed (including 18 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 382 passed, 18 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 403 passed, 19 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | None; raw totals 25/26 unchanged |
-| Screenshots | No new visual claim: shared_resources is a console demo |
+| CTest | 418 passed (including 19 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 383 passed, 19 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 404 passed, 20 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | Exactly new GetTypeReader ISSUE-043; older assertion multisets unchanged |
+| Screenshots | External-reference card captures inspected, RGBA-identical; final captures match |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -227,7 +229,21 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Latest complete checkpoint (2026-10-11):** 428 at 0c30ba0, tools/validate.sh exit 0.
+**Latest complete checkpoint (2026-10-11):** 430 at b113bdc, tools/validate.sh exit 0.
+SOFTWARE 383/19/25/3, OPENGLES3 404/20/3/3; 443 enabled CTests, 430/0 metadata.
+Archives: `reports/checkpoint-430-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`,
+`checkpoint-430-{build,ctest,validation}.log`, renderer-specific `-review.json` files and
+`checkpoint-430-binaries.json`. Both ORIGINAL comparisons to 428 require review exactly for
+new ISSUE-043; all older states/check counts/assertions are unchanged (25/26 -> 26/27).
+External references pass 11 checks; existing objects has eleven passes plus the one known lookup
+failure. SOFTWARE stderr is byte-identical; GL retains three ERROR/three INFO and 84 X protocol
+lines (42 requests each 18.0/25.0; volatile IDs differ). All 16 C ABI demos also pass both full
+smoke selections despite the externally evolving C API implementation (provenance below).
+Coverage 293/329 types, 1352/2326 named members, 158/3210 C routes; all 430 runtime columns
+are complete. Use ORIGINAL checkpoint-430 as the next baseline.
+
+Historical 428 checkpoint:
+**Completed checkpoint (2026-10-11):** 428 at 0c30ba0, tools/validate.sh exit 0.
 SOFTWARE 382/18/25/3, OPENGLES3 403/19/3/3; 441 enabled CTests, 428/0 metadata.
 Archives: `reports/checkpoint-428-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
 `checkpoint-428-{build,ctest,validation}.log`. Both reports match the fresh catalog; both
@@ -324,18 +340,11 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** start the complete 430 checkpoint after committing this batch.
-Final build `/tmp/cna-430-final-boundary-build.log` is clean; both final external-reference runs
-pass all 11 checks, their pixels match the inspected images, and the affected CTest passes. The previous 20 targeted CTests passed,
-including ALL 16 C ABI demos, both new XNB demos (one WILL_FAIL) and catalog tests:
-`/tmp/cna-430-targeted-ctest.log`. The final one-line assertion distinguishes missing assets
-from path-hardening refusal. Expected full counts: SOFTWARE 383/19/25/3, OPENGLES3
-404/20/3/3, 443 enabled CTests (418 passed including 19 WILL_FAIL, 25 skipped; three disabled).
-Both original strict comparisons to 428 should request review ONLY for the newly reproduced
-ISSUE-043 assertion; expected raw failed counts 26/27. Preserve raw evidence and record review;
-never suppress the assertion or silently rewrite the baseline. Imported topology remains next.
-External dependency source hashes remain unchanged from the post-start snapshot through final
-validation; no clean-revision-only dependency provenance is claimed.
+**Immediate next action:** full 430 is complete. Apply the prepared imported-topology and DDS
+stream drafts below as the next focused graphics batch; build, run both renderers, investigate
+failures, inspect screenshots, update docs and complete the next full checkpoint. No permission
+question is needed. The existing_objects/external_references drafts are already applied and stale.
+All older checkpoint assertions remain visible; retain the new known ISSUE-043 in future baselines.
 
 430 targeted evidence:
 - content.xnb.existing_objects: 12 console checks, eleven pass and one proves GetTypeReader's
@@ -350,7 +359,8 @@ validation; no clean-revision-only dependency provenance is claimed.
   final captures match the inspected images byte-for-byte in RGBA.
 - All eight new original assets regenerate identically; XNB tables/payload boundaries decoded
   independently. Metadata 430/0; coverage 293/329 types, 1352/2326 named members, 158/3210 C routes.
-  Runtime coverage columns still use full 428 until the new complete checkpoint finishes.
+  Full 430 now includes all runtime columns; both original renderer comparisons were reviewed
+  for exactly ISSUE-043 and archived without changing evidence.
 
 IMPORTANT dependency change: CNA HEAD remains 2fda5389d2990b40146d06de0ae0531d05055f24,
 but an external actor has edited roughly 60 C API implementation files and added marshal/output
@@ -358,8 +368,11 @@ headers. This is a real implementation refactor, not the preceding comment-only 
 edit/revert it or attribute this build to clean HEAD. Tracked patch and modified/untracked source
 hashes: `/tmp/cna-430-dependency-tracked.patch`, `/tmp/cna-430-dependency-files.json` (captured
 after build start, not an atomic build snapshot). Run the relevant C ABI demos/tests as well as
-new readers; inspect any changed diagnostics/behavior. Full 428 remains the stable complete
-baseline built before this refactor; its running binary was not rebuilt during that checkpoint.
+new readers; inspect any changed diagnostics/behavior. During full 430, CNA committed the helper refactor as 801ee62c5 (22:01) and math route generation
+as 4eed3baa7 (22:13), with further audio/effect route edits uncommitted. The running checkpoint
+continues using its already-built binaries; do not rebuild mid-run. Archive binary hashes at
+completion to identify those artifacts. Full 428 remains the stable complete baseline built
+before this refactor; its running binary was not rebuilt during that checkpoint.
 
 427 targeted evidence:
 - xnb_model: 11 checks per renderer. Original `.x` -> existing FORMAT xnb content build -> actual
@@ -396,6 +409,20 @@ content.xnb.shared_resources. It reads an ordinary inline Item alongside shared 
 Continue remaining ContentReader behaviors in COVERAGE_AUDIT.md; built-in model fixups and
 this custom graph do not establish every public reader overload or versioned schema.
 Remaining model gaps include imported topology/specular slots and broader skin/material variants.
+Later content plan (not implemented): `/tmp/cna-reader-version-plan.md` outlines a meaningful
+legacy/current optional-field schema, strict versus compatible SupportsVersion and scoped
+single-key registry replacement. Keep this behind the prepared graphics batch; do not equate
+container version with reader version or claim unexecuted compatibility behavior.
+
+A further unbuilt draft addresses the separate DDS stream gap:
+`/tmp/cna-dds-stream.cpp`, `/tmp/cna-dds-assets.py`, `/tmp/cna-dds-fixture`. The 232-byte DXT1
+file has four base stripes and four independently authored solid-color mips. It regenerates
+identically; Pillow independently decodes every base pixel correctly and all mip block ranges
+were checked through the exact end. Intended public workflow: packed stream offset/short reads,
+authored mip readback, fit versus crop and malformed mip refusal. No compilation, runtime,
+native-compressed upload or screenshot evidence yet. Full 430 is complete; review and apply now;
+coordinate with the imported-topology draft as the next focused graphics batch if appropriate.
+
 Read-only follow-up: the glTF importer explicitly closes LINE_LOOP as LINE_STRIP and expands
 TRIANGLE_STRIP/FAN to lists, preserving strip winding. `/tmp/cna-import-topology.py` prepares an
 original three-shape fixture (outline loop, strip quad, fan pentagon) under

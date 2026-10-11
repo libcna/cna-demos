@@ -1053,7 +1053,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   is unchanged. No graphics/GPU or genuine-XNA runtime comparison is claimed.
 - **Final labeled reproduction:** `/tmp/cna-430-existing-final-{SOFTWARE,OPENGLES3}.{json,log}`
   retains the same single failed check with the issue identifier. Its WILL_FAIL CTest passes;
-  complete-checkpoint evidence will be recorded after the current batch finishes.
+  full 430 at b113bdc completed with 443 enabled CTests and both complete smoke runs. The only
+  added failed assertion versus 428 is this one (25/26 -> 26/27); all older states/check counts
+  remain unchanged. Original logs and exact review/hashes: `reports/checkpoint-430-*`.
+  Both new external-reference renders pass independently; no failure was hidden by the marker.
 - **Handling:** retain the failing lookup assertion. A clearly labeled public named-factory
   fallback lets the remaining schema example run; it does not change the target name or add
   a hidden alias registration. No global registry clearing, CNA source edits or upstream report.
