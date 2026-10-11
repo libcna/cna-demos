@@ -93,10 +93,10 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **416-demo checkpoint passed** through demo revision `08caa43`, including texture copy
-ownership, compressed CNB limits and incompatible C diagnostic layouts. The script used private
-Xvfb (`/tmp/cna-demos-416-validation.log`). Complete raw assertion comparison, including
-child prefixes, matches checkpoint-415: 24 SOFTWARE / 25 OPENGLES3.
+The full **semantic 416-demo checkpoint passed** through revision `c350580`, including the
+C content root/cache and resized PNG/JPEG export extensions. All stages of tools/validate.sh
+completed under private Xvfb (`/tmp/cna-demos-416-semantic-validation.log`). Complete raw
+assertion comparison, including child prefixes, matches checkpoint-416: 24 SOFTWARE / 25 OPENGLES3.
 
 | Check | Result |
 |---|---|
@@ -106,8 +106,8 @@ child prefixes, matches checkpoint-415: 24 SOFTWARE / 25 OPENGLES3.
 | CTest | 403 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
 | SOFTWARE smoke | 371 passed, 17 expected failures, 25 skipped, 3 manual not run |
 | OPENGLES3 smoke (private Xvfb) | 392 passed, 18 expected failures, 3 skipped, 3 manual not run |
-| Unexpected outcomes | None; old statuses and failed-assertion multisets unchanged, new texture ownership demo passed |
-| Screenshots | Texture ownership inspected on both renderers; PNG files are byte-identical. Newer CNB/C diagnostics are console checks |
+| Unexpected outcomes | None; all 416 IDs/statuses and failed-assertion multisets unchanged |
+| Screenshots | Targeted C content and resized export evidence is detailed in section 14; no new visual review during smoke |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -219,15 +219,13 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 **Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **416 demos**
-through demo revision `08caa43`. Section 7 has the exact results. Log:
-`/tmp/cna-demos-416-validation.log`; archives:
-`reports/checkpoint-416-{SOFTWARE,OPENGLES3}.{json,log}` and
-`checkpoint-416-{build,ctest,validation}.log`. Both reports match all 416 catalog IDs exactly once.
-Compared with checkpoint-415, texture2d.copy_ownership is new and passes; every old status and
-failed-assertion multiset is unchanged. CNB limits now records 11 checks instead of 8. C diagnostic
-layouts have 26 child checks in stdout (standalone parent JSON checks=0).
-Coverage is 290/329 XNA types, 1318/2326 named members and 146/3210 C ABI routes,
-not comprehensive semantic coverage. CNA remains clean at
+at `c350580`. SOFTWARE 371/17/25/3 and OPENGLES3 392/18/3/3, 428 enabled CTests, metadata 416/0.
+Archives: `reports/semantic-416-{SOFTWARE,OPENGLES3}.{json,log}` and
+`semantic-416-{build,ctest,validation}.log`. Both reports contain all 416 catalog IDs exactly once.
+Compared with checkpoint-416, every status and failed-assertion multiset is unchanged;
+save_as_image records 8 checks instead of 4. C content has 39 child checks without a screenshot
+(standalone parent JSON checks=0). Coverage is 290/329 XNA types, 1318/2326 named members and
+149/3210 C ABI routes, not comprehensive semantic coverage. CNA remains clean at
 `2b15506a48e1a6202c985823131daf5856826f71`, newer than CI's
 `10a4ef1cb4cd832f761536d77588000104947f8d`.
 
@@ -237,11 +235,23 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** run the full semantic 416 checkpoint for the two existing-demo
-extensions below. Compare both current reports/catalog and raw failed assertions against
-checkpoint-416, then archive semantic-416. No new IDs: expected SOFTWARE 371/17/25/3,
-OPENGLES3 392/18/3/3 and 428 enabled CTests. Last full checkpoint is still 416 at 08caa43,
-before these two extensions.
+**Immediate next action:** apply and validate the prepared CNB schema-boundary, C callback
+borrowing and audio lifetime batch below. The full semantic-416 checkpoint is completed and
+archived; rebuilding is now safe. Keep the foreign-thread candidate for the following batch.
+
+Prepared next batch (NOT applied or built yet):
+`/tmp/cna-cnb-schema-boundaries.cpp` extends existing cnb_loader with four structurally valid
+containers refused by the typed schema (missing/duplicate RULE, truncated lives, trailing byte).
+`/tmp/cna-c-lifecycle-borrowed.c` and `-metadata.cpp` extend existing C lifecycle with expired
+callback device rejection and successful fresh borrowing. `/tmp/cna-audio-instance-lifetime.cpp`
+is a focused 78-line proposed `audio.sound_effect_instance.lifetime`: temporary-wrapper survival,
+move of a playing voice, idempotent disposal and the effect's cascade to moved/idle children.
+All APIs and relevant implementations were inspected; these drafts have NO runtime evidence yet.
+The preceding checkpoint has now been compared and archived.
+A later, separate candidate is drafted in `/tmp/cna-c-foreign-thread-dispatch.c`,
+`-metadata.cpp` and `-CMakeLists.txt`: explicit owner pumping for game-property reads/writes,
+default/restored thread affinity and bounded worker cleanup. It is NOT applied, compiled or run;
+automatic callback pumping, error forwarding and queued-call shutdown remain outside its scope.
 
 - C content root extension is applied and passes **41 child checks with screenshots** on both
   renderers (`/tmp/cna-c-content-root-{SOFTWARE,OPENGLES3}.{json,log,png}`), **39 without** in
