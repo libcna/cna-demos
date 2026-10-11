@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 23), 8 (content, 35), 9 (audio 21 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 36), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 16 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-434 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+435 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
-content 35 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 36 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 16 (standalone C programs). Every declared category has demos.
@@ -230,11 +230,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** the complete checkpoint-434-xml is archived and reviewed.
-Apply and validate the separate polymorphic XML candidate below, then proceed to ReadAsset
-callback/uncached-read semantics or the next useful member gap. Use ORIGINAL checkpoint-434-xml
-as the next baseline. Do not restart completed phases. The /tmp cycle/null-policy drafts
-are already applied and stale; use repository sources.
+**Immediate next action:** run the complete 435 checkpoint after the validated polymorphic XML
+batch. Build and focused checks are complete; keep source/assets immutable during the full run.
+Archive as checkpoint-435, compare ORIGINAL checkpoint-434-xml and confirm exactly one new
+PASS with eight passing child checks; old failures remain 28/29. Expected smoke results:
+SOFTWARE 387/20/25/3, OPENGLES3 408/21/3/3; 448 enabled CTests. Preserve both stderr streams
+and selected binary hashes including the three XML tools. Then proceed to the ReadAsset
+callback/uncached-read candidate or another meaningful public-member gap.
 
 433 targeted evidence:
 - reader_versions passes 17 console checks per renderer selection WITHOUT DISPLAY/WAYLAND;
@@ -315,17 +317,20 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
   snapshot; archive the final binary hashes with the complete checkpoint.
 - The /tmp cycle and null-policy drafts are applied and stale; use repository sources.
 
-Later focused candidate (NOT applied/built/run): `/tmp/cna-intermediate-polymorphism.cpp`,
-`/tmp/cna-intermediate-polymorphism-metadata.cpp`, `/tmp/cna-intermediate-polymorphism-CMakeLists.txt`.
-A new standalone content.custom.intermediate_polymorphism would demonstrate an abstract Spawn
-list with EnemySpawn/TreasureSpawn, explicit TypeSerializerFor registration, inherited/derived
-fields, actual XML Type attributes inspected through public XmlReader, null elements, fresh
-concrete objects and unknown/unrelated/abstract-type refusal (proposed 8 child
-checks). Negative probes check the intended diagnostic gate; type spellings use the namespace
-prefix actually emitted. Unlike the two extensions this would be one meaningful new demo.
-The complete 434-xml checkpoint now permits applying this next batch. No XNB, oracle execution or
-runtime validation is claimed from this draft. The separate source audit explains why XML
-RuntimeType/TypeVersion metadata alone does not establish dynamic dispatch.
+435 batch (built and targeted validation complete):
+- content.custom.intermediate_polymorphism has eight passing child checks per fresh renderer
+  selection WITHOUT DISPLAY/WAYLAND: actual concrete Type attributes, null, restored list order,
+  fresh dynamic EnemySpawn/TreasureSpawn objects with inherited/derived fields, and refusal of
+  unknown/unrelated/abstract types at their intended diagnostic gates. Public XmlReader inspects
+  actual emitted prefixes. No GPU, XNB output or genuine-XNA execution is claimed.
+- Evidence `/tmp/cna-435-polymorphism-{SOFTWARE,OPENGLES3}.{json,log}`. Standalone JSON has
+  checks=0; all eight checks are in child stdout. No new CNA issue or asset.
+- `/tmp/cna-435-build.log` clean; metadata 435/0; all 20 targeted CTests pass, including all 16
+  C ABI demos (`/tmp/cna-435-targeted-ctest.log`). Coverage remains 293/329 types, 1354/2326
+  named members, 158/3210 C routes. Full runtime columns still use checkpoint-434-xml and mark
+  the new ID absent until its complete run. External CNA C API changes required rebuilding
+  affected objects; no CNA edits here and no atomic dependency source snapshot claim.
+- All /tmp polymorphism drafts are applied and stale; use repository sources.
 Further source-only candidate after polymorphism: ReadAsset's disposal callback and uncached
 repeat reads. ContentReader currently records only non-null shared_ptr<IDisposable-derived>
 results from typed ReadObject paths; default manager fallback is explicitly deferred, and raw/

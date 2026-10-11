@@ -39,6 +39,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- A polymorphic XML spawn list restores concrete enemy/treasure schemas through an abstract
+  base and rejects unknown, unrelated or abstract type declarations (eight child checks).
 - Existing intermediate XML tools now round-trip a cyclic resource graph with verified C++
   ownership cleanup, and enforce a non-null objective on both serialization and deserialization.
   These extend semantic coverage without adding demo IDs.

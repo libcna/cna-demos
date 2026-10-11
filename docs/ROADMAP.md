@@ -189,7 +189,7 @@ a check that all authored colors remain visible and that a blank texture row can
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (35 demos; remaining below)
+## Phase 8 -- content 🟨 (36 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -241,7 +241,10 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ Existing intermediate XML tools now cover a two-resource cycle, explicit shared_ptr unlinking
   and verified release (16 child checks), plus AllowNull(false) on both read and write with an
   authored value distinct from its constructor default (11 child checks). Both tools run without
-  a display under both renderer selections; polymorphic XML dispatch remains separate work.
+  a display under both renderer selections.
+- ✅ `content.custom.intermediate_polymorphism`: explicit concrete serializer registration, an
+  abstract-base list, inherited/derived values, emitted Type attributes and nulls, plus refusal
+  of unknown/unrelated/abstract declarations (eight child checks, no display needed).
 - ✅ `content.content_manager.asset_precedence`: same-name XNB/CNB/CNJ/native values,
   cache versus fresh-manager lookup, Unload, explicit native filenames, corrupt compiled-file
   refusal and repair/retry. Thirteen checks pass; truncated XNB exposes a public exception-type
