@@ -8,7 +8,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 **404 demos** in 18 categories. Kinds: console 145, game 240, standalone 19. Automation: automated 368, manual 3, smoke-only 33.
 
-| Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
+| Category | Demos | Automated | Smoke-only | Manual | Run on BASELINE-SOFTWARE (passed / skipped / failed / not run / absent) | Run on BASELINE-OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 19 | 16 | 2 | 1 | 18 / 0 / 0 / 1 / 0 | 18 / 0 / 0 / 1 / 0 |
 | c_api | 13 | 12 | 1 | 0 | 13 / 0 / 0 / 0 / 0 | 13 / 0 / 0 / 0 / 0 |
@@ -35,12 +35,12 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 289 of 329** (87.8 %).
-- **Methods, properties, constructors and events named by a demo: 1307 of 2326** (56.2 %).
+- **Methods, properties, constructors and events named by a demo: 1310 of 2326** (56.3 %).
 - Fields and enum values named by a demo: 132 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
-| `Microsoft.Xna.Framework` | 40 / 42 | 474 / 643 | 34 / 78 |
+| `Microsoft.Xna.Framework` | 40 / 42 | 477 / 643 | 34 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 16 / 19 | 80 / 121 | 5 / 11 |
 | `Microsoft.Xna.Framework.Content` | 6 / 11 | 10 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |

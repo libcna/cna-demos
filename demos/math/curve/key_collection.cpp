@@ -13,6 +13,9 @@ namespace
         Curve curve;
         CurveKeyCollection& keys = curve.getKeysProperty();
 
+        ctx.Check(curve.getIsConstantProperty() && curve.Evaluate(-5.0f) == 0.0f && curve.Evaluate(5.0f) == 0.0f,
+                  "an empty curve is constant and evaluates to zero");
+
         // Added out of order...
         keys.Add(CurveKey(2.0f, 20.0f));
         keys.Add(CurveKey(0.0f, 0.0f));
@@ -35,6 +38,11 @@ namespace
         ctx.Check(keys.Remove(CurveKey(1.0f, 10.0f)), "Remove deletes an equal key");
         ctx.Check(curve.getIsConstantProperty(), "one key left: the curve is constant");
         ctx.Check(copy.getKeysProperty().getCountProperty() == 3, "Clone made an independent copy");
+        keys.getItemProperty(0).setValueProperty(7.0f);
+        ctx.Check(curve.Evaluate(-5.0f) == 7.0f && curve.Evaluate(5.0f) == 7.0f,
+                  "a single key supplies its value at every position");
+        ctx.Check(copy.getKeysProperty().getItemProperty(0).getValueProperty() == 0.0f,
+                  "editing a key value also leaves the cloned curve unchanged");
         keys.Clear();
         ctx.Check(keys.getCountProperty() == 0, "Clear removes every key");
     }
@@ -44,10 +52,10 @@ CNA_DEMOS_CONSOLE(CurveKeyCollectionDemo, {
     .id = "math.curve.key_collection",
     .title = "Curve key collection",
     .description = "Adds, finds, removes and clears keys in a CurveKeyCollection, which keeps them sorted by "
-                   "position, and copies a curve with Curve::Clone.",
+                   "position, copies a curve, and evaluates empty and single-key curves.",
     .apis = {"CurveKeyCollection::Add", "CurveKeyCollection::Item", "CurveKeyCollection::IndexOf",
              "CurveKeyCollection::RemoveAt", "CurveKeyCollection::Remove", "CurveKeyCollection::Clear",
              "CurveKeyCollection::Count", "Curve::IsConstant", "Curve::Clone", "CurveKey::Position", "CurveKey::Value",
-             "Curve::Keys"},
+             "Curve::Keys", "Curve::Evaluate"},
     .tags = {"curve", "collection"},
 })

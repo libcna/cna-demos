@@ -817,6 +817,30 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
+### CNA-DEMOS-ISSUE-036 -- Linear curve post-loop reads the first key's outgoing tangent
+
+- **Area:** math, `Curve::Evaluate`, `modules/math/src/Curve.cpp` (PostLoop Linear branch).
+- **Demo:** `math.curve.loop_types` (marked `knownIssue`).
+- **Environment:** Linux, GCC 14.2, CNA `2b15506a48e1a6202c985823131daf5856826f71`.
+- **Reproduction:** two keys `(0, 0)` and `(1, 1)`, ComputeTangents(Linear), then set the last
+  key's TangentOut to 3 and PostLoop to Linear. Evaluate at position 2.
+- **Observed:** 2, from `last.Value + first.TangentOut * (position - last.Position)`.
+- **Expected:** 4, from the last key's value 1 plus its outgoing tangent 3 times distance 1.
+  The locally available decompilation of genuine XNA 4.0 `Curve.Evaluate` explicitly reads
+  `curveKey2.tangentOut`, where curveKey2 is the last key. This is source evidence, not a
+  genuine-XNA runtime comparison. CNA's own CurveTest.EvaluatePostLoopLinear currently expects
+  the first-key behavior, so passing that upstream test does not establish XNA compatibility.
+- **Investigation:** the prior demo expected 2 after computing Linear tangents on a two-key
+  ramp. The last outgoing tangent is then zero, so even that original expectation was wrong:
+  XNA would hold at 1. The corrected demo sets distinct endpoint slopes explicitly and checks
+  the intended contract; first-key incoming extrapolation and negative CycleOffset/Oscillate
+  checks remain independent. No CNA source was modified.
+- **Related upstream record:** [CNA-BUG-064](https://libcna.com/known-issues/bugs/cna-bug-064.html)
+  also describes this post-loop error and the Step error already tracked here as ISSUE-002.
+- **Validation:** corrected demo executed on SOFTWARE: 16 checks, exactly one failure (actual 2,
+  expected 4). All five curve demos and catalog validation passed their CTest expectations;
+  metadata validation reports 404 demos and zero problems. Genuine XNA was not executed.
+
 ## Resolved
 
 (none yet)

@@ -151,10 +151,10 @@ CNA `2b15506a4`; planned work is not counted as completed or runtime-validated.
 
 | Members / behavior | Decision and evidence |
 |---|---|
-| Curve constructor, Keys, Evaluate | Existing `math.curve.evaluate` constructs a brightness timeline and checks keys and interpolation. Empty/single-key evaluation can be added to `key_collection` with its IsConstant checks. |
-| ComputeTangents | Existing `tangents` compares Flat/Linear/Smooth. The separate incoming/outgoing tangent overload remains a meaningful gap; extend that demo rather than adding an enum-variant demo. |
-| ComputeTangent | Extend `tangents` to edit one key's incoming/outgoing slopes and check the interpolated result; whole-curve computation alone does not show selective editing. |
-| PreLoop, PostLoop | Existing `loop_types` checks every post-loop mode and pre-loop Cycle. Negative-time CycleOffset/Oscillate boundaries remain useful checks within the existing demo. |
+| Curve constructor, Keys, Evaluate | Existing `math.curve.evaluate` constructs a brightness timeline and checks keys and interpolation. `key_collection` now checks zero for empty curves and a nonzero single-key value on both sides of its position. |
+| ComputeTangents | Existing `tangents` compares Flat/Linear/Smooth. `tangents` also computes different incoming/outgoing modes and checks the resulting midpoint (3.75). |
+| ComputeTangent | `tangents` now changes one key with separate modes, checks the untouched neighbor and midpoint 6.25, then restores Flat with the single-mode overload. |
+| PreLoop, PostLoop | `loop_types` checks all pre/post modes, explicit endpoint slopes and negative CycleOffset/Oscillate boundaries. Linear post-loop has one confirmed failure (ISSUE-036); the original demo expected the wrong first-key behavior. |
 | Curve Clone, IsConstant | Existing `key_collection` checks independence after removals and the transition to a single key. No separate clone demo. |
 | Collection constructor, Add, Item, Count, IndexOf, Remove, RemoveAt, Clear | Existing `key_collection` demonstrates sorted insertion and editing. Duplicate positions and Item replacement order are distinct edge cases to investigate before claiming complete collection behavior. |
 | Collection Clone, Contains, CopyTo, IsReadOnly | Clone fits existing copy/edit checks if extended; Contains is the boolean counterpart of demonstrated IndexOf. CopyTo and IsReadOnly are ordinary collection mechanics, intentionally without independent demos. They remain uncredited until actually shown. |

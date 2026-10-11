@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- Curve loop demo now checks the last outgoing tangent for Linear extrapolation; the former
+  expectation matched a CNA defect, now recorded as CNA-DEMOS-ISSUE-036.
 - Catalog validation extracts each demo object once before checking its fields and known issue;
   this avoids repeatedly parsing the complete catalog and timing out at 401 demos.
 - `tools/validate.sh` now stops on build and CTest failures even when their output contains no
@@ -15,6 +17,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing curve demos now show selective/asymmetric tangent computation, negative-time loop
+  boundaries, and empty/single-key evaluation without adding duplicate demos.
 - Custom CNB loader demo: a game-defined rules schema, public writer, shared loader registration,
   per-manager cache behavior and unsupported-schema rejection.
 - Quaternion double-cover/relative-turn demo and typed effect parameter round trips; confirmed

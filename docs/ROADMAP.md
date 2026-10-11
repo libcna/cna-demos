@@ -38,7 +38,8 @@ Console demos with checks; each shows one operation family.
   `ContainmentType`, `Intersects` (each pair that differs in meaning), `Plane.DotCoordinate`,
   `Ray.Intersects` distance, frustum culling. ≈ 18
 - `math.curve.*`: keys, `Evaluate`, `CurveLoopType` (constant/cycle/oscillate/linear),
-  `ComputeTangents`, `CurveContinuity`. ≈ 5
+  `ComputeTangents`, `CurveContinuity`. ✅ Existing demos extended for selective/asymmetric
+  tangents, negative loops, and empty/single-key curves; Linear post-loop exposes ISSUE-036. ≈ 5
 - `math.color.*`: constructors (bytes, floats, Vector3/4), `FromNonPremultiplied`, `Lerp`, `* float`,
   `PackedValue` layout, `ToVector3/4`, named colours. ≈ 6
 - `graphics.packed_vector.*`: pack/unpack round trip per format (Alpha8, Bgr565, Bgra4444,
