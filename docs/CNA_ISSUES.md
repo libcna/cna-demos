@@ -845,8 +845,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 - **Area:** documentation only, `DynamicSoundEffectInstance::setIsLoopedProperty` in
   `modules/audio/include/Microsoft/Xna/Framework/Audio/DynamicSoundEffectInstance.hpp`.
-- **Related demo:** `audio.dynamic_sound_effect_instance.streaming`; it currently does not set
-  IsLooped and therefore is not marked as an expected failure for this issue.
+- **Related demo:** `audio.dynamic_sound_effect_instance.streaming` now checks that true is
+  refused and false is accepted. Its failure marker is for the separate disposal issue below.
 - **Evidence:** source review at CNA `2b15506a48e1a6202c985823131daf5856826f71`. Both setter
   declarations say the argument is ignored/no effect. The implementation in
   `modules/audio/src/Xna/DynamicSoundEffectInstance.cpp` first checks disposal, then throws
@@ -855,10 +855,36 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Expected:** document that dynamic instances cannot loop: setting true throws, setting false
   is accepted, and using the setter after disposal throws ObjectDisposedException. This agrees
   with the locally available decompilation of genuine XNA 4.0 DynamicSoundEffectInstance.IsLooped.
-- **Validation scope:** header, implementation and reference source inspected; this property was
-  not newly executed in this session, and genuine XNA was not run. This is a confirmed comment
-  contradiction, not evidence of a runtime implementation defect. No CNA source was changed.
+- **Validation scope:** header, implementation and reference source inspected; the extended
+  streaming demo executed both setter values successfully on SOFTWARE and OPENGLES3. Genuine XNA was not run.
+  This is a confirmed comment contradiction, not a setter implementation defect. No CNA source
+  was changed.
 - **Suggested correction:** update both setter comments and their exception documentation.
+
+### CNA-DEMOS-ISSUE-038 -- Dynamic audio getters ignore disposal
+
+- **Area:** `DynamicSoundEffectInstance::getPendingBufferCountProperty` and
+  `getIsLoopedProperty`, `modules/audio/src/Xna/DynamicSoundEffectInstance.cpp`.
+- **Demo:** `audio.dynamic_sound_effect_instance.streaming` (marked `knownIssue`).
+- **Reproduction:** construct the dynamic instance, submit and play PCM, stop it, call Dispose,
+  verify IsDisposed, then read PendingBufferCount and IsLooped.
+- **Observed:** PendingBufferCount returns 0 and IsLooped returns false; neither getter throws.
+  The implementation returns queue size / false without
+  checking IsDisposed. The streamed playback, duration conversion and unsupported-request
+  checks pass independently; the failing checks concern only the two post-disposal getters.
+- **Expected:** both getters throw System::ObjectDisposedException. This is stated in the local
+  xna4-spec DynamicSoundEffectInstance.xml and appears explicitly in the genuine-XNA 4.0
+  decompilation's two getters. That reference was read, not executed.
+- **Investigation:** CNA's PendingBufferCountResetsToZeroAfterDisposeWhilePlaying unit test
+  currently expects zero after disposal. Queue cleanup is appropriate, but exposing its count
+  through a disposed public object conflicts with XNA; that upstream test does not establish
+  compatibility. The same unguarded implementations exist at the CI-pinned CNA revision
+  (source checked only). No upstream source was changed.
+- **Environment/evidence:** CNA `2b15506a48e1a6202c985823131daf5856826f71`, Linux GCC 14.2,
+  SOFTWARE and OPENGLES3/private Xvfb, SDL dummy audio. Both runs execute 11 checks with exactly
+  these two failures. Direct reports/logs: `/tmp/cna-streaming-lifecycle-{SOFTWARE,OPENGLES3}.{json,log}`.
+  Targeted CTest/catalog and metadata validation pass. No audible validation is claimed.
+- **Status:** runtime-confirmed missing disposal guards; not reported upstream.
 
 ## Resolved
 
