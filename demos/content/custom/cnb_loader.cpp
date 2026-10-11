@@ -77,6 +77,42 @@ namespace
         (void)another.Load<Rules>("rules");
         ctx.Check(reads == 2, "registration is shared but caches belong to each manager");
 
+        // A newer writer can add optional information without changing the known RULE schema.
+        // The same extension marked mandatory must be refused: silently ignoring it would
+        // change the meaning of the asset. No internal container code is needed for this policy.
+        constexpr auto ExtensionChunk = MakeChunkId('N', 'E', 'W', '!');
+        CnbWriter optional(typeId, 1);
+        optional.SetMetadata(RulesName, "optional");
+        optional.AddChunk(RulesChunk, bytes, CnbChunkFlags::Mandatory);
+        optional.AddChunk(ExtensionChunk, {42}, CnbChunkFlags::None);
+        optional.WriteToFile((path / "optional.cnb").string());
+        const Rules extended = content.Load<Rules>("optional");
+        ctx.Check(extended.name == rules.name && extended.gravity == rules.gravity && extended.lives == rules.lives,
+                  "an unknown optional chunk leaves the understood rules intact");
+
+        CnbWriter required(typeId, 1);
+        required.SetMetadata(RulesName, "required");
+        required.AddChunk(RulesChunk, bytes, CnbChunkFlags::Mandatory);
+        required.AddChunk(ExtensionChunk, {42}, CnbChunkFlags::Mandatory);
+        required.WriteToFile((path / "required.cnb").string());
+        const int readsBeforeFailure = reads;
+        bool mandatoryRejected = false;
+        try { (void)content.Load<Rules>("required"); }
+        catch (const ContentLoadException& error)
+        {
+            mandatoryRejected = true;
+            ctx.Print("Required extension refused: {}", error.what());
+        }
+        ctx.Check(mandatoryRejected && reads == readsBeforeFailure,
+                  "an unknown mandatory chunk is rejected before decoding the rules");
+
+        // Repair the same asset on disk and retry using the same manager, without Unload.
+        // Failed loads must not leave a cached, partially initialized game object behind.
+        writer.WriteToFile((path / "required.cnb").string());
+        const Rules repaired = content.Load<Rules>("required");
+        ctx.Check(repaired.name == rules.name && repaired.lives == rules.lives && reads == readsBeforeFailure + 1,
+                  "the same manager retries a failed asset after its file is repaired");
+
         CnbWriter future(typeId, 2);
         future.SetMetadata(RulesName, "future");
         future.AddChunk(RulesChunk, bytes, CnbChunkFlags::Mandatory);
@@ -96,7 +132,7 @@ CNA_DEMOS_CONSOLE(CnbLoader, {
     .id = "content.custom.cnb_loader",
     .title = "A custom CNB asset schema (CNAEXT)",
     .description = "Writes a small game-rules CNB asset, registers its typed loader, checks per-manager caching "
-                   "and process-wide registration, and rejects a newer unsupported schema.",
+                   "and process-wide registration, optional versus required extensions, retry after repair and schema rejection.",
     .apis = {"ContentManager::RegisterCnbLoaderEXT", "ContentManager::Load",
              "CNA::Content::Cnb::CnbAssetTypeIdFromName", "CNA::Content::Cnb::CnbWriter::SetMetadata",
              "CNA::Content::Cnb::CnbWriter::AddChunk", "CNA::Content::Cnb::CnbWriter::WriteToFile",

@@ -281,20 +281,42 @@ when unique_ptr deletes the object. All 9 checks pass on SOFTWARE, as do its CTe
 check and metadata validation (405/0). Callback counters precede the owned pointer so exceptions
 cannot leave a destructor invoking references to expired local state.
 
-**Full 405-demo checkpoint is running:** tools/validate.sh, log
-`/tmp/cna-demos-405-validation.log`. Until completed, section 7 still refers to the preceding
-404-demo semantic checkpoint. Coverage explicitly lists the new instance-limit ID as absent
+**Full 405-demo attempt interrupted:** tools/validate.sh, log
+`/tmp/cna-demos-405-validation.log`, passed build/metadata and all 417 enabled CTests, but
+the SOFTWARE process exited during `phone.phone_application_service.lifecycle` after an XIO
+fatal connection error on inherited display `:0`. It never wrote a fresh SOFTWARE report and
+never reached GLES. The raw smoke log is preserved as `/tmp/cna-demos-405-software-interrupted.log`.
+This is not a completed checkpoint; section 7 still refers to the preceding 404-demo semantic
+checkpoint. The isolated phone demo passes under private Xvfb
+(`/tmp/cna-phone-lifecycle-SOFTWARE.{json,log}`). No phone-demo defect was reproduced. Run the
+next entire validation under private Xvfb after the prepared batches rather than depending on
+the desktop display. A partial run cannot replace the complete archived reports. Coverage explicitly lists the new instance-limit ID as absent
 from those old reports. The new checkpoint must include both ownership and lifecycle changes.
 Further candidates: ContentManager cache/root/lifetime, CNB optional/mandatory chunk behavior,
 and Texture2D ownership/stream gaps. The new CNA binary-content table audits writer/document/
-cursor members outside the XNA percentage. ISSUE-037 records the source-confirmed dynamic
-IsLooped comment error without claiming a runtime defect; its actual guard can extend streaming. CNJ custom loading remains pending: a meaningful
-payload example needs a JSON-parser choice; do not borrow CNA's Internal parser or add a
-constant-return factory merely to increase coverage.
+cursor members outside the XNA percentage. The CNB optional/mandatory extension is completed: all 8 checks pass on both renderer
+selections, build/metadata and targeted CTest pass. Reports: `/tmp/cna-cnb-extensions-{SOFTWARE,OPENGLES3}.json`.
+The next prepared extensions are in `/tmp/cna-streaming-lifecycle.cpp` (buffer sizing, stream restrictions and disposal guards), plus
+`/tmp/cna-cnj-loader.cpp` (two named JSON factories for a game-owned Enemy).
+These are drafts, not yet built or validated; apply and validate next; the preceding checkpoint attempt has ended.
+ISSUE-037 records the source-confirmed dynamic
+IsLooped comment error without claiming a runtime defect; its actual guard can extend streaming.
+The CNJ parser choice is now resolved: nlohmann-json 3.11 is already an explicit README/CI
+prerequisite and 3.11.3 is installed. Link the content category explicitly using CNA's existing
+`cmake/HeaderOnlyJson.cmake` / `cna_link_json_headers` helper (also present at the CI pin), which
+isolates portable headers for cross builds. The prepared demo needs three original CNJ fixtures
+under `assets/custom`; it is not yet part of the catalog. No CNA Internal parser is needed.
 
-**Next**: remainders by value -- Phase 8 (`RegisterCnjLoader` for a game's
-own asset type: the CNJ hook hands the game raw JSON, and sharp-runtime's System.Text.Json is not
-part of CNA's build, so a demo would need its own parser; the CNB hook is now demonstrated); Phase 9 (category instance limits are now the next implementable batch above; RPC curves and
+Effects source review: all four configured `CNA_*_COMPILED_EFFECTS` switches are OFF and
+`CNA_FXC_EXECUTABLE` is empty in the current CMake cache, confirming the compiled-FX blocker.
+`PbrEffect::setImageBasedLightEXT` and the three-texture `ImageBasedLightEXT` bundle do exist,
+including EasyGL rendering support. However, the EnvironmentProcessor named in CNA's audit
+placeholders is absent from the tracked source tree. An IBL demo therefore still needs an
+authored, consistent irradiance/specular/BRDF bundle or a small asset generator; do not call a
+nonexistent processor or pass arbitrary unrelated textures and claim meaningful IBL coverage.
+
+**Next**: remainders by value -- Phase 8 (finish the prepared `RegisterCnjLoader` demo using
+nlohmann-json; the CNB hook is already demonstrated); Phase 9 (category instance limits are complete; RPC curves and
 cue variations still need authored data and audible or supported output observation); Phase 6 (image-based lighting; compiled `.fx` effects need fxc); Phase 12
 (`AvatarDescription::Changed`, manual); Phase 13 (devices-ext camera, system tray, message box and
 file dialog are manual; `CNA::Devices::Clipboard` repeats `CNA::Input::Clipboard`); Phase 15
