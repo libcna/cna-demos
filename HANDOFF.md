@@ -92,25 +92,23 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **418-demo checkpoint passed** through revision `d2f8645`, including C foreign-thread
-dispatch and vector array ranges. tools/validate.sh exited 0 under private Xvfb
-(`/tmp/cna-demos-418-validation.log`). All 418 IDs are present, with old statuses unchanged.
-OPENGLES3's 25 failed assertions match directly. SOFTWARE's 24 match after documented manual
-review of one stdout/stderr splice in ISSUE-019; original bytes are preserved (details below).
-The subsequent separate-stream validation fix has unit/regression evidence but awaits the next
-complete checkpoint; no demo binary changed for that fix.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. CNA was `2b15506a4` through the
+418 build; its checkout advanced externally during the 419 batch (provenance below).
+The full **419-demo checkpoint passed** through revision `7275e55`, including mesh-part
+buffer/effect behavior and the separate-stream validation fix. tools/validate.sh exited 0
+under private Xvfb (`/tmp/cna-demos-419-validation.log`). All 419 IDs are present; every old
+status and all failed-assertion messages/multiplicities match the reviewed 418 baseline.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 418 demos, 0 problems |
+| Metadata/assets `--validate` | 419 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 405 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 373 passed, 17 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 394 passed, 18 expected failures, 3 skipped, 3 manual not run |
-| Unexpected outcomes | No new demo/CNA failure; one log-stream splice reviewed, then all failure multisets match |
-| Screenshots | Latest C ABI changes are console checks; no rendering/visual claim. Earlier screenshots are detailed below |
+| CTest | 406 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 374 passed, 17 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 395 passed, 18 expected failures, 3 skipped, 3 manual not run |
+| Unexpected outcomes | None; raw failed-assertion multisets remain 24/25 |
+| Screenshots | mesh_parts inspected on both renderers; RGBA images identical |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -221,15 +219,29 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Current session checkpoint (2026-10-11):** full `tools/validate.sh` exited 0 for all **418 demos**
-at `d2f8645`. SOFTWARE 373/17/25/3, OPENGLES3 394/18/3/3, 430 enabled CTests, metadata 418/0.
-Archives: `reports/checkpoint-418-{SOFTWARE,OPENGLES3}.{json,log}` and
-`checkpoint-418-{build,ctest,validation}.log`. Both JSON reports match the fresh 418 catalog.
-New C dispatch passes; every old status is unchanged. C math has 18 child checks in stdout.
-Coverage is 290/329 XNA types, 1321/2326 members, 156/3210 C ABI routes, not comprehensive coverage.
-CNA remains clean at `2b15506a48e1a6202c985823131daf5856826f71` (CI pins `10a4ef1...`).
+**Current session checkpoint (2026-10-11):** full `tools/validate.sh` exited 0 for all **419 demos**
+at `7275e55`. SOFTWARE 374/17/25/3, OPENGLES3 395/18/3/3, 431 enabled CTests, metadata 419/0.
+Archives: `reports/checkpoint-419-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
+`checkpoint-419-{build,ctest,validation}.log`. Both JSON reports match the fresh 419 catalog.
+Strict comparisons against 418 (reviewed SOFTWARE log; original GL log) pass: all old statuses
+and exact failure messages/multiplicities remain unchanged, 24/25. New mesh_parts passes.
+Native stderr was inspected too: SOFTWARE's 25 renderer errors and one INFO match prior logs;
+GL has the same three renderer errors, one INFO and 84 X protocol diagnostics as 417/418
+(42 BadWindow ChangeProperty, 42 SendEvent; serial/resource IDs vary). The latter are CNA's
+already documented X-client lifetime diagnostics (plans/plan_vulkan.md VULKAN-154), not a new
+failure introduced by the capture fix. Original bytes are preserved, not filtered from archives.
+Coverage is 290/329 XNA types, 1327/2326 members, 156/3210 C ABI routes, not comprehensive coverage.
+CNA was clean at `2b15506a48e1a6202c985823131daf5856826f71` when the 418 batch was built
+(19:16 CEST); CI pins `10a4ef1...`. During the next batch, external CNA commits arrived
+from 19:23 onward. At the 419 build completion (19:37), its latest committed revision was
+`b9350df9a`; by 19:41 it had advanced to `c00b48c01` with a further documentation rename
+in progress. We did not edit or revert those changes. The inspected cumulative diff from
+2b15506 contains documentation/test-comment changes, a comment-only AudioMixer header edit,
+and deletion of an unused root Hello World main.cpp; no library implementation or public
+API behavior changed. The exact in-flight checkout was not atomically captured at build
+start, so do not attribute the 419 binary to an exclusively pinned CNA commit. Checkpoint 419 completed against its already-built binary without a mid-run rebuild.
 
-SOFTWARE raw comparison correctly requested review: five identical native logger stderr lines
+Historical 418 SOFTWARE raw comparison correctly requested review: five identical native logger stderr lines
 were inserted between "no burst of catch-up updates" and " followed the load" in ISSUE-019's
 stdout assertion (raw lines 746-751). Its JSON message independently contains the intact assertion.
 Exactly that one splice was removed from a COMPARISON COPY only:
@@ -237,8 +249,8 @@ Exactly that one splice was removed from a COMPARISON COPY only:
 hashes, the exact removed logger line/count and corroborating JSON message. Both copies retain
 24 CHECK FAILED markers; the reviewed copy matches checkpoint-417's exact failure multiset.
 GL's raw 25 matches directly. No assertion was removed or baseline silently rewritten.
-Use **checkpoint-418-SOFTWARE.reviewed.log** as the next comparison baseline, retaining its raw
-partner and review record. All original stdout/stderr bytes remain in the original archive.
+The 419 comparison used **checkpoint-418-SOFTWARE.reviewed.log**, retaining its raw
+partner and review record. Future comparisons can use the separate-stream 419 logs directly. All original stdout/stderr bytes remain in the original archive.
 
 `tools/validate.sh` now preserves stdout and stderr separately for future checkpoints, preventing
 this top-level pipe splice. Archive BOTH `smoke-<renderer>.log` and `.stderr.log`; compare stdout
@@ -253,11 +265,9 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** run full checkpoint-419 for the validated mesh_parts demo and the
-separate-stream capture fix. Compare SOFTWARE to checkpoint-418-SOFTWARE.reviewed.log (retain
-its raw partner/review record), GL to checkpoint-418-OPENGLES3.log and IDs to the fresh 419 catalog.
-Archive stdout AND stderr. Expected SOFTWARE 374/17/25/3, OPENGLES3 395/18/3/3, 431 enabled CTests
-and raw failed-assertion multisets 24/25. Last full checkpoint remains 418 at d2f8645.
+**Immediate next action:** apply and validate the two prepared drafts listed below, now that
+checkpoint 419 is archived. Reuse linux-full and shared ccache; run both renderer selections,
+inspect sampler/capture pixels, update coverage/status, then run the next complete checkpoint.
 
 New `graphics.model.mesh_parts` passes all 8 checks on SOFTWARE/OPENGLES3:
 shared buffers, distinct triangle/index/base-vertex ranges, effect collection deduplication,
@@ -265,9 +275,16 @@ retention/replacement, and two colored/two untouched pixel samples. Both screens
 RGBA data is identical. Evidence: `/tmp/cna-mesh-parts-{SOFTWARE,OPENGLES3}.{json,log,png}`.
 Build `/tmp/cna-419-mesh-build.log`, metadata 419/0 and its CTest plus two catalog checks pass
 (`/tmp/cna-419-mesh-ctest.log`). Coverage: 290/329 XNA types, 1327/2326 members, 156/3210 C routes.
-The runtime columns still show the new ID absent from the older full checkpoint. No new CNA issue.
+The complete 419 checkpoint now includes its runtime evidence in both coverage columns. No new CNA issue.
 The /tmp mesh draft is applied and stale. Next productive Phase 7 work is per-part sampler/topology
 behavior or the distinct SkinnedModelEXT carrier; the audit separates remaining members.
+
+Prepared next-batch drafts (not yet copied into the project or compiled):
+`/tmp/cna-model-part-sampler.cpp` demonstrates procedural part sampler metadata versus explicit
+device selection with red/green pixels. `/tmp/cna-c-host-frames.c` and
+`/tmp/cna-c-host-frames-metadata.cpp` demonstrate the copied GameFrameHooks table, two explicit
+host frames, BeginDraw suppression and terminal RunFrameEXT behavior. Their CNA APIs were
+read in source; these drafts are NOT runtime evidence. 419 is now complete/archived; these drafts are ready to apply.
 
 Previous 418 batch (included in its complete checkpoint):
 
@@ -311,8 +328,11 @@ for these three changes are applied and stale; do not reapply them.
 
 
 The ModelMesh/ModelMeshPart audit is in COVERAGE_AUDIT.md and now includes the validated
-shared-buffer example above. Imported sampler application remains an investigation candidate:
-the inspected Draw path alone is not a confirmed CNA defect. SkinnedModelEXT is distinct from
+shared-buffer example above. Sampler source review now resolves the initial suspicion: CNA's easygl_gltf_sampler_wrap_test
+explicitly documents GLTF-208, preserving application-owned device state and requiring explicit
+selection of a part sampler. Do not report missing automatic assignment as a CNA bug. A small
+procedural part-sampler metadata/explicit-selection pixel demo is a useful next step; importing
+actual authored glTF sampler fixtures remains separate. SkinnedModelEXT is distinct from
 the already demonstrated Model/SkinningData route. The C runtime audit also identifies host-driven
 run_frame_ext and GameFrameHooks as unexecuted behavior; no draft exists for those yet.
 
