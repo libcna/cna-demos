@@ -144,6 +144,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   (AudioEngine::RendererDetails), `math.formatting.to_string` (ToString of the math types; expected
   failure, CNA-DEMOS-ISSUE-024: BoundingBox and Ray print doubled braces); the type-converter demo
   also lists Vector4, Plane and Ray.
+- `game.window.orientation` (SupportedOrientations, CurrentOrientation, OrientationChanged, CNA's
+  keyboard orientation emulation enabled before the device exists) and
+  `graphics.shader_effect.vertex_displacement` (a heightmap sampled in a GLSL vertex shader through
+  ShaderEffect::SetTexture); `game.graphics_device_manager.device_events` also follows the
+  GraphicsDevice's own DeviceResetting/DeviceReset.
 - `graphics.render_target.hdr_blendable` (additive light past 1.0 in an HdrBlendable target, read
   back as HalfVector4, shown at an exposure; new `Need::HalfFloatRenderTargets`),
   `audio.xact.streaming_wave_bank` (streaming WaveBank constructor, IsPrepared, IsInUse;

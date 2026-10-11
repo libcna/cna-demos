@@ -6,7 +6,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**371 demos** in 18 categories. Kinds: console 139, game 222, standalone 10. Automation: automated 336, manual 2, smoke-only 33.
+**373 demos** in 18 categories. Kinds: console 139, game 224, standalone 10. Automation: automated 338, manual 2, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -18,9 +18,9 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 | 4 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 | 5 / 0 / 0 |
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 | 2 / 0 / 0 |
-| game | 30 | 25 | 4 | 1 | 23 / 5 / 1 | 28 / 0 / 1 |
+| game | 31 | 26 | 4 | 1 | 23 / 6 / 1 | 29 / 0 / 1 |
 | gamer_services | 18 | 18 | 0 | 0 | 17 / 0 / 1 | 17 / 0 / 1 |
-| graphics | 122 | 122 | 0 | 0 | 115 / 4 / 3 | 115 / 3 / 4 |
+| graphics | 123 | 123 | 0 | 0 | 115 / 5 / 3 | 116 / 3 / 4 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
 | math | 73 | 73 | 0 | 0 | 71 / 0 / 2 | 71 / 0 / 2 |
 | media | 10 | 9 | 1 | 0 | 10 / 0 / 0 | 10 / 0 / 0 |
@@ -32,17 +32,17 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 286 of 329** (86.9 %).
-- **Methods, properties, constructors and events named by a demo: 1063 of 2326** (45.7 %).
+- **Methods, properties, constructors and events named by a demo: 1068 of 2326** (45.9 %).
 - Fields and enum values named by a demo: 125 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
-| `Microsoft.Xna.Framework` | 40 / 42 | 282 / 643 | 34 / 78 |
+| `Microsoft.Xna.Framework` | 40 / 42 | 285 / 643 | 34 / 78 |
 | `Microsoft.Xna.Framework.Audio` | 16 / 19 | 78 / 121 | 5 / 11 |
 | `Microsoft.Xna.Framework.Content` | 6 / 11 | 10 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 42 / 52 | 114 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 256 / 550 | 80 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 258 / 550 | 80 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
@@ -295,6 +295,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GamePadCapabilities::HasTouchPadEXT` -- input.gamepad.touchpad
 - `GamePadCapabilities::HasTriggerVibrationMotorsEXT` -- input.gamepad.trigger_vibration
 - `GameWindow::FileDropEXT` -- game.window.file_drop
+- `GameWindow::KeyboardOrientationEmulationEnabledEXT` -- game.window.orientation
 - `GameWindow::TextDropEXT` -- game.window.file_drop
 - `GamerCollection::Count` -- net.network_session.local_session
 - `GamerCollection::Item` -- net.network_session.local_session
@@ -380,9 +381,11 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `SetMorphWeightsEXT` -- graphics.model.morph_targets
 - `ShaderEffect::GetCompileErrorEXT` -- graphics.shader_effect.toon_shading
 - `ShaderEffect::IsEffectValid` -- graphics.shader_effect.toon_shading
-- `ShaderEffect::SetUniformFloat` -- graphics.shader_effect.sprite_shader
+- `ShaderEffect::SetTexture` -- graphics.shader_effect.vertex_displacement
+- `ShaderEffect::SetUniformFloat` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.vertex_displacement
+- `ShaderEffect::SetUniformInt` -- graphics.shader_effect.vertex_displacement
 - `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading
-- `ShaderEffect::ShaderEffect` -- graphics.render_target.multiple_render_targets, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading
+- `ShaderEffect::ShaderEffect` -- graphics.render_target.multiple_render_targets, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.vertex_displacement
 - `SkinningData` -- graphics.model.skinned_animation
 - `SpriteFont::SpriteFont` -- graphics.sprite_font.glyph_constructor
 - `StorageDevice::GetStorageRootEXT` -- storage.storage_device.storage_root

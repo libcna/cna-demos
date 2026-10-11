@@ -44,7 +44,7 @@ Console demos with checks; each shows one operation family.
   Bgra5551, Byte4, HalfSingle/Vector2/Vector4, NormalizedByte2/4, NormalizedShort2/4, Rg32,
   Rgba1010102, Rgba64, Short2/4) -- one demo per format family, not per method. ≈ 8
 
-## Phase 3 -- game lifecycle (`game.*`) 🟨 (29 demos; remaining: ScreenDeviceName, orientation)
+## Phase 3 -- game lifecycle (`game.*`) 🟨 (31 demos; remaining: ScreenDeviceName)
 - Game: method order (`Initialize`→`LoadContent`→`BeginRun`→Update/Draw→`EndRun`→`UnloadContent`),
   `IsFixedTimeStep` and `TargetElapsedTime`, variable time step, `IsRunningSlowly`, `ResetElapsedTime`,
   `SuppressDraw`, `Exit`, `Exiting`/`Activated`/`Deactivated` events, `IsMouseVisible`,
@@ -115,7 +115,8 @@ Console demos with checks; each shows one operation family.
   and lighting together).
 - 🟨 CNA effects: ✅ `PbrEffect` metallic/roughness, ✅ `ColorMatrixEffect` (SOFTWARE). Remaining:
   PBR maps (normal, emissive, occlusion), `SkinnedPbrEffect`, image-based lighting.
-- 🟨 Custom shaders: ✅ `ShaderEffect` in 3D (toon shading) and in `SpriteBatch::Begin`
+- 🟨 Custom shaders: ✅ `ShaderEffect` in 3D (toon shading), a heightmap read in the vertex shader
+  (`graphics.shader_effect.vertex_displacement`) and in `SpriteBatch::Begin`
   (grayscale), GLSL chosen from `GetShaderDialectEXT()`. Remaining: compiled XNA `.fx` effects
   (needs a CNA build with `CNA_<RENDERER>_COMPILED_EFFECTS`), other dialects.
 - ✅ Effect API (3): parameters/techniques/passes reflection (properties reach parameters on
