@@ -234,13 +234,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** complete 439 at d6afc7b is archived and reviewed. Apply the prepared
-compiler integrity extension below, build and run both focused renderer selections, then targeted
-CTest and a full 439-integrity checkpoint against ORIGINAL checkpoint-439. The old failed Guide
-attempt remains preserved; its corrected observer passed the full retry. All 452 enabled CTests
-passed (164.62 s); SOFTWARE 388/23/25/3 and OPENGLES3 409/24/3/3. No CNA issue was added for
-the demo's former timing assumption. Next continue XML-to-XNB integration or remaining actual
-compiler publication behavior; do not repeat basic cache or sibling recognition coverage.
+**Immediate next action:** compiler integrity extension is built and passes fifteen child checks
+under both displayless renderer selections; all ten original checks are retained and both private
+paths are independently verified removed. Build /tmp/cna-439-integrity-build.log is clean; metadata
+439/0 and all 21 targeted CTests pass (/tmp/cna-439-integrity-targeted-ctest.log). Full
+439-integrity validation is next, using ORIGINAL checkpoint-439 as baseline. Expected unchanged
+439 IDs/statuses/known issues and 31/32 failed assertions; compiler child checks 10 -> 15. Archive
+both original streams and 26 selected artifact hashes. Do not mutate source/assets or rebuild
+during full runtime validation. After closing it, continue the XML-to-XNB source integration draft
+in /tmp/cna-xml-xnb-main.cpp (not applied/built/run), verified against actual public source headers.
 
 439 targeted evidence:
 - nested_builds passes 20 child checks and incremental_compiler ten, under both fresh displayless
@@ -477,22 +479,21 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
   /tmp/cna-439-notification-targeted-ctest.log. Five consecutive notification CTests pass
   in /tmp/cna-439-notification-repeat-ctest.log (13.35 s); commit and retry the complete checkpoint.
 
-Next integrity draft after complete full 439 (NOT applied/built/run):
-/tmp/cna-compiler-integrity.cpp and /tmp/cna-compiler-integrity-metadata.cpp extend the existing
-incremental_compiler ID from ten to fifteen proposed checks. The factory retains the latest
-registry only within main to check IsFrozen and specific late-registration refusal. Writer
-version 1 -> 2 should rebuild both nodes despite equal output bytes; same-length byte tampering
-with restored mtime should rebuild only that output's node; a corrupt manifest should rebuild
-both and be replaced. Clean should reject changed owned bytes before deleting a valid peer or
-manifest. The exact original bytes are explicitly restored only after the refusal observation,
-then the original successful clean control runs. All ten older checks remain. These are draft
-expectations, not evidence. Apply only after full 439 is complete/archived; no new demo ID.
+Integrity extension (built and focused-runtime validated; full checkpoint pending):
+The existing incremental_compiler ID now has fifteen passing checks. Accepted registry IsFrozen
+and late RegisterWriter refusal pass. Writer version 1 -> 2 rebuilds both nodes despite identical
+encoding; same-length output corruption with restored mtime rebuilds only that node; invalid
+manifest text triggers two fresh builds and valid replacement. Real clean refuses changed owned
+bytes without deleting the valid peer or manifest. Only then are exact owned bytes restored for
+the original successful-clean control. All ten older checks remain. Evidence:
+/tmp/cna-439-integrity-{SOFTWARE,OPENGLES3}.{json,log}. Expected corrupt-manifest warning and clean
+refusal are preserved, not failed demo checks. No new CNA issue; no concurrency/crash-consistency
+claim. Integrity drafts are APPLIED AND STALE; use repository sources.
 
-Next meaningful compiler gaps: component-version/parameter invalidation, corrupt/missing manifest
-recovery, same-length output tampering and ownership-safe cleanup of modified outputs; choose a
-coherent extension to the new compiler tool rather than new IDs per cache variation. Actual
+Next meaningful compiler gaps: actual parameter fingerprints, removed-source collection and
+missing-manifest recovery; choose coherent behavior rather than new IDs per cache variation. Actual
 multi-output/deployment publication failures and concurrent publishers remain distinct larger
-workstreams. Direct registry freezing/mutation rejection is public behavior still unexecuted.
+workstreams. Registry freezing and late mutation rejection are now exercised by the integrity extension.
 XML aliases remain ISSUE-046; XML-to-XNB writer integration and direct custom raw/existing-instance
 serialization are still gaps. Source-only integration notes: public XnaXmlSourceContentPipeline.hpp
 requires a shared XNA Serialization::Compiler::ContentCompiler with the game's serializer and

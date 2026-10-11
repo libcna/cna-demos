@@ -163,9 +163,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentFileSha256` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentPipeline::Build` -- content.custom.nested_builds, content.custom.pipeline_components, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::Stage` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineRegistry::IsFrozen` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterProcessor` -- content.custom.pipeline_components
-- `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterWriter` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterWriter` -- content.custom.incremental_compiler, content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentProcessorContext::ResolveSourceDependency` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessorParameters::Set` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentValue::Create` -- content.custom.pipeline_components

@@ -12,6 +12,7 @@
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <utility>
 #include <vector>
 
 #include "CNA/Content/Cnb/CnbByteWriter.hpp"
@@ -42,9 +43,10 @@ namespace
         if (!file.eof()) throw std::runtime_error("Unexpected score fields.");
         return value;
     }
-    void WriteText(const std::filesystem::path& path, std::string_view text)
+    void WriteFile(const std::filesystem::path& path, std::string_view text)
     {
-        std::ofstream file(path); file << text; file.close();
+        std::ofstream file(path, std::ios::binary);
+        file.write(text.data(), static_cast<std::streamsize>(text.size())); file.close();
         if (!file) throw std::runtime_error("Could not write the original demo input.");
     }
     std::string ReadText(const std::filesystem::path& path)
@@ -86,7 +88,8 @@ namespace
     class ScoreWriter final : public Pipeline::ContentTypeWriter
     {
     public:
-        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.ScoreWriter", "1"}; }
+        explicit ScoreWriter(std::string version) : version_(std::move(version)) {}
+        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.ScoreWriter", version_}; }
         std::string InputType() const override { return ScoreType; }
         std::vector<Pipeline::ContentWriterSchemaIdentity> OutputSchemaIdentities() const override
         {
@@ -103,6 +106,8 @@ namespace
             result.assetTypeName = ScoreType; result.assetSchemaVersion = 1;
             return result;
         }
+    private:
+        std::string version_;
     };
     std::uint32_t ReadScore(const std::filesystem::path& path)
     {
@@ -129,14 +134,17 @@ int main()
             std::cout << "Private compiler data: " << directory << '\n';
             const auto source = directory / "source", output = directory / "output";
             std::filesystem::create_directory(source);
-            WriteText(source / "arena.score", "5\n"); WriteText(source / "menu.score", "8\n");
-            WriteText(source / "multiplier.factor", "2\n");
-            const Pipeline::ContentPipelineRegistryFactory factory = [](const Pipeline::ContentCompilerOptions&) {
+            WriteFile(source / "arena.score", "5\n"); WriteFile(source / "menu.score", "8\n");
+            WriteFile(source / "multiplier.factor", "2\n");
+            std::string writerVersion = "1";
+            std::shared_ptr<Pipeline::ContentPipelineRegistry> latestRegistry;
+            const Pipeline::ContentPipelineRegistryFactory factory = [&](const Pipeline::ContentCompilerOptions&) {
                 ++factories;
                 auto registry = std::make_shared<Pipeline::ContentPipelineRegistry>();
                 registry->RegisterImporter(std::make_shared<ScoreImporter>());
                 registry->RegisterProcessor(std::make_shared<ScoreProcessor>());
-                registry->RegisterWriter(std::make_shared<ScoreWriter>());
+                registry->RegisterWriter(std::make_shared<ScoreWriter>(writerVersion));
+                latestRegistry = registry; // retained only for the visible post-build freeze check
                 return registry;
             };
             const std::vector<std::filesystem::path> arguments{
@@ -152,27 +160,36 @@ int main()
             check(firstManifest.Entries().size() == 2 && arena && arena->outputs.size() == 1 &&
                   arena->outputs.front().sha256 == Pipeline::ContentFileSha256(output / "arena.cnb"),
                   "the actual compiler manifest records both nodes and the published arena artifact's digest");
+            bool lateRegistration = false;
+            try { latestRegistry->RegisterWriter(std::make_shared<ScoreWriter>("late")); }
+            catch (const std::logic_error& error)
+            {
+                lateRegistration = std::string(error.what()).find("frozen") != std::string::npos;
+                std::cout << "Late registration refused: " << error.what() << '\n';
+            }
+            check(latestRegistry->IsFrozen() && lateRegistration,
+                  "accepting a registry freezes it and later component registration is explicitly refused");
             const int unchanged = Pipeline::RunContentCompiler(arguments, factory);
             check(unchanged == 0 && factories == 2 && imports == 2 && processes == 2 && writes == 2 &&
                   ReadText(manifestPath) == firstManifestText,
                   "a fresh registry invocation skips unchanged inputs without entering any component again");
-            WriteText(source / "arena.score", "7\n");
+            WriteFile(source / "arena.score", "7\n");
             const int edited = Pipeline::RunContentCompiler(arguments, factory);
             check(edited == 0 && imports == 3 && processes == 3 && writes == 3 &&
                   ReadScore(output / "arena.cnb") == 14 && ReadScore(output / "menu.cnb") == 16,
                   "editing one primary source rebuilds only its node and retains the other score");
-            WriteText(source / "multiplier.factor", "3\n");
+            WriteFile(source / "multiplier.factor", "3\n");
             const int dependency = Pipeline::RunContentCompiler(arguments, factory);
             check(dependency == 0 && imports == 5 && processes == 5 && writes == 5 &&
                   ReadScore(output / "arena.cnb") == 21 && ReadScore(output / "menu.cnb") == 24,
                   "changing a shared recorded source dependency rebuilds both affected nodes");
             const auto validArena = ReadText(output / "arena.cnb"), validManifest = ReadText(manifestPath);
-            WriteText(source / "arena.score", "invalid\n");
+            WriteFile(source / "arena.score", "invalid\n");
             const int failed = Pipeline::RunContentCompiler(arguments, factory);
             check(failed == 1 && imports == 6 && processes == 5 && writes == 5 &&
                   ReadText(output / "arena.cnb") == validArena && ReadText(manifestPath) == validManifest,
                   "a refused import leaves the last valid published artifact and manifest intact");
-            WriteText(source / "arena.score", "9\n");
+            WriteFile(source / "arena.score", "9\n");
             const int repaired = Pipeline::RunContentCompiler(arguments, factory);
             check(repaired == 0 && imports == 7 && processes == 6 && writes == 6 && ReadScore(output / "arena.cnb") == 27,
                   "repairing the source permits a subsequent successful rebuild");
@@ -180,7 +197,39 @@ int main()
             const int missing = Pipeline::RunContentCompiler(arguments, factory);
             check(missing == 0 && imports == 8 && processes == 7 && writes == 7 && ReadScore(output / "menu.cnb") == 24,
                   "deleting an owned output invalidates its skip and recreates the correct artifact");
-            WriteText(output / "manual.txt", "Unowned author note.\n");
+            const auto beforeVersion = Pipeline::ContentBuildManifest::Parse(ReadText(manifestPath));
+            const auto originalArena = ReadText(output / "arena.cnb"), originalMenu = ReadText(output / "menu.cnb");
+            writerVersion = "2"; // same encoding, a new declared implementation identity
+            const int versioned = Pipeline::RunContentCompiler(arguments, factory);
+            const auto afterVersion = Pipeline::ContentBuildManifest::Parse(ReadText(manifestPath));
+            const auto* oldArena = beforeVersion.Find("arena"); const auto* newArena = afterVersion.Find("arena");
+            check(versioned == 0 && imports == 10 && processes == 9 && writes == 9 && oldArena && newArena &&
+                  newArena->writer.version == "2" && oldArena->fingerprint != newArena->fingerprint &&
+                  ReadText(output / "arena.cnb") == originalArena && ReadText(output / "menu.cnb") == originalMenu,
+                  "a changed writer version invalidates both nodes even when its encoding produces identical bytes");
+            auto tampered = originalArena; tampered.back() = static_cast<char>(tampered.back() ^ 1);
+            const auto stamp = std::filesystem::last_write_time(output / "arena.cnb");
+            WriteFile(output / "arena.cnb", tampered);
+            std::filesystem::last_write_time(output / "arena.cnb", stamp);
+            const int restored = Pipeline::RunContentCompiler(arguments, factory);
+            check(restored == 0 && imports == 11 && processes == 10 && writes == 10 &&
+                  ReadText(output / "arena.cnb") == originalArena && ReadText(output / "menu.cnb") == originalMenu,
+                  "changed output bytes force a rebuild despite preserved file length and modification time");
+            WriteFile(manifestPath, "invalid manifest\n");
+            const int recovered = Pipeline::RunContentCompiler(arguments, factory);
+            const auto recoveredManifest = Pipeline::ContentBuildManifest::Parse(ReadText(manifestPath));
+            check(recovered == 0 && imports == 13 && processes == 12 && writes == 12 &&
+                  recoveredManifest.Entries().size() == 2 && ReadScore(output / "arena.cnb") == 27 && ReadScore(output / "menu.cnb") == 24,
+                  "a corrupt manifest triggers fresh node builds and is replaced by a valid manifest");
+            WriteFile(output / "manual.txt", "Unowned author note.\n");
+            const auto cleanManifest = ReadText(manifestPath);
+            WriteFile(output / "arena.cnb", "Hand-edited compiled content.\n");
+            const int guarded = Pipeline::RunContentCompiler({"clean", output}, factory);
+            check(guarded == 1 && ReadText(output / "arena.cnb") == "Hand-edited compiled content.\n" &&
+                  ReadText(output / "menu.cnb") == originalMenu && ReadText(manifestPath) == cleanManifest,
+                  "clean refuses changed owned bytes before deleting an untouched peer or the ownership manifest");
+            // Restore the exact owned bytes only after observing refusal, then exercise normal clean independently.
+            WriteFile(output / "arena.cnb", originalArena);
             const int cleaned = Pipeline::RunContentCompiler({"clean", output}, factory);
             check(cleaned == 0 && !std::filesystem::exists(output / "arena.cnb") && !std::filesystem::exists(output / "menu.cnb") &&
                   ReadText(output / "manual.txt") == "Unowned author note.\n" && std::filesystem::exists(source / "arena.score"),

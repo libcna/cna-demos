@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- The incremental score compiler now verifies registry freezing, writer-version invalidation,
+  digest-based tamper detection, corrupt-manifest recovery and refusal to clean changed owned files
+  without deleting their valid peers (15 checks, retaining all ten original checks).
 - Embedded incremental score compiler uses the actual RunContentCompiler coordinator: component
   counters and real manifests show unchanged skips, primary/shared dependency rebuilds, preserved
   valid output on import failure, repair, missing output recovery and ownership-aware clean.
