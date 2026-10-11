@@ -165,7 +165,7 @@ def main() -> int:
     add("")
     header = "| Category | Demos | Automated | Smoke-only | Manual |"
     if results:
-        header += "".join(f" Run on {r} (passed / skipped / failed) |" for r in results)
+        header += "".join(f" Run on {r} (passed / skipped / failed / not run / absent) |" for r in results)
     add(header)
     add("|" + "---|" * (5 + len(results)))
     for category in sorted(by_category):
@@ -176,9 +176,20 @@ def main() -> int:
                f"{sum(d['automation'] == 'manual' for d in members)} |")
         for renderer, statuses in results.items():
             got = collections.Counter(statuses.get(d["id"], "NOT IN REPORT") for d in members)
-            row += f" {got['PASSED']} / {got['SKIPPED']} / {got['FAILED']} |"
+            row += (f" {got['PASSED']} / {got['SKIPPED']} / {got['FAILED']} / "
+                    f"{got['NOT RUN']} / {got['NOT IN REPORT']} |")
         add(row)
     add("")
+    if results:
+        add('"Not run" is an explicit report result (for example a manual demo excluded from smoke); '
+            '"absent" means the supplied report has no result for that catalog ID. '
+            'An older report cannot validate newly added demos.')
+        add("")
+        for renderer, statuses in results.items():
+            absent = sorted(d["id"] for d in demos if d["id"] not in statuses)
+            if absent:
+                add(f"- {renderer}: absent from report: " + ", ".join(f"`{name}`" for name in absent) + ".")
+        add("")
 
     # --- XNA surface ------------------------------------------------------------------
     add("## XNA 4.0 API surface demonstrated")

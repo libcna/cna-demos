@@ -8,26 +8,29 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 **401 demos** in 18 categories. Kinds: console 143, game 239, standalone 19. Automation: automated 365, manual 3, smoke-only 33.
 
-| Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
+| Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
-| audio | 19 | 16 | 2 | 1 | 18 / 0 / 0 | 18 / 0 / 0 |
-| c_api | 13 | 12 | 1 | 0 | 13 / 0 / 0 | 13 / 0 / 0 |
-| cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 | 4 / 0 / 0 |
-| content | 20 | 20 | 0 | 0 | 17 / 0 / 3 | 17 / 0 / 3 |
-| core | 3 | 3 | 0 | 0 | 3 / 0 / 0 | 3 / 0 / 0 |
-| design | 4 | 4 | 0 | 0 | 4 / 0 / 0 | 4 / 0 / 0 |
-| devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 | 5 / 0 / 0 |
-| diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 | 2 / 0 / 0 |
-| game | 33 | 28 | 4 | 1 | 24 / 7 / 1 | 31 / 0 / 1 |
-| gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 | 16 / 0 / 2 |
-| graphics | 129 | 129 | 0 | 0 | 117 / 8 / 4 | 121 / 3 / 5 |
-| input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
-| math | 77 | 77 | 0 | 0 | 72 / 0 / 2 | 72 / 0 / 2 |
-| media | 10 | 9 | 1 | 0 | 10 / 0 / 0 | 10 / 0 / 0 |
-| net | 14 | 14 | 0 | 0 | 12 / 0 / 2 | 12 / 0 / 2 |
-| phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
-| platform | 2 | 2 | 0 | 0 | 1 / 1 / 0 | 2 / 0 / 0 |
-| storage | 7 | 7 | 0 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
+| audio | 19 | 16 | 2 | 1 | 18 / 0 / 0 / 1 / 0 | 18 / 0 / 0 / 1 / 0 |
+| c_api | 13 | 12 | 1 | 0 | 13 / 0 / 0 / 0 / 0 | 13 / 0 / 0 / 0 / 0 |
+| cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
+| content | 20 | 20 | 0 | 0 | 17 / 0 / 3 / 0 / 0 | 17 / 0 / 3 / 0 / 0 |
+| core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
+| design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
+| devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
+| diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
+| game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
+| gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
+| graphics | 129 | 129 | 0 | 0 | 117 / 8 / 4 / 0 / 0 | 121 / 3 / 5 / 0 / 0 |
+| input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
+| math | 77 | 77 | 0 | 0 | 75 / 0 / 2 / 0 / 0 | 75 / 0 / 2 / 0 / 0 |
+| media | 10 | 9 | 1 | 0 | 10 / 0 / 0 / 0 / 0 | 10 / 0 / 0 / 0 / 0 |
+| net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
+| phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
+| platform | 2 | 2 | 0 | 0 | 1 / 1 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
+| storage | 7 | 7 | 0 | 0 | 7 / 0 / 0 / 0 / 0 | 7 / 0 / 0 / 0 / 0 |
+
+"Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
+
 
 ## XNA 4.0 API surface demonstrated
 

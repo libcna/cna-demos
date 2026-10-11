@@ -5,7 +5,18 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 
 ## [Unreleased]
 
+### Fixed
+- Catalog validation extracts each demo object once before checking its fields and known issue;
+  this avoids repeatedly parsing the complete catalog and timing out at 401 demos.
+- `tools/validate.sh` now stops on build and CTest failures even when their output contains no
+  recognized diagnostic; complete logs are kept in the reports directory. `JOBS` controls
+  parallelism. `tools/test_validate.py` checks failure propagation without building CNA.
+- Coverage tables distinguish explicit NOT RUN results from demos absent in an older report,
+  listing missing IDs so stale smoke evidence cannot silently appear current.
+
 ### Added
+- Started semantic member/behavior audit tables for Quaternion, EffectParameter and Curve/CurveKeyCollection in
+  `docs/COVERAGE_AUDIT.md`, with explicit outstanding work and environment limitations.
 - Project foundation: CMake integration with a CNA source checkout (`CNA_ROOT_DIR`, presets
   `default`, `windowless`, `linux-multi`, `linux-full`), Ms-PL licence, documentation set.
 - Demo framework: self-registering registry, `DemoInfo` metadata, console/Game/standalone demo

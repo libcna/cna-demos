@@ -288,7 +288,8 @@ part of another demo, or not independently meaningful (record why). ✅ First pa
 decisions for every XNA type without a demo are in [COVERAGE_AUDIT.md](COVERAGE_AUDIT.md), demos
 that already showed a type now name it, and new demos cover the effect interfaces and the
 graphics device service. Remaining: the candidates COVERAGE_AUDIT.md lists, the CNA-specific
-headers. Add screenshot references for
+headers. Member/behavior audit started with Quaternion and EffectParameter (including overload
+and compiled-effect limitations); this is not a comprehensive member audit. Add screenshot references for
 deterministic demos and run the visual-regression comparison across renderers.
 
 ## Cross-cutting work (any time)

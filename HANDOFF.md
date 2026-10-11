@@ -86,19 +86,28 @@ CNA-DEMOS-ISSUE-024, `net.network_session.simulated_conditions` CNA-DEMOS-ISSUE-
 CNA-DEMOS-ISSUE-032 and -033).
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
-## 7. Build and test status (this session, Linux, Ubuntu 24.04, GCC 14.2, CMake 4.4.4 via pip)
+## 7. Build and test status
+
+Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
+The full **401-demo baseline checkpoint passed** in this session.
 
 | Check | Result |
 |---|---|
-| Configure + build `linux-full` (8 renderers, CNA as libcna.so, C API libcna_c_api.so) | ✅ |
-| `cna-demos --validate` | ✅ 0 problems |
-| `tools/validate.sh` (build, validate, ctest, smoke SOFTWARE + OPENGLES3/Xvfb, coverage) | ✅ |
-| `ctest` (CLI tests + 401 demos on SOFTWARE, dummy audio) | ✅ 413/413 (13 expected failures via WILL_FAIL, 3 manual demos disabled) |
-| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 357 passed, 13 expected failures, 25 skipped (window demos, PbrEffect fallback, custom shaders and MRT: no CustomEffects), 3 not run (manual) |
-| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ⚠️ 377 passed, 14 expected failures (ISSUE-021 on GL only), 1 unexpected: `gamer_services.guide.sign_in_screen` crashed once (exit 139, own-process child) and did not reproduce in 17 reruns nor in 3 runs of the gamer_services category -- watch for it;, 3 skipped (wireframe, LOD bias: not on GL ES; ColorMatrixEffect: SOFTWARE only), 3 not run (manual) |
-| Screenshots inspected (SOFTWARE, OPENGLES3): every graphics.* and input.* Game demo | ✅ correct; the renderers agree (except intentionally non-deterministic demos) |
-| Content build (`cna-content`, FontTextureProcessor) | ✅ builds `fonts/pixel_font.cnb`; FreeType not required |
-| CMake 3.28.3 (distro) with CNA_SHARED_LIBRARY=ON | ❌ CNA-DEMOS-ISSUE-001; cna-demos now defaults to static there |
+| Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
+| Metadata/assets `--validate` | 401 demos, 0 problems |
+| `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
+| CTest | 413/413 enabled tests, 3 manual disabled; 13 expected failures via WILL_FAIL |
+| SOFTWARE smoke | 360 passed, 13 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 381 passed, 14 expected failures, 3 skipped, 3 manual not run |
+| Unexpected outcomes | None on either renderer; the earlier sign-in-screen crash did not recur in this baseline |
+| Screenshots | Prior session inspected graphics/input contact sheets; not repeated this session |
+| Content build | Passed (CNB, XNB, media, content project) |
+
+Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
+a subsequent run exposed a catalog-check timeout. That demo-tooling defect was fixed by
+extracting each JSON demo object before checking its fields (2.66 seconds in isolation,
+3.89 under load instead of a 30-second timeout); invalid fixture checks still reject bad data.
+Only the final full run above counts as the completed checkpoint.
 
 ## 8. Exact commands that work
 
@@ -192,6 +201,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
+**Current session checkpoint (2026-10-11):** started clean at `55cca71`. The full baseline for
+401 demos is now complete (section 7), including the three formerly missing math smoke results.
+`tools/validate.sh` now preserves command failures and full logs; coverage exposes absent IDs in
+stale reports. Script failure-path tests and catalog rejection fixtures passed. Semantic member
+reviews for Quaternion, EffectParameter and Curve/CurveKeyCollection are in COVERAGE_AUDIT.md.
+The sibling CNA is newer than the CI pin: `2b15506a48e1a6202c985823131daf5856826f71`.
+
+Drafts for the two priority demos are `/tmp/cna-parameter-values.cpp` and
+`/tmp/cna-double-cover.cpp`; neither is in the catalog or runtime-validated yet. A subsequent
+CNB loader draft is `/tmp/cna-cnb-loader.cpp`: the public CnbWriter can generate a private temporary
+fixture (also available in the pinned CNA), so a custom pipeline writer is not a prerequisite.
+
 **First, two demos written in the last session that are not in the repository** (their checks
 failed and were not investigated before the session stopped; redo them from this description):
 * `graphics.effect.parameter_values`: typed `EffectParameter::SetValue`/`GetValue*` on a BasicEffect
@@ -206,8 +227,8 @@ failed and were not investigated before the session stopped; redo them from this
   Divide(q1, q2) as the turn from q2 to q1. Two checks failed ("with the sign check the blend is the
   20 degree turn", "Slerp(a, b, 0.5) takes the short way") -- find out whether the demo's maths or
   CNA is wrong before recording anything.
-Then run tools/validate.sh (the last full run covered 398 demos; the 3 demos and the metadata audit
-of the last commit were checked with build, `--validate` and ctest 413/413 only).
+Then validate the new batch. The 401-demo baseline now has a complete tools/validate.sh run;
+do not carry forward the old 398-demo checkpoint debt.
 
 
 **Next**: remainders by value -- Phase 8 (`RegisterCnbLoaderEXT`/`RegisterCnjLoader` for a game's

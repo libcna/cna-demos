@@ -75,6 +75,20 @@ disables Escape handling; `--frames N` overrides the limit. Determinism inputs:
 
 ## 3. CTest
 
+The standard full checkpoint is `JOBS=4 tools/validate.sh` (default preset: `linux-full`). It
+builds, validates metadata/assets, runs CTest, runs SOFTWARE and OPENGLES3 smoke batches (the
+latter through Xvfb when available), and regenerates coverage from those reports. `JOBS` is
+optional and defaults to `nproc`; `SKIP_GL=1` deliberately omits GL and must be noted in the
+handoff. Build warnings, command failures, unexpected demo failures and unexpected passes stop
+the checkpoint. Build and CTest output is retained in `build/<preset>/reports/build.log` and
+`ctest.log`; smoke output is retained as `smoke-<renderer>.log` alongside its JSON report.
+`python3 tools/test_validate.py` verifies the script's failure propagation with
+command stubs, without compiling CNA.
+
+Coverage distinguishes an explicit NOT RUN result from an ID absent in the supplied report.
+Regenerating metadata counts with old reports does not validate demos added since those runs;
+the generated table and missing-ID list expose that checkpoint debt.
+
 `ctest` registers:
 
 * `cna_demos.cli.*` -- command-line and registry tests (help, list, search, info, validate,

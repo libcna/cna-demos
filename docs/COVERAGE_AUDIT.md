@@ -110,3 +110,57 @@ Decisions:
 | Type | Decision |
 |---|---|
 | StorageDeviceNotConnectedException | environment: a removed storage device |
+
+## Public member and behavior audit (started 2026-10-11)
+
+Type coverage is not comprehensive coverage. The generated member count collapses overloads
+and records metadata claims; it does not prove that overloads, error paths, or behavior are
+demonstrated. This pass examines those separately. The tables below are source reviews against
+CNA `2b15506a4`; planned work is not counted as completed or runtime-validated.
+
+### Quaternion
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Constructor, Identity, CreateFromAxisAngle, CreateFromRotationMatrix, CreateFromYawPitchRoll | Existing `from_axis_angle` and `from_yaw_pitch_roll` demonstrate orientation construction and matrix conversion; no separate constructor demo needed. |
+| Concatenate, Multiply, operator multiply | Existing `concatenate` checks sequential vector transforms and noncommuting rotations. Scalar multiplication is component scaling, not a rotation composition; explain it when discussing normalization rather than creating another demo. |
+| Inverse, Conjugate | Existing `inverse_and_conjugate` checks undoing a rotation and the unit-quaternion precondition for replacing inverse by conjugate. |
+| Normalize, Length, LengthSquared | Existing `normalize` demonstrates accumulated drift and both normalization forms. LengthSquared is a trivial squared norm; can be named and checked there if extended. |
+| Lerp, Slerp | Existing `slerp` checks constant versus uneven angular speed. Negative-dot inputs and antipodal representations deserve the planned `double_cover` demo. |
+| Negate, unary negation, Dot, Add, operator addition, equality / inequality | Planned `double_cover`: distinguish component equality from orientation equality; negate all four components, choose a common hemisphere before normalized blending, and show that adding antipodes gives zero and cannot be normalized meaningfully. |
+| Divide, operator division | Planned `double_cover`: check `Divide(target, start)` as the additional rotation after start, including different axes so an order error cannot pass accidentally. |
+| Subtract, operator subtraction | Trivial component arithmetic; does not compute the relative orientation. Explain that distinction with Divide; no independent demo. |
+| Equals, GetHashCode, ToString | Exact value equality and formatting follow the existing math value-type demos; hashing needs no independent demo. Quaternion text is already printed in `inverse_and_conjugate`. |
+| Output-reference overloads | Existing `math.vector3.by_reference_overloads` explains the C++ calling convention. Audit quaternion aliasing only if an actual defect or distinct behavior emerges; do not duplicate every return-value demo. |
+
+### EffectParameter
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Name, ParameterClass, ParameterType, RowCount, ColumnCount | `parameters_and_techniques` already lists names/classes; the planned `parameter_values` should relate shape/type to the accessor used and inspect Bones array shape. |
+| SetValue; GetValueSingle, GetValueInt32, GetValueVector4, GetValueTexture2D | Planned `parameter_values`: typed round trips through named stock parameters; do not imply that setting a parameter updates the stock effect's cached public properties. |
+| GetValueMatrix, GetValueMatrixTranspose, SetValueTranspose | Planned `parameter_values`: use a non-symmetric translation/rotation matrix to make transpose semantics observable. Identity alone would not test it. |
+| Elements, GetValueMatrixArray, GetValueMatrixTransposeArray | Planned `parameter_values`: two distinct bone transforms, round trips and reflected array shape. Source currently constructs Bones as a 72-by-4 matrix with no Elements; runtime confirmation pending. |
+| GetValueBoolean, GetValueBooleanArray, GetValueInt32Array, GetValueSingleArray | Add to a compiled-effect demo when that workstream is available: stock parameters do not supply meaningful examples of every array type. No synthetic standalone parameter for each getter merely to raise counts. |
+| GetValueVector2, GetValueVector3, GetValueQuaternion and their Array forms; GetValueVector4Array | Same typed data concept, but reflected vector widths, array bounds and quaternion-as-float4 deserve compiled-effect checks. Defer to that coherent demo rather than claiming the Vector4 round trip covers all behavior. |
+| GetValueTexture3D, GetValueTextureCube | Renderer/effect-specific shader inputs: incorporate round trips into effects using these samplers; existing environment mapping demonstrates cube sampling, not these parameter getters. |
+| GetValueString, Semantic, Annotations, StructureMembers | Compiled effect reflection workstream (current build lacks compiled-effect support). Stock effects' empty metadata does not demonstrate annotated strings or nested structs. |
+| Invalid accessor / parameter-shape combinations | Planned `parameter_values`: Vector4 read as Single should be checked explicitly. CNA validates compiled storage shapes but the stock storage getter returns its first component; runtime confirmation pending. |
+
+### Curve and CurveKeyCollection
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Curve constructor, Keys, Evaluate | Existing `math.curve.evaluate` constructs a brightness timeline and checks keys and interpolation. Empty/single-key evaluation can be added to `key_collection` with its IsConstant checks. |
+| ComputeTangents | Existing `tangents` compares Flat/Linear/Smooth. The separate incoming/outgoing tangent overload remains a meaningful gap; extend that demo rather than adding an enum-variant demo. |
+| ComputeTangent | Extend `tangents` to edit one key's incoming/outgoing slopes and check the interpolated result; whole-curve computation alone does not show selective editing. |
+| PreLoop, PostLoop | Existing `loop_types` checks every post-loop mode and pre-loop Cycle. Negative-time CycleOffset/Oscillate boundaries remain useful checks within the existing demo. |
+| Curve Clone, IsConstant | Existing `key_collection` checks independence after removals and the transition to a single key. No separate clone demo. |
+| Collection constructor, Add, Item, Count, IndexOf, Remove, RemoveAt, Clear | Existing `key_collection` demonstrates sorted insertion and editing. Duplicate positions and Item replacement order are distinct edge cases to investigate before claiming complete collection behavior. |
+| Collection Clone, Contains, CopyTo, IsReadOnly | Clone fits existing copy/edit checks if extended; Contains is the boolean counterpart of demonstrated IndexOf. CopyTo and IsReadOnly are ordinary collection mechanics, intentionally without independent demos. They remain uncredited until actually shown. |
+| GetEnumerator, explicit IEnumerable.GetEnumerator | C# iteration machinery; C++ uses range iteration/indexing. No independent demo. |
+| Step continuity | Existing `step_continuity` is a failing compatibility example (ISSUE-002), not a successful implementation of Step. |
+
+Remaining audit scope: other XNA public members, overload families and behaviors, CNA-specific
+headers, renderer-specific execution, and manual/service scenarios. Neither these tables
+nor the existing type decisions constitute a complete public API audit.
