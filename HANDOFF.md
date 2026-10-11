@@ -93,25 +93,25 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The 427 batch began with CNA
-`8b5564f1e81196f3aaee9e9a652b8030e21f4c6c`; inspected changes since the 425 dependency
-snapshot are documentation/test paths, not runtime implementation.
-The full **427-demo checkpoint passed** through revision `204d23c`.
-`tools/validate.sh` exited 0 under private Xvfb (`/tmp/cna-demos-427-validation.log`). Both
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The 428 batch began with CNA
+`2fda5389d2990b40146d06de0ae0531d05055f24`; inspected changes since the 427 dependency
+snapshot are documentation/test paths and comment-only edits, not runtime behavior.
+The full **428-demo checkpoint passed** through revision `0c30ba0`.
+`tools/validate.sh` exited 0 under private Xvfb (`/tmp/cna-demos-428-validation.log`). Both
 complete reports match the fresh catalog. Both ORIGINAL stdout logs pass strict comparison
-to 425 directly: two new passing IDs and manifest checks 20 -> 26 (six additional XNB reader
-names); all older statuses and failed assertions remain unchanged (25 SOFTWARE / 26 OPENGLES3).
+to 427: only the new passing shared_resources ID (15 checks); all older statuses and failed
+assertions remain unchanged (25 SOFTWARE / 26 OPENGLES3).
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets `--validate` | 427 demos, 0 problems |
+| Metadata/assets `--validate` | 428 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 415 passed (including 18 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 381 passed, 18 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 402 passed, 19 expected failures, 3 skipped, 3 manual not run |
+| CTest | 416 passed (including 18 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 382 passed, 18 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 403 passed, 19 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | None; raw totals 25/26 unchanged |
-| Screenshots | XNB model and independent-skin scenes inspected; pairs RGBA-identical |
+| Screenshots | No new visual claim: shared_resources is a console demo |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -225,7 +225,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Latest complete checkpoint (2026-10-11):** 427 at 204d23c, tools/validate.sh exit 0.
+**Latest complete checkpoint (2026-10-11):** 428 at 0c30ba0, tools/validate.sh exit 0.
+SOFTWARE 382/18/25/3, OPENGLES3 403/19/3/3; 441 enabled CTests, 428/0 metadata.
+Archives: `reports/checkpoint-428-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
+`checkpoint-428-{build,ctest,validation}.log`. Both reports match the fresh catalog; both
+ORIGINAL stdout comparisons to 427 pass, with 25/26 failed assertions unchanged. Only the new
+shared_resources ID is added (15 passing checks). SOFTWARE stderr is byte-identical; GL retains
+three ERROR/three INFO and 84 X protocol lines (42 requests each 18.0/25.0, volatile IDs differ).
+Coverage 293/329 types, 1346/2326 named members, 158/3210 C routes; all 428 runtime columns
+are complete. Use ORIGINAL checkpoint-428 as the next baseline.
+
+Historical 427 checkpoint:
+**Completed checkpoint (2026-10-11):** 427 at 204d23c, tools/validate.sh exit 0.
 SOFTWARE 381/18/25/3, OPENGLES3 402/19/3/3; 440 enabled CTests, 427/0 metadata.
 Archives: `reports/checkpoint-427-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
 `checkpoint-427-{build,ctest,validation}.log`. Both reports cover the fresh catalog exactly;
@@ -311,22 +322,13 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** full 428 validation is starting; do not edit/build binary or asset
-sources until it finishes. Archive both original streams and compare against 427, then continue the runtime XNB
-member audit (existing-instance/raw object reads, versioned schema and reader initialization).
-New content.xnb.shared_resources passes 15 checks in fresh processes WITHOUT DISPLAY or
-WAYLAND_DISPLAY under both renderer selections. Metadata 428/0, four targeted CTests pass.
-Evidence: `/tmp/cna-428-xnb-final-{SOFTWARE,OPENGLES3}.{json,log}`, `/tmp/cna-428-ctest.log`,
-clean build `/tmp/cna-428-final-build.log`. All three XNB fixtures regenerate byte-identically.
-This is console CPU evidence, not a visual/GPU run. Full checkpoint still 427 until 428 completes.
-The initial draft incorrectly relied on StringReader being pre-registered: CNA registers built-in
-XNB readers from Game startup, not a bare ContentManager. Corrected with an explicitly registered
-custom Label reader; no Internal bootstrap call or CNA source change. The three fixtures are now
-178 bytes each; earlier /tmp 210-byte drafts are stale and must not overwrite applied sources.
-CNA advanced externally to 2fda5389d2990b40146d06de0ae0531d05055f24; net sources rebuilt for
-comment-only edits. Inspected library/CMake differences from 8b5564f contain no runtime change.
-Expected full counts: SOFTWARE 382/18/25/3, OPENGLES3 403/19/3/3, 441 enabled CTests;
-raw failed assertions should remain 25/26. Compare ORIGINAL checkpoint-427 logs.
+**Immediate next action:** apply/build the existing_objects and external_references drafts
+below now that full 428 is complete, then run both renderer selections, investigate the suspected
+type-to-reader lookup defect, inspect actual external-reference screenshots, update docs and run
+a complete checkpoint. New content.xnb.shared_resources is now fully validated (15 checks).
+The three graph XNB fixtures are 178 bytes each and regenerate byte-identically. The initial
+unregistered StringReader assumption was corrected with a custom Label reader; no Internal API
+or CNA source edits. Earlier /tmp 210-byte graph drafts are stale and must not be reapplied.
 
 427 targeted evidence:
 - xnb_model: 11 checks per renderer. Original `.x` -> existing FORMAT xnb content build -> actual
@@ -352,12 +354,44 @@ CNA was 8b5564f1e81196f3aaee9e9a652b8030e21f4c6c at build start; since bf0cde63 
 two doc/vendor test paths changed, not runtime implementation. Coverage is 293/329 XNA types,
 1344/2326 named members and 158/3210 C routes. All /tmp model drafts are now applied and stale.
 
+Next-batch drafts prepared during the immutable 428 run (NOT built or executed):
+`/tmp/cna-xnb-existing-objects.cpp`, `/tmp/cna-xnb-loadouts.py`,
+`/tmp/cna-xnb-loadout-fixture/loadouts/existing_slots.xnb`. The 129-byte original fixture
+regenerates identically and was independently decoded through the exact trailer/end. Proposed
+content.xnb.existing_objects uses Initialize/GetTypeReader, indexed/raw existing-slot fills,
+runtime-only field preservation, null fallback and type-erased tags. Important source-audit correction: the target type and reader factory names must remain distinct.
+The first draft equated them, which would hide a suspected CNA lookup defect: constructors record
+T -> target name, but GetTypeReader uses that target name as a factory key rather than resolving
+the matching reader. The revised draft checks this lookup explicitly, then uses the named public
+CreateReader fallback if needed to exercise the independent raw/existing-object behavior. This is
+NOT yet runtime-confirmed or marked as a known issue. Inspect targeted output before full tests;
+if reproduced, record a genuine CNA issue and preserve the failed check. CNA's existing
+ContentRuntimeContractTests registers its ContractValueReader under the target name itself,
+so that fixture does not distinguish the two names and does not refute this suspected defect. The dependency Read is
+stateless because GetTypeReader/CreateReader returns a fresh, separately owned instance.
+428 is complete; review/apply now; no compiled/runtime claims for this draft.
+
+A second separate draft covers external references: `/tmp/cna-xnb-external-references.cpp`,
+`/tmp/cna-xnb-external-assets.py`, `/tmp/cna-xnb-external-fixture`. Seven original assets regenerate
+identically. Two parent cards use slash/backslash sibling paths to the same loose PNG and compiled
+custom label; typed and erased nulls, owner cache reuse, path refusal and rendered shared edits
+are intended checks. Source review confirms only Texture2D/TextureCube/shared_ptr<Effect> have
+instantiated templated external-reference routes; the custom label uses the non-template std::any
+route. It has NOT been built, run or visually checked. 428 is complete; apply as the next batch.
+
 The runtime XNB graph drafts are now applied and superseded by tools/xnb_graphs.py and
 content.xnb.shared_resources. It reads an ordinary inline Item alongside shared resources;
 15 checks distinguish their identities, deferred callbacks, weak-edge lifetime and failure paths.
 Continue remaining ContentReader behaviors in COVERAGE_AUDIT.md; built-in model fixups and
 this custom graph do not establish every public reader overload or versioned schema.
 Remaining model gaps include imported topology/specular slots and broader skin/material variants.
+Read-only follow-up: the glTF importer explicitly closes LINE_LOOP as LINE_STRIP and expands
+TRIANGLE_STRIP/FAN to lists, preserving strip winding. `/tmp/cna-import-topology.py` prepares an
+original three-shape fixture (outline loop, strip quad, fan pentagon) under
+`/tmp/cna-import-topology-fixture`; a matching unbuilt `/tmp/cna-imported-topology.cpp` now inspects part topology/counts and
+index ranges, then checks closure/filled regions. No runtime evidence exists yet. A future
+focused demo can verify public part topology/counts/index buffers and closed-outline/filled pixels.
+
 
 425 animation investigation: final/source-before-extension first-frame pixels were identical on
 each renderer; cross-renderer lighting differences already existed (8,216 pixels, max delta 38),
