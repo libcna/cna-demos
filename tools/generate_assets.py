@@ -313,6 +313,13 @@ def custom_enemy_cnj() -> None:
         (directory / f"{name}.cnj").write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
 
 
+def custom_patrol_route() -> None:
+    """A 3-4-5 triangle: open route length 7, closed patrol length 12."""
+    directory = ROOT / "custom"
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "patrol.route").write_text("0 0\n3 0\n3 4\n", encoding="utf-8")
+
+
 def main() -> None:
     save_png(checker(64, 8, (255, 255, 255, 255), (72, 61, 139, 255)), "textures/checker.png")
     save_png(arrow(64), "textures/arrow.png")
@@ -339,6 +346,7 @@ def main() -> None:
     melody("music/falling.wav", [81, 76, 72, 69, 76, 72, 69, 64], 0.25)  # A minor, downwards
     custom_level_xnb("levels/castle.xnb")
     custom_enemy_cnj()
+    custom_patrol_route()
     # The sources of the XNA content project content_project/Game.contentproj (written by hand).
     save_png(keyed_ship(64), "Textures/ship_source.png", CONTENT_PROJECT_ROOT)
     save_png(checker(64, 4, (255, 255, 255, 255), (30, 30, 30, 255)), "Textures/grid.png", CONTENT_PROJECT_ROOT)

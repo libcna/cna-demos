@@ -6,14 +6,14 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**406 demos** in 18 categories. Kinds: console 147, game 240, standalone 19. Automation: automated 370, manual 3, smoke-only 33.
+**407 demos** in 18 categories. Kinds: console 148, game 240, standalone 19. Automation: automated 371, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 20 | 17 | 2 | 1 | 18 / 0 / 1 / 1 / 0 | 18 / 0 / 1 / 1 / 0 |
 | c_api | 13 | 12 | 1 | 0 | 13 / 0 / 0 / 0 / 0 | 13 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 22 | 22 | 0 | 0 | 19 / 0 / 3 / 0 / 0 | 19 / 0 / 3 / 0 / 0 |
+| content | 23 | 23 | 0 | 0 | 19 / 0 / 3 / 0 / 1 | 19 / 0 / 3 / 0 / 1 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.custom.pipeline_components`.
+- OPENGLES3: absent from report: `content.custom.pipeline_components`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -127,12 +129,21 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Buttons::Paddle4EXT` -- input.gamepad.extra_buttons
 - `Buttons::TouchPadEXT` -- input.gamepad.touchpad
 - `CNA::Content::Cnb::CnbAssetTypeIdFromName` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbByteReader::ReadCount` -- content.custom.pipeline_components
 - `CNA::Content::Cnb::CnbDocument::OpenChunk` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::RequireAsset` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbWriter::AddChunk` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbWriter::SetMetadata` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_loader
+- `CNA::Content::Pipeline::ContentPipeline::Build` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineError::Stage` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterProcessor` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterWriter` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentProcessorParameters::Set` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentValue::Create` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentValue::Get` -- content.custom.pipeline_components
 - `CNA::Devices::DisplayInfo::ContentScale` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::DisplayInfo::SafeArea` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::Locale::PreferredLocales` -- devices.system.machine_info
@@ -274,7 +285,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ContentManager::GetContentManifest` -- content.content_manager.manifest
 - `ContentManager::GetXnbReaderUsageSummary` -- content.content_manager.manifest
 - `ContentManager::RefreshContentManifest` -- content.content_manager.manifest
-- `ContentManager::RegisterCnbLoaderEXT` -- content.custom.cnb_loader
+- `ContentManager::RegisterCnbLoaderEXT` -- content.custom.cnb_loader, content.custom.pipeline_components
 - `ContentManager::RegisterCnjLoader` -- content.custom.cnj_loader
 - `ContentManager::RegisterTypeReader` -- content.custom.loose_file_reader
 - `ContentManifestEntry` -- content.content_manager.manifest

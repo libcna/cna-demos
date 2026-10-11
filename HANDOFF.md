@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 15), 8 (content, 22), 9 (audio 20 incl. 9 XACT, media 10 incl. a
+* In progress: 7 (models/glTF, 15), 8 (content, 23), 9 (audio 20 incl. 9 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 13 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-406 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+407 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 20 (9 XACT), core 3 (2 logger),
-content 22 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 23 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 13 (standalone C programs). Every declared category has demos.
@@ -214,8 +214,8 @@ process-level features; static CNA on CMake < 3.29.
 **Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **406 demos**
 through demo revision `1bb71ac`, including the ownership and lifecycle corrections. Section 7
 has the exact results. Log: `/tmp/cna-demos-406-validation.log`; named report archives:
-`reports/checkpoint-406-{SOFTWARE,OPENGLES3}.json`. Both reports match all current IDs, with no
-absent entries, unexpected failures or unexpected passes. Current generated coverage is
+`reports/checkpoint-406-{SOFTWARE,OPENGLES3}.json`. Both reports match all 406 IDs at that revision, with no
+absent entries, unexpected failures or unexpected passes. Later batches are identified below. Current generated coverage is
 289/329 XNA types and 1314/2326 named members; these are metadata counts, not comprehensive
 semantic coverage. CNA remains clean at `2b15506a48e1a6202c985823131daf5856826f71`, newer than
 CI's `10a4ef1cb4cd832f761536d77588000104947f8d`.
@@ -254,16 +254,15 @@ Completed this session (details and issue reproductions are in CHANGELOG and CNA
   JSON parsing, and coverage exposes IDs missing from old reports. Member audits now include
   content/binary formats, audio/XACT, texture ownership, sprites/text and pipeline APIs.
 
-**Highest-priority next batch:** apply `/tmp/cna-pipeline-components.cpp` as
-`demos/content/custom/pipeline_components.cpp`. It is a prepared, **unbuilt/unexecuted** draft
-for `content.custom.pipeline_components`, using public ContentPipelineRegistry, importer,
-processor, writer and ContentPipeline::Build from `CNA/Content/Pipeline/ContentPipeline.hpp`
-(already compiled into CNA_Content). Add `assets/custom/patrol.route` containing `0 0`, `3 0`,
-`3 4` on separate lines, plus generator/attribution support. It precomputes open length 7 or
-closed length 12, writes a bounded custom CNB schema, loads it and checks typed parameter
-errors. Source APIs and upstream acceptance tests were inspected; none of its planned checks
-count as current coverage. Build, run both renderer selections, CTest/catalog, then update
-ROADMAP/coverage/this handoff and continue.
+**Custom pipeline batch completed after the 406 checkpoint:**
+`content.custom.pipeline_components` registers a public importer, processor and writer, builds
+an original patrol route into CNB, checks deterministic output, precomputes open/closed lengths
+7/12, loads its runtime schema and verifies contextual rejection of an incorrectly typed
+processor parameter. All 6 checks pass on SOFTWARE and OPENGLES3, build/metadata (407/0) and
+its CTest/catalog pass. Reports: `/tmp/cna-pipeline-components-{SOFTWARE,OPENGLES3}.json`.
+The generator reproduces `assets/custom/patrol.route` byte-for-byte. No CNA issue was found.
+The complete reports in section 7 still describe revision `1bb71ac` and 406 demos until the
+next full run; coverage explicitly shows the new pipeline ID as absent in those reports.
 
 Next useful work after that:
 1. A build-time IntermediateSerializer example. The old type-audit exclusion was inaccurate:

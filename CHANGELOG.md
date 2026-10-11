@@ -22,6 +22,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Custom content pipeline demo: registered importer/processor/writer, build-time patrol-length
+  computation, deterministic CNB output, runtime loading and contextual parameter diagnostics.
 - Custom CNJ enemy demo with two named factories, actual JSON payload parsing, manager-local
   registrations, Unload/cache behavior and malformed-payload diagnostics; original fixtures
   are reproducible through the asset generator.
