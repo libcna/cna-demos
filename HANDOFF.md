@@ -94,21 +94,22 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6. CNA was `2b15506a4` through the
 418 build; its checkout advanced externally during the 419 batch (provenance below).
-The full **419-demo checkpoint passed** through revision `7275e55`, including mesh-part
-buffer/effect behavior and the separate-stream validation fix. tools/validate.sh exited 0
-under private Xvfb (`/tmp/cna-demos-419-validation.log`). All 419 IDs are present; every old
-status and all failed-assertion messages/multiplicities match the reviewed 418 baseline.
+The full **421-demo checkpoint passed** through revision `8741144`, including explicit part
+samplers and C host frame hooks. tools/validate.sh exited 0 under private Xvfb
+(`/tmp/cna-demos-421-validation.log`). All 421 IDs are present. Every old status is unchanged;
+failed-assertion multisets match after manual review of one SOFTWARE parent/child stdout splice
+(details below). That framework buffering defect is being fixed before the next batch.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 419 demos, 0 problems |
+| Metadata/assets `--validate` | 421 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 406 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 374 passed, 17 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 395 passed, 18 expected failures, 3 skipped, 3 manual not run |
-| Unexpected outcomes | None; raw failed-assertion multisets remain 24/25 |
-| Screenshots | mesh_parts inspected on both renderers; RGBA images identical |
+| CTest | 408 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 376 passed, 17 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 397 passed, 18 expected failures, 3 skipped, 3 manual not run |
+| Unexpected outcomes | No new demo/CNA failure; one stdout splice reviewed, failure multisets 24/25 |
+| Screenshots | part_sampler_state and host_frames inspected; each renderer pair has identical RGBA data |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -219,18 +220,20 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Current session checkpoint (2026-10-11):** full `tools/validate.sh` exited 0 for all **419 demos**
-at `7275e55`. SOFTWARE 374/17/25/3, OPENGLES3 395/18/3/3, 431 enabled CTests, metadata 419/0.
-Archives: `reports/checkpoint-419-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
-`checkpoint-419-{build,ctest,validation}.log`. Both JSON reports match the fresh 419 catalog.
-Strict comparisons against 418 (reviewed SOFTWARE log; original GL log) pass: all old statuses
-and exact failure messages/multiplicities remain unchanged, 24/25. New mesh_parts passes.
-Native stderr was inspected too: SOFTWARE's 25 renderer errors and one INFO match prior logs;
-GL has the same three renderer errors, one INFO and 84 X protocol diagnostics as 417/418
-(42 BadWindow ChangeProperty, 42 SendEvent; serial/resource IDs vary). The latter are CNA's
-already documented X-client lifetime diagnostics (plans/plan_vulkan.md VULKAN-154), not a new
-failure introduced by the capture fix. Original bytes are preserved, not filtered from archives.
-Coverage is 290/329 XNA types, 1327/2326 members, 156/3210 C ABI routes, not comprehensive coverage.
+**Current session checkpoint (2026-10-11):** full `tools/validate.sh` exited 0 for all **421 demos**
+at `8741144`. SOFTWARE 376/17/25/3, OPENGLES3 397/18/3/3, 433 enabled CTests, metadata 421/0.
+Archives: `reports/checkpoint-421-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
+`checkpoint-421-{build,ctest,validation}.log`. Both JSON reports match the fresh 421 catalog.
+Strict comparisons to 419 pass after the manually documented SOFTWARE log review below;
+GL matches directly. All old statuses and exact failed-assertion messages/multiplicities remain
+24/25, and both new IDs pass. Native stderr classes/counts also match 419: SOFTWARE 25 renderer
+errors + one INFO; GL three renderer errors + one INFO + 84 prior X protocol diagnostics
+(42 BadWindow ChangeProperty, 42 SendEvent; volatile serial/resource IDs differ).
+Coverage is 290/329 XNA types, 1327/2326 members, 158/3210 C ABI routes, not comprehensive coverage.
+The 421 build began with CNA clean at e60fa35f7803a2109ae8baed06ac5827f8e59b7b. Its checkout
+continued external documentation cleanup during validation; inspected modules/CMake source
+paths had no difference from that revision. No CNA edits were made by this task.
+Historical dependency provenance:
 CNA was clean at `2b15506a48e1a6202c985823131daf5856826f71` when the 418 batch was built
 (19:16 CEST); CI pins `10a4ef1...`. During the next batch, external CNA commits arrived
 from 19:23 onward. At the 419 build completion (19:37), its latest committed revision was
@@ -265,8 +268,33 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** complete the next full 421-demo checkpoint after committing this
-validated batch. Latest complete checkpoint remains 419. Both new demos pass targeted checks:
+**Immediate next action:** full 421 is complete and archived. The process-output repair is
+built; its regression CTest first FAILED on unchanged Process.cpp (CHILD before PARENT_CXX
+and PARENT_C), then PASSED after flushing both C++ and C streams before launch. Evidence:
+`/tmp/cna-process-output-{red,green}-{build,test}.log`; clean full incremental build. The real
+30-demo content batch passed with the same 26 passes/four known failures; all statuses, check
+counts and exact failure lines match 419 with no splice (`/tmp/cna-process-output-content.{json,log,stderr.log}`).
+Commit this tooling/checkpoint batch, then apply
+the three prepared model/palette drafts below and validate them. The new framework CTest adds
+one enabled test beyond the 421 checkpoint count (434 enabled with the same 421 demos).
+SOFTWARE 421 completed with expected demo statuses,
+but strict assertion comparison requested review: ISSUE-011's "Unload disposed the loaded
+texture" was split after "Unlo" by child stdout from later standalone XML/pipeline demos
+(raw smoke-SOFTWARE.log lines 524-645). JSON independently retains the complete original
+assertion. Original SOFTWARE report/stdout/stderr are already archived as checkpoint-421-SOFTWARE.*.
+Manual review moved the existing suffix before the exact interposed 5,885-byte / 121-line block
+in checkpoint-421-SOFTWARE.reviewed.log; no byte was added or removed, and all 24 failure
+markers remain. checkpoint-421-log-review.json records raw/reviewed/block SHA-256 values and
+corroborating JSON. Strict comparison to 419 now passes for the reviewed copy. Use this copy
+for the next SOFTWARE comparison, retaining raw evidence. Separate stderr capture works; this is a DIFFERENT buffered parent/child stdout
+ordering defect in RunProcess (std::system starts the child before pending parent streams are
+flushed). The raw log and the narrowly reviewed comparison copy with hashes are preserved.
+OPENGLES3 subsequently completed and matched directly. The process regression
+fixture `/tmp/cna-process-output-test.cpp` plus `/tmp/cna-check-process-output.cmake` was added to the
+existing CMake test build and verified red/green as described above. The /tmp process drafts
+are applied and stale. The repair is built and tested; its next full smoke checkpoint is pending.
+The fix drains C++ and C standard output streams before child execution; no parser normalization.
+This is demo framework tooling, not a new CNA issue. Both new demos already pass targeted checks:
 
 - graphics.model.part_sampler_state: 4 checks per renderer, stored clamp metadata versus
   application wrap and explicit selection, verified red/green pixels. Both screenshots inspected
@@ -280,8 +308,7 @@ validated batch. Latest complete checkpoint remains 419. Both new demos pass tar
 Build `/tmp/cna-421-model-host-build.log` is clean; metadata 421/0 and four targeted CTests pass
 (`/tmp/cna-421-model-host-ctest.log`). CNA was clean at e60fa35f7803a2109ae8baed06ac5827f8e59b7b
 before this build; subsequent changes are external. Coverage is 290/329 XNA types,
-1327/2326 named members and 158/3210 C routes. Runtime columns still use full 419 evidence and
-honestly mark the two new IDs absent. No new CNA issue. After the checkpoint, extend mesh_parts
+1327/2326 named members and 158/3210 C routes. Runtime columns now contain the complete 421 results. No new CNA issue. After the checkpoint, extend mesh_parts
 with a meaningful mixed-topology part, or begin the separately audited SkinnedModelEXT workflow.
 
 New `graphics.model.mesh_parts` passes all 8 checks on SOFTWARE/OPENGLES3:
@@ -296,6 +323,21 @@ behavior or the distinct SkinnedModelEXT carrier; the audit separates remaining 
 
 The /tmp sampler and C host-frame drafts have been applied and validated; they are stale copies.
 Do not overwrite subsequent source changes with them.
+
+Prepared during full 421 (NOT applied/compiled/runtime-tested):
+`/tmp/cna-model-mesh-topology.cpp` extends mesh_parts with one shared-buffer LineList part
+and narrow-band pixel checks, without a new ID. `/tmp/cna-model-skinned-parts.cpp` proposes
+`graphics.model.skinned_parts`: the distinct SkinnedModelEXT carrier owns procedural buffers,
+moves/replaces named parts, refuses a different bone count before moving parts, removes a
+temporary center part, samples a one-bone clip with
+nonidentity inverse bind, and draws the surviving pieces after donor destruction. Source APIs
+were read in SkinnedModelEXT.hpp/.cpp, VertexPositionNormalTextureSkinned.hpp and the CNA
+attachment integration example. This draft does not establish importer support, multiple-bone
+hierarchies, release/leak accounting or same-count skeleton/index-order compatibility. 421 is archived; fix and verify process-output ordering before
+applying those drafts. A third prepared source, `/tmp/cna-skinned-effect-palette.cpp`, extends
+existing two_bones with GetBoneTransforms round-trip and invalid empty/oversized palette and
+three-weight refusal while preserving the actual drawn two-bone pose (5 new checks; no new ID).
+These are the next productive batch; no draft has runtime validation yet.
 
 Previous 418 batch (included in its complete checkpoint):
 

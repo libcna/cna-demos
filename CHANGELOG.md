@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- The process launcher flushes C++ and C standard streams before running a child. A 421-demo
+  checkpoint exposed child XML output splitting a buffered parent assertion even with stderr
+  separated; raw evidence and an exact manually reviewed comparison copy are preserved.
+  A small buffered-pipe CTest reproduces the old ordering and passes with the fix.
 - Full validation preserves smoke stdout and stderr in separate logs. A real 418 checkpoint
   spliced native logger output into a buffered assertion; raw evidence and a narrowly reviewed
   comparison copy are retained. A regression fixture rejects the old merged-stream script.

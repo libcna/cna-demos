@@ -94,7 +94,8 @@ Decisions:
 | MediaSourceType | shown in `media.media_library.collections` |
 | VideoSoundtrackType | shown in `media.video_player.play_video` |
 | AlbumCollection, ArtistCollection, GenreCollection, PlaylistCollection, PictureCollection | shown (counts) in `media.media_library.collections`; their contents depend on the machine's library |
-| Album, Artist, Genre, Playlist, Picture, PictureAlbum, PictureAlbumCollection | environment: the user's own library (empty on CI); a manual demo at most |
+| Album, Artist, Genre, Playlist | Existing collections depend on the user's library and are empty on CI. Authored metadata/import fixtures need a separate workflow; no type credit for counts alone. |
+| Picture, PictureAlbum, PictureAlbumCollection | Candidate: a Linux child process can supply isolated XDG_CONFIG_HOME/user-dirs.dirs paths to SDL's public GetUserFolder route, then exercise SavePicture against generated content. Source review confirms MediaLibrary resolves its roots through the platform filesystem; runtime path isolation still must be verified before saving. Do not touch real user media or use the internal MediaLibraryPaths test overrides as a public demo API. Other platforms remain untested. |
 
 ## Microsoft.Xna.Framework.Net
 
@@ -324,6 +325,24 @@ for the shared-buffer/material rows; other proposals remain unexecuted.
 | SkinnedModelEXT, PartEXT and attachment APIs | Distinct from the existing Model + SkinningData + AnimationPlayer route. A purpose-built procedural or imported skin/part fixture should demonstrate AddPartEXT transferring buffer/part ownership, AttachPartEXT moving parts while retaining the receiver skeleton/clips, replacement by name, and RemovePartEXT releasing owned resources. Directly erasing Parts would only alter non-owning descriptors. Attachment checks bone count, but equal counts do not establish equal skeleton/index order; the caller must provide the same canonical skeleton. Existing skinned_animation and skinned_pbr do not cover this carrier. |
 | SkinnedModelEXT::ComputeBoneTransformsEXT | A separate pending palette workflow: local tracks, parent composition, inverse bind matrices, untracked bind pose and loop-versus-clamp behavior should feed actual SkinnedEffect drawing. Unknown clip, mismatched array sizes and non-topological parents have explicit source guards but no demo evidence yet. Existing node_animation uses AnimationClipEXT data with Model rather than this evaluator; do not transfer its coverage here. |
 | SkinnedModelEXT testing counters, move-only boilerplate | GetOwned*CountForTesting explicitly exposes test instrumentation: intentionally leave direct counter assertions to CNA tests. Useful public ownership evidence should come from the moved/replaced/removed parts and rendered results. Deleted copy operations and empty construction need no standalone demo. |
+
+### SkinnedEffect (palette contracts versus rendered behavior)
+
+Read against SkinnedEffect.hpp/.cpp and the actual two_bones, skinned_animation,
+effect_interfaces and parameter_values sources. The pending palette/SkinnedModelEXT drafts
+are not evidence until built and run. A valid joint palette alone does not establish lighting,
+weighted interpolation or all shader variants.
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Constructor, World/View/Projection, Texture, SetBoneTransforms | two_bones draws an authored strip with two joint matrices; skinned_animation feeds an imported clip through AnimationPlayer. Its three pixel checks establish the stationary lower tip, moved upper tip and vacated old tip. Matrix/property forwarding does not need separate getter-only examples. |
+| WeightsPerVertex, VertexPositionNormalTextureSkinned | two_bones selects two influences and authors a blended joint region, but its pixel assertions sample the unblended tips. A blend-region check and genuinely four-influence mesh remain useful semantic gaps. A one-influence owned-part example is drafted; do not credit it before runtime validation. Unsupported counts belong beside the existing palette example, not in enum-value demos. |
+| GetBoneTransforms, MaxBones, invalid palette/weight changes | Pending extension to two_bones reads back the uploaded pose and checks empty/oversized palette and unsupported weight-count refusal without changing subsequent drawing. GetBoneTransforms count bounds and the accepted maximum-sized palette remain unexecuted. ISSUE-035 concerns EffectParameter.Elements introspection, not proof that palette uploads fail. |
+| EnableDefaultLighting, DirectionalLight0/1/2, AmbientLightColor, LightingEnabled | Default lighting is used in two_bones and skinned_animation. Individual light contributions are not isolated there. Source intentionally always reports LightingEnabled=true and rejects false; an unlit-looking texture can instead use ambient-only lighting. Add that guard to a coherent lighting/material example rather than treating it as a CNA defect. |
+| DiffuseColor, EmissiveColor, SpecularColor/Power, Alpha, PreferPerPixelLighting, fog members | Skinned material/fog behavior remains a rendering-specific gap. effect_interfaces checks SkinnedEffect's interface availability but draws its separate Basic/AlphaTest/EnvironmentMap scene, so that scene does not validate skinned fog or per-pixel lighting. Reuse one skinned material scene for meaningful lighting/alpha/fog contrasts; scalar getter/setter permutations are trivial. |
+| Clone and SetOwnedTexture | Meaningful ownership/state gap: verify cloned palettes can diverge while texture references follow the shared/owned contract and remain usable for rendering. Existing BasicEffect clone evidence does not establish SkinnedEffect's palette copy. The protected copy constructor is a subclass hook, not an independent public construction example. |
+| VertexColorEnabled extension | An authored skinned vertex-color fixture deserves actual color checks; the stock skinned vertex structure used by two_bones carries no color. Do not infer this shader path from unskinned vertex colors or from a COLOR_0 importer flag alone. |
+| Shadow/punctual-light extensions, FillGpuDrawParams | Renderer-specific scene work remains. Some backends intentionally accept shadow metadata without a matching sampling variant; setters returning normally do not prove shadows. Demonstrate supported shadow/light scenes with pixels and declare renderer restrictions. FillGpuDrawParams is the internal renderer bridge; intentionally avoid a standalone public-demo wrapper around internal draw structures. |
 
 ### SoundEffectInstance and DynamicSoundEffectInstance
 

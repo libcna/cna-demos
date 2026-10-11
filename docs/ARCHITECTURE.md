@@ -32,7 +32,7 @@ cna-demos (one executable)
 | `CMakeLists.txt`, `CMakePresets.json` | top-level build, presets |
 | `cmake/CnaDemosCna.cmake` | locating and adding CNA |
 | `cmake/CnaDemosCategories.cmake` | `cna_demos_add_category()`, `cna_demos_add_standalone()`, warnings, packaging |
-| `cmake/CnaDemosTests.cmake`, `CnaDemosDiscoverTests.cmake`, `CnaDemosCheckCatalog.cmake` | CTest integration |
+| `cmake/CnaDemosTests.cmake`, `CnaDemosDiscoverTests.cmake`, `CnaDemosCheckCatalog.cmake`, `CnaDemosCheckProcessOutput.cmake` | CTest integration |
 | `src/CnaDemos/*.hpp` | the framework API demos include (`CnaDemos/Demo.hpp` is the only one a demo needs) |
 | `src/framework/*.cpp` | framework implementation (static library `cna_demos_framework`) |
 | `src/app/*.cpp` | the executable's command line and browser |
@@ -304,6 +304,10 @@ Nothing generated is committed except:
 
 * `docs/COVERAGE.md` -- regenerate with `tools/coverage_report.py` (see the file's header);
 * `assets/*` -- regenerate with `tools/generate_assets.py`.
+
+`tests/process_output.cpp` checks the real process launcher through a buffered pipe, compiling
+Process.cpp directly without pulling in CNA. It prevents child output from overtaking pending
+parent diagnostics; both C and C++ standard streams are flushed before launch.
 
 Build-time generated files live only in the build tree (the CTest discovery wrapper
 `cna_demos_discover_tests.cmake`).

@@ -238,7 +238,11 @@ a check that all authored colors remain visible and that a blank texture row can
   played from files (`Song::FromUri`, ISSUE-015). ✅ `media.video_player.play_video` (generated WMV)
   and ✅ `media.song.compiled_song` (generated Ogg Vorbis), both through the content pipeline
   (`assets/media`, own ContentManager: ISSUE-020), ✅ `media.video_player.pause_and_loop`
-  (Pause/Resume, IsLooped, Volume, IsMuted). Remaining: pictures (`SavePicture`).
+  (Pause/Resume, IsLooped, Volume, IsMuted). Remaining: pictures (`SavePicture`). Source review
+  found a candidate Linux fixture: a separate process with isolated XDG_CONFIG_HOME/user-dirs.dirs
+  can direct SDL's public user-folder resolution to generated music/picture folders. Verify the
+  resolved paths before saving; no real user media and no internal MediaLibraryPaths override.
+  This is a proposed workflow, not runtime evidence or cross-platform support.
 
 ## Phase 10 -- input ✅ (39 demos: keyboard, mouse, text input, clipboard, gamepad, touch, CNAEXT devices)
 - Keyboard: state, edge detection (pressed this frame), modifiers, `GetPressedKeys`.

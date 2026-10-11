@@ -51,7 +51,7 @@ new non-failing IDs, reports changed check counts, and exits 1 for changed exist
 issue markers, missing IDs, or added/removed failed assertions (including multiplicities).
 Exit 2 means the evidence could not be read or did not match the supplied catalog. Investigate
 every reported change; the tool never rewrites or accepts a baseline automatically. Older merged
-logs can contain stdout/stderr splices. Preserve the raw file; any manually repaired comparison
+logs can contain stdout/stderr splices; unflushed parent stdout can also be split by child stdout. Preserve the raw file; any manually repaired comparison
 copy must document its exact change, retain both hashes and corroborate the reconstructed
 assertion with independent evidence such as the JSON failure message. Never broadly strip
 errors or treat a changed assertion as accepted merely because its demo has a known-issue flag.
@@ -117,6 +117,10 @@ the checkpoint. Build and CTest output is retained in `build/<preset>/reports/bu
 `smoke-<renderer>.stderr.log`, alongside the JSON report. Keep both when archiving a checkpoint.
 This prevents native logger stderr from being inserted inside a buffered stdout assertion line;
 assertion comparison uses stdout, while stderr retains native/platform diagnostics for review.
+The process launcher also flushes C++ and C standard streams before starting an inherited-output
+child. Separate stderr alone cannot prevent pending parent stdout from being overtaken by child
+stdout. The small `cna_demos.framework.process_output_order` test captures through a pipe with
+C/C++ buffering deliberately enabled; the old launcher prints CHILD before both parent lines.
 The current JSON and stderr outputs are removed at the start; an interrupted process must not leave
 old results looking like fresh evidence. Explicitly named baseline archives are preserved.
 When the inherited desktop display is unstable, run the whole script under
@@ -133,6 +137,7 @@ the generated table and missing-ID list expose that checkpoint debt.
 
 * `cna_demos.cli.*` -- command-line and registry tests (help, list, search, info, validate,
   catalog JSON well-formedness checked by CMake's own JSON parser, usage errors);
+* `cna_demos.framework.process_output_order` -- parent/child output ordering, without linking CNA;
 * `cna_demos.demo.<renderer>.<id>` -- one test per demo and renderer, **discovered at ctest time**
   from `cna-demos --list-ids` (`cmake/CnaDemosDiscoverTests.cmake`, the `gtest_discover_tests`
   pattern). New demos become tests without re-running CMake. Manual demos are registered DISABLED.
@@ -143,7 +148,7 @@ the generated table and missing-ID list expose that checkpoint debt.
 | `CNA_DEMOS_TEST_TIMEOUT` | 120 | seconds per demo test |
 | `CNA_DEMOS_TEST_AUDIO_DRIVER` | `dummy` | `SDL_AUDIO_DRIVER` for tests: exercises the audio API without hardware |
 
-Labels: `cli`, `demo`, the category (`graphics`, `math`, ...), the automation class
+Labels: `cli`, `framework`, `demo`, the category (`graphics`, `math`, ...), the automation class
 (`automated`, `smoke-only`, `manual`), the kind (`console-demo`, `game-demo`,
 `standalone-demo`), the renderer, and `headless` or `display`.
 

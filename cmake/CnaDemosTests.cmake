@@ -82,6 +82,19 @@ add_test(NAME cna_demos.cli.catalog_json_parses
             -P "${CMAKE_CURRENT_LIST_DIR}/CnaDemosCheckCatalog.cmake")
 set_tests_properties(cna_demos.cli.catalog_json_parses PROPERTIES LABELS "cli;headless" TIMEOUT 30)
 
+# Small framework regression fixture: compile the real launcher without linking CNA.
+add_executable(cna-demos-process-test
+    "${CMAKE_SOURCE_DIR}/tests/process_output.cpp"
+    "${CMAKE_SOURCE_DIR}/src/framework/Process.cpp")
+target_include_directories(cna-demos-process-test PRIVATE "${CMAKE_SOURCE_DIR}/src")
+cna_demos_apply_warnings(cna-demos-process-test)
+add_test(NAME cna_demos.framework.process_output_order
+    COMMAND "${CMAKE_COMMAND}"
+            -DCNA_DEMOS_PROCESS_TEST_EXE=$<TARGET_FILE:cna-demos-process-test>
+            -P "${CMAKE_CURRENT_LIST_DIR}/CnaDemosCheckProcessOutput.cmake")
+set_tests_properties(cna_demos.framework.process_output_order PROPERTIES
+    LABELS "framework;headless" TIMEOUT 15)
+
 # --- 2. Per-demo tests, discovered at ctest time ---------------------------------
 set(_cna_demos_discovery_script "${CMAKE_CURRENT_BINARY_DIR}/cna_demos_discover_tests.cmake")
 file(GENERATE OUTPUT "${_cna_demos_discovery_script}" CONTENT

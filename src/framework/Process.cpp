@@ -2,6 +2,8 @@
 #include "CnaDemos/Process.hpp"
 
 #include <cstdlib>
+#include <cstdio>
+#include <iostream>
 #include <cstdint>
 #include <iterator>
 #include <system_error>
@@ -88,6 +90,13 @@ namespace CnaDemos
             command += ' ';
             command += Quote(argument);
         }
+        // Children inherit stdout/stderr. Drain both C++ and C buffers before launching:
+        // otherwise a child's output can split an earlier parent's buffered assertion line.
+        std::cout.flush();
+        std::cerr.flush();
+        std::clog.flush();
+        std::fflush(stdout);
+        std::fflush(stderr);
 #if defined(_WIN32)
         // cmd.exe strips one pair of outer quotes from the whole command line.
         command = "\"" + command + "\"";
