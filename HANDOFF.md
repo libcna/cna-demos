@@ -236,9 +236,11 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** apply and validate `/tmp/cna-c-audio-ownership.c` as the existing
-C audio example, then run the full 415 checkpoint for the two CNB additions and this extension.
-The complete 413 checkpoint at ca81bb0 remains the last full checkpoint; section 7 has its results.
+**Immediate next action:** run the full 415 checkpoint for the two CNB additions and the
+C audio ownership extension. Compare both renderer reports/current catalog and raw failed
+assertions against checkpoint-413, then archive checkpoint-415. Expected: SOFTWARE
+370/17/25/3, OPENGLES3 391/18/3/3, 427 enabled CTests. Section 7 still describes the last full
+checkpoint (413); no current full 415 evidence is claimed yet.
 
 The two CNB drafts are applied and pass: `content.custom.cnb_external_references` has 9 checks
 and `content.custom.cnb_read_limits` has 8 under both SOFTWARE/OPENGLES3 selections. Evidence:
@@ -261,9 +263,16 @@ writer rejection of `..`. It does not establish cycles, automatic child compilat
 The 416-byte tile layer checks independent writer/reader budgets plus schema limits after Parse
 succeeds; compressed expansion and other limits remain explicitly uncovered in the member audit.
 
-`/tmp/cna-c-audio-ownership.c` remains unapplied: four intended checks refuse SoundEffect/game
-destruction with a live instance, preserve sound duration, and reject a released instance handle.
-It extends an existing ID and still needs compilation/runtime validation with dummy audio.
+The existing C audio ownership extension is applied and passes all 19 child checks on both
+renderer selections (`/tmp/cna-c-audio-ownership-{SOFTWARE,OPENGLES3}.{json,log}`), including
+four new checks for early parent release refusal, preserved duration and stale instance handles.
+Build, metadata (415/0), its CTest and both catalog tests pass (3 tests). Dummy audio only;
+no audible or visual validation. No new CNA issue. Its /tmp draft is now stale.
+
+Next after this checkpoint: remaining CNB compression/limits behaviors or C ABI handle and
+versioned-structure boundaries from COVERAGE_AUDIT.md. Keep the existing focused demos where
+an extension fits; no per-enum or cosmetic variants. Composite nested build publication remains
+separate from the now demonstrated runtime XREF loading.
 
 The XML property example is included in the complete 412 checkpoint: all 5 child checks pass
 under SOFTWARE and OPENGLES3 selections (`/tmp/cna-intermediate-properties-{SOFTWARE,OPENGLES3}.{json,log}`).

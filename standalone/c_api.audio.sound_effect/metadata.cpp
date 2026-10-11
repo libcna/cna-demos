@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Sound in C: a SoundEffect from PCM",
     .description = "A C program asks whether audio playback is available, creates a SoundEffect from half a second "
                    "of 16-bit PCM it computes, plays an instance of it and follows the instance's state from the "
-                   "update callback until the sound stops by itself.",
+                   "update callback until the sound stops by itself; verifies refused parent destruction and released-handle rejection.",
     .apis = {"cna_audio_get_capabilities", "cna_sound_effect_create_pcm16", "cna_sound_effect_get_duration_ticks",
              "cna_sound_effect_create_instance", "cna_sound_effect_instance_set_volume",
              "cna_sound_effect_instance_play", "cna_sound_effect_instance_get_info",

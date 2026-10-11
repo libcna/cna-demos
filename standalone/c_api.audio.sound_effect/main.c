@@ -131,6 +131,16 @@ int main(int argc, char** argv)
         /* An instance is one controllable playback of the effect. */
         if (cna_demo_check_result(&demo, cna_sound_effect_create_instance(state.sound, &state.instance),
                                   "cna_sound_effect_create_instance")) {
+            /* Native sample retention does not remove C parent/child destruction rules. */
+            cna_demo_check(&demo, cna_sound_effect_destroy(state.sound) == CNA_RESULT_INVALID_STATE,
+                           "a sound with a live C instance refuses destruction");
+            cna_demo_check(&demo, cna_game_destroy(game) == CNA_RESULT_INVALID_STATE,
+                           "the game refuses destruction while its audio children remain alive");
+            duration_ticks = 0;
+            cna_demo_check(&demo,
+                           cna_sound_effect_get_duration_ticks(state.sound, &duration_ticks) == CNA_RESULT_SUCCESS &&
+                           duration_ticks == INT64_C(5000000),
+                           "the refused parent releases preserve the sound and its duration");
             cna_demo_check_result(&demo, cna_sound_effect_instance_set_volume(state.instance, 0.8f),
                                   "cna_sound_effect_instance_set_volume");
             cna_demo_check_result(&demo, cna_sound_effect_instance_play(state.instance),
@@ -150,6 +160,8 @@ int main(int argc, char** argv)
             /* Children first: the instance, then the effect, then the game. */
             cna_demo_check_result(&demo, cna_sound_effect_instance_destroy(state.instance),
                                   "cna_sound_effect_instance_destroy");
+            cna_demo_check(&demo, cna_sound_effect_instance_get_info(state.instance, &info) == CNA_RESULT_INVALID_HANDLE,
+                           "a released instance handle cannot be queried again");
         }
         cna_demo_check_result(&demo, cna_sound_effect_destroy(state.sound), "cna_sound_effect_destroy");
     }

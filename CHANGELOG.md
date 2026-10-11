@@ -30,6 +30,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing C audio example checks refused SoundEffect/game destruction while an instance lives,
+  preserved sound duration/playback and INVALID_HANDLE after releasing the instance.
 - Composite CNB encounter example resolves shared enemy profiles through XREF and the owning
   ContentManager, including reference failures and retry after a missing child is supplied.
 - Bounded CNB tile-layer example distinguishes file/chunk/aggregate budgets from schema
