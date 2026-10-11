@@ -144,6 +144,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   (AudioEngine::RendererDetails), `math.formatting.to_string` (ToString of the math types; expected
   failure, CNA-DEMOS-ISSUE-024: BoundingBox and Ray print doubled braces); the type-converter demo
   also lists Vector4, Plane and Ray.
+- `net.network_session.add_local_gamer` (AddLocalGamer in the lobby; AllowJoinInProgress during
+  play), `net.network_machine.remove_from_session` (standalone: the host removes a player's machine,
+  RemovedByHost) and the manual `gamer_services.signed_in_gamer.signed_out` (SignedOut through the
+  Guide). `CnaDemos/StandaloneProgram.hpp` holds what the C++ standalone programs share; the two
+  earlier net programs use it.
 - `audio.sound_effect.from_stream` (a loose WAV loaded at run time; CNA-DEMOS-ISSUE-029:
   `SoundEffect::FromStream` takes a `std::istream`, not a `System::IO::Stream`),
   `game.components.change_events` (EnabledChanged, UpdateOrderChanged, VisibleChanged,

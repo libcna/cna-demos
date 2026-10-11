@@ -192,7 +192,7 @@ Console demos with checks; each shows one operation family.
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (18 gamer services + 9 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 11 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -205,8 +205,8 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   LeaderboardReader (page, pivot); paging with PageDown/PageUp and typed columns
   (LeaderboardOutcome, TimeSpan; CNA-DEMOS-ISSUE-025).
 - ✅ `gamer_services.guide.notification_position`: Guide notifications moved to TopRight.
-- Remaining gamer services: `Guide::DelayNotifications`, `SignedOut` (offline only through the
-  Guide's own menu: a manual demo), `AvatarDescription::Changed`; service-only features (friends,
+- ✅ `gamer_services.signed_in_gamer.signed_out` (manual: sign out through the Guide, Home key).
+- Remaining gamer services: `Guide::DelayNotifications`, `AvatarDescription::Changed`; service-only features (friends,
   messages, gamer cards, marketplace, the WriteLeaderboards events) stay manual.
 - ✅ `net.*` (6): Local session (gamers, GamerJoined replay, host, ids, machine), lobby/ready/game
   flow, NetworkSessionProperties, BeginCreate/EndCreate, Gamer::Tag, PacketWriter/PacketReader
@@ -218,9 +218,12 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   QualityOfService, Join, GamerJoined/GamerLeft on the host) and `net.network_session.host_leaves`
   (SessionEnded with HostEndedSession; AllowHostMigration with HostChanged; CNA-DEMOS-ISSUE-026:
   on Linux a process that searched before a host started does not find it).
+- ✅ `net.network_session.add_local_gamer` (AddLocalGamer in the lobby, AllowJoinInProgress during
+  play), ✅ `net.network_machine.remove_from_session` (standalone: the host kicks a player,
+  RemovedByHost).
 - Remaining net: `SimulatedLatency`/`SimulatedPacketLoss` (if they apply to local delivery),
-  `AddLocalGamer`, `AllowJoinInProgress`, `PrivateGamerSlots`, a refused join
-  (NetworkSessionJoinException); voice (manual).
+  `PrivateGamerSlots`, a refused join (NetworkSessionJoinException; System Link refusals surface
+  as SessionNotFound after a timeout); voice (manual).
 
 ## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (17 demos)
 - ✅ `devices.*` (4): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,

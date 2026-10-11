@@ -15,14 +15,13 @@
 #include <memory>
 #include <optional>
 #include <string>
-#include <string_view>
 #include <thread>
 #include <utility>
 #include <vector>
 
-#include "CNA/Logger.hpp"
 #include "CnaDemos/GamerServicesDemo.hpp"
 #include "CnaDemos/Process.hpp"
+#include "CnaDemos/StandaloneProgram.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Game.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/Gamer.hpp"
@@ -33,7 +32,6 @@
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteFont.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteSortMode.hpp"
-#include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/GraphicsDeviceManager.hpp"
 #include "Microsoft/Xna/Framework/Input/Keyboard.hpp"
 #include "Microsoft/Xna/Framework/Input/KeyboardState.hpp"
@@ -65,12 +63,9 @@ namespace
     using Clock = std::chrono::steady_clock;
     constexpr std::chrono::seconds Patience(20);
 
-    struct Options
+    struct Options : CnaDemos::Standalone::Arguments
     {
-        bool automated = false;
         int playerRound = 0; // > 0: this process is the player of that round
-        std::string screenshot;
-        std::string logLevel = "warn";
     };
 
     const char* EndReasonName(NetworkSessionEndReason reason)
@@ -91,7 +86,7 @@ namespace
         explicit HostLeavesGame(const Options& options)
             : graphics_(this),
               options_(options),
-              name_(options.playerRound > 0 ? "player" : "host")
+              report_(options.playerRound > 0 ? "player" : "host")
         {
             getContentProperty().setRootDirectoryProperty("assets");
             // The screenshot reads the back buffer, which XNA allows under HiDef only.
@@ -113,7 +108,7 @@ namespace
             }
         }
 
-        [[nodiscard]] int Failures() const { return failures_; }
+        [[nodiscard]] int Failures() const { return report_.Failures(); }
 
     protected:
         void LoadContent() override
@@ -167,7 +162,7 @@ namespace
                                      options_.playerRound > 0 ? "Player (second process)" : "Host: leaves each round",
                                      Vector2(30.0f, 20.0f), Color::White);
             float y = 64.0f;
-            for (const std::string& line : lines_)
+            for (const std::string& line : report_.Lines())
             {
                 spriteBatch_->DrawString(*font_, line, Vector2(30.0f, y), Color::LightGreen);
                 y += 28.0f;
@@ -177,7 +172,7 @@ namespace
             if (finished_ && !options_.screenshot.empty() && options_.playerRound == 0 && !captured_)
             {
                 captured_ = true;
-                SaveScreenshot(device);
+                CnaDemos::Standalone::SaveScreenshot(device, options_.screenshot);
             }
             if (finished_ && (options_.automated || options_.playerRound > 0))
             {
@@ -206,11 +201,11 @@ namespace
                 {
                     // The host quits the game: disposing its session is leaving it.
                     CloseSession();
-                    Log("round " + std::to_string(round_) + ": left the session");
+                    report_.Log("round " + std::to_string(round_) + ": left the session");
                 }
                 else if (!joinedAt_ && Clock::now() - roundStarted_ > Patience)
                 {
-                    Check(false, "round " + std::to_string(round_) + ": a player joined");
+                    report_.Check(false, "round " + std::to_string(round_) + ": a player joined");
                     CloseSession();
                 }
             }
@@ -219,7 +214,8 @@ namespace
                 player_.join();
                 playerRunning_ = false;
                 CloseSession();
-                Check(playerExit_ == 0, round_ == 1 ? "round 1: the player saw the session end (HostEndedSession)"
+                report_.Check(playerExit_ == 0, round_ == 1
+                                                    ? "round 1: the player saw the session end (HostEndedSession)"
                                                     : "round 2: the player became the host (HostChanged)");
             }
         }
@@ -235,12 +231,13 @@ namespace
             joinedToken_ = session_->GamerJoined.Add([this](System::Object*, const GamerJoinedEventArgs& args) {
                 if (!args.getGamerProperty()->getIsLocalProperty())
                 {
-                    Log("round " + std::to_string(round_) + ": " + args.getGamerProperty()->getGamertagProperty() +
-                        " joined");
+                    report_.Log("round " + std::to_string(round_) + ": " +
+                                args.getGamerProperty()->getGamertagProperty() + " joined");
                     joinedAt_ = Clock::now();
                 }
             });
-            Log("round " + std::to_string(round) + ": hosting, AllowHostMigration " + (round == 2 ? "true" : "false"));
+            report_.Log("round " + std::to_string(round) + ": hosting, AllowHostMigration " +
+                        (round == 2 ? "true" : "false"));
 
             // The other machine: this program again, as a player. A new process each round:
             // CNA-DEMOS-ISSUE-026 -- on Linux a process that searched before this host's
@@ -254,7 +251,8 @@ namespace
                 arguments.emplace_back("--automated");
             }
             player_ = std::thread([this, arguments] {
-                playerExit_ = CnaDemos::RunProcess(CnaDemos::ExecutableDirectory() / ProgramName(), arguments);
+                playerExit_ = CnaDemos::RunProcess(
+                    CnaDemos::Standalone::ThisProgram("cna-demo-net-network_session-host_leaves"), arguments);
                 playerDone_ = true;
             });
         }
@@ -299,30 +297,32 @@ namespace
                 session_.reset(NetworkSession::Join(&sessions[i]));
                 joined_ = true;
                 playerJoinedAt_ = Clock::now();
-                Log("joined " + std::string(HostGamertag) + "'s session; AllowHostMigration " +
+                report_.Log("joined " + std::string(HostGamertag) + "'s session; AllowHostMigration " +
                     (session_->getAllowHostMigrationProperty() ? "true" : "false"));
-                Check(session_->getAllowHostMigrationProperty() == (options_.playerRound == 2),
+                report_.Check(session_->getAllowHostMigrationProperty() == (options_.playerRound == 2),
                       "the joined session carries the host's AllowHostMigration");
                 leftToken_ = session_->GamerLeft.Add([this](System::Object*, const GamerLeftEventArgs& args) {
                     left_ = args.getGamerProperty()->getGamertagProperty();
-                    Log("GamerLeft: " + left_);
+                    report_.Log("GamerLeft: " + left_);
                 });
-                hostChangedToken_ = session_->HostChanged.Add([this](System::Object*, const HostChangedEventArgs& args) {
+                hostChangedToken_ = session_->HostChanged.Add([this](System::Object*,
+                                                                     const HostChangedEventArgs& args) {
                     hostChanged_ = true;
                     oldHost_ = args.getOldHostProperty()->getGamertagProperty();
                     newHostIsLocal_ = args.getNewHostProperty()->getIsLocalProperty();
-                    Log("HostChanged: " + oldHost_ + " -> " + args.getNewHostProperty()->getGamertagProperty());
+                    report_.Log("HostChanged: " + oldHost_ + " -> " + args.getNewHostProperty()->getGamertagProperty());
                 });
-                endedToken_ = session_->SessionEnded.Add([this](System::Object*, const NetworkSessionEndedEventArgs& args) {
+                endedToken_ = session_->SessionEnded.Add([this](System::Object*,
+                                                                const NetworkSessionEndedEventArgs& args) {
                     ended_ = args.getEndReasonProperty();
-                    Log(std::string("SessionEnded: ") + EndReasonName(*ended_));
+                    report_.Log(std::string("SessionEnded: ") + EndReasonName(*ended_));
                 });
                 break;
             }
             found.Dispose();
             if (!session_ && Clock::now() - started_ > Patience)
             {
-                Check(false, "the host's session was found");
+                report_.Check(false, "the host's session was found");
                 Finish();
             }
         }
@@ -332,18 +332,18 @@ namespace
             if (options_.playerRound == 1)
             {
                 // Without migration the session cannot outlive its host.
-                Check(ended_ == NetworkSessionEndReason::HostEndedSession,
+                report_.Check(ended_ == NetworkSessionEndReason::HostEndedSession,
                       "without migration, SessionEnded reports HostEndedSession");
-                Check(!hostChanged_, "without migration, no HostChanged");
+                report_.Check(!hostChanged_, "without migration, no HostChanged");
                 return;
             }
             // With migration the session goes on: a remaining gamer -- here this machine's --
             // becomes the host.
-            Check(!ended_.has_value(), "with migration, the session does not end");
-            Check(hostChanged_ && oldHost_ == HostGamertag && newHostIsLocal_,
+            report_.Check(!ended_.has_value(), "with migration, the session does not end");
+            report_.Check(hostChanged_ && oldHost_ == HostGamertag && newHostIsLocal_,
                   "HostChanged names Demo Player as the old host and this machine's gamer as the new one");
-            Check(left_ == HostGamertag, "GamerLeft reports Demo Player");
-            Check(session_->getIsHostProperty() && session_->getAllGamersProperty().getCountProperty() == 1,
+            report_.Check(left_ == HostGamertag, "GamerLeft reports Demo Player");
+            report_.Check(session_->getIsHostProperty() && session_->getAllGamersProperty().getCountProperty() == 1,
                   "Second Player now hosts the session, alone");
         }
 
@@ -366,51 +366,17 @@ namespace
             finished_ = true;
             if (!options_.automated && options_.playerRound == 0)
             {
-                Log("press Escape or close the window");
+                report_.Log("press Escape or close the window");
             }
         }
 
-        void Log(const std::string& line)
-        {
-            std::cout << name_ << ": " << line << '\n' << std::flush;
-            lines_.push_back(line);
-        }
 
-        void Check(bool passed, const std::string& what)
-        {
-            std::cout << name_ << (passed ? ":   check: " : ":   CHECK FAILED: ") << what << '\n' << std::flush;
-            failures_ += passed ? 0 : 1;
-        }
 
-        static std::string ProgramName()
-        {
-#ifdef _WIN32
-            return "cna-demo-net-network_session-host_leaves.exe";
-#else
-            return "cna-demo-net-network_session-host_leaves";
-#endif
-        }
 
-        void SaveScreenshot(GraphicsDevice& device)
-        {
-            const auto& parameters = device.getPresentationParametersProperty();
-            const int width = parameters.getBackBufferWidthProperty();
-            const int height = parameters.getBackBufferHeightProperty();
-            std::vector<Color> pixels(static_cast<std::size_t>(width) * static_cast<std::size_t>(height));
-            device.GetBackBufferData(pixels.data(), static_cast<int>(pixels.size()));
-            for (Color& pixel : pixels)
-            {
-                pixel.setAProperty(255);
-            }
-            Texture2D image(device, width, height);
-            image.SetData(pixels.data(), static_cast<int>(pixels.size()));
-            image.SaveAsPng(options_.screenshot);
-            std::cout << "  screenshot: " << options_.screenshot << '\n';
-        }
 
         GraphicsDeviceManager graphics_;
         Options options_;
-        std::string name_;
+        CnaDemos::Standalone::Report report_;
         std::unique_ptr<NetworkSession> session_;
         System::EventHandler<GamerJoinedEventArgs>::Token joinedToken_{};
         System::EventHandler<GamerLeftEventArgs>::Token leftToken_{};
@@ -435,8 +401,6 @@ namespace
         std::string left_;
         bool finished_ = false;
         bool captured_ = false;
-        int failures_ = 0;
-        std::vector<std::string> lines_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
     };
@@ -445,30 +409,14 @@ namespace
 int main(int argc, char** argv)
 {
     Options options;
-    for (int i = 1; i < argc; ++i)
+    static_cast<CnaDemos::Standalone::Arguments&>(options) = CnaDemos::Standalone::ParseArguments(argc, argv);
+    for (std::size_t i = 0; i + 1 < options.other.size(); ++i)
     {
-        const std::string_view argument(argv[i]);
-        if (argument == "--automated")
-            options.automated = true;
-        else if (argument == "--player" && i + 1 < argc)
-            options.playerRound = std::stoi(argv[++i]);
-        else if (argument == "--frames" && i + 1 < argc)
-            ++i; // see the arguments above
-        else if (argument == "--screenshot" && i + 1 < argc)
-            options.screenshot = argv[++i];
-        else if (argument == "--log-level" && i + 1 < argc)
-            options.logLevel = argv[++i];
+        if (options.other[i] == "--player")
+        {
+            options.playerRound = std::stoi(options.other[i + 1]);
+        }
     }
-    if (options.logLevel == "fatal")
-        CNA::Logger::SetMinimumLevel(CNA::LogLevel::FATAL);
-    else if (options.logLevel == "error")
-        CNA::Logger::SetMinimumLevel(CNA::LogLevel::ERROR);
-    else if (options.logLevel == "info")
-        CNA::Logger::SetMinimumLevel(CNA::LogLevel::INFO);
-    else if (options.logLevel == "debug" || options.logLevel == "trace")
-        CNA::Logger::SetMinimumLevel(CNA::LogLevel::DEBUG);
-    else
-        CNA::Logger::SetMinimumLevel(CNA::LogLevel::WARN);
 
     try
     {

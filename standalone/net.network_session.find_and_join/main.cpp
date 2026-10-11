@@ -14,14 +14,13 @@
 #include <memory>
 #include <optional>
 #include <string>
-#include <string_view>
 #include <thread>
 #include <utility>
 #include <vector>
 
-#include "CNA/Logger.hpp"
 #include "CnaDemos/GamerServicesDemo.hpp"
 #include "CnaDemos/Process.hpp"
+#include "CnaDemos/StandaloneProgram.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Game.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/Gamer.hpp"
@@ -32,7 +31,6 @@
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteFont.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteSortMode.hpp"
-#include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/GraphicsDeviceManager.hpp"
 #include "Microsoft/Xna/Framework/Input/Keyboard.hpp"
 #include "Microsoft/Xna/Framework/Input/KeyboardState.hpp"
@@ -61,12 +59,9 @@ namespace
     // How long each side waits for the other before giving up.
     constexpr std::chrono::seconds Patience(20);
 
-    struct Options
+    struct Options : CnaDemos::Standalone::Arguments
     {
-        bool automated = false;
         bool joiner = false;
-        std::string screenshot;
-        std::string logLevel = "warn";
     };
 
     std::string MilliSeconds(const System::TimeSpan& time)
@@ -80,7 +75,7 @@ namespace
         explicit FindAndJoinGame(const Options& options)
             : graphics_(this),
               options_(options),
-              name_(options.joiner ? "joiner" : "host")
+              report_(options.joiner ? "joiner" : "host")
         {
             getContentProperty().setRootDirectoryProperty("assets");
             // The screenshot reads the back buffer, which XNA allows under HiDef only.
@@ -101,7 +96,7 @@ namespace
             }
         }
 
-        [[nodiscard]] int Failures() const { return failures_; }
+        [[nodiscard]] int Failures() const { return report_.Failures(); }
 
     protected:
         void LoadContent() override
@@ -134,7 +129,7 @@ namespace
             }
             if (Clock::now() - started_ > Patience + Patience)
             {
-                Check(false, "the run finished in time");
+                report_.Check(false, "the run finished in time");
                 Finish();
                 return;
             }
@@ -157,10 +152,10 @@ namespace
             GraphicsDevice& device = getGraphicsDeviceProperty();
             device.Clear(options_.joiner ? Color(40, 30, 52) : Color(24, 40, 52));
             spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
-            spriteBatch_->DrawString(*font_, options_.joiner ? "Joiner (second process)" : "Host", Vector2(30.0f, 20.0f),
-                                     Color::White);
+            spriteBatch_->DrawString(*font_, options_.joiner ? "Joiner (second process)" : "Host",
+                                     Vector2(30.0f, 20.0f), Color::White);
             float y = 64.0f;
-            for (const std::string& line : lines_)
+            for (const std::string& line : report_.Lines())
             {
                 spriteBatch_->DrawString(*font_, line, Vector2(30.0f, y), Color::LightGreen);
                 y += 28.0f;
@@ -170,7 +165,7 @@ namespace
             if (finished_ && !options_.screenshot.empty() && !options_.joiner && !captured_)
             {
                 captured_ = true;
-                SaveScreenshot(device);
+                CnaDemos::Standalone::SaveScreenshot(device, options_.screenshot);
             }
             // Unattended, and always for the joiner, the run ends with the exchange; the host
             // window otherwise stays until Escape. (The run lasts as long as the exchange takes,
@@ -193,15 +188,15 @@ namespace
                 joinedToken_ = session_->GamerJoined.Add([this](System::Object*, const GamerJoinedEventArgs& args) {
                     if (!args.getGamerProperty()->getIsLocalProperty())
                     {
-                        Log("GamerJoined: " + args.getGamerProperty()->getGamertagProperty() + " (remote)");
+                        report_.Log("GamerJoined: " + args.getGamerProperty()->getGamertagProperty() + " (remote)");
                         remoteJoined_ = args.getGamerProperty()->getGamertagProperty();
                     }
                 });
                 leftToken_ = session_->GamerLeft.Add([this](System::Object*, const GamerLeftEventArgs& args) {
-                    Log("GamerLeft: " + args.getGamerProperty()->getGamertagProperty());
+                    report_.Log("GamerLeft: " + args.getGamerProperty()->getGamertagProperty());
                     remoteLeft_ = args.getGamerProperty()->getGamertagProperty();
                 });
-                Log("hosting a System Link session as " + std::string(HostGamertag));
+                report_.Log("hosting a System Link session as " + std::string(HostGamertag));
 
                 // The second machine: this program again, as the joiner. It runs until it has
                 // joined and left; the host keeps updating its session meanwhile.
@@ -211,7 +206,8 @@ namespace
                     arguments.insert(arguments.begin(), "--automated");
                 }
                 joiner_ = std::thread([this, arguments] {
-                    joinerExit_ = CnaDemos::RunProcess(CnaDemos::ExecutableDirectory() / ProgramName(), arguments);
+                    joinerExit_ = CnaDemos::RunProcess(
+                        CnaDemos::Standalone::ThisProgram("cna-demo-net-network_session-find_and_join"), arguments);
                     joinerDone_ = true;
                 });
                 return;
@@ -221,11 +217,11 @@ namespace
             if (joinerDone_)
             {
                 joiner_.join();
-                Log("the joiner exited with code " + std::to_string(joinerExit_.load()));
-                Check(joinerExit_ == 0, "the joiner found the session, joined it and left");
-                Check(remoteJoined_ == JoinerGamertag, "the host saw Second Player join (GamerJoined)");
-                Check(remoteLeft_ == JoinerGamertag, "the host saw Second Player leave (GamerLeft)");
-                Check(session_->getRemoteGamersProperty().getCountProperty() == 0,
+                report_.Log("the joiner exited with code " + std::to_string(joinerExit_.load()));
+                report_.Check(joinerExit_ == 0, "the joiner found the session, joined it and left");
+                report_.Check(remoteJoined_ == JoinerGamertag, "the host saw Second Player join (GamerJoined)");
+                report_.Check(remoteLeft_ == JoinerGamertag, "the host saw Second Player leave (GamerLeft)");
+                report_.Check(session_->getRemoteGamersProperty().getCountProperty() == 0,
                       "the session has no remote gamer left");
                 Finish();
             }
@@ -246,7 +242,7 @@ namespace
                 {
                     const AvailableNetworkSession& available = sessions[i];
                     const QualityOfService& quality = available.getQualityOfServiceProperty();
-                    Log("found " + available.getHostGamertagProperty() + "'s session: " +
+                    report_.Log("found " + available.getHostGamertagProperty() + "'s session: " +
                         std::to_string(available.getCurrentGamerCountProperty()) + " gamer(s), " +
                         std::to_string(available.getOpenPublicGamerSlotsProperty()) + " open slot(s)");
                     if (available.getHostGamertagProperty() != HostGamertag)
@@ -254,15 +250,16 @@ namespace
                         continue;
                     }
                     // QualityOfService: measured while searching -- a lobby shows it per session.
-                    Log("  round trip " + MilliSeconds(quality.getAverageRoundtripTimeProperty()) + " (min " +
+                    report_.Log("  round trip " + MilliSeconds(quality.getAverageRoundtripTimeProperty()) + " (min " +
                         MilliSeconds(quality.getMinimumRoundtripTimeProperty()) + "), measured: " +
                         (quality.getIsAvailableProperty() ? "yes" : "no"));
-                    Check(available.getCurrentGamerCountProperty() == 1 && available.getOpenPublicGamerSlotsProperty() == 1,
+                    report_.Check(available.getCurrentGamerCountProperty() == 1 &&
+                                      available.getOpenPublicGamerSlotsProperty() == 1,
                           "the session holds its host and has one open slot");
                     session_.reset(NetworkSession::Join(&available));
-                    Log("joined");
-                    Check(!session_->getIsHostProperty(), "the joiner is not the host");
-                    Check(session_->getHostProperty() != nullptr &&
+                    report_.Log("joined");
+                    report_.Check(!session_->getIsHostProperty(), "the joiner is not the host");
+                    report_.Check(session_->getHostProperty() != nullptr &&
                               session_->getHostProperty()->getGamertagProperty() == HostGamertag,
                           "Demo Player hosts the joined session");
                     joinedAt_ = Clock::now();
@@ -271,7 +268,7 @@ namespace
                 found.Dispose(); // the search's results are released; a joined session lives on
                 if (!session_ && Clock::now() - started_ > Patience)
                 {
-                    Check(false, "Demo Player's session was found");
+                    report_.Check(false, "Demo Player's session was found");
                     Finish();
                 }
                 return;
@@ -280,9 +277,10 @@ namespace
             // Stay a moment, so the host sees this gamer in its session, then leave.
             if (Clock::now() - joinedAt_ > std::chrono::milliseconds(500))
             {
-                Check(session_->getAllGamersProperty().getCountProperty() == 2, "both gamers are in the session");
+                report_.Check(session_->getAllGamersProperty().getCountProperty() == 2,
+                              "both gamers are in the session");
                 CloseSession();
-                Log("left the session");
+                report_.Log("left the session");
                 Finish();
             }
         }
@@ -304,51 +302,17 @@ namespace
             finished_ = true;
             if (!options_.automated)
             {
-                Log("press Escape or close the window");
+                report_.Log("press Escape or close the window");
             }
         }
 
-        void Log(const std::string& line)
-        {
-            std::cout << name_ << ": " << line << '\n' << std::flush;
-            lines_.push_back(line);
-        }
 
-        void Check(bool passed, const std::string& what)
-        {
-            std::cout << name_ << (passed ? ":   check: " : ":   CHECK FAILED: ") << what << '\n' << std::flush;
-            failures_ += passed ? 0 : 1;
-        }
 
-        static std::string ProgramName()
-        {
-#ifdef _WIN32
-            return "cna-demo-net-network_session-find_and_join.exe";
-#else
-            return "cna-demo-net-network_session-find_and_join";
-#endif
-        }
 
-        void SaveScreenshot(GraphicsDevice& device)
-        {
-            const auto& parameters = device.getPresentationParametersProperty();
-            const int width = parameters.getBackBufferWidthProperty();
-            const int height = parameters.getBackBufferHeightProperty();
-            std::vector<Color> pixels(static_cast<std::size_t>(width) * static_cast<std::size_t>(height));
-            device.GetBackBufferData(pixels.data(), static_cast<int>(pixels.size()));
-            for (Color& pixel : pixels)
-            {
-                pixel.setAProperty(255);
-            }
-            Texture2D image(device, width, height);
-            image.SetData(pixels.data(), static_cast<int>(pixels.size()));
-            image.SaveAsPng(options_.screenshot);
-            std::cout << "  screenshot: " << options_.screenshot << '\n';
-        }
 
         GraphicsDeviceManager graphics_;
         Options options_;
-        std::string name_;
+        CnaDemos::Standalone::Report report_;
         std::unique_ptr<NetworkSession> session_;
         System::EventHandler<GamerJoinedEventArgs>::Token joinedToken_{};
         System::EventHandler<GamerLeftEventArgs>::Token leftToken_{};
@@ -361,8 +325,6 @@ namespace
         Clock::time_point joinedAt_{};
         bool finished_ = false;
         bool captured_ = false;
-        int failures_ = 0;
-        std::vector<std::string> lines_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
     };
@@ -371,30 +333,11 @@ namespace
 int main(int argc, char** argv)
 {
     Options options;
-    for (int i = 1; i < argc; ++i)
+    static_cast<CnaDemos::Standalone::Arguments&>(options) = CnaDemos::Standalone::ParseArguments(argc, argv);
+    for (const std::string& argument : options.other)
     {
-        const std::string_view argument(argv[i]);
-        if (argument == "--automated")
-            options.automated = true;
-        else if (argument == "--joiner")
-            options.joiner = true;
-        else if (argument == "--frames" && i + 1 < argc)
-            ++i; // see the arguments above
-        else if (argument == "--screenshot" && i + 1 < argc)
-            options.screenshot = argv[++i];
-        else if (argument == "--log-level" && i + 1 < argc)
-            options.logLevel = argv[++i];
+        options.joiner = options.joiner || argument == "--joiner";
     }
-    if (options.logLevel == "fatal")
-        CNA::Logger::SetMinimumLevel(CNA::LogLevel::FATAL);
-    else if (options.logLevel == "error")
-        CNA::Logger::SetMinimumLevel(CNA::LogLevel::ERROR);
-    else if (options.logLevel == "info")
-        CNA::Logger::SetMinimumLevel(CNA::LogLevel::INFO);
-    else if (options.logLevel == "debug" || options.logLevel == "trace")
-        CNA::Logger::SetMinimumLevel(CNA::LogLevel::DEBUG);
-    else
-        CNA::Logger::SetMinimumLevel(CNA::LogLevel::WARN);
 
     try
     {

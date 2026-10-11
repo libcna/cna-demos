@@ -6,7 +6,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**376 demos** in 18 categories. Kinds: console 141, game 225, standalone 10. Automation: automated 341, manual 2, smoke-only 33.
+**379 demos** in 18 categories. Kinds: console 141, game 227, standalone 11. Automation: automated 343, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -19,21 +19,21 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 | 5 / 0 / 0 |
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 | 2 / 0 / 0 |
 | game | 32 | 27 | 4 | 1 | 24 / 6 / 1 | 30 / 0 / 1 |
-| gamer_services | 18 | 18 | 0 | 0 | 17 / 0 / 1 | 17 / 0 / 1 |
+| gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 | 17 / 0 / 1 |
 | graphics | 123 | 123 | 0 | 0 | 115 / 5 / 3 | 116 / 3 / 4 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
 | math | 74 | 74 | 0 | 0 | 72 / 0 / 2 | 72 / 0 / 2 |
 | media | 10 | 9 | 1 | 0 | 10 / 0 / 0 | 10 / 0 / 0 |
-| net | 9 | 9 | 0 | 0 | 9 / 0 / 0 | 9 / 0 / 0 |
+| net | 11 | 11 | 0 | 0 | 11 / 0 / 0 | 11 / 0 / 0 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | storage | 7 | 7 | 0 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 286 of 329** (86.9 %).
-- **Methods, properties, constructors and events named by a demo: 1077 of 2326** (46.3 %).
-- Fields and enum values named by a demo: 125 of 753 (reported separately: a demo per enum value is not a goal).
+- **Types with at least one demo: 287 of 329** (87.2 %).
+- **Methods, properties, constructors and events named by a demo: 1083 of 2326** (46.6 %).
+- Fields and enum values named by a demo: 126 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
@@ -41,13 +41,13 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Audio` | 16 / 19 | 80 / 121 | 5 / 11 |
 | `Microsoft.Xna.Framework.Content` | 6 / 11 | 10 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
-| `Microsoft.Xna.Framework.GamerServices` | 42 / 52 | 114 / 244 | 1 / 223 |
+| `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
 | `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 258 / 550 | 80 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
 | `Microsoft.Xna.Framework.Media` | 17 / 24 | 68 / 192 | 1 / 8 |
-| `Microsoft.Xna.Framework.Net` | 20 / 23 | 61 / 127 | 4 / 22 |
+| `Microsoft.Xna.Framework.Net` | 20 / 23 | 65 / 127 | 5 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
 
 ### Types without a demo yet
@@ -57,7 +57,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 - `Microsoft.Xna.Framework`: IDrawable, IUpdateable
 - `Microsoft.Xna.Framework.Audio`: InstancePlayLimitException, NoAudioHardwareException, NoMicrophoneConnectedException
 - `Microsoft.Xna.Framework.Content`: ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute
-- `Microsoft.Xna.Framework.GamerServices`: FriendCollection, FriendGamer, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPrivilegeException, InviteAcceptedEventArgs, NetworkException, NetworkNotAvailableException, SignedOutEventArgs
+- `Microsoft.Xna.Framework.GamerServices`: FriendCollection, FriendGamer, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPrivilegeException, InviteAcceptedEventArgs, NetworkException, NetworkNotAvailableException
 - `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, GraphicsDeviceStatus, ModelBoneCollection.Enumerator, ModelEffectCollection.Enumerator, ModelMeshCollection.Enumerator, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException
 - `Microsoft.Xna.Framework.Input.Touch`: TouchCollection.Enumerator
 - `Microsoft.Xna.Framework.Media`: Album, Artist, Genre, Picture, PictureAlbum, PictureAlbumCollection, Playlist

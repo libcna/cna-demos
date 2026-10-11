@@ -181,6 +181,15 @@ the C API, process-global state). Create `standalone/<demo-id>/`:
 The runner also passes `--screenshot PATH` when one was requested and `--log-level LEVEL` (CNA's
 log output); a program that cannot use one ignores it.
 
+`CnaDemos/StandaloneProgram.hpp` (header-only) has what the C++ programs share: `ParseArguments`
+(the runner's arguments, log level applied, the rest kept for the program), `Report` (log lines
+with the process's role, counted checks), `SaveScreenshot` and `ThisProgram` (the program's own
+path, to start it again in another role with `CnaDemos::RunProcess` -- link `cna_demos_framework`).
+Programs with gamer services call `CnaDemos::UseOfflineDemoProfiles()` (`GamerServicesDemo.hpp`)
+and set `CNA_GAMER_SERVICES_AUTO_SIGN_IN` themselves. The `net.*` standalone demos are two
+processes of one program: the host starts the other side on a worker thread and checks its exit
+code; demos that need the network run one at a time under CTest (`RESOURCE_LOCK`).
+
 ### C API demos (`c_api.*`)
 
 C programs written against CNA's C ABI (`../cna/modules/c-api/include/CNA/C/*.h`, model program

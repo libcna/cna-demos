@@ -61,7 +61,7 @@ Decisions:
 | IAvatarAnimation | demo: `gamer_services.avatar.custom_animation` |
 | NotificationPosition | demo: `gamer_services.guide.notification_position` |
 | LeaderboardOutcome | demo: `gamer_services.leaderboard.paging` (a column type) |
-| SignedOutEventArgs | candidate (manual): offline, a profile signs out only through the Guide's own menu ("Sign out"); CNA has no call a game or an unattended run can make |
+| SignedOutEventArgs | demo (manual): `gamer_services.signed_in_gamer.signed_out` -- offline, a profile signs out only through the Guide's own menu, so a person does it |
 | FriendCollection, FriendGamer, InviteAcceptedEventArgs, GameUpdateRequiredException | service |
 | NetworkException, NetworkNotAvailableException | environment / CNA-DEMOS-ISSUE-018 (System Link failures surface as `std::runtime_error`) |
 
