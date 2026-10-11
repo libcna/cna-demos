@@ -301,7 +301,10 @@ routes, write/read/delete a save, no game object), ✅ `c_api.input.gamepad` (on
 derived bits, dead-zone modes, live polling), ✅ `c_api.game.components` (a component is a callback
 table; draw order, visibility, enabled, collection and component events), ✅
 `c_api.media.media_player` (song collection keeps its songs, queue view, transport, process-wide
-events). Remaining: more only where the C ABI differs from the C++ API in a way worth showing.
+events). Remaining: the diagnostics/handle/content table in COVERAGE_AUDIT.md identifies
+ABI-specific gaps (failed diagnostic queries, independent resource lifetime, borrowed handles
+and thread dispatch). Extend the existing examples where practical; do not duplicate C++ scenes
+merely to increase the route count.
 C#/.NET demos belong with the separate `cna-dotnet` binding; decide later whether to reference or
 host them.
 

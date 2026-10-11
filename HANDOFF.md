@@ -93,20 +93,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **406-demo checkpoint passed** through demo revision `1bb71ac`, including all five new
-demos and the member/ownership extensions. The entire script used private Xvfb after the
-inherited desktop X server interrupted an earlier attempt (log `/tmp/cna-demos-406-validation.log`).
+The full **407-demo checkpoint passed** through demo revision `b1346dc`, including the custom
+pipeline, root mutation guard and sprite pixel checks. The entire script used private Xvfb after the
+inherited desktop X server interrupted an earlier attempt (log `/tmp/cna-demos-407-validation.log`).
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 406 demos, 0 problems |
+| Metadata/assets `--validate` | 407 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 418/418 enabled tests, 3 manual disabled; 16 expected failures via WILL_FAIL |
-| SOFTWARE smoke | 362 passed, 16 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 383 passed, 17 expected failures, 3 skipped, 3 manual not run |
+| CTest | 419/419 enabled tests, 3 manual disabled; 17 expected failures via WILL_FAIL |
+| SOFTWARE smoke | 362 passed, 17 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 383 passed, 18 expected failures, 3 skipped, 3 manual not run |
 | Unexpected outcomes | None on either renderer; the earlier sign-in-screen crash did not recur in this baseline |
-| Screenshots | Manifest and texture-rectangle screenshots inspected on both renderers; prior broader contact-sheet review remains historical |
+| Screenshots | Manifest, texture rectangle, content root and both sprite sorting screenshots inspected on both renderers; prior broader contact-sheet review remains historical |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -185,7 +185,9 @@ CNA-DEMOS-ISSUE-034 (stock Vector4 effect parameters accept scalar getters),
 CNA-DEMOS-ISSUE-035 (SkinnedEffect Bones exposes no reflected array elements),
 CNA-DEMOS-ISSUE-036 (Linear curve post-loop reads the first outgoing tangent),
 CNA-DEMOS-ISSUE-037 (documentation only: dynamic IsLooped setter comments contradict the
-implementation and XNA reference; no new runtime execution or expected-failure marker).
+implementation and XNA reference; no separate expected-failure marker),
+CNA-DEMOS-ISSUE-038 (dynamic PendingBufferCount/IsLooped omit disposal guards),
+CNA-DEMOS-ISSUE-039 (ContentManager accepts root changes while assets remain loaded).
 
 ## 11. Dependencies (pinned for CI; same as cna-template's dependencies.lock)
 
@@ -212,11 +214,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **406 demos**
-through demo revision `1bb71ac`, including the ownership and lifecycle corrections. Section 7
-has the exact results. Log: `/tmp/cna-demos-406-validation.log`; named report archives:
-`reports/checkpoint-406-{SOFTWARE,OPENGLES3}.json`. Both reports match all 406 IDs at that revision, with no
-absent entries, unexpected failures or unexpected passes. Later batches are identified below. Current generated coverage is
+**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **407 demos**
+through demo revision `b1346dc`, including the pipeline, root guard and sprite checks. Section 7
+has the exact results. Log: `/tmp/cna-demos-407-validation.log`; named report archives:
+`reports/checkpoint-407-{SOFTWARE,OPENGLES3}.{json,log}`. Both reports match all 407 IDs, with no
+absent entries, unexpected failures or unexpected passes. Compared with 406, pipeline_components
+is new and passes; only cache_and_unload changes status, exposing ISSUE-039. Current generated coverage is
 289/329 XNA types and 1314/2326 named members; these are metadata counts, not comprehensive
 semantic coverage. CNA remains clean at `2b15506a48e1a6202c985823131daf5856826f71`, newer than
 CI's `10a4ef1cb4cd832f761536d77588000104947f8d`.
@@ -255,41 +258,45 @@ Completed this session (details and issue reproductions are in CHANGELOG and CNA
   JSON parsing, and coverage exposes IDs missing from old reports. Member audits now include
   content/binary formats, audio/XACT, texture ownership, sprites/text and pipeline APIs.
 
-**Custom pipeline batch completed after the 406 checkpoint:**
+**Custom pipeline batch included in the 407 checkpoint:**
 `content.custom.pipeline_components` registers a public importer, processor and writer, builds
 an original patrol route into CNB, checks deterministic output, precomputes open/closed lengths
 7/12, loads its runtime schema and verifies contextual rejection of an incorrectly typed
 processor parameter. All 6 checks pass on SOFTWARE and OPENGLES3, build/metadata (407/0) and
 its CTest/catalog pass. Reports: `/tmp/cna-pipeline-components-{SOFTWARE,OPENGLES3}.json`.
 The generator reproduces `assets/custom/patrol.route` byte-for-byte. No CNA issue was found.
-The complete reports in section 7 still describe revision `1bb71ac` and 406 demos until the
-next full run; coverage explicitly shows the new pipeline ID as absent in those reports.
-
-**Next full checkpoint:** tools/validate.sh under private Xvfb for the current 407 demos,
-including pipeline_components, the root guard and both sprite pixel revisions. Then continue
-with the highest-value unfinished work below.
-
-Next useful work after that:
+Next useful work:
 1. A build-time IntermediateSerializer example. The old type-audit exclusion was inaccurate:
    current IntermediateReader/Writer consume ContentSerializerAttribute, and public fluent
    ContentTypeDescriptor/ContentMemberDescriptor APIs implement named/optional/ignored/
    flattened fields. This needs the separate `cna_content_pipeline` build-time target, not
-   an Internal XML parser. No type-wrapper-only demos.
+   an Internal XML parser. A complete unbuilt draft is prepared in `/tmp/cna-intermediate-demo/`
+   (`main.cpp`, `metadata.cpp`, `CMakeLists.txt`) for standalone ID
+   `content.custom.intermediate_serializer`. Copy to that directory under `standalone/`, build
+   and verify its XML expectations; no draft result is counted as coverage. It links
+   `CNA::ContentPipelineBuild` only in the tool process to preserve the runtime/build-time
+   boundary. The runner already reports an omitted standalone as NOT RUN. No type-wrapper-only demos.
 2. Further ContentManager lifetime and lookup-order behaviors. The root mutation check is
    now completed in the existing cache_and_unload demo: both renderers execute 5 checks with
    exactly one failure (ISSUE-039), while original cache checks and the post-Unload root switch
    pass. Screenshots inspected on both; build/metadata (407/0), CTest and catalog checks pass.
    Reports/screenshots: `/tmp/cna-content-root-{SOFTWARE,OPENGLES3}.{json,png}`. This extension
-   is newer than the last full 406 checkpoint and must be included in the next complete run.
+   is included in the full 407 checkpoint.
 3. Further sprite/text behavior gaps in the audit. The two prepared sprite drafts have now
    been applied: layer-depth sorting passes 4 pixel checks, and texture sorting passes 2 with
    blank-row rejection, on SOFTWARE and OPENGLES3. All four screenshots were inspected. Build,
    metadata (407/0), both CTests and catalog validation pass. Evidence:
    `/tmp/cna-{layer_depth_sorting,sort_mode_texture}-{SOFTWARE,OPENGLES3}.{json,png}`.
-   No new CNA issue found. These source revisions also await the next full checkpoint.
+   No new CNA issue found. These revisions are included in the full 407 checkpoint.
 4. Remaining Phase 9 work: authored RPC/variation tables, cue-level limits/priorities/fades;
    category limits are already complete. Preserve ownership and distinguish state observation
    from audible evidence.
+5. The new C ABI audit distinguishes its ownership and diagnostic contracts from C++.
+   A draft extension `/tmp/cna-c-content-lifetime.c` checks checker pixels and font metrics after
+   manager Unload/destruction in the existing `c_api.content.content_manager` demo. It is not
+   yet applied, built or run. Apply after the XML batch; update metadata
+   for unload/get_data and verify drawing still works. This is the documented C contract,
+   not an expectation borrowed from C++ ISSUE-011/039.
 
 Effects constraints verified in the current sources/build: all four configured
 `CNA_*_COMPILED_EFFECTS` switches are OFF and `CNA_FXC_EXECUTABLE` is empty. PbrEffect's public

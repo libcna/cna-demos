@@ -36,7 +36,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - Dynamic streaming now checks PCM size/duration, unsupported loop/release operations and
   stop/disposal behavior. Two missing CNA disposal guards remain visible as ISSUE-038.
 - Semantic coverage audits now include content loading/binary formats, texture ownership,
-  audio/XACT and sprite/text behavior, separating exercised checks from visual-only evidence.
+  audio/XACT, sprite/text behavior and C ABI diagnostics/ownership, separating exercised checks
+  from visual-only evidence and preserving the differences between C and C++ contracts.
 - Existing XACT cue-state demo observes Disposing, repeated Dispose and deleting a disposed
   object, with callback state kept alive through scope unwinding.
 - XACT category instance-limit demo: Fail and ReplaceOldest policies, paused voices retaining

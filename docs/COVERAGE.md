@@ -13,7 +13,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | audio | 20 | 17 | 2 | 1 | 18 / 0 / 1 / 1 / 0 | 18 / 0 / 1 / 1 / 0 |
 | c_api | 13 | 12 | 1 | 0 | 13 / 0 / 0 / 0 / 0 | 13 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 23 | 23 | 0 | 0 | 19 / 0 / 3 / 0 / 1 | 19 / 0 / 3 / 0 / 1 |
+| content | 23 | 23 | 0 | 0 | 19 / 0 / 4 / 0 / 0 | 19 / 0 / 4 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,6 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.custom.pipeline_components`.
-- OPENGLES3: absent from report: `content.custom.pipeline_components`.
 
 ## XNA 4.0 API surface demonstrated
 
