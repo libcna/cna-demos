@@ -6,7 +6,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**379 demos** in 18 categories. Kinds: console 141, game 227, standalone 11. Automation: automated 343, manual 3, smoke-only 33.
+**380 demos** in 18 categories. Kinds: console 141, game 227, standalone 12. Automation: automated 344, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -24,7 +24,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
 | math | 74 | 74 | 0 | 0 | 72 / 0 / 2 | 72 / 0 / 2 |
 | media | 10 | 9 | 1 | 0 | 10 / 0 / 0 | 10 / 0 / 0 |
-| net | 11 | 11 | 0 | 0 | 11 / 0 / 0 | 11 / 0 / 0 |
+| net | 12 | 12 | 0 | 0 | 11 / 0 / 1 | 11 / 0 / 1 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | storage | 7 | 7 | 0 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
@@ -32,8 +32,8 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 287 of 329** (87.2 %).
-- **Methods, properties, constructors and events named by a demo: 1083 of 2326** (46.6 %).
-- Fields and enum values named by a demo: 126 of 753 (reported separately: a demo per enum value is not a goal).
+- **Methods, properties, constructors and events named by a demo: 1085 of 2326** (46.6 %).
+- Fields and enum values named by a demo: 128 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
@@ -47,7 +47,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
 | `Microsoft.Xna.Framework.Media` | 17 / 24 | 68 / 192 | 1 / 8 |
-| `Microsoft.Xna.Framework.Net` | 20 / 23 | 65 / 127 | 5 / 22 |
+| `Microsoft.Xna.Framework.Net` | 20 / 23 | 67 / 127 | 7 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
 
 ### Types without a demo yet

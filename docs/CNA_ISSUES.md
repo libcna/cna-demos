@@ -697,6 +697,26 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
+### CNA-DEMOS-ISSUE-030 -- `SimulatedPacketLoss` drops reliable packets for good
+
+- **Area:** net -- `ENetBackend` applies `NetworkSession::SimulatedPacketLoss` where AppData is
+  handed to a local gamer, after ENet's reliable transport has delivered it
+  (`ShouldDropForSimulatedLoss`, whatever the packet's `SendDataOptions`). A packet sent with
+  `SendDataOptions::Reliable` (or `ReliableInOrder`) is then lost for good. In XNA, reliable delivery
+  is guaranteed whatever the connection does -- the simulation makes it late (resent), never lost --
+  which is what a game tests with the simulation.
+- **Demos:** `net.network_session.simulated_conditions` (expected failure).
+- **Reproduction:** two processes in a System Link session; the receiver sets
+  `SimulatedPacketLoss = 0.3`; the sender sends one `SendDataOptions::Reliable` packet per frame with a
+  sequence number.
+- **Observed:** about 70 % of the reliable sequence numbers arrive (68 % in one run), the same share
+  as for unreliable packets.
+- **Expected:** every reliable packet arrives; only unreliable ones are lost.
+- **Environment:** CNA 0.1.0, Linux, System Link (ENet).
+- **Status:** open; not reported upstream yet.
+
+---
+
 ## Resolved
 
 (none yet)

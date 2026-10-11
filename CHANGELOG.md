@@ -144,6 +144,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   (AudioEngine::RendererDetails), `math.formatting.to_string` (ToString of the math types; expected
   failure, CNA-DEMOS-ISSUE-024: BoundingBox and Ray print doubled braces); the type-converter demo
   also lists Vector4, Plane and Ray.
+- `net.network_session.simulated_conditions` (standalone: SimulatedLatency and SimulatedPacketLoss
+  measured on packets between two processes; expected failure CNA-DEMOS-ISSUE-030: the simulated
+  loss drops reliable packets too).
 - `net.network_session.add_local_gamer` (AddLocalGamer in the lobby; AllowJoinInProgress during
   play), `net.network_machine.remove_from_session` (standalone: the host removes a player's machine,
   RemovedByHost) and the manual `gamer_services.signed_in_gamer.signed_out` (SignedOut through the

@@ -192,7 +192,7 @@ Console demos with checks; each shows one operation family.
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 11 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 12 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -221,8 +221,10 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 - ✅ `net.network_session.add_local_gamer` (AddLocalGamer in the lobby, AllowJoinInProgress during
   play), ✅ `net.network_machine.remove_from_session` (standalone: the host kicks a player,
   RemovedByHost).
-- Remaining net: `SimulatedLatency`/`SimulatedPacketLoss` (if they apply to local delivery),
-  `PrivateGamerSlots`, a refused join (NetworkSessionJoinException; System Link refusals surface
+- ✅ `net.network_session.simulated_conditions` (standalone: SimulatedLatency and SimulatedPacketLoss
+  measured between two processes; expected failure, CNA-DEMOS-ISSUE-030: reliable packets are lost
+  too).
+- Remaining net: `PrivateGamerSlots`, a refused join (NetworkSessionJoinException; System Link refusals surface
   as SessionNotFound after a timeout); voice (manual).
 
 ## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (17 demos)
