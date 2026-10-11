@@ -70,15 +70,22 @@ def short_type(full: str) -> str:
 
 def demonstrated_members(catalog: dict, inventory: dict):
     """Maps (type full name, member name) -> [demo ids] for every catalog API that names a
-    documented XNA member. Returns that map plus the API strings that matched nothing."""
+    documented XNA member, and type full name -> [demo ids] for every API that is a bare XNA type
+    name (an enumeration such as `Buttons`, an exception type). Returns both maps plus the API
+    strings that matched nothing."""
     by_short = collections.defaultdict(list)
     for full in inventory:
         by_short[short_type(full)].append(full)
 
     hits = collections.defaultdict(list)
+    type_hits = collections.defaultdict(list)
     unmatched = collections.defaultdict(list)
     for demo in catalog["demos"]:
         for api in demo["apis"]:
+            if "::" not in api and api in by_short:
+                for full in by_short[api]:
+                    type_hits[full].append(demo["id"])
+                continue
             if "::" not in api or api.startswith("CNA::"):
                 unmatched[api].append(demo["id"])
                 continue
@@ -93,7 +100,7 @@ def demonstrated_members(catalog: dict, inventory: dict):
                     matched = True
             if not matched:
                 unmatched[api].append(demo["id"])
-    return hits, unmatched
+    return hits, type_hits, unmatched
 
 
 def load_results(specs):
@@ -116,7 +123,7 @@ def main() -> int:
 
     catalog = load_catalog(args.exe)
     inventory = load_xna_inventory(Path(args.cna_root))
-    hits, unmatched = demonstrated_members(catalog, inventory)
+    hits, type_hits, unmatched = demonstrated_members(catalog, inventory)
     results = load_results(args.results)
     demos = catalog["demos"]
 
@@ -167,7 +174,7 @@ def main() -> int:
         ns = namespaces[entry["namespace"]]
         ns["types"] += 1
         hit_members = [m for m in entry["members"] if (full, m) in hits]
-        if hit_members:
+        if hit_members or full in type_hits:
             ns["types_hit"] += 1
         for member, category in entry["members"].items():
             key = "fields" if category == "field" else "members"
@@ -199,7 +206,7 @@ def main() -> int:
     add("")
     missing = collections.defaultdict(list)
     for full, entry, hit_members in type_rows:
-        if not hit_members:
+        if not hit_members and full not in type_hits:
             missing[entry["namespace"]].append(full[len(entry["namespace"]) + 1:])
     for name in sorted(missing):
         add(f"- `{name}`: " + ", ".join(sorted(missing[name])))
@@ -223,7 +230,8 @@ def main() -> int:
         "XNA 4.0 runtime assemblies. Overloads count once per member name.")
     add("- A member counts as demonstrated when at least one demo lists it in its `.apis` metadata as "
         "`Type::Member` (a constructor as `Type::Type`). The type is matched by its short name, so a short "
-        "name shared by two namespaces credits both.")
+        "name shared by two namespaces credits both. A bare type name (an enumeration such as `Buttons`, an "
+        "exception type) credits the type, not any of its members.")
     add("- \"Demonstrated\" means a demo exists and claims to show the member. Whether that demo has been "
         "executed is the separate \"Run on\" column above, taken from `--report` files of real runs.")
     add("- No percentage here measures CNA's correctness, and none is weighted by importance.")

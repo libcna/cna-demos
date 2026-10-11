@@ -135,6 +135,27 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   input (password mode, cancel), trial mode with SimulateTrialMode, the Guide's sign-in screen for a
   second player, achievements from an offline title catalog, GamerProfile, rich presence,
   GameDefaults and GamerPrivileges -- offline, with local profiles.
+- Graphics, model and content demos (7): occlusion queries, VertexBuffer::GetData,
+  DynamicIndexBuffer with Discard, Texture3D sub-box data, glTF node-animation clips
+  (ModelAnimationsEXT, ApplyClipToBonesEXT) on a generated turntable model, and the same font, sound
+  and curve compiled to CNB and to XNB.
+- Media demos (2): `media.video_player.play_video` plays a generated WMV and
+  `media.song.compiled_song` a generated Ogg Vorbis tune, both compiled by the content pipeline
+  (`content_media/` into `assets/media`, compiled only when CNA has its FFmpeg backend;
+  `tools/media_files.py` draws the frames and computes the audio, ffmpeg encodes them).
+  `Need::Video` now skips without CNA's video backend.
+- CNA-DEMOS-ISSUE-020 recorded: a compiled Song/Video stream is resolved from the ContentManager's
+  root, not beside the asset.
+- Coverage report: a bare XNA type name in `.apis` (an enumeration, an exception type) now credits
+  that type.
+- Phase 13 demos (17): devices (sensor availability, keyboard-emulated accelerometer,
+  VibrateController, CNA::Devices machine information), phone (PhoneApplicationService lifecycle),
+  design (TypeConverter text, cultures, property descriptors, InstanceDescriptor), diagnostics
+  (modes, counters and gauges), core logging (sink, levels), cnaext (ASCII post-process, CRT effect,
+  colour depth reduction, DebugDraw).
+- Game demos (4): ResetElapsedTime after a load, GameTime constructors, CNAEXT file/text drop, focus
+  and pausing (IsActive, OnActivated/OnDeactivated).
+- CNA-DEMOS-ISSUE-019 recorded: `Game::ResetElapsedTime` is ignored with a fixed time step.
 - Net demos (6): a Local session of two players (GamerJoined replayed on subscription, host, ids,
   machine), the lobby/ready/StartGame/EndGame flow, NetworkSessionProperties, BeginCreate/EndCreate,
   game objects in Gamer::Tag, and a PacketWriter -> SendData -> ReceiveData -> PacketReader round

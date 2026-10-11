@@ -6,84 +6,133 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**308 demos** in 12 categories. Kinds: console 120, game 187, standalone 1. Automation: automated 276, manual 2, smoke-only 30.
+**337 demos** in 17 categories. Kinds: console 133, game 203, standalone 1. Automation: automated 303, manual 2, smoke-only 32.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
 | audio | 14 | 11 | 2 | 1 | 13 / 0 / 0 | 13 / 0 / 0 |
-| content | 15 | 15 | 0 | 0 | 13 / 0 / 2 | 13 / 0 / 2 |
-| core | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
-| game | 25 | 22 | 2 | 1 | 21 / 3 / 0 | 24 / 0 / 0 |
+| cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 | 4 / 0 / 0 |
+| content | 16 | 16 | 0 | 0 | 14 / 0 / 2 | 14 / 0 / 2 |
+| core | 3 | 3 | 0 | 0 | 3 / 0 / 0 | 3 / 0 / 0 |
+| design | 4 | 4 | 0 | 0 | 4 / 0 / 0 | 4 / 0 / 0 |
+| devices | 4 | 4 | 0 | 0 | 4 / 0 / 0 | 4 / 0 / 0 |
+| diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 | 2 / 0 / 0 |
+| game | 29 | 24 | 4 | 1 | 22 / 5 / 1 | 27 / 0 / 1 |
 | gamer_services | 15 | 15 | 0 | 0 | 14 / 0 / 1 | 14 / 0 / 1 |
-| graphics | 106 | 106 | 0 | 0 | 102 / 3 / 1 | 102 / 3 / 1 |
+| graphics | 111 | 111 | 0 | 0 | 107 / 3 / 1 | 107 / 3 / 1 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
 | math | 72 | 72 | 0 | 0 | 71 / 0 / 1 | 71 / 0 / 1 |
-| media | 7 | 6 | 1 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
+| media | 9 | 8 | 1 | 0 | 9 / 0 / 0 | 9 / 0 / 0 |
 | net | 6 | 6 | 0 | 0 | 6 / 0 / 0 | 6 / 0 / 0 |
+| phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | platform | 1 | 1 | 0 | 0 | 1 / 0 / 0 | 1 / 0 / 0 |
 | storage | 7 | 7 | 0 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 190 of 329** (57.8 %).
-- **Methods, properties, constructors and events named by a demo: 929 of 2326** (39.9 %).
-- Fields and enum values named by a demo: 117 of 753 (reported separately: a demo per enum value is not a goal).
+- **Types with at least one demo: 231 of 329** (70.2 %).
+- **Methods, properties, constructors and events named by a demo: 980 of 2326** (42.1 %).
+- Fields and enum values named by a demo: 118 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
-| `Microsoft.Xna.Framework` | 36 / 42 | 270 / 643 | 34 / 78 |
-| `Microsoft.Xna.Framework.Audio` | 13 / 19 | 71 / 121 | 5 / 11 |
-| `Microsoft.Xna.Framework.Content` | 1 / 11 | 7 / 48 | 0 / 0 |
-| `Microsoft.Xna.Framework.Design` | 0 / 13 | 0 / 51 | 0 / 2 |
-| `Microsoft.Xna.Framework.GamerServices` | 21 / 52 | 101 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 69 / 99 | 217 / 550 | 77 / 192 |
+| `Microsoft.Xna.Framework` | 37 / 42 | 276 / 643 | 34 / 78 |
+| `Microsoft.Xna.Framework.Audio` | 14 / 19 | 71 / 121 | 5 / 11 |
+| `Microsoft.Xna.Framework.Content` | 2 / 11 | 7 / 48 | 0 / 0 |
+| `Microsoft.Xna.Framework.Design` | 9 / 13 | 19 / 51 | 0 / 2 |
+| `Microsoft.Xna.Framework.GamerServices` | 34 / 52 | 101 / 244 | 1 / 223 |
+| `Microsoft.Xna.Framework.Graphics` | 72 / 99 | 232 / 550 | 78 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
-| `Microsoft.Xna.Framework.Input` | 11 / 17 | 83 / 113 | 0 / 202 |
-| `Microsoft.Xna.Framework.Input.Touch` | 5 / 8 | 30 / 48 | 0 / 15 |
-| `Microsoft.Xna.Framework.Media` | 6 / 24 | 44 / 192 | 0 / 8 |
-| `Microsoft.Xna.Framework.Net` | 8 / 23 | 43 / 127 | 0 / 22 |
+| `Microsoft.Xna.Framework.Input` | 15 / 17 | 83 / 113 | 0 / 202 |
+| `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
+| `Microsoft.Xna.Framework.Media` | 10 / 24 | 55 / 192 | 0 / 8 |
+| `Microsoft.Xna.Framework.Net` | 11 / 23 | 43 / 127 | 0 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
 
 ### Types without a demo yet
 
 The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
-- `Microsoft.Xna.Framework`: DisplayOrientation, IDrawable, IGameComponent, IGraphicsDeviceManager, IUpdateable, PlayerIndex
-- `Microsoft.Xna.Framework.Audio`: AudioStopOptions, InstancePlayLimitException, MicrophoneState, NoAudioHardwareException, NoMicrophoneConnectedException, RendererDetail
-- `Microsoft.Xna.Framework.Content`: ContentLoadException, ContentReader, ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute, ContentTypeReader, ContentTypeReaderManager, ResourceContentManager
-- `Microsoft.Xna.Framework.Design`: BoundingBoxConverter, BoundingSphereConverter, ColorConverter, MathTypeConverter, MatrixConverter, PlaneConverter, PointConverter, QuaternionConverter, RayConverter, RectangleConverter, Vector2Converter, Vector3Converter, Vector4Converter
-- `Microsoft.Xna.Framework.GamerServices`: AvatarAnimationPreset, AvatarBodyType, AvatarBone, AvatarEye, AvatarEyebrow, AvatarMouth, AvatarRendererState, ControllerSensitivity, FriendCollection, FriendGamer, GameDifficulty, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPresenceMode, GamerPrivilegeException, GamerPrivilegeSetting, GamerServicesComponent, GamerServicesNotAvailableException, GamerZone, GuideAlreadyVisibleException, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardKey, LeaderboardOutcome, MessageBoxIcon, NetworkException, NetworkNotAvailableException, NotificationPosition, RacingCameraAngle, SignedOutEventArgs
-- `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, DynamicIndexBuffer, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectParameterClass, EffectParameterType, EffectPassCollection, GraphicsDeviceStatus, IEffectFog, IEffectLights, IEffectMatrices, IGraphicsDeviceService, IVertexType, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPart, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, OcclusionQuery, RenderTargetBinding, RenderTargetCube, Texture3D, VertexBufferBinding, VertexPositionColorTexture
-- `Microsoft.Xna.Framework.Input`: ButtonState, Buttons, GamePadDeadZone, GamePadType, KeyState, Keys
-- `Microsoft.Xna.Framework.Input.Touch`: GestureType, TouchCollection.Enumerator, TouchLocationState
-- `Microsoft.Xna.Framework.Media`: Album, AlbumCollection, Artist, ArtistCollection, Genre, GenreCollection, MediaSourceType, MediaState, Picture, PictureAlbum, PictureAlbumCollection, PictureCollection, Playlist, PlaylistCollection, SongCollection, Video, VideoPlayer, VideoSoundtrackType
-- `Microsoft.Xna.Framework.Net`: AvailableNetworkSession, AvailableNetworkSessionCollection, GameEndedEventArgs, GameStartedEventArgs, GamerLeftEventArgs, HostChangedEventArgs, NetworkSessionEndReason, NetworkSessionEndedEventArgs, NetworkSessionJoinError, NetworkSessionJoinException, NetworkSessionState, NetworkSessionType, QualityOfService, SendDataOptions, WriteLeaderboardsEventArgs
+- `Microsoft.Xna.Framework`: DisplayOrientation, IDrawable, IGameComponent, IGraphicsDeviceManager, IUpdateable
+- `Microsoft.Xna.Framework.Audio`: InstancePlayLimitException, MicrophoneState, NoAudioHardwareException, NoMicrophoneConnectedException, RendererDetail
+- `Microsoft.Xna.Framework.Content`: ContentReader, ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute, ContentTypeReader, ContentTypeReaderManager, ResourceContentManager
+- `Microsoft.Xna.Framework.Design`: PlaneConverter, RayConverter, RectangleConverter, Vector4Converter
+- `Microsoft.Xna.Framework.GamerServices`: AvatarBodyType, ControllerSensitivity, FriendCollection, FriendGamer, GameDifficulty, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPrivilegeException, GamerZone, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardOutcome, NetworkException, NetworkNotAvailableException, NotificationPosition, RacingCameraAngle, SignedOutEventArgs
+- `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectParameterClass, EffectParameterType, EffectPassCollection, GraphicsDeviceStatus, IEffectFog, IEffectLights, IEffectMatrices, IGraphicsDeviceService, IVertexType, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPart, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, RenderTargetBinding, RenderTargetCube, VertexBufferBinding, VertexPositionColorTexture
+- `Microsoft.Xna.Framework.Input`: KeyState, Keys
+- `Microsoft.Xna.Framework.Input.Touch`: TouchCollection.Enumerator
+- `Microsoft.Xna.Framework.Media`: Album, AlbumCollection, Artist, ArtistCollection, Genre, GenreCollection, MediaSourceType, Picture, PictureAlbum, PictureAlbumCollection, PictureCollection, Playlist, PlaylistCollection, VideoSoundtrackType
+- `Microsoft.Xna.Framework.Net`: AvailableNetworkSession, AvailableNetworkSessionCollection, GameEndedEventArgs, GameStartedEventArgs, GamerLeftEventArgs, HostChangedEventArgs, NetworkSessionEndReason, NetworkSessionEndedEventArgs, NetworkSessionJoinError, NetworkSessionJoinException, QualityOfService, WriteLeaderboardsEventArgs
 - `Microsoft.Xna.Framework.Storage`: StorageDeviceNotConnectedException
 
 ## CNA-specific and unmatched API names
 
 API names in demo metadata that are not documented XNA 4.0 members: CNA extensions (`CNA::...`, `...EXT` members) and anything misspelled. Review this list when adding demos -- a misspelled XNA name silently lowers the numbers above.
 
+- `Accelerometer::Accelerometer` -- devices.sensors.availability
+- `Accelerometer::IsSupported` -- devices.sensors.availability, devices.sensors.keyboard_accelerometer
+- `Accelerometer::KeyboardEmulationEnabledEXT` -- devices.sensors.keyboard_accelerometer
+- `Accelerometer::Start` -- devices.sensors.availability, devices.sensors.keyboard_accelerometer
+- `Accelerometer::Stop` -- devices.sensors.keyboard_accelerometer
+- `AccelerometerFailedException` -- devices.sensors.availability
+- `AccelerometerReading::Acceleration` -- devices.sensors.keyboard_accelerometer
+- `ActivatedEventArgs::IsApplicationInstancePreserved` -- phone.phone_application_service.lifecycle
 - `AnimationClip` -- graphics.model.skinned_animation
+- `AnimationClipEXT` -- graphics.model.node_animation
 - `AnimationPlayer::GetSkinTransforms` -- graphics.model.skinned_animation
 - `AnimationPlayer::GetWorldTransforms` -- graphics.model.skinned_animation
 - `AnimationPlayer::StartClip` -- graphics.model.skinned_animation
 - `AnimationPlayer::Update` -- graphics.model.skinned_animation
-- `AudioStopOptions` -- audio.xact.cue_states
-- `AvatarAnimationPreset` -- gamer_services.avatar.animation_presets, gamer_services.avatar.render
-- `AvatarBone` -- gamer_services.avatar.custom_pose
-- `AvatarEye` -- gamer_services.avatar.custom_pose
-- `AvatarEyebrow` -- gamer_services.avatar.custom_pose
-- `AvatarMouth` -- gamer_services.avatar.custom_pose
-- `AvatarRendererState` -- gamer_services.avatar.description_bytes, gamer_services.avatar.render
-- `ButtonState` -- input.mouse.click_detection, input.mouse.get_state
-- `Buttons` -- input.gamepad.state_values
+- `ApplyClipToBonesEXT` -- graphics.model.node_animation
 - `Buttons::Misc1EXT` -- input.gamepad.extra_buttons
 - `Buttons::Paddle1EXT` -- input.gamepad.extra_buttons
 - `Buttons::Paddle2EXT` -- input.gamepad.extra_buttons
 - `Buttons::Paddle3EXT` -- input.gamepad.extra_buttons
 - `Buttons::Paddle4EXT` -- input.gamepad.extra_buttons
 - `Buttons::TouchPadEXT` -- input.gamepad.touchpad
+- `CNA::Devices::Locale::PreferredLocales` -- devices.system.machine_info
+- `CNA::Devices::LocaleInfo` -- devices.system.machine_info
+- `CNA::Devices::PowerInfo::BatteryPercent` -- devices.system.machine_info
+- `CNA::Devices::PowerInfo::SecondsRemaining` -- devices.system.machine_info
+- `CNA::Devices::PowerInfo::State` -- devices.system.machine_info
+- `CNA::Devices::PowerState` -- devices.system.machine_info
+- `CNA::Devices::SystemInfo::LogicalCpuCoreCount` -- devices.system.machine_info
+- `CNA::Devices::SystemInfo::SystemRamMegabytes` -- devices.system.machine_info
+- `CNA::Diagnostics::GetBuildMode` -- diagnostics.profiler.modes
+- `CNA::Diagnostics::GetProvider` -- diagnostics.profiler.modes
+- `CNA::Diagnostics::GetRuntimeMode` -- diagnostics.profiler.modes
+- `CNA::Diagnostics::IDiagnosticsProvider::CaptureSnapshot` -- diagnostics.profiler.counters, diagnostics.profiler.modes
+- `CNA::Diagnostics::MetricSample` -- diagnostics.profiler.counters
+- `CNA::Diagnostics::SetRuntimeMode` -- diagnostics.profiler.modes
+- `CNA::Diagnostics::Snapshot` -- diagnostics.profiler.counters, diagnostics.profiler.modes
+- `CNA::Graphics::AsciiPostProcessEffect::AsciiPostProcessEffect` -- cnaext.ascii_post_process.scene
+- `CNA::Graphics::AsciiPostProcessEffect::Draw` -- cnaext.ascii_post_process.scene
+- `CNA::Graphics::AsciiPostProcessEffect::GetLastGridDimensions` -- cnaext.ascii_post_process.scene
+- `CNA::Graphics::AsciiPostProcessEffect::setCellSize` -- cnaext.ascii_post_process.scene
+- `CNA::Graphics::AsciiPostProcessEffect::setQuantizeMode` -- cnaext.ascii_post_process.scene
+- `CNA::Graphics::AsciiQuantizeMode` -- cnaext.ascii_post_process.scene
+- `CNA::Graphics::CRTEffect::CRTEffect` -- cnaext.crt_effect.full_screen
+- `CNA::Graphics::CRTEffect::setCurvature` -- cnaext.crt_effect.full_screen
+- `CNA::Graphics::CRTEffect::setMaskIntensity` -- cnaext.crt_effect.full_screen
+- `CNA::Graphics::CRTEffect::setMaskType` -- cnaext.crt_effect.full_screen
+- `CNA::Graphics::CRTEffect::setScanlineIntensity` -- cnaext.crt_effect.full_screen
+- `CNA::Graphics::CRTEffect::setVignetteIntensity` -- cnaext.crt_effect.full_screen
+- `CNA::Graphics::CRTMaskType` -- cnaext.crt_effect.full_screen
+- `CNA::Graphics::DebugDraw::DebugDraw` -- cnaext.debug_draw.shapes
+- `CNA::Graphics::DebugDraw::addBox` -- cnaext.debug_draw.shapes
+- `CNA::Graphics::DebugDraw::addCross` -- cnaext.debug_draw.shapes
+- `CNA::Graphics::DebugDraw::addFrustum` -- cnaext.debug_draw.shapes
+- `CNA::Graphics::DebugDraw::addLine` -- cnaext.debug_draw.shapes
+- `CNA::Graphics::DebugDraw::addSphere` -- cnaext.debug_draw.shapes
+- `CNA::Graphics::DebugDraw::begin` -- cnaext.debug_draw.shapes
+- `CNA::Graphics::DebugDraw::end` -- cnaext.debug_draw.shapes
+- `CNA::Graphics::DebugDraw::getLineCount` -- cnaext.debug_draw.shapes
+- `CNA::Graphics::DebugDraw::setDepthTested` -- cnaext.debug_draw.shapes
+- `CNA::Graphics::DepthEffect::DepthEffect` -- cnaext.depth_effect.color_reduction
+- `CNA::Graphics::DepthEffect::setDitherMode` -- cnaext.depth_effect.color_reduction
+- `CNA::Graphics::DepthEffect::setMode` -- cnaext.depth_effect.color_reduction
+- `CNA::Graphics::DepthEffectMode` -- cnaext.depth_effect.color_reduction
+- `CNA::Graphics::DitherMode` -- cnaext.depth_effect.color_reduction
 - `CNA::GraphicsCapability` -- graphics.device.supports_capability
 - `CNA::GraphicsRendererSelection::GetActive` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::GetAvailable` -- platform.renderer_selection.set_preferred
@@ -147,23 +196,41 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Input::Sensors::GetAccelerometerEXT` -- input.sensors.motion
 - `CNA::Input::Sensors::GetGyroscopeEXT` -- input.sensors.motion
 - `CNA::Input::Sensors::GetSensorsEXT` -- input.devices.list, input.sensors.motion
+- `CNA::LogCategory` -- core.logger.custom_sink
+- `CNA::LogLevel` -- core.logger.custom_sink, core.logger.minimum_level
+- `CNA::Logger::Debug` -- core.logger.minimum_level
+- `CNA::Logger::Error` -- core.logger.custom_sink
+- `CNA::Logger::Fatal` -- core.logger.minimum_level
+- `CNA::Logger::GetMinimumLevel` -- core.logger.minimum_level
+- `CNA::Logger::Info` -- core.logger.custom_sink
+- `CNA::Logger::ResetSink` -- core.logger.custom_sink
+- `CNA::Logger::SetMinimumLevel` -- core.logger.minimum_level
+- `CNA::Logger::SetSink` -- core.logger.custom_sink
+- `CNA::Logger::Trace` -- core.logger.minimum_level
+- `CNA::Logger::Warn` -- core.logger.custom_sink
+- `CNA::Logger::WarnIf` -- core.logger.minimum_level
 - `CNA::RendererLimit` -- graphics.device.capability_report
 - `CNA::getVersionMajor` -- core.version.version_string
 - `CNA::getVersionMinor` -- core.version.version_string
 - `CNA::getVersionPatch` -- core.version.version_string
 - `CNA::getVersionString` -- core.version.version_string
 - `CNA::isPreReleaseVersion` -- core.version.version_string
+- `CNA_DIAGNOSTICS_COUNTER_ADD` -- diagnostics.profiler.counters
+- `CNA_DIAGNOSTICS_GAUGE_SET` -- diagnostics.profiler.counters
+- `ClipTargetSpaceEXT` -- graphics.model.node_animation
 - `ColorMatrixEffect::ColorMatrixEffect` -- graphics.color_matrix_effect.sepia_and_invert
 - `ColorMatrixEffect::SetColorMatrix` -- graphics.color_matrix_effect.sepia_and_invert
 - `ColorMatrixEffect::SetColorOffset` -- graphics.color_matrix_effect.sepia_and_invert
-- `ContentLoadException` -- content.content_manager.missing_assets, content.content_manager.open_stream_override, content.custom.loose_file_reader
+- `Compass::IsSupported` -- devices.sensors.availability
 - `ContentManager::GetContentManifest` -- content.content_manager.manifest
 - `ContentManager::GetXnbReaderUsageSummary` -- content.content_manager.manifest
 - `ContentManager::RegisterTypeReader` -- content.custom.loose_file_reader
 - `ContentManifestEntry` -- content.content_manager.manifest
 - `ContentManifestReaderUsage` -- content.content_manager.manifest
 - `Effect::Apply` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading
+- `Environment::DeviceType` -- devices.sensors.availability
 - `FileAccess` -- storage.storage_container.file_modes
+- `FileDropEventArgsEXT::Files` -- game.window.file_drop
 - `FileMode` -- storage.storage_container.file_modes
 - `Game::RunFrameEXT` -- game.lifecycle.host_driven_loop
 - `GameComponentCollection::Add` -- game.components.game_component
@@ -202,14 +269,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GamePadCapabilities::HasPaddle4EXT` -- input.gamepad.extra_buttons
 - `GamePadCapabilities::HasTouchPadEXT` -- input.gamepad.touchpad
 - `GamePadCapabilities::HasTriggerVibrationMotorsEXT` -- input.gamepad.trigger_vibration
-- `GamePadDeadZone` -- input.gamepad.dead_zones
-- `GamePadType` -- input.gamepad.capabilities
-- `GamerPresenceMode` -- gamer_services.signed_in_gamer.presence
-- `GamerPrivilegeSetting` -- gamer_services.signed_in_gamer.privileges
-- `GamerServicesComponent` -- gamer_services.signed_in_gamer.automatic_sign_in
-- `GamerServicesNotAvailableException` -- gamer_services.achievement.award
+- `GameWindow::FileDropEXT` -- game.window.file_drop
+- `GameWindow::TextDropEXT` -- game.window.file_drop
 - `GestureSample::GestureSample` -- input.touch.gesture_queue
-- `GestureType` -- input.touch.gesture_queue, input.touch.gestures
 - `GltfImportDiagnosticEXT` -- graphics.model.import_report
 - `GltfImportReportEXT` -- graphics.model.import_report
 - `GraphicsDevice::ExecutesShaderEffectSourceEXT` -- graphics.shader_effect.toon_shading
@@ -227,7 +289,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Guide::SimulateKeyboardInputCancelEXT` -- gamer_services.guide.keyboard_input, gamer_services.guide.sign_in_screen
 - `Guide::SimulateMessageBoxClickEXT` -- gamer_services.guide.message_box
 - `Guide::WasKeyboardInputCanceledEXT` -- gamer_services.guide.keyboard_input
-- `GuideAlreadyVisibleException` -- gamer_services.guide.message_box
+- `Gyroscope::IsSupported` -- devices.sensors.availability
 - `IAsyncResult::AsyncState` -- gamer_services.guide.message_box, net.network_session.begin_create
 - `IAsyncResult::IsCompleted` -- gamer_services.guide.keyboard_input, net.network_session.begin_create
 - `Keyboard::GetKeyFromNameEXT` -- input.keyboard.key_names
@@ -237,12 +299,11 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Keyboard::GetScancodeFromNameEXT` -- input.keyboard.key_names
 - `Keyboard::GetScancodeNameEXT` -- input.keyboard.key_names
 - `LaunchParameters::ContainsKey` -- game.launch_parameters.parse
-- `LeaderboardKey` -- gamer_services.leaderboard.write_and_read
 - `LooseFileContentTypeReader::GetExtensions` -- content.custom.loose_file_reader
 - `LooseFileContentTypeReader::Read` -- content.custom.loose_file_reader
-- `MediaState` -- media.media_player.play_song
-- `MessageBoxIcon` -- gamer_services.guide.message_box
 - `Model::GltfImportReportEXT` -- graphics.model.import_report
+- `ModelAnimationsEXT` -- graphics.model.node_animation
+- `Motion::IsSupported` -- devices.sensors.availability
 - `Mouse::ClickedEXT` -- input.mouse.clicked_event
 - `Mouse::IsRelativeMouseModeEXT` -- input.mouse.relative_mode
 - `Mouse::SetCursor` -- input.mouse.cursors
@@ -261,27 +322,37 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `MouseCursor::Wait` -- input.mouse.cursors
 - `MouseCursor::WaitArrow` -- input.mouse.cursors
 - `MouseState::HorizontalScrollWheelValueEXT` -- input.mouse.get_state
-- `NetworkSessionState` -- net.network_session.game_flow
-- `NetworkSessionType` -- gamer_services.leaderboard.write_and_read, net.packet.send_and_receive
+- `OcclusionQuery::isPixelCountPreciseEXT` -- graphics.occlusion_query.visible_pixels
 - `PbrEffect::DiffuseColor` -- graphics.pbr_effect.metallic_roughness
 - `PbrEffect::DirectionalLight0` -- graphics.pbr_effect.metallic_roughness
 - `PbrEffect::MetallicFactor` -- graphics.pbr_effect.metallic_roughness
 - `PbrEffect::PbrEffect` -- graphics.pbr_effect.metallic_roughness
 - `PbrEffect::RoughnessFactor` -- graphics.pbr_effect.metallic_roughness
-- `PlayerIndex` -- input.gamepad.get_state, storage.storage_device.storage_root
+- `PhoneApplicationService::Activated` -- phone.phone_application_service.lifecycle
+- `PhoneApplicationService::AttachEXT` -- phone.phone_application_service.lifecycle
+- `PhoneApplicationService::Closing` -- phone.phone_application_service.lifecycle
+- `PhoneApplicationService::Current` -- phone.phone_application_service.lifecycle
+- `PhoneApplicationService::Deactivated` -- phone.phone_application_service.lifecycle
+- `PhoneApplicationService::DetachEXT` -- phone.phone_application_service.lifecycle
+- `PhoneApplicationService::Launching` -- phone.phone_application_service.lifecycle
+- `PhoneApplicationService::State` -- phone.phone_application_service.lifecycle
 - `PreparingDeviceSettingsEventArgs::getGraphicsDeviceInformationEXT` -- game.graphics_device_manager.preparing_device_settings
-- `SendDataOptions` -- net.packet.send_and_receive
+- `RectangleConverter::ConvertFrom` -- design.type_converter.string_round_trip
+- `SensorBase::CurrentValue` -- devices.sensors.keyboard_accelerometer
+- `SensorBase::Dispose` -- devices.sensors.availability
+- `SensorBase::IsDataValid` -- devices.sensors.availability, devices.sensors.keyboard_accelerometer
+- `SensorBase::State` -- devices.sensors.availability
+- `SensorState` -- devices.sensors.availability
 - `ShaderEffect::GetCompileErrorEXT` -- graphics.shader_effect.toon_shading
 - `ShaderEffect::IsEffectValid` -- graphics.shader_effect.toon_shading
 - `ShaderEffect::SetUniformFloat` -- graphics.shader_effect.sprite_shader
 - `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading
 - `ShaderEffect::ShaderEffect` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading
 - `SkinningData` -- graphics.model.skinned_animation
-- `SongCollection` -- media.media_player.queue_and_repeat
 - `SpriteFont::SpriteFont` -- graphics.sprite_font.glyph_constructor
 - `StorageDevice::GetStorageRootEXT` -- storage.storage_device.storage_root
 - `StorageDevice::SetAppNameEXT` -- storage.storage_device.show_selector, storage.storage_device.storage_root
-- `SurfaceFormat` -- content.xnb.dxt_texture
+- `TextDropEventArgsEXT::Text` -- game.window.file_drop
 - `TextInputEXT::INTERNAL_OnTextInput` -- gamer_services.guide.keyboard_input
 - `TextInputEXT::IsTextInputActive` -- input.text_input.typing
 - `TextInputEXT::SetInputRectangle` -- input.text_input.composition
@@ -293,15 +364,17 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Texture2D::Format` -- content.xnb.dxt_texture
 - `Texture2D::LevelCount` -- content.texture_processor.mipmaps
 - `TitleLocation::Path` -- media.media_player.play_song
-- `TouchLocationState` -- input.touch.get_state
 - `TouchPanel::EnqueueGesture` -- input.touch.gesture_queue
 - `TouchPanel::MouseTouchEmulationEnabledEXT` -- input.touch.get_state
 - `VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned` -- graphics.skinned_effect.two_bones
+- `VibrateController::Default` -- devices.vibrate_controller.start_stop
+- `VibrateController::Start` -- devices.vibrate_controller.start_stop
+- `VibrateController::Stop` -- devices.vibrate_controller.start_stop
 
 ## How these numbers are computed
 
 - The inventory is CNA's `docs/xna-4-runtime-member-coverage.json`: every documented member of the XNA 4.0 runtime assemblies. Overloads count once per member name.
-- A member counts as demonstrated when at least one demo lists it in its `.apis` metadata as `Type::Member` (a constructor as `Type::Type`). The type is matched by its short name, so a short name shared by two namespaces credits both.
+- A member counts as demonstrated when at least one demo lists it in its `.apis` metadata as `Type::Member` (a constructor as `Type::Type`). The type is matched by its short name, so a short name shared by two namespaces credits both. A bare type name (an enumeration such as `Buttons`, an exception type) credits the type, not any of its members.
 - "Demonstrated" means a demo exists and claims to show the member. Whether that demo has been executed is the separate "Run on" column above, taken from `--report` files of real runs.
 - No percentage here measures CNA's correctness, and none is weighted by importance.
 

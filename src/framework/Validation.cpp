@@ -185,6 +185,13 @@ namespace CnaDemos
                     report(id, "knownIssue must be an ID like CNA-DEMOS-ISSUE-001");
                 }
             }
+#ifndef CNA_VIDEO_AVAILABLE
+            // Videos are compiled only when CNA has its video backend; such demos then skip.
+            if (HasNeed(info.needs, Need::Video))
+            {
+                continue;
+            }
+#endif
             for (const std::string_view asset : info.assets)
             {
                 const std::filesystem::path path = std::filesystem::path(assetRoot) / std::string(asset);

@@ -44,8 +44,7 @@ Console demos with checks; each shows one operation family.
   Bgra5551, Byte4, HalfSingle/Vector2/Vector4, NormalizedByte2/4, NormalizedShort2/4, Rg32,
   Rgba1010102, Rgba64, Short2/4) -- one demo per format family, not per method. ≈ 8
 
-## Phase 3 -- game lifecycle (`game.*`) 🟨 (25 demos; remaining: Activated/Deactivated events,
-ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime constructors)
+## Phase 3 -- game lifecycle (`game.*`) 🟨 (29 demos; remaining: ScreenDeviceName, orientation)
 - Game: method order (`Initialize`→`LoadContent`→`BeginRun`→Update/Draw→`EndRun`→`UnloadContent`),
   `IsFixedTimeStep` and `TargetElapsedTime`, variable time step, `IsRunningSlowly`, `ResetElapsedTime`,
   `SuppressDraw`, `Exit`, `Exiting`/`Activated`/`Deactivated` events, `IsMouseVisible`,
@@ -92,15 +91,17 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   stencil mask, stencil counting). Remaining: two-sided stencil (stencil shadow volumes).
 - ✅ (5) `graphics.vertex_buffer.*` (static buffer + DrawPrimitives, DynamicVertexBuffer with
   Discard and ContentLost), `graphics.index_buffer.*` (indexed cube, 32-bit indices),
-  `graphics.vertex_declaration.custom_vertex`. Remaining: `NoOverwrite` ring buffer,
-  DynamicIndexBuffer, `VertexBuffer::GetData`, `SetVertexBuffers` with several streams.
+  `graphics.vertex_declaration.custom_vertex`, ✅ `graphics.vertex_buffer.get_data`,
+  ✅ `graphics.index_buffer.dynamic_index_buffer`. Remaining: `NoOverwrite` ring buffer,
+  `SetVertexBuffers` with several streams.
 - ✅ (3) `graphics.primitives.*`: DrawUserPrimitives, DrawUserIndexedPrimitives, all four
   PrimitiveTypes. Remaining: instancing (`DrawInstancedPrimitives`, needs a custom effect or a
   CNAEXT path).
 - ✅ (6) `graphics.render_target.*`: render to texture, `RenderTargetUsage` Discard/Preserve,
   read back with GetData, own depth buffer, mipmapped target, multisampling. Remaining: float/HDR
   formats, `RenderTargetCube` and multiple render targets (with effects, Phase 6).
-- `graphics.texture_cube.*`, `graphics.texture3d.*`, `graphics.occlusion_query.*`. ≈ 5
+- ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
+  `graphics.texture_cube.*` beyond the environment-map demo (render to a `RenderTargetCube`).
 
 ## Phase 6 -- effects and shaders 🟨 (14 demos: stock effects, effect API, PbrEffect)
 - ✅ Stock effects (11): `BasicEffect` (texture, default lighting, three directional lights,
@@ -118,23 +119,24 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
   XNA effect bytecode (`Effect(GraphicsDevice&, bytes)`), `EffectParameter`/`EffectTechnique`/
   `EffectPass` reflection and parameter setting. ≈ 8
 
-## Phase 7 -- models, animation, glTF 🟨 (7 demos)
+## Phase 7 -- models, animation, glTF 🟨 (8 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
   `Model.Tag`, `AnimationPlayer`, `SkinnedEffect`), the CNAEXT glTF import report of a model loaded
-  as a loose `.gltf` at run time. Assets: original glTF written by `tools/gltf_models.py`
+  as a loose `.gltf` at run time, CNAEXT node-animation clips (`ModelAnimationsEXT`,
+  `ApplyClipToBonesEXT`) on a turntable. Assets: original glTF written by `tools/gltf_models.py`
   (decision: generate, do not copy CNA's corpus), compiled by `cna_add_content`.
 - Remaining: PBR materials with lights (`PbrEffect`/`SkinnedPbrEffect`, GL only), textured glTF
-  (embedded PNG -> generated Texture2D children), node animation clips (`ApplyClipToBonesEXT`),
-  STEP/CUBICSPLINE clips, morph targets, glTF cameras (`ModelCameraEXT`) and punctual lights,
+  (embedded PNG -> generated Texture2D children), STEP/CUBICSPLINE clips, morph targets, glTF cameras (`ModelCameraEXT`) and punctual lights,
   material variants, `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
 
-## Phase 8 -- content 🟨 (16 demos; remaining below)
+## Phase 8 -- content 🟨 (17 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
-  manifest, custom loose-file reader. Remaining: XNB SpriteFont/SoundEffect/Curve, CNJ texture and
+  manifest, custom loose-file reader, the same SpriteFont/SoundEffect/Curve as CNB and XNB.
+  Remaining: CNJ texture and
   sprite font, `.contentproj` import (`CONTENT_PROJECT`), custom pipeline components and
   `RegisterCnbLoaderEXT`, `ContentReader`/`ContentTypeReader` details.
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
@@ -144,7 +146,7 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
 - `content.content_reader.*`: custom `ContentTypeReader`, `ResourceContentManager`,
   `ContentManifestEntry`. ≈ 20
 
-## Phase 9 -- audio and media 🟨 (audio: 13 demos incl. 5 XACT, media: 7; video open)
+## Phase 9 -- audio and media 🟨 (audio: 13 demos incl. 5 XACT, media: 8 incl. video)
 - ✅ `audio.sound_effect.*`: Play, Play(volume, pitch, pan), MasterVolume, PCM buffer
   constructor, GetSampleDuration/GetSampleSizeInBytes. Remaining: loop points.
 - ✅ `audio.sound_effect_instance.*`: playback state, looping, volume/pitch/pan, Apply3D
@@ -154,12 +156,13 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
 - ✅ `audio.xact.*` (5): play a cue, cue states, categories, global variables, positioned cues; XACT
   files generated by `tools/xact_files.py` in the layout CNA's own example writes. Remaining:
   streaming wave banks, cue variables and RPCs, complex cues/variations, instance limits.
-- ✅ `media.*` (7): play a song (State, PlayPosition, end), events through FrameworkDispatcher
+- ✅ `media.*` (9): play a song (State, PlayPosition, end), events through FrameworkDispatcher
   without a Game, playlists with Queue/MoveNext/MovePrevious/IsRepeating/IsShuffled, volume and
   mute, visualization data, Song properties, MediaLibrary collections. Songs are generated WAVs
-  played from files (`Song::FromUri`, ISSUE-015). Remaining: `Video`/`VideoPlayer` (needs
-  `CNA_ENABLE_VIDEO`/FFmpeg), compiled songs (`CNA.SongProcessor` takes .ogg/.mp3 -- needs an
-  encoder), pictures (`SavePicture`).
+  played from files (`Song::FromUri`, ISSUE-015). ✅ `media.video_player.play_video` (generated WMV)
+  and ✅ `media.song.compiled_song` (generated Ogg Vorbis), both through the content pipeline
+  (`assets/media`, own ContentManager: ISSUE-020). Remaining: VideoPlayer looping/pause/volume,
+  pictures (`SavePicture`).
 
 ## Phase 10 -- input ✅ (39 demos: keyboard, mouse, text input, clipboard, gamepad, touch, CNAEXT devices)
 - Keyboard: state, edge detection (pressed this frame), modifiers, `GetPressedKeys`.
@@ -198,16 +201,23 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   `AddLocalGamer`, `GamerLeft`/`HostChanged`/`SessionEnded`, `AllowJoinInProgress`,
   `PrivateGamerSlots`; Find/Join between two processes (a standalone demo); voice (manual).
 
-## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions ⬜
-- `devices.*`: `Microsoft.Devices.Sensors` (accelerometer, compass, gyroscope, motion -- manual
-  unless emulated), `VibrateController`; CNA devices-ext: clipboard, locale, power, system/display
-  info (automated), message box, file dialog, URL launcher, camera, system tray (manual).
-- `phone.*`: `PhoneApplicationService` lifecycle events, notification channel types.
-- `design.*`: each `TypeConverter` (string ↔ value round trip).
-- `diagnostics.*`: `CNA::Logger` levels and sinks, `CNA_DIAGNOSTICS` instrumentation.
+## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (17 demos)
+- ✅ `devices.*` (4): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
+  AccelerometerFailedException, Environment::DeviceType), CNAEXT keyboard-emulated accelerometer,
+  VibrateController, CNA::Devices SystemInfo/Locale/PowerInfo. Remaining: Compass/Gyroscope/Motion
+  readings (hardware), DisplayInfo (window), CNA devices-ext clipboard, message box, file dialog,
+  URL launcher (file:// only), camera, system tray (manual).
+- ✅ `phone.*` (1): PhoneApplicationService lifecycle with AttachEXT and State. Remaining:
+  notification channels (need a push service: manual).
+- ✅ `design.*` (4): text round trip and which types parse, cultures, property descriptors and
+  CreateInstance, InstanceDescriptor.
+- ✅ `diagnostics.*` (2) and `core.logger.*` (2): diagnostics build/runtime modes, counters and
+  gauges (recorded only in STATS/FULL builds), Logger sinks and levels. Remaining: zones, frame
+  scopes and trace recording (need a CNA build with `CNA_DIAGNOSTICS=FULL`).
+- ✅ `cnaext.*` (4): AsciiPostProcessEffect (every renderer), CRTEffect and DepthEffect (shader
+  renderers), DebugDraw.
 - `platform.*`: platform capabilities, native window handle, renderer selection with fallback
   chain (standalone), renderer capability profiles.
-- `cnaext.*`: `CRTEffect`, `AsciiPostProcessEffect`, `DepthEffect`, `DebugDraw`. ≈ 30
 
 ## Phase 14 -- bindings ⬜
 C API demos as standalone C programs (one C game per process): window/loop, sprite drawing,

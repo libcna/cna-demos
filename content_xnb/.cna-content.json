@@ -2,6 +2,9 @@
   "format": "CNA.ContentPipeline.Config",
   "version": 1,
   "assets": {
+    "fonts/pixel_font.png": {
+      "processor": "CNA.FontTextureProcessor"
+    },
     "textures/colour_wheel_dxt.png": {
       "parameters": {
         "textureFormat": { "type": "string", "value": "DxtCompressed" }

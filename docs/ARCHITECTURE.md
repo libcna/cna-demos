@@ -42,6 +42,7 @@ cna-demos (one executable)
 | `assets/` | shared demo assets, copied next to the executables at build time |
 | `content/` | content-pipeline sources (e.g. the font sheet) compiled by CNA's `cna-content` into the same assets directory (CNB format) |
 | `content_xnb/` | content-pipeline sources compiled into XNA's XNB format, into `assets/xnb/` |
+| `content_media/` | sources whose import needs CNA's FFmpeg backend (videos, compressed audio), compiled into `assets/media/` only when CNA has it |
 | `title/` | files CNA reads by a fixed path in the title directory (the offline achievement catalog), copied next to the executables |
 | `tools/` | developer tools (Python): asset generator, coverage report |
 | `docs/` | documentation; `docs/COVERAGE.md` is generated |
@@ -205,6 +206,7 @@ cna-demo-<id> (EXECUTABLE, one per standalone demo)
 cna_demos_assets (custom target) copies assets/ to <build>/bin/assets
 cna_demos_content (cna_add_content) compiles content/ into <build>/bin/assets (CNB files)
 cna_demos_content_xnb (cna_add_content FORMAT xnb) compiles content_xnb/ into <build>/bin/assets/xnb
+cna_demos_content_media (cna_add_content, only with CNA's FFmpeg backend) compiles content_media/ into <build>/bin/assets/media
 cna_demos_title_files (custom target) copies title/ to <build>/bin
 ```
 
@@ -240,6 +242,10 @@ keep demos independent). Revisit with measurements when the collection is in the
   Third-party assets are only allowed with licence and attribution in `THIRD_PARTY_NOTICES.md`.
 * Prefer procedural data inside the demo when the demo is not about loading; prefer a shared
   asset over duplicating one.
+* `content_media/` holds sources whose import needs CNA's FFmpeg backend: videos (`.wmv`, as XNA's
+  pipeline imported) and compressed audio. The directory is compiled only when CNA built that
+  backend (`TARGET cna_video_ffmpeg`); without it the demos that load them skip (`Need::Video`)
+  and `--validate` does not ask for their assets.
 * `title/` holds files CNA opens by a fixed title-relative path (`TitleContainer`), not through
   `Content`: `GamerServices/Achievements.json`, the offline achievement catalog. It is copied into
   `bin/` itself.

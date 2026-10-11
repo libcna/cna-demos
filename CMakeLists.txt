@@ -114,6 +114,18 @@ cna_add_content(TARGET cna_demos_content_xnb
     FORMAT xnb
     ${_cna_demos_content_tool}
     QUIET)
+# content_media/ holds sources whose import needs CNA's FFmpeg backend (CNA_ENABLE_VIDEO): videos,
+# whose size, frame rate and duration the pipeline probes, and compressed audio. Compiled only
+# when CNA has that backend; the demos that load them then skip (Need::Video).
+set(_cna_demos_content_targets cna_demos_content cna_demos_content_xnb)
+if(TARGET cna_video_ffmpeg)
+    cna_add_content(TARGET cna_demos_content_media
+        SOURCE_DIR content_media
+        OUTPUT_DIR "${CNA_DEMOS_OUTPUT_DIR}/assets/media"
+        ${_cna_demos_content_tool}
+        QUIET)
+    list(APPEND _cna_demos_content_targets cna_demos_content_media)
+endif()
 
 # -----------------------------------------------------------------------------
 # The cna-demos executable: CLI + interactive terminal browser.
@@ -138,7 +150,7 @@ target_link_libraries(cna-demos PRIVATE
 set_target_properties(cna-demos PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CNA_DEMOS_OUTPUT_DIR}")
 cna_demos_apply_warnings(cna-demos)
 cna_demos_finalize_executable(cna-demos)
-add_dependencies(cna-demos cna_demos_assets cna_demos_title_files cna_demos_content cna_demos_content_xnb)
+add_dependencies(cna-demos cna_demos_assets cna_demos_title_files ${_cna_demos_content_targets})
 
 # -----------------------------------------------------------------------------
 # Standalone demos (standalone/<demo-id>/), the documented exception.

@@ -175,8 +175,60 @@ def bending_strip(path: Path) -> None:
     doc.save(path)
 
 
+def turntable(path: Path) -> None:
+    """A display stand: a fixed base, a platform spinning on it with a crate on top, and the crate's
+    lid. Two clips animate ordinary scene nodes (no skin): "Spin" turns the platform once in four
+    seconds, "Open" swings the lid up and back in two."""
+    doc = Document()
+    parts = [
+        ("Base", (-1.2, 0.0, -1.2), (1.2, 0.3, 1.2), (0.45, 0.45, 0.5)),
+        ("Platform", (-1.0, 0.0, -1.0), (1.0, 0.15, 1.0), (0.85, 0.75, 0.3)),
+        ("Crate", (-0.5, 0.0, -0.5), (0.5, 0.8, 0.5), (0.65, 0.4, 0.2)),
+        ("Lid", (0.0, 0.0, -0.55), (1.1, 0.12, 0.55), (0.9, 0.3, 0.25)),
+    ]
+    for name, lo, hi, colour in parts:
+        positions, colours, indices = box(lo, hi, colour)
+        doc.gltf["meshes"].append({"name": name + "Mesh", "primitives": [{
+            "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True),
+                           "COLOR_0": doc.accessor(colours, "VEC4")},
+            "indices": doc.accessor(indices, "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+            "material": 0}]})
+    # Nodes: 0 Base -> 1 Platform (on the base) -> 2 Crate -> 3 Lid (hinged at the crate's left top edge).
+    doc.gltf["nodes"] = [
+        {"name": "Base", "mesh": 0, "children": [1]},
+        {"name": "Platform", "mesh": 1, "translation": [0.0, 0.3, 0.0], "children": [2]},
+        {"name": "Crate", "mesh": 2, "translation": [0.0, 0.15, 0.0], "children": [3]},
+        {"name": "Lid", "mesh": 3, "translation": [-0.55, 0.8, 0.0]},
+    ]
+
+    def clip(name, node, times, rotations):
+        sampler_input = doc.accessor(times, "SCALAR", target=None)
+        doc.gltf["accessors"][sampler_input].update({"min": [times[0]], "max": [times[-1]]})
+        return {"name": name,
+                "samplers": [{"input": sampler_input, "output": doc.accessor(rotations, "VEC4", target=None),
+                              "interpolation": "LINEAR"}],
+                "channels": [{"sampler": 0, "target": {"node": node, "path": "rotation"}}]}
+
+    def about_y(degrees):
+        return (0.0, math.sin(math.radians(degrees) / 2), 0.0, math.cos(math.radians(degrees) / 2))
+
+    def about_z(degrees):
+        return (0.0, 0.0, math.sin(math.radians(degrees) / 2), math.cos(math.radians(degrees) / 2))
+
+    doc.gltf["animations"] = [
+        clip("Spin", 1, [0.0, 1.0, 2.0, 3.0, 4.0], [about_y(a) for a in (0, 90, 180, 270, 360)]),
+        clip("Open", 3, [0.0, 1.0, 2.0], [about_z(a) for a in (0, 110, 0)]),
+    ]
+    doc.gltf["materials"] = [{"name": "BakedColours", "extensions": {"KHR_materials_unlit": {}}}]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+    doc.gltf["scenes"] = [{"name": "Turntable", "nodes": [0]}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
 def write_all(content_root: Path, assets_root: Path) -> None:
     robot_arm(content_root / "models" / "robot_arm.gltf")
     bending_strip(content_root / "models" / "bending_strip.gltf")
+    turntable(content_root / "models" / "turntable.gltf")
     # The same arm as a loose file: CNA can also load glTF at run time, without the pipeline.
     robot_arm(assets_root / "models" / "loose_robot_arm.gltf")

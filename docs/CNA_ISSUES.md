@@ -472,6 +472,44 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux.
 - **Status:** open (low impact; same family as ISSUE-010); not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-019 -- `Game::ResetElapsedTime` is ignored with a fixed time step
+
+- **Area:** runtime -- `Game::ResetElapsedTime` (`Game.cpp`) sets its flag only when
+  `IsFixedTimeStep` is false, and only the variable-step path reads it. The rule is FNA's (its
+  `ResetElapsedTime` says the call is "totally ignored" for a fixed time step).
+- **Demos:** `game.time_step.reset_elapsed_time` (expected failure).
+- **Reproduction:** in a default (fixed 60 Hz) game, stall one `Update` for 200 ms and call
+  `ResetElapsedTime()`; count the Updates before the next `Draw`.
+- **Observed:** 12 catch-up Updates run before the next Draw (the stall is made up step by step).
+- **Expected:** XNA documents the method for exactly this case (recovering from a slow frame
+  whose elapsed time is too large to be useful), and Microsoft's XNA GameStateManagement sample
+  calls it from its loading screen -- in a game with the default fixed time step -- so that the
+  timing does not try to catch up after the long loading frame (paraphrased from the sample's
+  comment). The next frame should run one ordinary step.
+- **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3.
+- **Status:** open (medium for games with loading screens: the world jumps ahead after a load);
+  not reported upstream yet.
+
+### CNA-DEMOS-ISSUE-020 -- A compiled Song/Video stream is looked up from the manager's root, not beside the asset
+
+- **Area:** content -- `ResolveMediaStreamPathEXT` (`ContentManager.cpp`) resolves a compiled
+  `.cnb` Song's or Video's stream reference with `BuildAssetPath(reference)`, i.e. relative to
+  the ContentManager's RootDirectory. The reference itself is written relative to the root of
+  the content build that compiled it (`music/theme.ogg` for the asset `music/theme`).
+- **Demos:** `media.song.compiled_song`, `media.video_player.play_video` (both pass by giving the
+  media content build, output to `assets/media`, a ContentManager rooted there).
+- **Reproduction:** build a content project with a song `music/theme.ogg` into `assets/media`,
+  then `ContentManager(nullptr, "assets").Load<Song>("media/music/theme")`.
+- **Observed:** `ContentLoadException: 'media/music/theme' streams 'music/theme.ogg', which was not
+  found beside it.` -- the file is beside it (`assets/media/music/theme.ogg`).
+- **Expected:** XNA's compiled song/video stores the stream path relative to the `.xnb` and it is
+  resolved from the asset's own directory, so a content build can sit anywhere below a manager's
+  root (as the message's "beside it" says). Resolving from the asset's directory (or storing the
+  reference relative to the asset) would make the load work from any root.
+- **Environment:** CNA 0.1.0, Linux.
+- **Status:** open (low: one ContentManager per content build avoids it); not reported upstream
+  yet.
+
 ---
 
 ## Resolved

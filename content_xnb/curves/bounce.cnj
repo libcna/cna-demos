@@ -1,0 +1,11 @@
+{
+  "cnjVersion": 1,
+  "type": "Curve",
+  "preLoop": "Constant",
+  "postLoop": "Cycle",
+  "keys": [
+    { "position": 0.0, "value": 0.0, "tangentIn": 0.0, "tangentOut": 2.0 },
+    { "position": 0.5, "value": 1.0, "tangentIn": 0.0, "tangentOut": 0.0 },
+    { "position": 1.0, "value": 0.0, "tangentIn": -2.0, "tangentOut": 0.0 }
+  ]
+}

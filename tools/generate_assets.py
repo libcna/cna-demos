@@ -25,12 +25,14 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 import gltf_models
+import media_files
 import xact_files
 import pixel_font
 
 ROOT = Path(__file__).resolve().parent.parent / "assets"
 CONTENT_ROOT = Path(__file__).resolve().parent.parent / "content"
 CONTENT_XNB_ROOT = Path(__file__).resolve().parent.parent / "content_xnb"
+CONTENT_MEDIA_ROOT = Path(__file__).resolve().parent.parent / "content_media"
 
 
 def save_png(image: Image.Image, relative: str, root: Path = ROOT) -> None:
@@ -212,9 +214,12 @@ def main() -> None:
     save_png(checker(128, 8, (255, 255, 255, 255), (20, 20, 20, 255)), "textures/mipmapped_checker.png", CONTENT_ROOT)
     save_png(colour_wheel(128), "textures/colour_wheel.png", CONTENT_XNB_ROOT)
     save_png(colour_wheel(128), "textures/colour_wheel_dxt.png", CONTENT_XNB_ROOT)
+    save_png(font_sheet(2), "fonts/pixel_font.png", CONTENT_XNB_ROOT)
+    tone("sounds/chime.wav", 880.0, 0.3, root=CONTENT_XNB_ROOT)
     tone("sounds/chime.wav", 880.0, 0.3, root=CONTENT_ROOT)
     gltf_models.write_all(CONTENT_ROOT, ROOT)
     xact_files.write_all(ROOT)
+    media_files.write_all(CONTENT_MEDIA_ROOT)
     tone("sounds/tone_440.wav", 440.0, 0.5)
     tone("sounds/tone_660.wav", 660.0, 0.25)
     melody("music/rising.wav", [60, 64, 67, 72, 64, 67, 72, 76], 0.25)   # C major, upwards

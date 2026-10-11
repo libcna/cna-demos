@@ -101,6 +101,14 @@ namespace CnaDemos
                               + " has no window");
             }
         }
+
+#ifndef CNA_VIDEO_AVAILABLE
+        // CNA decodes video only when built with its FFmpeg backend (CNA_ENABLE_VIDEO).
+        if (HasNeed(needs, Need::Video))
+        {
+            context_.Skip("CNA was built without video decoding (CNA_ENABLE_VIDEO)");
+        }
+#endif
     }
 
     void DemoGame::EndDraw()
