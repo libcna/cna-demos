@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- Standalone C++ tools now use the browser's shared-library-first link ordering. The new XNA
+  adapter tool exposed existing ISSUE-016 again: duplicate CNA TouchPanel statics caused an
+  exit-time double free despite passing pipeline checks.
 - Network simulation now uses coordinated finite bursts for baseline, latency, complete outage
   and recovery. Exact sent counts replace endpoint-span estimates and flaky percentage gates on
   unreliable transport. ISSUE-030 remains visible after loss is disabled and recovery is allowed.
@@ -27,6 +30,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- XNA pipeline adapter tool runs typed importer/processor registration through the real build
+  coordinator, tracks an original scale sidecar, converts imported route units through another
+  processor and checks compiled bounds, typed parameter isolation and contextual errors.
 - XML configuration example combines validated properties, inherited-member ordering, get-only
   collections that append to constructor defaults, and flattened nested spawn coordinates.
 - Focused C thread-local diagnostic demo interleaves two worker errors and preserves each worker's

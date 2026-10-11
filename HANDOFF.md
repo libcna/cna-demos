@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 15), 8 (content, 27), 9 (audio 20 incl. 9 XACT, media 10 incl. a
+* In progress: 7 (models/glTF, 15), 8 (content, 28), 9 (audio 20 incl. 9 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 14 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-412 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+413 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 20 (9 XACT), core 3 (2 logger),
-content 27 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 28 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 14 (standalone C programs). Every declared category has demos.
@@ -236,13 +236,23 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** implement and validate the prepared
-`/tmp/cna-xna-pipeline-components/` draft as `content.custom.xna_pipeline_components`.
-It is not yet applied, built or run. It registers XNA importer/processor adapters with the real
-ContentPipeline::Build coordinator, records an original patrol.scale sidecar dependency and
-uses ContentProcessorContext::Convert for scaled route bounds. Add the sidecar to the asset
-generator as well. Verify all assumptions against CNA source and actual output. Then continue
-with composite asset dependency/reference behavior or remaining member gaps in COVERAGE_AUDIT.md.
+**Immediate next action:** complete the full 413 checkpoint after the new
+`content.custom.xna_pipeline_components` and the standalone link-order fix. All seven child
+checks pass and the process exits successfully with SOFTWARE/OPENGLES3 selections
+(`/tmp/cna-xna-pipeline-{SOFTWARE,OPENGLES3}.{json,log}`). It exercises real XNA component
+registration, default selection, sidecar source dependency, nested Convert, typed parameter
+conversion/isolation and contextual rejection. No graphics/audio are initialized. Build and
+metadata (413/0) and all 8 targeted CTests pass. Coverage is regenerated; full reports
+still describe 412 demos. Run tools/validate.sh with private Xvfb, compare both current reports
+and raw assertions against checkpoint-412, and archive checkpoint-413 before continuing.
+
+The initial run passed all checks then aborted at exit. GDB and nm identified duplicate
+TouchPanel statics in the executable and libcna.so, extending existing ISSUE-016. The standalone
+C++ helper now uses the browser's shared-library-first link workaround; duplicate definitions
+are absent and clean exit is verified. Details and before/after evidence are in CNA_ISSUES.md.
+The draft CNB API typo was a separate demo compilation mistake, corrected to RequireSingle/OpenChunk.
+The /tmp draft is stale; do not reapply it. Next productive work is composite asset dependency/
+reference behavior or remaining member gaps in COVERAGE_AUDIT.md; do not reset completed phases.
 
 The XML property example is included in the complete 412 checkpoint: all 5 child checks pass
 under SOFTWARE and OPENGLES3 selections (`/tmp/cna-intermediate-properties-{SOFTWARE,OPENGLES3}.{json,log}`).

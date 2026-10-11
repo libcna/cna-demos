@@ -68,10 +68,13 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
   modules. Each can be turned off; dependent categories then disappear.
 * Modules outside the umbrella (`CNA::Net`, `CNA::GamerServices`, `CNA::Phone`, `CNA::Design`)
   are linked by the categories that need them (`demos/CMakeLists.txt`).
-* Standalone intermediate XML tools (`content.custom.intermediate_*`) link
+* Standalone intermediate XML tools (`content.custom.intermediate_*`) and the XNA component
+  adapter tool (`content.custom.xna_pipeline_components`) link
   `CNA::ContentPipelineBuild`. Each process owns its serializer registry and dependencies;
   these stay outside the browser's runtime link closure. Metadata remains discoverable when
   the tool target is unavailable, and the runner reports the omitted executable as NOT RUN.
+  C++ standalones use the browser's shared-library-first link workaround (ISSUE-016), preventing
+  optional module archives from introducing a second runtime and duplicate static destructors.
 * C ABI examples default to C99. The focused `c_api.core.thread_local_errors` target uses C11
   threads/atomics after a compile/link availability check and links the standard Threads target.
   It uses only game-independent C routes; no C++ threading wrapper or Game dispatcher is involved.

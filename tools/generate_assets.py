@@ -318,6 +318,7 @@ def custom_patrol_route() -> None:
     directory = ROOT / "custom"
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "patrol.route").write_text("0 0\n3 0\n3 4\n", encoding="utf-8")
+    (directory / "patrol.scale").write_text("2.0\n", encoding="utf-8")
 
 
 def main() -> None:

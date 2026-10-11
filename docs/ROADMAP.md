@@ -157,7 +157,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.skinned_pbr` (skinned + metallic-roughness imports as SkinnedPbrEffect).
 - Remaining: `ModelMeshPart` details, XNB models, `SkinnedModelEXT`.
 
-## Phase 8 -- content 🟨 (27 demos; remaining below)
+## Phase 8 -- content 🟨 (28 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -186,7 +186,10 @@ a check that all authored colors remain visible and that a blank texture row can
   and within described fields, with round trip and lexical/domain rejection on read and write.
   ✅ `content.custom.intermediate_properties`: inherited-member ordering, validated setter
   dispatch, get-only collections appending constructor defaults and flattened spawn coordinates.
-  Remaining: deeper serializer behaviors, custom XNA adapters and the member/behavior gaps
+  ✅ `content.custom.xna_pipeline_components`: actual XNA importer/processor adapters, default
+  processor selection, typed parameter conversion/isolation, source sidecar dependency and
+  nested Convert producing compiled route bounds.
+  Remaining: deeper serializer behaviors, composite asset builds and the member/behavior gaps
   in COVERAGE_AUDIT.md; this phase is not comprehensively covered.
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
   managers, `ContentLoadException`, loose files vs XNB vs CNB vs CNJ lookup order.

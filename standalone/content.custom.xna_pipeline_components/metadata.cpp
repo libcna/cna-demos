@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: MS-PL
+#include "CnaDemos/Demo.hpp"
+
+CNA_DEMOS_STANDALONE({
+    .id = "content.custom.xna_pipeline_components",
+    .title = "XNA component adapters and nested conversion",
+    .description = "Registers XNA-shaped importer and processor classes with CNA's coordinator, converts route "
+                   "units through another processor, records a sidecar dependency and compiles padded bounds; "
+                   "checks default selection, typed parameter binding and contextual parameter errors.",
+    .apis = {"CNA::Content::Pipeline::RegisterXnaImporter", "CNA::Content::Pipeline::RegisterXnaProcessor",
+             "CNA::Content::Pipeline::ContentPipeline::Build",
+             "Microsoft::Xna::Framework::Content::Pipeline::ContentImporter::Import",
+             "Microsoft::Xna::Framework::Content::Pipeline::ContentImporterAttribute::DefaultProcessor",
+             "Microsoft::Xna::Framework::Content::Pipeline::ContentImporterContext::AddDependency",
+             "Microsoft::Xna::Framework::Content::Pipeline::ContentProcessor::Process",
+             "Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::Convert",
+             "Microsoft::Xna::Framework::Content::Pipeline::ProcessorParameterBindings::Add",
+             "Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue"},
+    .tags = {"content", "custom", "pipeline", "parameters", "dependencies", "cnaext"},
+    .assets = {"custom/patrol.route", "custom/patrol.scale"},
+    .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild. "
+                    "Compiled CNB bytes are inspected in memory; nested asset publication and XNB writers remain separate.",
+})

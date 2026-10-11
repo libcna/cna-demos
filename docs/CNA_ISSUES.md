@@ -432,6 +432,17 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Expected:** a consumer cannot get two copies of CNA by linking CNA's own targets in any order.
   Possible fixes: link the `CNA` umbrella (not the module archives) from `CNA_GamerServices` and
   `CNA_Net` when CNA is shared, or build them into `libcna.so` too.
+- **Additional reproduction (2026-10-11):** `content.custom.xna_pipeline_components` linked
+  `CNA::ContentPipelineBuild` and `cna_demos_framework` through the standalone helper on
+  Linux/GCC 14/CMake 3.31.6. Its seven pipeline checks passed, then exit aborted in
+  TouchPanel::gestures_' deque destructor. GDB shows executable-owned destruction reached
+  from libcna.so's global finalizers; nm confirmed TouchPanel::GetState and gestures_ were
+  defined in the executable as well. Evidence: `/tmp/cna-xna-pipeline-{gdb,unbuffered}.log`
+  and `/tmp/cna-xna-pipeline-duplicate-symbols-{before,after}.txt`.
+  The standalone C++ helper now uses the same shared-library-first workaround as the browser.
+  The duplicate definitions disappear and both renderer-selected tool runs exit successfully.
+  This extends the existing issue to ContentPipelineBuild; no new issue number or expected
+  failure hides it. The C API linking path is unchanged.
 - **Status:** open (medium: a silent ODR violation that crashes at exit); not reported upstream yet.
 
 ### CNA-DEMOS-ISSUE-017 -- `Achievement::EarnedOnline` is always true
