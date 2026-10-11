@@ -6,21 +6,21 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**367 demos** in 18 categories. Kinds: console 137, game 220, standalone 10. Automation: automated 332, manual 2, smoke-only 33.
+**371 demos** in 18 categories. Kinds: console 139, game 222, standalone 10. Automation: automated 336, manual 2, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
-| audio | 16 | 13 | 2 | 1 | 15 / 0 / 0 | 15 / 0 / 0 |
+| audio | 18 | 15 | 2 | 1 | 17 / 0 / 0 | 17 / 0 / 0 |
 | c_api | 7 | 6 | 1 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 | 4 / 0 / 0 |
 | content | 18 | 18 | 0 | 0 | 15 / 0 / 3 | 15 / 0 / 3 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 | 3 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 | 4 / 0 / 0 |
-| devices | 4 | 4 | 0 | 0 | 4 / 0 / 0 | 4 / 0 / 0 |
+| devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 | 5 / 0 / 0 |
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 | 2 / 0 / 0 |
 | game | 30 | 25 | 4 | 1 | 23 / 5 / 1 | 28 / 0 / 1 |
 | gamer_services | 18 | 18 | 0 | 0 | 17 / 0 / 1 | 17 / 0 / 1 |
-| graphics | 121 | 121 | 0 | 0 | 114 / 4 / 3 | 114 / 3 / 4 |
+| graphics | 122 | 122 | 0 | 0 | 115 / 4 / 3 | 115 / 3 / 4 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
 | math | 73 | 73 | 0 | 0 | 71 / 0 / 2 | 71 / 0 / 2 |
 | media | 10 | 9 | 1 | 0 | 10 / 0 / 0 | 10 / 0 / 0 |
@@ -32,17 +32,17 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 286 of 329** (86.9 %).
-- **Methods, properties, constructors and events named by a demo: 1060 of 2326** (45.6 %).
-- Fields and enum values named by a demo: 124 of 753 (reported separately: a demo per enum value is not a goal).
+- **Methods, properties, constructors and events named by a demo: 1063 of 2326** (45.7 %).
+- Fields and enum values named by a demo: 125 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 40 / 42 | 282 / 643 | 34 / 78 |
-| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 75 / 121 | 5 / 11 |
+| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 78 / 121 | 5 / 11 |
 | `Microsoft.Xna.Framework.Content` | 6 / 11 | 10 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 42 / 52 | 114 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 256 / 550 | 79 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 256 / 550 | 80 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
@@ -111,6 +111,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Buttons::Paddle3EXT` -- input.gamepad.extra_buttons
 - `Buttons::Paddle4EXT` -- input.gamepad.extra_buttons
 - `Buttons::TouchPadEXT` -- input.gamepad.touchpad
+- `CNA::Devices::DisplayInfo::ContentScale` -- devices.display_info.scale_and_safe_area
+- `CNA::Devices::DisplayInfo::SafeArea` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::Locale::PreferredLocales` -- devices.system.machine_info
 - `CNA::Devices::LocaleInfo` -- devices.system.machine_info
 - `CNA::Devices::PowerInfo::BatteryPercent` -- devices.system.machine_info

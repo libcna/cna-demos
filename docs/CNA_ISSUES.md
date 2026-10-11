@@ -633,6 +633,51 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
+### CNA-DEMOS-ISSUE-027 -- SOFTWARE does not clamp source values above 1 before blending into an 8-bit target
+
+- **Area:** graphics, SOFTWARE renderer -- blending a texel sampled from a floating-point texture
+  (`HdrBlendable`) into a `Color` target. Direct3D (XNA) and OpenGL clamp the source colour, the
+  destination and the blend factors to [0, 1] before the blend equation when the target is a
+  fixed-point format; SOFTWARE uses the raw value, so with `BlendState::AlphaBlend` a source alpha
+  of 2 gives the destination a factor `1 - 2 = -1`.
+- **Demos:** none fails; found while writing `graphics.render_target.hdr_blendable`, which shows its
+  targets with `BlendState::Opaque` (their alpha is a sum of additive draws, not a coverage).
+- **Reproduction:** an `HdrBlendable` target filled additively with three `(0.8, 0.5, 0.2, 1)`
+  sprites over a cleared black (alpha 1) target, so that alpha reaches 2, 3 and 4 where one, two
+  and three sprites overlap; draw it with `SpriteBatch` (default `AlphaBlend`, tint 0.4) over a
+  back buffer cleared to `(24, 24, 32)`.
+- **Observed (SOFTWARE):** red 58 / 115 / 173 where one / two / three sprites overlap -- 24 below
+  OPENGLES3 per unit of alpha above 1 (the background subtracted); blue 0.
+- **Expected (OPENGLES3, and XNA):** red 82 / 163 / 245, blue 20 / 41 / 61: the source clamped to 1
+  (alpha 1, so the background is replaced).
+- **Environment:** CNA 0.1.0, Linux, SOFTWARE renderer.
+- **Status:** open (low: only float sources with values above 1 are affected); not reported
+  upstream yet.
+
+---
+
+### CNA-DEMOS-ISSUE-028 -- A streaming WaveBank opens a relative path from the working directory
+
+- **Area:** audio -- `WaveBank(AudioEngine*, streamingWaveBankFilename, offset, packetSize)` opens
+  the file with a plain file stream (`ParseXwbStreamingHeader`), so a relative name is resolved
+  against the working directory; the settings file (`AudioEngine`), the in-memory `WaveBank` and
+  the `SoundBank` are read through the title container, relative to the title location. CNA
+  follows FNA here (FNA's streaming constructor calls `FAudio_fopen` on the name), so the same
+  relative name works for an in-memory bank and fails for a streaming one unless the game runs
+  from its own directory.
+- **Demos:** `audio.xact.streaming_wave_bank` builds the path from `TitleLocation::Path()`, with a
+  comment naming this issue (as ISSUE-015 does for `Song::FromUri`).
+- **Reproduction:** run from another directory than the executable's (CTest runs in the build
+  tree): `WaveBank(&engine, "assets/xact/music.xwb", 0, 16)` beside
+  `AudioEngine("assets/xact/demo.xgs")`.
+- **Observed:** `[WaveBank] XWB streaming parse error (assets/xact/music.xwb): XWB: cannot open file
+  for streaming`; the bank never becomes prepared and its cues find no wave.
+- **Expected:** the streaming bank is found where the other XACT files of the title are.
+- **Environment:** CNA 0.1.0, Linux.
+- **Status:** open (low; follows FNA); not reported upstream yet.
+
+---
+
 ## Resolved
 
 (none yet)

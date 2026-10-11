@@ -5,8 +5,9 @@ sound bank (.xsb), all original data.
 XNA games got these files from the XACT authoring tool, which no longer exists for current
 platforms. The byte layout written here is the one CNA's own XACT example generates
 (cna/modules/audio/examples/demo_xact/src/XactFileGen.hpp, Ms-PL) and CNA's XACT parser reads:
-non-compact wave bank, simple cues (one sound, one wave each), two categories and one global
-variable.
+non-compact wave banks, simple cues (one sound, one wave each), two categories, one global and one
+cue variable. music.xwb is a streaming wave bank (flag set, wave data aligned to 2048-byte sectors), the
+kind a game streams from disc instead of loading.
 
 tools/generate_assets.py calls write_all(); the files land in assets/xact/.
 """
@@ -25,6 +26,10 @@ CUES = [
     ("Beep", 880.0, 0.2, 1),
 ]
 
+# The streamed music: one cue, a three-second arpeggio, in the Music category.
+MUSIC_NOTES = [261.6, 329.6, 392.0, 523.3, 392.0, 329.6, 261.6, 196.0]
+MUSIC_NOTE_SECONDS = 0.375
+
 
 def sine(frequency: float, seconds: float) -> bytes:
     count = int(SAMPLE_RATE * seconds)
@@ -36,45 +41,56 @@ def sine(frequency: float, seconds: float) -> bytes:
     return struct.pack("<%dh" % count, *samples)
 
 
+def melody(frequencies, note_seconds: float) -> bytes:
+    return b"".join(sine(frequency, note_seconds) for frequency in frequencies)
+
+
 def name64(text: str) -> bytes:
     return text.encode("ascii")[:63].ljust(64, b"\0")
 
 
 def xgs() -> bytes:
-    """Settings: categories Music and SFX (no parent, full volume), variable SpeedOfSound."""
+    """Settings: categories Music and SFX (no parent, full volume); the global variable SpeedOfSound
+    and the cue variable Intensity (each cue has its own value)."""
     cat_off, var_off = 80, 100
-    catname_off = var_off + 13
+    catname_off = var_off + 2 * 13
     varname_off = catname_off + len(b"Music\0SFX\0")
     out = bytearray()
     out += struct.pack("<IHHH", 0x46534758, 46, 0, 0) + bytes(8) + b"\0"            # "XGSF", versions, time, platform
-    out += struct.pack("<7H", 2, 1, 0, 0, 0, 0, 0)                                 # 2 categories, 1 variable
+    out += struct.pack("<7H", 2, 2, 0, 0, 0, 0, 0)                                 # 2 categories, 2 variables
     out += struct.pack("<8I", cat_off, var_off, 0, 0, 0, 0, catname_off, varname_off)
     out = out.ljust(80, b"\0")
     for _ in range(2):                                                             # instance limit, fades, behaviour,
         out += struct.pack("<BHHBHBB", 255, 0, 0, 0, 0xFFFF, 180, 1)               # no parent, volume byte 180 = 0 dB
-    out += struct.pack("<Bfff", 0x01, 343.0, 0.0, 1000.0)                          # PUBLIC, initial, min, max
-    out += b"Music\0SFX\0SpeedOfSound\0"
-    assert len(out) == 136
+    out += struct.pack("<Bfff", 0x01, 343.0, 0.0, 1000.0)                          # PUBLIC: initial, min, max
+    out += struct.pack("<Bfff", 0x01 | 0x04, 50.0, 0.0, 100.0)                     # PUBLIC | CUE
+    out += b"Music\0SFX\0SpeedOfSound\0Intensity\0"
+    assert len(out) == 159
     return bytes(out)
 
 
-def xwb(bank: str, waves) -> bytes:
-    """A non-compact wave bank of mono 16-bit PCM waves."""
+def xwb(bank: str, waves, streaming: bool = False) -> bytes:
+    """A non-compact wave bank of mono 16-bit PCM waves; a streaming bank aligns its waves to
+    2048-byte sectors, as the XACT tool does."""
+    alignment = 2048 if streaming else 4
     offsets, total = [], 0
     for wave in waves:
+        total = (total + alignment - 1) & ~(alignment - 1)
         offsets.append(total)
         total += len(wave)
     seg0_off, seg0_len = 52, 96
     seg1_off, seg1_len = seg0_off + seg0_len, 24 * len(waves)
-    seg4_off = (seg1_off + seg1_len + 3) & ~3
+    seg4_off = (seg1_off + seg1_len + alignment - 1) & ~(alignment - 1)
     out = bytearray(struct.pack("<III", 0x444E4257, 46, 44))                      # "WBND", version, header version
     out += struct.pack("<10I", seg0_off, seg0_len, seg1_off, seg1_len, 0, 0, 0, 0, seg4_off, total)
-    out += struct.pack("<II", 0, len(waves)) + name64(bank) + struct.pack("<IIII", 24, 0, 4, 0) + bytes(8)
+    flags = 1 if streaming else 0                                                  # WAVEBANK_TYPE_STREAMING
+    out += struct.pack("<II", flags, len(waves)) + name64(bank) + struct.pack("<IIII", 24, 0, alignment, 0) + bytes(8)
     fmt = (SAMPLE_RATE << 5) | (1 << 31)                                           # PCM, mono, 16-bit
     for offset, wave in zip(offsets, waves):
         out += struct.pack("<6I", 0, fmt, offset, len(wave), 0, 0)
     out = out.ljust(seg4_off, b"\0")
-    for wave in waves:
+    for offset, wave in zip(offsets, waves):
+        out = out.ljust(seg4_off + offset, b"\0")
         out += wave
     return bytes(out)
 
@@ -114,6 +130,8 @@ def write_all(assets_root: Path) -> None:
         "demo.xgs": xgs(),
         "tones.xwb": xwb("Tones", [sine(frequency, seconds) for _, frequency, seconds, _ in CUES]),
         "tones.xsb": xsb("ToneSounds", "Tones", CUES),
+        "music.xwb": xwb("Music", [melody(MUSIC_NOTES, MUSIC_NOTE_SECONDS)], streaming=True),
+        "music.xsb": xsb("MusicSounds", "Music", [("Theme", 0.0, 0.0, 0)]),
     }
     for name, data in files.items():
         (folder / name).write_bytes(data)

@@ -26,6 +26,7 @@ namespace CnaDemos
             {Need::MultiSampling, "multisampling"},
             {Need::CompiledEffects, "compiled-effects"},
             {Need::FloatRenderTargets, "float-render-targets"},
+            {Need::HalfFloatRenderTargets, "half-float-render-targets"},
             {Need::AnisotropicFiltering, "anisotropic-filtering"},
             {Need::IndirectDraw, "indirect-draw"},
             {Need::ComputeShaders, "compute-shaders"},

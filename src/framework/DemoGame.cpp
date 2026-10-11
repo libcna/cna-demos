@@ -39,6 +39,7 @@ namespace CnaDemos
             {Need::MultiSampling, CNA::GraphicsCapability::MultiSampleAntiAliasing},
             {Need::CompiledEffects, CNA::GraphicsCapability::CompiledEffects},
             {Need::FloatRenderTargets, CNA::GraphicsCapability::FloatRenderTargets},
+            {Need::HalfFloatRenderTargets, CNA::GraphicsCapability::HalfFloatRenderTargets},
             {Need::AnisotropicFiltering, CNA::GraphicsCapability::AnisotropicFiltering},
             {Need::IndirectDraw, CNA::GraphicsCapability::IndirectDraw},
             {Need::ComputeShaders, CNA::GraphicsCapability::ComputeShaders},

@@ -144,6 +144,16 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   (AudioEngine::RendererDetails), `math.formatting.to_string` (ToString of the math types; expected
   failure, CNA-DEMOS-ISSUE-024: BoundingBox and Ray print doubled braces); the type-converter demo
   also lists Vector4, Plane and Ray.
+- `graphics.render_target.hdr_blendable` (additive light past 1.0 in an HdrBlendable target, read
+  back as HalfVector4, shown at an exposure; new `Need::HalfFloatRenderTargets`),
+  `audio.xact.streaming_wave_bank` (streaming WaveBank constructor, IsPrepared, IsInUse;
+  `tools/xact_files.py` writes a streaming `music.xwb`) and
+  `devices.display_info.scale_and_safe_area` (CNA::Devices::DisplayInfo), `audio.xact.cue_variables`
+  (per-cue values, clamping, cue vs global variables; `demo.xgs` gains the cue variable
+  Intensity). Recorded
+  CNA-DEMOS-ISSUE-027 (SOFTWARE does not clamp source values above 1 before blending into an 8-bit
+  target) and CNA-DEMOS-ISSUE-028 (a streaming WaveBank opens a relative path from the working
+  directory).
 - Two-process net demos (standalone): `net.network_session.find_and_join` (a second process finds
   the System Link session -- host gamertag, open slots, QualityOfService -- joins and leaves) and
   `net.network_session.host_leaves` (the host leaves twice: SessionEnded with HostEndedSession,
