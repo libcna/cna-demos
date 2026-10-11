@@ -144,6 +144,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   (AudioEngine::RendererDetails), `math.formatting.to_string` (ToString of the math types; expected
   failure, CNA-DEMOS-ISSUE-024: BoundingBox and Ray print doubled braces); the type-converter demo
   also lists Vector4, Plane and Ray.
+- C API demos (3): `c_api.graphics.basic_effect_3d` (a lit cube from a vertex and an index
+  buffer and a BasicEffect), `c_api.graphics.render_target` (render to texture, read back, drawn
+  as a sprite) and `c_api.storage.save_game` (device, container, write/read/delete a save file).
 - `graphics.model.gltf_lights` (two KHR_lights_punctual lights become the PbrEffect's
   DirectionalLight0/1) and `graphics.model.clip_interpolation` (STEP, LINEAR and CUBICSPLINE
   samplers; expected failure CNA-DEMOS-ISSUE-031: CNA plays all three as LINEAR) and

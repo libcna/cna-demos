@@ -6,12 +6,12 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**383 demos** in 18 categories. Kinds: console 141, game 230, standalone 12. Automation: automated 347, manual 3, smoke-only 33.
+**386 demos** in 18 categories. Kinds: console 141, game 230, standalone 15. Automation: automated 350, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
 | audio | 19 | 16 | 2 | 1 | 18 / 0 / 0 | 18 / 0 / 0 |
-| c_api | 7 | 6 | 1 | 0 | 7 / 0 / 0 | 7 / 0 / 0 |
+| c_api | 10 | 9 | 1 | 0 | 10 / 0 / 0 | 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 | 4 / 0 / 0 |
 | content | 18 | 18 | 0 | 0 | 15 / 0 / 3 | 15 / 0 / 3 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 | 3 / 0 / 0 |
@@ -66,7 +66,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 56 of 3210** (1.7 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 100 of 3210** (3.1 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -74,15 +74,23 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `audio.h` | 9 / 74 |
 | `content.h` | 4 / 32 |
 | `core.h` | 3 / 7 |
-| `graphics.h` | 12 / 27 |
+| `effects.h` | 8 / 290 |
+| `graphics.h` | 13 / 27 |
+| `graphics_device.h` | 3 / 87 |
+| `graphics_state.h` | 2 / 14 |
+| `index_resources.h` | 3 / 10 |
 | `input.h` | 4 / 15 |
 | `input_keyboard.h` | 1 / 17 |
-| `matrix.h` | 5 / 57 |
+| `matrix.h` | 7 / 57 |
+| `render_target.h` | 3 / 12 |
 | `runtime.h` | 9 / 45 |
 | `sprite_font.h` | 2 / 9 |
+| `storage.h` | 16 / 49 |
 | `vectors.h` | 6 / 137 |
+| `vertex_resources.h` | 5 / 24 |
+| `vertex_values.h` | 1 / 13 |
 
-Headers without a demonstrated route: `cnb.h`, `color.h`, `content_readers.h`, `core_ext.h`, `curve.h`, `devices.h`, `display.h`, `effects.h`, `gamer_services.h`, `geometry.h`, `graphics_device.h`, `graphics_ext.h`, `graphics_resource.h`, `graphics_state.h`, `index_resources.h`, `input_cursor.h`, `input_devices.h`, `input_gamepad.h`, `input_haptics.h`, `input_joystick.h`, `input_mouse.h`, `input_text.h`, `input_touch.h`, `math.h`, `media.h`, `media_library.h`, `media_player.h`, `models.h`, `net.h`, `net_gamers.h`, `net_sessions.h`, `packed_vectors.h`, `quaternion.h`, `render_target.h`, `runtime_components.h`, `runtime_graphics_manager.h`, `runtime_window.h`, `sensors.h`, `storage.h`, `texture.h`, `texture_volume.h`, `vertex_resources.h`, `vertex_values.h`, `video.h`, `xact.h`.
+Headers without a demonstrated route: `cnb.h`, `color.h`, `content_readers.h`, `core_ext.h`, `curve.h`, `devices.h`, `display.h`, `gamer_services.h`, `geometry.h`, `graphics_ext.h`, `graphics_resource.h`, `input_cursor.h`, `input_devices.h`, `input_gamepad.h`, `input_haptics.h`, `input_joystick.h`, `input_mouse.h`, `input_text.h`, `input_touch.h`, `math.h`, `media.h`, `media_library.h`, `media_player.h`, `models.h`, `net.h`, `net_gamers.h`, `net_sessions.h`, `packed_vectors.h`, `quaternion.h`, `runtime_components.h`, `runtime_graphics_manager.h`, `runtime_window.h`, `sensors.h`, `texture.h`, `texture_volume.h`, `video.h`, `xact.h`.
 
 ## CNA-specific and unmatched API names
 

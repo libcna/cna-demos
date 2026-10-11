@@ -209,8 +209,10 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   (LeaderboardOutcome, TimeSpan; CNA-DEMOS-ISSUE-025).
 - ✅ `gamer_services.guide.notification_position`: Guide notifications moved to TopRight.
 - ✅ `gamer_services.signed_in_gamer.signed_out` (manual: sign out through the Guide, Home key).
-- Remaining gamer services: `Guide::DelayNotifications`, `AvatarDescription::Changed`; service-only features (friends,
-  messages, gamer cards, marketplace, the WriteLeaderboards events) stay manual.
+- Remaining gamer services: `AvatarDescription::Changed` (manual at most: offline, only the Guide's
+  own avatar editor changes a profile's stored avatar); `Guide::DelayNotifications` is service-only
+  (it delays the game-invitation prompts, which need the online service), like friends, messages,
+  gamer cards, marketplace and the WriteLeaderboards events.
 - ✅ `net.*` (6): Local session (gamers, GamerJoined replay, host, ids, machine), lobby/ready/game
   flow, NetworkSessionProperties, BeginCreate/EndCreate, Gamer::Tag, PacketWriter/PacketReader
   round trip in a System Link session (`Need::Network`). CNA's Local sessions open no sockets and
@@ -248,7 +250,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 - `platform.*`: platform capabilities, native window handle, renderer selection with fallback
   chain (standalone), renderer capability profiles.
 
-## Phase 14 -- bindings 🟨 (7 C API demos)
+## Phase 14 -- bindings 🟨 (10 C API demos)
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit),
@@ -257,9 +259,13 @@ C API demos as standalone C programs (one C game per process), built only with
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, release order),
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),
 ✅ `c_api.audio.sound_effect` (PCM16 effect, instance state),
-✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse).
-Remaining: 3D (vertex buffers + BasicEffect), render targets, game components, storage, media
-player, gamepad -- one demo each where the C ABI differs from the C++ API in a way worth showing.
+✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse),
+✅ `c_api.graphics.basic_effect_3d` (stock declaration, vertex/index buffers, BasicEffect with the
+IEffectMatrices/IEffectLights routes), ✅ `c_api.graphics.render_target` (render target, read-back,
+the target as a sprite texture), ✅ `c_api.storage.save_game` (synchronous selector and container
+routes, write/read/delete a save, no game object).
+Remaining: game components, media player, gamepad -- one demo each where the C ABI differs from
+the C++ API in a way worth showing.
 C#/.NET demos belong with the separate `cna-dotnet` binding; decide later whether to reference or
 host them.
 
