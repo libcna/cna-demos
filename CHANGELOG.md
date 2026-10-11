@@ -135,6 +135,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   input (password mode, cancel), trial mode with SimulateTrialMode, the Guide's sign-in screen for a
   second player, achievements from an offline title catalog, GamerProfile, rich presence,
   GameDefaults and GamerPrivileges -- offline, with local profiles.
+- Net demos (6): a Local session of two players (GamerJoined replayed on subscription, host, ids,
+  machine), the lobby/ready/StartGame/EndGame flow, NetworkSessionProperties, BeginCreate/EndCreate,
+  game objects in Gamer::Tag, and a PacketWriter -> SendData -> ReceiveData -> PacketReader round
+  trip in a System Link session (`Need::Network`, the only demo that opens sockets).
+- CNA-DEMOS-ISSUE-018 recorded: System Link socket failures surface as `std::runtime_error`
+  instead of `NetworkNotAvailableException`.
 - Avatar demos (4): AvatarRenderer with the Wave preset and its loading state, a custom pose from
   AvatarBone transforms with an AvatarExpression and the skeleton (ParentBones, BindPose),
   AvatarDescription bytes round trip and invalid descriptions, six animation presets side by side.

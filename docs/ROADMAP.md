@@ -176,7 +176,7 @@ ResetElapsedTime, ScreenDeviceName, orientation, CNAEXT file/text drop, GameTime
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (15 gamer services demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (15 gamer services + 6 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -190,9 +190,13 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 - Remaining gamer services: leaderboard paging (`PageDown`/`PageUp`) and column types,
   `Guide::NotificationPosition`/`DelayNotifications`, `SignedOut`, `AvatarDescription::Changed`;
   service-only features (friends, messages, gamer cards, marketplace) stay manual.
-- `net.*`: Local sessions (no sockets in CNA; packets are not delivered between local gamers
-  there), session state and events, `NetworkSessionProperties`; SystemLink over loopback for
-  `PacketWriter`/`PacketReader` and simulated latency/packet loss (`Need::Network`). ≈ 10
+- ✅ `net.*` (6): Local session (gamers, GamerJoined replay, host, ids, machine), lobby/ready/game
+  flow, NetworkSessionProperties, BeginCreate/EndCreate, Gamer::Tag, PacketWriter/PacketReader
+  round trip in a System Link session (`Need::Network`). CNA's Local sessions open no sockets and
+  deliver no packets, so packets need System Link.
+- Remaining net: `SimulatedLatency`/`SimulatedPacketLoss` (if they apply to local delivery),
+  `AddLocalGamer`, `GamerLeft`/`HostChanged`/`SessionEnded`, `AllowJoinInProgress`,
+  `PrivateGamerSlots`; Find/Join between two processes (a standalone demo); voice (manual).
 
 ## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions ⬜
 - `devices.*`: `Microsoft.Devices.Sensors` (accelerometer, compass, gyroscope, motion -- manual

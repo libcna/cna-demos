@@ -450,6 +450,28 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux, offline gamer services.
 - **Status:** open (low impact); not reported upstream yet.
 
+### CNA-DEMOS-ISSUE-018 -- System Link socket failures are `std::runtime_error`, not `NetworkNotAvailableException`
+
+- **Area:** net -- `NetworkSession::Create` / `BeginCreate` of a `SystemLink` session
+  (`ENetDiscoveryService.cpp`, `ENetHostHandle.cpp` throw `std::runtime_error`; nothing in
+  `NetworkSession.cpp` throws `NetworkNotAvailableException`).
+- **Demos:** `net.packet.send_and_receive` catches `NetworkNotAvailableException` to report SKIPPED
+  (its declared `Need::Network`); with CNA's current exception it reports FAILED instead.
+- **Reproduction:** occupy UDP port 61190 (CNA's discovery port) with a socket bound without
+  `SO_REUSEADDR`, then create a System Link session:
+  ```python
+  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); s.bind(("0.0.0.0", 61190))
+  ```
+  ```cpp
+  NetworkSession::Create(NetworkSessionType::SystemLink, 2, 4);
+  // throws std::runtime_error: "Failed to bind discovery UDP socket."
+  ```
+- **Expected:** XNA reports a missing or unusable network with
+  `NetworkNotAvailableException` (and other transport failures with `NetworkException`), which games
+  catch to show "network not available"; a `std::runtime_error` escapes such handlers.
+- **Environment:** CNA 0.1.0, Linux.
+- **Status:** open (low impact; same family as ISSUE-010); not reported upstream yet.
+
 ---
 
 ## Resolved

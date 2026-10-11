@@ -63,6 +63,11 @@ disables Escape handling; `--frames N` overrides the limit. Determinism inputs:
   run in a process of their own (`ownProcess` metadata, see ARCHITECTURE.md section 4), answer the
   Guide through CNA's `Simulate...EXT` calls and type through `TextInputEXT`. Achievements CNA keeps
   offline persist between runs; the demos' checks hold on the first run and on every later one.
+* Net demos use Local sessions (no sockets), except `net.packet.send_and_receive`, which hosts a
+  System Link session (`Need::Network`): it binds UDP sockets, including CNA's discovery port
+  61190, and would answer another machine's session search; it sends nothing on its own. Without a
+  usable network it should report SKIPPED, but CNA's socket errors are not yet XNA's
+  `NetworkNotAvailableException` (CNA-DEMOS-ISSUE-018), so today it reports FAILED.
 
 ## 3. CTest
 
