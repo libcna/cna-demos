@@ -93,25 +93,25 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. Checkpoint 423 began with CNA
-`a796ef491141b23b58a886eeb43d18f1e0227850`; library implementation remained unchanged from
-`e60fa35f7` (external documentation cleanup and an unrelated example-comment edit only).
-The full **423-demo checkpoint passed** through revision `37ad437`.
-`tools/validate.sh` exited 0 under private Xvfb (`/tmp/cna-demos-423-validation.log`). Both
-complete reports match the fresh catalog. Strict comparison to 422 correctly requests review
-for the newly demonstrated ISSUE-041 only; all older statuses and failed assertions remain
-unchanged. Per-renderer review JSON records original evidence hashes; no logs were rewritten.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The 425 batch began with CNA
+`bf0cde63f2f3ca11276d47a4c6a4ea870223455b`; inspected library/CMake paths were unchanged
+from the 423 dependency snapshot (ongoing external documentation cleanup).
+The full **425-demo checkpoint passed** through revision `7d25a1d`.
+`tools/validate.sh` exited 0 under private Xvfb (`/tmp/cna-demos-425-validation.log`). Both
+complete reports match the fresh catalog. Both ORIGINAL stdout logs pass strict comparison
+to 423 directly: only two new passing IDs and skinned_animation's 3 -> 10 checks; all older
+statuses and failed assertions remain unchanged (25 SOFTWARE / 26 OPENGLES3).
 
 | Check | Result |
 |---|---|
-| Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; current incremental build clean |
-| Metadata/assets `--validate` | 423 demos, 0 problems |
+| Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; incremental build clean |
+| Metadata/assets `--validate` | 425 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 411 passed (including 18 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 377 passed, 18 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 398 passed, 19 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | One new ISSUE-041 failure per renderer; raw totals 25/26, older 24/25 unchanged |
-| Screenshots | Imported-sampler captures inspected and RGBA-identical; picture streams have no visual claim |
+| CTest | 413 passed (including 18 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 379 passed, 18 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 400 passed, 19 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | None; raw totals 25/26 unchanged |
+| Screenshots | Manifest captures RGBA-identical; animation unchanged per renderer versus original source |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -224,7 +224,19 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Latest complete checkpoint (2026-10-11):** 423 at 37ad437, tools/validate.sh exit 0.
+**Latest complete checkpoint (2026-10-11):** 425 at 7d25a1d, tools/validate.sh exit 0.
+SOFTWARE 379/18/25/3, OPENGLES3 400/19/3/3; 438 enabled CTests, 425/0 metadata.
+Archives: `reports/checkpoint-425-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
+`checkpoint-425-{build,ctest,validation}.log`. Both reports cover the fresh catalog exactly;
+both ORIGINAL stdout logs pass strict comparison to 423 (25/26 failed assertions unchanged).
+New palette_sampling/skinned_manifest pass; existing skinned_animation increases 3 -> 10 checks.
+SOFTWARE stderr is byte-identical to 423; GL retains three ERROR/three INFO and 84 X protocol
+lines (42 request 18.0 / 42 request 25.0; volatile serial/resource IDs differ).
+Coverage remains 293/329 XNA types, 1342/2326 named members, 158/3210 C routes. All 425 IDs
+now have complete runtime columns. Use ORIGINAL checkpoint-425 as the next baseline.
+
+Historical 423 checkpoint:
+**Completed checkpoint (2026-10-11):** 423 at 37ad437, tools/validate.sh exit 0.
 SOFTWARE 377/18/25/3, OPENGLES3 398/19/3/3; 436 enabled CTests, 423/0 metadata.
 Archives: `reports/checkpoint-423-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
 `checkpoint-423-{build,ctest,validation}.log`. Both original logs compare to 422 with exactly
@@ -287,10 +299,11 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** the final 425 batch is built and targeted checks pass. Commit this
-batch and run full tools/validate.sh, then archive/compare against ORIGINAL checkpoint-423.
-Expected: SOFTWARE 379/18/25/3, OPENGLES3 400/19/3/3, 438 enabled CTests; no new failed assertions
-(expected raw 25/26 unchanged). Current coverage runtime columns still use complete 423 reports.
+**Immediate next action:** full 425 validation completed successfully and is archived as above.
+Apply the prepared XNB and multiple-skin drafts described below, build/validate/run both renderers,
+inspect screenshots, update coverage/status and proceed to full 427 checkpoint. No binary build
+or smoke process is still running. The next expected counts after two new passing demos are
+SOFTWARE 381/18/25/3, OPENGLES3 402/19/3/3, 440 enabled CTests; confirm rather than assume them.
 
 New/changed behavior:
 - palette_sampling: 14 checks without DISPLAY under both renderer selections. A three-bone
@@ -315,9 +328,26 @@ Coverage remains 293/329 XNA types, 1342/2326 named members, 158/3210 C routes: 
 behaviors add real evidence without inflating the XNA inventory. No new CNA bug established.
 CNA was bf0cde63f2f3ca11276d47a4c6a4ea870223455b at build start; modules/CMake source paths
 had no additional diff from a796ef491. All /tmp model drafts are now applied/stale.
-After the full checkpoint, the next concrete model/content gap is an original `.x` asset through
+The next concrete model/content gap is an original `.x` asset through
 existing content_xnb (CNA.XImporter -> CNA.XnaModelProcessor -> XNB ModelReader), then deeper
-skin root-prefix/multi-skin behavior. The source route was audited but no XNB model draft is applied.
+skin root-prefix/multi-skin behavior. The source route was audited. NEW unbuilt drafts: `/tmp/cna-xnb-model.cpp` and
+`/tmp/cna-xnb-panels.py`, with reproducible original `.x` at `/tmp/cna-xnb-panels-fixture`.
+Apply only after 425 completes; wire the generator into tools/generate_assets.py for CONTENT_XNB_ROOT.
+No XNB model source/asset is applied or runtime-validated yet.
+Also prepared NEW `/tmp/cna-multi-skin.cpp` and `/tmp/cna-multi-skin-generator.py`, with original
+reproducible glTF in `/tmp/cna-multi-skin-fixture`. Two one-joint skins share an authored quad and
+material, have non-joint ancestors at +/-0.5 and mesh nodes at +/-4, so the imported root prefixes
+must retain ancestry while skinned mesh-node placement is ignored. Source inspection corrected
+the initial draft: the loose importer parents skinned meshes to its identity root and stores
+only ancestor +/-0.5 in SkeletonRootPrefix, rather than putting inverse mesh +/-4 into it.
+The public header still describes the older cancellation representation; verify runtime before
+recording any documentation issue. The draft now checks preserved authored scene nodes and
+identity mesh parents explicitly. The draft animates the left root, deliberately
+disturbs/restores the right palette through ApplyBindPoseBoneTransformsEXT and checks isolation
+plus rendered positions. Not compiled/run. Live skinned bounds are a separate follow-up:
+coverage must not infer recomputation merely because an already-loose sphere contains a posed point. Integrate its generator into tools/gltf_models.py
+as a named function called by write_all; keep actual public CNA calls visible in the demo.
+After applying both prepared demos the catalog should be 427, pending real validation.
 
 423 targeted evidence: part_sampler_state passes 10 checks on both renderers, including actual
 glTF NEAREST/CLAMP metadata, owned texture and preserved out-of-range UVs; captures inspected,
