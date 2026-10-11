@@ -93,20 +93,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **411-demo checkpoint passed** through demo revision `82c5abc`, including controlled
-C thread-local diagnostics and all preceding XML/C diagnostic extensions. The script used
-private Xvfb (`/tmp/cna-demos-411-validation.log`). Complete raw assertion comparison, including
-child prefixes, matches semantic-410: 24 SOFTWARE / 25 OPENGLES3.
+The full **412-demo checkpoint passed** through demo revision `1bbdca6`, including XML
+property bindings, inheritance and constructor-owned collections. The script used private
+Xvfb (`/tmp/cna-demos-412-validation.log`). Complete raw assertion comparison, including
+child prefixes, matches checkpoint-411: 24 SOFTWARE / 25 OPENGLES3.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 411 demos, 0 problems |
+| Metadata/assets `--validate` | 412 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 398 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 366 passed, 17 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 387 passed, 18 expected failures, 3 skipped, 3 manual not run |
-| Unexpected outcomes | None; old statuses and failed-assertion multisets unchanged, new thread-local demo passed |
+| CTest | 399 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 367 passed, 17 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 388 passed, 18 expected failures, 3 skipped, 3 manual not run |
+| Unexpected outcomes | None; old statuses and failed-assertion multisets unchanged, new XML property demo passed |
 | Screenshots | Network simulation inspected on both renderers; newer XML/C diagnostics are console checks, not visual evidence |
 | Content build | Passed (CNB, XNB, media, content project) |
 
@@ -218,38 +218,38 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **411 demos**
-through demo revision `82c5abc`. Section 7 has the exact results. Log:
-`/tmp/cna-demos-411-validation.log`; archives:
-`reports/checkpoint-411-{SOFTWARE,OPENGLES3}.{json,log}` and
-`checkpoint-411-{build,ctest,validation}.log`. Both reports match all 411 catalog IDs exactly once.
-Compared with semantic-410, thread_local_errors is new and passes; every old status and failed
-assertion multiset is unchanged. Its 8 checks appear in child stdout; standalone parent JSON
-has checks=0. Coverage is 290/329 XNA types, 1318/2326 named members and 146/3210 C ABI routes,
+**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **412 demos**
+through demo revision `1bbdca6`. Section 7 has the exact results. Log:
+`/tmp/cna-demos-412-validation.log`; archives:
+`reports/checkpoint-412-{SOFTWARE,OPENGLES3}.{json,log}` and
+`checkpoint-412-{build,ctest,validation}.log`. Both reports match all 412 catalog IDs exactly once.
+Compared with checkpoint-411, intermediate_properties is new and passes; every old status and
+failed assertion multiset is unchanged. Its 5 checks appear in child stdout; standalone parent
+JSON has checks=0. Coverage is 290/329 XNA types, 1318/2326 named members and 146/3210 C ABI routes,
 not comprehensive semantic coverage. CNA remains clean at
 `2b15506a48e1a6202c985823131daf5856826f71`, newer than CI's
 `10a4ef1cb4cd832f761536d77588000104947f8d`.
 
-Raw failed-assertion multisets are unchanged across 407/408/409 both complete 410 checkpoints and 411:
+Raw failed-assertion multisets are unchanged across 407/408/409 both complete 410 checkpoints and 411/412:
 **24 SOFTWARE / 25 OPENGLES3**, including prefixed host/joiner lines. Earlier counts of 20/21
 omitted those child-process assertions. The intermediate semantic-409 run exposed a separate
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** the new `content.custom.intermediate_properties` is applied and built;
-all 5 child checks pass under SOFTWARE and OPENGLES3 selections. Evidence:
-`/tmp/cna-intermediate-properties-{SOFTWARE,OPENGLES3}.{json,log}`. It verifies setter dispatch
-and rejection, get-only collection defaults/appending, inherited-member ordering and flattened
-spawn coordinates. Targeted CTest/catalog (3 tests), build and metadata (412/0) pass; no new CNA
-issue. Coverage regenerated: 290/329 XNA types, 1318/2326 members, 146/3210 C routes. The full
-reports still contain 411 IDs until the next full checkpoint. These console runs are not renderer
-or visual validation. The old /tmp draft is applied; do not copy it over later edits.
+**Immediate next action:** implement and validate the prepared
+`/tmp/cna-xna-pipeline-components/` draft as `content.custom.xna_pipeline_components`.
+It is not yet applied, built or run. It registers XNA importer/processor adapters with the real
+ContentPipeline::Build coordinator, records an original patrol.scale sidecar dependency and
+uses ContentProcessorContext::Convert for scaled route bounds. Add the sidecar to the asset
+generator as well. Verify all assumptions against CNA source and actual output. Then continue
+with composite asset dependency/reference behavior or remaining member gaps in COVERAGE_AUDIT.md.
 
-Next run the complete 412 checkpoint under private Xvfb, compare ID/status maps and 24/25 raw
-failed-assertion multisets against checkpoint-411, and archive the evidence. Then continue with
-real XNA importer/processor adapters and composite asset dependency/reference behavior, or the
-remaining member gaps in COVERAGE_AUDIT.md. Runtime XNB graphs and base-typed polymorphic XML
-loading remain unclaimed by this concrete configuration example.
+The XML property example is included in the complete 412 checkpoint: all 5 child checks pass
+under SOFTWARE and OPENGLES3 selections (`/tmp/cna-intermediate-properties-{SOFTWARE,OPENGLES3}.{json,log}`).
+It verifies setter dispatch/rejection, get-only collection defaults/appending, inherited-member
+ordering and flattened spawn coordinates. No new CNA issue. These are console checks, not
+renderer or visual validation. Runtime XNB graphs and base-typed polymorphic XML loading remain
+unclaimed. Its old /tmp draft is applied; do not copy it over later edits.
 
 The original 398/401 checkpoint debt is closed. Full 401 and two 404 checkpoints also passed
 this session. A subsequent 405 attempt passed all CTests but lost the inherited X connection
