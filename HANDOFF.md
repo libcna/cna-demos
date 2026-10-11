@@ -93,20 +93,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **413-demo checkpoint passed** through demo revision `ca81bb0`, including XNA pipeline
-adapters and the standalone shared-runtime link fix. The script used private
-Xvfb (`/tmp/cna-demos-413-validation.log`). Complete raw assertion comparison, including
-child prefixes, matches checkpoint-412: 24 SOFTWARE / 25 OPENGLES3.
+The full **415-demo checkpoint passed** through demo revision `ce4d19e`, including composite CNB
+references, container/schema limits and the C audio ownership extension. The script used private
+Xvfb (`/tmp/cna-demos-415-validation.log`). Complete raw assertion comparison, including
+child prefixes, matches checkpoint-413: 24 SOFTWARE / 25 OPENGLES3.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 413 demos, 0 problems |
+| Metadata/assets `--validate` | 415 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 400 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 368 passed, 17 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 389 passed, 18 expected failures, 3 skipped, 3 manual not run |
-| Unexpected outcomes | None; old statuses and failed-assertion multisets unchanged, new XNA adapter demo passed |
+| CTest | 402 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 370 passed, 17 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 391 passed, 18 expected failures, 3 skipped, 3 manual not run |
+| Unexpected outcomes | None; old statuses and failed-assertion multisets unchanged, both new CNB demos passed |
 | Screenshots | Network simulation inspected on both renderers; newer XML/C diagnostics are console checks, not visual evidence |
 | Content build | Passed (CNB, XNB, media, content project) |
 
@@ -218,36 +218,37 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **413 demos**
-through demo revision `ca81bb0`. Section 7 has the exact results. Log:
-`/tmp/cna-demos-413-validation.log`; archives:
-`reports/checkpoint-413-{SOFTWARE,OPENGLES3}.{json,log}` and
-`checkpoint-413-{build,ctest,validation}.log`. Both reports match all 413 catalog IDs exactly once.
-Compared with checkpoint-412, xna_pipeline_components is new and passes; every old status and
-failed assertion multiset is unchanged. Its 7 checks appear in child stdout; standalone parent
-JSON has checks=0. Coverage is 290/329 XNA types, 1318/2326 named members and 146/3210 C ABI routes,
+**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **415 demos**
+through demo revision `ce4d19e`. Section 7 has the exact results. Log:
+`/tmp/cna-demos-415-validation.log`; archives:
+`reports/checkpoint-415-{SOFTWARE,OPENGLES3}.{json,log}` and
+`checkpoint-415-{build,ctest,validation}.log`. Both reports match all 415 catalog IDs exactly once.
+Compared with checkpoint-413, cnb_external_references and cnb_read_limits are new and pass;
+every old status and failed-assertion multiset is unchanged. Their 9/8 checks are in JSON;
+standalone C audio's 19 checks are in child stdout (parent JSON checks=0).
+Coverage is 290/329 XNA types, 1318/2326 named members and 146/3210 C ABI routes,
 not comprehensive semantic coverage. CNA remains clean at
 `2b15506a48e1a6202c985823131daf5856826f71`, newer than CI's
 `10a4ef1cb4cd832f761536d77588000104947f8d`.
 
-Raw failed-assertion multisets are unchanged across 407/408/409 both complete 410 checkpoints and 411/412/413:
+Raw failed-assertion multisets are unchanged across 407/408/409 both complete 410 checkpoints and 411/412/413/415:
 **24 SOFTWARE / 25 OPENGLES3**, including prefixed host/joiner lines. Earlier counts of 20/21
 omitted those child-process assertions. The intermediate semantic-409 run exposed a separate
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** run the full 415 checkpoint for the two CNB additions and the
-C audio ownership extension. Compare both renderer reports/current catalog and raw failed
-assertions against checkpoint-413, then archive checkpoint-415. Expected: SOFTWARE
-370/17/25/3, OPENGLES3 391/18/3/3, 427 enabled CTests. Section 7 still describes the last full
-checkpoint (413); no current full 415 evidence is claimed yet.
+**Immediate next action:** apply and validate the two semantic extensions prepared below:
+`/tmp/cna-cnb-compressed-limits.cpp` and `/tmp/cna-c-diagnostic-layouts.c`. Then continue with
+the prepared texture ownership example and a complete checkpoint. Full 415 at ce4d19e is
+complete: 427 enabled CTests, SOFTWARE 370/17/25/3 and OPENGLES3 391/18/3/3, with unchanged
+24/25 raw failed assertions. The original three drafts for that batch are applied and stale.
 
 The two CNB drafts are applied and pass: `content.custom.cnb_external_references` has 9 checks
 and `content.custom.cnb_read_limits` has 8 under both SOFTWARE/OPENGLES3 selections. Evidence:
 `/tmp/cna-cnb-{references,limits}-{SOFTWARE,OPENGLES3}.{json,log}`. Build, metadata (415/0),
 both demo CTests and both catalog tests pass (4 tests, `/tmp/cna-415-cnb-ctest.log`). These are
 console examples without rendering. No new CNA issue. Coverage/status audit is updated; full
-reports still have 413 IDs until the next checkpoint. Do not reapply the stale /tmp CNB drafts.
+reports now contain all 415 IDs. Do not reapply the stale /tmp CNB drafts.
 
 The initial run passed all checks then aborted at exit. GDB and nm identified duplicate
 TouchPanel statics in the executable and libcna.so, extending existing ISSUE-016. The standalone
@@ -269,10 +270,26 @@ four new checks for early parent release refusal, preserved duration and stale i
 Build, metadata (415/0), its CTest and both catalog tests pass (3 tests). Dummy audio only;
 no audible or visual validation. No new CNA issue. Its /tmp draft is now stale.
 
+Prepared after starting the full run: `/tmp/cna-cnb-compressed-limits.cpp` extends the existing
+limits example (no new ID), but is not applied/built/run. It queries actual Zstd support, inspects
+per-chunk storage and restored logical bytes, checks a compressed image against the aggregate
+expansion budget and restores uncompressed output. Three conditional checks would bring the
+current build to 11; unsupported builds explicitly leave that path unexecuted. Full 415 has finished; verify rather than assume compression/output behavior when applying it.
+A second unapplied extension, `/tmp/cna-c-diagnostic-layouts.c`, adds two checks to existing
+C error_handling: an undersized ErrorInfo declaration and unsupported structure version both
+return INVALID_ARGUMENT while preserving the original diagnostic. It allocates the full C
+object even when declaring a short layout. Compile/runtime validation is still pending.
+
 Next after this checkpoint: remaining CNB compression/limits behaviors or C ABI handle and
 versioned-structure boundaries from COVERAGE_AUDIT.md. Keep the existing focused demos where
 an extension fits; no per-enum or cosmetic variants. Composite nested build publication remains
 separate from the now demonstrated runtime XREF loading.
+
+Later graphics draft: `/tmp/cna-texture-copy-ownership.cpp`, not applied/built/run, proposed
+`graphics.texture2d.copy_ownership`. It checks initial sharing, partial rectangle mutation versus
+SetData(Color*, int) detachment, copied-but-independent Name/Tag, sibling survival after Dispose,
+and actual rendered pixels. It needs both renderer runs and screenshot inspection before any
+visual claim. The full 415 checkpoint is complete; validate the small semantic extensions first.
 
 The XML property example is included in the complete 412 checkpoint: all 5 child checks pass
 under SOFTWARE and OPENGLES3 selections (`/tmp/cna-intermediate-properties-{SOFTWARE,OPENGLES3}.{json,log}`).
@@ -579,7 +596,10 @@ queues copies of the songs; `MovePrevious` on the first song stays there (FNA's 
 
 Content facts learned: CNB schema 1 stores textures as RGBA8 only (DXT needs `--format xnb`;
 `content_xnb/` exists for that); compiled textures are premultiplied by default, loose PNGs are
-straight; `Texture2D` copies are handles sharing one texture (not Name/Tag); `ContentManager`'s
+straight; `Texture2D` copies initially share one texture (Name/Tag are per-wrapper copied values).
+Source audit: a partial rectangle update changes that shared texture, while `SetData(Color*, int)`
+replaces only the writing wrapper's texture. This copy/edit/lifetime sequence still needs a focused
+demo; do not generalize it to every mip/raw-data overload. `ContentManager`'s
 `Load<T>` ignores `OpenStream` overrides (ISSUE-012) and `Unload` only clears the cache
 (ISSUE-011). Storage facts: demos call `StorageDevice::SetAppNameEXT("cna-demos")` and delete their
 containers; saves go to `$XDG_DATA_HOME/cna-demos` or `~/.local/share/cna-demos`.

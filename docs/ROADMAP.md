@@ -311,7 +311,7 @@ C API demos as standalone C programs (one C game per process), built only with
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard and visible text),
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),
-✅ `c_api.audio.sound_effect` (PCM16 effect, instance state),
+✅ `c_api.audio.sound_effect` (PCM16 effect, instance state, refused parent destruction and stale instance handles),
 ✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse),
 ✅ `c_api.graphics.basic_effect_3d` (stock declaration, vertex/index buffers, BasicEffect with the
 IEffectMatrices/IEffectLights routes), ✅ `c_api.graphics.render_target` (render target, read-back,
