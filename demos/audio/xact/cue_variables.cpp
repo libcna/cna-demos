@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // XACT cue variables: values each Cue keeps for itself (unlike the engine's global variables).
+#include <memory>
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Audio/AudioEngine.hpp"
 #include "Microsoft/Xna/Framework/Audio/AudioStopOptions.hpp"
@@ -36,8 +37,8 @@ namespace
         // demo.xgs declares Intensity as a cue variable (0..100, initially 50): every Cue gets
         // its own copy -- two engine sounds playing at different revs, say. The sound designer
         // drives volume or pitch from it with RPC curves.
-        Cue* first = sounds.GetCue("LowTone");
-        Cue* second = sounds.GetCue("LowTone");
+        std::unique_ptr<Cue> first(sounds.GetCue("LowTone"));
+        std::unique_ptr<Cue> second(sounds.GetCue("LowTone"));
         ctx.Check(first->GetVariable("Intensity") == 50.0f && second->GetVariable("Intensity") == 50.0f,
                   "each new cue starts with the declared initial value, 50");
 

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // A streaming WaveBank: music played from the file as it goes, instead of loaded into memory.
 #include <chrono>
+#include <memory>
 #include <thread>
 
 #include "CnaDemos/Demo.hpp"
@@ -39,7 +40,7 @@ namespace
         ctx.Check(music.getIsPreparedProperty(), "the streaming wave bank becomes prepared");
         ctx.Check(!music.getIsInUseProperty(), "nothing plays from it yet");
 
-        Cue* theme = sounds.GetCue("Theme");
+        std::unique_ptr<Cue> theme(sounds.GetCue("Theme"));
         theme->Play();
         engine.Update();
         ctx.Check(theme->getIsPlayingProperty(), "the music cue plays from the streaming bank");

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- Four XACT demos now own GetCue results with unique_ptr: Dispose releases playback but does not
+  delete the returned C++ object. Borrowed video/leaderboard pointers retain their existing ownership.
 - Manifest paths are shortened to fit their on-screen columns; full names remain in console output.
 - Curve loop demo now checks the last outgoing tangent for Linear extrapolation; the former
   expectation matched a CNA defect, now recorded as CNA-DEMOS-ISSUE-036.

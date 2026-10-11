@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // XACT categories: one volume slider, pause and stop for a whole group of sounds.
 #include <chrono>
+#include <memory>
 #include <thread>
 
 #include "CnaDemos/Demo.hpp"
@@ -28,8 +29,8 @@ namespace
         ctx.Print("categories: {}, {}", music.getNameProperty(), effects.getNameProperty());
         ctx.Check(music != effects && music == engine.GetCategory("Music"), "categories compare by identity");
 
-        Cue* tune = sounds.GetCue("LowTone");   // in Music
-        Cue* beep = sounds.GetCue("HighTone");  // in SFX
+        std::unique_ptr<Cue> tune(sounds.GetCue("LowTone"));   // in Music
+        std::unique_ptr<Cue> beep(sounds.GetCue("HighTone"));  // in SFX
         tune->Play();
         beep->Play();
         engine.Update();

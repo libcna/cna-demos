@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // An XACT Cue object: prepared, playing, paused, stopped -- one Cue per playback.
 #include <chrono>
+#include <memory>
 #include <string>
 #include <thread>
 
@@ -28,8 +29,9 @@ namespace
         WaveBank waves(&engine, "assets/xact/tones.xwb");
         SoundBank sounds(&engine, "assets/xact/tones.xsb");
 
-        // GetCue gives a Cue to control (PlayCue only starts one). Each Cue plays once.
-        Cue* cue = sounds.GetCue("MidTone");
+        // GetCue returns a caller-owned object: Dispose releases playback, unique_ptr deletes it.
+        // PlayCue owns its fire-and-forget cues internally. Each Cue plays once.
+        std::unique_ptr<Cue> cue(sounds.GetCue("MidTone"));
         ctx.Print("{}: {}", cue->getNameProperty(), State(*cue));
         ctx.Check(cue->getIsPreparedProperty() && !cue->getIsPlayingProperty(), "a new cue is prepared, not playing");
 
@@ -52,7 +54,7 @@ namespace
         // XACT's pattern: a Cue is one playback. To play the sound again, get a new Cue.
         cue->Dispose();
         ctx.Check(cue->getIsDisposedProperty(), "Dispose releases it");
-        Cue* again = sounds.GetCue("MidTone");
+        std::unique_ptr<Cue> again(sounds.GetCue("MidTone"));
         ctx.Check(again != cue && again->getIsPreparedProperty(), "GetCue returns a new, prepared cue");
         again->Play();
         engine.Update();

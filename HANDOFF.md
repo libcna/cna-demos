@@ -256,12 +256,15 @@ OPENGLES3 382 / 16, with no unexpected outcomes. Comparison against the earlier 
 finds only the intentional `math.curve.loop_types` status/message change. Current coverage uses
 the fresh reports (1310/2326 named members); archives are
 `reports/semantic-404-{SOFTWARE,OPENGLES3}.json`. Log: `/tmp/cna-demos-semantic-validation.log`.
-**Next priority after this checkpoint:** source audit found a demo ownership bug in four XACT
-files: GetCue allocates with new; Cue::Dispose releases playback but does not delete the C++
-object, and SoundBank only owns PlayCue's fire-and-forget objects. Prepared unique_ptr fixes are
-`/tmp/cna-xact-{cue_states,categories,cue_variables,streaming_wave_bank}.cpp`; apply, build and
-run the XACT category. This is a demo bug, not a new CNA runtime issue.
-Then implement the unblocked category instance-limit workstream using
+**XACT ownership correction completed:** four existing demos now hold GetCue results in
+unique_ptr. Source confirms GetCue allocates with new and Dispose does not delete the object;
+this was a demo bug, not a CNA bug. Incremental build, all eight direct SOFTWARE XACT demos,
+nine relevant CTests (including catalog) and metadata validation passed. Reports/logs:
+`/tmp/cna-xact-ownership-SOFTWARE.{json,log}` and `/tmp/cna-xact-ownership-ctest.log`.
+No memory-sanitizer or audible validation is claimed. Full report evidence remains the preceding
+404 checkpoint until the next run includes this ownership fix.
+
+**Immediate next batch:** implement the unblocked category instance-limit workstream using
 `/tmp/cna-xact-instance-limits.cpp` and `/tmp/cna-xact-files.py` (drafts, not compiled). The
 settings generator adds `limits.xgs`: Music limit 1/Fail and SFX limit 1/ReplaceOldest (policy
 bits are shifted by 3). Public IsPlaying/IsStopped states can test this without listening.
