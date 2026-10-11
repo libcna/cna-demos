@@ -7,7 +7,8 @@ platforms. The byte layout written here is the one CNA's own XACT example genera
 (cna/modules/audio/examples/demo_xact/src/XactFileGen.hpp, Ms-PL) and CNA's XACT parser reads:
 non-compact wave banks, simple cues (one sound, one wave each), two categories, one global and one
 cue variable. music.xwb is a streaming wave bank (flag set, wave data aligned to 2048-byte sectors), the
-kind a game streams from disc instead of loading.
+kind a game streams from disc instead of loading. limits.xgs reuses the tone banks with
+authored category limits: Music rejects a second voice and SFX replaces the oldest.
 
 tools/generate_assets.py calls write_all(); the files land in assets/xact/.
 """
@@ -49,9 +50,11 @@ def name64(text: str) -> bytes:
     return text.encode("ascii")[:63].ljust(64, b"\0")
 
 
-def xgs() -> bytes:
+def xgs(category_limits=((255, 0), (255, 0))) -> bytes:
     """Settings: categories Music and SFX (no parent, full volume); the global variable SpeedOfSound
-    and the cue variable Intensity (each cue has its own value)."""
+    and the cue variable Intensity (each cue has its own value). Category limits are
+    (count, policy): 0 = Fail, 2 = ReplaceOldest; policies occupy bits 3..7 in XGS."""
+    assert len(category_limits) == 2
     cat_off, var_off = 80, 100
     catname_off = var_off + 2 * 13
     varname_off = catname_off + len(b"Music\0SFX\0")
@@ -60,8 +63,9 @@ def xgs() -> bytes:
     out += struct.pack("<7H", 2, 2, 0, 0, 0, 0, 0)                                 # 2 categories, 2 variables
     out += struct.pack("<8I", cat_off, var_off, 0, 0, 0, 0, catname_off, varname_off)
     out = out.ljust(80, b"\0")
-    for _ in range(2):                                                             # instance limit, fades, behaviour,
-        out += struct.pack("<BHHBHBB", 255, 0, 0, 0, 0xFFFF, 180, 1)               # no parent, volume byte 180 = 0 dB
+    for count, policy in category_limits:
+        # Instance limit, zero fades, behaviour, no parent, volume byte 180 = 0 dB, public.
+        out += struct.pack("<BHHBHBB", count, 0, 0, policy << 3, 0xFFFF, 180, 1)
     out += struct.pack("<Bfff", 0x01, 343.0, 0.0, 1000.0)                          # PUBLIC: initial, min, max
     out += struct.pack("<Bfff", 0x01 | 0x04, 50.0, 0.0, 100.0)                     # PUBLIC | CUE
     out += b"Music\0SFX\0SpeedOfSound\0Intensity\0"
@@ -128,6 +132,7 @@ def write_all(assets_root: Path) -> None:
     folder.mkdir(parents=True, exist_ok=True)
     files = {
         "demo.xgs": xgs(),
+        "limits.xgs": xgs(((1, 0), (1, 2))),
         "tones.xwb": xwb("Tones", [sine(frequency, seconds) for _, frequency, seconds, _ in CUES]),
         "tones.xsb": xsb("ToneSounds", "Tones", CUES),
         "music.xwb": xwb("Music", [melody(MUSIC_NOTES, MUSIC_NOTE_SECONDS)], streaming=True),

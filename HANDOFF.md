@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 15), 8 (content, 21), 9 (audio 19 incl. 8 XACT, media 10 incl. a
+* In progress: 7 (models/glTF, 15), 8 (content, 21), 9 (audio 20 incl. 9 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 13 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -63,10 +63,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-404 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+405 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 19 (8 XACT), core 3 (2 logger),
+effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 20 (9 XACT), core 3 (2 logger),
 content 21 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
@@ -264,11 +264,19 @@ nine relevant CTests (including catalog) and metadata validation passed. Reports
 No memory-sanitizer or audible validation is claimed. Full report evidence remains the preceding
 404 checkpoint until the next run includes this ownership fix.
 
-**Immediate next batch:** implement the unblocked category instance-limit workstream using
-`/tmp/cna-xact-instance-limits.cpp` and `/tmp/cna-xact-files.py` (drafts, not compiled). The
-settings generator adds `limits.xgs`: Music limit 1/Fail and SFX limit 1/ReplaceOldest (policy
-bits are shifted by 3). Public IsPlaying/IsStopped states can test this without listening.
-Check generated default files remain byte-identical; validate the new demo before updating counts.
+**Category instance-limit batch completed:** `audio.xact.instance_limits` passes all seven
+checks on SOFTWARE and OPENGLES3, including a paused cue retaining its slot, Fail rejecting the
+next cue, ReplaceOldest stopping a paused victim, category isolation and slot reuse after Stop.
+The original tone banks are reused; only `assets/xact/limits.xgs` (159 bytes) was added by the
+updated generator. Default xgs() remains byte-identical. The implementation and ownership rules
+also exist at the CI-pinned CNA commit (source checked; that checkout was not separately built).
+Build, metadata (405 demos, zero problems), new CTest and catalog test passed. Coverage was
+regenerated with the preceding 404-demo reports and explicitly lists the new ID as absent.
+
+**Immediate next batch:** extend the existing Cue lifecycle demo to observe Disposing once,
+including repeated Dispose, then run the full 405-demo checkpoint. Keep callback state alive
+until after the owned Cue is destroyed; declaring counters before unique_ptr gives safe scope
+ordering even if an exception occurs. No new demo or asset is needed for this lifecycle behavior.
 Further candidates: ContentManager cache/root/lifetime and Texture2D ownership/stream gaps. CNJ custom loading remains pending: a meaningful
 payload example needs a JSON-parser choice; do not borrow CNA's Internal parser or add a
 constant-return factory merely to increase coverage.

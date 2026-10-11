@@ -6,11 +6,11 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**404 demos** in 18 categories. Kinds: console 145, game 240, standalone 19. Automation: automated 368, manual 3, smoke-only 33.
+**405 demos** in 18 categories. Kinds: console 146, game 240, standalone 19. Automation: automated 369, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
-| audio | 19 | 16 | 2 | 1 | 18 / 0 / 0 / 1 / 0 | 18 / 0 / 0 / 1 / 0 |
+| audio | 20 | 17 | 2 | 1 | 18 / 0 / 0 / 1 / 1 | 18 / 0 / 0 / 1 / 1 |
 | c_api | 13 | 12 | 1 | 0 | 13 / 0 / 0 / 0 / 0 | 13 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 21 | 21 | 0 | 0 | 18 / 0 / 3 / 0 / 0 | 18 / 0 / 3 / 0 / 0 |
@@ -31,17 +31,19 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `audio.xact.instance_limits`.
+- OPENGLES3: absent from report: `audio.xact.instance_limits`.
 
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 289 of 329** (87.8 %).
 - **Methods, properties, constructors and events named by a demo: 1310 of 2326** (56.3 %).
-- Fields and enum values named by a demo: 132 of 753 (reported separately: a demo per enum value is not a goal).
+- Fields and enum values named by a demo: 133 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 40 / 42 | 477 / 643 | 34 / 78 |
-| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 80 / 121 | 5 / 11 |
+| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 80 / 121 | 6 / 11 |
 | `Microsoft.Xna.Framework.Content` | 6 / 11 | 10 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
