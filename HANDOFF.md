@@ -96,28 +96,30 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **437-demo checkpoint passed**
-through cna-demos revision `b697786`; the complete retry of `tools/validate.sh` exited 0 under
-private Xvfb (`/tmp/cna-demos-437-validation.log`). ORIGINAL comparisons to checkpoint-435
-require review exactly for new XML ISSUE-046; ownership passes 14 checks and XML child stdout
-has nine passes/one failure. All 435 older statuses, check counts and failed assertions remain
-unchanged (28/29 -> 29/30). Original evidence and exact renderer reviews are archived.
-The first attempt stopped before CTest on a transient staging diagnostic; its original logs
-remain as checkpoint-437-first-{build,validation}.log. No warning filter or CNA source changed.
-External CNA C API edits continued (observed through ee2b7a652); no atomic dependency source
-snapshot is claimed. `reports/checkpoint-437-binaries.json` hashes 23 selected main/CNA/C ABI/XML
-artifacts. No binary was rebuilt during runtime phases.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **438-demo checkpoint passed**
+through cna-demos revision `973a63a`; the complete retry of `tools/validate.sh` exited 0 under
+private Xvfb (`/tmp/cna-demos-438-validation.log`). ORIGINAL comparisons to checkpoint-437
+require review exactly for ownership 14 PASS -> 16 FAILED with one new ISSUE-011 assertion.
+All other older statuses, known issues and check counts remain; every older failed assertion
+is retained (29/30 -> 30/31). The new nested-build tool passes eleven child checks on each selection.
+The first attempt stopped in CTest on an unsupported fixed audio timing assumption; original
+logs remain as checkpoint-438-first-{build,ctest,validation}.log. The bounded natural-completion
+correction preserves six checks in both audio demos; both now pass in the complete checkpoint.
+External CNA C API edits continued; no atomic dependency source snapshot is claimed.
+`reports/checkpoint-438-binaries.json` hashes 24 selected main/CNA/C ABI/XML/nested-build artifacts;
+all match hashes taken during runtime. No binary was rebuilt during runtime phases.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets `--validate` | 437 demos, 0 problems |
+| Metadata/assets `--validate` | 438 demos, 0 problems |
 | `tools/validate.sh` | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 425 passed (including 21 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 388 passed, 21 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 409 passed, 22 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | Exactly one new XML ISSUE-046 assertion; all older failures retained |
-| Screenshots | Both multiple_batches captures inspected; max cross-renderer channel delta one |
+| CTest | 426 passed (including 22 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 388 passed, 22 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 409 passed, 23 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | Exactly one new default-recorder ISSUE-011 assertion; all older failures retained |
+| stderr | Both renderer streams byte-identical to original checkpoint-437 |
+| Screenshots | No new graphics/visual claim for the 438 content/audio batch |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -232,29 +234,23 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** initial full 438 at f899d61 STOPPED in CTest: from_stream's
-"and stops at its end" failed after its fixed 600 ms sleep. No renderer smoke began. Preserve
-/tmp/cna-438-first-ctest.log, /tmp/cna-438-full-first-build.log and
-/tmp/cna-demos-438-first-validation.log. Six fresh unmodified runs passed (three per selection),
-/tmp/cna-438-audio-original-{SOFTWARE,OPENGLES3}-{1,2,3}.{json,log}; the WAV source/copied bytes
-match SHA b7cb8c864d076444d0de8842373ac137c7691c0a3974f7d0ff8380fec56cf5c1. The compiled SDL3
-backend queries the asynchronous mixer track; no 600 ms completion contract was found. Exact
-scheduler delay is not proven, and no persistent CNA defect is established.
-from_stream and playback_state now poll natural completion with a steady-clock 3 s deadline;
-no Stop is used to satisfy it. Six checks per demo remain; from_stream's failed assertion text
-is unchanged. The related playback check is now named "natural completion". The timing correction is built cleanly (/tmp/cna-438-audio-build.log) and both demos pass six
-checks per fresh displayless renderer selection: /tmp/cna-438-audio-final-{from_stream,playback_state}-{SOFTWARE,OPENGLES3}.{json,log}.
-Observed waits are about 0.52/0.26 s; no audible-quality/latency claim. All 23 focused CTests pass
-(/tmp/cna-438-audio-targeted-ctest.log), plus five consecutive repetitions per audio demo
-(/tmp/cna-438-audio-repeat-ctest.log). Commit this correction and repeat the full checkpoint.
-The publication draft remains unapplied. Do not reuse the failed attempt as complete evidence.
-Compare ORIGINAL checkpoint-437: nested_builds is one new PASS (11 child checks); existing
-read_asset_ownership changes 14 PASS -> 16 FAILED with exactly one new ISSUE-011 assertion,
-while its fifteen other checks pass. All other old statuses/counts and all 29/30 failed
-assertions must remain; new raw totals 30/31. Expected SOFTWARE 388/22/25/3 and OPENGLES3
-409/23/3/3; 451 enabled CTests. Archive exact reviews and selected binary hashes including the
-new nested-build tool (24 artifacts). Then deepen the composite pipeline's actual publication/
-runtime-loading behavior or another meaningful member gap. Do not restart completed phases.
+**Immediate next action:** full 438 is complete and archived at `973a63a`. Continue the coherent
+pipeline-output batch with the prepared nested publication and route-summary extensions below.
+Apply the drafts, build, run both changed tools in fresh displayless processes under both renderer
+selections, and investigate every failure before assigning a known issue. Preserve all eleven
+nested and seven route-adapter child checks. Then run the next full checkpoint against ORIGINAL
+checkpoint-438, checking child stdout as well as JSON (standalone JSON check counts are zero).
+Do not restart completed phases or reuse the failed first 438 attempt as complete evidence.
+
+438 audio correction evidence: initial full attempt at f899d61 stopped in CTest on from_stream's
+fixed 600 ms completion assumption; no smoke began. Six unchanged isolated runs passed, with
+identical original/copied WAV SHA b7cb8c864d076444d0de8842373ac137c7691c0a3974f7d0ff8380fec56cf5c1.
+The actual SDL3 mixer is asynchronous; an exact scheduling cause was not proven. Both demos now
+poll State to natural completion with a steady-clock 3 s deadline, without Stop to satisfy it.
+Six checks each remain, including the original failed assertion text. Focused evidence is
+/tmp/cna-438-audio-final-{from_stream,playback_state}-{SOFTWARE,OPENGLES3}.{json,log}; all 23 targeted
+CTests and five repetitions per audio test passed before the successful complete retry.
+No audible-quality/latency claim and no persistent CNA defect established.
 
 433 targeted evidence:
 - reader_versions passes 17 console checks per renderer selection WITHOUT DISPLAY/WAYLAND;
@@ -388,7 +384,7 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
   here, no atomic source snapshot claim; archive the actual binaries after full validation.
 - All /tmp ownership/external-reference drafts are applied and stale; use repository sources.
 
-438 batch (built and targeted validation complete):
+438 batch (full validation complete):
 - nested_builds passes eleven child checks under both selections WITHOUT DISPLAY/WAYLAND.
   BuildAndLoadAsset scales a real profile before computing a stage budget without compiling that
   child. BuildAsset emits one actual child CNB for duplicate requests, matching parent XREF and
@@ -411,15 +407,14 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
   76d0b5bc2889502f3df7a36fb7c7be4ccd8829dcc998bca3a981bcf05384b1d1; guard.profile
   5fefa19a8106359d8329498a3f6db22bc8d15619ba8771284cf0ba8c3c2173da.
   tools/nested_build_assets.py is integrated into generate_assets.py. The ownership XNB is unchanged.
-- Coverage 293/329 types, 1354/2326 named members, 158/3210 C routes. Runtime columns still use
-  checkpoint-437: nested_builds is absent and ownership's old PASS represents the fourteen-check
-  pre-extension version. Full 438 must replace these; do not present them as current runtime proof.
+- Coverage 293/329 types, 1354/2326 named members, 158/3210 C routes. Runtime columns now use
+  checkpoint-438, including the new nested-build PASS and the extended ownership ISSUE-011 failure.
 - External CNA observed through ea41d758d9689cda348887a92a93bbe188864e8b, with C API work
   continuing; inspected content modules have no uncommitted changes. No CNA edit or atomic source
   snapshot claim. Archive actual binaries after validation. All /tmp drafts in this batch are
   applied and stale; use repository sources.
 
-Next extension draft during immutable full 438 (NOT applied/built/run):
+Next extension drafts prepared during immutable full 438 (NOT applied/built/run):
 - `/tmp/cna-nested-published.cpp` and `/tmp/cna-nested-published-metadata.cpp` extend the current
   nested_builds ID from eleven to fifteen proposed child checks. All existing checks remain.
   The caller writes returned parent/child CNB bytes into a newly reserved private directory;
@@ -432,12 +427,38 @@ Next extension draft during immutable full 438 (NOT applied/built/run):
   publisher or incremental cache. This draft is not runtime evidence. Apply only after full 438
   is complete and archived; update CMake only if a concrete missing dependency is found.
 
+Source-only next-gap audit during the full run: XnaPipelineBridge.cpp forwards processor
+AddOutputFile to canonical AddDeploymentFile using the filename basename. The canonical
+implementation accepts primary-root files or explicitly resolved external source capabilities;
+a generated file in an ordinary separate output directory appears to be refused. The public
+XNA comment describes processor-written files beside compiled output. This is a hypothesis,
+not a runtime reproduction or a new CNA issue; test the real coordinator before classifying it.
+`/tmp/cna-route-summary.cpp` is an unapplied/uncompiled follow-up draft extending the existing
+xna_pipeline_components ID: optional human-readable route report, processor label dependency,
+separate-output AddOutputFile assertion, explicit source-contained control, changed-label rebuild,
+missing-dependency rejection and private-directory cleanup (7 -> 13 proposed child checks).
+It copies the existing original route/scale into a private source root and does not modify assets.
+No metadata/issue number is assigned before actual reproduction; unexpected failures rethrow.
+It can join the nested publication extension as one coherent pipeline-output batch; never apply
+while a complete runtime checkpoint is running. Its metadata draft is /tmp/cna-route-summary-metadata.cpp.
+
 Further pipeline work: actual child publication/runtime loading, processor AddDependency and
 AddOutputFile, sibling-item reuse and incremental caching remain gaps. The real nested build
 already covers in-memory outputs/dependencies/names; do not create another variant for those.
 XML reference aliases remain ISSUE-046; the XML tool records filenames without importing files.
 
-**Latest complete checkpoint (2026-10-12):** 437 at b697786, full retry tools/validate.sh exit 0.
+**Latest complete checkpoint (2026-10-12):** 438 at 973a63a, full tools/validate.sh retry exit 0.
+SOFTWARE 388/22/25/3, OPENGLES3 409/23/3/3; 451 enabled CTests, 438/0 metadata.
+Archives: reports/checkpoint-438-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}, both -review.json,
+checkpoint-438-{build,ctest,validation}.log and checkpoint-438-binaries.json (24 selected artifacts).
+Only ownership's newly demonstrated default-recorder ISSUE-011 changes the original comparison;
+all other older outcomes/counts and all older failed assertions retained. Raw failures 30/31.
+Both stderr streams are byte-identical to 437. Selected binaries match hashes taken during runtime.
+Coverage 293/329 types, 1354/2326 named members, 158/3210 C routes; runtime columns complete.
+Use ORIGINAL checkpoint-438 next. First audio CTest failure and its logs are preserved separately.
+
+Historical 437 checkpoint:
+**Completed checkpoint (2026-10-12):** 437 at b697786, full retry tools/validate.sh exit 0.
 SOFTWARE 388/21/25/3, OPENGLES3 409/22/3/3; 450 enabled CTests, 437/0 metadata.
 Archives: `reports/checkpoint-437-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`,
 `checkpoint-437-{build,ctest,validation}.log`, both renderer `-review.json` files, and

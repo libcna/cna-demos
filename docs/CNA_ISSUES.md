@@ -339,7 +339,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `/tmp/cna-438-ownership-final-{SOFTWARE,OPENGLES3}.{json,log}` retains the same one failure
   with ISSUE-011. Its WILL_FAIL CTest and the other 20 focused tests pass. CNA observed at
   ea41d758d9689cda348887a92a93bbe188864e8b; inspected content modules have no uncommitted
-  edits. Full 438 remains pending; no graphics/genuine-XNA execution claim.
+  edits. Full 438 at 973a63a now retains exactly this one new failure on both selections;
+  original checkpoint-437 comparisons retain every older failed assertion (29/30 -> 30/31).
+  All 451 enabled CTests pass, and the labeled complete evidence/reviews are archived under
+  reports/checkpoint-438-*. No graphics/genuine-XNA execution claim.
 
 ### CNA-DEMOS-ISSUE-012 -- `ContentManager::Load<T>` never calls an `OpenStream` override
 
