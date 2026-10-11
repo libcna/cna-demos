@@ -61,7 +61,7 @@ Decisions:
 | GamerPrivilegeException | candidate: needs CNA's online service configured (offline, `net.network_session.online_session_types` shows GamerServicesNotAvailableException first) |
 | GamerCollection, GamerCollection.GamerCollectionEnumerator | shown by the `net.*` demos (AllGamers, LocalGamers); the enumerator is C#'s `foreach` machinery (C++ range-for) |
 | IAvatarAnimation | demo: `gamer_services.avatar.custom_animation` |
-| NotificationPosition | demo: `gamer_services.guide.notification_position` |
+| NotificationPosition | `gamer_services.guide.notification_position` checks the default/changed property and actual overlay pixels on both renderers. The corrected observer starts with early frames and terminates on either visible placement or a finite deadline; all four original checks remain. The old eleven-frame-plus-sleep assumption reproduced an empty-frame failure under load. Fresh runs capture the toast on observation two, and frame-eight screenshots were inspected on both renderers. This does not establish every enum position or notification queue behavior. |
 | LeaderboardOutcome | demo: `gamer_services.leaderboard.paging` (a column type) |
 | SignedOutEventArgs | demo (manual): `gamer_services.signed_in_gamer.signed_out` -- offline, a profile signs out only through the Guide's own menu, so a person does it |
 | FriendCollection, FriendGamer, InviteAcceptedEventArgs, GameUpdateRequiredException | service |

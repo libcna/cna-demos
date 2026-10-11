@@ -65,13 +65,9 @@ namespace
             spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
             spriteBatch_->DrawString(*font_, "Guide notifications: TopRight", Vector2(40.0f, 220.0f), Color::White);
             spriteBatch_->End();
-            if (!checked_ && FramesDrawn() == 10)
-            {
-                // The Guide slides its notification in over a quarter of a second of real time;
-                // an unattended run draws frames faster than that, so it waits before looking.
-                std::this_thread::sleep_for(std::chrono::milliseconds(500));
-                look_ = true;
-            }
+            // Inspect the overlay from its first frames instead of waiting a fixed frame count.
+            // A small bounded observation cadence also lets an unthrottled run animate the toast.
+            if (!checked_) std::this_thread::sleep_for(std::chrono::milliseconds(10));
             DemoGame::Draw(gameTime);
         }
 
@@ -79,17 +75,19 @@ namespace
         // frame is presented: the place to look at the finished frame.
         void EndDraw() override
         {
-            if (look_)
+            if (!checked_)
             {
-                look_ = false;
-                checked_ = true;
+                const auto now = std::chrono::steady_clock::now();
+                if (!observationStarted_) observationStarted_ = now;
                 const CnaDemos::BackBufferPixels pixels(getGraphicsDeviceProperty());
-                const int topRight = Covered(pixels, 500, 0, 800, 150);
-                const int bottomCenter = Covered(pixels, 250, 330, 550, 480);
-                Context().Print("notification pixels: {} at the top right, {} at the bottom centre", topRight,
-                                bottomCenter);
-                Context().Check(topRight > 500 && bottomCenter == 0,
-                                "the sign-in notification appears at the top right, not at the bottom centre");
+                topRight_ = Covered(pixels, 500, 0, 800, 150);
+                bottomCenter_ = Covered(pixels, 250, 330, 550, 480);
+                ++observations_;
+                // Observe either region: a misplaced toast must fail as soon as it is visible.
+                // A missing toast remains a failure at the deadline or the end of a short run.
+                if (topRight_ > 500 || bottomCenter_ > 500 ||
+                    now - *observationStarted_ >= std::chrono::seconds(2))
+                    CheckPosition();
             }
             DemoGame::EndDraw();
         }
@@ -98,15 +96,27 @@ namespace
         {
             if (Context().Automated())
             {
-                Context().Check(checked_, "the notification was looked at during the run");
+                if (!checked_) CheckPosition();
+                Context().Check(observations_ > 0, "the notification was looked at during the run");
             }
             DemoGame::EndRun();
         }
 
     private:
+        void CheckPosition()
+        {
+            checked_ = true;
+            Context().Print("notification pixels: {} at the top right, {} at the bottom centre; observed {} frame(s)",
+                            topRight_, bottomCenter_, observations_);
+            Context().Check(topRight_ > 500 && bottomCenter_ == 0,
+                            "the sign-in notification appears at the top right, not at the bottom centre");
+        }
+
         NotificationPosition defaultPosition_ = NotificationPosition::BottomCenter;
-        bool look_ = false;
         bool checked_ = false;
+        int observations_ = 0;
+        int topRight_ = 0, bottomCenter_ = 0;
+        std::optional<std::chrono::steady_clock::time_point> observationStarted_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
     };

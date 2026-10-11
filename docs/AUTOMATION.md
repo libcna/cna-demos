@@ -28,6 +28,12 @@ state transition or deadline. Nominal clip duration alone does not guarantee tha
 worker reports completion after a fixed sleep. Preserve failure evidence when investigating
 such timing assumptions; report successful runs as state-completion evidence.
 
+For short-lived overlays, inspect rendered frames as soon as presentation begins. A fixed late
+frame number may already be after a real-time notification expires. Stop observation when either
+the expected or incorrect placement becomes visible, and retain the original placement assertion;
+never wait only for the desired pixels. Missing presentation must still fail at a finite deadline
+or when the automated run ends. Preserve the failed run and inspect actual captures after correction.
+
 ### Known CNA issues (expected failures)
 
 A demo whose `knownIssue` names an entry of `docs/CNA_ISSUES.md` checks the documented behaviour

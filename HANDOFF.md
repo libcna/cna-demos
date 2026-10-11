@@ -233,8 +233,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** 439 batch is built and targeted validation is complete. Commit and
-run full tools/validate.sh with private Xvfb/dummy audio; compare ORIGINAL checkpoint-438-outputs.
+**Immediate next action:** full 439 at 32c9e70 stopped in CTest on the old Guide notification
+observer. Original reports/checkpoint-439-first-{build,ctest,validation}.log and captured binary
+hashes are retained. The timing failure was reproduced unchanged and corrected as detailed below;
+six focused runs/captures, all 26 relevant CTests and five consecutive notification CTests now pass.
+Commit the correction and retry complete tools/validate.sh; the first failed attempt is not a
+checkpoint. Update /tmp/cna-archive-439.py's sourceCommit and recapture its 26 binary hashes after
+the retry build. Compare ORIGINAL checkpoint-438-outputs, preserving all old results/failures.
 New incremental_compiler is PASS with ten child checks, and nested_builds remains PASS with
 20 child checks (all prior fifteen retained). Other statuses/known issues/counts and all 31/32
 failed assertions must stay unchanged. Expect SOFTWARE 388/23/25/3, OPENGLES3 409/24/3/3,
@@ -458,6 +463,36 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
 - Runtime columns in COVERAGE.md now describe complete checkpoint-438-outputs. No CLI atomic publisher, incremental cache, GPU/visual
   or genuine-XNA execution claim. External CNA observed through d751cf46a with C API changes;
   no CNA edit or atomic source snapshot claim.
+
+439 notification investigation (full retry pending):
+- Unchanged fresh runs /tmp/cna-439-notification-original-{SOFTWARE,OPENGLES3}-{1,2}.{json,log}
+  reproduce SOFTWARE failure once (7.024 s, both measured regions zero) and one pass (5.841 s,
+  9882 top-right pixels); GL passes twice (~3.25 s, 9879 pixels). Four checks each.
+- Source inspection shows a four-second real-time notification lifetime and 0.22 s entry
+  animation. The demo sampled only at FramesDrawn()==10 after another 500 ms sleep. The exact
+  failed frame's toast age was not instrumented; this fixed-frame timing assumption is invalid
+  under variable load, and no persistent CNA positioning defect is established.
+- The demo now observes every early EndDraw until either region exceeds the original visibility
+  threshold or a steady-clock two-second bound is reached. Ten-ms cadence permits animation in
+  an unthrottled run. Wrong-bottom placement is checked immediately, not retried until success.
+  A never-visible toast still fails at deadline/end-run; all four checks and the original failed
+  assertion text remain. No internal clock override or CNA source edit. Clean build /tmp/cna-439-notification-build.log. Two default-length runs plus a frame-eight capture
+  per renderer pass all four checks: /tmp/cna-439-notification-final-{SOFTWARE,OPENGLES3}-{1,2,capture}.{json,log}
+  and capture.png. Observation two finds 9882/9879 top-right pixels and zero bottom pixels; both
+  screenshots inspected. All 26 guide/content/C ABI/catalog CTests pass (27.70 s), preserved in
+  /tmp/cna-439-notification-targeted-ctest.log. Five consecutive notification CTests pass
+  in /tmp/cna-439-notification-repeat-ctest.log (13.35 s); commit and retry the complete checkpoint.
+
+Next integrity draft during immutable full 439 (NOT applied/built/run):
+/tmp/cna-compiler-integrity.cpp and /tmp/cna-compiler-integrity-metadata.cpp extend the existing
+incremental_compiler ID from ten to fifteen proposed checks. The factory retains the latest
+registry only within main to check IsFrozen and specific late-registration refusal. Writer
+version 1 -> 2 should rebuild both nodes despite equal output bytes; same-length byte tampering
+with restored mtime should rebuild only that output's node; a corrupt manifest should rebuild
+both and be replaced. Clean should reject changed owned bytes before deleting a valid peer or
+manifest. The exact original bytes are explicitly restored only after the refusal observation,
+then the original successful clean control runs. All ten older checks remain. These are draft
+expectations, not evidence. Apply only after full 439 is complete/archived; no new demo ID.
 
 Next meaningful compiler gaps: component-version/parameter invalidation, corrupt/missing manifest
 recovery, same-length output tampering and ownership-safe cleanup of modified outputs; choose a

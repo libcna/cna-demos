@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- Guide notification placement now observes the first rendered toast within a bounded real-time
+  window. Waiting eleven frames plus 500 ms could miss CNA's four-second notification under load;
+  the reproduced empty-frame failure and all four original assertions are preserved in evidence.
+  Either expected or misplaced notification pixels end observation, so wrong placement still fails.
 - Audio natural-completion checks now poll state with a steady-clock deadline. A full 438 CTest
   caught the stream demo still playing after its fixed 600 ms sleep; the original failure is
   archived. Both stream and playback-state demos retain six checks and leave the voice to finish.
