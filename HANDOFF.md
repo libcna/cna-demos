@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 22), 8 (content, 33), 9 (audio 21 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 33), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 16 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,10 +64,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-430 demos: math 78, game 33, graphics 138 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
+432 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 22 model), audio 21 (9 XACT), core 3 (2 logger),
+effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
 content 33 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
@@ -340,11 +340,34 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** full 430 is complete. Apply the prepared imported-topology and DDS
-stream drafts below as the next focused graphics batch; build, run both renderers, investigate
-failures, inspect screenshots, update docs and complete the next full checkpoint. No permission
-question is needed. The existing_objects/external_references drafts are already applied and stale.
-All older checkpoint assertions remain visible; retain the new known ISSUE-043 in future baselines.
+**Immediate next action:** commit the validated 432 graphics batch and run complete
+`tools/validate.sh`, then archive/strictly compare ORIGINAL checkpoint-430 evidence. Expected
+SOFTWARE 385/19/25/3, OPENGLES3 406/20/3/3, 445 enabled CTests (420 passed including 19
+WILL_FAIL, 25 skipped; three disabled); raw failed assertions should stay 26/27. Then implement
+the reader-version/registry-lifecycle proposal in `/tmp/cna-reader-version-plan.md` or another
+remaining high-priority member gap. Do not stop at this checkpoint.
+
+432 targeted evidence:
+- graphics.model.imported_topology: 18 checks per renderer, exact loop-closing/strip/fan index
+  ranges, public topology/counts, closed outline/unfilled interior and filled triangle regions.
+- graphics.texture2d.dds_stream: 14 checks per renderer, packed offset and seven-byte short reads,
+  complete five-level chain, four lower authored mips with exact DXT1 bytes, Color fit/crop,
+  malformed-chain refusal and actual stripe/crop pixels. BOTH select public Dxt1 storage;
+  Color fallback loading, other DXT alpha formats and physical GPU storage are not claimed.
+- `/tmp/cna-432-{imported_topology,dds_stream}-{SOFTWARE,OPENGLES3}.{json,log,png}`. All four
+  screenshots inspected; each renderer pair is RGBA-identical. Assets regenerate identically;
+  glTF payloads independently decoded, DDS base independently decoded by Pillow and mip ranges
+  checked through the exact end. Metadata 432/0; 20 targeted CTests pass including all 16 C ABI
+  demos, both new demos and catalog checks (`/tmp/cna-432-targeted-ctest.log`).
+- Initial build failed in external generated Cnb.inc: local result shadowed a same-named handle
+  in its initializer (`/tmp/cna-432-build.log`). The external author changed it to routeResult;
+  we did not edit CNA. Resumed build `/tmp/cna-432-retry-build.log` passes without diagnostics.
+  The transient confirmed generator defect is documented as resolved ISSUE-044, no runtime marker.
+- CNA HEAD was 4eed3baa7 with further external C API route generation in flight. Post-start hash
+  inventory `/tmp/cna-432-dependency-files.json` is NOT an atomic dependency build snapshot.
+  Preserve final binary hashes with the full checkpoint as with 430; do not edit/revert CNA.
+Coverage is 293/329 types, 1353/2326 named members, 158/3210 C routes. Full runtime columns
+still use checkpoint-430 until 432 completes. All /tmp graphics drafts are applied and stale.
 
 430 targeted evidence:
 - content.xnb.existing_objects: 12 console checks, eleven pass and one proves GetTypeReader's
@@ -414,21 +437,8 @@ legacy/current optional-field schema, strict versus compatible SupportsVersion a
 single-key registry replacement. Keep this behind the prepared graphics batch; do not equate
 container version with reader version or claim unexecuted compatibility behavior.
 
-A further unbuilt draft addresses the separate DDS stream gap:
-`/tmp/cna-dds-stream.cpp`, `/tmp/cna-dds-assets.py`, `/tmp/cna-dds-fixture`. The 232-byte DXT1
-file has four base stripes and four independently authored solid-color mips. It regenerates
-identically; Pillow independently decodes every base pixel correctly and all mip block ranges
-were checked through the exact end. Intended public workflow: packed stream offset/short reads,
-authored mip readback, fit versus crop and malformed mip refusal. No compilation, runtime,
-native-compressed upload or screenshot evidence yet. Full 430 is complete; review and apply now;
-coordinate with the imported-topology draft as the next focused graphics batch if appropriate.
-
-Read-only follow-up: the glTF importer explicitly closes LINE_LOOP as LINE_STRIP and expands
-TRIANGLE_STRIP/FAN to lists, preserving strip winding. `/tmp/cna-import-topology.py` prepares an
-original three-shape fixture (outline loop, strip quad, fan pentagon) under
-`/tmp/cna-import-topology-fixture`; a matching unbuilt `/tmp/cna-imported-topology.cpp` now inspects part topology/counts and
-index ranges, then checks closure/filled regions. No runtime evidence exists yet. A future
-focused demo can verify public part topology/counts/index buffers and closed-outline/filled pixels.
+The DDS and imported-topology drafts are now applied and validated as described above. Use
+repository sources, not stale /tmp drafts. The reader-version proposal remains unimplemented.
 
 
 425 animation investigation: final/source-before-extension first-frame pixels were identical on

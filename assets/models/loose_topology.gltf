@@ -1,0 +1,246 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "cna-demos tools/gltf_models.py"
+ },
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -0.9,
+    -0.3,
+    0.5
+   ],
+   "max": [
+    -0.5,
+    0.3,
+    0.5
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5123,
+   "count": 4,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -0.25,
+    -0.3,
+    0.5
+   ],
+   "max": [
+    0.25,
+    0.3,
+    0.5
+   ]
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5123,
+   "count": 4,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 5,
+   "type": "VEC3",
+   "min": [
+    0.45,
+    -0.3,
+    0.5
+   ],
+   "max": [
+    0.9,
+    0.35,
+    0.5
+   ]
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5126,
+   "count": 5,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 8,
+   "componentType": 5123,
+   "count": 5,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 48,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 48,
+   "byteLength": 64,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 112,
+   "byteLength": 8,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 120,
+   "byteLength": 48,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 168,
+   "byteLength": 64,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 232,
+   "byteLength": 8,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 240,
+   "byteLength": 60,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 300,
+   "byteLength": 80,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 380,
+   "byteLength": 10,
+   "target": 34963
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 390,
+   "uri": "data:application/octet-stream;base64,ZmZmv5qZmb4AAAA/AAAAv5qZmb4AAAA/AAAAv5qZmT4AAAA/ZmZmv5qZmT4AAAA/AACAP9jXVz8AAAAAAACAPwAAgD/Y11c/AAAAAAAAgD8AAIA/2NdXPwAAAAAAAIA/AACAP9jXVz8AAAAAAACAPwAAAQACAAMAAACAvpqZmb4AAAA/AACAPpqZmb4AAAA/AACAvpqZmT4AAAA/AACAPpqZmT4AAAA/AACAPwAAAAAAAAAAAACAPwAAgD8AAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAAAAAACAPwAAAQACAAMAZmbmPpqZmb4AAAA/ZmZmP5qZmb4AAAA/ZmZmP83MzD0AAAA/MzMzPzMzsz4AAAA/ZmbmPs3MzD0AAAA/AAAAAAAAgD8AAAAAAACAPwAAAAAAAIA/AAAAAAAAgD8AAAAAAACAPwAAAAAAAIA/AAAAAAAAgD8AAAAAAACAPwAAAAAAAIA/AAAAAAAAgD8AAAEAAgADAAQA"
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Loop",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "COLOR_0": 1
+     },
+     "mode": 2,
+     "material": 0,
+     "indices": 2
+    }
+   ]
+  },
+  {
+   "name": "Strip",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 3,
+      "COLOR_0": 4
+     },
+     "mode": 5,
+     "material": 1,
+     "indices": 5
+    }
+   ]
+  },
+  {
+   "name": "Fan",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 6,
+      "COLOR_0": 7
+     },
+     "mode": 6,
+     "material": 2,
+     "indices": 8
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "name": "Loop",
+   "mesh": 0
+  },
+  {
+   "name": "Strip",
+   "mesh": 1
+  },
+  {
+   "name": "Fan",
+   "mesh": 2
+  }
+ ],
+ "materials": [
+  {
+   "name": "Loop",
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  },
+  {
+   "name": "Strip",
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  },
+  {
+   "name": "Fan",
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  }
+ ],
+ "extensionsUsed": [
+  "KHR_materials_unlit"
+ ],
+ "scenes": [
+  {
+   "name": "Imported topology",
+   "nodes": [
+    0,
+    1,
+    2
+   ]
+  }
+ ],
+ "scene": 0
+}

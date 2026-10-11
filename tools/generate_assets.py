@@ -27,6 +27,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 import gltf_models
+import dds_assets
 import skinned_bundles
 import xnb_models
 import xnb_graphs
@@ -345,6 +346,7 @@ def main() -> None:
     tone("sounds/chime.wav", 880.0, 0.3, root=CONTENT_XNB_ROOT)
     tone("sounds/chime.wav", 880.0, 0.3, root=CONTENT_ROOT)
     gltf_models.write_all(CONTENT_ROOT, ROOT)
+    dds_assets.write_all(ROOT)
     skinned_bundles.write_all(ROOT)
     xnb_models.write_all(CONTENT_XNB_ROOT)
     xnb_graphs.write_all(ROOT)

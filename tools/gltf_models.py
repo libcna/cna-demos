@@ -596,6 +596,28 @@ def multiple_skins(path: Path) -> None:
     doc.save(path)
 
 
+def imported_topology(path: Path) -> None:
+    doc = Document()
+    shapes = [
+        ('Loop', 2, [(-.9, -.3, .5), (-.5, -.3, .5), (-.5, .3, .5), (-.9, .3, .5)], (1, 215/255, 0, 1)),
+        ('Strip', 5, [(-.25, -.3, .5), (.25, -.3, .5), (-.25, .3, .5), (.25, .3, .5)], (1, 0, 0, 1)),
+        ('Fan', 6, [(.45, -.3, .5), (.9, -.3, .5), (.9, .1, .5), (.7, .35, .5), (.45, .1, .5)], (0, 1, 0, 1)),
+    ]
+    doc.gltf['materials'] = []
+    for i, (name, mode, points, color) in enumerate(shapes):
+        attrs = {'POSITION': doc.accessor(points, 'VEC3', minmax=True),
+                 'COLOR_0': doc.accessor([color] * len(points), 'VEC4')}
+        primitive = {'attributes': attrs, 'mode': mode, 'material': i,
+                     'indices': doc.accessor(list(range(len(points))), 'SCALAR', UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER)}
+        doc.gltf['meshes'].append({'name': name, 'primitives': [primitive]})
+        doc.gltf['nodes'].append({'name': name, 'mesh': i})
+        doc.gltf['materials'].append({'name': name, 'extensions': {'KHR_materials_unlit': {}}})
+    doc.gltf['extensionsUsed'] = ['KHR_materials_unlit']
+    doc.gltf['scenes'] = [{'name': 'Imported topology', 'nodes': [0, 1, 2]}]
+    doc.gltf['scene'] = 0
+    doc.save(path)
+
+
 def write_all(content_root: Path, assets_root: Path) -> None:
     robot_arm(content_root / "models" / "robot_arm.gltf")
     bending_strip(content_root / "models" / "bending_strip.gltf")
@@ -617,3 +639,4 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     paint_toy(assets_root / "models" / "loose_paint_toy.gltf")
     sampler_quad(assets_root / "models" / "loose_sampler_clamp.gltf")
     multiple_skins(assets_root / "models" / "loose_multi_skin.gltf")
+    imported_topology(assets_root / "models" / "loose_topology.gltf")

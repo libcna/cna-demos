@@ -28,7 +28,7 @@ namespace
             GraphicsDevice& device = getGraphicsDeviceProperty();
             spriteBatch_ = std::make_unique<SpriteBatch>(device);
 
-            // Any readable Stream holding PNG, JPEG, BMP or GIF bytes; here a file shipped with the game.
+            // Any readable Stream holding PNG, JPEG or GIF bytes; here a file shipped with the game.
             {
                 const std::unique_ptr<System::IO::Stream> stream = TitleContainer::OpenStream(ImagePath);
                 original_ = Texture2D::FromStream(device, *stream);

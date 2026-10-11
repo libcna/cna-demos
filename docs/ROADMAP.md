@@ -84,7 +84,9 @@ Console demos with checks; each shows one operation family.
 - ✅ (8 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg` (including requested output
   dimensions and unchanged source), `LevelCount`. Remaining:
-  float/HDR formats, direct compressed-block data, CNAEXT `DDSFromStreamEXT`.
+  float/HDR formats and broader direct compressed-block updates.
+  ✅ `graphics.texture2d.dds_stream`: packed offset/short reads, original DXT1 mip-chain block
+  readback, fit/crop Color conversions, malformed-chain refusal and actual pixels (14 checks).
   ✅ `copy_ownership` checks partial shared edits versus full-upload detachment, Name/Tag isolation,
   sibling survival after Dispose and actual rendered pixels.
   ✅ Existing rectangle demo now checks nonzero CPU array offsets and untouched destination padding.
@@ -141,7 +143,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (22 demos)
+## Phase 7 -- models, animation, glTF 🟨 (23 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -179,7 +181,9 @@ a check that all authored colors remain visible and that a blank texture row can
   retained non-joint ancestry, ignored mesh-node placement, selective bind-pose restoration and
   live bounds responding to a controlled distant palette before the final rendered pose (21 checks).
   ISSUE-042 records stale root-prefix comments only; the runtime workflow passes.
-- Remaining: imported topology/specular slots, more skin weighting/material variants and other
+- ✅ `graphics.model.imported_topology`: line-loop closure and strip/fan normalization, exact
+  public index ranges and topology-dependent counts, plus actual outline/filled pixels (18 checks).
+- Remaining: points/incomplete primitive tails, specular slots, more skin weighting/material variants and other
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 

@@ -39,6 +39,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Imported glTF loop/strip/fan topology checks and a DDS stream workflow with authored mipmaps,
+  short reads, fit/crop conversion and malformed-chain refusal. Both demos check rendered pixels;
+  their SOFTWARE/OPENGLES3 captures were inspected and match exactly.
+- Recorded a transient external C API generator variable-shadowing build defect (ISSUE-044),
+  corrected by the external author before the resumed build; no CNA edits were made here.
 - Existing-object XNB loadout reads and external-reference cards: preserve runtime slot identity,
   distinguish indexed/raw/type-erased payloads, resolve sibling PNG/XNB assets and render shared
   cache edits. Distinct target/reader names expose CNA GetTypeReader failure (ISSUE-043), retained
