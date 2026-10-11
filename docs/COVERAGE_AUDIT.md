@@ -75,7 +75,7 @@ Decisions:
 | ModelMeshCollection, ModelMeshPartCollection, ModelEffectCollection | shown in `graphics.model.bones` (the indexer), `graphics.model.morph_targets`, `graphics.model.mesh_effects`; their enumerators are C#'s `foreach` machinery |
 | RenderTargetBinding | demo: `graphics.render_target.multiple_render_targets` |
 | VertexPositionColorTexture, IVertexType | demo: `graphics.vertex_declaration.stock_vertex_types` |
-| EffectAnnotation, EffectAnnotationCollection, EffectMaterial | candidate: need compiled XNA effects (`.fx` built with `CNA_<RENDERER>_COMPILED_EFFECTS`) or XNB models |
+| EffectAnnotation, EffectAnnotationCollection, EffectMaterial | environment: compiled XNA effects need Microsoft's `fxc` (`fx_2_0`, a Windows tool run through wine) to compile `.fx`, and a CNA build with `CNA_<RENDERER>_COMPILED_EFFECTS` (fetches FNA3D/MojoShader); neither is part of this repository's builds |
 | DeviceLostException, DeviceNotResetException, GraphicsDeviceStatus, NoSuitableGraphicsDeviceException | environment: device loss does not happen on CNA's desktop renderers; no adapter means no demos at all |
 
 ## Microsoft.Xna.Framework.Input

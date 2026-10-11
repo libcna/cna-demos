@@ -62,10 +62,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-373 demos: math 73, game 31, graphics 123 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+376 demos: math 74, game 32, graphics 123 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 5 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 12 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 11 model), audio 18 (8 XACT), core 3 (2 logger),
+effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 11 model), audio 19 (8 XACT), core 3 (2 logger),
 content 18, input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 18
 (own process each; 5 avatar, 2 leaderboard), net 9 (own process each; 2 standalone: two processes), devices 5, phone 1, design 4,
@@ -90,9 +90,9 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 | Configure + build `linux-full` (8 renderers, CNA as libcna.so, C API libcna_c_api.so) | ✅ |
 | `cna-demos --validate` | ✅ 0 problems |
 | `tools/validate.sh` (build, validate, ctest, smoke SOFTWARE + OPENGLES3/Xvfb, coverage) | ✅ |
-| `ctest` (CLI tests + 373 demos on SOFTWARE, dummy audio) | ✅ 386/386 (10 expected failures via WILL_FAIL, 2 manual demos disabled) |
-| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 341 passed, 10 expected failures, 20 skipped (window demos, PbrEffect fallback, custom shaders and MRT: no CustomEffects), 2 not run (manual) |
-| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ✅ 357 passed, 11 expected failures (ISSUE-021 on GL only), 3 skipped (wireframe, LOD bias: not on GL ES; ColorMatrixEffect: SOFTWARE only), 2 not run (manual) |
+| `ctest` (CLI tests + 376 demos on SOFTWARE, dummy audio) | ✅ 389/389 (10 expected failures via WILL_FAIL, 2 manual demos disabled) |
+| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 344 passed, 10 expected failures, 20 skipped (window demos, PbrEffect fallback, custom shaders and MRT: no CustomEffects), 2 not run (manual) |
+| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ✅ 360 passed, 11 expected failures (ISSUE-021 on GL only), 3 skipped (wireframe, LOD bias: not on GL ES; ColorMatrixEffect: SOFTWARE only), 2 not run (manual) |
 | Screenshots inspected (SOFTWARE, OPENGLES3): every graphics.* and input.* Game demo | ✅ correct; the renderers agree (except intentionally non-deterministic demos) |
 | Content build (`cna-content`, FontTextureProcessor) | ✅ builds `fonts/pixel_font.cnb`; FreeType not required |
 | CMake 3.28.3 (distro) with CNA_SHARED_LIBRARY=ON | ❌ CNA-DEMOS-ISSUE-001; cna-demos now defaults to static there |
@@ -157,7 +157,9 @@ CNA-DEMOS-ISSUE-026 (on Linux, a process that searched for System Link sessions 
 same machine started never receives that host's answers: unicast to the shared discovery port
 reaches only the newest socket), CNA-DEMOS-ISSUE-027 (SOFTWARE does not clamp float source values
 above 1 before blending into an 8-bit target), CNA-DEMOS-ISSUE-028 (a streaming WaveBank opens a
-relative path from the working directory, following FNA).
+relative path from the working directory, following FNA), CNA-DEMOS-ISSUE-029
+(`SoundEffect::FromStream` takes a `std::istream`, not the `System::IO::Stream` that
+`TitleContainer::OpenStream` returns).
 
 ## 11. Dependencies (pinned for CI; same as cna-template's dependencies.lock)
 

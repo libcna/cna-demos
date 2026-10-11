@@ -45,6 +45,9 @@ namespace
             // against the working directory, so build it from TitleLocation (CNA-DEMOS-ISSUE-015).
             song_.reset(Song::FromUri("Rising", TitleLocation::Path() + "/assets/music/rising.wav"));
             Context().Check(MediaPlayer::getStateProperty() == MediaState::Stopped, "MediaPlayer starts out Stopped");
+            // On a phone the user's own music may be playing: a game plays its soundtrack only
+            // when GameHasControl (always true on a desktop).
+            Context().Check(MediaPlayer::getGameHasControlProperty(), "the game has control of the music");
             MediaPlayer::Play(song_.get());
             Context().Check(MediaPlayer::getStateProperty() == MediaState::Playing, "Play makes it Playing at once");
         }
@@ -105,7 +108,7 @@ CNA_DEMOS_GAME(PlaySongDemo, {
     .description = "Plays a 2-second tune with Song::FromUri and MediaPlayer::Play, shows MediaPlayer::State and "
                    "PlayPosition, and checks that playback advances and stops by itself at the end.",
     .apis = {"Song::FromUri", "MediaPlayer::Play", "MediaPlayer::State", "MediaPlayer::PlayPosition",
-             "MediaPlayer::Stop", "MediaState", "TitleLocation::Path"},
+             "MediaPlayer::Stop", "MediaPlayer::GameHasControl", "MediaState", "TitleLocation::Path"},
     .tags = {"media", "music", "song", "background-music", "audio"},
     .needs = CnaDemos::Need::Audio,
     .frames = 200,

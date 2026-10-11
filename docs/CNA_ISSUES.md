@@ -678,6 +678,25 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
+### CNA-DEMOS-ISSUE-029 -- `SoundEffect::FromStream` takes a `std::istream`, not a `System::IO::Stream`
+
+- **Area:** audio API -- XNA's `SoundEffect.FromStream(Stream)` takes the same `Stream` type as
+  `Texture2D.FromStream` and `TitleContainer.OpenStream`; CNA's `Texture2D::FromStream` and
+  `TitleContainer::OpenStream` use `System::IO::Stream`, but `SoundEffect::FromStream` takes a
+  `std::istream&`, and sharp-runtime has no adaptor between the two. A game cannot hand the stream
+  `TitleContainer::OpenStream` returns to `SoundEffect::FromStream` (XNA's usual pattern) without
+  copying it into a `std::istringstream` first.
+- **Demos:** `audio.sound_effect.from_stream` opens the WAV as a `std::ifstream` from
+  `TitleLocation::Path()`, with a comment naming this issue.
+- **Reproduction:** `SoundEffect::FromStream(*TitleContainer::OpenStream("assets/sounds/tone_440.wav"))`.
+- **Observed:** does not compile (no conversion from `System::IO::Stream` to `std::istream&`).
+- **Expected:** an overload taking `System::IO::Stream&` (the `std::istream` one can stay as an
+  extension).
+- **Environment:** CNA 0.1.0.
+- **Status:** open (API shape); not reported upstream yet.
+
+---
+
 ## Resolved
 
 (none yet)

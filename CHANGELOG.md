@@ -144,6 +144,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   (AudioEngine::RendererDetails), `math.formatting.to_string` (ToString of the math types; expected
   failure, CNA-DEMOS-ISSUE-024: BoundingBox and Ray print doubled braces); the type-converter demo
   also lists Vector4, Plane and Ray.
+- `audio.sound_effect.from_stream` (a loose WAV loaded at run time; CNA-DEMOS-ISSUE-029:
+  `SoundEffect::FromStream` takes a `std::istream`, not a `System::IO::Stream`),
+  `game.components.change_events` (EnabledChanged, UpdateOrderChanged, VisibleChanged,
+  DrawOrderChanged, the OnEnabledChanged hook) and `math.bounding_box.intersects` (box against
+  boxes, spheres, rays and planes); `media.media_player.play_song` checks
+  `MediaPlayer::GameHasControl` before starting its music.
 - `game.window.orientation` (SupportedOrientations, CurrentOrientation, OrientationChanged, CNA's
   keyboard orientation emulation enabled before the device exists) and
   `graphics.shader_effect.vertex_displacement` (a heightmap sampled in a GLSL vertex shader through

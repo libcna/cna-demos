@@ -16,7 +16,7 @@ plan written.
 CMake integration, registry, metadata, runner, DemoGame, browser, CLI, catalog JSON, validation,
 CTest discovery, screenshots, coverage report, CI, pilot demos in 7 categories.
 
-## Phase 2 -- math (`math.*`) ✅ (72 math demos + 6 packed-vector demos)
+## Phase 2 -- math (`math.*`) ✅ (74 math demos + 6 packed-vector demos)
 Console demos with checks; each shows one operation family.
 - `math.vector2.*`, `math.vector3.*`, `math.vector4.*`: construction and constants, arithmetic
   operators, `Dot`, `Cross` (Vector3), `Normalize`, `Distance`/`DistanceSquared`, `Lerp`,
@@ -44,7 +44,7 @@ Console demos with checks; each shows one operation family.
   Bgra5551, Byte4, HalfSingle/Vector2/Vector4, NormalizedByte2/4, NormalizedShort2/4, Rg32,
   Rgba1010102, Rgba64, Short2/4) -- one demo per format family, not per method. ≈ 8
 
-## Phase 3 -- game lifecycle (`game.*`) 🟨 (31 demos; remaining: ScreenDeviceName)
+## Phase 3 -- game lifecycle (`game.*`) 🟨 (32 demos; remaining: ScreenDeviceName)
 - Game: method order (`Initialize`→`LoadContent`→`BeginRun`→Update/Draw→`EndRun`→`UnloadContent`),
   `IsFixedTimeStep` and `TargetElapsedTime`, variable time step, `IsRunningSlowly`, `ResetElapsedTime`,
   `SuppressDraw`, `Exit`, `Exiting`/`Activated`/`Deactivated` events, `IsMouseVisible`,
@@ -156,10 +156,10 @@ Console demos with checks; each shows one operation family.
 - `content.content_reader.*`: custom `ContentTypeReader`, `ResourceContentManager`,
   `ContentManifestEntry`. ≈ 20
 
-## Phase 9 -- audio and media 🟨 (audio: 18 demos incl. 8 XACT, media: 10 incl. video)
+## Phase 9 -- audio and media 🟨 (audio: 19 demos incl. 8 XACT, media: 10 incl. video)
 - ✅ `audio.sound_effect.*`: Play, Play(volume, pitch, pan), MasterVolume, PCM buffer
   constructor, GetSampleDuration/GetSampleSizeInBytes, ✅ `audio.sound_effect.loop_region` (loop
-  points).
+  points), ✅ `audio.sound_effect.from_stream` (loose WAV; ISSUE-029).
 - ✅ `audio.sound_effect_instance.*`: playback state, looping, volume/pitch/pan, Apply3D
   (smoke-only: hearing is the check).
 - ✅ `audio.dynamic_sound_effect_instance.streaming`: generated tone, BufferNeeded, pending buffers.
