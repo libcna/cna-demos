@@ -3,6 +3,7 @@
 #include <array>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
@@ -17,6 +18,7 @@
 #include "Microsoft/Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/IndexBuffer.hpp"
 #include "Microsoft/Xna/Framework/Graphics/IndexElementSize.hpp"
+#include "Microsoft/Xna/Framework/Graphics/Model.hpp"
 #include "Microsoft/Xna/Framework/Graphics/ModelMesh.hpp"
 #include "Microsoft/Xna/Framework/Graphics/ModelMeshPart.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RasterizerState.hpp"
@@ -69,7 +71,25 @@ namespace
             Context().Check(sampler.getAddressUProperty() == TextureAddressMode::Clamp &&
                             sampler.getFilterProperty() == TextureFilter::Point,
                             "the part carries point-clamp metadata for its base-color texture");
-            Context().Print("Left: application PointWrap. Right: explicitly selected part PointClamp.");
+            Context().Print("Left: application Wrap. Center: procedural Clamp. Right: imported glTF Clamp.");
+            imported_.emplace(getContentProperty().Load<Model>("models/loose_sampler_clamp"));
+            if (!Context().Check(imported_->getMeshesProperty().getCountProperty() == 1 &&
+                                  imported_->getMeshesProperty()[0]->getMeshPartsProperty().getCountProperty() == 1,
+                                  "the authored glTF imports one mesh with one part")) return;
+            auto* candidate = imported_->getMeshesProperty()[0]->getMeshPartsProperty()[0];
+            auto* material = dynamic_cast<BasicEffect*>(candidate->getEffectProperty());
+            if (!Context().Check(material && !material->getLightingEnabledProperty() &&
+                                  material->getTextureEnabledProperty() && material->getTextureProperty(),
+                                  "KHR_materials_unlit imports a textured, unlit BasicEffect")) return;
+            Context().Check(material->getTextureProperty()->getWidthProperty() == 2 &&
+                            material->getTextureProperty()->getHeightProperty() == 1,
+                            "the model owns the authored two-texel PNG");
+            const auto& importedSampler = candidate->getSamplerStatesEXTProperty()[0];
+            Context().Check(importedSampler.getFilterProperty() == TextureFilter::Point &&
+                            importedSampler.getAddressUProperty() == TextureAddressMode::Clamp &&
+                            importedSampler.getAddressVProperty() == TextureAddressMode::Clamp,
+                            "glTF NEAREST and CLAMP_TO_EDGE become the part's point-clamp sampler");
+            importedPart_ = candidate;
         }
 
         void Draw(const GameTime& time) override
@@ -80,24 +100,43 @@ namespace
             device.setDepthStencilStateProperty(DepthStencilState::None);
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             device.getSamplerStatesProperty()(0, SamplerState::PointWrap);
-            effect_->setWorldProperty(Matrix::CreateTranslation(-.5f, 0, 0));
+            effect_->setWorldProperty(Matrix::CreateTranslation(-.65f, 0, 0));
             mesh_->Draw(); // intentionally preserves the application's sampler, despite part metadata
             if (!checked_)
                 Context().Check(device.getSamplerStatesProperty()[0].getAddressUProperty() == TextureAddressMode::Wrap,
                                 "drawing a part preserves the application's device sampler");
 
             // Explicit selection is the public CNAEXT boundary used for imported part samplers too.
-            // This procedural fixture demonstrates selection, not glTF importer correctness.
             device.getSamplerStatesProperty()(0, part_->getSamplerStatesEXTProperty()[0]);
-            effect_->setWorldProperty(Matrix::CreateTranslation(.5f, 0, 0));
+            effect_->setWorldProperty(Matrix::getIdentityProperty());
             mesh_->Draw();
+            if (importedPart_)
+            {
+                const Matrix placement = Matrix::CreateTranslation(.65f, 0, 0);
+                const Matrix identity = Matrix::getIdentityProperty();
+                if (!checked_)
+                {
+                    // A wrap draw first proves the importer retained the out-of-range UV:
+                    // eagerly clamping vertex coordinates during import would stay green here.
+                    device.getSamplerStatesProperty()(0, SamplerState::PointWrap);
+                    imported_->Draw(placement, identity, identity);
+                    const CnaDemos::BackBufferPixels wrapped(device);
+                    Context().Check(CnaDemos::Near(wrapped.At(static_cast<int>(.825f * wrapped.Width()), wrapped.Height() / 2), Color::Red, 2),
+                                    "the imported UV still wraps to red when the application selects PointWrap");
+                }
+                device.getSamplerStatesProperty()(0, importedPart_->getSamplerStatesEXTProperty()[0]);
+                imported_->Draw(placement, identity, identity);
+            }
             if (!checked_)
             {
                 const CnaDemos::BackBufferPixels pixels(device);
-                Context().Check(CnaDemos::Near(pixels.At(pixels.Width() / 4, pixels.Height() / 2), Color::Red, 2),
+                Context().Check(CnaDemos::Near(pixels.At(static_cast<int>(.175f * pixels.Width()), pixels.Height() / 2), Color::Red, 2),
                                 "application PointWrap samples the red texel on the left");
-                Context().Check(CnaDemos::Near(pixels.At(3 * pixels.Width() / 4, pixels.Height() / 2), Color::Lime, 2),
-                                "explicitly selecting the part's PointClamp samples green on the right");
+                Context().Check(CnaDemos::Near(pixels.At(pixels.Width() / 2, pixels.Height() / 2), Color::Lime, 2),
+                                "explicitly selecting the procedural part's PointClamp samples green in the center");
+                if (importedPart_)
+                    Context().Check(CnaDemos::Near(pixels.At(static_cast<int>(.825f * pixels.Width()), pixels.Height() / 2), Color::Lime, 2),
+                                    "the imported part sampler clamps its out-of-range UV to green on the right");
                 checked_ = true;
             }
             Game::Draw(time);
@@ -111,6 +150,8 @@ namespace
         std::unique_ptr<IndexBuffer> indices_;
         std::unique_ptr<ModelMeshPart> part_;
         std::unique_ptr<ModelMesh> mesh_;
+        std::optional<Model> imported_;
+        ModelMeshPart* importedPart_ = nullptr; // borrowed from imported_; never retained past its lifetime
         bool checked_ = false;
     };
 }
@@ -119,12 +160,13 @@ CNA_DEMOS_GAME(PartSamplerDemo, {
     .id = "graphics.model.part_sampler_state",
     .title = "Select a model part's sampler explicitly",
     .description = "Stores clamp metadata on a model part, preserves the application's wrap sampler during Draw, "
-                   "then explicitly selects the part sampler and checks both texture samples with pixels.",
+                   "then selects procedural and imported glTF samplers and verifies their out-of-range texture samples with pixels.",
     .apis = {"Microsoft::Xna::Framework::Graphics::ModelMeshPart::SamplerStatesEXT",
              "Microsoft::Xna::Framework::Graphics::ModelMeshPart::setSamplerStateEXTProperty",
-             "ModelMesh::Draw", "GraphicsDevice::SamplerStates"},
+             "ModelMesh::Draw", "Model::Draw", "GraphicsDevice::SamplerStates"},
     .tags = {"model", "sampler", "texture", "cnaext", "3d"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
     .deterministic = true,
+    .assets = {"models/loose_sampler_clamp.gltf"},
 })

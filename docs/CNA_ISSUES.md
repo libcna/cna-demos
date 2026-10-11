@@ -930,6 +930,67 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** runtime-confirmed XNA compatibility gap, not a demo workaround; no CNA source
   changed and no upstream report sent.
 
+### CNA-DEMOS-ISSUE-040 -- Picture thumbnail comment contradicts generated thumbnails
+
+- **Area:** documentation only, Picture::GetThumbnail in
+  `modules/media/include/Microsoft/Xna/Framework/Media/Picture.hpp`.
+- **Related demo:** `media.media_library.save_picture` (normal thumbnail checks pass; its expected-failure
+  marker belongs to the separate short-read ISSUE-041).
+- **Evidence:** the public comment says no separate thumbnail is generated and that GetThumbnail
+  returns the same image as GetImage. The implementation in `modules/media/src/Xna/Picture.cpp`
+  instead calls ThumbnailGenerator::CreatePngThumbnail and returns a caller-owned MemoryStream
+  containing the generated image when possible; it otherwise falls back to the source FileStream.
+- **Reproduction/observed:** save the original 640x320 PNG into a private library, read GetImage
+  and verify its bytes equal the source, then save GetThumbnail's stream as a second picture.
+  The second Picture reports 128x64, and both files are indexed by a fresh MediaLibrary. The
+  demo checks smaller dimensions and preserved aspect ratio, not a fixed XNA thumbnail size.
+- **Environment/evidence:** Linux GCC 14.2, current CNA ce74063e6483020835af07c4af1e3614ebc5d962
+  (media implementation unchanged from e60fa35f7). The standalone ran under both SOFTWARE and
+  OPENGLES3 selections and passed 11 child checks each, including private XDG root verification
+  before library access. This is file/stream evidence, not GPU or visual thumbnail validation.
+  Reports/logs: `/tmp/cna-save-picture-{SOFTWARE,OPENGLES3}.{json,log}`; parent JSON check count
+  is zero for standalone tools, so the checks are in child stdout. No real user media was used.
+- **Expected/suggested correction:** document the possible generated thumbnail and original-image
+  fallback. The current 128-pixel maximum is an implementation choice, not a universal XNA
+  contract. The implementation's useful resizing behavior should not be removed to match the
+  stale comment.
+- **Status:** confirmed header contradiction; no CNA source changed and no upstream report sent.
+
+### CNA-DEMOS-ISSUE-041 -- SavePicture ignores short reads and saves a zero-padded image
+
+- **Area:** MediaLibrary::SavePicture(std::string, System::IO::Stream*) in
+  `modules/media/src/Xna/MediaLibrary.cpp`.
+- **Demo:** `media.media_library.save_picture` (marked `knownIssue` for this one failing check).
+- **Reproduction:** wrap the valid, original 1,666-byte 640x320 PNG in a public MemoryStream
+  subclass whose Read caps each delivery at 13 bytes. Start at position zero. A control reader
+  loops over the same fixture and verifies every byte matches the source, so the input is neither
+  truncated nor malformed. Pass another such stream to SavePicture and read back its GetImage.
+- **Observed:** only one Read occurs, consuming 13/1666 bytes. CNA nevertheless writes the full
+  allocated 1,666-byte vector, whose unread tail remains zero, and returns a Picture with 0x0
+  decoded dimensions. The saved image differs from the original. Both renderer selections
+  reproduce this; ordinary byte-vector and full-memory-stream saves pass independently.
+- **Expected:** consume repeated positive short reads until the intended image data is copied;
+  detect premature EOF instead of silently writing unread zero-filled storage. The public
+  SharpRuntime Stream.hpp contract explicitly permits Read to return fewer than count bytes
+  before EOF. This is a stream-consumer defect, not a malformed-image fixture or an assertion
+  about a particular genuine-XNA implementation.
+- **Investigation:** the overload allocates source->getLengthProperty() bytes, calls Read once,
+  ignores its returned count, and forwards the entire vector to the byte-buffer overload. That
+  overload writes the bytes and catches the decoder failure, producing width/height zero.
+  Partial-read handling is the confirmed defect; nonzero starting positions, unknown-length
+  streams and premature EOF have not been exercised by this reproduction.
+- **Environment/evidence:** Linux GCC 14.2, CNA ce74063e6483020835af07c4af1e3614ebc5d962
+  (media implementation unchanged from e60fa35f7). Initial repro logs/reports:
+  `/tmp/cna-save-picture-chunks-{SOFTWARE,OPENGLES3}.{json,log}` (13 checks before adding the
+  returned-pointer guard and issue label; exactly one failure in each). Final labeled runs
+  `/tmp/cna-save-picture-final-{SOFTWARE,OPENGLES3}.{json,log}` have 14 checks and the same
+  single failure; the targeted WILL_FAIL CTest passes. All filesystem work
+  used verified private XDG roots; no user pictures were read or written. The normal thumbnail
+  path still passed and returned 128x64. No visual/GPU validation is claimed for this file tool.
+- **Status:** runtime-confirmed CNA bug. The demo keeps the failing byte-preservation check;
+  no loop/workaround was added around CNA's SavePicture call, no CNA source changed and no
+  upstream report was sent.
+
 ## Resolved
 
 (none yet)

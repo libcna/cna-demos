@@ -39,6 +39,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Isolated picture-library example verifies saves, albums, original image bytes, generated thumbnail
+  and reindexing; valid short reads expose CNA-DEMOS-ISSUE-041. Stale thumbnail comments are ISSUE-040.
+- Existing sampler example now loads an authored glTF to verify NEAREST/CLAMP import, preserved
+  out-of-range UVs and explicit application to actual rendered pixels.
 - SkinnedModelEXT example transfers and replaces owned named parts, refuses a different bone count,
   removes a temporary part, then verifies sampled inverse-bind skinning after donor destruction.
 - Existing mesh_parts now mixes a shared-buffer line part with triangles; existing two_bones checks

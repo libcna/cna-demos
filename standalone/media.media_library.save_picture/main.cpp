@@ -1,0 +1,190 @@
+// SPDX-License-Identifier: MS-PL
+// SavePicture and picture streams in a private media library, isolated in a child process.
+#include <algorithm>
+#include <chrono>
+#include <cstdlib>
+#include <cstdint>
+#include <filesystem>
+#include <fstream>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <system_error>
+#include <vector>
+
+#include <iostream>
+#include <string_view>
+#include "CNA/Platform/CurrentPlatform.hpp"
+#include "Microsoft/Xna/Framework/TitleContainer.hpp"
+#include "Microsoft/Xna/Framework/Media/MediaLibrary.hpp"
+#include "Microsoft/Xna/Framework/Media/Picture.hpp"
+#include "Microsoft/Xna/Framework/Media/PictureAlbum.hpp"
+#include "Microsoft/Xna/Framework/Media/PictureAlbumCollection.hpp"
+#include "Microsoft/Xna/Framework/Media/PictureCollection.hpp"
+#include "System/IO/MemoryStream.hpp"
+
+using namespace Microsoft::Xna::Framework;
+using namespace Microsoft::Xna::Framework::Media;
+
+namespace
+{
+#if defined(__linux__)
+    struct PrivateLibrary
+    {
+        std::filesystem::path path;
+        ~PrivateLibrary()
+        {
+            std::error_code ignored;
+            std::filesystem::remove_all(path, ignored);
+        }
+    };
+
+    // Stream::Read may return fewer bytes than requested before EOF. The source stays a valid PNG.
+    class ShortReadStream final : public System::IO::MemoryStream
+    {
+    public:
+        using System::IO::MemoryStream::MemoryStream;
+        SharpRuntime::intcs Read(SharpRuntime::bytecs buffer[], SharpRuntime::intcs offset,
+                                SharpRuntime::intcs count) override
+        {
+            ++calls;
+            return System::IO::MemoryStream::Read(buffer, offset, std::min<SharpRuntime::intcs>(count, 13));
+        }
+        int calls = 0;
+    };
+
+    std::vector<std::uint8_t> ReadImage(System::IO::Stream& stream)
+    {
+        const auto length = stream.getLengthProperty();
+        if (length <= 0 || length > 16 * 1024 * 1024)
+            throw std::runtime_error("Unexpected image stream length");
+        std::vector<std::uint8_t> bytes(static_cast<std::size_t>(length));
+        SharpRuntime::intcs offset = 0;
+        while (offset < length)
+        {
+            const auto count = stream.Read(bytes.data(), offset, length - offset);
+            if (count <= 0) throw std::runtime_error("Image stream ended before its declared length");
+            offset += count;
+        }
+        return bytes;
+    }
+#endif
+
+    int SavePicture()
+    {
+#if !defined(__linux__)
+        std::cout << "SKIPPED: requires Linux XDG user-folder resolution\n";
+        return 77;
+#else
+        // This standalone program configures its environment BEFORE its first CNA/SDL use.
+        // SDL caches environment variables; changing native setenv inside an initialized browser
+        // would not reliably update SDL's copy. No HOME changes or internal CNA path overrides.
+        bool passed = true;
+        int checks = 0;
+        const auto check = [&](bool condition, std::string_view message) {
+            ++checks;
+            passed = passed && condition;
+            std::cout << (condition ? "  check: " : "  CHECK FAILED: ") << message << '\n';
+            return condition;
+        };
+        const auto root = std::filesystem::temp_directory_path() /
+            ("cna-demos-pictures-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+        if (!std::filesystem::create_directory(root)) throw std::runtime_error("Could not create private media directory");
+        PrivateLibrary cleanup{root};
+        const auto pictures = root / "pictures", music = root / "music", config = root / "config";
+        std::filesystem::create_directory(pictures);
+        std::filesystem::create_directory(music);
+        std::filesystem::create_directory(config);
+        if (root.string().find_first_of("\"\\\n") != std::string::npos)
+            throw std::runtime_error("Temporary path cannot be represented in this XDG fixture");
+        {
+            std::ofstream settings(config / "user-dirs.dirs");
+            settings << "XDG_PICTURES_DIR=\"" << pictures.string() << "\"\n"
+                     << "XDG_MUSIC_DIR=\"" << music.string() << "\"\n";
+            settings.close();
+            if (!settings) throw std::runtime_error("Could not write the private XDG configuration");
+        }
+        if (::setenv("XDG_CONFIG_HOME", config.c_str(), 1) != 0)
+            throw std::runtime_error("Could not select the private XDG configuration");
+        auto* filesystem = CNA::Platform::GetCurrentPlatform().GetFileSystem();
+        std::error_code error;
+        // Resolve BOTH folders before constructing MediaLibrary or calling SavePicture.
+        const bool pictureIsPrivate = filesystem && std::filesystem::equivalent(
+            filesystem->GetUserFolder(CNA::Platform::UserFolder::Pictures), pictures, error);
+        error.clear();
+        const bool musicIsPrivate = filesystem && std::filesystem::equivalent(
+            filesystem->GetUserFolder(CNA::Platform::UserFolder::Music), music, error);
+        if (!pictureIsPrivate || !musicIsPrivate)
+        {
+            std::cout << "SKIPPED: platform does not honor the isolated Linux XDG media folders\n";
+            return 77;
+        }
+        check(pictureIsPrivate && musicIsPrivate, "both media roots resolve to private fixture directories before library access");
+
+        MediaLibrary library;
+        check(library.getPicturesProperty()->getCountProperty() == 0 &&
+                  library.getSavedPicturesProperty()->getCountProperty() == 0,
+                  "the private library starts with no pictures");
+        const auto input = TitleContainer::OpenStream("assets/media/library_panorama.png");
+        const auto encoded = ReadImage(*input);
+        Picture* picture = library.SavePicture("Panorama.png", encoded); // borrowed: library owns it
+        if (!check(picture != nullptr, "SavePicture returns the new library-owned picture")) return 1;
+        check(picture->getNameProperty() == "Panorama.png" && picture->getWidthProperty() == 640 &&
+                  picture->getHeightProperty() == 320, "the saved picture retains its name and decoded dimensions");
+        auto* album = picture->getAlbumProperty();
+        if (!check(album && album->getNameProperty() == "Saved Pictures" &&
+                        album->getParentProperty() == library.getRootPictureAlbumProperty(),
+                        "the new picture belongs to Saved Pictures below the root album")) return 1;
+        check(library.getPicturesProperty()->getCountProperty() == 1 &&
+                  library.getSavedPicturesProperty()->getCountProperty() == 1 &&
+                  album->getPicturesProperty()->getCountProperty() == 1 &&
+                  library.getRootPictureAlbumProperty()->getAlbumsProperty()->getCountProperty() == 1,
+                  "all library and album views include the newly saved picture");
+        // Returned streams are caller-owned, unlike Picture and PictureAlbum pointers.
+        std::unique_ptr<System::IO::Stream> original(picture->GetImage());
+        check(ReadImage(*original) == encoded, "GetImage returns the exact original encoded bytes");
+        std::unique_ptr<System::IO::Stream> thumbnail(picture->GetThumbnail());
+        const auto thumbnailBytes = ReadImage(*thumbnail);
+        System::IO::MemoryStream thumbnailInput(thumbnailBytes.data(),
+                                                static_cast<SharpRuntime::intcs>(thumbnailBytes.size()));
+        Picture* preview = library.SavePicture("Preview.png", &thumbnailInput);
+        if (!check(preview != nullptr, "the stream overload saves the generated thumbnail")) return 1;
+        check(preview->getWidthProperty() > 0 && preview->getWidthProperty() < picture->getWidthProperty() &&
+                  preview->getWidthProperty() == 2 * preview->getHeightProperty(),
+                  "the thumbnail is smaller and preserves the panorama's aspect ratio");
+        check(thumbnailInput.getPositionProperty() == thumbnailInput.getLengthProperty(),
+                  "SavePicture consumes the supplied memory stream");
+        std::cout << "Original " << picture->getWidthProperty() << 'x' << picture->getHeightProperty()
+                  << ", thumbnail " << preview->getWidthProperty() << 'x' << preview->getHeightProperty() << '\n';
+        MediaLibrary reopened;
+        check(reopened.getPicturesProperty()->getCountProperty() == 2 &&
+                  reopened.getSavedPicturesProperty()->getCountProperty() == 2,
+                  "a new library indexes both files from the private saved-pictures folder");
+        ShortReadStream control(encoded.data(), static_cast<SharpRuntime::intcs>(encoded.size()));
+        check(ReadImage(control) == encoded && control.calls > 1,
+              "the short-read fixture delivers the complete valid PNG across multiple reads");
+        ShortReadStream chunks(encoded.data(), static_cast<SharpRuntime::intcs>(encoded.size()));
+        Picture* chunked = library.SavePicture("Chunked.png", &chunks);
+        if (!check(chunked != nullptr, "the short-read save returns a library-owned picture")) return 1;
+        std::unique_ptr<System::IO::Stream> savedChunks(chunked->GetImage());
+        const auto savedBytes = ReadImage(*savedChunks);
+        std::cout << "Short reads: " << chunks.calls << " call(s), consumed " << chunks.getPositionProperty()
+                  << '/' << chunks.getLengthProperty() << " bytes; saved picture " << chunked->getWidthProperty()
+                  << 'x' << chunked->getHeightProperty() << '\n';
+        check(savedBytes == encoded && chunks.getPositionProperty() == chunks.getLengthProperty(),
+              "SavePicture consumes every chunk and preserves the complete encoded image (CNA-DEMOS-ISSUE-041)");
+        std::cout << (passed ? "PASSED" : "FAILED") << " (" << checks << " checks)\n";
+        return passed ? 0 : 1;
+#endif
+    }
+}
+
+int main()
+{
+    try { return SavePicture(); }
+    catch (const std::exception& error)
+    {
+        std::cerr << "Picture library demo failed: " << error.what() << '\n';
+        return 1;
+    }
+}

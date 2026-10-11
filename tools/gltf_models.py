@@ -358,6 +358,34 @@ def textured_crate(path: Path) -> None:
     doc.save(path)
 
 
+def sampler_quad(path: Path) -> None:
+    """An unlit quad with out-of-range U and explicit nearest/clamp sampler metadata."""
+    import io
+    from PIL import Image
+    doc = Document()
+    positions = [(-.3, -.5, 0), (.3, -.5, 0), (.3, .5, 0), (-.3, .5, 0)]
+    doc.gltf["meshes"] = [{"name": "SamplerQuad", "primitives": [{
+        "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True),
+                       "TEXCOORD_0": doc.accessor([(1.125, .5)] * 4, "VEC2")},
+        "indices": doc.accessor([0, 1, 2, 0, 2, 3], "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+        "material": 0}]}]
+    image = Image.new("RGBA", (2, 1))
+    image.putdata([(255, 0, 0, 255), (0, 255, 0, 255)])
+    encoded = io.BytesIO()
+    image.save(encoded, format="PNG", optimize=False)
+    doc.gltf["images"] = [{"mimeType": "image/png", "bufferView": doc.view(encoded.getvalue())}]
+    # glTF NEAREST (9728), CLAMP_TO_EDGE (33071), explicitly on both axes.
+    doc.gltf["samplers"] = [{"magFilter": 9728, "minFilter": 9728, "wrapS": 33071, "wrapT": 33071}]
+    doc.gltf["textures"] = [{"source": 0, "sampler": 0}]
+    doc.gltf["materials"] = [{"name": "Clamp", "pbrMetallicRoughness": {"baseColorTexture": {"index": 0}},
+                              "extensions": {"KHR_materials_unlit": {}}}]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+    doc.gltf["nodes"] = [{"name": "ClampQuad", "mesh": 0}]
+    doc.gltf["scenes"] = [{"name": "Sampler", "nodes": [0]}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
 def slide_rig(path: Path) -> None:
     """Three boxes in rows sliding from x = -2 to 0 to 2 in two seconds, one clip "Slide" with one
     channel per box: the top box's sampler is STEP, the middle one's LINEAR, the bottom one's
@@ -558,3 +586,4 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     # Material variants only as a loose file: CNA's content pipeline refuses them (the compiled
     # model format cannot carry them).
     paint_toy(assets_root / "models" / "loose_paint_toy.gltf")
+    sampler_quad(assets_root / "models" / "loose_sampler_clamp.gltf")

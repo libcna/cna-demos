@@ -325,6 +325,7 @@ def main() -> None:
     save_png(checker(64, 8, (255, 255, 255, 255), (72, 61, 139, 255)), "textures/checker.png")
     save_png(arrow(64), "textures/arrow.png")
     save_png(gradient(128, 128), "textures/gradient.png")
+    save_png(framed_gradient(640, 320), "media/library_panorama.png")
     save_png(soft_circle(64), "textures/soft_circle.png")
     save_png(sprite_strip(32, 4), "textures/sprite_strip.png")
     save_png(font_sheet(2), "fonts/pixel_font.png", CONTENT_ROOT)

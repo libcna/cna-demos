@@ -162,11 +162,12 @@ a check that all authored colors remain visible and that a blank texture row can
   ranges and material effects; effect collection deduplication/replacement and both selected
   triangle halves plus a shared-buffer line part are checked with actual pixels on both renderers.
 - ✅ `graphics.model.part_sampler_state`: sampler metadata is selected explicitly by the application;
-  point-wrap versus point-clamp is checked with pixels on both renderers.
+  point-wrap versus point-clamp is checked with pixels on both renderers. An actual unlit glTF
+  fixture verifies imported NEAREST/CLAMP metadata, texture ownership and preserved UVs.
 - ✅ `graphics.model.skinned_parts`: the distinct SkinnedModelEXT owns/transfers/replaces named
   parts, rejects mismatched bone counts, removes a temporary part and feeds a sampled inverse-bind
   palette to actual SkinnedEffect drawing after donor destruction.
-- Remaining: imported topology/sampler fixtures, XNB models, SkinnedModelEXT manifest loading and
+- Remaining: imported topology/specular slots, XNB models, SkinnedModelEXT manifest loading and
   deeper hierarchy/clip behaviors (member decisions in COVERAGE_AUDIT.md).
 
 ## Phase 8 -- content 🟨 (30 demos; remaining below)
@@ -235,17 +236,20 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `audio.xact.instance_limits`: authored category Fail/ReplaceOldest limits, paused slots,
   isolation and freed-slot reuse checked through public states. Remaining: RPC curves (a variable driving
   volume/pitch), complex cues/variations and cue-level limits.
-- ✅ `media.*` (10): play a song (State, PlayPosition, end), events through FrameworkDispatcher
+- ✅ `media.*` (11): play a song (State, PlayPosition, end), events through FrameworkDispatcher
   without a Game, playlists with Queue/MoveNext/MovePrevious/IsRepeating/IsShuffled, volume and
   mute, visualization data, Song properties, MediaLibrary collections. Songs are generated WAVs
   played from files (`Song::FromUri`, ISSUE-015). ✅ `media.video_player.play_video` (generated WMV)
   and ✅ `media.song.compiled_song` (generated Ogg Vorbis), both through the content pipeline
   (`assets/media`, own ContentManager: ISSUE-020), ✅ `media.video_player.pause_and_loop`
-  (Pause/Resume, IsLooped, Volume, IsMuted). Remaining: pictures (`SavePicture`). Source review
-  found a candidate Linux fixture: a separate process with isolated XDG_CONFIG_HOME/user-dirs.dirs
-  can direct SDL's public user-folder resolution to generated music/picture folders. Verify the
-  resolved paths before saving; no real user media and no internal MediaLibraryPaths override.
-  This is a proposed workflow, not runtime evidence or cross-platform support.
+  (Pause/Resume, IsLooped, Volume, IsMuted).
+- ✅ `media.media_library.save_picture`: standalone Linux fixture verifies private XDG music and
+  picture roots before library access, vector/stream saves, borrowed picture/album views,
+  caller-owned image/thumbnail streams, smaller aspect-preserving thumbnail and reindexing.
+  A valid stream delivering 13-byte chunks exposes ISSUE-041: SavePicture reads once and writes
+  a zero-padded image. ISSUE-040 records stale thumbnail comments separately. Other platforms,
+  media tokens, name collisions and further stream/disposal contracts remain unaudited.
+
 
 ## Phase 10 -- input ✅ (39 demos: keyboard, mouse, text input, clipboard, gamepad, touch, CNAEXT devices)
 - Keyboard: state, edge detection (pressed this frame), modifiers, `GetPressedKeys`.

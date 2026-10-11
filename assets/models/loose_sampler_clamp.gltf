@@ -1,0 +1,133 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "cna-demos tools/gltf_models.py"
+ },
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -0.3,
+    -0.5,
+    0
+   ],
+   "max": [
+    0.3,
+    0.5,
+    0
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 48,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 48,
+   "byteLength": 32,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 80,
+   "byteLength": 12,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 92,
+   "byteLength": 74
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 166,
+   "uri": "data:application/octet-stream;base64,mpmZvgAAAL8AAAAAmpmZPgAAAL8AAAAAmpmZPgAAAD8AAAAAmpmZvgAAAD8AAAAAAACQPwAAAD8AAJA/AAAAPwAAkD8AAAA/AACQPwAAAD8AAAEAAgAAAAIAAwCJUE5HDQoaCgAAAA1JSERSAAAAAgAAAAEIBgAAAPQif4oAAAARSURBVHicY/jPwPCf4T/DfwAQ+AP9QXB56AAAAABJRU5ErkJggg=="
+  }
+ ],
+ "meshes": [
+  {
+   "name": "SamplerQuad",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "TEXCOORD_0": 1
+     },
+     "indices": 2,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "name": "ClampQuad",
+   "mesh": 0
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/png",
+   "bufferView": 3
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9728,
+   "minFilter": 9728,
+   "wrapS": 33071,
+   "wrapT": 33071
+  }
+ ],
+ "textures": [
+  {
+   "source": 0,
+   "sampler": 0
+  }
+ ],
+ "materials": [
+  {
+   "name": "Clamp",
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 0
+    }
+   },
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  }
+ ],
+ "extensionsUsed": [
+  "KHR_materials_unlit"
+ ],
+ "scenes": [
+  {
+   "name": "Sampler",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "scene": 0
+}
