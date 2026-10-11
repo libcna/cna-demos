@@ -93,21 +93,21 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **semantic 416-demo checkpoint passed** through revision `c350580`, including the
-C content root/cache and resized PNG/JPEG export extensions. All stages of tools/validate.sh
-completed under private Xvfb (`/tmp/cna-demos-416-semantic-validation.log`). Complete raw
-assertion comparison, including child prefixes, matches checkpoint-416: 24 SOFTWARE / 25 OPENGLES3.
+The full **417-demo checkpoint passed** through revision `0afdd22`, including audio instance
+lifetime, CNB schema boundaries and callback-scoped C device borrowing. tools/validate.sh exited 0
+under private Xvfb (`/tmp/cna-demos-417-validation.log`). All 417 IDs are accounted for, and the
+raw failed-assertion multisets match semantic-416: 24 SOFTWARE / 25 OPENGLES3.
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; first build had 16 third-party Draco deprecation warnings |
-| Metadata/assets `--validate` | 416 demos, 0 problems |
+| Metadata/assets `--validate` | 417 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 403 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 371 passed, 17 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 392 passed, 18 expected failures, 3 skipped, 3 manual not run |
-| Unexpected outcomes | None; all 416 IDs/statuses and failed-assertion multisets unchanged |
-| Screenshots | Targeted C content and resized export evidence is detailed in section 14; no new visual review during smoke |
+| CTest | 404 passed (including 17 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 372 passed, 17 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 393 passed, 18 expected failures, 3 skipped, 3 manual not run |
+| Unexpected outcomes | None; new audio lifetime demo passed, all old statuses and failed-assertion multisets unchanged |
+| Screenshots | Targeted C lifecycle screenshots inspected; audio/CNB are console checks. No new visual review during smoke |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -218,14 +218,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **416 demos**
-at `c350580`. SOFTWARE 371/17/25/3 and OPENGLES3 392/18/3/3, 428 enabled CTests, metadata 416/0.
-Archives: `reports/semantic-416-{SOFTWARE,OPENGLES3}.{json,log}` and
-`semantic-416-{build,ctest,validation}.log`. Both reports contain all 416 catalog IDs exactly once.
-Compared with checkpoint-416, every status and failed-assertion multiset is unchanged;
-save_as_image records 8 checks instead of 4. C content has 39 child checks without a screenshot
-(standalone parent JSON checks=0). Coverage is 290/329 XNA types, 1318/2326 named members and
-149/3210 C ABI routes, not comprehensive semantic coverage. CNA remains clean at
+**Current session checkpoint (2026-10-11):** full `tools/validate.sh` exited 0 for all **417 demos**
+at `0afdd22`. SOFTWARE 372/17/25/3 and OPENGLES3 393/18/3/3, 429 enabled CTests, metadata 417/0.
+Archives: `reports/checkpoint-417-{SOFTWARE,OPENGLES3}.{json,log}` and
+`checkpoint-417-{build,ctest,validation}.log`. Both reports contain all 417 catalog IDs exactly once.
+Compared with semantic-416, audio lifetime is new and passes; every old status and failed-assertion
+multiset is unchanged. cnb_loader records 12 checks instead of 8. C lifecycle has 16 child checks
+without a screenshot (parent JSON checks=0). Coverage is 290/329 XNA types, 1321/2326 named members
+and 150/3210 C ABI routes, not comprehensive semantic coverage. CNA remains clean at
 `2b15506a48e1a6202c985823131daf5856826f71`, newer than CI's
 `10a4ef1cb4cd832f761536d77588000104947f8d`.
 
@@ -235,10 +235,9 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** run full checkpoint-417 for the applied, targeted-validated batch
-below. Compare against semantic-416 and the fresh 417 catalog, including raw assertion counts
-24/25; archive checkpoint-417. Expected SOFTWARE 372/17/25/3, OPENGLES3 393/18/3/3 and 429 enabled
-CTests. Last full checkpoint remains semantic-416 at c350580 before this batch.
+**Immediate next action:** apply and validate the prepared C foreign-thread dispatch and math
+range drafts below. The full checkpoint-417 is complete and archived; rebuilding is safe.
+Then continue with the prepared ModelMeshPart example. Do not reset completed phases.
 
 - Existing cnb_loader passes 12 checks on both renderer selections; four new cases have valid
   containers but missing/duplicate RULE, a truncated lives integer or trailing schema byte.
@@ -256,15 +255,27 @@ CTests. Last full checkpoint remains semantic-416 at c350580 before this batch.
 
 Build `/tmp/cna-417-boundaries-build.log`, metadata 417/0 and five focused CTests pass
 (`/tmp/cna-417-boundaries-ctest.log`). No new CNA issue. Coverage now names 290/329 XNA types,
-1321/2326 members and 150/3210 C ABI routes; the generated runtime columns still honestly show
-one ID absent in the older full smoke reports until checkpoint-417 finishes. The /tmp drafts
+1321/2326 members and 150/3210 C ABI routes; the complete checkpoint-417 now includes the new audio ID and all extensions. The /tmp drafts
 for these three changes are applied and stale; do not reapply them.
 
 Next independent candidate is drafted in `/tmp/cna-c-foreign-thread-dispatch.c`,
 `-metadata.cpp` and `-CMakeLists.txt`: explicit owner pumping for game-property reads/writes,
 default/restored thread affinity and bounded worker cleanup. It is NOT applied, compiled or run;
 automatic callback pumping, error forwarding and queued-call shutdown remain outside its scope.
-After checkpoint-417, review/apply this C11 standalone or continue another meaningful member gap.
+The same following batch can extend existing C math using `/tmp/cna-c-math-ranges.c` and
+`-metadata.cpp`: direction versus position, array source/destination subranges, unchanged sentinels
+and refusal before any writes. This draft is also NOT applied/built/run. Header and implementation
+review confirms pre-write range validation; it deliberately uses disjoint arrays and makes no
+claim about overlapping-range safety or inverse-transpose normal correction.
+The preceding checkpoint is complete; review/apply these C ABI drafts next.
+
+A read-only ModelMesh/ModelMeshPart member audit is now in COVERAGE_AUDIT.md. A useful following
+Phase 7 candidate is shared-buffer mesh parts with actual StartIndex/VertexOffset pixel checks
+and Effect collection deduplication/removal. `/tmp/cna-model-mesh-parts.cpp` is now a NOT applied/
+built/run draft: distinct triangle halves make wrong StartIndex or VertexOffset visible. It owns
+the buffers/effects/parts explicitly and proposes eight checks; no runtime evidence yet.
+Imported sampler application needs investigation; the observed Draw path alone is not a confirmed
+CNA defect. SkinnedModelEXT is distinct from the already demonstrated Model/SkinningData route.
 
 Prior semantic-416 extensions (included in the completed checkpoint):
 
