@@ -1,0 +1,8 @@
+{
+  "cnjVersion": 1,
+  "type": "CnaDemos.EliteEnemy",
+  "data": {
+    "name": "Stone Guard",
+    "baseHealth": 50
+  }
+}

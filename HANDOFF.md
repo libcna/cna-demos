@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 15), 8 (content, 21), 9 (audio 20 incl. 9 XACT, media 10 incl. a
+* In progress: 7 (models/glTF, 15), 8 (content, 22), 9 (audio 20 incl. 9 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 13 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -63,11 +63,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-405 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+406 demos: math 78, game 33, graphics 130 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 15 model), audio 20 (9 XACT), core 3 (2 logger),
-content 21 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 22 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 13 (standalone C programs). Every declared category has demos.
@@ -296,16 +296,19 @@ Further candidates: ContentManager cache/root/lifetime, CNB optional/mandatory c
 and Texture2D ownership/stream gaps. The new CNA binary-content table audits writer/document/
 cursor members outside the XNA percentage. The CNB optional/mandatory extension is completed: all 8 checks pass on both renderer
 selections, build/metadata and targeted CTest pass. Reports: `/tmp/cna-cnb-extensions-{SOFTWARE,OPENGLES3}.json`.
-The next prepared extensions are in `/tmp/cna-streaming-lifecycle.cpp` (buffer sizing, stream restrictions and disposal guards), plus
-`/tmp/cna-cnj-loader.cpp` (two named JSON factories for a game-owned Enemy).
-These are drafts, not yet built or validated; apply and validate next; the preceding checkpoint attempt has ended.
+The next prepared extensions are in `/tmp/cna-streaming-lifecycle.cpp` (buffer sizing, stream restrictions and disposal guards).
+This is a draft, not yet built or validated; apply and validate next; the preceding checkpoint attempt has ended.
 ISSUE-037 records the source-confirmed dynamic
 IsLooped comment error without claiming a runtime defect; its actual guard can extend streaming.
-The CNJ parser choice is now resolved: nlohmann-json 3.11 is already an explicit README/CI
-prerequisite and 3.11.3 is installed. Link the content category explicitly using CNA's existing
+**Custom CNJ batch completed:** `content.custom.cnj_loader` uses two named factories for the
+same Enemy type, real JSON fields, per-manager registration/cache, Unload preserving factories,
+duplicate-name rejection and missing-field ContentLoadException. All 7 checks pass on both
+renderer selections; build, metadata (406/0), its CTest and catalog validation pass. Reports:
+`/tmp/cna-cnj-loader-{SOFTWARE,OPENGLES3}.json`. The CNJ parser choice is resolved: nlohmann-json 3.11 is already an explicit README/CI
+prerequisite and 3.11.3 is installed. The content category explicitly links via CNA's existing
 `cmake/HeaderOnlyJson.cmake` / `cna_link_json_headers` helper (also present at the CI pin), which
-isolates portable headers for cross builds. The prepared demo needs three original CNJ fixtures
-under `assets/custom`; it is not yet part of the catalog. No CNA Internal parser is needed.
+isolates portable headers for cross builds. Three original CNJ fixtures live
+under `assets/custom`, including an intentionally incomplete payload. No CNA Internal parser is needed.
 
 Effects source review: all four configured `CNA_*_COMPILED_EFFECTS` switches are OFF and
 `CNA_FXC_EXECUTABLE` is empty in the current CMake cache, confirming the compiled-FX blocker.
@@ -315,8 +318,8 @@ placeholders is absent from the tracked source tree. An IBL demo therefore still
 authored, consistent irradiance/specular/BRDF bundle or a small asset generator; do not call a
 nonexistent processor or pass arbitrary unrelated textures and claim meaningful IBL coverage.
 
-**Next**: remainders by value -- Phase 8 (finish the prepared `RegisterCnjLoader` demo using
-nlohmann-json; the CNB hook is already demonstrated); Phase 9 (category instance limits are complete; RPC curves and
+**Next**: remainders by value -- Phase 8 (custom pipeline components and further content behaviors; both custom loader hooks
+are now demonstrated); Phase 9 (category instance limits are complete; RPC curves and
 cue variations still need authored data and audible or supported output observation); Phase 6 (image-based lighting; compiled `.fx` effects need fxc); Phase 12
 (`AvatarDescription::Changed`, manual); Phase 13 (devices-ext camera, system tray, message box and
 file dialog are manual; `CNA::Devices::Clipboard` repeats `CNA::Input::Clipboard`); Phase 15

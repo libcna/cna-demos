@@ -1,0 +1,8 @@
+{
+  "cnjVersion": 1,
+  "type": "CnaDemos.Enemy",
+  "data": {
+    "name": "Mossling",
+    "health": 12
+  }
+}

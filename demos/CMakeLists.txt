@@ -9,6 +9,10 @@ cna_demos_add_category(math)                 # Vector*, Matrix, Quaternion, boun
 cna_demos_add_category(game)                 # Game lifecycle, GameTime, components, services, window
 cna_demos_add_category(graphics)             # GraphicsDevice, states, buffers, effects, textures, SpriteBatch
 cna_demos_add_category(content)              # ContentManager, XNB, CNB, CNJ, glTF
+# The custom CNJ loader owns its JSON parsing. Reuse CNA's existing header-only dependency
+# helper so cross builds consume portable JSON headers without a host libc include directory.
+include("${CNA_ROOT_DIR}/cmake/HeaderOnlyJson.cmake")
+cna_link_json_headers(cna_demos_cat_content)
 cna_demos_add_category(audio)                # SoundEffect, instances, 3D audio, dynamic sound, XACT
 cna_demos_add_category(media)                # Song, MediaPlayer, MediaLibrary, Video
 cna_demos_add_category(input)                # Keyboard, Mouse, GamePad, TouchPanel, text input

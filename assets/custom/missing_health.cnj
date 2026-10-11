@@ -1,0 +1,7 @@
+{
+  "cnjVersion": 1,
+  "type": "CnaDemos.Enemy",
+  "data": {
+    "name": "Incomplete enemy"
+  }
+}
