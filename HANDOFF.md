@@ -237,24 +237,29 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** apply and validate the two prepared extensions, then run the next
-full semantic checkpoint (same 416 IDs). Full 416 at 08caa43 is complete: 428 enabled CTests,
-SOFTWARE 371/17/25/3, OPENGLES3 392/18/3/3 and unchanged 24/25 failed assertions.
+**Immediate next action:** run the full semantic 416 checkpoint for the two existing-demo
+extensions below. Compare both current reports/catalog and raw failed assertions against
+checkpoint-416, then archive semantic-416. No new IDs: expected SOFTWARE 371/17/25/3,
+OPENGLES3 392/18/3/3 and 428 enabled CTests. Last full checkpoint is still 416 at 08caa43,
+before these two extensions.
 
-- `/tmp/cna-c-content-root.c` and `/tmp/cna-c-content-root-metadata.cpp`: existing C content
-  example gains root setter/count/copy, caller-buffer reuse, retained checker cache hit, a new
-  sprite-strip load from the changed root, and IO for the old name after Unload. It keeps
-  checking original checker/font handles after manager boundaries. Three root routes and
-  textures/sprite_strip.png are in the metadata draft. Neither is applied/built/run yet.
-  Expected successful count: 41 with screenshots / 39 without; verify it. Compare rendering
-  against `/tmp/cna-c-atlas-guard-{SOFTWARE,OPENGLES3}.png` (those files exist).
-- `/tmp/cna-save-as-image-dimensions.cpp`: existing save_as_image gains decoded PNG/JPEG
-  64x32 exports from the 128x128 source, source immutability and labeled thumbnails. It guards
-  the JPEG error-comparison loop against a wrong decoded shape. Not applied/built/run; intended
-  count 8. Inspect both renderer screenshots before claiming visual validation.
+- C content root extension is applied and passes **41 child checks with screenshots** on both
+  renderers (`/tmp/cna-c-content-root-{SOFTWARE,OPENGLES3}.{json,log,png}`), **39 without** in
+  CTest's LastTest.log. It verifies setter/count/copy, caller-buffer reuse, retained checker
+  cache hit, new sprite-strip resolution and IO for the old name after Unload. Existing owned
+  checker/font handles still render. Screenshot RGBA pixels are identical to the preceding
+  atlas-guard baseline on each renderer; expected checker colors and 1972 bright text pixels
+  were verified directly in both PNGs. SOFTWARE visually inspected.
+- SaveAs image extension is applied and passes **8 checks** on both renderers
+  (`/tmp/cna-save-dimensions-{SOFTWARE,OPENGLES3}.{json,log,png}`). PNG/JPEG decode at the
+  requested 64x32 size and the 128x128 source stays unchanged. The comparison loop now guards
+  JPEG output shape. Labeled screenshots inspected, source/PNG panel pixels match exactly on
+  each renderer, and between-renderer RGBA differences are at most 1 per RGB channel (alpha 0).
 
-The C root setter explicitly preserves cache entries while redirecting uncached loads; do not
-transfer the C++ loaded-root guard expectation (ISSUE-039) into this different C contract.
+Build, metadata (416/0), both demo CTests and both catalog tests pass (4 tests). Coverage is
+regenerated: 290/329 XNA types, 1318/2326 named members, **149/3210 C ABI routes**. No new CNA
+issue. All /tmp drafts for these extensions are applied and stale; do not reapply them. The C
+root setter's cache contract differs from the C++ loaded-root restriction (ISSUE-039).
 
 Both semantic extensions are applied and pass: cnb_read_limits now has 11 checks with Zstd
 available on both renderer selections (`/tmp/cna-compressed-limits-{SOFTWARE,OPENGLES3}.{json,log}`).

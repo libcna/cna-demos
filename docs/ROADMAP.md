@@ -82,7 +82,8 @@ Console demos with checks; each shows one operation family.
   scaled/rotated/mirrored text, `StringBuilder`, the CNAEXT glyph constructor. Remaining: loading
   an XNB font (Phase 8, content), TrueType `.spritefont` (needs FreeType and a licensed font).
 - ✅ (8 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
-  `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg`, `LevelCount`. Remaining:
+  `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg` (including requested output
+  dimensions and unchanged source), `LevelCount`. Remaining:
   float/HDR formats, direct compressed-block data, CNAEXT `DDSFromStreamEXT`.
   ✅ `copy_ownership` checks partial shared edits versus full-upload detachment, Name/Tag isolation,
   sibling survival after Dispose and actual rendered pixels.
@@ -312,7 +313,7 @@ C API demos as standalone C programs (one C game per process), built only with
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, callback errors),
 ✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
-✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard and visible text),
+✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard, root-change cache behavior and visible text),
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),
 ✅ `c_api.audio.sound_effect` (PCM16 effect, instance state, refused parent destruction and stale instance handles),
 ✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse),

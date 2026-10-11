@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- JPEG round-trip comparison now checks decoded dimensions before indexing the pixel array,
+  so an incorrect decoder shape cannot turn a failed demo expectation into out-of-bounds access.
 - Standalone C++ tools now use the browser's shared-library-first link ordering. The new XNA
   adapter tool exposed existing ISSUE-016 again: duplicate CNA TouchPanel statics caused an
   exit-time double free despite passing pipeline checks.
@@ -30,6 +32,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing C content example checks copied root strings, preserved cache entries across root
+  changes, uncached resolution under the new root and cache invalidation after Unload.
+- Existing PNG/JPEG export example verifies requested 64x32 output dimensions and an unchanged
+  128x128 source, with labeled decoded thumbnails beside the full-size round trips.
 - Texture value-copy example distinguishes shared rectangle edits from full-upload detachment,
   copied-but-independent Name/Tag and sibling survival after Dispose. Both renderers pass pixel
   checks and produce identical inspected screenshots.
