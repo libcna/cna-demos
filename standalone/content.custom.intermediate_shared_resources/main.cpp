@@ -29,9 +29,23 @@ namespace
             return name;
         }
         std::vector<std::string> items;
+        std::shared_ptr<LootTable> fallback;
         static void DescribeContent(ContentTypeDescriptor<LootTable>& type)
         {
             type.Field("Items", &LootTable::items).CollectionItemName("Drop");
+            type.Field("Fallback", &LootTable::fallback).SharedResource();
+        }
+    };
+
+    // XML reference fixups do not collect C++ shared_ptr cycles. Keep a scoped owner of both
+    // participating nodes so even an early return or exception breaks their owning back edges.
+    struct UnlinkFallbacks
+    {
+        std::shared_ptr<LootTable> first, second;
+        ~UnlinkFallbacks()
+        {
+            if (first) first->fallback.reset();
+            if (second) second->fallback.reset();
         }
     };
 
@@ -153,7 +167,56 @@ int main()
             }
             check(rejected, message);
         }
-        // This graph is acyclic: ordinary shared_ptr scope destruction releases every table.
+        // A cyclic graph is serialized through Resources, rather than recursive inline copies.
+        // The containing LevelLoot stays outside the cycle: both edges join actual resources.
+        std::weak_ptr<LootTable> authoredFirst, authoredSecond, restoredFirst, restoredSecond;
+        bool restoredOwnersObserved = false;
+        {
+            auto first = std::make_shared<LootTable>();
+            auto second = std::make_shared<LootTable>();
+            UnlinkFallbacks unlinkAuthored{first, second};
+            first->items = {"Coin"}; second->items = {"Key"};
+            first->fallback = second; second->fallback = first;
+            authoredFirst = first; authoredSecond = second;
+            auto cyclic = std::make_shared<LevelLoot>();
+            cyclic->guard = cyclic->patrol = first;
+            cyclic->boss = second;
+            std::unique_ptr<System::Xml::XmlWriter> cycleWriter(System::Xml::XmlWriter::CreateToString(settings));
+            IntermediateSerializer::Serialize<LevelLoot>(*cycleWriter, cyclic, "");
+            const auto cycleXml = cycleWriter->ToString();
+            std::cout << "Cyclic fallback tables:\n" << cycleXml << '\n';
+            int resources = 0;
+            for (std::size_t at = 0; (at = cycleXml.find("<Resource ID=", at)) != std::string::npos; ++at) ++resources;
+            check(resources == 2, "a two-table cycle emits each shared resource once instead of recursing inline");
+            std::unique_ptr<System::Xml::XmlReader> cycleReader(System::Xml::XmlReader::CreateFromString(cycleXml));
+            const auto restored = IntermediateSerializer::Deserialize<LevelLoot>(*cycleReader, "");
+            UnlinkFallbacks unlinkRestored{restored ? restored->guard : nullptr, restored ? restored->boss : nullptr};
+            const bool closed = restored && restored->guard && restored->boss &&
+                restored->guard == restored->patrol && restored->guard->fallback == restored->boss &&
+                restored->boss->fallback == restored->guard;
+            check(closed, "forward and backward fixups close on the same loaded resource identities");
+            if (closed)
+            {
+                restoredFirst = restored->guard; restoredSecond = restored->boss;
+                restoredOwnersObserved = true;
+                check(restored->guard != first && restored->boss != second &&
+                      restored->guard->items == first->items && restored->boss->items == second->items,
+                      "the cyclic graph contains fresh resources with both authored table values");
+                restored->guard->items.push_back("Potion");
+                check(restored->boss->fallback->items.size() == 2 && restored->patrol->items.size() == 2 &&
+                      restored->boss->items.size() == 1 && first->items.size() == 1,
+                      "an edit through the loaded cycle reaches aliases but preserves independent and authored tables");
+            }
+            else
+            {
+                check(false, "the cyclic graph contains fresh resources with both authored table values");
+                check(false, "an edit through the loaded cycle reaches aliases but preserves independent and authored tables");
+            }
+        } // explicit unlinking precedes ordinary shared_ptr destruction
+        check(authoredFirst.expired() && authoredSecond.expired(),
+              "scoped unlinking releases both authored cycle nodes");
+        check(restoredOwnersObserved && restoredFirst.expired() && restoredSecond.expired(),
+              "scoped unlinking releases both loaded cycle nodes");
         return passed ? 0 : 1;
     }
     catch (const std::exception& error)

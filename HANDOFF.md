@@ -229,11 +229,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** apply the two existing XML tool extensions below, build and run
-both renderer selections, investigate failures and update docs. Full 434 is complete and archived;
-use ORIGINAL checkpoint-434 as baseline. Since these extensions add no demo, name their eventual
-full archive checkpoint-434-xml (do not overwrite checkpoint-434). Then continue with the separate
-polymorphic XML candidate or the next semantic gap. Do not restart completed phases.
+**Immediate next action:** run full validation of the applied XML extensions, then archive as
+checkpoint-434-xml and compare ORIGINAL checkpoint-434. Same 434 IDs and expected outcomes:
+SOFTWARE 386/20/25/3, OPENGLES3 407/21/3/3; 447 enabled CTests; raw failures unchanged 28/29.
+The two standalone report rows still have checks=0: count their child stdout explicitly,
+intermediate_shared_resources 10 -> 16 passes and intermediate_serializer 9 -> 11 passes.
+Then continue with the separate polymorphic XML candidate below or the next semantic gap.
+Do not overwrite checkpoint-434 or restart completed phases.
 
 433 targeted evidence:
 - reader_versions passes 17 console checks per renderer selection WITHOUT DISPLAY/WAYLAND;
@@ -288,36 +290,37 @@ polymorphic XML candidate or the next semantic gap. Do not restart completed pha
   hashes are archived with full 434; no rebuild occurred during its runtime phases.
 - All /tmp precedence/CNJ/sprite drafts are now applied and stale; use repository sources.
 
-Next prepared extensions during immutable full 434 (NOT applied/built/run):
-`/tmp/cna-intermediate-cycles.cpp` and `/tmp/cna-intermediate-cycles-metadata.cpp`, based on
-CURRENT intermediate_shared_resources sources. Adds a SharedResource fallback edge to LootTable;
-keeps the existing acyclic/null/malformed-ID checks, then serializes two resources linked in a
-cycle under a separate LevelLoot root. Proposed six added checks (10 -> 16 child checks): exactly
-two resource records, loaded forward/backward closure and alias identity, fresh values, shared
-mutation, and expired weak handles after explicitly unlinking BOTH authored and loaded cycles.
-Scoped cleanup owns both nodes and breaks their shared_ptr edges even on early return/throw;
-no claim that XML or shared_ptr automatically collects cycles. Runtime-root-as-resource identity,
-malformed cyclic graphs and external references remain separate.
-Additional source-only audit decision: descriptor RuntimeType/TypeVersion currently only store
-metadata; no getter consumer was found in content/content-pipeline, and local XML reference
-fixtures do not substitute runtime names or emit versions. The audit now intentionally defers
-standalone getter/setter demos and keeps polymorphic XML dispatch as a separate real gap.
-No oracle execution or runtime coverage is claimed from this inspection.
-Companion `/tmp/cna-intermediate-null-policy.cpp` and `/tmp/cna-intermediate-null-policy-metadata.cpp`
-extend the CURRENT intermediate_serializer: nullable C++ Objective field with AllowNull(false),
-valid round trip plus refusal on XML read and write (expected 9 -> 11 child checks). Existing
-Hint remains optional/nullable. This applies actual authored-data policy, not one demo per flag.
-Both XML extensions preserve stable IDs and add no demos; archive their eventual complete
-checkpoint under a distinct suffix (for example checkpoint-434-xml), not over checkpoint-434. Full 434 is now archived/reviewed; apply these two extensions next. Do not apply older /tmp shared-resource drafts.
-Later focused candidate (also NOT applied/built/run): `/tmp/cna-intermediate-polymorphism.cpp`,
+XML extension batch (built and targeted validation complete, no new demo IDs):
+- intermediate_shared_resources: all 16 child checks pass under both selections WITHOUT
+  DISPLAY/WAYLAND. Two actual resources close their forward/backward cycle, retain aliases
+  and fresh values, share mutation, and expire after scoped unlinking of both authored and
+  loaded C++ cycles. Existing ten acyclic/null/malformed-ID checks are retained. No automatic
+  cycle collection, root-as-resource identity or malformed cyclic graph claim.
+- intermediate_serializer: all 11 child checks pass similarly. Objective's optional C++ carrier
+  is constrained by AllowNull(false); an authored value different from its constructor default
+  round-trips and explicit null is refused on read AND write. Existing Hint absence/null/default
+  behavior remains tested. Other collection/default policies remain separate gaps.
+- Evidence `/tmp/cna-434-xml-{intermediate_shared_resources,intermediate_serializer}-{SOFTWARE,OPENGLES3}.{json,log}`.
+  Parent standalone reports have checks=0; actual counts are in child stdout. No GPU/visual claim.
+- Build `/tmp/cna-434-xml-build.log` clean, metadata 434/0, all 20 targeted CTests pass including
+  all 16 C ABI demos (`/tmp/cna-434-xml-targeted-ctest.log`). Coverage stays 293/329 types,
+  1354/2326 named members, 158/3210 C routes; full runtime report source still checkpoint-434.
+- External CNA observed clean HEAD 419fb8d83 after committed C API handle/refusal/generation
+  changes. Relevant objects rebuilt and C ABI tests passed. Do not infer an atomic source
+  snapshot; archive the final binary hashes with the complete checkpoint.
+- The /tmp cycle and null-policy drafts are applied and stale; use repository sources.
+
+Later focused candidate (NOT applied/built/run): `/tmp/cna-intermediate-polymorphism.cpp`,
 `/tmp/cna-intermediate-polymorphism-metadata.cpp`, `/tmp/cna-intermediate-polymorphism-CMakeLists.txt`.
 A new standalone content.custom.intermediate_polymorphism would demonstrate an abstract Spawn
-list with EnemySpawn/TreasureSpawn, explicit TypeSerializerFor registration, inherited and derived
+list with EnemySpawn/TreasureSpawn, explicit TypeSerializerFor registration, inherited/derived
 fields, actual XML Type attributes inspected through public XmlReader, null elements, fresh
 concrete objects/virtual dispatch and unknown/unrelated/abstract-type refusal (proposed 9 child
-checks). Unlike the two extensions above this would be one meaningful new demo. Keep it for
-AFTER the two existing XML extensions unless a concrete blocker changes priority. No fixture,
-XNB, oracle run or runtime validation is claimed from this draft.
+checks). Negative probes check the intended diagnostic gate; type spellings use the namespace
+prefix actually emitted. Unlike the two extensions this would be one meaningful new demo.
+Apply only AFTER the 434-xml batch has its complete checkpoint. No XNB, oracle execution or
+runtime validation is claimed from this draft. The separate source audit explains why XML
+RuntimeType/TypeVersion metadata alone does not establish dynamic dispatch.
 
 
 **Latest complete checkpoint (2026-10-11):** 434 at 652398e, tools/validate.sh exit 0.

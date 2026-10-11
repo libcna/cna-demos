@@ -238,6 +238,10 @@ a check that all authored colors remain visible and that a blank texture row can
   GetTypeReader and implicit ReadRawObject target/factory-name failures, ISSUE-043).
 - ✅ `content.xnb.external_references`: sibling loose image/compiled label, null and unsafe/missing
   paths, typed/erased owner caches and actual shared-image rendering (11 checks per renderer).
+- ✅ Existing intermediate XML tools now cover a two-resource cycle, explicit shared_ptr unlinking
+  and verified release (16 child checks), plus AllowNull(false) on both read and write with an
+  authored value distinct from its constructor default (11 child checks). Both tools run without
+  a display under both renderer selections; polymorphic XML dispatch remains separate work.
 - ✅ `content.content_manager.asset_precedence`: same-name XNB/CNB/CNJ/native values,
   cache versus fresh-manager lookup, Unload, explicit native filenames, corrupt compiled-file
   refusal and repair/retry. Thirteen checks pass; truncated XNB exposes a public exception-type

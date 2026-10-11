@@ -39,6 +39,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing intermediate XML tools now round-trip a cyclic resource graph with verified C++
+  ownership cleanup, and enforce a non-null objective on both serialization and deserialization.
+  These extend semantic coverage without adding demo IDs.
 - Same-name compiled/source content precedence and cache lifetime checks; a truncated XNB
   exposes an unwrapped EndOfStreamException at the public Load boundary (ISSUE-045).
 - Existing CNJ loading now distinguishes cache entries by requested C++ type, and the

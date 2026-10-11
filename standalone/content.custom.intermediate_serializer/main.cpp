@@ -34,6 +34,7 @@ namespace
         }
         std::string name;
         std::int32_t health = 0;
+        std::optional<std::string> objective = "Open the gate";
         std::optional<std::string> hint = "Look for the key";
         std::vector<std::string> loot;
         std::int32_t runtimeScore = 0;
@@ -45,6 +46,8 @@ namespace
             ContentSerializerAttribute healthFormat;
             healthFormat.setElementNameProperty("HitPoints");
             type.Field("Health", &Encounter::health).Format(healthFormat);
+            // The C++ carrier can represent absence, but the game's authored schema forbids it.
+            type.Field("Objective", &Encounter::objective).AllowNull(false);
             type.Field("Hint", &Encounter::hint).Optional();
             type.Field("Loot", &Encounter::loot).CollectionItemName("Drop");
             type.Field("RuntimeScore", &Encounter::runtimeScore).Ignore();
@@ -64,6 +67,7 @@ int main()
         auto authored = std::make_shared<Encounter>();
         authored->name = "Gatekeeper";
         authored->health = 90;
+        authored->objective = "Recover the key";
         authored->hint.reset(); // omitted Optional restores the reader constructor default
         authored->loot = {"Coin", "Key"};
         authored->runtimeScore = 1234; // runtime-only state must never enter the source asset
@@ -84,7 +88,8 @@ int main()
 
         std::unique_ptr<System::Xml::XmlReader> reader(System::Xml::XmlReader::CreateFromString(xml));
         const auto loaded = IntermediateSerializer::Deserialize<Encounter>(*reader, "");
-        check(loaded && loaded->name == "Gatekeeper" && loaded->health == 90 && loaded->loot == authored->loot,
+        check(loaded && loaded->name == "Gatekeeper" && loaded->health == 90 && loaded->loot == authored->loot &&
+              loaded->objective == "Recover the key",
               "the authored encounter values round trip through intermediate XML");
         check(loaded && loaded->hint == "Look for the key" && loaded->runtimeScore == 0,
               "absent Optional keeps its constructor default and ignored runtime state is not copied");
@@ -116,9 +121,15 @@ int main()
         const auto healthStart = missing.find(healthElement);
         if (healthStart == std::string::npos) throw std::runtime_error("Serialized XML has no HitPoints element");
         missing.erase(healthStart, healthElement.size());
+        std::string nullObjective = xml;
+        const std::string objectiveElement = "<Objective>Recover the key</Objective>";
+        const auto objectiveStart = nullObjective.find(objectiveElement);
+        if (objectiveStart == std::string::npos) throw std::runtime_error("Serialized XML has no Objective element");
+        nullObjective.replace(objectiveStart, objectiveElement.size(), "<Objective Null=\"true\"/>");
         const std::pair<std::string, std::string> rejectedInputs[] = {
             {invalid, "an ignored field in authored XML is rejected"},
-            {missing, "a missing required HitPoints field is rejected despite its constructor default"}};
+            {missing, "a missing required HitPoints field is rejected despite its constructor default"},
+            {nullObjective, "AllowNull(false) rejects an explicitly null objective even though its C++ carrier is nullable"}};
         for (const auto& [input, expectation] : rejectedInputs)
         {
             bool rejected = false;
@@ -134,6 +145,19 @@ int main()
             }
             check(rejected, expectation);
         }
+        authored->objective.reset();
+        bool rejectedNullWrite = false;
+        try
+        {
+            std::unique_ptr<System::Xml::XmlWriter> invalidWriter(System::Xml::XmlWriter::CreateToString(settings));
+            IntermediateSerializer::Serialize<Encounter>(*invalidWriter, authored, "");
+        }
+        catch (const InvalidContentException& error)
+        {
+            rejectedNullWrite = true;
+            std::cout << "Invalid objective on write: " << error.what() << '\n';
+        }
+        check(rejectedNullWrite, "AllowNull(false) also rejects writing an encounter without its objective");
         return passed ? 0 : 1;
     }
     catch (const std::exception& error)

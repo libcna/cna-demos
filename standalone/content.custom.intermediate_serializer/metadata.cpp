@@ -6,13 +6,14 @@ CNA_DEMOS_STANDALONE({
     .title = "Describe an intermediate XML asset",
     .description = "Uses public content descriptors and ContentSerializerAttribute to serialize a game-owned "
                    "encounter with renamed, optional, collection and ignored fields. Distinguishes absent, "
-                   "present and explicit-null hints and rejects missing required or injected ignored fields.",
+                   "present and explicit-null hints, refuses a null required objective on read/write, and rejects missing or ignored fields.",
     .apis = {"ContentSerializerAttribute::ContentSerializerAttribute", "ContentSerializerAttribute::ElementName",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentTypeDescriptor::Field",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Format",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Optional",
+             "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::AllowNull",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::CollectionItemName",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Ignore"},
     .tags = {"content", "custom", "xml", "serialization", "pipeline", "cnaext"},

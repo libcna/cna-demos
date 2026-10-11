@@ -410,6 +410,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::Convert` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ProcessorParameterBindings::Add` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::AllowNull` -- content.custom.intermediate_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::CollectionItemName` -- content.custom.intermediate_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::FlattenContent` -- content.custom.intermediate_properties
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Format` -- content.custom.intermediate_serializer
