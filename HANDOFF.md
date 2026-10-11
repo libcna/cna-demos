@@ -93,10 +93,11 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 ## 7. Build and test status
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6, CNA `2b15506a4`.
-The full **410-demo checkpoint passed** through demo revision `4994374`, including the custom
-XML codec, reader/optional-field/atlas semantic extensions and coordinated network simulation.
-The entire script used private Xvfb (`/tmp/cna-demos-410-validation.log`). Complete raw assertion
-comparison, including child-process prefixes, matches checkpoint-409: 24 SOFTWARE / 25 OPENGLES3.
+The full **410-demo semantic checkpoint passed** through demo revision `b3fd470`, including
+shared XML graph errors and canonical C exception diagnostics on top of the custom XML codec,
+reader/optional-field/atlas extensions and coordinated network simulation. The script used private
+Xvfb (`/tmp/cna-demos-410-semantic-validation.log`). Complete raw assertion comparison, including
+child prefixes, matches checkpoint-410: 24 SOFTWARE / 25 OPENGLES3.
 
 | Check | Result |
 |---|---|
@@ -219,17 +220,18 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 **Current session checkpoint (2026-10-11):** full `tools/validate.sh` completed for all **410 demos**
-through demo revision `4994374`. Section 7 has the exact results. Log:
-`/tmp/cna-demos-410-validation.log`; archives:
-`reports/checkpoint-410-{SOFTWARE,OPENGLES3}.{json,log}` and
-`checkpoint-410-{build,ctest,validation}.log`. Both reports match all 410 catalog IDs exactly once.
-Compared with checkpoint-409, intermediate_type_serializer is new and passes; every old status
-is unchanged. The XNB reader's recorded checks increase from 3 to 5. Coverage is 290/329 XNA
-types and 1318/2326 named members, not comprehensive semantic coverage. CNA remains clean at
+through demo revision `b3fd470`. Section 7 has the exact results. Log:
+`/tmp/cna-demos-410-semantic-validation.log`; archives:
+`reports/semantic-410-{SOFTWARE,OPENGLES3}.{json,log}` and
+`semantic-410-{build,ctest,validation}.log`. Both reports match all 410 catalog IDs exactly once;
+every status and failed-assertion multiset is unchanged from checkpoint-410 (source 4994374).
+The extended child programs pass 10 shared-XML and 24 C diagnostic checks; parent JSON has
+checks=0 for standalone programs. Coverage is 290/329 XNA types, 1318/2326 named members and
+143/3210 C ABI routes, not comprehensive semantic coverage. CNA remains clean at
 `2b15506a48e1a6202c985823131daf5856826f71`, newer than CI's
 `10a4ef1cb4cd832f761536d77588000104947f8d`.
 
-Raw failed-assertion multisets are unchanged across 407/408/409 and the final 410 checkpoint:
+Raw failed-assertion multisets are unchanged across 407/408/409 and both complete 410 checkpoints:
 **24 SOFTWARE / 25 OPENGLES3**, including prefixed host/joiner lines. Earlier counts of 20/21
 omitted those child-process assertions. The intermediate semantic-409 run exposed a separate
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
@@ -388,11 +390,23 @@ ArgumentOutOfRangeException/ParamName=value and clearing those details after an 
 is rejected before mixer initialization or mutation; no audio playback or thread-isolation claim.
 Build, metadata (410/0), the two demos' CTests and both catalog checks pass (4 tests). Coverage
 is regenerated: XNA 290/329 types and 1318/2326 members, C ABI 143/3210 routes. Full checkpoint-410
-archives still describe source 4994374 before these last two extensions; a full semantic-410
-checkpoint is next. Compare every ID/status and the 24/25 failed-assertion multisets. The child
-checks appear in stdout, not the parent's JSON checks=0. Then continue with C diagnostic thread
+archives describe source 4994374 before these two extensions. The **full semantic-410 checkpoint
+at b3fd470 now passes** under private Xvfb, with every ID/status and 24/25 failed-assertion
+multiset unchanged. Archives are `semantic-410-*`; child checks are recorded in raw stdout. Then continue with C diagnostic thread
 isolation or XML properties/flattening/XNA adapter/dependency behavior from the member audit.
 Runtime XNB fixups and graph validation remain a separate unclaimed protocol.
+
+Prepared next focused draft: `/tmp/cna-thread-local-errors/` contains main.c, metadata.cpp and
+CMakeLists.txt for `c_api.core.thread_local_errors`. It creates no Game: two workers deliberately
+fail public vector/float-output routes in a controlled interleaving, read result/category/message
+after the other's write, and preserve the caller's distinct point-output error. Bounded atomic
+phase waits avoid a barrier deadlock; diagnostic queries and all CNA calls remain visible in the
+C source. It is not applied, built, executed or counted. The proposed target uses standard C11
+threads/atomics with a configure-time availability check; other C ABI demos retain C99. If
+adopted, document that narrow standard exception in DEMO_AUTHORING/ARCHITECTURE and update
+counts only after validation. It checks diagnostic storage, not foreign-thread Game dispatch or
+successful arithmetic semantics. The full semantic-410 checkpoint is complete; apply and validate this focused draft next.
+
 
 Effects constraints verified in the current sources/build: all four configured
 `CNA_*_COMPILED_EFFECTS` switches are OFF and `CNA_FXC_EXECUTABLE` is empty. PbrEffect's public
