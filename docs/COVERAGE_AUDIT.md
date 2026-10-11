@@ -195,6 +195,38 @@ CNA `2b15506a4`; planned work is not counted as completed or runtime-validated.
 | GetRenderer / GetRendererWeak / GetCpuPixelsWeak / HasRenderer, ReconstructFromCache | Publicly exposed CNA integration and cache hooks, not ordinary game texture operations. Intentionally no independent demo unless a renderer/cache integration scenario requires them. |
 | CreateCpuOnlyForTests, CreateWithRendererForTests | Explicit test seams; intentionally not game demonstrations. GetTypeName is routine runtime type identification, not an independent texture behavior. |
 
+### SoundEffectInstance and DynamicSoundEffectInstance
+
+These are source/behavior reviews. The automated checkpoint uses SDL's dummy audio driver;
+state and buffer checks can pass there, but audible quality, panning and Doppler are not validated.
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| SoundEffect::CreateInstance; Play, Pause, Resume, Stop(), State | `sound_effect_instance.playback_state` checks the normal state sequence, replay after stopping and natural completion. Repeated Play while already playing, Pause/Resume from stopped and disposed-object errors remain lifecycle gaps; extend that example when useful rather than creating one per state. |
+| IsLooped | `sound_effect_instance.looping` sets it before Play, verifies continued playback and rejects mutation after first Play. `sound_effect.loop_region` supplies authored loop points. Stop(false) and the loop's release behavior remain distinct from immediate Stop and need their own explicit checks. |
+| Volume, Pitch, Pan | `sound_effect_instance.volume_pitch_pan` changes the properties while playing. This is an audible example, not proof of mixer output under the dummy driver. Setter range errors and the interaction of Pan with a started 3D voice are not demonstrated. |
+| Apply3D overloads, listener/emitter state | `sound_effect_instance.apply_3d` moves one emitter around one listener and calls Apply3D before and during playback. Multiple-listener forms, emitter/listener Velocity and actual Doppler effects remain gaps; a printed SpeedOfSound default does not cover them. |
+| Dispose, IsDisposed, protected disposal hook; C++ moves | Scope destruction releases the ordinary demo voices, but explicit disposal/idempotence and a surviving instance after its source SoundEffect is destroyed are meaningful lifetime gaps. The move syntax and GetTypeName need no independent demonstrations. |
+| Dynamic constructor, Play, SubmitBuffer, BufferNeeded, PendingBufferCount | `dynamic_sound_effect_instance.streaming` generates mono 16-bit PCM, prequeues buffers and refills from the game-thread event. It checks playback and event requests and reports queue counts; it does not establish exact callback counts or underrun recovery. |
+| GetSampleSizeInBytes, GetSampleDuration | Streaming uses the size helper to allocate 50 ms buffers. The inverse dynamic-instance duration helper is not shown; add a round trip there. SoundEffect's static helpers are shown in `from_pcm_buffer` but that does not name the dynamic-instance member. |
+| SubmitBuffer offset/count; SubmitFloatBufferEXT | Pending coherent buffer-format extension: sliced submissions, frame alignment and float PCM mode changes. These behaviors are not inferred from one whole-vector 16-bit submission. Avoid one demo per overload. |
+| Dynamic IsLooped / Stop(false) | Pending targeted guards in streaming: the current implementation rejects IsLooped=true, despite the public header's stale claim that the setter has no effect. Read the implementation and reference contract before adding expectations; no new runtime claim is made by this audit. Stop(false) after playback is a separate unsupported request to demonstrate. |
+| QueueInitialBuffers, ClearBuffers, Update (CNA extensions) | Integration helpers. Ordinary games demonstrate the managed refill path through Game/FrameworkDispatcher. Explicit queue clearing or manual pumping needs a streaming lifecycle scenario before being credited; no isolated helper-name demos. |
+
+### XACT engine, banks, cues and categories
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| AudioEngine constructors, RendererDetails, ContentVersion | `xact.play_cue` creates the settings/banks and pumps Update; `renderer_details` lists output IDs/names and uses the look-ahead/output overload. The demo explicitly notes CNA's default-output limitation. ContentVersion is a format constant and needs no independent demo. |
+| AudioEngine::GetCategory, AudioCategory::Name / equality / Pause / Resume / Stop / SetVolume | `xact.categories` distinguishes Music/SFX identities, controls their cues independently and rejects an unknown name. SetVolume is called, but audible attenuation is not measured by the dummy-driver checkpoint. Equals/GetHashCode/ToString add no separate category concept. |
+| GetGlobalVariable / SetGlobalVariable; Cue::GetVariable / SetVariable | `global_variables` checks values and clamping; `cue_variables` checks independent per-cue storage, scope separation and read-only variables. These do not demonstrate an RPC curve changing audible volume/pitch or selecting an interactive variation. |
+| SoundBank constructors, PlayCue overloads, GetCue, IsInUse | `play_cue`, `positional_cue` and `cue_states` distinguish fire-and-forget playback, positional playback and controlled cue instances. GetCue returns caller-owned C++ objects; the four existing raw-pointer demos leak those objects after Dispose. Convert them to unique_ptr before extending XACT. Unknown cue lookup and disposing an engine/bank with live cues remain lifecycle gaps. |
+| Cue::Name, state flags, Play/Pause/Resume/Stop/Dispose | `cue_states` exercises prepared/playing/paused/stopped/disposed states and obtains a fresh cue to replay. Printing IsStopping does not exercise an authored release, and IsCreated/IsPreparing are not demonstrated. Add authored fade/stop behavior with the necessary asset data. |
+| Cue::Apply3D | `positional_cue` uses SoundBank's listener/emitter PlayCue overload, not an explicit moving Cue::Apply3D call. Extend that example for a controlled moving cue; do not credit the member merely because the internal implementation calls it. |
+| WaveBank constructors, IsPrepared, IsInUse | `play_cue` loads an in-memory bank; `streaming_wave_bank` uses offset/packet-size construction, plays it and checks release. Its relative-path restriction is recorded as ISSUE-028. Other packet sizes are not independent concepts. |
+| Disposing events, IsDisposed, explicit bank/engine disposal | Cue disposal is checked and renderer selection disposes a probe engine. Events and cascading disposal deserve a coherent ownership example; ordinary destructor use does not prove event ordering or idempotence. |
+| RPC curves, complex variations, instance limits | Still pending authored XACT data in tools/xact_files.py. Volume/pitch and variation choice need listening or a supported observation route; cue state and which voice is stopped can establish some instance-limit behavior without exposing CNA internals. Do not label the entire workstream audible-only. |
+
 Remaining audit scope: other XNA public members, overload families and behaviors, CNA-specific
 headers, renderer-specific execution, and manual/service scenarios. Neither these tables
 nor the existing type decisions constitute a complete public API audit.

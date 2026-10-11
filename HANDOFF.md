@@ -249,19 +249,27 @@ Both renderers pass all four checks; relevant CTests and metadata pass. Screensh
 in Update and fixed-step catch-up can run several updates per drawn frame; no pixel-equality
 comparison is claimed. No CNA defect found.
 
-**Immediate next action:** full tools/validate.sh for these five revised demos, log
+**Full checkpoint currently running:** tools/validate.sh for these five revised demos, log
 `/tmp/cna-demos-semantic-validation.log`. Until that finishes, section 7 and coverage BASELINE
 columns still refer to the complete pre-extension 404-demo run. Then update them to fresh results.
-Next productive implementation candidates are the ContentManager cache/root/lifetime and
-Texture2D ownership/stream gaps recorded in COVERAGE_AUDIT.md. CNJ custom loading remains pending: a meaningful
+**Next priority after this checkpoint:** source audit found a demo ownership bug in four XACT
+files: GetCue allocates with new; Cue::Dispose releases playback but does not delete the C++
+object, and SoundBank only owns PlayCue's fire-and-forget objects. Prepared unique_ptr fixes are
+`/tmp/cna-xact-{cue_states,categories,cue_variables,streaming_wave_bank}.cpp`; apply, build and
+run the XACT category. This is a demo bug, not a new CNA runtime issue.
+Then implement the unblocked category instance-limit workstream using
+`/tmp/cna-xact-instance-limits.cpp` and `/tmp/cna-xact-files.py` (drafts, not compiled). The
+settings generator adds `limits.xgs`: Music limit 1/Fail and SFX limit 1/ReplaceOldest (policy
+bits are shifted by 3). Public IsPlaying/IsStopped states can test this without listening.
+Check generated default files remain byte-identical; validate the new demo before updating counts.
+Further candidates: ContentManager cache/root/lifetime and Texture2D ownership/stream gaps. CNJ custom loading remains pending: a meaningful
 payload example needs a JSON-parser choice; do not borrow CNA's Internal parser or add a
 constant-return factory merely to increase coverage.
 
 **Next**: remainders by value -- Phase 8 (`RegisterCnjLoader` for a game's
 own asset type: the CNJ hook hands the game raw JSON, and sharp-runtime's System.Text.Json is not
-part of CNA's build, so a demo would need its own parser; the CNB hook is now demonstrated); Phase 9 (XACT RPC curves, cue variations, instance limits -- audible only: no API
-reports a cue's volume or chosen variation, and tools/xact_files.py would need RPC and variation
-tables); Phase 6 (image-based lighting; compiled `.fx` effects need fxc); Phase 12
+part of CNA's build, so a demo would need its own parser; the CNB hook is now demonstrated); Phase 9 (category instance limits are now the next implementable batch above; RPC curves and
+cue variations still need authored data and audible or supported output observation); Phase 6 (image-based lighting; compiled `.fx` effects need fxc); Phase 12
 (`AvatarDescription::Changed`, manual); Phase 13 (devices-ext camera, system tray, message box and
 file dialog are manual; `CNA::Devices::Clipboard` repeats `CNA::Input::Clipboard`); Phase 15
 (member coverage: name the XNA members existing demos already call, as audit pass 1 did for types;
