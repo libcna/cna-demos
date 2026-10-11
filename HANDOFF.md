@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 17), 8 (content, 30), 9 (audio 21 incl. 9 XACT, media 10 incl. a
+* In progress: 7 (models/glTF, 18), 8 (content, 30), 9 (audio 21 incl. 9 XACT, media 10 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 16 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,10 +64,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-421 demos: math 78, game 33, graphics 133 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
+422 demos: math 78, game 33, graphics 134 (19 SpriteBatch, 8 device, 8 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 17 model), audio 21 (9 XACT), core 3 (2 logger),
+effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 18 model), audio 21 (9 XACT), core 3 (2 logger),
 content 30 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 10 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
@@ -268,15 +268,37 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** full 421 is complete and archived. The process-output repair is
-built; its regression CTest first FAILED on unchanged Process.cpp (CHILD before PARENT_CXX
-and PARENT_C), then PASSED after flushing both C++ and C streams before launch. Evidence:
-`/tmp/cna-process-output-{red,green}-{build,test}.log`; clean full incremental build. The real
-30-demo content batch passed with the same 26 passes/four known failures; all statuses, check
-counts and exact failure lines match 419 with no splice (`/tmp/cna-process-output-content.{json,log,stderr.log}`).
-Commit this tooling/checkpoint batch, then apply
-the three prepared model/palette drafts below and validate them. The new framework CTest adds
-one enabled test beyond the 421 checkpoint count (434 enabled with the same 421 demos).
+**Immediate next action:** commit the validated 422 model/palette batch, then run the full
+checkpoint including the process-output fix. Latest complete/reviewed checkpoint remains 421.
+Use checkpoint-421-SOFTWARE.reviewed.log and the original GL log as failure baselines; retain
+their raw partners. The new framework CTest and one new demo mean 435 enabled tests (438 total).
+Expected smoke counts: SOFTWARE 377/17/25/3; GL 398/18/3/3; failed-assertion multisets 24/25.
+
+Current targeted evidence (both renderer selections passed):
+- mesh_parts: 10 checks, including mixed LineList/TriangleList in shared buffers; actual blue
+  line verified in three narrow pixel bands. Screenshots inspected and RGBA-identical.
+- two_bones: 8 checks, including exact palette readback, empty/oversized/invalid-weight refusal,
+  preservation and the original rendered pose. Screenshots inspected; identical silhouettes,
+  1,342 color pixels differ by at most one channel level (no exact-image equality claim).
+- new graphics.model.skinned_parts: 11 checks, including owned-part transfer/replacement after
+  donor destruction, different bone-count refusal before moves, removal, sampled inverse-bind
+  palette and actual shifted surviving geometry/clear removed position. Screenshots inspected
+  and RGBA-identical. No GPU leak/deallocation measurement, manifest-loading or equal-count
+  skeleton-compatibility claim.
+Evidence: `/tmp/cna-422-<demo-id>-{SOFTWARE,OPENGLES3}.{json,log,png}`. Build is clean
+(`/tmp/cna-422-model-palette-build.log`); metadata 422/0; all six targeted CTests pass
+(`/tmp/cna-422-model-palette-ctest.log`). CNA HEAD was e60fa35f7 with external documentation
+cleanup in progress; modules/CMake source paths still matched that revision. Coverage now names
+1328/2326 XNA members (290/329 types), 158/3210 C routes. Full runtime columns still use 421
+and show skinned_parts absent until the next complete smoke; changed-demo targeted counts are
+recorded here. No new CNA issue.
+
+The output-ordering fix is committed at 4b4e608. Its buffered-pipe fixture was verified red/green;
+the real 30-demo content batch then matched all 26 passes/four expected failures and intact
+failure lines from 419. Logs: `/tmp/cna-process-output-{red,green}-{build,test}.log` and
+`/tmp/cna-process-output-content.{json,log,stderr.log}`. Its full smoke validation is next.
+
+Historical 421 review:
 SOFTWARE 421 completed with expected demo statuses,
 but strict assertion comparison requested review: ISSUE-011's "Unload disposed the loaded
 texture" was split after "Unlo" by child stdout from later standalone XML/pipeline demos
@@ -324,20 +346,10 @@ behavior or the distinct SkinnedModelEXT carrier; the audit separates remaining 
 The /tmp sampler and C host-frame drafts have been applied and validated; they are stale copies.
 Do not overwrite subsequent source changes with them.
 
-Prepared during full 421 (NOT applied/compiled/runtime-tested):
-`/tmp/cna-model-mesh-topology.cpp` extends mesh_parts with one shared-buffer LineList part
-and narrow-band pixel checks, without a new ID. `/tmp/cna-model-skinned-parts.cpp` proposes
-`graphics.model.skinned_parts`: the distinct SkinnedModelEXT carrier owns procedural buffers,
-moves/replaces named parts, refuses a different bone count before moving parts, removes a
-temporary center part, samples a one-bone clip with
-nonidentity inverse bind, and draws the surviving pieces after donor destruction. Source APIs
-were read in SkinnedModelEXT.hpp/.cpp, VertexPositionNormalTextureSkinned.hpp and the CNA
-attachment integration example. This draft does not establish importer support, multiple-bone
-hierarchies, release/leak accounting or same-count skeleton/index-order compatibility. 421 is archived; fix and verify process-output ordering before
-applying those drafts. A third prepared source, `/tmp/cna-skinned-effect-palette.cpp`, extends
-existing two_bones with GetBoneTransforms round-trip and invalid empty/oversized palette and
-three-weight refusal while preserving the actual drawn two-bone pose (5 new checks; no new ID).
-These are the next productive batch; no draft has runtime validation yet.
+The model topology, skinned_parts and two_bones palette drafts under /tmp are applied and
+validated; they are stale copies. After completing 422, continue imported model/clip coverage
+or the source-audited isolated MediaLibrary SavePicture workflow in ROADMAP. Do not restart
+completed model scaffolding or treat type/member counts as comprehensive coverage.
 
 Previous 418 batch (included in its complete checkpoint):
 

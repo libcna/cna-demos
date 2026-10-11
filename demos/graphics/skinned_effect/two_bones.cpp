@@ -25,6 +25,9 @@
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
 #include "Microsoft/Xna/Framework/Vector4.hpp"
+#include "System/ArgumentException.hpp"
+#include "System/ArgumentNullException.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -82,8 +85,24 @@ namespace
 
             // Bone 0 stays put; bone 1 rotates 60 degrees about the joint (rotate around the origin,
             // which is where the joint is in this mesh).
-            effect_->SetBoneTransforms({Matrix::getIdentityProperty(),
-                                        Matrix::CreateRotationZ(MathHelper::ToRadians(-60.0f))});
+            const std::vector<Matrix> pose{Matrix::getIdentityProperty(),
+                                          Matrix::CreateRotationZ(MathHelper::ToRadians(-60.0f))};
+            effect_->SetBoneTransforms(pose);
+            Context().Check(effect_->GetBoneTransforms(2) == pose,
+                            "GetBoneTransforms retrieves the uploaded two-bone pose");
+            bool emptyRejected = false, oversizedRejected = false, weightsRejected = false;
+            try { effect_->SetBoneTransforms({}); }
+            catch (const System::ArgumentNullException&) { emptyRejected = true; }
+            try { effect_->SetBoneTransforms(std::vector<Matrix>(SkinnedEffect::MaxBones + 1,
+                                                                Matrix::getIdentityProperty())); }
+            catch (const System::ArgumentException&) { oversizedRejected = true; }
+            try { effect_->setWeightsPerVertexProperty(3); }
+            catch (const System::ArgumentOutOfRangeException&) { weightsRejected = true; }
+            Context().Check(emptyRejected, "an empty bone palette is refused");
+            Context().Check(oversizedRejected, "a bone palette larger than MaxBones is refused");
+            Context().Check(weightsRejected, "three weights per vertex is not a supported weight count");
+            Context().Check(effect_->GetBoneTransforms(2) == pose && effect_->getWeightsPerVertexProperty() == 2,
+                            "refused changes preserve the valid palette and weight count used for drawing");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -133,8 +152,9 @@ CNA_DEMOS_GAME(TwoBonesDemo, {
     .id = "graphics.skinned_effect.two_bones",
     .title = "Skinning with two bones",
     .description = "Bends a strip at a joint with SkinnedEffect: vertices carry bone indices and weights, "
-                   "SetBoneTransforms rotates bone 1, and vertices near the joint blend between the bones.",
-    .apis = {"SkinnedEffect::SkinnedEffect", "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::WeightsPerVertex",
+                   "SetBoneTransforms rotates bone 1, nearby vertices blend between the bones, and invalid palette/weight "
+                   "changes leave the rendered pose intact.",
+    .apis = {"SkinnedEffect::SkinnedEffect", "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::GetBoneTransforms", "SkinnedEffect::WeightsPerVertex",
              "SkinnedEffect::Texture", "VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned",
              "SkinnedEffect::View", "SkinnedEffect::Projection"},
     .tags = {"3d", "skinning", "animation", "bones", "effect"},

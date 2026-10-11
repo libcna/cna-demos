@@ -39,6 +39,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- SkinnedModelEXT example transfers and replaces owned named parts, refuses a different bone count,
+  removes a temporary part, then verifies sampled inverse-bind skinning after donor destruction.
+- Existing mesh_parts now mixes a shared-buffer line part with triangles; existing two_bones checks
+  palette readback and rejected invalid changes before verifying the preserved rendered pose.
 - Model part sampler example distinguishes stored metadata from explicit device selection, with
   wrap/clamp pixel checks on both renderers.
 - C host-frame example verifies copied lifecycle hooks, draw suppression, completion ordering

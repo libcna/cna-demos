@@ -19,6 +19,7 @@
 #include "Microsoft/Xna/Framework/Graphics/ModelMesh.hpp"
 #include "Microsoft/Xna/Framework/Graphics/ModelMeshPart.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RasterizerState.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PrimitiveType.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexBuffer.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexPositionColor.hpp"
 
@@ -35,7 +36,8 @@ namespace
             auto& device = getGraphicsDeviceProperty();
             red_ = std::make_unique<BasicEffect>(device);
             green_ = std::make_unique<BasicEffect>(device);
-            for (BasicEffect* effect : {red_.get(), green_.get()})
+            blue_ = std::make_unique<BasicEffect>(device);
+            for (BasicEffect* effect : {red_.get(), green_.get(), blue_.get()})
             {
                 effect->setWorldProperty(Matrix::getIdentityProperty());
                 effect->setViewProperty(Matrix::getIdentityProperty());
@@ -44,9 +46,10 @@ namespace
             }
             red_->setDiffuseColorProperty(Vector3(1, 0, 0));
             green_->setDiffuseColorProperty(Vector3(0, 1, 0));
+            blue_->setDiffuseColorProperty(Vector3(0, 0, 1));
             // Identity matrices put these two quads directly in clip space. Each part draws
             // only one of its quad's triangles: the missing half makes a wrong StartIndex visible.
-            const std::array<VertexPositionColor, 8> vertices = {
+            const std::array<VertexPositionColor, 10> vertices = {
                 VertexPositionColor(Vector3(-.8f, -.6f, .5f), Color::White),
                 VertexPositionColor(Vector3(-.2f, -.6f, .5f), Color::White),
                 VertexPositionColor(Vector3(-.2f,  .6f, .5f), Color::White),
@@ -55,10 +58,12 @@ namespace
                 VertexPositionColor(Vector3( .8f, -.6f, .5f), Color::White),
                 VertexPositionColor(Vector3( .8f,  .6f, .5f), Color::White),
                 VertexPositionColor(Vector3( .2f,  .6f, .5f), Color::White),
+                VertexPositionColor(Vector3(-.8f,  .8f, .5f), Color::White),
+                VertexPositionColor(Vector3( .8f,  .8f, .5f), Color::White),
             };
             const std::array<std::uint16_t, 6> indices{0, 1, 2, 0, 2, 3};
             vertices_ = std::make_unique<VertexBuffer>(device, VertexPositionColor::getVertexDeclarationStatic(),
-                                                       8, BufferUsage::WriteOnly);
+                                                       10, BufferUsage::WriteOnly);
             indices_ = std::make_unique<IndexBuffer>(device, IndexElementSize::SixteenBits, 6, BufferUsage::WriteOnly);
             vertices_->SetData(vertices.data(), static_cast<int>(vertices.size()));
             indices_->SetData(indices.data(), static_cast<int>(indices.size()));
@@ -66,7 +71,9 @@ namespace
             // owned by this demo; these public CNA constructors store pointers, not ownership.
             left_ = std::make_unique<ModelMeshPart>(vertices_.get(), indices_.get(), 4, 1, 0, 0);
             right_ = std::make_unique<ModelMeshPart>(vertices_.get(), indices_.get(), 4, 1, 3, 4);
-            mesh_ = std::make_unique<ModelMesh>(&device, "Two parts", std::vector<ModelMeshPart*>{left_.get(), right_.get()});
+            line_ = std::make_unique<ModelMeshPart>(vertices_.get(), indices_.get(), 2, 1, 0, 8);
+            line_->setPrimitiveTypeEXTProperty(PrimitiveType::LineList);
+            mesh_ = std::make_unique<ModelMesh>(&device, "Mixed parts", std::vector<ModelMeshPart*>{left_.get(), right_.get(), line_.get()});
             Context().Check(left_->getVertexBufferProperty() == right_->getVertexBufferProperty() &&
                             left_->getIndexBufferProperty() == right_->getIndexBufferProperty(),
                             "the two mesh parts share vertex and index buffers");
@@ -87,6 +94,12 @@ namespace
             Context().Check(effects.getCountProperty() == 1 && effects.Contains(green_.get()) && !effects.Contains(red_.get()),
                             "replacing the last use removes the old effect and deduplicates the replacement");
             left_->setEffectProperty(red_.get());
+            // The line has no effect during the collection checks above. It uses only indices
+            // 0,1 with base vertex 8: PrimitiveCount=1 means two vertices here, not three.
+            line_->setEffectProperty(blue_.get());
+            Context().Check(line_->getPrimitiveTypeEXTProperty() == PrimitiveType::LineList &&
+                            left_->getPrimitiveTypeEXTProperty() == PrimitiveType::TriangleList,
+                            "one mesh can carry both a line part and triangle parts");
         }
 
         void Draw(const GameTime& time) override
@@ -108,6 +121,18 @@ namespace
                 Context().Check(CnaDemos::Near(at(.35f, .3f), Color::Lime, 2), "the right base-vertex range uses the green effect");
                 Context().Check(CnaDemos::Near(at(-.65f, .3f), Color::DarkSlateGray, 2), "the unselected half of the left quad stays clear");
                 Context().Check(CnaDemos::Near(at(.65f, -.3f), Color::DarkSlateGray, 2), "the right StartIndex selects the other triangle only");
+                // A one-pixel line can land on either neighboring raster row. Check a narrow
+                // band at three interior columns instead of assuming identical endpoint rules.
+                bool lineVisible = true;
+                const int lineY = static_cast<int>(.1f * pixels.Height());
+                for (int x : {pixels.Width() / 3, pixels.Width() / 2, 2 * pixels.Width() / 3})
+                {
+                    bool blue = false;
+                    for (int y = lineY - 2; y <= lineY + 2; ++y)
+                        blue = blue || CnaDemos::Near(pixels.At(x, y), Color::Blue, 2);
+                    lineVisible = lineVisible && blue;
+                }
+                Context().Check(lineVisible, "the line part draws above the triangles with its own topology");
                 checked_ = true;
             }
             Game::Draw(time);
@@ -115,10 +140,10 @@ namespace
 
     private:
         // Reverse destruction order drops the mesh and its parts before the referenced objects.
-        std::unique_ptr<BasicEffect> red_, green_;
+        std::unique_ptr<BasicEffect> red_, green_, blue_;
         std::unique_ptr<VertexBuffer> vertices_;
         std::unique_ptr<IndexBuffer> indices_;
-        std::unique_ptr<ModelMeshPart> left_, right_;
+        std::unique_ptr<ModelMeshPart> left_, right_, line_;
         std::unique_ptr<ModelMesh> mesh_;
         bool checked_ = false;
     };
@@ -126,11 +151,12 @@ namespace
 
 CNA_DEMOS_GAME(MeshPartsDemo, {
     .id = "graphics.model.mesh_parts",
-    .title = "Mesh parts share buffers and choose their own effects",
+    .title = "Mesh parts share buffers and choose effects and topology",
     .description = "Builds two parts with shared buffers but different index/base-vertex ranges, checks effect "
-                   "collection membership on replacement, and verifies the two selected triangles with pixels.",
+                   "collection membership on replacement, and checks triangle ranges plus a line part with pixels.",
     .apis = {"ModelMesh::ModelMesh", "ModelMesh::Draw", "ModelMesh::Effects", "ModelMeshPart::ModelMeshPart",
              "ModelMeshPart::Effect", "ModelMeshPart::NumVertices", "ModelMeshPart::PrimitiveCount",
+             "Microsoft::Xna::Framework::Graphics::ModelMeshPart::PrimitiveTypeEXT",
              "ModelMeshPart::StartIndex", "ModelMeshPart::VertexOffset", "ModelMeshPart::VertexBuffer", "ModelMeshPart::IndexBuffer"},
     .tags = {"model", "mesh", "buffers", "effect", "cnaext", "3d"},
     .needs = CnaDemos::Need::ThreeD,
