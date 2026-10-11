@@ -99,8 +99,10 @@ Decisions:
 | Type | Decision |
 |---|---|
 | GameStartedEventArgs, GameEndedEventArgs | shown in `net.network_session.game_flow` |
-| AvailableNetworkSession, AvailableNetworkSessionCollection, QualityOfService, NetworkSessionJoinError, NetworkSessionJoinException | candidate: Find/Join between two processes (a standalone demo, ROADMAP Phase 12) |
-| GamerLeftEventArgs, HostChangedEventArgs, NetworkSessionEndReason, NetworkSessionEndedEventArgs | candidate: with the two-process demo -- in one process CNA's sessions have no remote gamer to leave or host to change |
+| AvailableNetworkSession, AvailableNetworkSessionCollection, QualityOfService | demo: `net.network_session.find_and_join` (two processes) |
+| NetworkSessionJoinError, NetworkSessionJoinException | candidate: a join refused (full session, no join in progress) -- with the two-process demos |
+| GamerLeftEventArgs | demo: `net.network_session.find_and_join`, `net.network_session.host_leaves` |
+| HostChangedEventArgs, NetworkSessionEndReason, NetworkSessionEndedEventArgs | demo: `net.network_session.host_leaves` (two processes) |
 | WriteLeaderboardsEventArgs | service: CNA raises the `Write*Leaderboard`/`WriteTrueSkill` events only for leaderboard gameplay on the CNA service |
 
 ## Microsoft.Xna.Framework.Storage

@@ -144,6 +144,13 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   (AudioEngine::RendererDetails), `math.formatting.to_string` (ToString of the math types; expected
   failure, CNA-DEMOS-ISSUE-024: BoundingBox and Ray print doubled braces); the type-converter demo
   also lists Vector4, Plane and Ray.
+- Two-process net demos (standalone): `net.network_session.find_and_join` (a second process finds
+  the System Link session -- host gamertag, open slots, QualityOfService -- joins and leaves) and
+  `net.network_session.host_leaves` (the host leaves twice: SessionEnded with HostEndedSession,
+  then HostChanged with AllowHostMigration); CNA-DEMOS-ISSUE-026 (on Linux, a process that
+  searched before a host started never receives its answers). CTest runs demos that need the
+  network one at a time (`RESOURCE_LOCK`). `CnaDemos::UseOfflineDemoProfiles` shares the gamer
+  services set-up with the standalone programs.
 - Audit demos (4): `gamer_services.avatar.custom_animation` (a game's own IAvatarAnimation drawn
   by AvatarRenderer), `gamer_services.guide.notification_position` (Guide notifications at
   TopRight), `gamer_services.leaderboard.paging` (PageDown/PageUp, LeaderboardOutcome and TimeSpan

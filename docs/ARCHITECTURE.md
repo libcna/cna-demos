@@ -103,7 +103,7 @@ Reach profile selects it itself with `GraphicsDeviceManager::setGraphicsProfileP
 |---|---|---|---|
 | Console | `CNA_DEMOS_CONSOLE(Function, {...})` | `void Function(DemoContext&)` in-process, no Game, no window | math, content data, storage, logging, anything without a frame loop |
 | Game | `CNA_DEMOS_GAME(Class, {...})` | a `DemoGame` subclass, constructed, `Run()`, destroyed, in-process | everything that needs a GraphicsDevice or a frame loop |
-| Standalone | `CNA_DEMOS_STANDALONE({...})` in `standalone/<id>/metadata.cpp` | a separate executable started as a child process | process-wide state: renderer selection, start-up, custom entry points, the C API |
+| Standalone | `CNA_DEMOS_STANDALONE({...})` in `standalone/<id>/metadata.cpp` | a separate executable started as a child process | process-wide state: renderer selection, start-up, custom entry points, the C API, several processes (System Link Find/Join) |
 
 In-process Game demos rely on CNA supporting several complete `Game` lifecycles one after another
 in one process (CNA tests this: `GameTest.UnloadContentWorksAcrossRepeatedGameInstancesInOneProcess`).

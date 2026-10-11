@@ -607,6 +607,32 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
+### CNA-DEMOS-ISSUE-026 -- On Linux, a process that searched before a host started does not find it
+
+- **Area:** net -- `ENetDiscoveryService` (System Link discovery). Every process binds one UDP
+  socket to port 61190 with `SO_REUSEADDR` (Linux; `SO_REUSEPORT` is set on Apple only) and keeps
+  it for the life of the process; a search sends its query by broadcast and to 127.0.0.1, and the
+  host answers by unicast to the querying address, port 61190. On Linux a unicast datagram to a
+  port shared through `SO_REUSEADDR` reaches only the most recently bound socket, while broadcasts
+  reach all of them. When the host's socket is newer than the searcher's, the host's own socket
+  receives the answer, and the searcher never does.
+- **Demos:** `net.network_session.host_leaves` starts a new player process for each round, with a
+  comment naming this issue; `net.network_session.find_and_join` hosts before it starts the
+  joiner, which is the order that works.
+- **Reproduction:** process A calls `NetworkSession::Find(NetworkSessionType::SystemLink, 1, {})`
+  (nothing is hosted yet); then process B on the same machine creates a SystemLink session; A
+  calls `Find` again, repeatedly.
+- **Observed:** A's searches return no sessions for as long as A runs (B receives its own
+  answers). Started after B, a fresh process finds B's session at once. The same delivery rule is
+  shown without CNA by two Python UDP sockets bound to one port with `SO_REUSEADDR`.
+- **Expected:** A finds B's session -- a lobby screen that searched before a friend on the same PC
+  started hosting must find the game (on separate machines the addresses differ and it works).
+- **Environment:** CNA 0.1.0, Linux 6.18; affects processes on one machine only.
+- **Status:** open; not reported upstream yet. A searcher could take its replies on a socket of its
+  own (as the Apple code path's `SearchSocket` does) instead of the shared port.
+
+---
+
 ## Resolved
 
 (none yet)

@@ -188,7 +188,7 @@ Console demos with checks; each shows one operation family.
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (18 gamer services + 7 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (18 gamer services + 9 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -210,9 +210,13 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   deliver no packets, so packets need System Link.
 - ✅ `net.network_session.online_session_types`: Local works offline; PlayerMatch and Ranked need
   the online service (GamerServicesNotAvailableException in CNA's offline mode).
+- ✅ Two processes (standalone): `net.network_session.find_and_join` (Find, AvailableNetworkSession,
+  QualityOfService, Join, GamerJoined/GamerLeft on the host) and `net.network_session.host_leaves`
+  (SessionEnded with HostEndedSession; AllowHostMigration with HostChanged; CNA-DEMOS-ISSUE-026:
+  on Linux a process that searched before a host started does not find it).
 - Remaining net: `SimulatedLatency`/`SimulatedPacketLoss` (if they apply to local delivery),
-  `AddLocalGamer`, `GamerLeft`/`HostChanged`/`SessionEnded`, `AllowJoinInProgress`,
-  `PrivateGamerSlots`; Find/Join between two processes (a standalone demo); voice (manual).
+  `AddLocalGamer`, `AllowJoinInProgress`, `PrivateGamerSlots`, a refused join
+  (NetworkSessionJoinException); voice (manual).
 
 ## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (17 demos)
 - ✅ `devices.*` (4): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,

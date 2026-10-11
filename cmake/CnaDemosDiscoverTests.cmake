@@ -92,6 +92,10 @@ foreach(_renderer IN LISTS CNA_DEMOS_TEST_RENDERERS)
         if(_automation STREQUAL "manual")
             set_tests_properties(${_name} PROPERTIES DISABLED TRUE)
         endif()
+        # System Link demos find every session on the network, each other's included: one at a time.
+        if(_needs MATCHES "(^|,)network(,|$)")
+            set_tests_properties(${_name} PROPERTIES RESOURCE_LOCK cna_demos_system_link)
+        endif()
         # A demo that documents a recorded CNA defect is expected to fail; if it starts passing,
         # the test fails so the stale known-issue marker gets noticed.
         if(NOT _known_issue STREQUAL "-")

@@ -99,6 +99,11 @@ xvfb-run -a ctest --test-dir build/linux-full -L display
 ctest --test-dir build/linux-full -L graphics -j8       # one category, sharded by CTest
 ```
 
+Demos that need the network (`Need::Network`: the System Link demos) share the CTest
+`RESOURCE_LOCK` `cna_demos_system_link`, so `ctest -j` runs them one at a time: System Link
+discovery finds every session on the network, and two of these demos running together would find
+each other's sessions.
+
 To exercise several renderers, list them: `-DCNA_DEMOS_TEST_RENDERERS="SOFTWARE;OPENGLES3"`.
 Windowed renderers need a display (`xvfb-run`; Mesa llvmpipe provides GL/GLES and lavapipe Vulkan
 without a GPU).

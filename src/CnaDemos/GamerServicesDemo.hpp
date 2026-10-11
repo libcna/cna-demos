@@ -11,6 +11,7 @@
 
 #include "CNA/GamerServices/Configuration.hpp"
 #include "CnaDemos/DemoGame.hpp"
+#include "CnaDemos/Metadata.hpp" // DemoEntry, for the ownProcess check
 #include "Microsoft/Xna/Framework/GamerServices/GamerServicesComponent.hpp"
 #include "Microsoft/Xna/Framework/Storage/StorageDevice.hpp"
 
@@ -18,6 +19,41 @@ namespace CnaDemos
 {
     /** The local profile the demos sign in, unless CNA_GAMER_SERVICES_AUTO_SIGN_IN names others. */
     inline constexpr const char* DemoGamertag = "Demo Player";
+
+    /** Sets an environment variable for this process and the processes it starts. */
+    inline void SetEnvironment(const char* name, const std::string& value)
+    {
+#ifdef _WIN32
+        _putenv_s(name, value.c_str());
+#else
+        setenv(name, value.c_str(), 1);
+#endif
+    }
+
+    /** Sets an environment variable unless the user already set it. */
+    inline void SetEnvironmentDefault(const char* name, const std::string& value)
+    {
+        const char* current = std::getenv(name);
+        if (current == nullptr || *current == '\0')
+        {
+            SetEnvironment(name, value);
+        }
+    }
+
+    /**
+     * CNA's offline gamer services with the demos' own profile store (see GamerServicesDemo
+     * below). The standalone net programs, which are not DemoGames, call it themselves before
+     * adding their GamerServicesComponent.
+     */
+    inline void UseOfflineDemoProfiles()
+    {
+        CNA::GamerServices::setConfigurationOverride(CNA::GamerServices::Configuration{});
+        Microsoft::Xna::Framework::Storage::StorageDevice::SetAppNameEXT("cna-demos");
+        SetEnvironmentDefault(
+            "CNA_GAMER_SERVICES_PROFILES_DIR",
+            (std::filesystem::path(Microsoft::Xna::Framework::Storage::StorageDevice::GetStorageRootEXT()) / "profiles")
+                .string());
+    }
 
     /**
      * Base class of the demos about gamer services. Its constructor does what an XNA game's
@@ -48,33 +84,13 @@ namespace CnaDemos
             {
                 throw std::logic_error("a gamer services demo must set .ownProcess = true in its metadata");
             }
-            CNA::GamerServices::setConfigurationOverride(CNA::GamerServices::Configuration{});
-            Microsoft::Xna::Framework::Storage::StorageDevice::SetAppNameEXT("cna-demos");
-            SetDefault("CNA_GAMER_SERVICES_PROFILES_DIR",
-                       (std::filesystem::path(Microsoft::Xna::Framework::Storage::StorageDevice::GetStorageRootEXT())
-                        / "profiles")
-                           .string());
-            SetDefault("CNA_GAMER_SERVICES_AUTO_SIGN_IN", autoSignIn);
+            UseOfflineDemoProfiles();
+            SetEnvironmentDefault("CNA_GAMER_SERVICES_AUTO_SIGN_IN", autoSignIn);
 
             // The component initializes GamerServicesDispatcher in Initialize, updates it every
             // frame and draws the Guide over the game. The collection keeps it alive.
             getComponentsProperty().Add(
                 std::make_shared<Microsoft::Xna::Framework::GamerServices::GamerServicesComponent>(*this));
-        }
-
-    private:
-        static void SetDefault(const char* name, const std::string& value)
-        {
-            const char* current = std::getenv(name);
-            if (current != nullptr && *current != '\0')
-            {
-                return;
-            }
-#ifdef _WIN32
-            _putenv_s(name, value.c_str());
-#else
-            setenv(name, value.c_str(), 1);
-#endif
         }
     };
 }
