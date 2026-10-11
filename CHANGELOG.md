@@ -22,6 +22,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing content cache demo now switches roots after Unload and exposes CNA accepting a root
+  change while assets remain loaded (ISSUE-039); the visual shows the observed result.
 - Custom content pipeline demo: registered importer/processor/writer, build-time patrol-length
   computation, deterministic CNB output, runtime loading and contextual parameter diagnostics.
 - Custom CNJ enemy demo with two named factories, actual JSON payload parsing, manager-local

@@ -172,7 +172,8 @@ Console demos with checks; each shows one operation family.
   example also covers optional/mandatory unknown chunks and retry after a repaired file.
   ✅ `content.custom.pipeline_components`: registered importer/processor/writer, real patrol
   precomputation, deterministic CNB output, runtime loading and typed parameter diagnostics.
-  Remaining: build-time IntermediateSerializer/custom XNA adapters and the member/behavior gaps
+  ✅ Existing cache/Unload demo now shows root switching after Unload and exposes CNA's missing
+  loaded-root guard (ISSUE-039). Remaining: build-time IntermediateSerializer/custom XNA adapters and the member/behavior gaps
   in COVERAGE_AUDIT.md; this phase is not comprehensively covered.
 - `content.content_manager.*`: `Load` caching semantics, `Unload`, `RootDirectory`, separate
   managers, `ContentLoadException`, loose files vs XNB vs CNB vs CNJ lookup order.

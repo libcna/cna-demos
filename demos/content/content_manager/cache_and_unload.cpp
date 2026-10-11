@@ -16,6 +16,7 @@
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/InvalidOperationException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -45,10 +46,24 @@ namespace
             for (int i = 0; i < 100; ++i)
                 checker_ = level.Load<Texture2D>("textures/checker");
             const int repeatedLoads = textures_ - before - firstLoad;
+            // A root change while assets are cached would mix old and new content under the
+            // same logical names. XNA refuses it; Unload establishes the boundary for a switch.
+            bool rootChangeRejected = false;
+            try { level.setRootDirectoryProperty("assets/xnb"); }
+            catch (const System::InvalidOperationException&) { rootChangeRejected = true; }
+            Context().Print("root change rejected: {}; root before Unload: {}", rootChangeRejected,
+                            level.getRootDirectoryProperty());
+            Context().Check(rootChangeRejected && level.getRootDirectoryProperty() == "assets",
+                            "RootDirectory cannot change while assets are loaded (CNA-DEMOS-ISSUE-039)");
+            rootSummary_ = rootChangeRejected ? "Root change refused until Unload"
+                : "CNA accepted root change while loaded (ISSUE-039)";
             // Unload forgets everything this manager loaded; the next Load reads the file again.
             level.Unload();
-            checker_ = level.Load<Texture2D>("textures/checker");
+            level.setRootDirectoryProperty("assets/textures");
+            checker_ = level.Load<Texture2D>("checker"); // same image, relative to the new root
             const int afterUnload = textures_ - before - firstLoad - repeatedLoads;
+            Context().Check(level.getRootDirectoryProperty() == "assets/textures",
+                            "after Unload the root can change and resolves the new relative name");
 
             Context().Print("textures created: first Load {}, 100 more Loads {}, Load after Unload {}", firstLoad,
                             repeatedLoads, afterUnload);
@@ -68,6 +83,7 @@ namespace
             spriteBatch_->DrawString(*font_, "Textures created by ContentManager::Load", Vector2(40.0f, 30.0f),
                                      Color::White);
             spriteBatch_->DrawString(*font_, summary_, Vector2(40.0f, 60.0f), Color::LightGreen);
+            spriteBatch_->DrawString(*font_, rootSummary_, Vector2(40.0f, 90.0f), Color::Yellow);
             spriteBatch_->Draw(checker_, Rectangle(40, 120, 192, 192), Color::White);
             spriteBatch_->End();
             Game::Draw(gameTime);
@@ -77,6 +93,7 @@ namespace
         int textures_ = 0;
         System::EventHandler<ResourceCreatedEventArgs>::Token created_{};
         std::string summary_;
+        std::string rootSummary_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
         Texture2D checker_;
@@ -87,11 +104,12 @@ CNA_DEMOS_GAME(CacheAndUnloadDemo, {
     .id = "content.content_manager.cache_and_unload",
     .title = "Asset cache and Unload",
     .description = "Counts the textures the device creates while a ContentManager loads one asset once, 100 more "
-                   "times (cache hits, no new texture) and again after Unload (loaded anew).",
+                   "times (cache hits), rejects a root change while loaded, then switches roots after Unload.",
     .apis = {"ContentManager::ContentManager", "ContentManager::Load", "ContentManager::Unload",
-             "GraphicsDevice::ResourceCreated"},
+             "ContentManager::RootDirectory", "GraphicsDevice::ResourceCreated"},
     .tags = {"content", "cache", "unload", "level", "memory"},
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb", "textures/checker.png"},
+    .knownIssue = "CNA-DEMOS-ISSUE-039",
 })

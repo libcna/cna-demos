@@ -886,6 +886,30 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   Targeted CTest/catalog and metadata validation pass. No audible validation is claimed.
 - **Status:** runtime-confirmed missing disposal guards; not reported upstream.
 
+### CNA-DEMOS-ISSUE-039 -- ContentManager permits changing the root with loaded assets
+
+- **Area:** both ContentManager::setRootDirectoryProperty overloads in
+  `modules/content/src/Xna/ContentManager.cpp`.
+- **Demo:** `content.content_manager.cache_and_unload` (marked `knownIssue`).
+- **Reproduction:** create a manager rooted at assets, Load<Texture2D>("textures/checker"),
+  then attempt to set RootDirectory to assets/xnb without first calling Unload.
+- **Observed:** the setter accepts the new path. Both overloads directly assign rootDirectory_
+  and never check the loaded-asset cache. The old cached asset and the new root can consequently
+  describe different content trees under one manager.
+- **Expected:** InvalidOperationException and an unchanged root while the manager has loaded
+  assets. The local genuine-XNA 4.0 ContentManager decompilation checks loadedAssets.Count > 0
+  before assigning the root. This is reference-source evidence; genuine XNA was not executed.
+- **Independent behavior:** after Unload, switching to assets/textures and loading checker
+  works, creating one new texture. Original first-load/cache/reload checks continue to pass;
+  the extended demo has 5 checks with exactly the root-mutation guard failing.
+- **Environment/evidence:** CNA `2b15506a48e1a6202c985823131daf5856826f71`, Linux GCC 14.2,
+  SOFTWARE and OPENGLES3/private Xvfb. Reports: `/tmp/cna-content-root-{SOFTWARE,OPENGLES3}.json`;
+  both execute 5 checks with exactly one failure, and both screenshots were inspected. Build,
+  metadata (407/0), targeted CTest and catalog validation pass. The same setter implementation
+  exists at the CI pin (source checked only).
+- **Status:** runtime-confirmed XNA compatibility gap, not a demo workaround; no CNA source
+  changed and no upstream report sent.
+
 ## Resolved
 
 (none yet)
