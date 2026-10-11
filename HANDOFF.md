@@ -93,25 +93,25 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The 425 batch began with CNA
-`bf0cde63f2f3ca11276d47a4c6a4ea870223455b`; inspected library/CMake paths were unchanged
-from the 423 dependency snapshot (ongoing external documentation cleanup).
-The full **425-demo checkpoint passed** through revision `7d25a1d`.
-`tools/validate.sh` exited 0 under private Xvfb (`/tmp/cna-demos-425-validation.log`). Both
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The 427 batch began with CNA
+`8b5564f1e81196f3aaee9e9a652b8030e21f4c6c`; inspected changes since the 425 dependency
+snapshot are documentation/test paths, not runtime implementation.
+The full **427-demo checkpoint passed** through revision `204d23c`.
+`tools/validate.sh` exited 0 under private Xvfb (`/tmp/cna-demos-427-validation.log`). Both
 complete reports match the fresh catalog. Both ORIGINAL stdout logs pass strict comparison
-to 423 directly: only two new passing IDs and skinned_animation's 3 -> 10 checks; all older
-statuses and failed assertions remain unchanged (25 SOFTWARE / 26 OPENGLES3).
+to 425 directly: two new passing IDs and manifest checks 20 -> 26 (six additional XNB reader
+names); all older statuses and failed assertions remain unchanged (25 SOFTWARE / 26 OPENGLES3).
 
 | Check | Result |
 |---|---|
 | Configure + build `linux-full` (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets `--validate` | 425 demos, 0 problems |
+| Metadata/assets `--validate` | 427 demos, 0 problems |
 | `tools/validate.sh` | Passed, including both complete smoke runs and coverage regeneration |
-| CTest | 413 passed (including 18 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 379 passed, 18 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (private Xvfb) | 400 passed, 19 expected failures, 3 skipped, 3 manual not run |
+| CTest | 415 passed (including 18 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 381 passed, 18 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (private Xvfb) | 402 passed, 19 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | None; raw totals 25/26 unchanged |
-| Screenshots | Manifest captures RGBA-identical; animation unchanged per renderer versus original source |
+| Screenshots | XNB model and independent-skin scenes inspected; pairs RGBA-identical |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -225,7 +225,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Latest complete checkpoint (2026-10-11):** 425 at 7d25a1d, tools/validate.sh exit 0.
+**Latest complete checkpoint (2026-10-11):** 427 at 204d23c, tools/validate.sh exit 0.
+SOFTWARE 381/18/25/3, OPENGLES3 402/19/3/3; 440 enabled CTests, 427/0 metadata.
+Archives: `reports/checkpoint-427-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
+`checkpoint-427-{build,ctest,validation}.log`. Both reports cover the fresh catalog exactly;
+both ORIGINAL stdout logs pass strict comparison to 425 (25/26 failed assertions unchanged).
+Both new model IDs pass; manifest checks increase 20 -> 26 for six new built-in reader names.
+SOFTWARE stderr is byte-identical to 425; GL ERROR/INFO counts remain three/three.
+Coverage is 293/329 XNA types, 1344/2326 named members, 158/3210 C routes. All 427 IDs have
+complete runtime columns. Use ORIGINAL checkpoint-427 as the next baseline.
+
+Historical 425 checkpoint:
+**Completed checkpoint (2026-10-11):** 425 at 7d25a1d, tools/validate.sh exit 0.
 SOFTWARE 379/18/25/3, OPENGLES3 400/19/3/3; 438 enabled CTests, 425/0 metadata.
 Archives: `reports/checkpoint-425-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` and
 `checkpoint-425-{build,ctest,validation}.log`. Both reports cover the fresh catalog exactly;
@@ -300,10 +311,12 @@ omitted those child-process assertions. The intermediate semantic-409 run expose
 flaky demo expectation, investigated and corrected below. `tools/compare_checkpoints.py` now
 checks IDs/statuses and assertion multiplicities; its tests and actual archived comparisons pass.
 
-**Immediate next action:** commit the final validated 427 model batch, then run full tools/validate.sh
-and compare ORIGINAL outputs to checkpoint-425. Expected SOFTWARE 381/18/25/3, OPENGLES3
-402/19/3/3 and 440 enabled CTests; raw failed assertions should remain 25/26. Full 427 is NOT
-complete yet; coverage runtime columns still use the complete 425 reports.
+**Immediate next action:** implement and validate the prepared runtime XNB shared-resource
+example described below. Full 427 is complete and archived; binary/asset edits may resume.
+The manifest demo increases 20 -> 26 checks because the new XNB requires six additional
+standard reader names: BasicEffectReader, IndexBufferReader, ModelReader, StringReader,
+VertexBufferReader and VertexDeclarationReader. The generated reader table and manifest loop
+were inspected; this is expected asset-driven coverage, not a regression.
 
 427 targeted evidence:
 - xnb_model: 11 checks per renderer. Original `.x` -> existing FORMAT xnb content build -> actual
@@ -333,7 +346,15 @@ After the checkpoint, continue the deeper public API audit: the XNB model now pr
 shared buffer fixups indirectly, but ContentReader::ReadSharedResource/ReadSharedResources still
 needs a focused runtime object-graph example using public reader callbacks. Existing intermediate
 XML shared-resource evidence does not establish that binary protocol. This is a productive Phase 8
-workstream; remaining model gaps include imported topology/specular slots and broader skin/material
+workstream. NEW unbuilt drafts: `/tmp/cna-xnb-shared-resources.cpp`, `/tmp/cna-xnb-graphs.py`,
+and `/tmp/cna-xnb-graph-fixture`. Three original XNB files regenerate byte-identically and their
+container sizes/signatures match; C++ reader behavior has NOT yet been built/run. The console
+draft uses the public platform base path for an absolute asset root, no graphics device.
+Review and apply now that 427 is complete, integrate the generator in tools/generate_assets.py, then
+validate deferred callbacks, aliasing, weak back-edge lifetime and invalid index/type refusal.
+The draft also reads an ordinary inline Item via ReadObject to contrast equal values with shared
+identity; final prepared files are now 210 bytes each (the earlier 197-byte drafts are superseded).
+Remaining model gaps include imported topology/specular slots and broader skin/material
 variants, not a reason to restart completed phases.
 
 425 animation investigation: final/source-before-extension first-frame pixels were identical on
