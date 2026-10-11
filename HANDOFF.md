@@ -62,9 +62,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-344 demos: math 72, game 29, graphics 111 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
-4 blend state, 4 sampler state, 3 rasterizer state, 5 depth-stencil state, 3 primitives,
-3 vertex buffer, 3 index buffer, 1 vertex declaration, 6 render target, 1 occlusion query, 7 BasicEffect, 10 other
+348 demos: math 72, game 29, graphics 115 (19 SpriteBatch, 8 device, 7 texture2d, 1 texture3d, 7 sprite font,
+4 blend state, 4 sampler state, 3 rasterizer state, 5 depth-stencil state, 4 primitives,
+4 vertex buffer, 3 index buffer, 1 vertex declaration, 7 render target, 1 occlusion query, 8 BasicEffect, 10 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 8 model), audio 14 (5 XACT), core 3 (2 logger),
 content 16, input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 9 (compiled video and song), gamer services 15
@@ -76,7 +76,8 @@ Known-issue demos: 6 (`math.curve.step_continuity` CNA-DEMOS-ISSUE-002,
 `content.content_manager.unload_disposes` CNA-DEMOS-ISSUE-011,
 `content.content_manager.open_stream_override` CNA-DEMOS-ISSUE-012,
 `gamer_services.achievement.award` CNA-DEMOS-ISSUE-017,
-`game.time_step.reset_elapsed_time` CNA-DEMOS-ISSUE-019).
+`game.time_step.reset_elapsed_time` CNA-DEMOS-ISSUE-019; and on OPENGLES3/OPENGL33 only,
+`graphics.render_target.render_target_cube` CNA-DEMOS-ISSUE-021).
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status (this session, Linux, Ubuntu 24.04, GCC 14.2, CMake 4.4.4 via pip)
@@ -86,9 +87,9 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 | Configure + build `linux-full` (8 renderers, CNA as libcna.so, C API libcna_c_api.so) | ✅ |
 | `cna-demos --validate` | ✅ 0 problems |
 | `tools/validate.sh` (build, validate, ctest, smoke SOFTWARE + OPENGLES3/Xvfb, coverage) | ✅ |
-| `ctest` (CLI tests + 344 demos on SOFTWARE, dummy audio) | ✅ 357/357 (6 expected failures via WILL_FAIL, 2 manual demos disabled) |
-| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 320 passed, 6 expected failures, 16 skipped (window demos, PbrEffect fallback, custom shaders: no CustomEffects), 2 not run (manual) |
-| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ✅ 333 passed, 6 expected failures, 3 skipped (wireframe, LOD bias: not on GL ES; ColorMatrixEffect: SOFTWARE only), 2 not run (manual) |
+| `ctest` (CLI tests + 348 demos on SOFTWARE, dummy audio) | ✅ 361/361 (6 expected failures via WILL_FAIL, 2 manual demos disabled) |
+| `--smoke` on SOFTWARE (no display), dummy audio | ✅ 324 passed, 6 expected failures, 16 skipped (window demos, PbrEffect fallback, custom shaders: no CustomEffects), 2 not run (manual) |
+| `--smoke` on OPENGLES3 under Xvfb (Mesa llvmpipe, GLES 3.2), dummy audio | ✅ 336 passed, 7 expected failures (ISSUE-021 on GL only), 3 skipped (wireframe, LOD bias: not on GL ES; ColorMatrixEffect: SOFTWARE only), 2 not run (manual) |
 | Screenshots inspected (SOFTWARE, OPENGLES3): every graphics.* and input.* Game demo | ✅ correct; the renderers agree (except intentionally non-deterministic demos) |
 | Content build (`cna-content`, FontTextureProcessor) | ✅ builds `fonts/pixel_font.cnb`; FreeType not required |
 | CMake 3.28.3 (distro) with CNA_SHARED_LIBRARY=ON | ❌ CNA-DEMOS-ISSUE-001; cna-demos now defaults to static there |
@@ -142,7 +143,9 @@ executable -- worked around in our CMake by naming libcna.so first), CNA-DEMOS-I
 `std::runtime_error`, not `NetworkNotAvailableException`), CNA-DEMOS-ISSUE-019
 (`Game::ResetElapsedTime` is ignored with a fixed time step, FNA's rule), CNA-DEMOS-ISSUE-020
 (a compiled Song/Video stream is resolved from the ContentManager's root, not beside the asset:
-the media content build in `assets/media` gets its own ContentManager rooted there).
+the media content build in `assets/media` gets its own ContentManager rooted there),
+CNA-DEMOS-ISSUE-021 (EasyGL -- OPENGLES3, OPENGL33 -- samples a rendered RenderTargetCube face
+upside down; SOFTWARE, VULKAN and SDL_GPU are right).
 
 ## 11. Dependencies (pinned for CI; same as cna-template's dependencies.lock)
 

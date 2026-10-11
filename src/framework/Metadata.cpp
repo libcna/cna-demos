@@ -34,6 +34,22 @@ namespace CnaDemos
         return needs;
     }
 
+    std::string_view KnownIssueFor(const DemoInfo& info, std::string_view renderer)
+    {
+        if (info.knownIssueRenderers.empty())
+        {
+            return info.knownIssue;
+        }
+        for (const std::string_view affected : info.knownIssueRenderers)
+        {
+            if (affected == renderer)
+            {
+                return info.knownIssue;
+            }
+        }
+        return {};
+    }
+
     std::vector<std::string_view> NeedNames(Need needs)
     {
         std::vector<std::string_view> names;

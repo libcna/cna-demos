@@ -510,6 +510,28 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** open (low: one ContentManager per content build avoids it); not reported upstream
   yet.
 
+### CNA-DEMOS-ISSUE-021 -- EasyGL samples a rendered RenderTargetCube face upside down
+
+- **Area:** graphics, EasyGL renderer (OPENGLES3, OPENGL33). EasyGL keeps a render target's GL
+  texels bottom-up and corrects 2D sampling per texture unit, but `BindDrawParams` leaves cube maps
+  out of that correction ("REMED-GFX-137 owns rendered cube faces", `EasyGLRenderer.cpp`), so a
+  face drawn into with `SetRenderTarget(RenderTargetCube*, CubeMapFace)` is sampled flipped
+  vertically by `EnvironmentMapEffect`.
+- **Demos:** `graphics.render_target.render_target_cube` (expected failure on OPENGLES3 and
+  OPENGL33 only).
+- **Reproduction:** fill the +Z face of a `TextureCube` (SetData) and of a `RenderTargetCube`
+  (SpriteBatch into the face) with the same image -- top half red, bottom half black; both read
+  back identical with `GetData`. Draw a mirror sphere (EnvironmentMapEffect, FresnelFactor 0) with
+  each as its EnvironmentMap, seen from +Z.
+- **Observed:** on OPENGLES3 and OPENGL33 the `SetData` cube shows red above the sphere's centre and
+  the rendered cube below it. In the demo, cubes orbiting above the sphere are reflected in its
+  lower half (0-30 reflected pixels above the centre, ~360 below).
+- **Expected:** both cubes sampled the same way, as SOFTWARE, VULKAN and SDL_GPU do (red above the
+  centre; ~450 reflected cube pixels above the centre, 0 below): a dynamic environment map must
+  reflect the scene upright.
+- **Environment:** CNA 0.1.0, Linux, Mesa llvmpipe under Xvfb (GL ES 3.2 and GL 3.3 core).
+- **Status:** open (medium for dynamic reflections on the GL renderers); not reported upstream yet.
+
 ---
 
 ## Resolved

@@ -139,6 +139,12 @@ namespace CnaDemos
          */
         std::string_view knownIssue = {};
         /**
+         * The renderers the known issue affects, by name ("OPENGLES3", as GetGraphicsRendererName
+         * reports it), when the defect is in some renderers only; empty = every renderer. On the
+         * others the demo is expected to pass like any other.
+         */
+        std::vector<std::string_view> knownIssueRenderers = {};
+        /**
          * True when the demo sets up state that CNA allows only once per process -- gamer
          * services (GamerServicesComponent initializes GamerServicesDispatcher, which XNA and
          * CNA refuse to initialize twice). Batch runs and the browser start such a demo in a
@@ -146,6 +152,9 @@ namespace CnaDemos
          */
         bool ownProcess = false;
     };
+
+    /** The demo's knownIssue if it applies to @p renderer (see DemoInfo::knownIssueRenderers), else empty. */
+    [[nodiscard]] std::string_view KnownIssueFor(const DemoInfo& info, std::string_view renderer);
 
     /** A registered demo: the author's metadata plus what the registry derived. */
     struct DemoEntry

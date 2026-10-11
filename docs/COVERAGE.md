@@ -6,7 +6,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**344 demos** in 18 categories. Kinds: console 133, game 203, standalone 8. Automation: automated 309, manual 2, smoke-only 33.
+**348 demos** in 18 categories. Kinds: console 133, game 207, standalone 8. Automation: automated 313, manual 2, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed) | Run on OPENGLES3 (passed / skipped / failed) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 | 2 / 0 / 0 |
 | game | 29 | 24 | 4 | 1 | 22 / 5 / 1 | 27 / 0 / 1 |
 | gamer_services | 15 | 15 | 0 | 0 | 14 / 0 / 1 | 14 / 0 / 1 |
-| graphics | 111 | 111 | 0 | 0 | 107 / 3 / 1 | 107 / 3 / 1 |
+| graphics | 115 | 115 | 0 | 0 | 111 / 3 / 1 | 110 / 3 / 2 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 | 39 / 0 / 0 |
 | math | 72 | 72 | 0 | 0 | 71 / 0 / 1 | 71 / 0 / 1 |
 | media | 9 | 8 | 1 | 0 | 9 / 0 / 0 | 9 / 0 / 0 |
@@ -31,9 +31,9 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 231 of 329** (70.2 %).
-- **Methods, properties, constructors and events named by a demo: 981 of 2326** (42.2 %).
-- Fields and enum values named by a demo: 118 of 753 (reported separately: a demo per enum value is not a goal).
+- **Types with at least one demo: 233 of 329** (70.8 %).
+- **Methods, properties, constructors and events named by a demo: 986 of 2326** (42.4 %).
+- Fields and enum values named by a demo: 119 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
@@ -42,7 +42,7 @@ Generated 2026-10-11 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Content` | 2 / 11 | 7 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 9 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 34 / 52 | 102 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 72 / 99 | 232 / 550 | 78 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 74 / 99 | 237 / 550 | 79 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 41 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 15 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
@@ -59,7 +59,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 - `Microsoft.Xna.Framework.Content`: ContentReader, ContentSerializerAttribute, ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute, ContentTypeReader, ContentTypeReaderManager, ResourceContentManager
 - `Microsoft.Xna.Framework.Design`: PlaneConverter, RayConverter, RectangleConverter, Vector4Converter
 - `Microsoft.Xna.Framework.GamerServices`: AvatarBodyType, ControllerSensitivity, FriendCollection, FriendGamer, GameDifficulty, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPrivilegeException, GamerZone, IAvatarAnimation, InviteAcceptedEventArgs, LeaderboardOutcome, NetworkException, NetworkNotAvailableException, NotificationPosition, RacingCameraAngle, SignedOutEventArgs
-- `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectParameterClass, EffectParameterType, EffectPassCollection, GraphicsDeviceStatus, IEffectFog, IEffectLights, IEffectMatrices, IGraphicsDeviceService, IVertexType, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPart, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, RenderTargetBinding, RenderTargetCube, VertexBufferBinding, VertexPositionColorTexture
+- `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, EffectParameterClass, EffectParameterType, EffectPassCollection, GraphicsDeviceStatus, IEffectFog, IEffectLights, IEffectMatrices, IGraphicsDeviceService, IVertexType, ModelBoneCollection.Enumerator, ModelEffectCollection, ModelEffectCollection.Enumerator, ModelMeshCollection, ModelMeshCollection.Enumerator, ModelMeshPart, ModelMeshPartCollection, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException, RenderTargetBinding, VertexPositionColorTexture
 - `Microsoft.Xna.Framework.Input`: KeyState, Keys
 - `Microsoft.Xna.Framework.Input.Touch`: TouchCollection.Enumerator
 - `Microsoft.Xna.Framework.Media`: Album, AlbumCollection, Artist, ArtistCollection, Genre, GenreCollection, MediaSourceType, Picture, PictureAlbum, PictureAlbumCollection, PictureCollection, Playlist, PlaylistCollection, VideoSoundtrackType

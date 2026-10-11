@@ -92,14 +92,16 @@ Console demos with checks; each shows one operation family.
 - ✅ (5) `graphics.vertex_buffer.*` (static buffer + DrawPrimitives, DynamicVertexBuffer with
   Discard and ContentLost), `graphics.index_buffer.*` (indexed cube, 32-bit indices),
   `graphics.vertex_declaration.custom_vertex`, ✅ `graphics.vertex_buffer.get_data`,
-  ✅ `graphics.index_buffer.dynamic_index_buffer`. Remaining: `NoOverwrite` ring buffer,
-  `SetVertexBuffers` with several streams.
+  ✅ `graphics.index_buffer.dynamic_index_buffer`, ✅ `graphics.vertex_buffer.several_streams`
+  (SetVertexBuffers). Remaining: `NoOverwrite` ring buffer (CNA accepts the hint and re-uploads the
+  whole buffer).
 - ✅ (3) `graphics.primitives.*`: DrawUserPrimitives, DrawUserIndexedPrimitives, all four
-  PrimitiveTypes. Remaining: instancing (`DrawInstancedPrimitives`, needs a custom effect or a
-  CNAEXT path).
+  PrimitiveTypes, ✅ `graphics.primitives.draw_instanced_primitives` (CNA's stock effects read a
+  per-instance world matrix from the instance stream).
 - ✅ (6) `graphics.render_target.*`: render to texture, `RenderTargetUsage` Discard/Preserve,
-  read back with GetData, own depth buffer, mipmapped target, multisampling. Remaining: float/HDR
-  formats, `RenderTargetCube` and multiple render targets (with effects, Phase 6).
+  read back with GetData, own depth buffer, mipmapped target, multisampling, ✅
+  `graphics.render_target.render_target_cube` (dynamic environment map; ISSUE-021 on the GL
+  renderers). Remaining: float/HDR formats, multiple render targets (with effects, Phase 6).
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
   `graphics.texture_cube.*` beyond the environment-map demo (render to a `RenderTargetCube`).
 
@@ -107,7 +109,8 @@ Console demos with checks; each shows one operation family.
 - ✅ Stock effects (11): `BasicEffect` (texture, default lighting, three directional lights,
   per-pixel lighting, material colours, fog, alpha), `AlphaTestEffect` cut-outs,
   `DualTextureEffect` light map, `EnvironmentMapEffect` with a `TextureCube` and Fresnel,
-  `SkinnedEffect` with two bones. Remaining: BasicEffect vertex colour + lighting combined.
+  `SkinnedEffect` with two bones, ✅ `graphics.basic_effect.vertex_color_lighting` (vertex colour
+  and lighting together).
 - 🟨 CNA effects: ✅ `PbrEffect` metallic/roughness, ✅ `ColorMatrixEffect` (SOFTWARE). Remaining:
   PBR maps (normal, emissive, occlusion), `SkinnedPbrEffect`, image-based lighting.
 - 🟨 Custom shaders: ✅ `ShaderEffect` in 3D (toon shading) and in `SpriteBatch::Begin`

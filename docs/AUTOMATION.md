@@ -32,7 +32,11 @@ and fails because of that recorded CNA defect. It is never turned into SKIPPED o
   demo that **passes** is reported as "UNEXPECTED PASS" and fails the batch;
 * CTest registers it with `WILL_FAIL` and the label `known-issue`, so CI stays green while the
   defect exists and turns red when it disappears (time to remove the marker);
-* `cna_demos.cli.catalog_json_parses` checks that every `knownIssue` has an entry in CNA_ISSUES.md.
+* `cna_demos.cli.catalog_json_parses` checks that every `knownIssue` has an entry in CNA_ISSUES.md;
+* a defect that only some renderers have names them in `knownIssueRenderers` (for example
+  `{"OPENGLES3", "OPENGL33"}`): on those the failure is expected, on every other renderer the demo
+  must pass like any other. `--list-ids` prints such an issue as `<issue>@R1,R2`, and CTest sets
+  `WILL_FAIL` only for the listed renderers.
 
 ## 2. Running unattended
 

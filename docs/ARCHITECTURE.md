@@ -137,7 +137,7 @@ dropped by the linker the way unreferenced members of a static library would be.
 
 `CnaDemos::DemoInfo` (in `src/CnaDemos/Metadata.hpp`) is written by the author with designated
 initializers. Fields: `id`, `title`, `description`, `apis`, `tags`, `automation`, `needs`, `frames`,
-`deterministic`, `assets`, `restrictions`, `knownIssue`. Nothing is written twice:
+`deterministic`, `assets`, `restrictions`, `knownIssue`, `knownIssueRenderers`, `ownProcess`. Nothing is written twice:
 
 * **category** = first ID segment; **subcategory** = the segments between first and last;
 * **kind** = which macro registered the demo;

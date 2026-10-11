@@ -5,6 +5,7 @@
 #include <set>
 #include <string>
 
+#include "CNA/GraphicsRendererType.hpp"
 #include "CnaDemos/Catalog.hpp"
 
 namespace CnaDemos
@@ -178,6 +179,18 @@ namespace CnaDemos
             if (HasNeed(info.needs, Need::CApi) && entry.kind != DemoKind::Standalone)
             {
                 report(id, "Need::CApi is for the C programs among the standalone demos");
+            }
+            if (!info.knownIssueRenderers.empty() && info.knownIssue.empty())
+            {
+                report(id, "knownIssueRenderers needs a knownIssue");
+            }
+            for (const std::string_view renderer : info.knownIssueRenderers)
+            {
+                CNA::GraphicsRendererType type{};
+                if (!CNA::tryParseGraphicsRendererName(renderer, type) || CNA::getGraphicsRendererName(type) != renderer)
+                {
+                    report(id, "knownIssueRenderers: '" + std::string(renderer) + "' is not a CNA renderer name");
+                }
             }
             if (!info.knownIssue.empty())
             {

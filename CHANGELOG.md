@@ -139,6 +139,13 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   DynamicIndexBuffer with Discard, Texture3D sub-box data, glTF node-animation clips
   (ModelAnimationsEXT, ApplyClipToBonesEXT) on a generated turntable model, and the same font, sound
   and curve compiled to CNB and to XNB.
+- Graphics demos (4): hardware instancing (DrawInstancedPrimitives with a per-instance world-matrix
+  stream), several vertex streams (SetVertexBuffers), rendering into a RenderTargetCube (dynamic
+  environment map), BasicEffect vertex colours with lighting.
+- `knownIssueRenderers` metadata: a recorded defect can be limited to some renderers (expected
+  failure there, a normal pass elsewhere; `--list-ids` prints `<issue>@R1,R2`, CTest follows it).
+- CNA-DEMOS-ISSUE-021 recorded: the EasyGL renderers (OPENGLES3, OPENGL33) sample a rendered
+  RenderTargetCube face upside down.
 - C API demos (7, Phase 14): standalone C99 programs against CNA's C ABI (`CNA::CApi`) --
   lifecycle callbacks and the loop, error results and diagnostics, sprites from computed pixels,
   a ContentManager with texture and SpriteFont, keyboard/mouse state, a SoundEffect from PCM,

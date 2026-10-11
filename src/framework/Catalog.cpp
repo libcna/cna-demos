@@ -136,6 +136,8 @@ namespace CnaDemos
             out << ",\n      \"deterministic\": " << (info.deterministic ? "true" : "false");
             out << ",\n      \"restrictions\": \"" << JsonEscape(info.restrictions) << "\"";
             out << ",\n      \"knownIssue\": \"" << JsonEscape(info.knownIssue) << "\"";
+            out << ",\n      \"knownIssueRenderers\": ";
+            WriteStringArray(out, info.knownIssueRenderers);
             out << ",\n      \"ownProcess\": " << (info.ownProcess ? "true" : "false");
             out << ",\n      \"source\": \"" << JsonEscape(entry.source) << "\"";
             if (entry.kind == DemoKind::Standalone)
@@ -192,7 +194,16 @@ namespace CnaDemos
         }
         if (!info.knownIssue.empty())
         {
-            out << "  Known issue : " << info.knownIssue << " (docs/CNA_ISSUES.md) -- expected to fail\n";
+            out << "  Known issue : " << info.knownIssue << " (docs/CNA_ISSUES.md) -- expected to fail";
+            if (!info.knownIssueRenderers.empty())
+            {
+                out << " on";
+                for (const std::string_view renderer : info.knownIssueRenderers)
+                {
+                    out << ' ' << renderer;
+                }
+            }
+            out << '\n';
         }
         if (info.ownProcess)
         {

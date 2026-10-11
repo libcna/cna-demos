@@ -110,6 +110,7 @@ open. `--screenshot` still captures the last frame it drew.
 | `assets` | no | files under `assets/` the demo loads (validated) |
 | `restrictions` | no | renderer/platform restrictions and *why* |
 | `knownIssue` | no | `CNA-DEMOS-ISSUE-NNN` when a recorded CNA defect makes the demo fail (section 11) |
+| `knownIssueRenderers` | no | renderer names (`"OPENGLES3"`) when the defect is in those renderers only; empty = all |
 | `ownProcess` | no (false) | the demo sets up state CNA allows once per process (gamer services); batch runs and the browser start it as `cna-demos <id>` in a new process. Every `GamerServicesDemo` sets it |
 
 ## 6. Style
@@ -235,7 +236,8 @@ Look at the screenshot. A demo that runs but draws the wrong thing is not done.
 ## 11. When the demo exposes a CNA bug
 
 Do not work around it silently. Minimise it, add an entry to [CNA_ISSUES.md](CNA_ISSUES.md), keep
-the demo checking the **documented** behaviour, and set `.knownIssue = "CNA-DEMOS-ISSUE-NNN"`. The
+the demo checking the **documented** behaviour, and set `.knownIssue = "CNA-DEMOS-ISSUE-NNN"` (plus
+`.knownIssueRenderers` when only some renderers have the defect -- compare the renderers first). The
 demo then still reports FAILED (with the issue named), while batch runs and CTest count it as an
 expected failure; if it ever passes, CTest fails so the stale marker is noticed. Fix CNA only for an
 obvious, low-risk, well-understood defect, in CNA's own repository, separately from demo work.

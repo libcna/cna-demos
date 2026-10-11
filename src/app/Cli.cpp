@@ -376,10 +376,15 @@ missing in this environment).
                 {
                     needList += (needList.empty() ? "" : ",") + std::string(need);
                 }
-                const std::string_view knownIssue = demo.entry.info.knownIssue;
+                // The known issue, "-" when none, "<issue>@R1,R2" when it affects some renderers only.
+                std::string knownIssue(demo.entry.info.knownIssue.empty() ? "-" : demo.entry.info.knownIssue);
+                for (std::size_t i = 0; i < demo.entry.info.knownIssueRenderers.size(); ++i)
+                {
+                    knownIssue += (i == 0 ? "@" : ",") + std::string(demo.entry.info.knownIssueRenderers[i]);
+                }
                 std::cout << demo.entry.info.id << ' ' << ToString(demo.entry.kind) << ' '
                           << ToString(demo.entry.info.automation) << ' ' << (needList.empty() ? "-" : needList) << ' '
-                          << (knownIssue.empty() ? "-" : knownIssue) << '\n';
+                          << knownIssue << '\n';
             }
             return 0;
         }

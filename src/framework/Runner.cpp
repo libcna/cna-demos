@@ -14,6 +14,8 @@
 #include "CnaDemos/Catalog.hpp"
 #include "CnaDemos/DemoGame.hpp"
 #include "CnaDemos/Process.hpp"
+#include "CNA/GraphicsRendererSelection.hpp"
+#include "CNA/GraphicsRendererType.hpp"
 #include "CNA/Logger.hpp"
 #include "Microsoft/Xna/Framework/Audio/NoAudioHardwareException.hpp"
 
@@ -240,7 +242,10 @@ namespace CnaDemos
     {
         RunResult result;
         result.id = std::string(demo.entry.info.id);
-        result.knownIssue = std::string(demo.entry.info.knownIssue);
+        // The renderer this process draws with (chosen before any device exists).
+        const std::string_view renderer =
+            CNA::getGraphicsRendererName(CNA::GraphicsRendererSelection::GetSelected());
+        result.knownIssue = std::string(KnownIssueFor(demo.entry.info, renderer));
 
         if (options.automated && demo.entry.info.automation == Automation::Manual)
         {
