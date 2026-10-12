@@ -103,6 +103,17 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **470-release** extends the existing looping demo from three to six checks.
+All ten dummy-audio repetitions (five per requested renderer environment) pass with empty
+stderr. Stop(false) leaves a paused voice paused and its configured IsLooped true; Resume
+starts it, then it naturally completes within a3s deadline. Original function source through
+all three old checks is unchanged. Observed waits after Resume range from
+0.239 to 0.261s; these are polling observations, not audible duration/latency or sample evidence.
+Watched build64542 passes9scheduled/8numbered operations, all3,909inputs unchanged.
+Metadata470/0; focused/targeted78295 passes37enabled CTests in5.65s; one manual microphone
+test disabled. Focused reviewer passes BEFORE commit; evidence checkpoint-470-release-focused-*.
+Last complete baseline470-specular. No extra ID or genuine CNA problem found; full run next.
+
 Complete checkpoint **470-specular**, source `c9660d8`,
 extends the existing shadow receiver from seven to nine GL controls. All nine pass with
 empty focused stderr; SOFTWARE retains its exact declared stock-path skip. Seven original
@@ -250,24 +261,19 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply and validate the same-ID 470-release looping extension.
-Full470-specular session80513 is CLOSED0; sourcec9660d8 is the comparison baseline.
-1. Apply /tmp/cna-loop-release.cpp to audio/sound_effect_instance/looping.cpp. Syntax95961
-   passed, no native evidence yet. Original three controls plus paused Stop(false), Resume
-   and bounded natural completion (six checks expected with dummy audio).
-2. Watched build /tmp/cna-build-470-release.py initial; consistency if inputs change.
-   Metadata, /tmp/cna-run-470-release-focused.py (five repetitions per requested renderer)
-   and targeted shell. Run /tmp/cna-review-470-release-focused.py BEFORE committing:
-   it requires the original function prefix through all three old checks unchanged.
-3. Update semantic docs, commit, export /tmp/cna-catalog-470-release.json; full wrapper,
-   capture once after build during CTest, freeze artifacts, archive both smokes and finish.
-   Baseline470-specular,483enabled CTests, unchanged470totals; looping3->6checks on both
-   selections only plus separately reviewed positive title Update variance.
-4. Close docs/history/HANDOFF and commit, then continue the prepared public Pan/3D mode
-   lifecycle /tmp/cna-spatial-mode.cpp. Syntax50498 passed, no native evidence yet.
-   Original audible sweep remains; source-only draft adds six public state/refusal checks.
-   Raw Pan changes on its refusal path must not be mistaken for observed output panning.
-Preserve the original ISSUE-057 refusal/probes and investigate any new diagnostic.
+HIGHEST PRIORITY: complete full470-release, then apply the prepared spatial-mode extension.
+Release is APPLIED; watched build, metadata, ten focused repetitions and37enabled targeted
+CTests pass. Original function prefix through all three old checks retained verbatim.
+Commit source/docs, export /tmp/cna-catalog-470-release.json, run prepared full wrapper.
+Capture hashes once after build during CTest; freeze artifacts through both smokes. Archive
+each selection then run /tmp/cna-470-release-finish.py. Baseline470-specular,483enabled CTests,
+unchanged470totals; only looping3->6checks on both selections plus reviewed positive title
+Update variance. Preserve any refusal and investigate it. Close docs/history/HANDOFF and commit.
+Immediately continue with /tmp/cna-spatial-mode.cpp (UNAPPLIED, syntax50498 passed).
+It retains apply_3d's original sweep/default check and adds six public mode/refusal controls.
+Prepared /tmp/cna-*470-spatial* helpers need complete470-release as baseline. Raw Pan getter
+changes on its refusal path are separate from output panning; no listening credit inferred.
+Open ISSUE-057 still has its original pre-CTest refusal and independent private probe evidence.
 
 ## 15. Assumptions the next session must know
 
@@ -284,11 +290,10 @@ Prior receiver/PCF/cascade/border/specular/query, audio formats/XACT, reader, mo
 lighting, palette and EOF drafts are APPLIED AND STALE. Do not restore old /tmp source.
 Preserve history and immutable checkpoint evidence, including original failures/probes.
 
-Next UNAPPLIED: /tmp/cna-loop-release.cpp, syntax95961 CLOSED0, empty log. Six checks
+APPLIED AND STALE: /tmp/cna-loop-release.cpp, syntax95961 CLOSED0, empty log. Six checks
 expected, original three retained verbatim. Pause before Stop(false) prevents a racy
 immediate-Playing assertion; Resume then bounded3s completion observes loop release.
-No audible sample/tail-content or latency claim. Helpers /tmp/cna-*470-release* are ready,
-UNRUN; source/notes/helper recovery under checkpoint-470-border-next-*.
+No audible sample/tail-content or latency claim. Release focused helpers pass; full helpers next; source/notes/helper recovery under checkpoint-470-border-next-*.
 
 Later UNAPPLIED: /tmp/cna-spatial-mode.cpp, syntax50498 CLOSED0, empty log. Existing
 apply_3d adds six mode/refusal controls before its original audible sweep (seven total).

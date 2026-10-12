@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Looping audio adds paused Stop(false)/Resume/natural-completion controls. All six checks
+  pass in ten dummy-audio repetitions; 37 enabled targeted CTests pass. No listening claim.
 - Complete470-specular: 483 enabled CTests and both full smoke suites retain all prior
   failure, child and network evidence; selected artifacts and normalized diagnostics stay stable.
 - Skinned shadow receiver adds isolated specular attenuation controls: nine GL checks,

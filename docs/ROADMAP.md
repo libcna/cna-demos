@@ -1089,3 +1089,16 @@ All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-spec
 Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
 No new ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057 stays
 open with its original refusal and independent private staging probe preserved.
+
+## Focused470-release
+
+Focused **470-release** extends the existing looping demo from three to six checks.
+All ten dummy-audio repetitions (five per requested renderer environment) pass with empty
+stderr. Stop(false) leaves a paused voice paused and its configured IsLooped true; Resume
+starts it, then it naturally completes within a3s deadline. Original function source through
+all three old checks is unchanged. Observed waits after Resume range from
+0.239 to 0.261s; these are polling observations, not audible duration/latency or sample evidence.
+Watched build64542 passes9scheduled/8numbered operations, all3,909inputs unchanged.
+Metadata470/0; focused/targeted78295 passes37enabled CTests in5.65s; one manual microphone
+test disabled. Focused reviewer passes BEFORE commit; evidence checkpoint-470-release-focused-*.
+Last complete baseline470-specular. No extra ID or genuine CNA problem found; full run next.
