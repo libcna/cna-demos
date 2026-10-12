@@ -466,7 +466,7 @@ survive. All previous assertions remain, with one host setup label updated.
 
 The new `c_api.game.launch_parameters` source demonstrates explicit UTF-8 spans, ownership,
 ordinal enumeration and count/copy boundaries. Both focused selections pass all fifteen child
-checks with empty stderr after the external ISSUE-053 repair; complete 456 validation is running.
+checks with empty stderr after the external ISSUE-053 repair; complete 456 validation passed all 469 enabled CTests and both smokes, preserving every old failure.
 
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:

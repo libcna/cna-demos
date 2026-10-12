@@ -1433,3 +1433,225 @@ build/linux-full/bin/cna-demos --renderer SOFTWARE --prefix <id-prefix> --out /t
 `--renderer OPENGLES3 --xvfb` for GL) and look at the image. Each: read the CNA header (and the
 implementation when semantics matter), write demos, build, run tools/validate.sh, review contact
 sheets, update this file, commit.
+
+
+## Checkpoints 455/456 preparation history (superseded by complete 456 at e70eeb5)
+
+The following is the former handoff's chronological preparation record. Live/pending statements
+inside it are historical; HANDOFF.md carries the current continuation. Full 456 ultimately
+passed 469 enabled CTests and both smokes, preserving all original 35/36 failures.
+
+## 14. Next task
+
+**Immediate next action:** resume full 456 validation session 65041 at source e70eeb5,
+/tmp/cna-demos-456-validation.log. Build passed (seven scheduled targets), metadata 456/0,
+All 469 enabled CTests pass (186.53 s); SOFTWARE smoke is archived/reviewed, OPENGLES3 is running. Runtime hashes captured after this build: 35 binaries/four assets.
+Do not edit/rebuild sources/assets during runtime. Archive each smoke using
+/tmp/cna-archive-456.py SOFTWARE|OPENGLES3, then /tmp/cna-456-finish.py. Helpers name e70eeb5.
+Manifest now passes 13 focused checks on each renderer with empty stderr: sixteen obsolete
+registration assertions replaced by three inventory/lazy-family checks; ten controls retained.
+Its earlier six failed assertions remain in checkpoint-456-manifest-*. Helpers permit only the
+explicit manifest 26 -> 13 count change and the existing title timing variance; all old raw
+failures/statuses/known issues and C/custom-content child lists/traces must still match 455.
+
+Full 455 at 9c023d8: tools/validate.sh exit 0, all 468 enabled CTests (199.23 s), SW 402/25/25/3,
+GL 423/26/3/3. Exact ORIGINAL 453 comparisons add only the two four-check material/specular IDs;
+every old status, check count, known issue, 35/36 failed assertions and C/custom-content child
+list/trace remains. All 34 binaries/four assets and normalized stderr match. Evidence/catalog/
+helpers: reports/checkpoint-455-*. Both scenes pass on both selections; all focused stderr empty.
+Four 800x480 captures actually inspected: material differs only 41,472 ambient-card pixels by
+one green level (26 SW /25 GL), specular only two pixels by one red level; original tolerance 1.
+
+Initial build FAILED in external uncommitted CNA cgltf implementation splitting: lost private
+helper declarations and transitive C string/memory includes. Both new demo objects compiled,
+but the executable did not link; all 34 old runtime binaries remained unchanged. Evidence:
+reports/checkpoint-455-initial-*. Recorded as ISSUE-052. The external author added string.h and
+CgltfInternals wrappers; retry succeeded (111 scheduled targets, known Draco CMP0148 developer
+warning only, no compiler diagnostics). ISSUE-052 is resolved for the exercised build; no CNA
+file edited/reverted and no warning suppressed by cna-demos. CNA/GamerServices refactoring
+was uncommitted over 3ee6ae3 during build; later clean ced719909 was observed during smoke.
+No atomic build-input snapshot is claimed.
+
+All 47 targeted C/graphics/CLI CTests passed (18.80 s: 46 passes incl. three WILL_FAIL, one PBR
+skip). Evidence, four images, repaired-source observations and retry log:
+reports/checkpoint-455-focused-*. /tmp/cna-review-455-focused.py verifies the focused results and
+exact image differences. The specular design JSON is analytic design only, not native mutation
+validation. /tmp/cna-catalog-455.json has the current catalog.
+
+Full archives include the actual catalog, comparison/finish scripts and final CNA state.
+Clean ced719909 observed at completion; source was changing during preparation, so no atomic
+source/input or complete transitive binary snapshot is claimed. No source/assets were changed
+by cna-demos during runtime.
+
+Previous COMPLETE checkpoint: 453 at 91fc3f9 (closure 9a95a11), tools/validate.sh exit 0, all 466
+enabled CTests (197.82 s), SW 400/25/25/3, GL 421/26/3/3. Exact ORIGINAL 451-prefix comparison
+adds only automatic_dispatch/vertex_colors, preserves every old 35/36 failure, status and count,
+and accepts exactly the TLS nine-check extension after its eight original controls. Other C/
+custom-content lists/traces, all 34 selected hashes/four assets and normalized stderr match.
+Evidence/catalog/helpers: reports/checkpoint-453-*. Its inspected vertex-color captures differ
+only 864 blue pixels by one level. All older C/vertex-color /tmp source drafts are stale.
+
+Current applied C candidate: standalone/c_api.game.launch_parameters/main.c (113 lines), with
+its metadata and CMakeLists. Fifteen intended child checks cover explicit bounded StringViews,
+owned UTF-8 bytes after caller overwrite, guarded exact/short buffer copies, ordinal enumeration
+(Zeta before lowercase names), documented first-wins Add, malformed replacement preserving prior
+state, null/zero-length empty values and explicit empty-list clearing. Output lengths are seeded
+with UINT64_MAX before short/exact/empty copies so unchanged outputs cannot pass accidentally.
+The current C source passes GCC 14 C99 -Wall/-Wextra/-Werror syntax-only validation; runtime is
+pending ISSUE-053 repair. /tmp/cna-launch-parameters* source drafts are older, APPLIED AND STALE.
+Prepared /tmp/cna-run-456-focused.py, /tmp/cna-archive-456.py, /tmp/cna-456-finish.py and
+/tmp/cna-capture-456.py expect 15 child checks, unchanged ORIGINAL 455 statuses/failures and
+old C/custom-content lists/traces, plus 35 selected binaries/four assets. The helpers now name source commit 8f2b04c; update that if source changes, and capture runtime
+hashes after the checkpoint build succeeds. /tmp/cna-catalog-456.json and source-only coverage are current metadata evidence.
+Then continue the semantic member audit. Remaining skinned gaps include independent diffuse contributions from lights 1/2, vertex/texture-
+alpha interactions, vertex-lighting specular and arbitrary joint scales. C gaps include automatic Draw dispatch, other callback failures and destruction
+cancellation; this batch demonstrates automatic Update specifically. Canonical TLS now covers
+nonempty owner details versus empty worker details, not all families or two distinct concurrent
+nonempty parameters. Invalid Matrix FOV, CurveKeyCollection index and pure SoundEffect sample
+helpers were rejected as ParamName fixtures by source inspection (std exceptions or local guards/
+zero-return paths); do not infer canonical detail coverage from those routes. Do not restart
+completed phases or add trivial getter/enum variants.
+
+Earlier checkpoint narratives and subsystem source observations are preserved in
+[docs/CHECKPOINT_HISTORY.md](docs/CHECKPOINT_HISTORY.md). Consult the relevant history when
+returning to an older area; its historical next-task instructions do not replace this section.
+
+## 15. Assumptions the next session must know
+
+* Current workspace: `/rv/data/development/github.com/libcna/cna-demos`; CNA and the other
+  dependencies are siblings (`../cna`, `../sharp-runtime`, `../easy-gl`, `../meta-gl`).
+* Current verified toolchain: GCC 14.2 and CMake 3.31.6. Reuse `build/linux-full`; do not create
+  temporary build trees. Set `CCACHE_DIR=/rv/cnaccache` and `CCACHE_BASEDIR=/rv` for every build.
+* External work may change the sibling CNA checkout. Do not edit/revert it from this task;
+  record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
+* Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
+
+## Active 456 batch
+
+Source 8f2b04c adds c_api.game.launch_parameters (113-line C source, 15 child checks). Both
+focused SOFTWARE/OPENGLES3 runs pass with empty stderr; all 35 related C/CLI/launch CTests pass
+in 20.53 s, including two existing WILL_FAIL cases. Evidence: reports/checkpoint-456-focused-*.
+Catalog/metadata: 456 demos, zero problems, 293/329 types, 1370/2326 XNA members, 166/3210 C routes.
+No loop/image is claimed for this map example. Its old /tmp source drafts are APPLIED AND STALE.
+
+Full 456 attempt 10188 stopped at the manifest CTest (see section 14). Its selected hashes and
+start-state observation of CNA 4985e26e7 are preserved under checkpoint-456-manifest-*.
+Earlier attempts stopped during build: public-dialect and header-availability archives preserve
+those failures. The corrected manifest focused checks and build now pass. Before starting the
+next checkpoint, update archive/finish helpers to the new source commit; recapture 35 binary/four
+asset hashes after that checkpoint's build, then compare both smokes to the original 455.
+
+ISSUE-053 is resolved for the exercised build: initial final-build attempt failed in external
+FrameworkDispatcher namespace lookup; the corrected retry passed (200 scheduled targets).
+Preserve the genuine failed compiler log. IMPORTANT capture correction: the files named
+checkpoint-456-failed-FrameworkDispatcher.cpp and -failed-state.json were captured AFTER the
+external array had moved to a global anonymous namespace. They already contain the repair.
+Earlier hash-equality blocker reports were wrong and are superseded by
+checkpoint-456-evidence-correction.json. Repair is in external 7d8eba687; later f15d59446 and
+ongoing ContentManager/GamerServices edits were observed. This is not an atomic input snapshot.
+No CNA source edited/reverted by cna-demos. Original first-build evidence remains separately
+archived; it does not validate the later output-sentinel refinement.
+
+Next graphics batch, AFTER full 456 closes: two existing animation extensions and one new cube
+transfer scene, catalog 457. All three drafts are UNAPPLIED and GCC 14 syntax-checked only:
+- /tmp/cna-palette-player-spaces.cpp: palette_sampling 14->19 checks. Reuses the three-bone
+  authored hierarchy through SkinningData/AnimationPlayer to distinguish local/world/skin points
+  and compare both public evaluators. Skeleton/clip outlive the player. No new image.
+- /tmp/cna-node-animation-contracts.cpp: node_animation 4->9 checks. Nonidentity untracked ancestry,
+  target-space refusal before writes, and time clamping after deliberately disturbing the pose.
+  Restore authored placement before drawing. Refresh its baseline capture from COMPLETE 456 first.
+- /tmp/cna-cube-face-transfers.cpp: 155 lines, eight intended checks, destination
+  demos/graphics/texture_cube/face_transfers.cpp. Independent Color faces, source/destination array
+  windows, 2x2/1x1 mips, refused writes with deliberately different texels and untouched output
+  guards. Atlas pixels are public read-back data rendered as Texture2D; no direct GPU-readback or
+  cube-shader-sampling claim. Metadata order corrected; final syntax diagnostics empty.
+
+Drafts and syntax helpers/logs are preserved under reports/checkpoint-456-next-*. Next runtime/
+comparison helpers are /tmp/cna-{run-457-focused,archive-457,457-finish,capture-457}.py (syntax
+checked, not run). They require ORIGINAL 456, exactly the two count extensions/new cube ID,
+unchanged other outcomes/C/custom-content child lists, 35 binaries/four assets, and PENDING_457
+replacement after the actual source commit. Inspect all four new node/cube captures; do not
+skip focused validation or the complete 457 checkpoint merely because the drafts compile.
+
+Earlier baseline animation runs used the first successful 456 build: palette 14/node 4 pass on
+both renderers, four empty stderr streams. Both 800x480 node first-frame captures were inspected;
+only two pixels differ across renderers (maximum channel difference 73), not RGBA-identical.
+Three selected hashes remained unchanged. Evidence: checkpoint-456-before-* and
+-intermediate-binaries.json. Refresh this baseline after current full 456 because CNA changed.
+
+Further source-only TextureCube member audit is in COVERAGE_AUDIT.md / ROADMAP phase 5.
+Future DDS diagnostic preparation: /tmp/cna-cube-dds-fixture.py generates the original 506-byte
+/tmp/cna-cube_levels.dds with six RGB24 faces and three independent mip colors. JSON records
+exact offsets/colors/hash; Python checks structure only. Archived as checkpoint-456-next-*.
+Current TextureCube::DDSFromStreamEXT reads once using total Length; unlike the exercised 2D
+route, short reads and nonzero starting positions need a bounded runtime probe. Compare normal,
+offset-16, seven-byte short-read and truncated streams (with/without prefix); the final payload
+byte is deliberately nonzero. No DDS native decoding/upload/visual evidence or new CNA issue yet.
+
+456 full attempt session 87099 TERMINATED exit 1 during build (310/567 progress), before CTest:
+external CNA promoted ShaderDialectEXT into public CNA/ShaderDialectEXT.hpp / namespace CNA.
+Four shader/MRT demos still imported the former internal name. This is fixed locally by using
+the actual public header/namespace in all four sources; no shader text or assertions changed.
+Evidence: checkpoint-456-public-dialect-{build,validation}.log and post-failure observed state.
+This is demo compatibility maintenance, not a new runtime CNA issue. Rebuild/focus these demos,
+commit the source changes, update 456 helper sourceCommit, then restart full validation. The
+previous focused launch checks remain valid for their recorded binaries; full 456 is NOT complete.
+
+Independent shader member audit now records ShaderEffect constructors/packages, success versus
+failure diagnostics, uniform families/arrays, sampler kinds, block layout and clone/lifetime
+boundaries. Existing GLSL success does not establish the error-log branch merely because metadata
+names GetCompileErrorEXT. ShaderEffect::Clone currently rebuilds source and copies labels/language;
+matrix/uniform/texture-state expectations need a bounded runtime probe before any CNA bug claim.
+No additional shader demo, metadata route or runtime credit was added by this source-only table.
+
+Compatibility build 49553 and focused session 12553 both completed successfully. The public
+ShaderDialectEXT import replaces all four former internal imports; shader text/assertions are
+unchanged. SOFTWARE skip stderr is the exact old custom-effects diagnostic (present in original
+455), not empty; the focused helper was corrected after inspecting that original evidence.
+Both GL shader results and C launch checks match expected counts. No runtime logs suppressed.
+
+Full validation restarted as live session 41710 at source 9c6a604; hash capture is pending its
+build completion. Helpers were updated and the successful dialect-focused review is archived.
+
+Additional full attempt 41710 stopped before runtime: four CNA content loader translation units
+reported CNA/ShaderDialectEXT.hpp missing. Post-failure direct reading and GCC preprocessing
+confirmed the header is available again. Raw build/validation logs, post-failure observation and
+empty successful preprocessing log are archived as checkpoint-456-header-availability-*.
+This is a transient external file-availability event with unknown cause, not an established CNA
+runtime defect. No file was restored/edited by cna-demos. Full retry 10188 is now live.
+
+Historical 10188 checkpoint update (superseded by its archived CTest failure): build exited 0 (81 scheduled targets), metadata 456/0, full CTest
+running. /tmp/cna-capture-456.py captured 35 binaries/four assets after the successful build;
+checkpoint-456-start-state.json observes CNA 4985e26e7 (public shader dialect promotion committed).
+Do not overwrite these runtime hashes or rebuild during the remaining runtime phases.
+
+Session 10188 has now exited 1 at CTest. The lazy reader registration contract is explicit in
+ContentManager::GetXnbReaderUsageSummary documentation. The manifest fix will verify inventory
+aggregation and the reader family required by the loaded font; it will not require unrelated
+model/audio readers to be pre-registered or assume a clean registry in shared smoke processes.
+
+Manifest correction completed: thirteen focused checks pass on each renderer, stderr empty;
+no screenshot/visual review claimed. No audio/model warm-up or internal registration shortcut
+was added. The ten existing snapshot/asset controls remain. Full checkpoint restart is next.
+
+Full checkpoint restarted at e70eeb5 as session 65041; seven-target build and metadata pass,
+CTest live. 35 binary/four asset hashes captured after this build. 455 is still last complete.
+
+65041 checkpoint update: all 469 enabled CTests pass; SOFTWARE smoke is running. No runtime
+checkpoint closure yet. Two additional UNAPPLIED source-only drafts are retained for AFTER 457:
+* /tmp/cna-cube-dds-streams.cpp (five intended checks): original in-source RGB24 six-face/three-mip
+  bytes, all-level Color readback, current-position control, seven-byte Read override, and identical
+  one-byte truncation at offsets zero/sixteen. Final byte is nonzero. Both stream defects remain
+  source suspicions until actual native execution; no CNA issue or knownIssue marker exists.
+* /tmp/cna-portable-package.cpp (seven intended checks): two owned GLSL language pairs, stable
+  selection under reordered variants, incomplete/ambiguous refusal, package-created ShaderEffect
+  language/validity, and stock versus channel-cycled sprite pixels. No invalid compiler source,
+  SPIR-V/DXIL/WGSL or desktop-runtime claim. Potential renderer support must be exercised.
+Both pass g++ -fsyntax-only with the existing compile_commands flags; logs empty. They are not
+in the project source/catalog and have no native link/runtime/visual credit. Archived with hashes
+as reports/checkpoint-456-next-* and checkpoint-456-next-stream-package-review.json.
+
+65041 checkpoint update: SOFTWARE completed 403/25/25/3; original 455 comparison passes.
+All 35 failed assertions, old statuses/known issues and old C/custom-content child lists/traces
+match exactly. Only the new launch-parameter ID and planned manifest 26 -> 13 count differ.
+SOFTWARE evidence/review is archived. OPENGLES3 remains live; do not run finish or rebuild yet.
