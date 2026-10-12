@@ -125,6 +125,9 @@ a check that all authored colors remain visible and that a blank texture row can
   rectangle windows, neighboring faces, authored mip levels and refused-call preservation.
   Both inspected readback-atlas captures are RGBA-identical; no direct GPU-readback claim.
   Full 457 passes all 470 enabled CTests and both smokes, retaining all original 35/36 failures.
+  ✅ `graphics.texture_cube.compressed_blocks`: eight checks on both renderer selections cover
+  exact DXT1 blocks, guarded byte windows, padded small mips and refused-transfer preservation.
+  Empty stderr; no decoded-pixel/sampling or direct GPU-readback claim.
   ✅ `graphics.texture_cube.sampler_ownership`: shared full-face edits, independent wrapper names,
   source disposal and actual custom cube sampling of all six faces. Five GL checks pass, image
   inspected and stderr empty; SOFTWARE capability skip. Full 462 passes 475 enabled CTests and
@@ -133,7 +136,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (33 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (34 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and specular controls: emission/ambient/half-alpha composition, independent
   colored lights 1/2, their sum and shininess exponent. Both focused four-check scenes pass on
   SOFTWARE/OPENGLES3; four captures inspected, all cross-renderer differences within tolerance 1.
@@ -155,6 +158,9 @@ a check that all authored colors remain visible and that a blank texture row can
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
   capability skip. Full 461 passes 474 enabled CTests and both smokes; all old failures are retained.
+- ✅ `graphics.shader_effect.uniform_palettes`: four GL checks verify two matrix/vec3 entries,
+  explicit payload layout/counts, caller-buffer overwrite and same-program updates. The image
+  was inspected; SOFTWARE capability skip. Other array families remain separate gaps.
 - ✅ `graphics.shader_effect.compiler_diagnostics`: seven GL checks retain raw/owned diagnostics
   after destroying a rejected syntactically invalid replacement; the valid program still draws
   checked cyan pixels. Image inspected, intentional compiler stderr preserved, SOFTWARE skip.

@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
-* Mostly complete: 6 (effects and shaders, 33).
+* Mostly complete: 6 (effects and shaders, 34).
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -64,9 +64,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-462 fully validated demos: math 78, game 33, graphics 154 (19 SpriteBatch, 8 device, 9 texture2d, 3 texture_cube, 1 texture3d, 7 sprite font,
+464 catalog demos (last complete 462; two new focused-tested concepts): math 78, game 33, graphics 156 (19 SpriteBatch, 8 device, 9 texture2d, 4 texture_cube, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
-4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 25 other
+4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 26 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
@@ -250,17 +250,23 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Full 462 is complete. Continue with the two source-only drafts below.** Apply compressed
-cube blocks and custom uniform palettes as one focused graphics batch. Both drafts passed
-syntax checks but have NO native runtime/image evidence. Use actual outcomes to classify
-failures; do not grant credit for source inspection or constructor support alone.
+**464 graphics batch is built and focused-tested; commit and start full validation.**
+Build 34613 passed 57 scheduled targets; metadata 464/0. compressed_blocks passes 8 checks on
+SOFTWARE/OPENGLES3 with empty stderr: exact DXT1 blocks/windows, padded small mips and refusal
+preservation. uniform_palettes passes 4 GL checks with empty stderr; its 800x480 image was actually
+inspected. Two matrix/vec3 entries survive caller-buffer overwrite; same-program updates swap
+transforms and change colors. SOFTWARE declares CustomEffects absence. No new CNA issue.
+Focused evidence/review: reports/checkpoint-464-focused-*. All /tmp drafts are APPLIED AND STALE.
 
-The next full baseline is ORIGINAL COMPLETE462: 37 SOFTWARE/41 GL raw failures, all old
-statuses/known issues/counts and all C/custom-content child lists/traces (automatic_dispatch
-now has 21 child checks). Only a positive title Update-count variance is pre-reviewed.
-Adapt the 462 helpers after focused outcomes are known. No source/assets/rebuilds during live
-complete runtime. Reuse build/linux-full, shared ccache and -j4; do not edit external CNA.
-Continue after the next checkpoint; broad type coverage is not comprehensive member coverage.
+Next full baseline is ORIGINAL COMPLETE462:37 SOFTWARE/41 GL raw failures and every old
+status/known issue/count and C/custom child list/trace (automatic_dispatch 21). Both new IDs must
+match focused outcomes; only one additional SOFTWARE CustomEffects skip diagnostic is expected.
+GL normalized stderr must remain unchanged, including the existing deliberate compiler error.
+A positive title Update-count change is the only pre-reviewed old count variance. No source/
+asset edits or rebuilds during full runtime. Continue after full 464; no complete 463 claim.
+
+Further gaps: typed packed/float cube payloads, custom volume sampling, other uniform families,
+remaining skinned-light behaviors and wider C routes. Do not restart completed phases.
 
 ## 15. Assumptions the next session must know
 
@@ -272,20 +278,10 @@ Continue after the next checkpoint; broad type coverage is not comprehensive mem
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-The old cube sampler and C Draw drafts are APPLIED AND STALE. Their source-only predecessors
-remain checkpoint-461-next-*; native evidence is checkpoint-462-focused-*.
+Older /tmp drafts are applied and stale. Source-only predecessors for this batch are archived
+as checkpoint-462-next-*; actual runtime evidence is checkpoint-464-focused-*.
+Focused runner/review: /tmp/cna-run-464-initial.py and /tmp/cna-review-464-focused.py.
 
-Next NOT-APPLIED drafts (archived as checkpoint-462-next-* with syntax logs/reviews):
-- /tmp/cna-cube-compressed-blocks.cpp: eight intended checks for DXT1 byte-block windows,
-  8x8 faces, padded 4x4/2x2/1x1 mips and refused short/misaligned transfer preservation.
-  Only constructor NotSupportedException is a capability skip. No decoded pixels, DDS loading,
-  sampling, other DXT alpha formats or direct GPU-readback claim. Wording edits after syntax only.
-- /tmp/cna-shader-uniform-palettes.cpp: four intended GL checks for two explicit M11..M44
-  matrix groups and two vec3 entries (counts 2, not scalar counts 32/6), caller-buffer overwrite
-  and same-program replacement in a second viewport. Swapped translations and new colors must
-  both reach pixels. Plain vertex indices address the entries. After syntax only explicit vector
-  include, comment spacing and inherited Effect::Apply metadata naming changed. No runtime yet.
-
-Remaining areas include typed packed/float cube transfers, volume custom sampling, other
-uniform-array families, remaining skinned-light behaviors and wider public C routes. Completed
-shader clone/compiler/cube-lifetime/automatic-Draw work is baseline, not a restart list.
+Full464 helpers prepared: /tmp/cna-capture-464.py after checkpoint build/during CTest,
+/tmp/cna-archive-464.py SOFTWARE then OPENGLES3 after their completed smokes, and
+/tmp/cna-464-finish.py after exit0. Exact baseline is original462, without C child additions.

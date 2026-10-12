@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Added
+- DXT1 cube block transfers: guarded byte windows, padded small mips and refused-transfer
+  preservation pass eight checks on both renderers.
+- Custom shader matrix/vec3 palettes: four GL checks verify explicit element counts/layout,
+  caller-buffer overwrite and same-program replacement; the rendered comparison was inspected.
+
 - Cube sampler ownership demo: shared full-face edits survive source disposal and all six
   faces are sampled through ShaderEffect. Five GL checks pass; the capture was inspected.
 - Automatic C dispatch now isolates Draw service with a BeginDraw worker and first-Draw
