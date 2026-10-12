@@ -618,3 +618,25 @@ both before/after GL images were inspected and all17selected pixels match. C sto
 31old child checks plus7positive permission controls, with only original EOF056 still failing.
 All24targeted CTests pass in4.14s, metadata467/0, current C inventory174/3210. Full467-scene
 comparison remains pending; COVERAGE.md still holds the preceding complete467 snapshot.
+
+
+Complete checkpoint **467-scene**, source `11dbd5b`, preserves all 467 IDs. Build: seven
+scheduled operations; metadata 467/0; all 480 enabled CTests pass in 211.34 s (448 passed,
+including 27 WILL_FAIL, 32 capability skips; three additional manual tests disabled).
+SOFTWARE: 405 passed / 27 failed / 32 skipped / 3 not run. OPENGLES3: 432 / 29 / 3 / 3.
+Both inner validation and outer Xvfb independently exit zero. All 38/42 original failed
+assertions, C/custom child lists and traces, and five network evaluation checks are retained,
+allowing precisely seven new positive storage permission checks (31 -> 38 with only ISSUE-056).
+Palette GL checks increase 4 -> 6; SOFTWARE keeps its declared skip. The only other JSON count
+change is GL window.title 11 -> 10, the reviewed positive per-Update variation.
+All 35 selected binary and four asset hashes remain unchanged. Normalized application stderr
+is identical, including 42 known GL X protocol records and the deliberate shader compiler
+error. Separate outer Xvfb diagnostics contain 13 exact amdgpu pairs (previously 14); no cause
+or hardware GPU claim. CNA 714f9f76a was observed clean at capture/final, not an atomic input
+snapshot. All capture/archive/finish helpers pass. Immutable evidence: checkpoint-467-scene-*.
+Coverage now records 293/329 types, 1373/2326 XNA members and 174/3210 C routes. These counts
+do not establish comprehensive semantic coverage.
+
+Next coherent extensions keep the same IDs: independent SkinnedEffect diffuse-light terms
+and the successful-End counterpart to C SpriteBatch cancellation. Drafts have source review
+only; neither has runtime or visual credit yet.

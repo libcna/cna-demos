@@ -515,7 +515,7 @@ ISSUE-041 failure; this is filesystem/stream evidence, not visual or GPU validat
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 19 standalone C programs cover coherent entry points in each Phase 14 area. The generated
-166/3210 route count is metadata coverage, not proof of those routes' full contracts. This first
+174/3210 route count is metadata coverage, not proof of those routes' full contracts. This first
 member review compares `core.h`, `runtime.h`, `content.h` and selected `vectors.h` routes with the actual C demo sources;
 the complete ABI still needs a wider audit. C++ behavior does not automatically cover C handles.
 

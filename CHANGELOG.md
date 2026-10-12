@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete467-scene: all480enabled CTests and both full smokes retain all38/42old failures,
+  exact child/network controls and stable selected hashes. Normalized application stderr
+  is unchanged; generated coverage now records174C routes.
 - Complete467:480enabled CTests and both full smoke suites preserve every old failed assertion
   and add only the independently confirmed EOF issue. Exact child controls and selected
   hashes remain stable; generated coverage now includes467demos and170C routes.

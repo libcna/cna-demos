@@ -69,7 +69,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 170 of 3210** (5.3 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 174 of 3210** (5.4 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -93,7 +93,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `runtime.h` | 24 / 45 |
 | `runtime_components.h` | 13 / 39 |
 | `sprite_font.h` | 2 / 9 |
-| `storage.h` | 18 / 49 |
+| `storage.h` | 22 / 49 |
 | `texture.h` | 1 / 21 |
 | `vectors.h` | 9 / 137 |
 | `vertex_resources.h` | 5 / 24 |
@@ -597,11 +597,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ShaderEffect::SetUniformFloat` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.vertex_displacement, graphics.texture3d.sampler_coordinates
 - `ShaderEffect::SetUniformFloatArray` -- graphics.shader_effect.sample_kernel
 - `ShaderEffect::SetUniformInt` -- graphics.shader_effect.vertex_displacement, graphics.texture3d.sampler_coordinates, graphics.texture_cube.sampler_ownership
+- `ShaderEffect::SetUniformMat4` -- graphics.shader_effect.uniform_palettes
 - `ShaderEffect::SetUniformMat4Array` -- graphics.shader_effect.uniform_palettes
 - `ShaderEffect::SetUniformVec2` -- graphics.shader_effect.sample_kernel
 - `ShaderEffect::SetUniformVec2Array` -- graphics.shader_effect.sample_kernel
 - `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading, graphics.texture_cube.sampler_ownership
 - `ShaderEffect::SetUniformVec3Array` -- graphics.shader_effect.uniform_palettes
+- `ShaderEffect::SetUniformVec4` -- graphics.shader_effect.uniform_palettes
 - `ShaderEffect::ShaderEffect` -- graphics.render_target.multiple_render_targets, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.vertex_displacement
 - `SkinnedEffect::LightingEnabled` -- graphics.skinned_effect.normal_lighting
 - `SkinnedEffect::VertexColorEnabled` -- graphics.skinned_effect.vertex_colors
