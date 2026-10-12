@@ -97,16 +97,17 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **445 checkpoint passed** at 6c9298f:
-tools/validate.sh exit 0, all 458 enabled CTests (206.40 s), both complete isolated-X11 smoke runs
-and coverage regeneration. ORIGINAL 444 comparisons retain every older ID/status/knownIssue,
-check count, content tool/24 host child checks and all 32/33 failed assertions. The new source-root
-demo passes ten native checks on both selections. All 32 selected hashes match runtime capture.
-Normalized stderr is unchanged: no GTK warnings; the same 84 nonfatal GL X protocol lines remain.
-Original streams/reviews, build/CTest logs and hashes: reports/checkpoint-445-*.
-The first focused traversal assertion had the wrong message fragment; CNA's actual refusal is
-correct, and the original failed log plus fixed contextual output are preserved. No new CNA issue
-or full-transitive dependency snapshot claim.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **445-profile checkpoint passed**
+at e903a2e: tools/validate.sh exit 0, all 458 enabled CTests (213.83 s), both complete isolated-X11
+smoke runs and coverage regeneration. ORIGINAL 445 comparisons retain every older ID/status/
+knownIssue, all 32/33 failed assertions and existing content/24 host child checks. The existing
+resize demo extends one passing check to seven. All 32 selected binary and four explicit resize
+asset hashes match runtime capture. Normalized stderr is unchanged, with no GTK warnings and
+same 84 nonfatal GL X protocol lines. Original streams/reviews/build/CTest/hashes:
+reports/checkpoint-445-profile-*. Before/after resize captures were inspected and RGBA-identical
+within and across renderers. No new runtime failure; documentation-only ISSUE-049 records the
+stale public build-environment overview. The initial external dirty-CNA C API build failure and
+successful retry remain archived separately; no atomic/full-transitive dependency snapshot claim.
 
 | Check | Result |
 |---|---|
@@ -118,7 +119,7 @@ or full-transitive dependency snapshot claim.
 | OPENGLES3 smoke (explicit x11, private Xvfb) | 415 passed, 24 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | All 32/33 older failed assertions retained |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Final host frame with replacement hooks inspected on both renderers; RGBA-identical to prior host captures |
+| Screenshots | Resize before/after images inspected on both renderers; all four RGBA-identical (800x480) |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -162,7 +163,8 @@ Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untest
 
 ## 10. Known CNA issues
 
-See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-048 (dropped parameters retained as effective metadata),
+See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-049 (stale build-environment overview),
+CNA-DEMOS-ISSUE-048 (dropped parameters retained as effective metadata),
 CNA-DEMOS-ISSUE-047 (AddOutputFile rejects the configured separate output directory),
 CNA-DEMOS-ISSUE-043 (target type versus reader factory lookup),
  CNA-DEMOS-ISSUE-001 (libcna.so link with CMake 3.27/3.28),
@@ -239,24 +241,27 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** the EXISTING resize demo profile extension is built/focused-validated.
-Seven checks pass on SOFTWARE and OPENGLES3, retaining its original one. Before/after screenshots
-were inspected and are RGBA-identical within and across renderers (800x480); focused stderr empty.
-The added raw PNG was generated only from the existing framed_gradient(100,60) function and is
-byte-identical to content/textures/odd_size.png; generator now reproduces both. The catalog
-remains at 445 demos. No runtime CNA failure. Documentation-only ISSUE-049 records the stale public
-environment overview; metadata has no new expected-failure marker. The native control writes and
-decodes CNB; XNB calls only ImportAndProcess, with no XNB output/hardware validation claim.
+**Immediate next action:** apply and validate the three prepared existing C callback/dispatch
+extensions below. Complete 445-profile is closed at e903a2e: 458 enabled CTests, SW 394/23/25/3,
+GL 415/24/3/3, exact original 32/33 failed assertions and all old content/host child lists retained.
+The resize extension passes seven checks; all old JSON counts are unchanged apart from its 1 -> 7.
+All 32 selected binaries and four explicit assets remained unchanged through runtime; normalized
+stderr identical. Evidence, strict reviews and helpers: reports/checkpoint-445-profile-*.
+Use ORIGINAL checkpoint-445-profile as the next full baseline.
 
-Build /tmp/cna-445-profile-build.log passed (81 steps, no compiler diagnostics); metadata 445/0.
-All 33 targeted CTests passed (11.56 s). Focused streams/captures/source hashes/build/CTest log:
-reports/checkpoint-445-profile-focused-*; original one-check captures are checkpoint-445-profile-
-before-*. Next: commit this batch and run complete 445-profile against ORIGINAL checkpoint-445.
-Capture 32 selected hashes after full build, then freeze source/assets during runtime. Prepared
-/tmp/cna-archive-445-profile.py and /tmp/cna-445-profile-finish.py use PENDING445PROFILE; expect
-same IDs, resize 1 -> 7, old native/content/24 host checks and exact 32/33 failures unchanged,
-unchanged normalized stderr, 458 enabled CTests and SW 394/23/25/3, GL 415/24/3/3.
-The /tmp resize draft/body are now APPLIED AND STALE; use repository sources only.
+The original profile-focused build passed (81 steps, no compiler diagnostics), metadata 445/0,
+33 targeted CTests (11.56 s), and both seven-check runs with empty stderr. Four actually inspected
+800x480 before/after screenshots are RGBA-identical. The raw source PNG is byte-identical to its
+existing content fixture. XNB calls stop at ImportAndProcess; only native CNB bytes are written
+and decoded, with no XNB output/Reach-hardware claim. Documentation-only ISSUE-049 adds no
+expected-failure marker. The /tmp resize source/body drafts are APPLIED AND STALE.
+
+The first full attempt (session 13537, exit 1) failed in external CNA C API ContentReaders/Cnb:
+31 unused-helper diagnostics under -Werror during uncommitted generated-route work. Runtime phases
+never started. Original evidence: reports/checkpoint-445-profile-initial-{build.log,validation.log,
+cna-state.json}; post-failure source hashes are not an atomic build-input snapshot. Current generated
+files contain direct calls to those helpers; the full retry rebuild passes without suppressing
+warnings or modifying CNA. This is not a reproduced clean-HEAD or cna-demos source defect.
 
 Next productive work: the existing C error_handling demo already runs two run_one_frame calls
 and observes a failed Update. Extend it coherently with terminal repeat behavior and explicit
@@ -264,8 +269,22 @@ UnloadContent after failure, retaining all 26 existing child checks; do not add 
 frame-step demo. It currently has only an update callback and an int context. CGame::UnloadContent
 explicitly opts into runAfterFailure while normal frame/event callbacks stop. A retained callback
 message after successful cleanup is another useful control. Inspect source/contracts and test;
-this note is not runtime evidence for those extra behaviors. Separate run_frame_ext failure
-completion/documentation ambiguity and foreign-thread served failures remain open.
+this note is not runtime evidence for those extra behaviors. UNAPPLIED draft:
+/tmp/cna-callback-cleanup.c (26 -> 29 proposed child checks), with caller-owned callback state,
+third failed-frame repeat, exactly-once unload and preserved diagnostic after successful cleanup.
+Separate run_frame_ext failure
+completion/documentation ambiguity remains open. A second UNAPPLIED draft is
+/tmp/cna-dispatch-failure.c (existing foreign_thread_dispatch, 14 -> 18 proposed child checks).
+It uses invalid MasterVolume=2, which reaches the canonical setter after handle-affinity dispatch;
+an invalid target step would be refused by a C argument gate BEFORE dispatch and cannot prove
+forwarding. It checks worker-side result/category and bounded message/type/parameter count/copy,
+with unchanged C11 completion/timeout handling. No runtime evidence yet. The default canonical message was verified in sharp-runtime and prior stdout.
+Third UNAPPLIED draft /tmp/cna-host-invalid-hooks.c adds two invalid frame-hook layouts before
+existing frames (24 -> 26 child checks, 28 with capture). Fully allocated objects declare a short
+size or version 2; subsequent original frame traces independently detect replaced/erased hooks.
+The three drafts total nine new checks, with all older labels retained. Prepared follow-up
+helpers /tmp/cna-archive-445-callbacks.py and /tmp/cna-445-callbacks-finish.py use a PENDING source
+placeholder and ORIGINAL checkpoint-445-profile; do not run them before the actual next build.
 
 445 evidence: /tmp/cna-demos-445-validation.log exit 0; all 458 enabled CTests (206.40 s), SW
 394/23/25/3, GL 415/24/3/3, exact 32/33 failed assertions unchanged, every older count/status/
