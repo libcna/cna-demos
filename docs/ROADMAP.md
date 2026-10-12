@@ -144,7 +144,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (36 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (37 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
   diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
   specular_lights now has eight on both renderers with inspected labeled comparisons.
@@ -906,3 +906,16 @@ LINK-041 changes declared CNB loader installation/removal locking, LINK-042 refi
 linker-flag matching. Selected runtime hashes remained unchanged; these newer source changes
 are not credited as exercised by469-pcf. The next watched build must incorporate them.
 Evidence: checkpoint-469-pcf-external-source-delta.json. No sibling files were edited.
+
+Focused470-cascades adds one coherent authored-atlas receiver. Six GL pixel controls pass:
+near and inclusive-split selection, far selection, half visibility in the blend band,
+independent fitting CameraView, and Count0 restoring the separate single-map transform.
+The actual 800x480 image was inspected; all six selected colors match within tolerance1.
+SOFTWARE explicitly skips the unsupported stock path; GL stderr is empty. OPENGL33 remains
+untested. No map generation, atlas-border filtering, four-cascade maximum or debug-tint proof.
+The watched build incorporates external LINK-041/LINK-042 at CNA123c36c34b;
+Initial build observed 6 changed watched CNA inputs during external work; the consistency rebuild then completed with unchanged inputs. No native checks ran between.
+The final watch covers 3,909 CNA source/header/CMake inputs; it is not
+an atomic or full transitive dependency snapshot.
+Metadata470/0; all26CLI/skinned CTests pass in4.36s, including two declared shadow skips.
+Full470-cascades validation is pending. Evidence: checkpoint-470-cascades-focused-*.

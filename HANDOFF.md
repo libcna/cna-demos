@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
-* Mostly complete: 6 (effects and shaders, 36).
+* Mostly complete: 6 (effects and shaders, 37).
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 22 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -64,9 +64,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-469 catalog demos (complete checkpoint469-pcf): math 78, game 33, graphics 160 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+470 catalog demos (focused470-cascades; last complete checkpoint469-pcf): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
-4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 28 other
+4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 29 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
@@ -242,22 +242,30 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply and validate the prepared470-cascades example.
-Complete469-pcf session18517 is CLOSED0; source b8f3d0d is the comparison baseline.
-1. Review/apply /tmp/cna-skinned-shadow-cascades.cpp to
-   demos/graphics/skinned_effect/shadow_cascades.cpp. Syntax41794 passed with empty log.
-   Six controls propose near/inclusive-split/far selection, half-visibility blending,
-   independent fitting CameraView and Count0 fallback. No native/image evidence yet.
-2. Run /tmp/cna-build-470-cascades.py initial; consistency rebuild if watched inputs change.
-   Validate metadata, run /tmp/cna-run-470-cascades-focused.py and targeted shell, actually
-   inspect the GL image before /tmp/cna-review-470-cascades-focused.py. ExpectedGL6/SWskip0.
-3. Update semantic/status docs, commit and export /tmp/cna-catalog-470-cascades.json.
-   Full /tmp/cna-run-470-cascades-validation.sh, capture helper after build during CTest once;
-   freeze sources/assets/runtime for smokes. Archive both renderers and run finish helper.
-   Expected483enabled CTests, SW406/27/34/3, GL435/29/3/3, all old38/42failures and exact
-   child/network evidence; only the new declared SOFTWARE cascade-skip diagnostic.
-4. Close docs/handoff/history and commit, then immediately continue the public-member audit.
-   /tmp/cna-occlusion-query-audit.md classifies the next bounded lifecycle workstream.
+HIGHEST PRIORITY: complete full470-cascades validation. Cascade source is APPLIED AND STALE.
+Focused470-cascades adds one coherent authored-atlas receiver. Six GL pixel controls pass:
+near and inclusive-split selection, far selection, half visibility in the blend band,
+independent fitting CameraView, and Count0 restoring the separate single-map transform.
+The actual 800x480 image was inspected; all six selected colors match within tolerance1.
+SOFTWARE explicitly skips the unsupported stock path; GL stderr is empty. OPENGL33 remains
+untested. No map generation, atlas-border filtering, four-cascade maximum or debug-tint proof.
+The watched build incorporates external LINK-041/LINK-042 at CNA123c36c34b;
+Initial build observed 6 changed watched CNA inputs during external work; the consistency rebuild then completed with unchanged inputs. No native checks ran between.
+The final watch covers 3,909 CNA source/header/CMake inputs; it is not
+an atomic or full transitive dependency snapshot.
+Metadata470/0; all26CLI/skinned CTests pass in4.36s, including two declared shadow skips.
+Full470-cascades validation is pending. Evidence: checkpoint-470-cascades-focused-*.
+1. Commit source/docs and export /tmp/cna-catalog-470-cascades.json.
+2. Run /tmp/cna-run-470-cascades-validation.sh, then /tmp/cna-capture-470-cascades.py once
+   after its build during CTest. Freeze source/assets/runtime during both smoke phases.
+3. Archive both renderers with /tmp/cna-archive-470-cascades.py into matching review logs;
+   run /tmp/cna-470-cascades-finish.py into /tmp/cna-470-cascades-finish-review.log.
+   Baseline complete469-pcf: sourceb8f3d0d, closure15576a7. Expected483enabled CTests,
+   SW406/27/34/3, GL435/29/3/3. Preserve all38/42failures, exact child/network controls,
+   normalized stderr except the new declared SOFTWARE cascade skip. Investigate differences.
+4. Close full docs/history/handoff and commit. Immediately continue470-query: run focused
+   helper BEFORE applying /tmp/cna-occlusion-lifecycle.cpp, inspect before/after captures,
+   then review before committing, because that reviewer compares original code against HEAD.
 
 ## 15. Assumptions the next session must know
 
@@ -269,17 +277,18 @@ Complete469-pcf session18517 is CLOSED0; source b8f3d0d is the comparison baseli
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is469-pcf, source b8f3d0d; its closure commit follows.
+Current complete baseline is469-pcf, source b8f3d0d, closure15576a7.
 All earlier receiver/PCF, audio, XACT, reader, move, field, lighting, palette and EOF proposals
 are APPLIED AND STALE. Preserve previous checkpoint evidence, including failures and probes.
 See docs/CHECKPOINT_HISTORY.md. Never overwrite current source with an older /tmp draft.
 
-Next unapplied draft: /tmp/cna-skinned-shadow-cascades.cpp; syntax41794 CLOSED0, empty log.
+Applied cascade source: /tmp/cna-skinned-shadow-cascades.cpp; syntax41794 CLOSED0, empty log.
 Its six proposed controls use two authored atlas slices, an inclusive split, one-unit blend
-band, independent fitting camera and Count0 single-map fallback. No native/image evidence.
-Source review and recovery: checkpoint-469-shadow-next-*, especially shadow-cascades-notes.
+band, independent fitting camera and Count0 single-map fallback. All six GL controls and the explicit SOFTWARE skip now pass; actual image inspected.
+Focused evidence: checkpoint-470-cascades-focused-*. Original source-only recovery:
+checkpoint-469-shadow-next-*, especially shadow-cascades-notes.
 Prepared focused/full helper family: /tmp/cna-*470-cascades*; recovery under
-checkpoint-469-shadow-next-validation-drafts-*. These helpers have not been run.
+checkpoint-469-shadow-next-validation-drafts-*. The cascade watched build, focused/targeted runner and reviewer have passed; full helpers are pending.
 
 Later source-only audit: /tmp/cna-occlusion-query-audit.md, recovered as
 checkpoint-469-shadow-next-occlusion-query-audit.md. Existing visibility/count/polling behavior
@@ -300,5 +309,14 @@ These are unrun scripts, not evidence. PCF closure helper is /tmp/cna-close-469-
 External CNA advanced during the frozen checkpoint from e842e7473 to clean123c36c34b:
 LINK-041 changes declared CNB loader installation/removal locking, LINK-042 refines static
 linker-flag matching. Selected runtime hashes remained unchanged; these newer source changes
-are not credited as exercised by469-pcf. The next watched build must incorporate them.
+are not credited as exercised by469-pcf. The470-cascades initial and consistency builds have now incorporated them.
 Evidence: checkpoint-469-pcf-external-source-delta.json. No sibling files were edited.
+
+Cascade focused reviewer/document helper now account for an initial changed-input build and
+require a final unchanged-input consistency build. Prepared /tmp/cna-document-470-cascades-focused.py
+must run only after actual image inspection and successful focused reviewer. Recovery:
+checkpoint-470-cascades-pre-native-*. Both helpers have now passed after actual image inspection.
+Initial33371 CLOSED0 (584scheduled/581numbered), six changed inputs; consistency90087 CLOSED0
+(32scheduled/29numbered), all3,909watched inputs unchanged. Focused/targeted16253 CLOSED0;
+GL6checks with empty stderr, SWdeclaredskip0/exit77,26CTests4.36s. CNA123c36c34b has external
+uncommitted CMake/probe/document changes, recorded in the journals; no sibling edits by this task.

@@ -47,6 +47,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- Authored two-slice shadow cascades: inclusive depth selection, blend-band visibility,
+  a separate fitting camera and Count0 fallback. Six GL pixel checks pass in the inspected
+  scene; unsupported SOFTWARE rendering is explicitly skipped.
 - Public OcclusionQuery member audit: existing visibility/polling evidence, precision semantics,
   and explicit decisions for ordering, disposal, unsupported profiles and backend lifecycle gaps.
 - The existing shadow receiver now compares one-tap, 3x3 and 5x5 visibility averages over
