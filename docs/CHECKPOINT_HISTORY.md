@@ -1748,3 +1748,83 @@ step served a request; do not add a timing-only test and claim isolated Draw ser
 has eight checks, palette changes 14 -> 19 and node 4 -> 9. Every old status/known issue, all
 35 failed assertions and all C/custom-content child lists/traces match. SOFTWARE evidence is
 archived/reviewed. Session 33564 remains live in OPENGLES3; finish and rebuild must wait.
+
+
+## Complete 459 (5ed8055) and preparation record
+
+Full validation exited 0: 472 enabled CTests (209.38 s), SW 404/26/26/3, GL 426/27/3/3.
+Original457 comparison preserves all old evidence after six explicit new passing C labels;
+DDS adds exactly two ISSUE-054 failures (35/36 ->37/38), package eight GL checks/SW skip.
+Selected35 binaries/four assets remain stable; normalized stderr adds only the one declared
+SOFTWARE CustomEffects skip diagnostic. GL package capture inspected and final capture identical.
+The following older continuation statements are historical; HANDOFF.md supersedes live states.
+
+## 14. Next task
+
+**Immediate next action:** resume complete 459 validation session 65747 at source 5ed8055,
+/tmp/cna-demos-459-validation.log. Its seven-target build and metadata 459/0 passed; CTest
+passed all 472 enabled tests (209.38 s); SOFTWARE is complete/reviewed and OPENGLES3 is running. Runtime capture has 35 binaries/four assets; helpers name 5ed8055. Do not edit or
+rebuild sources/assets during runtime. Archive each completed renderer with
+/tmp/cna-archive-459.py, then /tmp/cna-459-finish.py; original COMPLETE 457 is the baseline.
+Catalog /tmp/cna-catalog-459.json is current. Source /tmp drafts are APPLIED AND STALE.
+
+Focused review /tmp/cna-review-459-focused.py passes: DDS has exactly two ISSUE-054 failures,
+package has eight GL checks or its declared SOFTWARE skip, and C adds exactly six passing labels
+to its original forty (44 pass/2 old failures total). All old C labels/order remain after removal
+of the six named additions. C trace: Destroyed property: pending=1, result=3, category=3.
+No new C route/ID. Final GL image is identical to the initial capture actually inspected.
+The DDS catch correction was a demo bug: catch actual System::FormatException, not
+std::runtime_error. Genuine ISSUE-054 follows separate five-check runs with complete/prefixed
+controls, one seven-byte Read call and acceptance of corrupted truncated bytes at offset16.
+No CNA source was edited, and no reader workaround was added.
+
+Complete helpers compare to ORIGINAL 457 and permit only the new IDs, exact two DDS failures
+(35/36 -> 37/38), six specified passing C labels, and positive title timing variance. The generic
+comparator must request review (exit1) for the new failing ID/assertions; the wrapper explicitly
+verifies that exact delta. Stderr may add only one exact SOFTWARE CustomEffects skip diagnostic
+for the new package; all other normalized diagnostics must match. Expected, still unverified
+full totals: 472 enabled CTests, SW 404/26/26/3, GL 426/27/3/3. Do not edit/rebuild during runtime.
+
+After full 459, continue the semantic member audit. ShaderEffect::Clone deserves a bounded
+public matrix/owned-program behavior probe against Effect::Clone's contract; existing source
+recompiles shader strings and copies labels/language but appears not to preserve matrix state.
+Do not file a bug from source alone or assume raw uniform setters have the same clone contract.
+Invalid-syntax compiler diagnostics remain separate: unusable package selection throws
+ShaderCompilationExceptionEXT, whereas usable payloads delegate to the legacy string compiler
+and can return an invalid effect for bad syntax. Automatic Draw service is also still separate:
+ordinary alternating frames cannot prove which step served a worker. Remaining cube gaps include
+typed/compressed transfer paths, copy/shared-resource lifetime and actual sampler behavior;
+remaining skinned gaps include independent diffuse lights1/2, alpha, vertex specular and joint scales.
+No completed phase should be restarted, and no batch completion is a stopping condition.
+
+## 15. Assumptions the next session must know
+
+* Current workspace: `/rv/data/development/github.com/libcna/cna-demos`; CNA and the other
+  dependencies are siblings (`../cna`, `../sharp-runtime`, `../easy-gl`, `../meta-gl`).
+* Current verified toolchain: GCC 14.2 and CMake 3.31.6. Reuse `build/linux-full`; do not create
+  temporary build trees. Set `CCACHE_DIR=/rv/cnaccache` and `CCACHE_BASEDIR=/rv` for every build.
+* External work may change the sibling CNA checkout. Do not edit/revert it from this task;
+  record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
+* Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
+
+Next UNAPPLIED draft: /tmp/cna-shader-clone-state.cpp, archived as checkpoint-459-next-*.
+Nine intended checks need at least two frames (one-frame capture only executes eight): explicit
+source/language identity, nonidentity W/V/P retention, independent World mutation with observed
+clone state restored, equal-viewport pixel comparison, original program disposal, disposed-clone
+refusal, and unchanged clone pixels next frame. Public GraphicsResource::Dispose is used through
+a base reference because the protected bool overload hides ShaderEffect's parameterless name.
+The live device outlives all effects; inspected Effect::Dispose retains device_, so the proposed
+refusal call does not dereference a destroyed device. Corrected Viewport getters; syntax now
+passes with empty log. No native/runtime/image credit or new issue yet. Examine the actual
+clone contract carefully before classifying state-copy behavior; raw uniform/texture copying
+is explicitly outside this draft's claim.
+
+459 helper clarification: --quiet suppresses in-process GameContext.Print. DDS fixture/read-call/
+accepted-truncation trace is checked in focused logs; full comparisons check five JSON checks and
+exactly two raw failures. Ordinary C printf/check traces remain enforced in both full logs.
+
+459 SOFTWARE completed 404/26/26/3 and passed the exact wrapper review against ORIGINAL 457:
+all old outcomes/known issues/counts and child lists/traces remain after the six specified new C
+passes; raw failed assertions are exactly 35 -> 37 (the two ISSUE-054 checks). The general
+comparator correctly requested review, which is recorded explicitly. OPENGLES3 remains live
+in session65747; do not finish/rebuild yet. SOFTWARE evidence is archived under checkpoint-459-*.

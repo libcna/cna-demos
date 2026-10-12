@@ -1437,6 +1437,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Suggested repair:** read the actual remaining payload to completion (respecting each Read
   result), and give the decoder only initialized bytes actually read; preserve truncation errors.
   No CNA file was modified by this task.
+- **Complete checkpoint:** 459 at 5ed8055 passes all 472 enabled CTests and both full smoke runs.
+  Original457 comparison adds exactly these two failures (35/36 -> 37/38), retains every older
+  failure/status and C child list after six unrelated passing destruction controls. Runtime hashes
+  are stable; stderr adds only the separately declared SOFTWARE package skip diagnostic.
 - **Environment/status:** Linux, GCC 14.2/CMake 3.31.6 linux-full, explicit X11/Xvfb and dummy audio.
   CNA 2202cb4f1483f7bb54c12c9f9a88c0bf374fe0a6 observed after reproduction, with unrelated
   documentation/content-test changes present. Source observations/hashes are archived separately;

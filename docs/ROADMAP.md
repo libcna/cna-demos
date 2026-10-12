@@ -481,7 +481,8 @@ ordinal enumeration and count/copy boundaries. Both focused selections pass all 
 checks with empty stderr after the external ISSUE-053 repair; complete 456 validation passed all 469 enabled CTests and both smokes, preserving every old failure.
 The existing foreign_thread_dispatch now also tests final owner destruction cancelling a waiting
 property call: six new controls pass on both selections, preserving all forty original checks
-and both ISSUE-050 failures (44 passes/2 failures total). Full 459 validation is next.
+and both ISSUE-050 failures (44 passes/2 failures total). Full 459 passes all 472 enabled CTests and both smokes; exact comparisons preserve old failures
+and add only the two documented DDS ISSUE-054 checks.
 
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
