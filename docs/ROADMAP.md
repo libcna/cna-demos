@@ -142,7 +142,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (34 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (35 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and specular controls: emission/ambient/half-alpha composition, independent
   colored lights 1/2, their sum and shininess exponent. Both focused four-check scenes pass on
   SOFTWARE/OPENGLES3; four captures inspected, all cross-renderer differences within tolerance 1.
@@ -589,3 +589,14 @@ a new CNA transfer defect. Next drafts remain unapplied: the shader sample kerne
 storage extension is now natively probed:30passes/one EOF-position failure, with its23old
 checks retained. Direct FileStream independently reports-1after EOF with correct data and
 rewind controls (ISSUE-056). Apply both as batch467, preserving the real failure explicitly.
+
+
+Focused467 now builds/validates467/0 and passes24targeted CTests (16passed,8capability skips,
+5.55s). The sample kernel adds five GL checks and an actually inspected image with27exact
+pixel samples: distinct scalar weights/vec2 offsets and texel size change spread and direction
+on the same program after caller buffers are overwritten. SOFTWARE declares CustomEffects
+absence. C save_game retains23old checks plus8new (30pass/one ISSUE-056), empty stderr on both
+requested selections. Two C routes raise the current metadata inventory to170/3210; generated
+COVERAGE.md remains the complete466-transfer snapshot until full467 validation finishes.
+The pending full comparison must retain every old failure and add exactly the confirmed EOF
+position failure, rather than accepting the changed known-issue status alone.

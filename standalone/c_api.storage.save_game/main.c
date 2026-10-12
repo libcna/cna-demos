@@ -82,6 +82,8 @@ int main(int argc, char** argv)
     if (cna_demo_check_result(&demo, cna_storage_container_open(device, view("C API Saves"), completed, &completions,
                                                                 &container),
                               "cna_storage_container_open")) {
+        cna_demo_check(&demo, cna_storage_device_destroy(device) == CNA_RESULT_INVALID_STATE,
+                       "an open container prevents destruction of its storage device");
         memset(save, 0, sizeof(save));
         put_u32(save, 7U);         /* level */
         put_u32(save + 4, 12345U); /* score */
@@ -89,6 +91,8 @@ int main(int argc, char** argv)
 
         if (cna_demo_check_result(&demo, cna_storage_container_create_file(container, view("slot1.sav"), &stream),
                                   "cna_storage_container_create_file")) {
+            cna_demo_check(&demo, cna_storage_container_destroy(container) == CNA_RESULT_INVALID_STATE,
+                           "an open stream prevents destruction of its storage container");
             cna_demo_check_result(&demo, cna_storage_stream_write(stream, save, sizeof(save)),
                                   "cna_storage_stream_write");
             cna_demo_check_result(&demo, cna_storage_stream_close(stream), "cna_storage_stream_close");
@@ -107,10 +111,50 @@ int main(int argc, char** argv)
                                   "cna_storage_container_open_file")) {
             cna_demo_check_result(&demo, cna_storage_stream_get_length(stream, &length),
                                   "cna_storage_stream_get_length");
+            /* Seek to the last eight bytes (the end of the authored player name and padding).
+               A larger physical output also proves what a short EOF read leaves untouched. */
+            {
+                uint8_t tail[14], expected[14];
+                uint64_t tail_read = UINT64_MAX;
+                int64_t position = INT64_C(-987654321);
+                CNA_Result result = cna_storage_stream_seek(stream, -8, CNA_SEEK_ORIGIN_END, &position);
+                cna_demo_check(&demo, result == CNA_RESULT_SUCCESS && position == SAVE_SIZE - 8,
+                               "seeking backwards from the end locates the saved name tail");
+                memset(tail, 0xA5, sizeof(tail));
+                memcpy(expected, tail, sizeof(tail));
+                memcpy(expected + 1, save + SAVE_SIZE - 8, 8);
+                result = cna_storage_stream_read(stream, tail + 1, 12U, &tail_read);
+                cna_demo_check(&demo, result == CNA_RESULT_SUCCESS && tail_read == 8U &&
+                               memcmp(tail, expected, sizeof(tail)) == 0,
+                               "a short EOF read returns the actual tail bytes and preserves unused output and guards");
+                tail_read = UINT64_MAX;
+                result = cna_storage_stream_read(stream, tail + 1, 12U, &tail_read);
+                cna_demo_check(&demo, result == CNA_RESULT_SUCCESS && tail_read == 0U &&
+                               memcmp(tail, expected, sizeof(tail)) == 0,
+                               "reading again at EOF returns zero without changing caller storage");
+                /* ISSUE-056: the underlying FileStream currently publishes -1 after EOF.
+                   Keep the real byte-offset contract visible instead of accepting that sentinel. */
+                position = INT64_C(-987654321);
+                result = cna_storage_stream_get_position(stream, &position);
+                printf("  EOF position: result=%d, position=%lld, expected=%d\n",
+                       (int)result, (long long)position, SAVE_SIZE);
+                cna_demo_check(&demo, result == CNA_RESULT_SUCCESS && position == SAVE_SIZE,
+                               "short and empty EOF reads leave the stream positioned at its real end");
+                position = INT64_C(-987654321);
+                result = cna_storage_stream_seek(stream, 0, CNA_SEEK_ORIGIN_BEGIN, &position);
+                cna_demo_check(&demo, result == CNA_RESULT_SUCCESS && position == 0,
+                               "rewinding restores the original full-save read after EOF");
+            }
             memset(loaded, 0, sizeof(loaded));
             cna_demo_check_result(&demo, cna_storage_stream_read(stream, loaded, sizeof(loaded), &bytes_read),
                                   "cna_storage_stream_read");
             cna_demo_check_result(&demo, cna_storage_stream_close(stream), "cna_storage_stream_close");
+            {
+                int64_t untouched = INT64_C(987654321);
+                const CNA_Result result = cna_storage_stream_get_position(stream, &untouched);
+                cna_demo_check(&demo, result == CNA_RESULT_INVALID_HANDLE && untouched == INT64_C(987654321),
+                               "closing the read stream invalidates its handle without writing a stale position query");
+            }
             printf("  loaded %llu of %lld bytes: level %u, score %u, name %.16s\n",
                    (unsigned long long)bytes_read, (long long)length, get_u32(loaded), get_u32(loaded + 4),
                    (const char*)(loaded + 8));

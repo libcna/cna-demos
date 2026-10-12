@@ -19,7 +19,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 - **Area:** sharp-runtime `System::IO::FileStream::Read/getPositionProperty`, exposed through
   CNA StorageContainer file streams and `cna_storage_stream_get_position`.
-- **Reproduction:** the pending extension of `c_api.storage.save_game` is independently
+- **Reproduction:** the extension of `c_api.storage.save_game` is independently
   compiled as `/tmp/cna-storage-eof-probe` using existing C target inputs. It seeks to byte16
   of the original24-byte save and requests12bytes into physically allocated guarded storage.
   A second read at EOF and a position query follow. A separate `/tmp/cna-canonical-eof-probe`
@@ -45,7 +45,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   shipped binaries remain unchanged through probe builds/runs. Immutable stdout/stderr/JSON,
   direct/C sources, helper scripts, source hashes and exact23+8child review are in
   `build/linux-full/reports/checkpoint-466-transfer-eof-*`. No sibling source changes or
-  upstream messages. The catalog extension/knownIssue metadata is the next application step.
+  upstream messages. The catalog extension now retains the failing assertion with knownIssue metadata; its native
+  build, both focused selections and relevant CTest WILL_FAIL contract pass as documented
+  in checkpoint-467-focused-* (30positive child checks and only the confirmed position failure). Reproduce via
+  `cna-demos c_api.storage.save_game --automated --renderer SOFTWARE` after building.
 
 ### CNA-DEMOS-ISSUE-001 -- `libcna.so` fails to link with CMake 3.28 (duplicate symbols)
 
@@ -794,7 +797,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   and exactly the reliable-loss assertion fails on both renderers. The repair changes only
   bounded coordination timing, including sign-in waits; packet counts, pacing, latency and
   recovery assertions remain unchanged. This does not add a CNA issue or waive the earlier
-  interrupted evaluation. Full repaired checkpoint validation is pending.
+  interrupted evaluation. Full repaired466-timing validation passes all479enabled CTests
+  and both exact smoke comparisons. Controlled identical8-second phase delays also prove the
+  repaired37.41-second exchange retains all five host checks while the original sender times
+  out at22.88seconds. Complete466-transfer subsequently preserves the same network checks.
 
 ---
 
@@ -1555,7 +1561,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Repair observed:** external commit 7d8eba687 contains the global-namespace array.
   HEAD 18d8398af was observed during repair review, with later build-system edits. The existing linux-full retry passed (200 scheduled targets; no compiler diagnostics). Both
   focused launch-parameter runs pass all fifteen child checks with empty stderr. Resolved for
-  the exercised build; full 456 validation is still pending. No CNA source edited/reverted, warning suppressed, runtime
+  the exercised build; subsequent full456 validation passed all469enabled CTests and both
+  smoke suites with exact prior35/36failed assertions retained. No CNA source edited/reverted, warning suppressed, runtime
   knownIssue marker or upstream message.
 
 

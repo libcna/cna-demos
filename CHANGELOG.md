@@ -20,6 +20,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- Three-tap shader image filter: five GL checks and inspected pixels demonstrate scalar weight
+  arrays, vec2 offsets and non-square texel size with same-program updates.
+- Existing C save example adds parent/child release guards, guarded short EOF reads, rewind
+  and handle expiry. It preserves all23original controls and exposes ISSUE-056: FileStream
+  returns position-1after EOF. Direct and C probes isolate the dependency defect.
 - Existing Texture3D transfers now include guarded boxed reads, authored non-cubic mip data
   and refusal preservation; ten checks pass on both renderers with unchanged inspected images.
 - Existing C content now demonstrates stable game-owned manager borrowing, configuration
