@@ -97,15 +97,15 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **440 checkpoint passed** at 9995869:
-tools/validate.sh exit 0, all 453 enabled CTests (332.25 s), both complete smoke runs and regenerated
-coverage. Original 439-integrity comparisons preserve every older ID/status/known issue/check count
-and all 31/32 failed assertions. New XML tool passes ten child checks, matching focused evidence;
-compiler 15 and nested 20 remain unchanged. All 29 selected binary hashes match runtime capture.
-Stderr adds only two sentinel DEBUG loads and two expected CNB-refusal diagnostic lines per renderer
-after timestamp/private-path normalization; inherited GTK warnings remain. **Display isolation was
-not enforced in the invocation:** a matching probe selected Wayland despite Xvfb. These are valid
-runtime results but not proven private-X11 coverage. A harness correction and full 440-x11 follow.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **440-x11 checkpoint passed** at 8b370a0:
+tools/validate.sh exit 0, all 453 enabled CTests (162.54 s), both complete smoke runs and regenerated
+coverage. Explicit SDL_VIDEO_DRIVER=x11 and removed WAYLAND_DISPLAY isolate both outer Xvfb and
+the script's GL leg. ORIGINAL 440 comparisons preserve every ID/status/known issue/JSON check count
+and all 31/32 failed assertions. XML 10, compiler 15 and nested 20 child checks are unchanged. All 29
+selected native hashes match runtime capture AND the preceding inherited-display checkpoint.
+Both stderr streams lose 55 GTK warnings; SOFTWARE adds nothing, GL retains 84 previously observed
+nonfatal X protocol diagnostics. Original streams, exact reviews and display-isolation/red-green
+regression evidence are archived. No CNA source edit or new CNA issue ID.
 
 | Check | Result |
 |---|---|
@@ -114,9 +114,9 @@ runtime results but not proven private-X11 coverage. A harness correction and fu
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
 | CTest | 428 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
 | SOFTWARE smoke | 389 passed, 23 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (inherited SDL video selection; X11 correction pending) | 410 passed, 24 expected failures, 3 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 410 passed, 24 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | All 31/32 older failed assertions retained |
-| stderr | Expected clean refusal plus display-dependent GTK warnings investigated and archived |
+| stderr | No GTK warnings; expected content diagnostics and 84 nonfatal GL X protocol lines archived |
 | Screenshots | Corrected Guide notification captured and inspected on both renderers |
 | Content build | Passed (CNB, XNB, media, content project) |
 
@@ -232,13 +232,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** full 440 at 9995869 is complete and archived/reviewed. The validate.sh
-Xvfb leg correction is APPLIED: force SDL_VIDEO_DRIVER=x11 and remove WAYLAND_DISPLAY locally.
-A new command-stub regression fails on the original script (/tmp/cna-440-x11-red-test.log), while
-all four old tests pass. Run the updated tests, commit and run full 440-x11 with explicit outer
-SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY xvfb-run settings. Compare ORIGINAL checkpoint-440;
-expect unchanged 440 statuses/known issues and 31/32 raw failed assertions. Capture 29 selected hashes
-including SDL3/mixer; no rebuild/source mutation during runtime. Then continue the raw XML draft.
+**Immediate next action:** complete 440-x11 at 8b370a0 is archived/reviewed. Apply the next raw XML
+existing-instance drafts below, build, run both displayless selections, targeted tests, update docs
+and full 441 against ORIGINAL checkpoint-440-x11. Keep the explicit isolated-X11 full invocation.
+The script now enforces x11 in its own GL leg. New regression failed before the correction and all
+five validation-tool tests pass afterward; complete 453 enabled CTests passed. Binary hashes unchanged
+across inherited 440 and isolated 440-x11. Do not repeat the already closed isolation investigation.
 
 XML integration source 9995869 is built and fully validated. Focused evidence:
 /tmp/cna-440-xml-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}, ten child checks each, private paths
@@ -246,10 +245,11 @@ independently absent. Clean /tmp/cna-440-build.log; metadata 440/0 and all 22 ta
 Originals and 29 selected hashes archived in reports/checkpoint-440-*; both exact reviews pass.
 The XML-to-XNB /tmp drafts are APPLIED AND STALE; use repository sources.
 
-Next after isolated full 440-x11: /tmp/cna-xml-existing-main.cpp plus /tmp/cna-xml-existing-metadata.cpp
+Next prepared batch after complete 440-x11: /tmp/cna-xml-existing-main.cpp plus /tmp/cna-xml-existing-metadata.cpp
 and /tmp/cna-xml-existing-CMakeLists.txt are UNAPPLIED/UNBUILT/UNEXECUTED. Proposed stable ID
-content.custom.intermediate_existing_instances, eight checks: preallocated stat-slot identity,
-nonserialized owner state, ordinary Null/type rejection versus raw attribute bypass. StatSlot
+content.custom.intermediate_existing_instances, ten proposed checks: preallocated stat-slot identity,
+nonserialized owner state, ordinary Null/type rejection versus raw attribute bypass, plus an explicit
+raw serializer hint writing one compact field and filling its preallocated instance. StatSlot
 and the known unrelated string serializers are explicitly registered. Do not infer coverage yet.
 
 Display isolation investigation: inherited WAYLAND_DISPLAY=wayland-0, XDG_SESSION_TYPE=wayland
@@ -261,8 +261,8 @@ checkpoint-440-display-review.json. The last invocations omitted AUTOMATION.md's
 invocation and also make the script's own Xvfb leg enforce its promised backend. This does not prove
 the lower-level source of GTK's init-order warning. Do not label inherited 439-integrity/current 440
 as proven private-X11 execution. Their assertions/results are valid on the selected environment.
-Original streams remain intact. After current 440, fix the GL Xvfb leg and rerun explicit-X11 full
-validation; keep inherited and isolated checkpoints separately. No CNA code edit or issue ID.
+Original streams remain intact. The GL leg is now fixed, full 440-x11 is complete, and inherited
+and isolated checkpoints are archived separately. No CNA code edit or issue ID.
 
 Earlier GTK investigation evidence remains reports/checkpoint-439-integrity-gtk-* and its
 -stderr-review.json: 55 GTK warnings per full renderer, one per isolated inherited title probe,
@@ -519,7 +519,7 @@ After XML-to-XNB integration, the source-reviewed raw/existing-instance gap is d
 COVERAGE_AUDIT.md: both raw forms bypass Null/Type selection, and caller-carrier forwarding alone
 does not prove identity reuse. A future focused custom serializer should fill a preallocated
 reference object while preserving nonserialized state, with ordinary/raw attribute controls.
-An unapplied, unbuilt draft is now /tmp/cna-xml-existing-main.cpp (eight expected checks);
+An unapplied, unbuilt draft is now /tmp/cna-xml-existing-main.cpp (ten expected checks);
 Metadata/build drafts are /tmp/cna-xml-existing-metadata.cpp and /tmp/cna-xml-existing-CMakeLists.txt;
 no integration or runtime execution yet. It follows complete XML-to-XNB validation.
 
@@ -539,15 +539,20 @@ return 1 is explicitly asserted, not a failed demo. Two DEBUG runtime load lines
 CNB-refusal diagnostic lines are retained per run. No GPU, genuine-XNA, external-object-graph,
 crash-consistency or multi-output publication claim. Do not repeat basic cache/sibling coverage.
 
-**Latest complete checkpoint (2026-10-12):** 440 at 9995869, tools/validate.sh exit 0.
+**Latest complete checkpoint (2026-10-12):** 440-x11 at 8b370a0, tools/validate.sh exit 0.
 SOFTWARE 389/23/25/3, OPENGLES3 410/24/3/3; all 453 enabled CTests, metadata 440/0. Archive prefix
-reports/checkpoint-440: both .json/.log/.stderr.log, both -review.json, build/ctest/validation logs
-and -binaries.json with 29 selected artifacts (including resolved SDL3/mixer). All older statuses,
-known issues, JSON counts and 31/32 failed assertions retained. New XML child checks 10 PASS, compiler 15
-and nested 20 unchanged. Normalized stderr adds two sentinel loads plus two explicit CNB-refusal
-lines, removes none. Runtime columns complete; coverage 293/329 types, 1354/2326 members, 158/3210 C routes.
-The inherited display allowed Wayland; separate native-handle probes prove the selection difference.
-Use ORIGINAL checkpoint-440 for the next explicitly isolated 440-x11 checkpoint, not as proven X11 evidence.
+reports/checkpoint-440-x11: original renderer JSON/stdout/stderr, both -review.json, build/ctest/
+validation logs and -binaries.json (29 selected artifacts), -display-review.json and red/green
+validation-tool test logs. Exact ORIGINAL 440 comparison preserves all ID/status/known issue/count
+sets and 31/32 failed assertions; XML 10, compiler 15 and nested 20 child lists unchanged. All 29 hashes
+match runtime capture and inherited 440. GTK warnings 55 -> 0 per renderer; GL has 84 known nonfatal
+X protocol diagnostics, SOFTWARE no added stderr messages. Native-handle controls confirm the
+explicit X11 selection. Coverage 293/329 types, 1354/2326 members, 158/3210 C routes; both runtime
+columns complete. Use ORIGINAL checkpoint-440-x11 next.
+
+Historical 440 at 9995869 remains archived with both reviews and 29 hashes: same totals/child checks,
+new XML integration 10 PASS, all 453 enabled CTests (332.25 s). That invocation inherited Wayland;
+its valid results are not isolated-X11 evidence. Do not replace its raw streams with corrected data.
 
 Historical 439-integrity at 83c919d is also archived: SOFTWARE 388/23/25/3, OPENGLES3 409/24/3/3,
 all 452 enabled CTests, 26 hashes, compiler 10 -> 15 retaining all older checks. It shares the inherited
