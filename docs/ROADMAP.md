@@ -557,19 +557,19 @@ deterministic demos and run the visual-regression comparison across renderers.
 - CI: an Xvfb job for OPENGLES3; more renderers as CI capacity allows.
 - A text font for on-screen labels (SpriteFont asset policy; see PLAN.md).
 
-Checkpoint 464 now completes the compressed-cube and uniform-palette batch:477 enabled CTests
-passed, SOFTWARE 405/26/30/3 and OPENGLES3 430/28/3/3. The first smoke attempt was interrupted
-with exit 143; both full smokes and coverage were resumed on unchanged binaries. Exact prior
-37/41 failures and all C/custom child evidence are retained; only the declared SOFTWARE skip
-diagnostic was added. Texture3D now has a separate member/behavior classification in the audit;
-its shader sampling now has the focused evidence above. The existing C SpriteBatch extension
-also passes all19 child checks (21 with capture) on both selections: active-batch texture
-retention, cancellation without a deferred flush and successful release afterwards. All older
-child labels remain; both before/after image pairs were inspected. These later changes still
-need their own complete466 checkpoint, rather than inheriting full464 coverage.
+Complete checkpoint **466-timing** at source5e7c950 validates the typed-cube, actual volume
+sampling and C deferred-batch cancellation extensions:479 enabled CTests pass (237.52s),
+SOFTWARE406/26/31/3 and OPENGLES3 432/28/3/3. Inner validation and outer Xvfb both exit0.
+Exact comparisons retain all37/41 old failed assertions, all five network evaluation checks
+and old C/custom child evidence, permitting only eight named C sprite additions. Selected
+binary/asset hashes remain stable; normalized stderr adds one SOFTWARE CustomEffects skip.
 
-Initial 466 full SOFTWARE smoke exposed an orchestration deadline before the network packet
-checks, despite the same known-issue status. Exact comparison rejected it; original evidence
-is retained. The focused phase-watchdog repair preserves all five original network assertions
-on both selections. The distinct 466-timing full checkpoint must pass before this batch becomes
-a new complete baseline; complete 464 remains the reference in the meantime.
+The initial466 SOFTWARE aggregate network deadline was rejected despite its known-issue
+status. A phase watchdog preserves the original packet predicates. A separate controlled
+native regression with three8-second transition delays makes the old sender time out at
+22.88s; the repaired37.41s exchange preserves all five host checks with only ISSUE-030.
+This is a demo coordination fix. Original/repaired/full evidence remains immutable.
+
+Next: extend existing volume_data transfers and C content_manager game-owned borrowing;
+then continue deeper uniform/lighting and C ownership audits. These are behavioral extensions,
+not additional demo IDs. Current prepared drafts have syntax and before-capture evidence only.

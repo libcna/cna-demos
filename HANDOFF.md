@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-466 catalog demos (last complete 464; current batch focused-tested): math 78, game 33, graphics 158 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+466 catalog demos (complete 466-timing checkpoint): math 78, game 33, graphics 158 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 26 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
@@ -101,40 +101,36 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-**Complete 464 checkpoint verified at 7bcb39f.** The original tools/validate.sh invocation
-passed its seven-target build, metadata and all 477 enabled CTests (241.42s), then ended with
-SIGTERM/exit 143 during SOFTWARE smoke before JSON publication. The signal origin is unknown;
-no remaining demo process was found. Its partial evidence remains checkpoint-464-interrupted-*.
-Both full smoke phases and coverage were resumed without rebuilding in /tmp/cna-resume-464.sh;
-that runner exited 0, and exact comparisons plus /tmp/cna-464-finish.py passed. This is completed
-validation with resumed runtime phases, not a claim that the original script exited zero.
+**Complete466-timing at5e7c950 is verified.** tools/validate.sh and the outer Xvfb wrapper both
+returned0, recorded independently; tool session73558 also exited0. Seven scheduled build
+operations and metadata466/0 passed. All479 enabled CTests passed in237.52s (448passed incl.
+26WILL_FAIL,31skipped,3manual disabled). SOFTWARE406/26/31/3, OPENGLES3 432/28/3/3.
+Coverage293/329 types,1373/2326 XNA members,166/3210 C routes; comprehensive coverage is not claimed.
 
-Metadata 464/0; coverage 293/329 types,1372/2326 XNA members, 166/3210 C routes. Original complete 462
-comparison adds only compressed_blocks and uniform_palettes. Every old status/known issue,
-raw failure and C/custom-content child list/trace is retained exactly. Failures remain 37/41.
-Only GL game.window.title checks vary 11 ->10 (unchanged per-Update checks under a frame limit).
-All 35 selected binaries/four assets stayed unchanged, including across the interruption.
-Normalized stderr adds exactly one SOFTWARE CustomEffects skip; GL is identical, including
-the deliberate compiler diagnostic and 84 Xprotocol lines. No diagnostics suppressed.
-CNA 90bd2d33c was observed at runtime capture and final inspection, with external documentation
-edits; this is not an atomic source/input snapshot.
+Original complete464 comparison preserves all37/41 raw failed assertions, all five original
+network evaluation child lines, and every C/custom-content child list after filtering exactly
+eight named C sprite additions (11 ->19 without capture). The two new IDs match focused results:
+typed cube8checks both, volume6GL/SW skip. All35 selected binary/four asset hashes stayed stable.
+Normalized stderr adds exactly one declared SOFTWARE CustomEffects skip; GL is unchanged.
+Outer Xvfb diagnostics are separately retained; no diagnostic is suppressed. CNA0a2918c1d was
+observed at capture/final inspection; this is not an atomic input/source snapshot.
 
-| Check | Result |
-|---|---|
-| Existing linux-full checkpoint build | Passed seven scheduled targets; no compiler diagnostics |
-| Metadata/assets --validate | 464 demos, 0 problems |
-| Full validation phases | Build/CTest passed; interrupted smoke attempt retained; both resumed complete smokes and coverage passed |
-| CTest | 447 passed (including 26 WILL_FAIL), 30 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 405 passed, 26 expected failures, 30 skipped, 3 manual not run |
-| OPENGLES3 smoke | 430 passed, 28 expected failures, 3 skipped, 3 manual not run |
-| New behavior | Compressed cube 8 checks on both; uniform palettes 4 GL checks/SW skip |
-| Artifacts/diagnostics | Selected hashes stable; only the declared SOFTWARE skip diagnostic added |
+Initial466 at6f4feed is NOT an accepted baseline. Its full SOFTWARE smoke reached recovery,
+then exhausted a single20second aggregate demo deadline before packet evaluation. Exact raw
+review rejected that substituted failure despite its known-issue status. The original logs,
+unchanged isolated reproductions and repair evidence remain checkpoint-466-initial-*,
+checkpoint-466-net-original-* and checkpoint-466-timing-focused-*. The repaired per-phase
+watchdog retains every packet/latency/recovery predicate and the original ISSUE-030 failure.
+The controlled native long-exchange regression is also complete: the original sender times out
+at 22.88 s and the host evaluates an incomplete exchange; the repaired exchange completes in
+37.41 s with all five original host checks (four passes and only ISSUE-030). Both use identical
+8-second delays before each host phase. This is a demo orchestration repair, not a CNA fix.
 
-The focused palette GL image was actually inspected: both matrix translations and vec3 colors
-must update for the lower viewport's changed arrangement. Compressed cube checks are public
-byte transfers, not sampling/decoded-image/direct GPU-readback evidence. No new CNA issue.
-Complete reports/catalog/helpers: checkpoint-464-*. Previous complete 462 at bbddd34 (closure
-84a19c9) has 475 enabled CTests, SW 404/26/29/3, GL 428/28/3/3 and the same 37/41 failures.
+Focused volume and all four C sprite before/after captures were actually inspected. GL C images
+are RGBA-identical; SOFTWARE animation timing varies, while exact center/corner controls remain.
+Typed cube results concern public storage transfers, not GPU readback or sampling. Full archives
+and helpers: checkpoint-466-timing-*. Previous complete464 source7bcb39f/closure1c31a67 and its
+interrupted/resumed runtime history are retained in CHECKPOINT_HISTORY.md.
 
 ## 8. Exact commands that work
 
@@ -253,60 +249,26 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-Complete 464 source 7bcb39f/closure 1c31a67 remains the full baseline. New batch 466 is built and
-focused-tested: 37 targets scheduled (34 completed, restat skips); known Draco CMP0148 CMake
-developer warning only, no compiler diagnostics. Metadata 466/0. All 8 relevant CTests pass
-(6 passed including the DDS WILL_FAIL,2 capability skips; 3.75 s). CNA c05e67714 observed clean.
+Complete baseline: **466-timing at source 5e7c950**, including full validation and the additional
+controlled delayed regression. All sessions are closed; do not repeat completed phases.
+Immutable evidence: reports/checkpoint-466-timing-*, including delayed-review.json. The
+rejected initial466 attempt and prior complete464 are documented in CHECKPOINT_HISTORY.md.
 
-New outcomes: typed_payloads 8 checks on SOFTWARE/OPENGLES3; sampler_coordinates 6 GL checks
-and SOFTWARE CustomEffects skip. C sprite_batch preserves all 13 captured child checks plus
-exactly 8 additions (21 with capture,19 without). All executed stderr streams are empty except
-the declared volume SOFTWARE skip. The volume image and all 4 before/after C images were
-actually inspected. Volume centers include the expected RGB(191,0,64) blend; C cancellation
-leaves the clear corner unchanged. GL C before/after is RGBA-identical; SOFTWARE animation
-varies, so whole-image identity is not claimed. No new CNA issue.
-Focused evidence and exact review: reports/checkpoint-466-focused-*.
+Immediately extend the two existing demos using the reviewed /tmp drafts below. The native
+before captures have completed successfully on SOFTWARE/OPENGLES3 and all four images were
+actually inspected: volume_data has 3 checks; C content_manager has 41 captured child checks.
+All four stderr streams are empty. Preserve those checks/images, apply the two drafts and add
+the two C metadata routes, build, then run the same focused runner in after mode. Expected
+counts: volume10; C49 with capture/47 without. No new catalog ID; checkpoint **466-transfer**.
+Compare seven/eight exact new checks and actual image pixels before crediting the behavior.
 
-Full 466 session 55059 is CLOSED with wrapper exit 143 after both complete smoke JSONs and
-coverage were written. All initial evidence is archived as checkpoint-466-initial-*. GL exact
-comparison passes; selected 35 binaries/four asset hashes remained stable and expected stderr
-deltas match. This still is NOT an accepted baseline because of the SOFTWARE assertion change. Build (7 scheduled targets) and
-metadata 466/0 passed; all 479 enabled CTests passed in 247.81 s. SOFTWARE completed 406/26/31/3,
-but its EXACT RAW COMPARISON FAILED: the old ISSUE-030 reliable-loss assertion is replaced by
-"the coordinated packet exchange completes before its deadline". The one 20-second aggregate
-demo timer expired at 20.84 s after outage recovery began, before Evaluate. Do not accept the
-known-issue status as proof that all old controls ran. Initial raw JSON/stdout/stderr and the
-rejected comparison are archived as checkpoint-466-initial-SOFTWARE-*.
-
-HIGHEST PRIORITY: the unchanged isolated net demo completed all five original child checks
-on both renderers (11.64s SOFTWARE,9.24s GL), with only the original ISSUE-030 reliable-loss
-failure. Original isolated logs are checkpoint-466-net-original-*. The initial full timeout is
-an orchestration-budget failure before Evaluate, not a new delivery observation. The exact
-reason for slower whole-suite progress is unknown; load sensitivity is consistent with timings.
-
-A focused demo fix is NOW APPLIED in net.network_session.simulated_conditions/main.cpp:
-20 seconds per finite startup/burst/recovery phase, reset only on actual phase transitions,
-with sign-in waits checked after the watchdog. Timeout diagnostics identify phase/recovery.
-All 24 packet bursts, 20 ms pacing, 200 ms minimum latency, 600 ms settling, 1 s recovery and every
-original Evaluate assertion remain unchanged. Build passed 52 scheduled targets (49 completed/restat), with only the known Draco CMake
-developer warning. Metadata 466/0. Repaired focused runs pass all four positive network checks
-and retain exactly the single original ISSUE-030 failure on both renderers, empty stderr.
-Exact five-label/order comparison passed; affected CTest passes its WILL_FAIL contract
-(12.91s). CNA 0a2918c1d observed clean; since c05e67714 only a documentation file changed.
-Next commit the repair and run full validation under distinct 466-timing, preserving initial 466.
-No new CNA issue is claimed. Original failure remains visible; do not waive it as known ISSUE-030.
-
-The two future transfer/borrow drafts below remain NOT APPLIED and now wait behind this
-validation failure investigation. Full 466 is not a completed baseline; last complete remains 464.
-Expected intended full comparison to ORIGINAL COMPLETE464: old37/41 raw failures, only two new
-IDs and eight named C sprite additions; C/custom lists/traces otherwise exact. Expected totals
-SW406/26/31/3, GL432/28/3/3; normalized stderr+one SOFTWARE CustomEffects skip, GL unchanged.
-Selected35 binary/four asset hashes were captured and must not be recaptured after runtime.
-
-Continue immediately after the validated checkpoint. Next coherent gap: extend volume_data
-with guarded boxed reads and non-cubic authored mip/Z-boundary controls, retaining its original
-checks and image. Other gaps: meaningful uniform families, skinned-light behaviors and wider
-C routes. Do not restart completed phases or add format/overload-only duplicate IDs.
+After focused checks, update the semantic audit/roadmap and generated coverage, run relevant
+CTests and a full checkpoint against original complete466-timing. Preserve all37/41 raw old
+failures, the five network evaluation checks and all other C/custom child lists/traces. Only
+the volume3 ->10 and eight named C content additions are intended count changes. Keep input
+hashes stable across runtime. Then continue to meaningful shader uniform families, skinned
+lighting or other untested C ownership/dispatch behavior from the audit. Never infer broad
+member coverage from type counts or add format/overload-only duplicate IDs.
 
 ## 15. Assumptions the next session must know
 
@@ -318,48 +280,35 @@ C routes. Do not restart completed phases or add format/overload-only duplicate 
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-The previous compressed/palette source drafts are applied and stale; their runtime evidence
-is checkpoint-464-focused-*. Full 464 helpers all ran successfully: /tmp/cna-capture-464.py,
-/tmp/cna-archive-464.py, /tmp/cna-resume-464.sh and /tmp/cna-464-finish.py. The interrupted
-attempt and successful resumed phases remain explicit in their archived evidence.
+Current baseline helpers /tmp/cna-capture-466-timing.py, /tmp/cna-archive-466-timing.py and
+/tmp/cna-466-timing-finish.py all passed. Inner tools/validate.sh and outer Xvfb exit codes are
+both zero; Xvfb stderr is separately archived (31 amdgpu diagnostic pairs, no hardware claim).
+Do not reuse /tmp/cna-466-finish.py to accept rejected initial466. All old466/464 drafts are
+applied and stale. No runtime is live.
 
-Current batch source-only predecessors are checkpoint-464-next-*. Their /tmp drafts are now
-APPLIED AND STALE: cna-cube-typed-payloads.cpp, cna-volume-sampling.cpp, cna-sprite-retention.c.
-Actual focused runtime evidence is checkpoint-466-focused-*, not the earlier syntax reviews.
-Runner /tmp/cna-run-466-focused.py completed before/after; /tmp/cna-review-466-focused.py passed
-all outcomes, exact C child additions, stderr boundaries and image pixel observations.
-The original volume_data scene stays unchanged; typed cube transfers do not establish sampling
-or direct GPU readback, and volume sampling establishes neither mip filtering nor non-Color data.
+NOT APPLIED: /tmp/cna-volume-transfer-windows.cpp. Syntax passed, empty log; draft/source
+review archived as checkpoint-466-next-volume-transfers-*. Adds guarded source/boxed output,
+short logical count refusal, authored 8x4x2 mip chain, mip-local Z bounds, data preservation
+and nonexistent-level output refusal. No new native behavior credit before after validation.
 
-Full 466 runtime capture is DONE: 35 binaries/four assets, CNA c05e67714. Do not recapture after
-runtime. Helpers /tmp/cna-capture-466.py, /tmp/cna-archive-466.py SOFTWARE/OPENGLES3 and
-/tmp/cna-466-finish.py are prepared and syntax-checked. Archive each renderer only after its
-complete JSON exists; finish only after the validation runner exits successfully. Exact C
-child comparison filters only the eight names from checkpoint-466-focused-review.json.
+NOT APPLIED: /tmp/cna-content-game-borrow.c. Syntax passed, empty log; evidence archived as
+checkpoint-466-next-content-borrow-*. Eight additions cover stable game-owned manager borrow,
+refused independent destruction, copied-root isolation, survival beyond callbacks/source
+destruction and stale-output preservation after game destruction. Copy precedes asset loads;
+no cached-object sharing or borrowed-manager loading claim. Add actual metadata routes
+cna_game_get_content_manager_ext and cna_game_set_content_manager_ext upon application.
 
-Next NOT-APPLIED proposal: /tmp/cna-volume-transfer-windows.cpp. Syntax passed with empty
-log; source review and draft archived as checkpoint-466-next-volume-transfers-*. The existing
-volume_data keeps 3 original checks/atlas and adds 7 for guarded source/boxed output, short-count
-refusal, a non-cubic 8x4x2 authored mip chain, mip-local Z bounds, preservation and invalid-level
-output refusal. No native runtime/image claim. Capture the current atlas before applying, then
-compare both renderer images after native validation. Apply only after full 466 completes.
+Focused runner /tmp/cna-run-466-transfer-focused.py: before mode completed; after is pending.
+Original captures/logs/JSON: /tmp/cna-466-transfer-before-{volume,content}-{SOFTWARE,OPENGLES3}.*.
+Archive these before any new run; do not overwrite the original references.
 
-Second NOT-APPLIED proposal: /tmp/cna-content-game-borrow.c. Empty successful C99 syntax
-log/draft/source review archived as checkpoint-466-next-content-borrow-*. Eight intended
-child additions retain existing 39/41 controls and scene: stable game-owned manager borrow,
-refused independent destruction, copied-root isolation, lifetime beyond callbacks/source
-destruction, and stale-output preservation after game destruction. Copy precedes all loads,
-so cached-object sharing and borrowed-manager loading are not claimed. Two new C routes
-need metadata upon application. Native evidence is pending; apply only after full 466.
-
-Prepared next focused runner: /tmp/cna-run-466-transfer-focused.py before/after for the
-existing volume_data and C content_manager, with all four captures per mode. Not executed
-yet. Expected after counts: volume 3 ->10, C 39 ->47 without capture /41 ->49 with capture.
-The catalog remains 466; intended next checkpoint label 466-transfer avoids replacing the
-current immutable 466 archives. Preserve old checks/images and review exactly 7/8 additions.
-
-Current repaired focused evidence is checkpoint-466-timing-focused-*. Initial 466 selected
-hashes/diagnostics/status totals are archived and stable; outer wrapper exited 143 after full
-outputs. Next full invocation should separately record inner tools/validate.sh and outer
-xvfb-run exit codes plus Xvfb stderr to clarify that wrapper behavior. Do not claim an exit 0
-that was not observed. The unchanged isolated net baseline is checkpoint-466-net-original-*.
+Controlled regression helpers /tmp/cna-build-deadline-probes.py, /tmp/cna-run-deadline-probes.py
+and /tmp/cna-review-deadline-probes.py all passed. Original6f4feed/fixed5e7c950 variants use
+identical 8-second host transition delays, separate child basenames and the absolute existing
+asset root (ContentManager is title-relative). Existing compile/link configuration is reused;
+only /tmp objects/binaries are written, with no second build tree or linker dependency edits.
+Old22.88s: sender deadline plus incomplete sender/latency checks and ISSUE-030. Fixed37.41s:
+all five original host checks, only ISSUE-030 fails. Both explicitly select SOFTWARE for
+host/child; stderr retains INFO renderer/audio lines, no WARN/ERROR. All35 selected project
+binary hashes still match the full checkpoint. No native stalled-peer injection, screenshot
+credit or atomic transitive dependency snapshot claim. Archives checkpoint-466-timing-delayed-*.

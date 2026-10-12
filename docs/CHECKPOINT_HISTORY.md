@@ -1961,3 +1961,76 @@ trace pending=1/before=333333/observed=500000/updates_between=0/result=0. No C i
 device borrow or latency guarantee. Complete reports/catalog/helpers: checkpoint-462-*.
 Previous complete 461 at a447ad2 (closure 4f9fe87) has 474 enabled CTests, SW 404/26/28/3,
 GL 427/28/3/3 and the same 37/41 failed assertions; full history is CHECKPOINT_HISTORY.md.
+
+## Complete 464 checkpoint (superseded by 466-timing)
+
+**Complete 464 checkpoint verified at 7bcb39f.** The original tools/validate.sh invocation
+passed its seven-target build, metadata and all 477 enabled CTests (241.42s), then ended with
+SIGTERM/exit 143 during SOFTWARE smoke before JSON publication. The signal origin is unknown;
+no remaining demo process was found. Its partial evidence remains checkpoint-464-interrupted-*.
+Both full smoke phases and coverage were resumed without rebuilding in /tmp/cna-resume-464.sh;
+that runner exited 0, and exact comparisons plus /tmp/cna-464-finish.py passed. This is completed
+validation with resumed runtime phases, not a claim that the original script exited zero.
+
+Metadata 464/0; coverage 293/329 types,1372/2326 XNA members, 166/3210 C routes. Original complete 462
+comparison adds only compressed_blocks and uniform_palettes. Every old status/known issue,
+raw failure and C/custom-content child list/trace is retained exactly. Failures remain 37/41.
+Only GL game.window.title checks vary 11 ->10 (unchanged per-Update checks under a frame limit).
+All 35 selected binaries/four assets stayed unchanged, including across the interruption.
+Normalized stderr adds exactly one SOFTWARE CustomEffects skip; GL is identical, including
+the deliberate compiler diagnostic and 84 Xprotocol lines. No diagnostics suppressed.
+CNA 90bd2d33c was observed at runtime capture and final inspection, with external documentation
+edits; this is not an atomic source/input snapshot.
+
+| Check | Result |
+|---|---|
+| Existing linux-full checkpoint build | Passed seven scheduled targets; no compiler diagnostics |
+| Metadata/assets --validate | 464 demos, 0 problems |
+| Full validation phases | Build/CTest passed; interrupted smoke attempt retained; both resumed complete smokes and coverage passed |
+| CTest | 447 passed (including 26 WILL_FAIL), 30 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 405 passed, 26 expected failures, 30 skipped, 3 manual not run |
+| OPENGLES3 smoke | 430 passed, 28 expected failures, 3 skipped, 3 manual not run |
+| New behavior | Compressed cube 8 checks on both; uniform palettes 4 GL checks/SW skip |
+| Artifacts/diagnostics | Selected hashes stable; only the declared SOFTWARE skip diagnostic added |
+
+The focused palette GL image was actually inspected: both matrix translations and vec3 colors
+must update for the lower viewport's changed arrangement. Compressed cube checks are public
+byte transfers, not sampling/decoded-image/direct GPU-readback evidence. No new CNA issue.
+Complete reports/catalog/helpers: checkpoint-464-*. Previous complete 462 at bbddd34 (closure
+84a19c9) has 475 enabled CTests, SW 404/26/29/3, GL 428/28/3/3 and the same 37/41 failures.
+
+
+## Complete 466-timing and rejected initial466 (2026-10-12)
+
+Source6f4feed adds typed_cube8checks both renderers, sampler_coordinates6GL/SW capability skip,
+and eight C sprite cancellation checks (19 without capture/21 with). Focused images inspected;
+GL C before/after identical, SOFTWARE animation differs with exact stable center/corner controls.
+Initial full466 builds7 targets, validates466/0 and passes479 enabled CTests in247.81s. Both
+smoke JSONs and coverage finish, but outer wrapper exits143 (origin unknown). Status totals
+SW406/26/31/3 and GL432/28/3/3 conceal a SOFTWARE replacement of ISSUE-030 by the aggregate
+20-second deadline before Evaluate. Exact raw review rejects that baseline. GL retains all41
+old raw failures; selected35 binaries/four assets stable. Original evidence:466-initial-*.
+
+Unchanged isolated original and repaired focused net runs retain all five host checks with
+four passes and only ISSUE-030. Source5e7c950 resets a20-second watchdog only at finite
+startup/burst/recovery transitions, including sign-in in the watchdog; packet counts, pacing,
+settling, recovery and all evaluation predicates stay unchanged. Full466-timing is complete:
+build7, metadata466/0,479 enabled CTests237.52s (448passed incl26WILL_FAIL,31skipped,3disabled),
+SW406/26/31/3,GL432/28/3/3. Both inner tools/validate.sh and outer Xvfb exit0 explicitly logged.
+Exact originalcomplete464 comparison retains all37/41 failed assertions, old statuses/counts,
+all five net checks and every C/custom child list except the eight named C sprite additions.
+Only the two declared new IDs are added.35binary/fourasset hashes stable. Normalized stderr
+adds only one SOFTWARE CustomEffects skip; GL unchanged including intentional compiler error
+and84Xprotocol lines. Separate outerXvfb log retains31amdgpu diagnostic pairs; no hardware claim.
+CNA0a2918c1d observed clean at capture/final, not an atomic input snapshot. Coverage293/329types,
+1373/2326XNA,166/3210C. All capture/archive/finish helper reviews pass.
+
+Controlled native regression uses /tmp binaries from original6f4feed/repaired5e7c950 and the
+same existing compile/link configuration, identical8-second delays before three host phases,
+own child basenames and absolute existing asset root. Old22.884857839s: sender deadline then
+host partial evaluation yields four failures (deadline, sender incomplete, no delayed packets,
+ISSUE-030). Fixed37.413048156s: all five original host checks, four pass and only ISSUE-030.
+Both host/child SOFTWARE selections explicit; stderr INFO retained without WARN/ERROR.
+Selected35 shipped binaries remain unchanged; no new build tree, stalled-peer injection or
+screenshot validation. Probe-induced partial failures are not new CNA issues. All evidence
+and helpers:checkpoint-466-timing-delayed-*. The original398/401 validation debt is long closed.
