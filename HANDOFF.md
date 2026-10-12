@@ -97,26 +97,26 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **441-contracts checkpoint passed**
-at 2d28a13: tools/validate.sh exit 0, all 454 enabled CTests (188.72 s), both complete isolated-X11
-smoke runs and coverage regeneration. ORIGINAL 441-config comparisons preserve every ID/status/
-knownIssue and every old failed assertion; exactly ISSUE-048 is added (31/32 -> 32/33). Native
-patrol checks rise 6 -> 14; adapter child checks 13 -> 19 retain all old checks and match focused
-17-pass/two-failure evidence. Compiler 20, XML 10 + 10 and nested 20 lists are unchanged. All 30
-selected hashes match runtime capture. Normalized stderr is unchanged: no GTK warnings, the same
-content diagnostics and 84 nonfatal GL X protocol lines. Archives: reports/checkpoint-441-contracts-*.
-No new visual or full-transitive dependency snapshot claim.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **442 checkpoint passed** at bf1f674:
+tools/validate.sh exit 0, all 455 enabled CTests (208.27 s), both complete isolated-X11 smoke runs
+and coverage regeneration. ORIGINAL 441-contracts comparisons preserve every older ID/status/
+knownIssue/check count and all 32/33 failed assertions. The new publication demo contributes 14
+passing child checks matching focused evidence; all older compiler/XML/nested/adapter lists are
+unchanged. All 31 selected hashes match runtime capture. Normalized stderr adds exactly the six
+focused Publish/Graph lines and removes nothing; no GTK warnings, same 84 nonfatal GL X protocol
+lines. Original streams/reviews, build/CTest logs and hashes: reports/checkpoint-442-*.
+No new CNA issue, visual validation or full-transitive dependency snapshot claim.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets --validate | 441 demos, 0 problems |
+| Metadata/assets --validate | 442 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 429 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 390 passed, 23 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 411 passed, 24 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | All older failures retained; only ISSUE-048 added (31/32 -> 32/33) |
-| stderr | No GTK warnings; expected content diagnostics and 84 nonfatal GL X protocol lines archived |
+| CTest | 430 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 391 passed, 23 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 412 passed, 24 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | All 32/33 older failed assertions retained |
+| stderr | Only six expected publication/graph lines added; no GTK warnings; GL X protocol diagnostics unchanged |
 | Screenshots | Corrected Guide notification captured and inspected on both renderers |
 | Content build | Passed (CNB, XNB, media, content project) |
 
@@ -238,17 +238,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** new content.custom.multi_artifact_publication is APPLIED and built.
-Both /tmp/cna-442-publication-final-{SOFTWARE,OPENGLES3}.{json,log,stderr.log} pass all 14 child
-checks, preserving the initial twelve. Actual stderr contains one Publish refusal and two Graph
-refusals from deliberate private fixtures; both data trees are independently absent. No new CNA
-issue. Metadata 442/0. All 25 targeted CTests pass (6.30 s, /tmp/cna-442-targeted-ctest.log).
-Coverage regenerated with the previous complete reports: one absent new ID is honest until the
-full checkpoint; type/member totals unchanged. Focused streams and original build/CTest logs are
-archived under reports/checkpoint-442-focused-*. Commit, run complete 442 against ORIGINAL 441-contracts, archive
-both streams and exact reviews. Expect one new PASS: SOFTWARE 391/23/25/3, GL 412/24/3/3; all old
-32/33 failed assertions and all old child lists unchanged. Capture 31 selected hashes (prior 30
-plus new executable) after full build, freeze source/assets during runtime, then continue.
+**Immediate next action:** full 442 is COMPLETE at bf1f674. Apply the prepared dependency_graph
+tool and existing patrol absent-writer extension below, build, validate, run both displayless
+selections, investigate mismatches, run targeted CTests and update semantic coverage. Expected
+new graph child count is 13 and existing patrol 14 -> 15; these are drafts, not runtime evidence.
+All /tmp publication drafts are stale/applied; do not reapply them.
+
+442 evidence: /tmp/cna-demos-442-validation.log exit 0; 455 enabled CTests, SOFTWARE 391/23/25/3,
+GL 412/24/3/3, exact 32/33 failures retained. Both archive wrappers /tmp/cna-archive-442.py and
+/tmp/cna-442-finish.py pass; 31 selected hashes unchanged; stderr adds precisely the six focused
+Publish/Graph lines. Original full evidence is reports/checkpoint-442-*; focused evidence is
+reports/checkpoint-442-focused-* (14 passes both selections, 25 targeted CTests in 6.30 s).
 
 Build evidence: /tmp/cna-442-build.log completed 108 steps; automatic configure included vendored
 Draco CMP0148 developer warning, not a compiler warning/error. Final build /tmp/cna-442-final-build.log
@@ -256,7 +256,7 @@ completed 86 steps after external C API changes. /tmp/cna-442-target-build.log t
 strengthened final source up to date. Do not conflate those dependency rebuilds with demo defects.
 All /tmp/cna-multi-artifact-publication* drafts are APPLIED AND STALE; use repository sources.
 
-Latest complete checkpoint: 441-contracts at 2d28a13 (closure 89510ca); 454 enabled CTests pass,
+Previous complete checkpoint: 441-contracts at 2d28a13 (closure 89510ca); 454 enabled CTests pass,
 SOFTWARE 390/23/25/3, GL 411/24/3/3, exact 32/33 failed assertions, same normalized stderr and
 30 unchanged selected hashes. Original evidence under reports/checkpoint-441-contracts-*.
 Contract focused evidence remains /tmp/cna-441-values-* (14 native checks) and
@@ -289,6 +289,25 @@ Next deeper gaps: actual content-build dependency scheduling/effective fingerpri
 remaining C ABI callback lifecycle contracts. Prefer a coherent extension where it fits; no per-
 getter or per-error demo proliferation. Source AddContentBuildDependency exists, but neither this
 publication example nor manually supplied ContentBuildSibling controls prove CLI graph scheduling.
+Read-only preparation during 442: /tmp/cna-build-graph.cpp, /tmp/cna-build-graph-metadata.cpp and
+/tmp/cna-build-graph-CMakeLists.txt propose content.custom.dependency_graph (241 lines, 13 planned
+checks). NOT applied/compiled/run. Original battle budget has a strong enemy build edge plus XREF;
+hud has only an XREF. Changing enemy 7 -> 9 should rebuild enemy/battle but skip hud, change only
+battle's effective fingerprint despite identical parent bytes, and fresh runtime budgets become
+27/18 instead of 21/14. Real ContentManager custom CNB loader resolves the profile. Cycle and
+missing-primary-node controls must preserve the last valid artifacts/manifest, then explicit source
+repair should permit old complete skips. No cross-source read in the processor, no fabricated
+fingerprint or manual scheduler. Source-reviewed against actual Prepare/ExecuteBuildNode behavior;
+writer order is not publication order (initial graph preparation stages all candidate outputs).
+Also prepared /tmp/cna-pipeline-absent-writer.cpp (NOT applied/compiled/run): extends the existing
+native patrol from 14 to 15 checks by registering an intentional XNB absence before registry freeze,
+then verifying the real Selection error's source/asset/context and game-authored reason while CNB
+remains supported. All prior checks remain. No new ID; sorted registry views/repeated Freeze are
+classified as ordinary inspection instead of new demos. COVERAGE_AUDIT's stale introduction and
+old error-stage gaps were corrected; added source-reviewed registry/environment/logging decisions.
+442 is now fully archived; apply both preparations after this documentation commit. Archive helpers for 442 are /tmp/cna-archive-442.py and
+/tmp/cna-442-finish.py; the latter checks that added stderr equals precisely the six focused
+Publish/Graph diagnostic lines after private-path normalization.
 
 Initial config build /tmp/cna-441-config-build.log stopped in concurrently modified C API:
 CnaCApiDisplay.cpp:439 lacked the qualification/using for ToNativePresentationParameters. At later
