@@ -46,12 +46,15 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Focused C host-failure demo checks second-Update failure, terminal state without replay,
+  preserved diagnostics, exactly-once unload and released-handle refusal. Its nine passing checks
+  accompany one visible ISSUE-051 contract failure; normal host and RunOneFrame demos remain intact.
 - Existing C dispatch demo now cancels a permitted queued property write, verifies no mutation
   or later replay, and resumes service for a fresh worker. All thirty prior assertions remain;
   ten new controls pass on both renderers, with only the existing two ISSUE-050 failures.
 - A small host-frame reproducer confirms CNA-DEMOS-ISSUE-051: terminal state and unload cleanup
   work after Update fails, but C exiting/end_run callbacks promised by the public comment are
-  suppressed. The contract discrepancy remains outside catalog counts and expected failures.
+  suppressed. The focused host-failure demo now also checks this contract discrepancy.
 - Existing C thread-dispatch demo now retains all original controls and exposes ISSUE-050 through
   two no-pump owner-only probes. Bounded cancellation leaves the game usable and avoids running
   forbidden work; only the two documented assertions fail on SOFTWARE and OPENGLES3.

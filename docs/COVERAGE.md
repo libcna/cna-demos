@@ -6,12 +6,12 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**446 demos** in 18 categories. Kinds: console 159, game 251, standalone 36. Automation: automated 410, manual 3, smoke-only 33.
+**447 demos** in 18 categories. Kinds: console 159, game 251, standalone 37. Automation: automated 411, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
-| c_api | 16 | 15 | 1 | 0 | 15 / 0 / 1 / 0 / 0 | 15 / 0 / 1 / 0 / 0 |
+| c_api | 17 | 16 | 1 | 0 | 15 / 0 / 1 / 0 / 1 | 15 / 0 / 1 / 0 / 1 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `c_api.game.host_failure`.
+- OPENGLES3: absent from report: `c_api.game.host_failure`.
 
 ## XNA 4.0 API surface demonstrated
 

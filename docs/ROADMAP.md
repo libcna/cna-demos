@@ -433,12 +433,13 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
-## Phase 14 -- bindings 🟨 (16 C API demos)
+## Phase 14 -- bindings 🟨 (17 C API demos)
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit, expired callback device handles, refused owner-thread callback reentry),
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, retained callback failure and exactly-once unload cleanup),
 ✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
+✅ `c_api.game.host_failure` (terminal CALLBACK/false, retained diagnostic, no replay, exactly-once unload and handle release; promised C exit hooks expose ISSUE-051),
 ✅ `c_api.game.host_frames` (copied frame hooks, explicit host stepping, draw suppression, incompatible-layout refusal, removal/replacement and terminal exit),
 ✅ `c_api.game.foreign_thread_dispatch` (default/restored thread affinity, explicit owner pumping, served canonical diagnostics and no-pump owner-only probes exposing ISSUE-050, permitted-write cancellation and resumed dispatch),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
@@ -459,9 +460,9 @@ and thread dispatch). The existing dispatch demo now reproduces ISSUE-050 on Run
 owner-only operations incorrectly queue when dispatch is enabled. Its 40 child checks retain
 all thirty prior assertions and expose exactly two failures on both selections; permitted queued
 write cancellation and resumed dispatch add ten passing controls. The independent
-bounded diagnostic remains available; neither change raises the global C route count. A separate host-failure diagnostic confirms
+bounded diagnostic remains available; neither change raises the global C route count. The focused host_failure demo confirms
 terminal CALLBACK/false and cleanup but exposes suppressed C exit hooks despite the public
-promise (ISSUE-051); other callback failure locations remain untested. Extend the existing examples where practical; do not duplicate C++ scenes
+promise (ISSUE-051), nine passes/one failure on both selections. Other callback failure locations remain untested. Extend the existing examples where practical; do not duplicate C++ scenes
 merely to increase the route count.
 C#/.NET demos belong with the separate `cna-dotnet` binding; decide later whether to reference or
 host them.

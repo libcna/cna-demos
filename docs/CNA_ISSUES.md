@@ -1386,8 +1386,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   the native Game lifecycle. Other failing callback locations and browser scheduling are untested.
 - **Environment/status:** confirmed contract/implementation mismatch on Linux, CNA observed clean
   at 4ee1e0b553667b6e999248fcefdea729654ee497 before/after reproduction. Selected evidence is not an
-  atomic dependency snapshot. Open; no CNA edits or upstream message. The diagnostic remains
-  outside the catalog: no new demo, route-count credit or expected-failure marker.
+  atomic dependency snapshot. Open; no CNA edits or upstream message.
+- **Catalog integration:** `c_api.game.host_failure` now gives this terminal-failure contract its
+  own fresh process, preserving the existing normal host and RunOneFrame scenarios. Focused
+  SOFTWARE/OPENGLES3 runs pass nine checks and fail exactly the combined promised C exit-hook
+  assertion. The supplied callback diagnostic survives, later host calls remain terminal, unload
+  runs once and the released handle is invalid despite destruction returning CALLBACK. Both
+  traces are ILBUDUZ and stderr is empty under the demo logger. All32 focused C/CLI CTests pass
+  (7.36 s), including the expected-failure marker. Evidence: reports/checkpoint-447-focused-*.
+  A full447 checkpoint is pending; the independent minimal reproducer remains available.
 
 
 ## Resolved
