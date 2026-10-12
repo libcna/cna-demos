@@ -122,7 +122,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
   `graphics.texture_cube.*` beyond the environment-map demo (render to a `RenderTargetCube`).
 
-## Phase 6 -- effects and shaders 🟨 (25 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (27 demos: stock effects, effect API, PbrEffect)
 - ✅ Stock effects (12): `BasicEffect` (texture, default lighting, three directional lights,
   per-pixel lighting, material colours, fog, alpha), `AlphaTestEffect` cut-outs,
   `DualTextureEffect` light map, `EnvironmentMapEffect` with a `TextureCube` and Fresnel,
@@ -136,6 +136,10 @@ a check that all authored colors remain visible and that a blank texture row can
   (`graphics.shader_effect.vertex_displacement`) and in `SpriteBatch::Begin`
   (grayscale), GLSL chosen from `GetShaderDialectEXT()`. Remaining: compiled XNA `.fx` effects
   (needs a CNA build with `CNA_<RENDERER>_COMPILED_EFFECTS`), other dialects.
+- ✅ `graphics.skinned_effect.normal_lighting`: joint rotation/blended-normal normalization,
+  nonuniform World inverse transpose and the lighting-disable refusal (five checks).
+- ✅ `graphics.skinned_effect.per_pixel_lighting`: actual vertex-lit constant color versus
+  per-pixel diffuse gradient on one shared skinned mesh (three checks, RGBA-identical captures).
 - ✅ `graphics.skinned_effect.fog_depth`: bone-only depth changes, disabled-fog control and actual
   FogStart/midpoint/FogEnd colors. Four checks pass on both renderers; both captures inspected,
   with only one blue-channel level of difference on the middle card.

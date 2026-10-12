@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Two focused skinned-lighting scenes now verify rotated/blended normals and nonuniform World
+  inverse transpose, then distinguish actual vertex/pixel diffuse lighting. Five and three checks
+  pass on both renderers; all four captures inspected. LightingEnabled=false refusal is included.
 - Skinned fog now has a focused bone-depth scene: a shared bind mesh moves only through its
   palette to the fog start, middle and end. Four rendered checks include a disabled-fog control;
   both renderer captures were inspected and agree within the original one-channel-level tolerance.
