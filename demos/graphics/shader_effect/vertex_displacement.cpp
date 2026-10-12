@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "CNA/Internal/Renderers/Common/IGraphicsRenderer.hpp"
+#include "CNA/ShaderDialectEXT.hpp"
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
@@ -23,7 +23,7 @@
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
-using CNA::Internal::Renderers::ShaderDialectEXT;
+using CNA::ShaderDialectEXT;
 
 namespace
 {

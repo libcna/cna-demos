@@ -165,7 +165,10 @@ a check that all authored colors remain visible and that a blank texture row can
   Apply), `Effect::Clone`, the effect interfaces (IEffectMatrices/IEffectLights/IEffectFog).
 - Custom shaders: `ShaderEffect` per shader language (ask `RendererCapabilityProfile`), compiled
   XNA effect bytecode (`Effect(GraphicsDevice&, bytes)`), `EffectParameter`/`EffectTechnique`/
-  `EffectPass` reflection and parameter setting. ≈ 8
+  `EffectPass` reflection and parameter setting. The ShaderEffect member table in COVERAGE_AUDIT.md
+  separates legacy source success from portable package selection, compiler diagnostics, uniform
+  arrays, cube/volume samplers, block layout and clone/lifetime behavior. These are semantic gaps,
+  not extra credit for the existing GLSL scenes. ≈ 8
 
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
@@ -455,15 +458,15 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
-## Phase 14 -- bindings 🟨 (19 C API demos; launch parameters pending runtime)
+## Phase 14 -- bindings 🟨 (19 C API demos)
 The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks
 (28 with capture) and 31 error checks pass on both renderer selections. Larger version-one input
 and output prefixes retain their known behavior; unknown output tails and original diagnostics
 survive. All previous assertions remain, with one host setup label updated.
 
 The new `c_api.game.launch_parameters` source demonstrates explicit UTF-8 spans, ownership,
-ordinal enumeration and count/copy boundaries; metadata validates, but its latest sentinel
-refinement has no runtime credit while the external ISSUE-053 build blocker remains.
+ordinal enumeration and count/copy boundaries. Both focused selections pass all fifteen child
+checks with empty stderr after the external ISSUE-053 repair; complete 456 validation is running.
 
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:

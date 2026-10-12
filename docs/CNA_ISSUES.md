@@ -1402,6 +1402,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 
+## Resolved
+
 ### CNA-DEMOS-ISSUE-053 -- In-flight framework update registration uses an out-of-scope array
 
 - **Area:** external uncommitted `modules/audio/src/Xna/FrameworkDispatcher.cpp` and new
@@ -1420,12 +1422,19 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   ongoing external audio/media/content/runtime edits; this is not a clean-HEAD reproduction or
   an atomic source snapshot. The successful first build is separately retained as
   `checkpoint-456-initial-build.log`; no new focused runtime or complete 456 checkpoint yet.
-- **Status:** open build blocker for the observed source. No CNA source edited/reverted, warning
-  suppressed, runtime knownIssue marker or upstream message. Continue source review/draft work
-  and retry the existing tree only after observing a relevant source change.
+- **Capture correction:** direct source review on continuation found that the archived
+  failed-FrameworkDispatcher.cpp and failed-state diff already contain the external repair:
+  the array is in a translation-unit-global anonymous namespace. The source changed between
+  the genuine failed compilation and capture. Comparing current hashes to that repaired capture
+  incorrectly prolonged the reported blocker; those prior interpretations are superseded by
+  reports/checkpoint-456-evidence-correction.json. The failure log is retained unchanged.
+- **Repair observed:** external commit 7d8eba687 contains the global-namespace array, now at
+  HEAD 18d8398af with later build-system edits. The existing linux-full retry passed (200 scheduled targets; no compiler diagnostics). Both
+  focused launch-parameter runs pass all fifteen child checks with empty stderr. Resolved for
+  the exercised build; full 456 validation is still pending. No CNA source edited/reverted, warning suppressed, runtime
+  knownIssue marker or upstream message.
 
 
-## Resolved
 
 ### CNA-DEMOS-ISSUE-052 -- In-flight cgltf implementation split breaks the importer build
 

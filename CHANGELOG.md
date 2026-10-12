@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- Four shader/MRT demos now include CNA/ShaderDialectEXT.hpp and use the public CNA namespace
+  after CNA promoted the dialect query type out of its renderer-internal interface. Shader text,
+  stable IDs and existing assertions are retained.
 - Guide notification placement now observes the first rendered toast within a bounded real-time
   window. Waiting eleven frames plus 500 ms could miss CNA's four-second notification under load;
   the reproduced empty-frame failure and all four original assertions are preserved in evidence.
@@ -48,8 +51,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ### Added
 - C launch-parameter map example with owned UTF-8 spans, ordinal key enumeration, guarded
   count/copy buffers, duplicate precedence and preserved state on refused replacement.
-  Catalog/syntax checks pass; runtime validation is pending an external CNA build repair
-  (ISSUE-053). No completed 456 checkpoint is claimed.
+  All fifteen child checks pass on SOFTWARE/OPENGLES3, and the 35 related C/CLI/launch CTests pass.
+  The transient external CNA build failure and its repair are recorded as ISSUE-053.
 - Skinned material scenes isolate textured emission/ambient response and premultiplied global
   alpha, then colored specular lights 1/2, their sum and the material shininess exponent.
   Both four-check scenes pass on SOFTWARE/OPENGLES3; all four captures were inspected.
