@@ -257,6 +257,9 @@ a check that all authored colors remain visible and that a blank texture row can
   actual parent/child bytes: missing-child refusal, same-manager retry, restored profile data,
   shared runtime cache and cleanup are verified. Matching sibling items now defer compilation
   to their host; mismatched parameters produce a generated child (20 child checks).
+- ✅ `content.custom.intermediate_existing_instances`: ordinary and raw reads populate preallocated
+  reference objects, preserve nonserialized state, distinguish Null/type attributes and use an
+  explicit per-field compact serializer without replacing the default descriptor (10 child checks).
 - ✅ `content.custom.xml_xnb_pipeline`: original custom XML source through the actual compiler,
   pre-registered serializer and versioned XNB writer, manifest digest, runtime reader dispatch,
   unchanged skip, authored edit, cache versus Unload/reload and explicit CNB-schema refusal

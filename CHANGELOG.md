@@ -49,6 +49,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - The validation script's Xvfb leg now explicitly selects SDL's x11 driver and removes inherited
   WAYLAND_DISPLAY. A real native-handle comparison exposed Wayland selection despite Xvfb; a
   regression test checks this isolation alongside existing failure-propagation controls.
+- Existing-instance intermediate XML now demonstrates ordinary/raw object reads, retained
+  reference identity and nonserialized state, Null/type gates and an explicit per-field compact
+  serializer hint (10 checks; no global serializer replacement or runtime-XNB claim).
 - Custom XML-to-XNB source integration: actual compiler publication through a game type writer,
   versioned runtime reader dispatch, incremental skip/edit and ContentManager cache/reload behavior.
   Ten checks include explicit refusal to invent a CNB schema for the arbitrary XML object.

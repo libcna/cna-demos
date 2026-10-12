@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-440 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+441 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
-content 41 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 42 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 16 (standalone C programs). Every declared category has demos.
@@ -232,12 +232,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** complete 440-x11 at 8b370a0 is archived/reviewed. Apply the next raw XML
-existing-instance drafts below, build, run both displayless selections, targeted tests, update docs
-and full 441 against ORIGINAL checkpoint-440-x11. Keep the explicit isolated-X11 full invocation.
-The script now enforces x11 in its own GL leg. New regression failed before the correction and all
-five validation-tool tests pass afterward; complete 453 enabled CTests passed. Binary hashes unchanged
-across inherited 440 and isolated 440-x11. Do not repeat the already closed isolation investigation.
+**Immediate next action:** content.custom.intermediate_existing_instances is applied, built and
+focused-runtime validated: ten child checks pass under both displayless selections, stderr empty
+(/tmp/cna-441-xml-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}). Clean /tmp/cna-441-build.log,
+metadata 441/0 and all 22 targeted CTests pass (/tmp/cna-441-targeted-ctest.log, 11.16 s), including
+all 16 C ABI demos. Commit and run full 441 against ORIGINAL checkpoint-440-x11 with explicit outer
+SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY xvfb-run. Expected SOFTWARE 390/23/25/3, GL 411/24/3/3,
+all 454 enabled CTests; preserve every old status/known issue and 31/32 raw failed assertions. Capture
+30 selected hashes (prior 29 plus the new XML executable). No source/assets/rebuild during runtime.
+After that, continue actual compiler parameter fingerprints/removed-source collection or another
+meaningful remaining public content behavior. Basic cache, sibling and XML raw calls are covered.
 
 XML integration source 9995869 is built and fully validated. Focused evidence:
 /tmp/cna-440-xml-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}, ten child checks each, private paths
@@ -245,12 +249,15 @@ independently absent. Clean /tmp/cna-440-build.log; metadata 440/0 and all 22 ta
 Originals and 29 selected hashes archived in reports/checkpoint-440-*; both exact reviews pass.
 The XML-to-XNB /tmp drafts are APPLIED AND STALE; use repository sources.
 
-Next prepared batch after complete 440-x11: /tmp/cna-xml-existing-main.cpp plus /tmp/cna-xml-existing-metadata.cpp
-and /tmp/cna-xml-existing-CMakeLists.txt are UNAPPLIED/UNBUILT/UNEXECUTED. Proposed stable ID
-content.custom.intermediate_existing_instances, ten proposed checks: preallocated stat-slot identity,
-nonserialized owner state, ordinary Null/type rejection versus raw attribute bypass, plus an explicit
-raw serializer hint writing one compact field and filling its preallocated instance. StatSlot
-and the known unrelated string serializers are explicitly registered. Do not infer coverage yet.
+441 raw/existing-instance evidence: the custom Slots serializer uses public ReadObject and
+ReadRawObject with preallocated references. Default descriptors preserve their pointer identity,
+authored Health and nonserialized owner tokens. Ordinary Null returns empty without filling the
+supplied slot, unrelated known string Type is refused, and raw Type/Null attributes are bypassed.
+An explicit field-specific compact serializer writes integer text and fills its own supplied
+instance without changing the ordinary global descriptor. The same authoring reference is encoded
+twice inline; no shared-resource alias preservation is claimed. All ten checks pass, including
+following-field alignment after ordinary Null. No new CNA issue, file fixture, GPU, genuine-XNA or
+runtime-XNB raw-reading claim. All /tmp/cna-xml-existing-* drafts are APPLIED AND STALE; use sources.
 
 Display isolation investigation: inherited WAYLAND_DISPLAY=wayland-0, XDG_SESSION_TYPE=wayland
 and DISPLAY=:0 were present; xvfb-run changes DISPLAY but does not remove Wayland selection.
@@ -515,19 +522,18 @@ the original successful-clean control. All ten older checks remain. Evidence:
 refusal are preserved, not failed demo checks. No new CNA issue; no concurrency/crash-consistency
 claim. Integrity drafts are APPLIED AND STALE; use repository sources.
 
-After XML-to-XNB integration, the source-reviewed raw/existing-instance gap is documented in
-COVERAGE_AUDIT.md: both raw forms bypass Null/Type selection, and caller-carrier forwarding alone
-does not prove identity reuse. A future focused custom serializer should fill a preallocated
-reference object while preserving nonserialized state, with ordinary/raw attribute controls.
-An unapplied, unbuilt draft is now /tmp/cna-xml-existing-main.cpp (ten expected checks);
-Metadata/build drafts are /tmp/cna-xml-existing-metadata.cpp and /tmp/cna-xml-existing-CMakeLists.txt;
-no integration or runtime execution yet. It follows complete XML-to-XNB validation.
+The previously source-reviewed raw/existing-instance gap is now executed by the 441st demo above.
+Explicit-hint ordinary combinations and boxed Core forwarding remain intentionally without isolated
+duplicate demos; only add a meaningful dynamic-schema case. Public source review also confirms
+concurrent Build requires reentrant components/log sinks; no parallel execution is claimed from
+serial compiler counters or registry freezing.
 
 Next meaningful compiler gaps: actual parameter fingerprints, removed-source collection and
 missing-manifest recovery; choose coherent behavior rather than new IDs per cache variation. Actual
 multi-output/deployment publication failures and concurrent publishers remain distinct larger
 workstreams. Registry freezing and late mutation rejection are now exercised by the integrity extension.
-XML aliases remain ISSUE-046; direct custom raw/existing-instance serialization is still a gap.
+XML aliases remain ISSUE-046; direct custom raw/existing-instance serialization now has focused
+runtime evidence above, pending full 441 inclusion.
 The XML-to-XNB integration now uses public RegisterXnaXmlSourceContentPipeline with a shared XNA
 ContentCompiler after TypeSerializerFor<ProfileSource> and AddTypeWriter<ProfileWriter>. Public
 factory options.xnbContainer supplies the container configuration. Actual original profile XML

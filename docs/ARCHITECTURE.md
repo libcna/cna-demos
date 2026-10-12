@@ -69,7 +69,8 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
 * Modules outside the umbrella (`CNA::Net`, `CNA::GamerServices`, `CNA::Phone`, `CNA::Design`)
   are linked by the categories that need them (`demos/CMakeLists.txt`).
 * Standalone intermediate XML tools (`content.custom.intermediate_*`) and the XNA component
-  adapter tool (`content.custom.xna_pipeline_components`) link
+  adapter tool (`content.custom.xna_pipeline_components`) and the raw/existing-instance XML tool
+  (`content.custom.intermediate_existing_instances`) link
   `CNA::ContentPipelineBuild`. Each process owns its serializer registry and dependencies;
   these stay outside the browser's runtime link closure. Metadata remains discoverable when
   the tool target is unavailable, and the runner reports the omitted executable as NOT RUN.
