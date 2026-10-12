@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete 469-shadow: all 482 enabled CTests and both smoke suites pass their expected
+  outcomes. All old failure/child/network evidence is preserved; the only added diagnostic
+  is the declared SOFTWARE shadow-path skip.
 - Complete468-formats: a fresh full run after the preserved XACT timing failure passes all481
   enabled CTests and both smoke suites. Every old failure/child/network control remains exact;
   selected artifacts and normalized diagnostics remain stable.

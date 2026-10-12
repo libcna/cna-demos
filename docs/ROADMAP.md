@@ -840,3 +840,26 @@ was not run. No shadow-map generation, PCF kernels, cascades, punctual/specular-
 renderer credit. CMake regenerated;33scheduled/30numbered build operations, no changed hashes
 among3,906watched CNA inputs. The known vendored Draco developer warning remains. Metadata469/0;
 all25targeted CLI/skinned CTests pass in4.04s (one declared shadow skip). Full validation pending.
+
+## Complete 469-shadow
+
+Complete checkpoint **469-shadow**, source `a4a2a31`, adds authored-map shadow
+reception after skinning. Four paired-pixel controls pass on OPENGLES3: disabled reception,
+shadowed direct diffuse with retained ambient/emission, excessive bias and detached map.
+The actual image was inspected; eight selected pixels match predictions within tolerance 1.
+SOFTWARE explicitly skips the unsupported stock path. OPENGL33 is declared but untested.
+No shadow-map generation, PCF kernel, cascade, punctual/specular-shadow or other-renderer credit.
+Full session 13123 builds in 7 scheduled operations, validates 469 metadata entries / 0 problems,
+and passes all 482 enabled CTests in 220.45s (449 passed including 27 WILL_FAIL, 33 skips;
+three additional manual tests disabled). SOFTWARE 406/27/33/3, OPENGLES3 434/29/3/3.
+Every old 38/42 failed assertion, C/custom child list/trace and all five network controls remain
+exact. Old JSON count differences: {"OPENGLES3": {}, "SOFTWARE": {}}.
+All 35 selected binaries / four existing assets and reader fixture copies remain unchanged.
+Normalized stderr differs only by the expected SOFTWARE shadow skip diagnostic; GL retains
+42 known X protocol records and its intentional shader error. The outer Xvfb log contains
+22 exact amdgpu pairs (previously 16); independently journaled inner/outer exits are zero.
+Capture CNA e842e74733 (clean), final CNA e842e74733 (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-469-shadow-*.
+Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
+Semantic coverage remains incomplete; named-member counts do not establish all behaviors.
