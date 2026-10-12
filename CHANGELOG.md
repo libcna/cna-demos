@@ -46,6 +46,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Budget dependency graph contrasts strong build edges with runtime-only references, verifies
+  effective fingerprint propagation, real runtime loads, cycle/missing-node refusal and repair.
+  Sixteen checks include actual two-worker importer overlap, deterministic outputs and skipping.
+- The native patrol's fifteenth check documents its deliberately absent XNB writer and verifies
+  the game-authored reason through a real Selection error while retaining its supported CNB path.
 - Multi-artifact encounter compilation: two CNB schemas, a deployed briefing and real manifest
   ownership. Fourteen checks include partial publication/retry, graph destination conflicts,
   incremental skips and clean with or without its ownership record; no whole-node rollback claim.

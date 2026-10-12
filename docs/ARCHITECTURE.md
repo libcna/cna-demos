@@ -85,6 +85,10 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
   returns two explicitly declared CNB schemas and the processor registers an original support file
   through AddDeploymentFile. The compiler owns publication, graph destination reservations and
   manifest-based clean; the demo only creates private fixtures and deliberate destination conflicts.
+* `content.custom.dependency_graph` embeds the same compiler for strong build edges versus
+  runtime-only references. Its registered CPU components are reentrant; atomic counters and a
+  bounded two-importer rendezvous observe serial/two-worker behavior. A separate runtime loader
+  resolves the actual published profile through ContentManager; no internal scheduler is invoked.
 * `content.custom.xml_xnb_pipeline` links both compiler and build-time serializer modules.
   Its process pre-registers a game XML serializer and XNB writer before configuring the public XML
   source route. The real compiler publishes original temporary XML as XNB; a separately registered

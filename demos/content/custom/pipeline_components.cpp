@@ -32,6 +32,7 @@ namespace
 {
     constexpr const char* ImportedType = "CnaDemos.PatrolSource";
     constexpr const char* RuntimeType = "CnaDemos.Patrol";
+    constexpr const char* XnbAbsence = "This game publishes patrols only with its CNB PATH schema.";
     constexpr auto PathChunk = Cnb::MakeChunkId('P', 'A', 'T', 'H');
     struct Patrol { float length; std::vector<Vector2> points; };
 
@@ -151,6 +152,7 @@ namespace
         registry->RegisterImporter(std::make_shared<PatrolImporter>());
         registry->RegisterProcessor(std::make_shared<PatrolProcessor>());
         registry->RegisterWriter(std::make_shared<PatrolWriter>());
+        registry->DocumentAbsentWriter(Pipeline::ContentOutputFormat::Xnb, RuntimeType, XnbAbsence);
         const Pipeline::ContentPipeline pipeline(registry);
         Pipeline::ContentBuildRequest request;
         request.sourceRoot = TitleLocation::Path() + "/assets";
@@ -281,22 +283,41 @@ namespace
             }
             ctx.Check(contextual, refusal.check);
         }
+
+        request.outputFormat = Pipeline::ContentOutputFormat::Xnb;
+        bool intentionalAbsence = false;
+        try { (void)pipeline.Build(request); }
+        catch (const Pipeline::ContentPipelineError& error)
+        {
+            intentionalAbsence = error.Stage() == Stage::Selection && error.Component().empty() &&
+                error.LogicalName() == request.logicalName &&
+                error.Source() == std::filesystem::canonical(request.sourceRoot / request.source) &&
+                std::string(error.what()).find(XnbAbsence) != std::string::npos;
+            ctx.Print("Unsupported game format: {}", error.what());
+        }
+        ctx.Check(intentionalAbsence &&
+                  registry->AbsentWriterReason(Pipeline::ContentOutputFormat::Xnb, RuntimeType) == XnbAbsence &&
+                  registry->AbsentWriterReason(Pipeline::ContentOutputFormat::Cnb, RuntimeType).empty(),
+                  "an intentionally absent XNB writer reports the game's reason at Selection without disabling CNB");
     }
 }
 
 CNA_DEMOS_CONSOLE(PipelineComponents, {
     .id = "content.custom.pipeline_components",
     .title = "Build a custom patrol asset (CNAEXT)",
-    .description = "Registers a text importer, a length-precomputing processor and a CNB writer, builds a patrol "
-                   "through ContentPipeline, loads its runtime schema and distinguishes stable output identities from C++ payload errors.",
+    .description = "Builds and loads a CNB patrol through registered importer, processor and writer; checks typed parameters, "
+                   "stable and C++ result contracts, retained values and an intentionally absent XNB route.",
     .apis = {"CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter",
              "CNA::Content::Pipeline::ContentPipelineRegistry::RegisterProcessor",
              "CNA::Content::Pipeline::ContentPipelineRegistry::RegisterWriter",
+             "CNA::Content::Pipeline::ContentPipelineRegistry::DocumentAbsentWriter",
+             "CNA::Content::Pipeline::ContentPipelineRegistry::AbsentWriterReason",
              "CNA::Content::Pipeline::ContentPipeline::Build", "CNA::Content::Pipeline::ContentValue::Create",
              "CNA::Content::Pipeline::ContentValue::Get", "CNA::Content::Pipeline::ContentValue::StableType",
              "CNA::Content::Pipeline::ContentValue::CppType", "CNA::Content::Pipeline::ContentValue::RawData",
              "CNA::Content::Pipeline::ContentValue::Empty", "CNA::Content::Pipeline::ContentPipelineError::Component",
-             "CNA::Content::Pipeline::ContentPipelineError::Source", "CNA::Content::Pipeline::ContentPipelineError::LogicalName", "CNA::Content::Pipeline::ContentProcessorParameters::Set",
+             "CNA::Content::Pipeline::ContentPipelineError::Source", "CNA::Content::Pipeline::ContentPipelineError::LogicalName",
+             "CNA::Content::Pipeline::ContentProcessorParameters::Set",
              "CNA::Content::Pipeline::ContentPipelineError::Stage", "ContentManager::RegisterCnbLoaderEXT",
              "CNA::Content::Cnb::CnbByteReader::ReadCount"},
     .tags = {"content", "custom", "pipeline", "cnb", "cnaext"},

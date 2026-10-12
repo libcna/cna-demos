@@ -189,7 +189,7 @@ a check that all authored colors remain visible and that a blank texture row can
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (43 demos; remaining below)
+## Phase 8 -- content 🟨 (44 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -208,14 +208,20 @@ a check that all authored colors remain visible and that a blank texture row can
   containers whose game schema has missing/duplicate blocks, truncated fields or trailing bytes.
   ✅ `content.custom.pipeline_components`: registered importer/processor/writer, real patrol
   precomputation, deterministic CNB output, runtime loading and typed parameter diagnostics.
-  Existing example now has 14 passing checks: copied carrier lifetime and separate stable-identity
-  versus C++ payload guards at Import, Process and Write, with exact error context.
+  Existing example now has 15 passing checks: copied carrier lifetime and separate stable-identity
+  versus C++ payload guards at Import, Process and Write, with exact error context. An explicitly
+  documented absent XNB route gives the game's reason at Selection while CNB remains supported.
   ✅ `content.custom.multi_artifact_publication`: a real compiler node publishes two declared CNB
   schemas plus a briefing through native AddDeploymentFile. Fourteen focused checks cover digests,
   XREF/ownership, skips, missing companion recovery, changed support input, Publish failure/retry,
   graph refusal of two nodes claiming one destination, and clean with/without its manifest.
   The failed deployment leaves newly published CNBs and the older manifest; no whole-node rollback
   or crash/concurrent-publisher guarantee is claimed.
+  ✅ `content.custom.dependency_graph`: strong build edges versus runtime-only XREFs, actual
+  incremental propagation of effective fingerprints with unchanged parent bytes, fresh runtime
+  budgets, cycle/missing-node refusal and repaired skipping. Sixteen focused checks also verify
+  actual two-worker importer overlap, byte-identical serial/parallel manifests/artifacts and
+  unchanged parallel skipping. Same-output concurrent compiler processes remain untested.
   ✅ Existing cache/Unload demo now shows root switching after Unload and exposes CNA's missing
   loaded-root guard (ISSUE-039). ✅ `content.custom.intermediate_serializer`: a separate build-time
   tool with named/optional/ignored fields, collection item names, absent/present/null distinctions,

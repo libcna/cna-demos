@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 23), 8 (content, 43), 9 (audio 21 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 44), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 16 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-442 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+443 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
-content 43 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 44 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 16 (standalone C programs). Every declared category has demos.
@@ -238,11 +238,27 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** full 442 is COMPLETE at bf1f674. Apply the prepared dependency_graph
-tool and existing patrol absent-writer extension below, build, validate, run both displayless
-selections, investigate mismatches, run targeted CTests and update semantic coverage. Expected
-new graph child count is 13 and existing patrol 14 -> 15; these are drafts, not runtime evidence.
-All /tmp publication drafts are stale/applied; do not reapply them.
+**Immediate next action:** new dependency_graph and existing patrol absence extension are built
+and focused-validated. Graph final /tmp/cna-443-graph-final-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}
+has 16 passes, retaining the initial thirteen. Patrol /tmp/cna-443-absence-* has 15 native passes.
+Two-worker importer overlap is observed via a bounded rendezvous; serial/parallel manifests and
+all three CNBs are byte-identical, and unchanged two-worker builds skip all importers/writers.
+No new CNA issue; actual cycle/missing-node Graph diagnostics are expected. Private trees are
+independently gone. Final build /tmp/cna-443-final-build.log is clean (11 steps), metadata 443/0.
+All 26 targeted CTests pass (6.10 s, /tmp/cna-443-targeted-ctest.log). Coverage regenerated against
+ORIGINAL full 442 reports honestly shows the new graph absent until the full run; type/member
+totals unchanged. Focused original streams/build/CTest logs are archived as
+reports/checkpoint-443-focused-*. Commit and run complete 443 against ORIGINAL checkpoint-442. Expect one new graph PASS, native patrol 14 -> 15 checks,
+unchanged old child lists and exact 32/33 failures. Capture 32 selected hashes (31 plus new graph
+exe) after full build; freeze source/assets while runtime checks run. Then continue the audit.
+All /tmp graph/absence/publication drafts are APPLIED AND STALE. Repository sources contain the
+final two-worker extension; do not reapply the old thirteen-check draft.
+
+Original /tmp/cna-443-build.log completed 110 steps including external C API changes; its automatic
+configure includes vendored Draco's known CMP0148 developer warning, no compiler diagnostics.
+Initial thirteen graph checks remain /tmp/cna-443-graph-* (before the -final extension). Existing
+patrol's intentional XNB route absence is registered before freeze and reports its reason through
+the real Selection exception; direct Cnb/Xnb reason lookups distinguish the working route.
 
 442 evidence: /tmp/cna-demos-442-validation.log exit 0; 455 enabled CTests, SOFTWARE 391/23/25/3,
 GL 412/24/3/3, exact 32/33 failures retained. Both archive wrappers /tmp/cna-archive-442.py and
@@ -289,23 +305,15 @@ Next deeper gaps: actual content-build dependency scheduling/effective fingerpri
 remaining C ABI callback lifecycle contracts. Prefer a coherent extension where it fits; no per-
 getter or per-error demo proliferation. Source AddContentBuildDependency exists, but neither this
 publication example nor manually supplied ContentBuildSibling controls prove CLI graph scheduling.
-Read-only preparation during 442: /tmp/cna-build-graph.cpp, /tmp/cna-build-graph-metadata.cpp and
-/tmp/cna-build-graph-CMakeLists.txt propose content.custom.dependency_graph (241 lines, 13 planned
-checks). NOT applied/compiled/run. Original battle budget has a strong enemy build edge plus XREF;
-hud has only an XREF. Changing enemy 7 -> 9 should rebuild enemy/battle but skip hud, change only
-battle's effective fingerprint despite identical parent bytes, and fresh runtime budgets become
-27/18 instead of 21/14. Real ContentManager custom CNB loader resolves the profile. Cycle and
-missing-primary-node controls must preserve the last valid artifacts/manifest, then explicit source
-repair should permit old complete skips. No cross-source read in the processor, no fabricated
-fingerprint or manual scheduler. Source-reviewed against actual Prepare/ExecuteBuildNode behavior;
-writer order is not publication order (initial graph preparation stages all candidate outputs).
-Also prepared /tmp/cna-pipeline-absent-writer.cpp (NOT applied/compiled/run): extends the existing
-native patrol from 14 to 15 checks by registering an intentional XNB absence before registry freeze,
-then verifying the real Selection error's source/asset/context and game-authored reason while CNB
-remains supported. All prior checks remain. No new ID; sorted registry views/repeated Freeze are
-classified as ordinary inspection instead of new demos. COVERAGE_AUDIT's stale introduction and
-old error-stage gaps were corrected; added source-reviewed registry/environment/logging decisions.
-442 is now fully archived; apply both preparations after this documentation commit. Archive helpers for 442 are /tmp/cna-archive-442.py and
+Completed graph work at the focused level now closes the previously pending strong-edge/effective-
+fingerprint/cycle behavior gap and demonstrates two-worker scheduling with a finite overlap probe.
+Only the graph's serial and two-worker invocations are covered; multiple independent compiler
+processes competing for one output root, broader graph shapes and crash recovery remain separate.
+Next useful member work: remaining C ABI callback lifecycle contracts, or actual content logger
+forwarding/declared-loss diagnostics in an existing coherent component example. Ordinary registry
+inventory/accessor views and repeated Freeze need no new demo IDs. Native absent-writer routing
+now has direct evidence in the existing patrol; the related /tmp draft is stale.
+Archive helpers for 442 are /tmp/cna-archive-442.py and
 /tmp/cna-442-finish.py; the latter checks that added stderr equals precisely the six focused
 Publish/Graph diagnostic lines after private-path normalization.
 
