@@ -99,28 +99,29 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **451-prefix checkpoint passed** at
-62b0375: tools/validate.sh exit 0, all 464 enabled CTests (185.72 s), both complete isolated-X11
-smoke runs and coverage regeneration. Exact ORIGINAL 451 comparisons retain all 451 IDs, every
-old status/known issue/check count and all 35/36 failed assertions. All old C/custom-content child
-checks/traces remain, with exactly one host setup label changed and two additional error-prefix
-checks (29 -> 31). All 33 selected binary/four asset hashes match runtime capture; normalized
-stderr is identical (no GTK warnings, same 84 GL X protocol lines). Evidence/catalog/scripts:
-reports/checkpoint-451-prefix-*. Four focused before/after host captures were actually inspected
-and are RGBA-identical, with the same ILBUbUbDeUDUrDsXEZ trace. Clean CNA 3ee6ae3 was observed
-at runtime capture; this is not an atomic dependency/input snapshot.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **453 checkpoint passed** at
+91fc3f9: tools/validate.sh exit 0, all 466 enabled CTests (197.82 s), both complete isolated-X11
+smoke runs and coverage regeneration. Exact ORIGINAL 451-prefix comparisons add only the passing
+automatic_dispatch and vertex_colors IDs, retain every old status/known issue/check count and
+all 35/36 failed assertions. TLS retains its eight ordered original assertions and adds exactly
+nine canonical-detail checks; all other C/custom-content child lists/traces remain unchanged.
+All 34 selected binary/four asset hashes match runtime capture; normalized stderr is identical
+(no GTK warnings, same 84 GL X protocol lines). Evidence/catalog/scripts: reports/checkpoint-453-*.
+Both focused 800x480 color captures were actually inspected: only 864 pixels differ by one blue
+level within original tolerance 1. Clean CNA 3ee6ae3 was observed; this is not an atomic
+source/input or full dependency snapshot.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental checkpoint build clean |
-| Metadata/assets --validate | 451 demos, 0 problems |
+| Metadata/assets --validate | 453 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 439 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 398 passed, 25 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 419 passed, 26 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | All 35/36 older failures retained; error child 29 -> 31, host setup label reviewed |
+| CTest | 441 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 400 passed, 25 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 421 passed, 26 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | All 35/36 older failures retained; automatic child 15, TLS child 17, vertex-color Game 3 |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Four before/after host captures inspected; RGBA-identical on both renderers |
+| Screenshots | Both vertex-color captures inspected; 864 pixels differ by one blue level within tolerance |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -244,36 +245,58 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** the 453 semantic batch is APPLIED and focused-validated. Commit it,
-then run/close full checkpoint 453 against ORIGINAL 451-prefix. Source catalog: 453/0. The new
-C automatic-dispatch demo passes 15 child checks, the existing TLS demo passes 17 (all eight old
-checks retained), and skinned vertex_colors passes three rendered checks under both selections.
-All six focused stderr streams are empty. Both 800x480 color captures were actually inspected;
-only 864 pixels differ by one blue level within original tolerance 1. No new CNA issue.
+**Immediate next action:** full checkpoint 453 is COMPLETE. Commit its closure, then apply
+and validate the two material/specular candidates below, making catalog 455. The later C launch
+parameter candidate remains separate. No source/assets were changed during completed runtime.
 
-Build passed (114 scheduled targets, known Draco CMP0148 developer warning on regeneration,
-no compiler diagnostics); all 45 targeted graphics/C API/CLI CTests passed (11.41 s: 44 passes
-including three WILL_FAIL, one PBR capability skip). Evidence/review:
-reports/checkpoint-453-focused-*. /tmp/cna-review-453-focused.py checks the original TLS prefix,
-all new focused counts and exact image differences. All automatic/color/canonical-TLS /tmp
-source drafts and generators are APPLIED AND STALE; use repository sources.
+Full 453 at 91fc3f9: tools/validate.sh exit 0, all 466 enabled CTests (197.82 s), SW 400/25/25/3,
+GL 421/26/3/3. Exact ORIGINAL 451-prefix comparisons add only automatic_dispatch and vertex_colors,
+retain all older statuses/counts/35/36 failures, and accept exactly TLS's nine new checks after
+its original eight. All other C/custom-content child lists/traces, 34 binary/four asset hashes and
+normalized stderr match. Evidence/catalog/helpers: reports/checkpoint-453-*.
 
-Prepared /tmp/cna-archive-453.py and /tmp/cna-453-finish.py expect ORIGINAL 451-prefix, exactly
-two new passing IDs, TLS 8 -> 17 with the old ordered prefix and nine exact new labels, all old
-35/36 failures/statuses/counts/C/custom-content child lists/traces retained. Replace PENDING_453
-with the source commit; capture 34 binaries (including new C automatic-dispatch executable) and
-four assets after the full build enters CTest. Catalog: /tmp/cna-catalog-453.json. Full log:
-/tmp/cna-demos-453-validation.log. Do not rebuild or modify source/assets during runtime.
+Focused build passed (114 scheduled targets, known Draco CMP0148 developer warning, no compiler
+diagnostics); all 45 targeted C/graphics/CLI CTests passed (11.41 s: 44 passes incl. three WILL_FAIL,
+one PBR skip). Automatic dispatch has 15 child checks, TLS 17, vertex_colors three rendered checks,
+both selections pass with empty stderr. Both 800x480 captures actually inspected: same flat control
+and tint gradient, only 864 pixels differ by one blue level within original tolerance 1. No new
+CNA issue. All automatic/color/canonical-TLS /tmp sources and generators are APPLIED AND STALE.
 
-Last COMPLETE checkpoint: 451-prefix at 62b0375 (closure 9115156), tools/validate.sh exit 0,
-all 464 enabled CTests (185.72 s), SW 398/25/25/3, GL 419/26/3/3. Exact ORIGINAL 451 comparisons
-retain all prior IDs/statuses/counts/35/36 failures, the one reviewed host setup label and two new
-error-prefix checks. All 33 selected binaries/four assets and normalized stderr match. Evidence:
-reports/checkpoint-451-prefix-*. Four before/after host captures were actually inspected and
-RGBA-identical, trace ILBUbUbDeUDUrDsXEZ unchanged. Clean CNA 3ee6ae3 was observed; no atomic
-source/input or full transitive dependency snapshot is claimed.
+Previous complete checkpoint: 451-prefix at 62b0375 (closure 9115156), 464 enabled CTests
+(185.72 s), SW 398/25/25/3, GL 419/26/3/3. Exact older failures retained; host setup label reviewed
+and error-prefix 29 -> 31. Its four before/after host images were actually inspected and identical,
+trace ILBUbUbDeUDUrDsXEZ retained. Evidence: checkpoint-451-prefix-*. CNA clean 3ee6ae3 observed;
+selected hashes are not an atomic source/full dependency snapshot.
 
-After closure, continue the semantic member audit. Remaining skinned gaps include emissive/
+The next UNAPPLIED candidate is /tmp/cna-skinned-material-colors.cpp (124 lines;
+generator /tmp/cna-prepare-skinned-material-colors.py). Four cards isolate emission, ambient *
+diffuse, their sum and Alpha=.5 with AlphaBlend over MidnightBlue; all use a non-white opaque
+texel and a bone moving bind Z=0 into view. Four intended pixel checks have original tolerance 1:
+(32,128,48), (51,26,10), (83,153,58), (54,89,85). Actual public material APIs, native color upload
+and SOFTWARE's classic shader composition were reviewed. No build/runtime/image credit yet.
+A companion UNAPPLIED /tmp/cna-skinned-specular-lights.cpp (138 lines; generator
+/tmp/cna-prepare-skinned-specular-lights.py) uses four equal-camera viewports to isolate red
+light 1, blue light 2, their specular sum and material powers 2/8. Black opaque texture,
+zero diffuse/ambient/emission and material SpecularColor (.5,1,.25) keep terms distinct. Expected
+center RGB: (102,0,0), (0,0,51), (102,0,51), (52,0,26), original tolerance 1. Analytic pixel-center
+calculation: /tmp/cna-skinned-specular-design.json (design only). Actual SkinnedEffect upload,
+SOFTWARE classic-light half-vector/additive-specular paths and public viewport APIs were read.
+No build/runtime/image credit yet. Full 453 is now closed; review these sources before applying.
+Together these candidates would make catalog 455; inspect before applying. Prepared runners/
+comparisons: /tmp/cna-run-455-focused.py, /tmp/cna-archive-455.py, /tmp/cna-455-finish.py. They
+expect two four-check Game IDs against ORIGINAL 453, unchanged old 35/36 failures and all C/
+custom-content child lists (including automatic 15 and TLS 17), 34 binaries/four assets, and
+PENDING_455 source replacement before a future full run.
+
+Later UNAPPLIED C candidate: /tmp/cna-launch-parameters.c (106 lines), matching
+/tmp/cna-launch-parameters-metadata.cpp and /tmp/cna-launch-parameters-CMakeLists.txt. Fourteen
+intended checks exercise explicit StringView bounds, owned UTF-8 input after caller overwrite,
+byte-count/exact-copy guards, ordinal name enumeration, documented first-wins Add, refused
+malformed replacement preserving prior count/value, and explicit empty-list clearing. The
+C++ parse example already teaches syntax but not these C buffer/ownership/enumeration contracts.
+Public runtime.h and generated/native routes were read; no build/runtime credit yet. Keep this
+for a later batch after the material work, rather than expanding the current running checkpoint.
+Then continue the semantic member audit. Remaining skinned gaps include emissive/
 specular/alpha material behavior, independent lights 1/2, vertex-alpha interactions and arbitrary
 joint scales. C gaps include automatic Draw dispatch, other callback failures and destruction
 cancellation; this batch demonstrates automatic Update specifically. Canonical TLS now covers
