@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 23), 8 (content, 44), 9 (audio 21 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 45), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 16 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-443 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+444 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
-content 44 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 45 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 16 (standalone C programs). Every declared category has demos.
@@ -239,15 +239,27 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** complete 443 is archived/reviewed at source 488208f. Continue the
-member audit with native build diagnostics and the existing C ABI host-frame hook lifecycle.
-Reviewed but UNAPPLIED drafts: /tmp/cna-pipeline-diagnostics.cpp (nine proposed checks; real
-opacity quantization loss, downstream logger, null sink, exact endpoints, import failure/retry)
-and /tmp/cna-host-hook-replacement.c (retains seventeen old checks; adds removal/replacement
-between host frames with a separate copied hook context). Build/run both, inspect host captures,
-update audit/status and perform the next complete checkpoint against ORIGINAL checkpoint-443.
-Prepared /tmp/cna-archive-444.py and /tmp/cna-444-finish.py still need the actual source commit
-and explicit host-child comparison before use. Do not treat draft code as validated.
+**Immediate next action:** native pipeline_diagnostics and the existing C ABI host_frames
+extension are built/focused-validated. Nine native checks pass without a display on SOFTWARE and
+OPENGLES3. Host frames retain all seventeen older assertions and add seven, plus two screenshot
+checks (26 with capture, 24 without); exact trace ILBUbUbDeUDUrDsXEZ. Both last-frame captures
+were inspected and are RGBA-identical to earlier host captures, 800x480 solid (32,128,192,255).
+Both focused stdout/stderr streams are archived under reports/checkpoint-444-focused-*; stderr is
+empty, private opacity files independently gone. No new CNA issue. Initial build
+/tmp/cna-444-build.log passed, with the known vendored Draco CMP0148 configure warning; final
+/tmp/cna-444-final-build.log passed after more external C API changes (no compiler diagnostics).
+Metadata 444/0; all 28 targeted CTests pass (13.48 s). Next: commit this batch and run the complete
+444 checkpoint against ORIGINAL checkpoint-443, capture 32 selected runtime hashes after its
+build, then freeze source/assets until both smoke runs end. Prepared archive helpers are
+/tmp/cna-archive-444.py RENDERER and /tmp/cna-444-finish.py; replace PENDING444 with the source
+commit before use. They check nine new native assertions, host 17 -> 24 retained/focused checks,
+old content tool lists, every old status/known issue and exact 32/33 failures. Expect no normalized
+stderr differences. Expected CTest: 457 enabled; SOFTWARE 393/23/25/3, GL 414/24/3/3.
+
+The /tmp opacity and hook drafts are APPLIED AND STALE. Repository host code captures the last
+replacement-hook frame; do not restore the earlier draft's first-draw capture. Continue after this
+checkpoint with the uncovered external source-root capability behavior or remaining C ABI callback
+failure/foreign-thread contracts. No comprehensive semantic coverage claim.
 
 443 evidence: /tmp/cna-demos-443-validation.log exit 0; 456 enabled CTests, SOFTWARE 392/23/25/3,
 GL 413/24/3/3. Both original comparisons preserve exact 32/33 failures. Graph sixteen child checks

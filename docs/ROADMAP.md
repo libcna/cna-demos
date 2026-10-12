@@ -189,7 +189,7 @@ a check that all authored colors remain visible and that a blank texture row can
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (44 demos; remaining below)
+## Phase 8 -- content 🟨 (45 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -211,6 +211,10 @@ a check that all authored colors remain visible and that a blank texture row can
   Existing example now has 15 passing checks: copied carrier lifetime and separate stable-identity
   versus C++ payload guards at Import, Process and Write, with exact error context. An explicitly
   documented absent XNB route gives the game's reason at Selection while CNB remains supported.
+  ✅ `content.custom.pipeline_diagnostics`: an original opacity strip produces real 8-bit
+  quantization loss, contextual importer/processor/writer messages and a copied downstream log.
+  Nine checks cover exact endpoints without warnings, null sinks, import failure and repair.
+  Concurrent logger callbacks and CLI verbosity are not established by these synchronous builds.
   ✅ `content.custom.multi_artifact_publication`: a real compiler node publishes two declared CNB
   schemas plus a briefing through native AddDeploymentFile. Fourteen focused checks cover digests,
   XREF/ownership, skips, missing companion recovery, changed support input, Publish failure/retry,
@@ -422,7 +426,7 @@ C API demos as standalone C programs (one C game per process), built only with
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit, expired callback device handles),
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, callback errors),
 ✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
-✅ `c_api.game.host_frames` (copied frame hooks, explicit host stepping, draw suppression and terminal exit),
+✅ `c_api.game.host_frames` (copied frame hooks, explicit host stepping, draw suppression, removal/replacement and terminal exit),
 ✅ `c_api.game.foreign_thread_dispatch` (default/restored thread affinity and explicit owner pumping of worker game-property calls),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard, root-change cache behavior and visible text),

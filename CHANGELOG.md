@@ -46,6 +46,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Native pipeline diagnostics compile an opacity strip with actual 8-bit precision loss and verify
+  downstream logger forwarding, retained result messages, exact/no-warning inputs and failure/retry.
+- Existing C host-frame demo removes and replaces hooks between frames with a separate caller
+  context, retains all seventeen prior checks and captures the final replacement-hook frame.
 - Budget dependency graph contrasts strong build edges with runtime-only references, verifies
   effective fingerprint propagation, real runtime loads, cycle/missing-node refusal and repair.
   Sixteen checks include actual two-worker importer overlap, deterministic outputs and skipping.

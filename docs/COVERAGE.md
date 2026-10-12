@@ -6,14 +6,14 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**443 demos** in 18 categories. Kinds: console 157, game 250, standalone 36. Automation: automated 407, manual 3, smoke-only 33.
+**444 demos** in 18 categories. Kinds: console 158, game 250, standalone 36. Automation: automated 408, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
 | c_api | 16 | 15 | 1 | 0 | 16 / 0 / 0 / 0 / 0 | 16 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 44 | 44 | 0 | 0 | 35 / 0 / 9 / 0 / 0 | 35 / 0 / 9 / 0 / 0 |
+| content | 45 | 45 | 0 | 0 | 35 / 0 / 9 / 0 / 1 | 35 / 0 / 9 / 0 / 1 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.custom.pipeline_diagnostics`.
+- OPENGLES3: absent from report: `content.custom.pipeline_diagnostics`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -160,19 +162,21 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Find` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Parse` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildEnvironment::strictness` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentBuildLogger::Log` -- content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ContentBuildManifest::Find` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentBuildManifest::Parse` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentBuildManifestEntry::directFingerprint` -- content.custom.dependency_graph
 - `CNA::Content::Pipeline::ContentBuildManifestEntry::fingerprint` -- content.custom.dependency_graph
 - `CNA::Content::Pipeline::ContentBuildRequest::siblings` -- content.custom.nested_builds
-- `CNA::Content::Pipeline::ContentBuildResult::messages` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentBuildResult::messages` -- content.custom.pipeline_diagnostics, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildResult::parameters` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentFileSha256` -- content.custom.incremental_compiler, content.custom.multi_artifact_publication
-- `CNA::Content::Pipeline::ContentPipeline::Build` -- content.custom.nested_builds, content.custom.pipeline_components, content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentImporterContext::LogInfo` -- content.custom.pipeline_diagnostics
+- `CNA::Content::Pipeline::ContentPipeline::Build` -- content.custom.nested_builds, content.custom.pipeline_components, content.custom.pipeline_diagnostics, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::Component` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::LogicalName` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::Source` -- content.custom.pipeline_components
-- `CNA::Content::Pipeline::ContentPipelineError::Stage` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineError::Stage` -- content.custom.pipeline_components, content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ContentPipelineRegistry::AbsentWriterReason` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::DocumentAbsentWriter` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::IsFrozen` -- content.custom.incremental_compiler
@@ -182,6 +186,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentProcessorContext::AddContentBuildDependency` -- content.custom.dependency_graph
 - `CNA::Content::Pipeline::ContentProcessorContext::AddDeploymentFile` -- content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentProcessorContext::AddRuntimeReference` -- content.custom.dependency_graph, content.custom.multi_artifact_publication
+- `CNA::Content::Pipeline::ContentProcessorContext::LogImportant` -- content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ContentProcessorContext::Parameters` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessorContext::ResolveSourceDependency` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessorParameters::Set` -- content.custom.pipeline_components
@@ -194,6 +199,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentValue::RawData` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentValue::StableType` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentWriteResult::additionalOutputs` -- content.custom.multi_artifact_publication
+- `CNA::Content::Pipeline::ContentWriteResult::warnings` -- content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::RegisterXnaImporter` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline
