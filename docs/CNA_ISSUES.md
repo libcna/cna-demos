@@ -59,6 +59,20 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `build/linux-full/reports/checkpoint-470-query-staging-probe-*`.
   All35selected shipped binaries and four existing assets remained unchanged through the probes.
   This is a source/selected-artifact observation, not an atomic full dependency snapshot.
+- **Recurrence on471-punctual:** initial focused build22225, demo HEADc173c11 plus the new
+  uncommitted punctual receiver, compiles/links33scheduled operations but exits1 at the
+  unchanged diagnostic gate (CMake exit0, gate1). The content-project step reports the same
+  missing-owner condition for `cna_content_stage_v1_477930_18dd5445705a3d88_0`. No new demo
+  metadata/native/CTest/smoke run follows that refusal. Both relevant tool headers are byte-
+  identical to the original independent probe; CNA remains cleaneff3131017 and all3909watched
+  build inputs stay unchanged. The exact candidate and its owner file are absent at later
+  inspection; creation versus teardown is still unobserved. Original build, source/input
+  observations, headers and post-build artifact hashes are preserved separately under
+  `build/linux-full/reports/checkpoint-471-punctual-initial-staging-refusal-*`. No directory
+  is removed, warning suppressed or CNA source changed. The fresh watched consistency retry
+  completes7scheduled operations with CMake0/gate0 and all3909inputs unchanged. Focused
+  SW/GL and27targeted CTests then pass (GL8pixels, exactSWskip, actual image inspected).
+  This permits native validation but does not resolve the staging race.
 - **Handling:** keep the warning gate and original failure visible, retry the unchanged documented
   full validation after recording the defect, and retain this issue even if scheduling permits a
   clean retry. The eleven OcclusionQuery controls already pass on both renderers independently.

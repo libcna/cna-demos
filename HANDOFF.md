@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
-* Mostly complete: 6 (effects and shaders, 37).
+* Mostly complete: 6 (effects and shaders, 38).
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 22 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -64,9 +64,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-470 catalog demos (complete checkpoint470-authored): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+471 catalog demos (focused checkpoint471-punctual; complete baseline470-authored): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
-4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 29 other
+4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
@@ -102,6 +102,25 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **471-punctual** adds one coherent point/spot receiver scene with eight GL
+pixel controls. Both authored maps store normalized distance64/255; the receiver's post-
+skin distance3/Range6 is.5. The spot matrix deliberately gives projected depth.1, so the
+shadow control distinguishes distance comparison from projected depth. No map preserves
+direct light, attaching the map removes it, and bias.3 restores it. Separate range/cone
+controls remove direct light. Linear intensity4 gives lit RGB(74,64,43), versus floor
+RGB(20,28,26). The actual800x480 image was inspected and all eight centers match within1.
+GL stderr is empty; SOFTWARE retains the exact declared stock-path skip. No producer,
+all cube faces/seams, partial spot-kernel weights, cone-edge interpolation, punctual
+specular or other-renderer proof. All27targeted CLI/skinned CTests pass in3.19s,
+including three declared shadow skips. Initial watched build22225 compiled33scheduled operations but gate1 correctly refused
+ISSUE-057 missing-owner diagnostics. Original evidence is retained under
+checkpoint-471-punctual-initial-staging-refusal-*. Unchanged watched consistency retry
+passes7scheduled operations with3909inputs unchanged and diagnostic gate0. Focused/targeted
+8468 and the pixel reviewer pass BEFORE source commit. Metadata471/0; full validation against470-authored is pending.
+Evidence: checkpoint-471-punctual-focused-*.
+
+Last complete baseline:
 
 Complete checkpoint **470-authored**, source `f44b514`,
 extends cue_states from nine to fifteen checks. Six dummy-audio runs pass with empty
@@ -248,27 +267,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: authored point/spot distance-map reception from the semantic audit.
-Full470-authored is complete; its source commit above is the comparison baseline.
-1. Read checkpoint-470-fourth-next-punctual-audit.md and actual current CNA API/shader.
-   /tmp/cna-punctual-shadows.cpp is UNAPPLIED, final syntax88776 CLOSED0/emptylog (70281/7524 superseded). Confirm
-   demos/graphics/skinned_effect/punctual_shadows.cpp and its ID do not already exist;
-   add this one coherent eight-control receiver scene without changing existing demos.
-2. Reuse watched build/warning gate and consistency rebuild if inputs change. Metadata,
-   focused SOFTWAREskip/GL8 runs, actual GL image inspection and eight pixel comparisons,
-   then relevant CLI/skinned CTests. Native/image behavior is still UNTESTED; investigate
-   differences from predicted RGB74/64/43 and floor20/28/26 rather than changing expectations
-   merely to match output. Both maps encode normalized distance, not projected depth.
-3. Update semantic docs, commit and export catalog. Full validation expected471demos,
-   484enabled CTests; SW406/27/35/3, GL436/29/3/3. Strict comparison keeps every old failure,
-   C/custom child and network control, allowing the one new ID and exact new SOFTWAREskip
-   diagnostic plus separately reviewed positive title Update variance. Preserve selected
-   binary/assets/18fixture capture discipline; no rebuild/recapture during full runtime.
-4. Close checkpoint/HANDOFF, commit and continue the member/behavior audit. Point/spot
-   maps and range/cone exclusion do not establish a producer, all cube directions/seams,
-   partial-kernel weights, cone-edge interpolation or other renderers. PunctualLightEXT
-   exposes diffuse only; do not invent a missing public punctual-specular obligation.
-Original mono streaming/ISSUE-038 and open build-only ISSUE-057 remain unchanged.
+IN PROGRESS:471-punctual focused validation is complete; full checkpoint next.
+Actual800x480GLimage viewed,8pixelchecks pass, SOFTWARE exact declaredskip.27targetedCTests
+pass (three declaredskips), metadata471/0. Focused reviewer passed BEFORE sourcecommit.
+Commit source/docs, export /tmp/cna-catalog-471-punctual.json, run fullwrapper and capture
+ONCE after build duringCTest. Freeze35binaries/4assets/18fixtures through fullruntime.
+Expected484enabledCTest; SW406/27/35/3, GL436/29/3/3. Archive against complete470-authored:
+all38/42oldfailures/C/custom child evidence and5network controls exact; only the one new
+ID, exact new SOFTWAREskip diagnostic and reviewed positive titleUpdate variance allowed.
+Preserve/investigate unexpected evidence. Finish/close helpers prepared; review diff/commit.
+Then immediately continue UNAPPLIED same-ID /tmp/cna-cue-spatial.cpp (syntax93508 only),
+retaining original audible loop/SmokeOnly and adding6public variable/state controls.
+Open build-only ISSUE-057 keeps its refusal and private reproduction evidence.
 
 ## 15. Assumptions the next session must know
 
@@ -284,14 +294,14 @@ Current complete baseline is470-authored; source commit is in section7.
 All earlier graphics/audio/content/transfer drafts, including fourth-cascade and XACT
 release drafts, are APPLIED AND STALE. Preserve immutable failed-attempt evidence.
 
-Next UNAPPLIED: /tmp/cna-punctual-shadows.cpp, final syntax88776 CLOSED0/emptylog (70281/7524 superseded).
+APPLIED AND STALE: /tmp/cna-punctual-shadows.cpp, final syntax88776 CLOSED0/emptylog (70281/7524 superseded).
 Recovery/source hashes/notes: checkpoint-470-fourth-next-punctual-* and
 checkpoint-470-fourth-next-cna-punctual-*. Eight planned controls cover point no-map,
 cube shadow, normalized bias and range exclusion; spot no-map,2D shadow,bias and cone
 exclusion. Material floorRGB20/28/26; distance3/Range6 gives attenuation.087890625 and
-litRGB74/64/43 with linear intensity4, within1. No native or actual-image evidence. All cube faces store64/255;
-no all-face-direction or seam proof. No source/asset changes yet. Prepared UNRUN471punctual apply/build/focused/review/targeted/full
-helpers under/tmp, recovery checkpoint-470-authored-next-punctual-helper-*. Guarded apply
+litRGB74/64/43 with linear intensity4, within1. ActualGLimage viewed and all8pixels pass. All cube faces store64/255;
+no all-face-direction or seam proof. New source added; no file assets added. Focused471punctual apply/build/focused/review/targeted/full
+helpers passed; full helpers remain UNRUN under/tmp, recovery checkpoint-470-authored-next-punctual-helper-*. Guarded apply
 checks the exact draft hash and absent targetID/path; full closure /tmp/cna-close-471-punctual.py prepared UNRUN; inspect before use.
 
 CNA public PunctualLightEXT is a diffuse-only point/spot receiver; the source audit

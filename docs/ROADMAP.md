@@ -144,7 +144,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (37 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (38 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
   diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
   specular_lights now has eight on both renderers with inspected labeled comparisons.
@@ -1357,3 +1357,22 @@ artifact/source observations, not an atomic or full transitive input snapshot.
 All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-authored-*.
 Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is untouched;
 build-only ISSUE-057 retains its staging refusal and private reproduction evidence.
+
+## Focused471-punctual
+
+Focused **471-punctual** adds one coherent point/spot receiver scene with eight GL
+pixel controls. Both authored maps store normalized distance64/255; the receiver's post-
+skin distance3/Range6 is.5. The spot matrix deliberately gives projected depth.1, so the
+shadow control distinguishes distance comparison from projected depth. No map preserves
+direct light, attaching the map removes it, and bias.3 restores it. Separate range/cone
+controls remove direct light. Linear intensity4 gives lit RGB(74,64,43), versus floor
+RGB(20,28,26). The actual800x480 image was inspected and all eight centers match within1.
+GL stderr is empty; SOFTWARE retains the exact declared stock-path skip. No producer,
+all cube faces/seams, partial spot-kernel weights, cone-edge interpolation, punctual
+specular or other-renderer proof. All27targeted CLI/skinned CTests pass in3.19s,
+including three declared shadow skips. Initial watched build22225 compiled33scheduled operations but gate1 correctly refused
+ISSUE-057 missing-owner diagnostics. Original evidence is retained under
+checkpoint-471-punctual-initial-staging-refusal-*. Unchanged watched consistency retry
+passes7scheduled operations with3909inputs unchanged and diagnostic gate0. Focused/targeted
+8468 and the pixel reviewer pass BEFORE source commit. Metadata471/0; full validation against470-authored is pending.
+Evidence: checkpoint-471-punctual-focused-*.

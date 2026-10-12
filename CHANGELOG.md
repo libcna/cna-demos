@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- A focused point/spot receiver adds8GLpixel controls for authored distance maps, bias,
+  range and cone exclusion;27targeted CTests pass. No shadow producer or other-backend claim.
 - Complete470-authored: all483enabled CTests and both full smoke suites preserve previous
   failure/child/network evidence; selected artifacts and normalized diagnostics stay stable.
 - XACT cue states now distinguish no release, authored fade completion and Immediate
