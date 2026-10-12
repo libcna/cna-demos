@@ -1374,7 +1374,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   OPENGLES3. Both produce first `ILBUD`, failed/terminal `ILBUDU`, final `ILBUDUZ`, two updates,
   zero exiting/end_run callbacks and one unload. Renderer INFO stderr is preserved (89/782 bytes)
   and identical between initial/final runs. Original streams, exits, initial source and selected
-  source/binary hashes: reports/cna-issue-051-*. GCC14/C11/-Wall/-Wextra/-Werror builds pass.
+  source/binary hashes: reports/cna-issue-051-*. GCC 14/C11/-Wall/-Wextra/-Werror builds pass.
 - **Cause:** native RunFrameEXT calls OnExiting and EndRun when the run ends. The C adapter routes
   both tables through Invoke, whose existing callbackFailure_ guard suppresses them. UnloadContent
   explicitly opts into runAfterFailure and therefore still runs. This is distinct from ISSUE-050
@@ -1394,9 +1394,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   runs once and the released handle is invalid despite destruction returning CALLBACK. Both
   traces are ILBUDUZ and stderr is empty under the demo logger. All32 focused C/CLI CTests pass
   (7.36 s), including the expected-failure marker. Evidence: reports/checkpoint-447-focused-*.
-  Complete447 at4272ce1 passes all460 enabled CTests and both full smoke runs. Exact original
+  Complete 447 at 4272ce1 passes all 460 enabled CTests and both full smoke runs. Exact original
   comparisons add only this ID/assertion (34/35 ->35/36), retaining all older statuses/counts/
-  failures and C/custom-content child lists. Selected33 binary/four asset hashes and normalized
+  failures and C/custom-content child lists. Selected 33 binary/four asset hashes and normalized
   stderr match. Full archives/reviews: reports/checkpoint-447-*. The minimal reproducer remains available.
 
 

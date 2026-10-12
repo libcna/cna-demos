@@ -99,27 +99,27 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC14.2, CMake3.31.6. The full **447 checkpoint passed** at4272ce1:
-tools/validate.sh exit0, all460 enabled CTests (144.24 s), both complete isolated-X11 smoke runs
-and coverage regeneration. ORIGINAL446-cancel comparisons add only the host_failure ID and one
-ISSUE-051 assertion (34/35 ->35/36). Every older status/knownIssue/count and C/custom-content
-child list is unchanged. New child has9 PASS +1 FAIL. Selected33 binary/four asset hashes match
-runtime capture; normalized stderr is unchanged (no GTK warnings, same84 nonfatal GL X protocol
-lines). Evidence: reports/checkpoint-447-*; strict helpers /tmp/cna-archive-447.py and
-/tmp/cna-447-finish.py. All runtime columns include447 IDs. No rendered scene changed or visual
-validation claimed for host failure. This is not a full dependency/input snapshot.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **448 checkpoint passed** at
+11d29b3: tools/validate.sh exit 0, all 461 enabled CTests (197.73 s), both complete isolated-X11
+smoke runs and coverage regeneration. ORIGINAL checkpoint-447 comparisons add only the new
+six-check passing weight_channels ID. All 35/36 earlier failed assertions, older statuses/counts/
+known issues and C/custom-content child lists remain unchanged. Selected 33 binary/four asset
+hashes match runtime capture; normalized stderr is unchanged (no GTK warnings, same 84 nonfatal
+GL X protocol lines). Evidence, catalog and scripts: reports/checkpoint-448-*; helpers also remain
+in /tmp/cna-archive-448.py and /tmp/cna-448-finish.py. Both focused 800x480 captures were actually
+inspected and are RGBA-identical. This is not a full dependency/input snapshot.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets --validate | 447 demos, 0 problems |
+| Metadata/assets --validate | 448 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 435 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 394 passed, 25 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 415 passed, 26 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | All34/35 older failures retained; one new ISSUE-051 assertion (35/36) |
+| CTest | 436 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 395 passed, 25 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 416 passed, 26 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | All 35/36 older failures retained; new graphics demo has six passes |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Dispatch extension has no rendered scene; earlier lifecycle images were inspected |
+| Screenshots | Both weight-channel captures inspected; RGBA-identical, 800x480, 7,504 pixels per colored mesh |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -243,40 +243,52 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** run full448 against ORIGINAL checkpoint-447. New
-`graphics.skinned_effect.weight_channels` is applied, built and focused-validated on both
-renderers: six JSON checks pass, stderr empty, actual800x480 images inspected and RGBA-identical.
-Each colored mesh covers7,504 pixels; translated positions match the authored active channels.
-One/two influences have nonzero ignored lanes; four influences all contribute with indices2,0,3,1.
-Five center/near-edge samples per mesh plus three empty bind centers form six assertions.
-Analytic /tmp/cna-weight-channels-geometry.py checks sensitivity to each omitted contribution,
-with/without renormalization; no native mutant/rotation/normal-blending claim. Evidence:
-reports/checkpoint-448-focused-*. No new CNA issue. Source /tmp draft is APPLIED AND STALE.
+**Immediate next action:** extend the existing weight-channel demo with the final palette slot,
+using the UNAPPLIED draft below. Complete 448 at 11d29b3 is CLOSED: tools/validate.sh exit 0,
+all 461 enabled CTests (197.73 s), SW 395/25/25/3, GL 416/26/3/3. Exact ORIGINAL 447 comparisons
+add only weight_channels (six PASS checks); all old 35/36 failures, statuses/counts/known issues
+and child lists remain. Selected 33 binary/four asset hashes and normalized stderr match.
+reports/checkpoint-448-* is the new baseline. No runtime checkpoint is currently running.
+Inventory: 293/329 types, 1357/2326 XNA members, 158/3210 C routes; all runtime columns cover 448 IDs.
 
-Build /tmp/cna-448-build.log passed (55 targets, known Draco CMP0148 developer warning on new
-source regeneration; no compiler diagnostics). Metadata448/0, all23 targeted CTests (5.94 s:
-22 passed including one WILL_FAIL, one PBR capability skip). Source catalog448/graphics142/
-game252/standalone37/C API17/known-demo26. Coverage generated with ORIGINAL447 reports marks
-new ID absent until full448; inventory293/329 types,1357/2326 XNA members,158/3210 C routes.
+Focused weight-channel evidence: build 55 targets (known Draco CMP0148 developer warning on
+regeneration, no compiler diagnostics), metadata 448/0, all 23 targeted CTests (5.94 s: 22 passed
+including one WILL_FAIL, one PBR capability skip). Six checks pass on both renderers, stderr
+empty, both 800x480 images actually inspected and RGBA-identical, 7,504 pixels per colored mesh.
+reports/checkpoint-448-focused-*. The original weight-channel draft is APPLIED AND STALE.
 
-Full helpers /tmp/cna-archive-448.py and /tmp/cna-448-finish.py need PENDING448 replaced with
-source commit. Catalog /tmp/cna-catalog-448.json. Capture33 selected binaries/four assets AFTER
-full build. Expected totals SW395/25/25/3, GL416/26/3/3, all461 enabled CTests (436 passed incl25
-WILL_FAIL +25 skipped), three disabled. Add only the new six-check PASS ID; preserve all35/36
-failed assertions, older statuses/counts/knownIssue and all C/custom-content child lists/traces.
-Game checks are in JSON, not standalone child stdout. Freeze sources/assets through runtime.
+Priority follow-up: /tmp/cna-max-slot-render.cpp (178 lines), prepared by
+/tmp/cna-prepare-max-slot.py, is UNAPPLIED. It extends the SAME weight_channels ID from six to
+seven checks. Each frame first draws the original three short-palette controls unchanged. A
+fourth cyan mesh then uses a MaxBones-sized palette and indices2,0,MaxBones-1,1, with a distinct
+last-slot translation(.5,.5) and weights(.1,.2,.3,.4). Its expected world center is(-.404,-.63).
+The last slot differs from every earlier authored slot, so clamping/wrapping cannot select an
+equivalent transform. The existing six checks remain, plus five pixel probes grouped into one
+new rendered boundary assertion. Original three colored regions should remain RGBA-identical;
+only a new cyan rectangle should replace background. This closes the actual last-slot rendering
+gap beyond two_bones' CPU palette readback, without another demo ID. No build/runtime/image
+validation yet. Apply only now that 448 is closed; verify both images and actual changed pixels,
+then full checkpoint with the same 448 IDs and old 35/36 failures. Fog remains the later draft.
 
-Latest COMPLETE baseline447 at4272ce1 (closure6d08511): tools/validate.sh exit0, all460 enabled
-CTests144.24 s, SW394/25/25/3, GL415/26/3/3. Only the new host_failure ID/ISSUE-051 label were
-added (raw35/36); all older results/child checks unchanged. Selected33 binary/four asset hashes
-and normalized stderr match. reports/checkpoint-447-*.
+Later work: UNAPPLIED /tmp/cna-skinned-fog-depth.cpp (133 lines), proposed
+`graphics.skinned_effect.fog_depth`. It uses one shared Z=0 bind mesh, one active bone and
+World translations only in X. Bone transforms supply depths2/4/6 under identity View and an
+orthographic projection. A fog-disabled gold control precedes fog-enabled draws at FogStart2,
+halfway4 and FogEnd6; expected colors Gold, (178,182,119) within1, CornflowerBlue. Background
+MidnightBlue differs from full fog. Four checks planned, no new file assets. Actual public fog
+setters and SkinnedEffect's post-skin fog-vector path were read; no build/runtime/visual evidence
+exists for this draft. Prepared /tmp/cna-{archive-449,449-finish,run-449-focused}.py need review,
+actual source commit/catalog449 and33 binary/four asset hash capture after future full build.
+Expected new PASS ID with4 JSON checks only; all old35/36 failures and child lists must remain.
+Preserve the current complete/focused weight-channel evidence before
+applying. Build, both renderer captures and actual inspection are mandatory; investigate any
+color/depth mismatch instead of adjusting expectations to the observed output.
 
-Next meaningful gaps after full448: skinning with rotated/nonuniform joint normals or material/
-fog behavior; automatic C callback-scope dispatch; other callback failure locations and broader
-public-member audit. Four-channel translation does not establish normal blending or every
-weight distribution. Canonical thread-local exception details remain separate from the tested
-result/category/message isolation; invalid FOV uses std::invalid_argument and cannot prove
-ParamName isolation. Keep actual CNA calls visible and preserve existing controls.
+This is a separate fog-after-bone-transform behavior: BasicEffect fog moves objects through World
+and cannot prove it. Other remaining gaps: rotated/nonuniform joint normals, lighting/alpha,
+automatic C callback-scope dispatch, other callback failure locations and broader member audit.
+Canonical thread-local exception details remain separate from result/category/message isolation;
+invalid FOV uses std::invalid_argument and cannot prove ParamName isolation. Preserve old controls.
 
 Earlier COMPLETE catalog checkpoint: 446-palette at 55ebc57 (closure 2c3f095), all 459 enabled
 CTests (143.36 s), SW 395/23/25/3, GL 416/24/3/3, exact prior 32/33 failed assertions and all
@@ -286,7 +298,7 @@ reports/checkpoint-446-palette-*. The newer reentry checkpoint is now the baseli
 are stale; the owner-dispatch draft is now applied. The newer 446-reentry runtime checkpoint is complete as described above.
 
 A later seven-target rebuild against clean CNA 4ee1e0b553667b6e999248fcefdea729654ee497 passed;
-the diagnostic compiles with GCC14/C11/-Wall/-Wextra/-Werror. All 32 selected catalog binaries
+the diagnostic compiles with GCC 14/C11/-Wall/-Wextra/-Werror. All 32 selected catalog binaries
 still match 446-palette after this rebuild and probe compilation; metadata remains 446/0. The
 only new native executable is the separate defect reproducer. Its final four cases each exit 1
 for the explicitly confirmed defect. Renderer initialization/selection INFO stderr is preserved,
