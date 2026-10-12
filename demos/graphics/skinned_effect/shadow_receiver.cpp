@@ -74,11 +74,12 @@ namespace
             effect_->setAmbientLightColorProperty(Vector3(.1f, .2f, .3f));
             effect_->setEmissiveColorProperty(Vector3(.02f, .03f, .04f));
             effect_->setSpecularColorProperty(Vector3::Zero);
+            effect_->setSpecularPowerProperty(1);
             auto& light = effect_->getDirectionalLight0Property();
             light.setEnabledProperty(true);
             light.setDirectionProperty(Vector3(0, 0, -1));
             light.setDiffuseColorProperty(Vector3::One);
-            light.setSpecularColorProperty(Vector3::Zero);
+            light.setSpecularColorProperty(Vector3::One);
             effect_->getDirectionalLight1Property().setEnabledProperty(false);
             effect_->getDirectionalLight2Property().setEnabledProperty(false);
             // Post-skin Z=-3 becomes clip Z=0, hence comparison depth=.5 after clip-to-map conversion.
@@ -86,7 +87,7 @@ namespace
             effect_->setShadowFilterRadiusEXT(0); // each panel selects its comparison kernel below
             batch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
-            Context().Print("The left half of the authored map stores 64/255, the right 192/255. Receiver depth=.5; only the left half is occluded. Ambient and emission remain. Bias=.3 deliberately removes that shadow, illustrating why excessive bias loses contact. The lower row compares visibility at world X=-.125: zero for one tap, 1/3 for 3x3 and 2/5 for 5x5. Each tap compares depth before visibility is averaged. This is receiver sampling, not shadow-map generation.");
+            Context().Print("The left half of the authored map stores 64/255, the right 192/255. Receiver depth=.5; only the left half is occluded. Ambient and emission remain. Bias=.3 deliberately removes that shadow, illustrating why excessive bias loses contact. The middle row compares visibility at world X=-.125: zero for one tap, 1/3 for 3x3 and 2/5 for 5x5. Each tap compares depth before visibility is averaged. The last row isolates direct specular with no diffuse or ambient/emissive floor. This is receiver sampling, not shadow-map generation.");
         }
         void Draw(const GameTime& time) override
         {
@@ -98,16 +99,22 @@ namespace
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             device.SetVertexBuffer(vertices_.get());
             device.setIndicesProperty(indices_.get());
-            for (int panel = 0; panel < 7; ++panel)
+            for (int panel = 0; panel < 9; ++panel)
             {
-                const int column = panel % 4, row = panel / 4;
+                const int column = panel < 7 ? panel % 4 : panel - 7;
+                const int row = panel < 7 ? panel / 4 : 2;
+                const bool specularOnly = panel >= 7;
+                effect_->setDiffuseColorProperty(specularOnly ? Vector3::Zero : Vector3(.6f, .4f, .2f));
+                effect_->setAmbientLightColorProperty(specularOnly ? Vector3::Zero : Vector3(.1f, .2f, .3f));
+                effect_->setEmissiveColorProperty(specularOnly ? Vector3::Zero : Vector3(.02f, .03f, .04f));
+                effect_->setSpecularColorProperty(specularOnly ? Vector3(.3f, .15f, .05f) : Vector3::Zero);
                 const int left = full.getWidthProperty() * column / 4;
                 const int right = full.getWidthProperty() * (column + 1) / 4;
-                device.setViewportProperty(Viewport(left, row * full.getHeightProperty() / 2,
-                                                   right - left, full.getHeightProperty() / 2));
-                effect_->setShadowFilterRadiusEXT(panel < 4 ? 0 : panel - 4);
+                device.setViewportProperty(Viewport(left, row * full.getHeightProperty() / 3,
+                                                   right - left, full.getHeightProperty() / 3));
+                effect_->setShadowFilterRadiusEXT((panel < 4 || specularOnly) ? 0 : panel - 4);
                 effect_->setShadowMapEXT(panel == 3 ? nullptr : shadow_.get());
-                effect_->setShadowsEnabledEXT(panel != 0);
+                effect_->setShadowsEnabledEXT(panel != 0 && panel != 7);
                 effect_->setShadowDepthBiasEXT(panel == 2 ? .3f : 0.0f);
                 for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
                 {
@@ -116,21 +123,25 @@ namespace
                 }
             }
             device.setViewportProperty(full);
-            const std::array<const char*, 7> labels{
-                "Disabled", "Enabled", "Bias .3", "Detached", "1 tap: 0", "3x3: 1/3", "5x5: 2/5"};
+            const std::array<const char*, 9> labels{
+                "Disabled", "Enabled", "Bias .3", "Detached", "1 tap: 0", "3x3: 1/3", "5x5: 2/5",
+                "Spec: disabled", "Spec: enabled"};
             batch_->Begin();
-            for (int panel = 0; panel < 7; ++panel)
+            for (int panel = 0; panel < 9; ++panel)
                 batch_->DrawString(*font_, labels[panel], Vector2(
-                    static_cast<float>((panel % 4) * full.getWidthProperty() / 4 + 8),
-                    static_cast<float>((panel / 4) * full.getHeightProperty() / 2 + 20)), Color::White);
-            // Mark the horizontal position used by all three lower-row visibility checks.
+                    static_cast<float>((panel < 7 ? panel % 4 : panel - 7) * full.getWidthProperty() / 4 + 8),
+                    static_cast<float>((panel < 7 ? panel / 4 : 2) * full.getHeightProperty() / 3 + 8)), Color::White);
+            // Mark the horizontal position used by all three middle-row visibility checks.
             for (int radius = 0; radius < 3; ++radius)
                 batch_->DrawString(*font_, "^", Vector2(
                     static_cast<float>(radius * full.getWidthProperty() / 4 + full.getWidthProperty() * 3 / 32 - 3),
-                    static_cast<float>(full.getHeightProperty() * 9 / 10)), Color::White);
+                    static_cast<float>(full.getHeightProperty() * 19 / 30)), Color::White);
             batch_->DrawString(*font_, "Visibility at\nmarked position", Vector2(
                 static_cast<float>(full.getWidthProperty() * 3 / 4 + 8),
-                static_cast<float>(full.getHeightProperty() * 3 / 4)), Color::White);
+                static_cast<float>(full.getHeightProperty() / 2)), Color::White);
+            batch_->DrawString(*font_, "Specular only\nPower 1; no floor", Vector2(
+                static_cast<float>(full.getWidthProperty() / 2 + 8),
+                static_cast<float>(full.getHeightProperty() * 5 / 6 - 16)), Color::White);
             batch_->End();
             if (FramesDrawn() == 0)
             {
@@ -147,8 +158,8 @@ namespace
                 {
                     const int left = pixels.Width() * panel / 4;
                     const int width = pixels.Width() / 4;
-                    Context().Check(CnaDemos::Near(pixels.At(left + width / 4, pixels.Height() / 4), panel == 1 ? occluded : lit, 1) &&
-                                    CnaDemos::Near(pixels.At(left + width * 3 / 4, pixels.Height() / 4), lit, 1), checks[panel]);
+                    Context().Check(CnaDemos::Near(pixels.At(left + width / 4, pixels.Height() / 6), panel == 1 ? occluded : lit, 1) &&
+                                    CnaDemos::Near(pixels.At(left + width * 3 / 4, pixels.Height() / 6), lit, 1), checks[panel]);
                 }
                 // At world X=-.125 (u near texel-center 3), the kernels include 0/1,
                 // 3/9 and 10/25 lit taps. Uniform rows isolate horizontal edge averaging.
@@ -161,8 +172,21 @@ namespace
                 {
                     const int width = pixels.Width() / 4;
                     const int x = radius * width + width * 3 / 8;
-                    Context().Check(CnaDemos::Near(pixels.At(x, pixels.Height() * 3 / 4), filtered[radius], 1),
+                    Context().Check(CnaDemos::Near(pixels.At(x, pixels.Height() / 2), filtered[radius], 1),
                                     filterChecks[radius]);
+                }
+                // E points from the bone-translated fragment to eye0. At worldX near +/-.25,
+                // dot(normal, normalize(E+Z)) is about.99914; power1 gives RGB(76,38,13).
+                const Color highlight(76, 38, 13);
+                const std::array<const char*, 2> specularChecks{
+                    "disabled reception preserves direct specular light on both map halves",
+                    "enabled reception removes direct specular light only on the occluded half"};
+                for (int panel = 0; panel < 2; ++panel)
+                {
+                    const int width = pixels.Width() / 4, left = panel * width;
+                    const int y = pixels.Height() * 5 / 6;
+                    Context().Check(CnaDemos::Near(pixels.At(left + width / 4, y), panel == 0 ? highlight : Color::Black, 1) &&
+                                    CnaDemos::Near(pixels.At(left + width * 3 / 4, y), highlight, 1), specularChecks[panel]);
                 }
             }
             Game::Draw(time);
@@ -180,9 +204,10 @@ CNA_DEMOS_GAME(ShadowReceiverDemo, {
     .id = "graphics.skinned_effect.shadow_receiver",
     .title = "Authored-map shadows on a skinned receiver",
     .description = "Samples an authored depth map after a bone transform, contrasts direct-light shadowing with the "
-                   "retained ambient/emissive floor, and compares reception, bias, detachment and 1/9/25-tap visibility averaging.",
+                   "retained ambient/emissive floor, compares reception, bias, detachment and 1/9/25-tap averaging, and isolates direct specular attenuation.",
     .apis = {"SkinnedEffect::SetBoneTransforms", "SkinnedEffect::DiffuseColor", "SkinnedEffect::AmbientLightColor",
              "SkinnedEffect::EmissiveColor", "SkinnedEffect::PreferPerPixelLighting",
+             "SkinnedEffect::SpecularColor", "SkinnedEffect::SpecularPower",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowMapEXT",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setLightViewProjectionEXT",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowsEnabledEXT",
@@ -195,5 +220,5 @@ CNA_DEMOS_GAME(ShadowReceiverDemo, {
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "EasyGL OPENGLES3/OPENGL33 stock receiver path only; other renderers explicitly skipped. "
                     "An authored Color map and 1/9/25-tap comparisons do not establish map generation, "
-                    "cascades, punctual-light shadows, specular shadowing or other renderers.",
+                    "cascades, punctual-light shadows, per-vertex or alpha-dependent specular shadows, or other renderers.",
 })

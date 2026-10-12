@@ -1045,3 +1045,17 @@ an old range-error gap: volume_pitch_pan already checks three refused ranges. No
 or runtime credit comes from that source review.
 No new ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057 stays
 open with its original refusal and independent private staging probe preserved.
+
+## Focused470-specular
+
+Focused **470-specular** extends shadow_receiver from seven to nine GL checks while
+preserving all original assertion labels. Two additional panels remove diffuse/ambient/
+emission and compare disabled/enabled reception of directional specular light. Both
+highlights remain RGB(76,38,13) with reception disabled; enabling it makes only the
+occluded half black. Actual three-row800x480 image inspected; all15 selected pixels,
+including all original controls at new coordinates, match within tolerance1. GL stderr
+is empty; SOFTWARE retains its exact declared skip. No whole-image identity, per-vertex,
+alpha, cascade or punctual-specular claim. Watched build10959 passes9scheduled/8numbered
+operations with all3,909inputs unchanged. Metadata470/0; focused/targeted75346 passes
+26CTests in2.64s (two declared shadow skips). Focused reviewer passes BEFORE source commit;
+evidence checkpoint-470-specular-focused-*. Last full baseline470-border; full run is next.

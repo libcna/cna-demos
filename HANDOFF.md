@@ -103,6 +103,18 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **470-specular** extends shadow_receiver from seven to nine GL checks while
+preserving all original assertion labels. Two additional panels remove diffuse/ambient/
+emission and compare disabled/enabled reception of directional specular light. Both
+highlights remain RGB(76,38,13) with reception disabled; enabling it makes only the
+occluded half black. Actual three-row800x480 image inspected; all15 selected pixels,
+including all original controls at new coordinates, match within tolerance1. GL stderr
+is empty; SOFTWARE retains its exact declared skip. No whole-image identity, per-vertex,
+alpha, cascade or punctual-specular claim. Watched build10959 passes9scheduled/8numbered
+operations with all3,909inputs unchanged. Metadata470/0; focused/targeted75346 passes
+26CTests in2.64s (two declared shadow skips). Focused reviewer passes BEFORE source commit;
+evidence checkpoint-470-specular-focused-*. Last full baseline470-border; full run is next.
+
 Complete checkpoint **470-border**, source `54dfda7`,
 extends the existing cascade demo with two shared-boundary isolation controls. All eight
 GL checks pass; SOFTWARE retains its declared stock-path skip. The actual three-row image
@@ -252,20 +264,19 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply and validate the prepared same-ID470-specular receiver extension.
-Full470-border session88833 is CLOSED0; source54dfda7 is the comparison baseline.
-1. Review/apply /tmp/cna-shadow-specular.cpp to shadow_receiver.cpp. Syntax6913 passed,
-   no native/image evidence yet. Seven original controls plus two isolated specular controls.
-2. Run /tmp/cna-build-470-specular.py initial; consistency if watched inputs change. Metadata,
-   /tmp/cna-run-470-specular-focused.py and targeted shell. Inspect actual three-row image;
-   reviewer checks15selectedpixels and original seven labels BEFORE committing.
-3. Update semantic docs, commit and export /tmp/cna-catalog-470-specular.json. Full helper
-   family: capture selected hashes once after build during CTest, freeze artifacts through
-   both smokes, archive each renderer and finish. Expected483enabled CTests, same470totals;
-   GLreceiver7->9checks only plus separately reviewed positive title Update variance.
-4. Close docs/history/handoff and commit; immediately continue deeper public behavior work.
-   Cascade maximum/debug tint, punctual shadows and audio lifecycle remain separate gaps.
-Preserve original failures and investigate any staging warning. ISSUE-057 stays open.
+HIGHEST PRIORITY: complete full470-specular, then apply the prepared loop-release extension.
+Specular is APPLIED; native, actual-image/15pixel, source-predicate and26targeted CTests pass.
+Commit source/docs and export /tmp/cna-catalog-470-specular.json. Run the prepared full
+validation shell, capture once after build during CTest, freeze artifacts through both
+smokes, archive SOFTWARE/OPENGLES3 and run /tmp/cna-470-specular-finish.py.
+Baseline470-border,483enabled CTests and unchanged470totals; only GLreceiver7->9checks plus
+separately reviewed positive title Update variance. Investigate any unexpected difference.
+Close full docs/history/HANDOFF and commit; immediately proceed to /tmp/cna-loop-release.cpp.
+Release draft is UNAPPLIED, syntax95961 passed, no native evidence. Prepared /tmp/cna-*470-release*
+helpers expect looping3->6checks on both selections, ten focused repetitions and all original
+function source through its first3checks unchanged. Baseline must be complete470-specular.
+After release, continue the public Pan/3D mode lifecycle from the spatial-audio audit.
+Open ISSUE-057 remains preserved; a clean build does not fix its staging diagnostic race.
 
 ## 15. Assumptions the next session must know
 
@@ -282,12 +293,12 @@ All prior receiver/PCF/cascade/border/query, audio, XACT, reader, move, field, l
 palette and EOF proposals are APPLIED AND STALE. Preserve all prior evidence, including
 failures/probes. See docs/CHECKPOINT_HISTORY.md; do not replace current source with stale drafts.
 
-Unapplied: /tmp/cna-shadow-specular.cpp; syntax6913 CLOSED0, empty log. It isolates direct
+APPLIED AND STALE: /tmp/cna-shadow-specular.cpp; syntax6913 CLOSED0, empty log. It isolates direct
 specular reception with diffuse/ambient/emission zero, power1 and RGB(76,38,13)/Black,
-tolerance1. Three-row layout requires actual image and15pixel review. No native/image,
-per-vertex/alpha/cascade/punctual-specular evidence yet. Source/notes recovery under
+tolerance1. Three-row layout requires actual image and15pixel review. Native/actual-image/15pixel review now passes. No
+per-vertex/alpha/cascade/punctual-specular evidence. Source/notes recovery under
 checkpoint-470-query-next-cna-shadow-specular* and checkpoint-470-query-next-specular-*.
-Prepared UNRUN specular helper family: /tmp/cna-*470-specular*, recovery under
+Specular focused helpers passed; full helpers next: /tmp/cna-*470-specular*, recovery under
 checkpoint-470-border-next-helper-*. Baseline470-border,483CTests, unchanged totals,
 GLreceiver7->9 only plus reviewed positive title variance. Run focused reviewer BEFORE
 committing because it compares the original seven assertion labels against HEAD.
