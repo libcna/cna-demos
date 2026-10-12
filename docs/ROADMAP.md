@@ -1192,3 +1192,34 @@ one additional manual microphone disabled. Focused reviewer passes BEFORE source
 evidence checkpoint-470-bounds-focused-*. Last full baseline470-spatial; full validation next.
 No new ID or genuine CNA problem found. Float alignment acceptance remains a source-only
 classification and must not be converted into an invented alignment exception.
+
+## Complete470-bounds
+
+Complete checkpoint **470-bounds**, source `41af406`,
+extends buffer_formats from 16 to 20 checks. Two dummy-audio runs (one per requested
+renderer environment) pass with empty stderr. Negative float offset and max-int count
+preserve the staged integer queue; negative count and a nonempty range at the vector end
+preserve the staged float queue. Each refusal is ArgumentOutOfRangeException with
+Stopped/Pending1 retained. All 16 original assertion calls remain verbatim/in order,
+including original mode guards and integer/float playback transitions. No sample readback,
+partial-float output, live-playing/concurrent-producer or listening evidence. Float range
+bounds differ from integer frame alignment; no invented alignment exception is expected.
+Watched build 1507 passes 9 scheduled / 8 numbered operations, all 3,909 watched inputs
+unchanged and diagnostic gate 0. Focused/targeted session 14824 passes 37 enabled CTests
+in 5.60 s; one additional manual microphone test disabled. Metadata 470 / 0 problems.
+Full session 24481 builds in 7 scheduled operations without warning and passes all 483
+enabled CTests in 149.72 s (449 passed including 27 WILL_FAIL; 34 skips; three additional
+manual tests disabled). SOFTWARE 406/27/34/3, OPENGLES3 435/29/3/3. Every old 38/42 failed
+assertion, C/custom child list/trace and all five network controls remain exact.
+Reviewed JSON count differences:
+{"OPENGLES3": {"audio.dynamic_sound_effect_instance.buffer_formats": {"after": 20, "before": 16, "reason": "Four float-range refusal controls added; original sixteen buffer-format predicates retained."}}, "SOFTWARE": {"audio.dynamic_sound_effect_instance.buffer_formats": {"after": 20, "before": 16, "reason": "Four float-range refusal controls added; original sixteen buffer-format predicates retained."}}}.
+All 35 selected binaries/four existing assets and reader fixture copies remain unchanged
+through runtime. Normalized application stderr is identical, including 42 known GL X
+protocol records and the intentional shader error. Outer Xvfb has 11 exact amdgpu
+pairs (previous 18); independent inner/outer exits 0. Capture CNA eff3131017
+(clean), final CNA eff3131017 (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-bounds-*.
+Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
+No extra ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057
+stays open with its original refusal and independent private staging probe preserved.

@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-470 catalog demos (complete checkpoint470-spatial): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+470 catalog demos (complete checkpoint470-bounds): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 29 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
@@ -103,45 +103,31 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **470-bounds** extends buffer_formats from16to20checks. Two dummy-audio runs
-(one per requested renderer environment) pass with empty stderr. Negative float offset
-and max-int count preserve the staged integer queue; negative count and end-offset with
-positive count preserve the staged float queue. Each refusal is ArgumentOutOfRangeException
-with Stopped/Pending1 retained. All16original assertion calls remain verbatim/in order,
-including original integer/float mode guards and playback transitions. No partial-float
-output, live-playing/concurrent-producer, sample-readback or listening claim.
-Watched build1507 passes9scheduled/8numbered operations with all3,909inputs unchanged and
-diagnostic gate0. Metadata470/0; focused/targeted14824 passes37enabled CTests in5.60s,
-one additional manual microphone disabled. Focused reviewer passes BEFORE source commit;
-evidence checkpoint-470-bounds-focused-*. Last full baseline470-spatial; full validation next.
-No new ID or genuine CNA problem found. Float alignment acceptance remains a source-only
-classification and must not be converted into an invented alignment exception.
-
-Complete checkpoint **470-spatial**, source `9a6234b`,
-extends the existing apply_3d demo from one to seven checks. Two dummy-audio runs (one per
-requested renderer environment) pass with empty stderr. The complete original audible
-sweep/default-speed check source remains verbatim. Six added controls demonstrate paused
-Pan/3D refusals, selecting the other mode after Stop, and re-aiming a paused3D voice.
-The refused Pan setter exposes its newly assigned .75 public value while State remains
-Paused. This is observed CNA property/state behavior, not by itself a CNA defect or a
-measurement of output panning. No attenuation, Doppler or new listening credit; SmokeOnly
-remains appropriate for the original audible sweep.
-Watched build 53385 passes 9 scheduled / 8 numbered operations, all 3,909 watched inputs
-unchanged and diagnostic gate 0. Focused/targeted session 84713 passes 37 enabled CTests
+Complete checkpoint **470-bounds**, source `41af406`,
+extends buffer_formats from 16 to 20 checks. Two dummy-audio runs (one per requested
+renderer environment) pass with empty stderr. Negative float offset and max-int count
+preserve the staged integer queue; negative count and a nonempty range at the vector end
+preserve the staged float queue. Each refusal is ArgumentOutOfRangeException with
+Stopped/Pending1 retained. All 16 original assertion calls remain verbatim/in order,
+including original mode guards and integer/float playback transitions. No sample readback,
+partial-float output, live-playing/concurrent-producer or listening evidence. Float range
+bounds differ from integer frame alignment; no invented alignment exception is expected.
+Watched build 1507 passes 9 scheduled / 8 numbered operations, all 3,909 watched inputs
+unchanged and diagnostic gate 0. Focused/targeted session 14824 passes 37 enabled CTests
 in 5.60 s; one additional manual microphone test disabled. Metadata 470 / 0 problems.
-Full session 17556 builds in 7 scheduled operations without warning and passes all 483
-enabled CTests in 148.64 s (449 passed including 27 WILL_FAIL; 34 skips; three additional
+Full session 24481 builds in 7 scheduled operations without warning and passes all 483
+enabled CTests in 149.72 s (449 passed including 27 WILL_FAIL; 34 skips; three additional
 manual tests disabled). SOFTWARE 406/27/34/3, OPENGLES3 435/29/3/3. Every old 38/42 failed
 assertion, C/custom child list/trace and all five network controls remain exact.
 Reviewed JSON count differences:
-{"OPENGLES3": {"audio.sound_effect_instance.apply_3d": {"after": 7, "before": 1, "reason": "Six public Pan/3D mode controls added; original sweep and speed-default predicate retained."}}, "SOFTWARE": {"audio.sound_effect_instance.apply_3d": {"after": 7, "before": 1, "reason": "Six public Pan/3D mode controls added; original sweep and speed-default predicate retained."}}}.
+{"OPENGLES3": {"audio.dynamic_sound_effect_instance.buffer_formats": {"after": 20, "before": 16, "reason": "Four float-range refusal controls added; original sixteen buffer-format predicates retained."}}, "SOFTWARE": {"audio.dynamic_sound_effect_instance.buffer_formats": {"after": 20, "before": 16, "reason": "Four float-range refusal controls added; original sixteen buffer-format predicates retained."}}}.
 All 35 selected binaries/four existing assets and reader fixture copies remain unchanged
 through runtime. Normalized application stderr is identical, including 42 known GL X
-protocol records and the intentional shader error. Outer Xvfb has 18 exact amdgpu
+protocol records and the intentional shader error. Outer Xvfb has 11 exact amdgpu
 pairs (previous 18); independent inner/outer exits 0. Capture CNA eff3131017
 (clean), final CNA eff3131017 (clean).
 These are selected artifact/source observations, not an atomic/full transitive input snapshot.
-All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-spatial-*.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-bounds-*.
 Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
 No extra ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057
 stays open with its original refusal and independent private staging probe preserved.
@@ -265,20 +251,25 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: complete full470-bounds, then implement the reviewed paused queue-clear
-extension from the actual validated source. Bounds is APPLIED; watched build/diagnostic
-gate, metadata, two focused runs and37enabled targeted CTests pass. Original16assertion
-calls remain verbatim/in order. Commit source/docs, export /tmp/cna-catalog-470-bounds.json,
-run the prepared full wrapper; capture once after build during CTest, freeze artifacts,
-archive both selections and finish. Baseline470-spatial,483enabled CTests, unchanged470totals;
-buffer_formats16->20checks only plus reviewed positive title Update variance. Preserve refusals.
-Close docs/history/HANDOFF and commit; immediately continue /tmp/cna-dynamic-clear-audit.md.
-That source-only next decision proposes pausedClearBuffers, a still-refused float format
-change, and same-format refill (planned20->23checks). Generate from the actual source after
-bounds validation; no draft/syntax/native queue-clear evidence yet. Pending combines staged
-and submitted data and cannot alone prove QueueInitialBuffers transport or sample output.
-Leave original mono streaming and ISSUE-038 controls intact. Open ISSUE-057 retains its
-original staging refusal and independent probe; no gates or diagnostics may be suppressed.
+HIGHEST PRIORITY: apply and validate the same-ID470-clear paused-queue extension.
+Full470-bounds session24481 is CLOSED0; source41af406 is the comparison baseline.
+1. Run /tmp/cna-apply-470-clear.py: it verifies the completed bounds evidence and the exact
+   source base hash before copying /tmp/cna-paused-clear.cpp. If the base differs, rebase
+   the draft instead of overwriting fixes. Syntax11341 passed; no native evidence yet.
+2. Watched /tmp/cna-build-470-clear.py initial, diagnostic gate and consistency if inputs
+   change. Metadata, two focused runs, targeted shell and focused reviewer BEFORE commit.
+   /tmp/cna-review-470-clear-focused.py requires all20original assertion calls verbatim/in
+   order plus23checks total. Preserve paused state, retained format refusal and refill.
+3. Update semantic docs, commit, export /tmp/cna-catalog-470-clear.json. Full wrapper,
+   capture once after build during CTest, freeze artifacts, archive both smokes and finish.
+   Baseline470-bounds,483enabled CTests, unchanged470totals; buffer_formats20->23checks only
+   on both selections plus reviewed positive title Update variance. Preserve any refusal.
+4. Close docs/history/HANDOFF and commit; immediately continue the semantic behavior audit.
+   Pending counts combine staged/submitted data and do not independently prove native
+   QueueInitialBuffers transfer or output samples. Keep this distinction in coverage docs.
+   Original mono streaming and ISSUE-038 controls remain untouched; consider another
+   meaningful audio lifecycle or remaining cascade maximum/debug/punctual behavior next.
+Open ISSUE-057 retains its original refusal and independent private staging reproduction.
 
 ## 15. Assumptions the next session must know
 
@@ -290,38 +281,37 @@ original staging refusal and independent probe; no gates or diagnostics may be s
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is470-spatial, source9a6234b; closure follows.
+Current complete baseline is470-bounds, source41af406; closure follows.
 Prior shadow receiver/PCF/cascade/border/specular/query, looping release/spatial mode,
-audio formats/XACT, reader, move, field, lighting, palette and EOF drafts are APPLIED AND
-STALE. Do not restore old /tmp source; preserve immutable runtime and original failures.
+audio formats/float bounds/XACT, reader, move, field, lighting, palette and EOF drafts
+are APPLIED AND STALE. Do not restore old /tmp source; preserve immutable runtime evidence.
 
-APPLIED AND STALE: /tmp/cna-float-bounds.cpp. Final syntax32693 CLOSED0, empty log; original
-syntax81703 preceded an assertion-wording correction. Four new float range refusals
-preserve staged integer/float data and all16original assertions (20checks total). Negative
-offset/max-int count occur before integer playback; negative count/end-offset positive
-count occur with the float queue staged. Original format guards will also check that
-invalid requests did not prematurely select float mode. Two focused20check runs now pass.
-CNA's float path does not enforce the integer whole-frame rule; an existing CNA test
-explicitly accepts3samples forStereo. This is not an invented alignment failure or a CNA
-issue. No partial-float playback/sample-output, concurrent-producer or listening claim.
+Next UNAPPLIED: /tmp/cna-paused-clear.cpp, syntax11341 CLOSED0, empty log. Adds three
+controls to the actual41af406 buffer_formats source (20->23). ClearBuffers retainsPaused
+withPending0; a valid float submission should still refuse withPaused/Pending0; integer
+refill plus visible QueueInitialBuffers retainsPaused/Pending1 before originalResume/Stop.
+All20original assertion calls are preserved verbatim/in order in the source-only draft.
+Counts combine staged/submitted data; no independent transport/sample-output, live-playing
+format switch, concurrent-producer or listening claim. No native evidence yet.
 
-Current source/syntax recovery: checkpoint-470-release-next-final-*; initial notes/source
-review: checkpoint-470-release-next-float-bounds* and next-cna-float-bounds*. Helpers:
-/tmp/cna-*470-bounds*, focused passed/full next, recovery checkpoint-470-release-next-bounds-helper-*.
-The watched build gates warning/error/FAILED output without suppressing diagnostics.
-Focused reviewer checks the original16full assertion calls verbatim/in order BEFORE commit.
-Baseline must be complete470-spatial; no image inspection is applicable to these silent
-console controls. A full closure helper for470-bounds has not yet been prepared.
+Source/notes/syntax/base-hash recovery: checkpoint-470-bounds-next-*. Always apply through
+/tmp/cna-apply-470-clear.py, which refuses a changed bounds base instead of overwriting
+corrections. Prepared UNRUN /tmp/cna-*470-clear* helper family, recovery under
+checkpoint-470-bounds-next-clear-helper-*. Build gates warning/error/FAILED output;
+focused reviewer runs BEFORE commit. Full baseline must be complete470-bounds.
+No full closure helper for470-clear is prepared yet. Original mono streaming stays intact.
 
-Spatial member decisions and float range/alignment classification are in COVERAGE_AUDIT;
-source inspection itself adds no runtime credit. Open build-only ISSUE-057 remains under
-checkpoint-470-query-initial-staging-refusal-* and checkpoint-470-query-staging-probe-*.
-No warning gate suppressed, unknown staging directory removed or CNA source changed.
-Clean full validation does not resolve that race or establish its original interleaving.
+The earlier source decision /tmp/cna-dynamic-clear-audit.md is preserved under
+checkpoint-470-spatial-next-dynamic-clear-audit.*. No metadata-only semantic credit is
+inferred for QueueInitialBuffers merely because the call is visible.
+Open build-only ISSUE-057 remains under checkpoint-470-query-initial-staging-refusal-*
+and checkpoint-470-query-staging-probe-*. No warning gate suppressed, unknown staging
+directory removed or CNA source changed. A clean full run does not resolve that race.
 
-After470-bounds: /tmp/cna-dynamic-clear-audit.md is a source-only next-work decision.
-Plan a same-ID buffer_formats extension: pausedClearBuffers, still-refused float format,
-and same-format refill (20->23checks). Pending combines staged/submitted buffers and cannot
-by itself prove QueueInitialBuffers transport/output samples. No draft/syntax/native evidence.
-Generate from the actual source only after bounds validates, preserving any fixes. Recovery
-checkpoint-470-spatial-next-dynamic-clear-audit.*; leave mono streaming/ISSUE-038 intact.
+After470-clear: /tmp/cna-fourth-cascade.cpp, final syntax89591 CLOSED0, emptylog; no native/image
+evidence. Existing cascade8->10GLchecks: Count4, fitting depth7 selects slot3; .5 comparison
+is litRGB173,130,77, then .9 withDebugTint yields shadowfloorRGB20,28,15. CNA uses horizontal
+strips, not2x2. Two cards replace only the old ninth explanatory cell; original eight draw/
+pixel loops remain verbatim. Need actual before/afterGLimages and tenpixels; verify basehash.
+Recovery checkpoint-470-bounds-next-fourth-cascade* and next-cna-fourth-cascade*. No helpers
+yet; no all-four-index/palette, producer, arbitrary-atlas or other-renderer credit.
