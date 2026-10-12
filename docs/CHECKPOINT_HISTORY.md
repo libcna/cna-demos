@@ -1833,7 +1833,7 @@ in session65747; do not finish/rebuild yet. SOFTWARE evidence is archived under 
 
 
 **460 focused reproduction complete; full validation is next.** Retry build2864 passed after
-230 scheduled targets; previous build93935 terminated with exit143 after511/602, without a
+230 scheduled targets; previous build93935 terminated with exit 143 after511/602, without a
 compiler diagnostic. Both logs are archived. Metadata460/0. Manifest13 passes on both renderers.
 Clone frame1 has8 checks, frame2 has9: exactly three GL failures establish ISSUE-055, six positive
 controls pass including surviving-clone pixels. Both images actually inspected; GL stderr empty.
@@ -1897,7 +1897,7 @@ GL 425/26/3/3. Historical preparation details are in docs/CHECKPOINT_HISTORY.md.
 
 **Complete 461 checkpoint passed at a447ad2.** tools/validate.sh exited 0; all 474 enabled
 CTests passed (234.89s), both full isolated-X11 smokes and coverage regeneration completed.
-Metadata 461/0; coverage 293/329 types,1372/2326 XNA members,166/3210 C routes. This is semantic
+Metadata 461/0; coverage 293/329 types,1372/2326 XNA members, 166/3210 C routes. This is semantic
 shader progress without implying additional public types or comprehensive member coverage.
 Original complete 459 comparison adds only clone_state/compiler_diagnostics. Every older
 status/known issue/count, raw failure and C/custom-content child list/trace is retained.
@@ -1927,3 +1927,37 @@ query-triggered built-in registration without asserting a lazy transition.
 Complete reports/catalog/helpers: build/linux-full/reports/checkpoint-461-*; initial unmarked
 clone evidence remains checkpoint-460-*. Previous complete 459 at 5ed8055 (closure 19bd3dd) has
 472 enabled CTests, SOFTWARE404/26/26/3, GL426/27/3/3 and37/38 raw failed assertions.
+
+## Complete 462 checkpoint (superseded by 464)
+
+**Complete 462 checkpoint passed at bbddd34.** tools/validate.sh exited 0; all 475 enabled
+CTests passed (228.67 s), both full isolated-X11 smokes and coverage regeneration completed.
+Metadata 462/0; coverage 293/329 types, 1372/2326 XNA members, 166/3210 C routes.
+Original complete 461 comparison adds only sampler_ownership and six passing automatic-Draw
+child controls. Every older status/known issue/raw failure and C/custom-content child list/trace
+is retained after filtering those six specifically named additions. Raw failures remain 37/41.
+Only GL game.window.title checks vary 10 -> 11 (unchanged per-Update checks under a frame limit).
+All 35 selected binaries/four assets stayed unchanged through runtime. Normalized stderr adds
+exactly one SOFTWARE CustomEffects skip; GL is identical, including the existing deliberate
+compiler diagnostic and 84 Xprotocol lines. No diagnostics suppressed. CNA 2a5100d72 observed
+at runtime capture; final external HEAD90bd2d33c/state archived separately, not an atomic
+input snapshot.
+
+| Check | Result |
+|---|---|
+| Existing linux-full checkpoint build | Passed seven scheduled targets; no compiler diagnostics |
+| Metadata/assets --validate | 462 demos, 0 problems |
+| tools/validate.sh | Passed, both complete smokes and coverage regeneration |
+| CTest | 446 passed (including 26 WILL_FAIL), 29 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 404 passed, 26 expected failures, 29 skipped, 3 manual not run |
+| OPENGLES3 smoke | 428 passed, 28 expected failures, 3 skipped, 3 manual not run |
+| New behavior | Cube 5 GL checks/SW skip; C automatic_dispatch 21 child checks on both selections |
+| Artifacts/diagnostics | Selected hashes stable; only the one declared SOFTWARE skip diagnostic added |
+
+The focused cube GL image was actually inspected: six solid faces survive source disposal,
+including the shared orange +Z edit. No in-face orientation/mip filtering/direct GPU-readback
+claim. The C extension preserves all 15 Update controls and adds six first-Draw checks; exact
+trace pending=1/before=333333/observed=500000/updates_between=0/result=0. No C image, Draw-served
+device borrow or latency guarantee. Complete reports/catalog/helpers: checkpoint-462-*.
+Previous complete 461 at a447ad2 (closure 4f9fe87) has 474 enabled CTests, SW 404/26/28/3,
+GL 427/28/3/3 and the same 37/41 failed assertions; full history is CHECKPOINT_HISTORY.md.

@@ -5,6 +5,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 
 ## [Unreleased]
 
+### Validation
+- Checkpoint 464: all 477 enabled CTests and both complete smoke suites verified, preserving
+  all prior 37/41 failed assertions and C/custom child evidence. A SIGTERM-interrupted smoke
+  attempt is archived; both suites were resumed without rebuilding and selected hashes stayed
+  stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
+
 ### Added
 - DXT1 cube block transfers: guarded byte windows, padded small mips and refused-transfer
   preservation pass eight checks on both renderers.

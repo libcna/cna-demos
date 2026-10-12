@@ -550,3 +550,10 @@ deterministic demos and run the visual-regression comparison across renderers.
 - Visual regression: reference images + comparison step (AUTOMATION.md section 5).
 - CI: an Xvfb job for OPENGLES3; more renderers as CI capacity allows.
 - A text font for on-screen labels (SpriteFont asset policy; see PLAN.md).
+
+Checkpoint 464 now completes the compressed-cube and uniform-palette batch:477 enabled CTests
+passed, SOFTWARE 405/26/30/3 and OPENGLES3 430/28/3/3. The first smoke attempt was interrupted
+with exit 143; both full smokes and coverage were resumed on unchanged binaries. Exact prior
+37/41 failures and all C/custom child evidence are retained; only the declared SOFTWARE skip
+diagnostic was added. Texture3D now has a separate member/behavior classification in the audit;
+its proposed shader sampling and the C batch-retention extension remain syntax-only drafts.
