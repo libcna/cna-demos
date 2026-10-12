@@ -99,28 +99,28 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **449 checkpoint passed** at
-b80889a: tools/validate.sh exit 0, all 462 enabled CTests (316.91 s), both complete isolated-X11
-smoke runs and coverage regeneration. Exact ORIGINAL 448-max-slot comparisons add only the
-four-check passing fog_depth ID and preserve every old 35/36 failed assertion, status/known issue
-and C/custom-content child list/trace. GL game.window.title varies 12 -> 10 because unchanged
-checks run per Update. All 33 selected binary/four asset hashes match runtime capture; normalized
-stderr is identical (no GTK warnings, same 84 GL X protocol lines). Evidence/catalog/scripts:
-reports/checkpoint-449-*. Both focused 800x480 captures were actually inspected: only the middle
-card differs by one blue level (119 SW / 118 GL), within the original tolerance 1. External CNA
-C API work was ongoing during the build/runtime; this is not an atomic dependency/input snapshot.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **451 checkpoint passed** at
+b405307: tools/validate.sh exit 0, all 464 enabled CTests (202.05 s), both complete isolated-X11
+smoke runs and coverage regeneration. Exact ORIGINAL 449 comparisons add only normal_lighting
+(five checks) and per_pixel_lighting (three), preserving every old 35/36 failed assertion,
+status/known issue, check count and C/custom-content child list/trace. All 33 selected binary/four
+asset hashes match runtime capture; normalized stderr is identical (no GTK warnings, same 84 GL
+X protocol lines). Evidence/catalog/scripts: reports/checkpoint-451-*. All four focused 800x480
+captures were actually inspected: normal middle cards differ by one red level (235 SW / 234 GL)
+within original tolerance 1; lighting-mode captures are RGBA-identical. Clean CNA 3ee6ae3 was
+observed after the build; this is not an atomic dependency/input snapshot.
 
 | Check | Result |
 |---|---|
-| Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets --validate | 449 demos, 0 problems |
+| Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental checkpoint build clean |
+| Metadata/assets --validate | 451 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 437 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 396 passed, 25 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 417 passed, 26 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | All 35/36 older failures retained; new fog_depth ID has four passes |
+| CTest | 439 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 398 passed, 25 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 419 passed, 26 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | All 35/36 older failures retained; new normal/mode IDs have five/three passes |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Both fog captures inspected; same silhouettes, 39,168 middle-card pixels differ only by one blue level |
+| Screenshots | Four lighting captures inspected; original tolerance respected, mode images RGBA-identical |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -244,8 +244,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** run and close full checkpoint 451 against ORIGINAL 449, then apply
-the existing C host-prefix extension below. Two lighting scenes are APPLIED and focused-validated;
+**Immediate next action:** full checkpoint 451 is COMPLETE; capture the existing C host/error
+baseline and apply the compatible-prefix extensions below. Two lighting scenes are APPLIED and focused-validated;
 all normal/mode /tmp drafts and their older generators are STALE. Catalog 451/0; normal_lighting
 passes five checks and per_pixel_lighting passes three on SOFTWARE/OPENGLES3, all stderr empty.
 All four 800x480 captures were actually inspected: normal silhouettes match, with only 31,104
@@ -256,12 +256,13 @@ Build passed (34 scheduled targets, known Draco CMP0148 developer warning on reg
 no compiler diagnostics). All 43 targeted graphics/C API/CLI CTests passed (11.45 s: three
 WILL_FAIL cases, one PBR capability skip). Evidence: reports/checkpoint-451-focused-*; analytical
 normal colors: checkpoint-451-normal-design.json (design only, no native mutation testing).
-Prepared /tmp/cna-archive-451.py and /tmp/cna-451-finish.py compare against ORIGINAL 449 and
-expect exactly two new PASS IDs (5/3 checks), all old 35/36 failures and child lists unchanged.
-They still need the actual source commit (PENDING451) and 33 binary/four asset hashes captured
-after full build enters CTest. Old 450-only helpers are superseded. No full 451 checkpoint runs yet.
+Full checkpoint 451 is COMPLETE at b405307: tools/validate.sh exit 0, all 464 enabled CTests
+(202.05 s), SW 398/25/25/3, GL 419/26/3/3. ORIGINAL 449 comparison adds only the two new lighting
+IDs, retaining all old counts/statuses, 35/36 failures and C/custom-content child lists/traces.
+All 33 binary/four asset hashes and normalized stderr match. Archived catalog/helpers/evidence:
+reports/checkpoint-451-*. Older normal/mode drafts and 450-only helpers are superseded.
 
-Last COMPLETE checkpoint is 449 at b80889a (closure 9c25c03): tools/validate.sh exit 0, all 462
+Previous COMPLETE checkpoint is 449 at b80889a (closure 9c25c03): tools/validate.sh exit 0, all 462
 enabled CTests (316.91 s), SW 396/25/25/3, GL 417/26/3/3. Exact ORIGINAL 448-max-slot comparisons
 add only fog_depth and preserve every old failure, child list/trace and known issue; GL title
 varies 12 -> 10 with Update timing. All selected hashes and normalized stderr match. Source/input
@@ -277,12 +278,26 @@ replacement/restoration and invalid-size/version controls remain. Same 26 child 
 capture), one setup label changes, same expected ILBUbUbDeUDUrDsXEZ trace and rendered image.
 No build/runtime evidence yet; review before applying. This avoids adding a demo or meaningless
 extra count just to exercise the public forward-compatible prefix contract.
+Complementary same-batch draft: /tmp/cna-error-prefix.c extends existing error_handling from
+29 to 31 checks. A real CNA_ErrorInfo prefix plus two nonzero uint64 tail fields is passed with
+the full allocated size/version 1; result/category/message length must be filled, the unknown
+tail must survive and the thread's original diagnostic must remain. Every old control remains.
+The public ABI prefix rule and CnaCApi.cpp output writes were reviewed; no runtime credit yet.
+Prepared /tmp/cna-archive-451-prefix.py and /tmp/cna-451-prefix-finish.py expect the same 451 IDs,
+all old failures/statuses/counts, host's one changed setup label and exactly two new error-child
+checks. They need PENDING_PREFIX replacement and new hashes after the future full build. Capture
+host_frames on both renderers BEFORE applying these drafts, then compare its post-change images.
+
 
 This is a separate fog-after-bone-transform behavior: BasicEffect fog moves objects through World
 and cannot prove it. Other remaining gaps: rotated/nonuniform joint normals, lighting/alpha,
 automatic C callback-scope dispatch, other callback failure locations and broader member audit.
 Canonical thread-local exception details remain separate from result/category/message isolation;
 invalid FOV uses std::invalid_argument and cannot prove ParamName isolation. Preserve old controls.
+The pure SoundEffect sample-size/duration C routes also cannot supply that failure: invalid
+rates return zero natively and undefined channels fail in the adapter. Source-reviewed only.
+A future served canonical-exception fixture needs explicit worker interleaving and bounded
+queue cancellation, without claiming owner diagnostics survive ordinary successful pump calls.
 
 Earlier COMPLETE catalog checkpoint: 446-palette at 55ebc57 (closure 2c3f095), all 459 enabled
 CTests (143.36 s), SW 395/23/25/3, GL 416/24/3/3, exact prior 32/33 failed assertions and all
