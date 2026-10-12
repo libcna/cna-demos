@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-457 demos (456 last complete; 457 focused checks passed): math 78, game 33, graphics 149 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture_cube, 1 texture3d, 7 sprite font,
+457 fully validated demos: math 78, game 33, graphics 149 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture_cube, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 22 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
@@ -99,42 +99,35 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-**457 focused validation passed; full checkpoint is next.** The 57-target build passed, registry
-457/0, coverage is source-only (293/329 types, 1372/2326 XNA members, 166/3210 C routes).
-Palette 19/node 9/cube 8 checks pass on each renderer with empty stderr. Four new captures were
-actually inspected; node matches its original456 baseline on each renderer and cube is
-RGBA-identical across renderers. Full 456 remains the last complete baseline below.
-
-**Complete 456 checkpoint passed at e70eeb5.** tools/validate.sh exited 0; all 469 enabled
-CTests passed (186.53 s), both complete isolated-X11 smokes and coverage regeneration finished.
-Metadata: 456/0; coverage 293/329 types, 1370/2326 XNA members, 166/3210 C routes.
-Original 455 comparison adds c_api.game.launch_parameters with fifteen passing child checks;
-its standalone parent correctly has zero checks. Manifest changes deliberately from 26 to 13
-checks after CNA's lazy reader registration: ten prior controls retained, sixteen obsolete
-startup-registration assertions replaced by three inventory/typed-load checks. Only additional
-count variation is GL game.window.title 10 -> 11 (per-Update timing, unchanged source).
-All old statuses/known issues, exact 35/36 failed assertions and C/custom-content child lists/
-traces remain. 35 selected binaries/four assets stayed unchanged through runtime; normalized
-stderr is identical, including the existing 84 GL X protocol lines. No new screenshot was taken
-for this nonvisual map/manifest compatibility batch. CNA 4985e26e7 observed at capture; final
-CNA state archived separately. This is not an atomic input or complete dependency snapshot.
+**Complete 457 checkpoint passed at ab2a92b.** tools/validate.sh exited 0; all 470 enabled
+CTests passed (393.71 s), both complete isolated-X11 smokes and coverage regeneration finished.
+Metadata: 457/0; coverage 293/329 types, 1372/2326 XNA members, 166/3210 C routes.
+Original complete 456 comparison adds the eight-check cube face-transfer scene, extends
+palette_sampling 14 -> 19 and node_animation 4 -> 9, and retains every old status/known issue,
+all 35/36 failed assertions and all C/custom-content child lists/traces. GL game.window.title
+changes 11 -> 10 from unchanged per-Update timing; no other unplanned count difference.
+All 35 selected binaries/four assets stayed unchanged through runtime; normalized stderr is
+identical (including the existing 84 GL X protocol lines). CNA dabb4a2cd observed at runtime
+capture; final source state archived separately. No atomic build-input/dependency snapshot.
 
 | Check | Result |
 |---|---|
 | Existing linux-full build | Passed; seven scheduled checkpoint targets, no compiler diagnostics |
-| Metadata/assets --validate | 456 demos, 0 problems |
+| Metadata/assets --validate | 457 demos, 0 problems |
 | tools/validate.sh | Passed, complete SOFTWARE/OPENGLES3 and coverage regeneration |
-| CTest | 444 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 403 passed, 25 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke | 424 passed, 26 expected failures, 3 skipped, 3 manual not run |
-| Changed checks | Launch child 15; manifest 26 -> 13; all 35/36 original failures retained |
-| Binary/assets/stderr | Selected hashes stable and normalized diagnostics identical to original 455 |
+| CTest | 445 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 404 passed, 25 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke | 425 passed, 26 expected failures, 3 skipped, 3 manual not run |
+| Changed checks | Cube 8, palette 14 -> 19, node 4 -> 9; all 35/36 old failures retained |
+| Binary/assets/stderr | Selected hashes stable and normalized diagnostics identical to original 456 |
+| Screenshots | Four new captures actually inspected; cube pair RGBA-identical, node unchanged against its own baseline on each renderer |
 
-Reports/logs/catalog/comparison scripts: build/linux-full/reports/checkpoint-456-*.
-Initial failures are retained separately: FrameworkDispatcher namespace (resolved ISSUE-053),
-old internal ShaderDialect imports (demo compatibility fix), transient header availability,
-and the obsolete manifest assumption (six failed CTest assertions). Historical details moved
-to docs/CHECKPOINT_HISTORY.md; do not treat old live-session notes there as current instructions.
+Focused palette/node/cube runs pass 19/9/8 checks on both selections, all stderr empty. Node's
+pre-existing cross-renderer difference is two pixels (max channel delta 73), not an identity
+claim. The cube scene displays public readback through a 2D atlas; it proves neither direct GPU
+readback nor cube shader sampling. Reports/catalog/helpers: build/linux-full/reports/checkpoint-457-*.
+Previous complete 456 at e70eeb5 (closure fe93504): 469 enabled CTests, SW 403/25/25/3,
+GL 424/26/3/3. All previous failures/preparation corrections remain in docs/CHECKPOINT_HISTORY.md.
 
 ## 8. Exact commands that work
 
@@ -251,46 +244,43 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** commit the validated 457 batch, update PENDING_457 in the archive/
-finish helpers, then start full tools/validate.sh. Capture 35 binaries/four assets after its
-build; compare to ORIGINAL COMPLETE 456. Focused evidence: checkpoint-457-focused-*.
-All six runs pass with empty stderr, with four captures actually inspected. The earlier refreshed
-node baseline is archived under checkpoint-456-final-before-*; before/after RGBA is identical
-on each renderer (the existing cross-renderer node difference is two pixels, max delta 73).
-The following drafts are APPLIED AND STALE; do not copy them over further edits:
+**Immediately apply and focus-test the next semantic batch**, using the completed 457 baseline.
+The three following files are UNAPPLIED and pass syntax only (no native runtime credit):
 
-* /tmp/cna-palette-player-spaces.cpp -> demos/graphics/model/palette_sampling.cpp: 14 -> 19
-  checks comparing local/world/skin transforms through AnimationPlayer, with the existing
-  three-bone SkinnedModelEXT fixture and noncommuting scale/rotation/inverse binds.
-* /tmp/cna-node-animation-contracts.cpp -> demos/graphics/model/node_animation.cpp: 4 -> 9
-  checks for nonidentity untracked state, wrong-space refusal with all transforms preserved,
-  and disturbed-pose negative/past-end clamps. Original scene placement is restored.
-* /tmp/cna-cube-face-transfers.cpp -> demos/graphics/texture_cube/face_transfers.cpp: new eight-
-  check Color face/rectangle/mip workflow, guarded array windows, refused transfers and a
-  displayed 2D atlas of public readback. It does not prove GPU readback or cube shader sampling.
+* /tmp/cna-cube-dds-streams.cpp -> demos/graphics/texture_cube/dds_streams.cpp: five intended
+  checks. Original in-source RGB24 six-face/three-mip data; full/current-position controls,
+  seven-byte Read chunks, and the same one-byte truncation at offsets zero/sixteen. A suspected
+  single-Read/total-Length defect must be reproduced and distinguished from fixture mistakes
+  before recording any CNA issue. It is not currently marked knownIssue. The independent Python
+  structural fixture /tmp/cna-cube-dds-fixture.py is not CNA runtime evidence.
+* /tmp/cna-portable-package.cpp -> demos/graphics/shader_effect/portable_package.cpp: eight
+  intended checks. Owned ES/desktop stage pairs, selection independent of declaration order,
+  incomplete/ambiguous refusal, owned labeled diagnostics from refused effect construction,
+  selected-language retention and labeled stock/channel-cycle sprite pixels. Uses existing
+  fonts/pixel_font.cnb. No binary shader, desktop-runtime or bad-syntax compiler-log claim.
+* /tmp/cna-dispatch-destroy-cancellation.c -> standalone/c_api.game.foreign_thread_dispatch/main.c:
+  40 -> 46 intended child checks, all original labels and both ISSUE-050 failures retained.
+  Re-enable dispatch, start a permitted setter without pumping, destroy on the owner, bound
+  worker release before joining, require INVALID_STATE/STATE and stale-handle output preservation.
+  A delayed post-destruction call cannot pass actual-cancellation proof. Update existing metadata
+  description when applied; no new C ID or metadata route is needed.
 
-Use /tmp/cna-capture-457.py after the full checkpoint build, then /tmp/cna-archive-457.py for
-each completed renderer and /tmp/cna-457-finish.py. Helpers expect cube 8 checks, palette 14 -> 19,
-node 4 -> 9, otherwise original456 outcomes/counts/failures/traces (title timing variance only).
-Catalog /tmp/cna-catalog-457.json is current. Expected totals remain projections until full runs:
-470 enabled CTests, SW 404/25/25/3, GL 425/26/3/3. Do not edit/rebuild during runtime phases.
+Latest package and C drafts are archived as checkpoint-457-next-*; the older checkpoint-456
+package draft has only seven checks and is stale. DDS draft is checkpoint-456-next-*.
+First build/validate, run each changed demo on both selections, inspect the package captures,
+investigate all failures, record genuine CNA defects and preserve initial unmarked evidence.
+Then update coverage/audit/ROADMAP/issues/handoff, commit and perform the next complete checkpoint.
+Two new IDs would make 459 demos; runtime/check totals depend on observed results, not projections.
+Prepare exact comparison/capture helpers against ORIGINAL COMPLETE 457 once the expected new
+assertions are established. Runtime artifact list remains 35 paths/four selected assets unless
+actual linked dependencies change. Do not edit/rebuild during a complete runtime checkpoint.
 
-Then continue with the deeper TextureCube/ShaderEffect audit in docs/COVERAGE_AUDIT.md:
-* /tmp/cna-cube-dds-streams.cpp: five intended checks with original RGB24 six-face/three-mip
-  in-source data. Full/current-position controls, seven-byte Read chunks, and identical one-byte
-  truncations at offsets zero/sixteen. Short-read/length issues are source suspicions only;
-  exercise before filing any CNA issue. /tmp/cna-cube-dds-fixture.py is an independent Python
-  structural fixture, not CNA runtime evidence.
-* /tmp/cna-portable-package.cpp: seven intended checks for owned ES/desktop stage pairs,
-  declaration-order independence, incomplete/ambiguous selection, selected-language retention
-  and stock/channel-cycle sprite pixels. No binary shader or compiler-error-path claim.
-Both new drafts pass syntax only, with empty logs; neither is in the project catalog.
-
-Remaining C work includes automatic Draw dispatch, other callback failures and destruction
-cancellation. Existing automatic_dispatch establishes Update only. Remaining skinned work
-includes independent diffuse lights 1/2, alpha interactions, vertex specular and joint scales.
-Do not restart completed phases or stop at this batch. See docs/CHECKPOINT_HISTORY.md for
-older checkpoints and preparation failures, including the non-atomic ISSUE-053 capture correction.
+Shader contract: unusable code/package selection throws ShaderCompilationExceptionEXT; a usable
+payload delegates to the legacy string compiler and bad syntax can still return an invalid
+effect. Do not infer exception behavior solely from the name. Automatic Draw service remains
+separate: ordinary alternating frames cannot prove whether Update or Draw served a request.
+Remaining skinned gaps include independent diffuse lights 1/2, alpha interactions, vertex specular
+and joint scales. No completed phase should be restarted. Continue after each meaningful batch.
 
 ## 15. Assumptions the next session must know
 

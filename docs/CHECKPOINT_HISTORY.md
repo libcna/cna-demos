@@ -1655,3 +1655,96 @@ as reports/checkpoint-456-next-* and checkpoint-456-next-stream-package-review.j
 All 35 failed assertions, old statuses/known issues and old C/custom-content child lists/traces
 match exactly. Only the new launch-parameter ID and planned manifest 26 -> 13 count differ.
 SOFTWARE evidence/review is archived. OPENGLES3 remains live; do not run finish or rebuild yet.
+
+
+## Complete 457 and its preparation (ab2a92b)
+
+Full tools/validate.sh exited 0, 470 enabled CTests (393.71 s), SW 404/25/25/3 and GL 425/26/3/3.
+Exact original456 comparison adds cube eight checks and palette/node extensions 14->19/4->9;
+all 35/36 old failed assertions, statuses/known issues and C/custom child lists/traces remain.
+Selected 35 binaries/four assets and normalized stderr are unchanged through runtime.
+Four new captures actually inspected: node unchanged per renderer against its refreshed456
+baseline (pre-existing cross-renderer two pixels, max delta73), cube pair RGBA-identical.
+The following earlier continuation notes are historical; HANDOFF.md supersedes their live state.
+
+## 14. Next task
+
+**Immediate next action:** resume COMPLETE 457 validation session 33564 at source ab2a92b,
+/tmp/cna-demos-457-validation.log. Its seven-target build and metadata 457/0 passed; all 470 enabled CTests passed (393.71 s),
+SOFTWARE smoke is complete and reviewed; OPENGLES3 is running. Selected 35 binary/four asset hashes captured after this build; helpers now name
+ab2a92b. Do not edit/rebuild sources/assets while runtime runs. Archive each completed smoke
+with /tmp/cna-archive-457.py, then /tmp/cna-457-finish.py. Original complete 456 remains baseline.
+Focused evidence: checkpoint-457-focused-*; all six runs passed with empty stderr and all four
+new captures were actually inspected. Node matches original456 separately on each renderer;
+its existing cross-renderer difference is two pixels/max delta 73. Cube captures are identical.
+The following drafts are APPLIED AND STALE; do not copy them over further edits:
+
+* /tmp/cna-palette-player-spaces.cpp -> demos/graphics/model/palette_sampling.cpp: 14 -> 19
+  checks comparing local/world/skin transforms through AnimationPlayer, with the existing
+  three-bone SkinnedModelEXT fixture and noncommuting scale/rotation/inverse binds.
+* /tmp/cna-node-animation-contracts.cpp -> demos/graphics/model/node_animation.cpp: 4 -> 9
+  checks for nonidentity untracked state, wrong-space refusal with all transforms preserved,
+  and disturbed-pose negative/past-end clamps. Original scene placement is restored.
+* /tmp/cna-cube-face-transfers.cpp -> demos/graphics/texture_cube/face_transfers.cpp: new eight-
+  check Color face/rectangle/mip workflow, guarded array windows, refused transfers and a
+  displayed 2D atlas of public readback. It does not prove GPU readback or cube shader sampling.
+
+Use /tmp/cna-capture-457.py after the full checkpoint build, then /tmp/cna-archive-457.py for
+each completed renderer and /tmp/cna-457-finish.py. Helpers expect cube 8 checks, palette 14 -> 19,
+node 4 -> 9, otherwise original456 outcomes/counts/failures/traces (title timing variance only).
+Catalog /tmp/cna-catalog-457.json is current. Expected totals remain projections until full runs:
+470 enabled CTests, SW 404/25/25/3, GL 425/26/3/3. Do not edit/rebuild during runtime phases.
+
+Then continue with the deeper TextureCube/ShaderEffect audit in docs/COVERAGE_AUDIT.md:
+* /tmp/cna-cube-dds-streams.cpp: five intended checks with original RGB24 six-face/three-mip
+  in-source data. Full/current-position controls, seven-byte Read chunks, and identical one-byte
+  truncations at offsets zero/sixteen. Short-read/length issues are source suspicions only;
+  exercise before filing any CNA issue. /tmp/cna-cube-dds-fixture.py is an independent Python
+  structural fixture, not CNA runtime evidence.
+* /tmp/cna-portable-package.cpp: eight intended checks for owned ES/desktop stage pairs,
+  declaration-order independence, incomplete/ambiguous selection, owned refusal diagnostics, selected-language retention
+  and stock/channel-cycle sprite pixels. No binary shader or compiler-error-path claim.
+Both new drafts pass syntax only, with empty logs; neither is in the project catalog.
+
+Remaining C work includes automatic Draw dispatch, other callback failures and destruction
+cancellation. Existing automatic_dispatch establishes Update only. Remaining skinned work
+includes independent diffuse lights 1/2, alpha interactions, vertex specular and joint scales.
+Do not restart completed phases or stop at this batch. See docs/CHECKPOINT_HISTORY.md for
+older checkpoints and preparation failures, including the non-atomic ISSUE-053 capture correction.
+
+## 15. Assumptions the next session must know
+
+* Current workspace: `/rv/data/development/github.com/libcna/cna-demos`; CNA and the other
+  dependencies are siblings (`../cna`, `../sharp-runtime`, `../easy-gl`, `../meta-gl`).
+* Current verified toolchain: GCC 14.2 and CMake 3.31.6. Reuse `build/linux-full`; do not create
+  temporary build trees. Set `CCACHE_DIR=/rv/cnaccache` and `CCACHE_BASEDIR=/rv` for every build.
+* External work may change the sibling CNA checkout. Do not edit/revert it from this task;
+  record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
+* Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
+
+Source-only shader contract clarification during 457 runtime: ShaderEffect's explicit code/package
+constructors throw ShaderCompilationExceptionEXT for unusable package selection, but delegate
+usable payload compilation to the legacy constructor; invalid syntax can still return an invalid
+effect. The portable-package draft now has eight intended checks, including copying labeled
+stage diagnostics from the selection-refusal exception and inspecting them after its destruction.
+This is still outside the catalog and has no native runtime credit; bad-syntax/compiler-log work
+remains separate. Do not infer exception behavior solely from the exception's name.
+
+Further UNAPPLIED C preparation: /tmp/cna-dispatch-destroy-cancellation.c extends the existing
+foreign_thread_dispatch source from 40 to 46 intended checks, retaining all original labels and
+two ISSUE-050 failures. It re-enables dispatch at the final boundary, starts a permitted setter,
+never pumps it, destroys on the owner, then bounds release before joining and requires the worker's
+INVALID_STATE/STATE record plus stale-handle/output preservation. A delayed post-destruction
+call cannot pass the actual-cancellation assertion. C11 -Wall -Wextra -Werror syntax passes,
+empty log; no native link/runtime credit. Latest C and eight-check package drafts are archived
+as checkpoint-457-next-* (the earlier checkpoint-456 package draft has only seven checks).
+After the complete 457 checkpoint, prioritize the DDS stream and package runtime workflows;
+this C extension is an independent productive follow-up. Update metadata/description and exact
+child-check comparison only after the source is applied and runtime results are known.
+Automatic Draw remains separate: ordinary alternating frames alone cannot establish which
+step served a request; do not add a timing-only test and claim isolated Draw service.
+
+457 SOFTWARE smoke completed 404/25/25/3; exact ORIGINAL 456 comparison passed. The new cube
+has eight checks, palette changes 14 -> 19 and node 4 -> 9. Every old status/known issue, all
+35 failed assertions and all C/custom-content child lists/traces match. SOFTWARE evidence is
+archived/reviewed. Session 33564 remains live in OPENGLES3; finish and rebuild must wait.

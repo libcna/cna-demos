@@ -124,6 +124,7 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `graphics.texture_cube.face_transfers` now passes eight focused checks per renderer: guarded
   rectangle windows, neighboring faces, authored mip levels and refused-call preservation.
   Both inspected readback-atlas captures are RGBA-identical; no direct GPU-readback claim.
+  Full 457 passes all 470 enabled CTests and both smokes, retaining all original 35/36 failures.
 
 ## Phase 6 -- effects and shaders 🟨 (30 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and specular controls: emission/ambient/half-alpha composition, independent
