@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete 469-pcf: all 482 enabled CTests and both full smoke suites preserve the exact
+  old failures, child/network controls and normalized diagnostics. The receiver adds three
+  passing kernel controls; selected artifacts remain stable through runtime.
 - Complete 469-shadow: all 482 enabled CTests and both smoke suites pass their expected
   outcomes. All old failure/child/network evidence is preserved; the only added diagnostic
   is the declared SOFTWARE shadow-path skip.
@@ -44,6 +47,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- Public OcclusionQuery member audit: existing visibility/polling evidence, precision semantics,
+  and explicit decisions for ordering, disposal, unsupported profiles and backend lifecycle gaps.
 - The existing shadow receiver now compares one-tap, 3x3 and 5x5 visibility averages over
   an authored depth edge. All seven GL controls pass; the inspected image marks the measured
   positions and retains the original reception/bias/detachment controls.

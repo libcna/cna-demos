@@ -392,6 +392,21 @@ In particular, a successful bounded Game run does not itself verify the rendered
 | DrawString overloads and transforms | `draw_string`, `string_builder` and `transformed_text` show ordinary/mutable text, scalar/per-axis scale, centered rotation and whole-string mirroring. Nonzero text layer depth with sprite/text overlap and pixel-checked transformed bounds remain pending; redundant overload syntax needs no separate demo. |
 | getTextureEXT, getGlyphBoundsEXT, getCroppingEXT, getKerningEXT | Public read-only inspection extensions primarily useful to custom layout/bindings. They are not demonstrated merely because CNA internally reads the same tables. A small glyph-layout inspector could extend `glyph_constructor`; no getter-per-demo expansion. Returned references must not outlive the font. |
 
+### OcclusionQuery (result observation and resource lifetime)
+
+Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and
+`graphics.occlusion_query.visible_pixels`. Complete469-shadow already records the existing
+three visibility controls passing on SOFTWARE and OPENGLES3. This audit adds decisions,
+not new runtime or screenshot evidence. The later lifecycle draft is not applied yet.
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Constructor, Begin and End | visible_pixels creates three queries and brackets actual draws of hidden, open and moving lights. Its fixed controls establish depth rejection and visibility. Constructor refusal under Reach or absent renderer capability is a separate documented path: declared needs/profile selection do not execute every constructor error. A shared profile/capability example could add it if useful; no separate constructor-only scene. |
+| IsComplete, PixelCount and result reuse | The fixed queries are read only after both complete, and the moving query is reused after observing completion. EndRun requires the fixed results to arrive during the automated run. This establishes a bounded polling workflow, not fixed GPU completion latency. Fresh/no-result PixelCount, End before Begin, repeated Begin and reuse without observing IsComplete are meaningful ordering gaps. A prepared scratch-query preflight can extend this same example while preserving its three original visibility checks. The source records an IsComplete observation even when it returns false; the reuse guard is observation, not a promise that earlier GPU work completed. Do not infer that premature reuse is safe on every renderer or require an initially false GPU poll. Nested distinct active queries remain a separate backend constraint. |
+| isPixelCountPreciseEXT | The existing example selects either a real tally greater than 100 or the documented boolean value 1 for the open light; the hidden light must always yield zero. The extension prevents interpreting an ES3 boolean result as a coverage ratio. This does not establish exact cross-renderer raster counts, sample-versus-pixel behavior with MSAA, or all renderer implementations. |
+| Dispose, IsDisposed, HasRenderer and disposed operations | Normal query ownership is demonstrated by unique_ptr cleanup. Explicit disposal before C++ destruction and selected ObjectDisposedException paths remain gaps; the prepared preflight proposes release-state, Begin and PixelCount checks. HasRenderer is a small lifetime diagnostic, not an independent scene. A general GraphicsResource demo does not establish every query-specific disposed operation. Query destruction after earlier device/context teardown is a separate lifecycle scenario; no device-loss or all-backend teardown proof is claimed. |
+| GetTypeName, inherited Name/Tag and protected Dispose(bool) | Reflection identity and inherited resource bookkeeping do not justify duplicate demos per subclass. The protected hook is framework lifecycle plumbing; applications use public Dispose. The queued public preflight avoids internal query handles and renderer bridges. |
+
 ### ModelMesh and ModelMeshPart
 
 The existing model examples load authored glTF/CNB geometry. That does not establish every

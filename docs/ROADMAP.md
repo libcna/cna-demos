@@ -872,3 +872,37 @@ is claimed after rearranging the panels. Build44646 closed0, 9 scheduled / 8 num
 operations; all 3,906 watched CNA inputs unchanged at clean e842e7473. Metadata469/0.
 Focused/targeted24236 closed0; all25CLI/skinned CTests pass in3.67s, including the declared
 skip. Full469-pcf validation is pending. Evidence: checkpoint-469-pcf-focused-*.
+
+The public-member audit now classifies OcclusionQuery separately: existing depth/visibility,
+precision and polling evidence versus constructor refusals, ordering and disposal gaps.
+A source-only preflight proposal is queued after PCF and cascades; no new runtime credit.
+
+## Complete 469-pcf
+
+Complete checkpoint **469-pcf**, source `b8f3d0d`, extends shadow_receiver
+without adding an ID. Four original paired-pixel controls remain; three lower-row controls
+compare one-tap, 3x3 and 5x5 kernels with visibility 0, 1/3 and 2/5. All seven GL checks pass.
+The actual image was inspected; eight original and three new selected pixels match within
+tolerance 1. Markers locate the kernel samples. No image-identity claim after the layout change.
+SOFTWARE retains its declared skip; OPENGL33 remains untested. No map generation, cascades,
+other edge orientations, out-of-range radius clamping or punctual/specular-shadow credit.
+Full session 18517 builds in 7 scheduled operations, validates 469 metadata entries / 0 problems,
+and passes all 482 enabled CTests in 223.34s (449 passed including 27 WILL_FAIL, 33 skips;
+three additional manual tests disabled). SOFTWARE 406/27/33/3, OPENGLES3 434/29/3/3.
+Every old 38/42 failed assertion, C/custom child list/trace and all five network controls remain
+exact. Reviewed JSON count differences: {"OPENGLES3": {"graphics.skinned_effect.shadow_receiver": {"after": 7, "before": 4, "reason": "Three authored-map kernel controls added; original four paired-pixel predicates retained."}}, "SOFTWARE": {}}.
+All 35 selected binaries / four existing assets and reader fixture copies remain unchanged.
+Normalized application stderr is identical, retaining 42 known GL X protocol records and the
+intentional shader error. The outer Xvfb log contains 18 exact amdgpu pairs (previously 22);
+independently journaled inner/outer exits are zero. Capture CNA e842e74733
+(clean), final CNA 123c36c34b (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-469-pcf-*.
+Generated coverage remains 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
+Semantic coverage grew without increasing named-member or demo counts; it remains incomplete.
+
+External CNA advanced during the frozen checkpoint from e842e7473 to clean123c36c34b:
+LINK-041 changes declared CNB loader installation/removal locking, LINK-042 refines static
+linker-flag matching. Selected runtime hashes remained unchanged; these newer source changes
+are not credited as exercised by469-pcf. The next watched build must incorporate them.
+Evidence: checkpoint-469-pcf-external-source-delta.json. No sibling files were edited.
