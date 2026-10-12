@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete470-authored: all483enabled CTests and both full smoke suites preserve previous
+  failure/child/network evidence; selected artifacts and normalized diagnostics stay stable.
 - XACT cue states now distinguish no release, authored fade completion and Immediate
   interruption. Six15check runs and37targeted CTests pass; original predicates/assets remain.
 - Complete470-fourth: all483enabled CTests and both full smoke suites preserve previous

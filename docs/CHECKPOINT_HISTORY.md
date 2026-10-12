@@ -2670,3 +2670,31 @@ artifact/source observations, not an atomic or full transitive input snapshot.
 All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-fourth-*.
 Semantic coverage remains incomplete, and build-only ISSUE-057 stays open with its
 original staging refusal and independent private reproduction preserved.
+
+## Complete470-authored
+
+Complete checkpoint **470-authored**, source `f44b514`,
+extends cue_states from nine to fifteen checks. Six dummy-audio runs pass with empty
+stderr. All nine original predicates remain in order; the misleading Immediate label
+is corrected. Public controls now compare immediate no-fade AsAuthored stop, an authored
+cue entering Stopping and reaching Stopped, and Immediate interruption of a fresh tail.
+The generator adds an original three-second PCM bank and a complex single-sound cue with
+500ms fade-out. All six existing XACT assets remain byte-identical; all eight source/staged
+banks are checked. Observed state waits are 500–510ms, including caller
+scheduling and polling; no acoustic envelope, audible quality or output-sample timing claim.
+The watched build and focused review passed before source commit; original evidence is
+under checkpoint-470-authored-focused-*. Full validation passes all483enabled CTests in
+149.50s, with three additional manual tests disabled. SOFTWARE406/27/34/3 and
+OPENGLES3 435/29/3/3 retain all38/42prior failed assertions, C/custom child evidence and
+five network controls. Reviewed JSON count changes:
+{"OPENGLES3": {"audio.xact.cue_states": {"after": 15, "before": 9, "reason": "Six authored-release controls added; original nine predicates retained, one misleading label corrected."}}, "SOFTWARE": {"audio.xact.cue_states": {"after": 15, "before": 9, "reason": "Six authored-release controls added; original nine predicates retained, one misleading label corrected."}}}.
+All35selected binaries, four existing assets and18fixture hashes (source/staged builtinXNB
+and all eight XACT banks) stay unchanged through runtime. Normalized application stderr
+is identical, including42known GL X protocol records and the intentional shader error.
+Outer Xvfb has9exact amdgpu pairs (previous17); independent inner/outer exits0.
+Capture CNA eff3131017 (clean), final CNA
+eff3131017 (clean). These are selected
+artifact/source observations, not an atomic or full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-authored-*.
+Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is untouched;
+build-only ISSUE-057 retains its staging refusal and private reproduction evidence.

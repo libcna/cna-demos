@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-470 catalog demos (complete checkpoint470-fourth): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+470 catalog demos (complete checkpoint470-authored): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 29 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
@@ -103,47 +103,31 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **470-authored** extends cue_states from nine to fifteen public state checks.
-Six dummy-audio runs (three per requested renderer environment) pass with empty stderr.
-All nine original predicates remain in order; one misleading Immediate label is corrected.
-The original no-fade bank stops immediately with AsAuthored. A new original three-second
-PCM bank and complex single-sound cue with500ms fadeOutMS demonstrate Stopping to bounded
-Stopped, then Immediate interruption of a fresh tail. Observed state waits are
-500–510ms including caller scheduling; no audible-envelope or output-sample timing claim.
-All six old XACT assets remain byte-identical and all eight source/staged banks match.
-Watched build62470 passes9scheduled/8numbered operations,3909inputs unchanged and diagnostic
-gate0. Metadata470/0. Focused/targeted8158 passes37enabled CTests in5.72s, with one additional
-manual microphone test disabled. Focused reviewer passes BEFORE source commit; original
-reports/streams/hashes: checkpoint-470-authored-focused-*. Full validation is pending.
-
-Last complete baseline:
-
-Complete checkpoint **470-fourth**, source `6f27142`,
-extends the existing shadow_cascades from eight to ten GL pixel checks. At Count4,
-fitting depth7 selects slot3: its comparison depth .5 is lit RGB(173,130,77), while
-.9 with DebugTint produces the shadow floor RGB(20,28,15). CNA uses four horizontal
-atlas strips. Both actual800x480 GL images were inspected; all eight original pixels
-remain, two new pixels match within tolerance1, and regions outside the replaced ninth
-cell are RGBA-identical. The original eight drawing/check loops remain verbatim.
-SOFTWARE retains its exact declared skip; GL stderr is empty. This does not demonstrate
-every four-cascade index/debug color, arbitrary atlases, invalid counts, a producer or
-other renderers. No whole-image identity or additional demo ID is claimed.
+Complete checkpoint **470-authored**, source `f44b514`,
+extends cue_states from nine to fifteen checks. Six dummy-audio runs pass with empty
+stderr. All nine original predicates remain in order; the misleading Immediate label
+is corrected. Public controls now compare immediate no-fade AsAuthored stop, an authored
+cue entering Stopping and reaching Stopped, and Immediate interruption of a fresh tail.
+The generator adds an original three-second PCM bank and a complex single-sound cue with
+500ms fade-out. All six existing XACT assets remain byte-identical; all eight source/staged
+banks are checked. Observed state waits are 500–510ms, including caller
+scheduling and polling; no acoustic envelope, audible quality or output-sample timing claim.
 The watched build and focused review passed before source commit; original evidence is
-under checkpoint-470-fourth-focused-*. Full validation passes all483enabled CTests in
-148.94s, with three additional manual tests disabled. SOFTWARE406/27/34/3 and
+under checkpoint-470-authored-focused-*. Full validation passes all483enabled CTests in
+149.50s, with three additional manual tests disabled. SOFTWARE406/27/34/3 and
 OPENGLES3 435/29/3/3 retain all38/42prior failed assertions, C/custom child evidence and
 five network controls. Reviewed JSON count changes:
-{"OPENGLES3": {"graphics.skinned_effect.shadow_cascades": {"after": 10, "before": 8, "reason": "Two fourth-slot depth/debug-tint controls added; original eight cascade predicates retained."}}, "SOFTWARE": {}}.
-All35selected binaries, four existing assets and reader fixture copies stay unchanged
-through runtime. Normalized application stderr is identical, including42known GL X
-protocol records and the intentional shader error. Outer Xvfb has17exact amdgpu
-pairs (previous14); independent inner/outer exits are0. Capture CNA
-eff3131017 (clean), final CNA
+{"OPENGLES3": {"audio.xact.cue_states": {"after": 15, "before": 9, "reason": "Six authored-release controls added; original nine predicates retained, one misleading label corrected."}}, "SOFTWARE": {"audio.xact.cue_states": {"after": 15, "before": 9, "reason": "Six authored-release controls added; original nine predicates retained, one misleading label corrected."}}}.
+All35selected binaries, four existing assets and18fixture hashes (source/staged builtinXNB
+and all eight XACT banks) stay unchanged through runtime. Normalized application stderr
+is identical, including42known GL X protocol records and the intentional shader error.
+Outer Xvfb has9exact amdgpu pairs (previous17); independent inner/outer exits0.
+Capture CNA eff3131017 (clean), final CNA
 eff3131017 (clean). These are selected
 artifact/source observations, not an atomic or full transitive input snapshot.
-All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-fourth-*.
-Semantic coverage remains incomplete, and build-only ISSUE-057 stays open with its
-original staging refusal and independent private reproduction preserved.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-authored-*.
+Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is untouched;
+build-only ISSUE-057 retains its staging refusal and private reproduction evidence.
 
 ## 8. Exact commands that work
 
@@ -264,20 +248,27 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-IN PROGRESS:470-authored focused evidence is complete; full validation next.
-Build62470 CLOSED0, six native runs/targeted8158 CLOSED0. Focused reviewer passed BEFORE
-sourcecommit. Metadata470/0, cue_states15both, all9oldpredicates retained; new banks actually
-loaded, all8source/staged banks match. No focused failure or new CNA issue.
-1. Commit source/assets/generator/docs; export /tmp/cna-catalog-470-authored.json. Run
-   /tmp/cna-run-470-authored-validation.sh; capture ONCE after fullbuild duringCTest using
-   /tmp/cna-capture-470-authored.py (35binaries/4assets/18fixture hashes). Freeze during smoke.
-2. Strict archive both renderers against470-fourth, finish and close. All38/42oldfailures,
-   C/custom child evidence and5network checks exact. Only cue_states9->15 and reviewed
-   positive titleUpdate variance may differ. Normalized stderr unchanged; preserve unexpected
-   evidence and investigate. Review docs/closure diff and commit.
-3. Immediately continue UNAPPLIED punctual-shadow draft (syntaxonly). It is one coherent
-   new8control point/spot receiver scene; no native/image evidence or helpers yet.
-Open ISSUE-057 retains its original staging refusal and independent private reproduction.
+HIGHEST PRIORITY: authored point/spot distance-map reception from the semantic audit.
+Full470-authored is complete; its source commit above is the comparison baseline.
+1. Read checkpoint-470-fourth-next-punctual-audit.md and actual current CNA API/shader.
+   /tmp/cna-punctual-shadows.cpp is UNAPPLIED, final syntax88776 CLOSED0/emptylog (70281/7524 superseded). Confirm
+   demos/graphics/skinned_effect/punctual_shadows.cpp and its ID do not already exist;
+   add this one coherent eight-control receiver scene without changing existing demos.
+2. Reuse watched build/warning gate and consistency rebuild if inputs change. Metadata,
+   focused SOFTWAREskip/GL8 runs, actual GL image inspection and eight pixel comparisons,
+   then relevant CLI/skinned CTests. Native/image behavior is still UNTESTED; investigate
+   differences from predicted RGB74/64/43 and floor20/28/26 rather than changing expectations
+   merely to match output. Both maps encode normalized distance, not projected depth.
+3. Update semantic docs, commit and export catalog. Full validation expected471demos,
+   484enabled CTests; SW406/27/35/3, GL436/29/3/3. Strict comparison keeps every old failure,
+   C/custom child and network control, allowing the one new ID and exact new SOFTWAREskip
+   diagnostic plus separately reviewed positive title Update variance. Preserve selected
+   binary/assets/18fixture capture discipline; no rebuild/recapture during full runtime.
+4. Close checkpoint/HANDOFF, commit and continue the member/behavior audit. Point/spot
+   maps and range/cone exclusion do not establish a producer, all cube directions/seams,
+   partial-kernel weights, cone-edge interpolation or other renderers. PunctualLightEXT
+   exposes diffuse only; do not invent a missing public punctual-specular obligation.
+Original mono streaming/ISSUE-038 and open build-only ISSUE-057 remain unchanged.
 
 ## 15. Assumptions the next session must know
 
@@ -289,33 +280,29 @@ Open ISSUE-057 retains its original staging refusal and independent private repr
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is470-fourth; source commit is recorded in section7.
-All earlier graphics/audio/content/transfer drafts, including fourth-cascade, are
-APPLIED AND STALE. Do not restore them over current sources.
+Current complete baseline is470-authored; source commit is in section7.
+All earlier graphics/audio/content/transfer drafts, including fourth-cascade and XACT
+release drafts, are APPLIED AND STALE. Preserve immutable failed-attempt evidence.
 
-APPLIED AND STALE: /tmp/cna-xact-release.cpp and /tmp/cna-xact-release-files.py.
-Syntax44310 CLOSED0 with empty log; generated outputs under /tmp/cna-xact-release-generated
-preserve all6existingXACTassets byte-identically. The new release.xwb is132472bytes and
-release.xsb247bytes; both now load in six passing15check runs with empty stderr. Recovery/base hashes/audit are under
-checkpoint-470-clear-next-xact-*. All9prior check predicates remain in order; one misleading
-label is corrected. Six added controls should make15checks. Public getters reconcile state;
-steady-clock observations include caller scheduling. No sample-exact or listening claim.
-The source audit notices a paused-release comment/condition discrepancy but does not claim
-a CNA defect; the prepared scenario uses playing voices. Investigate separately if needed.
+Next UNAPPLIED: /tmp/cna-punctual-shadows.cpp, final syntax88776 CLOSED0/emptylog (70281/7524 superseded).
+Recovery/source hashes/notes: checkpoint-470-fourth-next-punctual-* and
+checkpoint-470-fourth-next-cna-punctual-*. Eight planned controls cover point no-map,
+cube shadow, normalized bias and range exclusion; spot no-map,2D shadow,bias and cone
+exclusion. Material floorRGB20/28/26; distance3/Range6 gives attenuation.087890625 and
+litRGB74/64/43 with linear intensity4, within1. No native or actual-image evidence. All cube faces store64/255;
+no all-face-direction or seam proof. No source/asset changes yet. Prepared UNRUN471punctual apply/build/focused/review/targeted/full
+helpers under/tmp, recovery checkpoint-470-authored-next-punctual-helper-*. Guarded apply
+checks the exact draft hash and absent targetID/path; full closure /tmp/cna-close-471-punctual.py prepared UNRUN; inspect before use.
 
-Full XACT capture must include both new source/staged banks, not silently inherit the old
-four-asset subset. Prepared UNRUN /tmp/cna-*470-authored* helpers cover guarded application, watched build,
-six focused runs,37targeted CTests, full capture/archive/finish. Recovery:
-checkpoint-470-fourth-next-authored-helper-*. Full capture includes18fixture hashes:
-source/staged builtin XNB plus all8XACTbanks. Full closure /tmp/cna-close-470-authored.py is prepared but UNRUN; review after evidence.
-Existing stable IDs,
-architecture, full comparison discipline and original streaming/ISSUE-038 stay intact.
-Next source-only punctual audit: checkpoint-470-fourth-next-punctual-*. PunctualLightEXT
-offers diffuse only; no public punctual specular field. COVERAGE_AUDIT corrects the
-previous missing-demo implication. Point/spot authored-distance reception remains
-a real gap. /tmp/cna-punctual-shadows.cpp is UNAPPLIED, syntax70281 CLOSED0/emptylog;
-eight planned point/spot controls, no native/image evidence or helpers. Recovery and
-expected471catalog/full totals are in checkpoint-470-fourth-next-punctual-audit.md.
-Continue authored XACT release first.
-Open ISSUE-057 retains checkpoint-470-query-initial-staging-refusal-* and private staging
-probe evidence. No clean validation is evidence that this race has been repaired.
+CNA public PunctualLightEXT is a diffuse-only point/spot receiver; the source audit
+corrects the earlier general punctual-specular-gap implication. Maps store normalized
+distance/range. Spot lookup projectsXY, samples3x3; point uses one cube tap. Source
+expectations are not runtime evidence. Actual GL captures/checks and declared SWskip
+are required. Preserve stable IDs, current architecture and original mono streaming.
+After punctual reception, source-only cue spatial-variable follow-up is documented in
+checkpoint-470-fourth-next-cue-spatial-audit.md. UNAPPLIED /tmp/cna-cue-spatial.cpp now
+passes syntax93508/emptylog, preserves the entire original audible loop and adds6public
+variable/state controls (was0checks). SmokeOnly retained; no runtime/acoustic evidence.
+Source/base hashes and recovery: checkpoint-470-authored-next-cue-spatial-*; no helpers yet.
+Open ISSUE-057 retains its original staging refusal/private probe; clean runs do not
+prove that race repaired. Never edit/revert sibling CNA from this workstream.
