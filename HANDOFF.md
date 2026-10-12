@@ -98,17 +98,16 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **446-owner checkpoint passed**
-at 9e7a27b: tools/validate.sh exit 0, all 459 enabled CTests (146.63 s), both complete isolated-X11
-smoke runs and coverage regeneration. ORIGINAL 446-reentry comparisons add exactly the two
-ISSUE-050 assertions (32/33 -> 34/35). Only foreign_thread_dispatch changes status/knownIssue;
-all eighteen old child checks survive (30 total, 28 PASS + two failures). Every other C/custom-
-content child list, host trace and prior failure remains unchanged. Selected 32 binary/four
-asset hashes match runtime capture; normalized stderr is unchanged (no GTK warnings, same 84
-nonfatal GL X protocol lines). Evidence: reports/checkpoint-446-owner-*; strict helpers remain
-in /tmp/cna-archive-446-owner.py and /tmp/cna-446-owner-finish.py. No new issue beyond the
-previously confirmed ISSUE-050. This is not a full dependency/input snapshot. No rendered
-scene changed; focused dispatch stdout is authoritative and both stderr streams are empty.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **446-cancel checkpoint passed**
+at effc2a6: tools/validate.sh exit0, all459 enabled CTests (168.06 s), both complete isolated-X11
+smoke runs and coverage regeneration. ORIGINAL446-owner comparisons retain every ID/status/
+knownIssue/count and all34/35 failed assertions. Dispatch grows30 ->40 child checks, retaining
+all old assertions and adding ten passes; every other C/custom-content child list and host trace
+is unchanged. Selected32 binary/four asset hashes match runtime capture; normalized stderr is
+unchanged (no GTK warnings, same84 nonfatal GL X protocol lines). Evidence and strict reviews:
+reports/checkpoint-446-cancel-*. Helpers: /tmp/cna-archive-446-cancel.py and
+/tmp/cna-446-cancel-finish.py. No rendered scene changed. This is not a full dependency snapshot.
+Independent ISSUE-051 diagnosis remains outside this catalog and adds no smoke failure.
 
 | Check | Result |
 |---|---|
@@ -118,7 +117,7 @@ scene changed; focused dispatch stdout is authoritative and both stderr streams 
 | CTest | 434 passed (including 24 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
 | SOFTWARE smoke | 394 passed, 24 expected failures, 25 skipped, 3 manual not run |
 | OPENGLES3 smoke (explicit x11, private Xvfb) | 415 passed, 25 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | All 32/33 older failures retained; exactly two ISSUE-050 assertions added (34/35) |
+| Changed assertions | All34/35 older failures retained; ten new passing dispatch child checks |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
 | Screenshots | Dispatch extension has no rendered scene; earlier lifecycle images were inspected |
 | Content build | Passed (CNB, XNB, media, content project) |
@@ -244,13 +243,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** run the complete 446-cancel checkpoint against ORIGINAL
-checkpoint-446-owner. The existing dispatch extension is focused-validated: clean 11-target build,
-metadata446/0, all31 C/CLI CTests (10.08 s), both selections exactly38 PASS + two old ISSUE-050
-failures out of40. All30 older child checks remain, stderr empty. The permitted setter really
-queues (INVALID_STATE/STATE on cancellation), does not change the owner's target step, does not
-replay while disabled or after re-enabling, and a fresh worker succeeds. No new ID or global
-API count. Focused evidence: reports/checkpoint-446-cancel-focused-*.
+**Immediate next action:** apply and validate the focused host-failure draft described below.
+Complete446-cancel at effc2a6 is CLOSED: tools/validate.sh exit0, all459 enabled CTests168.06 s,
+SW394/24/25/3, GL415/25/3/3, original34/35 failed assertions unchanged. All old child assertions
+and other C/custom-content lists remain; dispatch30 ->40 adds ten passes. Selected32 binary/four
+asset hashes and normalized stderr match. reports/checkpoint-446-cancel-* is the new baseline.
+No runtime checkpoint is running. Catalog446, C API16, known-issue demos25.
+
+Focused cancellation: clean11-target build, metadata446/0, all31 C/CLI CTests10.08 s, both
+selections38 PASS + two old ISSUE-050 failures, all30 prior checks retained, stderr empty.
+Evidence: reports/checkpoint-446-cancel-focused-*. Cancellation drafts are APPLIED AND STALE.
 
 Confirmed diagnostic-only ISSUE-051: tools/repro_c_api_host_failure.c (77 lines) reproduces
 omitted C exiting/end_run hooks despite runtime.h's promise. Two variable host frames produce
@@ -262,24 +264,23 @@ CNA observed clean at 4ee1e0b553667b6e999248fcefdea729654ee497 before/after. Sel
 hashes and original streams: reports/cna-issue-051-*. No CNA edits/upstream message, catalog credit
 or extra known-failure marker. Reproducer build command and contract ambiguity: CNA_ISSUES.md.
 
-Full helpers: /tmp/cna-archive-446-cancel.py, /tmp/cna-446-cancel-finish.py, catalog
-/tmp/cna-catalog-446-cancel.json. Replace PENDING446CANCEL with the source commit; capture32
-selected binary/four asset hashes AFTER build. Expected same446 totals SW394/24/25/3,
-GL415/25/3/3, all459 enabled CTests, raw failures34/35 unchanged. Only dispatch child grows
-30 ->40; preserve all older assertions and every other C/custom-content list. Freeze source/assets
-through runtime. The cancellation and host diagnostic drafts are APPLIED AND STALE.
-
-Latest COMPLETE baseline: 446-owner at 9e7a27b (closure2ef3d21), tools/validate.sh exit0,
-459 enabled CTests146.63 s, SW394/24/25/3, GL415/25/3/3. Exact ORIGINAL446-reentry comparisons
-add only two ISSUE-050 labels/status change; all older assertions retained. Selected32 binary/
-four asset hashes and normalized stderr match. reports/checkpoint-446-owner-*.
-
-Next useful work after closing cancellation: host failure behavior can be added to an existing
-C diagnostic example where it preserves its current RunOneFrame controls; the independent
-ISSUE-051 tool already separates terminal state/cleanup from the contradictory callback promise.
-Other open priorities include automatic callback-scope dispatch or four-influence skinned
-geometry/material rendering. Avoid merely repeating the served-property case or creating
-an ID for a scalar/enum variant. Existing phase work stays the baseline.
+Next work: UNAPPLIED /tmp/cna-host-failure-demo.c (100 lines)
+and /tmp/cna-host-failure-metadata.cpp, generated by /tmp/cna-prepare-host-failure-demo.py.
+Proposed stable ID c_api.game.host_failure: a fresh host run fails its second Update and checks
+terminal false, preserved diagnostic, no replay, exactly-once unload and invalid released handle.
+Ten assertions expected: nine passes and one ISSUE-051 combined C exiting/end_run promise failure.
+A separate process preserves both existing normal host_frames and error_handling RunOneFrame
+scenarios and the one-C-game-per-process convention. This is a distinct terminal-failure contract,
+not a scalar variant. No runtime claim for the draft yet; the independent reproducer is confirmed.
+If applied, add the standard standalone CMakeLists, build/focus/test, expect447 demos/C API17/
+standalone37, known-issue demos26, raw failures35/36 (one new label only), SW394/25/25/3 and
+GL415/26/3/3. All460 enabled CTests (435 passed incl25 WILL_FAIL +25 skips), three manual disabled.
+Prepared /tmp/cna-{archive-447,447-finish,run-447-focused}.py need actual source commit/catalog
+and33 binary hash capture after build. Do not apply during complete446-cancel. Other later gaps: automatic callback-scope dispatch,
+four-influence skinned geometry/material rendering and other callback failure locations. A later
+canonical thread-local detail audit must preserve existing controls. Do not assume invalid FOV
+supplies ParamName: generated C Matrix delegates to a current std::invalid_argument throw;
+this source-only candidate was rejected, with no runtime or added coverage claim.
 
 Earlier COMPLETE catalog checkpoint: 446-palette at 55ebc57 (closure 2c3f095), all 459 enabled
 CTests (143.36 s), SW 395/23/25/3, GL 416/24/3/3, exact prior 32/33 failed assertions and all
