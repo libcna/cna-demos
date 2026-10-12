@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
-* Mostly complete: 6 (effects and shaders, 23).
+* Mostly complete: 6 (effects and shaders, 24).
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -64,9 +64,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-447 demos: math 78, game 33, graphics 141 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+448 demos: math 78, game 33, graphics 142 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
-4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 15 other
+4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 16 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
@@ -243,41 +243,40 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** apply and validate the weight-channel draft below. Complete447 at
-4272ce1 is CLOSED: tools/validate.sh exit0, all460 enabled CTests144.24 s, SW394/25/25/3,
-GL415/26/3/3. Exact ORIGINAL446-cancel comparisons add only the new host_failure ID and one
-ISSUE-051 label (raw35/36); all older statuses/counts/known issues/child assertions unchanged.
-Selected33 binary/four asset hashes and normalized stderr match. reports/checkpoint-447-* is
-the new baseline. No runtime checkpoint is running. Inventory293/329 types,1356/2326 XNA members,
-158/3210 C routes; catalog447/C API17/standalone37/known-issue demos26, all runtime columns complete.
+**Immediate next action:** run full448 against ORIGINAL checkpoint-447. New
+`graphics.skinned_effect.weight_channels` is applied, built and focused-validated on both
+renderers: six JSON checks pass, stderr empty, actual800x480 images inspected and RGBA-identical.
+Each colored mesh covers7,504 pixels; translated positions match the authored active channels.
+One/two influences have nonzero ignored lanes; four influences all contribute with indices2,0,3,1.
+Five center/near-edge samples per mesh plus three empty bind centers form six assertions.
+Analytic /tmp/cna-weight-channels-geometry.py checks sensitivity to each omitted contribution,
+with/without renormalization; no native mutant/rotation/normal-blending claim. Evidence:
+reports/checkpoint-448-focused-*. No new CNA issue. Source /tmp draft is APPLIED AND STALE.
 
-Host failure focus: build35 targets (known Draco CMP0148 developer warning on regeneration,
-no compiler diagnostics), metadata447/0, all32 C/CLI CTests7.36 s, both selections9 PASS +1 FAIL,
-traceILBUDUZ and empty stderr. reports/checkpoint-447-focused-*. Host drafts APPLIED AND STALE.
-The independent ISSUE-051 reproducer remains tools/repro_c_api_host_failure.c; original/final
-source/binary evidence reports/cna-issue-051-*. No CNA edits or upstream message. No rendered
-scene or browser scheduling validation; other failed callback locations remain untested.
+Build /tmp/cna-448-build.log passed (55 targets, known Draco CMP0148 developer warning on new
+source regeneration; no compiler diagnostics). Metadata448/0, all23 targeted CTests (5.94 s:
+22 passed including one WILL_FAIL, one PBR capability skip). Source catalog448/graphics142/
+game252/standalone37/C API17/known-demo26. Coverage generated with ORIGINAL447 reports marks
+new ID absent until full448; inventory293/329 types,1357/2326 XNA members,158/3210 C routes.
 
-Next work: UNAPPLIED /tmp/cna-weight-channels.cpp (141 lines),
-proposed graphics.skinned_effect.weight_channels. Existing one/two-weight scenes use zero unused
-lanes and cannot prove the selector ignores nonzero inactive data. This draft renders three
-small meshes with valid active-weight sums for1/2/4, deliberately nonzero unused lanes in1/2,
-four actual influences in4 and permuted bone indices2,0,3,1. Translated palette, ambient-only
-colors and identity projection give explicit expected positions; five near-edge/center samples
-per mesh plus empty bind-center checks are planned (six assertions). All four-lane contributions
-are nonzero. /tmp/cna-weight-channels-geometry.py analytically confirms the five probes detect
-omitting any lane with or without renormalization; this is NOT native mutation/runtime evidence.
-The draft has NOT been compiled, run or visually inspected. Verify source/math, apply only after
-447 runtime closes, build/focus on both renderers, inspect both screenshots, then document/full-
-checkpoint. No file assets needed. Prepared /tmp/cna-{archive-448,448-finish,run-448-focused}.py need inspection, actual source commit,
-/tmp/cna-catalog-448.json and33 selected binary/four asset hashes captured after the future full
-build. Full comparison must add only the new six-PASS ID, preserve all35/36 failures and all old
-C/custom-content child lists/traces. New target regeneration can emit known Draco CMP0148 warning.
-Expected new count448/graphics142/game252, same known-demo26/raw35/36 IF it passes. Inventory
-must be regenerated, not guessed. Other gaps: automatic callback-scope dispatch, skin material/
-fog behavior and other callback failure locations. Canonical thread-local exception details
-remain distinct from result/category/message isolation; invalid FOV currently throws
-std::invalid_argument, so it is not a valid ParamName candidate. Preserve old controls.
+Full helpers /tmp/cna-archive-448.py and /tmp/cna-448-finish.py need PENDING448 replaced with
+source commit. Catalog /tmp/cna-catalog-448.json. Capture33 selected binaries/four assets AFTER
+full build. Expected totals SW395/25/25/3, GL416/26/3/3, all461 enabled CTests (436 passed incl25
+WILL_FAIL +25 skipped), three disabled. Add only the new six-check PASS ID; preserve all35/36
+failed assertions, older statuses/counts/knownIssue and all C/custom-content child lists/traces.
+Game checks are in JSON, not standalone child stdout. Freeze sources/assets through runtime.
+
+Latest COMPLETE baseline447 at4272ce1 (closure6d08511): tools/validate.sh exit0, all460 enabled
+CTests144.24 s, SW394/25/25/3, GL415/26/3/3. Only the new host_failure ID/ISSUE-051 label were
+added (raw35/36); all older results/child checks unchanged. Selected33 binary/four asset hashes
+and normalized stderr match. reports/checkpoint-447-*.
+
+Next meaningful gaps after full448: skinning with rotated/nonuniform joint normals or material/
+fog behavior; automatic C callback-scope dispatch; other callback failure locations and broader
+public-member audit. Four-channel translation does not establish normal blending or every
+weight distribution. Canonical thread-local exception details remain separate from the tested
+result/category/message isolation; invalid FOV uses std::invalid_argument and cannot prove
+ParamName isolation. Keep actual CNA calls visible and preserve existing controls.
 
 Earlier COMPLETE catalog checkpoint: 446-palette at 55ebc57 (closure 2c3f095), all 459 enabled
 CTests (143.36 s), SW 395/23/25/3, GL 416/24/3/3, exact prior 32/33 failed assertions and all

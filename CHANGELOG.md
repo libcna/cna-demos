@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Active skinning-channel demo verifies that one/two influences ignore nonzero unused lanes,
+  and four weights blend the explicitly indexed palette. Six rendered checks pass on SOFTWARE
+  and OPENGLES3; both inspected captures are pixel-identical. Other skinning scenes remain intact.
 - Focused C host-failure demo checks second-Update failure, terminal state without replay,
   preserved diagnostics, exactly-once unload and released-handle refusal. Its nine passing checks
   accompany one visible ISSUE-051 contract failure; normal host and RunOneFrame demos remain intact.
