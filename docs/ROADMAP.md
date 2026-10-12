@@ -1238,3 +1238,34 @@ diagnostic gate0. Metadata470/0; focused/targeted51461 passes37enabled CTests in
 one additional manual microphone disabled. Focused reviewer passes BEFORE commit;
 evidence checkpoint-470-clear-focused-*. Last full baseline470-bounds; full validation next.
 Original mono streaming/ISSUE-038 untouched; no new ID or genuine CNA defect found.
+
+## Complete470-clear
+
+Complete checkpoint **470-clear**, source `10a9593`,
+extends buffer_formats from 20 to 23 checks. Guarded application verified the unchanged
+validated41af406 base. Two dummy-audio runs (one per requested renderer environment) pass
+with empty stderr. ClearBuffers retainsPaused/Pending0; a valid float submission still
+refuses with that same state; same-format refill and visible QueueInitialBuffers retain
+Paused/Pending1 before originalResume/Stop. All 20 original assertion calls remain verbatim
+and in order. Counts combine staged/submitted data and do not independently prove native
+transfer or output samples. No live-playing/concurrent-producer or listening claim.
+Watched build 47439 passes 9 scheduled / 8 numbered operations, all 3,909 watched inputs
+unchanged and diagnostic gate 0. Focused/targeted session 51461 passes 37 enabled CTests
+in 5.61 s; one additional manual microphone test disabled. Metadata 470 / 0 problems.
+Full session 79728 builds in 7 scheduled operations without warning and passes all 483
+enabled CTests in 149.94 s (449 passed including 27 WILL_FAIL; 34 skips; three additional
+manual tests disabled). SOFTWARE 406/27/34/3, OPENGLES3 435/29/3/3. Every old 38/42 failed
+assertion, C/custom child list/trace and all five network controls remain exact.
+Reviewed JSON count differences:
+{"OPENGLES3": {"audio.dynamic_sound_effect_instance.buffer_formats": {"after": 23, "before": 20, "reason": "Three paused-queue clearing and format-retention controls added; original twenty predicates retained."}}, "SOFTWARE": {"audio.dynamic_sound_effect_instance.buffer_formats": {"after": 23, "before": 20, "reason": "Three paused-queue clearing and format-retention controls added; original twenty predicates retained."}}}.
+All 35 selected binaries/four existing assets and reader fixture copies remain unchanged
+through runtime. Normalized application stderr is identical, including 42 known GL X
+protocol records and the intentional shader error. Outer Xvfb has 14 exact amdgpu
+pairs (previous 11); independent inner/outer exits 0. Capture CNA eff3131017
+(clean), final CNA eff3131017 (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-clear-*.
+Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
+Original mono streaming/ISSUE-038 is untouched. No extra ID or issue marker; semantic
+coverage remains incomplete. Build-only ISSUE-057 stays open with its original refusal
+and independent private staging probe preserved.
