@@ -158,6 +158,65 @@ cleanup:
     if (texture != CNA_INVALID_HANDLE) (void)cna_texture2d_destroy(texture);
 }
 
+/* Successful End is the other retention boundary: the gold command must be visible even
+   after its texture is released. The last-frame readback checks the opposite corner. */
+static void check_completed_batch(SpriteState* state, CNA_Handle graphics_device)
+{
+    CNA_Handle texture = CNA_INVALID_HANDLE;
+    CNA_Handle batch = CNA_INVALID_HANDLE;
+    CNA_Texture2DCreateInfo texture_info;
+    CNA_SpriteBatchBeginInfo begin_info;
+    CNA_SpriteCommand command;
+    const CNA_Color gold = {255, 215, 0, 255};
+    CNA_Result result;
+    memset(&texture_info, 0, sizeof(texture_info));
+    texture_info.struct_size = (uint32_t)sizeof(texture_info);
+    texture_info.struct_version = UINT32_C(1);
+    texture_info.width = 1;
+    texture_info.height = 1;
+    texture_info.format = CNA_SURFACE_FORMAT_COLOR;
+    if (!cna_demo_check_result(state->demo, cna_texture2d_create(graphics_device, &texture_info, &texture),
+                               "create the completion probe texture")) goto cleanup;
+    if (!cna_demo_check_result(state->demo, cna_texture2d_set_data_rgba8(texture, &gold, 1),
+                               "upload the completion probe color")) goto cleanup;
+    if (!cna_demo_check_result(state->demo, cna_sprite_batch_create(graphics_device, &batch),
+                               "create an independently owned completion batch")) goto cleanup;
+    memset(&begin_info, 0, sizeof(begin_info));
+    begin_info.struct_size = (uint32_t)sizeof(begin_info);
+    begin_info.struct_version = UINT32_C(1);
+    begin_info.sort_mode = CNA_SPRITE_SORT_MODE_DEFERRED;
+    if (!cna_demo_check_result(state->demo, cna_sprite_batch_begin(batch, &begin_info),
+                               "begin a deferred completion interval")) goto cleanup;
+    memset(&command, 0, sizeof(command));
+    command.struct_size = (uint32_t)sizeof(command);
+    command.struct_version = UINT32_C(1);
+    command.texture = texture;
+    command.destination = (CNA_Rectangle){776, 456, 20, 20};
+    command.source = (CNA_Rectangle){0, 0, 1, 1};
+    command.color = (CNA_Color){255, 255, 255, 255};
+    if (!cna_demo_check_result(state->demo, cna_sprite_batch_submit_many(batch, &command, 1),
+                               "queue a gold corner command for a successful flush")) goto cleanup;
+    result = cna_texture2d_destroy(texture);
+    cna_demo_check(state->demo, result == CNA_RESULT_INVALID_STATE,
+                   "the completion batch retains its texture before End");
+    if (result == CNA_RESULT_SUCCESS) texture = CNA_INVALID_HANDLE;
+    /* End emits the gold command and must release the texture before the batch is destroyed. */
+    if (!cna_demo_check_result(state->demo, cna_sprite_batch_end(batch),
+                               "End successfully flushes the gold corner command")) goto cleanup;
+    if (texture != CNA_INVALID_HANDLE) {
+        result = cna_texture2d_destroy(texture);
+        if (cna_demo_check_result(state->demo, result,
+                                  "successful End releases the texture while its batch is still alive"))
+            texture = CNA_INVALID_HANDLE;
+    }
+    result = cna_sprite_batch_destroy(batch);
+    if (cna_demo_check_result(state->demo, result, "destroy the completed batch after its texture"))
+        batch = CNA_INVALID_HANDLE;
+cleanup:
+    if (batch != CNA_INVALID_HANDLE) (void)cna_sprite_batch_destroy(batch);
+    if (texture != CNA_INVALID_HANDLE) (void)cna_texture2d_destroy(texture);
+}
+
 static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* context, CNA_CallbackError* out_error)
 {
     const double pi = 3.14159265358979323846;
@@ -222,6 +281,7 @@ static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* con
             return result;
         }
         check_cancelled_batch(state, graphics_device);
+        check_completed_batch(state, graphics_device);
         readback = cna_graphics_device_get_backbuffer_data_rgba8(graphics_device, pixels, 800U * 480U, &count);
         if (readback == CNA_RESULT_NOT_SUPPORTED) {
             printf("  this renderer cannot read its back buffer back; pixel checks skipped\n");
@@ -229,6 +289,7 @@ static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* con
                    cna_demo_check(state->demo, count == 800U * 480U, "an 800x480 back buffer")) {
             const CNA_Color centre = pixels[240 * 800 + 400];
             const CNA_Color corner = pixels[10 * 800 + 10];
+            const CNA_Color completed = pixels[470 * 800 + 790];
             printf("  centre %u,%u,%u  corner %u,%u,%u\n", centre.r, centre.g, centre.b, corner.r, corner.g,
                    corner.b);
             cna_demo_check(state->demo, centre.r > 240 && centre.g > 240 && centre.b > 240,
@@ -236,6 +297,8 @@ static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* con
             cna_demo_check(state->demo, corner.r == background.r && corner.g == background.g &&
                                             corner.b == background.b,
                            "away from the sprites the clear colour remains");
+            cna_demo_check(state->demo, completed.r == 255 && completed.g == 215 && completed.b == 0,
+                           "the successfully flushed gold command survives texture and batch destruction");
         }
         cna_demo_capture(state->demo, graphics_device);
     }

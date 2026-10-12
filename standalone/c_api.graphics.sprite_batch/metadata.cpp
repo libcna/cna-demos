@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C program builds a small Texture2D from RGBA pixels it computes, then draws a ring of tinted, "
                    "rotating sprites of it each frame with one cna_sprite_batch_submit_many call between "
                    "cna_sprite_batch_begin and cna_sprite_batch_end. Checks the back buffer, active-batch texture retention, "
-                   "and cancellation of deferred commands when their batch is destroyed.",
+                   "cancellation without flushing, and successful End releasing its texture while emitted pixels remain.",
     .apis = {"cna_game_get_graphics_device", "cna_texture2d_create", "cna_texture2d_set_data_rgba8",
              "cna_sprite_batch_create", "cna_sprite_batch_begin", "cna_sprite_batch_submit_many",
              "cna_sprite_batch_end", "cna_sprite_batch_destroy", "cna_texture2d_destroy",

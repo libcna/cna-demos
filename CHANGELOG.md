@@ -26,6 +26,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- Existing skinned lighting now isolates two diffuse lights and combines them with its retained
+  specular controls; eight checks pass per renderer and labeled captures were inspected.
+- C SpriteBatch now proves successful End releases retained textures while flushed pixels
+  survive texture and batch destruction. Ten additions preserve every original child control.
 - Shader palettes now compose a shared scalar matrix and premultiplied scene tint over both
   array entries; six GL checks preserve the old controls and verify transformed pixels.
 - C storage now demonstrates explicit read-only permissions, refused truncation/writing and

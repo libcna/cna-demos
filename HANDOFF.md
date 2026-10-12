@@ -237,27 +237,37 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply the prepared same-count **467-light** extensions after capturing the
-current scenes. Full467-scene is CLOSED (session96593, exit0); source/runtime edits may resume.
-1. Run /tmp/cna-467-light-syntax.py and /tmp/cna-run-467-light-focused.py before.
-2. Inspect the four original captures; apply /tmp/cna-skinned-light-terms.cpp to
-   demos/graphics/skinned_effect/specular_lights.cpp and /tmp/cna-sprite-end-release.c to
-   standalone/c_api.graphics.sprite_batch/main.c. Update C metadata to describe End release.
-3. Build with the existing flags/tree, validate metadata, run the same helper after and inspect
-   all four new captures. /tmp/cna-review-467-light-focused.py requires actual inspection first,
-   plus /tmp/cna-467-light-build.log and /tmp/cna-467-light-targeted-ctest.log. Preserve every old
-   assertion; expected skinned4 -> 8, C sprite19 -> 29 (21 -> 31 with capture), both renderers.
-4. Update semantic audit/status docs, commit source, export /tmp/cna-catalog-467-light.json,
-   then run the prepared full wrapper /tmp/cna-run-467-light-validation.sh. Capture binaries
-   after build while CTest runs using /tmp/cna-capture-467-light.py; never recapture after runtime.
-   Archive both smokes with /tmp/cna-archive-467-light.py, then /tmp/cna-467-light-finish.py.
-   Expected480enabled CTests and unchanged totals/failures; baseline is COMPLETE467-scene.
-5. Continue the deeper behavior audit after closure. Typed volume data, resource ownership,
-   additional dispatch boundaries and renderer-specific stock-effect behaviors remain useful.
+HIGHEST PRIORITY: run full **467-light** after committing the focused source. Full467-scene
+(source11dbd5b, closure34e223b) is the comparison baseline. Both /tmp draft predecessors are
+APPLIED AND STALE. Focused syntax/build/runtime/visual/exact-child review is complete.
 
-Drafts are NOT APPLIED and have no syntax/native/visual credit yet. Both are existing-demo
-extensions with no new IDs/routes. Prepared helpers have not run. Recovery copies live under
-reports/checkpoint-467-scene-next-*; keep those original source proposals immutable.
+Focused467-light extends existing examples without adding an ID or API route. Build12scheduled/
+11completed operations and metadata467/0 pass; all25targeted CLI/skinned/C-sprite CTests pass
+in4.75s. Skinned lights preserve four specular controls and add four independent diffuse/additive
+checks; eight pass per renderer. The C sprite example retains all19old children plus10successful
+End-release controls (29without capture/31with). All eight before/after images were inspected;
+selected color/clear controls and all400gold pixels are verified. Layout changes and animated
+ring timing preclude general image identity. All focused stderr is empty; no new CNA issue.
+Generated COVERAGE.md remains complete467-scene until full467-light closes; inventory totals
+remain293/329types,1373/2326XNA members,174/3210C routes.
+
+Prepared /tmp/cna-run-467-light-validation.sh journals inner/outer exits and Xvfb diagnostics.
+Export /tmp/cna-catalog-467-light.json before starting. After build, while CTest runs, capture
+35binary/fourasset hashes using /tmp/cna-capture-467-light.py; never recapture after runtime.
+Then archive/review both smokes with /tmp/cna-archive-467-light.py SOFTWARE/OPENGLES3 and run
+/tmp/cna-467-light-finish.py after wrapper closes. Expected480enabled CTests and unchanged
+SW405/27/32/3, GL432/29/3/3. Retain every38/42raw failure, all C/custom/network traces; filter
+only10named C sprite additions. Only skinned4->8on both is an intended old JSON count change;
+positive title Update variance is separately reviewed. No new normalized stderr is expected.
+No source/asset edits or rebuild during a live full smoke. Update closure docs and continue.
+Further typed volume payloads, resource ownership, dispatch boundaries and stock-effect
+renderer behaviors remain useful semantic work; no comprehensive coverage claim.
+
+Focused immutable evidence: reports/checkpoint-467-light-focused-*; the earlier source-only
+proposals/helpers remain under checkpoint-467-scene-next-*. Before sessions6559/22260, build59623
+and after/CTest95446 are CLOSED0. /tmp/cna-review-467-light-focused.py PASSED after all eight
+images were actually inspected. Source labels verify original C++ controls; they are not
+printed successful child checks. The exact C child comparison is based on real stdout lines.
 
 ## 15. Assumptions the next session must know
 
@@ -274,27 +284,6 @@ EOF, palette or read-only drafts. Their final implementations are the committed 
 Prior checkpoint details and original EOF proof references are in CHECKPOINT_HISTORY.md.
 No source/assets/rebuild during a live full smoke; source-only /tmp preparation and docs are safe.
 
-NOT-APPLIED follow-up /tmp/cna-skinned-light-terms.cpp extends existing specular_lights,
-keeping its4original specular controls in a resized top row. A labeled second row isolates
-light1/light2 diffuse terms, their float sum, then diffuse+specular, with white texture and
-material(.5,1,.25). Actual public light DiffuseColor setters were reviewed. Both directions
-have N dot L=.6; expected bottom RGB(77,77,0),(0,77,38),(77,153,38),(179,153,89), tolerance1.
-Eight intended checks, no new ID. Existing font asset is newly declared; labels do not cross
-sample centers. New geometry layout intentionally changes the image, so capture/inspect
-before and after rather than claiming identity. Syntax/native/visual validation pending;
-source-only preparation during full467-scene; that checkpoint is now closed.
-
-
-NOT-APPLIED companion /tmp/cna-sprite-end-release.c preserves the19original C sprite child
-checks and adds10intended controls. A separate deferred batch submits a gold bottom-right
-rectangle; texture destruction must fail before End, End flushes, then texture destruction
-must succeed while the batch is still alive. Batch cleanup and the existing back-buffer
-readback prove the emitted gold pixels survive both releases. Original cancelled red corner
-and white center controls remain. This is the successful-flush counterpart to cancellation,
-not a new ID, failed-flush test or Immediate undo claim. Actual graphics.h and native
-SpriteBatchEnd/ReleaseBatchTextureReferences reviewed at clean CNA714f9f76a. No native claim.
-Prepared /tmp/cna-467-light-syntax.py and /tmp/cna-run-467-light-focused.py before/after;
-Full467-scene is now closed. Intended batch467-light, same467IDs. Capture both original
-skinned and sprite scenes first; inspect all before/after images. Sprite animation is time-driven,
-so compare stable controls/added corner, not whole-image identity. Draft/helper copies archived
-as reports/checkpoint-467-scene-next-* for recovery. Do not apply during any new full smoke.
+Both lighting and C End-release /tmp drafts are now applied and stale. Their design/proposal
+copies remain under checkpoint-467-scene-next-*, and final sources/hashes/runtime evidence
+under checkpoint-467-light-focused-*. Do not reapply or repeat original baseline captures.

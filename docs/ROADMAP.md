@@ -143,9 +143,9 @@ a check that all authored colors remain visible and that a blank texture row can
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
 ## Phase 6 -- effects and shaders 🟨 (35 demos: stock effects, effect API, PbrEffect)
-- ✅ Skinned material and specular controls: emission/ambient/half-alpha composition, independent
-  colored lights 1/2, their sum and shininess exponent. Both focused four-check scenes pass on
-  SOFTWARE/OPENGLES3; four captures inspected, all cross-renderer differences within tolerance 1.
+- ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
+  diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
+  specular_lights now has eight on both renderers with inspected labeled comparisons.
 
 - ✅ `graphics.skinned_effect.vertex_colors`: a plain packed-color skinned vertex contrasts the
   disabled channel with actual material/texture/tint multiplication and interpolation. Three
@@ -640,3 +640,14 @@ do not establish comprehensive semantic coverage.
 Next coherent extensions keep the same IDs: independent SkinnedEffect diffuse-light terms
 and the successful-End counterpart to C SpriteBatch cancellation. Drafts have source review
 only; neither has runtime or visual credit yet.
+
+
+Focused467-light extends existing examples without adding an ID or API route. Build12scheduled/
+11completed operations and metadata467/0 pass; all25targeted CLI/skinned/C-sprite CTests pass
+in4.75s. Skinned lights preserve four specular controls and add four independent diffuse/additive
+checks; eight pass per renderer. The C sprite example retains all19old children plus10successful
+End-release controls (29without capture/31with). All eight before/after images were inspected;
+selected color/clear controls and all400gold pixels are verified. Layout changes and animated
+ring timing preclude general image identity. All focused stderr is empty; no new CNA issue.
+Generated COVERAGE.md remains complete467-scene until full467-light closes; inventory totals
+remain293/329types,1373/2326XNA members,174/3210C routes.
