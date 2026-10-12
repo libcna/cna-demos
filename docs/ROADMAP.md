@@ -1102,3 +1102,33 @@ Watched build64542 passes9scheduled/8numbered operations, all3,909inputs unchang
 Metadata470/0; focused/targeted78295 passes37enabled CTests in5.65s; one manual microphone
 test disabled. Focused reviewer passes BEFORE commit; evidence checkpoint-470-release-focused-*.
 Last complete baseline470-specular. No extra ID or genuine CNA problem found; full run next.
+
+## Complete470-release
+
+Complete checkpoint **470-release**, source `f08554f`,
+extends the existing looping demo from three to six checks. Ten dummy-audio repetitions
+(five per requested renderer environment) pass with empty stderr. The complete original
+function prefix through its three old controls remains unchanged. Stop(false) leaves a
+paused voice paused with configured IsLooped true; Resume starts it, and it then naturally
+stops within a 3 s steady-clock deadline. Observed post-Resume waits in focused repetitions
+are 0.239-0.261 s; these are polling observations, not audible duration/latency or sample
+content evidence. Pausing before release avoids a racy immediate-Playing assertion.
+Watched build 64542 passes 9 scheduled / 8 numbered operations with all 3,909 watched
+inputs unchanged. Focused/targeted session 78295 passes 37 enabled CTests in 5.65 s;
+one additional manual microphone test is disabled. Metadata has 470 entries / 0 problems.
+Full session 59103 builds in 7 scheduled operations without warning and passes all 483
+enabled CTests in 157.07 s (449 passed including 27 WILL_FAIL; 34 skips; three additional
+manual tests disabled). SOFTWARE 406/27/34/3, OPENGLES3 435/29/3/3. Every old 38/42 failed
+assertion, C/custom child list/trace and all five network controls remain exact.
+Reviewed JSON count differences:
+{"OPENGLES3": {"audio.sound_effect_instance.looping": {"after": 6, "before": 3, "reason": "Three paused-loop release controls added; original three looping predicates retained."}}, "SOFTWARE": {"audio.sound_effect_instance.looping": {"after": 6, "before": 3, "reason": "Three paused-loop release controls added; original three looping predicates retained."}}}.
+All 35 selected binaries/four existing assets and reader fixture copies remain unchanged
+through runtime. Normalized application stderr is identical, including 42 known GL X
+protocol records and the intentional shader error. Outer Xvfb has 18 exact amdgpu
+pairs (previous 17); independent inner/outer exits 0. Capture CNA eff3131017
+(clean), final CNA eff3131017 (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-release-*.
+Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
+No extra ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057
+stays open with its original refusal and independent private staging probe preserved.
