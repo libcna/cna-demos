@@ -18,8 +18,10 @@
 #include "Microsoft/Xna/Framework/Graphics/Texture3D.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "Microsoft/Xna/Framework/Vector4.hpp"
 #include "System/ArgumentException.hpp"
 #include "System/InvalidOperationException.hpp"
+#include "System/NotSupportedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -134,6 +136,8 @@ namespace
                                 at(15, 15, 0) != Color::White && at(15, 15, 3) != Color::White,
                             "the box touched slices 1 and 2 only");
 
+            CheckVectorField(device);
+
             // Show each slice as an ordinary 2D texture made from the read-back data.
             for (int z = 0; z < Depth; ++z)
             {
@@ -159,6 +163,83 @@ namespace
         }
 
     private:
+        void CheckVectorField(GraphicsDevice& device)
+        {
+            // A 4x3x2 displacement field uses signed XYZ and a fourth scalar channel, not Color.
+            // Keep the existing Color atlas: this section demonstrates transfers, not GPU sampling.
+            std::optional<Texture3D> fieldVolume;
+            try { fieldVolume.emplace(device, 4, 3, 2, false, SurfaceFormat::Vector4); }
+            catch (const System::NotSupportedException&)
+            { Context().Skip("the live device/profile must create a Vector4 volume for the displacement field"); }
+            if (!fieldVolume) return;
+            const Vector4 guard(99, 98, 97, 96);
+            std::array<Vector4, 26> source;
+            source.fill(guard);
+            for (int z = 0; z < 2; ++z)
+                for (int y = 0; y < 3; ++y)
+                    for (int x = 0; x < 4; ++x)
+                    {
+                        const int index = (z * 3 + y) * 4 + x;
+                        source[index + 1] = Vector4(static_cast<float>(x) - .5f,
+                            static_cast<float>(y) * 2 - .25f, static_cast<float>(z) * 4 + .5f,
+                            static_cast<float>(index + 1) * .125f);
+                    }
+            const auto originalSource = source;
+            fieldVolume->SetData(source.data(), 1, 24);
+            std::array<Vector4, 28> observed, expected;
+            observed.fill(guard); expected = observed;
+            std::copy(source.begin() + 1, source.end() - 1, expected.begin() + 2);
+            fieldVolume->GetData(observed.data(), 2, 24);
+            Context().Check(fieldVolume->getFormatProperty() == SurfaceFormat::Vector4 &&
+                            source == originalSource && observed == expected,
+                            "a guarded Vector4 volume preserves every signed displacement and above-one channel without Color quantization");
+
+            std::array<float, 100> scalarView, expectedScalars;
+            scalarView.fill(-123.5f); expectedScalars = scalarView;
+            for (int index = 0; index < 24; ++index)
+            {
+                const Vector4& value = source[index + 1];
+                expectedScalars[index * 4 + 2] = value.X;
+                expectedScalars[index * 4 + 3] = value.Y;
+                expectedScalars[index * 4 + 4] = value.Z;
+                expectedScalars[index * 4 + 5] = value.W;
+            }
+            fieldVolume->GetData(scalarView.data(), 2, 96);
+            Context().Check(scalarView == expectedScalars,
+                            "twenty-four vector voxels expose ninety-six ordered float elements with both guard pairs intact");
+
+            // Edit x=1..2, y=1 in both slices. The compact payload has no full-volume row pitch.
+            const std::array<Vector4, 6> patch{guard, Vector4(-8, 2, .25f, 1), Vector4(4, -3, 8, .5f),
+                                              Vector4(16, .125f, -4, 2), Vector4(.5f, 32, -2, .25f), guard};
+            fieldVolume->SetData(0, 1, 1, 3, 2, 0, 2, patch.data(), 1, 4);
+            expected[2 + 5] = patch[1]; expected[2 + 6] = patch[2];
+            expected[2 + 17] = patch[3]; expected[2 + 18] = patch[4];
+            fieldVolume->GetData(observed.data(), 2, 24);
+            Context().Check(observed == expected,
+                            "a compact two-slice typed box changes exactly four field voxels and preserves every neighbor and guard");
+            std::array<float, 18> box;
+            box.fill(-123.5f);
+            const std::array<float, 18> expectedBox{-123.5f, -8,2,.25f,1, 4,-3,8,.5f,
+                                                  16,.125f,-4,2, .5f,32,-2,.25f, -123.5f};
+            fieldVolume->GetData(0, 1, 1, 3, 2, 0, 2, box.data(), 1, 16);
+            Context().Check(box == expectedBox,
+                            "a boxed scalar read packs the two slice rows consecutively while preserving caller guards");
+            box.fill(-123.5f);
+            const auto beforeRefusal = box;
+            bool readRefused = false;
+            // Physical storage fits all sixteen scalars plus guards; only the declared count is short.
+            try { fieldVolume->GetData(0, 1, 1, 3, 2, 0, 2, box.data(), 1, 15); }
+            catch (const System::ArgumentException&) { readRefused = true; }
+            Context().Check(readRefused && box == beforeRefusal,
+                            "a short scalar box read is refused before changing any output or guard");
+            bool writeRefused = false;
+            try { fieldVolume->SetData(0, 1, 1, 3, 2, 0, 2, box.data(), 1, 15); }
+            catch (const System::ArgumentException&) { writeRefused = true; }
+            fieldVolume->GetData(observed.data(), 2, 24);
+            Context().Check(writeRefused && observed == expected && box == beforeRefusal,
+                            "a short scalar box upload preserves the complete existing field and caller storage");
+        }
+
         std::vector<Texture2D> slices_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
@@ -170,12 +251,16 @@ CNA_DEMOS_GAME(VolumeDataDemo, {
     .title = "3D textures",
     .description = "Creates a 32x32x4 Texture3D, fills it slice by slice with SetData, overwrites a sub-box spanning "
                    "two slices, reads guarded boxes and shows the base slices as 2D textures. A non-cubic authored mip chain "
-                   "checks per-level Z bounds and refused-transfer preservation.",
+                   "checks per-level Z bounds. A signed Vector4 displacement field contrasts vector/scalar counts, compact "
+                   "two-slice boxes, guarded windows and refused-transfer preservation.",
     .apis = {"Texture3D::Texture3D", "Texture3D::SetData", "Texture3D::GetData", "Texture3D::Width",
-             "Texture3D::Height", "Texture3D::Depth", "Texture::LevelCount", "Texture::Format"},
+             "Texture3D::Height", "Texture3D::Depth", "Texture::LevelCount", "Texture::Format", "SurfaceFormat::Vector4"},
     .tags = {"texture", "volume", "3d-texture", "lookup-table"},
     .needs = CnaDemos::Need::Texture3D,
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
+    .restrictions = "Requires Color and Vector4 volume creation; only constructor capability refusal skips the typed fixture. "
+                    "Public transfer checks and the Color readback atlas do not establish direct GPU readback, float sampling, "
+                    "packed formats or half-float conversion.",
 })

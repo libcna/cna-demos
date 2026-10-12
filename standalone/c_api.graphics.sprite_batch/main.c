@@ -194,6 +194,16 @@ static void check_completed_batch(SpriteState* state, CNA_Handle graphics_device
     command.destination = (CNA_Rectangle){776, 456, 20, 20};
     command.source = (CNA_Rectangle){0, 0, 1, 1};
     command.color = (CNA_Color){255, 255, 255, 255};
+    /* The first command would visibly change the old clear-corner control. An invalid second
+       texture must refuse the whole array before that valid first command enters the batch. */
+    {
+        CNA_SpriteCommand refused[2] = {command, command};
+        refused[0].destination = (CNA_Rectangle){4, 4, 20, 20};
+        refused[1].texture = CNA_INVALID_HANDLE;
+        result = cna_sprite_batch_submit_many(batch, refused, 2);
+        cna_demo_check(state->demo, result == CNA_RESULT_INVALID_HANDLE,
+                       "an invalid second texture refuses the entire sprite command array");
+    }
     if (!cna_demo_check_result(state->demo, cna_sprite_batch_submit_many(batch, &command, 1),
                                "queue a gold corner command for a successful flush")) goto cleanup;
     result = cna_texture2d_destroy(texture);

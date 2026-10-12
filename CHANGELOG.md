@@ -29,6 +29,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- Existing volume transfers now demonstrate signed Vector4 fields, vector/scalar element
+  counts, compact two-slice edits and guarded refusal preservation; sixteen checks pass.
+- C SpriteBatch now proves an invalid second texture refuses the entire command array before
+  its valid first command is queued; the existing scene and all prior checks remain.
 - Existing skinned lighting now isolates two diffuse lights and combines them with its retained
   specular controls; eight checks pass per renderer and labeled captures were inspected.
 - C SpriteBatch now proves successful End releases retained textures while flushed pixels

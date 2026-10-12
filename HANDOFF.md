@@ -237,34 +237,39 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply the prepared same-count **467-field** extensions after capturing the
-current scenes. Full467-light is CLOSED (session73796, exit0); source/runtime edits may resume.
-The comparison baseline is source2588b74. Do not reapply its old light/End-release drafts.
-1. Run /tmp/cna-467-field-syntax.py and /tmp/cna-run-467-field-focused.py before.
-2. Inspect four original captures; apply /tmp/cna-volume-vector-field.cpp to
-   demos/graphics/texture3d/volume_data.cpp and /tmp/cna-sprite-array-refusal.c to
-   standalone/c_api.graphics.sprite_batch/main.c. Update C metadata for array refusal.
-3. Build/validate with the existing tree/flags, run the focused helper after, inspect all four
-   new captures, and run relevant CLI/texture3d/C-sprite CTests. Preserve logs as
-   /tmp/cna-467-field-build.log and /tmp/cna-467-field-targeted-ctest.log, then run
-   /tmp/cna-review-467-field-focused.py. Expected volume10 -> 16, C29 -> 30 (31 -> 32with capture).
-   Volume image should remain RGBA-identical; the C ring is time-dependent. All old controls
-   must remain. The entire old left corner and gold rectangle are separately checked.
-4. Update semantic audit/status docs, commit source and export /tmp/cna-catalog-467-field.json.
-   Run /tmp/cna-run-467-field-validation.sh; after build capture35binary/fourasset hashes with
-   /tmp/cna-capture-467-field.py. Never recapture after runtime or rebuild during smokes.
-   Archive both smokes via /tmp/cna-archive-467-field.py, then /tmp/cna-467-field-finish.py.
-   Expected480enabled CTests, unchanged totals and all38/42raw failures; only six volume and
-   one C child additions are intended. Positive title Update variance needs explicit review.
-5. Immediately continue the deeper public behavior audit after closure. Broader format/ownership,
-   dispatch and renderer-specific behavior remain gaps; current counts are not completeness.
+HIGHEST PRIORITY: run full **467-field** after committing the focused source. Full467-light
+(source2588b74, closuredf9acb9) is the exact comparison baseline. Both new /tmp predecessors
+are APPLIED AND STALE. Focused syntax/build/runtime/visual/exact-child review is complete.
 
-Current focused467-light evidence is complete: build12scheduled/11completed, metadata467/0,
-all25targeted CTests4.75s, eight inspected before/after captures, both eight-check lighting
-runs and exact C19+10controls. All stderr empty; selected pixels exact/within original lighting
-tolerance1. Full467-light now validates that batch. Evidence: checkpoint-467-light-focused-*.
-Future field/refusal drafts are still NOT APPLIED, with no syntax/native/visual credit.
-Recovery source/helper copies and analytic/source review: checkpoint-467-light-next-*.
+Focused467-field keeps all467IDs and current API inventory. Build12scheduled/11completed
+operations and metadata467/0 pass. All18targeted CLI/volume/C-sprite CTests pass in4.06s
+(17passed/one declared SOFTWARE CustomEffects skip). Volume10->16checks covers signedVector4
+versus scalar storage, compact two-slice boxes, guards and refused-count preservation on both
+renderers. C SpriteBatch29->30children (31->32with capture) retains every old label/order and
+adds invalid-second-handle array refusal before enqueue. All eight actual before/after images
+were inspected; both volume RGBA pairs are identical, all400left-corner/400gold pixels remain
+exact. The C ring is time-dependent. All stderr is empty; no new CNA issue. This does not
+establish float sampling, packed formats, direct GPU readback or native-flush rollback.
+Generated COVERAGE.md remains complete467-light until the new full checkpoint finishes;
+inventory remains293/329types,1373/2326XNA members,174/3210C routes.
+
+Prepared /tmp/cna-run-467-field-validation.sh journals inner/outer exits and Xvfb diagnostics.
+Export /tmp/cna-catalog-467-field.json before starting. After build, while CTest runs, capture
+35binary/fourasset hashes using /tmp/cna-capture-467-field.py; never recapture after runtime.
+Archive/review both smokes via /tmp/cna-archive-467-field.py SOFTWARE/OPENGLES3 and run
+/tmp/cna-467-field-finish.py after wrapper closes. Expected480enabled CTests and unchanged
+SW405/27/32/3, GL432/29/3/3. Retain every38/42raw failure, every C/custom/network control;
+filter only the one named sprite-array addition. Only volume10->16on both is the planned
+old JSON count change; positive window.title Update variance is separately reviewed.
+No new normalized stderr is expected. No source/asset edits or rebuild during live smokes.
+After closure, update docs and continue public behavior coverage. Remaining resource
+ownership, dispatch boundaries and renderer-specific stock effects are productive directions.
+
+Focused immutable evidence: reports/checkpoint-467-field-focused-*; original source-only
+proposals/helpers remain checkpoint-467-light-next-*. Syntax49483/before92954/build57916/
+after-and-CTest82393 are CLOSED0. Reviewer /tmp/cna-review-467-field-focused.py PASSED after
+all eight images were actually inspected. C++ original labels are checked in source and
+success counts in JSON; C child labels/order come from stdout. No fabricated success log.
 
 ## 15. Assumptions the next session must know
 
@@ -281,35 +286,7 @@ EOF, palette or read-only drafts. Their final implementations are the committed 
 Prior checkpoint details and original EOF proof references are in CHECKPOINT_HISTORY.md.
 No source/assets/rebuild during a live full smoke; source-only /tmp preparation and docs are safe.
 
-Both lighting and C End-release /tmp drafts are now applied and stale. Their design/proposal
-copies remain under checkpoint-467-scene-next-*, and final sources/hashes/runtime evidence
-under checkpoint-467-light-focused-*. Do not reapply or repeat original baseline captures.
-
-
-NOT-APPLIED next batch proposal **467-field** (full467-light is now closed):
-/tmp/cna-volume-vector-field.cpp extends volume_data with six intended typed-transfer controls
-(10->16). A signed4x3x2Vector4 displacement field uses source/destination guards, exact24vector
-versus96scalar views, and a compact2x1x2box crossing both slices. Scalar boxed read preserves
-layout/guards; logical15instead16 reads/writes are refused with fully adequate physical
-storage, leaving outputs/full field unchanged. Existing Color atlas and all10controls remain;
-no float sampling, direct GPU readback, packed/half-format claim. Only Vector4 constructor
-capability refusal may skip; actual profile/format and serialization APIs were inspected.
-/tmp/cna-sprite-array-refusal.c adds one coherent prevalidation control to the existing End
-fixture: valid first command would paint the old clear corner, invalid second texture must
-refuse the entire two-command array. Subsequent valid gold submission/End/release plus old
-clear-corner pixels establish continued usability and absence of partial enqueue. Expected
-C29->30without capture (31->32with); no native-flush rollback/Immediate credit.
-Both drafts remain source-only, with no syntax/native/visual credit. Current live binaries and
-project sources are untouched. Helpers /tmp/cna-467-field-syntax.py and
-/tmp/cna-run-467-field-focused.py before/after are prepared but NOT RUN. Capture/inspect
-original scenes before application; volume atlas should stay identical, C ring remains
-time-dependent. Recovery copies/source hashes: reports/checkpoint-467-light-next-*.
-
-Prepared /tmp/cna-review-467-field-focused.py expects all eight before/after images to have
-been actually inspected, source/JSON evidence for the10old C++ controls and exact C child
-labels. It requires /tmp/cna-467-field-build.log and -targeted-ctest.log. Current preparation
-validated only the parser's ten original source labels, not the new fixture. Full helpers
-/tmp/cna-run-467-field-validation.sh, -capture-, -archive- and -finish variants are ready but
-NOT RUN. Their baseline is COMPLETE467-light once closed; same480CTest and38/42failure totals
-are expected. Archive copies remain checkpoint-467-light-next-*. Do not execute future builds
-or native probes during the live full467-light runtime.
+The lighting/End-release and field/array-refusal /tmp drafts are now applied and stale.
+Final source/runtime proof is in their focused checkpoint archives. Do not reapply or rerun
+completed baseline captures. Source-only design notes are historical unless section14 names
+them as the next action. No new field/array work remains outside full checkpoint closure.

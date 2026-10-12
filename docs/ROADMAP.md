@@ -120,7 +120,9 @@ a check that all authored colors remain visible and that a blank texture row can
   ShaderEffect), ✅ `graphics.render_target.hdr_blendable` (values past 1.0 in an HdrBlendable
   target; ISSUE-027 found on SOFTWARE).
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
-  other typed/compressed format families, further DDS stream boundaries and resource lifetimes.
+  remaining typed/compressed format families, further DDS stream boundaries and resource lifetimes.
+  ✅ volume_data now also passes six signedVector4/scalar boxed-transfer controls, preserving
+  its ten original assertions and pixel-identical inspected Color atlases on both renderers.
   ✅ `graphics.texture_cube.face_transfers` now passes eight focused checks per renderer: guarded
   rectangle windows, neighboring faces, authored mip levels and refused-call preservation.
   Both inspected readback-atlas captures are RGBA-identical; no direct GPU-readback claim.
@@ -668,3 +670,15 @@ or hardware GPU claim. CNA 714f9f76a was observed clean at capture/final, not an
 snapshot. All capture/archive/finish helpers pass. Immutable evidence: checkpoint-467-light-*.
 Coverage remains 293/329 types, 1373/2326 XNA members and 174/3210 C routes. No new demo ID or
 route was needed for these behavioral extensions; comprehensive coverage is not established.
+
+Focused467-field keeps all467IDs and current API inventory. Build12scheduled/11completed
+operations and metadata467/0 pass. All18targeted CLI/volume/C-sprite CTests pass in4.06s
+(17passed/one declared SOFTWARE CustomEffects skip). Volume10->16checks covers signedVector4
+versus scalar storage, compact two-slice boxes, guards and refused-count preservation on both
+renderers. C SpriteBatch29->30children (31->32with capture) retains every old label/order and
+adds invalid-second-handle array refusal before enqueue. All eight actual before/after images
+were inspected; both volume RGBA pairs are identical, all400left-corner/400gold pixels remain
+exact. The C ring is time-dependent. All stderr is empty; no new CNA issue. This does not
+establish float sampling, packed formats, direct GPU readback or native-flush rollback.
+Generated COVERAGE.md remains complete467-light until the new full checkpoint finishes;
+inventory remains293/329types,1373/2326XNA members,174/3210C routes.
