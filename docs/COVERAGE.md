@@ -6,7 +6,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**469 demos** in 18 categories. Kinds: console 160, game 270, standalone 39. Automation: automated 433, manual 3, smoke-only 33.
+**470 demos** in 18 categories. Kinds: console 160, game 271, standalone 39. Automation: automated 434, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 160 | 160 | 0 | 0 | 138 / 16 / 6 / 0 / 0 | 149 / 3 / 8 / 0 / 0 |
+| graphics | 161 | 161 | 0 | 0 | 138 / 17 / 6 / 0 / 0 | 150 / 3 / 8 / 0 / 0 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 11 | 10 | 1 | 0 | 10 / 0 / 1 / 0 / 0 | 10 / 0 / 1 / 0 / 0 |
@@ -508,10 +508,11 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Graphics::AnimationPlayer::Update` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::ApplyBindPoseBoneTransformsEXT` -- graphics.model.multiple_skins
 - `Microsoft::Xna::Framework::Graphics::BoneTrackEXT` -- graphics.model.palette_sampling
-- `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setLightViewProjectionEXT` -- graphics.skinned_effect.shadow_receiver
+- `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setLightViewProjectionEXT` -- graphics.skinned_effect.shadow_cascades, graphics.skinned_effect.shadow_receiver
+- `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowCascadesEXT` -- graphics.skinned_effect.shadow_cascades
 - `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowDepthBiasEXT` -- graphics.skinned_effect.shadow_receiver
 - `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowFilterRadiusEXT` -- graphics.skinned_effect.shadow_receiver
-- `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowMapEXT` -- graphics.skinned_effect.shadow_receiver
+- `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowMapEXT` -- graphics.skinned_effect.shadow_cascades, graphics.skinned_effect.shadow_receiver
 - `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowsEnabledEXT` -- graphics.skinned_effect.shadow_receiver
 - `Microsoft::Xna::Framework::Graphics::KeyframeEXT` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::Model::BoundingSphereEXT` -- graphics.model.multiple_skins
@@ -520,6 +521,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Graphics::ModelMeshPart::SamplerStatesEXT` -- graphics.model.part_sampler_state
 - `Microsoft::Xna::Framework::Graphics::ModelMeshPart::setSamplerStateEXTProperty` -- graphics.model.part_sampler_state
 - `Microsoft::Xna::Framework::Graphics::ModelSkinEXT` -- graphics.model.multiple_skins
+- `Microsoft::Xna::Framework::Graphics::ShadowCascadeStateEXT` -- graphics.skinned_effect.shadow_cascades
 - `Microsoft::Xna::Framework::Graphics::SkinnedEffect::SetOwnedTexture` -- graphics.skinned_effect.clone_ownership
 - `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT` -- graphics.model.skinned_manifest
 - `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::AddPartEXT` -- graphics.model.skinned_parts

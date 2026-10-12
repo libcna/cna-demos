@@ -919,3 +919,30 @@ The final watch covers 3,909 CNA source/header/CMake inputs; it is not
 an atomic or full transitive dependency snapshot.
 Metadata470/0; all26CLI/skinned CTests pass in4.36s, including two declared shadow skips.
 Full470-cascades validation is pending. Evidence: checkpoint-470-cascades-focused-*.
+
+## Complete 470-cascades
+
+Complete checkpoint **470-cascades**, source `370bf37`, adds a focused
+six-control authored-atlas scene: near/inclusive-split/far selection, half visibility in a
+blend band, independent fitting CameraView and Count0 restoring the single-map transform.
+All six GL checks pass; the actual image was inspected and six selected colors match within
+tolerance1. SOFTWARE explicitly skips the unsupported stock path; OPENGL33 remains untested.
+No shadow-map generation, atlas-border filtering, four-cascade maximum or DebugTint credit.
+Initial build33371 incorporates external CNA LINK-041/LINK-042 and completes584scheduled /
+581numbered operations, but detects six watched CMake input changes during external work.
+No native checks ran until consistency90087 completed32scheduled/29numbered operations with
+all3,909watched inputs unchanged. Focused/targeted16253 passes26CTests in4.36s, two shadow skips.
+Full21772 builds in7scheduled operations, validates470metadata/0problems and passes all483
+enabled CTests in221.58s (449passed including27WILL_FAIL,34skips; three additional manual
+tests disabled). SOFTWARE406/27/34/3, OPENGLES3 435/29/3/3. Every old38/42failed assertion,
+C/custom child list/trace and all five network controls remain exact. Old JSON count differences:
+{"OPENGLES3": {}, "SOFTWARE": {}}.
+All35selected binaries/four existing assets and readerfixture copies remain unchanged.
+Normalized application stderr adds only the declared SOFTWARE cascade skip; GL retains42known
+X protocol records and the intentional shader error. The outer Xvfb log contains12exact
+amdgpu pairs (previously18); independently journaled inner/outer exits are zero.
+Capture CNA123c36c34b (dirty), final CNAdc9c34f62f (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-cascades-*.
+Generated coverage: 293/329types, 1374/2326XNA members, 174/3210C routes.
+Semantic coverage remains incomplete; authored cascade sampling does not establish all shadows.

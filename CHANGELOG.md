@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete470-cascades: all483enabled CTests and both full smoke suites preserve every old
+  failure/child/network control. Six new cascade checks pass on GL; SOFTWARE declares its
+  stock-path skip. Selected artifacts stay stable through runtime after consistency rebuilding.
 - Complete 469-pcf: all 482 enabled CTests and both full smoke suites preserve the exact
   old failures, child/network controls and normalized diagnostics. The receiver adds three
   passing kernel controls; selected artifacts remain stable through runtime.
