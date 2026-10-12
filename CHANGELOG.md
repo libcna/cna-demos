@@ -46,6 +46,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing patrol pipeline example distinguishes stable output declarations from actual C++
+  payload types at Import, Process and Write, and verifies copied ContentValue ownership (14 checks).
+- Existing XNA adapter contrasts strict refusal with warning/default parameter handling and retained
+  valid overrides. Correct compiled bounds are verified separately from returned effective metadata,
+  whose retained dropped entries expose ISSUE-048; the older ISSUE-047 remains visible.
 - The validation script's Xvfb leg now explicitly selects SDL's x11 driver and removes inherited
   WAYLAND_DISPLAY. A real native-handle comparison exposed Wayland selection despite Xvfb; a
   regression test checks this isolation alongside existing failure-propagation controls.

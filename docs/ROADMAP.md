@@ -208,6 +208,8 @@ a check that all authored colors remain visible and that a blank texture row can
   containers whose game schema has missing/duplicate blocks, truncated fields or trailing bytes.
   ✅ `content.custom.pipeline_components`: registered importer/processor/writer, real patrol
   precomputation, deterministic CNB output, runtime loading and typed parameter diagnostics.
+  Existing example now has 14 passing checks: copied carrier lifetime and separate stable-identity
+  versus C++ payload guards at Import, Process and Write, with exact error context.
   ✅ Existing cache/Unload demo now shows root switching after Unload and exposes CNA's missing
   loaded-root guard (ISSUE-039). ✅ `content.custom.intermediate_serializer`: a separate build-time
   tool with named/optional/ignored fields, collection item names, absent/present/null distinctions,
@@ -222,8 +224,10 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.custom.xna_pipeline_components`: actual XNA importer/processor adapters, default
   processor selection, typed parameter conversion/isolation, source sidecar dependency and
   nested Convert producing compiled route bounds. The extension reads a processor label dependency
-  and writes a bounds summary: 12 checks pass; AddOutputFile refuses the configured separate
-  output root (ISSUE-047). Explicit rebuild/input failure and cleanup are verified; no CLI cache claim.
+  and writes a bounds summary. With the strictness extension, 17 of 19 checks pass:
+  AddOutputFile refuses the configured separate output root (ISSUE-047), and returned effective
+  parameters retain entries dropped by XnaCompatible (ISSUE-048). Defaulted compiled bounds,
+  two contextual warnings, retained valid overrides and refusal of missing inputs are verified. Explicit rebuild/input failure and cleanup are verified; no CLI cache claim.
   ✅ `content.custom.cnb_external_references`: actual XREF tables and owner-mediated child loads,
   shared/local caches, bad references, missing child retry and unsafe-name rejection.
   ✅ `content.custom.cnb_read_limits`: container inspection, independent writer/reader byte

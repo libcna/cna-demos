@@ -13,6 +13,7 @@
 #include <sstream>
 #include <system_error>
 #include <vector>
+#include <variant>
 
 #include "CnaDemos/Process.hpp"
 #include "CNA/Content/Cnb/CnbByteReader.hpp"
@@ -279,6 +280,47 @@ int main()
             check(rejected, unknown ? "an undeclared parameter reports the responsible processor"
                                     : "an unconvertible parameter reports the process stage and component");
         }
+        // Strict (above) refuses these mistakes. XnaCompatible warns, drops only the
+        // offending entries and lets the freshly constructed processor retain its defaults.
+        auto compatible = request;
+        compatible.environment.strictness = Pipeline::ContentStrictness::XnaCompatible;
+        compatible.parameters.Set("Padding", std::string("wide"));
+        compatible.parameters.Set("UnknownPadding", 1.5);
+        const auto defaulted = pipeline.Build(compatible);
+        check(defaulted.output.bytes == built.output.bytes,
+              "XnaCompatible drops two invalid parameters and compiles the actual default bounds");
+        bool paddingWarning = false, unknownWarning = false, contextualWarnings = defaulted.messages.size() == 2;
+        for (const auto& message : defaulted.messages)
+        {
+            contextualWarnings &= message.level == Pipeline::ContentLogLevel::Warning &&
+                message.stage == Pipeline::ContentPipelineStage::Process && message.component == BoundsName &&
+                message.logicalName == compatible.logicalName &&
+                message.source == std::filesystem::canonical(compatible.sourceRoot / compatible.source);
+            paddingWarning |= message.text.find("parameter 'Padding'") != std::string::npos;
+            unknownWarning |= message.text.find("'UnknownPadding'") != std::string::npos;
+        }
+        check(contextualWarnings && paddingWarning && unknownWarning,
+              "each dropped parameter has its own warning with full source, asset and processor context");
+        std::cout << "Returned effective parameter entries: " << defaulted.parameters.Values().size() << '\n';
+        for (const auto& [name, value] : defaulted.parameters.Values())
+        {
+            (void)value;
+            std::cout << "  returned parameter: " << name << '\n';
+        }
+        check(defaulted.parameters.Values().empty(),
+              "the build result's effective parameters omit both dropped entries (CNA-DEMOS-ISSUE-048)");
+        check(compatible.parameters.Values().size() == 2 && compatible.parameters.Find("Padding") &&
+              std::holds_alternative<std::string>(*compatible.parameters.Find("Padding")) &&
+              std::get<std::string>(*compatible.parameters.Find("Padding")) == "wide",
+              "lenient processing leaves the caller's authored parameter request intact");
+        compatible.parameters.Set("Padding", 1.5);
+        const auto partiallyDefaulted = pipeline.Build(compatible);
+        const auto retainedPadding = ReadBounds(partiallyDefaulted);
+        check(retainedPadding.minX == -1.5f && retainedPadding.minY == -1.5f &&
+              retainedPadding.maxX == 7.5f && retainedPadding.maxY == 9.5f &&
+              partiallyDefaulted.messages.size() == 1 &&
+              partiallyDefaulted.messages.front().text.find("'UnknownPadding'") != std::string::npos,
+              "lenient processing preserves a valid Padding override while warning about an unknown parameter");
         const auto directory = std::filesystem::temp_directory_path() /
             ("cna-demos-route-summary-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
         if (!std::filesystem::create_directory(directory)) throw std::runtime_error("Could not reserve a private source/output directory.");
@@ -342,6 +384,18 @@ int main()
                 std::cout << "Missing label refused: " << error.what() << '\n';
             }
             check(missing, "a missing processor dependency is refused with the responsible process-stage context");
+            summary.environment.strictness = Pipeline::ContentStrictness::XnaCompatible;
+            bool compatibleMissing = false;
+            try { (void)pipeline.Build(summary); }
+            catch (const Pipeline::ContentPipelineError& error)
+            {
+                compatibleMissing = error.Stage() == Pipeline::ContentPipelineStage::Process &&
+                    error.Component() == BoundsName && error.Source() == sources / summary.source &&
+                    error.LogicalName() == summary.logicalName &&
+                    std::string(error.what()).find("patrol.label") != std::string::npos;
+            }
+            check(compatibleMissing,
+                  "XnaCompatible still refuses a missing processor input instead of defaulting past it");
         }
         check(!std::filesystem::exists(directory), "private route copies, labels and generated summaries are removed");
         return passed ? 0 : 1;

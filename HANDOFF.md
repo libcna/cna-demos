@@ -236,27 +236,41 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** full compiler configuration checkpoint is complete (source e3b8244,
-/tmp/cna-demos-441-config-validation.log, exit 0). Original streams, exact reviews, build/CTest logs
-and 30 selected hashes are archived under reports/checkpoint-441-config-*. Compiler 20 child
-checks pass; all older statuses and exact 31/32 failures remain. Apply the prepared existing-demo
-extensions below, build, validate and run both selections; investigate the suspected returned
-parameter metadata discrepancy before assigning an issue. Then continue the deeper audit.
+**Immediate next action:** contract extensions are APPLIED; original build is clean and focused
+runs completed. pipeline_components has 14 passing checks on both displayless selections
+(/tmp/cna-441-values-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}). XNA adapter has 17 passes/two
+failures among 19 child checks: original ISSUE-047 plus reproduced returned-parameter contract
+ISSUE-048. Initial unlabeled evidence /tmp/cna-441-strictness-first-* is retained. Final labeled
+rebuild /tmp/cna-441-contracts-final-build.log is clean; labeled focused runs retain 17 passes and
+only ISSUE-047/048, with all 13 original child checks preserved and private data gone. All 24
+targeted CTests pass (6.46 s, /tmp/cna-441-contracts-targeted-ctest.log), metadata 441/0, coverage
+regenerated with previous full runtime reports (type/member totals unchanged). Focused evidence
+is archived under reports/checkpoint-441-contracts-focused-*. Commit, then run full 441-contracts against ORIGINAL checkpoint-441-config. Expect same 441
+statuses/knownIssue IDs, native patrol JSON count 6 -> 14, adapter child list 13 -> 19 and exactly
+one new labeled failed assertion per renderer (31/32 -> 32/33). Other child checks unchanged.
+Record all 30 selected binary hashes after full build; freeze source/assets during runtime.
 
-Read-only preparation: /tmp/cna-pipeline-value-contracts.cpp (generator
-/tmp/cna-draft-value-contracts.py) extends existing pipeline_components from 6 to 14 checks.
-Source-reviewed, NOT applied/compiled/run: importer/processor empty and wrong stable identities
-versus correctly named wrong C++ payloads must fail in Import/Process/Write respectively; exact
-source/logical/component diagnostics and retained ContentValue ownership are checked. No new ID.
-The prerequisite checkpoint is now archived; apply after this documentation commit. Parameter strictness draft also prepared:
-/tmp/cna-xna-strictness.cpp (generator /tmp/cna-draft-strictness.py), NOT applied/compiled/run.
-It adds six checks to the existing XNA adapter: two invalid parameters default with two contextual
-warnings, caller request retained, valid override survives, and missing processor input still fails.
-One check expects ContentBuildResult.parameters to exclude dropped entries: public header says
-"Effective processor parameters", but ContentPipeline.cpp:1674 copies request.parameters.
-Reproduce before assigning any issue ID; distinguish returned-metadata contract from correct
-compiled default output. MakeContentBuildManifestEntry copies result.parameters; cache/fingerprint
-implications are source observations only, not runtime evidence. Keep original ISSUE-047 exposed.
+Both /tmp/cna-pipeline-value-contracts.cpp and /tmp/cna-xna-strictness.cpp drafts/generators are
+APPLIED AND STALE: repository contains the final labeled reproduction and extra returned-key
+output. Do not reapply drafts. Native example distinguishes importer/processor empty/wrong stable
+identities from wrong C++ payloads accepted by identity selection but rejected by the consumer Get.
+The existing XNA adapter checks actual default CNB bytes, two contextual warnings, caller request
+retention, valid override preservation and refusal of missing processor input. ISSUE-048 concerns
+the documented effective result metadata only: both dropped keys remain. MakeContentBuildManifestEntry
+copies result.parameters; cache effects are source observations only, not reproduced failures.
+No CNA source edit. ISSUE-047 was accidentally below Resolved in the issue document; it is now
+correctly under Open along with new ISSUE-048.
+
+Latest COMPLETE checkpoint: 441-config at e3b8244 (closure e245a87); all 454 enabled CTests,
+SOFTWARE 390/23/25/3, OPENGLES3 411/24/3/3, exact 31/32 failures and unchanged normalized stderr.
+Archives reports/checkpoint-441-config-* include original streams, exact reviews and 30 hashes.
+
+Next deeper work: native writer additional outputs and actual compiler deployment/publication
+failure recovery. Source review only: tools/content/content.cpp PublishResult writes individual
+outputs sequentially with per-file atomic helpers; do not assume whole-node rollback. The public
+native AddDeploymentFile accepts a contained source and safe output path (separate from the XNA
+AddOutputFile ISSUE-047). A focused multi-artifact publication demo would add meaning beyond the
+existing single-output compiler controls; no implementation or runtime claim yet.
 
 Initial config build /tmp/cna-441-config-build.log stopped in concurrently modified C API:
 CnaCApiDisplay.cpp:439 lacked the qualification/using for ToNativePresentationParameters. At later

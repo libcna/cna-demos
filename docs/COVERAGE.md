@@ -159,11 +159,17 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::IsCnbCompressionSupported` -- content.custom.cnb_read_limits
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Find` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Parse` -- content.custom.incremental_compiler
+- `CNA::Content::Pipeline::ContentBuildEnvironment::strictness` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildManifest::Find` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildManifest::Parse` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildRequest::siblings` -- content.custom.nested_builds
+- `CNA::Content::Pipeline::ContentBuildResult::messages` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentBuildResult::parameters` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentFileSha256` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentPipeline::Build` -- content.custom.nested_builds, content.custom.pipeline_components, content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineError::Component` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineError::LogicalName` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineError::Source` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::Stage` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::IsFrozen` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter` -- content.custom.pipeline_components
@@ -172,8 +178,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentProcessorContext::Parameters` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessorContext::ResolveSourceDependency` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessorParameters::Set` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentStrictness::XnaCompatible` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentValue::CppType` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentValue::Create` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentValue::Empty` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentValue::Get` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentValue::RawData` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentValue::StableType` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaImporter` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline

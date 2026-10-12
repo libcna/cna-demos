@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <string>
 #include <system_error>
+#include <typeindex>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -34,14 +35,25 @@ namespace
     constexpr auto PathChunk = Cnb::MakeChunkId('P', 'A', 'T', 'H');
     struct Patrol { float length; std::vector<Vector2> points; };
 
+    // Deliberately broken component outputs below distinguish coordinator type checks from
+    // the receiving component's Get<T>() check. Normal builds keep the default output.
+    enum class ReturnedValue { Valid, Empty, WrongStableType, WrongCppType };
+
     class PatrolImporter final : public Pipeline::ContentImporter
     {
+        ReturnedValue returned_;
     public:
+        explicit PatrolImporter(ReturnedValue returned = ReturnedValue::Valid) : returned_(returned) {}
         Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.PatrolImporter", "1"}; }
         std::vector<std::string> SourceExtensions() const override { return {".route"}; }
         std::vector<std::string> OutputTypes() const override { return {ImportedType}; }
         Pipeline::ContentValue Import(Pipeline::ContentImporterContext& context) const override
         {
+            if (returned_ == ReturnedValue::Empty) return {};
+            if (returned_ == ReturnedValue::WrongStableType)
+                return Pipeline::ContentValue::Create("CnaDemos.UndeclaredRoute", std::vector<Vector2>{});
+            if (returned_ == ReturnedValue::WrongCppType)
+                return Pipeline::ContentValue::Create(ImportedType, std::string("not waypoints"));
             std::ifstream source(context.SourcePath());
             if (!source) throw std::runtime_error("Could not open the patrol route");
             std::vector<Vector2> points;
@@ -61,7 +73,9 @@ namespace
 
     class PatrolProcessor final : public Pipeline::ContentProcessor
     {
+        ReturnedValue returned_;
     public:
+        explicit PatrolProcessor(ReturnedValue returned = ReturnedValue::Valid) : returned_(returned) {}
         Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.PatrolProcessor", "1"}; }
         std::string InputType() const override { return ImportedType; }
         std::string OutputType() const override { return RuntimeType; }
@@ -74,6 +88,11 @@ namespace
         Pipeline::ContentValue Process(const Pipeline::ContentValue& input,
                                        Pipeline::ContentProcessorContext& context) const override
         {
+            if (returned_ == ReturnedValue::Empty) return {};
+            if (returned_ == ReturnedValue::WrongStableType)
+                return Pipeline::ContentValue::Create("CnaDemos.UndeclaredPatrol", Patrol{});
+            if (returned_ == ReturnedValue::WrongCppType)
+                return Pipeline::ContentValue::Create(RuntimeType, std::string("not a patrol"));
             Patrol patrol{0.0f, input.Get<std::vector<Vector2>>()};
             for (std::size_t i = 1; i < patrol.points.size(); ++i)
                 patrol.length += Vector2::Distance(patrol.points[i - 1], patrol.points[i]);
@@ -196,6 +215,72 @@ namespace
             ctx.Print("Invalid processor parameter: {}", error.what());
         }
         ctx.Check(rejected, "an invalid parameter reports the processor and the failing pipeline stage");
+
+        auto value = Pipeline::ContentValue::Create(RuntimeType, Patrol{12.0f, {Vector2(3, 4)}});
+        const void* shared = value.RawData();
+        const auto retained = value;
+        value = {};
+        ctx.Check(value.Empty() && value.StableType().empty() &&
+                  value.CppType() == std::type_index(typeid(void)) && value.RawData() == nullptr,
+                  "an empty carrier has no stable identity, concrete type or data pointer");
+        // RawData is inspected only after CppType agrees. Get<T>() remains the checked API.
+        ctx.Check(!retained.Empty() && retained.StableType() == RuntimeType &&
+                  retained.CppType() == std::type_index(typeid(Patrol)) &&
+                  retained.RawData() == shared && retained.RawData() == &retained.Get<Patrol>() &&
+                  retained.Get<Patrol>().length == 12.0f && retained.Get<Patrol>().points.size() == 1 &&
+                  retained.Get<Patrol>().points.front() == Vector2(3, 4),
+                  "a copied carrier retains its typed immutable patrol after the original is reset");
+
+        using Stage = Pipeline::ContentPipelineStage;
+        using Output = ReturnedValue;
+        struct Refusal
+        {
+            Output importer, processor;
+            Stage stage;
+            const char* component;
+            const char* diagnostic;
+            const char* check;
+        };
+        const std::array refusals{
+            Refusal{Output::Empty, Output::Valid, Stage::Import, "CnaDemos.PatrolImporter",
+                    "importer returned an empty value",
+                    "an empty importer result fails at Import with source and component context"},
+            Refusal{Output::WrongStableType, Output::Valid, Stage::Import, "CnaDemos.PatrolImporter",
+                    "undeclared output type",
+                    "an undeclared importer output identity fails at Import before processing"},
+            Refusal{Output::WrongCppType, Output::Valid, Stage::Process, "CnaDemos.PatrolProcessor",
+                    "does not contain the C++ type",
+                    "a declared importer identity with the wrong C++ payload fails at the processor Get"},
+            Refusal{Output::Valid, Output::Empty, Stage::Process, "CnaDemos.PatrolProcessor",
+                    "processor returned an empty value",
+                    "an empty processor result fails at Process with source and component context"},
+            Refusal{Output::Valid, Output::WrongStableType, Stage::Process, "CnaDemos.PatrolProcessor",
+                    "processor declared output type",
+                    "an undeclared processor output identity fails at Process before writing"},
+            Refusal{Output::Valid, Output::WrongCppType, Stage::Write, "CnaDemos.PatrolWriter",
+                    "does not contain the C++ type",
+                    "a declared processor identity with the wrong C++ payload fails at the writer Get"},
+        };
+        request.parameters.Set("closed", true); // Restore valid input before testing each output contract.
+        for (const auto& refusal : refusals)
+        {
+            auto invalidRegistry = std::make_shared<Pipeline::ContentPipelineRegistry>();
+            invalidRegistry->RegisterImporter(std::make_shared<PatrolImporter>(refusal.importer));
+            invalidRegistry->RegisterProcessor(std::make_shared<PatrolProcessor>(refusal.processor));
+            invalidRegistry->RegisterWriter(std::make_shared<PatrolWriter>());
+            const Pipeline::ContentPipeline invalidPipeline(invalidRegistry);
+            bool contextual = false;
+            try { (void)invalidPipeline.Build(request); }
+            catch (const Pipeline::ContentPipelineError& error)
+            {
+                contextual = error.Stage() == refusal.stage && error.Component() == refusal.component &&
+                    error.LogicalName() == request.logicalName &&
+                    error.Source() == std::filesystem::canonical(request.sourceRoot / request.source) &&
+                    std::string(error.what()).find(refusal.diagnostic) != std::string::npos;
+                ctx.Print("Expected component refusal: {}", error.what());
+            }
+            ctx.Check(contextual, refusal.check);
+        }
     }
 }
 
@@ -203,12 +288,15 @@ CNA_DEMOS_CONSOLE(PipelineComponents, {
     .id = "content.custom.pipeline_components",
     .title = "Build a custom patrol asset (CNAEXT)",
     .description = "Registers a text importer, a length-precomputing processor and a CNB writer, builds a patrol "
-                   "through ContentPipeline, loads its runtime schema and checks contextual parameter errors.",
+                   "through ContentPipeline, loads its runtime schema and distinguishes stable output identities from C++ payload errors.",
     .apis = {"CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter",
              "CNA::Content::Pipeline::ContentPipelineRegistry::RegisterProcessor",
              "CNA::Content::Pipeline::ContentPipelineRegistry::RegisterWriter",
              "CNA::Content::Pipeline::ContentPipeline::Build", "CNA::Content::Pipeline::ContentValue::Create",
-             "CNA::Content::Pipeline::ContentValue::Get", "CNA::Content::Pipeline::ContentProcessorParameters::Set",
+             "CNA::Content::Pipeline::ContentValue::Get", "CNA::Content::Pipeline::ContentValue::StableType",
+             "CNA::Content::Pipeline::ContentValue::CppType", "CNA::Content::Pipeline::ContentValue::RawData",
+             "CNA::Content::Pipeline::ContentValue::Empty", "CNA::Content::Pipeline::ContentPipelineError::Component",
+             "CNA::Content::Pipeline::ContentPipelineError::Source", "CNA::Content::Pipeline::ContentPipelineError::LogicalName", "CNA::Content::Pipeline::ContentProcessorParameters::Set",
              "CNA::Content::Pipeline::ContentPipelineError::Stage", "ContentManager::RegisterCnbLoaderEXT",
              "CNA::Content::Cnb::CnbByteReader::ReadCount"},
     .tags = {"content", "custom", "pipeline", "cnb", "cnaext"},
