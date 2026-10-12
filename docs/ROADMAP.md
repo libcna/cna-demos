@@ -190,6 +190,12 @@ a check that all authored colors remain visible and that a blank texture row can
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
 ## Phase 8 -- content 🟨 (46 demos; remaining below)
+
+- ✅ Existing `content.texture_processor.resize_to_power_of_two` now verifies XNB-targeted
+  Reach/HiDef mipmap processing, resized payloads matching its rendered CNB and the distinct native
+  CNB profile policy (seven checks). Scene captures remain RGBA-identical on both renderers.
+  XNB writing/loading and actual Reach hardware remain separate; ISSUE-049 is a stale public
+  environment comment, not a runtime failure.
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT

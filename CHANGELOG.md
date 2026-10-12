@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing texture resize demo now contrasts actual Reach/HiDef mipmap processing with native
+  CNB output, compares freshly resized pixels with its loaded texture and retains the original scene.
+  Seven checks pass; the public build-environment overview mismatch is documented as ISSUE-049.
 - Explicit shared-art source-root capabilities through the built-in CNJ texture pipeline: actual
   decoded pixels, dependency aliases, relocated/local sources, refused paths/grants and repair.
   Console examples now show captured build messages and contextual source-root refusals.

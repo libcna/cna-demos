@@ -1258,6 +1258,33 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   all 30 selected runtime hashes match. Archives: `reports/checkpoint-441-contracts-*`.
 - **Status:** open; an observable public metadata/contract discrepancy, not a demo failure.
 
+### CNA-DEMOS-ISSUE-049 -- Build-environment overview incorrectly says built-ins ignore its fields
+
+- **Area:** documentation only, the host-level build-facts overview above ContentBuildEnvironment
+  in `modules/content/include/CNA/Content/Pipeline/ContentPipeline.hpp` (around lines 169-176).
+- **Related demo:** `content.texture_processor.resize_to_power_of_two` (passes; no expected-failure marker).
+- **Mismatch:** the overview says "None of them changes what a built-in CNA component does today."
+  Actual TextureProcessor behavior consults targetProfile when processing an XNB-targeted texture.
+- **Reproduction/observed:** register the native texture pipeline and ImportAndProcess the original
+  100x60 PNG with Xnb output intent, Color format and generateMipmaps=true. Reach refuses it at
+  Process/CNA.TextureProcessor with the power-of-two requirement. Changing only targetProfile to
+  HiDef produces seven mip payloads at the original size. Explicit resizing instead permits Reach
+  with 128x64 and eight levels; disabling mipmaps permits the unscaled Reach case. CNB output
+  intentionally has no XNB profile gate and writes/decodes the original seven mip levels.
+- **Evidence:** seven checks pass on SOFTWARE and OPENGLES3; the old rendered CNB scene remains
+  RGBA-identical before/after and across renderers, and fresh resized base pixels match its loaded
+  texture. Original streams/captures/source hashes are `reports/checkpoint-445-profile-focused-*`,
+  with baseline captures `checkpoint-445-profile-before-*`; all 33 targeted CTests pass.
+  The XNB cases inspect processed values, not written XNB bytes or XNA/Reach hardware execution.
+- **Environment:** Linux/GCC 14.2; observed CNA HEAD `30831ba6ca01a8820e84720c12ddd10a04d52051`.
+  The inspected pipeline header and texture processor source have no uncommitted changes; other
+  C API work continues. This is not an atomic source/dependency snapshot.
+- **Expected/suggested correction:** describe the environment as host facts that built-in and
+  custom components can consult; remove the obsolete blanket claim. For example, distinguish
+  XNB texture-profile policy from CNB processing without implying every field affects every route.
+- **Status:** confirmed public-comment mismatch; runtime behavior is correct. No CNA source
+  changed, upstream message sent, failing assertion suppressed or new known-failure demo added.
+
 ## Resolved
 
 ### CNA-DEMOS-ISSUE-044 -- In-flight C API generation shadows a result-handle parameter

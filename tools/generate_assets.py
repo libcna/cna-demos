@@ -343,6 +343,7 @@ def main() -> None:
     save_png(keyed_ship(64), "textures/keyed_ship.png", CONTENT_ROOT)
     save_png(soft_circle(64), "textures/soft_circle_compiled.png", CONTENT_ROOT)
     save_png(framed_gradient(100, 60), "textures/odd_size.png", CONTENT_ROOT)
+    save_png(framed_gradient(100, 60), "textures/odd_size.png")  # raw input for runtime profile processing
     save_png(checker(128, 8, (255, 255, 255, 255), (20, 20, 20, 255)), "textures/mipmapped_checker.png", CONTENT_ROOT)
     save_png(colour_wheel(128), "textures/colour_wheel.png", CONTENT_XNB_ROOT)
     save_png(colour_wheel(128), "textures/colour_wheel_dxt.png", CONTENT_XNB_ROOT)

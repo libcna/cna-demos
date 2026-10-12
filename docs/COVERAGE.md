@@ -161,6 +161,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Find` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Parse` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildEnvironment::strictness` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentBuildEnvironment::targetProfile` -- content.texture_processor.resize_to_power_of_two
 - `CNA::Content::Pipeline::ContentBuildLogger::Log` -- content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ContentBuildManifest::Find` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentBuildManifest::Parse` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication
@@ -174,6 +175,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentFileSha256` -- content.custom.incremental_compiler, content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentImporterContext::LogInfo` -- content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ContentPipeline::Build` -- content.custom.nested_builds, content.custom.pipeline_components, content.custom.pipeline_diagnostics, content.custom.source_root_capabilities, content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentPipeline::ImportAndProcess` -- content.texture_processor.resize_to_power_of_two
 - `CNA::Content::Pipeline::ContentPipelineError::Component` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::LogicalName` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::Source` -- content.custom.pipeline_components
@@ -208,6 +210,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline
 - `CNA::Content::Pipeline::RunContentCompiler` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication, content.custom.xml_xnb_pipeline
+- `CNA::Content::Pipeline::TextureResizeToPowerOfTwoParameter` -- content.texture_processor.resize_to_power_of_two
 - `CNA::Devices::DisplayInfo::ContentScale` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::DisplayInfo::SafeArea` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::Locale::PreferredLocales` -- devices.system.machine_info

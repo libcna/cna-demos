@@ -239,25 +239,33 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** complete 445 is closed at source 6c9298f. Continue the EXISTING
-resize_to_power_of_two demo using /tmp/cna-resize-profile.cpp (UNAPPLIED, seven proposed checks,
-retaining its one original check). Baseline capture session 59612 passed (one check on each renderer), archived under
-reports/checkpoint-445-profile-before-*:
-/tmp/cna-445-profile-before-{SOFTWARE,OPENGLES3}.{json,log,stderr.log,png}. Inspect its result before
-editing sources. Add raw assets/textures/odd_size.png using the existing original
-framed_gradient(100,60) generator, and a matching save_png call in tools/generate_assets.py.
-The same original PNG already lives under content/textures; verify byte identity and generate
-only the new fixture. Apply the draft, build, run/capture both renderers and compare before/after.
-The scene's drawing stays the same; fresh resized base pixels are compared with its loaded CNB.
-Public ImportAndProcess inspects actual XNB-targeted Reach/HiDef processing. Only the CNB control
-writes a container; XNB output/load and actual Reach hardware validation remain unclaimed.
+**Immediate next action:** the EXISTING resize demo profile extension is built/focused-validated.
+Seven checks pass on SOFTWARE and OPENGLES3, retaining its original one. Before/after screenshots
+were inspected and are RGBA-identical within and across renderers (800x480); focused stderr empty.
+The added raw PNG was generated only from the existing framed_gradient(100,60) function and is
+byte-identical to content/textures/odd_size.png; generator now reproduces both. The catalog
+remains at 445 demos. No runtime CNA failure. Documentation-only ISSUE-049 records the stale public
+environment overview; metadata has no new expected-failure marker. The native control writes and
+decodes CNB; XNB calls only ImportAndProcess, with no XNB output/hardware validation claim.
 
-Future full checkpoint should be 445-profile (same catalog, no new ID), against ORIGINAL
-checkpoint-445. Prepared /tmp/cna-archive-445-profile.py and /tmp/cna-445-profile-finish.py use
-PENDING445PROFILE. They expect resize 1 -> 7, unchanged old native/content/24 host checks and
-32/33 failures, 32 runtime hashes and unchanged normalized stderr. Review after actual focused
-runs; no profile-extension build/runtime evidence yet. Do not change source/assets during full
-runtime checkpoints. /tmp/cna-resize-profile-body.txt is only a drafting fragment.
+Build /tmp/cna-445-profile-build.log passed (81 steps, no compiler diagnostics); metadata 445/0.
+All 33 targeted CTests passed (11.56 s). Focused streams/captures/source hashes/build/CTest log:
+reports/checkpoint-445-profile-focused-*; original one-check captures are checkpoint-445-profile-
+before-*. Next: commit this batch and run complete 445-profile against ORIGINAL checkpoint-445.
+Capture 32 selected hashes after full build, then freeze source/assets during runtime. Prepared
+/tmp/cna-archive-445-profile.py and /tmp/cna-445-profile-finish.py use PENDING445PROFILE; expect
+same IDs, resize 1 -> 7, old native/content/24 host checks and exact 32/33 failures unchanged,
+unchanged normalized stderr, 458 enabled CTests and SW 394/23/25/3, GL 415/24/3/3.
+The /tmp resize draft/body are now APPLIED AND STALE; use repository sources only.
+
+Next productive work: the existing C error_handling demo already runs two run_one_frame calls
+and observes a failed Update. Extend it coherently with terminal repeat behavior and explicit
+UnloadContent after failure, retaining all 26 existing child checks; do not add a duplicate basic
+frame-step demo. It currently has only an update callback and an int context. CGame::UnloadContent
+explicitly opts into runAfterFailure while normal frame/event callbacks stop. A retained callback
+message after successful cleanup is another useful control. Inspect source/contracts and test;
+this note is not runtime evidence for those extra behaviors. Separate run_frame_ext failure
+completion/documentation ambiguity and foreign-thread served failures remain open.
 
 445 evidence: /tmp/cna-demos-445-validation.log exit 0; all 458 enabled CTests (206.40 s), SW
 394/23/25/3, GL 415/24/3/3, exact 32/33 failed assertions unchanged, every older count/status/
