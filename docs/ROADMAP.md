@@ -455,7 +455,9 @@ table; draw order, visibility, enabled, collection and component events), ✅
 `c_api.media.media_player` (song collection keeps its songs, queue view, transport, process-wide
 events). Remaining: the diagnostics/handle/content table in COVERAGE_AUDIT.md identifies
 ABI-specific gaps (thread-local diagnostics, invalid release guards, borrowed handles
-and thread dispatch). Extend the existing examples where practical; do not duplicate C++ scenes
+and thread dispatch). A bounded diagnostic now reproduces ISSUE-050 on RunFrameEXT/Destroy:
+owner-only operations are incorrectly queued when dispatch is enabled. This remains outside
+the catalog; it does not raise the C route coverage count. Extend the existing examples where practical; do not duplicate C++ scenes
 merely to increase the route count.
 C#/.NET demos belong with the separate `cna-dotnet` binding; decide later whether to reference or
 host them.

@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Bounded C owner-thread diagnostic reproduces CNA-DEMOS-ISSUE-050: enabled foreign-thread
+  dispatch incorrectly queues RunFrameEXT and Destroy. Cancellation proves queuing without
+  executing either forbidden operation; the existing demo expectations remain unchanged.
 - Existing two-bone skinning demo now checks the blended joint silhouette, refused palette-read
   counts and an accepted maximum-sized palette. All eight older checks remain; the thirteen-check
   result preserves the original rendered images on both renderers.

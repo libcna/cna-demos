@@ -161,7 +161,8 @@ Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untest
 
 ## 10. Known CNA issues
 
-See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-049 (stale build-environment overview),
+See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-050 (owner-only C game operations incorrectly queued),
+CNA-DEMOS-ISSUE-049 (stale build-environment overview),
 CNA-DEMOS-ISSUE-048 (dropped parameters retained as effective metadata),
 CNA-DEMOS-ISSUE-047 (AddOutputFile rejects the configured separate output directory),
 CNA-DEMOS-ISSUE-043 (target type versus reader factory lookup),
@@ -239,13 +240,31 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** reproduce the source-level C API owner-thread driving/destruction
-finding below using the prepared bounded no-pump diagnostic. Full 446-palette at 55ebc57 is
-closed: all 459 enabled CTests (143.36 s), SW 395/23/25/3, GL 416/24/3/3, exact prior 32/33
-failed assertions, old C/custom-content child lists and host trace retained. two_bones now passes
-thirteen checks (was eight); every other old JSON count is unchanged. All selected hashes and
-normalized stderr match. Evidence/helpers: reports/checkpoint-446-palette-*. Use this as the
-next complete baseline. The /tmp palette draft is APPLIED AND STALE.
+**Immediate next action:** continue the C ABI behavior audit from confirmed ISSUE-050 below.
+The bounded owner-thread reproducer is now a committed-location tool,
+tools/repro_c_api_owner_thread.c, compiled and runtime-verified for RunFrameEXT and Destroy
+under both selections. Neither forbidden operation is pumped/executed. It proves wrong queuing
+through cancelled INVALID_STATE, with the owner's step intact and successful owner cleanup.
+No catalog expected-failure marker was changed. Next: extend existing foreign_thread_dispatch
+with safe owner-only controls while preserving all eighteen child checks, or move to the
+independent callback-reentrancy boundary in lifecycle_callbacks. A refused destruction there
+must be distinguished from its owned-manager release guard (inspect the actual diagnostic).
+Do not edit CNA from this task. If these guards remain blocked, continue the skinned material/
+fog or four-influence geometry work identified in COVERAGE_AUDIT.md.
+
+Latest COMPLETE catalog checkpoint: 446-palette at 55ebc57 (closure 2c3f095), all 459 enabled
+CTests (143.36 s), SW 395/23/25/3, GL 416/24/3/3, exact prior 32/33 failed assertions and all
+old C/custom-content child lists/host trace retained. two_bones passes thirteen checks; all other
+old counts unchanged. Selected hashes and normalized stderr match. Original evidence/helpers:
+reports/checkpoint-446-palette-*. Use it as the next baseline. All /tmp palette/clone/C drafts
+are APPLIED AND STALE. No runtime checkpoint is currently running.
+
+A later seven-target rebuild against clean CNA 4ee1e0b553667b6e999248fcefdea729654ee497 passed;
+the diagnostic compiles with GCC14/C11/-Wall/-Wextra/-Werror. All 32 selected catalog binaries
+still match 446-palette after this rebuild and probe compilation; metadata remains 446/0. The
+only new native executable is the separate defect reproducer. Its final four cases each exit 1
+for the explicitly confirmed defect. Renderer initialization/selection INFO stderr is preserved,
+not empty; the first evidence-check script wrongly assumed silence and its correction is recorded.
 
 Focused palette evidence: 27-target build without diagnostics, metadata 446/0, all 17 targeted
 CTests (2.30 s), thirteen checks on both selections, empty stderr. Both inspected 800x480 images
@@ -307,25 +326,22 @@ Next meaningful gaps: four-influence geometry, skinned material/fog rendering or
 uncovered C host failure completion/queued dispatch cancellation. Avoid inferring a queued call
 from only a worker's pre-call readiness flag. Existing completed phases remain the baseline.
 
-New source-only finding to investigate AFTER current runtime checkpoint: generated Runtime.inc
-currently wraps run_frame_ext/run_one_frame/run/tick/destroy in CallWithExceptionBarrier, which
-can dispatch a foreign-thread handle refusal; public runtime.h explicitly says driving/destruction
-remain refused even with dispatch enabled. GetCallableGame calls ordinary GetGame/LookupHandle
-and only adds a callback-reentrancy guard. This may be an in-flight generated-C-API regression,
-not yet runtime-reproduced or filed as a CNA issue. A bounded NO-PUMP worker probe is safest:
-correct driving refusal returns THREAD directly; an erroneously queued call must be cancelled
-by disabling dispatch before joining, never served. Test drive and destruction separately,
-retain all existing demo checks, and qualify the dirty-CNA source/binary state.
-Prepared diagnostic-only /tmp/cna-driver-affinity-probe.c is NOT built/run yet. Compile it into
-the existing build/linux-full tree after checkpoint closure (no temporary build tree), then run
-separate fresh processes for default run_frame_ext and the "destroy" argument. Exit 0 means
-THREAD without cancellation; exit 1 means cancellation released INVALID_STATE (proof of queuing);
-exit 2 is unexpected/inconclusive and must not be labeled a CNA regression without investigation.
-It never pumps, confirms the owner's target step survives, and releases the game on the owner.
-Later read-only observation: external CNA is now clean at
-4ee1e0b553667b6e999248fcefdea729654ee497; both Runtime.inc and CnaCApiRuntime.cpp are tracked
-and clean there. The dispatching barriers remain present. This new source observation is not
-retroactive proof of a clean/atomic build input snapshot; rebuild/reproduce after 446-palette.
+Confirmed CNA-DEMOS-ISSUE-050: clean CNA 4ee1e0b553667b6e999248fcefdea729654ee497 was observed
+before rebuild and after reproduction. generated Runtime.inc uses CallWithExceptionBarrier on
+owner-only driving/destruction routes, despite runtime.h's explicit exception to dispatch.
+GetCallableGame adds only a callback-reentrancy guard; ordinary handle lookup signals a retryable
+foreign-thread failure. Initial and final-source probes reproduce both RunFrameEXT and Destroy
+on both selections. Cancelled INVALID_STATE proves real queuing; readiness/timing alone would
+not. The probe distinguishes scheduling-inconclusive cases with exit 2 and never services the
+forbidden body. Other generated driving routes share the source shape but were not executed.
+
+Reproduction commands and source analysis: docs/CNA_ISSUES.md ISSUE-050. All original/final
+stdout, stderr, exits, initial source, clean-state observations and selected source/binary hashes:
+reports/cna-issue-050-*. The initial final-source verification stopped because native INFO stderr
+was incorrectly assumed empty, and a premature archive then lacked the remaining case logs.
+All remaining cases were completed; each final stderr equals its original stream exactly. The
+note preserves that tooling error. No extra CNA defect, renderer-frame validation or full atomic
+transitive input snapshot is claimed. No CNA file changed or upstream message sent.
 
 445 evidence: /tmp/cna-demos-445-validation.log exit 0; all 458 enabled CTests (206.40 s), SW
 394/23/25/3, GL 415/24/3/3, exact 32/33 failed assertions unchanged, every older count/status/
