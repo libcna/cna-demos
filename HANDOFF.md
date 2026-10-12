@@ -97,15 +97,16 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **446-palette checkpoint passed**
-at 55ebc57: tools/validate.sh exit 0, all 459 enabled CTests (143.36 s), both complete isolated-X11
-smoke runs and coverage regeneration. ORIGINAL 446 comparisons retain every older ID/status/
-knownIssue and all 32/33 failed assertions; two_bones extends eight passing checks to thirteen.
-All C/custom-content child lists and host trace are unchanged. Selected 32 binary/four asset
-hashes match runtime capture; normalized stderr is unchanged (no GTK warnings, same 84 nonfatal
-GL X protocol lines). Original evidence and helpers: reports/checkpoint-446-palette-*.
-Both actually inspected focused two-bone images are RGBA-identical to their original 422
-references. No new CNA issue from this extension. This is not a full dependency/input snapshot.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **446-reentry checkpoint passed**
+at e473144: tools/validate.sh exit 0, all 459 enabled CTests (149.41 s), both complete isolated-X11
+smoke runs and coverage regeneration. ORIGINAL 446-palette comparisons retain every ID/status/
+knownIssue and all 32/33 failed assertions. Lifecycle extends sixteen passing child checks to
+eighteen; all other C/custom-content child lists and host trace are unchanged. Selected 32 binary/
+four asset hashes match runtime capture. Normalized stderr is unchanged (no GTK warnings, same
+84 nonfatal GL X protocol lines). Evidence: reports/checkpoint-446-reentry-*; helpers remain in
+/tmp/cna-archive-446-reentry.py and /tmp/cna-446-reentry-finish.py. No new CNA issue from reentry.
+This is not a full dependency/input snapshot. Focused lifecycle images were actually inspected;
+their solid colors depend on game time, so no pixel-identity claim applies.
 
 | Check | Result |
 |---|---|
@@ -117,7 +118,7 @@ references. No new CNA issue from this extension. This is not a full dependency/
 | OPENGLES3 smoke (explicit x11, private Xvfb) | 416 passed, 24 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | All 32/33 older failed assertions retained |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Two-bone images inspected on both renderers; each RGBA-identical to its original 422 reference (800x480) |
+| Screenshots | Focused lifecycle images inspected on both renderers (800x480, time-dependent clear colors) |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -240,24 +241,31 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** commit the built/focused-validated C callback-reentry extension,
-then run complete 446-reentry against ORIGINAL checkpoint-446-palette. Existing lifecycle_callbacks
-passes eighteen child checks without capture (was sixteen), twenty with capture (was eighteen).
-Both selections pass and retain every older assertion. INVALID_STATE/STATE diagnostics identify
-callback reentry, not the independent owned-manager guard; normal lifecycle/borrow checks pass.
-Build /tmp/cna-446-reentry-build.log passed (11 targets, no diagnostics); metadata 446/0; all
-31 C/CLI CTests passed (5.40 s). Both inspected 800x480 images show the time-dependent clear:
-SOFTWARE (67,60,113,255), OPENGLES3 (54,60,126,255). No image-equality claim; stderr empty.
-Evidence/source hashes: reports/checkpoint-446-reentry-focused-*. No new CNA issue. Catalog 446.
-Prepare strict full comparison/hashes: expect same totals, all prior 32/33 failed assertions,
-all old child checks retained and lifecycle 16 -> 18 only. Freeze source/assets during runtime.
+**Immediate next action:** apply and validate the owner-dispatch extension below. Complete
+446-reentry at e473144 is CLOSED: tools/validate.sh exit 0; 459 enabled CTests (149.41 s),
+SW 395/23/25/3, GL 416/24/3/3. Exact ORIGINAL 446-palette comparisons retain all 32/33 failed
+assertions, statuses, known issues and old child checks; lifecycle adds two passing assertions
+(16 -> 18 without capture, 18 -> 20 with capture). All other C/custom-content lists are unchanged.
+Selected 32 binary/four asset hashes and normalized stderr match. Evidence and strict reviews:
+reports/checkpoint-446-reentry-*. Use this as the next baseline. No runtime checkpoint is running.
 
-Latest COMPLETE catalog checkpoint: 446-palette at 55ebc57 (closure 2c3f095), all 459 enabled
+UNAPPLIED next draft /tmp/cna-owner-dispatch.c extends existing foreign_thread_dispatch from
+18 to 30 child checks. All old controls remain. Two owner-only workers use NO PUMP, are safely
+cancelled if queued, require a conclusive result distinct from pre-call scheduling delays, and
+verify the owner's unchanged target step afterwards. The correct direct THREAD assertions are
+labeled ISSUE-050; current CNA is expected to produce two failures and 28 passes. No runtime
+claim yet. Ordinary workers retain the old five-second completion assertion; only owner-only
+probes have a separately labeled return-or-cancel safety check. Do not apply during 446-reentry.
+This draft still needs metadata knownIssue=ISSUE-050, actual focused validation, strict failure
+comparison and documentation updates; expected known-demo count would become 25, raw failures
+34/35 ONLY if the two documented assertions reproduce. Do not merely accept a whole-demo failure.
+
+Earlier COMPLETE catalog checkpoint: 446-palette at 55ebc57 (closure 2c3f095), all 459 enabled
 CTests (143.36 s), SW 395/23/25/3, GL 416/24/3/3, exact prior 32/33 failed assertions and all
 old C/custom-content child lists/host trace retained. two_bones passes thirteen checks; all other
 old counts unchanged. Selected hashes and normalized stderr match. Original evidence/helpers:
-reports/checkpoint-446-palette-*. Use it as the next baseline. All /tmp palette/clone/C drafts
-are APPLIED AND STALE. No runtime checkpoint is currently running.
+reports/checkpoint-446-palette-*. The newer reentry checkpoint is now the baseline. Previously applied palette/clone/C drafts
+are stale; the explicitly named owner-dispatch draft above remains UNAPPLIED. The newer 446-reentry runtime checkpoint is complete as described above.
 
 A later seven-target rebuild against clean CNA 4ee1e0b553667b6e999248fcefdea729654ee497 passed;
 the diagnostic compiles with GCC14/C11/-Wall/-Wextra/-Werror. All 32 selected catalog binaries
