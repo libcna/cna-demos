@@ -31,6 +31,25 @@ typedef struct GameState {
     int64_t last_total_ticks;
 } GameState;
 
+/* Read the actual rejection before another call replaces the diagnostic. The specific reason
+   matters: a live graphics manager could independently prevent game destruction. */
+static int callback_reentry_refused(CNA_Result result)
+{
+    CNA_ErrorInfo info = {0};
+    char message[256] = {0};
+    uint64_t needed = 0, copied = 0;
+    info.struct_size = sizeof(info);
+    info.struct_version = 1;
+    if (result != CNA_RESULT_INVALID_STATE || cna_error_get_last_info(&info) != CNA_RESULT_SUCCESS ||
+        info.result != CNA_RESULT_INVALID_STATE || info.category != CNA_ERROR_CATEGORY_STATE ||
+        cna_error_get_last_message_size(&needed) != CNA_RESULT_SUCCESS || needed >= sizeof(message) ||
+        cna_error_copy_last_message(message, needed, &copied) != CNA_RESULT_SUCCESS || copied != needed)
+        return 0;
+    message[copied] = '\0';
+    printf("Callback reentry diagnostic: %s\n", message);
+    return strstr(message, "cannot be called from a lifecycle callback") != NULL;
+}
+
 static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, void* context,
                                CNA_CallbackError* out_error)
 {
@@ -58,6 +77,16 @@ static CNA_Result update(CNA_Handle game, const CNA_GameTime* game_time, void* c
     }
     ++state->updates;
     if (state->updates == 1) {
+        /* Running on the owner thread does not permit recursive driving or destruction from
+           inside its active callback. Refusals must leave this outer run and borrow scope alive. */
+        CNA_Bool nested_running = CNA_TRUE;
+        cna_demo_check(state->demo,
+                       callback_reentry_refused(cna_game_run_frame_ext(game, &nested_running)) &&
+                       state->updates == 1 && state->draws == 0,
+                       "an Update callback cannot recursively drive another game frame");
+        cna_demo_check(state->demo, callback_reentry_refused(cna_game_destroy(game)) &&
+                       state->loads == 1 && state->exits == 0 && state->unloads == 0,
+                       "game destruction is refused specifically because the lifecycle callback is active");
         uint64_t name_bytes = 0;
         CNA_Handle fresh_device = CNA_INVALID_HANDLE;
         cna_demo_check(state->demo,

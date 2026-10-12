@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing C lifecycle demo rejects recursive frame driving and game destruction from Update,
+  checks the callback-specific diagnostic and preserves all original timing, device-borrow and
+  cleanup checks. This owner-thread boundary is independent of foreign-thread ISSUE-050.
 - Bounded C owner-thread diagnostic reproduces CNA-DEMOS-ISSUE-050: enabled foreign-thread
   dispatch incorrectly queues RunFrameEXT and Destroy. Cancellation proves queuing without
   executing either forbidden operation; the existing demo expectations remain unchanged.

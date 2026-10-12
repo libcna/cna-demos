@@ -240,17 +240,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** continue the C ABI behavior audit from confirmed ISSUE-050 below.
-The bounded owner-thread reproducer is now a committed-location tool,
-tools/repro_c_api_owner_thread.c, compiled and runtime-verified for RunFrameEXT and Destroy
-under both selections. Neither forbidden operation is pumped/executed. It proves wrong queuing
-through cancelled INVALID_STATE, with the owner's step intact and successful owner cleanup.
-No catalog expected-failure marker was changed. Next: extend existing foreign_thread_dispatch
-with safe owner-only controls while preserving all eighteen child checks, or move to the
-independent callback-reentrancy boundary in lifecycle_callbacks. A refused destruction there
-must be distinguished from its owned-manager release guard (inspect the actual diagnostic).
-Do not edit CNA from this task. If these guards remain blocked, continue the skinned material/
-fog or four-influence geometry work identified in COVERAGE_AUDIT.md.
+**Immediate next action:** commit the built/focused-validated C callback-reentry extension,
+then run complete 446-reentry against ORIGINAL checkpoint-446-palette. Existing lifecycle_callbacks
+passes eighteen child checks without capture (was sixteen), twenty with capture (was eighteen).
+Both selections pass and retain every older assertion. INVALID_STATE/STATE diagnostics identify
+callback reentry, not the independent owned-manager guard; normal lifecycle/borrow checks pass.
+Build /tmp/cna-446-reentry-build.log passed (11 targets, no diagnostics); metadata 446/0; all
+31 C/CLI CTests passed (5.40 s). Both inspected 800x480 images show the time-dependent clear:
+SOFTWARE (67,60,113,255), OPENGLES3 (54,60,126,255). No image-equality claim; stderr empty.
+Evidence/source hashes: reports/checkpoint-446-reentry-focused-*. No new CNA issue. Catalog 446.
+Prepare strict full comparison/hashes: expect same totals, all prior 32/33 failed assertions,
+all old child checks retained and lifecycle 16 -> 18 only. Freeze source/assets during runtime.
 
 Latest COMPLETE catalog checkpoint: 446-palette at 55ebc57 (closure 2c3f095), all 459 enabled
 CTests (143.36 s), SW 395/23/25/3, GL 416/24/3/3, exact prior 32/33 failed assertions and all
