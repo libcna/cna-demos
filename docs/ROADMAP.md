@@ -651,3 +651,20 @@ selected color/clear controls and all400gold pixels are verified. Layout changes
 ring timing preclude general image identity. All focused stderr is empty; no new CNA issue.
 Generated COVERAGE.md remains complete467-scene until full467-light closes; inventory totals
 remain293/329types,1373/2326XNA members,174/3210C routes.
+
+Complete checkpoint **467-light**, source `2588b74`, preserves all 467 IDs. Build: seven
+scheduled operations; metadata 467/0; all 480 enabled CTests pass in 235.91 s (448 passed,
+including 27 WILL_FAIL, 32 capability skips; three additional manual tests disabled).
+SOFTWARE: 405 passed / 27 failed / 32 skipped / 3 not run. OPENGLES3: 432 / 29 / 3 / 3.
+Both inner validation and outer Xvfb independently exit zero. All 38/42 original failed
+assertions, C/custom child lists and traces, and five network evaluation checks are retained,
+allowing precisely ten new positive C SpriteBatch End-release checks (19 -> 29).
+Skinned lighting checks increase 4 -> 8 on both renderers. Exact JSON count variations are
+archived in each renderer's review; only positive window.title Update variance is allowed.
+All 35 selected binary and four asset hashes remain unchanged. Normalized application stderr
+is identical, including 42 known GL X protocol records and the deliberate shader compiler
+error. Separate outer Xvfb diagnostics contain 16 exact amdgpu pairs (previously 13); no cause
+or hardware GPU claim. CNA 714f9f76a was observed clean at capture/final, not an atomic input
+snapshot. All capture/archive/finish helpers pass. Immutable evidence: checkpoint-467-light-*.
+Coverage remains 293/329 types, 1373/2326 XNA members and 174/3210 C routes. No new demo ID or
+route was needed for these behavioral extensions; comprehensive coverage is not established.
