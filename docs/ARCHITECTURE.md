@@ -132,7 +132,7 @@ Reach profile selects it itself with `GraphicsDeviceManager::setGraphicsProfileP
 
 | Kind | Registered with | Runs | Use for |
 |---|---|---|---|
-| Console | `CNA_DEMOS_CONSOLE(Function, {...})` | `void Function(DemoContext&)` in-process, no Game, no window | math, content data, storage, logging, anything without a frame loop |
+| Console | `CNA_DEMOS_CONSOLE(Function, {...})` | `void Function(DemoContext&)` in-process, no framework-run frame loop | math, content data, storage, logging, anything without a frame loop |
 | Game | `CNA_DEMOS_GAME(Class, {...})` | a `DemoGame` subclass, constructed, `Run()`, destroyed, in-process | everything that needs a GraphicsDevice or a frame loop |
 | Standalone | `CNA_DEMOS_STANDALONE({...})` in `standalone/<id>/metadata.cpp` | a separate executable started as a child process | process-wide state: renderer selection, start-up, custom entry points, the C API, several processes (System Link Find/Join) |
 
@@ -149,6 +149,13 @@ start `cna-demos <id> --batch-child --report <tmp>` and take the result from tha
 message, checks). `cna-demos <id>` itself is such a process and runs the demo directly. The demo
 stays an ordinary in-process Game demo in every other respect (one source file, the shared
 executable).
+
+The same `ownProcess` dispatch also supports Console demos. `content.xnb.reader_versions`
+withdraws a declared built-in reader, so it uses isolation to keep the browser's unknown
+factories untouched. It constructs two sequential Games to exercise their registration
+boundary without calling Run. Its original custom-key checks remain in the same source file;
+no separate executable or alternate registry framework is needed.
+
 
 ## 5. Registry and metadata
 

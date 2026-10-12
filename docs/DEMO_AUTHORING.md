@@ -111,7 +111,7 @@ open. `--screenshot` still captures the last frame it drew.
 | `restrictions` | no | renderer/platform restrictions and *why* |
 | `knownIssue` | no | `CNA-DEMOS-ISSUE-NNN` when a recorded CNA defect makes the demo fail (section 11) |
 | `knownIssueRenderers` | no | renderer names (`"OPENGLES3"`) when the defect is in those renderers only; empty = all |
-| `ownProcess` | no (false) | the demo sets up state CNA allows once per process (gamer services); batch runs and the browser start it as `cna-demos <id>` in a new process. Every `GamerServicesDemo` sets it |
+| `ownProcess` | no (false) | isolate once-per-process services or deliberate global state changes that cannot faithfully restore unknown parent state. Batch/browser runs launch the shared executable in a new process; supported for Game and Console. Every `GamerServicesDemo` and the built-in reader-withdrawal example set it |
 
 ## 6. Style
 

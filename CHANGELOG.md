@@ -35,6 +35,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- Existing XNB reader policies now include built-in factory withdrawal, cache independence and
+  re-declaration by a subsequent Game. All23checks pass in an isolated console process;
+  a deterministic signed primitive fixture supplements the unchanged schema fixtures.
 - Existing volume sampling now survives move construction, replacement of an occupied destination
   and disposal/destruction of both source wrappers. Eight GL checks pass with an unchanged
   inspected image; SOFTWARE retains its declared CustomEffects skip.

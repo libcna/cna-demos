@@ -33,8 +33,8 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Demos: `demos/<category>/.../<name>.cpp`, ID = path, registered by `CNA_DEMOS_CONSOLE`/
   `CNA_DEMOS_GAME`; each category is an OBJECT library found by `GLOB_RECURSE CONFIGURE_DEPENDS`.
 * Standalone demos: `standalone/<id>/{metadata.cpp,main.cpp,CMakeLists.txt}` → `cna-demo-<id-with-dashes>`.
-* `ownProcess` demos (gamer services: once-per-process dispatcher) are in-process Game demos that
-  batch runs and the browser start as `cna-demos <id> --batch-child --report <tmp>`.
+* `ownProcess` Game/Console demos isolate once-per-process services or deliberate registry
+  mutation; batch runs and the browser start them as `cna-demos <id> --batch-child --report <tmp>`.
 * CNA consumed via `add_subdirectory(${CNA_ROOT_DIR} EXCLUDE_FROM_ALL SYSTEM)`, linking `CNA`.
 * Renderer: CNA's `CNA_GRAPHICS_RENDERER(S)`; runtime `--renderer` (one renderer per process).
 * Project graphics profile set to HiDef in `main` (Reach demos opt in).
@@ -242,27 +242,22 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply and validate the prepared **467-readers** extension. Full467-move
-(session65534) is CLOSED0; capture/archive/finish helpers passed. Source1721771 is the comparison
-baseline. Do not reapply the move ownership draft or rerun completed move baseline captures.
-1. Reader syntax17197 already passed. Run /tmp/cna-run-467-readers-focused.py before, retaining
-   the original17checks in both requested environments.
-2. Apply /tmp/cna-builtin-reader-lifetime.cpp to demos/content/xnb/reader_versions.cpp and
-   /tmp/cna-xnb-versions-builtin.py to tools/xnb_versions.py; generate only this fixture family.
-   Keep all three old fixtures byte-identical and add assets/versions/builtin_score.xnb.
-3. Use /tmp/cna-build-467-readers.py initial with the shared cache; finish a consistency phase
-   if watched inputs change. Then metadata validation, focused after and targeted CTests via
-   /tmp/cna-run-467-readers-targeted.sh. No native work over partially rebuilt objects.
-4. Execute /tmp/cna-review-467-readers-focused.py. Expected17->23both, empty stderr, original
-   custom-reader source body exact, deterministic new90byte primitive and unchanged old fixtures.
-   No rendering/visual credit: the two sequential Games do not Run. Update semantic/status docs,
-   explain Console ownProcess in architecture/authoring docs, commit and export
-   /tmp/cna-catalog-467-readers.json.
-5. Run /tmp/cna-run-467-readers-validation.sh. Capture selected artifacts during CTest with
-   /tmp/cna-capture-467-readers.py, including separately captured new fixture copies. Never
-   recapture after runtime or rebuild during smokes. Archive both renderers with
-   /tmp/cna-archive-467-readers.py, then /tmp/cna-467-readers-finish.py and close documentation.
-6. Immediately continue the prepared stereo buffer-format scenario after that checkpoint.
+HIGHEST PRIORITY: complete full **467-readers** validation. The source, generator and new fixture
+are APPLIED; do not reapply proposals or redo before captures. Syntax17197, before runs,
+watched build27370 and focused/targeted97195 all closed0. Both environments pass23checks;
+all17original source controls are exact, old3fixtures unchanged, new90byte primitive deterministic
+and staged identically. Metadata467/0; all23targeted CTests pass in3.16s. Focused reviewer passed;
+immutable evidence checkpoint-467-readers-focused-*. Neither Game runs; no visual validation.
+1. Commit the validated source/docs and export /tmp/cna-catalog-467-readers.json.
+2. Run /tmp/cna-run-467-readers-validation.sh. After its build, during CTest, capture35binary/
+   fourexistingasset hashes plus both new fixture copies with /tmp/cna-capture-467-readers.py.
+   Never recapture after runtime or rebuild/change sources/assets during full smokes.
+3. Archive both renderers via /tmp/cna-archive-467-readers.py, then /tmp/cna-467-readers-finish.py.
+   Baseline is complete467-move (source1721771, closure5c737d4): all38/42failures, C/custom child
+   controls and five network controls must remain. Only intended JSON change is reader17->23both;
+   positive window.title Update variance remains a separately reviewed possibility.
+4. Close status/handoff/history, then immediately continue the prepared stereo buffer-format
+   proposal below. No permission-to-continue pause and no restart of prior phases.
 
 ## 15. Assumptions the next session must know
 
@@ -274,52 +269,31 @@ baseline. Do not reapply the move ownership draft or rerun completed move baseli
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current completed baseline is467-move, source1721771; its closure commit follows. Older field,
-lighting, palette, EOF and kernel drafts are applied and stale. Their evidence and source
-history are in docs/CHECKPOINT_HISTORY.md. Do not alter/revert the sibling CNA checkout.
-The current initial and consistency build journals show no changed watched input hashes;
-source commits/status changed as external work was committed. Do not infer source changes
-from commit IDs alone, or an atomic/full dependency snapshot from selected hashes.
+Current complete baseline is467-move, source1721771 and closure5c737d4. The reader extension's
+focused evidence is complete; its full checkpoint is the next task. Older field, lighting,
+palette, EOF, kernel and move proposals are applied and stale. Do not reapply them. Exact
+history and immutable evidence references are in docs/CHECKPOINT_HISTORY.md.
 
-NOT-APPLIED follow-up **467-readers**: /tmp/cna-builtin-reader-lifetime.cpp extends existing
-content.xnb.reader_versions with six intended built-in lifetime controls, retaining all17
-original checks (intended23total). ownProcess=true protects unknown parent/browser factories;
-Runner and metadata validation support Console isolation. First Game loads signedInt32 -12345,
-withdraws its reader, preserves a cached value, refuses uncached loads without reinstalling
-that factory, and refuses reload after Unload. A second sequential Game loads BEFORE any
-registry query could materialize declarations. Neither Game runs; no renderer/visual credit.
-Use public APIs, no Internal registration helpers or blanket global clearing.
-/tmp/cna-xnb-versions-builtin.py adds deterministic90byte versions/builtin_score.xnb to the
-existing generator. Only pure Python generation ran into two /tmp directories: outputs agree,
-all three old fixtures match current assets byte-for-byte, and structure/payload were checked.
-Reader syntax-only session17197 now closed0 with an empty log; no native reader execution yet. Recovery proposals/helpers/new fixture and source
-review: reports/checkpoint-467-move-next-*.
-After full move closure: run /tmp/cna-467-readers-syntax.py and the before mode of
-/tmp/cna-run-467-readers-focused.py; apply source/generator and generate the new fixture,
-retaining old fixture hashes; build/validate; run after and /tmp/cna-run-467-readers-targeted.sh.
-Preserve original custom reader checks exactly and verify JSON17->23. Success assertions are
-not printed as C++ stdout children. No screenshot is appropriate for these content-only Games.
-Focused /tmp/cna-review-467-readers-focused.py and full reader capture/archive/finish helpers
-are now prepared but NOT RUN, against future complete467-move. All old assertions remain exact;
-new fixture hashes are captured separately from the existing four selected assets. Helper
-recovery copies and syntax journal are archived under checkpoint-467-move-next-*.
+Reader implementation is now demos/content/xnb/reader_versions.cpp and tools/xnb_versions.py,
+with assets/versions/builtin_score.xnb. The two former /tmp proposals are APPLIED AND STALE.
+Focused review verifies original17source controls unchanged,23checks on both selections,
+empty stderr, all old fixture bytes preserved and the new90byte signed primitive reproduced.
+Console ownProcess is explained in architecture/authoring docs; no framework code changed.
+Current source observation at focused build: cleanCNA5a85d5ed2. Build27370 observed all3,906
+watched CNA source/header/CMake hashes unchanged; this is not an atomic/full dependency snapshot.
 
-Additional source-only audit: DynamicSoundEffectInstance sliced stereo buffers and symmetric
-int16/float format transitions remain a coherent gap after reader lifetime. Public APIs/header
-and implementation reviewed at CNA0ae1c41b1; duration helpers intentionally stay16-bit PCM.
-Source-only /tmp/cna-dynamic-buffer-formats.cpp is now prepared: a focused console stereo
-buffer-format example (new meaningful concept, intended16checks) separates byte/sample ranges,
-refuses partial integer frames without queue mutation, pauses/resumes and stops before both
-format transitions. Silent fixtures prove states/acceptance, not output samples or audio quality.
-Syntax-only session71196 now passed with an empty log; no native execution. Source/hash
-review archived in checkpoint-467-move-next-*. See the
-updated COVERAGE_AUDIT.md decision row. Do not apply until the reader checkpoint closes.
-
-Prepared /tmp/cna-build-467-readers.py retains the watched-input initial/consistency build
-workflow for the next batch; not run. It writes a before journal before starting compilation.
+NOT-APPLIED next proposal after reader closure: /tmp/cna-dynamic-buffer-formats.cpp is a focused
+console stereo buffer-format example (new meaningful concept, intended16checks). It separates
+integer byte ranges from float sample ranges, refuses partial integer frames without queue
+mutation, pauses/resumes and stops before both format transitions. Silent fixtures prove
+accepted ranges and playback states, not output samples or audio quality. Syntax-only71196
+passed with an empty log; no native execution. /tmp/cna-468-formats-syntax.py is prepared.
+Source/helper/hash review recovery: checkpoint-467-move-next-*. All original stream-refill
+checks/ISSUE038 remain separate. Do not claim float frame-alignment refusal or concurrent
+producer coverage. Duration helpers intentionally retain16-bit PCM meaning in float mode.
 
 Further source-only graphics audit: IShadowReceiverEXT accepts ignored inputs on unsupported
 renderers, and GraphicsCapability has no shadow query. A future authored-map SkinnedEffect
 receiver must declare its renderer scope and verify direct-light attenuation versus retained
 ambient/emission in actual pixels. Do not misuse CustomEffects as a stock-shadow capability.
-No shadow demo draft/native evidence yet; updated semantic table records exact source scope.
+No shadow demo draft/native evidence yet; the semantic table records the exact source scope.

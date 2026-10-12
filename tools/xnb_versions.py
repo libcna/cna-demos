@@ -16,3 +16,9 @@ def write_all(assets_root: Path) -> None:
         if extra is not None:
             data += struct.pack('<f', extra)
         (root / f'{asset}.xnb').write_bytes(b'XNBw' + bytes([5, 0]) + struct.pack('<I', 10 + len(data)) + data)
+
+    # A real primitive asset for the declared built-in factory's cache/lifetime boundary.
+    builtin = b'Microsoft.Xna.Framework.Content.Int32Reader, Microsoft.Xna.Framework'
+    data = bytes([1, len(builtin)]) + builtin + struct.pack('<i', 0)
+    data += bytes([0, 1]) + struct.pack('<i', -12345)
+    (root / 'builtin_score.xnb').write_bytes(b'XNBw' + bytes([5, 0]) + struct.pack('<I', 10 + len(data)) + data)

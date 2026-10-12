@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MS-PL
 // Evolve a small XNB schema and replace its reader policy without discarding cached assets.
+#include <cstdint>
 #include <filesystem>
 #include <memory>
 #include <optional>
 #include <string>
 
 #include "CnaDemos/Demo.hpp"
+#include "Microsoft/Xna/Framework/Game.hpp"
 #include "CNA/Platform/CurrentPlatform.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
@@ -50,6 +52,46 @@ namespace
     {
         ~ScopedRegistration() { ContentTypeReaderManager::RemoveTypeCreatorEXT(ReaderName); }
     };
+
+    void BuiltinReaderLifetime(CnaDemos::DemoContext& ctx, const std::filesystem::path& root)
+    {
+        constexpr const char* builtin = "Microsoft.Xna.Framework.Content.Int32Reader";
+        constexpr const char* asset = "versions/builtin_score";
+        const auto refusesPrimitive = [&](ContentManager& manager) {
+            try { (void)manager.Load<std::int32_t>(asset); }
+            catch (const ContentLoadException& error)
+            { ctx.Print("Withdrawn built-in refused: {}", error.what()); return true; }
+            return false;
+        };
+        {
+            // This demo runs in its own process. Withdrawing a built-in must not replace an
+            // unknown application's factory or change the registry of the catalog/browser.
+            Microsoft::Xna::Framework::Game firstGame;
+            ContentManager cached(nullptr, root.string());
+            ctx.Check(cached.Load<std::int32_t>(asset) == -12345,
+                      "a Game's declared built-in reader loads the authored signed primitive value");
+            ctx.Check(ContentTypeReaderManager::RemoveTypeCreatorEXT(builtin) &&
+                      !ContentTypeReaderManager::IsRegistered(builtin) &&
+                      !ContentTypeReaderManager::CreateReader(builtin),
+                      "withdrawing the declared Int32 reader removes its factory and direct construction");
+            ctx.Check(cached.Load<std::int32_t>(asset) == -12345,
+                      "the already-cached primitive remains usable after its built-in reader is withdrawn");
+            ContentManager uncached(nullptr, root.string());
+            ctx.Check(refusesPrimitive(uncached) && !ContentTypeReaderManager::IsRegistered(builtin) &&
+                      !ContentTypeReaderManager::CreateReader(builtin),
+                      "an uncached typed load refuses the withdrawn built-in instead of reinstalling it");
+            cached.Unload();
+            ctx.Check(refusesPrimitive(cached),
+                      "unloading the old cache exposes the same withdrawn-reader boundary on its next load");
+        }
+        {
+            Microsoft::Xna::Framework::Game nextGame;
+            ContentManager fresh(nullptr, root.string());
+            // Load before querying the registry: a query could itself materialize declarations.
+            ctx.Check(fresh.Load<std::int32_t>(asset) == -12345,
+                      "a subsequent Game declares the built-in readers again and a fresh typed load succeeds");
+        }
+    }
 
     void ReaderVersions(CnaDemos::DemoContext& ctx)
     {
@@ -125,6 +167,7 @@ namespace
         }
         ctx.Check(!ContentTypeReaderManager::IsRegistered(ReaderName) && finalPolicyLifetime.expired(),
                   "scoped withdrawal releases the final policy and removes its registered factory");
+        BuiltinReaderLifetime(ctx, root);
     }
 }
 
@@ -132,13 +175,18 @@ CNA_DEMOS_CONSOLE(ReaderVersions, {
     .id = "content.xnb.reader_versions",
     .title = "Replace a versioned XNB reader policy",
     .description = "Loads real legacy/current schemas under strict and compatible reader policies, checks duplicate registration, "
-                   "withdrawal and cache independence, and owns factory policy captures until scoped cleanup.",
+                   "withdrawal and cache independence, and owns factory policy captures until scoped cleanup. Also contrasts "
+                   "withdrawn built-in readers with cached values, uncached loads and a subsequent Game declaration.",
     .apis = {"ContentTypeReader::TypeVersion", "ContentTypeReader::Read", "ContentTypeReaderManager::AddTypeCreator",
              "Microsoft::Xna::Framework::Content::ContentTypeReaderBase::SupportsVersion",
              "Microsoft::Xna::Framework::Content::ContentTypeReaderManager::RemoveTypeCreatorEXT",
              "Microsoft::Xna::Framework::Content::ContentTypeReaderManager::CreateReader",
-             "Microsoft::Xna::Framework::Content::ContentTypeReaderManager::IsRegistered", "ContentManager::Load"},
+             "Microsoft::Xna::Framework::Content::ContentTypeReaderManager::IsRegistered", "ContentManager::Load",
+             "ContentManager::Unload", "Game::Game"},
     .tags = {"content", "xnb", "version", "reader", "registry", "lifetime"},
-    .assets = {"versions/legacy_stats.xnb", "versions/current_stats.xnb", "versions/future_stats.xnb"},
-    .restrictions = "CNA's reader-version enforcement and factory-policy ownership; container version remains five.",
+    .assets = {"versions/legacy_stats.xnb", "versions/current_stats.xnb", "versions/future_stats.xnb", "versions/builtin_score.xnb"},
+    .restrictions = "CNA reader-version enforcement and factory lifetime; container version remains five. "
+                    "A private process withdraws a built-in factory and creates two sequential Games without running them; "
+                    "no rendering or hardware validation is claimed.",
+    .ownProcess = true,
 })

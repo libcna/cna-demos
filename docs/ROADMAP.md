@@ -741,3 +741,14 @@ Selected artifact verification is not an atomic source or full transitive depend
 All capture/archive/finish helpers pass; immutable evidence: checkpoint-467-move-*.
 Generated coverage remains293/329types,1373/2326XNA members,174/3210C routes. Semantic ownership
 coverage grew without adding IDs; comprehensive coverage is not established.
+
+Focused checkpoint 467-readers extends the existing reader_versions demo without adding an ID.
+All17original custom-policy controls remain unchanged, with six built-in lifetime controls:
+Game declaration, explicit withdrawal, cached survival, uncached refusal without resurrection,
+refusal after Unload, and a fresh load after a subsequent Game declaration. Both requested
+renderer environments pass23checks with empty stderr. Console ownProcess isolates registry
+mutation; neither Game runs and no rendering/visual credit is claimed. The deterministic90byte
+signed Int32 fixture is staged identically; all three old fixtures remain byte-identical.
+The nine-operation build (eight numbered completions) exits0 with no diagnostics and no changed
+hashes among3,906watched CNA source/header/CMake inputs. Metadata467/0; all23targeted CLI/XNB/
+manifest CTests pass in3.16s, including one expected known-issue failure. Full validation is pending.
