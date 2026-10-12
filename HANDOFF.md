@@ -97,17 +97,15 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **446 checkpoint passed** at
-62b5cb8: tools/validate.sh exit 0, all 459 enabled CTests (153.20 s), both complete isolated-X11
-smoke runs and coverage regeneration. ORIGINAL 445-callbacks comparisons retain every older ID/
-status/knownIssue and all 32/33 failed assertions. All existing C/custom content child lists and
-host trace are unchanged. The new skinned clone demo passes ten checks on both renderers.
-All 32 selected binary/four explicit asset hashes match runtime capture. Normalized stderr is
-unchanged: no GTK warnings, same 84 nonfatal GL X protocol lines. Original streams/reviews,
-build/CTest/validation logs and hashes: reports/checkpoint-446-*. Both actually inspected clone
-captures are RGBA-identical (800x480), with precise retained-texel colors at independent positions.
-No new CNA issue or full dependency snapshot claim. Initial automatic configure retained the
-known vendored Draco CMP0148 developer warning; subsequent full incremental build was clean.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **446-palette checkpoint passed**
+at 55ebc57: tools/validate.sh exit 0, all 459 enabled CTests (143.36 s), both complete isolated-X11
+smoke runs and coverage regeneration. ORIGINAL 446 comparisons retain every older ID/status/
+knownIssue and all 32/33 failed assertions; two_bones extends eight passing checks to thirteen.
+All C/custom-content child lists and host trace are unchanged. Selected 32 binary/four asset
+hashes match runtime capture; normalized stderr is unchanged (no GTK warnings, same 84 nonfatal
+GL X protocol lines). Original evidence and helpers: reports/checkpoint-446-palette-*.
+Both actually inspected focused two-bone images are RGBA-identical to their original 422
+references. No new CNA issue from this extension. This is not a full dependency/input snapshot.
 
 | Check | Result |
 |---|---|
@@ -119,7 +117,7 @@ known vendored Draco CMP0148 developer warning; subsequent full incremental buil
 | OPENGLES3 smoke (explicit x11, private Xvfb) | 416 passed, 24 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | All 32/33 older failed assertions retained |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Clone captures inspected on both renderers; RGBA-identical with distinct retained-texel colors (800x480) |
+| Screenshots | Two-bone images inspected on both renderers; each RGBA-identical to its original 422 reference (800x480) |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -241,17 +239,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** commit and run complete 446-palette against ORIGINAL checkpoint-446.
-The existing two_bones extension passes thirteen checks on both renderers, retaining all eight
-older assertions. Both actually inspected 800x480 images are RGBA-identical to their original
-422 references; focused stderr empty. Catalog stays 446. Build /tmp/cna-446-palette-build.log
-passed (27 targets, no diagnostics); metadata 446/0, all 17 targeted CTests passed (2.30 s).
-Evidence/source hashes/original images: reports/checkpoint-446-palette-focused-* and -original-*.
-No new CNA issue. /tmp/cna-archive-446-palette.py and /tmp/cna-446-palette-finish.py need the
-actual source commit, /tmp/cna-catalog-446-palette.json and fresh post-build 32 binary/four asset
-hashes. Expect unchanged totals and exact 32/33 failed assertions; two_bones 8 -> 13 is the
-only intended old JSON count change. Keep source/assets frozen throughout runtime.
-The /tmp two_bones draft is APPLIED AND STALE. Use repository source.
+**Immediate next action:** reproduce the source-level C API owner-thread driving/destruction
+finding below using the prepared bounded no-pump diagnostic. Full 446-palette at 55ebc57 is
+closed: all 459 enabled CTests (143.36 s), SW 395/23/25/3, GL 416/24/3/3, exact prior 32/33
+failed assertions, old C/custom-content child lists and host trace retained. two_bones now passes
+thirteen checks (was eight); every other old JSON count is unchanged. All selected hashes and
+normalized stderr match. Evidence/helpers: reports/checkpoint-446-palette-*. Use this as the
+next complete baseline. The /tmp palette draft is APPLIED AND STALE.
+
+Focused palette evidence: 27-target build without diagnostics, metadata 446/0, all 17 targeted
+CTests (2.30 s), thirteen checks on both selections, empty stderr. Both inspected 800x480 images
+are RGBA-identical to their original 422 references. Original/focused images, logs and observed
+source hashes: checkpoint-446-palette-focused-* and -original-*. No new CNA issue from this demo.
 
 Full 446 at 62b5cb8 (closure 420a099) is the completed baseline: 459 enabled CTests (153.20 s),
 SW 395/23/25/3, GL 416/24/3/3, exact 32/33 failed assertions and all prior child lists retained.
@@ -307,6 +306,26 @@ actual SkinnedEffect APIs; the final slot is distinct but no vertex indexes it d
 Next meaningful gaps: four-influence geometry, skinned material/fog rendering or the separately
 uncovered C host failure completion/queued dispatch cancellation. Avoid inferring a queued call
 from only a worker's pre-call readiness flag. Existing completed phases remain the baseline.
+
+New source-only finding to investigate AFTER current runtime checkpoint: generated Runtime.inc
+currently wraps run_frame_ext/run_one_frame/run/tick/destroy in CallWithExceptionBarrier, which
+can dispatch a foreign-thread handle refusal; public runtime.h explicitly says driving/destruction
+remain refused even with dispatch enabled. GetCallableGame calls ordinary GetGame/LookupHandle
+and only adds a callback-reentrancy guard. This may be an in-flight generated-C-API regression,
+not yet runtime-reproduced or filed as a CNA issue. A bounded NO-PUMP worker probe is safest:
+correct driving refusal returns THREAD directly; an erroneously queued call must be cancelled
+by disabling dispatch before joining, never served. Test drive and destruction separately,
+retain all existing demo checks, and qualify the dirty-CNA source/binary state.
+Prepared diagnostic-only /tmp/cna-driver-affinity-probe.c is NOT built/run yet. Compile it into
+the existing build/linux-full tree after checkpoint closure (no temporary build tree), then run
+separate fresh processes for default run_frame_ext and the "destroy" argument. Exit 0 means
+THREAD without cancellation; exit 1 means cancellation released INVALID_STATE (proof of queuing);
+exit 2 is unexpected/inconclusive and must not be labeled a CNA regression without investigation.
+It never pumps, confirms the owner's target step survives, and releases the game on the owner.
+Later read-only observation: external CNA is now clean at
+4ee1e0b553667b6e999248fcefdea729654ee497; both Runtime.inc and CnaCApiRuntime.cpp are tracked
+and clean there. The dispatching barriers remain present. This new source observation is not
+retroactive proof of a clean/atomic build input snapshot; rebuild/reproduce after 446-palette.
 
 445 evidence: /tmp/cna-demos-445-validation.log exit 0; all 458 enabled CTests (206.40 s), SW
 394/23/25/3, GL 415/24/3/3, exact 32/33 failed assertions unchanged, every older count/status/
