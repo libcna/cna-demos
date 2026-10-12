@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-467 catalog demos (complete checkpoint467-light): math 78, game 33, graphics 159 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+467 catalog demos (complete checkpoint467-field): math 78, game 33, graphics 159 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 27 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
@@ -102,22 +102,29 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete checkpoint **467-light**, source `2588b74`, preserves all 467 IDs. Build: seven
-scheduled operations; metadata 467/0; all 480 enabled CTests pass in 235.91 s (448 passed,
-including 27 WILL_FAIL, 32 capability skips; three additional manual tests disabled).
-SOFTWARE: 405 passed / 27 failed / 32 skipped / 3 not run. OPENGLES3: 432 / 29 / 3 / 3.
-Both inner validation and outer Xvfb independently exit zero. All 38/42 original failed
-assertions, C/custom child lists and traces, and five network evaluation checks are retained,
-allowing precisely ten new positive C SpriteBatch End-release checks (19 -> 29).
-Skinned lighting checks increase 4 -> 8 on both renderers. Exact JSON count variations are
-archived in each renderer's review; only positive window.title Update variance is allowed.
-All 35 selected binary and four asset hashes remain unchanged. Normalized application stderr
-is identical, including 42 known GL X protocol records and the deliberate shader compiler
-error. Separate outer Xvfb diagnostics contain 16 exact amdgpu pairs (previously 13); no cause
-or hardware GPU claim. CNA 714f9f76a was observed clean at capture/final, not an atomic input
-snapshot. All capture/archive/finish helpers pass. Immutable evidence: checkpoint-467-light-*.
-Coverage remains 293/329 types, 1373/2326 XNA members and 174/3210 C routes. No new demo ID or
-route was needed for these behavioral extensions; comprehensive coverage is not established.
+Complete checkpoint **467-field**, source `d4eee34`, preserves all 467 IDs. The external CNA
+checkout advanced from714f9f76a to clean1bc9ff044 (LINK-032 mold archive extraction) at the
+build boundary. CMake regenerated and scheduled53operations (50numbered completions), including
+relinking CNA and its consumers. Metadata467/0 and all480enabled CTests pass in326.00s
+(448passed incl27WILL_FAIL,32capability skips; three additional manual tests disabled).
+The known vendored Draco CMP0148 developer warning remains; no compiler diagnostic is hidden.
+Concurrent cc1plus processes/host load22.10were observed, without isolating a performance cause.
+SOFTWARE405/27/32/3 and OPENGLES3 432/29/3/3; independently journaled inner/outer exits both0.
+Exact comparisons retain all38/42old failed assertions, all C/custom child lists/traces and
+all five network evaluation controls, allowing only one new C sprite array-refusal child
+(29->30). Volume10->16is the intended JSON count change on both. Any positive window.title
+Update variance is recorded explicitly in the renderer reviews.
+All35selected binary/fourasset hashes captured after the rebuild remain stable. Normalized
+application stderr is identical, including42known GL X protocol records and the intentional
+shader compiler error. Separate outerXvfb diagnostics contain15exact amdgpu pairs (previously16);
+no hardware GPU claim. After-build source capture observed cleanCNA1bc9ff044; external sources
+subsequently advanced (mid-run547c3092a plus optional-service changes; final 60aedeab57 with external uncommitted changes).
+Selected runtime hashes stayed fixed across that source work. Focused images used prior714f9f76a.
+The full checkpoint exercises the captured binaries, not those later source edits; this is not
+an atomic source/input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-467-field-*.
+Generated coverage remains293/329types,1373/2326XNA members,174/3210C routes. Semantic coverage
+grew without adding IDs/routes; comprehensive coverage is not established.
 
 ## 8. Exact commands that work
 
@@ -145,8 +152,8 @@ python3 tools/coverage_report.py --exe build/linux-full/bin/cna-demos --cna-root
 
 | Renderer | Status in this environment |
 |---|---|
-| SOFTWARE | runtime-tested (all demos), screenshots inspected |
-| OPENGLES3 | runtime-tested under Xvfb + Mesa llvmpipe, screenshots inspected |
+| SOFTWARE | full smoke suite run with declared capability skips and manual exclusions; selected screenshots inspected |
+| OPENGLES3 | full smoke suite run under Xvfb + Mesa llvmpipe with declared skips/manual exclusions; selected screenshots inspected |
 | HEADLESS, STUB, OPENGL33, SDL_RENDERER, VULKAN, SDL_GPU | compiled in; not yet run in a recorded session |
 | WEBGL2, WEBGPU, DIRECTX9, DIRECTX11, METAL, FNA3D | not built (other platforms / extra deps) |
 
@@ -237,39 +244,32 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: run full **467-field** after committing the focused source. Full467-light
-(source2588b74, closuredf9acb9) is the exact comparison baseline. Both new /tmp predecessors
-are APPLIED AND STALE. Focused syntax/build/runtime/visual/exact-child review is complete.
+HIGHEST PRIORITY: apply the prepared same-count **467-move** extension after capturing the
+current sampler scene. Full467-field is CLOSED (session8459, exit0); source/runtime work may
+resume. Comparison baseline is sourced4eee34. Do not reapply its field/array drafts.
+1. Run /tmp/cna-467-move-syntax.py and /tmp/cna-run-467-move-focused.py before.
+2. Inspect the original GL image; apply /tmp/cna-volume-move-ownership.cpp to
+   demos/graphics/texture3d/sampler_coordinates.cpp. It includes its own metadata changes.
+3. Build/validate using the existing tree/cache, run the focused helper after and inspect
+   the new GL image. Run relevant CLI/texture3d CTests. Keep logs at
+   /tmp/cna-467-move-build.log and /tmp/cna-467-move-targeted-ctest.log, then execute
+   /tmp/cna-review-467-move-focused.py. Expected6->8GLchecks, unchangedSWCustomEffects skip,
+   identical inspected RGBA and15selected sampler centers; original Draw block is unchanged.
+4. Update semantic audit/status docs, commit source, export /tmp/cna-catalog-467-move.json.
+   Run /tmp/cna-run-467-move-validation.sh; after build capture35binary/fourasset hashes via
+   /tmp/cna-capture-467-move.py. Never recapture after runtime or rebuild during smokes.
+   Archive both smokes via /tmp/cna-archive-467-move.py, then /tmp/cna-467-move-finish.py.
+   Expected480enabled CTests and unchanged totals/38/42failures; no C additions/filtering.
+5. Immediately continue the public behavior audit after closure. Resource ownership,
+   dispatch boundaries and renderer-specific stock-effect behaviors remain useful gaps.
 
-Focused467-field keeps all467IDs and current API inventory. Build12scheduled/11completed
-operations and metadata467/0 pass. All18targeted CLI/volume/C-sprite CTests pass in4.06s
-(17passed/one declared SOFTWARE CustomEffects skip). Volume10->16checks covers signedVector4
-versus scalar storage, compact two-slice boxes, guards and refused-count preservation on both
-renderers. C SpriteBatch29->30children (31->32with capture) retains every old label/order and
-adds invalid-second-handle array refusal before enqueue. All eight actual before/after images
-were inspected; both volume RGBA pairs are identical, all400left-corner/400gold pixels remain
-exact. The C ring is time-dependent. All stderr is empty; no new CNA issue. This does not
-establish float sampling, packed formats, direct GPU readback or native-flush rollback.
-Generated COVERAGE.md remains complete467-light until the new full checkpoint finishes;
-inventory remains293/329types,1373/2326XNA members,174/3210C routes.
-
-Prepared /tmp/cna-run-467-field-validation.sh journals inner/outer exits and Xvfb diagnostics.
-Export /tmp/cna-catalog-467-field.json before starting. After build, while CTest runs, capture
-35binary/fourasset hashes using /tmp/cna-capture-467-field.py; never recapture after runtime.
-Archive/review both smokes via /tmp/cna-archive-467-field.py SOFTWARE/OPENGLES3 and run
-/tmp/cna-467-field-finish.py after wrapper closes. Expected480enabled CTests and unchanged
-SW405/27/32/3, GL432/29/3/3. Retain every38/42raw failure, every C/custom/network control;
-filter only the one named sprite-array addition. Only volume10->16on both is the planned
-old JSON count change; positive window.title Update variance is separately reviewed.
-No new normalized stderr is expected. No source/asset edits or rebuild during live smokes.
-After closure, update docs and continue public behavior coverage. Remaining resource
-ownership, dispatch boundaries and renderer-specific stock effects are productive directions.
-
-Focused immutable evidence: reports/checkpoint-467-field-focused-*; original source-only
-proposals/helpers remain checkpoint-467-light-next-*. Syntax49483/before92954/build57916/
-after-and-CTest82393 are CLOSED0. Reviewer /tmp/cna-review-467-field-focused.py PASSED after
-all eight images were actually inspected. C++ original labels are checked in source and
-success counts in JSON; C child labels/order come from stdout. No fabricated success log.
+Focused467-field evidence is complete:12scheduled/11completed build,metadata467/0,
+18targeted CTests4.06s (17pass/one capability skip), all eight images actually inspected,
+two identical volume RGBA pairs and exact C29+1children. All stderr empty. Public field
+transfers do not establish float sampling/GPU readback; C preflight does not establish native
+flush rollback. Full467-field now validates those sources after external CNA relinking.
+Evidence: checkpoint-467-field-focused-*. The next move draft is NOT APPLIED and still has
+no syntax/native/visual credit. Recovery sources/helpers: checkpoint-467-field-next-*.
 
 ## 15. Assumptions the next session must know
 
@@ -281,7 +281,7 @@ success counts in JSON; C child labels/order come from stdout. No fabricated suc
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-The full467-light capture/archive/finish helpers all passed. Do not reapply older kernel,
+The full467-field capture/archive/finish helpers all passed. Do not reapply older kernel,
 EOF, palette or read-only drafts. Their final implementations are the committed baseline.
 Prior checkpoint details and original EOF proof references are in CHECKPOINT_HISTORY.md.
 No source/assets/rebuild during a live full smoke; source-only /tmp preparation and docs are safe.
@@ -290,3 +290,43 @@ The lighting/End-release and field/array-refusal /tmp drafts are now applied and
 Final source/runtime proof is in their focused checkpoint archives. Do not reapply or rerun
 completed baseline captures. Source-only design notes are historical unless section14 names
 them as the next action. No new field/array work remains outside full checkpoint closure.
+
+
+NOT-APPLIED next proposal **467-move**: /tmp/cna-volume-move-ownership.cpp extends existing
+texture3d.sampler_coordinates, retaining six original GL checks and adding two ownership
+controls (intended8GL, unchangedSWCustomEffects skip). A2x2x2red/blue upload is move-constructed
+into a staging wrapper; explicit source Dispose leaves its exact public GetData payload alive.
+Move-assignment then replaces a distinct occupied1x1x1green scene destination. Disposing the
+staging wrapper preserves2x2x2dimensions/payload; both moved-from destructors execute before
+Draw. Existing sampler3D pixel controls establish actual retained sampling after those scopes.
+No sampler ever refers to either temporary: no active-binding move, external-reference rebinding,
+cross-device assignment, direct GPU readback, non-Color or mip claim. Actual public methods and
+Texture3D/GraphicsResource move implementation reviewed at cleanCNA1bc9ff044. Source-only;
+no syntax/native/visual validation yet. Full467-field is now closed; follow section14.
+Prepared /tmp/cna-467-move-syntax.py and /tmp/cna-run-467-move-focused.py before/after; not run.
+Capture/inspect the original GL image before application and after; RGBA identity is expected.
+Recovery source/helper copies/hashes: reports/checkpoint-467-field-next-*. No new ID needed.
+
+Prepared /tmp/cna-review-467-move-focused.py requires actual before/after GL inspection,
+GL6->8/SWskip outcomes, identical RGBA and15checked sampler centers. It also verifies the
+entire original Draw/pixel-control block stays unchanged. Requires future build/targeted
+CTest logs, and is NOT RUN. Source/helper recovery archive is checkpoint-467-field-next-*.
+
+Full467-move helper family is prepared in /tmp (run-validation shell, capture/archive/finish
+Python scripts), NOT RUN; original copies archived under checkpoint-467-field-next-*.
+Comparison baseline will be COMPLETE467-field, with no C child additions/filtering and only
+GL sampler6->8planned. Keep all old38/42failures and five network evaluation controls.
+
+External LINK-034 changed public Game.hpp during current runtime (observed source hash/mtime
+in checkpoint-467-field-midrun-game-header.json). Current captured binaries remain the
+pre-change build until final hash verification. The next native build must finish all
+Game.hpp-dependent objects before running. Observe that header before/after the next build;
+if it changes again, finish an incremental consistency rebuild before focused native checks.
+Do not repeat the earlier mixed-layout incident or label inconsistent objects a CNA defect.
+
+Additional source-only follow-up after move ownership: built-in XNB reader withdrawal across
+Load<T> and subsequent Game re-declaration (external LINK-033). Existing reader_versions
+proves only a custom key. COVERAGE_AUDIT.md now classifies this missing behavior and why a
+future extension must run in its own process; Runner supports ownProcess for Console too.
+Use actual primitive XNB loads and cached/uncached/new-Game controls, not Internal registration
+helpers or blanket global clearing. No draft/asset/native evidence has been produced yet.

@@ -2219,3 +2219,31 @@ Coverage remains 293/329 types, 1373/2326 XNA members and 174/3210 C routes. No 
 route was needed for these behavioral extensions; comprehensive coverage is not established.
 
 JSON count review: `{"OPENGLES3": {"graphics.skinned_effect.specular_lights": {"after": 8, "before": 4, "reason": "Four reviewed independent diffuse/additive controls."}}, "SOFTWARE": {"graphics.skinned_effect.specular_lights": {"after": 8, "before": 4, "reason": "Four reviewed independent diffuse/additive controls."}}}`.
+
+## Complete467-field
+
+Complete checkpoint **467-field**, source `d4eee34`, preserves all 467 IDs. The external CNA
+checkout advanced from714f9f76a to clean1bc9ff044 (LINK-032 mold archive extraction) at the
+build boundary. CMake regenerated and scheduled53operations (50numbered completions), including
+relinking CNA and its consumers. Metadata467/0 and all480enabled CTests pass in326.00s
+(448passed incl27WILL_FAIL,32capability skips; three additional manual tests disabled).
+The known vendored Draco CMP0148 developer warning remains; no compiler diagnostic is hidden.
+Concurrent cc1plus processes/host load22.10were observed, without isolating a performance cause.
+SOFTWARE405/27/32/3 and OPENGLES3 432/29/3/3; independently journaled inner/outer exits both0.
+Exact comparisons retain all38/42old failed assertions, all C/custom child lists/traces and
+all five network evaluation controls, allowing only one new C sprite array-refusal child
+(29->30). Volume10->16is the intended JSON count change on both. Any positive window.title
+Update variance is recorded explicitly in the renderer reviews.
+All35selected binary/fourasset hashes captured after the rebuild remain stable. Normalized
+application stderr is identical, including42known GL X protocol records and the intentional
+shader compiler error. Separate outerXvfb diagnostics contain15exact amdgpu pairs (previously16);
+no hardware GPU claim. After-build source capture observed cleanCNA1bc9ff044; external sources
+subsequently advanced (mid-run547c3092a plus optional-service changes; final 60aedeab57 with external uncommitted changes).
+Selected runtime hashes stayed fixed across that source work. Focused images used prior714f9f76a.
+The full checkpoint exercises the captured binaries, not those later source edits; this is not
+an atomic source/input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-467-field-*.
+Generated coverage remains293/329types,1373/2326XNA members,174/3210C routes. Semantic coverage
+grew without adding IDs/routes; comprehensive coverage is not established.
+
+JSON count review: `{"OPENGLES3": {"graphics.texture3d.volume_data": {"after": 16, "before": 10, "reason": "Six reviewed typed vector-field transfer controls."}}, "SOFTWARE": {"graphics.texture3d.volume_data": {"after": 16, "before": 10, "reason": "Six reviewed typed vector-field transfer controls."}}}`.
