@@ -38,6 +38,7 @@ import xnb_resolution
 import xnb_ownership
 import nested_build_assets
 import media_files
+import music_library_assets
 import xact_files
 import pixel_font
 
@@ -363,6 +364,7 @@ def main() -> None:
     nested_build_assets.write_all(ROOT)
     xact_files.write_all(ROOT)
     media_files.write_all(CONTENT_MEDIA_ROOT)
+    music_library_assets.write_all(ROOT)
     tone("sounds/tone_440.wav", 440.0, 0.5)
     tone("sounds/tone_660.wav", 660.0, 0.25)
     melody("music/rising.wav", [60, 64, 67, 72, 64, 67, 72, 76], 0.25)   # C major, upwards

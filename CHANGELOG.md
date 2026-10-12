@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added isolated tagged music import with populated albums, artists, genres and an M3U
+  playlist; 15 exact child checks pass in both environments with borrowed object identity preserved.
 - Complete472-cuelimits:485enabled CTests and both full smoke suites retain all previous
   failure/child/network evidence; instance_limits adds five per-cue capacity controls.
 - XACT instance limits now distinguish per-cue definition capacity from category limits:

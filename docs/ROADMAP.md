@@ -386,7 +386,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - `content.content_reader.*`: custom `ContentTypeReader`, `ResourceContentManager`,
   `ContentManifestEntry`. ≈ 20
 
-## Phase 9 -- audio and media 🟨 (audio: 23 demos incl. 10 XACT, media: 11 incl. video)
+## Phase 9 -- audio and media 🟨 (audio: 23 demos incl. 10 XACT, media: 12 incl. video)
 - ✅ `audio.sound_effect.*`: Play, Play(volume, pitch, pan), MasterVolume, PCM buffer
   constructor, GetSampleDuration/GetSampleSizeInBytes, ✅ `audio.sound_effect.loop_region` (loop
   points), ✅ `audio.sound_effect.from_stream` (loose WAV; ISSUE-029).
@@ -416,7 +416,7 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `audio.xact.instance_limits`: authored category Fail/ReplaceOldest limits, paused slots,
   isolation and freed-slot reuse checked through public states. Remaining: RPC curves (a variable driving
   volume/pitch), complex variation selection and cue-level limits.
-- ✅ `media.*` (11): play a song (State, PlayPosition, end), events through FrameworkDispatcher
+- ✅ `media.*` (12): play a song (State, PlayPosition, end), events through FrameworkDispatcher
   without a Game, playlists with Queue/MoveNext/MovePrevious/IsRepeating/IsShuffled, volume and
   mute, visualization data, Song properties, MediaLibrary collections. Songs are generated WAVs
   played from files (`Song::FromUri`, ISSUE-015). ✅ `media.video_player.play_video` (generated WMV)
@@ -1551,3 +1551,22 @@ helpers pass; immutable evidence: checkpoint-472-cuelimits-*. Generated coverage
 Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is unchanged;
 ISSUE-057 retains its original staging refusal, private reproduction and 471-punctual
 recurrence. Subsequent clean runs do not establish a repair of that race.
+
+## Focused473-music
+
+Focused **473-music** adds media.media_library.music_index, a standalone Linux workflow
+with 15 exact child checks in each requested environment. Each stderr has exactly six reviewed TitleContainer INFO
+lines for opening the three original assets. Parent JSON
+reports zero checks; the actual child lists are archived and compared. Both public XDG
+music/picture roots are verified private before library access. Three original tagged FLAC
+tracks yield two artists, two same-name albums distinguished by artist and unequal by Album::Equals, one genre and one
+M3U playlist. Public names/track numbers, group membership, shared Song back-references
+and reversed playlist order agree. All returned objects/views remain library-owned.
+No duration, playback, art, other-tag-format or other-platform claim. The fixture encoder
+produced identical bytes twice; ffprobe confirms tags, and all source/staged copies match.
+The initial reviewer refused its incorrect empty-stderr expectation. Original evidence and
+reviewer remain under checkpoint-473-music-focused-initial-stderr-refusal-*. Re-review accepts
+only the six exact INFO lines; no source change, logging suppression or native rerun.
+Watched build/gate, metadata473/0, two native runs, 28 enabled media/CLI CTests in 10.12s
+and focused reviewer pass before source commit. Full validation against complete472-cuelimits
+is pending. Evidence: checkpoint-473-music-focused-*.
