@@ -104,7 +104,7 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 members, 166/3210 C routes), with no 456 full-runtime columns. The first build succeeded, but a
 later external FrameworkDispatcher.cpp change initially prevented the sentinel-enhanced C source
 rebuild (ISSUE-053). The repaired retry passed, and both focused launch runs pass fifteen child
-checks with empty stderr. All 35 related CTests pass (20.53 s); complete validation session 87099 is running. See the active-batch notes below. The complete 455 evidence remains archived.
+checks with empty stderr. All 35 related CTests pass (20.53 s); complete validation session 10188 stopped with one failing CTest (manifest). See the active-batch notes below. The complete 455 evidence remains archived.
 
 Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **455 checkpoint passed** at
 9c023d8: tools/validate.sh exit 0, all 468 enabled CTests (199.23 s), both complete isolated-X11
@@ -252,13 +252,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** commit the validated public ShaderDialectEXT compatibility fix,
-update /tmp/cna-archive-456.py and /tmp/cna-456-finish.py sourceCommit, then restart COMPLETE 456
-validation. Compatibility build 49553 passed (644 scheduled targets, no compiler diagnostics).
-Focused session 12553 passed: four SOFTWARE skips with exactly the known custom-effects logger
-line; OPENGLES3 shader/MRT checks 5/4/2/2; launch parameters 15 child passes on both selections;
-metadata 456/0. Evidence: checkpoint-456-dialect-focused-*. No new images, but existing pixel
-assertions executed. Full 455 remains the last complete baseline; later drafts are UNAPPLIED.
+**Immediate next action:** start the complete 456 checkpoint after committing the manifest
+compatibility correction. Its incremental build passed (33 targets), metadata remains 456/0,
+and focused SOFTWARE/OPENGLES3 runs both pass 13 checks with empty stderr. Original 455 had
+26 checks: sixteen blanket built-in registration assertions were replaced by three meaningful
+inventory/typed-load checks; the ten asset/snapshot controls are retained. Full 10188 stopped at
+one failing CTest among 469 enabled tests (246.56 s), with six reader-availability failures;
+no smoke phase started. Evidence: reports/checkpoint-456-manifest-* and focused-manifest-*.
+Archive helpers allow only this explicit 26 -> 13 change and the existing title timing variance.
+455 remains the last complete checkpoint. Do not edit/rebuild during the next runtime phases.
 
 Full 455 at 9c023d8: tools/validate.sh exit 0, all 468 enabled CTests (199.23 s), SW 402/25/25/3,
 GL 423/26/3/3. Exact ORIGINAL 453 comparisons add only the two four-check material/specular IDs;
@@ -340,13 +342,12 @@ in 20.53 s, including two existing WILL_FAIL cases. Evidence: reports/checkpoint
 Catalog/metadata: 456 demos, zero problems, 293/329 types, 1370/2326 XNA members, 166/3210 C routes.
 No loop/image is claimed for this map example. Its old /tmp source drafts are APPLIED AND STALE.
 
-Previous COMPLETE validation session 87099 terminated exit 1 during build; /tmp/cna-demos-456-validation.log. Its build regenerated
-after external configuration changes and scheduled 567 targets. Do not edit demo sources/assets
-or rebuild separately while it runs. After the repaired full checkpoint build reaches CTest, run /tmp/cna-capture-456.py
-for 35 selected runtime binaries/four assets. Then archive each completed smoke using
-/tmp/cna-archive-456.py SOFTWARE|OPENGLES3, and finish with /tmp/cna-456-finish.py. Helpers name
-source 8f2b04c; /tmp/cna-catalog-456.json is current metadata. Copies are in checkpoint-456-cna-*.
-Full 455 remains the last complete checkpoint until all these gates pass.
+Full 456 attempt 10188 stopped at the manifest CTest (see section 14). Its selected hashes and
+start-state observation of CNA 4985e26e7 are preserved under checkpoint-456-manifest-*.
+Earlier attempts stopped during build: public-dialect and header-availability archives preserve
+those failures. The corrected manifest focused checks and build now pass. Before starting the
+next checkpoint, update archive/finish helpers to the new source commit; recapture 35 binary/four
+asset hashes after that checkpoint's build, then compare both smokes to the original 455.
 
 ISSUE-053 is resolved for the exercised build: initial final-build attempt failed in external
 FrameworkDispatcher namespace lookup; the corrected retry passed (200 scheduled targets).
@@ -416,3 +417,27 @@ ShaderDialectEXT import replaces all four former internal imports; shader text/a
 unchanged. SOFTWARE skip stderr is the exact old custom-effects diagnostic (present in original
 455), not empty; the focused helper was corrected after inspecting that original evidence.
 Both GL shader results and C launch checks match expected counts. No runtime logs suppressed.
+
+Full validation restarted as live session 41710 at source 9c6a604; hash capture is pending its
+build completion. Helpers were updated and the successful dialect-focused review is archived.
+
+Additional full attempt 41710 stopped before runtime: four CNA content loader translation units
+reported CNA/ShaderDialectEXT.hpp missing. Post-failure direct reading and GCC preprocessing
+confirmed the header is available again. Raw build/validation logs, post-failure observation and
+empty successful preprocessing log are archived as checkpoint-456-header-availability-*.
+This is a transient external file-availability event with unknown cause, not an established CNA
+runtime defect. No file was restored/edited by cna-demos. Full retry 10188 is now live.
+
+Historical 10188 checkpoint update (superseded by its archived CTest failure): build exited 0 (81 scheduled targets), metadata 456/0, full CTest
+running. /tmp/cna-capture-456.py captured 35 binaries/four assets after the successful build;
+checkpoint-456-start-state.json observes CNA 4985e26e7 (public shader dialect promotion committed).
+Do not overwrite these runtime hashes or rebuild during the remaining runtime phases.
+
+Session 10188 has now exited 1 at CTest. The lazy reader registration contract is explicit in
+ContentManager::GetXnbReaderUsageSummary documentation. The manifest fix will verify inventory
+aggregation and the reader family required by the loaded font; it will not require unrelated
+model/audio readers to be pre-registered or assume a clean registry in shared smoke processes.
+
+Manifest correction completed: thirteen focused checks pass on each renderer, stderr empty;
+no screenshot/visual review claimed. No audio/model warm-up or internal registration shortcut
+was added. The ten existing snapshot/asset controls remain. Full checkpoint restart is next.

@@ -235,7 +235,7 @@ a check that all authored colors remain visible and that a blank texture row can
   as it is, `CONTENT_PROJECT`). A CNJ texture repeats the texture processor demos (the same
   parameters in JSON). ✅ `content.custom.cnb_loader` uses public CnbWriter and
   RegisterCnbLoaderEXT for a typed asset, caching and schema rejection. ✅ Existing manifest demo
-  now demonstrates explicit snapshot refresh and its independence from the asset cache. ✅
+  now demonstrates explicit snapshot refresh, its independence from the asset cache, per-file reader aggregation and lazy availability after typed loading (13 focused checks on both renderers). ✅
   `content.custom.cnj_loader` uses two named JSON factories for a game-owned Enemy type, actual
   payload decoding with nlohmann-json, manager-local registration and useful error paths. The CNB
   example also covers optional/mandatory unknown chunks, retry after a repaired file, and valid

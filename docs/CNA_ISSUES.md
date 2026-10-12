@@ -1428,8 +1428,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   the genuine failed compilation and capture. Comparing current hashes to that repaired capture
   incorrectly prolonged the reported blocker; those prior interpretations are superseded by
   reports/checkpoint-456-evidence-correction.json. The failure log is retained unchanged.
-- **Repair observed:** external commit 7d8eba687 contains the global-namespace array, now at
-  HEAD 18d8398af with later build-system edits. The existing linux-full retry passed (200 scheduled targets; no compiler diagnostics). Both
+- **Repair observed:** external commit 7d8eba687 contains the global-namespace array.
+  HEAD 18d8398af was observed during repair review, with later build-system edits. The existing linux-full retry passed (200 scheduled targets; no compiler diagnostics). Both
   focused launch-parameter runs pass all fifteen child checks with empty stderr. Resolved for
   the exercised build; full 456 validation is still pending. No CNA source edited/reverted, warning suppressed, runtime
   knownIssue marker or upstream message.

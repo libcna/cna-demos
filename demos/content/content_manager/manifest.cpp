@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <system_error>
 #include <memory>
+#include <map>
+#include <set>
 #include <optional>
 #include <string>
 #include <vector>
@@ -72,6 +74,10 @@ namespace
         {
             ShowSnapshotRefresh(Context());
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
+            // The inventory is a file snapshot, but availability reflects the current process.
+            // Built-in reader families are registered lazily by Load<T>(); earlier demos may
+            // already have registered them in a shared smoke run.
+            const auto beforeLoad = getContentProperty().GetXnbReaderUsageSummary();
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
 
             // One entry per asset name, with every form found for it: an .xnb, a .cnj, or native
@@ -113,18 +119,31 @@ namespace
             Context().Check(find("textures/checker") != entries.end(),
                             "loose files are listed by asset name, without extension");
 
-            // For .xnb files: which XNA type readers they need, and whether this process has them.
-            for (const ContentManifestReaderUsage& usage : getContentProperty().GetXnbReaderUsageSummary())
+            // Aggregate distinct reader names per file independently of the summary API.
+            std::map<std::string, int> expectedCounts, beforeCounts, afterCounts;
+            for (const auto& entry : entries)
+                for (const auto& reader : std::set<std::string>(entry.xnbReaderNames.begin(), entry.xnbReaderNames.end()))
+                    ++expectedCounts[reader];
+            for (const auto& usage : beforeLoad)
+                beforeCounts.emplace(usage.readerName, usage.fileCount);
+            bool fontReader = false, textureReader = false;
+            const auto afterLoad = getContentProperty().GetXnbReaderUsageSummary();
+            for (const ContentManifestReaderUsage& usage : afterLoad)
             {
+                afterCounts.emplace(usage.readerName, usage.fileCount);
                 Context().Print("XNB reader {}: {} file(s), {}", usage.readerName, usage.fileCount,
-                                usage.isRegistered ? "available" : "NOT available");
-                // XNA's own readers must all be there; a game's own reader (levels/castle.xnb names
-                // CnaDemos.LevelReader) is available once the game registers it.
-                if (usage.readerName.starts_with("Microsoft.Xna.Framework."))
-                {
-                    Context().Check(usage.isRegistered, "CNA has the reader " + usage.readerName);
-                }
+                                usage.isRegistered ? "available" : "not registered yet");
+                if (usage.readerName == "Microsoft.Xna.Framework.Content.SpriteFontReader")
+                    fontReader = usage.isRegistered;
+                if (usage.readerName == "Microsoft.Xna.Framework.Content.Texture2DReader")
+                    textureReader = usage.isRegistered;
             }
+            Context().Check(afterCounts == expectedCounts && afterLoad.size() == expectedCounts.size(),
+                            "reader summary counts each referencing file once with no duplicate rows");
+            Context().Check(beforeCounts == afterCounts,
+                            "loading an asset does not change the manifest's reader inventory");
+            Context().Check(fontReader && textureReader,
+                            "Load<SpriteFont> makes its font and texture reader family available");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -154,7 +173,7 @@ CNA_DEMOS_GAME(ManifestDemo, {
     .title = "Content manifest (CNAEXT)",
     .description = "Lists every asset below Game::Content's root with ContentManager::GetContentManifest -- XNB, CNJ "
                    "and native forms per asset name -- and the XNA type readers the .xnb files need "
-                   "(GetXnbReaderUsageSummary). Demonstrates explicit refresh after files arrive or disappear.",
+                   "(GetXnbReaderUsageSummary). Demonstrates explicit refresh after files arrive or disappear and reader availability after typed loading.",
     .apis = {"ContentManager::GetContentManifest", "ContentManager::GetXnbReaderUsageSummary",
              "ContentManager::RefreshContentManifest", "ContentManager::Load",
              "ContentManifestEntry", "ContentManifestReaderUsage"},

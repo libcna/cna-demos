@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Fixed
+- Content manifest checks now follow CNA's documented lazy reader registration. The demo validates
+  per-file reader counts, inventory stability across loading and the loaded font reader family,
+  replacing its obsolete assumption that every built-in reader exists at Game startup.
 - Four shader/MRT demos now include CNA/ShaderDialectEXT.hpp and use the public CNA namespace
   after CNA promoted the dialect query type out of its renderer-internal interface. Shader text,
   stable IDs and existing assertions are retained.
