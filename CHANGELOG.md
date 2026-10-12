@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Skinned-effect clone ownership demo renders independent copied bone palettes after the source
+  effect and caller texture reference are released, and checks shared texture lifetime through the
+  last clone. A non-white texel makes the rendered checks distinguish real data from a fallback.
 - Three existing C demos deepen callback contracts without adding IDs: retained frame failure and
   exactly-once unload cleanup; structured canonical diagnostics forwarded from a served worker
   failure; incompatible frame-hook layouts refused without replacing the active table. All older

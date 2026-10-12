@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
-* Mostly complete: 6 (effects and shaders, 22).
+* Mostly complete: 6 (effects and shaders, 23).
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -64,9 +64,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-445 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+446 demos: math 78, game 33, graphics 141 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
-4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
+4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 15 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
@@ -239,14 +239,22 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** apply and validate the prepared SkinnedEffect clone ownership demo
-below. Full 445-callbacks at 016d515 is closed: all 458 enabled CTests (164.11 s), SOFTWARE
-394/23/25/3, OPENGLES3 415/24/3/3. Strict ORIGINAL 445-profile comparisons retain every older
-ID/status/knownIssue, exact 32/33 failed assertions, all old child assertions and host trace.
-The three existing C demos pass 29/18/26 child checks; every other C/custom content child list
-is unchanged. All 32 binary/four asset hashes match runtime capture; normalized stderr unchanged.
-Full original streams, reviews and helpers: reports/checkpoint-445-callbacks-*. Use this as the
-next complete baseline. No new CNA issue. The /tmp C drafts are APPLIED AND STALE.
+**Immediate next action:** graphics.skinned_effect.clone_ownership is built and focused-validated
+with ten passing checks on both renderer selections, including actual tinted pixels and final
+shared-owner release. Catalog is 446. Build /tmp/cna-446-build.log passed (51 targets; known
+vendored Draco CMP0148 configure developer warning, no compiler diagnostics); metadata 446/0.
+All 42 targeted CTests passed (40 passed incl. three WILL_FAIL, two capability skips; 10.46 s).
+Both actually inspected 800x480 captures are RGBA-identical; focused stderr empty. Evidence:
+reports/checkpoint-446-focused-*. Inventory now names 293/329 types, 1356/2326 XNA members and
+158/3210 C routes; old 445 runtime columns intentionally leave the new ID missing until full runs.
+Commit this batch, then run complete 446 against ORIGINAL
+checkpoint-445-callbacks, capturing 32 selected binary/four explicit asset hashes after the build.
+Freeze source/assets during runtime. Prepared /tmp/cna-archive-446.py and /tmp/cna-446-finish.py
+need the actual commit/catalog/hashes substituted; expect one new passing ten-check ID and all
+old statuses, C/custom-content child assertions and exact 32/33 failures preserved.
+The /tmp skinned draft is APPLIED AND STALE. Use repository source. Full 445-callbacks at 016d515
+remains the completed baseline: 458 enabled CTests (164.11 s), SW 394/23/25/3, GL 415/24/3/3;
+selected hashes and normalized stderr unchanged. Evidence: reports/checkpoint-445-callbacks-*.
 
 Focused C evidence: build passed (87 targets, no compiler diagnostics); metadata 445/0, all 31
 C/CLI CTests passed (6.80 s), both renderer selections pass, all six stderr streams empty.
@@ -280,16 +288,14 @@ worker. Original C11 acquire/release and bounded timeout cleanup are unchanged. 
 negative controls use fully allocated C objects, and actual next-frame traces verify preservation.
 Host run_frame_ext failure completion/documentation ambiguity remains untested.
 
-UNAPPLIED next-graphics draft: /tmp/cna-skinned-clone-ownership.cpp, proposed focused ID
- graphics.skinned_effect.clone_ownership. Real Clone and SetOwnedTexture produce two independent
-one-bone palettes sharing a texture after the original effect/caller reference are released.
-Ten proposed checks include exact rendered colors/positions and weak_ptr lifetime through final
-clone destruction. A non-white tint texel distinguishes real texture use from a white fallback. An expired-texture guard avoids drawing through a dangling effect pointer if
-ownership is defective. No build/runtime/visual evidence yet; do not apply during 445-callbacks.
-The separate existing two_bones demo retains its own palette-validation/bending scenario.
-Prepared /tmp/cna-archive-446.py and /tmp/cna-446-finish.py use PENDING446, expect ten new
-checks and preserve every old C/content child list. They need the real source commit/catalog
-and fresh post-build hashes before use. No future checkpoint is claimed complete.
+The new graphics demo uses native Clone/SetOwnedTexture. Two independent one-bone palettes
+share a non-white tint texture after the original effect/caller reference are released; exact
+rendered colors/positions and weak_ptr ownership checks cover the complete intended lifetime.
+An expired-texture guard prevents a dangling texture draw if ownership breaks. No explicit
+Texture2D.Dispose, raw setter ownership, multi-weight blend or all-material clone claim.
+The separate existing two_bones example remains unchanged. Next semantic work can extend its
+blend-region evidence or cover a coherent skinned lighting/fog scene; inherited C host failure
+completion and queued dispatch cancellation remain separate, currently untested contracts.
 
 445 evidence: /tmp/cna-demos-445-validation.log exit 0; all 458 enabled CTests (206.40 s), SW
 394/23/25/3, GL 415/24/3/3, exact 32/33 failed assertions unchanged, every older count/status/
