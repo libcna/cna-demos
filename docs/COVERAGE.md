@@ -6,11 +6,11 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**467 demos** in 18 categories. Kinds: console 159, game 269, standalone 39. Automation: automated 431, manual 3, smoke-only 33.
+**468 demos** in 18 categories. Kinds: console 160, game 269, standalone 39. Automation: automated 432, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
-| audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
+| audio | 22 | 19 | 2 | 1 | 20 / 0 / 1 / 1 / 0 | 20 / 0 / 1 / 1 / 0 |
 | c_api | 19 | 18 | 1 | 0 | 16 / 0 / 3 / 0 / 0 | 16 / 0 / 3 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
@@ -370,7 +370,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ContentReader::ReadInt32` -- content.xnb.custom_type_reader, content.xnb.shared_resources
 - `ContentReader::ReadString` -- content.xnb.custom_type_reader, content.xnb.shared_resources
 - `ContentTypeReaderManager::AddTypeCreator` -- content.content_manager.asset_precedence, content.content_manager.read_asset_ownership, content.xnb.custom_type_reader, content.xnb.existing_objects, content.xnb.external_references, content.xnb.reader_versions, content.xnb.shared_resources
-- `DynamicSoundEffectInstance::Stop` -- audio.dynamic_sound_effect_instance.streaming
+- `DynamicSoundEffectInstance::Stop` -- audio.dynamic_sound_effect_instance.buffer_formats, audio.dynamic_sound_effect_instance.streaming
 - `Effect::Apply` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.uniform_palettes
 - `Environment::DeviceType` -- devices.sensors.availability
 - `EvaluateMorphWeightsEXT` -- graphics.model.morph_targets
@@ -451,6 +451,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `LeaderboardEntry::RankingEXT` -- gamer_services.leaderboard.paging
 - `LooseFileContentTypeReader::GetExtensions` -- content.content_manager.asset_precedence, content.custom.loose_file_reader
 - `LooseFileContentTypeReader::Read` -- content.content_manager.asset_precedence, content.custom.loose_file_reader
+- `Microsoft::Xna::Framework::Audio::DynamicSoundEffectInstance::SubmitFloatBufferEXT` -- audio.dynamic_sound_effect_instance.buffer_formats
 - `Microsoft::Xna::Framework::Content::ContentManager::RegisterCnbLoaderEXT` -- content.content_manager.asset_precedence, content.custom.nested_builds
 - `Microsoft::Xna::Framework::Content::ContentManager::RegisterTypeReader` -- content.content_manager.asset_precedence
 - `Microsoft::Xna::Framework::Content::ContentTypeReaderBase::SupportsVersion` -- content.xnb.reader_versions

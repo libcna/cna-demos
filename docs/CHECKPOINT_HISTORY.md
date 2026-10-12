@@ -2302,3 +2302,34 @@ Game construction adds one named member. Semantic reader
 lifetime coverage grew without a new ID; comprehensive coverage is not established.
 
 JSON count review: `{"OPENGLES3": {"content.xnb.reader_versions": {"after": 23, "before": 17, "reason": "Six reviewed built-in reader lifetime controls."}}, "SOFTWARE": {"content.xnb.reader_versions": {"after": 23, "before": 17, "reason": "Six reviewed built-in reader lifetime controls."}}}`.
+
+## Complete468-formats
+
+Complete checkpoint **468-formats**, final source `aad1917`, adds one coherent
+stereo buffer-format console example. All16new controls pass in both requested environments:
+byte/sample ranges, integer frame-alignment refusals, preserved paused streams and stopped
+format transitions. Original event-refill source/ISSUE038 are unchanged. No renderer/image,
+output-sample, audible-quality or concurrent-producer credit is claimed.
+The initial full attempt (source d70f2ca, session6704) stopped at CTest after play_cue's fixed700ms
+idle assertion failed; one failure among481tests in182.28s. No smoke ran. Original logs, exit1
+journals and runtime hashes are preserved as checkpoint-468-formats-initial-ctest-refusal-*.
+Ten independent public XACT probe trials did not reproduce the transient; actual buffer-hint
+acceptance and the original cause remain unisolated. The demo now polls actual bank state while
+pumping with a3s steady-clock limit, retaining all three original predicates. Ten corrected
+native repetitions and24XACT/CLI CTests pass, empty stderr; this is no CNA or audible-timing fix.
+A fresh full attempt (session98882) builds in7scheduled operations, validates468metadata/0problems
+and passes all481enabled CTests in211.17s (449passed incl27WILL_FAIL,32skips; three additional
+manual tests disabled). SOFTWARE406/27/32/3 and OPENGLES3 433/29/3/3. Every old38/42failed assertion,
+C/custom child list/trace and all five network controls remain exact. The new audio example
+passes16; old count differences are limited to any separately reviewed positive title Update
+variance. All35selected binary/fourexistingasset hashes plus readerfixture copies stay stable.
+Normalized application stderr is identical, including42known GL X protocol records and the
+intentional shader error. The fresh outerXvfb log contains16exact amdgpu pairs (previously11);
+independently journaled inner/outer exits are0. Capture source observation CNAe842e74733
+(clean), final CNAe842e74733 (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable complete evidence: checkpoint-468-formats-*.
+Generated coverage: 293/329types, 1374/2326XNA members, 174/3210C routes.
+Semantic format coverage and the completion-check correction do not establish comprehensive CNA coverage.
+
+JSON count review: `{"OPENGLES3": {}, "SOFTWARE": {}}`.

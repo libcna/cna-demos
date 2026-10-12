@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-468 catalog demos (focused468-formats; last complete checkpoint467-readers): math 78, game 33, graphics 159 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+468 catalog demos (complete checkpoint468-formats): math 78, game 33, graphics 159 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 27 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
@@ -102,30 +102,32 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete checkpoint **467-readers**, source `583ee6f`, preserves all 467 IDs. The existing
-reader_versions demo retains every17custom-policy control and adds six built-in lifetime controls:
-withdrawal, cache independence, refusal without resurrection and a subsequent Game declaration.
-Both requested environments pass23checks; neither Game runs and no renderer/visual credit is claimed.
-Console ownProcess keeps the mutation out of the parent/browser registry. Original three fixtures
-remain byte-identical; the new90byte signed primitive is generated and staged identically.
-Focused build9operations/8numbered completions, metadata467/0 and23targeted CTests3.16s passed.
-The full build schedules7operations; metadata467/0 and all480enabled CTests pass in169.66s
-(448passed incl27WILL_FAIL,32skips; three additional manual tests disabled).
-SOFTWARE405/27/32/3 and OPENGLES3 432/29/3/3. All38/42previous failed assertions, every C/custom
-child list/trace and all five network controls remain exact. Only planned JSON changes are
-reader17->23both; positive window.title Update variance, if present, is recorded in the reviews.
-All35selected binary/fourexistingasset hashes and both copies of the newfixture remain stable
-through runtime. Normalized application stderr is unchanged, including42known GL X protocol
-records and the deliberate shader compiler error. Separate outerXvfb diagnostics contain11
-exact amdgpu pairs (previously15); independently journaled inner/outer exits are0.
-Capture source observation: CNAe842e74733 (clean);
-final observation: CNAe842e74733 (clean).
-The e842e7473 commit before capture changed only external link-architecture documentation.
-These source observations and selected runtime hashes are not an atomic/full dependency snapshot.
-All capture/archive/finish helpers pass; immutable evidence: checkpoint-467-readers-*.
-Generated coverage now records293/329types,1374/2326XNA members,174/3210C routes; explicit
-Game construction adds one named member. Semantic reader
-lifetime coverage grew without a new ID; comprehensive coverage is not established.
+Complete checkpoint **468-formats**, final source `aad1917`, adds one coherent
+stereo buffer-format console example. All16new controls pass in both requested environments:
+byte/sample ranges, integer frame-alignment refusals, preserved paused streams and stopped
+format transitions. Original event-refill source/ISSUE038 are unchanged. No renderer/image,
+output-sample, audible-quality or concurrent-producer credit is claimed.
+The initial full attempt (source d70f2ca, session6704) stopped at CTest after play_cue's fixed700ms
+idle assertion failed; one failure among481tests in182.28s. No smoke ran. Original logs, exit1
+journals and runtime hashes are preserved as checkpoint-468-formats-initial-ctest-refusal-*.
+Ten independent public XACT probe trials did not reproduce the transient; actual buffer-hint
+acceptance and the original cause remain unisolated. The demo now polls actual bank state while
+pumping with a3s steady-clock limit, retaining all three original predicates. Ten corrected
+native repetitions and24XACT/CLI CTests pass, empty stderr; this is no CNA or audible-timing fix.
+A fresh full attempt (session98882) builds in7scheduled operations, validates468metadata/0problems
+and passes all481enabled CTests in211.17s (449passed incl27WILL_FAIL,32skips; three additional
+manual tests disabled). SOFTWARE406/27/32/3 and OPENGLES3 433/29/3/3. Every old38/42failed assertion,
+C/custom child list/trace and all five network controls remain exact. The new audio example
+passes16; old count differences are limited to any separately reviewed positive title Update
+variance. All35selected binary/fourexistingasset hashes plus readerfixture copies stay stable.
+Normalized application stderr is identical, including42known GL X protocol records and the
+intentional shader error. The fresh outerXvfb log contains16exact amdgpu pairs (previously11);
+independently journaled inner/outer exits are0. Capture source observation CNAe842e74733
+(clean), final CNAe842e74733 (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable complete evidence: checkpoint-468-formats-*.
+Generated coverage: 293/329types, 1374/2326XNA members, 174/3210C routes.
+Semantic format coverage and the completion-check correction do not establish comprehensive CNA coverage.
 
 ## 8. Exact commands that work
 
@@ -245,32 +247,23 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: start a NEW full468-formats attempt after committing the XACT timing fix.
-Initial full session6704 CLOSED1 at CTest (play_cue fixed700ms idle assumption,481tests/182.28s).
-Original logs/exits/capture states are immutable in checkpoint-468-formats-initial-ctest-refusal-*;
-no smoke ran. Independent10public probe trials did not reproduce the delay or verify buffer-hint
-acceptance; no original cause/CNA-fix claim. Applied3s bounded state polling retains all3checks.
-Build72494closed0 with unchanged watched inputs; native/targeted66961closed0 (5repetitions per
-environment,3checks each, empty stderr;24XACT/CLI tests3.18s). Reviewer passed; evidence is
-checkpoint-468-formats-xact-fix-*. Commit correction/docs, then clear only archived current
-wrapper exits/end/Xvfb output before a fresh full run. Capture new runtime hashes AFTER its build,
-not from the failed attempt. Do not overwrite immutable initial-refusal evidence.
-The stereo source is APPLIED,
-focused native/reviewer evidence COMPLETE. Watched build95230 closed0 (33scheduled/30numbered
-completions, no changed3,906watched inputs; known Draco CMake warning retained). Metadata468/0.
-Focused/targeted71117closed0:16checks both, empty stderr,37enabled CTests7.47s, one additional
-manual microphone disabled. Original event-refill source exact. No screenshot or audible credit.
-1. Commit source/docs and export /tmp/cna-catalog-468-formats.json.
-2. Run /tmp/cna-run-468-formats-validation.sh. After its build, during CTest,
-   /tmp/cna-capture-468-formats.py captures35binary/fourexistingasset hashes plus the existing
-   readerfixture copies. No rebuild/source/asset mutation during smokes; never recapture later.
-3. Archive both renderers with /tmp/cna-archive-468-formats.py, then run
-   /tmp/cna-468-formats-finish.py. Baseline is complete467-readers(source583ee6f,closure19ec32c).
-   Expected481enabled CTests, SW406/27/32/3, GL433/29/3/3; all38/42old failures and every
-   child/network control exact. Only separately reviewed positive title Update variance allowed
-   among old counts; new stereo demo must pass16. Close full status/handoff/history afterwards.
-4. Immediately continue the prepared469-shadow receiver proposal below; source-only/syntax
-   evidence exists, but its actual pixels and supported renderer scope remain to validate.
+HIGHEST PRIORITY: apply and validate the prepared **469-shadow** receiver example. Fresh full
+468-formats(session98882) is CLOSED0 after the documented initial CTest refusal and correction.
+Final sourceaad1917 is the comparison baseline. Do not reapply the stereo draft or XACT fix.
+1. /tmp/cna-skinned-shadow-receiver.cpp has syntax-only84074evidence, empty log; no native/image
+   evidence. Apply to demos/graphics/skinned_effect/shadow_receiver.cpp. Authored8x4Color map,
+   one bone, direct diffuse versus ambient/emission, enabled/bias/detach; explicit EasyGL scope.
+2. /tmp/cna-build-469-shadow.py initial, consistency if watched inputs change; metadata469/0.
+   Run /tmp/cna-run-469-shadow-focused.py and targeted shell. ExpectedSWskip0/exit77, GL4/exit0.
+   Actually inspect the GL image, then /tmp/cna-review-469-shadow-focused.py verifies eight
+   selected pixels and exact diagnostic. Investigate any mismatch; no getter-only shadow credit.
+3. Update semantic/status docs, commit, export /tmp/cna-catalog-469-shadow.json. Run
+   /tmp/cna-run-469-shadow-validation.sh; capture after build during CTest with the matching
+   capture helper. Freeze sources/assets/runtime for smoke phases; never recapture afterwards.
+4. Archive both renderers with /tmp/cna-archive-469-shadow.py, then /tmp/cna-469-shadow-finish.py.
+   Expected482enabled CTests, SW406/27/33/3, GL434/29/3/3, all old38/42failures and exact child/
+   network evidence, only the new explicitSWskip diagnostic. Then close docs/handoff/history
+   and immediately continue the highest-priority public behavior audit.
 
 ## 15. Assumptions the next session must know
 
@@ -282,47 +275,29 @@ manual microphone disabled. Original event-refill source exact. No screenshot or
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is467-readers, source583ee6f, closure19ec32c. Older field, lighting,
-palette, EOF, kernel and move proposals are applied and stale. Do not reapply them. Exact
-history and immutable evidence references are in docs/CHECKPOINT_HISTORY.md.
+Current complete baseline is468-formats, sourceaad1917; its closure commit follows. The stereo
+buffer source and XACT completion correction are final, not pending proposals. Preserve the
+initial failed CTest evidence and inconclusive public probe as well as the successful retry.
+All previous reader, move, field, lighting, palette and EOF proposals are applied and stale;
+see docs/CHECKPOINT_HISTORY.md. Never reapply old /tmp drafts over current implementations.
 
-Reader implementation is now demos/content/xnb/reader_versions.cpp and tools/xnb_versions.py,
-with assets/versions/builtin_score.xnb. The two former /tmp proposals are APPLIED AND STALE.
-Focused review verifies original17source controls unchanged,23checks on both selections,
-empty stderr, all old fixture bytes preserved and the new90byte signed primitive reproduced.
-Console ownProcess is explained in architecture/authoring docs; no framework code changed.
-Reader focused-build source observation: cleanCNA5a85d5ed2. Build27370 observed all3,906
-watched CNA source/header/CMake hashes unchanged; this is not an atomic/full dependency snapshot.
+NOT-APPLIED469-shadow proposal: /tmp/cna-skinned-shadow-receiver.cpp, syntax84074passed with
+empty log. It authors an8x4Color map, moves one bone toZ=-3, maps post-skin position to depth.5,
+and compares disabled/enabled reception, excessive bias and map detachment. Direct diffuse
+is contrasted with retained ambient/emission. Four paired-pixel controls are intended; actual
+GL image must be inspected and eight selected pixels verified. No native/image credit yet.
+Explicit EasyGL OPENGLES3/OPENGL33 scope; SOFTWARE skips because this stock shadow path is
+unsupported. Do not misuse CustomEffects as its capability query; GraphicsCapability has no
+shadow entry. No map generation, PCF kernel, cascade, punctual/specular-shadow or other-renderer
+credit. Recovery source/syntax: checkpoint-467-readers-next-*.
 
-APPLIED AND STALE stereo buffer proposal: /tmp/cna-dynamic-buffer-formats.cpp is a focused
-console stereo buffer-format example (new meaningful concept, intended16checks). It separates
-integer byte ranges from float sample ranges, refuses partial integer frames without queue
-mutation, pauses/resumes and stops before both format transitions. Silent fixtures prove
-accepted ranges and playback states, not output samples or audio quality. Syntax-only71196
-passed with an empty log; focused native/reviewer evidence is now complete.
-Source/helper/hash review recovery: checkpoint-467-move-next-*. All original stream-refill
-checks/ISSUE038 remain separate. Do not claim float frame-alignment refusal or concurrent
-producer coverage. Duration helpers intentionally retain16-bit PCM meaning in float mode.
+Shadow watched build/focused/targeted helpers are in /tmp, and the full capture/archive/finish
+family plus focused reviewer are ready, NOT RUN. Names are listed in section14. Recovery full
+helpers: checkpoint-468-formats-next-*. Expected482enabled CTests, SW406/27/33/3 and GL434/29/3/3,
+all old38/42failures/child controls exact and only the new declaredSWskip diagnostic. Never
+approve results just from those totals; preserve/investigate each unexpected assertion/log.
 
-Further source-only graphics audit: IShadowReceiverEXT accepts ignored inputs on unsupported
-renderers, and GraphicsCapability has no shadow query. A future authored-map SkinnedEffect
-receiver must declare its renderer scope and verify direct-light attenuation versus retained
-ambient/emission in actual pixels. Do not misuse CustomEffects as a stock-shadow capability.
-Source-only /tmp/cna-skinned-shadow-receiver.cpp is now prepared: four paired-pixel controls
-for disabled/enabled/bias/detached reception using an authored8x4Color map, post-skin light
-coordinates and an independently predicted ambient/emissive floor. Syntax84074passed with
-an empty log; no native/image evidence. /tmp/cna-469-shadow-syntax.py is the syntax helper.
-Recovery source/hash review: checkpoint-467-readers-next-*. Run only after stereo format closure.
-
-The468-formats focused runner, targeted CTests, watched build and focused reviewer have all
-completed successfully. Full run-validation/capture/archive/finish helpers are prepared but
-NOT RUN; follow section14. Recovery helpers: checkpoint-467-readers-next-*.
-
-Prepared shadow helpers (NOT RUN): /tmp/cna-build-469-shadow.py,
-/tmp/cna-run-469-shadow-focused.py (GL screenshot only) and targeted shell. Expected4GLpixel
-checks/SWexplicit skip0; actual GL image must be inspected before any visual claim. Full
-shadow capture/archive/finish helpers and focused reviewer are now prepared, NOT RUN:
-/tmp/cna-review-469-shadow-focused.py requires actual GL image inspection and eight sampled
-pixels, while the full family expects482enabled CTests, SW406/27/33/3, GL434/29/3/3 and only
-one new explicit SWskip diagnostic. All old38/42failures/child controls remain exact. Recovery
-helpers: checkpoint-468-formats-next-*. Audio full validation remains the next action.
+Source-only follow-up AFTER that initial shadow checkpoint: /tmp/cna-shadow-pcf-notes.md
+derives1/3and2/5visibility for3x3/5x5comparison kernels across the same authored depth edge.
+Extend the same receiver example only after its four original controls have native/image
+proof. No PCF C++ draft/runtime credit yet. Recovery: checkpoint-468-formats-next-shadow-pcf-*.

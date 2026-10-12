@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete468-formats: a fresh full run after the preserved XACT timing failure passes all481
+  enabled CTests and both smoke suites. Every old failure/child/network control remains exact;
+  selected artifacts and normalized diagnostics remain stable.
 - Complete467-readers: all480enabled CTests and both full smoke suites preserve every old
   failure and exact child/network controls. Selected binary/asset hashes, including the new
   primitive fixture, stay stable; normalized application diagnostics are unchanged.
