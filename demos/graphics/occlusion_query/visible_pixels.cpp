@@ -7,6 +7,8 @@
 #include <string>
 
 #include "CnaDemos/Demo.hpp"
+#include "System/InvalidOperationException.hpp"
+#include "System/ObjectDisposedException.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BasicEffect.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthStencilState.hpp"
@@ -38,12 +40,48 @@ namespace
         return {tl, tr, bl, tr, br, bl};
     }
 
+    template<class Exception, class Action>
+    void ExpectRefusal(CnaDemos::DemoContext& context, const char* label, Action action)
+    {
+        bool refused = false;
+        try { action(); }
+        catch (const Exception& error)
+        {
+            refused = true;
+            context.Print("{}: {}", label, error.what());
+        }
+        context.Check(refused, label);
+    }
+
     class OcclusionDemo final : public CnaDemos::DemoGame
     {
     protected:
         void LoadContent() override
         {
             GraphicsDevice& device = getGraphicsDeviceProperty();
+            // Ordering rules are independent of how quickly this renderer completes a query.
+            // This scratch query is ended before disposal; the visible lights below use their own queries.
+            OcclusionQuery scratch(device);
+            Context().Check(!scratch.getIsCompleteProperty(), "a fresh query has no completed result");
+            ExpectRefusal<System::InvalidOperationException>(Context(), "PixelCount before Begin is refused",
+                [&] { (void)scratch.getPixelCountProperty(); });
+            ExpectRefusal<System::InvalidOperationException>(Context(), "End without Begin is refused",
+                [&] { scratch.End(); });
+            scratch.Begin();
+            ExpectRefusal<System::InvalidOperationException>(Context(), "a repeated Begin is refused without ending the active query",
+                [&] { scratch.Begin(); });
+            scratch.End();
+            // Deliberately do not observe IsComplete here. Completion speed cannot bypass this guard.
+            ExpectRefusal<System::InvalidOperationException>(Context(), "reuse before observing IsComplete is refused",
+                [&] { scratch.Begin(); });
+            scratch.Dispose();
+            Context().Check(scratch.getIsDisposedProperty() && !scratch.HasRenderer(),
+                            "explicit disposal marks the query disposed and releases its renderer");
+            ExpectRefusal<System::ObjectDisposedException>(Context(), "Begin on a disposed query is refused",
+                [&] { scratch.Begin(); });
+            ExpectRefusal<System::ObjectDisposedException>(Context(), "PixelCount on a disposed query is refused",
+                [&] { (void)scratch.getPixelCountProperty(); });
+
             spriteBatch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             effect_ = std::make_unique<BasicEffect>(device);
@@ -172,9 +210,11 @@ CNA_DEMOS_GAME(OcclusionDemo, {
     .description = "Counts the visible pixels of lights drawn behind a wall with OcclusionQuery::Begin/End: zero "
                    "for one hidden completely, many for one in the open, and a live count for one passing behind "
                    "the wall, read when IsComplete says the answer has arrived; isPixelCountPreciseEXT tells a real "
-                   "tally from the 0/1 flag OpenGL ES 3.0 can only give.",
+                   "tally from the 0/1 flag OpenGL ES 3.0 can only give. A scratch query demonstrates ordering and disposal refusals.",
     .apis = {"OcclusionQuery::OcclusionQuery", "OcclusionQuery::Begin", "OcclusionQuery::End",
-             "OcclusionQuery::IsComplete", "OcclusionQuery::PixelCount", "OcclusionQuery::isPixelCountPreciseEXT"},
+             "OcclusionQuery::IsComplete", "OcclusionQuery::PixelCount", "OcclusionQuery::isPixelCountPreciseEXT",
+             "GraphicsResource::Dispose", "GraphicsResource::IsDisposed",
+             "Microsoft::Xna::Framework::Graphics::OcclusionQuery::HasRenderer"},
     .tags = {"3d", "occlusion", "query", "visibility", "lens-flare"},
     .needs = CnaDemos::Need::ThreeD | CnaDemos::Need::OcclusionQuery,
     .frames = 30,

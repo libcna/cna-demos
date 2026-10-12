@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-470 catalog demos (complete checkpoint470-cascades): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+470 catalog demos (focused470-query; last complete checkpoint470-cascades): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 29 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
@@ -245,23 +245,28 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: validate the prepared same-ID470-query lifecycle extension.
-Complete470-cascades session21772 is CLOSED0; source370bf37 is the comparison baseline.
-1. Run /tmp/cna-run-470-query-focused.py before, preserving actual SOFTWARE/OPENGLES3
-   captures and three original checks. Inspect both images before applying the source.
-2. Review/apply /tmp/cna-occlusion-lifecycle.cpp to demos/graphics/occlusion_query/visible_pixels.cpp.
-   Syntax74173 passed. Eight scratch-query controls precede the unchanged Update/Draw/EndRun;
-   expected11checks on both renderers. No runtime evidence for the added controls yet.
-3. /tmp/cna-build-470-query.py initial, consistency if watched inputs change; metadata470/0.
-   /tmp/cna-run-470-query-focused.py after and targeted shell, then inspect both new images.
-   Run /tmp/cna-review-470-query-focused.py BEFORE committing: it compares the complete
-   original runtime path against HEAD. Moving light is time-dependent; no image-identity claim.
-4. Update semantic docs, commit, export /tmp/cna-catalog-470-query.json. Run full helper family,
-   capture selected hashes once after build during CTest, freeze source/assets/runtime,
-   archive both renderers and finish. Expected483enabled CTests and unchanged470totals;
-   only query3->11checks and separately reviewed positive title Update variance may differ.
-5. Close full docs/history/handoff and commit; immediately continue the public behavior audit.
-   Remaining shadow atlas-border/specular/punctual gaps and audio lifecycle decisions remain.
+HIGHEST PRIORITY: complete full470-query validation. Query source is APPLIED AND STALE.
+Focused 470-query extends the existing visible_pixels demo with eight scratch-query
+ordering/disposal controls, retaining its three original visibility controls. Both SOFTWARE
+and OPENGLES3 pass11checks with empty stderr. All four actual before/after images were
+inspected; the complete Update/Draw/EndRun source remains unchanged. Moving-light positions
+vary with time, so no image identity or GPU completion-latency claim. Original fixed counts
+remain0/4422 (SOFTWARE, precise) and0/1 (OPENGLES3, boolean). Build81666 closed0:9scheduled /
+8numbered operations, all3,909watched inputs unchanged at clean CNAdc9c34f62. Metadata470/0.
+Before70538 and after/targeted95414 closed0; all16CLI/query CTests pass in3.46s. Focused reviewer
+passed before the source commit, preserving the original runtime code against HEAD.
+Full470-query validation is pending. Evidence: checkpoint-470-query-focused-*.
+1. Commit source/docs and export /tmp/cna-catalog-470-query.json.
+2. Run /tmp/cna-run-470-query-validation.sh; capture once with /tmp/cna-capture-470-query.py
+   after its build during CTest. Freeze sources/assets/runtime during smoke phases.
+3. Archive both selections with /tmp/cna-archive-470-query.py into matching review logs,
+   then /tmp/cna-470-query-finish.py into /tmp/cna-470-query-finish-review.log.
+   Baseline complete470-cascades: source370bf37, closure6f89f3d. Expected483enabled CTests,
+   SW406/27/34/3 and GL435/29/3/3. Only query3->11checks and separately reviewed positive
+   title Update variance may differ; retain all38/42failures, child/network evidence and stderr.
+4. Close full docs/history/handoff and commit. Immediately continue470-border: review/apply
+   /tmp/cna-cascade-border.cpp only after this checkpoint, inspect the new layout and all eight
+   centers, and run its focused reviewer BEFORE committing (it compares six labels with HEAD).
 
 ## 15. Assumptions the next session must know
 
@@ -273,25 +278,25 @@ Complete470-cascades session21772 is CLOSED0; source370bf37 is the comparison ba
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is470-cascades, source370bf37; its closure commit follows.
+Current complete baseline is470-cascades, source370bf37, closure6f89f3d.
 All earlier receiver/PCF/cascade, audio, XACT, reader, move, field, lighting, palette and EOF
 proposals are APPLIED AND STALE. Preserve prior evidence, including failures and probes.
 See docs/CHECKPOINT_HISTORY.md; do not overwrite current implementations with old drafts.
 
-Next unapplied draft: /tmp/cna-occlusion-lifecycle.cpp, syntax74173 CLOSED0, empty log.
-A scratch query proposes eight ordering/disposal controls before the unchanged three visible
-query controls (11expected). Fresh/no-result, End-before-Begin, repeated Begin, reuse without
-an IsComplete observation, release-state and disposed Begin/PixelCount are checked. No native
-or image evidence for this draft yet. No GPU completion-latency or all-disposed-member claim.
+Applied query source: /tmp/cna-occlusion-lifecycle.cpp, syntax74173 CLOSED0, empty log.
+A scratch query adds eight ordering/disposal controls before the unchanged three visibility
+controls (11passing). Fresh/no-result, End-before-Begin, repeated Begin, reuse without
+an IsComplete observation, release-state and disposed Begin/PixelCount are checked. All eleven checks now pass on both renderers; four actual before/after images inspected. No GPU completion-latency or all-disposed-member claim.
 Source/semantic audit: /tmp/cna-occlusion-query-audit.md and docs/COVERAGE_AUDIT.md.
 Recovery source/syntax/audit: checkpoint-469-pcf-next-*.
 
 Prepared query helper family: /tmp/cna-*470-query*, recovery checkpoint-469-pcf-next-helpers-*.
-Focused runner takes before/after argument. Capture before applying source, inspect all four
-actual images, run reviewer before committing so HEAD is the original runtime source.
+Focused before/after runs, all four image inspections and the pre-commit source reviewer are
+complete. Preserve their archived evidence; do not overwrite before captures with changed source.
 Full helpers expect baseline470-cascades,483CTests, SW406/27/34/3 and GL435/29/3/3, exact old
 38/42failed assertions and all child/network controls, unchanged normalized diagnostics.
-These query helpers are unrun; future results must be investigated before any coverage claim.
+Query watched build, before/after runner, targeted tests and focused reviewer have passed.
+Full helpers are pending; investigate every unexpected result before coverage credit.
 
 External CNA had active CMake/probe/document edits during the cascade initial build.
 The initial and subsequent unchanged-input consistency journals preserve that distinction.

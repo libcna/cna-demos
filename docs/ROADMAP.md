@@ -946,3 +946,14 @@ These are selected artifact/source observations, not an atomic/full transitive i
 All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-cascades-*.
 Generated coverage: 293/329types, 1374/2326XNA members, 174/3210C routes.
 Semantic coverage remains incomplete; authored cascade sampling does not establish all shadows.
+
+Focused 470-query extends the existing visible_pixels demo with eight scratch-query
+ordering/disposal controls, retaining its three original visibility controls. Both SOFTWARE
+and OPENGLES3 pass11checks with empty stderr. All four actual before/after images were
+inspected; the complete Update/Draw/EndRun source remains unchanged. Moving-light positions
+vary with time, so no image identity or GPU completion-latency claim. Original fixed counts
+remain0/4422 (SOFTWARE, precise) and0/1 (OPENGLES3, boolean). Build81666 closed0:9scheduled /
+8numbered operations, all3,909watched inputs unchanged at clean CNAdc9c34f62. Metadata470/0.
+Before70538 and after/targeted95414 closed0; all16CLI/query CTests pass in3.46s. Focused reviewer
+passed before the source commit, preserving the original runtime code against HEAD.
+Full470-query validation is pending. Evidence: checkpoint-470-query-focused-*.

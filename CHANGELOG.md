@@ -50,6 +50,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- The existing occlusion-query scene now checks fresh-result access, Begin/End ordering,
+  observation before reuse and explicit disposal. Eleven controls pass on both renderers;
+  the original visibility scene and its three checks are preserved.
 - Authored two-slice shadow cascades: inclusive depth selection, blend-band visibility,
   a separate fitting camera and Count0 fallback. Six GL pixel checks pass in the inspected
   scene; unsupported SOFTWARE rendering is explicitly skipped.
