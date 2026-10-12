@@ -97,27 +97,29 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **445-callbacks checkpoint passed**
-at 016d515: tools/validate.sh exit 0, all 458 enabled CTests (164.11 s), both complete isolated-X11
-smoke runs and coverage regeneration. ORIGINAL 445-profile comparisons retain every older ID/
-status/knownIssue, all 32/33 failed assertions and every prior child assertion. Three existing C
-examples now have 29/18/26 checks for error handling/dispatch/host frames. All other C/custom
-content child lists and host trace are unchanged. All 32 selected binary and four explicit asset
-hashes match runtime capture. Normalized stderr is unchanged: no GTK warnings, same 84 nonfatal
-GL X protocol lines. Evidence: reports/checkpoint-445-callbacks-*. Both inspected focused host
-captures are RGBA-identical to prior images. No new CNA issue or full dependency snapshot claim.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **446 checkpoint passed** at
+62b5cb8: tools/validate.sh exit 0, all 459 enabled CTests (153.20 s), both complete isolated-X11
+smoke runs and coverage regeneration. ORIGINAL 445-callbacks comparisons retain every older ID/
+status/knownIssue and all 32/33 failed assertions. All existing C/custom content child lists and
+host trace are unchanged. The new skinned clone demo passes ten checks on both renderers.
+All 32 selected binary/four explicit asset hashes match runtime capture. Normalized stderr is
+unchanged: no GTK warnings, same 84 nonfatal GL X protocol lines. Original streams/reviews,
+build/CTest/validation logs and hashes: reports/checkpoint-446-*. Both actually inspected clone
+captures are RGBA-identical (800x480), with precise retained-texel colors at independent positions.
+No new CNA issue or full dependency snapshot claim. Initial automatic configure retained the
+known vendored Draco CMP0148 developer warning; subsequent full incremental build was clean.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets --validate | 445 demos, 0 problems |
+| Metadata/assets --validate | 446 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 433 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 394 passed, 23 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 415 passed, 24 expected failures, 3 skipped, 3 manual not run |
+| CTest | 434 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 395 passed, 23 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 416 passed, 24 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | All 32/33 older failed assertions retained |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Host captures inspected on both renderers; RGBA-identical to original 444 images (800x480) |
+| Screenshots | Clone captures inspected on both renderers; RGBA-identical with distinct retained-texel colors (800x480) |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -239,22 +241,19 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** graphics.skinned_effect.clone_ownership is built and focused-validated
-with ten passing checks on both renderer selections, including actual tinted pixels and final
-shared-owner release. Catalog is 446. Build /tmp/cna-446-build.log passed (51 targets; known
-vendored Draco CMP0148 configure developer warning, no compiler diagnostics); metadata 446/0.
-All 42 targeted CTests passed (40 passed incl. three WILL_FAIL, two capability skips; 10.46 s).
-Both actually inspected 800x480 captures are RGBA-identical; focused stderr empty. Evidence:
-reports/checkpoint-446-focused-*. Inventory now names 293/329 types, 1356/2326 XNA members and
-158/3210 C routes; old 445 runtime columns intentionally leave the new ID missing until full runs.
-Commit this batch, then run complete 446 against ORIGINAL
-checkpoint-445-callbacks, capturing 32 selected binary/four explicit asset hashes after the build.
-Freeze source/assets during runtime. Prepared /tmp/cna-archive-446.py and /tmp/cna-446-finish.py
-need the actual commit/catalog/hashes substituted; expect one new passing ten-check ID and all
-old statuses, C/custom-content child assertions and exact 32/33 failures preserved.
-The /tmp skinned draft is APPLIED AND STALE. Use repository source. Full 445-callbacks at 016d515
-remains the completed baseline: 458 enabled CTests (164.11 s), SW 394/23/25/3, GL 415/24/3/3;
-selected hashes and normalized stderr unchanged. Evidence: reports/checkpoint-445-callbacks-*.
+**Immediate next action:** apply and validate the existing two_bones palette/joint extension
+below. Full 446 at 62b5cb8 is closed: 459 enabled CTests (153.20 s), SOFTWARE 395/23/25/3,
+OPENGLES3 416/24/3/3. Every older ID/status/knownIssue, exact 32/33 failed assertions, all
+C/custom-content child lists and host trace are retained. The new clone demo passes ten checks;
+32 binary/four asset hashes unchanged and normalized stderr identical. Use ORIGINAL
+checkpoint-446 as the next full baseline. Evidence and helpers: reports/checkpoint-446-*.
+
+Clone focused evidence: build passed (51 targets; known vendored Draco CMP0148 configure
+warning, no compiler diagnostics), metadata 446/0, all 42 targeted CTests passed (40 passed
+including three WILL_FAIL, two capability skips; 10.46 s). Both inspected 800x480 captures are
+RGBA-identical; focused stderr empty. Evidence: checkpoint-446-focused-*. Inventory 293/329
+types, 1356/2326 XNA members and 158/3210 C routes; all runtime columns now include 446 IDs.
+The /tmp clone draft is APPLIED AND STALE. No new CNA issue.
 
 Focused C evidence: build passed (87 targets, no compiler diagnostics); metadata 445/0, all 31
 C/CLI CTests passed (6.80 s), both renderer selections pass, all six stderr streams empty.
@@ -293,8 +292,19 @@ share a non-white tint texture after the original effect/caller reference are re
 rendered colors/positions and weak_ptr ownership checks cover the complete intended lifetime.
 An expired-texture guard prevents a dangling texture draw if ownership breaks. No explicit
 Texture2D.Dispose, raw setter ownership, multi-weight blend or all-material clone claim.
-The separate existing two_bones example remains unchanged. Next semantic work can extend its
-blend-region evidence or cover a coherent skinned lighting/fog scene; inherited C host failure
+The separate existing two_bones example remains unchanged. A new UNAPPLIED draft
+/tmp/cna-two-bones-blend.cpp extends its eight checks to thirteen: two joint-silhouette samples,
+zero/oversized GetBoneTransforms count refusals and an accepted MaxBones palette with a distinct
+last-slot matrix. It restores the original two-matrix pose before drawing; no last-slot GPU claim.
+Geometry/rendering remain unchanged. Source geometry: the y=0 row uses equal weights and moves
+(+/-1/4,0) to (+/-3/16,-/+sqrt(3)/16). An independent point/triangle calculation distinguishes
+both single-bone hard switches. Original 422 screenshots on both renderers contain 3x3 filled
+and empty neighborhoods at the proposed projected samples (427,246) and (421,252); this is
+historical image evidence, NOT a new runtime test. Do not apply during full 446.
+Prepared /tmp/cna-archive-446-palette.py and /tmp/cna-446-palette-finish.py use
+PENDING446PALETTE, expect the same catalog with two_bones 8 -> 13, and need a real commit,
+catalog and fresh post-build hashes before use. Next otherwise
+cover a coherent skinned lighting/fog scene; inherited C host failure
 completion and queued dispatch cancellation remain separate, currently untested contracts.
 
 445 evidence: /tmp/cna-demos-445-validation.log exit 0; all 458 enabled CTests (206.40 s), SW
