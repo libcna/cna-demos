@@ -70,6 +70,23 @@ namespace
         ctx.Check(refused && voice.getStateProperty() == SoundState::Paused &&
                   voice.getPendingBufferCountProperty() == pausedIntegerBuffers,
                   "a float submission cannot change a paused integer stream or its pending buffers");
+        // Discard queued audio while retaining the paused voice and its sample format.
+        // ClearBuffers is not Stop: a float submission is still an invalid format switch.
+        voice.ClearBuffers();
+        ctx.Check(voice.getStateProperty() == SoundState::Paused && voice.getPendingBufferCountProperty() == 0,
+                  "clearing a paused integer stream discards its buffers without stopping it");
+        refused = false;
+        try { voice.SubmitFloatBufferEXT(floats, 2, floatSamples); }
+        catch (const System::InvalidOperationException&) { refused = true; }
+        ctx.Check(refused && voice.getStateProperty() == SoundState::Paused &&
+                  voice.getPendingBufferCountProperty() == 0,
+                  "an empty paused stream still refuses a different sample format");
+        voice.SubmitBuffer(pcm, 4, pcmBytes);
+        voice.QueueInitialBuffers(); // explicitly submit the refill while the voice is paused
+        // PendingBufferCount includes both staged and submitted buffers. It confirms the
+        // retained queue/state here, not independent proof of the native transfer or samples.
+        ctx.Check(voice.getStateProperty() == SoundState::Paused && voice.getPendingBufferCountProperty() == 1,
+                  "the paused stream accepts a same-format refill before resuming");
         voice.Resume();
         ctx.Check(voice.getStateProperty() == SoundState::Playing,
                   "the original integer stream resumes after the refused format change");
@@ -123,9 +140,11 @@ CNA_DEMOS_CONSOLE(BufferFormats, {
     .id = "audio.dynamic_sound_effect_instance.buffer_formats",
     .title = "Stereo buffers and stopped format transitions",
     .description = "Submits stereo PCM byte ranges and float sample ranges, rejects partial integer frames and out-of-bounds float ranges, "
-                   "and demonstrates stopping before changing a live stream's sample format in either direction.",
+                   "clears and refills a paused queue, and demonstrates stopping before changing its sample format.",
     .apis = {"DynamicSoundEffectInstance::DynamicSoundEffectInstance", "DynamicSoundEffectInstance::SubmitBuffer",
              "Microsoft::Xna::Framework::Audio::DynamicSoundEffectInstance::SubmitFloatBufferEXT",
+             "Microsoft::Xna::Framework::Audio::DynamicSoundEffectInstance::ClearBuffers",
+             "Microsoft::Xna::Framework::Audio::DynamicSoundEffectInstance::QueueInitialBuffers",
              "DynamicSoundEffectInstance::PendingBufferCount", "DynamicSoundEffectInstance::GetSampleSizeInBytes",
              "DynamicSoundEffectInstance::GetSampleDuration", "DynamicSoundEffectInstance::Play",
              "DynamicSoundEffectInstance::Stop", "SoundEffectInstance::Pause", "SoundEffectInstance::Resume",
@@ -134,5 +153,6 @@ CNA_DEMOS_CONSOLE(BufferFormats, {
     .needs = CnaDemos::Need::Audio,
     .restrictions = "Silent stereo fixtures establish accepted ranges, refusal preservation and playback states. "
                     "No sample readback, audible quality, live-playing format-switch refusal, partial-float-frame output behavior "
-                    "or concurrent producer behavior is inferred.",
+                    "or concurrent producer behavior is inferred. Pending counts combine staged and submitted buffers; "
+                    "unchanged counts do not independently prove native transfer.",
 })

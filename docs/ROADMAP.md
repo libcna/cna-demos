@@ -1223,3 +1223,18 @@ All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-boun
 Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
 No extra ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057
 stays open with its original refusal and independent private staging probe preserved.
+
+## Focused470-clear
+
+Focused **470-clear** extends buffer_formats from20to23checks. Guarded application verified
+the exact validated41af406 source base before copying. Two dummy-audio runs (one per
+requested renderer environment) pass with empty stderr. ClearBuffers retainsPaused/Pending0;
+a valid float submission still refuses with that same state; same-format refill and visible
+QueueInitialBuffers retainPaused/Pending1 before originalResume/Stop. All20original assertion
+calls remain verbatim/in order. Pending combines staged/submitted data and does not alone
+prove native transfer or sample output. No live-playing/concurrent-producer or listening claim.
+Watched build47439 passes9scheduled/8numbered operations with all3,909inputs unchanged and
+diagnostic gate0. Metadata470/0; focused/targeted51461 passes37enabled CTests in5.61s,
+one additional manual microphone disabled. Focused reviewer passes BEFORE commit;
+evidence checkpoint-470-clear-focused-*. Last full baseline470-bounds; full validation next.
+Original mono streaming/ISSUE-038 untouched; no new ID or genuine CNA defect found.

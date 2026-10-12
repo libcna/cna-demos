@@ -103,6 +103,19 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **470-clear** extends buffer_formats from20to23checks. Guarded application verified
+the exact validated41af406 source base before copying. Two dummy-audio runs (one per
+requested renderer environment) pass with empty stderr. ClearBuffers retainsPaused/Pending0;
+a valid float submission still refuses with that same state; same-format refill and visible
+QueueInitialBuffers retainPaused/Pending1 before originalResume/Stop. All20original assertion
+calls remain verbatim/in order. Pending combines staged/submitted data and does not alone
+prove native transfer or sample output. No live-playing/concurrent-producer or listening claim.
+Watched build47439 passes9scheduled/8numbered operations with all3,909inputs unchanged and
+diagnostic gate0. Metadata470/0; focused/targeted51461 passes37enabled CTests in5.61s,
+one additional manual microphone disabled. Focused reviewer passes BEFORE commit;
+evidence checkpoint-470-clear-focused-*. Last full baseline470-bounds; full validation next.
+Original mono streaming/ISSUE-038 untouched; no new ID or genuine CNA defect found.
+
 Complete checkpoint **470-bounds**, source `41af406`,
 extends buffer_formats from 16 to 20 checks. Two dummy-audio runs (one per requested
 renderer environment) pass with empty stderr. Negative float offset and max-int count
@@ -251,25 +264,21 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply and validate the same-ID470-clear paused-queue extension.
-Full470-bounds session24481 is CLOSED0; source41af406 is the comparison baseline.
-1. Run /tmp/cna-apply-470-clear.py: it verifies the completed bounds evidence and the exact
-   source base hash before copying /tmp/cna-paused-clear.cpp. If the base differs, rebase
-   the draft instead of overwriting fixes. Syntax11341 passed; no native evidence yet.
-2. Watched /tmp/cna-build-470-clear.py initial, diagnostic gate and consistency if inputs
-   change. Metadata, two focused runs, targeted shell and focused reviewer BEFORE commit.
-   /tmp/cna-review-470-clear-focused.py requires all20original assertion calls verbatim/in
-   order plus23checks total. Preserve paused state, retained format refusal and refill.
-3. Update semantic docs, commit, export /tmp/cna-catalog-470-clear.json. Full wrapper,
-   capture once after build during CTest, freeze artifacts, archive both smokes and finish.
-   Baseline470-bounds,483enabled CTests, unchanged470totals; buffer_formats20->23checks only
-   on both selections plus reviewed positive title Update variance. Preserve any refusal.
-4. Close docs/history/HANDOFF and commit; immediately continue the semantic behavior audit.
-   Pending counts combine staged/submitted data and do not independently prove native
-   QueueInitialBuffers transfer or output samples. Keep this distinction in coverage docs.
-   Original mono streaming and ISSUE-038 controls remain untouched; consider another
-   meaningful audio lifecycle or remaining cascade maximum/debug/punctual behavior next.
-Open ISSUE-057 retains its original refusal and independent private staging reproduction.
+HIGHEST PRIORITY: complete full470-clear, then validate the prepared fourth-cascade extension.
+Clear is APPLIED; guarded base verification, watched build/diagnostic gate, metadata, two
+focused runs and37enabled targeted CTests pass. All20original assertion calls retained.
+Commit source/docs, export /tmp/cna-catalog-470-clear.json, run full wrapper; capture once
+after build during CTest, freeze artifacts, archive each renderer and finish. Baseline470-bounds,
+483enabled CTests, unchanged470totals; buffer_formats20->23checks only plus reviewed positive
+title Update variance. Preserve unexpected differences. Close docs/history/HANDOFF and commit.
+Immediately continue /tmp/cna-fourth-cascade.cpp (UNAPPLIED, final syntax89591 passed).
+It preserves original eight draw/pixel loops and fills the ninth cell with two fourth-slot
+controls (10GLchecks expected, SOFTWAREsameSkip). Actual layout is four horizontal strips;
+depth7 selects slot3, comparison.5 is lit; comparison.9 withDebugTint givesRGB20,28,15.
+Verify recordedbasehash, take/view actual before and afterGLimages, check old8pixels plus
+new(599,400)/(733,400). No native/image evidence yet or all-index/palette/producer credit.
+Full graphics helpers remain to be prepared. Original mono streaming/ISSUE-038 stays intact;
+open ISSUE-057 keeps its original staging refusal and private reproduction evidence.
 
 ## 15. Assumptions the next session must know
 
@@ -286,17 +295,17 @@ Prior shadow receiver/PCF/cascade/border/specular/query, looping release/spatial
 audio formats/float bounds/XACT, reader, move, field, lighting, palette and EOF drafts
 are APPLIED AND STALE. Do not restore old /tmp source; preserve immutable runtime evidence.
 
-Next UNAPPLIED: /tmp/cna-paused-clear.cpp, syntax11341 CLOSED0, empty log. Adds three
+APPLIED AND STALE: /tmp/cna-paused-clear.cpp, syntax11341 CLOSED0, empty log. Adds three
 controls to the actual41af406 buffer_formats source (20->23). ClearBuffers retainsPaused
 withPending0; a valid float submission should still refuse withPaused/Pending0; integer
 refill plus visible QueueInitialBuffers retainsPaused/Pending1 before originalResume/Stop.
 All20original assertion calls are preserved verbatim/in order in the source-only draft.
 Counts combine staged/submitted data; no independent transport/sample-output, live-playing
-format switch, concurrent-producer or listening claim. No native evidence yet.
+format switch, concurrent-producer or listening claim. Two native23check runs now pass; no output/sample proof.
 
 Source/notes/syntax/base-hash recovery: checkpoint-470-bounds-next-*. Always apply through
 /tmp/cna-apply-470-clear.py, which refuses a changed bounds base instead of overwriting
-corrections. Prepared UNRUN /tmp/cna-*470-clear* helper family, recovery under
+corrections. Clear focused helpers passed; full /tmp/cna-*470-clear* family next, recovery under
 checkpoint-470-bounds-next-clear-helper-*. Build gates warning/error/FAILED output;
 focused reviewer runs BEFORE commit. Full baseline must be complete470-bounds.
 No full closure helper for470-clear is prepared yet. Original mono streaming stays intact.

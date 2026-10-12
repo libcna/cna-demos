@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Stereo streaming now distinguishes paused queue clearing from Stop. Both dummy-audio
+  runs pass23checks and37enabled targeted CTests pass; prior20assertion calls remain unchanged.
 - Complete470-bounds: 483 enabled CTests and both full smoke suites retain all prior
   failure, child and network evidence; selected artifacts and normalized diagnostics stay stable.
 - Stereo buffer example adds four float-range refusal controls. All20checks pass in both
