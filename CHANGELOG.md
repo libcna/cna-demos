@@ -46,6 +46,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Focused C automatic dispatch demo proves ordinary Update service with every Draw suppressed,
+  plus callback-scoped device borrowing and expiry. Fifteen checks pass on both selections.
+- Existing thread-local C diagnostics retain all eight earlier controls and add nine checks for
+  canonical owner exception details versus a worker's C validation, without foreign Game calls.
+- Skinned vertex-color example verifies the actual CNA extension with a plain packed-color vertex,
+  disabled control and interpolated material/texture/tint multiplication; both captures inspected.
 - Existing C host and error demos now exercise larger compatible version-one structures: callback
   tables are copied and used after caller storage is wiped; diagnostic fields are filled without
   changing unknown tail fields or the original error. Both renderers retain all older controls.

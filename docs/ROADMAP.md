@@ -122,7 +122,11 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
   `graphics.texture_cube.*` beyond the environment-map demo (render to a `RenderTargetCube`).
 
-## Phase 6 -- effects and shaders 🟨 (27 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (28 demos: stock effects, effect API, PbrEffect)
+- ✅ `graphics.skinned_effect.vertex_colors`: a plain packed-color skinned vertex contrasts the
+  disabled channel with actual material/texture/tint multiplication and interpolation. Three
+  rendered checks pass on both selections; inspected images agree within one blue level.
+
 - ✅ Stock effects (12): `BasicEffect` (texture, default lighting, three directional lights,
   per-pixel lighting, material colours, fog, alpha), `AlphaTestEffect` cut-outs,
   `DualTextureEffect` light map, `EnvironmentMapEffect` with a `TextureCube` and Fresnel,
@@ -444,7 +448,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
-## Phase 14 -- bindings 🟨 (17 C API demos)
+## Phase 14 -- bindings 🟨 (18 C API demos)
 The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks
 (28 with capture) and 31 error checks pass on both renderer selections. Larger version-one input
 and output prefixes retain their known behavior; unknown output tails and original diagnostics
@@ -454,7 +458,8 @@ C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit, expired callback device handles, refused owner-thread callback reentry),
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, retained callback failure and exactly-once unload cleanup),
-✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
+✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker/caller diagnostics and canonical owner type/parameter isolation; 17 passing checks),
+✅ `c_api.game.automatic_dispatch` (15 passing checks: automatic Update service with Draw suppressed, property mutation, callback-scope device borrowing and expiry),
 ✅ `c_api.game.host_failure` (terminal CALLBACK/false, retained diagnostic, no replay, exactly-once unload and handle release; promised C exit hooks expose ISSUE-051),
 ✅ `c_api.game.host_frames` (copied larger compatible frame-hook prefix, explicit host stepping, draw suppression, incompatible-layout refusal, removal/replacement and terminal exit),
 ✅ `c_api.game.foreign_thread_dispatch` (default/restored thread affinity, explicit owner pumping, served canonical diagnostics and no-pump owner-only probes exposing ISSUE-050, permitted-write cancellation and resumed dispatch),
@@ -471,8 +476,8 @@ derived bits, dead-zone modes, live polling), ✅ `c_api.game.components` (a com
 table; draw order, visibility, enabled, collection and component events), ✅
 `c_api.media.media_player` (song collection keeps its songs, queue view, transport, process-wide
 events). Remaining: the diagnostics/handle/content table in COVERAGE_AUDIT.md identifies
-ABI-specific gaps (thread-local diagnostics, invalid release guards, borrowed handles
-and thread dispatch). The existing dispatch demo now reproduces ISSUE-050 on RunFrameEXT/Destroy:
+ABI-specific gaps (additional diagnostic families, invalid release guards, borrowed handles
+and remaining dispatch/shutdown behaviors). The existing dispatch demo now reproduces ISSUE-050 on RunFrameEXT/Destroy:
 owner-only operations incorrectly queue when dispatch is enabled. Its 40 child checks retain
 all thirty prior assertions and expose exactly two failures on both selections; permitted queued
 write cancellation and resumed dispatch add ten passing controls. The independent
