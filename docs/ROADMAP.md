@@ -407,6 +407,8 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `audio.xact.cue_variables`. ✅ Four controlled-cue demos now own GetCue results correctly.
   ✅ `cue_states` adds an authored500ms release, bounded Stopping/Stopped transition and
   Immediate interruption;15checks pass in six dummy-audio runs, with no audible-envelope claim.
+  ✅ `positional_cue` retains its audible loop and adds6owned-Cue Apply3D variable/state
+  controls beforePlay and while paused; SmokeOnly remains and mixed output is not measured.
   ✅ `audio.xact.instance_limits`: authored category Fail/ReplaceOldest limits, paused slots,
   isolation and freed-slot reuse checked through public states. Remaining: RPC curves (a variable driving
   volume/pitch), complex variation selection and cue-level limits.
@@ -1414,3 +1416,17 @@ All capture/archive/finish helpers pass; immutable evidence: checkpoint-471-punc
 Generated coverage:293/329types,1374/2326XNA members.
 Semantic coverage remains incomplete; original mono streaming/ISSUE-038 and build-only
 ISSUE-057 remain intact, with the latter's staging refusal/private reproduction retained.
+
+## Focused471-cue3d
+
+Focused **471-cue3d** extends positional_cue from zero to six public checks while
+retaining its complete original audible eight-position sweep and SmokeOnly classification.
+Two dummy-audio runs pass with empty stderr and still print all eight original positions.
+An owned Cue::Apply3D publishes Distance5, OrientationAngle0 and neutral Doppler beforePlay;
+turning the emitter sideways changes its public angle to90degrees. A paused cue accepts
+Distance10 and approaching velocity at one tenth of public SpeedOfSound, giving raw
+DopplerPitchScalar10/9. These are public variable/state observations, not acoustic panning,
+mixed pitch, RPC curve application or listening evidence. All37enabled audio/CLI CTests
+pass in5.78s; one additional manual microphone test is disabled. Watched build,
+diagnostic gate and focused reviewer pass BEFORE sourcecommit. Metadata471/0; full
+validation against complete471-punctual is pending. Evidence: checkpoint-471-cue3d-focused-*.

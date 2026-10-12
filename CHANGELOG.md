@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Positional XACT now directly demonstrates owned Cue::Apply3D spatial variables and
+  paused movement; six checks pass in both requested environments, preserving the audible sweep.
 - Complete471-punctual:484enabled CTests and both full smoke suites retain all previous
   failure/child/network evidence; new point/spot receiver passes8GLpixel controls.
 - A focused point/spot receiver adds8GLpixel controls for authored distance maps, bias,

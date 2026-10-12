@@ -103,6 +103,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **471-cue3d** extends positional_cue from zero to six public checks while
+retaining its complete original audible eight-position sweep and SmokeOnly classification.
+Two dummy-audio runs pass with empty stderr and still print all eight original positions.
+An owned Cue::Apply3D publishes Distance5, OrientationAngle0 and neutral Doppler beforePlay;
+turning the emitter sideways changes its public angle to90degrees. A paused cue accepts
+Distance10 and approaching velocity at one tenth of public SpeedOfSound, giving raw
+DopplerPitchScalar10/9. These are public variable/state observations, not acoustic panning,
+mixed pitch, RPC curve application or listening evidence. All37enabled audio/CLI CTests
+pass in5.78s; one additional manual microphone test is disabled. Watched build,
+diagnostic gate and focused reviewer pass BEFORE sourcecommit. Metadata471/0; full
+validation against complete471-punctual is pending. Evidence: checkpoint-471-cue3d-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **471-punctual**, source `ed7daab`,
 adds one coherent SkinnedEffect point/spot receiver demo with eight GL pixel checks.
 Authored constant-distance cube/2D maps store64/255; post-skin distance3/Range6 compares
@@ -258,20 +272,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: same-ID explicit Cue::Apply3D and public spatial-variable extension.
-Full471-punctual is complete. /tmp/cna-cue-spatial.cpp is UNAPPLIED; syntax93508 CLOSED0,
-emptylog. Verify base hash from checkpoint-470-authored-next-cue-spatial-base.json before
-application; preserve intervening corrections. It retains the complete original audible
-positional_cue loop and adds6checks (was0), with SmokeOnly retained.
-Use watched build/diagnostic gate, consistency if inputs change, metadata, focused dummy
-audio under both requested environments, then37relevant audio/CLI CTests. Inspect actual
-public distance/angle/Doppler values; no mixer-output or listening claim. Review original
-loop preservation BEFORE sourcecommit, update semantic docs/HANDOFF, commit/exportcatalog,
-then full484CTest and both471smokes. Keep all old failures/children/network controls exact;
-only positional_cue0->6 and reviewed positive titleUpdate count may differ. Capture once
-post-build and preserve35binaries/4assets/18fixtures through runtime. Investigate surprises.
-Close checkpoint and immediately continue the highest-priority public behavior audit.
-Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged.
+IN PROGRESS:471-cue3d focused evidence is complete (build82419, focused/targeted23659 CLOSED0); full validation next. Two6check dummy-
+audio runs, original audible loop preservation,37enabled audio/CLI CTests and metadata471/0
+pass. Reviewer passed BEFORE sourcecommit; public values are not acoustic/mixed output.
+Commit source/docs and export /tmp/cna-catalog-471-cue3d.json. Fullwrapper, captureONCE
+post-build duringCTest (35binaries/4assets/18fixtures), freeze artifacts through both smokes.
+Compare against complete471-punctual:484enabledCTest, same471totals, all38/42oldfailures/
+C/custom child evidence and5network controls exact; only positional_cue0->6 and reviewed
+positive titleUpdate variance may change. Normalized stderr unchanged. Preserve surprises,
+finish/close, reviewdiff and commit; immediately continue the public behavior audit.
+Next candidate is bank/engine lifetime: checkpoint-471-punctual-next-bank-lifetime-audit.md.
+Source-only scenario, no new draft/native evidence. Original mono streaming and ISSUE-057 intact.
 
 ## 15. Assumptions the next session must know
 
@@ -287,12 +298,12 @@ Current complete baseline is471-punctual; source commit is in section7.
 All earlier drafts, including authored XACT release and punctual shadows, are APPLIED
 AND STALE. Preserve immutable failed-attempt evidence and current source corrections.
 
-Next UNAPPLIED /tmp/cna-cue-spatial.cpp, syntax93508 CLOSED0/emptylog. Recovery/audit/base
+APPLIED AND STALE /tmp/cna-cue-spatial.cpp, syntax93508 CLOSED0/emptylog. Recovery/audit/base
 hashes: checkpoint-470-authored-next-cue-spatial-*. Six planned controls observe a caller-
 owned cue's Distance5, OrientationAngle0/90degrees and neutral Doppler beforePlay, then
 Distance10 while paused and raw Doppler10/9 when moving toward a stationary listener at
 one tenth of public SpeedOfSound. Explicit emitterDopplerScale1. The complete original
-audible loop remains verbatim; SmokeOnly retained. No runtime/acoustic evidence yet.
+audible loop remains verbatim; SmokeOnly retained. Two focused runs now pass6checks with empty stderr; acoustic output remains unmeasured.
 GetVariable exposes stored spatial variables, not actual mixed output. AttackTime and
 ReleaseTime live clocks are substituted internally for RPC evaluation and must not be
 misrepresented as public GetVariable stopwatches. Prepared UNRUN /tmp/cna-*471-cue3d* helpers cover guardedapply, watched build, two focused
