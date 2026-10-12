@@ -1394,7 +1394,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   runs once and the released handle is invalid despite destruction returning CALLBACK. Both
   traces are ILBUDUZ and stderr is empty under the demo logger. All32 focused C/CLI CTests pass
   (7.36 s), including the expected-failure marker. Evidence: reports/checkpoint-447-focused-*.
-  A full447 checkpoint is pending; the independent minimal reproducer remains available.
+  Complete447 at4272ce1 passes all460 enabled CTests and both full smoke runs. Exact original
+  comparisons add only this ID/assertion (34/35 ->35/36), retaining all older statuses/counts/
+  failures and C/custom-content child lists. Selected33 binary/four asset hashes and normalized
+  stderr match. Full archives/reviews: reports/checkpoint-447-*. The minimal reproducer remains available.
 
 
 ## Resolved

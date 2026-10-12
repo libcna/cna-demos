@@ -99,26 +99,25 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **446-cancel checkpoint passed**
-at effc2a6: tools/validate.sh exit0, all459 enabled CTests (168.06 s), both complete isolated-X11
-smoke runs and coverage regeneration. ORIGINAL446-owner comparisons retain every ID/status/
-knownIssue/count and all34/35 failed assertions. Dispatch grows30 ->40 child checks, retaining
-all old assertions and adding ten passes; every other C/custom-content child list and host trace
-is unchanged. Selected32 binary/four asset hashes match runtime capture; normalized stderr is
-unchanged (no GTK warnings, same84 nonfatal GL X protocol lines). Evidence and strict reviews:
-reports/checkpoint-446-cancel-*. Helpers: /tmp/cna-archive-446-cancel.py and
-/tmp/cna-446-cancel-finish.py. No rendered scene changed. This is not a full dependency snapshot.
-Independent ISSUE-051 diagnosis remains outside this catalog and adds no smoke failure.
+Current environment: Linux, GCC14.2, CMake3.31.6. The full **447 checkpoint passed** at4272ce1:
+tools/validate.sh exit0, all460 enabled CTests (144.24 s), both complete isolated-X11 smoke runs
+and coverage regeneration. ORIGINAL446-cancel comparisons add only the host_failure ID and one
+ISSUE-051 assertion (34/35 ->35/36). Every older status/knownIssue/count and C/custom-content
+child list is unchanged. New child has9 PASS +1 FAIL. Selected33 binary/four asset hashes match
+runtime capture; normalized stderr is unchanged (no GTK warnings, same84 nonfatal GL X protocol
+lines). Evidence: reports/checkpoint-447-*; strict helpers /tmp/cna-archive-447.py and
+/tmp/cna-447-finish.py. All runtime columns include447 IDs. No rendered scene changed or visual
+validation claimed for host failure. This is not a full dependency/input snapshot.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets --validate | 446 demos, 0 problems |
+| Metadata/assets --validate | 447 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 434 passed (including 24 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 394 passed, 24 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 415 passed, 25 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | All34/35 older failures retained; ten new passing dispatch child checks |
+| CTest | 435 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 394 passed, 25 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 415 passed, 26 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | All34/35 older failures retained; one new ISSUE-051 assertion (35/36) |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
 | Screenshots | Dispatch extension has no rendered scene; earlier lifecycle images were inspected |
 | Content build | Passed (CNB, XNB, media, content project) |
@@ -244,41 +243,41 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** run complete447 against ORIGINAL checkpoint-446-cancel. New focused
-c_api.game.host_failure is applied and validated: metadata447/0, both renderer selections nine
-PASS + exactly one ISSUE-051 failure, trace ILBUDUZ, empty stderr. All32 C/CLI CTests passed
-(7.36 s). Build /tmp/cna-447-build.log passed (35 targets; known vendored Draco CMP0148 CMake
-developer warning on necessary regeneration, no compiler diagnostics). Evidence/source hashes:
-reports/checkpoint-447-focused-*. Catalog447/C API17/standalone37/known-issue demos26.
-Coverage inventory remains293/329 types,1356/2326 XNA members,158/3210 C routes. Current coverage
-uses ORIGINAL446-cancel reports and explicitly lists the new ID as absent; full447 must fill it.
+**Immediate next action:** apply and validate the weight-channel draft below. Complete447 at
+4272ce1 is CLOSED: tools/validate.sh exit0, all460 enabled CTests144.24 s, SW394/25/25/3,
+GL415/26/3/3. Exact ORIGINAL446-cancel comparisons add only the new host_failure ID and one
+ISSUE-051 label (raw35/36); all older statuses/counts/known issues/child assertions unchanged.
+Selected33 binary/four asset hashes and normalized stderr match. reports/checkpoint-447-* is
+the new baseline. No runtime checkpoint is running. Inventory293/329 types,1356/2326 XNA members,
+158/3210 C routes; catalog447/C API17/standalone37/known-issue demos26, all runtime columns complete.
 
-Full helpers: /tmp/cna-archive-447.py and /tmp/cna-447-finish.py; catalog /tmp/cna-catalog-447.json.
-Replace PENDING447 with source commit; capture33 selected binary hashes (the previous32 plus
-build/linux-full/bin/cna-demo-c_api-game-host_failure) and four asset hashes AFTER full build.
-Expected447 totals SW394/25/25/3, GL415/26/3/3, all460 enabled CTests (435 passed including
-25 WILL_FAIL +25 skips), three manual disabled. Exact comparisons must retain all older34/35
-failed assertions and add only the new combined ISSUE-051 label (35/36); all old statuses/counts/
-knownIssue and C/custom-content child lists stay unchanged. New child10 with9 PASS +1 FAIL.
-Freeze source/assets through runtime. All447 host-failure drafts are APPLIED AND STALE.
+Host failure focus: build35 targets (known Draco CMP0148 developer warning on regeneration,
+no compiler diagnostics), metadata447/0, all32 C/CLI CTests7.36 s, both selections9 PASS +1 FAIL,
+traceILBUDUZ and empty stderr. reports/checkpoint-447-focused-*. Host drafts APPLIED AND STALE.
+The independent ISSUE-051 reproducer remains tools/repro_c_api_host_failure.c; original/final
+source/binary evidence reports/cna-issue-051-*. No CNA edits or upstream message. No rendered
+scene or browser scheduling validation; other failed callback locations remain untested.
 
-Latest COMPLETE baseline:446-cancel at effc2a6 (closure2fe769c), full tools/validate.sh exit0,
-all459 enabled CTests168.06 s, SW394/24/25/3, GL415/25/3/3; raw34/35 failures unchanged,
-dispatch30 ->40 adds ten passes and retains every older assertion. Selected32 binary/four asset
-hashes and normalized stderr match. reports/checkpoint-446-cancel-*.
-
-ISSUE-051 remains a contract/implementation mismatch: native Game completion occurs but the
-C adapter suppresses exiting/end_run after failure. The independent public-API reproducer and
-initial/final evidence remain tools/repro_c_api_host_failure.c and reports/cna-issue-051-*.
-No CNA edits or upstream message; other callback failure locations and browser scheduling are
-untested. The new demo preserves existing normal host_frames and error_handling RunOneFrame
-scenarios, and one C game per process. No rendered-content/visual validation is claimed.
-
-Next productive gaps after closing447: automatic callback-scope dispatch; four-influence skinned
-geometry/material rendering; further public-member behavior audit. Canonical thread-local
-exception details remain separate from existing result/category/message isolation. Source audit
-rejected invalid FOV as proof of ParamName (current Matrix throws std::invalid_argument);
-choose an actual canonical exception route before claiming that behavior. Preserve old controls.
+Next work: UNAPPLIED /tmp/cna-weight-channels.cpp (141 lines),
+proposed graphics.skinned_effect.weight_channels. Existing one/two-weight scenes use zero unused
+lanes and cannot prove the selector ignores nonzero inactive data. This draft renders three
+small meshes with valid active-weight sums for1/2/4, deliberately nonzero unused lanes in1/2,
+four actual influences in4 and permuted bone indices2,0,3,1. Translated palette, ambient-only
+colors and identity projection give explicit expected positions; five near-edge/center samples
+per mesh plus empty bind-center checks are planned (six assertions). All four-lane contributions
+are nonzero. /tmp/cna-weight-channels-geometry.py analytically confirms the five probes detect
+omitting any lane with or without renormalization; this is NOT native mutation/runtime evidence.
+The draft has NOT been compiled, run or visually inspected. Verify source/math, apply only after
+447 runtime closes, build/focus on both renderers, inspect both screenshots, then document/full-
+checkpoint. No file assets needed. Prepared /tmp/cna-{archive-448,448-finish,run-448-focused}.py need inspection, actual source commit,
+/tmp/cna-catalog-448.json and33 selected binary/four asset hashes captured after the future full
+build. Full comparison must add only the new six-PASS ID, preserve all35/36 failures and all old
+C/custom-content child lists/traces. New target regeneration can emit known Draco CMP0148 warning.
+Expected new count448/graphics142/game252, same known-demo26/raw35/36 IF it passes. Inventory
+must be regenerated, not guessed. Other gaps: automatic callback-scope dispatch, skin material/
+fog behavior and other callback failure locations. Canonical thread-local exception details
+remain distinct from result/category/message isolation; invalid FOV currently throws
+std::invalid_argument, so it is not a valid ParamName candidate. Preserve old controls.
 
 Earlier COMPLETE catalog checkpoint: 446-palette at 55ebc57 (closure 2c3f095), all 459 enabled
 CTests (143.36 s), SW 395/23/25/3, GL 416/24/3/3, exact prior 32/33 failed assertions and all
