@@ -99,15 +99,17 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **448 checkpoint passed** at
-11d29b3: tools/validate.sh exit 0, all 461 enabled CTests (197.73 s), both complete isolated-X11
-smoke runs and coverage regeneration. ORIGINAL checkpoint-447 comparisons add only the new
-six-check passing weight_channels ID. All 35/36 earlier failed assertions, older statuses/counts/
-known issues and C/custom-content child lists remain unchanged. Selected 33 binary/four asset
-hashes match runtime capture; normalized stderr is unchanged (no GTK warnings, same 84 nonfatal
-GL X protocol lines). Evidence, catalog and scripts: reports/checkpoint-448-*; helpers also remain
-in /tmp/cna-archive-448.py and /tmp/cna-448-finish.py. Both focused 800x480 captures were actually
-inspected and are RGBA-identical. This is not a full dependency/input snapshot.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **448-max-slot checkpoint passed**
+at f00543d: tools/validate.sh exit 0, all 461 enabled CTests (191.49 s), both complete isolated-X11
+smoke runs and coverage regeneration. Exact ORIGINAL checkpoint-448 comparisons preserve all
+35/36 failed assertions, statuses/known issues and older C/custom-content child checks/traces.
+weight_channels increases six -> seven PASS checks; GL game.window.title varies 10 -> 12 because
+its unchanged checks run per Update rather than per rendered frame. All 33 selected binary/four
+asset hashes match the post-build runtime capture; normalized stderr is identical (no GTK warnings,
+same 84 GL X protocol lines). Evidence/catalog/scripts: reports/checkpoint-448-max-slot-*.
+Both focused 800x480 captures were actually inspected and are RGBA-identical; only 7,504 new cyan
+pixels differ from their original 448 images. CNA was clean at 16fde50c after the full build;
+external CNA work continued during runtime. This is not an atomic dependency/input snapshot.
 
 | Check | Result |
 |---|---|
@@ -117,9 +119,9 @@ inspected and are RGBA-identical. This is not a full dependency/input snapshot.
 | CTest | 436 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
 | SOFTWARE smoke | 395 passed, 25 expected failures, 25 skipped, 3 manual not run |
 | OPENGLES3 smoke (explicit x11, private Xvfb) | 416 passed, 26 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | All 35/36 older failures retained; new graphics demo has six passes |
+| Changed assertions | All 35/36 older failures retained; weight_channels six -> seven passes |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Both weight-channel captures inspected; RGBA-identical, 800x480, 7,504 pixels per colored mesh |
+| Screenshots | Both final-slot captures inspected; RGBA-identical, only the new 7,504-pixel cyan mesh differs from original 448 |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -243,27 +245,26 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** run and close the full 448-max-slot checkpoint against ORIGINAL
-checkpoint-448, then continue with fog below. The existing weight_channels extension is APPLIED;
-/tmp/cna-max-slot-render.cpp is now stale. Same 448 IDs, weight_channels six -> seven checks,
-expected old 35/36 failed assertions unchanged. Prepared helpers:
-/tmp/cna-archive-448-max-slot.py and /tmp/cna-448-max-slot-finish.py need the actual source commit
-and 33 binary/four asset hashes captured after the full build, before runtime checks.
+**Immediate next action:** apply the skinned fog draft below, then build, inspect both rendered
+captures and complete the 449 checkpoint. Full 448-max-slot at f00543d is CLOSED: tools/validate.sh
+exit 0, 461 enabled CTests (191.49 s), SW 395/25/25/3, GL 416/26/3/3. Strict ORIGINAL 448
+comparisons preserve all 35/36 failures, older statuses/known issues and C/custom-content child
+checks/traces. Only weight_channels gains a semantic check (six -> seven); GL title varies 10 ->12
+with Update timing. Selected 33 binary/four asset hashes and normalized stderr match. New baseline:
+reports/checkpoint-448-max-slot-*. No runtime checkpoint is running. Do not reapply the final-slot
+draft: it is APPLIED AND STALE. Inventory remains 293/329 types, 1357/2326 members, 158/3210 C routes.
 
-Focused extension: 28-target incremental build without compiler diagnostics, metadata 448/0,
-all 23 targeted CTests (6.94 s), seven PASS checks on both renderers, empty stderr. Both 800x480
-captures were actually inspected and are RGBA-identical. Comparing each against ORIGINAL 448
-changes exactly 7,504 MidnightBlue pixels to cyan; all older colored regions remain unchanged.
-The original short-palette controls run every frame before a fourth mesh addresses MaxBones-1
-with a distinct transform. Evidence: reports/checkpoint-448-max-slot-focused-*.
+Focused final-slot evidence: 28-target clean incremental build, metadata 448/0, all 23 targeted
+CTests (6.94 s), seven PASS checks on both selections and empty stderr. Both images actually
+inspected, RGBA-identical; exactly 7,504 background pixels become cyan versus original 448, with
+all older colored regions unchanged. The short palette controls run every frame before the
+full-size indexed draw. reports/checkpoint-448-max-slot-focused-*.
 
-Resume baseline: incremental build and metadata 448/0 passed, all 461 enabled CTests passed
-(202.83 s). At that observation CNA was clean at fbaff069eb21cc9b069d7f19953ff864b37036b0 and
-all 33 selected binaries/four assets matched original 448. Later external C API render-target
-edits were present and included in the focused incremental build; no CNA files were edited here,
-and no atomic dependency snapshot is claimed. Baseline logs are archived as
-checkpoint-448-max-slot-baseline-*. Last COMPLETE checkpoint is still original 448 at 11d29b3:
-SW 395/25/25/3, GL 416/26/3/3, all old raw failures and C/custom-content child lists retained.
+Resume baseline passed all 461 enabled CTests (202.83 s); all 33 selected binaries/four assets
+then matched original 448. Later CNA render-target edits were incrementally rebuilt before the
+focused extension. Full build observed clean CNA 16fde50cdae016cbc0918259ea1afcdf26fc7656; external
+C API work was again uncommitted by runtime completion. Start/end observations are archived,
+selected artifacts stayed fixed, and no CNA source was edited here. Do not claim atomic inputs.
 
 Later work: UNAPPLIED /tmp/cna-skinned-fog-depth.cpp (133 lines), proposed
 `graphics.skinned_effect.fog_depth`. It uses one shared Z=0 bind mesh, one active bone and
@@ -278,6 +279,18 @@ Expected new PASS ID with4 JSON checks only; all old35/36 failures and child lis
 Preserve the current complete/focused weight-channel evidence before
 applying. Build, both renderer captures and actual inspection are mandatory; investigate any
 color/depth mismatch instead of adjusting expectations to the observed output.
+
+After fog: /tmp/cna-normal-lighting.cpp is a new UNAPPLIED 131-line draft. /tmp/cna-prepare-normal-lighting.py generates an OLDER
+three-card draft; do not rerun it over the newer file. Proposed graphics.skinned_effect.normal_lighting uses
+one +Z bind normal: identity, a 60-degree Y rotation, and equal identity/120-degree influences.
+The latter produces a shorter normal with the same direction after normalization. A single
+white directional light toward(.6,0,.8), Gold diffuse, zero ambient/specular, and bone rotations
+should produce (204,172,0), then (235,198,0) twice (tolerance 1). A fourth card uses the same
+blend with World scale(2,1,1), whose inverse-transpose normal should produce (254,214,0).
+Four pixel checks planned; all cards are placed at World Z=-3. Actual CNA APIs and software transform/
+Lambert path were read, but no compilation/runtime/image evidence exists. Review and validate
+only after fog's full checkpoint; do not infer arbitrary nonuniform-scale or per-pixel lighting
+coverage from this draft. Nonuniform World scale is distinct from nonuniform joint scale.
 
 This is a separate fog-after-bone-transform behavior: BasicEffect fog moves objects through World
 and cannot prove it. Other remaining gaps: rotated/nonuniform joint normals, lighting/alpha,
