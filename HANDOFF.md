@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-470 catalog demos (focused470-query; last complete checkpoint470-cascades): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+470 catalog demos (complete checkpoint470-query): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 29 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
@@ -103,30 +103,36 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete checkpoint **470-cascades**, source `370bf37`, adds a focused
-six-control authored-atlas scene: near/inclusive-split/far selection, half visibility in a
-blend band, independent fitting CameraView and Count0 restoring the single-map transform.
-All six GL checks pass; the actual image was inspected and six selected colors match within
-tolerance1. SOFTWARE explicitly skips the unsupported stock path; OPENGL33 remains untested.
-No shadow-map generation, atlas-border filtering, four-cascade maximum or DebugTint credit.
-Initial build33371 incorporates external CNA LINK-041/LINK-042 and completes584scheduled /
-581numbered operations, but detects six watched CMake input changes during external work.
-No native checks ran until consistency90087 completed32scheduled/29numbered operations with
-all3,909watched inputs unchanged. Focused/targeted16253 passes26CTests in4.36s, two shadow skips.
-Full21772 builds in7scheduled operations, validates470metadata/0problems and passes all483
-enabled CTests in221.58s (449passed including27WILL_FAIL,34skips; three additional manual
-tests disabled). SOFTWARE406/27/34/3, OPENGLES3 435/29/3/3. Every old38/42failed assertion,
-C/custom child list/trace and all five network controls remain exact. Old JSON count differences:
-{"OPENGLES3": {}, "SOFTWARE": {}}.
-All35selected binaries/four existing assets and readerfixture copies remain unchanged.
-Normalized application stderr adds only the declared SOFTWARE cascade skip; GL retains42known
-X protocol records and the intentional shader error. The outer Xvfb log contains12exact
-amdgpu pairs (previously18); independently journaled inner/outer exits are zero.
-Capture CNA123c36c34b (dirty), final CNAdc9c34f62f (clean).
+Complete checkpoint **470-query**, source `68980d0` (query code a699a2d),
+extends the existing occlusion scene with eight ordering/disposal controls. All eleven checks
+pass on SOFTWARE and OPENGLES3; the three original visibility controls and complete
+Update/Draw/EndRun source remain unchanged. Four actual before/after images were inspected.
+Fixed counts remain 0/4422 (SOFTWARE, precise) and 0/1 (OPENGLES3, boolean). Moving-light
+positions are time-dependent; no image-identity or GPU completion-latency claim.
+Initial watched build81666 passes9scheduled/8numbered operations, all3,909watched inputs
+unchanged at clean dc9c34f62. Before70538 and after/targeted95414 pass;16CTests in3.46s.
+The initial full attempt (sourcea699a2d) stopped before metadata/CTest/smoke after a staging
+warning, inner/outer exits1. Original evidence: checkpoint-470-query-initial-staging-refusal-*.
+Private unchanged-CNA-header concurrency probes reproduce the missing-metadata diagnostic in
+all three1,000-owner trials, while a1,000-owner sequential control has no diagnostics. Zero
+owner errors/scavenger removals and empty final private parents; selected35binaries/4assets
+stay unchanged through probes. This is open CNA-DEMOS-ISSUE-057, a tool diagnostic race, not
+an occlusion failure or demonstrated content corruption. Original exact interleaving remains
+unobserved. Probe evidence: checkpoint-470-query-staging-probe-*. A clean retry does not fix it.
+Fresh full16616 builds in7scheduled operations without warning, validates470metadata/0problems
+and passes all483enabled CTests in165.69s (449passed including27WILL_FAIL,34skips; three
+additional manual tests disabled). SOFTWARE406/27/34/3, OPENGLES3 435/29/3/3. Every old38/42
+failed assertion, C/custom child list/trace and all five network controls remain exact.
+Reviewed JSON count differences: {"OPENGLES3": {"graphics.occlusion_query.visible_pixels": {"after": 11, "before": 3, "reason": "Eight scratch-query lifecycle controls added; original three visibility predicates retained."}}, "SOFTWARE": {"graphics.occlusion_query.visible_pixels": {"after": 11, "before": 3, "reason": "Eight scratch-query lifecycle controls added; original three visibility predicates retained."}}}.
+All35selected binaries/four existing assets and readerfixture copies remain unchanged through
+this fresh runtime attempt. Normalized application stderr is identical, including42known GL
+X protocol records and the intentional shader error. The fresh outer Xvfb log contains13
+exact amdgpu pairs (previous complete12, initial refusal1); independent inner/outer exits0.
+Capture CNAeff3131017 (clean), final CNAeff3131017 (clean).
 These are selected artifact/source observations, not an atomic/full transitive input snapshot.
-All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-cascades-*.
+All fresh capture/archive/finish helpers pass; immutable complete evidence: checkpoint-470-query-*.
 Generated coverage: 293/329types, 1374/2326XNA members, 174/3210C routes.
-Semantic coverage remains incomplete; authored cascade sampling does not establish all shadows.
+Semantic coverage remains incomplete; no extra demo or runtime knownIssue marker was added.
 
 ## 8. Exact commands that work
 
@@ -246,28 +252,25 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: fresh full470-query retry after the diagnosed initial staging refusal.
-Query source a699a2d is APPLIED AND STALE;11checks on both selections and16targeted CTests pass.
-The first full wrapper CLOSED1 at the warning gate after7build operations. NO metadata/CTest/
-smoke ran and NO runtime capture was made. Original logs/exits/post-refusal selected hashes:
-checkpoint-470-query-initial-staging-refusal-*. The original candidate was absent on inspection.
-1. Investigation COMPLETE: CNA-DEMOS-ISSUE-057. Three private concurrent staging trials
-   reproduce3,175/3,079/3,089exact missing-metadata diagnostics with1,000owners each; zero owner
-   errors/removals, final private roots empty. Sequential1,000owner control has0diagnostics.
-   Native probe/control compile sessions92407/11140 CLOSED0; probe exits1 intentionally,
-   sequential exits0. All35selected binaries/4assets unchanged; staging reviewer passed.
-   This proves a CNA tool diagnostic race, not the original exact interleaving or asset corruption.
-   No sibling edits, unknown-directory deletions, warning suppression or runtime issue marker.
-2. Commit investigation docs. Clear only archived /tmp current wrapper exits/end/Xvfb outputs
-   before a fresh /tmp/cna-run-470-query-validation.sh attempt, preserving original evidence.
-   Capture /tmp/cna-capture-470-query.py once after successful build during CTest. Freeze runtime.
-3. Archive both selections, saving /tmp/cna-470-query-{SOFTWARE,OPENGLES3}-review.log;
-   run /tmp/cna-470-query-finish.py into /tmp/cna-470-query-finish-review.log. Baseline complete
-   470-cascades source370bf37,closure6f89f3d. Expected483enabled CTests,SW406/27/34/3,
-   GL435/29/3/3; only query3->11 and separately reviewed positive title Update variance may differ.
-   Keep all38/42failures, child/network controls and normalized diagnostics exact.
-4. Close full docs/history/handoff and commit; a clean retry does not resolve ISSUE-057.
-   Immediately continue470-border, whose unapplied source/helper family is prepared.
+HIGHEST PRIORITY: apply and validate the same-ID470-border cascade extension.
+Fresh full470-query session16616 is CLOSED0; source68980d0 is the comparison baseline.
+Preserve the initial staging refusal and independent ISSUE-057 probe; the issue remains open.
+1. Review/apply /tmp/cna-cascade-border.cpp to demos/graphics/skinned_effect/shadow_cascades.cpp.
+   Syntax7564 passed with empty log; no native/image evidence yet. Six original controls plus
+   two shared-UV(.5,.5) near/far slice controls (8GLchecks expected), requested radius2.
+2. Run /tmp/cna-build-470-border.py initial; consistency if watched inputs change. Validate
+   metadata, run /tmp/cna-run-470-border-focused.py and targeted shell. Inspect the actual
+   three-row GL image; recheck six original centers at y80/240 and two new centers at y400.
+   Run /tmp/cna-review-470-border-focused.py BEFORE committing to compare old labels with HEAD.
+   No image identity or independent proof of all25cascade tap weights is claimed.
+3. Update semantic docs, commit, export /tmp/cna-catalog-470-border.json. Full helper family,
+   capture selected hashes once after build during CTest, freeze runtime, archive both renderers
+   and finish. Expected483enabled CTests and unchanged470totals; only GLcascade6->8checks
+   and separately reviewed positive title Update variance may change. Preserve exact failures,
+   C/custom children/network controls and normalized diagnostics. Investigate any staging warning.
+4. Close full docs/history/handoff and commit; immediately continue the public behavior audit.
+   Remaining specular/punctual shadows, cascade debug/max-count and audio lifecycle decisions
+   remain separate; do not claim comprehensive coverage from named-member counts.
 
 ## 15. Assumptions the next session must know
 
@@ -279,42 +282,35 @@ checkpoint-470-query-initial-staging-refusal-*. The original candidate was absen
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is470-cascades, source370bf37, closure6f89f3d.
-All earlier receiver/PCF/cascade, audio, XACT, reader, move, field, lighting, palette and EOF
-proposals are APPLIED AND STALE. Preserve prior evidence, including failures and probes.
-See docs/CHECKPOINT_HISTORY.md; do not overwrite current implementations with old drafts.
+Current complete baseline is470-query, source68980d0 (query codea699a2d); closure follows.
+All earlier receiver/PCF/cascade/query, audio, XACT, reader, move, field, lighting, palette and
+EOF proposals are APPLIED AND STALE. Preserve prior evidence, including failures and probes.
+See docs/CHECKPOINT_HISTORY.md; never overwrite current implementations from stale /tmp drafts.
 
-Applied query source: /tmp/cna-occlusion-lifecycle.cpp, syntax74173 CLOSED0, empty log.
-A scratch query adds eight ordering/disposal controls before the unchanged three visibility
-controls (11passing). Fresh/no-result, End-before-Begin, repeated Begin, reuse without
-an IsComplete observation, release-state and disposed Begin/PixelCount are checked. All eleven checks now pass on both renderers; four actual before/after images inspected. No GPU completion-latency or all-disposed-member claim.
-Source/semantic audit: /tmp/cna-occlusion-query-audit.md and docs/COVERAGE_AUDIT.md.
-Recovery source/syntax/audit: checkpoint-469-pcf-next-*.
+Next unapplied draft: /tmp/cna-cascade-border.cpp; syntax7564 CLOSED0, empty log.
+It preserves six cascade controls and adds near/far cases at the same atlas UV(.5,.5),
+requesting radius2. Each selected slice must exclude the neighboring slice's opposite depth.
+The three-row layout moves all original centers; actual image inspection and pixel review
+are required. No native/image border evidence or independent25tap-weight proof yet.
+Notes/source/syntax recovery: checkpoint-470-cascades-next-*.
 
-Prepared query helper family: /tmp/cna-*470-query*, recovery checkpoint-469-pcf-next-helpers-*.
-Focused before/after runs, all four image inspections and the pre-commit source reviewer are
-complete. Preserve their archived evidence; do not overwrite before captures with changed source.
-Full helpers expect baseline470-cascades,483CTests, SW406/27/34/3 and GL435/29/3/3, exact old
-38/42failed assertions and all child/network controls, unchanged normalized diagnostics.
-Query watched build, before/after runner, targeted tests and focused reviewer have passed.
-Full helpers are pending; investigate every unexpected result before coverage credit.
+Prepared border helper family: /tmp/cna-*470-border*, recovery under
+checkpoint-470-cascades-next-border-helpers-*. Baseline470-query,483CTests, unchanged totals,
+GLcascade6->8 only plus permitted positive title Update variance. Run focused reviewer before
+committing, as it compares the first six source assertion labels with the original HEAD.
+All border helpers remain unrun; sources are unapplied.
 
-External CNA had active CMake/probe/document edits during the cascade initial build.
-The initial and subsequent unchanged-input consistency journals preserve that distinction.
-No sibling files were edited from this task. Always watch current inputs before native work;
-new source state does not retroactively change the evidence of frozen completed checkpoints.
+Open build-only CNA-DEMOS-ISSUE-057 is independently reproduced. Original pre-CTest refusal
+and three concurrent / one sequential private staging probes are preserved under
+checkpoint-470-query-initial-staging-refusal-* and checkpoint-470-query-staging-probe-*.
+No warning gate was loosened, unknown staging tree deleted or CNA source modified. The clean
+retry does not resolve the race, and the original exact creation/teardown interleaving is unknown.
+These diagnostic tools are not catalog demos and add no runtime knownIssue flag.
 
-Later border draft AFTER470-query: /tmp/cna-cascade-border.cpp, syntax7564 CLOSED0, empty
-log. Six original cascade controls plus two cases at identical atlas UV(.5,.5) isolate near/
-far slices with requested radius2 (8GLchecks expected). Third-row layout needs actual image
-inspection and rechecking every original center at new coordinates. No native/image evidence
-or claim of independently verified25tap weights. Notes/recovery: checkpoint-470-cascades-next-*.
-
-Prepared later border helper family: /tmp/cna-*470-border*, recovered under
-checkpoint-470-cascades-next-border-helpers-*. It expects complete470-query as baseline;
-run focused reviewer before committing to preserve the original six labels against HEAD.
-No border helper has run. Source is still only /tmp/cna-cascade-border.cpp, not applied.
-
-Diagnostic staging sources and controls are read-only probes of CNA tools, not catalog demos.
-Recovery: checkpoint-470-query-staging-probe-*. The original refusal and exact probe review
-are separate; no full retry or runtime hash capture has started yet.
+Later source-only work AFTER470-border: /tmp/cna-shadow-specular.cpp, syntax6913 CLOSED0,
+empty log. It extends shadow_receiver from7to9controls with isolated specular reception
+disabled/enabled; material diffuse/ambient/emission are zero, power1, expected highlight
+RGB(76,38,13), shadowBlack, tolerance1. Three-row relayout requires checking all15selected
+pixels and actual image inspection. No native/image evidence; no per-vertex/alpha/cascade/
+punctual-specular credit. Recovery notes/source/syntax: checkpoint-470-query-next-specular-*,
+and checkpoint-470-query-next-cna-shadow-specular*. No specular helper family prepared yet.

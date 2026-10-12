@@ -2423,3 +2423,36 @@ build interleaving remains unobserved and no content corruption is claimed. Orig
 probe sources/executables/logs and review are archived under checkpoint-470-query-initial-staging-refusal-*
 and checkpoint-470-query-staging-probe-*. The warning gate remains unchanged; a fresh full retry
 is pending. No runtime demo knownIssue marker or extra demo ID is added.
+
+## Complete 470-query
+
+Complete checkpoint **470-query**, source `68980d0` (query code a699a2d),
+extends the existing occlusion scene with eight ordering/disposal controls. All eleven checks
+pass on SOFTWARE and OPENGLES3; the three original visibility controls and complete
+Update/Draw/EndRun source remain unchanged. Four actual before/after images were inspected.
+Fixed counts remain 0/4422 (SOFTWARE, precise) and 0/1 (OPENGLES3, boolean). Moving-light
+positions are time-dependent; no image-identity or GPU completion-latency claim.
+Initial watched build81666 passes9scheduled/8numbered operations, all3,909watched inputs
+unchanged at clean dc9c34f62. Before70538 and after/targeted95414 pass;16CTests in3.46s.
+The initial full attempt (sourcea699a2d) stopped before metadata/CTest/smoke after a staging
+warning, inner/outer exits1. Original evidence: checkpoint-470-query-initial-staging-refusal-*.
+Private unchanged-CNA-header concurrency probes reproduce the missing-metadata diagnostic in
+all three1,000-owner trials, while a1,000-owner sequential control has no diagnostics. Zero
+owner errors/scavenger removals and empty final private parents; selected35binaries/4assets
+stay unchanged through probes. This is open CNA-DEMOS-ISSUE-057, a tool diagnostic race, not
+an occlusion failure or demonstrated content corruption. Original exact interleaving remains
+unobserved. Probe evidence: checkpoint-470-query-staging-probe-*. A clean retry does not fix it.
+Fresh full16616 builds in7scheduled operations without warning, validates470metadata/0problems
+and passes all483enabled CTests in165.69s (449passed including27WILL_FAIL,34skips; three
+additional manual tests disabled). SOFTWARE406/27/34/3, OPENGLES3 435/29/3/3. Every old38/42
+failed assertion, C/custom child list/trace and all five network controls remain exact.
+Reviewed JSON count differences: {"OPENGLES3": {"graphics.occlusion_query.visible_pixels": {"after": 11, "before": 3, "reason": "Eight scratch-query lifecycle controls added; original three visibility predicates retained."}}, "SOFTWARE": {"graphics.occlusion_query.visible_pixels": {"after": 11, "before": 3, "reason": "Eight scratch-query lifecycle controls added; original three visibility predicates retained."}}}.
+All35selected binaries/four existing assets and readerfixture copies remain unchanged through
+this fresh runtime attempt. Normalized application stderr is identical, including42known GL
+X protocol records and the intentional shader error. The fresh outer Xvfb log contains13
+exact amdgpu pairs (previous complete12, initial refusal1); independent inner/outer exits0.
+Capture CNAeff3131017 (clean), final CNAeff3131017 (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All fresh capture/archive/finish helpers pass; immutable complete evidence: checkpoint-470-query-*.
+Generated coverage: 293/329types, 1374/2326XNA members, 174/3210C routes.
+Semantic coverage remains incomplete; no extra demo or runtime knownIssue marker was added.

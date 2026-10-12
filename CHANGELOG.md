@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete470-query: the fresh full run passes483enabled CTests and both smoke suites with
+  exact prior failure/child/network evidence and stable selected artifacts. The original
+  staging-warning refusal and independently reproduced open ISSUE-057 remain preserved.
 - Recorded CNA-DEMOS-ISSUE-057 after a pre-CTest content staging warning. Three isolated
   concurrent probes reproduce the diagnostic; a sequential control is clean. Original failure
   evidence is retained, and the full validation warning gate remains enabled.

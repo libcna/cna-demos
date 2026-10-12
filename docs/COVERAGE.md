@@ -521,6 +521,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Graphics::ModelMeshPart::SamplerStatesEXT` -- graphics.model.part_sampler_state
 - `Microsoft::Xna::Framework::Graphics::ModelMeshPart::setSamplerStateEXTProperty` -- graphics.model.part_sampler_state
 - `Microsoft::Xna::Framework::Graphics::ModelSkinEXT` -- graphics.model.multiple_skins
+- `Microsoft::Xna::Framework::Graphics::OcclusionQuery::HasRenderer` -- graphics.occlusion_query.visible_pixels
 - `Microsoft::Xna::Framework::Graphics::ShadowCascadeStateEXT` -- graphics.skinned_effect.shadow_cascades
 - `Microsoft::Xna::Framework::Graphics::SkinnedEffect::SetOwnedTexture` -- graphics.skinned_effect.clone_ownership
 - `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT` -- graphics.model.skinned_manifest
