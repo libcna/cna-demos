@@ -6,14 +6,14 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**439 demos** in 18 categories. Kinds: console 157, game 250, standalone 32. Automation: automated 403, manual 3, smoke-only 33.
+**440 demos** in 18 categories. Kinds: console 157, game 250, standalone 33. Automation: automated 404, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
 | c_api | 16 | 15 | 1 | 0 | 16 / 0 / 0 / 0 / 0 | 16 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 40 | 40 | 0 | 0 | 31 / 0 / 9 / 0 / 0 | 31 / 0 / 9 / 0 / 0 |
+| content | 41 | 41 | 0 | 0 | 31 / 0 / 9 / 0 / 1 | 31 / 0 / 9 / 0 / 1 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.custom.xml_xnb_pipeline`.
+- OPENGLES3: absent from report: `content.custom.xml_xnb_pipeline`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -173,7 +175,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentValue::Get` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaImporter` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.nested_builds, content.custom.xna_pipeline_components
-- `CNA::Content::Pipeline::RunContentCompiler` -- content.custom.incremental_compiler
+- `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline
+- `CNA::Content::Pipeline::RunContentCompiler` -- content.custom.incremental_compiler, content.custom.xml_xnb_pipeline
 - `CNA::Devices::DisplayInfo::ContentScale` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::DisplayInfo::SafeArea` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::Locale::PreferredLocales` -- devices.system.machine_info
@@ -423,6 +426,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::Filename` -- content.custom.intermediate_external_references
 - `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ProcessorParameterBindings::Add` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Compiler::ContentCompiler::AddTypeWriter` -- content.custom.xml_xnb_pipeline
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Compiler::ContentTypeWriter::GetRuntimeReader` -- content.custom.xml_xnb_pipeline
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Compiler::ContentTypeWriter::GetRuntimeType` -- content.custom.xml_xnb_pipeline
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Compiler::ContentTypeWriter::TypeVersion` -- content.custom.xml_xnb_pipeline
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Compiler::ContentTypeWriter::Write` -- content.custom.xml_xnb_pipeline
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Compiler::ContentWriter::Write` -- content.custom.xml_xnb_pipeline
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::AllowNull` -- content.custom.intermediate_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::CollectionItemName` -- content.custom.intermediate_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::FlattenContent` -- content.custom.intermediate_properties
@@ -440,7 +449,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::AddTypeSerializer` -- content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize` -- content.custom.intermediate_external_references, content.custom.intermediate_polymorphism, content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize` -- content.custom.intermediate_external_references, content.custom.intermediate_polymorphism, content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
-- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::TypeSerializerFor` -- content.custom.intermediate_polymorphism
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::TypeSerializerFor` -- content.custom.intermediate_polymorphism, content.custom.xml_xnb_pipeline
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateWriter::Xml` -- content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Graphics::AnimationClipEXT` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::ApplyBindPoseBoneTransformsEXT` -- graphics.model.multiple_skins

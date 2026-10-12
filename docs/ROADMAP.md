@@ -257,6 +257,10 @@ a check that all authored colors remain visible and that a blank texture row can
   actual parent/child bytes: missing-child refusal, same-manager retry, restored profile data,
   shared runtime cache and cleanup are verified. Matching sibling items now defer compilation
   to their host; mismatched parameters produce a generated child (20 child checks).
+- ✅ `content.custom.xml_xnb_pipeline`: original custom XML source through the actual compiler,
+  pre-registered serializer and versioned XNB writer, manifest digest, runtime reader dispatch,
+  unchanged skip, authored edit, cache versus Unload/reload and explicit CNB-schema refusal
+  (10 child checks). No genuine-XNA or GPU claim; external graphs remain separate work.
 - ✅ `content.custom.incremental_compiler`: real RunContentCompiler registry factory and manifest,
   unchanged skips, primary/shared dependency invalidation, failed-import preservation, repair,
   missing-output rebuild, writer-version identity, same-length/timestamp output tampering, corrupt

@@ -80,6 +80,10 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
   discovery, fingerprints, manifest skipping, publication and manifest-based clean. The tool's
   temporary score inputs are original runtime fixtures, not another native build tree. This
   build-time dependency remains isolated from the browser's runtime link closure.
+* `content.custom.xml_xnb_pipeline` links both compiler and build-time serializer modules.
+  Its process pre-registers a game XML serializer and XNB writer before configuring the public XML
+  source route. The real compiler publishes original temporary XML as XNB; a separately registered
+  runtime reader loads those exact files. Authored and runtime C++ types are deliberately distinct.
 * C ABI examples default to C99. The focused `c_api.core.thread_local_errors` and
   `c_api.game.foreign_thread_dispatch` targets use C11 threads/atomics after a compile/link
   availability check and link the standard Threads target. The former uses game-independent

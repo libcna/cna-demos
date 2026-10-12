@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-439 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+440 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
-content 40 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 41 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 16 (standalone C programs). Every declared category has demos.
@@ -233,12 +233,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** complete 439-integrity is archived/reviewed at 83c919d. Continue with
-/tmp/cna-xml-xnb-main.cpp, /tmp/cna-xml-xnb-metadata.cpp and /tmp/cna-xml-xnb-CMakeLists.txt:
-apply as content.custom.xml_xnb_pipeline (new focused XML source/writer/runtime integration),
-build and run both displayless selections. Ten proposed checks are still unexecuted. Then update
-coverage/docs and run the complete 440 checkpoint against ORIGINAL checkpoint-439-integrity.
-A later raw/existing-instance draft is /tmp/cna-xml-existing-main.cpp; do not jump ahead of XML-XNB.
+**Immediate next action:** XML-to-XNB integration is applied, built and focused-runtime validated.
+New content.custom.xml_xnb_pipeline passes all ten child checks under both displayless selections:
+/tmp/cna-440-xml-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}. Both private paths are independently
+verified absent. Build /tmp/cna-440-build.log is clean; metadata 440/0 and all 22 targeted CTests
+pass (/tmp/cna-440-targeted-ctest.log). Commit and run full 440 against ORIGINAL 439-integrity:
+expect SOFTWARE 389/23/25/3, OPENGLES3 410/24/3/3, all 453 enabled CTests and unchanged 31/32 raw
+failed assertions. Capture 29 selected binaries (prior 26 plus new XML executable and the resolved
+SDL3/mixer libraries), preserve both original streams and inspect new child checks explicitly.
+No rebuild/source mutation during runtime. After complete 440, continue the raw/existing-instance
+draft /tmp/cna-xml-existing-main.cpp (still unapplied/unbuilt/unexecuted; eight proposed checks).
+XML-to-XNB drafts are APPLIED AND STALE; use repository sources.
 
 GTK observation: full 439-integrity adds exactly 55 gtk_disable_setlocale-before-gtk_init warnings
 per renderer. Unchanged window.title reproduces once under each Xvfb selection and passes; displayless
@@ -506,15 +511,17 @@ Next meaningful compiler gaps: actual parameter fingerprints, removed-source col
 missing-manifest recovery; choose coherent behavior rather than new IDs per cache variation. Actual
 multi-output/deployment publication failures and concurrent publishers remain distinct larger
 workstreams. Registry freezing and late mutation rejection are now exercised by the integrity extension.
-XML aliases remain ISSUE-046; XML-to-XNB writer integration and direct custom raw/existing-instance
-serialization are still gaps. Source-only integration notes: public XnaXmlSourceContentPipeline.hpp
-requires a shared XNA Serialization::Compiler::ContentCompiler with the game's serializer and
-AddTypeWriter<TWriter> configured before RegisterXnaXmlSourceContentPipeline. That registration
-includes pass-through processors and RegisterXnaXnbOutput; it deliberately has no arbitrary-object
-CNB route. The required container options can come from public ContentCompilerOptions::xnbContainer
-in a RunContentCompiler factory despite their internally named C++ type. A future original profile
-XML -> real custom writer -> XNB -> public runtime reader/ContentManager scenario would close the
-integration gap; no such runtime execution is claimed yet. Do not repeat the now-tested sibling recognition or basic cache route.
+XML aliases remain ISSUE-046; direct custom raw/existing-instance serialization is still a gap.
+The XML-to-XNB integration now uses public RegisterXnaXmlSourceContentPipeline with a shared XNA
+ContentCompiler after TypeSerializerFor<ProfileSource> and AddTypeWriter<ProfileWriter>. Public
+factory options.xnbContainer supplies the container configuration. Actual original profile XML
+builds to a 56-byte XNB through XmlImporter and pass-through, then public runtime reader/manager
+restores Sentinel health 75. Unchanged input skips the writer; health 120 rebuilds. Cached data stays 75
+until Unload/reload sees 120. Manifest importer and actual artifact digest are verified. A separate
+CNB request reaches the expected Selection diagnostic for the unsupported arbitrary-object schema;
+return 1 is explicitly asserted, not a failed demo. Two DEBUG runtime load lines plus two expected
+CNB-refusal diagnostic lines are retained per run. No GPU, genuine-XNA, external-object-graph,
+crash-consistency or multi-output publication claim. Do not repeat basic cache/sibling coverage.
 
 **Latest complete checkpoint (2026-10-12):** 439-integrity at 83c919d, tools/validate.sh exit 0.
 SOFTWARE 388/23/25/3, OPENGLES3 409/24/3/3; all 452 enabled CTests passed (266.63 s), metadata 439/0.
