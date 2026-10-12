@@ -121,6 +121,9 @@ a check that all authored colors remain visible and that a blank texture row can
   target; ISSUE-027 found on SOFTWARE).
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
   `graphics.texture_cube.*` beyond the environment-map demo (render to a `RenderTargetCube`).
+  The TextureCube member table in COVERAGE_AUDIT.md now separates face/region/mip transfers,
+  typed/compressed formats, DDS stream boundaries and shared-resource lifetime. It is source-only
+  planning; existing effect pixels do not establish those behaviors.
 
 ## Phase 6 -- effects and shaders 🟨 (30 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and specular controls: emission/ambient/half-alpha composition, independent
@@ -452,11 +455,15 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
-## Phase 14 -- bindings 🟨 (18 C API demos)
+## Phase 14 -- bindings 🟨 (19 C API demos; launch parameters pending runtime)
 The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks
 (28 with capture) and 31 error checks pass on both renderer selections. Larger version-one input
 and output prefixes retain their known behavior; unknown output tails and original diagnostics
 survive. All previous assertions remain, with one host setup label updated.
+
+The new `c_api.game.launch_parameters` source demonstrates explicit UTF-8 spans, ownership,
+ordinal enumeration and count/copy boundaries; metadata validates, but its latest sentinel
+refinement has no runtime credit while the external ISSUE-053 build blocker remains.
 
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:

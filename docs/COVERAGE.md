@@ -6,31 +6,28 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**455 demos** in 18 categories. Kinds: console 159, game 258, standalone 38. Automation: automated 419, manual 3, smoke-only 33.
+**456 demos** in 18 categories. Kinds: console 159, game 258, standalone 39. Automation: automated 420, manual 3, smoke-only 33.
 
-| Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
-|---|---|---|---|---|---|---|
-| audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
-| c_api | 18 | 17 | 1 | 0 | 16 / 0 / 2 / 0 / 0 | 16 / 0 / 2 / 0 / 0 |
-| cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
-| core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
-| design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
-| diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
-| game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
-| gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 148 | 148 | 0 | 0 | 135 / 8 / 5 / 0 / 0 | 139 / 3 / 6 / 0 / 0 |
-| input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
-| math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
-| media | 11 | 10 | 1 | 0 | 10 / 0 / 1 / 0 / 0 | 10 / 0 / 1 / 0 / 0 |
-| net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
-| phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
-| platform | 2 | 2 | 0 | 0 | 1 / 1 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
-| storage | 7 | 7 | 0 | 0 | 7 / 0 / 0 / 0 / 0 | 7 / 0 / 0 / 0 / 0 |
-
-"Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
-
+| Category | Demos | Automated | Smoke-only | Manual |
+|---|---|---|---|---|
+| audio | 21 | 18 | 2 | 1 |
+| c_api | 19 | 18 | 1 | 0 |
+| cnaext | 4 | 4 | 0 | 0 |
+| content | 46 | 46 | 0 | 0 |
+| core | 3 | 3 | 0 | 0 |
+| design | 4 | 4 | 0 | 0 |
+| devices | 5 | 5 | 0 | 0 |
+| diagnostics | 2 | 2 | 0 | 0 |
+| game | 33 | 28 | 4 | 1 |
+| gamer_services | 19 | 18 | 0 | 1 |
+| graphics | 148 | 148 | 0 | 0 |
+| input | 39 | 14 | 25 | 0 |
+| math | 78 | 78 | 0 | 0 |
+| media | 11 | 10 | 1 | 0 |
+| net | 14 | 14 | 0 | 0 |
+| phone | 1 | 1 | 0 | 0 |
+| platform | 2 | 2 | 0 | 0 |
+| storage | 7 | 7 | 0 | 0 |
 
 ## XNA 4.0 API surface demonstrated
 
@@ -69,7 +66,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 158 of 3210** (4.9 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 166 of 3210** (5.2 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -90,7 +87,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `media.h` | 2 / 39 |
 | `media_player.h` | 12 / 41 |
 | `render_target.h` | 3 / 12 |
-| `runtime.h` | 16 / 45 |
+| `runtime.h` | 24 / 45 |
 | `runtime_components.h` | 13 / 39 |
 | `sprite_font.h` | 2 / 9 |
 | `storage.h` | 16 / 49 |

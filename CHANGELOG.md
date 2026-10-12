@@ -46,6 +46,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- C launch-parameter map example with owned UTF-8 spans, ordinal key enumeration, guarded
+  count/copy buffers, duplicate precedence and preserved state on refused replacement.
+  Catalog/syntax checks pass; runtime validation is pending an external CNA build repair
+  (ISSUE-053). No completed 456 checkpoint is claimed.
 - Skinned material scenes isolate textured emission/ambient response and premultiplied global
   alpha, then colored specular lights 1/2, their sum and the material shininess exponent.
   Both four-check scenes pass on SOFTWARE/OPENGLES3; all four captures were inspected.

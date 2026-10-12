@@ -1402,6 +1402,29 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 
+### CNA-DEMOS-ISSUE-053 -- In-flight framework update registration uses an out-of-scope array
+
+- **Area:** external uncommitted `modules/audio/src/Xna/FrameworkDispatcher.cpp` and new
+  `CNA/Internal/Audio/FrameworkUpdates.hpp`, during the link-boundary refactor.
+- **Reproduction:** documented GCC 14.2/CMake 3.31.6 linux-full incremental build with the shared
+  compiler cache and `-j4`, after the first 456 batch build succeeded.
+- **Observed:** `FrameworkUpdates::Install` is defined in `CNA::Internal::FrameworkUpdates`,
+  but names `frameworkUpdates` without qualification. The array lives in an anonymous namespace
+  nested inside `Microsoft::Xna::Framework`; it is not found in the Install function's scope.
+  GCC rejects the translation unit, and Ninja exits 1 before the current sentinel-enhanced
+  launch-parameter demo can be linked or run. This is a CNA build defect, not a C demo failure.
+- **Expected:** both registration and dispatch can access the intended shared update array
+  through valid C++ name lookup.
+- **Evidence:** `reports/checkpoint-456-failed-build.log`, `-failed-state.json`, archived
+  `-failed-FrameworkDispatcher.cpp` and `-failed-FrameworkUpdates.hpp`. HEAD was ced719909 with
+  ongoing external audio/media/content/runtime edits; this is not a clean-HEAD reproduction or
+  an atomic source snapshot. The successful first build is separately retained as
+  `checkpoint-456-initial-build.log`; no new focused runtime or complete 456 checkpoint yet.
+- **Status:** open build blocker for the observed source. No CNA source edited/reverted, warning
+  suppressed, runtime knownIssue marker or upstream message. Continue source review/draft work
+  and retry the existing tree only after observing a relevant source change.
+
+
 ## Resolved
 
 ### CNA-DEMOS-ISSUE-052 -- In-flight cgltf implementation split breaks the importer build
