@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-471 catalog demos (focused checkpoint471-punctual; complete baseline470-authored): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+471 catalog demos (complete checkpoint471-punctual): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
@@ -103,50 +103,41 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **471-punctual** adds one coherent point/spot receiver scene with eight GL
-pixel controls. Both authored maps store normalized distance64/255; the receiver's post-
-skin distance3/Range6 is.5. The spot matrix deliberately gives projected depth.1, so the
-shadow control distinguishes distance comparison from projected depth. No map preserves
-direct light, attaching the map removes it, and bias.3 restores it. Separate range/cone
-controls remove direct light. Linear intensity4 gives lit RGB(74,64,43), versus floor
-RGB(20,28,26). The actual800x480 image was inspected and all eight centers match within1.
-GL stderr is empty; SOFTWARE retains the exact declared stock-path skip. No producer,
-all cube faces/seams, partial spot-kernel weights, cone-edge interpolation, punctual
-specular or other-renderer proof. All27targeted CLI/skinned CTests pass in3.19s,
-including three declared shadow skips. Initial watched build22225 compiled33scheduled operations but gate1 correctly refused
-ISSUE-057 missing-owner diagnostics. Original evidence is retained under
-checkpoint-471-punctual-initial-staging-refusal-*. Unchanged watched consistency retry
-passes7scheduled operations with3909inputs unchanged and diagnostic gate0. Focused/targeted
-8468 and the pixel reviewer pass BEFORE source commit. Metadata471/0; full validation against470-authored is pending.
-Evidence: checkpoint-471-punctual-focused-*.
-
-Last complete baseline:
-
-Complete checkpoint **470-authored**, source `f44b514`,
-extends cue_states from nine to fifteen checks. Six dummy-audio runs pass with empty
-stderr. All nine original predicates remain in order; the misleading Immediate label
-is corrected. Public controls now compare immediate no-fade AsAuthored stop, an authored
-cue entering Stopping and reaching Stopped, and Immediate interruption of a fresh tail.
-The generator adds an original three-second PCM bank and a complex single-sound cue with
-500ms fade-out. All six existing XACT assets remain byte-identical; all eight source/staged
-banks are checked. Observed state waits are 500–510ms, including caller
-scheduling and polling; no acoustic envelope, audible quality or output-sample timing claim.
-The watched build and focused review passed before source commit; original evidence is
-under checkpoint-470-authored-focused-*. Full validation passes all483enabled CTests in
-149.50s, with three additional manual tests disabled. SOFTWARE406/27/34/3 and
-OPENGLES3 435/29/3/3 retain all38/42prior failed assertions, C/custom child evidence and
-five network controls. Reviewed JSON count changes:
-{"OPENGLES3": {"audio.xact.cue_states": {"after": 15, "before": 9, "reason": "Six authored-release controls added; original nine predicates retained, one misleading label corrected."}}, "SOFTWARE": {"audio.xact.cue_states": {"after": 15, "before": 9, "reason": "Six authored-release controls added; original nine predicates retained, one misleading label corrected."}}}.
+Complete checkpoint **471-punctual**, source `ed7daab`,
+adds one coherent SkinnedEffect point/spot receiver demo with eight GL pixel checks.
+Authored constant-distance cube/2D maps store64/255; post-skin distance3/Range6 compares
+at.5. No map preserves direct diffuse, the map removes it, and normalized bias.3 restores
+it. The spot matrix gives projecteddepth.1, deliberately different from distance.5,
+so its shadow control distinguishes the comparison quantity. Separate controls exclude
+the receiver by range or cone. Linear light intensity4
+produces RGB(74,64,43), versus the ambient/emissive floor RGB(20,28,26). The actual800x480
+GL image was inspected and all eight selected pixels match within1. GL stderr is empty;
+SOFTWARE has the exact declared unsupported-stock-path skip. No producer, all cube
+faces/seams, partial spot-kernel weights, cone-edge interpolation or other-renderer proof.
+PunctualLightEXT offers diffuse only; no public punctual specular capability is invented.
+Initial focused build22225 compiles33scheduled operations but its diagnostic gate
+correctly refuses the recurrent ISSUE-057 missing-owner warning. Original logs/input
+observations/headers and post-build hashes remain under
+checkpoint-471-punctual-initial-staging-refusal-*. The unchanged consistency retry passes
+7scheduled operations with3909watched inputs stable and gate0; no CNA edit, warning
+suppression or staging-directory deletion. Native/27CTest/pixel review then pass before
+source commit. A clean retry/full run does not resolve the independently reproduced race. Evidence:
+checkpoint-471-punctual-focused-*. Full validation passes all484enabled CTests in159.93s,
+with three additional manual tests disabled. SOFTWARE406/27/35/3 and OPENGLES3 436/29/3/3
+retain all38/42prior failed assertions, C/custom child evidence and five network controls.
+The new ID is graphics.skinned_effect.punctual_shadows. Reviewed old JSON count changes:
+{"OPENGLES3": {}, "SOFTWARE": {}}.
 All35selected binaries, four existing assets and18fixture hashes (source/staged builtinXNB
-and all eight XACT banks) stay unchanged through runtime. Normalized application stderr
-is identical, including42known GL X protocol records and the intentional shader error.
-Outer Xvfb has9exact amdgpu pairs (previous17); independent inner/outer exits0.
-Capture CNA eff3131017 (clean), final CNA
-eff3131017 (clean). These are selected
+and all eight XACT banks) stay unchanged through runtime. Normalized stderr differs only
+by the expected new SOFTWARE skip; GL retains42known X protocol records and the intentional
+shader error. Outer Xvfb has14exact amdgpu pairs (previous9); independent
+inner/outer exits0. Capture CNA eff3131017 (clean),
+final CNA eff3131017 (clean). These are selected
 artifact/source observations, not an atomic or full transitive input snapshot.
-All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-authored-*.
-Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is untouched;
-build-only ISSUE-057 retains its staging refusal and private reproduction evidence.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-471-punctual-*.
+Generated coverage:293/329types,1374/2326XNA members.
+Semantic coverage remains incomplete; original mono streaming/ISSUE-038 and build-only
+ISSUE-057 remain intact, with the latter's staging refusal/private reproduction retained.
 
 ## 8. Exact commands that work
 
@@ -267,18 +258,20 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-IN PROGRESS:471-punctual focused validation is complete; full checkpoint next.
-Actual800x480GLimage viewed,8pixelchecks pass, SOFTWARE exact declaredskip.27targetedCTests
-pass (three declaredskips), metadata471/0. Focused reviewer passed BEFORE sourcecommit.
-Commit source/docs, export /tmp/cna-catalog-471-punctual.json, run fullwrapper and capture
-ONCE after build duringCTest. Freeze35binaries/4assets/18fixtures through fullruntime.
-Expected484enabledCTest; SW406/27/35/3, GL436/29/3/3. Archive against complete470-authored:
-all38/42oldfailures/C/custom child evidence and5network controls exact; only the one new
-ID, exact new SOFTWAREskip diagnostic and reviewed positive titleUpdate variance allowed.
-Preserve/investigate unexpected evidence. Finish/close helpers prepared; review diff/commit.
-Then immediately continue UNAPPLIED same-ID /tmp/cna-cue-spatial.cpp (syntax93508 only),
-retaining original audible loop/SmokeOnly and adding6public variable/state controls.
-Open build-only ISSUE-057 keeps its refusal and private reproduction evidence.
+HIGHEST PRIORITY: same-ID explicit Cue::Apply3D and public spatial-variable extension.
+Full471-punctual is complete. /tmp/cna-cue-spatial.cpp is UNAPPLIED; syntax93508 CLOSED0,
+emptylog. Verify base hash from checkpoint-470-authored-next-cue-spatial-base.json before
+application; preserve intervening corrections. It retains the complete original audible
+positional_cue loop and adds6checks (was0), with SmokeOnly retained.
+Use watched build/diagnostic gate, consistency if inputs change, metadata, focused dummy
+audio under both requested environments, then37relevant audio/CLI CTests. Inspect actual
+public distance/angle/Doppler values; no mixer-output or listening claim. Review original
+loop preservation BEFORE sourcecommit, update semantic docs/HANDOFF, commit/exportcatalog,
+then full484CTest and both471smokes. Keep all old failures/children/network controls exact;
+only positional_cue0->6 and reviewed positive titleUpdate count may differ. Capture once
+post-build and preserve35binaries/4assets/18fixtures through runtime. Investigate surprises.
+Close checkpoint and immediately continue the highest-priority public behavior audit.
+Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged.
 
 ## 15. Assumptions the next session must know
 
@@ -290,29 +283,28 @@ Open build-only ISSUE-057 keeps its refusal and private reproduction evidence.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is470-authored; source commit is in section7.
-All earlier graphics/audio/content/transfer drafts, including fourth-cascade and XACT
-release drafts, are APPLIED AND STALE. Preserve immutable failed-attempt evidence.
+Current complete baseline is471-punctual; source commit is in section7.
+All earlier drafts, including authored XACT release and punctual shadows, are APPLIED
+AND STALE. Preserve immutable failed-attempt evidence and current source corrections.
 
-APPLIED AND STALE: /tmp/cna-punctual-shadows.cpp, final syntax88776 CLOSED0/emptylog (70281/7524 superseded).
-Recovery/source hashes/notes: checkpoint-470-fourth-next-punctual-* and
-checkpoint-470-fourth-next-cna-punctual-*. Eight planned controls cover point no-map,
-cube shadow, normalized bias and range exclusion; spot no-map,2D shadow,bias and cone
-exclusion. Material floorRGB20/28/26; distance3/Range6 gives attenuation.087890625 and
-litRGB74/64/43 with linear intensity4, within1. ActualGLimage viewed and all8pixels pass. All cube faces store64/255;
-no all-face-direction or seam proof. New source added; no file assets added. Focused471punctual apply/build/focused/review/targeted/full
-helpers passed; full helpers remain UNRUN under/tmp, recovery checkpoint-470-authored-next-punctual-helper-*. Guarded apply
-checks the exact draft hash and absent targetID/path; full closure /tmp/cna-close-471-punctual.py prepared UNRUN; inspect before use.
+Next UNAPPLIED /tmp/cna-cue-spatial.cpp, syntax93508 CLOSED0/emptylog. Recovery/audit/base
+hashes: checkpoint-470-authored-next-cue-spatial-*. Six planned controls observe a caller-
+owned cue's Distance5, OrientationAngle0/90degrees and neutral Doppler beforePlay, then
+Distance10 while paused and raw Doppler10/9 when moving toward a stationary listener at
+one tenth of public SpeedOfSound. Explicit emitterDopplerScale1. The complete original
+audible loop remains verbatim; SmokeOnly retained. No runtime/acoustic evidence yet.
+GetVariable exposes stored spatial variables, not actual mixed output. AttackTime and
+ReleaseTime live clocks are substituted internally for RPC evaluation and must not be
+misrepresented as public GetVariable stopwatches. Prepared UNRUN /tmp/cna-*471-cue3d* helpers cover guardedapply, watched build, two focused
+runs,37targeted CTests, reviewer BEFORE sourcecommit and fullcapture/archive/finish. Recovery:
+checkpoint-471-punctual-next-cue3d-helper-*. Full Cue3D closure helper prepared UNRUN, same recovery prefix.
 
-CNA public PunctualLightEXT is a diffuse-only point/spot receiver; the source audit
-corrects the earlier general punctual-specular-gap implication. Maps store normalized
-distance/range. Spot lookup projectsXY, samples3x3; point uses one cube tap. Source
-expectations are not runtime evidence. Actual GL captures/checks and declared SWskip
-are required. Preserve stable IDs, current architecture and original mono streaming.
-After punctual reception, source-only cue spatial-variable follow-up is documented in
-checkpoint-470-fourth-next-cue-spatial-audit.md. UNAPPLIED /tmp/cna-cue-spatial.cpp now
-passes syntax93508/emptylog, preserves the entire original audible loop and adds6public
-variable/state controls (was0checks). SmokeOnly retained; no runtime/acoustic evidence.
-Source/base hashes and recovery: checkpoint-470-authored-next-cue-spatial-*; no helpers yet.
-Open ISSUE-057 retains its original staging refusal/private probe; clean runs do not
-prove that race repaired. Never edit/revert sibling CNA from this workstream.
+After Cue3D, source-only bank/engine lifetime follow-up is in
+checkpoint-471-punctual-next-bank-lifetime-audit.md with source hashes. WaveBank disposal
+catches consuming cues; SoundBank also catches prepared cues; engine cascades to banks/cues.
+UNAPPLIED /tmp/cna-bank-lifetime.cpp now passes syntax69584 CLOSED0/emptylog with12planned
+checks. No native proof/helpers yet; verify targetID/path absent after Cue3D. No undocumented
+global callback-order claim.
+Retain current architecture, stable IDs and original mono streaming/ISSUE-038. Never edit
+or revert sibling CNA from this task. ISSUE-057 retains its initial staging refusal and
+private reproduction; successful runs are not evidence that race has been repaired.

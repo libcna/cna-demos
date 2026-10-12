@@ -2698,3 +2698,41 @@ artifact/source observations, not an atomic or full transitive input snapshot.
 All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-authored-*.
 Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is untouched;
 build-only ISSUE-057 retains its staging refusal and private reproduction evidence.
+
+## Complete471-punctual
+
+Complete checkpoint **471-punctual**, source `ed7daab`,
+adds one coherent SkinnedEffect point/spot receiver demo with eight GL pixel checks.
+Authored constant-distance cube/2D maps store64/255; post-skin distance3/Range6 compares
+at.5. No map preserves direct diffuse, the map removes it, and normalized bias.3 restores
+it. The spot matrix gives projecteddepth.1, deliberately different from distance.5,
+so its shadow control distinguishes the comparison quantity. Separate controls exclude
+the receiver by range or cone. Linear light intensity4
+produces RGB(74,64,43), versus the ambient/emissive floor RGB(20,28,26). The actual800x480
+GL image was inspected and all eight selected pixels match within1. GL stderr is empty;
+SOFTWARE has the exact declared unsupported-stock-path skip. No producer, all cube
+faces/seams, partial spot-kernel weights, cone-edge interpolation or other-renderer proof.
+PunctualLightEXT offers diffuse only; no public punctual specular capability is invented.
+Initial focused build22225 compiles33scheduled operations but its diagnostic gate
+correctly refuses the recurrent ISSUE-057 missing-owner warning. Original logs/input
+observations/headers and post-build hashes remain under
+checkpoint-471-punctual-initial-staging-refusal-*. The unchanged consistency retry passes
+7scheduled operations with3909watched inputs stable and gate0; no CNA edit, warning
+suppression or staging-directory deletion. Native/27CTest/pixel review then pass before
+source commit. A clean retry/full run does not resolve the independently reproduced race. Evidence:
+checkpoint-471-punctual-focused-*. Full validation passes all484enabled CTests in159.93s,
+with three additional manual tests disabled. SOFTWARE406/27/35/3 and OPENGLES3 436/29/3/3
+retain all38/42prior failed assertions, C/custom child evidence and five network controls.
+The new ID is graphics.skinned_effect.punctual_shadows. Reviewed old JSON count changes:
+{"OPENGLES3": {}, "SOFTWARE": {}}.
+All35selected binaries, four existing assets and18fixture hashes (source/staged builtinXNB
+and all eight XACT banks) stay unchanged through runtime. Normalized stderr differs only
+by the expected new SOFTWARE skip; GL retains42known X protocol records and the intentional
+shader error. Outer Xvfb has14exact amdgpu pairs (previous9); independent
+inner/outer exits0. Capture CNA eff3131017 (clean),
+final CNA eff3131017 (clean). These are selected
+artifact/source observations, not an atomic or full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-471-punctual-*.
+Generated coverage:293/329types,1374/2326XNA members.
+Semantic coverage remains incomplete; original mono streaming/ISSUE-038 and build-only
+ISSUE-057 remain intact, with the latter's staging refusal/private reproduction retained.

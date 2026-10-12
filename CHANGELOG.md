@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete471-punctual:484enabled CTests and both full smoke suites retain all previous
+  failure/child/network evidence; new point/spot receiver passes8GLpixel controls.
 - A focused point/spot receiver adds8GLpixel controls for authored distance maps, bias,
   range and cone exclusion;27targeted CTests pass. No shadow producer or other-backend claim.
 - Complete470-authored: all483enabled CTests and both full smoke suites preserve previous
