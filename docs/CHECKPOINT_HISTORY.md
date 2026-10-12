@@ -1859,3 +1859,36 @@ typed/compressed cube transfers, copy/shared-resource lifetime and actual cube s
 automatic Draw dispatch needs proof of the servicing step, not ordinary alternating-frame
 completion. Skinned gaps include independent diffuse lights1/2, alpha, vertex specular and
 joint scales. Continue after each batch; completed phases are the baseline, not a restart list.
+
+## Complete459 before shader state/diagnostics
+
+**Complete 459 checkpoint passed at 5ed8055.** tools/validate.sh exited 0; all 472 enabled
+CTests passed (209.38 s), both complete isolated-X11 smokes and coverage regeneration finished.
+Metadata 459/0; coverage 293/329 types, 1372/2326 XNA members, 166/3210 C routes.
+Original complete 457 comparison adds only the DDS/package IDs and six passing C destruction
+controls. Every old status/known issue/count and C/custom-content child list/trace remains
+(after removing those six explicitly named C additions). Raw failures change exactly 35/36 ->
+37/38: short DDS reads and prefixed truncation, ISSUE-054. The generic comparator's requested
+review is explicitly resolved by exact checks; raw evidence is unmodified. No title count change.
+All 35 selected binaries/four assets stayed unchanged through runtime. Normalized GL stderr is
+identical; SOFTWARE adds exactly one declared CustomEffects skip diagnostic for portable_package.
+CNA f130abff4 observed at runtime capture; final source state archived separately. This is not
+an atomic build-input or full transitive dependency snapshot.
+
+| Check | Result |
+|---|---|
+| Existing linux-full build | Passed; seven scheduled checkpoint targets, no compiler diagnostics |
+| Metadata/assets --validate | 459 demos, 0 problems |
+| tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
+| CTest | 446 passed (including 26 WILL_FAIL), 26 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 404 passed, 26 expected failures, 26 skipped, 3 manual not run |
+| OPENGLES3 smoke | 426 passed, 27 expected failures, 3 skipped, 3 manual not run |
+| New behavior | Package 8 GL checks/SW skip; DDS 3 passes and exactly 2 ISSUE-054 failures; C 44 passes and the 2 old ISSUE-050 failures |
+| Artifacts/diagnostics | Selected hashes stable; only the one declared SOFTWARE skip diagnostic added |
+
+The labeled package GL capture was actually inspected; its final capture is RGBA-identical.
+No DDS or C screenshot claim. The initial DDS catch bug (std::runtime_error versus actual
+System::FormatException) was fixed before the five-check CNA reproduction and remains archived.
+Complete reports/catalog/helpers: build/linux-full/reports/checkpoint-459-*.
+Previous complete 457 at ab2a92b (closure 768797e) has 470 enabled CTests and SW 404/25/25/3,
+GL 425/26/3/3. Historical preparation details are in docs/CHECKPOINT_HISTORY.md.

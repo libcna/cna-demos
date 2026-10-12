@@ -174,6 +174,10 @@ explicit code/package language are distinct APIs.
 | Source properties, GetVertexSource/GetFragmentSource, GetTypeName | Source accessors are useful diagnostics but do not justify independent getter demos; incorporate source ownership/identity only where a compile or clone workflow needs them. GetTypeName is routine reflection identity. |
 | GetEffectRendererPtr, FillGpuDrawParams, protected OnApply/Dispose and portable fallback constructor | Renderer/subclass integration points. Normal draws already reach the apply/parameter bridge; avoid a game demo that merely exposes internal renderer pointers/structures. Protected fallback construction belongs to a real derived-effect integration, not a synthetic constructor-count example. |
 
+Full 461 at a447ad2 passes all 474 enabled CTests and both complete smokes. Every original 459
+outcome/child check is retained; GL adds exactly the three clone assertions (38 ->41), SOFTWARE
+keeps 37. Stable selected runtime hashes and exact skip/compiler stderr deltas are archived.
+
 ### Curve and CurveKeyCollection
 
 | Members / behavior | Decision and evidence |

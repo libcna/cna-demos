@@ -1480,8 +1480,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Suggested repair/status:** guard disposed state and copy World/View/Projection when creating
   the independent program. Open; no CNA source edited, upstream message, physical-GPU or
   desktop-GL runtime claim. Marked focused461 repeats all nine checks and the same three failures;
-  its frame-two capture is RGBA-identical to the inspected initial image. Combined full461
-  checkpoint validation is pending.
+  its frame-two capture is RGBA-identical to the inspected initial image. Full 461 at a447ad2
+  passes 474 enabled CTests and both smokes, retaining every original 459 failure and adding
+  exactly these three GL assertions (38 ->41; SOFTWARE37 unchanged). Runtime hashes stay stable;
+  stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
 

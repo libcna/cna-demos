@@ -150,7 +150,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
-  capability skip. Combined full461 checkpoint pending.
+  capability skip. Full 461 passes 474 enabled CTests and both smokes; all old failures are retained.
 - ✅ `graphics.shader_effect.compiler_diagnostics`: seven GL checks retain raw/owned diagnostics
   after destroying a rejected syntactically invalid replacement; the valid program still draws
   checked cyan pixels. Image inspected, intentional compiler stderr preserved, SOFTWARE skip.
