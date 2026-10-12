@@ -121,7 +121,7 @@ disables Escape handling; `--frames N` overrides the limit. Determinism inputs:
 
 The standard full checkpoint is `JOBS=4 tools/validate.sh` (default preset: `linux-full`). It
 builds, validates metadata/assets, runs CTest, runs SOFTWARE and OPENGLES3 smoke batches (the
-latter through Xvfb when available), and regenerates coverage from those reports. `JOBS` is
+latter through Xvfb with SDL's x11 driver and WAYLAND_DISPLAY removed when available), and regenerates coverage from those reports. `JOBS` is
 optional and defaults to `nproc`; `SKIP_GL=1` deliberately omits GL and must be noted in the
 handoff. Build warnings, command failures, unexpected demo failures and unexpected passes stop
 the checkpoint. Build and CTest output is retained in `build/<preset>/reports/build.log` and
@@ -136,10 +136,17 @@ C/C++ buffering deliberately enabled; the old launcher prints CHILD before both 
 The current JSON and stderr outputs are removed at the start; an interrupted process must not leave
 old results looking like fresh evidence. Explicitly named baseline archives are preserved.
 When the inherited desktop display is unstable, run the whole script under
-`WAYLAND_DISPLAY= xvfb-run -a -s '-screen 0 1280x1024x24' tools/validate.sh`, so CTest and SOFTWARE
-also have a private display. The script still creates its own nested Xvfb for OPENGLES3.
+`SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY xvfb-run -a -s '-screen 0 1280x1024x24' tools/validate.sh`, so CTest and SOFTWARE
+also have a private display. The script still creates its own nested Xvfb for OPENGLES3 and
+forces x11 locally for that child, even if the caller selected Wayland. Xvfb setting DISPLAY alone
+does not select SDL's backend: an unchanged native_handle probe printed Wayland with inherited
+WAYLAND_DISPLAY, then X11 when explicitly isolated. Both passed; only the Wayland probe emitted
+the observed GTK initialization warning. Original inherited-display checkpoints remain valid
+runtime evidence but are not proof of private X11 execution. This is an invocation/validation
+isolation correction, not a newly attributed CNA API defect.
 `python3 tools/test_validate.py` verifies the script's failure propagation with
-command stubs, without compiling CNA.
+command stubs, without compiling CNA. It also injects a synthetic inherited Wayland driver and
+checks that the GL child receives the private X11 display; that case fails on the old script.
 
 Coverage distinguishes an explicit NOT RUN result from an ID absent in the supplied report.
 Regenerating metadata counts with old reports does not validate demos added since those runs;

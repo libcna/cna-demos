@@ -55,7 +55,9 @@ results+=(--results "SOFTWARE=$reports/results-SOFTWARE.json")
 
 if [[ "${SKIP_GL:-0}" != "1" ]] && "$bin" --renderers | grep -qx OPENGLES3 && command -v xvfb-run >/dev/null; then
     echo "== smoke: OPENGLES3 (Xvfb)"
-    SDL_AUDIO_DRIVER=dummy xvfb-run -a -s "-screen 0 1280x1024x24" \
+    # DISPLAY alone does not prevent SDL selecting an inherited Wayland session.
+    SDL_AUDIO_DRIVER=dummy SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY \
+        xvfb-run -a -s "-screen 0 1280x1024x24" \
         "$bin" --smoke --quiet --renderer OPENGLES3 --report "$reports/results-OPENGLES3.json" \
         2> "$reports/smoke-OPENGLES3.stderr.log" | tee "$reports/smoke-OPENGLES3.log" | grep -A50 "^Summary"
     results+=(--results "OPENGLES3=$reports/results-OPENGLES3.json")
