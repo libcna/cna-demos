@@ -575,11 +575,17 @@ renderers: ten volume checks and49 captured C child checks (47 without), preserv
 controls. Eight inspected before/after images form four RGBA-identical pairs; stderr is empty.
 Volume coverage adds guarded boxed transfers and non-cubic authored mips/refusal preservation;
 C coverage adds stable game-owned borrowing, copied-root independence and expiry. No new ID.
-Full466-transfer is pending against original complete466-timing; generated inventory names
-168 C routes, with runtime columns still from that preceding complete checkpoint.
+Full466-transfer at5944070 is now complete:479enabled CTests281.68s, SOFTWARE406/26/31/3,
+OPENGLES3 432/28/3/3, both inner/outer exits0. Exact37/41old failures, network controls and
+C/custom evidence are retained except the planned seven/eight additions. Selected hashes
+remain stable. GL has42rather than84known X protocol diagnostics; all other normalized
+stderr is unchanged and the precise reduction is reviewed, without claiming a fix.
+Generated inventory names168C routes; runtime columns now use the new full checkpoint.
 
 A mid-build external Game.hpp layout change produced an initial SIGSEGV at an original check.
 The archived backtrace/object timestamps identify mixed object layouts; an incremental rebuild
 resolves it without editing CNA or changing the demo. This is build consistency evidence, not
-a new CNA transfer defect. Next drafts for a shader sample kernel and C stream ownership/EOF
-have passed syntax only and remain unapplied until the transfer checkpoint closes.
+a new CNA transfer defect. Next drafts remain unapplied: the shader sample kernel has syntax evidence only. The C
+storage extension is now natively probed:30passes/one EOF-position failure, with its23old
+checks retained. Direct FileStream independently reports-1after EOF with correct data and
+rewind controls (ISSUE-056). Apply both as batch467, preserving the real failure explicitly.

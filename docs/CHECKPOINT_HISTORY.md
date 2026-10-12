@@ -2034,3 +2034,35 @@ Both host/child SOFTWARE selections explicit; stderr INFO retained without WARN/
 Selected35 shipped binaries remain unchanged; no new build tree, stalled-peer injection or
 screenshot validation. Probe-induced partial failures are not new CNA issues. All evidence
 and helpers:checkpoint-466-timing-delayed-*. The original398/401 validation debt is long closed.
+
+
+## Complete 466-transfer (2026-10-12)
+
+Source59440706d3127a7f9f02422a95bb9c1511918f7d extends volume_data3->10checks and C content
+39->47childchecks without capture (41->49with), preserving all original controls. All eight
+before/after images inspected, four pairs RGBA-identical, focused stderr empty. Initial build
+615scheduled/612completed passes but external Game.hpp changes its capability value to
+std::optional at16:55:34.496679375, just after DemoGame.o16:55:33.956675335. The volume object
+compiles later17:05:11.668997158; SIGSEGV occurs at its ORIGINAL first Check with context pointing
+at GraphicsDeviceManager's vtable. An unchanged clear control passes but has no checks. The
+64scheduled/61completed corrective rebuild resolves the mixed layout without demo changes.
+All original crash/backtrace/object hashes remain checkpoint-466-transfer-initial-*.
+
+Full build32scheduled/29completed, metadata466/0,479enabled CTests281.68s (448passed including
+26WILL_FAIL,31skipped,3disabled), SOFTWARE406/26/31/3 and GL432/28/3/3. Exact originalcomplete
+466-timing comparison retains37/41raw failures, all five network checks, all C/custom lists
+and traces except8named content additions; only volume JSON3->10changes.35selected binaries
+and4assets stable. SW normalized stderr unchanged; GL retains all application diagnostics
+including intentional shader compile failure but known X protocol lines fall84->42. Initial
+strict diagnostic review rejects this; an explicit four-record removal counter15/15/6/6 then
+records the finite variation. Cause not isolated, no repair/suppression claim. Separate outer
+Xvfb log has7amdgpu diagnostic pairs rather than31; inner/outer exit journals both0. Capture,
+archive and final helpers all pass; CNA59598bfac clean at capture/final, not an atomic snapshot.
+Coverage293/329types,1373/2326XNA,168/3210C. Archives checkpoint-466-transfer-*.
+
+Subsequent /tmp-only EOF probes leave35project hashes unchanged. Direct FileStream reads4
+nonzero bytes with guards, reports-1after short/empty reads instead of4, and rewinds/rereads
+correctly. C storage draft has30passes/one failure (SUCCESS/-1instead of24), preserving all23
+original checks plus8named additions on both requested renderer environments. Empty stderr;
+no Game/rendering/visual claim. Root is the sharp-runtime FileStream EOF state/position path,
+exposed by the C adapter (ISSUE-056). Sources/helpers/review:checkpoint-466-transfer-eof-*.

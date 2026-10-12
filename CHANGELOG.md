@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete checkpoint 466-transfer:479 enabled CTests and both full smoke suites retain all
+  37/41 old failures and child controls. Selected hashes stay stable; an exact reduction from
+  84 to42 existing GL X protocol messages is reviewed separately, without a repair claim.
 - Complete checkpoint 466-timing: all 479 enabled CTests and both full smoke suites pass
   exact baseline comparison, preserving all 37/41 old failures and network evaluation checks.
   The initial aggregate network deadline is a recorded demo bug; a per-phase watchdog keeps

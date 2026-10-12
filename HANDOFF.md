@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-466 catalog demos (complete 466-timing checkpoint): math 78, game 33, graphics 158 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+466 catalog demos (complete 466-transfer checkpoint): math 78, game 33, graphics 158 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 26 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
@@ -101,36 +101,37 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-**Complete466-timing at5e7c950 is verified.** tools/validate.sh and the outer Xvfb wrapper both
-returned0, recorded independently; tool session73558 also exited0. Seven scheduled build
-operations and metadata466/0 passed. All479 enabled CTests passed in237.52s (448passed incl.
-26WILL_FAIL,31skipped,3manual disabled). SOFTWARE406/26/31/3, OPENGLES3 432/28/3/3.
-Coverage293/329 types,1373/2326 XNA members,166/3210 C routes; comprehensive coverage is not claimed.
+**Complete 466-transfer at source 5944070 is verified.** tools/validate.sh and outer Xvfb both
+returned0, independently journaled; session44780 is CLOSED. Build32scheduled/29completed,
+metadata466/0 and all479enabled CTests pass (281.68s;448passed including26WILL_FAIL,31skipped,
+3manualdisabled). SOFTWARE406/26/31/3; OPENGLES3 432/28/3/3. Coverage293/329types,
+1373/2326XNA members,168/3210C routes; comprehensive semantic coverage is not claimed.
 
-Original complete464 comparison preserves all37/41 raw failed assertions, all five original
-network evaluation child lines, and every C/custom-content child list after filtering exactly
-eight named C sprite additions (11 ->19 without capture). The two new IDs match focused results:
-typed cube8checks both, volume6GL/SW skip. All35 selected binary/four asset hashes stayed stable.
-Normalized stderr adds exactly one declared SOFTWARE CustomEffects skip; GL is unchanged.
-Outer Xvfb diagnostics are separately retained; no diagnostic is suppressed. CNA0a2918c1d was
-observed at capture/final inspection; this is not an atomic input/source snapshot.
+Exact original complete466-timing comparison retains all37/41 old failed assertions, all five
+network evaluation checks and all C/custom child lists/traces except eight named C content
+additions (39->47 without capture). Volume checks3->10; no other JSON count changes. All35
+selected binary/four asset hashes remain stable. SOFTWARE normalized stderr is unchanged;
+GL preserves all application diagnostics but has42rather than84 known X protocol lines.
+The initial exact diagnostic rejection and finite four-record reduction are explicitly reviewed
+in checkpoint-466-transfer-stderr-review.json; cause not isolated, no X protocol fix claimed.
+Outer Xvfb retains seven amdgpu diagnostic pairs; both exits0, no hardware GPU claim.
+CNA59598bfac observed clean at capture/final; this is not an atomic transitive input snapshot.
 
-Initial466 at6f4feed is NOT an accepted baseline. Its full SOFTWARE smoke reached recovery,
-then exhausted a single20second aggregate demo deadline before packet evaluation. Exact raw
-review rejected that substituted failure despite its known-issue status. The original logs,
-unchanged isolated reproductions and repair evidence remain checkpoint-466-initial-*,
-checkpoint-466-net-original-* and checkpoint-466-timing-focused-*. The repaired per-phase
-watchdog retains every packet/latency/recovery predicate and the original ISSUE-030 failure.
-The controlled native long-exchange regression is also complete: the original sender times out
-at 22.88 s and the host evaluates an incomplete exchange; the repaired exchange completes in
-37.41 s with all five original host checks (four passes and only ISSUE-030). Both use identical
-8-second delays before each host phase. This is a demo orchestration repair, not a CNA fix.
+Focused volume10checks and C49captured child checks pass on both selections. All eight
+before/after images were actually inspected and all four pairs are RGBA-identical; stderr empty.
+A mid-build external Game.hpp layout change initially caused SIGSEGV at an original volume
+check. Archived timestamps/backtrace identify mixed object layouts; an incremental64-target
+rebuild resolves it without demo changes. Evidence: checkpoint-466-transfer-initial-* and
+-focused-*. This is build consistency, not a CNA transfer defect. Full evidence/helpers:
+checkpoint-466-transfer-*. Previous complete466-timing and rejected initial466 remain in
+CHECKPOINT_HISTORY.md; their network regression work is complete, not a new task.
 
-Focused volume and all four C sprite before/after captures were actually inspected. GL C images
-are RGBA-identical; SOFTWARE animation timing varies, while exact center/corner controls remain.
-Typed cube results concern public storage transfers, not GPU readback or sampling. Full archives
-and helpers: checkpoint-466-timing-*. Previous complete464 source7bcb39f/closure1c31a67 and its
-interrupted/resumed runtime history are retained in CHECKPOINT_HISTORY.md.
+Separate EOF probes after the checkpoint confirm **ISSUE-056**, not yet in catalog metadata:
+direct FileStream reads4bytes then reports position-1 instead of4 (all data/rewind controls pass).
+The pending C storage extension has30passes/one failure: SUCCESS/-1 instead of24 after EOF,
+with all23original child checks retained. Both requested renderer environments agree; this is
+storage-only evidence, not rendering. Probe compilation/run left all35project binary hashes
+unchanged. Archives: checkpoint-466-transfer-eof-*. See next task for application.
 
 ## 8. Exact commands that work
 
@@ -167,7 +168,8 @@ Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untest
 
 ## 10. Known CNA issues
 
-See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-055 (shader clone matrices/disposal),
+See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-056 (FileStream position after EOF; pending C demo extension),
+CNA-DEMOS-ISSUE-055 (shader clone matrices/disposal),
 CNA-DEMOS-ISSUE-054 (cube DDS short reads and prefixed truncation),
 CNA-DEMOS-ISSUE-051 (host failure C exit-hook contract mismatch),
 CNA-DEMOS-ISSUE-050 (owner-only C game operations incorrectly queued),
@@ -249,44 +251,27 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-Complete baseline: **466-timing at source 5e7c950**, including full validation and the additional
-controlled delayed regression. All sessions are closed; do not repeat completed phases.
-Immutable evidence: reports/checkpoint-466-timing-*, including delayed-review.json. The
-rejected initial466 attempt and prior complete464 are documented in CHECKPOINT_HISTORY.md.
+Complete466-transfer source5944070 is the full baseline. All build/runtime/review sessions
+are closed. Commit the closure docs, then **immediately continue with batch467**:
 
-Both transfer/borrow drafts are applied and focused-verified. Volume10checks and C49captured
-child checks (47without) pass on SOFTWARE/OPENGLES3, all four exits0 and stderr empty. The
-seven/eight additions preserve old controls; all eight before/after images were actually
-inspected and all four pairs are RGBA-identical. Metadata466/0; fifteen CLI CTests pass in2.69s,
-and the three affected demo CTests are separately recorded (one expected capability skip).
-Focused evidence/review: reports/checkpoint-466-transfer-focused-*. Catalog remains466;
-new metadata names two C routes (168/3210), XNA1373/2326 and types293/329 unchanged.
+1. Run /tmp/cna-run-467-focused.py before to capture the existing C storage23child checks.
+2. Apply /tmp/cna-sample-kernel.cpp as demos/graphics/shader_effect/sample_kernel.cpp and
+   /tmp/cna-storage-stream-lifetime.c to the existing save_game/main.c. Add actual C metadata
+   routes cna_storage_stream_seek/get_position and knownIssue CNA-DEMOS-ISSUE-056; keep its
+   correct EOF-position expectation. Update descriptions/restrictions and issue reproduction.
+3. Reuse linux-full, build-j4, validate metadata, run focused runner after and relevant CTests.
+   Expected kernel5GL/SW CustomEffects skip; C30passes/one ISSUE-056 failure (31child checks).
+   Preserve all23old C checks plus exactly8new; actually inspect the GL filter image/tap pixels.
+4. Update semantic audit/coverage/handoff, commit source, then full checkpoint467 compared to
+   original complete466-transfer. Only new shader ID and storage ISSUE-056 status/failure plus
+   the8named C additions are expected. Do not infer success from aggregate known-issue status.
 
-Initial615-operation build (612completed, restat skips) passed but mixed two external Game
-layouts: Game.hpp changed at16:55:34.496679375, just after DemoGame.o16:55:33.956675335;
-volume.o compiled later17:05:11.668997158. First volume run segfaulted at its ORIGINAL first
-Check, with context pointing at a GraphicsDeviceManager vtable. Backtrace/streams/hashes and
-unmodified clear control are archived in checkpoint-466-transfer-initial-*. Corrective64
-scheduled/61completed rebuild resolved the crash without demo changes. Both builds have no
-compiler warnings/errors (known Draco CMake developer warning only). This is mixed build
-state, not a new CNA transfer issue. CNA1741edc5c includes the layout change; further external
-SDL_image removal edits continue. Do not modify sibling sources or claim an atomic snapshot.
-
-HIGHEST PRIORITY: commit focused source/docs, then run full466-transfer against original
-complete466-timing. Prepared wrapper /tmp/cna-run-466-transfer-validation.sh separately
-journals inner/outer exits and Xvfb diagnostics. After its build, capture35binary/fourasset
-hashes with /tmp/cna-capture-466-transfer.py; do not rebuild/change sources during runtime.
-Archive/compare each completed smoke via /tmp/cna-archive-466-transfer.py SOFTWARE/OPENGLES3;
-then /tmp/cna-466-transfer-finish.py. Helpers are prepared, not yet executed. Baseline statuses
-SW406/26/31/3,GL432/28/3/3; preserve all37/41 raw failures and five network evaluation checks.
-
-Semantic audit/roadmap and generated inventory are updated; coverage runtime columns still
-come from complete466-timing until the new full checkpoint finishes. Preserve all37/41 raw old
-failures, the five network evaluation checks and all other C/custom child lists/traces. Only
-the volume3 ->10 and eight named C content additions are intended count changes. Keep input
-hashes stable across runtime. Then continue to meaningful shader uniform families, skinned
-lighting or other untested C ownership/dispatch behavior from the audit. Never infer broad
-member coverage from type counts or add format/overload-only duplicate IDs.
+Both source drafts have passed syntax, with a later printf-only C addition compiled natively
+by the diagnostic. They are NOT APPLIED. Expected new catalog467, C routes170; do not claim
+new shader runtime/visual evidence before running it. EOF's root cause is already isolated
+with direct and C probes; do not repeat them just to rediscover it. No sibling source edits.
+Then continue meaningful uniform/lighting/resource behaviors from COVERAGE_AUDIT.md rather
+than restarting phases or adding trivial per-format variants.
 
 ## 15. Assumptions the next session must know
 
@@ -298,54 +283,34 @@ member coverage from type counts or add format/overload-only duplicate IDs.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current baseline helpers /tmp/cna-capture-466-timing.py, /tmp/cna-archive-466-timing.py and
-/tmp/cna-466-timing-finish.py all passed. Inner tools/validate.sh and outer Xvfb exit codes are
-both zero; Xvfb stderr is separately archived (31 amdgpu diagnostic pairs, no hardware claim).
-Do not reuse /tmp/cna-466-finish.py to accept rejected initial466. All old466/464 drafts are
-applied and stale. The corrective rebuild session98386 and focused runtime76937 are CLOSED exit0;
-/tmp/cna-466-transfer-rebuild.log is archived. No runtime is live.
+Current complete helpers /tmp/cna-capture-466-transfer.py, /tmp/cna-archive-466-transfer.py
+SOFTWARE/OPENGLES3 and /tmp/cna-466-transfer-finish.py all passed. Finish accepts only the
+explicitly reviewed finite GL diagnostic reduction; its original rejection helper is archived.
+All runtime hashes/exits/reports are immutable. The volume transfer and game-content-borrow
+/tmp predecessors are APPLIED AND STALE. Do not reapply or restart old466-timing work.
 
-APPLIED AND FOCUSED-VERIFIED (draft now stale): /tmp/cna-volume-transfer-windows.cpp. Syntax passed, empty log; draft/source
-review archived as checkpoint-466-next-volume-transfers-*. Adds guarded source/boxed output,
-short logical count refusal, authored 8x4x2 mip chain, mip-local Z bounds, data preservation
-and nonexistent-level output refusal. Both native renderer runs now pass; full checkpoint pending.
+Next shader draft /tmp/cna-sample-kernel.cpp: one bright texel, original kernel, horizontal
+1:2:1 spread and vertical1:6:1 spread using the same shader. Actual SetUniformVec2Array offsets,
+SetUniformFloatArray weights and SetUniformVec2 texel size remain visible. Caller arrays are
+overwritten before drawing; expected centers/neighbors/off-axis/outer pixels distinguish tap
+contributions. Five intended checks. Syntax passed; native/image validation pending.
 
-APPLIED AND FOCUSED-VERIFIED (draft now stale): /tmp/cna-content-game-borrow.c. Syntax passed, empty log; evidence archived as
-checkpoint-466-next-content-borrow-*. Eight additions cover stable game-owned manager borrow,
-refused independent destruction, copied-root isolation, survival beyond callbacks/source
-destruction and stale-output preservation after game destruction. Copy precedes asset loads;
-no cached-object sharing or borrowed-manager loading claim. Add actual metadata routes
-cna_game_get_content_manager_ext and cna_game_set_content_manager_ext upon application.
+Next C draft /tmp/cna-storage-stream-lifetime.c: eight additions preserve the save format and
+all23original checks. Device/container parent destruction is refused while children live.
+A seek selects the last8bytes (nonzero name tail plus padding), a12byte request into14allocated
+bytes proves short-read data/guards, a second EOF read preserves output, position must be24,
+then rewind and original full-save read still work; a closed handle leaves query output intact.
+Two routes plus knownIssue056 need metadata. Native probe confirms exactly the position failure;
+remaining30checks pass on both requested renderer environments, empty stderr. No Game is created.
 
-Focused runner /tmp/cna-run-466-transfer-focused.py: both before/after modes completed and reviewed.
-Original captures/logs/JSON: /tmp/cna-466-transfer-before-{volume,content}-{SOFTWARE,OPENGLES3}.*.
-Archive these before any new run; do not overwrite the original references.
-
-Controlled regression helpers /tmp/cna-build-deadline-probes.py, /tmp/cna-run-deadline-probes.py
-and /tmp/cna-review-deadline-probes.py all passed. Original6f4feed/fixed5e7c950 variants use
-identical 8-second host transition delays, separate child basenames and the absolute existing
-asset root (ContentManager is title-relative). Existing compile/link configuration is reused;
-only /tmp objects/binaries are written, with no second build tree or linker dependency edits.
-Old22.88s: sender deadline plus incomplete sender/latency checks and ISSUE-030. Fixed37.41s:
-all five original host checks, only ISSUE-030 fails. Both explicitly select SOFTWARE for
-host/child; stderr retains INFO renderer/audio lines, no WARN/ERROR. All35 selected project
-binary hashes still match the full checkpoint. No native stalled-peer injection, screenshot
-credit or atomic transitive dependency snapshot claim. Archives checkpoint-466-timing-delayed-*.
-
-
-Source-only follow-up draft /tmp/cna-sample-kernel.cpp (NOT APPLIED): a focused three-tap
-image filter uses actual SetUniformVec2Array offsets, SetUniformFloatArray weights and a
-scalar SetUniformVec2 texel size. Public header counts and EasyGL array upload paths were
-reviewed; existing demos contain no calls to these three setters. A single white texel is
-shown unchanged, horizontally spread1:2:1, then vertically spread1:6:1 with the same program.
-Caller arrays are overwritten before drawing; expected center/neighbor/off-axis pixels
-separate weights from offset direction. Five intended checks; syntax passed with empty log, native/image validation
-pending. Apply only after transfer checkpoint; no coverage credit yet.
-
-Source-only C follow-up /tmp/cna-storage-stream-lifetime.c (NOT APPLIED): eight additions to
-existing save_game retain its format/old assertions. Actual public source shows independent
-container/stream release guards and native seek/EOF semantics. Tail read requests12bytes where
-8remain, with14allocatedbytes and exactguards; subsequentEOFread, position, rewind, retained
-full-save check and stale closed-handle output are explicit. Two potential new metadata routes:
-cna_storage_stream_seek/get_position. Syntax passed with empty log; native validation pending; no new ID or runtime
-credit. Existing C selector/open callbacks are synchronous by contract, not missing async work.
+EOF proof helpers /tmp/cna-build-storage-eof-probe.py and -canonical-eof-probe.py write only
+/tmp objects/executables using existing compile/link configuration (no dependency-file edits,
+no second build tree). /tmp/cna-run-eof-probes.py and /tmp/cna-review-eof-probes.py completed.
+Direct canonical probe uses a unique /tmp file, reads4nonzero bytes with intact guards, gets
+position-1 after short/empty reads, then successfully rewinds/rereads. Exit1 solely means the
+position contract failed; fixture/other-control failures would be exit2. C probes each exit1
+with30/31checks passing and SUCCESS/-1 instead of24. Exact original23child list plus8named
+additions verified; all35shipped binary hashes unchanged. Source observations are clean CNA
+59598bfac at first review and714f9f76a at later review, sharp-runtime c20373bae clean; none is
+an atomic input snapshot. Evidence/sources/helpers: reports/checkpoint-466-transfer-eof-*.
+Prepared focused runner /tmp/cna-run-467-focused.py before/after has NOT EXECUTED yet.

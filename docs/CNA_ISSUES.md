@@ -15,6 +15,38 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-056 -- File stream position becomes -1 after a short EOF read
+
+- **Area:** sharp-runtime `System::IO::FileStream::Read/getPositionProperty`, exposed through
+  CNA StorageContainer file streams and `cna_storage_stream_get_position`.
+- **Reproduction:** the pending extension of `c_api.storage.save_game` is independently
+  compiled as `/tmp/cna-storage-eof-probe` using existing C target inputs. It seeks to byte16
+  of the original24-byte save and requests12bytes into physically allocated guarded storage.
+  A second read at EOF and a position query follow. A separate `/tmp/cna-canonical-eof-probe`
+  uses direct FileStream with a unique4-byte temporary file, requesting6bytes, then querying
+  position after both short and empty reads. Sources/builders/runners are archived below.
+- **Observed:** C returns SUCCESS with position-1 instead of24. Exactly one of31child checks
+  fails; all23original controls plus seven additions pass, including exact tail bytes, untouched
+  guards, empty EOF output, rewind/full reread, parent release guards and stale-handle output.
+  Both requested renderer environments agree. The direct FileStream probe reads4bytes and
+  reports-1after both reads instead of4, while every data/guard/rewind/reread control passes.
+  Both programs return1 specifically for the defect; stderr is empty. No Game/rendering claim.
+- **Expected:** an open file stream remains positioned at the actual end after a short/empty
+  EOF read; its position getter must not publish an internal std::fstream failure sentinel as
+  a successful byte offset. The C adapter should retain the same canonical stream semantics.
+- **Investigation:** FileStream::Read uses fstream.read/gcount and leaves EOF/fail state set;
+  getPositionProperty directly calls tellg. CNA's generated C getter forwards that value with
+  SUCCESS. Direct reproduction isolates the underlying stream path from the C adapter and
+  rules out the demo's source/output buffers. Seek from Begin clears native state and restores
+  successful reading; that positive control does not weaken the failing position assertion.
+- **Environment/evidence:** Linux x86_64/GCC14.2, existing linux-full runtime artifacts from
+  complete466-transfer (CNA59598bfac), observed clean sharp-runtime c20373bae. Later source
+  review observes CNA714f9f76a; no atomic input/source snapshot is claimed. All35selected
+  shipped binaries remain unchanged through probe builds/runs. Immutable stdout/stderr/JSON,
+  direct/C sources, helper scripts, source hashes and exact23+8child review are in
+  `build/linux-full/reports/checkpoint-466-transfer-eof-*`. No sibling source changes or
+  upstream messages. The catalog extension/knownIssue metadata is the next application step.
+
 ### CNA-DEMOS-ISSUE-001 -- `libcna.so` fails to link with CMake 3.28 (duplicate symbols)
 
 - **Area:** build system -- CNA's shared runtime library (`CNA_SHARED_LIBRARY`,
