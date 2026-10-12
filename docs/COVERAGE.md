@@ -6,7 +6,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**461 demos** in 18 categories. Kinds: console 159, game 263, standalone 39. Automation: automated 425, manual 3, smoke-only 33.
+**462 demos** in 18 categories. Kinds: console 159, game 264, standalone 39. Automation: automated 426, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 153 | 153 | 0 | 0 | 136 / 11 / 6 / 0 / 0 | 142 / 3 / 8 / 0 / 0 |
+| graphics | 154 | 154 | 0 | 0 | 136 / 11 / 6 / 0 / 1 | 142 / 3 / 8 / 0 / 1 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 11 | 10 | 1 | 0 | 10 / 0 / 1 / 0 / 0 | 10 / 0 / 1 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `graphics.texture_cube.sampler_ownership`.
+- OPENGLES3: absent from report: `graphics.texture_cube.sampler_ownership`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -593,10 +595,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ShaderEffect::GetShaderDiagnosticsEXT` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package
 - `ShaderEffect::HasRenderer` -- graphics.shader_effect.clone_state
 - `ShaderEffect::IsEffectValid` -- graphics.shader_effect.clone_state, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.toon_shading
-- `ShaderEffect::SetTexture` -- graphics.shader_effect.vertex_displacement
+- `ShaderEffect::SetTexture` -- graphics.shader_effect.vertex_displacement, graphics.texture_cube.sampler_ownership
 - `ShaderEffect::SetUniformFloat` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.vertex_displacement
-- `ShaderEffect::SetUniformInt` -- graphics.shader_effect.vertex_displacement
-- `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading
+- `ShaderEffect::SetUniformInt` -- graphics.shader_effect.vertex_displacement, graphics.texture_cube.sampler_ownership
+- `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading, graphics.texture_cube.sampler_ownership
 - `ShaderEffect::ShaderEffect` -- graphics.render_target.multiple_render_targets, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.vertex_displacement
 - `SkinnedEffect::LightingEnabled` -- graphics.skinned_effect.normal_lighting
 - `SkinnedEffect::VertexColorEnabled` -- graphics.skinned_effect.vertex_colors

@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Added
+- Cube sampler ownership demo: shared full-face edits survive source disposal and all six
+  faces are sampled through ShaderEffect. Five GL checks pass; the capture was inspected.
+- Automatic C dispatch now isolates Draw service with a BeginDraw worker and first-Draw
+  observation. All fifteen Update controls remain; six new controls pass on both renderers.
+
 - Shader compiler diagnostics demo: seven GL checks distinguish compiler failure from package
   selection refusal, retain owned diagnostics and render with the original valid program.
   The deliberate compiler stderr and inspected cyan-card capture are retained.

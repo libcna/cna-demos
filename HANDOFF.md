@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-461 fully validated demos: math 78, game 33, graphics 153 (19 SpriteBatch, 8 device, 9 texture2d, 2 texture_cube, 1 texture3d, 7 sprite font,
+462 catalog demos (last complete 461; cube and Draw extension focused-tested): math 78, game 33, graphics 154 (19 SpriteBatch, 8 device, 9 texture2d, 3 texture_cube, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 25 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
@@ -251,20 +251,25 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Full 461 is complete. Continue with the prepared cube and automatic-Draw behaviors.**
-Do not repeat already completed shader/package/clone/DDS work. Both next drafts below are
-NOT APPLIED and have syntax-only evidence; inspect their source, apply, build/validate, run both
-renderers, actually inspect the cube GL image, and investigate any failures before classifying.
-Keep all old 15 automatic_dispatch child labels/order and the old Update trace; filter only the
-six specifically added passing Draw controls when reviewing the next full checkpoint.
+**462 cube/Draw batch is built and focused-tested; commit and start full validation.**
+Build 21458 passed 83 scheduled targets; metadata 462/0. Cube sampler_ownership passes 5 GL checks
+and its 800x480 image was actually inspected; GL stderr empty, SOFTWARE CustomEffects skip.
+Existing c_api.game.automatic_dispatch passes 21 child checks on both selections with empty
+stderr: all 15 original labels/order remain after removing 6 explicit Draw additions. Its old
+Update trace is unchanged; new trace pending=1/before=333333/observed=500000/updates_between=0/
+result=0 proves first-Draw observation after a pending BeginDraw setter. No Draw-served borrow
+or visual/latency claim. Focused logs/review are reports/checkpoint-462-focused-*.
 
-The next full baseline is ORIGINAL COMPLETE461:37 SOFTWARE / 41 GL raw failures, all old
-statuses/known issues/counts and C/custom-content child lists/traces. A positive title Update
-count change is the only pre-reviewed timing variance. Helpers from461 can be adapted after
-actual focused results; do not blindly bless new failures or compiler/renderer diagnostics.
-Reuse build/linux-full, shared ccache and -j4. External CNA refactoring caused several large
-rebuilds this batch; no external file was edited. No source/assets/rebuilds during full runtime.
-Continue after the next checkpoint; semantic member coverage remains incomplete.
+The next full baseline is ORIGINAL COMPLETE461:37 SOFTWARE/41 GL raw failures. Preserve every
+old status/known issue/count and C/custom-content child list/trace, filtering only the six named
+new automatic_dispatch checks. The new cube ID should pass5 on GL or skip on SOFTWARE.
+Expected stderr: exactly one additional SOFTWARE CustomEffects skip; GL normalized stream
+unchanged, including its existing deliberate compiler error. Positive title Update count
+variance remains the sole pre-reviewed old count change. No source/assets/rebuilds during full
+runtime. The old /tmp cube/C drafts are now APPLIED AND STALE. Continue after full 462.
+
+Further gaps: typed/compressed cube transfers, volume custom sampling, shader uniform arrays,
+remaining skinned-light behaviors and wider public C routes. Do not restart completed phases.
 
 ## 15. Assumptions the next session must know
 
@@ -276,20 +281,10 @@ Continue after the next checkpoint; semantic member coverage remains incomplete.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Next NOT-APPLIED candidate: /tmp/cna-cube-sampler-ownership.cpp, archived with empty successful
-syntax log as checkpoint-461-next-*. Five intended checks cover a copied cube's shared full-face
-Color edit, independent wrapper names, source disposal and six actual custom samplerCube reads.
-It uses ShaderEffect::SetTexture(unit1); SpriteBatch owns unit0. No native run/image evidence.
-This complements face_transfers' readback atlas and stock reflection; no in-face orientation,
-mip filtering, physical GPU readback or every copy/move path claim. Ready to apply after the complete461 closure.
-Other meaningful gaps: typed/compressed cube transfers, shader uniform arrays/volume binding,
-automatic Draw dispatch with proof of its servicing step, and remaining skinned-light behaviors.
-Older /tmp clone/compiler/package/DDS/C-destruction drafts are APPLIED AND STALE.
+Source-only predecessors are retained as checkpoint-461-next-*; they are applied and stale.
+The C source also prevents a repeated BeginDraw from launching a second worker. Runtime runners
+and exact focused comparison: /tmp/cna-run-462-initial.py and /tmp/cna-review-462-focused.py.
 
-Additional NOT-APPLIED C candidate: /tmp/cna-automatic-draw.c, archived as checkpoint-461-next-*
-with empty successful C11 Wall/Wextra/Werror syntax log and source review. Extends existing
-c_api.game.automatic_dispatch, retaining its15 original child labels/trace and adding6 intended
-controls. A setter starts inside BeginDraw after Update, must still be pending with old state,
-and the very first Draw must observe the new value with unchanged Update count. No explicit
-pump or intervening host frame can provide credit. Shutdown/cancellation precedes bounded join;
-worker success is checked separately from cancellation. No runtime evidence yet. Now consider this with the cube batch; preserve the original15 checks by exact filtered comparison.
+Full462 helpers ready: /tmp/cna-capture-462.py after its build/during CTest, then
+/tmp/cna-archive-462.py SOFTWARE and OPENGLES3 after each complete smoke, and
+/tmp/cna-462-finish.py after exit0. They compare original461 and exact six Draw additions.

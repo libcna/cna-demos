@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
-/* Normal host frames serve worker calls automatically at Update, even when Draw is suppressed. */
+/* Observe automatic Update service, then isolate Draw service with a BeginDraw worker. */
 #include <CNA/C/cna.h>
 #include <stdatomic.h>
 #include <stdio.h>
@@ -10,6 +10,7 @@
 
 #define INITIAL_TICKS INT64_C(166667)
 #define CHANGED_TICKS INT64_C(333333)
+#define DRAW_TICKS INT64_C(500000)
 
 typedef struct State {
     CNA_Handle game;
@@ -19,6 +20,11 @@ typedef struct State {
     CNA_Handle expired_device; /* Numeric identifier retained only for an explicit expiry check. */
     int64_t before, after;
     int updates, draws, suppressed, saw_change, wrong_thread;
+    thrd_t draw_worker;
+    atomic_int draw_entered, draw_done;
+    CNA_Result draw_result;
+    int draw_phase, draw_started, draw_pending, draw_begin_updates;
+    int64_t draw_before, draw_observed;
 } State;
 
 static int worker(void* context)
@@ -35,6 +41,15 @@ static int worker(void* context)
     if (state->result == CNA_RESULT_SUCCESS)
         state->borrow_result = cna_game_get_graphics_device(state->game, &state->expired_device);
     atomic_store_explicit(&state->done, 1, memory_order_release);
+    return 0;
+}
+
+static int draw_worker(void* context)
+{
+    State* state = (State*)context;
+    atomic_store_explicit(&state->draw_entered, 1, memory_order_release);
+    state->draw_result = cna_game_set_target_elapsed_time_ticks(state->game, DRAW_TICKS);
+    atomic_store_explicit(&state->draw_done, 1, memory_order_release);
     return 0;
 }
 
@@ -55,15 +70,39 @@ static CNA_Result begin_draw(CNA_Handle game, const CNA_GameTime* time, void* co
 {
     State* state = (State*)context;
     (void)game; (void)time; (void)error;
-    ++state->suppressed;
-    *should_draw = CNA_FALSE; /* Isolate automatic Update service from the separate Draw pump. */
+    if (!state->draw_phase) {
+        ++state->suppressed;
+        *should_draw = CNA_FALSE; /* Preserve the original Update-only control. */
+        return CNA_RESULT_SUCCESS;
+    }
+    *should_draw = CNA_TRUE;
+    if (state->draw_started) return CNA_RESULT_SUCCESS; /* Never launch a second worker. */
+    state->draw_begin_updates = state->updates;
+    /* Update has already returned. This one setter can only be served by the coming Draw.
+       An entered flag alone is not proof of queuing: the first Draw must observe its write. */
+    state->draw_started = thrd_create(&state->draw_worker, draw_worker, state) == thrd_success;
+    if (state->draw_started) {
+        const struct timespec pause = {0, 2000000L};
+        for (int attempt = 0; attempt < 500 && !atomic_load_explicit(&state->draw_entered, memory_order_acquire); ++attempt)
+            (void)thrd_sleep(&pause, NULL);
+        for (int attempt = 0; attempt < 100 && !atomic_load_explicit(&state->draw_done, memory_order_acquire); ++attempt)
+            (void)thrd_sleep(&pause, NULL);
+        state->draw_pending = atomic_load_explicit(&state->draw_entered, memory_order_acquire) &&
+            !atomic_load_explicit(&state->draw_done, memory_order_acquire) &&
+            cna_game_get_target_elapsed_time_ticks(game, &state->draw_before) == CNA_RESULT_SUCCESS &&
+            state->draw_before == CHANGED_TICKS;
+    }
     return CNA_RESULT_SUCCESS;
 }
 
 static CNA_Result draw(CNA_Handle game, const CNA_GameTime* time, void* context, CNA_CallbackError* error)
 {
-    (void)game; (void)time; (void)error;
-    ++((State*)context)->draws;
+    State* state = (State*)context;
+    (void)error;
+    ++state->draws;
+    if (!thrd_equal(state->owner, thrd_current()) || time == NULL) ++state->wrong_thread;
+    if (state->draw_phase)
+        return cna_game_get_target_elapsed_time_ticks(game, &state->draw_observed);
     return CNA_RESULT_SUCCESS;
 }
 
@@ -81,6 +120,8 @@ int main(int argc, char** argv)
     cna_demo_init(&demo, "c_api.game.automatic_dispatch", argc, argv, 0);
     state.owner = thrd_current();
     atomic_init(&state.done, 0);
+    atomic_init(&state.draw_entered, 0);
+    atomic_init(&state.draw_done, 0);
     callbacks.struct_size = (uint32_t)sizeof(callbacks);
     callbacks.struct_version = UINT32_C(1);
     callbacks.context = &state;
@@ -141,6 +182,36 @@ int main(int argc, char** argv)
                    "the automatically served device borrow expires before returning to the host");
     printf("Automatic dispatch: before=%lld, after=%lld, observed=%d, draws=%d\n",
            (long long)state.before, (long long)state.after, state.saw_change, state.draws);
+    if (!cna_demo_check_result(&demo, cna_game_set_foreign_thread_calls_ext(state.game, CNA_TRUE),
+                               "enable dispatch for the isolated Draw service phase")) goto cleanup;
+    state.draw_phase = 1;
+    const CNA_Result draw_frame = cna_game_run_frame_ext(state.game, &running);
+    state.draw_phase = 0;
+    cna_demo_check(&demo, state.draw_started, "start a permitted setter inside BeginDraw after Update has returned");
+    cna_demo_check(&demo, draw_frame == CNA_RESULT_SUCCESS && running && state.draw_pending &&
+                   state.draws == 1 && state.updates == state.draw_begin_updates &&
+                   state.draw_observed == DRAW_TICKS && state.wrong_thread == 0,
+                   "the first Draw observes the pending write without any intervening Update or explicit pump");
+    cna_demo_check_result(&demo, cna_game_set_foreign_thread_calls_ext(state.game, CNA_FALSE),
+                          "disable Draw-phase dispatch before bounded worker cleanup");
+    if (state.draw_started) {
+        for (int attempt = 0; attempt < 2500 && !atomic_load_explicit(&state.draw_done, memory_order_acquire); ++attempt)
+            (void)thrd_sleep(&pause, NULL);
+        if (!atomic_load_explicit(&state.draw_done, memory_order_acquire)) {
+            cna_demo_check(&demo, 0, "the Draw-phase worker returns after bounded dispatch shutdown");
+            exit(EXIT_FAILURE);
+        }
+    }
+    int draw_join_result = 1;
+    const int draw_joined = state.draw_started ? thrd_join(state.draw_worker, &draw_join_result) : thrd_error;
+    cna_demo_check(&demo, draw_joined == thrd_success && draw_join_result == 0,
+                   "join the Draw-served worker after dispatch shutdown");
+    cna_demo_check(&demo, state.draw_started && atomic_load_explicit(&state.draw_done, memory_order_acquire) &&
+                   state.draw_result == CNA_RESULT_SUCCESS && state.draw_observed == DRAW_TICKS,
+                   "the Draw-phase setter completed successfully rather than being cancelled at cleanup");
+    printf("Automatic Draw: pending=%d, before=%lld, observed=%lld, updates_between=%d, result=%d\n",
+           state.draw_pending, (long long)state.draw_before, (long long)state.draw_observed,
+           state.updates - state.draw_begin_updates, (int)state.draw_result);
     cna_demo_check(&demo, cna_game_request_exit(state.game) == CNA_RESULT_SUCCESS &&
                    cna_game_run_frame_ext(state.game, &running) == CNA_RESULT_SUCCESS && !running,
                    "the owner ends its host-driven run after the worker finishes");

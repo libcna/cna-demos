@@ -125,6 +125,9 @@ a check that all authored colors remain visible and that a blank texture row can
   rectangle windows, neighboring faces, authored mip levels and refused-call preservation.
   Both inspected readback-atlas captures are RGBA-identical; no direct GPU-readback claim.
   Full 457 passes all 470 enabled CTests and both smokes, retaining all original 35/36 failures.
+  ✅ `graphics.texture_cube.sampler_ownership`: shared full-face edits, independent wrapper names,
+  source disposal and actual custom cube sampling of all six faces. Five GL checks pass, image
+  inspected and stderr empty; SOFTWARE capability skip.
   🟨 `graphics.texture_cube.dds_streams`: full and prefixed RGB24 cubes/mips and ordinary
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
@@ -496,7 +499,7 @@ C API demos as standalone C programs (one C game per process), built only with
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit, expired callback device handles, refused owner-thread callback reentry),
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, retained callback failure and exactly-once unload cleanup),
 ✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker/caller diagnostics and canonical owner type/parameter isolation; 17 passing checks),
-✅ `c_api.game.automatic_dispatch` (15 passing checks: automatic Update service with Draw suppressed, property mutation, callback-scope device borrowing and expiry),
+✅ `c_api.game.automatic_dispatch` (21 passing checks: all 15 Update-only controls plus 6 isolated first-Draw setter controls, retaining callback-scope device borrowing and expiry in the Update phase),
 ✅ `c_api.game.host_failure` (terminal CALLBACK/false, retained diagnostic, no replay, exactly-once unload and handle release; promised C exit hooks expose ISSUE-051),
 ✅ `c_api.game.host_frames` (copied larger compatible frame-hook prefix, explicit host stepping, draw suppression, incompatible-layout refusal, removal/replacement and terminal exit),
 ✅ `c_api.game.foreign_thread_dispatch` (default/restored thread affinity, explicit owner pumping, served canonical diagnostics and no-pump owner-only probes exposing ISSUE-050, permitted-write cancellation and resumed dispatch),
