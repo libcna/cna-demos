@@ -6,37 +6,34 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**456 demos** in 18 categories. Kinds: console 159, game 258, standalone 39. Automation: automated 420, manual 3, smoke-only 33.
+**457 demos** in 18 categories. Kinds: console 159, game 259, standalone 39. Automation: automated 421, manual 3, smoke-only 33.
 
-| Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
-|---|---|---|---|---|---|---|
-| audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
-| c_api | 19 | 18 | 1 | 0 | 17 / 0 / 2 / 0 / 0 | 17 / 0 / 2 / 0 / 0 |
-| cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
-| core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
-| design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
-| diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
-| game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
-| gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 148 | 148 | 0 | 0 | 135 / 8 / 5 / 0 / 0 | 139 / 3 / 6 / 0 / 0 |
-| input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
-| math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
-| media | 11 | 10 | 1 | 0 | 10 / 0 / 1 / 0 / 0 | 10 / 0 / 1 / 0 / 0 |
-| net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
-| phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
-| platform | 2 | 2 | 0 | 0 | 1 / 1 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
-| storage | 7 | 7 | 0 | 0 | 7 / 0 / 0 / 0 / 0 | 7 / 0 / 0 / 0 / 0 |
-
-"Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
-
+| Category | Demos | Automated | Smoke-only | Manual |
+|---|---|---|---|---|
+| audio | 21 | 18 | 2 | 1 |
+| c_api | 19 | 18 | 1 | 0 |
+| cnaext | 4 | 4 | 0 | 0 |
+| content | 46 | 46 | 0 | 0 |
+| core | 3 | 3 | 0 | 0 |
+| design | 4 | 4 | 0 | 0 |
+| devices | 5 | 5 | 0 | 0 |
+| diagnostics | 2 | 2 | 0 | 0 |
+| game | 33 | 28 | 4 | 1 |
+| gamer_services | 19 | 18 | 0 | 1 |
+| graphics | 149 | 149 | 0 | 0 |
+| input | 39 | 14 | 25 | 0 |
+| math | 78 | 78 | 0 | 0 |
+| media | 11 | 10 | 1 | 0 |
+| net | 14 | 14 | 0 | 0 |
+| phone | 1 | 1 | 0 | 0 |
+| platform | 2 | 2 | 0 | 0 |
+| storage | 7 | 7 | 0 | 0 |
 
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 293 of 329** (89.1 %).
-- **Methods, properties, constructors and events named by a demo: 1370 of 2326** (58.9 %).
-- Fields and enum values named by a demo: 134 of 753 (reported separately: a demo per enum value is not a goal).
+- **Methods, properties, constructors and events named by a demo: 1372 of 2326** (59.0 %).
+- Fields and enum values named by a demo: 135 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
@@ -45,7 +42,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Content` | 7 / 11 | 23 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 316 / 550 | 85 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 318 / 550 | 86 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 44 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
@@ -490,6 +487,11 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateWriter::WriteRawObject` -- content.custom.intermediate_existing_instances
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateWriter::Xml` -- content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Graphics::AnimationClipEXT` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::GetBoneTransforms` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::GetSkinTransforms` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::GetWorldTransforms` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::StartClip` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::Update` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::ApplyBindPoseBoneTransformsEXT` -- graphics.model.multiple_skins
 - `Microsoft::Xna::Framework::Graphics::BoneTrackEXT` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::KeyframeEXT` -- graphics.model.palette_sampling
@@ -508,6 +510,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::InverseBindPoseGlobal` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::ParentBoneIndices` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::RemovePartEXT` -- graphics.model.skinned_parts
+- `Microsoft::Xna::Framework::Graphics::SkinningData` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::SkinningData::SkeletonRootNodeIndexEXT` -- graphics.model.multiple_skins
 - `Microsoft::Xna::Framework::Graphics::SkinningData::SkeletonRootPrefix` -- graphics.model.multiple_skins
 - `Microsoft::Xna::Framework::Graphics::Texture2D::DDSFromStreamEXT` -- graphics.texture2d.dds_stream

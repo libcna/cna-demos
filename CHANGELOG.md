@@ -52,6 +52,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Cube face transfers now demonstrate guarded source/destination windows, a rectangular face edit,
+  independently authored mips, refused-transfer preservation and a readback atlas (eight checks).
+- Existing animation demos now distinguish local/world/skin transforms and verify nonidentity
+  untracked state, wrong-space refusal with preserved transforms and disturbed-pose time clamps.
 - C launch-parameter map example with owned UTF-8 spans, ordinal key enumeration, guarded
   count/copy buffers, duplicate precedence and preserved state on refused replacement.
   All fifteen child checks pass on SOFTWARE/OPENGLES3, and the 35 related C/CLI/launch CTests pass.

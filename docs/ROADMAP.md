@@ -120,10 +120,10 @@ a check that all authored colors remain visible and that a blank texture row can
   ShaderEffect), ✅ `graphics.render_target.hdr_blendable` (values past 1.0 in an HdrBlendable
   target; ISSUE-027 found on SOFTWARE).
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
-  `graphics.texture_cube.*` beyond the environment-map demo (render to a `RenderTargetCube`).
-  The TextureCube member table in COVERAGE_AUDIT.md now separates face/region/mip transfers,
-  typed/compressed formats, DDS stream boundaries and shared-resource lifetime. It is source-only
-  planning; existing effect pixels do not establish those behaviors.
+  typed/compressed cube formats, DDS stream boundaries and shared-resource lifetime.
+  ✅ `graphics.texture_cube.face_transfers` now passes eight focused checks per renderer: guarded
+  rectangle windows, neighboring faces, authored mip levels and refused-call preservation.
+  Both inspected readback-atlas captures are RGBA-identical; no direct GPU-readback claim.
 
 ## Phase 6 -- effects and shaders 🟨 (30 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and specular controls: emission/ambient/half-alpha composition, independent
@@ -201,6 +201,10 @@ a check that all authored colors remain visible and that a blank texture row can
   palette to actual SkinnedEffect drawing after donor destruction.
 - ✅ `graphics.model.palette_sampling`: three-bone parent composition, untracked bind pose,
   scale/rotation/translation interpolation, inverse binds, loop/clamp boundaries and invalid-data guards.
+  Its 19-check extension now contrasts AnimationPlayer local/world/skin spaces through the same
+  authored hierarchy. Existing node_animation now has nine checks for untracked application state,
+  wrong-space refusal/preserved transforms and disturbed-pose boundary clamps. Both renderer
+  selections pass; original node images are unchanged separately on each renderer.
 - ✅ `graphics.model.skinned_manifest`: original nested skeleton/mesh/texture/clip sidecars load
   through ContentManager, a truncated skeleton is refused and actual animated pixels are checked.
 - ✅ Existing skinned_animation now checks player state, relative versus absolute time, looping,

@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-456 fully validated demos: math 78, game 33, graphics 148 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+457 demos (456 last complete; 457 focused checks passed): math 78, game 33, graphics 149 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture_cube, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 22 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
@@ -98,6 +98,12 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+**457 focused validation passed; full checkpoint is next.** The 57-target build passed, registry
+457/0, coverage is source-only (293/329 types, 1372/2326 XNA members, 166/3210 C routes).
+Palette 19/node 9/cube 8 checks pass on each renderer with empty stderr. Four new captures were
+actually inspected; node matches its original456 baseline on each renderer and cube is
+RGBA-identical across renderers. Full 456 remains the last complete baseline below.
 
 **Complete 456 checkpoint passed at e70eeb5.** tools/validate.sh exited 0; all 469 enabled
 CTests passed (186.53 s), both complete isolated-X11 smokes and coverage regeneration finished.
@@ -245,9 +251,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediately continue with 457:** refresh the existing animation first-frame baseline using
-/tmp/cna-456-animation-baseline.py (old counts palette 14, node 4). Archive it separately from
-older intermediate-456 captures. Then apply these already syntax-checked, UNAPPLIED drafts:
+**Immediate next action:** commit the validated 457 batch, update PENDING_457 in the archive/
+finish helpers, then start full tools/validate.sh. Capture 35 binaries/four assets after its
+build; compare to ORIGINAL COMPLETE 456. Focused evidence: checkpoint-457-focused-*.
+All six runs pass with empty stderr, with four captures actually inspected. The earlier refreshed
+node baseline is archived under checkpoint-456-final-before-*; before/after RGBA is identical
+on each renderer (the existing cross-renderer node difference is two pixels, max delta 73).
+The following drafts are APPLIED AND STALE; do not copy them over further edits:
 
 * /tmp/cna-palette-player-spaces.cpp -> demos/graphics/model/palette_sampling.cpp: 14 -> 19
   checks comparing local/world/skin transforms through AnimationPlayer, with the existing
@@ -259,14 +269,11 @@ older intermediate-456 captures. Then apply these already syntax-checked, UNAPPL
   check Color face/rectangle/mip workflow, guarded array windows, refused transfers and a
   displayed 2D atlas of public readback. It does not prove GPU readback or cube shader sampling.
 
-Build, metadata validation and /tmp/cna-run-457-focused.py come next. Actually inspect both node
-and cube captures, compare node to the refreshed baseline, update semantic coverage/docs and
-commit the source. Then full 457 tools/validate.sh using /tmp/cna-capture-457.py after build;
-/tmp/cna-archive-457.py and /tmp/cna-457-finish.py compare to ORIGINAL COMPLETE 456. Replace
-PENDING_457 with the source commit. Expect 457 IDs, 470 enabled CTests, SW 404/25/25/3 and
-GL 425/26/3/3 if no defects; never treat these projections as runtime evidence.
-The 457 helper drafts are syntax-checked but unexecuted. All drafts are also archived under
-reports/checkpoint-456-next-*. No linked/runtime/visual credit for them yet.
+Use /tmp/cna-capture-457.py after the full checkpoint build, then /tmp/cna-archive-457.py for
+each completed renderer and /tmp/cna-457-finish.py. Helpers expect cube 8 checks, palette 14 -> 19,
+node 4 -> 9, otherwise original456 outcomes/counts/failures/traces (title timing variance only).
+Catalog /tmp/cna-catalog-457.json is current. Expected totals remain projections until full runs:
+470 enabled CTests, SW 404/25/25/3, GL 425/26/3/3. Do not edit/rebuild during runtime phases.
 
 Then continue with the deeper TextureCube/ShaderEffect audit in docs/COVERAGE_AUDIT.md:
 * /tmp/cna-cube-dds-streams.cpp: five intended checks with original RGB24 six-face/three-mip
@@ -294,4 +301,3 @@ older checkpoints and preparation failures, including the non-atomic ISSUE-053 c
 * External work may change the sibling CNA checkout. Do not edit/revert it from this task;
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
-

@@ -2,6 +2,7 @@
 // CNAEXT rigid node animation: glTF clips that move a model's own bones (no skin).
 #include <cmath>
 #include <optional>
+#include <stdexcept>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
@@ -58,6 +59,46 @@ namespace
                       "a quarter turn about Y carries the crate's +X edge to -Z");
             ctx.Check(base->getTransformProperty() == baseBefore, "bones without a track keep their transform");
 
+            // An untracked transform is application state, not an instruction to restore bind pose.
+            const Vector3 offset(3, -1, 2);
+            const Matrix movedBase = Matrix::CreateTranslation(offset);
+            base->setTransformProperty(movedBase);
+            ApplyClipToBonesEXT(*stand_, spin, TimeSpan::FromSeconds(1));
+            stand_->CopyAbsoluteBoneTransformsTo(absolute_);
+            const Vector3 movedEdge = Vector3::Transform(Vector3::UnitX,
+                absolute_[static_cast<std::size_t>(crate->getIndexProperty())]);
+            ctx.Check(base->getTransformProperty() == movedBase && Vector3::Distance(movedEdge, edge + offset) < 1e-3f,
+                      "a nonidentity untracked base survives sampling and carries its animated descendants");
+
+            std::vector<Matrix> before(absolute_.size()), after(absolute_.size());
+            stand_->CopyBoneTransformsTo(before);
+            AnimationClip wrongSpace = spin;
+            wrongSpace.TargetSpace = ClipTargetSpaceEXT::JointPalette;
+            bool refused = false;
+            try { ApplyClipToBonesEXT(*stand_, wrongSpace, TimeSpan::Zero); }
+            catch (const std::invalid_argument&) { refused = true; }
+            ctx.Check(refused, "a joint-palette clip is refused instead of treating joint slots as scene-node indices");
+            stand_->CopyBoneTransformsTo(after);
+            ctx.Check(after == before, "refusing the wrong target space preserves every current local bone transform");
+
+            ApplyClipToBonesEXT(*stand_, spin, TimeSpan::Zero);
+            stand_->CopyBoneTransformsTo(before);
+            ApplyClipToBonesEXT(*stand_, spin, TimeSpan::FromSeconds(1)); // disturb before testing the clamp
+            ApplyClipToBonesEXT(*stand_, spin, TimeSpan::FromSeconds(-1));
+            stand_->CopyBoneTransformsTo(after);
+            ctx.Check(after == before && base->getTransformProperty() == movedBase,
+                      "negative scene-node sampling clamps to the first pose and retains untracked state");
+            ApplyClipToBonesEXT(*stand_, spin, spin.Duration);
+            stand_->CopyBoneTransformsTo(before);
+            ApplyClipToBonesEXT(*stand_, spin, TimeSpan::FromSeconds(1));
+            ApplyClipToBonesEXT(*stand_, spin, spin.Duration + TimeSpan::FromSeconds(1));
+            stand_->CopyBoneTransformsTo(after);
+            ctx.Check(after == before && base->getTransformProperty() == movedBase,
+                      "sampling past the duration clamps to the final pose instead of looping");
+            // Restore the demonstration's authored placement before the usual interactive animation.
+            base->setTransformProperty(baseBefore);
+            ApplyClipToBonesEXT(*stand_, spin, TimeSpan::FromSeconds(1));
+
             view_ = Matrix::CreateLookAt(Vector3(0.0f, 3.5f, 6.0f), Vector3(0.0f, 0.8f, 0.0f), Vector3::Up);
             projection_ = Matrix::CreatePerspectiveFieldOfView(MathHelper::PiOver4,
                 getGraphicsDeviceProperty().getViewportProperty().getAspectRatioProperty(), 0.1f, 100.0f);
@@ -99,9 +140,9 @@ CNA_DEMOS_GAME(NodeAnimationDemo, {
     .title = "Node animation clips (CNAEXT)",
     .description = "Plays two glTF clips that animate ordinary nodes of a model -- a spinning platform and a crate "
                    "lid opening -- by reading ModelAnimationsEXT from Model.Tag and posing the bones with "
-                   "ApplyClipToBonesEXT each frame; untracked bones keep their transforms.",
+                   "ApplyClipToBonesEXT each frame; nonidentity untracked state survives, time clamps and wrong target spaces are refused.",
     .apis = {"ApplyClipToBonesEXT", "ModelAnimationsEXT", "AnimationClipEXT", "ClipTargetSpaceEXT", "Model::Tag",
-             "Model::CopyAbsoluteBoneTransformsTo", "Model::Draw", "Model::Bones"},
+             "Model::CopyAbsoluteBoneTransformsTo", "Model::CopyBoneTransformsTo", "ModelBone::Transform", "Model::Draw", "Model::Bones"},
     .tags = {"3d", "model", "gltf", "animation", "cnaext"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 40,

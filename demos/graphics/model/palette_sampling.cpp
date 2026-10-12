@@ -7,6 +7,7 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SkinnedModelEXT.hpp"
+#include "Microsoft/Xna/Framework/Graphics/AnimationPlayer.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Quaternion.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
@@ -69,6 +70,43 @@ namespace
         ctx.Check(Near(tipPosition, Vector3(-1, 2, 0)),
                   "the tip's local animation composes through both parents before inverse-bind skinning");
 
+        // The Model-facing player uses SkinningData, not SkinnedModelEXT. Reuse the authored
+        // skeleton to distinguish its three coordinate spaces without another rendering scene.
+        SkinningData skeleton;
+        skeleton.BoneCount = model.BoneCount;
+        skeleton.SkeletonHierarchy = model.ParentBoneIndices;
+        skeleton.BindPose = model.BindPoseLocal;
+        skeleton.InverseBindPose = model.InverseBindPoseGlobal;
+        AnimationPlayer player(skeleton); // skeleton and clip both outlive this borrowed player
+        bool playerRestIsIdentity = player.GetSkinTransforms().size() == 3;
+        for (const auto& bone : player.GetSkinTransforms())
+            playerRestIsIdentity = playerRestIsIdentity && bone == Matrix::getIdentityProperty();
+        if (!ctx.Check(player.GetBoneTransforms() == skeleton.BindPose && playerRestIsIdentity,
+                       "before a clip the Model player retains local bind offsets but publishes an identity skin palette")) return;
+        player.StartClip(clip);
+        player.Update(TimeSpan::FromSeconds(1), false, false);
+        const auto& local = player.GetBoneTransforms();
+        const auto& world = player.GetWorldTransforms();
+        const auto& skin = player.GetSkinTransforms();
+        ctx.Check(Near(Vector3::Transform(Vector3::Zero, local[0]), Vector3(3, 0, 0)) &&
+                  Near(Vector3::Transform(Vector3::Zero, local[1]), Vector3(0, 1, 0)) &&
+                  Near(Vector3::Transform(Vector3::Zero, local[2]), Vector3(1, 1, 0)),
+                  "local transforms contain each tracked pose or untracked bind offset without ancestor motion");
+        ctx.Check(Near(Vector3::Transform(Vector3::Zero, world[0]), Vector3(3, 0, 0)) &&
+                  Near(Vector3::Transform(Vector3::Zero, world[1]), Vector3(1, 0, 0)) &&
+                  Near(Vector3::Transform(Vector3::Zero, world[2]), Vector3(-1, 2, 0)),
+                  "world transforms locate joint origins after the parent's interpolated scale and quarter turn");
+        ctx.Check(Near(Vector3::Transform(Vector3::Zero, skin[0]), Vector3(3, -4, 0)) &&
+                  Near(Vector3::Transform(Vector3::Zero, skin[1]), Vector3(3, -4, 0)) &&
+                  Near(Vector3::Transform(Vector3::Zero, skin[2]), Vector3(1, -4, 0)) &&
+                  Near(Vector3::Transform(bindJoints[2], skin[2]), Vector3(-1, 2, 0)),
+                  "skin transforms move bind-model points rather than joint-local origins after inverse-bind correction");
+        bool samePlayers = skin.size() == middle.size();
+        for (std::size_t i = 0; i < skin.size() && samePlayers; ++i)
+            for (const auto& point : {bindJoints[i], bindJoints[i] + Vector3::UnitX})
+                samePlayers = samePlayers && Near(Vector3::Transform(point, skin[i]), Vector3::Transform(point, middle[i]));
+        ctx.Check(samePlayers, "both public evaluators agree on transformed bind points and offsets for this authored hierarchy");
+
         // Compare transformed rest-space points, not implementation-generated expected matrices.
         const auto samePose = [&](const std::vector<Matrix>& expected) {
             if (palette.size() != expected.size()) return false;
@@ -112,13 +150,19 @@ CNA_DEMOS_CONSOLE(PaletteSampling, {
     .id = "graphics.model.palette_sampling",
     .title = "Sample a hierarchical skin palette",
     .description = "Samples translation, scale and rotation through a three-bone hierarchy, preserves an untracked bind pose, "
-                   "compares looped and clamped time, and rejects invalid clip/skeleton requests.",
+                   "distinguishes AnimationPlayer local/world/skin coordinates, compares looped and clamped time, and rejects invalid clip/skeleton requests.",
     .apis = {"Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::ComputeBoneTransformsEXT",
              "Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::ParentBoneIndices",
              "Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::BindPoseLocal",
              "Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::InverseBindPoseGlobal",
              "Microsoft::Xna::Framework::Graphics::AnimationClipEXT",
              "Microsoft::Xna::Framework::Graphics::BoneTrackEXT",
-             "Microsoft::Xna::Framework::Graphics::KeyframeEXT"},
+             "Microsoft::Xna::Framework::Graphics::KeyframeEXT",
+             "Microsoft::Xna::Framework::Graphics::SkinningData",
+             "Microsoft::Xna::Framework::Graphics::AnimationPlayer::StartClip",
+             "Microsoft::Xna::Framework::Graphics::AnimationPlayer::Update",
+             "Microsoft::Xna::Framework::Graphics::AnimationPlayer::GetBoneTransforms",
+             "Microsoft::Xna::Framework::Graphics::AnimationPlayer::GetWorldTransforms",
+             "Microsoft::Xna::Framework::Graphics::AnimationPlayer::GetSkinTransforms"},
     .tags = {"model", "skinning", "animation", "hierarchy", "cnaext"},
 })
