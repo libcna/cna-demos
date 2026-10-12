@@ -14,11 +14,13 @@
 #include <system_error>
 #include <utility>
 #include <vector>
+#include <variant>
 
 #include "CNA/Content/Cnb/CnbByteWriter.hpp"
 #include "CNA/Content/Cnb/CnbDocument.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
 #include "CNA/Content/Pipeline/ContentBuildManifest.hpp"
+#include "CNA/Content/Pipeline/ContentBuildConfiguration.hpp"
 #include "CNA/Content/Pipeline/ContentCompiler.hpp"
 
 namespace Pipeline = CNA::Content::Pipeline;
@@ -70,19 +72,26 @@ namespace
     class ScoreProcessor final : public Pipeline::ContentProcessor
     {
     public:
-        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.ScoreProcessor", "1"}; }
+        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.ScoreProcessor", "2"}; }
         std::string InputType() const override { return SourceType; }
         std::string OutputType() const override { return ScoreType; }
         void ValidateParameters(const Pipeline::ContentProcessorParameters& parameters) const override
         {
-            if (!parameters.Values().empty()) throw std::invalid_argument("ScoreProcessor accepts no parameters.");
+            for (const auto& [name, value] : parameters.Values())
+            {
+                const auto* bonus = std::get_if<std::int64_t>(&value);
+                if (name != "Bonus" || !bonus || *bonus < 0 || *bonus > 1000)
+                    throw std::invalid_argument("ScoreProcessor accepts only an i64 Bonus in 0..1000.");
+            }
         }
         Pipeline::ContentValue Process(const Pipeline::ContentValue& input,
                                        Pipeline::ContentProcessorContext& context) const override
         {
             ++processes;
             const auto multiplier = context.ResolveSourceDependency("multiplier.factor");
-            return Pipeline::ContentValue::Create(ScoreType, input.Get<int>() * ReadPositive(multiplier));
+            const auto* bonus = context.Parameters().Find("Bonus");
+            const int addition = bonus ? static_cast<int>(std::get<std::int64_t>(*bonus)) : 0;
+            return Pipeline::ContentValue::Create(ScoreType, input.Get<int>() * ReadPositive(multiplier) + addition);
         }
     };
     class ScoreWriter final : public Pipeline::ContentTypeWriter
@@ -222,14 +231,61 @@ int main()
                   recoveredManifest.Entries().size() == 2 && ReadScore(output / "arena.cnb") == 27 && ReadScore(output / "menu.cnb") == 24,
                   "a corrupt manifest triggers fresh node builds and is replaced by a valid manifest");
             WriteFile(output / "manual.txt", "Unowned author note.\n");
-            const auto cleanManifest = ReadText(manifestPath);
+            const auto configurationPath = source / Pipeline::ContentBuildConfigurationFileName;
+            const std::string configuration = R"json({"format":"CNA.ContentPipeline.Config","version":1,"assets":{"arena.score":{"parameters":{"Bonus":{"type":"i64","value":"5"}}}}})json";
+            WriteFile(configurationPath, configuration);
+            const auto parsedConfiguration = Pipeline::ContentBuildConfiguration::Parse(configuration, configurationPath);
+            const auto* settings = parsedConfiguration.Find("arena.score");
+            const auto* configuredBonus = settings ? std::get_if<std::int64_t>(settings->parameters.Find("Bonus")) : nullptr;
+            const int configured = Pipeline::RunContentCompiler(arguments, factory);
+            const auto configuredManifestText = ReadText(manifestPath);
+            const auto configuredManifest = Pipeline::ContentBuildManifest::Parse(configuredManifestText);
+            const auto* configuredArena = configuredManifest.Find("arena");
+            const auto* recoveredArena = recoveredManifest.Find("arena");
+            const auto* recordedBonus = configuredArena ? std::get_if<std::int64_t>(configuredArena->parameters.Find("Bonus")) : nullptr;
+            check(configured == 0 && configuredBonus && *configuredBonus == 5 && recordedBonus && *recordedBonus == 5 &&
+                  configuredArena && recoveredArena && configuredArena->fingerprint != recoveredArena->fingerprint &&
+                  imports == 14 && processes == 13 && writes == 13 && ReadScore(output / "arena.cnb") == 32 &&
+                  ReadText(output / "menu.cnb") == originalMenu,
+                  "a typed per-asset configuration changes its node's parameter fingerprint and rebuilds only that score");
+            WriteFile(configurationPath, " \n" + configuration + "\n");
+            const int reformatted = Pipeline::RunContentCompiler(arguments, factory);
+            check(reformatted == 0 && imports == 14 && processes == 13 && writes == 13 &&
+                  ReadText(manifestPath) == configuredManifestText,
+                  "rewriting only configuration whitespace preserves the effective parameters and skips both nodes");
+            auto changedConfiguration = configuration;
+            changedConfiguration.replace(changedConfiguration.find("\"5\""), 3, "\"6\"");
+            WriteFile(configurationPath, changedConfiguration);
+            const int changedParameter = Pipeline::RunContentCompiler(arguments, factory);
+            const auto changedManifest = Pipeline::ContentBuildManifest::Parse(ReadText(manifestPath));
+            const auto* changedArena = changedManifest.Find("arena");
+            const auto* changedBonus = changedArena ? std::get_if<std::int64_t>(changedArena->parameters.Find("Bonus")) : nullptr;
+            check(changedParameter == 0 && changedBonus && *changedBonus == 6 && configuredArena && changedArena &&
+                  changedArena->fingerprint != configuredArena->fingerprint && imports == 15 && processes == 14 && writes == 14 &&
+                  ReadScore(output / "arena.cnb") == 33 && ReadText(output / "menu.cnb") == originalMenu,
+                  "changing the effective Bonus parameter rebuilds its score while retaining the unconfigured peer");
+            std::filesystem::remove(source / "menu.score");
+            const int retired = Pipeline::RunContentCompiler(arguments, factory);
+            const auto retiredManifest = Pipeline::ContentBuildManifest::Parse(ReadText(manifestPath));
+            check(retired == 0 && imports == 15 && processes == 14 && writes == 14 &&
+                  !std::filesystem::exists(output / "menu.cnb") && retiredManifest.Entries().size() == 1 &&
+                  !retiredManifest.Find("menu") && ReadScore(output / "arena.cnb") == 33 &&
+                  ReadText(output / "manual.txt") == "Unowned author note.\n",
+                  "removing a source collects only its proven obsolete output and retains the live node and unowned file");
+            WriteFile(source / "menu.score", "8\n");
+            const int returned = Pipeline::RunContentCompiler(arguments, factory);
+            check(returned == 0 && imports == 16 && processes == 15 && writes == 15 &&
+                  Pipeline::ContentBuildManifest::Parse(ReadText(manifestPath)).Entries().size() == 2 &&
+                  ReadText(output / "menu.cnb") == originalMenu && ReadScore(output / "arena.cnb") == 33,
+                  "restoring the source publishes its node again without rebuilding the retained configured score");
+            const auto cleanManifest = ReadText(manifestPath), cleanArena = ReadText(output / "arena.cnb");
             WriteFile(output / "arena.cnb", "Hand-edited compiled content.\n");
             const int guarded = Pipeline::RunContentCompiler({"clean", output}, factory);
             check(guarded == 1 && ReadText(output / "arena.cnb") == "Hand-edited compiled content.\n" &&
                   ReadText(output / "menu.cnb") == originalMenu && ReadText(manifestPath) == cleanManifest,
                   "clean refuses changed owned bytes before deleting an untouched peer or the ownership manifest");
             // Restore the exact owned bytes only after observing refusal, then exercise normal clean independently.
-            WriteFile(output / "arena.cnb", originalArena);
+            WriteFile(output / "arena.cnb", cleanArena);
             const int cleaned = Pipeline::RunContentCompiler({"clean", output}, factory);
             check(cleaned == 0 && !std::filesystem::exists(output / "arena.cnb") && !std::filesystem::exists(output / "menu.cnb") &&
                   ReadText(output / "manual.txt") == "Unowned author note.\n" && std::filesystem::exists(source / "arena.score"),

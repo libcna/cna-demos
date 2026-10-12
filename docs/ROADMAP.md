@@ -267,9 +267,11 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `content.custom.incremental_compiler`: real RunContentCompiler registry factory and manifest,
   unchanged skips, primary/shared dependency invalidation, failed-import preservation, repair,
   missing-output rebuild, writer-version identity, same-length/timestamp output tampering, corrupt
-  manifest recovery, frozen-registry refusal and ownership-aware clean (15 child checks). Clean
+  manifest recovery, frozen-registry refusal and ownership-aware clean. Typed per-asset Bonus
+  changes rebuild only the affected node, whitespace-only configuration edits skip, and source
+  removal/reintroduction collects/restores only its owned output (20 child checks). Clean
   rejects changed owned bytes without deleting an untouched peer or the manifest. Crash consistency,
-  parallel publishers, parameter fingerprints and graph/deployment cache cases remain separate work.
+  parallel publishers and graph/deployment cache cases remain separate work.
 - ✅ `content.custom.intermediate_external_references`: filename versus inline data, table
   deduplication, relocation, wrapper/null identity and invalid references. Nine child checks pass;
   native emitted TargetType alias round-trip exposes ISSUE-046. File imports/build publication

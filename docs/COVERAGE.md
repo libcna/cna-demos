@@ -157,6 +157,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::IsCnbCompressionSupported` -- content.custom.cnb_read_limits
+- `CNA::Content::Pipeline::ContentBuildConfiguration::Find` -- content.custom.incremental_compiler
+- `CNA::Content::Pipeline::ContentBuildConfiguration::Parse` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildManifest::Find` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildManifest::Parse` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildRequest::siblings` -- content.custom.nested_builds
@@ -167,6 +169,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterProcessor` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterWriter` -- content.custom.incremental_compiler, content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentProcessorContext::Parameters` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessorContext::ResolveSourceDependency` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessorParameters::Set` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentValue::Create` -- content.custom.pipeline_components

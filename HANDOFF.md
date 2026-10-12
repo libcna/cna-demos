@@ -231,12 +231,23 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** complete 441 at 7361498 is archived/reviewed. Apply the prepared
-compiler configuration extension below to the existing incremental_compiler ID (15 -> 20 checks),
-build, run focused selections and targeted tests, update docs and complete 441-config against
-ORIGINAL checkpoint-441 with explicit X11 isolation. All prior checks must remain and 31/32 raw
-failed assertions stay unchanged. Reuse the same 30 selected native artifact paths for hashes.
-The new raw/existing-instance XML demo is fully validated; do not reapply its stale drafts.
+**Immediate next action:** compiler configuration extension is applied and validated in focused
+runs: 20 child checks per selection, all 15 old checks retained, private paths independently absent
+(/tmp/cna-441-config-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}). Full retry build is clean,
+metadata 441/0 and all 22 targeted CTests pass (/tmp/cna-441-config-targeted-ctest.log, 5.85 s).
+Commit and run complete 441-config against ORIGINAL checkpoint-441 using explicit X11 isolation.
+Expect unchanged 441 status/known-issue sets and 31/32 failed assertions; compiler child checks 15 -> 20,
+other XML/nested child lists unchanged. Capture 30 selected hashes; no source/assets/rebuild during
+runtime. Then deepen the remaining component-type contracts or another coherent content behavior.
+
+Initial config build /tmp/cna-441-config-build.log stopped in concurrently modified C API:
+CnaCApiDisplay.cpp:439 lacked the qualification/using for ToNativePresentationParameters. At later
+inspection, the external worktree already had the alias on line 48. No CNA edit from this task,
+no claim that clean CNA 161d43b00 fails. Initial log and post-failure source/status hashes remain
+reports/checkpoint-441-config-initial-{build.log,cna-state.json}; the latter explicitly is not an
+atomic failed-source snapshot. Independent compiler target built and passed focused 20 checks
+before full retry /tmp/cna-441-config-retry-build.log succeeded. This transient external transition
+is not recorded as a new stable CNA issue. Preserve the initial failure, do not hide it.
 
 441 focused evidence: /tmp/cna-441-xml-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}, ten child checks
 per run and empty stderr. /tmp/cna-441-build.log clean, metadata 441/0 and all 22 targeted CTests pass
@@ -528,7 +539,7 @@ duplicate demos; only add a meaningful dynamic-schema case. Public source review
 concurrent Build requires reentrant components/log sinks; no parallel execution is claimed from
 serial compiler counters or registry freezing.
 
-Prepared next extension after complete 441 (NOT applied/built/run):
+Compiler configuration extension after complete 441 (built and focused-runtime validated; full checkpoint pending):
 /tmp/cna-compiler-configuration.cpp and /tmp/cna-compiler-configuration-metadata.cpp extend the
 existing incremental_compiler from 15 to 20 checks. Source APIs verified: public
 ContentBuildConfigurationFileName/Parse/Find, Context.Parameters and typed i64 JSON values stored
@@ -539,15 +550,18 @@ Bonus 6 should rebuild arena to 33; manifest values/fingerprints and callback co
 Removing menu.score should collect its trusted obsolete output while preserving the live node and
 unowned note, and restoring it should publish menu again. Both owned outputs exist before the
 original guarded/successful clean controls; exact latest arena bytes are captured and restored
-only after observing modified-output refusal. All fifteen older assertion texts remain. Five new
-checks and all counter/value expectations are unexecuted. /tmp/cna-draft-compiler-configuration.py
+only after observing modified-output refusal. All fifteen older assertion texts remain. All 20 checks and their counter/value expectations now pass under both displayless selections,
+including actual obsolete-output collection and reintroduction. Drafts are applied and stale. /tmp/cna-draft-compiler-configuration.py
 can regenerate these drafts from current sources; its C++ escape sequences were reviewed/corrected
 before compilation. Prefer reading the drafts rather than overwriting later changes blindly.
 
-Next meaningful compiler gaps: actual parameter fingerprints, removed-source collection and
-missing-manifest recovery; choose coherent behavior rather than new IDs per cache variation. Actual
-multi-output/deployment publication failures and concurrent publishers remain distinct larger
-workstreams. Registry freezing and late mutation rejection are now exercised by the integrity extension.
+Next meaningful compiler gaps: missing-manifest recovery, multi-output/deployment publication
+failures, graph-level invalidation and concurrency; choose coherent scenarios rather than IDs per
+cache variation. Typed parameter fingerprints and removed-source collection are now executed.
+The member audit still identifies native ContentValue stable-type/C++-carrier and component-result
+mismatches as meaningful contract gaps; inspect the existing pipeline_components demo before
+choosing an extension. Registry freezing and late mutation rejection are already exercised.
+
 XML aliases remain ISSUE-046; direct custom raw/existing-instance serialization now has focused
 runtime evidence above, included in complete 441.
 The XML-to-XNB integration now uses public RegisterXnaXmlSourceContentPipeline with a shared XNA

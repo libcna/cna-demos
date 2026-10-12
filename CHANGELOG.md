@@ -55,6 +55,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - Custom XML-to-XNB source integration: actual compiler publication through a game type writer,
   versioned runtime reader dispatch, incremental skip/edit and ContentManager cache/reload behavior.
   Ten checks include explicit refusal to invent a CNB schema for the arbitrary XML object.
+- The embedded score compiler now exercises typed per-asset configuration fingerprints,
+  semantic no-op configuration rewrites, obsolete-output collection after source removal and
+  source reintroduction (20 checks, retaining all fifteen previous assertions).
 - The incremental score compiler now verifies registry freezing, writer-version invalidation,
   digest-based tamper detection, corrupt-manifest recovery and refusal to clean changed owned files
   without deleting their valid peers (15 checks, retaining all ten original checks).
