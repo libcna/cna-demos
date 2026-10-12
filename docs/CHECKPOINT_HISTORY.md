@@ -2456,3 +2456,35 @@ These are selected artifact/source observations, not an atomic/full transitive i
 All fresh capture/archive/finish helpers pass; immutable complete evidence: checkpoint-470-query-*.
 Generated coverage: 293/329types, 1374/2326XNA members, 174/3210C routes.
 Semantic coverage remains incomplete; no extra demo or runtime knownIssue marker was added.
+
+## Complete470-border
+
+Complete checkpoint **470-border**, source `54dfda7`,
+extends the existing cascade demo with two shared-boundary isolation controls. All eight
+GL checks pass; SOFTWARE retains its declared stock-path skip. The actual three-row image
+was inspected and six relocated original plus two new selected pixels match within 1.
+Both new controls use atlas UV (.5,.5), receiver depth .5 and requested radius 2. Selected
+near/far slices remain independently occluded/lit. This establishes slice isolation, not
+all 25 filter weights inside a cascade, arbitrary atlas layouts or other renderers.
+Watched build 36795 passes 9 scheduled / 8 numbered operations with all 3,909 watched inputs
+unchanged. Focused/targeted session 19479 passes 26 CTests in 2.69 s; original six labels retained.
+Full session 88833 builds in 7 scheduled operations without warning, validates 470 metadata entries with 0 problems
+and passes all 483 enabled CTests in 150.80 s (449 passed including 27 WILL_FAIL, 34 skips;
+three additional manual tests disabled). SOFTWARE 406/27/34/3, OPENGLES3 435/29/3/3.
+Every old 38/42 failed assertion, C/custom child list/trace and all five network controls
+remain exact. Reviewed JSON count differences:
+{"OPENGLES3": {"graphics.skinned_effect.shadow_cascades": {"after": 8, "before": 6, "reason": "Two shared-edge slice-isolation controls added; original six cascade predicates retained."}}, "SOFTWARE": {}}.
+All 35 selected binaries/four existing assets and reader fixture copies remain unchanged
+through runtime. Normalized application stderr is identical, including 42 known GL X protocol
+records and the intentional shader error. Outer Xvfb has 18 exact amdgpu pairs (previous 13);
+independent inner/outer exits 0. Capture CNA eff3131017 (clean),
+final CNA eff3131017 (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-border-*.
+Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
+The additional source-only spatial-audio audit classifies listener/emitter properties,
+Doppler, orientation, multi-listener approximation and Pan/3D mode changes. It corrects
+an old range-error gap: volume_pitch_pan already checks three refused ranges. No listening
+or runtime credit comes from that source review.
+No new ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057 stays
+open with its original refusal and independent private staging probe preserved.

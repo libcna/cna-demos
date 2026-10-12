@@ -511,7 +511,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setLightViewProjectionEXT` -- graphics.skinned_effect.shadow_cascades, graphics.skinned_effect.shadow_receiver
 - `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowCascadesEXT` -- graphics.skinned_effect.shadow_cascades
 - `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowDepthBiasEXT` -- graphics.skinned_effect.shadow_receiver
-- `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowFilterRadiusEXT` -- graphics.skinned_effect.shadow_receiver
+- `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowFilterRadiusEXT` -- graphics.skinned_effect.shadow_cascades, graphics.skinned_effect.shadow_receiver
 - `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowMapEXT` -- graphics.skinned_effect.shadow_cascades, graphics.skinned_effect.shadow_receiver
 - `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowsEnabledEXT` -- graphics.skinned_effect.shadow_receiver
 - `Microsoft::Xna::Framework::Graphics::KeyframeEXT` -- graphics.model.palette_sampling
