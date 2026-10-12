@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete471-cue3d:484enabled CTests and both full smoke suites retain all previous
+  failure/child/network evidence; owned Cue spatial variables add six public checks.
 - Positional XACT now directly demonstrates owned Cue::Apply3D spatial variables and
   paused movement; six checks pass in both requested environments, preserving the audible sweep.
 - Complete471-punctual:484enabled CTests and both full smoke suites retain all previous

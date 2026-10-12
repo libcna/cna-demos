@@ -2736,3 +2736,31 @@ All capture/archive/finish helpers pass; immutable evidence: checkpoint-471-punc
 Generated coverage:293/329types,1374/2326XNA members.
 Semantic coverage remains incomplete; original mono streaming/ISSUE-038 and build-only
 ISSUE-057 remain intact, with the latter's staging refusal/private reproduction retained.
+
+## Complete471-cue3d
+
+Complete checkpoint **471-cue3d**, source `057d783`,
+extends positional_cue from zero to six checks while retaining its entire original
+8-position audible sweep and SmokeOnly classification. Two dummy-audio runs pass with
+empty stderr. Explicit owned Cue::Apply3D publishes Distance5, OrientationAngle0 and
+neutral Doppler beforePlay; reorientation yields90degrees. While paused, a new position
+and velocity produce Distance10 and raw Doppler10/9. These are public variable/state
+observations, not acoustic panning, mixed pitch, RPC curve application or listening.
+The watched build/diagnostic gate and37targeted CTests pass before source commit;
+original loop preservation and actual observations are checkpoint-471-cue3d-focused-*.
+Full validation passes all484enabled CTests in150.01s, with three additional manual
+tests disabled. SOFTWARE406/27/35/3 and OPENGLES3 436/29/3/3 retain all38/42prior failed
+assertions, C/custom child evidence and five network controls. Reviewed count changes:
+{"OPENGLES3": {"audio.xact.positional_cue": {"after": 6, "before": 0, "reason": "Six public Cue spatial-variable/state controls added; entire original audible loop retained."}}, "SOFTWARE": {"audio.xact.positional_cue": {"after": 6, "before": 0, "reason": "Six public Cue spatial-variable/state controls added; entire original audible loop retained."}}}.
+All35selected binaries, four existing assets and18fixture hashes stay unchanged through
+runtime. Normalized stderr is identical, including42known GL X protocol records and the
+intentional shader error. Outer Xvfb has13exact amdgpu pairs (previous14);
+independent inner/outer exits0. Capture CNA eff3131017
+(clean), final CNA eff3131017
+(clean). These are selected artifact/source
+observations, not an atomic or full transitive input snapshot. All capture/archive/finish
+helpers pass; immutable evidence: checkpoint-471-cue3d-*. Generated coverage:
+293/329types and1378/2326XNA members. No extra demo ID.
+Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is unchanged;
+ISSUE-057 retains its original staging refusal, private reproduction and471-punctual
+recurrence. Subsequent clean runs do not establish a repair of that race.

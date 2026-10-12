@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-471 catalog demos (complete checkpoint471-punctual): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+471 catalog demos (complete checkpoint471-cue3d): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
@@ -103,55 +103,31 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **471-cue3d** extends positional_cue from zero to six public checks while
-retaining its complete original audible eight-position sweep and SmokeOnly classification.
-Two dummy-audio runs pass with empty stderr and still print all eight original positions.
-An owned Cue::Apply3D publishes Distance5, OrientationAngle0 and neutral Doppler beforePlay;
-turning the emitter sideways changes its public angle to90degrees. A paused cue accepts
-Distance10 and approaching velocity at one tenth of public SpeedOfSound, giving raw
-DopplerPitchScalar10/9. These are public variable/state observations, not acoustic panning,
-mixed pitch, RPC curve application or listening evidence. All37enabled audio/CLI CTests
-pass in5.78s; one additional manual microphone test is disabled. Watched build,
-diagnostic gate and focused reviewer pass BEFORE sourcecommit. Metadata471/0; full
-validation against complete471-punctual is pending. Evidence: checkpoint-471-cue3d-focused-*.
-
-Last complete baseline:
-
-Complete checkpoint **471-punctual**, source `ed7daab`,
-adds one coherent SkinnedEffect point/spot receiver demo with eight GL pixel checks.
-Authored constant-distance cube/2D maps store64/255; post-skin distance3/Range6 compares
-at.5. No map preserves direct diffuse, the map removes it, and normalized bias.3 restores
-it. The spot matrix gives projecteddepth.1, deliberately different from distance.5,
-so its shadow control distinguishes the comparison quantity. Separate controls exclude
-the receiver by range or cone. Linear light intensity4
-produces RGB(74,64,43), versus the ambient/emissive floor RGB(20,28,26). The actual800x480
-GL image was inspected and all eight selected pixels match within1. GL stderr is empty;
-SOFTWARE has the exact declared unsupported-stock-path skip. No producer, all cube
-faces/seams, partial spot-kernel weights, cone-edge interpolation or other-renderer proof.
-PunctualLightEXT offers diffuse only; no public punctual specular capability is invented.
-Initial focused build22225 compiles33scheduled operations but its diagnostic gate
-correctly refuses the recurrent ISSUE-057 missing-owner warning. Original logs/input
-observations/headers and post-build hashes remain under
-checkpoint-471-punctual-initial-staging-refusal-*. The unchanged consistency retry passes
-7scheduled operations with3909watched inputs stable and gate0; no CNA edit, warning
-suppression or staging-directory deletion. Native/27CTest/pixel review then pass before
-source commit. A clean retry/full run does not resolve the independently reproduced race. Evidence:
-checkpoint-471-punctual-focused-*. Full validation passes all484enabled CTests in159.93s,
-with three additional manual tests disabled. SOFTWARE406/27/35/3 and OPENGLES3 436/29/3/3
-retain all38/42prior failed assertions, C/custom child evidence and five network controls.
-The new ID is graphics.skinned_effect.punctual_shadows. Reviewed old JSON count changes:
-{"OPENGLES3": {}, "SOFTWARE": {}}.
-All35selected binaries, four existing assets and18fixture hashes (source/staged builtinXNB
-and all eight XACT banks) stay unchanged through runtime. Normalized stderr differs only
-by the expected new SOFTWARE skip; GL retains42known X protocol records and the intentional
-shader error. Outer Xvfb has14exact amdgpu pairs (previous9); independent
-inner/outer exits0. Capture CNA eff3131017 (clean),
-final CNA eff3131017 (clean). These are selected
-artifact/source observations, not an atomic or full transitive input snapshot.
-All capture/archive/finish helpers pass; immutable evidence: checkpoint-471-punctual-*.
-Generated coverage:293/329types,1374/2326XNA members.
-Semantic coverage remains incomplete; original mono streaming/ISSUE-038 and build-only
-ISSUE-057 remain intact, with the latter's staging refusal/private reproduction retained.
+Complete checkpoint **471-cue3d**, source `057d783`,
+extends positional_cue from zero to six checks while retaining its entire original
+8-position audible sweep and SmokeOnly classification. Two dummy-audio runs pass with
+empty stderr. Explicit owned Cue::Apply3D publishes Distance5, OrientationAngle0 and
+neutral Doppler beforePlay; reorientation yields90degrees. While paused, a new position
+and velocity produce Distance10 and raw Doppler10/9. These are public variable/state
+observations, not acoustic panning, mixed pitch, RPC curve application or listening.
+The watched build/diagnostic gate and37targeted CTests pass before source commit;
+original loop preservation and actual observations are checkpoint-471-cue3d-focused-*.
+Full validation passes all484enabled CTests in150.01s, with three additional manual
+tests disabled. SOFTWARE406/27/35/3 and OPENGLES3 436/29/3/3 retain all38/42prior failed
+assertions, C/custom child evidence and five network controls. Reviewed count changes:
+{"OPENGLES3": {"audio.xact.positional_cue": {"after": 6, "before": 0, "reason": "Six public Cue spatial-variable/state controls added; entire original audible loop retained."}}, "SOFTWARE": {"audio.xact.positional_cue": {"after": 6, "before": 0, "reason": "Six public Cue spatial-variable/state controls added; entire original audible loop retained."}}}.
+All35selected binaries, four existing assets and18fixture hashes stay unchanged through
+runtime. Normalized stderr is identical, including42known GL X protocol records and the
+intentional shader error. Outer Xvfb has13exact amdgpu pairs (previous14);
+independent inner/outer exits0. Capture CNA eff3131017
+(clean), final CNA eff3131017
+(clean). These are selected artifact/source
+observations, not an atomic or full transitive input snapshot. All capture/archive/finish
+helpers pass; immutable evidence: checkpoint-471-cue3d-*. Generated coverage:
+293/329types and1378/2326XNA members. No extra demo ID.
+Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is unchanged;
+ISSUE-057 retains its original staging refusal, private reproduction and471-punctual
+recurrence. Subsequent clean runs do not establish a repair of that race.
 
 ## 8. Exact commands that work
 
@@ -272,17 +248,24 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-IN PROGRESS:471-cue3d focused evidence is complete (build82419, focused/targeted23659 CLOSED0); full validation next. Two6check dummy-
-audio runs, original audible loop preservation,37enabled audio/CLI CTests and metadata471/0
-pass. Reviewer passed BEFORE sourcecommit; public values are not acoustic/mixed output.
-Commit source/docs and export /tmp/cna-catalog-471-cue3d.json. Fullwrapper, captureONCE
-post-build duringCTest (35binaries/4assets/18fixtures), freeze artifacts through both smokes.
-Compare against complete471-punctual:484enabledCTest, same471totals, all38/42oldfailures/
-C/custom child evidence and5network controls exact; only positional_cue0->6 and reviewed
-positive titleUpdate variance may change. Normalized stderr unchanged. Preserve surprises,
-finish/close, reviewdiff and commit; immediately continue the public behavior audit.
-Next candidate is bank/engine lifetime: checkpoint-471-punctual-next-bank-lifetime-audit.md.
-Source-only scenario, no new draft/native evidence. Original mono streaming and ISSUE-057 intact.
+HIGHEST PRIORITY: focused XACT bank/engine ownership and cascading disposal.
+Full471-cue3d is complete. Read checkpoint-471-punctual-next-bank-lifetime-audit.md
+and current public headers/source before implementation. UNAPPLIED
+/tmp/cna-bank-lifetime.cpp has a pre-native individual-event-counter correction; syntax60808 CLOSED0/emptylog (69584 superseded) with12planned checks;
+verify its corrected hash in checkpoint-471-cue3d-bank-lifetime-individual-counter-draft.json and absent targetID/path. No native proof yet; guarded apply/build/focused/reviewer/full helpers are prepared UNRUN under /tmp/cna-*472-banks*.
+One coherent bank_lifetime console demo can distinguish a prepared caller-owned cue
+from a paused consuming cue: wave-bank disposal disposes the latter, sound-bank disposal
+also disposes prepared cues, and engine disposal cascades to registered banks/cues.
+Observe public IsDisposed/IsInUse/state flags and Disposing sender/exactly-once counts.
+Declare callback storage before observed objects for unwind/destructor safety, retain
+caller-owned unique_ptr allocations, and avoid undocumented global event-order or output
+latency claims. Reuse original XACT assets; new fixtures are not needed for this scenario.
+After source review, draft, watchedbuild/diagnostic gate, metadata, focused dummy-audio
+checks and relevant CTests, update semantic docs/HANDOFF and commit. Then full validation,
+capture once post-build, freeze through runtime and compare every old failure/child/network
+control. Investigate surprises; keep original refusals visible. Close/commit and immediately
+continue the next public member/behavior gap. Do not equate member names with completeness.
+Original mono streaming/ISSUE-038 and open build-only ISSUE-057 remain intact.
 
 ## 15. Assumptions the next session must know
 
@@ -294,28 +277,21 @@ Source-only scenario, no new draft/native evidence. Original mono streaming and 
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is471-punctual; source commit is in section7.
-All earlier drafts, including authored XACT release and punctual shadows, are APPLIED
-AND STALE. Preserve immutable failed-attempt evidence and current source corrections.
+Current complete baseline is471-cue3d; source commit is in section7.
+All earlier drafts, including punctual shadows and Cue spatial variables, are APPLIED
+AND STALE. Preserve original refusal evidence and current source corrections.
 
-APPLIED AND STALE /tmp/cna-cue-spatial.cpp, syntax93508 CLOSED0/emptylog. Recovery/audit/base
-hashes: checkpoint-470-authored-next-cue-spatial-*. Six planned controls observe a caller-
-owned cue's Distance5, OrientationAngle0/90degrees and neutral Doppler beforePlay, then
-Distance10 while paused and raw Doppler10/9 when moving toward a stationary listener at
-one tenth of public SpeedOfSound. Explicit emitterDopplerScale1. The complete original
-audible loop remains verbatim; SmokeOnly retained. Two focused runs now pass6checks with empty stderr; acoustic output remains unmeasured.
-GetVariable exposes stored spatial variables, not actual mixed output. AttackTime and
-ReleaseTime live clocks are substituted internally for RPC evaluation and must not be
-misrepresented as public GetVariable stopwatches. Prepared UNRUN /tmp/cna-*471-cue3d* helpers cover guardedapply, watched build, two focused
-runs,37targeted CTests, reviewer BEFORE sourcecommit and fullcapture/archive/finish. Recovery:
-checkpoint-471-punctual-next-cue3d-helper-*. Full Cue3D closure helper prepared UNRUN, same recovery prefix.
+Next source-only bank/engine lifetime audit: checkpoint-471-punctual-next-bank-lifetime-*.
+UNAPPLIED /tmp/cna-bank-lifetime.cpp has a pre-native individual-event-counter correction; syntax60808 CLOSED0/emptylog (69584 superseded),12plannedchecks;
+verify corrected hash in checkpoint-471-cue3d-bank-lifetime-individual-counter-draft.json and absent targetID/path before adding. No native proof yet. Prepared UNRUN helpers: /tmp/cna-*472-banks*; recovery checkpoint-471-cue3d-next-banks-helper-*.
+Actual CNA source registers every returned Cue with its
+SoundBank, including prepared cues, but only consuming cues with WaveBank. Both bank
+Dispose methods call Cue::Dispose; WaveBank does not merely Stop it. AudioEngine disposal
+cascades to registered cues and banks. All child C++ allocations remain caller-owned.
+Public flags/events can demonstrate the coherent ownership distinction without private
+registries, mixer hooks or unsafe dangling-pointer access. Do not assert global callback
+order, asynchronous safety or audible stopping latency without separate evidence.
 
-After Cue3D, source-only bank/engine lifetime follow-up is in
-checkpoint-471-punctual-next-bank-lifetime-audit.md with source hashes. WaveBank disposal
-catches consuming cues; SoundBank also catches prepared cues; engine cascades to banks/cues.
-UNAPPLIED /tmp/cna-bank-lifetime.cpp now passes syntax69584 CLOSED0/emptylog with12planned
-checks. No native proof/helpers yet; verify targetID/path absent after Cue3D. No undocumented
-global callback-order claim.
-Retain current architecture, stable IDs and original mono streaming/ISSUE-038. Never edit
-or revert sibling CNA from this task. ISSUE-057 retains its initial staging refusal and
-private reproduction; successful runs are not evidence that race has been repaired.
+Keep existing architecture/stable IDs and original mono streaming/ISSUE-038. Never edit
+or revert sibling CNA from this task. ISSUE-057 retains initial/private probe and repeated
+471-punctual evidence; a clean checkpoint does not prove that race repaired.

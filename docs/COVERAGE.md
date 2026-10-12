@@ -35,13 +35,13 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 293 of 329** (89.1 %).
-- **Methods, properties, constructors and events named by a demo: 1374 of 2326** (59.1 %).
+- **Methods, properties, constructors and events named by a demo: 1378 of 2326** (59.2 %).
 - Fields and enum values named by a demo: 137 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 40 / 42 | 478 / 643 | 34 / 78 |
-| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 87 / 121 | 6 / 11 |
+| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 91 / 121 | 6 / 11 |
 | `Microsoft.Xna.Framework.Content` | 7 / 11 | 23 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
