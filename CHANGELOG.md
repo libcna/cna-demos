@@ -5,10 +5,19 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 
 ## [Unreleased]
 
+### Added
+- Shader compiler diagnostics demo: seven GL checks distinguish compiler failure from package
+  selection refusal, retain owned diagnostics and render with the original valid program.
+  The deliberate compiler stderr and inspected cyan-card capture are retained.
+- Shader clone state/lifetime demo: independently compiled programs, matrix-copy comparison,
+  mutation isolation and rendering after original disposal. Nine GL checks expose the three
+  ISSUE-055 assertions; both images inspected. SOFTWARE declares its capability boundary.
+
 ### Fixed
-- Content manifest checks now follow CNA's documented lazy reader registration. The demo validates
+- Content manifest checks now verify current reader availability across CNA's registration changes. The demo validates
   per-file reader counts, inventory stability across loading and the loaded font reader family,
-  replacing its obsolete assumption that every built-in reader exists at Game startup.
+  replacing its blanket assumption that every built-in reader exists at Game startup.
+  Later query-triggered registration is compatible with these checks; no lazy transition is inferred.
 - Four shader/MRT demos now include CNA/ShaderDialectEXT.hpp and use the public CNA namespace
   after CNA promoted the dialect query type out of its renderer-internal interface. Shader text,
   stable IDs and existing assertions are retained.

@@ -129,7 +129,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (31 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (33 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and specular controls: emission/ambient/half-alpha composition, independent
   colored lights 1/2, their sum and shininess exponent. Both focused four-check scenes pass on
   SOFTWARE/OPENGLES3; four captures inspected, all cross-renderer differences within tolerance 1.
@@ -147,10 +147,17 @@ a check that all authored colors remain visible and that a blank texture row can
   `graphics.pbr_effect.texture_maps` (normal map with a Vector4 vertex tangent, emissive map,
   occlusion map on ambient light), ✅ `SkinnedPbrEffect` (`graphics.model.skinned_pbr`). Remaining:
   image-based lighting.
+- 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
+  mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
+  (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
+  capability skip. Combined full461 checkpoint pending.
+- ✅ `graphics.shader_effect.compiler_diagnostics`: seven GL checks retain raw/owned diagnostics
+  after destroying a rejected syntactically invalid replacement; the valid program still draws
+  checked cyan pixels. Image inspected, intentional compiler stderr preserved, SOFTWARE skip.
 - ✅ `graphics.shader_effect.portable_package`: owned language/stage pairs, order-independent
   selection, incomplete/ambiguous refusals, owned exception diagnostics and actual RGB-to-GBR
   pixels (eight GL checks, SOFTWARE capability skip). GL capture inspected; desktop/binary
-  variants and invalid-syntax compiler diagnostics remain distinct gaps.
+  variants and additional compiler-stage/link failures remain distinct gaps.
 - 🟨 Custom shaders: ✅ `ShaderEffect` in 3D (toon shading), a heightmap read in the vertex shader
   (`graphics.shader_effect.vertex_displacement`) and in `SpriteBatch::Begin`
   (grayscale), GLSL chosen from `GetShaderDialectEXT()`. Remaining: compiled XNA `.fx` effects

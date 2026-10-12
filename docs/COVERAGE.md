@@ -6,7 +6,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**459 demos** in 18 categories. Kinds: console 159, game 261, standalone 39. Automation: automated 423, manual 3, smoke-only 33.
+**461 demos** in 18 categories. Kinds: console 159, game 263, standalone 39. Automation: automated 425, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 151 | 151 | 0 | 0 | 136 / 9 / 6 / 0 / 0 | 141 / 3 / 7 / 0 / 0 |
+| graphics | 153 | 153 | 0 | 0 | 136 / 9 / 6 / 0 / 2 | 141 / 3 / 7 / 0 / 2 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 11 | 10 | 1 | 0 | 10 / 0 / 1 / 0 / 0 | 10 / 0 / 1 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `graphics.shader_effect.clone_state`, `graphics.shader_effect.compiler_diagnostics`.
+- OPENGLES3: absent from report: `graphics.shader_effect.clone_state`, `graphics.shader_effect.compiler_diagnostics`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -343,6 +345,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Platform::TryGetX11` -- platform.window.native_handle
 - `CNA::RendererLimit` -- graphics.device.capability_report
 - `CNA::ShaderCompilationExceptionEXT::getDiagnostics` -- graphics.shader_effect.portable_package
+- `CNA::ShaderDiagnosticEXT::getColumn` -- graphics.shader_effect.compiler_diagnostics
+- `CNA::ShaderDiagnosticEXT::getLine` -- graphics.shader_effect.compiler_diagnostics
+- `CNA::ShaderDiagnosticEXT::getMessage` -- graphics.shader_effect.compiler_diagnostics
+- `CNA::ShaderDiagnosticEXT::getSeverity` -- graphics.shader_effect.compiler_diagnostics
+- `CNA::ShaderDiagnosticEXT::getSourceLabel` -- graphics.shader_effect.compiler_diagnostics
+- `CNA::ShaderDiagnosticEXT::getStage` -- graphics.shader_effect.compiler_diagnostics
 - `CNA::getVersionMajor` -- core.version.version_string
 - `CNA::getVersionMinor` -- core.version.version_string
 - `CNA::getVersionPatch` -- core.version.version_string
@@ -581,15 +589,17 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `SensorBase::State` -- devices.sensors.availability
 - `SensorState` -- devices.sensors.availability
 - `SetMorphWeightsEXT` -- graphics.model.morph_targets
-- `ShaderEffect::GetCompileErrorEXT` -- graphics.shader_effect.toon_shading
-- `ShaderEffect::GetSelectedShaderLanguageEXT` -- graphics.shader_effect.portable_package
-- `ShaderEffect::GetShaderDiagnosticsEXT` -- graphics.shader_effect.portable_package
-- `ShaderEffect::IsEffectValid` -- graphics.shader_effect.toon_shading
+- `ShaderEffect::Clone` -- graphics.shader_effect.clone_state
+- `ShaderEffect::GetCompileErrorEXT` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.toon_shading
+- `ShaderEffect::GetSelectedShaderLanguageEXT` -- graphics.shader_effect.clone_state, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package
+- `ShaderEffect::GetShaderDiagnosticsEXT` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package
+- `ShaderEffect::HasRenderer` -- graphics.shader_effect.clone_state
+- `ShaderEffect::IsEffectValid` -- graphics.shader_effect.clone_state, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.toon_shading
 - `ShaderEffect::SetTexture` -- graphics.shader_effect.vertex_displacement
 - `ShaderEffect::SetUniformFloat` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.vertex_displacement
 - `ShaderEffect::SetUniformInt` -- graphics.shader_effect.vertex_displacement
 - `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading
-- `ShaderEffect::ShaderEffect` -- graphics.render_target.multiple_render_targets, graphics.shader_effect.portable_package, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.vertex_displacement
+- `ShaderEffect::ShaderEffect` -- graphics.render_target.multiple_render_targets, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.vertex_displacement
 - `SkinnedEffect::LightingEnabled` -- graphics.skinned_effect.normal_lighting
 - `SkinnedEffect::VertexColorEnabled` -- graphics.skinned_effect.vertex_colors
 - `SkinnedPbrEffect` -- graphics.model.skinned_pbr

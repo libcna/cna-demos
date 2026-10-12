@@ -1828,3 +1828,34 @@ all old outcomes/known issues/counts and child lists/traces remain after the six
 passes; raw failed assertions are exactly 35 -> 37 (the two ISSUE-054 checks). The general
 comparator correctly requested review, which is recorded explicitly. OPENGLES3 remains live
 in session65747; do not finish/rebuild yet. SOFTWARE evidence is archived under checkpoint-459-*.
+
+## Shader preparation after full459 (before combined461)
+
+
+**460 focused reproduction complete; full validation is next.** Retry build2864 passed after
+230 scheduled targets; previous build93935 terminated with exit143 after511/602, without a
+compiler diagnostic. Both logs are archived. Metadata460/0. Manifest13 passes on both renderers.
+Clone frame1 has8 checks, frame2 has9: exactly three GL failures establish ISSUE-055, six positive
+controls pass including surviving-clone pixels. Both images actually inspected; GL stderr empty.
+SOFTWARE skips CustomEffects. Initial unmarked evidence/source/CNA observations are archived
+as checkpoint-460-initial-*, -unmarked-clone_state.cpp, -observed-* and -focused-observation.json.
+Marker applied; build1425 passed554 scheduled targets, /tmp/cna-460-marker-build.log.
+Incremental build96026 is now live at /tmp/cna-461-build.log. Further external public platform/
+render-target changes expanded it to602 targets; CNA2a5100d72 observed with uncommitted edits. To amortize that rebuild, the syntax-checked diagnostics
+source is now APPLIED as graphics.shader_effect.compiler_diagnostics (its /tmp draft is stale).
+Build96026 includes the new glob/object. After it finishes, run each
+new demo focused, inspect diagnostic image/logs, update docs/coverage and commit. The combined
+complete checkpoint will be461 against ORIGINAL COMPLETE459; there is no complete460 claim.
+
+Next full461 checkpoint must compare ORIGINAL COMPLETE459, preserving exactly the old37/38 raw
+failures and every C/custom-content child list/trace. GL adds exactly the three ISSUE-055 labels;
+SOFTWARE adds two declared CustomEffects skip diagnostics. The compiler demo adds deliberate
+GL compiler text: inspect and archive its exact focused output before approving that delta.
+Reuse build/linux-full, shared ccache and -j4; no source/assets/rebuilds during live full runtime.
+Continue after this checkpoint.
+
+Further meaningful gaps: bad-syntax shader diagnostics (selection refusal already shown),
+typed/compressed cube transfers, copy/shared-resource lifetime and actual cube sampler behavior;
+automatic Draw dispatch needs proof of the servicing step, not ordinary alternating-frame
+completion. Skinned gaps include independent diffuse lights1/2, alpha, vertex specular and
+joint scales. Continue after each batch; completed phases are the baseline, not a restart list.

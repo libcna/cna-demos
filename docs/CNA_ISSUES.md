@@ -1446,6 +1446,43 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   documentation/content-test changes present. Source observations/hashes are archived separately;
   no atomic build-input snapshot is claimed. Open; no upstream message or genuine-XNA execution.
 
+### CNA-DEMOS-ISSUE-055 -- ShaderEffect clone loses matrices and accepts a disposed original
+
+- **Area/reproduction:** `graphics.shader_effect.clone_state`, OPENGLES3 under isolated X11/Xvfb,
+  at least two frames. An explicitly labeled GLSL pair compiles, receives nonidentity World,
+  View and Projection, and is cloned through the public owning `Effect*` return. Both programs
+  draw one triangle in equal viewports; the original is then disposed while its device stays alive.
+- **Observed:** nine checks execute, six pass and exactly three fail. World translation changes
+  -0.75 -> 0, View translation 0.25 -> 0 and projection X scale 0.5 -> 1. The clone's triangle is
+  larger and differently positioned. Calling Clone on the disposed original returns another
+  compiled effect instead of throwing System::ObjectDisposedException. Both GL stderr streams
+  are empty. SOFTWARE declares its CustomEffects capability skip; no SOFTWARE clone execution.
+- **Expected/contract scope:** Effect::Clone promises an independent clone with current values
+  and explicitly throws ObjectDisposedException after disposal. ShaderEffect documents a
+  deliberate fresh-program recompilation instead of program sharing; it does not document
+  resetting public IEffectMatrices state. Matrix retention is the state-copy interpretation of
+  those clone contracts; the disposed-object refusal is explicit. This report makes no claim
+  that raw SetUniform values or texture bindings must be copied.
+- **Cause observed in source:** ShaderEffect::Clone constructs from the two source strings and
+  copies language/labels only. Its three matrix fields retain identity defaults, and it does not
+  guard IsDisposed before dereferencing the still-live device and constructing a new effect.
+  The demo owns every returned pointer and restores the clone's observed World after its
+  independent-mutation check, so it does not silently repair the omitted values before drawing.
+- **Positive controls:** original and clone compile in the same explicit language with identical
+  sources; changing the clone's World leaves the original unchanged; both draw visible output.
+  Public GraphicsResource::Dispose releases the original program while the clone remains valid,
+  and the surviving clone's checked pixels stay identical in the next frame.
+- **Evidence:** reports/checkpoint-460-initial-* preserves the unmarked runs and both inspected
+  800x480 images. Frame one has eight checks; frame two adds the passing survival assertion.
+  checkpoint-460-unmarked-clone_state.cpp, -observed-ShaderEffect.cpp/.hpp, -observed-Effect.hpp
+  and -focused-observation.json retain source observations. CNA f130abff4 was observed with
+  external content-registration changes; these are not atomic build-input snapshots.
+- **Suggested repair/status:** guard disposed state and copy World/View/Projection when creating
+  the independent program. Open; no CNA source edited, upstream message, physical-GPU or
+  desktop-GL runtime claim. Marked focused461 repeats all nine checks and the same three failures;
+  its frame-two capture is RGBA-identical to the inspected initial image. Combined full461
+  checkpoint validation is pending.
+
 ## Resolved
 
 ### CNA-DEMOS-ISSUE-053 -- In-flight framework update registration uses an out-of-scope array

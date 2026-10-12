@@ -75,8 +75,8 @@ namespace
             ShowSnapshotRefresh(Context());
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             // The inventory is a file snapshot, but availability reflects the current process.
-            // Built-in reader families are registered lazily by Load<T>(); earlier demos may
-            // already have registered them in a shared smoke run.
+            // Loading and registry queries can make declared readers available; earlier demos
+            // may already have registered them in a shared smoke run.
             const auto beforeLoad = getContentProperty().GetXnbReaderUsageSummary();
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
 
@@ -143,7 +143,7 @@ namespace
             Context().Check(beforeCounts == afterCounts,
                             "loading an asset does not change the manifest's reader inventory");
             Context().Check(fontReader && textureReader,
-                            "Load<SpriteFont> makes its font and texture reader family available");
+                            "the loaded SpriteFont has its font and texture reader family available");
         }
 
         void Draw(const GameTime& gameTime) override
