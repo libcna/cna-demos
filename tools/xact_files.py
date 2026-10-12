@@ -9,6 +9,7 @@ non-compact wave banks, simple cues (one sound, one wave each), two categories, 
 cue variable. music.xwb is a streaming wave bank (flag set, wave data aligned to 2048-byte sectors), the
 kind a game streams from disc instead of loading. limits.xgs reuses the tone banks with
 authored category limits: Music rejects a second voice and SFX replaces the oldest.
+release.xsb authors a 500 ms fade-out on a complex single-sound cue backed by a three-second tone.
 
 tools/generate_assets.py calls write_all(); the files land in assets/xact/.
 """
@@ -99,24 +100,32 @@ def xwb(bank: str, waves, streaming: bool = False) -> bytes:
     return bytes(out)
 
 
-def xsb(bank: str, wave_bank: str, cues) -> bytes:
-    """A sound bank with one simple cue -> one sound -> one wave per entry."""
+def xsb(bank: str, wave_bank: str, cues, fade_out_ms: int | None = None) -> bytes:
+    """One cue -> one sound -> one wave per entry. An authored fade uses complex
+    single-sound cue records; simple cues have no fade fields."""
+    assert fade_out_ms is None or 0 <= fade_out_ms <= 65535
+    complex_cues = fade_out_ms is not None
     count = len(cues)
     header = 138
     sound_off = header
     cue_off = sound_off + 12 * count
-    wbname_off = cue_off + 5 * count
+    wbname_off = cue_off + (15 if complex_cues else 5) * count
     nameindex_off = wbname_off + 64
     names_off = nameindex_off + 6 * count
     out = bytearray(struct.pack("<IHHH", 0x4B424453, 46, 0, 0) + bytes(8) + b"\0")  # "SDBK"
-    out += struct.pack("<HHHHBHHH", count, 0, 0, 0, 1, count, 0, 0)
-    out += struct.pack("<10i", cue_off, -1, -1, -1, -1, -1, wbname_off, -1, nameindex_off, sound_off)
+    out += struct.pack("<HHHHBHHH", 0 if complex_cues else count, count if complex_cues else 0, 0, 0, 1, count, 0, 0)
+    out += struct.pack("<10i", -1 if complex_cues else cue_off, cue_off if complex_cues else -1, -1, -1, -1, -1, wbname_off, -1, nameindex_off, sound_off)
     out += name64(bank)
     assert len(out) == header
     for index, (_, _, _, category) in enumerate(cues):
         out += struct.pack("<BHBhBHHB", 0, category, 180, 0, 255, 0, index, 0)     # simple sound
     for index in range(count):
-        out += struct.pack("<BI", 0, sound_off + 12 * index)                       # simple cue -> sound
+        if complex_cues:
+            # SINGLE_SOUND, sound offset, no transition, unlimited instances, no fade-in,
+            # authored fade-out milliseconds, default Fail policy.
+            out += struct.pack("<BIIBHHB", 0x04, sound_off + 12 * index, 0, 255, 0, fade_out_ms, 0)
+        else:
+            out += struct.pack("<BI", 0, sound_off + 12 * index)                   # simple cue -> sound
     out += name64(wave_bank)
     position = names_off
     for index, (name, _, _, _) in enumerate(cues):
@@ -133,6 +142,8 @@ def write_all(assets_root: Path) -> None:
     files = {
         "demo.xgs": xgs(),
         "limits.xgs": xgs(((1, 0), (1, 2))),
+        "release.xwb": xwb("Release", [sine(329.6, 3.0)]),
+        "release.xsb": xsb("ReleaseSounds", "Release", [("ReleaseTone", 329.6, 3.0, 0)], fade_out_ms=500),
         "tones.xwb": xwb("Tones", [sine(frequency, seconds) for _, frequency, seconds, _ in CUES]),
         "tones.xsb": xsb("ToneSounds", "Tones", CUES),
         "music.xwb": xwb("Music", [melody(MUSIC_NOTES, MUSIC_NOTE_SECONDS)], streaming=True),

@@ -57,7 +57,7 @@ namespace
         cue->Stop(AudioStopOptions::Immediate);
         engine.Update();
         ctx.Print("after Stop(Immediate): {}", State(*cue));
-        ctx.Check(cue->getIsStoppedProperty(), "Stop(Immediate) stops it at once (AsAuthored would let it fade)");
+        ctx.Check(cue->getIsStoppedProperty(), "Stop(Immediate) stops it at once");
 
         // XACT's pattern: a Cue is one playback. To play the sound again, get a new Cue.
         cue->Dispose();
@@ -74,7 +74,44 @@ namespace
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
         again->Stop(AudioStopOptions::AsAuthored);
         engine.Update();
+        // This simple cue has no authored fade or release RPC: AsAuthored stops it immediately.
+        ctx.Check(again->getIsStoppedProperty() && !again->getIsStoppingProperty(),
+                  "AsAuthored stops a cue with no authored release immediately");
         again->Dispose();
+
+        // release.xsb has a complex single-sound cue with a 500 ms fade-out, backed by
+        // a three-second original tone. The fade is authored in the bank, not by this loop.
+        WaveBank releaseWaves(&engine, "assets/xact/release.xwb");
+        SoundBank releaseSounds(&engine, "assets/xact/release.xsb");
+        std::unique_ptr<Cue> release(releaseSounds.GetCue("ReleaseTone"));
+        release->Play();
+        engine.Update();
+        ctx.Check(release->getIsPlayingProperty(), "the authored-release cue starts playing");
+        release->Stop(AudioStopOptions::AsAuthored);
+        const auto started = std::chrono::steady_clock::now();
+        ctx.Check(release->getIsStoppingProperty() && !release->getIsPlayingProperty() &&
+                  !release->getIsStoppedProperty(), "an authored fade enters Stopping before Stopped");
+        const auto deadline = started + std::chrono::seconds(3);
+        while (release->getIsStoppingProperty() && std::chrono::steady_clock::now() < deadline)
+        {
+            engine.Update();
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        ctx.Check(release->getIsStoppedProperty() && !release->getIsStoppingProperty(),
+                  "the authored release reaches Stopped while the engine is pumped");
+        ctx.Print("Observed authored-release state wait: {} ms (not output-sample timing)",
+                  std::chrono::duration_cast<std::chrono::milliseconds>(
+                      std::chrono::steady_clock::now() - started).count());
+        release->Dispose();
+
+        std::unique_ptr<Cue> interrupted(releaseSounds.GetCue("ReleaseTone"));
+        interrupted->Play();
+        interrupted->Stop(AudioStopOptions::AsAuthored);
+        ctx.Check(interrupted->getIsStoppingProperty(), "a fresh cue has its own authored release");
+        interrupted->Stop(AudioStopOptions::Immediate);
+        ctx.Check(interrupted->getIsStoppedProperty() && !interrupted->getIsStoppingProperty(),
+                  "Immediate interrupts an authored release without waiting for its deadline");
+        interrupted->Dispose();
     }
 }
 
@@ -83,11 +120,11 @@ CNA_DEMOS_CONSOLE(CueStates, {
     .title = "XACT cue states",
     .description = "Gets a Cue with SoundBank::GetCue and walks it through Play, Pause, Resume and Stop, printing "
                    "IsPrepared/IsPlaying/IsPaused/IsStopped, checks Disposing and repeated disposal, then gets a "
-                   "fresh Cue to play the sound again.",
+                   "fresh Cue, then contrasts no release, an authored fade and Immediate interruption.",
     .apis = {"SoundBank::GetCue", "Cue::Play", "Cue::Pause", "Cue::Resume", "Cue::Stop", "Cue::Name",
              "Cue::IsPrepared", "Cue::IsPlaying", "Cue::IsPaused", "Cue::IsStopping", "Cue::IsStopped",
              "Cue::IsDisposed", "Cue::Dispose", "Cue::Disposing", "AudioStopOptions"},
     .tags = {"audio", "xact", "cue", "state"},
     .needs = CnaDemos::Need::Audio,
-    .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb"},
+    .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb", "xact/release.xwb", "xact/release.xsb"},
 })

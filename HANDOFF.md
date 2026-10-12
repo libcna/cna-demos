@@ -103,6 +103,21 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **470-authored** extends cue_states from nine to fifteen public state checks.
+Six dummy-audio runs (three per requested renderer environment) pass with empty stderr.
+All nine original predicates remain in order; one misleading Immediate label is corrected.
+The original no-fade bank stops immediately with AsAuthored. A new original three-second
+PCM bank and complex single-sound cue with500ms fadeOutMS demonstrate Stopping to bounded
+Stopped, then Immediate interruption of a fresh tail. Observed state waits are
+500–510ms including caller scheduling; no audible-envelope or output-sample timing claim.
+All six old XACT assets remain byte-identical and all eight source/staged banks match.
+Watched build62470 passes9scheduled/8numbered operations,3909inputs unchanged and diagnostic
+gate0. Metadata470/0. Focused/targeted8158 passes37enabled CTests in5.72s, with one additional
+manual microphone test disabled. Focused reviewer passes BEFORE source commit; original
+reports/streams/hashes: checkpoint-470-authored-focused-*. Full validation is pending.
+
+Last complete baseline:
+
 Complete checkpoint **470-fourth**, source `6f27142`,
 extends the existing shadow_cascades from eight to ten GL pixel checks. At Count4,
 fitting depth7 selects slot3: its comparison depth .5 is lit RGB(173,130,77), while
@@ -249,25 +264,20 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: validate the prepared same-ID XACT authored-release extension.
-Full470-fourth is complete; its source commit above is the comparison baseline.
-1. Run /tmp/cna-apply-470-authored.py: it requires completed470-fourth and verifies
-   checkpoint-470-clear-next-xact-release-base.json before applying the two drafts.
-   Rebase if changed; never restore stale sources over corrections. It generates only
-   XACT assets and requires all six existing banks to remain byte-identical.
-2. Watched build with warning gate and consistency rebuild if CNA inputs change. Validate
-   metadata, run cue_states on both requested environments with dummy audio, then relevant
-   audio/CLI CTests. Expected15checks versus9; preserve all9prior predicates, correcting
-   only the misleading Immediate label. Inspect actual state/wait output and empty stderr.
-3. The generator adds release.xwb (original three-second PCM tone) and release.xsb (a
-   complex single-sound cue with500ms fadeOutMS). Native loading is still UNTESTED.
-   Public controls compare no authored release, Stopping to bounded Stopped, and Immediate
-   interruption of a fresh tail. No acoustic/sample timing or envelope-quality claim.
-4. Update semantic docs/HANDOFF, commit, export catalog; run full validation. Capture both
-   source/staged new banks alongside selected binaries/assets after build, once. No edits
-   or rebuilding during smoke; preserve all old failures/children/network controls and
-   investigate unexpected diagnostics. Close checkpoint, commit and continue the audit.
-Original mono streaming/ISSUE-038 remains untouched. Build-only ISSUE-057 stays open.
+IN PROGRESS:470-authored focused evidence is complete; full validation next.
+Build62470 CLOSED0, six native runs/targeted8158 CLOSED0. Focused reviewer passed BEFORE
+sourcecommit. Metadata470/0, cue_states15both, all9oldpredicates retained; new banks actually
+loaded, all8source/staged banks match. No focused failure or new CNA issue.
+1. Commit source/assets/generator/docs; export /tmp/cna-catalog-470-authored.json. Run
+   /tmp/cna-run-470-authored-validation.sh; capture ONCE after fullbuild duringCTest using
+   /tmp/cna-capture-470-authored.py (35binaries/4assets/18fixture hashes). Freeze during smoke.
+2. Strict archive both renderers against470-fourth, finish and close. All38/42oldfailures,
+   C/custom child evidence and5network checks exact. Only cue_states9->15 and reviewed
+   positive titleUpdate variance may differ. Normalized stderr unchanged; preserve unexpected
+   evidence and investigate. Review docs/closure diff and commit.
+3. Immediately continue UNAPPLIED punctual-shadow draft (syntaxonly). It is one coherent
+   new8control point/spot receiver scene; no native/image evidence or helpers yet.
+Open ISSUE-057 retains its original staging refusal and independent private reproduction.
 
 ## 15. Assumptions the next session must know
 
@@ -283,10 +293,10 @@ Current complete baseline is470-fourth; source commit is recorded in section7.
 All earlier graphics/audio/content/transfer drafts, including fourth-cascade, are
 APPLIED AND STALE. Do not restore them over current sources.
 
-Next UNAPPLIED: /tmp/cna-xact-release.cpp and /tmp/cna-xact-release-files.py.
+APPLIED AND STALE: /tmp/cna-xact-release.cpp and /tmp/cna-xact-release-files.py.
 Syntax44310 CLOSED0 with empty log; generated outputs under /tmp/cna-xact-release-generated
 preserve all6existingXACTassets byte-identically. The new release.xwb is132472bytes and
-release.xsb247bytes; neither has native evidence yet. Recovery/base hashes/audit are under
+release.xsb247bytes; both now load in six passing15check runs with empty stderr. Recovery/base hashes/audit are under
 checkpoint-470-clear-next-xact-*. All9prior check predicates remain in order; one misleading
 label is corrected. Six added controls should make15checks. Public getters reconcile state;
 steady-clock observations include caller scheduling. No sample-exact or listening claim.
