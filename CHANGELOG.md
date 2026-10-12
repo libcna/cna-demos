@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing C host and error demos now exercise larger compatible version-one structures: callback
+  tables are copied and used after caller storage is wiped; diagnostic fields are filled without
+  changing unknown tail fields or the original error. Both renderers retain all older controls.
 - Two focused skinned-lighting scenes now verify rotated/blended normals and nonuniform World
   inverse transpose, then distinguish actual vertex/pixel diffuse lighting. Five and three checks
   pass on both renderers; all four captures inspected. LightingEnabled=false refusal is included.

@@ -132,6 +132,8 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks = {0};
     CNA_GameFrameHooks hooks = {0};
     CNA_GameFrameHooks incompatible = {0};
+    /* Model a future caller retaining the version-one prefix and appending unknown fields. */
+    struct { CNA_GameFrameHooks prefix; uint64_t future[2]; } extended_hooks = {0};
     CNA_GameCreateInfo info = {0};
     CNA_Handle game = CNA_INVALID_HANDLE, manager = CNA_INVALID_HANDLE;
     CNA_Bool running = CNA_FALSE;
@@ -163,8 +165,15 @@ int main(int argc, char** argv)
         return cna_demo_finish(&demo);
     if (!cna_demo_check_result(&demo, cna_demo_use_hidef(game, &manager), "select HiDef for optional capture"))
         goto cleanup;
-    if (!cna_demo_check_result(&demo, cna_game_set_frame_hooks_ext(game, &hooks), "install the second callback table"))
-        goto cleanup;
+    extended_hooks.prefix = hooks;
+    extended_hooks.prefix.struct_size = sizeof(extended_hooks);
+    extended_hooks.future[0] = UINT64_C(0x123456789abcdef0);
+    extended_hooks.future[1] = UINT64_C(0xfedcba9876543210);
+    if (!cna_demo_check_result(&demo, cna_game_set_frame_hooks_ext(game, &extended_hooks.prefix),
+                               "install a larger compatible frame-hook prefix")) goto cleanup;
+    /* No prior hooks exist: the first frame trace must prove these known fields were installed.
+       Destroy the local prefix as well, so storing a pointer instead of copying cannot pass. */
+    memset(&extended_hooks, 0, sizeof(extended_hooks));
     /* Both tables are copied. Their context still points to live caller-owned state. */
     memset(&callbacks, 0, sizeof(callbacks));
     memset(&hooks, 0, sizeof(hooks));

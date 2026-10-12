@@ -445,13 +445,18 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
 ## Phase 14 -- bindings 🟨 (17 C API demos)
+The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks
+(28 with capture) and 31 error checks pass on both renderer selections. Larger version-one input
+and output prefixes retain their known behavior; unknown output tails and original diagnostics
+survive. All previous assertions remain, with one host setup label updated.
+
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit, expired callback device handles, refused owner-thread callback reentry),
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, retained callback failure and exactly-once unload cleanup),
 ✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
 ✅ `c_api.game.host_failure` (terminal CALLBACK/false, retained diagnostic, no replay, exactly-once unload and handle release; promised C exit hooks expose ISSUE-051),
-✅ `c_api.game.host_frames` (copied frame hooks, explicit host stepping, draw suppression, incompatible-layout refusal, removal/replacement and terminal exit),
+✅ `c_api.game.host_frames` (copied larger compatible frame-hook prefix, explicit host stepping, draw suppression, incompatible-layout refusal, removal/replacement and terminal exit),
 ✅ `c_api.game.foreign_thread_dispatch` (default/restored thread affinity, explicit owner pumping, served canonical diagnostics and no-pump owner-only probes exposing ISSUE-050, permitted-write cancellation and resumed dispatch),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard, root-change cache behavior and visible text),

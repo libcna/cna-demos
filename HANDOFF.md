@@ -244,53 +244,39 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** full checkpoint 451 is COMPLETE; capture the existing C host/error
-baseline and apply the compatible-prefix extensions below. Two lighting scenes are APPLIED and focused-validated;
-all normal/mode /tmp drafts and their older generators are STALE. Catalog 451/0; normal_lighting
-passes five checks and per_pixel_lighting passes three on SOFTWARE/OPENGLES3, all stderr empty.
-All four 800x480 captures were actually inspected: normal silhouettes match, with only 31,104
-middle-card pixels differing by one red level (235 SW / 234 GL), within original tolerance 1;
-mode captures are RGBA-identical and show the expected constant-gray panel versus diffuse gradient.
+**Immediate next action:** build/focused validation of the compatible-prefix batch is COMPLETE;
+commit it and run full checkpoint 451-prefix against ORIGINAL 451. Catalog stays 451. Existing
+host_frames still has 26 child checks (28 with capture), with only its initial setup label changed;
+error_handling has 31 (all old 29 preserved plus two output-prefix assertions). Both SOFTWARE and
+OPENGLES3 focused runs pass with empty stderr. All four before/after host captures were actually
+inspected and are RGBA-identical, 800x480 solid (32,128,192,255), trace ILBUbUbDeUDUrDsXEZ unchanged.
+Build passed (14 scheduled targets, no diagnostics); metadata 451/0; all 32 C API/CLI CTests passed
+(8.26 s, including two WILL_FAIL). No new CNA issue. Source/draft prefixes are APPLIED AND STALE.
 
-Build passed (34 scheduled targets, known Draco CMP0148 developer warning on regeneration,
-no compiler diagnostics). All 43 targeted graphics/C API/CLI CTests passed (11.45 s: three
-WILL_FAIL cases, one PBR capability skip). Evidence: reports/checkpoint-451-focused-*; analytical
-normal colors: checkpoint-451-normal-design.json (design only, no native mutation testing).
-Full checkpoint 451 is COMPLETE at b405307: tools/validate.sh exit 0, all 464 enabled CTests
-(202.05 s), SW 398/25/25/3, GL 419/26/3/3. ORIGINAL 449 comparison adds only the two new lighting
-IDs, retaining all old counts/statuses, 35/36 failures and C/custom-content child lists/traces.
-All 33 binary/four asset hashes and normalized stderr match. Archived catalog/helpers/evidence:
-reports/checkpoint-451-*. Older normal/mode drafts and 450-only helpers are superseded.
+Evidence/review: reports/checkpoint-451-prefix-{before,focused}-*;
+/tmp/cna-review-451-prefix-focused.py performed exact child-list/image comparisons. Prepared
+/tmp/cna-archive-451-prefix.py and /tmp/cna-451-prefix-finish.py compare against ORIGINAL 451,
+allow exactly the reviewed host setup label and two new error checks, and require all old
+35/36 failures/statuses/counts/child lists/traces. Replace PENDING_PREFIX with the source commit;
+capture 33 runtime binaries/four assets after the full build enters CTest. Catalog:
+/tmp/cna-catalog-451-prefix.json. Use /tmp/cna-demos-451-prefix-validation.log for the full run.
 
-Previous COMPLETE checkpoint is 449 at b80889a (closure 9c25c03): tools/validate.sh exit 0, all 462
-enabled CTests (316.91 s), SW 396/25/25/3, GL 417/26/3/3. Exact ORIGINAL 448-max-slot comparisons
-add only fog_depth and preserve every old failure, child list/trace and known issue; GL title
-varies 12 -> 10 with Update timing. All selected hashes and normalized stderr match. Source/input
-snapshots are not atomic; external CNA C API work continues. Evidence/scripts: checkpoint-449-*.
+Last COMPLETE checkpoint is 451 at b405307 (closure cb7dadf): tools/validate.sh exit 0, all 464
+enabled CTests (202.05 s), SW 398/25/25/3, GL 419/26/3/3. ORIGINAL 449 comparison adds only the
+normal/mode IDs (five/three checks), retaining every old check count, known issue, failure and
+C/custom-content child trace/list. All selected hashes and normalized stderr match. Evidence:
+reports/checkpoint-451-*. Four lighting captures actually inspected; normal middle cards differ
+by one red level within original tolerance, mode images RGBA-identical. Earlier normal/mode
+/tmp drafts and older 450-only helpers are stale. CNA clean 3ee6ae3 observed after the build and
+again at completion; selected hashes are not an atomic source/full dependency snapshot.
 
-Later C ABI candidate: /tmp/cna-host-prefix.c is an UNAPPLIED extension of existing
-c_api.game.host_frames. ABI_VERSIONING.md lines 584-591 explicitly permit a larger structure
-once its known prefix is validated. The initial frame-hook table becomes an actually allocated
-prefix plus two nonzero unknown uint64 fields; only that initial install uses the larger size.
-It is zeroed after installation, and the original startup trace must prove the known callbacks
-were copied (there were no prior hooks to mask an ignored install). All later ordinary-size
-replacement/restoration and invalid-size/version controls remain. Same 26 child checks (28 with
-capture), one setup label changes, same expected ILBUbUbDeUDUrDsXEZ trace and rendered image.
-No build/runtime evidence yet; review before applying. This avoids adding a demo or meaningless
-extra count just to exercise the public forward-compatible prefix contract.
-Complementary same-batch draft: /tmp/cna-error-prefix.c extends existing error_handling from
-29 to 31 checks. A real CNA_ErrorInfo prefix plus two nonzero uint64 tail fields is passed with
-the full allocated size/version 1; result/category/message length must be filled, the unknown
-tail must survive and the thread's original diagnostic must remain. Every old control remains.
-The public ABI prefix rule and CnaCApi.cpp output writes were reviewed; no runtime credit yet.
-Prepared /tmp/cna-archive-451-prefix.py and /tmp/cna-451-prefix-finish.py expect the same 451 IDs,
-all old failures/statuses/counts, host's one changed setup label and exactly two new error-child
-checks. They need PENDING_PREFIX replacement and new hashes after the future full build. Capture
-host_frames on both renderers BEFORE applying these drafts, then compare its post-change images.
+After closure, continue remaining semantic behavior coverage: automatic callback-scope dispatch,
+canonical thread-local detail isolation, skinned vertex-color/material behavior or other audited
+member gaps. Do not repeat completed phases or add trivial wrapper/enum demos.
 
 
 This is a separate fog-after-bone-transform behavior: BasicEffect fog moves objects through World
-and cannot prove it. Other remaining gaps: rotated/nonuniform joint normals, lighting/alpha,
+and cannot prove it. Other remaining gaps: nonuniform joint scale, emissive/specular/alpha and vertex color,
 automatic C callback-scope dispatch, other callback failure locations and broader member audit.
 Canonical thread-local exception details remain separate from result/category/message isolation;
 invalid FOV uses std::invalid_argument and cannot prove ParamName isolation. Preserve old controls.

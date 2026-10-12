@@ -139,6 +139,26 @@ int main(int argc, char** argv)
                            strcmp(message, original) == 0,
                            "an unsupported diagnostic structure version preserves the original error");
         }
+        /* A future caller may append fields after the version-one output prefix. The
+           library fills known fields, preserves the unknown tail and keeps its diagnostic. */
+        {
+            struct { CNA_ErrorInfo prefix; uint64_t future[2]; } extended = {0};
+            extended.prefix.struct_size = (uint32_t)sizeof(extended);
+            extended.prefix.struct_version = UINT32_C(1);
+            extended.future[0] = UINT64_C(0x123456789abcdef0);
+            extended.future[1] = UINT64_C(0xfedcba9876543210);
+            result = cna_error_get_last_info(&extended.prefix);
+            cna_demo_check(&demo, result == CNA_RESULT_SUCCESS &&
+                           extended.prefix.result == CNA_RESULT_INVALID_ARGUMENT &&
+                           extended.prefix.category == CNA_ERROR_CATEGORY_ARGUMENT &&
+                           extended.prefix.message_byte_length == strlen(original),
+                           "a larger compatible diagnostic prefix receives the original error fields");
+            cna_demo_check(&demo, extended.future[0] == UINT64_C(0x123456789abcdef0) &&
+                           extended.future[1] == UINT64_C(0xfedcba9876543210) &&
+                           last_error(message, sizeof(message)) == CNA_ERROR_CATEGORY_ARGUMENT &&
+                           strcmp(message, original) == 0,
+                           "a larger diagnostic query preserves unknown tail fields and the thread's original error");
+        }
         memset(name, '#', sizeof(name));
         result = cna_error_copy_last_message(name, 1U, &reported);
         cna_demo_check(&demo, result == CNA_RESULT_BUFFER_TOO_SMALL && reported > 1U && name[0] == '#',
