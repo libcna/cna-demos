@@ -100,6 +100,64 @@ static CNA_Color hue(int index)
     return colors[index % 6];
 }
 
+/* A queued C texture is retained until End or cancellation. The red corner command must
+   never reach the back buffer: the existing corner pixel check below observes cancellation. */
+static void check_cancelled_batch(SpriteState* state, CNA_Handle graphics_device)
+{
+    CNA_Handle texture = CNA_INVALID_HANDLE;
+    CNA_Handle batch = CNA_INVALID_HANDLE;
+    CNA_Texture2DCreateInfo texture_info;
+    CNA_SpriteBatchBeginInfo begin_info;
+    CNA_SpriteCommand command;
+    const CNA_Color red = {255, 0, 0, 255};
+    CNA_Result result;
+    memset(&texture_info, 0, sizeof(texture_info));
+    texture_info.struct_size = (uint32_t)sizeof(texture_info);
+    texture_info.struct_version = UINT32_C(1);
+    texture_info.width = 1;
+    texture_info.height = 1;
+    texture_info.format = CNA_SURFACE_FORMAT_COLOR;
+    if (!cna_demo_check_result(state->demo, cna_texture2d_create(graphics_device, &texture_info, &texture),
+                               "create the cancellation probe texture")) goto cleanup;
+    if (!cna_demo_check_result(state->demo, cna_texture2d_set_data_rgba8(texture, &red, 1),
+                               "upload the cancellation probe color")) goto cleanup;
+    if (!cna_demo_check_result(state->demo, cna_sprite_batch_create(graphics_device, &batch),
+                               "create an independently owned cancellation batch")) goto cleanup;
+    memset(&begin_info, 0, sizeof(begin_info));
+    begin_info.struct_size = (uint32_t)sizeof(begin_info);
+    begin_info.struct_version = UINT32_C(1);
+    begin_info.sort_mode = CNA_SPRITE_SORT_MODE_DEFERRED;
+    if (!cna_demo_check_result(state->demo, cna_sprite_batch_begin(batch, &begin_info),
+                               "begin a deferred cancellation interval")) goto cleanup;
+    memset(&command, 0, sizeof(command));
+    command.struct_size = (uint32_t)sizeof(command);
+    command.struct_version = UINT32_C(1);
+    command.texture = texture;
+    command.destination = (CNA_Rectangle){4, 4, 20, 20};
+    command.source = (CNA_Rectangle){0, 0, 1, 1};
+    command.color = (CNA_Color){255, 255, 255, 255};
+    if (!cna_demo_check_result(state->demo, cna_sprite_batch_submit_many(batch, &command, 1),
+                               "queue a red corner command without ending the interval")) goto cleanup;
+    result = cna_texture2d_destroy(texture);
+    cna_demo_check(state->demo, result == CNA_RESULT_INVALID_STATE,
+                   "a texture retained by an active deferred batch cannot be destroyed");
+    if (result == CNA_RESULT_SUCCESS) texture = CNA_INVALID_HANDLE;
+    /* Deliberately no End: destroy cancels queued commands and releases their C references. */
+    result = cna_sprite_batch_destroy(batch);
+    if (cna_demo_check_result(state->demo, result,
+                              "destroy the active batch without flushing its queued command"))
+        batch = CNA_INVALID_HANDLE;
+    if (texture != CNA_INVALID_HANDLE) {
+        result = cna_texture2d_destroy(texture);
+        if (cna_demo_check_result(state->demo, result,
+                                  "cancelling the batch releases its retained texture for destruction"))
+            texture = CNA_INVALID_HANDLE;
+    }
+cleanup:
+    if (batch != CNA_INVALID_HANDLE) (void)cna_sprite_batch_destroy(batch);
+    if (texture != CNA_INVALID_HANDLE) (void)cna_texture2d_destroy(texture);
+}
+
 static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* context, CNA_CallbackError* out_error)
 {
     const double pi = 3.14159265358979323846;
@@ -163,6 +221,7 @@ static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* con
         if (result != CNA_RESULT_SUCCESS) {
             return result;
         }
+        check_cancelled_batch(state, graphics_device);
         readback = cna_graphics_device_get_backbuffer_data_rgba8(graphics_device, pixels, 800U * 480U, &count);
         if (readback == CNA_RESULT_NOT_SUPPORTED) {
             printf("  this renderer cannot read its back buffer back; pixel checks skipped\n");

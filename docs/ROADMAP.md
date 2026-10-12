@@ -120,7 +120,7 @@ a check that all authored colors remain visible and that a blank texture row can
   ShaderEffect), ✅ `graphics.render_target.hdr_blendable` (values past 1.0 in an HdrBlendable
   target; ISSUE-027 found on SOFTWARE).
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
-  typed/compressed cube formats, DDS stream boundaries and shared-resource lifetime.
+  other typed/compressed format families, further DDS stream boundaries and resource lifetimes.
   ✅ `graphics.texture_cube.face_transfers` now passes eight focused checks per renderer: guarded
   rectangle windows, neighboring faces, authored mip levels and refused-call preservation.
   Both inspected readback-atlas captures are RGBA-identical; no direct GPU-readback claim.
@@ -128,6 +128,12 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `graphics.texture_cube.compressed_blocks`: eight checks on both renderer selections cover
   exact DXT1 blocks, guarded byte windows, padded small mips and refused-transfer preservation.
   Empty stderr; no decoded-pixel/sampling or direct GPU-readback claim.
+  ✅ `graphics.texture_cube.typed_payloads`: eight checks on both selections cover packed-word
+  serialization, guarded element windows, unclamped Vector4 channels, scalar views, a typed
+  rectangle patch and atomic refusal. No sampling or direct GPU-readback claim.
+  ✅ `graphics.texture3d.sampler_coordinates`: six GL checks and an inspected image establish
+  actual slice centers, point versus 3:1 linear filtering, and Clamp versus W-only Wrap on unit1.
+  SOFTWARE capability skip; mips, other formats and varying X/Y remain separate.
   ✅ `graphics.texture_cube.sampler_ownership`: shared full-face edits, independent wrapper names,
   source disposal and actual custom cube sampling of all six faces. Five GL checks pass, image
   inspected and stderr empty; SOFTWARE capability skip. Full 462 passes 475 enabled CTests and
@@ -556,4 +562,8 @@ passed, SOFTWARE 405/26/30/3 and OPENGLES3 430/28/3/3. The first smoke attempt w
 with exit 143; both full smokes and coverage were resumed on unchanged binaries. Exact prior
 37/41 failures and all C/custom child evidence are retained; only the declared SOFTWARE skip
 diagnostic was added. Texture3D now has a separate member/behavior classification in the audit;
-its proposed shader sampling and the C batch-retention extension remain syntax-only drafts.
+its shader sampling now has the focused evidence above. The existing C SpriteBatch extension
+also passes all19 child checks (21 with capture) on both selections: active-batch texture
+retention, cancellation without a deferred flush and successful release afterwards. All older
+child labels remain; both before/after image pairs were inspected. These later changes still
+need their own complete466 checkpoint, rather than inheriting full464 coverage.

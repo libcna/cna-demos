@@ -12,6 +12,13 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- Typed cube payloads distinguish packed storage words from C++ object sizes and preserve
+  unclamped float-vector channels; eight checks pass on both renderers.
+- Actual volume sampling compares slice centers, point/linear filtering and W-only wrapping;
+  six GL checks pass and the labeled image was inspected. SOFTWARE declares its capability skip.
+- The existing C SpriteBatch demo now checks active-batch texture retention and cancellation
+  without flushing a queued corner command. All original checks plus eight additions pass.
+
 - DXT1 cube block transfers: guarded byte windows, padded small mips and refused-transfer
   preservation pass eight checks on both renderers.
 - Custom shader matrix/vec3 palettes: four GL checks verify explicit element counts/layout,

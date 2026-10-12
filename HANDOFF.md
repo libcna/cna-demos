@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-464 catalog demos (complete checkpoint, including resumed smoke phases): math 78, game 33, graphics 156 (19 SpriteBatch, 8 device, 9 texture2d, 4 texture_cube, 1 texture3d, 7 sprite font,
+466 catalog demos (last complete 464; current batch focused-tested): math 78, game 33, graphics 158 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 26 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
@@ -253,24 +253,33 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-Full 464 is COMPLETE (source 7bcb39f): exact old outcomes/child lists/failures, selected hashes and
-stderr deltas all verified after resuming the interrupted smoke attempt. Archive helpers have
-run successfully. Do not repeat completed baseline work solely because the first attempt was
-interrupted; its evidence and the successful resumed phases are explicitly preserved.
+Complete 464 source 7bcb39f/closure 1c31a67 remains the full baseline. New batch 466 is built and
+focused-tested: 37 targets scheduled (34 completed, restat skips); known Draco CMP0148 CMake
+developer warning only, no compiler diagnostics. Metadata 466/0. All 8 relevant CTests pass
+(6 passed including the DDS WILL_FAIL,2 capability skips; 3.75 s). CNA c05e67714 observed clean.
 
-Next apply the three NOT-APPLIED drafts listed below: packed/float cube payloads, actual volume
-sampling, and the existing C sprite demo's deferred-batch lifetime extension. First capture
-that C demo's before images with /tmp/cna-run-466-focused.py before. After applying/building,
-run its after mode, inspect new volume and before/after C images, compare the original C child
-list plus exactly eight additions, and investigate any failures before claiming coverage.
-The catalog should grow by two IDs only. Update the semantic audit, metadata and handoff.
+New outcomes: typed_payloads 8 checks on SOFTWARE/OPENGLES3; sampler_coordinates 6 GL checks
+and SOFTWARE CustomEffects skip. C sprite_batch preserves all 13 captured child checks plus
+exactly 8 additions (21 with capture,19 without). All executed stderr streams are empty except
+the declared volume SOFTWARE skip. The volume image and all 4 before/after C images were
+actually inspected. Volume centers include the expected RGB(191,0,64) blend; C cancellation
+leaves the clear corner unchanged. GL C before/after is RGBA-identical; SOFTWARE animation
+varies, so whole-image identity is not claimed. No new CNA issue.
+Focused evidence and exact review: reports/checkpoint-466-focused-*.
 
-Next full baseline is ORIGINAL COMPLETE 464:37 SOFTWARE/41 GL raw failures and every old
-status/known issue/count and C/custom child list/trace (automatic_dispatch21). Preserve these
-while accounting for only the eight named C sprite additions. Positive title Update-count
-variance is the only pre-reviewed old JSON-count variation. Continue immediately after the
-next validated batch. Further gaps include volume mip/box transfer boundaries, other meaningful
-uniform families, remaining skinned-light behaviors and wider C routes; no completed phase restart.
+Next commit this source/docs batch and run the complete 466 checkpoint. Baseline ORIGINAL
+COMPLETE 464: 37 SOFTWARE/41 GL raw failures and every older status/known issue/count and
+C/custom child list/trace (automatic_dispatch21). Filter only the eight named C sprite additions
+when comparing child evidence. Expected smoke totals SW406/26/31/3, GL432/28/3/3; raw failures
+unchanged. Only one additional SOFTWARE CustomEffects skip diagnostic is expected; GL stderr
+unchanged. Positive title Update-count variance remains the only pre-reviewed old JSON-count
+variation. Selected 35 binaries/four assets must stay unchanged during runtime. Do not rebuild
+or edit project sources/assets during the full run; docs and source-only /tmp proposals are fine.
+
+Continue immediately after the validated checkpoint. Next coherent gap: extend volume_data
+with guarded boxed reads and non-cubic authored mip/Z-boundary controls, retaining its original
+checks and image. Other gaps: meaningful uniform families, skinned-light behaviors and wider
+C routes. Do not restart completed phases or add format/overload-only duplicate IDs.
 
 ## 15. Assumptions the next session must know
 
@@ -282,29 +291,15 @@ uniform families, remaining skinned-light behaviors and wider C routes; no compl
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Older /tmp drafts are applied and stale. Source-only predecessors for this batch are archived
-as checkpoint-462-next-*; actual runtime evidence is checkpoint-464-focused-*.
-Focused runner/review: /tmp/cna-run-464-initial.py and /tmp/cna-review-464-focused.py.
+The previous compressed/palette source drafts are applied and stale; their runtime evidence
+is checkpoint-464-focused-*. Full 464 helpers all ran successfully: /tmp/cna-capture-464.py,
+/tmp/cna-archive-464.py, /tmp/cna-resume-464.sh and /tmp/cna-464-finish.py. The interrupted
+attempt and successful resumed phases remain explicit in their archived evidence.
 
-Full 464 helpers all ran successfully: /tmp/cna-capture-464.py, /tmp/cna-archive-464.py,
-/tmp/cna-resume-464.sh and /tmp/cna-464-finish.py. Archived helpers and interrupted/resumed logs
-explain the complete checkpoint; old live session IDs are closed.
-
-Next NOT-APPLIED draft: /tmp/cna-cube-typed-payloads.cpp, archived with empty successful syntax
-log/review as checkpoint-464-next-*. Eight intended checks cover Bgr565 word serialization,
-guarded element windows, raw little-endian bytes, oversized-element refusal, unclamped Vector4
-channels, sixteen-scalar view of four texels, a typed rectangle patch and short-count refusal.
-Only creation of either required format may skip. No runtime/image/sampling/GPU-readback credit.
-Full 464 is now complete; this draft is ready for native build/runtime validation.
-
-Second NOT-APPLIED draft: /tmp/cna-volume-sampling.cpp, archived with successful empty syntax
-log/source review as checkpoint-464-next-volume-*. Six intended checks use actual sampler3D,
-explicit unit1 and two solid slices: centers, point selection, 3:1 linear interpolation and
-Clamp versus W-only Wrap outside the range. Existing volume_data stays unchanged. Source
-review confirms per-draw sampler application; no runtime/image credit yet. Full 464 is now complete; native validation remains next.
-
-Further NOT-APPLIED C extension: /tmp/cna-sprite-retention.c, successful empty C99 syntax log
-and source review archived as checkpoint-464-next-sprite-retention-*. Eight added child checks
-for active deferred-batch texture retention and cancellation, preserving existing child labels.
-A queued red corner command is cancelled just before the existing final-frame corner readback.
-No runtime/image credit. This can follow the two texture drafts without adding a catalog ID.
+Current batch source-only predecessors are checkpoint-464-next-*. Their /tmp drafts are now
+APPLIED AND STALE: cna-cube-typed-payloads.cpp, cna-volume-sampling.cpp, cna-sprite-retention.c.
+Actual focused runtime evidence is checkpoint-466-focused-*, not the earlier syntax reviews.
+Runner /tmp/cna-run-466-focused.py completed before/after; /tmp/cna-review-466-focused.py passed
+all outcomes, exact C child additions, stderr boundaries and image pixel observations.
+The original volume_data scene stays unchanged; typed cube transfers do not establish sampling
+or direct GPU readback, and volume sampling establishes neither mip filtering nor non-Color data.
