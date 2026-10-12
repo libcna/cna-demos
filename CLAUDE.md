@@ -11,7 +11,7 @@ docs/ARCHITECTURE.md.
 1. Read HANDOFF.md. 2. `git status`, `git log --oneline | head`.
 3. Make sure the siblings exist: `../cna` (+ submodules SDL, SDL_image, SDL_mixer, draco),
    `../sharp-runtime`, `../easy-gl`, `../meta-gl` (versions in HANDOFF.md).
-4. Baseline: `cmake --preset linux-full && cmake --build --preset linux-full -j$(nproc)`,
+4. Baseline: `cmake --preset linux-full && cmake --build --preset linux-full -j4`,
    `build/linux-full/bin/cna-demos --validate`, `ctest --test-dir build/linux-full -j4`.
 5. Continue with HANDOFF.md's "Next task". 6. Before stopping (or every substantial batch),
    update HANDOFF.md and commit.
@@ -20,17 +20,21 @@ docs/ARCHITECTURE.md.
 
 ```bash
 cmake --preset linux-full                     # or windowless (no display/GL siblings), linux-multi
-cmake --build --preset linux-full -j$(nproc)
+cmake --build --preset linux-full -j4
 B=build/linux-full/bin
 $B/cna-demos --validate                       # registry/metadata/assets checks
 $B/cna-demos <id> --automated --renderer SOFTWARE --screenshot /tmp/x.png   # run + capture
-xvfb-run -a $B/cna-demos <id> --automated --renderer OPENGLES3 --screenshot /tmp/y.png
+SDL_AUDIO_DRIVER=dummy SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY \
+  xvfb-run -a $B/cna-demos <id> --automated --renderer OPENGLES3 --screenshot /tmp/y.png
 SDL_AUDIO_DRIVER=dummy $B/cna-demos --smoke --renderer SOFTWARE --report /tmp/r.json
 ctest --test-dir build/linux-full -j4         # CLI tests + one test per demo (SOFTWARE)
 python3 tools/coverage_report.py --exe $B/cna-demos --cna-root ../cna --results SOFTWARE=/tmp/r.json
 ```
 
-Set `XDG_RUNTIME_DIR` (any private dir) to silence SDL's Wayland probe noise in headless shells.
+For this shared workstation, use HANDOFF.md's existing build tree, compiler and shared ccache;
+keep parallelism at four. For a complete headless checkpoint, use the explicit X11 invocation in
+[AUTOMATION.md](docs/AUTOMATION.md). Xvfb's DISPLAY alone does not prevent SDL selecting an
+inherited Wayland session. Set a private `XDG_RUNTIME_DIR` for headless runs.
 
 ## Rules (non-negotiable)
 

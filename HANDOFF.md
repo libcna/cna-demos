@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 23), 8 (content, 39), 9 (audio 21 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 42), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 16 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -97,14 +97,15 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **441 checkpoint passed** at 7361498:
-tools/validate.sh exit 0, all 454 enabled CTests (191.33 s), both complete isolated-X11 smoke runs and
-coverage regeneration. ORIGINAL 440-x11 comparisons preserve every older ID/status/known issue/
-JSON check count and all 31/32 failed assertions. New raw/existing-instance XML tool has ten passing
-child checks, matching focused evidence; older XML 10, compiler 15 and nested 20 lists are unchanged.
-All 30 selected hashes match runtime capture. Stderr is unchanged after private-path/serial
-normalization: no GTK warnings, the same content diagnostics and 84 nonfatal GL X protocol lines.
-Both original streams/reviews and binary evidence are archived. No new CNA issue or visual claim.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **441-config checkpoint passed** at
+e3b8244: tools/validate.sh exit 0, all 454 enabled CTests (142.62 s), both complete isolated-X11
+smoke runs and coverage regeneration. ORIGINAL checkpoint-441 comparisons preserve every older
+ID/status/known issue/JSON check count and all 31/32 failed assertions. Compiler child checks
+increase 15 -> 20, retaining every old assertion and matching both focused runs; XML 10 + 10 and
+nested 20 lists are unchanged. All 30 selected hashes match runtime capture. Stderr is unchanged
+after private-path/serial normalization: no GTK warnings, the same content diagnostics and 84
+nonfatal GL X protocol lines. Original streams/reviews and binary evidence are archived under
+reports/checkpoint-441-config-*. No new CNA issue or visual claim.
 
 | Check | Result |
 |---|---|
@@ -134,12 +135,16 @@ export CCACHE_DIR=/rv/cnaccache CCACHE_BASEDIR=/rv
 cmake --preset linux-full -DCMAKE_CXX_COMPILER=g++-14 -DCMAKE_C_COMPILER=gcc-14 \
   -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
 cmake --build --preset linux-full -j4
-tools/validate.sh                       # the standard end-of-batch check (all of the below)
+# Complete checkpoint: isolate both the outer CTest/SOFTWARE phase and the script's GL child.
+JOBS=4 SDL_AUDIO_DRIVER=dummy SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY \
+  xvfb-run -a -s "-screen 0 1280x1024x24" tools/validate.sh
+# Individual diagnostic commands (not a replacement for the complete checkpoint):
 export XDG_RUNTIME_DIR=/tmp/xdg-runtime; mkdir -p -m 700 $XDG_RUNTIME_DIR
 build/linux-full/bin/cna-demos --validate
 ctest --test-dir build/linux-full -j4
 SDL_AUDIO_DRIVER=dummy build/linux-full/bin/cna-demos --smoke --renderer SOFTWARE --report /tmp/r.json
-xvfb-run -a -s "-screen 0 1280x1024x24" build/linux-full/bin/cna-demos --smoke --renderer OPENGLES3
+SDL_AUDIO_DRIVER=dummy SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY \
+  xvfb-run -a -s "-screen 0 1280x1024x24" build/linux-full/bin/cna-demos --smoke --renderer OPENGLES3
 python3 tools/coverage_report.py --exe build/linux-full/bin/cna-demos --cna-root ../cna --results SOFTWARE=/tmp/r.json
 ```
 
@@ -231,14 +236,27 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** compiler configuration extension is applied and validated in focused
-runs: 20 child checks per selection, all 15 old checks retained, private paths independently absent
-(/tmp/cna-441-config-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}). Full retry build is clean,
-metadata 441/0 and all 22 targeted CTests pass (/tmp/cna-441-config-targeted-ctest.log, 5.85 s).
-Commit and run complete 441-config against ORIGINAL checkpoint-441 using explicit X11 isolation.
-Expect unchanged 441 status/known-issue sets and 31/32 failed assertions; compiler child checks 15 -> 20,
-other XML/nested child lists unchanged. Capture 30 selected hashes; no source/assets/rebuild during
-runtime. Then deepen the remaining component-type contracts or another coherent content behavior.
+**Immediate next action:** full compiler configuration checkpoint is complete (source e3b8244,
+/tmp/cna-demos-441-config-validation.log, exit 0). Original streams, exact reviews, build/CTest logs
+and 30 selected hashes are archived under reports/checkpoint-441-config-*. Compiler 20 child
+checks pass; all older statuses and exact 31/32 failures remain. Apply the prepared existing-demo
+extensions below, build, validate and run both selections; investigate the suspected returned
+parameter metadata discrepancy before assigning an issue. Then continue the deeper audit.
+
+Read-only preparation: /tmp/cna-pipeline-value-contracts.cpp (generator
+/tmp/cna-draft-value-contracts.py) extends existing pipeline_components from 6 to 14 checks.
+Source-reviewed, NOT applied/compiled/run: importer/processor empty and wrong stable identities
+versus correctly named wrong C++ payloads must fail in Import/Process/Write respectively; exact
+source/logical/component diagnostics and retained ContentValue ownership are checked. No new ID.
+The prerequisite checkpoint is now archived; apply after this documentation commit. Parameter strictness draft also prepared:
+/tmp/cna-xna-strictness.cpp (generator /tmp/cna-draft-strictness.py), NOT applied/compiled/run.
+It adds six checks to the existing XNA adapter: two invalid parameters default with two contextual
+warnings, caller request retained, valid override survives, and missing processor input still fails.
+One check expects ContentBuildResult.parameters to exclude dropped entries: public header says
+"Effective processor parameters", but ContentPipeline.cpp:1674 copies request.parameters.
+Reproduce before assigning any issue ID; distinguish returned-metadata contract from correct
+compiled default output. MakeContentBuildManifestEntry copies result.parameters; cache/fingerprint
+implications are source observations only, not runtime evidence. Keep original ISSUE-047 exposed.
 
 Initial config build /tmp/cna-441-config-build.log stopped in concurrently modified C API:
 CnaCApiDisplay.cpp:439 lacked the qualification/using for ToNativePresentationParameters. At later
@@ -539,7 +557,7 @@ duplicate demos; only add a meaningful dynamic-schema case. Public source review
 concurrent Build requires reentrant components/log sinks; no parallel execution is claimed from
 serial compiler counters or registry freezing.
 
-Compiler configuration extension after complete 441 (built and focused-runtime validated; full checkpoint pending):
+Compiler configuration extension after complete 441 (full 441-config checkpoint passed):
 /tmp/cna-compiler-configuration.cpp and /tmp/cna-compiler-configuration-metadata.cpp extend the
 existing incremental_compiler from 15 to 20 checks. Source APIs verified: public
 ContentBuildConfigurationFileName/Parse/Find, Context.Parameters and typed i64 JSON values stored
