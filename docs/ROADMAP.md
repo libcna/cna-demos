@@ -957,3 +957,13 @@ remain0/4422 (SOFTWARE, precise) and0/1 (OPENGLES3, boolean). Build81666 closed0
 Before70538 and after/targeted95414 closed0; all16CLI/query CTests pass in3.46s. Focused reviewer
 passed before the source commit, preserving the original runtime code against HEAD.
 Full470-query validation is pending. Evidence: checkpoint-470-query-focused-*.
+
+The initial full470-query attempt stopped before CTest on a content-tool staging warning.
+A private native probe using unchanged CNA staging code reproduces the exact diagnostic in
+all three concurrent trials (1,000 owners each), while a1,000-owner sequential control reports
+zero diagnostics. No owner errors/removals, empty final private parents, unchanged35selected
+binaries/four assets. This is CNA-DEMOS-ISSUE-057, a build-tool diagnostic race; the original
+build interleaving remains unobserved and no content corruption is claimed. Original failure,
+probe sources/executables/logs and review are archived under checkpoint-470-query-initial-staging-refusal-*
+and checkpoint-470-query-staging-probe-*. The warning gate remains unchanged; a fresh full retry
+is pending. No runtime demo knownIssue marker or extra demo ID is added.

@@ -2413,3 +2413,13 @@ These are selected artifact/source observations, not an atomic/full transitive i
 All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-cascades-*.
 Generated coverage: 293/329types, 1374/2326XNA members, 174/3210C routes.
 Semantic coverage remains incomplete; authored cascade sampling does not establish all shadows.
+
+The initial full470-query attempt stopped before CTest on a content-tool staging warning.
+A private native probe using unchanged CNA staging code reproduces the exact diagnostic in
+all three concurrent trials (1,000 owners each), while a1,000-owner sequential control reports
+zero diagnostics. No owner errors/removals, empty final private parents, unchanged35selected
+binaries/four assets. This is CNA-DEMOS-ISSUE-057, a build-tool diagnostic race; the original
+build interleaving remains unobserved and no content corruption is claimed. Original failure,
+probe sources/executables/logs and review are archived under checkpoint-470-query-initial-staging-refusal-*
+and checkpoint-470-query-staging-probe-*. The warning gate remains unchanged; a fresh full retry
+is pending. No runtime demo knownIssue marker or extra demo ID is added.

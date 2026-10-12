@@ -15,6 +15,55 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-057 -- Content staging scavenger warns during normal concurrent lifecycle
+
+- **Area:** CNA content tools, `tools/common/CnaContentStaging.hpp`, consumed by `cna-content`
+  and the content-project build. Build-time diagnostic race; no runtime demo knownIssue marker.
+- **Original observation:** full470-query, demo source `a699a2d`, completed all seven scheduled
+  build operations, then `tools/validate.sh` stopped at its unchanged warning gate before
+  metadata validation, CTest or smoke. Content-project output included
+  `error: warning: content staging scavenger: cna_content_stage_v1_306788_18dd6c565a238173_0:
+  owner metadata is absent or is not a regular file`. Both wrapper exits were1.
+  The actual candidate under `/tmp/cna_content_staging_v1` was absent when later inspected.
+- **Independent reproduction:** compile `/tmp/cna-staging-concurrency-probe.cpp` with GCC14.2,
+  C++23, `-O2 -pthread -I../cna/tools/common`. It directly uses the unchanged CNA tool header.
+  One thread creates/destroys1,000 `ContentBuildStagingDirectory` objects in an initially empty
+  private parent; another repeatedly calls `ScavengeContentStagingDirectories` there. No malformed
+  staging fixture is fabricated and the production staging root is never scanned by the probe.
+  Run it only with a fresh private parent; the archived Python driver creates one per trial.
+- **Observed:** all three bounded trials reproduce the exact missing-owner-metadata diagnostic,
+  respectively3,175/3,079/3,089 times. Each completes1,000 owners with zero owner errors, zero
+  reported removals and an empty private parent afterwards. Other observed race diagnostics
+  concern vanished directory validation and incomplete/unreadable metadata. Each probe exits1
+  deliberately for the reproduced condition, with empty stderr. A sequential control creates
+  another1,000 owners and scans while each complete owner is alive and after destruction:
+  zero scan errors, zero diagnostics, final parent empty, exit0.
+- **Expected:** overlapping normal CNA staging lifecycles should not produce malformed-owner
+  warnings merely because another builder is publishing or removing its private staging state.
+  Conservative cleanup must remain safe; suspicious unrelated directories should still be
+  preserved and reported as appropriate. A warning-free successful consumer build should not
+  depend on the scheduling of independent content-tool invocations.
+- **Mechanism and limits:** enumeration, directory validation, metadata stat/size/read and lease
+  handling are separate filesystem operations. Creation exposes the candidate before its lease
+  and atomic metadata publication; destruction removes the metadata/directory. The scanner reads
+  metadata before checking age or claiming the lease. The isolated probe establishes diagnostics
+  during legitimate concurrent lifecycle operations. The original build's precise interleaving,
+  including creation versus teardown, was not observed. No asset corruption or unsafe removal
+  is claimed. The older checkpoint437 refusal involved the related vanished-directory message;
+  its original logs remain separate and are not retroactively a reproduction of this exact run.
+- **Evidence/environment:** Linux x86_64, GCC14.2, CNA tools observed at clean
+  `eff31310179168fb4f47258e6226a5234c2140d0`; relevant header snapshots and hashes are archived.
+  Original build/refusal/exits and post-refusal selected artifacts:
+  `build/linux-full/reports/checkpoint-470-query-initial-staging-refusal-*`.
+  Probe sources, executables, original streams, compiler logs, private-root identities and review:
+  `build/linux-full/reports/checkpoint-470-query-staging-probe-*`.
+  All35selected shipped binaries and four existing assets remained unchanged through the probes.
+  This is a source/selected-artifact observation, not an atomic full dependency snapshot.
+- **Handling:** keep the warning gate and original failure visible, retry the unchanged documented
+  full validation after recording the defect, and retain this issue even if scheduling permits a
+  clean retry. The eleven OcclusionQuery controls already pass on both renderers independently.
+  No sibling source was changed, unknown staging directory deleted or upstream message sent.
+
 ### CNA-DEMOS-ISSUE-056 -- File stream position becomes -1 after a short EOF read
 
 - **Area:** sharp-runtime `System::IO::FileStream::Read/getPositionProperty`, exposed through

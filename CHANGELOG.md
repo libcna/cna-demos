@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Recorded CNA-DEMOS-ISSUE-057 after a pre-CTest content staging warning. Three isolated
+  concurrent probes reproduce the diagnostic; a sequential control is clean. Original failure
+  evidence is retained, and the full validation warning gate remains enabled.
 - Complete470-cascades: all483enabled CTests and both full smoke suites preserve every old
   failure/child/network control. Six new cascade checks pass on GL; SOFTWARE declares its
   stock-path skip. Selected artifacts stay stable through runtime after consistency rebuilding.
