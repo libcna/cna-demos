@@ -211,7 +211,9 @@ three-stage route (15 checks pass on SOFTWARE and OPENGLES3). The separate XNA a
 now executes registered typed components through the same real coordinator. Its parameter extension
 has 17 passing child checks and two refusals (ISSUE-047/048) under both displayless selections.
 The native patrol has 15 checks, nested-build and incremental compiler tools each have 20,
-multi-artifact publication has 14, and the dependency-graph tool has 16 focused checks. Remaining gaps below are not implied covered.
+multi-artifact publication has 14, the dependency-graph tool has 16, and native build diagnostics
+has nine checks. Complete checkpoint 444 preserves all of these under both renderers. Remaining
+gaps below are not implied covered.
 
 | Members / behavior | Decision and evidence |
 |---|---|

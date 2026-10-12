@@ -97,28 +97,28 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **443 checkpoint passed** at 488208f:
-tools/validate.sh exit 0, all 456 enabled CTests (209.16 s), both complete isolated-X11 smoke runs
-and coverage regeneration. ORIGINAL 442 comparisons retain every older ID/status/knownIssue and
-all 32/33 failed assertions. Patrol adds its fifteenth check; GL game.window.title has 12 rather
-than 10 checks because the unchanged assertion runs per Update, not per rendered frame. The new
-graph tool's sixteen child checks match focused evidence, and all older content tool lists match.
-All 32 selected hashes match runtime capture. Normalized stderr adds exactly the thirteen focused
-graph lines (six debug loads, cycle/missing-node diagnostics), with no removals or GTK warnings;
-the same 84 nonfatal GL X protocol lines remain. Original streams/reviews, build/CTest logs and
-hashes: reports/checkpoint-443-*. No new CNA issue or full-transitive dependency snapshot claim.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **444 checkpoint passed** at 116d8f4:
+tools/validate.sh exit 0, all 457 enabled CTests (165.82 s), both complete isolated-X11 smoke runs
+and coverage regeneration. ORIGINAL 443 comparisons retain every older ID/status/knownIssue and
+all 32/33 failed assertions. New diagnostics has nine native passes; host frames retain all
+seventeen prior child checks and add seven, matching focused evidence. All older content tool
+lists remain unchanged. GL game.window.title has 10 rather than 12 checks because its unchanged
+assertion runs per Update, not per rendered frame. All 32 selected hashes match runtime capture.
+Normalized stderr is unchanged: no GTK warnings; the same 84 nonfatal GL X protocol lines remain.
+Original streams/reviews, build/CTest logs and hashes: reports/checkpoint-444-*.
+No new CNA issue or full-transitive dependency snapshot claim.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets --validate | 443 demos, 0 problems |
+| Metadata/assets --validate | 444 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 431 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 392 passed, 23 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 413 passed, 24 expected failures, 3 skipped, 3 manual not run |
+| CTest | 432 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 393 passed, 23 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 414 passed, 24 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | All 32/33 older failed assertions retained |
-| stderr | Only thirteen expected graph/debug lines added; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Corrected Guide notification captured and inspected on both renderers |
+| stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
+| Screenshots | Final host frame with replacement hooks inspected on both renderers; RGBA-identical to prior host captures |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -239,27 +239,38 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** native pipeline_diagnostics and the existing C ABI host_frames
-extension are built/focused-validated. Nine native checks pass without a display on SOFTWARE and
-OPENGLES3. Host frames retain all seventeen older assertions and add seven, plus two screenshot
-checks (26 with capture, 24 without); exact trace ILBUbUbDeUDUrDsXEZ. Both last-frame captures
-were inspected and are RGBA-identical to earlier host captures, 800x480 solid (32,128,192,255).
-Both focused stdout/stderr streams are archived under reports/checkpoint-444-focused-*; stderr is
-empty, private opacity files independently gone. No new CNA issue. Initial build
-/tmp/cna-444-build.log passed, with the known vendored Draco CMP0148 configure warning; final
-/tmp/cna-444-final-build.log passed after more external C API changes (no compiler diagnostics).
-Metadata 444/0; all 28 targeted CTests pass (13.48 s). Next: commit this batch and run the complete
-444 checkpoint against ORIGINAL checkpoint-443, capture 32 selected runtime hashes after its
-build, then freeze source/assets until both smoke runs end. Prepared archive helpers are
-/tmp/cna-archive-444.py RENDERER and /tmp/cna-444-finish.py; replace PENDING444 with the source
-commit before use. They check nine new native assertions, host 17 -> 24 retained/focused checks,
-old content tool lists, every old status/known issue and exact 32/33 failures. Expect no normalized
-stderr differences. Expected CTest: 457 enabled; SOFTWARE 393/23/25/3, GL 414/24/3/3.
+**Immediate next action:** complete 444 is archived/reviewed at source 116d8f4. Continue with
+/tmp/cna-source-root-capabilities.cpp, an UNAPPLIED draft with ten proposed native checks. It
+registers the built-in CNJ/Texture2D pipeline and copies the original checker/sprite-strip PNGs
+into private disjoint roots. Check actual decoded pixels/dependency aliases, remapping/local paths,
+unknown capability/traversal/absolute/equal-root refusal and repair. Header/source APIs were read;
+there is no build/runtime evidence yet. Original assets are declared in metadata. Prepared future
+/tmp/cna-archive-445.py and /tmp/cna-445-finish.py retain PENDING445; review/adapt after focused runs.
+Use ORIGINAL checkpoint-444 as the next full baseline. Keep source/assets frozen during runtimes.
 
+444 evidence: /tmp/cna-demos-444-validation.log exit 0; 457 enabled CTests, SOFTWARE 393/23/25/3,
+GL 414/24/3/3, exact 32/33 failures retained. All older statuses/known issues and content child lists
+match. Nine native diagnostic checks pass and C host frames retain seventeen + seven new checks.
+All 32 selected runtime hashes match; normalized stderr unchanged (SW 25 ERROR/16 DEBUG/3 INFO;
+GL 3 ERROR/16 DEBUG/3 INFO plus the same 84 X protocol lines). Full evidence/review helpers are
+reports/checkpoint-444-*; original focus/build/28-targeted-CTest evidence is checkpoint-444-focused-*.
+Both last-frame host images were inspected, exactly 800x480 solid (32,128,192,255), RGBA-identical
+to prior captures; exact callback trace ILBUbUbDeUDUrDsXEZ. With captures the tool has 26 checks.
+Native opacity source cleanup independently confirmed and both focused stderr streams empty.
+Initial build had the known vendored Draco CMP0148 configure warning; final build and full build
+had no compiler diagnostics. More external C API changes were built; no atomic CNA snapshot claim.
+
+The initial SOFTWARE archive helper stopped at a repeated C child ID and reported zero child
+checks. Raw logs confirmed 17/24 and the corrected parser skips identical child headers; strict
+reviews now pass for both renderers. Initial helper failure is preserved in
+reports/checkpoint-444-initial-archive-review.log. This was not a demo or CNA failure.
 The /tmp opacity and hook drafts are APPLIED AND STALE. Repository host code captures the last
-replacement-hook frame; do not restore the earlier draft's first-draw capture. Continue after this
-checkpoint with the uncovered external source-root capability behavior or remaining C ABI callback
-failure/foreign-thread contracts. No comprehensive semantic coverage claim.
+replacement-hook frame; do not reapply its draft's earlier first-draw capture. Next other gaps:
+C ABI callback-failure/foreign-thread behavior. Source-only note: runtime.h's run_frame_ext prose
+names exiting/end_run after failure, but CGame::Invoke suppresses later callbacks; UnloadContent
+opts into runAfterFailure. No runtime reproduction or issue has been recorded for that wording.
+Coverage is now complete for all 444 IDs in both supplied full runs: 293/329 types, 1354/2326
+named XNA members, 158/3210 C routes. This is not comprehensive semantic coverage.
 
 443 evidence: /tmp/cna-demos-443-validation.log exit 0; 456 enabled CTests, SOFTWARE 392/23/25/3,
 GL 413/24/3/3. Both original comparisons preserve exact 32/33 failures. Graph sixteen child checks
