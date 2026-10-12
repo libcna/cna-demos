@@ -2548,3 +2548,34 @@ All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-rele
 Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
 No extra ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057
 stays open with its original refusal and independent private staging probe preserved.
+
+## Complete470-spatial
+
+Complete checkpoint **470-spatial**, source `9a6234b`,
+extends the existing apply_3d demo from one to seven checks. Two dummy-audio runs (one per
+requested renderer environment) pass with empty stderr. The complete original audible
+sweep/default-speed check source remains verbatim. Six added controls demonstrate paused
+Pan/3D refusals, selecting the other mode after Stop, and re-aiming a paused3D voice.
+The refused Pan setter exposes its newly assigned .75 public value while State remains
+Paused. This is observed CNA property/state behavior, not by itself a CNA defect or a
+measurement of output panning. No attenuation, Doppler or new listening credit; SmokeOnly
+remains appropriate for the original audible sweep.
+Watched build 53385 passes 9 scheduled / 8 numbered operations, all 3,909 watched inputs
+unchanged and diagnostic gate 0. Focused/targeted session 84713 passes 37 enabled CTests
+in 5.60 s; one additional manual microphone test disabled. Metadata 470 / 0 problems.
+Full session 17556 builds in 7 scheduled operations without warning and passes all 483
+enabled CTests in 148.64 s (449 passed including 27 WILL_FAIL; 34 skips; three additional
+manual tests disabled). SOFTWARE 406/27/34/3, OPENGLES3 435/29/3/3. Every old 38/42 failed
+assertion, C/custom child list/trace and all five network controls remain exact.
+Reviewed JSON count differences:
+{"OPENGLES3": {"audio.sound_effect_instance.apply_3d": {"after": 7, "before": 1, "reason": "Six public Pan/3D mode controls added; original sweep and speed-default predicate retained."}}, "SOFTWARE": {"audio.sound_effect_instance.apply_3d": {"after": 7, "before": 1, "reason": "Six public Pan/3D mode controls added; original sweep and speed-default predicate retained."}}}.
+All 35 selected binaries/four existing assets and reader fixture copies remain unchanged
+through runtime. Normalized application stderr is identical, including 42 known GL X
+protocol records and the intentional shader error. Outer Xvfb has 18 exact amdgpu
+pairs (previous 18); independent inner/outer exits 0. Capture CNA eff3131017
+(clean), final CNA eff3131017 (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-spatial-*.
+Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
+No extra ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057
+stays open with its original refusal and independent private staging probe preserved.
