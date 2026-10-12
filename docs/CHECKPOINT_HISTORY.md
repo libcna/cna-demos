@@ -2641,3 +2641,32 @@ Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
 Original mono streaming/ISSUE-038 is untouched. No extra ID or issue marker; semantic
 coverage remains incomplete. Build-only ISSUE-057 stays open with its original refusal
 and independent private staging probe preserved.
+
+## Complete470-fourth
+
+Complete checkpoint **470-fourth**, source `6f27142`,
+extends the existing shadow_cascades from eight to ten GL pixel checks. At Count4,
+fitting depth7 selects slot3: its comparison depth .5 is lit RGB(173,130,77), while
+.9 with DebugTint produces the shadow floor RGB(20,28,15). CNA uses four horizontal
+atlas strips. Both actual800x480 GL images were inspected; all eight original pixels
+remain, two new pixels match within tolerance1, and regions outside the replaced ninth
+cell are RGBA-identical. The original eight drawing/check loops remain verbatim.
+SOFTWARE retains its exact declared skip; GL stderr is empty. This does not demonstrate
+every four-cascade index/debug color, arbitrary atlases, invalid counts, a producer or
+other renderers. No whole-image identity or additional demo ID is claimed.
+The watched build and focused review passed before source commit; original evidence is
+under checkpoint-470-fourth-focused-*. Full validation passes all483enabled CTests in
+148.94s, with three additional manual tests disabled. SOFTWARE406/27/34/3 and
+OPENGLES3 435/29/3/3 retain all38/42prior failed assertions, C/custom child evidence and
+five network controls. Reviewed JSON count changes:
+{"OPENGLES3": {"graphics.skinned_effect.shadow_cascades": {"after": 10, "before": 8, "reason": "Two fourth-slot depth/debug-tint controls added; original eight cascade predicates retained."}}, "SOFTWARE": {}}.
+All35selected binaries, four existing assets and reader fixture copies stay unchanged
+through runtime. Normalized application stderr is identical, including42known GL X
+protocol records and the intentional shader error. Outer Xvfb has17exact amdgpu
+pairs (previous14); independent inner/outer exits are0. Capture CNA
+eff3131017 (clean), final CNA
+eff3131017 (clean). These are selected
+artifact/source observations, not an atomic or full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-fourth-*.
+Semantic coverage remains incomplete, and build-only ISSUE-057 stays open with its
+original staging refusal and independent private reproduction preserved.

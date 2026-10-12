@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete470-fourth: all483enabled CTests and both full smoke suites preserve previous
+  failure/child/network evidence; selected artifacts and normalized diagnostics stay stable.
 - Cascade sampling now demonstrates fourth-slot depth and diagnostic tint. Ten GL pixel
   checks and26targeted CTests pass; original eight panels stay unchanged outside the new cell.
 - Complete470-clear: 483 enabled CTests and both full smoke suites retain all prior
