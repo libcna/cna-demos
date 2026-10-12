@@ -241,12 +241,21 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** apply and validate the existing two_bones palette/joint extension
-below. Full 446 at 62b5cb8 is closed: 459 enabled CTests (153.20 s), SOFTWARE 395/23/25/3,
-OPENGLES3 416/24/3/3. Every older ID/status/knownIssue, exact 32/33 failed assertions, all
-C/custom-content child lists and host trace are retained. The new clone demo passes ten checks;
-32 binary/four asset hashes unchanged and normalized stderr identical. Use ORIGINAL
-checkpoint-446 as the next full baseline. Evidence and helpers: reports/checkpoint-446-*.
+**Immediate next action:** commit and run complete 446-palette against ORIGINAL checkpoint-446.
+The existing two_bones extension passes thirteen checks on both renderers, retaining all eight
+older assertions. Both actually inspected 800x480 images are RGBA-identical to their original
+422 references; focused stderr empty. Catalog stays 446. Build /tmp/cna-446-palette-build.log
+passed (27 targets, no diagnostics); metadata 446/0, all 17 targeted CTests passed (2.30 s).
+Evidence/source hashes/original images: reports/checkpoint-446-palette-focused-* and -original-*.
+No new CNA issue. /tmp/cna-archive-446-palette.py and /tmp/cna-446-palette-finish.py need the
+actual source commit, /tmp/cna-catalog-446-palette.json and fresh post-build 32 binary/four asset
+hashes. Expect unchanged totals and exact 32/33 failed assertions; two_bones 8 -> 13 is the
+only intended old JSON count change. Keep source/assets frozen throughout runtime.
+The /tmp two_bones draft is APPLIED AND STALE. Use repository source.
+
+Full 446 at 62b5cb8 (closure 420a099) is the completed baseline: 459 enabled CTests (153.20 s),
+SW 395/23/25/3, GL 416/24/3/3, exact 32/33 failed assertions and all prior child lists retained.
+Selected binary/asset hashes and normalized stderr unchanged. Evidence: checkpoint-446-*.
 
 Clone focused evidence: build passed (51 targets; known vendored Draco CMP0148 configure
 warning, no compiler diagnostics), metadata 446/0, all 42 targeted CTests passed (40 passed
@@ -292,20 +301,12 @@ share a non-white tint texture after the original effect/caller reference are re
 rendered colors/positions and weak_ptr ownership checks cover the complete intended lifetime.
 An expired-texture guard prevents a dangling texture draw if ownership breaks. No explicit
 Texture2D.Dispose, raw setter ownership, multi-weight blend or all-material clone claim.
-The separate existing two_bones example remains unchanged. A new UNAPPLIED draft
-/tmp/cna-two-bones-blend.cpp extends its eight checks to thirteen: two joint-silhouette samples,
-zero/oversized GetBoneTransforms count refusals and an accepted MaxBones palette with a distinct
-last-slot matrix. It restores the original two-matrix pose before drawing; no last-slot GPU claim.
-Geometry/rendering remain unchanged. Source geometry: the y=0 row uses equal weights and moves
-(+/-1/4,0) to (+/-3/16,-/+sqrt(3)/16). An independent point/triangle calculation distinguishes
-both single-bone hard switches. Original 422 screenshots on both renderers contain 3x3 filled
-and empty neighborhoods at the proposed projected samples (427,246) and (421,252); this is
-historical image evidence, NOT a new runtime test. Do not apply during full 446.
-Prepared /tmp/cna-archive-446-palette.py and /tmp/cna-446-palette-finish.py use
-PENDING446PALETTE, expect the same catalog with two_bones 8 -> 13, and need a real commit,
-catalog and fresh post-build hashes before use. Next otherwise
-cover a coherent skinned lighting/fog scene; inherited C host failure
-completion and queued dispatch cancellation remain separate, currently untested contracts.
+The two_bones extension now covers this authored equal-weight joint's silhouette, not every
+possible weight or a four-influence mesh. Palette count failures and maximum-size readback use
+actual SkinnedEffect APIs; the final slot is distinct but no vertex indexes it during rendering.
+Next meaningful gaps: four-influence geometry, skinned material/fog rendering or the separately
+uncovered C host failure completion/queued dispatch cancellation. Avoid inferring a queued call
+from only a worker's pre-call readiness flag. Existing completed phases remain the baseline.
 
 445 evidence: /tmp/cna-demos-445-validation.log exit 0; all 458 enabled CTests (206.40 s), SW
 394/23/25/3, GL 415/24/3/3, exact 32/33 failed assertions unchanged, every older count/status/

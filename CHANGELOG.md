@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing two-bone skinning demo now checks the blended joint silhouette, refused palette-read
+  counts and an accepted maximum-sized palette. All eight older checks remain; the thirteen-check
+  result preserves the original rendered images on both renderers.
 - Skinned-effect clone ownership demo renders independent copied bone palettes after the source
   effect and caller texture reference are released, and checks shared texture lifetime through the
   last clone. A non-white texel makes the rendered checks distinguish real data from a fallback.

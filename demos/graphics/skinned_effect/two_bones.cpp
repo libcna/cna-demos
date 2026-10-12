@@ -103,6 +103,21 @@ namespace
             Context().Check(weightsRejected, "three weights per vertex is not a supported weight count");
             Context().Check(effect_->GetBoneTransforms(2) == pose && effect_->getWeightsPerVertexProperty() == 2,
                             "refused changes preserve the valid palette and weight count used for drawing");
+            bool zeroReadRejected = false, oversizedReadRejected = false;
+            try { (void)effect_->GetBoneTransforms(0); }
+            catch (const System::ArgumentOutOfRangeException&) { zeroReadRejected = true; }
+            try { (void)effect_->GetBoneTransforms(SkinnedEffect::MaxBones + 1); }
+            catch (const System::ArgumentOutOfRangeException&) { oversizedReadRejected = true; }
+            Context().Check(zeroReadRejected, "GetBoneTransforms refuses a zero requested count");
+            Context().Check(oversizedReadRejected, "GetBoneTransforms refuses a count beyond MaxBones");
+            std::vector<Matrix> fullPalette(SkinnedEffect::MaxBones, Matrix::getIdentityProperty());
+            fullPalette[0] = pose[0];
+            fullPalette[1] = pose[1];
+            fullPalette.back() = Matrix::CreateTranslation(3, 4, 5);
+            effect_->SetBoneTransforms(fullPalette);
+            Context().Check(effect_->GetBoneTransforms(SkinnedEffect::MaxBones) == fullPalette,
+                            "a maximum-sized palette round-trips both its first matrices and last slot");
+            effect_->SetBoneTransforms(pose); // the original mesh still names only bones 0 and 1
         }
 
         void Draw(const GameTime& gameTime) override
@@ -135,6 +150,14 @@ namespace
                 Context().Check(pixel(Vector3(0.0f, -1.3f, 0.0f)) != Color::MidnightBlue, "the lower half stays in place");
                 Context().Check(pixel(tip) == Color::MidnightBlue, "the upper half is no longer where it was modelled");
                 Context().Check(pixel(bentTip) != Color::MidnightBlue, "it follows bone 1 to the rotated position");
+                // At y=0, both weights are 1/2: x=+/-1/4 becomes (+/-3/16, -/+sqrt(3)/16).
+                // The triangles adjoining that row therefore have a blended edge, not a hard
+                // switch to either bone. These samples are inside/outside that actual joint
+                // silhouette, away from the unblended tips checked above.
+                Context().Check(pixel(Vector3(.28f, -.07f, 0.0f)) != Color::MidnightBlue,
+                                "the blended joint fills its weighted outer edge");
+                Context().Check(pixel(Vector3(.22f, -.13f, 0.0f)) == Color::MidnightBlue,
+                                "the blended joint leaves the hard-switch edge empty");
             }
 
             Game::Draw(gameTime);
@@ -153,7 +176,7 @@ CNA_DEMOS_GAME(TwoBonesDemo, {
     .title = "Skinning with two bones",
     .description = "Bends a strip at a joint with SkinnedEffect: vertices carry bone indices and weights, "
                    "SetBoneTransforms rotates bone 1, nearby vertices blend between the bones, and invalid palette/weight "
-                   "changes leave the rendered pose intact.",
+                   "changes leave the rendered pose intact; joint-edge pixels also verify the mixed-weight region.",
     .apis = {"SkinnedEffect::SkinnedEffect", "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::GetBoneTransforms", "SkinnedEffect::WeightsPerVertex",
              "SkinnedEffect::Texture", "VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned",
              "SkinnedEffect::View", "SkinnedEffect::Projection"},

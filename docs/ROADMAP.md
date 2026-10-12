@@ -126,7 +126,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ Stock effects (12): `BasicEffect` (texture, default lighting, three directional lights,
   per-pixel lighting, material colours, fog, alpha), `AlphaTestEffect` cut-outs,
   `DualTextureEffect` light map, `EnvironmentMapEffect` with a `TextureCube` and Fresnel,
-  `SkinnedEffect` with two bones, ✅ `graphics.basic_effect.vertex_color_lighting` (vertex colour
+  `SkinnedEffect` with two bones, mixed-weight joint pixels and palette read/write boundaries, ✅ `graphics.basic_effect.vertex_color_lighting` (vertex colour
   and lighting together).
 - 🟨 CNA effects: ✅ `PbrEffect` metallic/roughness, ✅ `ColorMatrixEffect` (SOFTWARE), ✅
   `graphics.pbr_effect.texture_maps` (normal map with a Vector4 vertex tangent, emissive map,
