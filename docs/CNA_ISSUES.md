@@ -1432,7 +1432,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   Original build evidence remains above; repaired-source hashes, retry log and focused results
   are in `reports/checkpoint-455-focused-*`. External uncommitted work is still ongoing, so this
   is not a clean-commit or atomic-input claim. No CNA source edited/reverted or warning suppressed
-  by cna-demos. Resolved for the exercised build; no runtime knownIssue marker or upstream message.
+  by cna-demos. The external cgltf split/fix was subsequently committed as bf9089edc; later clean
+  ced719909 was observed during checkpoint 455 runtime. Resolved for the exercised build; no
+  runtime knownIssue marker or upstream message.
 
 
 ### CNA-DEMOS-ISSUE-044 -- In-flight C API generation shadows a result-handle parameter
