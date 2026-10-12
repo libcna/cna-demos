@@ -1346,6 +1346,50 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   count and C/custom-content child list. Selected hashes and normalized stderr are unchanged.
   Original evidence and strict reviews: reports/checkpoint-446-owner-*.
 
+### CNA-DEMOS-ISSUE-051 -- Host-frame failure contract promises suppressed C exit hooks
+
+- **Area:** public `CNA/C/runtime.h` host-frame contract and the C lifecycle adapter in
+  `CnaCApiRuntime.cpp`. This concerns C callback tables, not whether native Game::EndRun executes.
+- **Contract:** cna_game_run_frame_ext explicitly says an exit through a failed callback completes
+  the run with `exiting`, then `end_run`, returns CALLBACK and reports out_running=false.
+- **Observed:** after an ordinary successful variable-time frame, the second Update returns IO
+  with a supplied message. RunFrameEXT returns CALLBACK (9) and false, but neither C exit hook
+  runs. A later host call returns CALLBACK/false without replay, and destruction returns CALLBACK
+  and invokes UnloadContent exactly once. Terminal state and cleanup work; the promised C hook
+  sequence is the discrepancy. No rendered-content or error-message preservation claim is made.
+- **Reproducer:** tools/repro_c_api_host_failure.c records independent counters and an ordered
+  trace. Exit 0 means the promised ILBUDUXEZ sequence; exit 1 confirms ILBUDUZ with both exit
+  counters zero; exit 2 is a different/inconclusive result. Build in the existing tree:
+
+  ```bash
+  CCACHE_DIR=/rv/cnaccache CCACHE_BASEDIR=/rv ccache gcc-14 -std=c11 -Wall -Wextra -Werror \
+    -I ../cna/modules/c-api/include tools/repro_c_api_host_failure.c \
+    -L build/linux-full/CNA/modules/c-api -Wl,-rpath,'$ORIGIN/../CNA/modules/c-api' \
+    -lcna_c_api -o build/linux-full/bin/cna-repro-c-api-host-failure
+  export CNA_GRAPHICS_RENDERER=SOFTWARE SDL_AUDIO_DRIVER=dummy SDL_VIDEO_DRIVER=x11
+  env -u WAYLAND_DISPLAY xvfb-run -a build/linux-full/bin/cna-repro-c-api-host-failure
+  ```
+
+- **Evidence:** initial and final persistent-source builds reproduce exit 1 on SOFTWARE and
+  OPENGLES3. Both produce first `ILBUD`, failed/terminal `ILBUDU`, final `ILBUDUZ`, two updates,
+  zero exiting/end_run callbacks and one unload. Renderer INFO stderr is preserved (89/782 bytes)
+  and identical between initial/final runs. Original streams, exits, initial source and selected
+  source/binary hashes: reports/cna-issue-051-*. GCC14/C11/-Wall/-Wextra/-Werror builds pass.
+- **Cause:** native RunFrameEXT calls OnExiting and EndRun when the run ends. The C adapter routes
+  both tables through Invoke, whose existing callbackFailure_ guard suppresses them. UnloadContent
+  explicitly opts into runAfterFailure and therefore still runs. This is distinct from ISSUE-050
+  and the passing owner-thread reentry guards.
+- **Suggested resolution:** reconcile the public promise with the intended failure policy. If
+  suppressing ordinary callbacks after failure is intended, document that exception explicitly;
+  otherwise provide the promised completion hooks while retaining the original failure and
+  exactly-once cleanup. This probe does not establish genuine XNA behavior or recommend changing
+  the native Game lifecycle. Other failing callback locations and browser scheduling are untested.
+- **Environment/status:** confirmed contract/implementation mismatch on Linux, CNA observed clean
+  at 4ee1e0b553667b6e999248fcefdea729654ee497 before/after reproduction. Selected evidence is not an
+  atomic dependency snapshot. Open; no CNA edits or upstream message. The diagnostic remains
+  outside the catalog: no new demo, route-count credit or expected-failure marker.
+
+
 ## Resolved
 
 ### CNA-DEMOS-ISSUE-044 -- In-flight C API generation shadows a result-handle parameter

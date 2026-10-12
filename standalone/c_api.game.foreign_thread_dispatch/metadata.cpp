@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Serve C worker calls on the game owner thread",
     .description = "Checks default handle thread affinity, explicitly pumps opted-in worker reads and writes "
                    "of the game's target step, forwards a served native failure with its structured exception details, "
-                   "checks restored affinity, then verifies that driving and destruction must refuse foreign callers even with dispatch enabled.",
+                   "checks owner-only refusals, cancels a queued property write without replay and resumes dispatch.",
     .apis = {"cna_game_create", "cna_game_destroy", "cna_game_run_frame_ext", "cna_game_set_foreign_thread_calls_ext",
              "cna_game_run_foreign_thread_calls_ext", "cna_game_get_target_elapsed_time_ticks",
              "cna_game_set_target_elapsed_time_ticks", "cna_error_get_last_info",
@@ -18,6 +18,7 @@ CNA_DEMOS_STANDALONE({
     .deterministic = true,
     .restrictions = "Standalone C11 program; requires CNA::CApi and C11 threads/atomics. "
                     "Owner-only probes never pump and safely cancel incorrectly queued calls (ISSUE-050). "
-                    "No game loop, rendering, automatic callback pumping or cancellation of permitted resource calls is demonstrated.",
+                    "A permitted property write is cancelled before execution; re-enabled dispatch serves a fresh worker. "
+                    "No game loop, rendering, automatic callback pumping or cancellation during game destruction is demonstrated.",
     .knownIssue = "CNA-DEMOS-ISSUE-050",
 })

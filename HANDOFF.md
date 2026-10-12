@@ -164,7 +164,8 @@ Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untest
 
 ## 10. Known CNA issues
 
-See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-050 (owner-only C game operations incorrectly queued),
+See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-051 (host failure C exit-hook contract mismatch),
+CNA-DEMOS-ISSUE-050 (owner-only C game operations incorrectly queued),
 CNA-DEMOS-ISSUE-049 (stale build-environment overview),
 CNA-DEMOS-ISSUE-048 (dropped parameters retained as effective metadata),
 CNA-DEMOS-ISSUE-047 (AddOutputFile rejects the configured separate output directory),
@@ -243,36 +244,42 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** apply and validate the cancellation extension described below.
-Complete 446-owner at 9e7a27b is CLOSED: tools/validate.sh exit 0; all 459 enabled CTests
-(146.63 s), SW 394/24/25/3, GL 415/25/3/3; raw failed assertions 34/35. Strict comparisons with
-ORIGINAL 446-reentry add only the two ISSUE-050 labels and the dispatch status/knownIssue change.
-All old child assertions, other C/custom-content lists and host trace remain. Selected 32 binary/
-four asset hashes and normalized stderr match. reports/checkpoint-446-owner-* is the new baseline.
-No runtime checkpoint is currently running. Source catalog446; known-issue demos25.
+**Immediate next action:** run the complete 446-cancel checkpoint against ORIGINAL
+checkpoint-446-owner. The existing dispatch extension is focused-validated: clean 11-target build,
+metadata446/0, all31 C/CLI CTests (10.08 s), both selections exactly38 PASS + two old ISSUE-050
+failures out of40. All30 older child checks remain, stderr empty. The permitted setter really
+queues (INVALID_STATE/STATE on cancellation), does not change the owner's target step, does not
+replay while disabled or after re-enabling, and a fresh worker succeeds. No new ID or global
+API count. Focused evidence: reports/checkpoint-446-cancel-focused-*.
 
-Focused owner evidence: clean 11-target build, metadata446/0, all31 C/CLI CTests (7.31 s),
-28 PASS + two labeled failures on both renderer selections, empty stderr. All eighteen old checks
-remain. No Game loop or rendering; renderer initialization still occurs. The owner-only calls
-are cancelled with INVALID_STATE/STATE without pumping, and owner cleanup succeeds. Evidence:
-reports/checkpoint-446-owner-focused-*. Owner draft is APPLIED AND STALE.
+Confirmed diagnostic-only ISSUE-051: tools/repro_c_api_host_failure.c (77 lines) reproduces
+omitted C exiting/end_run hooks despite runtime.h's promise. Two variable host frames produce
+ILBUDU after Update fails, terminal calls return CALLBACK/false without replay, and destruction
+unloads once (final ILBUDUZ). Native Game completion occurs; only the C table hooks are suppressed
+by Invoke's callbackFailure_ guard. Initial/final sources both reproduce on both selections.
+Native renderer INFO stderr is retained (89/782 bytes), not empty; no pixel validation claimed.
+CNA observed clean at 4ee1e0b553667b6e999248fcefdea729654ee497 before/after. Selected source/binary
+hashes and original streams: reports/cna-issue-051-*. No CNA edits/upstream message, catalog credit
+or extra known-failure marker. Reproducer build command and contract ambiguity: CNA_ISSUES.md.
 
-Next useful work: UNAPPLIED /tmp/cna-cancel-dispatch.c, prepared by
-/tmp/cna-prepare-cancel-dispatch.py, adds permitted queued property cancellation and re-enabling
-dispatch to the existing demo (expected 30 -> 40 child checks, same two ISSUE-050 failures).
-The worker starts directly with a setter to a different target step; no owner pumping occurs
-until explicit shutdown releases it. Require actual INVALID_STATE/STATE cancellation, verify
-unchanged owner value, disabled pump and a fresh successfully served worker after re-enabling.
-This distinguishes real queuing from a delayed pre-call THREAD refusal. No runtime claim yet.
-Prepared helpers /tmp/cna-{archive-446-cancel,446-cancel-finish,run-446-cancel-focused}.py still
-need source commit/catalog/hash capture and actual evidence. Do not apply during the full owner
-checkpoint. Later gap: host-run failure completion versus the public exiting/end_run promise.
-UNCOMPILED /tmp/cna-host-failure-probe.c (76 lines) isolates two variable host frames, second
-Update failure, terminal no-replay and destruction. Expected correct trace ILBUDUXEZ; current
-source suggests ILBUDUZ because Invoke suppresses exiting/end_run after callbackFailure_.
-Exit 0 correct contract, 1 exact omitted-callback outcome, 2 other/inconclusive. No runtime
-claim or issue ID yet. Compile only into the existing build tree after the live checkpoint.
-Keep the existing focused examples and actual APIs visible; do not add a count-only variant.
+Full helpers: /tmp/cna-archive-446-cancel.py, /tmp/cna-446-cancel-finish.py, catalog
+/tmp/cna-catalog-446-cancel.json. Replace PENDING446CANCEL with the source commit; capture32
+selected binary/four asset hashes AFTER build. Expected same446 totals SW394/24/25/3,
+GL415/25/3/3, all459 enabled CTests, raw failures34/35 unchanged. Only dispatch child grows
+30 ->40; preserve all older assertions and every other C/custom-content list. Freeze source/assets
+through runtime. The cancellation and host diagnostic drafts are APPLIED AND STALE.
+
+Latest COMPLETE baseline: 446-owner at 9e7a27b (closure2ef3d21), tools/validate.sh exit0,
+459 enabled CTests146.63 s, SW394/24/25/3, GL415/25/3/3. Exact ORIGINAL446-reentry comparisons
+add only two ISSUE-050 labels/status change; all older assertions retained. Selected32 binary/
+four asset hashes and normalized stderr match. reports/checkpoint-446-owner-*.
+
+Next useful work after closing cancellation: host failure behavior can be added to an existing
+C diagnostic example where it preserves its current RunOneFrame controls; the independent
+ISSUE-051 tool already separates terminal state/cleanup from the contradictory callback promise.
+Other open priorities include automatic callback-scope dispatch or four-influence skinned
+geometry/material rendering. Avoid merely repeating the served-property case or creating
+an ID for a scalar/enum variant. Existing phase work stays the baseline.
 
 Earlier COMPLETE catalog checkpoint: 446-palette at 55ebc57 (closure 2c3f095), all 459 enabled
 CTests (143.36 s), SW 395/23/25/3, GL 416/24/3/3, exact prior 32/33 failed assertions and all

@@ -21,6 +21,7 @@ typedef struct Request {
     int fail_volume;
     int owner_operation;
     int cancelled;
+    int cancel_pending;
     int copied_diagnostic;
     char message[512], exception_type[128], parameter[32];
     atomic_int done;
@@ -35,7 +36,11 @@ static int worker(void* argument)
     Request* request = (Request*)argument;
     /* Ordinary calls can wait for owner dispatch; driving and destruction must still refuse.
        Every out parameter stays alive for the whole call. */
-    if (request->owner_operation != ORDINARY_CALL) {
+    if (request->cancel_pending) {
+        /* This permitted property write should queue, then be cancelled without changing the
+           owner's value. Start with the setter itself, not an earlier queued read. */
+        request->result = cna_game_set_target_elapsed_time_ticks(request->game, INITIAL_TICKS);
+    } else if (request->owner_operation != ORDINARY_CALL) {
         CNA_Bool running = CNA_TRUE;
         /* These routes must refuse a foreign caller even while ordinary dispatch is enabled.
            The owner deliberately NEVER pumps this request. */
@@ -91,7 +96,7 @@ static int run_worker(CnaDemo* demo, Request* request, int pump)
     if (!cna_demo_check(demo, thrd_create(&thread, worker, request) == thrd_success,
                         "a worker starts")) return 0;
     int pumped = 1;
-    const int attempts = request->owner_operation == ORDINARY_CALL ? 2500 : 500;
+    const int attempts = request->owner_operation == ORDINARY_CALL && !request->cancel_pending ? 2500 : 500;
     for (int attempt = 0; attempt < attempts && !atomic_load_explicit(&request->done, memory_order_acquire); ++attempt) {
         /* Joining here without pumping would deadlock: the worker waits for this owner.
            A normal Game loop pumps automatically; this host explicitly serves the calls. */
@@ -116,6 +121,9 @@ static int run_worker(CnaDemo* demo, Request* request, int pump)
     }
     int result = 1;
     const int joined = thrd_join(thread, &result);
+    if (request->cancel_pending)
+        return cna_demo_check(demo, joined == thrd_success && result == 0,
+                              "the pending property worker is released before joining");
     if (request->owner_operation != ORDINARY_CALL)
         return cna_demo_check(demo, joined == thrd_success && result == 0,
                               "the owner-only worker returns or is safely cancelled before joining");
@@ -209,6 +217,36 @@ int main(int argc, char** argv)
         cna_demo_check(&demo, cna_game_get_target_elapsed_time_ticks(game, &owner_ticks) == CNA_RESULT_SUCCESS &&
                        owner_ticks == CHANGED_TICKS,
                        "the owner still has its unchanged game after the forbidden operation probe");
+    }
+    /* A permitted property call has the opposite contract from the owner-only probes above:
+       it should wait for dispatch, and disabling the feature must cancel it without execution. */
+    Request pending;
+    memset(&pending, 0, sizeof(pending));
+    pending.game = game;
+    pending.cancel_pending = 1;
+    if (cna_demo_check_result(&demo, cna_game_set_foreign_thread_calls_ext(game, CNA_TRUE),
+                              "enable dispatch for a pending property write") &&
+        run_worker(&demo, &pending, 0)) {
+        cna_demo_check(&demo, pending.cancelled && pending.result == CNA_RESULT_INVALID_STATE &&
+                       pending.error_query == CNA_RESULT_SUCCESS &&
+                       pending.error.result == CNA_RESULT_INVALID_STATE && pending.error.category == CNA_ERROR_CATEGORY_STATE,
+                       "disabling dispatch cancels an actually queued property write with INVALID_STATE");
+        printf("Cancelled property: cancelled=%d, result=%u, category=%u\n", pending.cancelled,
+               (unsigned)pending.result, (unsigned)pending.error.category);
+        int64_t ticks = 0;
+        cna_demo_check(&demo, cna_game_get_target_elapsed_time_ticks(game, &ticks) == CNA_RESULT_SUCCESS &&
+                       ticks == CHANGED_TICKS, "the cancelled setter leaves the owner's target step unchanged");
+        cna_demo_check(&demo, cna_game_run_foreign_thread_calls_ext(game) == CNA_RESULT_SUCCESS &&
+                       cna_game_get_target_elapsed_time_ticks(game, &ticks) == CNA_RESULT_SUCCESS && ticks == CHANGED_TICKS,
+                       "pumping disabled dispatch does not replay the cancelled setter");
+        Request resumed;
+        memset(&resumed, 0, sizeof(resumed));
+        resumed.game = game;
+        if (cna_demo_check_result(&demo, cna_game_set_foreign_thread_calls_ext(game, CNA_TRUE),
+                                  "re-enable dispatch after cancelling the pending write") &&
+            run_worker(&demo, &resumed, 1))
+            cna_demo_check(&demo, resumed.result == CNA_RESULT_SUCCESS && resumed.before == CHANGED_TICKS,
+                           "a fresh worker is served after re-enabling and sees no replay of the cancelled setter");
     }
     cna_demo_check_result(&demo, cna_game_set_foreign_thread_calls_ext(game, CNA_FALSE), "leave dispatch disabled");
     cna_demo_check_result(&demo, cna_game_destroy(game), "destroy the game on its owner thread");

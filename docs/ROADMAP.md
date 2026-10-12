@@ -440,7 +440,7 @@ C API demos as standalone C programs (one C game per process), built only with
 ✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, retained callback failure and exactly-once unload cleanup),
 ✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
 ✅ `c_api.game.host_frames` (copied frame hooks, explicit host stepping, draw suppression, incompatible-layout refusal, removal/replacement and terminal exit),
-✅ `c_api.game.foreign_thread_dispatch` (default/restored thread affinity, explicit owner pumping, served canonical diagnostics and no-pump owner-only probes exposing ISSUE-050),
+✅ `c_api.game.foreign_thread_dispatch` (default/restored thread affinity, explicit owner pumping, served canonical diagnostics and no-pump owner-only probes exposing ISSUE-050, permitted-write cancellation and resumed dispatch),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard, root-change cache behavior and visible text),
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),
@@ -456,9 +456,12 @@ table; draw order, visibility, enabled, collection and component events), ✅
 events). Remaining: the diagnostics/handle/content table in COVERAGE_AUDIT.md identifies
 ABI-specific gaps (thread-local diagnostics, invalid release guards, borrowed handles
 and thread dispatch). The existing dispatch demo now reproduces ISSUE-050 on RunFrameEXT/Destroy:
-owner-only operations incorrectly queue when dispatch is enabled. Its 30 child checks retain
-all eighteen old passes and expose exactly two failures on both selections. The independent
-bounded diagnostic remains available; neither change raises the global C route count. Extend the existing examples where practical; do not duplicate C++ scenes
+owner-only operations incorrectly queue when dispatch is enabled. Its 40 child checks retain
+all thirty prior assertions and expose exactly two failures on both selections; permitted queued
+write cancellation and resumed dispatch add ten passing controls. The independent
+bounded diagnostic remains available; neither change raises the global C route count. A separate host-failure diagnostic confirms
+terminal CALLBACK/false and cleanup but exposes suppressed C exit hooks despite the public
+promise (ISSUE-051); other callback failure locations remain untested. Extend the existing examples where practical; do not duplicate C++ scenes
 merely to increase the route count.
 C#/.NET demos belong with the separate `cna-dotnet` binding; decide later whether to reference or
 host them.
