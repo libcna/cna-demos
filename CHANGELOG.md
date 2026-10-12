@@ -46,12 +46,15 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing C thread-dispatch demo now retains all original controls and exposes ISSUE-050 through
+  two no-pump owner-only probes. Bounded cancellation leaves the game usable and avoids running
+  forbidden work; only the two documented assertions fail on SOFTWARE and OPENGLES3.
 - Existing C lifecycle demo rejects recursive frame driving and game destruction from Update,
   checks the callback-specific diagnostic and preserves all original timing, device-borrow and
   cleanup checks. This owner-thread boundary is independent of foreign-thread ISSUE-050.
 - Bounded C owner-thread diagnostic reproduces CNA-DEMOS-ISSUE-050: enabled foreign-thread
   dispatch incorrectly queues RunFrameEXT and Destroy. Cancellation proves queuing without
-  executing either forbidden operation; the existing demo expectations remain unchanged.
+  executing either forbidden operation; the same defect is now checked by the existing dispatch demo.
 - Existing two-bone skinning demo now checks the blended joint silhouette, refused palette-read
   counts and an accepted maximum-sized palette. All eight older checks remain; the thirteen-check
   result preserves the original rendered images on both renderers.

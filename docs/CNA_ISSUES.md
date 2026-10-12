@@ -1333,8 +1333,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment/status:** confirmed on Linux/GCC 14.2. CNA was clean at
   `4ee1e0b553667b6e999248fcefdea729654ee497` before rebuild and after reproduction. This records
   the observed clean source and selected artifacts, not an atomic full dependency snapshot.
-  Open; no CNA files changed or upstream message sent. This diagnostic is not a catalog demo,
-  and the existing 446-demo checkpoint remains unchanged; no expected-failure marker was added.
+  Open; no CNA files changed or upstream message sent.
+- **Catalog integration:** `c_api.game.foreign_thread_dispatch` now carries ISSUE-050 and checks
+  both owner-only operations without pumping. Focused SOFTWARE/OPENGLES3 runs retain all eighteen
+  original passing assertions and produce exactly 28 passes/two labeled failures out of 30.
+  Both cancellation results are INVALID_STATE/STATE; the owner remains usable and destroys the
+  game. Delayed pre-call scheduling is separately inconclusive. Both stderr streams are empty.
+  All 31 focused C/CLI CTests pass, including this expected-failure test (7.31 s). Source/logs:
+  reports/checkpoint-446-owner-focused-*. A full checkpoint is pending; the previous complete
+  446-reentry checkpoint predates this catalog integration.
 
 ## Resolved
 

@@ -13,10 +13,14 @@
 #define INITIAL_TICKS INT64_C(166667)
 #define CHANGED_TICKS INT64_C(333333)
 
+enum { ORDINARY_CALL, DRIVE_FRAME, DESTROY_GAME };
+
 typedef struct Request {
     CNA_Handle game;
     int change_step;
     int fail_volume;
+    int owner_operation;
+    int cancelled;
     int copied_diagnostic;
     char message[512], exception_type[128], parameter[32];
     atomic_int done;
@@ -29,17 +33,25 @@ typedef struct Request {
 static int worker(void* argument)
 {
     Request* request = (Request*)argument;
-    /* With dispatch off, the same handle is rejected. With it on, this call blocks until
-       its owner pumps the queue. The out parameters stay alive for the whole call. */
-    request->result = cna_game_get_target_elapsed_time_ticks(request->game, &request->before);
-    if (request->result == CNA_RESULT_SUCCESS && request->fail_volume) {
-        /* Unlike an invalid target step, this reaches the native setter after handle affinity
-           dispatch. CNA refuses 2.0 before initializing audio or changing the global volume. */
-        request->result = cna_sound_effect_set_master_volume(request->game, 2.0f);
-    } else if (request->result == CNA_RESULT_SUCCESS && request->change_step) {
-        request->result = cna_game_set_target_elapsed_time_ticks(request->game, CHANGED_TICKS);
-        if (request->result == CNA_RESULT_SUCCESS)
-            request->result = cna_game_get_target_elapsed_time_ticks(request->game, &request->after);
+    /* Ordinary calls can wait for owner dispatch; driving and destruction must still refuse.
+       Every out parameter stays alive for the whole call. */
+    if (request->owner_operation != ORDINARY_CALL) {
+        CNA_Bool running = CNA_TRUE;
+        /* These routes must refuse a foreign caller even while ordinary dispatch is enabled.
+           The owner deliberately NEVER pumps this request. */
+        request->result = request->owner_operation == DRIVE_FRAME ?
+            cna_game_run_frame_ext(request->game, &running) : cna_game_destroy(request->game);
+    } else {
+        request->result = cna_game_get_target_elapsed_time_ticks(request->game, &request->before);
+        if (request->result == CNA_RESULT_SUCCESS && request->fail_volume) {
+            /* Unlike an invalid target step, this reaches the native setter after handle affinity
+               dispatch. CNA refuses 2.0 before initializing audio or changing the global volume. */
+            request->result = cna_sound_effect_set_master_volume(request->game, 2.0f);
+        } else if (request->result == CNA_RESULT_SUCCESS && request->change_step) {
+            request->result = cna_game_set_target_elapsed_time_ticks(request->game, CHANGED_TICKS);
+            if (request->result == CNA_RESULT_SUCCESS)
+                request->result = cna_game_get_target_elapsed_time_ticks(request->game, &request->after);
+        }
     }
     request->error.struct_size = (uint32_t)sizeof(request->error);
     request->error.struct_version = UINT32_C(1);
@@ -79,7 +91,8 @@ static int run_worker(CnaDemo* demo, Request* request, int pump)
     if (!cna_demo_check(demo, thrd_create(&thread, worker, request) == thrd_success,
                         "a worker starts")) return 0;
     int pumped = 1;
-    for (int attempt = 0; attempt < 2500 && !atomic_load_explicit(&request->done, memory_order_acquire); ++attempt) {
+    const int attempts = request->owner_operation == ORDINARY_CALL ? 2500 : 500;
+    for (int attempt = 0; attempt < attempts && !atomic_load_explicit(&request->done, memory_order_acquire); ++attempt) {
         /* Joining here without pumping would deadlock: the worker waits for this owner.
            A normal Game loop pumps automatically; this host explicitly serves the calls. */
         if (pump && cna_game_run_foreign_thread_calls_ext(request->game) != CNA_RESULT_SUCCESS) {
@@ -90,6 +103,7 @@ static int run_worker(CnaDemo* demo, Request* request, int pump)
     }
     const int finished = atomic_load_explicit(&request->done, memory_order_acquire);
     if (!finished) {
+        request->cancelled = 1;
         /* Release queued calls before joining on a failure path. Never abandon stack-backed
            request storage or enter an unbounded join if the runtime itself stops responding. */
         (void)cna_game_set_foreign_thread_calls_ext(request->game, CNA_FALSE);
@@ -102,6 +116,9 @@ static int run_worker(CnaDemo* demo, Request* request, int pump)
     }
     int result = 1;
     const int joined = thrd_join(thread, &result);
+    if (request->owner_operation != ORDINARY_CALL)
+        return cna_demo_check(demo, joined == thrd_success && result == 0,
+                              "the owner-only worker returns or is safely cancelled before joining");
     return cna_demo_check(demo, pumped && finished && joined == thrd_success && result == 0,
                           "the worker completes within the bounded service loop");
 }
@@ -164,6 +181,34 @@ int main(int argc, char** argv)
                            phase == 0 ? "foreign handle calls are refused by default" :
                                         "disabling dispatch restores thread-affinity rejection");
         }
+    }
+    for (int operation = DRIVE_FRAME; operation <= DESTROY_GAME; ++operation) {
+        Request request;
+        memset(&request, 0, sizeof(request));
+        request.game = game;
+        request.owner_operation = operation;
+        /* Re-enable for each attempt: cancellation of ISSUE-050 turns dispatch off. */
+        if (!cna_demo_check_result(&demo, cna_game_set_foreign_thread_calls_ext(game, CNA_TRUE),
+                                   "enable dispatch for an owner-only operation probe")) break;
+        if (!run_worker(&demo, &request, 0)) break;
+        /* A worker delayed until after shutdown could return THREAD without testing the enabled
+           state. Report that as inconclusive, never as proof that the owner-only contract works. */
+        const int conclusive = !request.cancelled || request.result == CNA_RESULT_INVALID_STATE;
+        cna_demo_check(&demo, conclusive, "the owner-only probe reaches a conclusive call or cancellation result");
+        if (conclusive)
+            cna_demo_check(&demo, !request.cancelled && request.result == CNA_RESULT_THREAD &&
+                           request.error_query == CNA_RESULT_SUCCESS && request.error.result == CNA_RESULT_THREAD &&
+                           request.error.category == CNA_ERROR_CATEGORY_THREAD,
+                           operation == DRIVE_FRAME ?
+                           "foreign frame driving is refused without queuing (CNA-DEMOS-ISSUE-050)" :
+                           "foreign game destruction is refused without queuing (CNA-DEMOS-ISSUE-050)");
+        printf("Owner-only %s: cancelled=%d, result=%u, category=%u\n",
+               operation == DRIVE_FRAME ? "RunFrameEXT" : "Destroy", request.cancelled,
+               (unsigned)request.result, (unsigned)request.error.category);
+        int64_t owner_ticks = 0;
+        cna_demo_check(&demo, cna_game_get_target_elapsed_time_ticks(game, &owner_ticks) == CNA_RESULT_SUCCESS &&
+                       owner_ticks == CHANGED_TICKS,
+                       "the owner still has its unchanged game after the forbidden operation probe");
     }
     cna_demo_check_result(&demo, cna_game_set_foreign_thread_calls_ext(game, CNA_FALSE), "leave dispatch disabled");
     cna_demo_check_result(&demo, cna_game_destroy(game), "destroy the game on its owner thread");
