@@ -90,7 +90,7 @@ namespace
             effect_->setShadowFilterRadiusEXT(0); // each panel below selects its comparison kernel
             batch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
-            Context().Print("Two authored atlas slices store depths64/255 and192/255. Split depth3 selects the first slice inclusively; depth4 selects the second. A one-unit band blends at depth2.5. A separate fitting camera changes cascade selection without moving the rendering camera. Count0 restores the low-depth single-map lookup. The last row sends both cascades to the exact same atlas UV(.5,.5); each selected slice must keep radius2 taps in its own region.");
+            Context().Print("Two authored atlas slices store depths64/255 and192/255. Split depth3 selects the first slice inclusively; depth4 selects the second. A one-unit band blends at depth2.5. A separate fitting camera changes cascade selection without moving the rendering camera. Count0 restores the low-depth single-map lookup. Two panels in the last row send both cascades to the exact same atlas UV(.5,.5); each selected slice must keep radius2 taps in its own region. The final cell uses four horizontal strips: fitting depth7 selects slot3; its comparison depth changes from .5 to .9 and enables the yellow diagnostic tint.");
         }
         void Draw(const GameTime& time) override
         {
@@ -135,6 +135,38 @@ namespace
                     device.DrawIndexedPrimitives(PrimitiveType::TriangleList, 0, 0, 4, 0, 2);
                 }
             }
+            // Use the remaining cell for the last slot at the four-cascade limit. CNA
+            // packs cascades as horizontal strips, not a 2x2 atlas. The first three slots
+            // compare at depth .9; slot3 changes from .5 (lit) to .9 (shadowed and tinted).
+            const int fourthLeft = full.getWidthProperty() * 2 / 3;
+            const int fourthWidth = full.getWidthProperty() - fourthLeft;
+            for (int variant = 0; variant < 2; ++variant)
+            {
+                const int left = fourthLeft + fourthWidth * variant / 2;
+                const int right = fourthLeft + fourthWidth * (variant + 1) / 2;
+                device.setViewportProperty(Viewport(left, full.getHeightProperty() * 2 / 3,
+                                                   right - left, full.getHeightProperty() / 3));
+                effect_->SetBoneTransforms({Matrix::CreateTranslation(0, 0, -7)});
+                ShadowCascadeStateEXT cascades;
+                cascades.Count = ShadowCascadeStateEXT::kMaxCascades;
+                for (int slot = 0; slot < cascades.Count; ++slot)
+                {
+                    const float center = (static_cast<float>(slot) + .5f) / static_cast<float>(cascades.Count);
+                    const float depth = slot == cascades.Count - 1 && variant == 0 ? .5f : .9f;
+                    cascades.WorldToAtlas[slot] = Matrix::CreateScale(0, 0, 0) *
+                        Matrix::CreateTranslation(center, .5f, depth);
+                    cascades.SplitDistance[slot] = 2.0f * static_cast<float>(slot + 1);
+                }
+                cascades.CameraView = Matrix::getIdentityProperty();
+                cascades.DebugTint = variant == 1;
+                effect_->setShadowFilterRadiusEXT(0);
+                effect_->setShadowCascadesEXT(cascades);
+                for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
+                {
+                    pass.Apply();
+                    device.DrawIndexedPrimitives(PrimitiveType::TriangleList, 0, 0, 4, 0, 2);
+                }
+            }
             device.setViewportProperty(full);
             const std::array<const char*, 8> labels{
                 "Depth 2: near", "Depth 3: split", "Depth 4: far",
@@ -144,9 +176,9 @@ namespace
                 batch_->DrawString(*font_, labels[panel], Vector2(
                     static_cast<float>((panel % 3) * full.getWidthProperty() / 3 + 8),
                     static_cast<float>((panel / 3) * full.getHeightProperty() / 3 + 8)), Color::White);
-            batch_->DrawString(*font_, "Same atlas UV\nDifferent slice\nFilter radius 2", Vector2(
+            batch_->DrawString(*font_, "4th: lit/tinted", Vector2(
                 static_cast<float>(full.getWidthProperty() * 2 / 3 + 8),
-                static_cast<float>(full.getHeightProperty() * 5 / 6 - 24)), Color::White);
+                static_cast<float>(full.getHeightProperty() * 2 / 3 + 8)), Color::White);
             batch_->End();
             if (FramesDrawn() == 0)
             {
@@ -168,6 +200,14 @@ namespace
                     const int y = pixels.Height() * (2 * (panel / 3) + 1) / 6;
                     Context().Check(CnaDemos::Near(pixels.At(x, y), expected[panel], 1), checks[panel]);
                 }
+                const int lastLeft = pixels.Width() * 2 / 3;
+                const int lastWidth = pixels.Width() - lastLeft;
+                const int lastY = pixels.Height() * 5 / 6;
+                Context().Check(CnaDemos::Near(pixels.At(lastLeft + lastWidth / 4, lastY), lit, 1),
+                                "four cascades select the last slot and its lit depth at fitting depth7");
+                // DebugTint for slot3 is (1,1,.6), applied to the unquantized ambient/emissive floor.
+                Context().Check(CnaDemos::Near(pixels.At(lastLeft + lastWidth * 3 / 4, lastY), Color(20, 28, 15), 1),
+                                "the last slot's changed depth becomes shadowed with its yellow debug tint");
             }
             Game::Draw(time);
         }
@@ -184,19 +224,21 @@ CNA_DEMOS_GAME(ShadowCascadesDemo, {
     .id = "graphics.skinned_effect.shadow_cascades",
     .title = "Authored cascade atlas selection and sampling",
     .description = "Selects two authored shadow-atlas slices by fitting-camera depth, checks the inclusive split, "
-                   "blends across its near side, restores the single-map path with Count0 and isolates the shared atlas edge.",
+                   "blends across its near side, restores the single-map path with Count0, isolates the shared atlas edge, and checks last-slot depth and debug tint at the four-cascade limit.",
     .apis = {"SkinnedEffect::SetBoneTransforms",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowMapEXT",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowCascadesEXT",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowFilterRadiusEXT",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setLightViewProjectionEXT",
-             "Microsoft::Xna::Framework::Graphics::ShadowCascadeStateEXT"},
+             "Microsoft::Xna::Framework::Graphics::ShadowCascadeStateEXT",
+             "Microsoft::Xna::Framework::Graphics::ShadowCascadeStateEXT::kMaxCascades",
+             "Microsoft::Xna::Framework::Graphics::ShadowCascadeStateEXT::DebugTint"},
     .tags = {"skinning", "shadows", "cascades", "cnaext"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 1,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "EasyGL OPENGLES3/OPENGL33 stock receiver path only; other renderers explicitly skipped. "
-                    "Authored Color atlas, two cascades and a shared-edge radius2 case; no shadow-map generation, "
-                    "arbitrary atlas layouts, all kernel weights, four-cascade maximum, debug tint or other-renderer proof.",
+                    "Authored Color atlas, two-slice controls and the fourth slot at maximum count; no shadow-map generation, "
+                    "arbitrary atlas layouts, all kernel weights, every four-slice selection/debug color or other-renderer proof.",
 })

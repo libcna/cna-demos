@@ -103,6 +103,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **470-fourth** extends shadow_cascades from eight to ten GL controls.
+Count4 with fitting depth7 selects slot3. Its comparison depth .5 yields lit RGB(173,130,77);
+.9 with DebugTint yields shadow-floor RGB(20,28,15). Both actual800x480 images were viewed;
+all original eight pixels remain correct and regions outside the replaced ninth cell are
+RGBA-identical. Original eight drawing/check loops remain verbatim. SOFTWARE retains the
+exact stock-path skip and GL stderr is empty. No every-index/debug-color, invalid-count,
+arbitrary-atlas, shadow-producer or other-renderer credit, and no whole-image identity.
+Watched build18210 passes9scheduled/8numbered operations, all3909inputs unchanged and
+warning/error gate0. Metadata470/0. Focused/targeted21966 passes26CTests in2.71s, including
+two declared shadow skips. Focused reviewer passes BEFORE source commit. Evidence:
+checkpoint-470-fourth-focused-*. Full validation against complete470-clear is pending.
+
+Last complete baseline:
+
 Complete checkpoint **470-clear**, source `10a9593`,
 extends buffer_formats from 20 to 23 checks. Guarded application verified the unchanged
 validated41af406 base. Two dummy-audio runs (one per requested renderer environment) pass
@@ -251,27 +265,21 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply and validate the same-ID470-fourth cascade extension.
-Full470-clear session79728 is CLOSED0; source10a9593 is the comparison baseline.
-1. Run /tmp/cna-run-470-fourth-focused.py before and VIEW the actual GL image (8checks).
-   Then /tmp/cna-apply-470-fourth.py verifies completed baseline, before result and exact
-   source hash before applying /tmp/cna-fourth-cascade.cpp. Rebase if the source differs;
-   never overwrite fixes. Final syntax89591 passed; no native/image evidence yet.
-2. Watched /tmp/cna-build-470-fourth.py initial; diagnostic gate and consistency if inputs
-   change. Metadata, focused after (SOFTWAREskip/GL10), targeted shell. View actual after
-   image. /tmp/cna-review-470-fourth-focused.py runs BEFORE commit: original eight draw/
-   pixel loops, ten selected pixels and RGBA identity outside the old ninth cell. Preserve
-   and investigate any mismatch; no unreviewed relaxation or whole-image identity claim.
-3. Update semantic docs, commit, export /tmp/cna-catalog-470-fourth.json. Full wrapper,
-   capture once after build during CTest, freeze artifacts, archive both smokes and finish.
-   Baseline470-clear,483enabled CTests, unchanged470totals; GLcascade8->10checks only plus
-   separately reviewed positive title Update variance. SOFTWARE retains its exact skip.
-4. Close docs/history/HANDOFF and commit; immediately continue the public behavior audit.
-   This fixture checks fourth-slot depth and yellow debug tint at Count4; it does not prove
-   everyCount4index/palettecolor, invalidcounts, arbitraryatlases, producers or otherbackends.
-   Remaining punctual shadows, authored XACT release and other meaningful behaviors in
-   COVERAGE_AUDIT remain productive; do not equate named-member counts with completeness.
-Open ISSUE-057 retains its original pre-CTest refusal and independent private reproduction.
+IN PROGRESS:470-fourth focused evidence is complete; full validation is next.
+Build18210 CLOSED0, native/targeted21966 CLOSED0. Both actualGLimages viewed; reviewer
+passed BEFORE source commit. No unresolved focused failure. Metadata470/0, GL10/SWskip.
+1. Commit source/semantic docs, export /tmp/cna-catalog-470-fourth.json, then run
+   /tmp/cna-run-470-fourth-validation.sh. Capture ONCE with /tmp/cna-capture-470-fourth.py
+   after the full build while CTest runs; no edits/rebuild/recapture during smoke.
+2. Archive SOFTWARE after GL begins; archive GL only after outer exit0. Finish and close
+   via /tmp/cna-archive-470-fourth.py, /tmp/cna-470-fourth-finish.py and
+   /tmp/cna-close-470-fourth.py. Compare against complete470-clear (source10a9593).
+   Expected483enabled CTests, same470totals, GLcascade8->10only plus reviewed positive
+   title Update variance. Every failure/child/network control stays exact. Investigate
+   differences; preserve original refusal evidence. Review closure diff and commit.
+3. Immediately continue prepared XACT release drafts (UNAPPLIED, syntax/generator only).
+   Verify source base hashes, preserve existing assets and run native loading/state checks.
+Open ISSUE-057 keeps its original refusal and independent reproduction evidence.
 
 ## 15. Assumptions the next session must know
 
@@ -288,13 +296,14 @@ All prior shadow receiver/PCF/cascade/border/specular/query, loop release/spatia
 audio formats/bounds/paused-clear/XACT, reader, move, field, lighting, palette and EOF
 drafts are APPLIED AND STALE. Do not restore old /tmp source; retain original failures.
 
-Next UNAPPLIED: /tmp/cna-fourth-cascade.cpp. Final syntax89591 CLOSED0, empty log;
+APPLIED AND STALE: /tmp/cna-fourth-cascade.cpp. Final syntax89591 CLOSED0, empty log;
 initial54185 preceded text corrections. Original eight draw/pixel loops remain verbatim.
 CNA packs Count4 as four horizontal strips. Bone/fittingdepth7 selects slot3 after splits
 2/4/6/8; matrices map to strip centers. Last-slot comparison.5 gives litRGB173,130,77;
 comparison.9 withDebugTint gives shadowfloorRGB20,28,15. Two cards replace the old ninth
 explanatory cell. Expected new centers(599,400)/(733,400); old eight coordinates unchanged.
-No native/image evidence yet. Actual before/after GL images must be viewed; no whole-image
+BeforeGL8 and afterGL10 pass with actual images viewed; original eight pixel/draw loops
+and outer regions retained. SOFTWAREskip exact. Full validation pending; no whole-image
 identity, all-index/palette, producer, arbitrary-atlas or other-renderer credit.
 
 Source/notes/syntax/base-hash recovery: checkpoint-470-bounds-next-fourth-cascade* and

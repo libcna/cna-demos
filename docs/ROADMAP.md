@@ -1269,3 +1269,17 @@ Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
 Original mono streaming/ISSUE-038 is untouched. No extra ID or issue marker; semantic
 coverage remains incomplete. Build-only ISSUE-057 stays open with its original refusal
 and independent private staging probe preserved.
+
+## Focused470-fourth
+
+Focused **470-fourth** extends shadow_cascades from eight to ten GL controls.
+Count4 with fitting depth7 selects slot3. Its comparison depth .5 yields lit RGB(173,130,77);
+.9 with DebugTint yields shadow-floor RGB(20,28,15). Both actual800x480 images were viewed;
+all original eight pixels remain correct and regions outside the replaced ninth cell are
+RGBA-identical. Original eight drawing/check loops remain verbatim. SOFTWARE retains the
+exact stock-path skip and GL stderr is empty. No every-index/debug-color, invalid-count,
+arbitrary-atlas, shadow-producer or other-renderer credit, and no whole-image identity.
+Watched build18210 passes9scheduled/8numbered operations, all3909inputs unchanged and
+warning/error gate0. Metadata470/0. Focused/targeted21966 passes26CTests in2.71s, including
+two declared shadow skips. Focused reviewer passes BEFORE source commit. Evidence:
+checkpoint-470-fourth-focused-*. Full validation against complete470-clear is pending.
