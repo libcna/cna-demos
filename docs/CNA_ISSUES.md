@@ -755,6 +755,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux, System Link (ENet).
 - **Status:** open; not reported upstream yet.
 
+- **Demo watchdog correction (2026-10-12):** initial 466 SOFTWARE reached recovery but its
+  aggregate 20-second orchestration deadline expired before packet evaluation. The original raw
+  failure is archived and was not accepted as an ISSUE-030 reproduction. Unchanged isolated
+  runs and the per-phase-watchdog repair both retain all five original child checks: four pass,
+  and exactly the reliable-loss assertion fails on both renderers. The repair changes only
+  bounded coordination timing, including sign-in waits; packet counts, pacing, latency and
+  recovery assertions remain unchanged. This does not add a CNA issue or waive the earlier
+  interrupted evaluation. Full repaired checkpoint validation is pending.
+
 ---
 
 ### CNA-DEMOS-ISSUE-031 -- glTF STEP and CUBICSPLINE animation samplers play as LINEAR

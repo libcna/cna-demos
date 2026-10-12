@@ -567,3 +567,9 @@ also passes all19 child checks (21 with capture) on both selections: active-batc
 retention, cancellation without a deferred flush and successful release afterwards. All older
 child labels remain; both before/after image pairs were inspected. These later changes still
 need their own complete466 checkpoint, rather than inheriting full464 coverage.
+
+Initial 466 full SOFTWARE smoke exposed an orchestration deadline before the network packet
+checks, despite the same known-issue status. Exact comparison rejected it; original evidence
+is retained. The focused phase-watchdog repair preserves all five original network assertions
+on both selections. The distinct 466-timing full checkpoint must pass before this batch becomes
+a new complete baseline; complete 464 remains the reference in the meantime.

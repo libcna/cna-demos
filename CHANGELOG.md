@@ -37,6 +37,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   ISSUE-055 assertions; both images inspected. SOFTWARE declares its capability boundary.
 
 ### Fixed
+- Network simulation now gives each finite startup/burst/recovery phase its own 20-second
+  watchdog. A real full-smoke failure exhausted the previous aggregate budget before packet
+  evaluation; its raw evidence is retained. Both focused renderers preserve all five original
+  controls and the same ISSUE-030 failure, with packet counts and latency/recovery checks intact.
 - Content manifest checks now verify current reader availability across CNA's registration changes. The demo validates
   per-file reader counts, inventory stability across loading and the loaded font reader family,
   replacing its blanket assumption that every built-in reader exists at Game startup.

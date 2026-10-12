@@ -66,7 +66,9 @@ namespace
     constexpr const char* HostGamertag = "Demo Player";
     constexpr const char* SenderGamertag = "Second Player";
     using Clock = std::chrono::steady_clock;
-    constexpr std::chrono::seconds Patience(20);
+    // Bound each finite coordination phase independently. A slow renderer/child startup
+    // must not consume the later bursts' budgets; packet delivery checks remain unchanged.
+    constexpr std::chrono::seconds PhasePatience(20);
     constexpr int BurstPackets = 24;
     constexpr std::chrono::milliseconds SendInterval(20);
     constexpr std::chrono::milliseconds SettleTime(600);
@@ -136,7 +138,7 @@ namespace
         {
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
-            started_ = Clock::now();
+            phaseStarted_ = Clock::now();
         }
 
         void UnloadContent() override
@@ -159,16 +161,21 @@ namespace
             {
                 Exit();
             }
-            if (finished_ || Gamer::getSignedInGamersProperty()->getCountProperty() == 0)
+            if (finished_)
             {
                 return;
             }
-            if (Clock::now() - started_ > Patience)
+            if (Clock::now() - phaseStarted_ > PhasePatience)
             {
+                report_.Log("deadline state: phase=" + std::to_string(phase_) +
+                            ", recovery=" + std::to_string(recovering_.has_value()) +
+                            ", sender_done=" + std::to_string(senderDone_.load()));
                 report_.Check(false, "the coordinated packet exchange completes before its deadline");
                 finished_ = true;
                 return;
             }
+            // Sign-in waits are also bounded; they must not return before the watchdog runs.
+            if (Gamer::getSignedInGamersProperty()->getCountProperty() == 0) return;
             if (options_.sender)
             {
                 UpdateSender();
@@ -244,6 +251,7 @@ namespace
                         // must have a chance to be retransmitted after the connection recovers.
                         session_->setSimulatedPacketLossProperty(0.0f);
                         recovering_ = Clock::now();
+                        phaseStarted_ = *recovering_; // one separate recovery/child-cleanup budget
                         report_.Log("outage ended; waiting for reliable recovery");
                     }
                     else if (Clock::now() - *recovering_ >= RecoveryTime)
@@ -263,6 +271,7 @@ namespace
         void BeginPhase(int phase)
         {
             phase_ = phase;
+            phaseStarted_ = Clock::now();
             settling_.reset();
             session_->setSimulatedLatencyProperty(System::TimeSpan::FromMilliseconds(phase == 1 ? Latency : 0));
             session_->setSimulatedPacketLossProperty(phase == 2 ? 1.0f : 0.0f);
@@ -351,6 +360,7 @@ namespace
             if (phase_ < 2 && Signalled("go-" + std::to_string(phase_ + 1)))
             {
                 ++phase_;
+                phaseStarted_ = Clock::now();
                 sequence_ = 0;
                 burstFinished_.reset();
                 nextSend_ = Clock::now();
@@ -395,7 +405,7 @@ namespace
         Options options_;
         CnaDemos::Standalone::Report report_;
         std::unique_ptr<NetworkSession> session_;
-        Clock::time_point started_{};
+        Clock::time_point phaseStarted_{};
         int phase_ = -1;
         // The host's side.
         std::thread sender_;

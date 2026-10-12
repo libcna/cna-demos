@@ -20,7 +20,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 158 | 158 | 0 | 0 | 137 / 13 / 6 / 0 / 2 | 145 / 3 / 8 / 0 / 2 |
+| graphics | 158 | 158 | 0 | 0 | 138 / 14 / 6 / 0 / 0 | 147 / 3 / 8 / 0 / 0 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 11 | 10 | 1 | 0 | 10 / 0 / 1 / 0 / 0 | 10 / 0 / 1 / 0 / 0 |
@@ -31,8 +31,6 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `graphics.texture3d.sampler_coordinates`, `graphics.texture_cube.typed_payloads`.
-- OPENGLES3: absent from report: `graphics.texture3d.sampler_coordinates`, `graphics.texture_cube.typed_payloads`.
 
 ## XNA 4.0 API surface demonstrated
 
