@@ -97,24 +97,23 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **440-x11 checkpoint passed** at 8b370a0:
-tools/validate.sh exit 0, all 453 enabled CTests (162.54 s), both complete smoke runs and regenerated
-coverage. Explicit SDL_VIDEO_DRIVER=x11 and removed WAYLAND_DISPLAY isolate both outer Xvfb and
-the script's GL leg. ORIGINAL 440 comparisons preserve every ID/status/known issue/JSON check count
-and all 31/32 failed assertions. XML 10, compiler 15 and nested 20 child checks are unchanged. All 29
-selected native hashes match runtime capture AND the preceding inherited-display checkpoint.
-Both stderr streams lose 55 GTK warnings; SOFTWARE adds nothing, GL retains 84 previously observed
-nonfatal X protocol diagnostics. Original streams, exact reviews and display-isolation/red-green
-regression evidence are archived. No CNA source edit or new CNA issue ID.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **441 checkpoint passed** at 7361498:
+tools/validate.sh exit 0, all 454 enabled CTests (191.33 s), both complete isolated-X11 smoke runs and
+coverage regeneration. ORIGINAL 440-x11 comparisons preserve every older ID/status/known issue/
+JSON check count and all 31/32 failed assertions. New raw/existing-instance XML tool has ten passing
+child checks, matching focused evidence; older XML 10, compiler 15 and nested 20 lists are unchanged.
+All 30 selected hashes match runtime capture. Stderr is unchanged after private-path/serial
+normalization: no GTK warnings, the same content diagnostics and 84 nonfatal GL X protocol lines.
+Both original streams/reviews and binary evidence are archived. No new CNA issue or visual claim.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets --validate | 440 demos, 0 problems |
+| Metadata/assets --validate | 441 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 428 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 389 passed, 23 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 410 passed, 24 expected failures, 3 skipped, 3 manual not run |
+| CTest | 429 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 390 passed, 23 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 411 passed, 24 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | All 31/32 older failed assertions retained |
 | stderr | No GTK warnings; expected content diagnostics and 84 nonfatal GL X protocol lines archived |
 | Screenshots | Corrected Guide notification captured and inspected on both renderers |
@@ -232,16 +231,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** content.custom.intermediate_existing_instances is applied, built and
-focused-runtime validated: ten child checks pass under both displayless selections, stderr empty
-(/tmp/cna-441-xml-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}). Clean /tmp/cna-441-build.log,
-metadata 441/0 and all 22 targeted CTests pass (/tmp/cna-441-targeted-ctest.log, 11.16 s), including
-all 16 C ABI demos. Commit and run full 441 against ORIGINAL checkpoint-440-x11 with explicit outer
-SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY xvfb-run. Expected SOFTWARE 390/23/25/3, GL 411/24/3/3,
-all 454 enabled CTests; preserve every old status/known issue and 31/32 raw failed assertions. Capture
-30 selected hashes (prior 29 plus the new XML executable). No source/assets/rebuild during runtime.
-After that, continue actual compiler parameter fingerprints/removed-source collection or another
-meaningful remaining public content behavior. Basic cache, sibling and XML raw calls are covered.
+**Immediate next action:** complete 441 at 7361498 is archived/reviewed. Apply the prepared
+compiler configuration extension below to the existing incremental_compiler ID (15 -> 20 checks),
+build, run focused selections and targeted tests, update docs and complete 441-config against
+ORIGINAL checkpoint-441 with explicit X11 isolation. All prior checks must remain and 31/32 raw
+failed assertions stay unchanged. Reuse the same 30 selected native artifact paths for hashes.
+The new raw/existing-instance XML demo is fully validated; do not reapply its stale drafts.
+
+441 focused evidence: /tmp/cna-441-xml-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}, ten child checks
+per run and empty stderr. /tmp/cna-441-build.log clean, metadata 441/0 and all 22 targeted CTests pass
+(/tmp/cna-441-targeted-ctest.log, 11.16 s), including all 16 C ABI demos. Full evidence is archived
+as reports/checkpoint-441-*; both exact original comparisons and selected hash verification pass.
 
 XML integration source 9995869 is built and fully validated. Focused evidence:
 /tmp/cna-440-xml-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}, ten child checks each, private paths
@@ -528,12 +528,28 @@ duplicate demos; only add a meaningful dynamic-schema case. Public source review
 concurrent Build requires reentrant components/log sinks; no parallel execution is claimed from
 serial compiler counters or registry freezing.
 
+Prepared next extension after complete 441 (NOT applied/built/run):
+/tmp/cna-compiler-configuration.cpp and /tmp/cna-compiler-configuration-metadata.cpp extend the
+existing incremental_compiler from 15 to 20 checks. Source APIs verified: public
+ContentBuildConfigurationFileName/Parse/Find, Context.Parameters and typed i64 JSON values stored
+as strings; CLI uses --config or the conventional .cna-content.json, not an invented parameter flag.
+Processor identity becomes 2 for the new bounded Bonus parameter (default 0 preserves all old cases).
+Per-asset Bonus 5 should rebuild only arena to 32, whitespace-only rewriting should skip both,
+Bonus 6 should rebuild arena to 33; manifest values/fingerprints and callback counters are inspected.
+Removing menu.score should collect its trusted obsolete output while preserving the live node and
+unowned note, and restoring it should publish menu again. Both owned outputs exist before the
+original guarded/successful clean controls; exact latest arena bytes are captured and restored
+only after observing modified-output refusal. All fifteen older assertion texts remain. Five new
+checks and all counter/value expectations are unexecuted. /tmp/cna-draft-compiler-configuration.py
+can regenerate these drafts from current sources; its C++ escape sequences were reviewed/corrected
+before compilation. Prefer reading the drafts rather than overwriting later changes blindly.
+
 Next meaningful compiler gaps: actual parameter fingerprints, removed-source collection and
 missing-manifest recovery; choose coherent behavior rather than new IDs per cache variation. Actual
 multi-output/deployment publication failures and concurrent publishers remain distinct larger
 workstreams. Registry freezing and late mutation rejection are now exercised by the integrity extension.
 XML aliases remain ISSUE-046; direct custom raw/existing-instance serialization now has focused
-runtime evidence above, pending full 441 inclusion.
+runtime evidence above, included in complete 441.
 The XML-to-XNB integration now uses public RegisterXnaXmlSourceContentPipeline with a shared XNA
 ContentCompiler after TypeSerializerFor<ProfileSource> and AddTypeWriter<ProfileWriter>. Public
 factory options.xnbContainer supplies the container configuration. Actual original profile XML
@@ -545,16 +561,19 @@ return 1 is explicitly asserted, not a failed demo. Two DEBUG runtime load lines
 CNB-refusal diagnostic lines are retained per run. No GPU, genuine-XNA, external-object-graph,
 crash-consistency or multi-output publication claim. Do not repeat basic cache/sibling coverage.
 
-**Latest complete checkpoint (2026-10-12):** 440-x11 at 8b370a0, tools/validate.sh exit 0.
-SOFTWARE 389/23/25/3, OPENGLES3 410/24/3/3; all 453 enabled CTests, metadata 440/0. Archive prefix
-reports/checkpoint-440-x11: original renderer JSON/stdout/stderr, both -review.json, build/ctest/
-validation logs and -binaries.json (29 selected artifacts), -display-review.json and red/green
-validation-tool test logs. Exact ORIGINAL 440 comparison preserves all ID/status/known issue/count
-sets and 31/32 failed assertions; XML 10, compiler 15 and nested 20 child lists unchanged. All 29 hashes
-match runtime capture and inherited 440. GTK warnings 55 -> 0 per renderer; GL has 84 known nonfatal
-X protocol diagnostics, SOFTWARE no added stderr messages. Native-handle controls confirm the
-explicit X11 selection. Coverage 293/329 types, 1354/2326 members, 158/3210 C routes; both runtime
-columns complete. Use ORIGINAL checkpoint-440-x11 next.
+**Latest complete checkpoint (2026-10-12):** 441 at 7361498, tools/validate.sh exit 0.
+SOFTWARE 390/23/25/3, OPENGLES3 411/24/3/3; all 454 enabled CTests (191.33 s), metadata 441/0. Archive
+prefix reports/checkpoint-441: original renderer JSON/stdout/stderr, both -review.json, build/ctest/
+validation logs and -binaries.json (30 selected artifacts, including new raw XML tool and SDL3/mixer).
+Exact ORIGINAL 440-x11 reviews retain all older IDs/statuses/known issues/counts and 31/32 raw failed
+assertions. New raw XML 10 PASS; prior XML 10, compiler 15 and nested 20 lists retained. Normalized stderr
+unchanged, including 84 GL X protocol diagnostics and no GTK warnings. Hashes match runtime capture.
+Coverage 293/329 types, 1354/2326 members, 158/3210 C routes; both runtime columns complete.
+Use ORIGINAL checkpoint-441 next. No native rebuild during runtime and no atomic dependency snapshot.
+
+Historical 440-x11 at 8b370a0 remains archived: SOFTWARE 389/23/25/3, GL 410/24/3/3, all 453 enabled
+CTests (162.54 s), 29 hashes. It corrected inherited Wayland selection with tested X11 isolation,
+retained every assertion, and removed 55 GTK warnings per renderer without filtering stderr.
 
 Historical 440 at 9995869 remains archived with both reviews and 29 hashes: same totals/child checks,
 new XML integration 10 PASS, all 453 enabled CTests (332.25 s). That invocation inherited Wayland;
