@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 23), 8 (content, 45), 9 (audio 21 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 16 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-444 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+445 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
-content 45 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 16 (standalone C programs). Every declared category has demos.
@@ -239,14 +239,36 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** complete 444 is archived/reviewed at source 116d8f4. Continue with
-/tmp/cna-source-root-capabilities.cpp, an UNAPPLIED draft with ten proposed native checks. It
-registers the built-in CNJ/Texture2D pipeline and copies the original checker/sprite-strip PNGs
-into private disjoint roots. Check actual decoded pixels/dependency aliases, remapping/local paths,
-unknown capability/traversal/absolute/equal-root refusal and repair. Header/source APIs were read;
-there is no build/runtime evidence yet. Original assets are declared in metadata. Prepared future
-/tmp/cna-archive-445.py and /tmp/cna-445-finish.py retain PENDING445; review/adapt after focused runs.
-Use ORIGINAL checkpoint-444 as the next full baseline. Keep source/assets frozen during runtimes.
+**Immediate next action:** source_root_capabilities is built and focused-validated: ten native
+checks pass on SOFTWARE and OPENGLES3 without a display. It uses built-in CNJ/Texture2D slices,
+original copied checker/sprite-strip PNGs and exact CPU decoded pixels, dependency root aliases,
+relocation with identical CNB bytes, local-path isolation, and contextual refusal/repair. Native
+pipeline_diagnostics now prints its actual three captured messages for viewers; all nine retained
+checks pass on both selections. Both stderr streams are empty and private trees independently gone.
+No new CNA issue. Focused evidence/source hashes/builds: reports/checkpoint-445-focused-*.
+
+Initial source-root SOFTWARE run passed nine of ten checks; the traversal assertion expected the
+normalization diagnostic, but leading ../source/image.png remains after lexically_normal and CNA
+correctly rejects it at the explicit dot-segment guard. The fixed check still requires Import,
+CNA.CnjImporter, exact source/asset and "must not contain '.' or '..'". Final stdout records that
+actual refusal. Original failure: reports/checkpoint-445-first-roots-SOFTWARE.*. No CNA edit.
+Initial build /tmp/cna-445-build.log passed with the known Draco CMP0148 configure warning;
+final /tmp/cna-445-final-build.log passed without compiler diagnostics. Metadata 445/0; all 29
+targeted CTests passed (11.25 s). Next: commit source and run complete 445 against ORIGINAL
+checkpoint-444; capture 32 selected hashes after its build, then freeze sources/assets through
+both smoke runs. Prepared /tmp/cna-archive-445.py RENDERER and /tmp/cna-445-finish.py still contain
+PENDING445. They require ten new native checks, unchanged old statuses/known issues/counts (apart
+from positive per-Update title counts), identical old content/24 host child checks, exact 32/33
+failures and unchanged normalized stderr. Expect 458 enabled CTests, SW 394/23/25/3, GL 415/24/3/3.
+
+The /tmp source-root draft is APPLIED AND STALE: it still has the wrong traversal diagnostic.
+Use repository sources only. After this checkpoint, continue meaningful build-environment or C ABI
+callback/dispatch behavior. A concrete source-audited environment candidate is XNB Reach refusing
+NPOT mipmaps, HiDef accepting them and explicit resize enabling Reach; the CNB route intentionally
+has no such target-profile gate. Verify public registration/inspection APIs before implementation;
+no runtime or genuine-XNA evidence is claimed for this candidate. Alias syntax enumeration and
+ordinary root-map accessors do not justify separate demos. Nested capabilities, CLI fingerprints,
+symlink semantics and cross-platform containment remain separate from this focused root demo.
 
 444 evidence: /tmp/cna-demos-444-validation.log exit 0; 457 enabled CTests, SOFTWARE 393/23/25/3,
 GL 414/24/3/3, exact 32/33 failures retained. All older statuses/known issues and content child lists

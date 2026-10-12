@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Explicit shared-art source-root capabilities through the built-in CNJ texture pipeline: actual
+  decoded pixels, dependency aliases, relocated/local sources, refused paths/grants and repair.
+  Console examples now show captured build messages and contextual source-root refusals.
 - Native pipeline diagnostics compile an opacity strip with actual 8-bit precision loss and verify
   downstream logger forwarding, retained result messages, exact/no-warning inputs and failure/retry.
 - Existing C host-frame demo removes and replaces hooks between frames with a separate caller

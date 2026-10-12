@@ -189,7 +189,7 @@ a check that all authored colors remain visible and that a blank texture row can
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (45 demos; remaining below)
+## Phase 8 -- content 🟨 (46 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -211,6 +211,10 @@ a check that all authored colors remain visible and that a blank texture row can
   Existing example now has 15 passing checks: copied carrier lifetime and separate stable-identity
   versus C++ payload guards at Import, Process and Write, with exact error context. An explicitly
   documented absent XNB route gives the game's reason at Selection while CNB remains supported.
+  ✅ `content.custom.source_root_capabilities`: built-in CNJ texture compilation reads original
+  shared art through a request-local alias. Ten focused checks cover exact pixels, recorded roots,
+  identical output after relocation, ordinary local references, contextual refusals and repair.
+  No GPU, nested-capability propagation or CLI incremental-fingerprint claim.
   ✅ `content.custom.pipeline_diagnostics`: an original opacity strip produces real 8-bit
   quantization loss, contextual importer/processor/writer messages and a copied downstream log.
   Nine checks cover exact endpoints without warnings, null sinks, import failure and repair.

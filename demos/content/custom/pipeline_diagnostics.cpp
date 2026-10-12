@@ -158,6 +158,15 @@ namespace
             request.logicalName = "ui/fade";
             request.logger = &logger;
             const auto built = pipeline.Build(request);
+            // Show the first build's actual captured messages to an interactive demo viewer.
+            for (const auto& message : logger.messages)
+            {
+                const char* level = message.level == Pipeline::ContentLogLevel::Info ? "Info" :
+                    message.level == Pipeline::ContentLogLevel::Important ? "Important" :
+                    message.level == Pipeline::ContentLogLevel::Warning ? "Warning" : "Error";
+                ctx.Print("{} [{}] {}: {}", level, Pipeline::ContentPipelineStageName(message.stage),
+                          message.component, message.text);
+            }
 
             const auto document = Cnb::CnbDocument::Parse(built.output.bytes, "opacity result");
             Cnb::CnbByteReader samples(document.ChunkData(document.FindSingle(Data).value()), "opacity samples");
