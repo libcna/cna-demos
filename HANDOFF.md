@@ -97,17 +97,16 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **439 checkpoint passed**
-through cna-demos revision `d6afc7b`; tools/validate.sh completed both smoke runs and coverage
-regeneration (/tmp/cna-demos-439-validation.log). ORIGINAL checkpoint-438-outputs comparisons
-retain all older statuses/known issues and exact failed assertions (31/32). The unchanged window
-title demo performs one check per Update: OPENGLES3 recorded 11 rather than 10 passing checks;
-all other JSON counts are unchanged. All fifteen older nested checks remain among twenty passing
-checks; the new compiler passes ten child checks. Both original stdout/stderr streams and exact
-reviews are archived. Stderr adds four expected DEBUG asset loads and two intentional rejected-import
-diagnostic lines per renderer. GL retains 84 X protocol diagnostics with changed serial numbers.
-All 26 selected binary hashes match the runtime capture; no runtime rebuild or atomic dependency
-source snapshot is claimed. The first failed Guide timing attempt is archived separately.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **439-integrity checkpoint passed**
+through cna-demos revision `83c919d`; tools/validate.sh exited 0 with both complete smoke runs and
+coverage regeneration (/tmp/cna-demos-439-integrity-validation.log). ORIGINAL checkpoint-439
+comparisons retain all IDs/statuses/known issues and exact failed assertions (31/32). OPENGLES3
+window.title returns from 11 to 10 passing Update checks; other JSON counts are unchanged.
+Compiler child checks 10 -> 15 retain all older checks and match focused runs; nested checks stay 20.
+All 26 selected binary hashes match runtime capture. No atomic dependency/full-transitive snapshot
+is claimed. Both stderr streams add the intentional clean refusal and 55 GTK initialization warnings;
+GL no longer emits the earlier 84 X protocol lines. Original streams, exact reviews and separate GTK
+investigation evidence are archived; see the immediate next-task section for the unresolved warning.
 
 | Check | Result |
 |---|---|
@@ -118,7 +117,7 @@ source snapshot is claimed. The first failed Guide timing attempt is archived se
 | SOFTWARE smoke | 388 passed, 23 expected failures, 25 skipped, 3 manual not run |
 | OPENGLES3 smoke (private Xvfb) | 409 passed, 24 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | All 31/32 older failed assertions retained |
-| stderr | Expected compiler rejection and sibling loads; original streams archived |
+| stderr | Expected clean refusal plus display-dependent GTK warnings investigated and archived |
 | Screenshots | Corrected Guide notification captured and inspected on both renderers |
 | Content build | Passed (CNB, XNB, media, content project) |
 
@@ -234,15 +233,21 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** compiler integrity extension is built and passes fifteen child checks
-under both displayless renderer selections; all ten original checks are retained and both private
-paths are independently verified removed. Build /tmp/cna-439-integrity-build.log is clean; metadata
-439/0 and all 21 targeted CTests pass (/tmp/cna-439-integrity-targeted-ctest.log). Full
-439-integrity validation is next, using ORIGINAL checkpoint-439 as baseline. Expected unchanged
-439 IDs/statuses/known issues and 31/32 failed assertions; compiler child checks 10 -> 15. Archive
-both original streams and 26 selected artifact hashes. Do not mutate source/assets or rebuild
-during full runtime validation. After closing it, continue the XML-to-XNB source integration draft
-in /tmp/cna-xml-xnb-main.cpp (not applied/built/run), verified against actual public source headers.
+**Immediate next action:** complete 439-integrity is archived/reviewed at 83c919d. Continue with
+/tmp/cna-xml-xnb-main.cpp, /tmp/cna-xml-xnb-metadata.cpp and /tmp/cna-xml-xnb-CMakeLists.txt:
+apply as content.custom.xml_xnb_pipeline (new focused XML source/writer/runtime integration),
+build and run both displayless selections. Ten proposed checks are still unexecuted. Then update
+coverage/docs and run the complete 440 checkpoint against ORIGINAL checkpoint-439-integrity.
+A later raw/existing-instance draft is /tmp/cna-xml-existing-main.cpp; do not jump ahead of XML-XNB.
+
+GTK observation: full 439-integrity adds exactly 55 gtk_disable_setlocale-before-gtk_init warnings
+per renderer. Unchanged window.title reproduces once under each Xvfb selection and passes; displayless
+SOFTWARE passes without warning. Evidence reports/checkpoint-439-integrity-gtk-* and
+checkpoint-439-integrity-stderr-review.json. No suppression or CNA edit. Selected libcna is
+unchanged; ldd resolves SDL3/mixer from sibling .sdl-prebuilt-Linux-x86_64-wayland, outside the 26
+selected artifacts. Root cause not established, so no new CNA issue ID. Add these resolved SDL
+library hashes to subsequent selected captures (plus the new XML executable), without claiming
+full dependency closure. This observation does not block independent content coverage.
 
 439 targeted evidence:
 - nested_builds passes 20 child checks and incremental_compiler ten, under both fresh displayless
@@ -479,7 +484,7 @@ XML extension batch (built and targeted validation complete, no new demo IDs):
   /tmp/cna-439-notification-targeted-ctest.log. Five consecutive notification CTests pass
   in /tmp/cna-439-notification-repeat-ctest.log (13.35 s); commit and retry the complete checkpoint.
 
-Integrity extension (built and focused-runtime validated; full checkpoint pending):
+Integrity extension (included in complete 439-integrity checkpoint):
 The existing incremental_compiler ID now has fifteen passing checks. Accepted registry IsFrozen
 and late RegisterWriter refusal pass. Writer version 1 -> 2 rebuilds both nodes despite identical
 encoding; same-length output corruption with restored mtime rebuilds only that node; invalid
@@ -489,6 +494,13 @@ the original successful-clean control. All ten older checks remain. Evidence:
 /tmp/cna-439-integrity-{SOFTWARE,OPENGLES3}.{json,log}. Expected corrupt-manifest warning and clean
 refusal are preserved, not failed demo checks. No new CNA issue; no concurrency/crash-consistency
 claim. Integrity drafts are APPLIED AND STALE; use repository sources.
+
+After XML-to-XNB integration, the source-reviewed raw/existing-instance gap is documented in
+COVERAGE_AUDIT.md: both raw forms bypass Null/Type selection, and caller-carrier forwarding alone
+does not prove identity reuse. A future focused custom serializer should fill a preallocated
+reference object while preserving nonserialized state, with ordinary/raw attribute controls.
+An unapplied, unbuilt draft is now /tmp/cna-xml-existing-main.cpp (eight expected checks);
+no metadata/build integration or runtime execution yet. It follows XML-to-XNB, not ahead of it.
 
 Next meaningful compiler gaps: actual parameter fingerprints, removed-source collection and
 missing-manifest recovery; choose coherent behavior rather than new IDs per cache variation. Actual
@@ -504,16 +516,19 @@ in a RunContentCompiler factory despite their internally named C++ type. A futur
 XML -> real custom writer -> XNB -> public runtime reader/ContentManager scenario would close the
 integration gap; no such runtime execution is claimed yet. Do not repeat the now-tested sibling recognition or basic cache route.
 
-**Latest complete checkpoint (2026-10-12):** 439 at d6afc7b, full tools/validate.sh completed.
-SOFTWARE 388/23/25/3, OPENGLES3 409/24/3/3; 452 enabled CTests, 439/0 metadata.
-Archives reports/checkpoint-439-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}, both -review.json,
-checkpoint-439-{build,ctest,validation}.log and -binaries.json (26 selected artifacts).
-Exact original reviews retain every old status/known issue/failed assertion (31/32); OPENGLES3
-window.title has one extra passing Update check, all other JSON counts unchanged. Nested child
-checks 15 -> 20, new incremental compiler ten passing. Stderr adds four sibling DEBUG loads and
-two intentional invalid-import diagnostic lines; GL's 84 X protocol lines have changed serials.
-Binary hashes match runtime capture. Coverage 293/329 types, 1354/2326 named members,
-158/3210 C routes; both runtime columns complete. Use ORIGINAL checkpoint-439 next.
+**Latest complete checkpoint (2026-10-12):** 439-integrity at 83c919d, tools/validate.sh exit 0.
+SOFTWARE 388/23/25/3, OPENGLES3 409/24/3/3; all 452 enabled CTests passed (266.63 s), metadata 439/0.
+Archives reports/checkpoint-439-integrity-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}, both -review.json,
+checkpoint-439-integrity-{build,ctest,validation}.log and -binaries.json (26 selected artifacts).
+Both strict comparisons against ORIGINAL 439 preserve all 31/32 failed assertions and all ID/status/
+known-issue sets. Window.title's GL Update checks 11 -> 10; others unchanged. Compiler child checks 10 -> 15
+retain all older checks; nested remains 20. GTK diagnostics investigated separately above; no hidden
+filter change. Selected hashes match runtime capture. Coverage 293/329 types, 1354/2326 named members,
+158/3210 C routes; runtime columns complete. Use ORIGINAL checkpoint-439-integrity next.
+
+Historical complete 439 at d6afc7b also remains archived with 26 selected hashes and both reviews:
+same totals, compiler 10 checks and nested 20. It corrected the Guide observer timing defect after
+preserving the failed first attempt; all 452 enabled CTests passed (164.62 s).
 
 Historical 438-outputs checkpoint at e6327d2 remains archived with its original reviews, binary
 hashes and logs: SOFTWARE 387/23/25/3, OPENGLES3 408/24/3/3; 451 enabled CTests. It introduced
