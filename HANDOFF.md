@@ -171,7 +171,8 @@ Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untest
 
 ## 10. Known CNA issues
 
-See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-051 (host failure C exit-hook contract mismatch),
+See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-053 (in-flight FrameworkDispatcher build blocker),
+CNA-DEMOS-ISSUE-051 (host failure C exit-hook contract mismatch),
 CNA-DEMOS-ISSUE-050 (owner-only C game operations incorrectly queued),
 CNA-DEMOS-ISSUE-049 (stale build-environment overview),
 CNA-DEMOS-ISSUE-048 (dropped parameters retained as effective metadata),
@@ -307,9 +308,8 @@ The current C source passes GCC 14 C99 -Wall/-Wextra/-Werror syntax-only validat
 pending ISSUE-053 repair. /tmp/cna-launch-parameters* source drafts are older, APPLIED AND STALE.
 Prepared /tmp/cna-run-456-focused.py, /tmp/cna-archive-456.py, /tmp/cna-456-finish.py and
 /tmp/cna-capture-456.py expect 15 child checks, unchanged ORIGINAL 455 statuses/failures and
-old C/custom-content lists/traces, plus 35 selected binaries/four assets. Replace PENDING_456
-with the final source commit before archiving, and capture runtime hashes after the checkpoint
-build succeeds. /tmp/cna-catalog-456.json and source-only coverage are current metadata evidence.
+old C/custom-content lists/traces, plus 35 selected binaries/four assets. The helpers now name source commit 8f2b04c; update that if source changes, and capture runtime
+hashes after the checkpoint build succeeds. /tmp/cna-catalog-456.json and source-only coverage are current metadata evidence.
 Then continue the semantic member audit. Remaining skinned gaps include independent diffuse contributions from lights 1/2, vertex/texture-
 alpha interactions, vertex-lighting specular and arbitrary joint scales. C gaps include automatic Draw dispatch, other callback failures and destruction
 cancellation; this batch demonstrates automatic Update specifically. Canonical TLS now covers
@@ -373,3 +373,18 @@ linked from ROADMAP phase 5. Future coherent work includes face/region/mip trans
 formats and retained-resource lifetime. DDSFromStreamEXT currently calls Read once using total
 Length (source review), unlike the exercised 2D route: prepare a bounded original-fixture probe
 before calling this a runtime bug. No cube draft or new runtime/API credit yet.
+
+Current C source/docs are preserved in local commit 8f2b04c. The 456 archive/finish helpers now
+name that source commit (no PENDING_456 placeholder); copies and the focused/capture helpers are
+archived as reports/checkpoint-456-cna-*. They have not produced a complete checkpoint.
+
+A third UNAPPLIED later draft is /tmp/cna-cube-face-transfers.cpp (155 lines, eight intended checks;
+target demos/graphics/texture_cube/face_transfers.cpp). Actual TextureCube and SOFTWARE/EasyGL
+transfer sources were read. It checks six independent Color faces, a 2x2 patch with different
+source/destination array offsets, 2x2/1x1 authored mips, refused writes with deliberately different
+replacement texels, and untouched output guards on a refused read. Its atlas is 2D read-back data,
+not evidence of direct GPU readback or cube shader sampling. Corrected metadata ordering; final
+GCC 14 syntax-only run passes with empty diagnostics. No native link/runtime/visual credit.
+Draft/helper/log are archived as checkpoint-456-next-cna-cube-*. Apply only after 456 and the
+prepared animation extension checkpoint are complete. DDS stream short-read suspicion remains
+source-only and separate; no cube DDS reproducer or issue has been created.
