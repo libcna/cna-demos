@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete467-readers: all480enabled CTests and both full smoke suites preserve every old
+  failure and exact child/network controls. Selected binary/asset hashes, including the new
+  primitive fixture, stay stable; normalized application diagnostics are unchanged.
 - Complete467-move: all480enabled CTests and both full smoke suites preserve all38/42old
   failures and exact child/network controls. Selected artifacts stay unchanged through runtime,
   and normalized application diagnostics remain identical.

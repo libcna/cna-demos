@@ -752,3 +752,28 @@ signed Int32 fixture is staged identically; all three old fixtures remain byte-i
 The nine-operation build (eight numbered completions) exits0 with no diagnostics and no changed
 hashes among3,906watched CNA source/header/CMake inputs. Metadata467/0; all23targeted CLI/XNB/
 manifest CTests pass in3.16s, including one expected known-issue failure. Full validation is pending.
+
+Complete checkpoint **467-readers**, source `583ee6f`, preserves all 467 IDs. The existing
+reader_versions demo retains every17custom-policy control and adds six built-in lifetime controls:
+withdrawal, cache independence, refusal without resurrection and a subsequent Game declaration.
+Both requested environments pass23checks; neither Game runs and no renderer/visual credit is claimed.
+Console ownProcess keeps the mutation out of the parent/browser registry. Original three fixtures
+remain byte-identical; the new90byte signed primitive is generated and staged identically.
+Focused build9operations/8numbered completions, metadata467/0 and23targeted CTests3.16s passed.
+The full build schedules7operations; metadata467/0 and all480enabled CTests pass in169.66s
+(448passed incl27WILL_FAIL,32skips; three additional manual tests disabled).
+SOFTWARE405/27/32/3 and OPENGLES3 432/29/3/3. All38/42previous failed assertions, every C/custom
+child list/trace and all five network controls remain exact. Only planned JSON changes are
+reader17->23both; positive window.title Update variance, if present, is recorded in the reviews.
+All35selected binary/fourexistingasset hashes and both copies of the newfixture remain stable
+through runtime. Normalized application stderr is unchanged, including42known GL X protocol
+records and the deliberate shader compiler error. Separate outerXvfb diagnostics contain11
+exact amdgpu pairs (previously15); independently journaled inner/outer exits are0.
+Capture source observation: CNAe842e74733 (clean);
+final observation: CNAe842e74733 (clean).
+The e842e7473 commit before capture changed only external link-architecture documentation.
+These source observations and selected runtime hashes are not an atomic/full dependency snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-467-readers-*.
+Generated coverage now records293/329types,1374/2326XNA members,174/3210C routes; explicit
+Game construction adds one named member. Semantic reader
+lifetime coverage grew without a new ID; comprehensive coverage is not established.
