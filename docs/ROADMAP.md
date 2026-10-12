@@ -706,3 +706,16 @@ an atomic source/input snapshot.
 All capture/archive/finish helpers pass; immutable evidence: checkpoint-467-field-*.
 Generated coverage remains293/329types,1373/2326XNA members,174/3210C routes. Semantic coverage
 grew without adding IDs/routes; comprehensive coverage is not established.
+
+Focused checkpoint 467-move extends existing Texture3D sampling with move construction,
+occupied-destination move assignment and explicit disposal/destruction of both source wrappers.
+All six original GL controls remain, plus two ownership checks; SOFTWARE retains its declared
+CustomEffects skip. The actual GL images were inspected and are RGBA-identical, with fifteen
+sample centers verified. Metadata: 467 demos, zero problems. All 17 targeted CLI/volume CTests
+pass (one declared capability skip), 3.50 s. GL stderr is empty. The initial broad build
+scheduled 671 operations (668 numbered completions), followed by a seven-operation consistency
+build; both exit zero and all 3,906 watched CNA source/header/CMake hashes stay unchanged
+across each build. CNA commits advanced from 3a1d77b47 to 0ae1c41b1 while already-dirty content
+was committed; this is not evidence of changed watched contents during compilation. The known
+vendored Draco CMP0148 developer warning remains. These observations are not an atomic or
+full transitive input snapshot. Full checkpoint validation is pending.

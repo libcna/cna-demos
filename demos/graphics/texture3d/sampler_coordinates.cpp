@@ -5,6 +5,7 @@
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "CNA/ShaderDialectEXT.hpp"
@@ -64,11 +65,36 @@ void main() { FragColor = texture(volume, vec3(0.5, 0.5, sliceZ)); }
             shader_ = std::make_unique<ShaderEffect>(device, header + VertexSource, header + FragmentSource);
             if (!Context().Check(shader_->IsEffectValid(), "the custom sampler3D shader compiles"))
                 throw std::runtime_error(shader_->GetCompileErrorEXT());
-            volume_ = std::make_unique<Texture3D>(device, 2, 2, 2, false, SurfaceFormat::Color);
             // Z varies slowest. All four texels in each slice share a color, isolating W behavior.
             const std::array<Color, 8> texels{Color::Red, Color::Red, Color::Red, Color::Red,
                                              Color::Blue, Color::Blue, Color::Blue, Color::Blue};
-            volume_->SetData(texels.data(), 8);
+            {
+                // Stage an upload, then transfer ownership into the scene. No sampler references
+                // either temporary; shader binding happens only after both have been destroyed.
+                Texture3D uploaded(device, 2, 2, 2, false, SurfaceFormat::Color);
+                uploaded.SetData(texels.data(), 8);
+                Texture3D staged(std::move(uploaded));
+                uploaded.Dispose();
+                std::array<Color, 8> observed;
+                observed.fill(Color::Black);
+                staged.GetData(observed.data(), 8);
+                Context().Check(!staged.getIsDisposedProperty() && observed == texels,
+                                "move construction keeps the uploaded volume alive after the source wrapper is disposed");
+
+                // A distinct occupied destination makes assignment's replacement observable.
+                volume_ = std::make_unique<Texture3D>(device, 1, 1, 1, false, SurfaceFormat::Color);
+                const Color placeholder = Color::Green;
+                volume_->SetData(&placeholder, 1);
+                *volume_ = std::move(staged);
+                staged.Dispose();
+                observed.fill(Color::Black);
+                volume_->GetData(observed.data(), 8);
+                Context().Check(!volume_->getIsDisposedProperty() && volume_->getWidthProperty() == 2 &&
+                                volume_->getHeightProperty() == 2 && volume_->getDepthProperty() == 2 &&
+                                observed == texels,
+                                "move assignment replaces an occupied destination and retains both slices after the staging wrapper is disposed");
+            } // both moved-from wrappers are destroyed before any sampler3D draw
+
             declaration_.emplace(static_cast<int>(sizeof(Vertex)), std::vector<VertexElement>{
                 VertexElement(0, VertexElementFormat::Vector3, VertexElementUsage::Position, 0)});
             const std::array<Vertex, 6> quad{{{-1,-1,0}, {1,-1,0}, {-1,1,0},
@@ -157,15 +183,18 @@ CNA_DEMOS_GAME(VolumeSamplingDemo, {
     .id = "graphics.texture3d.sampler_coordinates",
     .title = "Sampling volume slices and the W axis",
     .description = "Binds a real two-slice Texture3D to an explicit custom sampler unit, compares point selection with "
-                   "linear interpolation, and checks Clamp versus Wrap beyond the W coordinate range.",
+                   "linear interpolation, and checks Clamp versus Wrap beyond the W coordinate range after moving staged "
+                   "volume ownership and releasing both temporary wrappers.",
     .apis = {"ShaderEffect::SetTexture", "ShaderEffect::SetUniformInt", "ShaderEffect::SetUniformFloat",
-             "Texture3D::Texture3D", "Texture3D::SetData", "GraphicsDevice::SamplerStates", "SamplerState::PointClamp",
+             "Texture3D::Texture3D", "Texture3D::SetData", "Texture3D::GetData", "GraphicsResource::Dispose",
+             "GraphicsDevice::SamplerStates", "SamplerState::PointClamp",
              "SamplerState::LinearClamp", "SamplerState::AddressW", "TextureAddressMode::Wrap"},
-    .tags = {"texture", "volume", "shader", "sampler", "filtering", "cnaext"},
+    .tags = {"texture", "volume", "shader", "sampler", "filtering", "ownership", "cnaext"},
     .needs = CnaDemos::Need::Texture3D | CnaDemos::Need::CustomEffects,
     .frames = 1,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "GLSL only. Backbuffer pixels establish actual sampling of a single-level Color volume; "
-                    "no mip filtering, volume GetData/GPU readback, non-Color format or varying X/Y behavior is inferred.",
+                    "public GetData checks retained payloads after moves. No direct GPU readback, active-binding move, external-reference "
+                    "rebinding, cross-device assignment, mip filtering, non-Color format or varying X/Y behavior is inferred.",
 })
