@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-462 catalog demos (last complete 461; cube and Draw extension focused-tested): math 78, game 33, graphics 154 (19 SpriteBatch, 8 device, 9 texture2d, 3 texture_cube, 1 texture3d, 7 sprite font,
+462 fully validated demos: math 78, game 33, graphics 154 (19 SpriteBatch, 8 device, 9 texture2d, 3 texture_cube, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 25 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
@@ -101,38 +101,37 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-**Complete 461 checkpoint passed at a447ad2.** tools/validate.sh exited 0; all 474 enabled
-CTests passed (234.89s), both full isolated-X11 smokes and coverage regeneration completed.
-Metadata 461/0; coverage 293/329 types,1372/2326 XNA members,166/3210 C routes. This is semantic
-shader progress without implying additional public types or comprehensive member coverage.
-Original complete 459 comparison adds only clone_state/compiler_diagnostics. Every older
-status/known issue/count, raw failure and C/custom-content child list/trace is retained.
-SOFTWARE raw failures stay37; GL38 ->41 adds exactly the three ISSUE-055 clone assertions.
-The generic GL comparator's requested review is resolved explicitly by these exact checks.
-No title count variance occurred. All 35 selected binaries/four assets remained unchanged through
-runtime. Normalized stderr adds only two SOFTWARE CustomEffects skips and exactly the focused
-GL compiler diagnostic (including its blank continuation line). No diagnostics were suppressed.
-CNA 2a5100d72 observed at runtime capture; final external state archived separately. No atomic
-build-input or full transitive dependency snapshot is claimed.
+**Complete 462 checkpoint passed at bbddd34.** tools/validate.sh exited 0; all 475 enabled
+CTests passed (228.67 s), both full isolated-X11 smokes and coverage regeneration completed.
+Metadata 462/0; coverage 293/329 types, 1372/2326 XNA members, 166/3210 C routes.
+Original complete 461 comparison adds only sampler_ownership and six passing automatic-Draw
+child controls. Every older status/known issue/raw failure and C/custom-content child list/trace
+is retained after filtering those six specifically named additions. Raw failures remain 37/41.
+Only GL game.window.title checks vary 10 -> 11 (unchanged per-Update checks under a frame limit).
+All 35 selected binaries/four assets stayed unchanged through runtime. Normalized stderr adds
+exactly one SOFTWARE CustomEffects skip; GL is identical, including the existing deliberate
+compiler diagnostic and 84 Xprotocol lines. No diagnostics suppressed. CNA 2a5100d72 observed
+at runtime capture; final external HEAD90bd2d33c/state archived separately, not an atomic
+input snapshot.
 
 | Check | Result |
 |---|---|
-| Existing linux-full checkpoint build | Passed420 scheduled targets; no compiler diagnostics |
-| Metadata/assets --validate | 461 demos, 0 problems |
+| Existing linux-full checkpoint build | Passed seven scheduled targets; no compiler diagnostics |
+| Metadata/assets --validate | 462 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smokes and coverage regeneration |
-| CTest | 446 passed (including 26 WILL_FAIL), 28 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 404 passed, 26 expected failures, 28 skipped, 3 manual not run |
-| OPENGLES3 smoke | 427 passed, 28 expected failures,3 skipped, 3 manual not run |
-| New behavior | Compiler 7 GL checks pass; clone 6 pass/exactly 3 ISSUE-055 failures; two SOFTWARE capability skips |
-| Artifacts/diagnostics | Selected hashes stable; exact declared skip/compiler stderr additions only |
+| CTest | 446 passed (including 26 WILL_FAIL), 29 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 404 passed, 26 expected failures, 29 skipped, 3 manual not run |
+| OPENGLES3 smoke | 428 passed, 28 expected failures, 3 skipped, 3 manual not run |
+| New behavior | Cube 5 GL checks/SW skip; C automatic_dispatch 21 child checks on both selections |
+| Artifacts/diagnostics | Selected hashes stable; only the one declared SOFTWARE skip diagnostic added |
 
-Both initial clone images and the diagnostic cyan-card image were actually inspected; the
-marked focused clone frame2 is RGBA-identical to its initial capture. No full-smoke screenshot
-or physical GPU claim. The manifest retains 13 checks on both renderers; wording acknowledges
-query-triggered built-in registration without asserting a lazy transition.
-Complete reports/catalog/helpers: build/linux-full/reports/checkpoint-461-*; initial unmarked
-clone evidence remains checkpoint-460-*. Previous complete 459 at 5ed8055 (closure 19bd3dd) has
-472 enabled CTests, SOFTWARE404/26/26/3, GL426/27/3/3 and37/38 raw failed assertions.
+The focused cube GL image was actually inspected: six solid faces survive source disposal,
+including the shared orange +Z edit. No in-face orientation/mip filtering/direct GPU-readback
+claim. The C extension preserves all 15 Update controls and adds six first-Draw checks; exact
+trace pending=1/before=333333/observed=500000/updates_between=0/result=0. No C image, Draw-served
+device borrow or latency guarantee. Complete reports/catalog/helpers: checkpoint-462-*.
+Previous complete 461 at a447ad2 (closure 4f9fe87) has 474 enabled CTests, SW 404/26/28/3,
+GL 427/28/3/3 and the same 37/41 failed assertions; full history is CHECKPOINT_HISTORY.md.
 
 ## 8. Exact commands that work
 
@@ -251,25 +250,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**462 cube/Draw batch is built and focused-tested; commit and start full validation.**
-Build 21458 passed 83 scheduled targets; metadata 462/0. Cube sampler_ownership passes 5 GL checks
-and its 800x480 image was actually inspected; GL stderr empty, SOFTWARE CustomEffects skip.
-Existing c_api.game.automatic_dispatch passes 21 child checks on both selections with empty
-stderr: all 15 original labels/order remain after removing 6 explicit Draw additions. Its old
-Update trace is unchanged; new trace pending=1/before=333333/observed=500000/updates_between=0/
-result=0 proves first-Draw observation after a pending BeginDraw setter. No Draw-served borrow
-or visual/latency claim. Focused logs/review are reports/checkpoint-462-focused-*.
+**Full 462 is complete. Continue with the two source-only drafts below.** Apply compressed
+cube blocks and custom uniform palettes as one focused graphics batch. Both drafts passed
+syntax checks but have NO native runtime/image evidence. Use actual outcomes to classify
+failures; do not grant credit for source inspection or constructor support alone.
 
-The next full baseline is ORIGINAL COMPLETE461:37 SOFTWARE/41 GL raw failures. Preserve every
-old status/known issue/count and C/custom-content child list/trace, filtering only the six named
-new automatic_dispatch checks. The new cube ID should pass5 on GL or skip on SOFTWARE.
-Expected stderr: exactly one additional SOFTWARE CustomEffects skip; GL normalized stream
-unchanged, including its existing deliberate compiler error. Positive title Update count
-variance remains the sole pre-reviewed old count change. No source/assets/rebuilds during full
-runtime. The old /tmp cube/C drafts are now APPLIED AND STALE. Continue after full 462.
-
-Further gaps: typed/compressed cube transfers, volume custom sampling, shader uniform arrays,
-remaining skinned-light behaviors and wider public C routes. Do not restart completed phases.
+The next full baseline is ORIGINAL COMPLETE462: 37 SOFTWARE/41 GL raw failures, all old
+statuses/known issues/counts and all C/custom-content child lists/traces (automatic_dispatch
+now has 21 child checks). Only a positive title Update-count variance is pre-reviewed.
+Adapt the 462 helpers after focused outcomes are known. No source/assets/rebuilds during live
+complete runtime. Reuse build/linux-full, shared ccache and -j4; do not edit external CNA.
+Continue after the next checkpoint; broad type coverage is not comprehensive member coverage.
 
 ## 15. Assumptions the next session must know
 
@@ -281,10 +272,20 @@ remaining skinned-light behaviors and wider public C routes. Do not restart comp
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Source-only predecessors are retained as checkpoint-461-next-*; they are applied and stale.
-The C source also prevents a repeated BeginDraw from launching a second worker. Runtime runners
-and exact focused comparison: /tmp/cna-run-462-initial.py and /tmp/cna-review-462-focused.py.
+The old cube sampler and C Draw drafts are APPLIED AND STALE. Their source-only predecessors
+remain checkpoint-461-next-*; native evidence is checkpoint-462-focused-*.
 
-Full462 helpers ready: /tmp/cna-capture-462.py after its build/during CTest, then
-/tmp/cna-archive-462.py SOFTWARE and OPENGLES3 after each complete smoke, and
-/tmp/cna-462-finish.py after exit0. They compare original461 and exact six Draw additions.
+Next NOT-APPLIED drafts (archived as checkpoint-462-next-* with syntax logs/reviews):
+- /tmp/cna-cube-compressed-blocks.cpp: eight intended checks for DXT1 byte-block windows,
+  8x8 faces, padded 4x4/2x2/1x1 mips and refused short/misaligned transfer preservation.
+  Only constructor NotSupportedException is a capability skip. No decoded pixels, DDS loading,
+  sampling, other DXT alpha formats or direct GPU-readback claim. Wording edits after syntax only.
+- /tmp/cna-shader-uniform-palettes.cpp: four intended GL checks for two explicit M11..M44
+  matrix groups and two vec3 entries (counts 2, not scalar counts 32/6), caller-buffer overwrite
+  and same-program replacement in a second viewport. Swapped translations and new colors must
+  both reach pixels. Plain vertex indices address the entries. After syntax only explicit vector
+  include, comment spacing and inherited Effect::Apply metadata naming changed. No runtime yet.
+
+Remaining areas include typed packed/float cube transfers, volume custom sampling, other
+uniform-array families, remaining skinned-light behaviors and wider public C routes. Completed
+shader clone/compiler/cube-lifetime/automatic-Draw work is baseline, not a restart list.

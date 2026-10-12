@@ -341,6 +341,11 @@ public readback through Texture2D; it does not establish direct GPU readback or 
 | Copy/move wrappers and Dispose | sampler_ownership now passes five GL checks: copied wrappers keep independent Name values; a complete Color face upload through the source remains shared; disposing the source leaves its sibling readable; custom samplerCube draws all six surviving faces including the changed orange +Z face. The GL image was actually inspected and stderr is empty. SOFTWARE declares CustomEffects absence, so this ownership scene has no SOFTWARE runtime credit. Unlike the tested simple Texture2D full upload, the cube Color route keeps sharing. Copy assignment across devices, moving an actively bound wrapper and device teardown remain separate lifecycle decisions; plain move syntax needs no independent demo. |
 | GetTypeName, GetRenderer, protected renderer constructor/Dispose hook | Reflection identity is trivial. GetRenderer is the internal renderer bridge, and protected construction supports RenderTargetCube; no independent game-facing examples are justified for these implementation entry points. Device/context-loss restoration is a separate renderer/manual lifecycle workstream, not established by CPU shadows found in source. |
 
+Full 462 at bbddd34 passes all 475 enabled CTests and both complete smokes. The new retained-cube
+scene adds five GL checks/SOFTWARE skip; six automatic-Draw child checks preserve every older
+C control. Original 461 raw failures stay 37/41; selected hashes stay stable and GL stderr is
+unchanged. No broader compressed/typed-format coverage follows from the Color sampler scene.
+
 ### SpriteBatch and SpriteFont
 
 Reviewed against current public headers and the 19 sprite-batch / 7 sprite-font demos. This is

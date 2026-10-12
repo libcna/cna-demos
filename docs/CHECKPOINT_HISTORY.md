@@ -1892,3 +1892,38 @@ System::FormatException) was fixed before the five-check CNA reproduction and re
 Complete reports/catalog/helpers: build/linux-full/reports/checkpoint-459-*.
 Previous complete 457 at ab2a92b (closure 768797e) has 470 enabled CTests and SW 404/25/25/3,
 GL 425/26/3/3. Historical preparation details are in docs/CHECKPOINT_HISTORY.md.
+
+## Complete461 before retained-cube and automatic-Draw coverage
+
+**Complete 461 checkpoint passed at a447ad2.** tools/validate.sh exited 0; all 474 enabled
+CTests passed (234.89s), both full isolated-X11 smokes and coverage regeneration completed.
+Metadata 461/0; coverage 293/329 types,1372/2326 XNA members,166/3210 C routes. This is semantic
+shader progress without implying additional public types or comprehensive member coverage.
+Original complete 459 comparison adds only clone_state/compiler_diagnostics. Every older
+status/known issue/count, raw failure and C/custom-content child list/trace is retained.
+SOFTWARE raw failures stay37; GL38 ->41 adds exactly the three ISSUE-055 clone assertions.
+The generic GL comparator's requested review is resolved explicitly by these exact checks.
+No title count variance occurred. All 35 selected binaries/four assets remained unchanged through
+runtime. Normalized stderr adds only two SOFTWARE CustomEffects skips and exactly the focused
+GL compiler diagnostic (including its blank continuation line). No diagnostics were suppressed.
+CNA 2a5100d72 observed at runtime capture; final external state archived separately. No atomic
+build-input or full transitive dependency snapshot is claimed.
+
+| Check | Result |
+|---|---|
+| Existing linux-full checkpoint build | Passed420 scheduled targets; no compiler diagnostics |
+| Metadata/assets --validate | 461 demos, 0 problems |
+| tools/validate.sh | Passed, both complete smokes and coverage regeneration |
+| CTest | 446 passed (including 26 WILL_FAIL), 28 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 404 passed, 26 expected failures, 28 skipped, 3 manual not run |
+| OPENGLES3 smoke | 427 passed, 28 expected failures,3 skipped, 3 manual not run |
+| New behavior | Compiler 7 GL checks pass; clone 6 pass/exactly 3 ISSUE-055 failures; two SOFTWARE capability skips |
+| Artifacts/diagnostics | Selected hashes stable; exact declared skip/compiler stderr additions only |
+
+Both initial clone images and the diagnostic cyan-card image were actually inspected; the
+marked focused clone frame2 is RGBA-identical to its initial capture. No full-smoke screenshot
+or physical GPU claim. The manifest retains 13 checks on both renderers; wording acknowledges
+query-triggered built-in registration without asserting a lazy transition.
+Complete reports/catalog/helpers: build/linux-full/reports/checkpoint-461-*; initial unmarked
+clone evidence remains checkpoint-460-*. Previous complete 459 at 5ed8055 (closure 19bd3dd) has
+472 enabled CTests, SOFTWARE404/26/26/3, GL426/27/3/3 and37/38 raw failed assertions.

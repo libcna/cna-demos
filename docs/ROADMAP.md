@@ -127,7 +127,8 @@ a check that all authored colors remain visible and that a blank texture row can
   Full 457 passes all 470 enabled CTests and both smokes, retaining all original 35/36 failures.
   ✅ `graphics.texture_cube.sampler_ownership`: shared full-face edits, independent wrapper names,
   source disposal and actual custom cube sampling of all six faces. Five GL checks pass, image
-  inspected and stderr empty; SOFTWARE capability skip.
+  inspected and stderr empty; SOFTWARE capability skip. Full 462 passes 475 enabled CTests and
+  both smokes while retaining every old 37/41 failed assertion.
   🟨 `graphics.texture_cube.dds_streams`: full and prefixed RGB24 cubes/mips and ordinary
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
