@@ -102,6 +102,10 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused467-scene is also verified (see next task): palette6GLchecks and C38childchecks with
+only original ISSUE-056, inspected images,24targeted CTests. Current metadata names174C routes;
+full467-scene is pending. No new catalog ID.
+
 **Complete 467 at source c45349f is verified.** tools/validate.sh and outer Xvfb both return 0,
 independently journaled; session 41309 is CLOSED. Build: 7 scheduled operations, metadata 467/0,
 all 480 enabled CTests in 217.01 s (448 passed incl27 WILL_FAIL,32 skipped,3 manual disabled).
@@ -245,25 +249,30 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-Complete 467 at c45349f is the full baseline. All full validation/reviews are closed. Commit
-closure docs and immediately continue the prepared **same-count467-scene** extensions below.
-Syntax checker /tmp/cna-467-next-syntax.py and before runner /tmp/cna-run-467-scene-focused.py
-are CLOSED successfully. Both syntax logs are empty. Original GL palette image was actually
-inspected: four passing checks; SOFTWARE declares CustomEffects skip. Both C before cases
-retain31child checks with only ISSUE-056. Native after validation remains pending.
+HIGHEST PRIORITY: focused467-scene is verified; commit source/docs then run its complete
+checkpoint against ORIGINAL COMPLETE467 (sourcec45349f, closure7e62f83). Both drafts are now
+APPLIED AND STALE. Build12scheduled/11completed, metadata467/0, all24targeted CTests pass
+(16passed/8capability skips,4.14s). GL palette4->6checks and both actually inspected images
+retain original color controls plus the shared parent transform/tint; all17selected before/after
+pixels are exact. Two rows became three, so whole-image identity is not claimed. C storage
+31->38childchecks retains every old line/status plus precisely7positive permission controls,
+with37passes and only original ISSUE-056. GL/C stderr empty; SW keeps the same declared skip.
+Evidence/review:reports/checkpoint-467-scene-focused-*. Current inventory174C routes; generated
+COVERAGE.md remains complete467's170-route snapshot until new full validation finishes.
 
-Then apply /tmp/cna-uniform-scene.cpp to existing uniform_palettes.cpp and
-/tmp/cna-storage-read-only.c to existing C save_game/main.c, adding the four new C metadata
-routes and descriptions. Build-j4, metadata, focused after run, relevant CTests, actual image
-inspection and exact old-child comparison. Expected after: palette6GL/SWskip, C38childchecks
-with37passes and only the original ISSUE-056 failure. No new ID; C routes would174/3210.
+Prepared /tmp/cna-run-467-scene-validation.sh performs full validation with inner/outer exit
+journals and separate Xvfb diagnostics. After its build, run /tmp/cna-capture-467-scene.py
+before smokes and never recapture after runtime. Do not edit sources/rebuild during smokes.
+Archive/review complete smoke outputs using /tmp/cna-archive-467-scene.py SOFTWARE/OPENGLES3,
+then /tmp/cna-467-scene-finish.py. Helpers prepared, not yet executed. Catalog is
+/tmp/cna-catalog-467-scene.json. Expected480enabled CTests, totals SW405/27/32/3, GL432/29/3/3.
+Preserve all38/42raw failures, every old outcome/knownIssue and C/custom/network evidence,
+filtering only7named permission additions. Only palette4->6GLis an intended old JSON change;
+positive title Update variance needs explicit review. No new normalized stderr is expected.
 
-Update audit/status/coverage/handoff, commit source, then complete checkpoint467-scene against
-ORIGINAL COMPLETE467. Preserve all38/42raw failures, all old outcomes/knownIssues and C/custom
-lists/traces after filtering precisely7new permission checks. Only palette4->6is an intended
-old JSON count change; positive title Update variance needs explicit review. Expected totals
-stay SW405/27/32/3 and GL432/29/3/3. Do not overwrite current467archives or infer success merely
-from known-issue status. Continue deeper public API behavior after the checkpoint closes.
+After full validation update coverage/closure docs and continue deeper public behaviors;
+independent skinned diffuse-light terms and further resource/dispatch contracts remain useful
+coherent extensions. No new demo ID is needed for the current batch.
 
 ## 15. Assumptions the next session must know
 
@@ -308,23 +317,23 @@ an atomic input snapshot. Evidence/sources/helpers: reports/checkpoint-466-trans
 Focused runner /tmp/cna-run-467-focused.py before/after and exact review completed.
 
 
-NOT-APPLIED follow-up /tmp/cna-uniform-scene.cpp extends existing uniform_palettes rather
+APPLIED follow-up /tmp/cna-uniform-scene.cpp (predecessor now stale) extends existing uniform_palettes rather
 than adding an ID. It retains four original checks in the first two resized viewports and
 adds a third scene-wide parent transform/premultiplied tint, using actual scalar SetUniformMat4
 and SetUniformVec4 alongside the existing arrays. Explicit16float matrix layout, caller-buffer
 overwrite, expected shifted centers RGB(0,32,128)/(64,0,128), vacated old centers and retained
 gap distinguish transform order and tint/alpha. Six intended checks. Before/after images will
 change from two rows to three; preserve old assertions but do not claim pixel identity.
-Source proposal; syntax passed, native/visual after evidence pending. Full467is closed.
+Source proposal; syntax passed, native/visual after evidence now verified (see section14). Full467is closed.
 
-Second NOT-APPLIED follow-up /tmp/cna-storage-read-only.c extends the now-applied31check C
+APPLIED follow-up /tmp/cna-storage-read-only.c (predecessor now stale) extends the now-applied31check C
 save_game. It adds7coherent permission controls: Read+Truncate refusal before file changes,
 valid explicit Read open, combined CanRead/CanWrite/CanSeek inspection, refused one-byte
 write, unchanged position/length, exact original save bytes and successful close. Actual
 storage.h routes and canonical exception mapping (NotSupported -> CNA_RESULT_NOT_SUPPORTED)
 were reviewed. Existing31checks including ISSUE-056 remain; expected38total/one known failure.
 Four new C routes would need metadata (open_file_access and three capability queries).
-Syntax passed; native validation pending. Preserve the same demo-owned file/cleanup, no new ID.
+Syntax and native validation passed (37positive checks/only existing056). Preserve the same demo-owned file/cleanup, no new ID.
 
 Next helpers are now running as described in section14: /tmp/cna-467-next-syntax.py checks both follow-up drafts
 with existing C++/C flags; /tmp/cna-run-467-scene-focused.py captures current palette/storage

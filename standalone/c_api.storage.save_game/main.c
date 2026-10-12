@@ -163,6 +163,46 @@ int main(int argc, char** argv)
                            "the save reads back byte for byte");
         }
 
+        /* A reader can inspect the same save without permission to change it. Rejected mode
+           combinations and write attempts must leave the original bytes and position intact. */
+        {
+            CNA_Handle rejected = CNA_INVALID_HANDLE;
+            CNA_Handle read_only = CNA_INVALID_HANDLE;
+            CNA_Result result = cna_storage_container_open_file_access(container, view("slot1.sav"),
+                CNA_FILE_MODE_TRUNCATE, CNA_FILE_ACCESS_READ, &rejected);
+            cna_demo_check(&demo, result == CNA_RESULT_INVALID_ARGUMENT && rejected == CNA_INVALID_HANDLE,
+                           "a read-only open refuses truncation before changing the saved file");
+            if (rejected != CNA_INVALID_HANDLE)
+                cna_demo_check_result(&demo, cna_storage_stream_close(rejected), "close an unexpectedly accepted truncating stream");
+            if (cna_demo_check_result(&demo, cna_storage_container_open_file_access(container, view("slot1.sav"),
+                    CNA_FILE_MODE_OPEN, CNA_FILE_ACCESS_READ, &read_only), "open the save with explicit read-only access")) {
+                CNA_Bool can_read = CNA_FALSE, can_write = CNA_TRUE, can_seek = CNA_FALSE;
+                const uint8_t replacement = 0xE7;
+                int64_t position = INT64_C(-987654321), unchanged_length = INT64_C(-987654321);
+                uint8_t read_only_bytes[SAVE_SIZE];
+                uint64_t read_only_count = UINT64_MAX;
+                cna_demo_check(&demo,
+                    cna_storage_stream_get_can_read(read_only, &can_read) == CNA_RESULT_SUCCESS &&
+                    cna_storage_stream_get_can_write(read_only, &can_write) == CNA_RESULT_SUCCESS &&
+                    cna_storage_stream_get_can_seek(read_only, &can_seek) == CNA_RESULT_SUCCESS &&
+                    can_read == CNA_TRUE && can_write == CNA_FALSE && can_seek == CNA_TRUE,
+                    "the read-only stream reports reading and seeking but no writing capability");
+                result = cna_storage_stream_write(read_only, &replacement, 1U);
+                cna_demo_check(&demo, result == CNA_RESULT_NOT_SUPPORTED,
+                               "writing to the read-only save reports NOT_SUPPORTED");
+                cna_demo_check(&demo,
+                    cna_storage_stream_get_position(read_only, &position) == CNA_RESULT_SUCCESS && position == 0 &&
+                    cna_storage_stream_get_length(read_only, &unchanged_length) == CNA_RESULT_SUCCESS && unchanged_length == SAVE_SIZE,
+                    "the refused write leaves the read position and file length unchanged");
+                memset(read_only_bytes, 0xA5, sizeof(read_only_bytes));
+                result = cna_storage_stream_read(read_only, read_only_bytes, sizeof(read_only_bytes), &read_only_count);
+                cna_demo_check(&demo, result == CNA_RESULT_SUCCESS && read_only_count == SAVE_SIZE &&
+                               memcmp(read_only_bytes, save, SAVE_SIZE) == 0,
+                               "the readable stream retains every original save byte after both permission refusals");
+                cna_demo_check_result(&demo, cna_storage_stream_close(read_only), "close the explicit read-only stream");
+            }
+        }
+
         /* "Delete save". */
         cna_demo_check_result(&demo, cna_storage_container_delete_file(container, view("slot1.sav")),
                               "cna_storage_container_delete_file");

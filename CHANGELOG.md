@@ -23,6 +23,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- Shader palettes now compose a shared scalar matrix and premultiplied scene tint over both
+  array entries; six GL checks preserve the old controls and verify transformed pixels.
+- C storage now demonstrates explicit read-only permissions, refused truncation/writing and
+  preserved file bytes, position and length. Seven new controls pass; only EOF056 remains.
 - Three-tap shader image filter: five GL checks and inspected pixels demonstrate scalar weight
   arrays, vec2 offsets and non-square texel size with same-program updates.
 - Existing C save example adds parent/child release guards, guarded short EOF reads, rewind

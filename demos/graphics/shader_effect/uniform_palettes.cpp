@@ -41,18 +41,20 @@ namespace
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in float aPalette;
 uniform mat4 transforms[2];
+uniform mat4 sceneTransform;
 uniform vec3 paletteColors[2];
 out vec3 tint;
 void main() {
     int slot = int(aPalette + 0.5);
-    gl_Position = transforms[slot] * vec4(aPosition, 1.0);
+    gl_Position = sceneTransform * transforms[slot] * vec4(aPosition, 1.0);
     tint = paletteColors[slot];
 }
 )";
     constexpr const char* Fragment = R"(
 in vec3 tint;
+uniform vec4 sceneTint;
 out vec4 FragColor;
-void main() { FragColor = vec4(tint, 1.0); }
+void main() { FragColor = vec4(tint * sceneTint.rgb, 1.0) * sceneTint.a; }
 )";
     class UniformPaletteDemo final : public CnaDemos::DemoGame
     {
@@ -83,7 +85,7 @@ void main() { FragColor = vec4(tint, 1.0); }
         {
             auto& device = getGraphicsDeviceProperty();
             const auto full = device.getViewportProperty();
-            const int width = full.getWidthProperty(), halfHeight = full.getHeightProperty() / 2;
+            const int width = full.getWidthProperty(), rowHeight = full.getHeightProperty() / 3;
             const Matrix left = Matrix::CreateTranslation(-.5f, 0, 0);
             const Matrix right = Matrix::CreateTranslation(.5f, 0, 0);
             // Each group is M11..M44, matching SetUniformMat4's public payload convention.
@@ -98,7 +100,7 @@ void main() { FragColor = vec4(tint, 1.0); }
             device.setDepthStencilStateProperty(DepthStencilState::None);
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             device.SetVertexBuffer(vertices_.get());
-            for (int row = 0; row < 2; ++row)
+            for (int row = 0; row < 3; ++row)
             {
                 auto matrices = transforms;
                 std::array<float, 6> colors{1, 0, 0, 0, 1, 0};
@@ -107,30 +109,54 @@ void main() { FragColor = vec4(tint, 1.0); }
                     matrices[12] = .5f; matrices[28] = -.5f; // swap the two M41 translations
                     colors = {0, 1, 1, 1, 0, 1}; // cyan slot0, magenta slot1
                 }
-                device.setViewportProperty(Viewport(0, row * halfHeight, width, halfHeight));
+                // The scene transform is a parent of both per-object palette transforms.
+                // Row-vector XNA composition scales first, then translates; upload M11..M44 explicitly.
+                const Matrix scene = row == 2 ? Matrix::CreateScale(.5f, .5f, 1) *
+                                                Matrix::CreateTranslation(0, .2f, 0) : Matrix::getIdentityProperty();
+                std::array<float, 16> sceneValues{
+                    scene.M11,scene.M12,scene.M13,scene.M14, scene.M21,scene.M22,scene.M23,scene.M24,
+                    scene.M31,scene.M32,scene.M33,scene.M34, scene.M41,scene.M42,scene.M43,scene.M44};
+                if (row == 2) colors = {0, 1, 1, 1, 0, 1};
+                device.setBlendStateProperty(row == 2 ? BlendState::AlphaBlend : BlendState::Opaque);
+                device.setViewportProperty(Viewport(0, row * rowHeight, width, rowHeight));
                 shader_->Apply();
+                shader_->SetUniformMat4("sceneTransform", sceneValues.data()); // one parent matrix
+                if (row == 2) shader_->SetUniformVec4("sceneTint", .5f, .25f, 1, .5f);
+                else shader_->SetUniformVec4("sceneTint", 1, 1, 1, 1);
                 shader_->SetUniformMat4Array("transforms", matrices.data(), 2); // two matrices, not 32 floats
                 shader_->SetUniformVec3Array("paletteColors", colors.data(), 2); // two vectors, not 6 floats
-                matrices.fill(0); colors.fill(0); // caller storage can change after the upload
+                sceneValues.fill(0); matrices.fill(0); colors.fill(0); // caller storage can change after the upload
                 device.DrawPrimitives(PrimitiveType::TriangleList, 0, 2);
             }
             device.setViewportProperty(full);
             batch_->Begin();
-            batch_->DrawString(*font_, "Initial transform and color palettes", Vector2(40, 20), Color::White);
-            batch_->DrawString(*font_, "Swapped transforms and updated colors", Vector2(40, static_cast<float>(halfHeight + 20)), Color::White);
+            batch_->DrawString(*font_, "Initial transform and color palettes", Vector2(40, 12), Color::White);
+            batch_->DrawString(*font_, "Swapped transforms and updated colors", Vector2(40, static_cast<float>(rowHeight + 12)), Color::White);
+            batch_->DrawString(*font_, "Shared scene transform and premultiplied tint",
+                               Vector2(40, static_cast<float>(rowHeight * 2 + 12)), Color::White);
             batch_->End();
             if (FramesDrawn() == 0)
             {
                 const CnaDemos::BackBufferPixels screen(device);
-                Context().Check(CnaDemos::Near(screen.At(width / 4, halfHeight / 2), Color::Red, 0) &&
-                                CnaDemos::Near(screen.At(width * 3 / 4, halfHeight / 2), Color::Lime, 0),
+                Context().Check(CnaDemos::Near(screen.At(width / 4, rowHeight / 2), Color::Red, 0) &&
+                                CnaDemos::Near(screen.At(width * 3 / 4, rowHeight / 2), Color::Lime, 0),
                                 "both transform and vec3 array entries render their initial palette values after caller buffers change");
-                Context().Check(CnaDemos::Near(screen.At(width / 4, halfHeight * 3 / 2), Color::Magenta, 0) &&
-                                CnaDemos::Near(screen.At(width * 3 / 4, halfHeight * 3 / 2), Color::Cyan, 0),
+                Context().Check(CnaDemos::Near(screen.At(width / 4, rowHeight * 3 / 2), Color::Magenta, 0) &&
+                                CnaDemos::Near(screen.At(width * 3 / 4, rowHeight * 3 / 2), Color::Cyan, 0),
                                 "updating the same program swaps the two matrix translations and replaces both color entries");
-                Context().Check(CnaDemos::Near(screen.At(width / 2, halfHeight / 2), Color::Black, 0) &&
-                                CnaDemos::Near(screen.At(width / 2, halfHeight * 3 / 2), Color::Black, 0),
+                Context().Check(CnaDemos::Near(screen.At(width / 2, rowHeight / 2), Color::Black, 0) &&
+                                CnaDemos::Near(screen.At(width / 2, rowHeight * 3 / 2), Color::Black, 0),
                                 "the translated triangle pairs leave the center gap unchanged in both viewports");
+                const int sceneY = rowHeight * 2 + rowHeight * 2 / 5;
+                // Parent scaling moves centers from +/-0.5 to +/-0.25; +0.2 Y moves them upwards.
+                // Cyan/magenta times RGB(.5,.25,1), then premultiplied alpha .5 over black.
+                Context().Check(CnaDemos::Near(screen.At(width * 3 / 8, sceneY), Color(0, 32, 128), 1) &&
+                                CnaDemos::Near(screen.At(width * 5 / 8, sceneY), Color(64, 0, 128), 1),
+                                "the shared scalar matrix composes after both palette transforms and all tint channels affect the blended colors");
+                Context().Check(CnaDemos::Near(screen.At(width / 4, sceneY), Color::Black, 0) &&
+                                CnaDemos::Near(screen.At(width * 3 / 4, sceneY), Color::Black, 0) &&
+                                CnaDemos::Near(screen.At(width / 2, sceneY), Color::Black, 0),
+                                "the scene transform vacates both original object centers and retains their new center gap");
             }
             DemoGame::Draw(time);
         }
@@ -146,8 +172,9 @@ CNA_DEMOS_GAME(UniformPaletteDemo, {
     .id = "graphics.shader_effect.uniform_palettes",
     .title = "Custom shader transform and color arrays",
     .description = "Uploads two matrix and vec3 palette entries with explicit scalar layout, changes caller storage, "
-                   "then updates the same program and verifies both transformed positions and colors.",
-    .apis = {"ShaderEffect::SetUniformMat4Array", "ShaderEffect::SetUniformVec3Array", "Effect::Apply",
+                   "then updates the same program. A shared scalar matrix and premultiplied tint compose over both palette entries.",
+    .apis = {"ShaderEffect::SetUniformMat4Array", "ShaderEffect::SetUniformVec3Array",
+             "ShaderEffect::SetUniformMat4", "ShaderEffect::SetUniformVec4", "Effect::Apply",
              "Matrix::CreateTranslation", "GraphicsDevice::DrawPrimitives"},
     .tags = {"shader", "uniform", "array", "matrix", "cnaext"},
     .needs = CnaDemos::Need::ThreeD | CnaDemos::Need::CustomEffects,
@@ -155,5 +182,5 @@ CNA_DEMOS_GAME(UniformPaletteDemo, {
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "GLSL only. Counts are two matrices/two vec3 values; no invalid array count, missing-uniform, "
-                    "uniform-block or other scalar/vector-array behavior is inferred.",
+                    "uniform-block or other array-family behavior is inferred.",
 })

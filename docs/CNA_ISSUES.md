@@ -47,8 +47,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `build/linux-full/reports/checkpoint-466-transfer-eof-*`. No sibling source changes or
   upstream messages. The catalog extension now retains the failing assertion with knownIssue metadata; its native
   build, both focused selections and relevant CTest WILL_FAIL contract pass as documented
-  in checkpoint-467-focused-* (30positive child checks and only the confirmed position failure). Reproduce via
-  `cna-demos c_api.storage.save_game --automated --renderer SOFTWARE` after building.
+  in checkpoint-467-focused-* (30positive child checks and only the confirmed position failure). The later read-only extension preserves this failure and adds seven positive controls
+  (37passes/one failure,38total) on both requested selections, in checkpoint-467-scene-focused-*.
+  Reproduce via `cna-demos c_api.storage.save_game --automated --renderer SOFTWARE` after building.
 
 ### CNA-DEMOS-ISSUE-001 -- `libcna.so` fails to link with CMake 3.28 (duplicate symbols)
 

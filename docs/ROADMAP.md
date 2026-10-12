@@ -610,3 +610,11 @@ variance. Normalized stderr adds one SOFTWARE capability skip, GL unchanged. COV
 now records467complete results/170C routes. Next coherent extensions reuse uniform_palettes
 for a shared parent transform/tint and save_game for explicit read-only permission semantics;
 their source drafts do not yet have runtime/visual credit.
+
+
+Focused467-scene extends the two existing examples without changing catalog count. Palettes
+retain their four original checks and add two for a shared scalar matrix/premultiplied tint;
+both before/after GL images were inspected and all17selected pixels match. C storage retains
+31old child checks plus7positive permission controls, with only original EOF056 still failing.
+All24targeted CTests pass in4.14s, metadata467/0, current C inventory174/3210. Full467-scene
+comparison remains pending; COVERAGE.md still holds the preceding complete467 snapshot.
