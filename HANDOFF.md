@@ -245,7 +245,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: complete full **468-formats** validation. The stereo source is APPLIED,
+HIGHEST PRIORITY: start a NEW full468-formats attempt after committing the XACT timing fix.
+Initial full session6704 CLOSED1 at CTest (play_cue fixed700ms idle assumption,481tests/182.28s).
+Original logs/exits/capture states are immutable in checkpoint-468-formats-initial-ctest-refusal-*;
+no smoke ran. Independent10public probe trials did not reproduce the delay or verify buffer-hint
+acceptance; no original cause/CNA-fix claim. Applied3s bounded state polling retains all3checks.
+Build72494closed0 with unchanged watched inputs; native/targeted66961closed0 (5repetitions per
+environment,3checks each, empty stderr;24XACT/CLI tests3.18s). Reviewer passed; evidence is
+checkpoint-468-formats-xact-fix-*. Commit correction/docs, then clear only archived current
+wrapper exits/end/Xvfb output before a fresh full run. Capture new runtime hashes AFTER its build,
+not from the failed attempt. Do not overwrite immutable initial-refusal evidence.
+The stereo source is APPLIED,
 focused native/reviewer evidence COMPLETE. Watched build95230 closed0 (33scheduled/30numbered
 completions, no changed3,906watched inputs; known Draco CMake warning retained). Metadata468/0.
 Focused/targeted71117closed0:16checks both, empty stderr,37enabled CTests7.47s, one additional
@@ -311,4 +321,8 @@ NOT RUN; follow section14. Recovery helpers: checkpoint-467-readers-next-*.
 Prepared shadow helpers (NOT RUN): /tmp/cna-build-469-shadow.py,
 /tmp/cna-run-469-shadow-focused.py (GL screenshot only) and targeted shell. Expected4GLpixel
 checks/SWexplicit skip0; actual GL image must be inspected before any visual claim. Full
-shadow capture/archive/finish helpers are not prepared yet. Audio full validation remains the next action.
+shadow capture/archive/finish helpers and focused reviewer are now prepared, NOT RUN:
+/tmp/cna-review-469-shadow-focused.py requires actual GL image inspection and eight sampled
+pixels, while the full family expects482enabled CTests, SW406/27/33/3, GL434/29/3/3 and only
+one new explicit SWskip diagnostic. All old38/42failures/child controls remain exact. Recovery
+helpers: checkpoint-468-formats-next-*. Audio full validation remains the next action.

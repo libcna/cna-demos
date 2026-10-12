@@ -93,6 +93,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   ISSUE-055 assertions; both images inspected. SOFTWARE declares its capability boundary.
 
 ### Fixed
+- XACT play_cue now waits for actual bank-idle state with a finite three-second limit instead
+  of assuming completion after700ms. All three original checks remain; the first failed full
+  checkpoint and inconclusive reproduction evidence are preserved.
 - Network simulation now gives each finite startup/burst/recovery phase its own 20-second
   watchdog. A real full-smoke failure exhausted the previous aggregate budget before packet
   evaluation; its raw evidence is retained. Both focused renderers preserve all five original

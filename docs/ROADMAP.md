@@ -791,3 +791,14 @@ quality credit is claimed. The build regenerated CMake and scheduled33operations
 completions); all3,906watched CNA input hashes stayed unchanged. The existing vendored Draco
 CMP0148 developer warning remains. Metadata468/0; all37enabled audio/CLI CTests pass in7.47s
 (one additional manual microphone test disabled). Full checkpoint validation is pending.
+
+Initial full468-formats attempt stopped at CTest: audio.xact.play_cue failed its bank-idle
+assertion after a fixed700ms pump (one failure among481enabled tests,182.28s); no smoke phase
+started. Original logs, both exit1journals, source d70f2ca and captured unchanged35runtime hashes
+are retained as checkpoint-468-formats-initial-ctest-refusal-*. An independent public XACT probe
+ran five default and five requested-large-buffer trials without reproducing the delay; actual
+buffer-size acceptance and the transient cause were not measured/isolated. The demo now pumps
+until actual idle state or a3s steady-clock deadline, retaining all three original assertions.
+No issue waiver or CNA fix claim. Nine-operation rebuild, metadata468/0, ten native repetitions
+(three checks each, empty stderr) and all24XACT/CLI CTests3.18s pass. Wait observations0.345-0.394s
+start after PlayCue/firstUpdate and do not measure audible duration. A fresh full attempt is next.

@@ -37,7 +37,17 @@ namespace
         sounds.PlayCue("LowTone");
         engine.Update();
         ctx.Check(sounds.getIsInUseProperty(), "while a cue plays, the sound bank is in use");
-        Pump(engine, 700);
+        // Completion follows the audio worker, not a guaranteed 100 ms margin over asset length.
+        // Continue pumping actual XACT state, with a finite limit so a stuck cue still fails.
+        const auto waitStart = std::chrono::steady_clock::now();
+        const auto deadline = waitStart + std::chrono::seconds(3);
+        while (sounds.getIsInUseProperty() && std::chrono::steady_clock::now() < deadline)
+        {
+            engine.Update();
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        ctx.Print("waited {:.3f} s for natural XACT completion (3 s limit)",
+                  std::chrono::duration<double>(std::chrono::steady_clock::now() - waitStart).count());
         ctx.Check(!sounds.getIsInUseProperty(), "after the 0.6 s sound ends, the bank is idle again");
 
         sounds.PlayCue("Beep");
