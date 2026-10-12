@@ -6,12 +6,12 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**466 demos** in 18 categories. Kinds: console 159, game 268, standalone 39. Automation: automated 430, manual 3, smoke-only 33.
+**467 demos** in 18 categories. Kinds: console 159, game 269, standalone 39. Automation: automated 431, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 21 | 18 | 2 | 1 | 19 / 0 / 1 / 1 / 0 | 19 / 0 / 1 / 1 / 0 |
-| c_api | 19 | 18 | 1 | 0 | 17 / 0 / 2 / 0 / 0 | 17 / 0 / 2 / 0 / 0 |
+| c_api | 19 | 18 | 1 | 0 | 16 / 0 / 3 / 0 / 0 | 16 / 0 / 3 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -20,7 +20,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 158 | 158 | 0 | 0 | 138 / 14 / 6 / 0 / 0 | 147 / 3 / 8 / 0 / 0 |
+| graphics | 159 | 159 | 0 | 0 | 138 / 15 / 6 / 0 / 0 | 148 / 3 / 8 / 0 / 0 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 11 | 10 | 1 | 0 | 10 / 0 / 1 / 0 / 0 | 10 / 0 / 1 / 0 / 0 |
@@ -69,7 +69,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 168 of 3210** (5.2 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 170 of 3210** (5.3 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -93,7 +93,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `runtime.h` | 24 / 45 |
 | `runtime_components.h` | 13 / 39 |
 | `sprite_font.h` | 2 / 9 |
-| `storage.h` | 16 / 49 |
+| `storage.h` | 18 / 49 |
 | `texture.h` | 1 / 21 |
 | `vectors.h` | 9 / 137 |
 | `vertex_resources.h` | 5 / 24 |
@@ -593,10 +593,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ShaderEffect::GetShaderDiagnosticsEXT` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package
 - `ShaderEffect::HasRenderer` -- graphics.shader_effect.clone_state
 - `ShaderEffect::IsEffectValid` -- graphics.shader_effect.clone_state, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.toon_shading
-- `ShaderEffect::SetTexture` -- graphics.shader_effect.vertex_displacement, graphics.texture3d.sampler_coordinates, graphics.texture_cube.sampler_ownership
+- `ShaderEffect::SetTexture` -- graphics.shader_effect.sample_kernel, graphics.shader_effect.vertex_displacement, graphics.texture3d.sampler_coordinates, graphics.texture_cube.sampler_ownership
 - `ShaderEffect::SetUniformFloat` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.vertex_displacement, graphics.texture3d.sampler_coordinates
+- `ShaderEffect::SetUniformFloatArray` -- graphics.shader_effect.sample_kernel
 - `ShaderEffect::SetUniformInt` -- graphics.shader_effect.vertex_displacement, graphics.texture3d.sampler_coordinates, graphics.texture_cube.sampler_ownership
 - `ShaderEffect::SetUniformMat4Array` -- graphics.shader_effect.uniform_palettes
+- `ShaderEffect::SetUniformVec2` -- graphics.shader_effect.sample_kernel
+- `ShaderEffect::SetUniformVec2Array` -- graphics.shader_effect.sample_kernel
 - `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading, graphics.texture_cube.sampler_ownership
 - `ShaderEffect::SetUniformVec3Array` -- graphics.shader_effect.uniform_palettes
 - `ShaderEffect::ShaderEffect` -- graphics.render_target.multiple_render_targets, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.vertex_displacement

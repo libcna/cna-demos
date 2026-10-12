@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-467 catalog demos (focused467; latest complete checkpoint466-transfer): math 78, game 33, graphics 159 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+467 catalog demos (complete checkpoint467): math 78, game 33, graphics 159 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 27 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
@@ -102,45 +102,30 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused467 now passes at working source:36scheduled/33completed build, metadata467/0,
-all24targeted CTests (16passed incl storage WILL_FAIL,8capability skips,5.55s). Kernel5GLchecks
-and its actual inspected800x480image pass with27exact sample pixels; SOFTWARE skips with
-exit77/declared CustomEffects diagnostic. C storage retains23old checks plus8new,30pass and
-one ISSUE-056 failure on both selections, empty stderr. Inventory293/329,1373/2326,170/3210C.
-docs/COVERAGE.md intentionally remains the previous complete snapshot until full467 finishes;
-/tmp/cna-467-inventory.md records current metadata only. Focused archives:checkpoint-467-focused-*.
+**Complete 467 at source c45349f is verified.** tools/validate.sh and outer Xvfb both return 0,
+independently journaled; session 41309 is CLOSED. Build: 7 scheduled operations, metadata 467/0,
+all 480 enabled CTests in 217.01 s (448 passed incl27 WILL_FAIL,32 skipped,3 manual disabled).
+SOFTWARE405/27/32/3, OPENGLES3 432/29/3/3. Generated coverage now uses these complete results:
+293/329types, 1373/2326XNA members, 170/3210 C routes; comprehensive coverage is not claimed.
 
-**Complete 466-transfer at source 5944070 is verified.** tools/validate.sh and outer Xvfb both
-returned0, independently journaled; session44780 is CLOSED. Build32scheduled/29completed,
-metadata466/0 and all479enabled CTests pass (281.68s;448passed including26WILL_FAIL,31skipped,
-3manualdisabled). SOFTWARE406/26/31/3; OPENGLES3 432/28/3/3. Coverage293/329types,
-1373/2326XNA members,168/3210C routes; comprehensive semantic coverage is not claimed.
+Exact originalcomplete466-transfer comparison retains all 37/41 prior failed assertions and
+adds only ISSUE-056 (38/42 total). Only C save_game changes status/knownIssue; its23 old child
+checks remain plus8 named additions (31 total, 30 pass/1 failure). All other C/custom lists/traces
+and five network evaluation checks are exact. New kernel5GL/SWskip matches focused evidence.
+Only other JSON count change is GL game.window.title10->11, its positive per-Update variation.
+All35 selected binary/four asset hashes remain stable. Normalized stderr adds exactly one
+SOFTWARE CustomEffects skip; GL is unchanged, including42known X protocol records and the
+intentional shader compile error. Separate outerXvfb diagnostics retain14 amdgpu pairs; no
+hardware GPU claim. CNA 714f9f76a observed clean at capture/final, not an atomic input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: reports/checkpoint-467-*.
 
-Exact original complete466-timing comparison retains all37/41 old failed assertions, all five
-network evaluation checks and all C/custom child lists/traces except eight named C content
-additions (39->47 without capture). Volume checks3->10; no other JSON count changes. All35
-selected binary/four asset hashes remain stable. SOFTWARE normalized stderr is unchanged;
-GL preserves all application diagnostics but has42rather than84 known X protocol lines.
-The initial exact diagnostic rejection and finite four-record reduction are explicitly reviewed
-in checkpoint-466-transfer-stderr-review.json; cause not isolated, no X protocol fix claimed.
-Outer Xvfb retains seven amdgpu diagnostic pairs; both exits0, no hardware GPU claim.
-CNA59598bfac observed clean at capture/final; this is not an atomic transitive input snapshot.
-
-Focused volume10checks and C49captured child checks pass on both selections. All eight
-before/after images were actually inspected and all four pairs are RGBA-identical; stderr empty.
-A mid-build external Game.hpp layout change initially caused SIGSEGV at an original volume
-check. Archived timestamps/backtrace identify mixed object layouts; an incremental64-target
-rebuild resolves it without demo changes. Evidence: checkpoint-466-transfer-initial-* and
--focused-*. This is build consistency, not a CNA transfer defect. Full evidence/helpers:
-checkpoint-466-transfer-*. Previous complete466-timing and rejected initial466 remain in
-CHECKPOINT_HISTORY.md; their network regression work is complete, not a new task.
-
-Separate EOF probes after the checkpoint confirm **ISSUE-056**, now applied in focused467 metadata:
-direct FileStream reads4bytes then reports position-1 instead of4 (all data/rewind controls pass).
-The now-applied C storage extension has30passes/one failure: SUCCESS/-1 instead of24 after EOF,
-with all23original child checks retained. Both requested renderer environments agree; this is
-storage-only evidence, not rendering. Probe compilation/run left all35project binary hashes
-unchanged. Archives: checkpoint-466-transfer-eof-*. See next task for application.
+Focused build36scheduled/33completed, metadata 467/0 and all24targeted CTests pass (5.55s,
+16passed/8capability skips). The actual800x480kernel image was inspected and all27sample pixels
+are exact. C EOF behavior is independently reproduced through direct FileStream and C API:
+position-1after short/empty EOF reads despite valid data/guards/rewind. All35shipped binaries
+remain unchanged through those probes. Proof:checkpoint-466-transfer-eof-*, ISSUE-056.
+Previous complete466-transfer source5944070/closureaf64eff, its mixed-layout build correction
+and explicitly reviewed GL diagnostic reduction remain in CHECKPOINT_HISTORY.md.
 
 ## 8. Exact commands that work
 
@@ -260,27 +245,25 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: focused467 is verified; commit source/docs then run complete checkpoint467
-against ORIGINAL COMPLETE466-transfer at5944070 (closureaf64eff). Both drafts are APPLIED AND
-STALE. /tmp/cna-run-467-focused.py before/after and /tmp/cna-review-467-focused.py completed;
-all24relevant CTests pass. Do not repeat the completed EOF probes or preliminary source work.
+Complete 467 at c45349f is the full baseline. All full validation/reviews are closed. Commit
+closure docs and immediately continue the prepared **same-count467-scene** extensions below.
+Syntax checker /tmp/cna-467-next-syntax.py and before runner /tmp/cna-run-467-scene-focused.py
+are CLOSED successfully. Both syntax logs are empty. Original GL palette image was actually
+inspected: four passing checks; SOFTWARE declares CustomEffects skip. Both C before cases
+retain31child checks with only ISSUE-056. Native after validation remains pending.
 
-Prepared /tmp/cna-run-467-validation.sh runs the full documented validation with separate
-inner/outer exit journals/Xvfb diagnostics. After its build and before smokes, capture with
-/tmp/cna-capture-467.py; do not change sources/rebuild during runtime. Each full smoke is
-archived/reviewed by /tmp/cna-archive-467.py SOFTWARE/OPENGLES3, then /tmp/cna-467-finish.py.
-Helpers are prepared, not yet executed. Catalog: /tmp/cna-catalog-467.json. Expected full totals:
-SOFTWARE405pass/27knownfail/32skip/3notrun; GL432/29/3/3;480enabled CTests (483with3disabled).
-Only new shader ID and storage ISSUE-056 status/failure plus8named child additions are allowed.
-Raw failed-assertion counts should37->38SW/41->42GL; all older messages/multiplicities, C/custom
-lists/traces and five network evaluation controls must remain exact. Positive title Update
-variance needs explicit review. SW stderr adds only one declared custom-effects skip; inspect
-any other difference rather than automatically accepting aggregate known-issue results.
+Then apply /tmp/cna-uniform-scene.cpp to existing uniform_palettes.cpp and
+/tmp/cna-storage-read-only.c to existing C save_game/main.c, adding the four new C metadata
+routes and descriptions. Build-j4, metadata, focused after run, relevant CTests, actual image
+inspection and exact old-child comparison. Expected after: palette6GL/SWskip, C38childchecks
+with37passes and only the original ISSUE-056 failure. No new ID; C routes would174/3210.
 
-After full validation, regenerate coverage (handled by validate.sh), update closure docs and
-immediately continue deeper public behaviors. Remaining useful work includes selected scalar
-shader matrix/tint uses, independent skinned diffuse lights, wider resource/dispatch behavior
-and the explicit audit remainder. Prefer coherent extensions over method-per-demo variants.
+Update audit/status/coverage/handoff, commit source, then complete checkpoint467-scene against
+ORIGINAL COMPLETE467. Preserve all38/42raw failures, all old outcomes/knownIssues and C/custom
+lists/traces after filtering precisely7new permission checks. Only palette4->6is an intended
+old JSON count change; positive title Update variance needs explicit review. Expected totals
+stay SW405/27/32/3 and GL432/29/3/3. Do not overwrite current467archives or infer success merely
+from known-issue status. Continue deeper public API behavior after the checkpoint closes.
 
 ## 15. Assumptions the next session must know
 
@@ -292,9 +275,9 @@ and the explicit audit remainder. Prefer coherent extensions over method-per-dem
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete helpers /tmp/cna-capture-466-transfer.py, /tmp/cna-archive-466-transfer.py
-SOFTWARE/OPENGLES3 and /tmp/cna-466-transfer-finish.py all passed. Finish accepts only the
-explicitly reviewed finite GL diagnostic reduction; its original rejection helper is archived.
+Current complete helpers /tmp/cna-capture-467.py, /tmp/cna-archive-467.py
+SOFTWARE/OPENGLES3 and /tmp/cna-467-finish.py all passed. Current diagnostic differences are
+only one declared SOFTWARE skip; the previous finite GL reduction belongs to466-transfer.
 All runtime hashes/exits/reports are immutable. The volume transfer and game-content-borrow
 /tmp predecessors are APPLIED AND STALE. Do not reapply or restart old466-timing work.
 
@@ -323,3 +306,29 @@ additions verified; all35shipped binary hashes unchanged. Source observations ar
 59598bfac at first review and714f9f76a at later review, sharp-runtime c20373bae clean; none is
 an atomic input snapshot. Evidence/sources/helpers: reports/checkpoint-466-transfer-eof-*.
 Focused runner /tmp/cna-run-467-focused.py before/after and exact review completed.
+
+
+NOT-APPLIED follow-up /tmp/cna-uniform-scene.cpp extends existing uniform_palettes rather
+than adding an ID. It retains four original checks in the first two resized viewports and
+adds a third scene-wide parent transform/premultiplied tint, using actual scalar SetUniformMat4
+and SetUniformVec4 alongside the existing arrays. Explicit16float matrix layout, caller-buffer
+overwrite, expected shifted centers RGB(0,32,128)/(64,0,128), vacated old centers and retained
+gap distinguish transform order and tint/alpha. Six intended checks. Before/after images will
+change from two rows to three; preserve old assertions but do not claim pixel identity.
+Source proposal; syntax passed, native/visual after evidence pending. Full467is closed.
+
+Second NOT-APPLIED follow-up /tmp/cna-storage-read-only.c extends the now-applied31check C
+save_game. It adds7coherent permission controls: Read+Truncate refusal before file changes,
+valid explicit Read open, combined CanRead/CanWrite/CanSeek inspection, refused one-byte
+write, unchanged position/length, exact original save bytes and successful close. Actual
+storage.h routes and canonical exception mapping (NotSupported -> CNA_RESULT_NOT_SUPPORTED)
+were reviewed. Existing31checks including ISSUE-056 remain; expected38total/one known failure.
+Four new C routes would need metadata (open_file_access and three capability queries).
+Syntax passed; native validation pending. Preserve the same demo-owned file/cleanup, no new ID.
+
+Next helpers are now running as described in section14: /tmp/cna-467-next-syntax.py checks both follow-up drafts
+with existing C++/C flags; /tmp/cna-run-467-scene-focused.py captures current palette/storage
+before application, then after. Full467is closed; before captures/syntax completed successfully. Palette4->6GLchecks/SWskip;
+C31->38childchecks with exactly the same ISSUE-056 failure. Two GL images should be inspected;
+layout changes from2rows to3, so pixel identity is not expected. Planned same-count checkpoint
+label467-scene avoids overwriting current467archives. New C route total would174, no new ID.

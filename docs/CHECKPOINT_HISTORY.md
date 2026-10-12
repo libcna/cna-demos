@@ -2066,3 +2066,24 @@ correctly. C storage draft has30passes/one failure (SUCCESS/-1instead of24), pre
 original checks plus8named additions on both requested renderer environments. Empty stderr;
 no Game/rendering/visual claim. Root is the sharp-runtime FileStream EOF state/position path,
 exposed by the C adapter (ISSUE-056). Sources/helpers/review:checkpoint-466-transfer-eof-*.
+
+
+## Complete467 (2026-10-12)
+
+Sourcec45349fb38fea2295aad924a8cfe9f316069ae9e adds sample_kernel5GLchecks/SW CustomEffects
+skip and eight C save_game controls (23->31children;30pass/one ISSUE-056). Actual800x480GL
+image inspected, all27sample centers/neighbors/outer pixels exact; focused GL stderr empty.
+C original23child list retained, only EOF position fails (SUCCESS/-1instead of24), no Game or
+visual claim. Direct/C probes in466-transfer-eof isolate underlying sharp-runtime behavior.
+Focused build36scheduled/33completed, metadata467/0,24targeted CTests5.55s (16pass/8skip).
+
+Full build7scheduled operations, metadata467/0,480enabled CTests217.01s (448passed including
+27WILL_FAIL,32skipped,3manualdisabled), SW405/27/32/3,GL432/29/3/3. Inner/outer exits0 recorded
+separately. Exact originalcomplete466-transfer comparison retains37/41old failures and adds
+only EOF056 (38/42total); only storage changes old status/knownIssue. Old23storage child lines
+plus8named additions, all other C/custom lists/traces and all5net checks exact. Only other JSON
+count change: positive per-Update GL title10->11.35selected binaries/fourassets stable.
+Normalizedstderr+one SOFTWARECustomEffects skip; GL unchanged incl42Xprotocol records and
+intentional shader compiler error. OuterXvfb retains14amdgpu diagnostic pairs, no hardware
+claim. CNA714f9f76a clean observed at capture/final, not an atomic snapshot. Coverage293/329,
+1373/2326XNA,170/3210C. All capture/archive/finish helpers pass; checkpoint-467-* immutable.

@@ -600,3 +600,13 @@ requested selections. Two C routes raise the current metadata inventory to170/32
 COVERAGE.md remains the complete466-transfer snapshot until full467 validation finishes.
 The pending full comparison must retain every old failure and add exactly the confirmed EOF
 position failure, rather than accepting the changed known-issue status alone.
+
+
+Complete467 atc45349f now validates the focused batch:480enabled CTests217.01s, both full
+smokes (SW405/27/32/3,GL432/29/3/3), independent inner/outer exits0 and stable selected hashes.
+Exact old37/41failures remain plus only EOF056 (38/42); all old C/custom/network evidence is
+retained with the eight named storage additions. GL title10->11is a positive per-Update
+variance. Normalized stderr adds one SOFTWARE capability skip, GL unchanged. COVERAGE.md
+now records467complete results/170C routes. Next coherent extensions reuse uniform_palettes
+for a shared parent transform/tint and save_game for explicit read-only permission semantics;
+their source drafts do not yet have runtime/visual credit.

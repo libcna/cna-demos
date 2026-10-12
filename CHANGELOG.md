@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete467:480enabled CTests and both full smoke suites preserve every old failed assertion
+  and add only the independently confirmed EOF issue. Exact child controls and selected
+  hashes remain stable; generated coverage now includes467demos and170C routes.
 - Complete checkpoint 466-transfer:479 enabled CTests and both full smoke suites retain all
   37/41 old failures and child controls. Selected hashes stay stable; an exact reduction from
   84 to42 existing GL X protocol messages is reviewed separately, without a repair claim.
