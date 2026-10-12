@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete472-banks:485enabled CTests and both full smoke suites retain all previous
+  failure/child/network evidence; the bank ownership demo adds12public state/event checks.
 - Added XACT bank/engine ownership demonstration:12public disposal/state/event checks
   pass in both requested environments; prepared and consuming cues have distinct dependencies.
 - Complete471-cue3d:484enabled CTests and both full smoke suites retain all previous

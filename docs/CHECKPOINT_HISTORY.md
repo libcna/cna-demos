@@ -2764,3 +2764,32 @@ helpers pass; immutable evidence: checkpoint-471-cue3d-*. Generated coverage:
 Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is unchanged;
 ISSUE-057 retains its original staging refusal, private reproduction and471-punctual
 recurrence. Subsequent clean runs do not establish a repair of that race.
+
+## Complete472-banks
+
+Complete checkpoint **472-banks**, source `5fe4921`,
+adds audio.xact.bank_lifetime with12 public ownership checks in each requested environment.
+A paused consuming cue holds both banks in use; WaveBank disposal disposes it while a
+prepared never-played cue and SoundBank survive. SoundBank disposal releases prepared
+cues too. Sender/exactly-once counts persist across repeated disposal and deletion of
+disposed wrappers. A fresh graph of banks/cues is released by AudioEngine disposal.
+Caller-owned allocations remain unique_ptr-owned. No global callback-order, concurrent
+teardown or acoustic-latency claim. Two focused runs have empty stderr;38enabled audio/CLI
+CTests, watched build/diagnostic gate and focused reviewer pass before source commit.
+Full validation passes all485enabled CTests in165.34s, with three additional manual
+tests disabled. SOFTWARE407/27/35/3 and OPENGLES3 437/29/3/3 retain all38/42prior failed
+assertions, C/custom child evidence and five network controls. One newID passes12checks;
+reviewed old count changes:
+{"OPENGLES3": {}, "SOFTWARE": {}}.
+All35selected binaries, four existing assets and18fixture hashes stay unchanged through
+runtime. Normalized stderr is identical, including42known GL X protocol records and the
+intentional shader error. Outer Xvfb has18exact amdgpu pairs (previous13);
+independent inner/outer exits0. Capture CNA eff3131017
+(clean), final CNA eff3131017
+(clean). These are selected artifact/source
+observations, not an atomic or full transitive input snapshot. All capture/archive/finish
+helpers pass; immutable evidence: checkpoint-472-banks-*. Generated coverage:
+293/329types and1386/2326XNA members.
+Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is unchanged;
+ISSUE-057 retains its original staging refusal, private reproduction and471-punctual
+recurrence. Subsequent clean runs do not establish a repair of that race.
