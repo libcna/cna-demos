@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete467-move: all480enabled CTests and both full smoke suites preserve all38/42old
+  failures and exact child/network controls. Selected artifacts stay unchanged through runtime,
+  and normalized application diagnostics remain identical.
 - Complete467-field: all480enabled CTests and both smoke suites retain every38/42old failure
   and child/network control after external CNA relinking. Selected hashes remain stable
   through runtime; normalized application diagnostics are unchanged.

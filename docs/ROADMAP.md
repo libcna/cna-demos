@@ -719,3 +719,25 @@ across each build. CNA commits advanced from 3a1d77b47 to 0ae1c41b1 while alread
 was committed; this is not evidence of changed watched contents during compilation. The known
 vendored Draco CMP0148 developer warning remains. These observations are not an atomic or
 full transitive input snapshot. Full checkpoint validation is pending.
+
+Complete checkpoint **467-move**, source `1721771`, preserves all 467 IDs. Focused validation
+retains six original GL sampler controls plus two ownership controls, with inspected identical
+before/after RGBA and fifteen verified centers. SOFTWARE retains its declared CustomEffects skip.
+The broad focused build and a consistency build each observed unchanged hashes for 3,906 watched
+CNA module/header/CMake files. Source commits advanced while prior dirty contents were committed;
+this does not itself imply changing build inputs. The known vendored Draco CMake developer warning
+is preserved. The full validation build scheduled seven operations; metadata467/0 and all480enabled
+CTests pass in207.06s (448passed incl27WILL_FAIL,32skips; three additional manual tests disabled).
+SOFTWARE405/27/32/3 and OPENGLES3 432/29/3/3. All38/42previous failed assertions, every C/custom child
+list/trace and all five network evaluation controls remain exact, with no additions or filtering.
+The planned JSON change is GL sampler6->8; positive window.title Update variance, if present,
+is recorded separately in the renderer reviews. All35selected binary/fourasset hashes captured
+after the full build remain stable. Normalized application stderr is unchanged, including the42
+known GL X protocol records and intentional shader error. Separate outerXvfb diagnostics contain
+15exact amdgpu pairs (previously15). Both independently journaled inner/outer exits are0.
+Capture source observation: CNA0ae1c41b18 (dirty);
+final observation: CNA5a85d5ed24 (clean).
+Selected artifact verification is not an atomic source or full transitive dependency snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-467-move-*.
+Generated coverage remains293/329types,1373/2326XNA members,174/3210C routes. Semantic ownership
+coverage grew without adding IDs; comprehensive coverage is not established.

@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-467 catalog demos (complete checkpoint467-field): math 78, game 33, graphics 159 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+467 catalog demos (complete checkpoint467-move): math 78, game 33, graphics 159 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 27 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
@@ -102,29 +102,27 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete checkpoint **467-field**, source `d4eee34`, preserves all 467 IDs. The external CNA
-checkout advanced from714f9f76a to clean1bc9ff044 (LINK-032 mold archive extraction) at the
-build boundary. CMake regenerated and scheduled53operations (50numbered completions), including
-relinking CNA and its consumers. Metadata467/0 and all480enabled CTests pass in326.00s
-(448passed incl27WILL_FAIL,32capability skips; three additional manual tests disabled).
-The known vendored Draco CMP0148 developer warning remains; no compiler diagnostic is hidden.
-Concurrent cc1plus processes/host load22.10were observed, without isolating a performance cause.
-SOFTWARE405/27/32/3 and OPENGLES3 432/29/3/3; independently journaled inner/outer exits both0.
-Exact comparisons retain all38/42old failed assertions, all C/custom child lists/traces and
-all five network evaluation controls, allowing only one new C sprite array-refusal child
-(29->30). Volume10->16is the intended JSON count change on both. Any positive window.title
-Update variance is recorded explicitly in the renderer reviews.
-All35selected binary/fourasset hashes captured after the rebuild remain stable. Normalized
-application stderr is identical, including42known GL X protocol records and the intentional
-shader compiler error. Separate outerXvfb diagnostics contain15exact amdgpu pairs (previously16);
-no hardware GPU claim. After-build source capture observed cleanCNA1bc9ff044; external sources
-subsequently advanced (mid-run547c3092a plus optional-service changes; final 60aedeab57 with external uncommitted changes).
-Selected runtime hashes stayed fixed across that source work. Focused images used prior714f9f76a.
-The full checkpoint exercises the captured binaries, not those later source edits; this is not
-an atomic source/input snapshot.
-All capture/archive/finish helpers pass; immutable evidence: checkpoint-467-field-*.
-Generated coverage remains293/329types,1373/2326XNA members,174/3210C routes. Semantic coverage
-grew without adding IDs/routes; comprehensive coverage is not established.
+Complete checkpoint **467-move**, source `1721771`, preserves all 467 IDs. Focused validation
+retains six original GL sampler controls plus two ownership controls, with inspected identical
+before/after RGBA and fifteen verified centers. SOFTWARE retains its declared CustomEffects skip.
+The broad focused build and a consistency build each observed unchanged hashes for 3,906 watched
+CNA module/header/CMake files. Source commits advanced while prior dirty contents were committed;
+this does not itself imply changing build inputs. The known vendored Draco CMake developer warning
+is preserved. The full validation build scheduled seven operations; metadata467/0 and all480enabled
+CTests pass in207.06s (448passed incl27WILL_FAIL,32skips; three additional manual tests disabled).
+SOFTWARE405/27/32/3 and OPENGLES3 432/29/3/3. All38/42previous failed assertions, every C/custom child
+list/trace and all five network evaluation controls remain exact, with no additions or filtering.
+The planned JSON change is GL sampler6->8; positive window.title Update variance, if present,
+is recorded separately in the renderer reviews. All35selected binary/fourasset hashes captured
+after the full build remain stable. Normalized application stderr is unchanged, including the42
+known GL X protocol records and intentional shader error. Separate outerXvfb diagnostics contain
+15exact amdgpu pairs (previously15). Both independently journaled inner/outer exits are0.
+Capture source observation: CNA0ae1c41b18 (dirty);
+final observation: CNA5a85d5ed24 (clean).
+Selected artifact verification is not an atomic source or full transitive dependency snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-467-move-*.
+Generated coverage remains293/329types,1373/2326XNA members,174/3210C routes. Semantic ownership
+coverage grew without adding IDs; comprehensive coverage is not established.
 
 ## 8. Exact commands that work
 
@@ -244,21 +242,27 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: complete full **467-move** validation, then immediately apply the prepared
-467-readers extension. The move source is applied; focused validation is COMPLETE. Do not
-reapply drafts or rerun its before captures. Initial build32851 and focused78017 closed0;
-consistency build also closed0. Source/input journals and focused evidence are archived as
-checkpoint-467-move-*. Original six GL checks plus two ownership controls pass; inspected
-before/after RGBA is identical. Metadata467/0; 17 targeted CTests pass (one skip), 3.50 s.
-1. Commit the validated source/docs and export /tmp/cna-catalog-467-move.json.
-2. Run /tmp/cna-run-467-move-validation.sh. After its build, during CTest, capture35binary/
-   fourasset hashes via /tmp/cna-capture-467-move.py. Never recapture after runtime or rebuild
-   during smoke phases. Source-only /tmp preparation and documentation are safe.
-3. Archive both smokes via /tmp/cna-archive-467-move.py SOFTWARE and OPENGLES3, then execute
-   /tmp/cna-467-move-finish.py. Baseline is complete467-field; expected480enabled CTests,
-   unchanged totals and all38/42old failures, exact C/custom children and five network controls.
-   Only planned JSON change is sampler6->8GL; positive title Update variance reviewed separately.
-4. Update closure/status/coverage documentation, commit, then continue with467-readers below.
+HIGHEST PRIORITY: apply and validate the prepared **467-readers** extension. Full467-move
+(session65534) is CLOSED0; capture/archive/finish helpers passed. Source1721771 is the comparison
+baseline. Do not reapply the move ownership draft or rerun completed move baseline captures.
+1. Reader syntax17197 already passed. Run /tmp/cna-run-467-readers-focused.py before, retaining
+   the original17checks in both requested environments.
+2. Apply /tmp/cna-builtin-reader-lifetime.cpp to demos/content/xnb/reader_versions.cpp and
+   /tmp/cna-xnb-versions-builtin.py to tools/xnb_versions.py; generate only this fixture family.
+   Keep all three old fixtures byte-identical and add assets/versions/builtin_score.xnb.
+3. Use /tmp/cna-build-467-readers.py initial with the shared cache; finish a consistency phase
+   if watched inputs change. Then metadata validation, focused after and targeted CTests via
+   /tmp/cna-run-467-readers-targeted.sh. No native work over partially rebuilt objects.
+4. Execute /tmp/cna-review-467-readers-focused.py. Expected17->23both, empty stderr, original
+   custom-reader source body exact, deterministic new90byte primitive and unchanged old fixtures.
+   No rendering/visual credit: the two sequential Games do not Run. Update semantic/status docs,
+   explain Console ownProcess in architecture/authoring docs, commit and export
+   /tmp/cna-catalog-467-readers.json.
+5. Run /tmp/cna-run-467-readers-validation.sh. Capture selected artifacts during CTest with
+   /tmp/cna-capture-467-readers.py, including separately captured new fixture copies. Never
+   recapture after runtime or rebuild during smokes. Archive both renderers with
+   /tmp/cna-archive-467-readers.py, then /tmp/cna-467-readers-finish.py and close documentation.
+6. Immediately continue the prepared stereo buffer-format scenario after that checkpoint.
 
 ## 15. Assumptions the next session must know
 
@@ -270,7 +274,7 @@ before/after RGBA is identical. Metadata467/0; 17 targeted CTests pass (one skip
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current completed baseline is467-field, source d4eee34 and closure da2b73c. Older field,
+Current completed baseline is467-move, source1721771; its closure commit follows. Older field,
 lighting, palette, EOF and kernel drafts are applied and stale. Their evidence and source
 history are in docs/CHECKPOINT_HISTORY.md. Do not alter/revert the sibling CNA checkout.
 The current initial and consistency build journals show no changed watched input hashes;
@@ -288,11 +292,34 @@ Use public APIs, no Internal registration helpers or blanket global clearing.
 /tmp/cna-xnb-versions-builtin.py adds deterministic90byte versions/builtin_score.xnb to the
 existing generator. Only pure Python generation ran into two /tmp directories: outputs agree,
 all three old fixtures match current assets byte-for-byte, and structure/payload were checked.
-No reader C++ syntax/native evidence yet. Recovery proposals/helpers/new fixture and source
+Reader syntax-only session17197 now closed0 with an empty log; no native reader execution yet. Recovery proposals/helpers/new fixture and source
 review: reports/checkpoint-467-move-next-*.
 After full move closure: run /tmp/cna-467-readers-syntax.py and the before mode of
 /tmp/cna-run-467-readers-focused.py; apply source/generator and generate the new fixture,
 retaining old fixture hashes; build/validate; run after and /tmp/cna-run-467-readers-targeted.sh.
 Preserve original custom reader checks exactly and verify JSON17->23. Success assertions are
 not printed as C++ stdout children. No screenshot is appropriate for these content-only Games.
-Full reader archive/review helpers still need preparation against complete467-move.
+Focused /tmp/cna-review-467-readers-focused.py and full reader capture/archive/finish helpers
+are now prepared but NOT RUN, against future complete467-move. All old assertions remain exact;
+new fixture hashes are captured separately from the existing four selected assets. Helper
+recovery copies and syntax journal are archived under checkpoint-467-move-next-*.
+
+Additional source-only audit: DynamicSoundEffectInstance sliced stereo buffers and symmetric
+int16/float format transitions remain a coherent gap after reader lifetime. Public APIs/header
+and implementation reviewed at CNA0ae1c41b1; duration helpers intentionally stay16-bit PCM.
+Source-only /tmp/cna-dynamic-buffer-formats.cpp is now prepared: a focused console stereo
+buffer-format example (new meaningful concept, intended16checks) separates byte/sample ranges,
+refuses partial integer frames without queue mutation, pauses/resumes and stops before both
+format transitions. Silent fixtures prove states/acceptance, not output samples or audio quality.
+Syntax-only session71196 now passed with an empty log; no native execution. Source/hash
+review archived in checkpoint-467-move-next-*. See the
+updated COVERAGE_AUDIT.md decision row. Do not apply until the reader checkpoint closes.
+
+Prepared /tmp/cna-build-467-readers.py retains the watched-input initial/consistency build
+workflow for the next batch; not run. It writes a before journal before starting compilation.
+
+Further source-only graphics audit: IShadowReceiverEXT accepts ignored inputs on unsupported
+renderers, and GraphicsCapability has no shadow query. A future authored-map SkinnedEffect
+receiver must declare its renderer scope and verify direct-light attenuation versus retained
+ambient/emission in actual pixels. Do not misuse CustomEffects as a stock-shadow capability.
+No shadow demo draft/native evidence yet; updated semantic table records exact source scope.
