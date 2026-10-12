@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- XACT categories now contrast independent groups with authored parent/child pause, resume
+  and stop: ten checks pass while all five original predicates remain.
 - Complete473-music:486enabled CTests and both full smoke suites retain all previous
   failure/child/network evidence; music import adds 15 explicitly reviewed child checks.
 - Added isolated tagged music import with populated albums, artists, genres and an M3U

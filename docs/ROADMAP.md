@@ -1601,3 +1601,17 @@ helpers pass; immutable evidence: checkpoint-473-music-*. Generated coverage:
 Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is unchanged;
 ISSUE-057 retains its original staging refusal, private reproduction and 471-punctual
 recurrence. Subsequent clean runs do not establish a repair of that race.
+
+## Focused473-hierarchy
+
+Focused **473-hierarchy** extends audio.xact.categories from five to ten checks.
+All five original predicates and the independent Music/SFX workflow remain, with only the
+incorrect identity label corrected to name equality. A separate original160byte hierarchy.xgs
+makes Master the parent of SFX and reuses the existing PCM/sound bank. Five added checks
+establish live paused direct/descendant voices, parent Resume/Pause, child-only Resume and
+parent Stop from a verified both-paused state. Two dummy-audio runs pass ten checks with
+empty stderr;38enabled audio/CLI CTests pass in 6.80s, plus one disabled manual microphone
+test. Watched build/gate, metadata473/0 and focused reviewer pass before source commit.
+All nine old XACT files remain byte-identical; all ten source/staged pairs match.
+No future-voice pause inheritance, audible volume, deep hierarchy or category-fade claim.
+Full473-hierarchy is pending against complete473-music. Evidence:checkpoint-473-hierarchy-focused-*.

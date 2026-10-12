@@ -103,6 +103,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **473-hierarchy** extends audio.xact.categories from five to ten checks.
+All five original predicates and the independent Music/SFX workflow remain, with only the
+incorrect identity label corrected to name equality. A separate original160byte hierarchy.xgs
+makes Master the parent of SFX and reuses the existing PCM/sound bank. Five added checks
+establish live paused direct/descendant voices, parent Resume/Pause, child-only Resume and
+parent Stop from a verified both-paused state. Two dummy-audio runs pass ten checks with
+empty stderr;38enabled audio/CLI CTests pass in 6.80s, plus one disabled manual microphone
+test. Watched build/gate, metadata473/0 and focused reviewer pass before source commit.
+All nine old XACT files remain byte-identical; all ten source/staged pairs match.
+No future-voice pause inheritance, audible volume, deep hierarchy or category-fade claim.
+Full473-hierarchy is pending against complete473-music. Evidence:checkpoint-473-hierarchy-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **473-music**, source `979a99b`,
 adds an isolated tagged music-library workflow with 15 identical child checks in each
 requested environment. Focused stderr retains six exact TitleContainer requested/resolved
@@ -251,25 +265,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: authored XACT category hierarchy in the existing categories demo.
-Read checkpoint-472-banks-next-category-hierarchy-* and current public source. UNAPPLIED
-/tmp/cna-category-hierarchy.cpp and /tmp/cna-category-hierarchy-files.py pass refined
-syntax93473 (both-paused Stop guard;60954 superseded) and private generation. No native proof.
-Use checkpoint-473-music-next-hierarchy-refined-base.json for current hashes. Prepared UNRUN
-/tmp/cna-*473-hierarchy* helpers cover apply/build/focused/review/docs and full evidence.
-The generator base is the now-applied per-cue-limit generator. Original five category
-predicates remain; correct only the identity label because equality compares names.
-Five planned added controls observe live direct/descendant voices through parent Resume,
-parent Pause, child-only Resume and parent Stop. One160bytehierarchy.xgs makes Master the
-parent of SFX and reuses existing PCM. All9previous XACT assets must remain byte-identical.
-Do not infer inherited pause for future voices, volume output or category replacement fades.
-Run watchedbuild/gate, focused native/CTest checks and asset preservation before committing;
-then fullcheckpoint, capture once, freeze and compare all old failure/child/network evidence.
-Maintain the new music standalone's15child checks and36selected artifacts in future baselines.
-Finish/update/commit and immediately continue the next meaningful coverage workstream.
-Further UNAPPLIED follow-ups: checkpoint-473-music-next-duration-* (syntax87663), then
-next-album-art-* (syntax55056); no native evidence. MediaPlayer/MediaQueue member decisions
-are in COVERAGE_AUDIT. Original mono streaming/ISSUE-038 and build-only ISSUE-057 unchanged.
+Focused473-hierarchy is complete; commit source/docs and run full validation next.
+Helpers /tmp/cna-*473-hierarchy*; catalog /tmp/cna-catalog-473-hierarchy.json.
+Capture ONCE after fullbuild during CTest:36selected binaries/4existing assets/28fixture hashes.
+Freeze through both full smokes. Expect486enabled CTests; SOFTWARE408/27/35/3 and
+OPENGLES3 438/29/3/3. All38/42failures/C/custom child checks/traces and5network controls
+must match; music_index retains15exact child checks. Only categories5->10 and positive
+window.title Update variance may change parent counts. Normalized stderr must be identical.
+Preserve/refuse surprises; finish/close/reviewdiff/commit. Then continue positive imported
+Song/Album/Playlist durations, extending music_index with actual positive values and member sums.
+Unapplied /tmp/cna-music-duration.cpp and -metadata.cpp; base checkpoint-473-music-next-duration-*.
+Three planned checks only with CNA_FFMPEG_AVAILABLE; no zero-sum or playback credit.
+Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged.
 
 ## 15. Assumptions the next session must know
 
@@ -284,7 +291,6 @@ are in COVERAGE_AUDIT. Original mono streaming/ISSUE-038 and build-only ISSUE-05
 Current complete baseline is473-music; source commit is in section7.
 All earlier drafts, including music import, per-cue limits, bank lifetime and spatial
 variables, are APPLIED AND STALE. Preserve original refusal evidence and source corrections.
-Next UNAPPLIED hierarchy audit: checkpoint-472-banks-next-category-hierarchy-*;
-use checkpoint-473-music-next-hierarchy-refined-base.json for the current draft hashes.
-Syntax/private fixture comparison is not native proof; verify current source before adding.
+Hierarchy drafts are APPLIED AND STALE; focused build42490 and native/CTest/reviewer54689 pass.
+Full checkpoint remains pending; use section14 for continuation commands.
 Retain established architecture/stable IDs and never edit/revert sibling CNA from this task.

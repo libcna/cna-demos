@@ -27,7 +27,7 @@ namespace
         AudioCategory music = engine.GetCategory("Music");
         AudioCategory effects = engine.GetCategory("SFX");
         ctx.Print("categories: {}, {}", music.getNameProperty(), effects.getNameProperty());
-        ctx.Check(music != effects && music == engine.GetCategory("Music"), "categories compare by identity");
+        ctx.Check(music != effects && music == engine.GetCategory("Music"), "categories compare by name");
 
         std::unique_ptr<Cue> tune(sounds.GetCue("LowTone"));   // in Music
         std::unique_ptr<Cue> beep(sounds.GetCue("HighTone"));  // in SFX
@@ -61,6 +61,38 @@ namespace
         ctx.Check(unknown, "a category the settings file does not define is an InvalidOperationException");
         tune->Dispose();
         beep->Dispose();
+
+        // A separate authored hierarchy makes Master the parent of SFX. The original
+        // independent Music/SFX categories above keep their original fixture and checks.
+        AudioEngine hierarchy("assets/xact/hierarchy.xgs");
+        WaveBank hierarchyWaves(&hierarchy, "assets/xact/tones.xwb");
+        SoundBank hierarchySounds(&hierarchy, "assets/xact/tones.xsb");
+        AudioCategory master = hierarchy.GetCategory("Master");
+        AudioCategory child = hierarchy.GetCategory("SFX");
+        std::unique_ptr<Cue> direct(hierarchySounds.GetCue("LowTone"));
+        std::unique_ptr<Cue> descendant(hierarchySounds.GetCue("HighTone"));
+        direct->Play();
+        direct->Pause();
+        descendant->Play();
+        descendant->Pause();
+        ctx.Check(direct->getIsPausedProperty() && descendant->getIsPausedProperty(),
+                  "both hierarchy voices are live and paused before category controls");
+        master.Resume();
+        ctx.Check(direct->getIsPlayingProperty() && descendant->getIsPlayingProperty(),
+                  "parent Resume reaches its own voice and the live descendant voice");
+        master.Pause();
+        ctx.Check(direct->getIsPausedProperty() && descendant->getIsPausedProperty(),
+                  "parent Pause reaches both direct and descendant voices");
+        child.Resume();
+        ctx.Check(direct->getIsPausedProperty() && descendant->getIsPlayingProperty(),
+                  "child Resume leaves the parent's own voice paused");
+        child.Pause();
+        const bool bothPausedBeforeStop = direct->getIsPausedProperty() && descendant->getIsPausedProperty();
+        master.Stop(AudioStopOptions::Immediate);
+        ctx.Check(bothPausedBeforeStop && direct->getIsStoppedProperty() && descendant->getIsStoppedProperty(),
+                  "parent Stop releases its own voice and the paused descendant voice");
+        direct->Dispose();
+        descendant->Dispose();
     }
 }
 
@@ -68,11 +100,11 @@ CNA_DEMOS_CONSOLE(Categories, {
     .id = "audio.xact.categories",
     .title = "XACT categories",
     .description = "Plays a Music cue and an SFX cue, then turns Music down with AudioCategory::SetVolume, pauses and "
-                   "resumes SFX, and stops Music; an unknown category name throws.",
+                   "resumes SFX, and stops Music; contrasts independent groups with authored parent/child control.",
     .apis = {"AudioEngine::GetCategory", "AudioCategory::Name", "AudioCategory::SetVolume", "AudioCategory::Pause",
              "AudioCategory::Resume", "AudioCategory::Stop", "AudioCategory::op_Equality",
              "AudioCategory::op_Inequality"},
     .tags = {"audio", "xact", "category", "volume", "options"},
     .needs = CnaDemos::Need::Audio,
-    .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb"},
+    .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb", "xact/hierarchy.xgs"},
 })
