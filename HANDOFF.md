@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
-* Mostly complete: 6 (effects and shaders, 35).
+* Mostly complete: 6 (effects and shaders, 36).
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 22 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -64,9 +64,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-468 catalog demos (complete checkpoint468-formats): math 78, game 33, graphics 159 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+469 catalog demos (focused469-shadow; last complete checkpoint468-formats): math 78, game 33, graphics 160 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
-4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 27 other
+4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 28 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
@@ -247,23 +247,22 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply and validate the prepared **469-shadow** receiver example. Fresh full
-468-formats(session98882) is CLOSED0 after the documented initial CTest refusal and correction.
-Final sourceaad1917 is the comparison baseline. Do not reapply the stereo draft or XACT fix.
-1. /tmp/cna-skinned-shadow-receiver.cpp has syntax-only84074evidence, empty log; no native/image
-   evidence. Apply to demos/graphics/skinned_effect/shadow_receiver.cpp. Authored8x4Color map,
-   one bone, direct diffuse versus ambient/emission, enabled/bias/detach; explicit EasyGL scope.
-2. /tmp/cna-build-469-shadow.py initial, consistency if watched inputs change; metadata469/0.
-   Run /tmp/cna-run-469-shadow-focused.py and targeted shell. ExpectedSWskip0/exit77, GL4/exit0.
-   Actually inspect the GL image, then /tmp/cna-review-469-shadow-focused.py verifies eight
-   selected pixels and exact diagnostic. Investigate any mismatch; no getter-only shadow credit.
-3. Update semantic/status docs, commit, export /tmp/cna-catalog-469-shadow.json. Run
-   /tmp/cna-run-469-shadow-validation.sh; capture after build during CTest with the matching
-   capture helper. Freeze sources/assets/runtime for smoke phases; never recapture afterwards.
-4. Archive both renderers with /tmp/cna-archive-469-shadow.py, then /tmp/cna-469-shadow-finish.py.
-   Expected482enabled CTests, SW406/27/33/3, GL434/29/3/3, all old38/42failures and exact child/
-   network evidence, only the new explicitSWskip diagnostic. Then close docs/handoff/history
-   and immediately continue the highest-priority public behavior audit.
+HIGHEST PRIORITY: complete full **469-shadow** validation. Source proposal is APPLIED AND STALE.
+Build38083closed0 (33scheduled/30numbered operations, unchanged3,906watched inputs, known Draco
+warning). Metadata469/0. Focused/targeted77359closed0: SWskip0/exit77, GL4checks/exit0, emptyGL
+stderr. The actual GL image was inspected and the focused reviewer verified all eight selected
+pixels. All25CLI/skinned CTests pass in4.04s, including one declared shadow skip.
+1. Commit source/docs; export /tmp/cna-catalog-469-shadow.json.
+2. Run /tmp/cna-run-469-shadow-validation.sh; after build, during CTest, capture selected hashes
+   with /tmp/cna-capture-469-shadow.py. Freeze sources/assets/runtime during smoke phases and
+   never recapture afterwards. Current complete baseline468-formats:sourceaad1917,closure6181597.
+3. Archive both renderers with /tmp/cna-archive-469-shadow.py, saving renderer review logs, then
+   /tmp/cna-469-shadow-finish.py into /tmp/cna-469-shadow-finish-review.log. Expected482enabled
+   CTests, SW406/27/33/3, GL434/29/3/3; all old38/42failures and exact child/network evidence.
+   Only new diagnostic is the declaredSWshadow skip, already confirmed by focused execution.
+4. Close full status/handoff/history and commit. Immediately continue the source-reviewed PCF
+   extension to this same receiver: preserve the four existing controls, add meaningful kernel
+   averaging behavior, inspect the new layout and verify all old/new pixel controls.
 
 ## 15. Assumptions the next session must know
 
@@ -275,24 +274,24 @@ Final sourceaad1917 is the comparison baseline. Do not reapply the stereo draft 
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is468-formats, sourceaad1917; its closure commit follows. The stereo
+Current complete baseline is468-formats, sourceaad1917, closure6181597. The stereo
 buffer source and XACT completion correction are final, not pending proposals. Preserve the
 initial failed CTest evidence and inconclusive public probe as well as the successful retry.
 All previous reader, move, field, lighting, palette and EOF proposals are applied and stale;
 see docs/CHECKPOINT_HISTORY.md. Never reapply old /tmp drafts over current implementations.
 
-NOT-APPLIED469-shadow proposal: /tmp/cna-skinned-shadow-receiver.cpp, syntax84074passed with
+APPLIED AND STALE469-shadow proposal: /tmp/cna-skinned-shadow-receiver.cpp, syntax84074passed with
 empty log. It authors an8x4Color map, moves one bone toZ=-3, maps post-skin position to depth.5,
 and compares disabled/enabled reception, excessive bias and map detachment. Direct diffuse
-is contrasted with retained ambient/emission. Four paired-pixel controls are intended; actual
-GL image must be inspected and eight selected pixels verified. No native/image credit yet.
+is contrasted with retained ambient/emission. All four paired-pixel controls now pass on GL; the actual image was inspected and eight
+selected pixels verified. Evidence: checkpoint-469-shadow-focused-*.
 Explicit EasyGL OPENGLES3/OPENGL33 scope; SOFTWARE skips because this stock shadow path is
 unsupported. Do not misuse CustomEffects as its capability query; GraphicsCapability has no
 shadow entry. No map generation, PCF kernel, cascade, punctual/specular-shadow or other-renderer
 credit. Recovery source/syntax: checkpoint-467-readers-next-*.
 
-Shadow watched build/focused/targeted helpers are in /tmp, and the full capture/archive/finish
-family plus focused reviewer are ready, NOT RUN. Names are listed in section14. Recovery full
+Shadow watched build/focused/targeted helpers and focused reviewer have passed. Full capture/
+archive/finish family is prepared, NOT RUN. Names are listed in section14. Recovery full
 helpers: checkpoint-468-formats-next-*. Expected482enabled CTests, SW406/27/33/3 and GL434/29/3/3,
 all old38/42failures/child controls exact and only the new declaredSWskip diagnostic. Never
 approve results just from those totals; preserve/investigate each unexpected assertion/log.

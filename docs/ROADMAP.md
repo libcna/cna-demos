@@ -144,7 +144,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (35 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (36 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
   diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
   specular_lights now has eight on both renderers with inspected labeled comparisons.
@@ -829,3 +829,14 @@ These are selected artifact/source observations, not an atomic/full transitive i
 All capture/archive/finish helpers pass; immutable complete evidence: checkpoint-468-formats-*.
 Generated coverage: 293/329types, 1374/2326XNA members, 174/3210C routes.
 Semantic format coverage and the completion-check correction do not establish comprehensive CNA coverage.
+
+Focused checkpoint469-shadow adds one authored-map SkinnedEffect receiver (469catalog demos).
+Four paired-pixel GL controls pass: disabled/enabled reception, excessive positive depth bias
+and map detachment. A post-skin light-space lookup removes direct diffuse while retaining the
+predicted ambient/emissive floor. The actual800x480OPENGLES3image was inspected; all eight
+selected pixels match within tolerance1, stderr empty. SOFTWARE explicitly skips its unsupported
+stock shadow path with the declared diagnostic. OPENGL33 is in the declared EasyGL scope but
+was not run. No shadow-map generation, PCF kernels, cascades, punctual/specular-shadow or other
+renderer credit. CMake regenerated;33scheduled/30numbered build operations, no changed hashes
+among3,906watched CNA inputs. The known vendored Draco developer warning remains. Metadata469/0;
+all25targeted CLI/skinned CTests pass in4.04s (one declared shadow skip). Full validation pending.

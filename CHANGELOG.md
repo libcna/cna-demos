@@ -41,6 +41,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- Authored-map skinned shadow reception: four GL pixel controls compare disabled/enabled
+  reception, depth bias and detachment while preserving ambient/emission. The capture was
+  inspected; unsupported SOFTWARE rendering is explicitly skipped.
 - Stereo dynamic-audio buffer formats: byte/sample ranges, partial-frame rejection, preserved
   paused streams and stopped integer/float transitions. Sixteen public-state controls pass
   with dummy audio; the existing event-refill demo remains unchanged.
