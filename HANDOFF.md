@@ -241,13 +241,29 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** apply and validate the three prepared existing C callback/dispatch
-extensions below. Complete 445-profile is closed at e903a2e: 458 enabled CTests, SW 394/23/25/3,
+**Immediate next action:** commit the validated C callback/dispatch extensions and run complete
+445-callbacks against ORIGINAL checkpoint-445-profile. The catalog remains 445. error_handling
+passes 29 child checks (was 26), foreign_thread_dispatch 18 (was 14), host_frames 26 (was 24),
+or 28 with capture. All old assertion labels retained. Both renderer selections pass; every
+focused stderr stream is empty. Host trace remains ILBUbUbDeUDUrDsXEZ; both inspected 800x480
+captures are RGBA-identical to original 444 host images. No new CNA issue.
+
+Build /tmp/cna-445-callbacks-build.log passed (87 targets, no compiler diagnostics); metadata
+445/0 and all 31 C/CLI CTests passed (6.80 s). Evidence and selected observed source hashes:
+reports/checkpoint-445-callbacks-focused-*. External CNA C API sources continue changing; no
+atomic dependency snapshot claim. /tmp/cna-review-callbacks-focused.py strictly compared old
+child assertions and images. /tmp/cna-archive-445-callbacks.py and /tmp/cna-445-callbacks-finish.py
+need the actual commit substituted for PENDING445CALLBACKS, fresh catalog and post-build
+32 binary/four resize-asset hashes. Expect unchanged full totals, exact 32/33 failures and
+normalized stderr. Freeze source/assets during runtime; all three /tmp C drafts are APPLIED
+AND STALE. Next productive read-only work: SkinnedEffect Clone/SetOwnedTexture palette and
+texture ownership semantics in COVERAGE_AUDIT.md, or remaining C dispatch drive/cancellation
+contracts. Do not infer queued cancellation from a worker's pre-call readiness flag.
+
+Complete 445-profile is closed at e903a2e (closure 7eea0a3): 458 enabled CTests, SW 394/23/25/3,
 GL 415/24/3/3, exact original 32/33 failed assertions and all old content/host child lists retained.
-The resize extension passes seven checks; all old JSON counts are unchanged apart from its 1 -> 7.
-All 32 selected binaries and four explicit assets remained unchanged through runtime; normalized
-stderr identical. Evidence, strict reviews and helpers: reports/checkpoint-445-profile-*.
-Use ORIGINAL checkpoint-445-profile as the next full baseline.
+The resize extension passes seven checks. All 32 selected binaries and four explicit assets
+remained unchanged through runtime; normalized stderr identical. Evidence: checkpoint-445-profile-*.
 
 The original profile-focused build passed (81 steps, no compiler diagnostics), metadata 445/0,
 33 targeted CTests (11.56 s), and both seven-check runs with empty stderr. Four actually inspected
@@ -263,28 +279,12 @@ cna-state.json}; post-failure source hashes are not an atomic build-input snapsh
 files contain direct calls to those helpers; the full retry rebuild passes without suppressing
 warnings or modifying CNA. This is not a reproduced clean-HEAD or cna-demos source defect.
 
-Next productive work: the existing C error_handling demo already runs two run_one_frame calls
-and observes a failed Update. Extend it coherently with terminal repeat behavior and explicit
-UnloadContent after failure, retaining all 26 existing child checks; do not add a duplicate basic
-frame-step demo. It currently has only an update callback and an int context. CGame::UnloadContent
-explicitly opts into runAfterFailure while normal frame/event callbacks stop. A retained callback
-message after successful cleanup is another useful control. Inspect source/contracts and test;
-this note is not runtime evidence for those extra behaviors. UNAPPLIED draft:
-/tmp/cna-callback-cleanup.c (26 -> 29 proposed child checks), with caller-owned callback state,
-third failed-frame repeat, exactly-once unload and preserved diagnostic after successful cleanup.
-Separate run_frame_ext failure
-completion/documentation ambiguity remains open. A second UNAPPLIED draft is
-/tmp/cna-dispatch-failure.c (existing foreign_thread_dispatch, 14 -> 18 proposed child checks).
-It uses invalid MasterVolume=2, which reaches the canonical setter after handle-affinity dispatch;
-an invalid target step would be refused by a C argument gate BEFORE dispatch and cannot prove
-forwarding. It checks worker-side result/category and bounded message/type/parameter count/copy,
-with unchanged C11 completion/timeout handling. No runtime evidence yet. The default canonical message was verified in sharp-runtime and prior stdout.
-Third UNAPPLIED draft /tmp/cna-host-invalid-hooks.c adds two invalid frame-hook layouts before
-existing frames (24 -> 26 child checks, 28 with capture). Fully allocated objects declare a short
-size or version 2; subsequent original frame traces independently detect replaced/erased hooks.
-The three drafts total nine new checks, with all older labels retained. Prepared follow-up
-helpers /tmp/cna-archive-445-callbacks.py and /tmp/cna-445-callbacks-finish.py use a PENDING source
-placeholder and ORIGINAL checkpoint-445-profile; do not run them before the actual next build.
+The C batch now verifies the three previously prepared behaviors. Invalid MasterVolume reaches
+the native setter after handle dispatch; zero TargetElapsedTime is rejected locally and cannot
+prove error forwarding. Canonical message/type/parameter buffers are bounded and copied on the
+worker. Original C11 acquire/release and bounded timeout cleanup are unchanged. Hook-layout
+negative controls use fully allocated C objects, and actual next-frame traces verify preservation.
+Host run_frame_ext failure completion/documentation ambiguity remains untested.
 
 445 evidence: /tmp/cna-demos-445-validation.log exit 0; all 458 enabled CTests (206.40 s), SW
 394/23/25/3, GL 415/24/3/3, exact 32/33 failed assertions unchanged, every older count/status/

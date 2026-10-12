@@ -434,10 +434,10 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
 ✅ `c_api.game.lifecycle_callbacks` (ABI version, callback table, cna_game_run, request_exit, expired callback device handles),
-✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, callback errors),
+✅ `c_api.core.error_handling` (results, categories, last message, failed-query/layout preservation, exact-sized count/copy, canonical exception type/parameter details, retained callback failure and exactly-once unload cleanup),
 ✅ `c_api.core.thread_local_errors` (bounded C11 interleaving, independent worker and caller diagnostics),
-✅ `c_api.game.host_frames` (copied frame hooks, explicit host stepping, draw suppression, removal/replacement and terminal exit),
-✅ `c_api.game.foreign_thread_dispatch` (default/restored thread affinity and explicit owner pumping of worker game-property calls),
+✅ `c_api.game.host_frames` (copied frame hooks, explicit host stepping, draw suppression, incompatible-layout refusal, removal/replacement and terminal exit),
+✅ `c_api.game.foreign_thread_dispatch` (default/restored thread affinity, explicit owner pumping and worker-side canonical diagnostics from a served failure),
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard, root-change cache behavior and visible text),
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),

@@ -131,6 +131,7 @@ int main(int argc, char** argv)
     Replacement replacement = {0};
     CNA_GameCallbacks callbacks = {0};
     CNA_GameFrameHooks hooks = {0};
+    CNA_GameFrameHooks incompatible = {0};
     CNA_GameCreateInfo info = {0};
     CNA_Handle game = CNA_INVALID_HANDLE, manager = CNA_INVALID_HANDLE;
     CNA_Bool running = CNA_FALSE;
@@ -169,9 +170,19 @@ int main(int argc, char** argv)
     memset(&hooks, 0, sizeof(hooks));
     cna_demo_check(&demo, state.count == 0, "creation and hook installation do not start a run");
 
+    /* Fully allocate the C object even when declaring a deliberately incompatible layout.
+       An accidentally accepted empty table would erase hooks and fail the next frame trace. */
+    incompatible.struct_size = sizeof(incompatible) - 1;
+    incompatible.struct_version = 1;
+    cna_demo_check(&demo, cna_game_set_frame_hooks_ext(game, &incompatible) == CNA_RESULT_INVALID_ARGUMENT,
+                   "an undersized hook declaration is refused before replacing the installed table");
     if (!cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running), "host frame 1")) goto cleanup;
     cna_demo_check(&demo, running == CNA_TRUE && strcmp(state.trace, "ILBUb") == 0,
                    "first frame initializes, loads, begins, updates and suppresses drawing");
+    incompatible.struct_size = sizeof(incompatible);
+    incompatible.struct_version = 2;
+    cna_demo_check(&demo, cna_game_set_frame_hooks_ext(game, &incompatible) == CNA_RESULT_INVALID_ARGUMENT,
+                   "an unsupported hook version is refused; the next frame still uses the original table");
     if (!cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running), "host frame 2")) goto cleanup;
     cna_demo_check(&demo, running == CNA_TRUE && strcmp(state.trace, "ILBUbUbDe") == 0,
                    "second frame updates and draws without restarting the run");

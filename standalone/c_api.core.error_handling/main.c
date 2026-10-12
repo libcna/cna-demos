@@ -14,6 +14,12 @@
 
 static const char callback_message[] = "the level file is missing";
 
+typedef struct CallbackState {
+    int updates;
+    int unloads;
+    int cleanup_context_valid;
+} CallbackState;
+
 /* Reads the calling thread's last diagnostic: its category and its message. */
 static CNA_ErrorCategory last_error(char* message, size_t capacity)
 {
@@ -38,15 +44,26 @@ static CNA_ErrorCategory last_error(char* message, size_t capacity)
 /* An update callback that fails on its second frame, explaining why. */
 static CNA_Result update(CNA_Handle game, const CNA_GameTime* game_time, void* context, CNA_CallbackError* out_error)
 {
-    int* updates = (int*)context;
+    CallbackState* state = (CallbackState*)context;
     (void)game;
     (void)game_time;
-    if (++*updates == 2) {
+    if (++state->updates == 2) {
         /* The message is borrowed: it only has to stay valid until the callback returns. */
         out_error->message.data = callback_message;
         out_error->message.byte_length = sizeof(callback_message) - 1U;
         return CNA_RESULT_IO;
     }
+    return CNA_RESULT_SUCCESS;
+}
+
+/* Ordinary frame callbacks stop after failure; content cleanup must still run at destruction. */
+static CNA_Result unload(CNA_Handle game, const CNA_GameTime* game_time, void* context,
+                          CNA_CallbackError* out_error)
+{
+    CallbackState* state = (CallbackState*)context;
+    (void)game; (void)out_error;
+    ++state->unloads;
+    state->cleanup_context_valid = state->updates == 2 && game_time == NULL;
     return CNA_RESULT_SUCCESS;
 }
 
@@ -62,7 +79,7 @@ int main(int argc, char** argv)
     char name[256];
     uint64_t needed = 0U;
     uint64_t reported = 0U;
-    int updates = 0;
+    CallbackState state = {0};
 
     cna_demo_init(&demo, "c_api.core.error_handling", argc, argv, 3);
 
@@ -70,7 +87,8 @@ int main(int argc, char** argv)
     callbacks.struct_size = (uint32_t)sizeof(callbacks);
     callbacks.struct_version = UINT32_C(1);
     callbacks.update = update;
-    callbacks.context = &updates;
+    callbacks.unload_content = unload;
+    callbacks.context = &state;
     memset(&create_info, 0, sizeof(create_info));
     create_info.struct_size = (uint32_t)sizeof(create_info);
     create_info.struct_version = UINT32_C(1);
@@ -196,10 +214,22 @@ int main(int argc, char** argv)
                    "the second frame returns CALLBACK, category CALLBACK");
     cna_demo_check(&demo, strstr(message, callback_message) != NULL, "the diagnostic carries the callback's message");
 
+    result = cna_game_run_one_frame(game);
+    cna_demo_check(&demo, result == CNA_RESULT_CALLBACK && state.updates == 2 && state.unloads == 0 &&
+                   last_error(message, sizeof(message)) == CNA_ERROR_CATEGORY_CALLBACK &&
+                   strcmp(message, callback_message) == 0,
+                   "repeating a failed frame preserves its diagnostic without another update or early unload");
+
     /* A game whose callback failed still releases everything when destroyed, and that last call
        reports the failure once more, so a caller that only checks the final result still sees it. */
     result = cna_game_destroy(game);
     cna_demo_check(&demo, result == CNA_RESULT_CALLBACK, "cna_game_destroy releases it and reports CALLBACK again");
+    cna_demo_check(&demo, state.unloads == 1 && state.cleanup_context_valid,
+                   "UnloadContent runs once after the failed Update with its caller-owned context and null time");
+    cna_demo_check(&demo, last_error(message, sizeof(message)) == CNA_ERROR_CATEGORY_CALLBACK &&
+                   strcmp(message, callback_message) == 0,
+                   "successful unload cleanup preserves the original callback diagnostic");
+    printf("Callback counts: %d updates, %d unloads after failure\n", state.updates, state.unloads);
     cna_demo_check(&demo, cna_game_get_is_active(game, &active) == CNA_RESULT_INVALID_HANDLE,
                    "afterwards the handle names nothing: INVALID_HANDLE");
     return cna_demo_finish(&demo);

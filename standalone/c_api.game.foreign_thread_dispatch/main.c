@@ -16,6 +16,9 @@
 typedef struct Request {
     CNA_Handle game;
     int change_step;
+    int fail_volume;
+    int copied_diagnostic;
+    char message[512], exception_type[128], parameter[32];
     atomic_int done;
     CNA_Result result;
     CNA_Result error_query;
@@ -29,7 +32,11 @@ static int worker(void* argument)
     /* With dispatch off, the same handle is rejected. With it on, this call blocks until
        its owner pumps the queue. The out parameters stay alive for the whole call. */
     request->result = cna_game_get_target_elapsed_time_ticks(request->game, &request->before);
-    if (request->result == CNA_RESULT_SUCCESS && request->change_step) {
+    if (request->result == CNA_RESULT_SUCCESS && request->fail_volume) {
+        /* Unlike an invalid target step, this reaches the native setter after handle affinity
+           dispatch. CNA refuses 2.0 before initializing audio or changing the global volume. */
+        request->result = cna_sound_effect_set_master_volume(request->game, 2.0f);
+    } else if (request->result == CNA_RESULT_SUCCESS && request->change_step) {
         request->result = cna_game_set_target_elapsed_time_ticks(request->game, CHANGED_TICKS);
         if (request->result == CNA_RESULT_SUCCESS)
             request->result = cna_game_get_target_elapsed_time_ticks(request->game, &request->after);
@@ -37,6 +44,29 @@ static int worker(void* argument)
     request->error.struct_size = (uint32_t)sizeof(request->error);
     request->error.struct_version = UINT32_C(1);
     request->error_query = cna_error_get_last_info(&request->error);
+    if (request->fail_volume) {
+        uint64_t needed = 0, copied = 0;
+        /* Query on the worker: the owner must forward the actual error record, including
+           canonical details. Leave room for our terminators outside each copied payload. */
+        request->copied_diagnostic =
+            cna_error_get_last_message_size(&needed) == CNA_RESULT_SUCCESS &&
+            needed > 0 && needed < sizeof(request->message) &&
+            cna_error_copy_last_message(request->message, needed, &copied) == CNA_RESULT_SUCCESS &&
+            copied == needed;
+        if (request->copied_diagnostic) request->message[copied] = '\0';
+        request->copied_diagnostic = request->copied_diagnostic &&
+            cna_error_get_last_exception_type_size_ext(&needed) == CNA_RESULT_SUCCESS &&
+            needed > 0 && needed < sizeof(request->exception_type) &&
+            cna_error_copy_last_exception_type_ext(request->exception_type, needed, &copied) == CNA_RESULT_SUCCESS &&
+            copied == needed;
+        if (request->copied_diagnostic) request->exception_type[copied] = '\0';
+        request->copied_diagnostic = request->copied_diagnostic &&
+            cna_error_get_last_exception_param_name_size_ext(&needed) == CNA_RESULT_SUCCESS &&
+            needed > 0 && needed < sizeof(request->parameter) &&
+            cna_error_copy_last_exception_param_name_ext(request->parameter, needed, &copied) == CNA_RESULT_SUCCESS &&
+            copied == needed;
+        if (request->copied_diagnostic) request->parameter[copied] = '\0';
+    }
     atomic_store_explicit(&request->done, 1, memory_order_release);
     return 0;
 }
@@ -108,6 +138,26 @@ int main(int argc, char** argv)
                            cna_game_get_target_elapsed_time_ticks(game, &owner_ticks) == CNA_RESULT_SUCCESS &&
                            owner_ticks == CHANGED_TICKS,
                            "served worker reads and changes the owner's actual target step");
+            Request refused;
+            memset(&refused, 0, sizeof(refused));
+            refused.game = game;
+            refused.fail_volume = 1;
+            if (!run_worker(&demo, &refused, 1)) break;
+            cna_demo_check(&demo, refused.before == CHANGED_TICKS &&
+                           refused.result == CNA_RESULT_INVALID_ARGUMENT &&
+                           refused.error_query == CNA_RESULT_SUCCESS &&
+                           refused.error.result == CNA_RESULT_INVALID_ARGUMENT &&
+                           refused.error.category == CNA_ERROR_CATEGORY_ARGUMENT,
+                           "a served native failure returns its result and category to the worker");
+            cna_demo_check(&demo, refused.copied_diagnostic &&
+                           strcmp(refused.exception_type, "System.ArgumentOutOfRangeException") == 0 &&
+                           strcmp(refused.parameter, "value") == 0 &&
+                           strcmp(refused.message, "Specified argument was out of the range of valid values.\n"
+                                                   "Parameter name: value") == 0,
+                           "the worker receives the native exception type, parameter and message");
+            if (refused.copied_diagnostic)
+                printf("Served diagnostic: %s (%s): %s\n",
+                       refused.exception_type, refused.parameter, refused.message);
         } else {
             cna_demo_check(&demo, request.result == CNA_RESULT_THREAD && request.error_query == CNA_RESULT_SUCCESS &&
                            request.error.result == CNA_RESULT_THREAD && request.error.category == CNA_ERROR_CATEGORY_THREAD,
