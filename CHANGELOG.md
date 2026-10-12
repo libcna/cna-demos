@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Skinned material scenes isolate textured emission/ambient response and premultiplied global
+  alpha, then colored specular lights 1/2, their sum and the material shininess exponent.
+  Both four-check scenes pass on SOFTWARE/OPENGLES3; all four captures were inspected.
 - Focused C automatic dispatch demo proves ordinary Update service with every Draw suppressed,
   plus callback-scoped device borrowing and expiry. Fifteen checks pass on both selections.
 - Existing thread-local C diagnostics retain all eight earlier controls and add nine checks for

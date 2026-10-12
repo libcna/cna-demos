@@ -6,7 +6,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**453 demos** in 18 categories. Kinds: console 159, game 256, standalone 38. Automation: automated 417, manual 3, smoke-only 33.
+**455 demos** in 18 categories. Kinds: console 159, game 258, standalone 38. Automation: automated 419, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 146 | 146 | 0 | 0 | 133 / 8 / 5 / 0 / 0 | 137 / 3 / 6 / 0 / 0 |
+| graphics | 148 | 148 | 0 | 0 | 133 / 8 / 5 / 0 / 2 | 137 / 3 / 6 / 0 / 2 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 11 | 10 | 1 | 0 | 10 / 0 / 1 / 0 / 0 | 10 / 0 / 1 / 0 / 0 |
@@ -31,11 +31,13 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `graphics.skinned_effect.material_colors`, `graphics.skinned_effect.specular_lights`.
+- OPENGLES3: absent from report: `graphics.skinned_effect.material_colors`, `graphics.skinned_effect.specular_lights`.
 
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 293 of 329** (89.1 %).
-- **Methods, properties, constructors and events named by a demo: 1363 of 2326** (58.6 %).
+- **Methods, properties, constructors and events named by a demo: 1370 of 2326** (58.9 %).
 - Fields and enum values named by a demo: 134 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
@@ -45,7 +47,7 @@ Generated 2026-10-12 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Content` | 7 / 11 | 23 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 309 / 550 | 85 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 316 / 550 | 85 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 44 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |

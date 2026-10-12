@@ -1400,7 +1400,40 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr match. Full archives/reviews: reports/checkpoint-447-*. The minimal reproducer remains available.
 
 
+
+
 ## Resolved
+
+### CNA-DEMOS-ISSUE-052 -- In-flight cgltf implementation split breaks the importer build
+
+- **Area:** external uncommitted changes to `modules/content/src/GltfImport/GltfImportCore.cpp`
+  and new `CgltfImplementation.cpp`, while refactoring CNA link boundaries/GamerServices.
+- **Reproduction:** reuse the documented GCC 14.2/CMake 3.31.6 linux-full tree and run
+  `CCACHE_DIR=/rv/cnaccache CCACHE_BASEDIR=/rv cmake --build --preset linux-full -j4`.
+- **Observed:** the first 455-batch build exits 1 in GltfImportCore.cpp. Removing
+  CGLTF_IMPLEMENTATION from that translation unit makes its existing calls to
+  cgltf_component_read_index and cgltf_element_read_float undeclared. Both helpers are static
+  inside cgltf.h's implementation section. The same removal loses transitive C memory/string
+  declarations used by the local stb implementations (memcpy, memset and related errors).
+  The two new material/specular demo objects compile, but the new executable is not linked.
+- **Expected:** separating cgltf's public implementation into one translation unit should leave
+  the importer self-contained and preserve its sparse-accessor decoding through available APIs
+  or deliberately retained local helpers, with explicit standard-header dependencies.
+- **Evidence:** `reports/checkpoint-455-initial-build.log`, `-cna-state.json`, archived initial
+  GltfImportCore.cpp/CgltfImplementation.cpp/cgltf.h and `-runtime-integrity.json`. HEAD was
+  3ee6ae3c83d0eb59551f496d6c85109e377edc81 with ongoing external edits; this is **not** a clean-HEAD
+  reproduction or an atomic source snapshot. All 34 selected binaries from complete checkpoint
+  453 remained unchanged after the failed build; the new demos have no runtime evidence yet.
+- **Resolution:** the external author added explicit string.h and a CgltfInternals.hpp interface;
+  CgltfImplementation.cpp supplies wrappers reaching the two implementation-local helpers.
+  The same linux-full build then succeeds (111 scheduled targets, known Draco CMP0148 developer
+  warning on regeneration, no compiler diagnostics). All 47 relevant C/graphics/CLI CTests pass
+  (18.80 s; one capability skip), and both new four-check scenes pass under SOFTWARE/OPENGLES3.
+  Original build evidence remains above; repaired-source hashes, retry log and focused results
+  are in `reports/checkpoint-455-focused-*`. External uncommitted work is still ongoing, so this
+  is not a clean-commit or atomic-input claim. No CNA source edited/reverted or warning suppressed
+  by cna-demos. Resolved for the exercised build; no runtime knownIssue marker or upstream message.
+
 
 ### CNA-DEMOS-ISSUE-044 -- In-flight C API generation shadows a result-handle parameter
 

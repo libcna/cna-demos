@@ -122,7 +122,11 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
   `graphics.texture_cube.*` beyond the environment-map demo (render to a `RenderTargetCube`).
 
-## Phase 6 -- effects and shaders 🟨 (28 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (30 demos: stock effects, effect API, PbrEffect)
+- ✅ Skinned material and specular controls: emission/ambient/half-alpha composition, independent
+  colored lights 1/2, their sum and shininess exponent. Both focused four-check scenes pass on
+  SOFTWARE/OPENGLES3; four captures inspected, all cross-renderer differences within tolerance 1.
+
 - ✅ `graphics.skinned_effect.vertex_colors`: a plain packed-color skinned vertex contrasts the
   disabled channel with actual material/texture/tint multiplication and interpolation. Three
   rendered checks pass on both selections; inspected images agree within one blue level.
