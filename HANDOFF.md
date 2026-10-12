@@ -103,6 +103,17 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **470-border** extends the existing cascade demo from six to eight GL checks.
+Both slices receive identical atlas UV(.5,.5), depth.5 and requested radius2; near/far
+selection retains the independent occluded/lit colors at the shared boundary. Original
+six assertion labels remain exact. The actual800x480 three-row image was inspected and
+all eight selected pixels match within tolerance1; no image-identity/all25tap-weight claim.
+SOFTWARE retains its exact declared skip, GL stderr is empty. Watched build36795 passes
+9scheduled/8numbered operations with all3,909watched inputs unchanged. Metadata470/0,
+focused/targeted19479 passes all26CTests in2.69s (two declared shadow skips). Focused
+review passes before commit; evidence checkpoint-470-border-focused-*. Full validation is
+next; last complete baseline470-query. No new demo ID or genuine CNA failure found.
+
 Complete checkpoint **470-query**, source `68980d0` (query code a699a2d),
 extends the existing occlusion scene with eight ordering/disposal controls. All eleven checks
 pass on SOFTWARE and OPENGLES3; the three original visibility controls and complete
@@ -169,7 +180,8 @@ Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untest
 
 ## 10. Known CNA issues
 
-See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-056 (FileStream position after EOF),
+See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-057 (concurrent tool staging diagnostic race),
+CNA-DEMOS-ISSUE-056 (FileStream position after EOF),
 CNA-DEMOS-ISSUE-055 (shader clone matrices/disposal),
 CNA-DEMOS-ISSUE-054 (cube DDS short reads and prefixed truncation),
 CNA-DEMOS-ISSUE-051 (host failure C exit-hook contract mismatch),
@@ -252,25 +264,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply and validate the same-ID470-border cascade extension.
-Fresh full470-query session16616 is CLOSED0; source68980d0 is the comparison baseline.
-Preserve the initial staging refusal and independent ISSUE-057 probe; the issue remains open.
-1. Review/apply /tmp/cna-cascade-border.cpp to demos/graphics/skinned_effect/shadow_cascades.cpp.
-   Syntax7564 passed with empty log; no native/image evidence yet. Six original controls plus
-   two shared-UV(.5,.5) near/far slice controls (8GLchecks expected), requested radius2.
-2. Run /tmp/cna-build-470-border.py initial; consistency if watched inputs change. Validate
-   metadata, run /tmp/cna-run-470-border-focused.py and targeted shell. Inspect the actual
-   three-row GL image; recheck six original centers at y80/240 and two new centers at y400.
-   Run /tmp/cna-review-470-border-focused.py BEFORE committing to compare old labels with HEAD.
-   No image identity or independent proof of all25cascade tap weights is claimed.
-3. Update semantic docs, commit, export /tmp/cna-catalog-470-border.json. Full helper family,
-   capture selected hashes once after build during CTest, freeze runtime, archive both renderers
-   and finish. Expected483enabled CTests and unchanged470totals; only GLcascade6->8checks
-   and separately reviewed positive title Update variance may change. Preserve exact failures,
-   C/custom children/network controls and normalized diagnostics. Investigate any staging warning.
-4. Close full docs/history/handoff and commit; immediately continue the public behavior audit.
-   Remaining specular/punctual shadows, cascade debug/max-count and audio lifecycle decisions
-   remain separate; do not claim comprehensive coverage from named-member counts.
+HIGHEST PRIORITY: complete the full470-border checkpoint, then continue with the prepared
+single-map specular reception extension. Border is APPLIED; syntax/build/focused/visual/
+targeted review passed. Commit source/docs, export /tmp/cna-catalog-470-border.json, run
+/tmp/cna-run-470-border-validation.sh. Capture once after build during CTest with
+/tmp/cna-capture-470-border.py; freeze artifacts through both smokes. Archive both using
+/tmp/cna-archive-470-border.py, then /tmp/cna-470-border-finish.py. Baseline470-query;
+483enabled CTests and unchanged470totals expected. Only GLcascade6->8checks plus reviewed
+positive title Update variance allowed. Preserve original failures and investigate refusals.
+Close docs/history/HANDOFF and commit. Immediately continue with /tmp/cna-shadow-specular.cpp
+(unapplied, syntax-only); inspect its actual rendered output before claiming coverage.
+Open ISSUE-057 remains; preserve the prior staging refusal and independent probe evidence.
 
 ## 15. Assumptions the next session must know
 
@@ -287,18 +291,18 @@ All earlier receiver/PCF/cascade/query, audio, XACT, reader, move, field, lighti
 EOF proposals are APPLIED AND STALE. Preserve prior evidence, including failures and probes.
 See docs/CHECKPOINT_HISTORY.md; never overwrite current implementations from stale /tmp drafts.
 
-Next unapplied draft: /tmp/cna-cascade-border.cpp; syntax7564 CLOSED0, empty log.
+APPLIED border draft: /tmp/cna-cascade-border.cpp; syntax7564 CLOSED0, empty log.
 It preserves six cascade controls and adds near/far cases at the same atlas UV(.5,.5),
 requesting radius2. Each selected slice must exclude the neighboring slice's opposite depth.
 The three-row layout moves all original centers; actual image inspection and pixel review
-are required. No native/image border evidence or independent25tap-weight proof yet.
+are required. Focused image/eight-pixel evidence now passes; independent25tap-weight proof is not claimed.
 Notes/source/syntax recovery: checkpoint-470-cascades-next-*.
 
 Prepared border helper family: /tmp/cna-*470-border*, recovery under
 checkpoint-470-cascades-next-border-helpers-*. Baseline470-query,483CTests, unchanged totals,
 GLcascade6->8 only plus permitted positive title Update variance. Run focused reviewer before
 committing, as it compares the first six source assertion labels with the original HEAD.
-All border helpers remain unrun; sources are unapplied.
+Border build/focused/targeted/reviewer have passed. Full helpers are next.
 
 Open build-only CNA-DEMOS-ISSUE-057 is independently reproduced. Original pre-CTest refusal
 and three concurrent / one sequential private staging probes are preserved under

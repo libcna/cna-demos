@@ -1000,3 +1000,16 @@ These are selected artifact/source observations, not an atomic/full transitive i
 All fresh capture/archive/finish helpers pass; immutable complete evidence: checkpoint-470-query-*.
 Generated coverage: 293/329types, 1374/2326XNA members, 174/3210C routes.
 Semantic coverage remains incomplete; no extra demo or runtime knownIssue marker was added.
+
+## Focused470-border
+
+Focused **470-border** extends the existing cascade demo from six to eight GL checks.
+Both slices receive identical atlas UV(.5,.5), depth.5 and requested radius2; near/far
+selection retains the independent occluded/lit colors at the shared boundary. Original
+six assertion labels remain exact. The actual800x480 three-row image was inspected and
+all eight selected pixels match within tolerance1; no image-identity/all25tap-weight claim.
+SOFTWARE retains its exact declared skip, GL stderr is empty. Watched build36795 passes
+9scheduled/8numbered operations with all3,909watched inputs unchanged. Metadata470/0,
+focused/targeted19479 passes all26CTests in2.69s (two declared shadow skips). Focused
+review passes before commit; evidence checkpoint-470-border-focused-*. Full validation is
+next; last complete baseline470-query. No new demo ID or genuine CNA failure found.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Cascade atlas demo adds two shared-boundary isolation controls; all eight GL checks and
+  26 relevant CTests pass. The actual image and all eight sample colors were reviewed.
 - Complete470-query: the fresh full run passes483enabled CTests and both smoke suites with
   exact prior failure/child/network evidence and stable selected artifacts. The original
   staging-warning refusal and independently reproduced open ISSUE-057 remain preserved.

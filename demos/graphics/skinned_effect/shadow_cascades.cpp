@@ -87,10 +87,10 @@ namespace
             effect_->setShadowMapEXT(shadow_.get());
             effect_->setShadowsEnabledEXT(true);
             effect_->setShadowDepthBiasEXT(0);
-            effect_->setShadowFilterRadiusEXT(0); // isolate a single comparison, not PCF averaging
+            effect_->setShadowFilterRadiusEXT(0); // each panel below selects its comparison kernel
             batch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
-            Context().Print("Two authored atlas slices store depths64/255 and192/255. Split depth3 selects the first slice inclusively; depth4 selects the second. A one-unit band blends at depth2.5. A separate fitting camera changes cascade selection without moving the rendering camera. Count0 restores the low-depth single-map lookup.");
+            Context().Print("Two authored atlas slices store depths64/255 and192/255. Split depth3 selects the first slice inclusively; depth4 selects the second. A one-unit band blends at depth2.5. A separate fitting camera changes cascade selection without moving the rendering camera. Count0 restores the low-depth single-map lookup. The last row sends both cascades to the exact same atlas UV(.5,.5); each selected slice must keep radius2 taps in its own region.");
         }
         void Draw(const GameTime& time) override
         {
@@ -102,20 +102,28 @@ namespace
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             device.SetVertexBuffer(vertices_.get());
             device.setIndicesProperty(indices_.get());
-            const std::array<float, 6> depths{2, 3, 4, 2.5f, 4, 4};
-            for (int panel = 0; panel < 6; ++panel)
+            const std::array<float, 8> depths{2, 3, 4, 2.5f, 4, 4, 2, 4};
+            for (int panel = 0; panel < 8; ++panel)
             {
                 const int column = panel % 3, row = panel / 3;
                 const int left = full.getWidthProperty() * column / 3;
                 const int right = full.getWidthProperty() * (column + 1) / 3;
-                device.setViewportProperty(Viewport(left, row * full.getHeightProperty() / 2,
-                                                   right - left, full.getHeightProperty() / 2));
+                device.setViewportProperty(Viewport(left, row * full.getHeightProperty() / 3,
+                                                   right - left, full.getHeightProperty() / 3));
                 effect_->SetBoneTransforms({Matrix::CreateTranslation(0, 0, -depths[panel])});
                 ShadowCascadeStateEXT cascades;
                 cascades.Count = panel == 5 ? 0 : 2;
                 // Cascade matrices already map world positions into normalized atlas space.
                 cascades.WorldToAtlas[0] = Matrix::CreateScale(.5f, .5f, 0) * Matrix::CreateTranslation(.25f, .5f, .5f);
                 cascades.WorldToAtlas[1] = Matrix::CreateScale(.5f, .5f, 0) * Matrix::CreateTranslation(.75f, .5f, .5f);
+                if (panel >= 6)
+                {
+                    // The exact shared atlas edge belongs to either selected slice. Each slice
+                    // must constrain its own taps even though both matrices produce the same UV.
+                    cascades.WorldToAtlas[0] = Matrix::CreateScale(0, 0, 0) * Matrix::CreateTranslation(.5f, .5f, .5f);
+                    cascades.WorldToAtlas[1] = cascades.WorldToAtlas[0];
+                }
+                effect_->setShadowFilterRadiusEXT(panel >= 6 ? 2 : 0);
                 cascades.SplitDistance[0] = 3;
                 cascades.SplitDistance[1] = 10;
                 cascades.CameraView = panel == 4 ? Matrix::CreateTranslation(0, 0, 2) : Matrix::getIdentityProperty();
@@ -128,31 +136,36 @@ namespace
                 }
             }
             device.setViewportProperty(full);
-            const std::array<const char*, 6> labels{
+            const std::array<const char*, 8> labels{
                 "Depth 2: near", "Depth 3: split", "Depth 4: far",
-                "Depth 2.5: blend", "Fitting camera +2", "Count 0: single"};
+                "Depth 2.5: blend", "Fitting camera +2", "Count 0: single", "Near atlas edge", "Far atlas edge"};
             batch_->Begin();
-            for (int panel = 0; panel < 6; ++panel)
+            for (int panel = 0; panel < 8; ++panel)
                 batch_->DrawString(*font_, labels[panel], Vector2(
                     static_cast<float>((panel % 3) * full.getWidthProperty() / 3 + 8),
-                    static_cast<float>((panel / 3) * full.getHeightProperty() / 2 + 20)), Color::White);
+                    static_cast<float>((panel / 3) * full.getHeightProperty() / 3 + 8)), Color::White);
+            batch_->DrawString(*font_, "Same atlas UV\nDifferent slice\nFilter radius 2", Vector2(
+                static_cast<float>(full.getWidthProperty() * 2 / 3 + 8),
+                static_cast<float>(full.getHeightProperty() * 5 / 6 - 24)), Color::White);
             batch_->End();
             if (FramesDrawn() == 0)
             {
                 const CnaDemos::BackBufferPixels pixels(device);
                 const Color lit(173, 130, 77), occluded(20, 28, 26), halfVisible(97, 79, 51);
-                const std::array<Color, 6> expected{occluded, occluded, lit, halfVisible, occluded, occluded};
-                const std::array<const char*, 6> checks{
+                const std::array<Color, 8> expected{occluded, occluded, lit, halfVisible, occluded, occluded, occluded, lit};
+                const std::array<const char*, 8> checks{
                     "view depth2 selects the occluded near atlas slice",
                     "the exact depth3 split remains in the near cascade",
                     "view depth4 selects the directly lit far atlas slice",
                     "a one-unit blend band gives half visibility at depth2.5",
                     "cascade selection follows the fitting camera independently of the rendering View",
-                    "Count0 restores the separately supplied single-map transform"};
-                for (int panel = 0; panel < 6; ++panel)
+                    "Count0 restores the separately supplied single-map transform",
+                    "radius2 sampling at the near slice edge excludes the lit neighboring slice",
+                    "radius2 sampling at the far slice edge excludes the occluded neighboring slice"};
+                for (int panel = 0; panel < 8; ++panel)
                 {
                     const int x = pixels.Width() * (2 * (panel % 3) + 1) / 6;
-                    const int y = pixels.Height() * (2 * (panel / 3) + 1) / 4;
+                    const int y = pixels.Height() * (2 * (panel / 3) + 1) / 6;
                     Context().Check(CnaDemos::Near(pixels.At(x, y), expected[panel], 1), checks[panel]);
                 }
             }
@@ -169,12 +182,13 @@ namespace
 }
 CNA_DEMOS_GAME(ShadowCascadesDemo, {
     .id = "graphics.skinned_effect.shadow_cascades",
-    .title = "Authored cascade atlas selection and blending",
+    .title = "Authored cascade atlas selection and sampling",
     .description = "Selects two authored shadow-atlas slices by fitting-camera depth, checks the inclusive split, "
-                   "blends across its near side, and restores the single-map path with Count0.",
+                   "blends across its near side, restores the single-map path with Count0 and isolates the shared atlas edge.",
     .apis = {"SkinnedEffect::SetBoneTransforms",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowMapEXT",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowCascadesEXT",
+             "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowFilterRadiusEXT",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setLightViewProjectionEXT",
              "Microsoft::Xna::Framework::Graphics::ShadowCascadeStateEXT"},
     .tags = {"skinning", "shadows", "cascades", "cnaext"},
@@ -183,6 +197,6 @@ CNA_DEMOS_GAME(ShadowCascadesDemo, {
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "EasyGL OPENGLES3/OPENGL33 stock receiver path only; other renderers explicitly skipped. "
-                    "Authored Color atlas, two cascades and one-tap comparisons; no shadow-map generation, "
-                    "atlas-border filtering, four-cascade maximum, debug tint or other-renderer proof.",
+                    "Authored Color atlas, two cascades and a shared-edge radius2 case; no shadow-map generation, "
+                    "arbitrary atlas layouts, all kernel weights, four-cascade maximum, debug tint or other-renderer proof.",
 })
