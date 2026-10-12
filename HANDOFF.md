@@ -99,29 +99,28 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **448-max-slot checkpoint passed**
-at f00543d: tools/validate.sh exit 0, all 461 enabled CTests (191.49 s), both complete isolated-X11
-smoke runs and coverage regeneration. Exact ORIGINAL checkpoint-448 comparisons preserve all
-35/36 failed assertions, statuses/known issues and older C/custom-content child checks/traces.
-weight_channels increases six -> seven PASS checks; GL game.window.title varies 10 -> 12 because
-its unchanged checks run per Update rather than per rendered frame. All 33 selected binary/four
-asset hashes match the post-build runtime capture; normalized stderr is identical (no GTK warnings,
-same 84 GL X protocol lines). Evidence/catalog/scripts: reports/checkpoint-448-max-slot-*.
-Both focused 800x480 captures were actually inspected and are RGBA-identical; only 7,504 new cyan
-pixels differ from their original 448 images. CNA was clean at 16fde50c after the full build;
-external CNA work continued during runtime. This is not an atomic dependency/input snapshot.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **449 checkpoint passed** at
+b80889a: tools/validate.sh exit 0, all 462 enabled CTests (316.91 s), both complete isolated-X11
+smoke runs and coverage regeneration. Exact ORIGINAL 448-max-slot comparisons add only the
+four-check passing fog_depth ID and preserve every old 35/36 failed assertion, status/known issue
+and C/custom-content child list/trace. GL game.window.title varies 12 -> 10 because unchanged
+checks run per Update. All 33 selected binary/four asset hashes match runtime capture; normalized
+stderr is identical (no GTK warnings, same 84 GL X protocol lines). Evidence/catalog/scripts:
+reports/checkpoint-449-*. Both focused 800x480 captures were actually inspected: only the middle
+card differs by one blue level (119 SW / 118 GL), within the original tolerance 1. External CNA
+C API work was ongoing during the build/runtime; this is not an atomic dependency/input snapshot.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets --validate | 448 demos, 0 problems |
+| Metadata/assets --validate | 449 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 436 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 395 passed, 25 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 416 passed, 26 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | All 35/36 older failures retained; weight_channels six -> seven passes |
+| CTest | 437 passed (including 25 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 396 passed, 25 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 417 passed, 26 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | All 35/36 older failures retained; new fog_depth ID has four passes |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Both final-slot captures inspected; RGBA-identical, only the new 7,504-pixel cyan mesh differs from original 448 |
+| Screenshots | Both fog captures inspected; same silhouettes, 39,168 middle-card pixels differ only by one blue level |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -245,39 +244,66 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** run and close full checkpoint 449 against ORIGINAL 448-max-slot,
-then continue with the normal-lighting draft below. The new graphics.skinned_effect.fog_depth
-is APPLIED; /tmp/cna-skinned-fog-depth.cpp is stale. Catalog 449/0; focused four PASS checks on
-SOFTWARE/OPENGLES3, empty stderr. Both 800x480 captures actually inspected: same silhouettes and
-endpoint colors; only 39,168 middle-card pixels differ in blue (119 SW / 118 GL), within original
-tolerance 1. Each card has 39,168 pixels. No RGBA-identity claim. The fog-disabled control and
-bone-only depth changes establish post-skin fog, not arbitrary material or perspective behavior.
+**Immediate next action:** apply and validate the two complementary lighting demos below as
+one batch, then complete checkpoint 451. Full 449 at b80889a is CLOSED: tools/validate.sh exit 0,
+462 enabled CTests (316.91 s), SW 396/25/25/3, GL 417/26/3/3, regenerated coverage. ORIGINAL
+448-max-slot comparisons add only fog_depth (four PASS checks); all old 35/36 raw failures,
+statuses/known issues and C/custom-content child lists/traces remain. GL title varies 12 -> 10
+with Update timing. All 33 selected binary/four asset hashes and normalized stderr match.
+Baseline/evidence/catalog/scripts: reports/checkpoint-449-*. No checkpoint is running.
+Inventory: 293/329 types, 1361/2326 members, 158/3210 C routes; all runtime columns cover 449 IDs.
 
-Focused build passed (57 scheduled targets, known Draco CMP0148 configure developer warning,
-no compiler diagnostics); all 41 targeted graphics/C API/CLI CTests pass (11.73 s), including
-three WILL_FAIL cases and one PBR capability skip. Evidence: reports/checkpoint-449-focused-*.
-External CNA C API work is ongoing at observed HEAD 16fde50c; no atomic input snapshot claimed.
-Prepared /tmp/cna-archive-449.py and /tmp/cna-449-finish.py compare with 448-max-slot but still
-need the actual source commit plus 33 binary/four asset hashes after the full build. Expected
-new four-PASS ID only; all old 35/36 failures and C/custom-content child lists must remain.
+Focused fog: metadata 449/0; four checks pass on both renderers, empty stderr. Both 800x480
+captures actually inspected: identical silhouettes/endpoint colors, only the 39,168 middle-card
+pixels differ in blue (119 SW / 118 GL), within the original tolerance 1. Each card has 39,168
+pixels. Initial build had only the known Draco CMP0148 developer warning; all 41 targeted
+CTest cases passed (11.73 s). Full rebuild had 83 scheduled targets without compiler diagnostics.
+External CNA C API work continued; start/end state is archived, with no atomic source claim.
+The fog draft is APPLIED AND STALE. Final-slot/weight-channel/older C drafts are stale too.
 
-Last COMPLETE checkpoint: 448-max-slot at f00543d (closure af9d35c), tools/validate.sh exit 0,
-all 461 enabled CTests (191.49 s), SW 395/25/25/3, GL 416/26/3/3. ORIGINAL 448 comparisons add
-only the seventh weight_channels check, with GL title count 10 -> 12 from Update timing.
-All raw failures, child lists/traces and selected hashes retained; normalized stderr unchanged.
-Baseline/evidence/scripts: reports/checkpoint-448-max-slot-*. No full 449 runtime is running yet.
+Next coherent batch (449 is now closed): apply BOTH complementary lighting scenes below,
+validate their five/three checks and actual images, then run one full 451 checkpoint against
+ORIGINAL 449. This keeps each source focused while validating the related lighting work together.
+Prepared /tmp/cna-archive-451.py and /tmp/cna-451-finish.py require PENDING451 replacement and
+fresh runtime hash capture. The older 450-only helpers are superseded; do not use them. Copies of the final unapplied
+drafts and 451 helpers are also preserved under reports/checkpoint-449-next-*.
 
-After fog: /tmp/cna-normal-lighting.cpp is a new UNAPPLIED 131-line draft. /tmp/cna-prepare-normal-lighting.py generates an OLDER
+After fog: /tmp/cna-normal-lighting.cpp is a new UNAPPLIED 138-line draft. /tmp/cna-prepare-normal-lighting.py generates an OLDER
 three-card draft; do not rerun it over the newer file. Proposed graphics.skinned_effect.normal_lighting uses
 one +Z bind normal: identity, a 60-degree Y rotation, and equal identity/120-degree influences.
 The latter produces a shorter normal with the same direction after normalization. A single
 white directional light toward(.6,0,.8), Gold diffuse, zero ambient/specular, and bone rotations
 should produce (204,172,0), then (235,198,0) twice (tolerance 1). A fourth card uses the same
 blend with World scale(2,1,1), whose inverse-transpose normal should produce (254,214,0).
-Four pixel checks planned; all cards are placed at World Z=-3. Actual CNA APIs and software transform/
+Four pixel checks plus one declared LightingEnabled=false refusal check are planned;
+all cards are placed at World Z=-3. The public header declares NotSupportedException and
+the failed mutation must leave lighting enabled before the actual lit draws. Actual CNA APIs and software transform/
 Lambert path were read, but no compilation/runtime/image evidence exists. Review and validate
 only after fog's full checkpoint; do not infer arbitrary nonuniform-scale or per-pixel lighting
 coverage from this draft. Nonuniform World scale is distinct from nonuniform joint scale.
+The older 450-only helpers are superseded by the combined 451 helpers above. Analytic colors:
+/tmp/cna-normal-lighting-design.json (design only, no native mutation test).
+
+Second scene in that lighting batch: /tmp/cna-skinned-lighting-modes.cpp is an UNAPPLIED
+121-line candidate for graphics.skinned_effect.per_pixel_lighting, generated by
+/tmp/cna-prepare-skinned-lighting-modes.py. It uses one shared quad with authored endpoint normals
+(-.8,0,.6)/(.8,0,.6), a bone translating bind Z=0 to Z=-3, and false/true lighting modes in two
+panels. With white diffuse, a +Z-facing light and zero ambient/specular, expected gray values
+are 153 across the vertex-lit panel, 255 at the pixel-lit center and 212 halfway toward its
+right edge (tolerance 1). Three checks planned; no build/runtime/image validation yet. This
+isolates the SkinnedEffect shader variant, which the constant normals of the preceding demo
+cannot distinguish. All CNA calls remain visible; no new assets. Review before applying.
+
+Later C ABI candidate: /tmp/cna-host-prefix.c is an UNAPPLIED extension of existing
+c_api.game.host_frames. ABI_VERSIONING.md lines 584-591 explicitly permit a larger structure
+once its known prefix is validated. The initial frame-hook table becomes an actually allocated
+prefix plus two nonzero unknown uint64 fields; only that initial install uses the larger size.
+It is zeroed after installation, and the original startup trace must prove the known callbacks
+were copied (there were no prior hooks to mask an ignored install). All later ordinary-size
+replacement/restoration and invalid-size/version controls remain. Same 26 child checks (28 with
+capture), one setup label changes, same expected ILBUbUbDeUDUrDsXEZ trace and rendered image.
+No build/runtime evidence yet; review before applying. This avoids adding a demo or meaningless
+extra count just to exercise the public forward-compatible prefix contract.
 
 This is a separate fog-after-bone-transform behavior: BasicEffect fog moves objects through World
 and cannot prove it. Other remaining gaps: rotated/nonuniform joint normals, lighting/alpha,
