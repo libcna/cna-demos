@@ -9,8 +9,9 @@ CNA_DEMOS_STANDALONE({
                    "cna_sprite_batch_draw_string after unloading and destroying the manager, and releases "
                    "the independently owned resources in the documented order. Checks that a live font "
                    "prevents an early atlas release and still draws visible text afterwards; root changes preserve cached "
-                   "names, redirect new loads and copy the caller's root string.",
-    .apis = {"cna_content_manager_create", "cna_content_manager_load_texture2d",
+                   "names, redirect new loads and copy the caller's root string. Also checks stable game-owned manager "
+                   "borrowing, copied configuration and invalidation at game destruction.",
+    .apis = {"cna_game_get_content_manager_ext", "cna_game_set_content_manager_ext", "cna_content_manager_create", "cna_content_manager_load_texture2d",
              "cna_content_manager_load_sprite_font", "cna_content_manager_unload", "cna_content_manager_destroy",
              "cna_content_manager_set_root_directory", "cna_content_manager_get_root_directory_size",
              "cna_content_manager_copy_root_directory",

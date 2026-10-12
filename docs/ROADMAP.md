@@ -570,6 +570,16 @@ native regression with three8-second transition delays makes the old sender time
 22.88s; the repaired37.41s exchange preserves all five host checks with only ISSUE-030.
 This is a demo coordination fix. Original/repaired/full evidence remains immutable.
 
-Next: extend existing volume_data transfers and C content_manager game-owned borrowing;
-then continue deeper uniform/lighting and C ownership audits. These are behavioral extensions,
-not additional demo IDs. Current prepared drafts have syntax and before-capture evidence only.
+Existing volume_data and C content_manager extensions now pass focused validation on both
+renderers: ten volume checks and49 captured C child checks (47 without), preserving all old
+controls. Eight inspected before/after images form four RGBA-identical pairs; stderr is empty.
+Volume coverage adds guarded boxed transfers and non-cubic authored mips/refusal preservation;
+C coverage adds stable game-owned borrowing, copied-root independence and expiry. No new ID.
+Full466-transfer is pending against original complete466-timing; generated inventory names
+168 C routes, with runtime columns still from that preceding complete checkpoint.
+
+A mid-build external Game.hpp layout change produced an initial SIGSEGV at an original check.
+The archived backtrace/object timestamps identify mixed object layouts; an incremental rebuild
+resolves it without editing CNA or changing the demo. This is build consistency evidence, not
+a new CNA transfer defect. Next drafts for a shader sample kernel and C stream ownership/EOF
+have passed syntax only and remain unapplied until the transfer checkpoint closes.

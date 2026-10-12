@@ -17,6 +17,7 @@
 typedef struct ContentState {
     CnaDemo* demo;
     CNA_Handle content;      /* owned ContentManager */
+    CNA_Handle game_content; /* borrowed from the game; never destroy or release */
     CNA_Handle checker;      /* owned Texture2D */
     CNA_Handle font;         /* owned SpriteFont */
     CNA_Handle font_atlas;   /* owned Texture2D the font draws from */
@@ -58,6 +59,25 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     if (!cna_demo_check_result(state->demo, cna_content_manager_create(graphics_device, &content_info, &state->content),
                                "cna_content_manager_create")) {
         return CNA_RESULT_SUCCESS; /* the checks report it; the frames still run */
+    }
+
+    /* The game owns a separate manager value. Its borrowed handle remains stable across
+       copying another manager into that value; it is not an independently owned child. */
+    if (cna_demo_check_result(state->demo, cna_game_get_content_manager_ext(game, &state->game_content),
+                              "borrow the game's own content manager")) {
+        CNA_Handle same_manager = CNA_INVALID_HANDLE;
+        result = cna_content_manager_destroy(state->game_content);
+        cna_demo_check(state->demo, result == CNA_RESULT_INVALID_STATE,
+                       "the game's borrowed content manager refuses independent destruction");
+        cna_demo_check_result(state->demo,
+            cna_content_manager_set_root_directory(state->game_content, view("game-only-root")),
+            "give the game manager a distinguishable root before copying");
+        /* Copy before loading assets: this example tests configuration, not cached-object sharing. */
+        cna_demo_check_result(state->demo, cna_game_set_content_manager_ext(game, state->content),
+                              "copy the caller-owned manager into the game's existing manager value");
+        result = cna_game_get_content_manager_ext(game, &same_manager);
+        cna_demo_check(state->demo, result == CNA_RESULT_SUCCESS && same_manager == state->game_content,
+                       "borrowing after replacement returns the same game-owned manager handle");
     }
 
     /* Asset names have no extension: the manager finds textures/checker.png. */
@@ -115,6 +135,13 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
                                memcmp(root_copy, "assets/textures", (size_t)root_bytes) == 0 && root_copy[root_bytes] == '#',
                                "the manager copied its root independently of the caller's reused buffer");
             }
+            /* The setter copied the old assets root; it did not alias this caller-owned manager. */
+            memset(root_copy, '#', sizeof(root_copy));
+            copied = UINT64_MAX;
+            result = cna_content_manager_copy_root_directory(state->game_content, root_copy, sizeof(root_copy), &copied);
+            cna_demo_check(state->demo, result == CNA_RESULT_SUCCESS && copied == sizeof("assets") - 1U &&
+                           memcmp(root_copy, "assets", sizeof("assets") - 1U) == 0 && root_copy[6] == '#',
+                           "the game keeps the copied root when the caller-owned source changes later");
             /* textures/checker would not exist under assets/textures; this name is already cached. */
             if (cna_demo_check_result(state->demo,
                     cna_content_manager_load_texture2d(state->content, view("textures/checker"), &cached),
@@ -306,7 +333,7 @@ int main(int argc, char** argv)
     cna_demo_init(&demo, "c_api.content.content_manager", argc, argv, 10);
     memset(&state, 0, sizeof(state));
     state.demo = &demo;
-    state.content = state.checker = state.font = state.font_atlas = state.sprite_batch = CNA_INVALID_HANDLE;
+    state.content = state.game_content = state.checker = state.font = state.font_atlas = state.sprite_batch = CNA_INVALID_HANDLE;
 
     memset(&callbacks, 0, sizeof(callbacks));
     callbacks.struct_size = (uint32_t)sizeof(callbacks);
@@ -326,6 +353,12 @@ int main(int argc, char** argv)
     }
     cna_demo_check_result(&demo, cna_demo_use_hidef(game, &manager), "HiDef profile (back-buffer read-back)");
     cna_demo_check_result(&demo, cna_game_run(game), "cna_game_run");
+    {
+        uint64_t root_bytes = UINT64_MAX;
+        const CNA_Result result = cna_content_manager_get_root_directory_size(state.game_content, &root_bytes);
+        cna_demo_check(&demo, result == CNA_RESULT_SUCCESS && root_bytes == sizeof("assets") - 1U,
+                       "the game-owned borrow survives callbacks and destruction of the caller-owned source");
+    }
 
     /* Loaded resources are owned by the caller, not by the manager: each is destroyed by itself --
        the font before the atlas it draws from -- and all of them before the game. */
@@ -335,6 +368,12 @@ int main(int argc, char** argv)
     release(&state, &state.checker, cna_texture2d_destroy, "cna_texture2d_destroy (the checker)");
     release(&state, &state.content, cna_content_manager_destroy, "cna_content_manager_destroy");
     cna_demo_check_result(&demo, cna_graphics_device_manager_destroy(manager), "cna_graphics_device_manager_destroy");
-    cna_demo_check_result(&demo, cna_game_destroy(game), "cna_game_destroy");
+    /* A game-owned content borrow does not prevent game destruction; its old identifier expires. */
+    if (cna_demo_check_result(&demo, cna_game_destroy(game), "cna_game_destroy")) {
+        uint64_t untouched = UINT64_C(987654321);
+        const CNA_Result result = cna_content_manager_get_root_directory_size(state.game_content, &untouched);
+        cna_demo_check(&demo, result == CNA_RESULT_INVALID_HANDLE && untouched == UINT64_C(987654321),
+                       "game destruction invalidates its manager borrow without writing a stale query's output");
+    }
     return cna_demo_finish(&demo);
 }

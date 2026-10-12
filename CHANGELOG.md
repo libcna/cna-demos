@@ -6,12 +6,21 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete checkpoint 466-timing: all 479 enabled CTests and both full smoke suites pass
+  exact baseline comparison, preserving all 37/41 old failures and network evaluation checks.
+  The initial aggregate network deadline is a recorded demo bug; a per-phase watchdog keeps
+  every packet predicate. A controlled delayed exchange lasts 37.41 seconds and still runs
+  all five host checks, while the original sender times out at 22.88 seconds.
 - Checkpoint 464: all 477 enabled CTests and both complete smoke suites verified, preserving
   all prior 37/41 failed assertions and C/custom child evidence. A SIGTERM-interrupted smoke
   attempt is archived; both suites were resumed without rebuilding and selected hashes stayed
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- Existing Texture3D transfers now include guarded boxed reads, authored non-cubic mip data
+  and refusal preservation; ten checks pass on both renderers with unchanged inspected images.
+- Existing C content now demonstrates stable game-owned manager borrowing, configuration
+  copying and handle expiry. Eight new controls preserve all original checks and scene pixels.
 - Typed cube payloads distinguish packed storage words from C++ object sizes and preserve
   unclamped float-vector channels; eight checks pass on both renderers.
 - Actual volume sampling compares slice centers, point/linear filtering and W-only wrapping;
