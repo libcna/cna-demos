@@ -97,25 +97,25 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **444 checkpoint passed** at 116d8f4:
-tools/validate.sh exit 0, all 457 enabled CTests (165.82 s), both complete isolated-X11 smoke runs
-and coverage regeneration. ORIGINAL 443 comparisons retain every older ID/status/knownIssue and
-all 32/33 failed assertions. New diagnostics has nine native passes; host frames retain all
-seventeen prior child checks and add seven, matching focused evidence. All older content tool
-lists remain unchanged. GL game.window.title has 10 rather than 12 checks because its unchanged
-assertion runs per Update, not per rendered frame. All 32 selected hashes match runtime capture.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **445 checkpoint passed** at 6c9298f:
+tools/validate.sh exit 0, all 458 enabled CTests (206.40 s), both complete isolated-X11 smoke runs
+and coverage regeneration. ORIGINAL 444 comparisons retain every older ID/status/knownIssue,
+check count, content tool/24 host child checks and all 32/33 failed assertions. The new source-root
+demo passes ten native checks on both selections. All 32 selected hashes match runtime capture.
 Normalized stderr is unchanged: no GTK warnings; the same 84 nonfatal GL X protocol lines remain.
-Original streams/reviews, build/CTest logs and hashes: reports/checkpoint-444-*.
-No new CNA issue or full-transitive dependency snapshot claim.
+Original streams/reviews, build/CTest logs and hashes: reports/checkpoint-445-*.
+The first focused traversal assertion had the wrong message fragment; CNA's actual refusal is
+correct, and the original failed log plus fixed contextual output are preserved. No new CNA issue
+or full-transitive dependency snapshot claim.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets --validate | 444 demos, 0 problems |
+| Metadata/assets --validate | 445 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 432 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 393 passed, 23 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 414 passed, 24 expected failures, 3 skipped, 3 manual not run |
+| CTest | 433 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 394 passed, 23 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 415 passed, 24 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | All 32/33 older failed assertions retained |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
 | Screenshots | Final host frame with replacement hooks inspected on both renderers; RGBA-identical to prior host captures |
@@ -239,36 +239,44 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** source_root_capabilities is built and focused-validated: ten native
-checks pass on SOFTWARE and OPENGLES3 without a display. It uses built-in CNJ/Texture2D slices,
-original copied checker/sprite-strip PNGs and exact CPU decoded pixels, dependency root aliases,
-relocation with identical CNB bytes, local-path isolation, and contextual refusal/repair. Native
-pipeline_diagnostics now prints its actual three captured messages for viewers; all nine retained
-checks pass on both selections. Both stderr streams are empty and private trees independently gone.
-No new CNA issue. Focused evidence/source hashes/builds: reports/checkpoint-445-focused-*.
+**Immediate next action:** complete 445 is closed at source 6c9298f. Continue the EXISTING
+resize_to_power_of_two demo using /tmp/cna-resize-profile.cpp (UNAPPLIED, seven proposed checks,
+retaining its one original check). Baseline capture session 59612 passed (one check on each renderer), archived under
+reports/checkpoint-445-profile-before-*:
+/tmp/cna-445-profile-before-{SOFTWARE,OPENGLES3}.{json,log,stderr.log,png}. Inspect its result before
+editing sources. Add raw assets/textures/odd_size.png using the existing original
+framed_gradient(100,60) generator, and a matching save_png call in tools/generate_assets.py.
+The same original PNG already lives under content/textures; verify byte identity and generate
+only the new fixture. Apply the draft, build, run/capture both renderers and compare before/after.
+The scene's drawing stays the same; fresh resized base pixels are compared with its loaded CNB.
+Public ImportAndProcess inspects actual XNB-targeted Reach/HiDef processing. Only the CNB control
+writes a container; XNB output/load and actual Reach hardware validation remain unclaimed.
 
-Initial source-root SOFTWARE run passed nine of ten checks; the traversal assertion expected the
-normalization diagnostic, but leading ../source/image.png remains after lexically_normal and CNA
-correctly rejects it at the explicit dot-segment guard. The fixed check still requires Import,
-CNA.CnjImporter, exact source/asset and "must not contain '.' or '..'". Final stdout records that
-actual refusal. Original failure: reports/checkpoint-445-first-roots-SOFTWARE.*. No CNA edit.
-Initial build /tmp/cna-445-build.log passed with the known Draco CMP0148 configure warning;
-final /tmp/cna-445-final-build.log passed without compiler diagnostics. Metadata 445/0; all 29
-targeted CTests passed (11.25 s). Next: commit source and run complete 445 against ORIGINAL
-checkpoint-444; capture 32 selected hashes after its build, then freeze sources/assets through
-both smoke runs. Prepared /tmp/cna-archive-445.py RENDERER and /tmp/cna-445-finish.py still contain
-PENDING445. They require ten new native checks, unchanged old statuses/known issues/counts (apart
-from positive per-Update title counts), identical old content/24 host child checks, exact 32/33
-failures and unchanged normalized stderr. Expect 458 enabled CTests, SW 394/23/25/3, GL 415/24/3/3.
+Future full checkpoint should be 445-profile (same catalog, no new ID), against ORIGINAL
+checkpoint-445. Prepared /tmp/cna-archive-445-profile.py and /tmp/cna-445-profile-finish.py use
+PENDING445PROFILE. They expect resize 1 -> 7, unchanged old native/content/24 host checks and
+32/33 failures, 32 runtime hashes and unchanged normalized stderr. Review after actual focused
+runs; no profile-extension build/runtime evidence yet. Do not change source/assets during full
+runtime checkpoints. /tmp/cna-resize-profile-body.txt is only a drafting fragment.
 
-The /tmp source-root draft is APPLIED AND STALE: it still has the wrong traversal diagnostic.
-Use repository sources only. After this checkpoint, continue meaningful build-environment or C ABI
-callback/dispatch behavior. A concrete source-audited environment candidate is XNB Reach refusing
-NPOT mipmaps, HiDef accepting them and explicit resize enabling Reach; the CNB route intentionally
-has no such target-profile gate. Verify public registration/inspection APIs before implementation;
-no runtime or genuine-XNA evidence is claimed for this candidate. Alias syntax enumeration and
-ordinary root-map accessors do not justify separate demos. Nested capabilities, CLI fingerprints,
-symlink semantics and cross-platform containment remain separate from this focused root demo.
+445 evidence: /tmp/cna-demos-445-validation.log exit 0; all 458 enabled CTests (206.40 s), SW
+394/23/25/3, GL 415/24/3/3, exact 32/33 failed assertions unchanged, every older count/status/
+knownIssue retained. Ten new native source-root checks pass; all older content tool/24 host child
+lists unchanged. Normalized stderr unchanged and all 32 selected hashes match. Full evidence and
+helpers: reports/checkpoint-445-*. Original focused runs/builds/source hashes/29 targeted CTests
+(11.25 s): checkpoint-445-focused-*. Native diagnostics still has nine passes and now displays
+its three captured messages. Private trees independently gone; focused stderr empty.
+First source-root SOFTWARE run had one wrong diagnostic expectation: leading ../source/image.png
+survives lexically_normal, then CNA correctly rejects its '..' segment. The corrected test still
+checks Import, CNA.CnjImporter, exact source/asset and the observed refusal reason. Original failure
+is checkpoint-445-first-roots-SOFTWARE.*; no CNA patch/issue. Initial build had the known Draco
+CMP0148 configure warning; final/full builds had no compiler diagnostics. External C API changes
+were built without claiming an atomic dependency snapshot. Coverage has complete runtime columns:
+293/329 types, 1354/2326 named members, 158/3210 C routes. Semantic coverage remains incomplete.
+
+The /tmp source-root draft is APPLIED AND STALE, including its wrong traversal diagnostic; use
+repository sources. Source-root nested propagation, CLI fingerprints, symlinks and platform path
+semantics remain separate. Ordinary root-map getters/alias spelling need no independent demos.
 
 444 evidence: /tmp/cna-demos-444-validation.log exit 0; 457 enabled CTests, SOFTWARE 393/23/25/3,
 GL 414/24/3/3, exact 32/33 failures retained. All older statuses/known issues and content child lists
