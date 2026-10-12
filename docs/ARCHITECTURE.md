@@ -81,6 +81,10 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
   discovery, fingerprints, manifest skipping, publication and manifest-based clean. The tool's
   temporary score inputs are original runtime fixtures, not another native build tree. This
   build-time dependency remains isolated from the browser's runtime link closure.
+* `content.custom.multi_artifact_publication` also links `CNA::ContentCompiler`. Its native writer
+  returns two explicitly declared CNB schemas and the processor registers an original support file
+  through AddDeploymentFile. The compiler owns publication, graph destination reservations and
+  manifest-based clean; the demo only creates private fixtures and deliberate destination conflicts.
 * `content.custom.xml_xnb_pipeline` links both compiler and build-time serializer modules.
   Its process pre-registers a game XML serializer and XNB writer before configuring the public XML
   source route. The real compiler publishes original temporary XML as XNB; a separately registered

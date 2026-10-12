@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Multi-artifact encounter compilation: two CNB schemas, a deployed briefing and real manifest
+  ownership. Fourteen checks include partial publication/retry, graph destination conflicts,
+  incremental skips and clean with or without its ownership record; no whole-node rollback claim.
 - Existing patrol pipeline example distinguishes stable output declarations from actual C++
   payload types at Import, Process and Write, and verifies copied ContentValue ownership (14 checks).
 - Existing XNA adapter contrasts strict refusal with warning/default parameter handling and retained

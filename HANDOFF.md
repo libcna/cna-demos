@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 22).
-* In progress: 7 (models/glTF, 23), 8 (content, 42), 9 (audio 21 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 43), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 16 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,11 +64,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-441 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+442 demos: math 78, game 33, graphics 140 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 14 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
-content 42 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 43 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 16 (standalone C programs). Every declared category has demos.
@@ -238,22 +238,29 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** full 441-contracts is COMPLETE at 2d28a13. Apply the prepared focused
-multi-artifact publication tool below as content.custom.multi_artifact_publication, build/validate,
-run both displayless selections and investigate the deliberate publication failure before claiming
-its stage. Drafts are source-reviewed only. Then run relevant CTests, regenerate coverage, update
-docs and continue. Latest full original baseline is reports/checkpoint-441-contracts-*:
-454 enabled CTests pass, SOFTWARE 390/23/25/3, GL 411/24/3/3, exact 32/33 failed assertions.
-All 30 selected hashes match, normalized stderr unchanged, type/member totals unchanged.
+**Immediate next action:** new content.custom.multi_artifact_publication is APPLIED and built.
+Both /tmp/cna-442-publication-final-{SOFTWARE,OPENGLES3}.{json,log,stderr.log} pass all 14 child
+checks, preserving the initial twelve. Actual stderr contains one Publish refusal and two Graph
+refusals from deliberate private fixtures; both data trees are independently absent. No new CNA
+issue. Metadata 442/0. All 25 targeted CTests pass (6.30 s, /tmp/cna-442-targeted-ctest.log).
+Coverage regenerated with the previous complete reports: one absent new ID is honest until the
+full checkpoint; type/member totals unchanged. Focused streams and original build/CTest logs are
+archived under reports/checkpoint-442-focused-*. Commit, run complete 442 against ORIGINAL 441-contracts, archive
+both streams and exact reviews. Expect one new PASS: SOFTWARE 391/23/25/3, GL 412/24/3/3; all old
+32/33 failed assertions and all old child lists unchanged. Capture 31 selected hashes (prior 30
+plus new executable) after full build, freeze source/assets during runtime, then continue.
 
-Completed contract evidence: /tmp/cna-441-values-* (14 native checks),
-/tmp/cna-441-strictness-final-* (19 child checks: 17 passes plus ISSUE-047/048),
-/tmp/cna-441-contracts-final-build.log clean; 24 targeted CTests pass (6.46 s).
-Full /tmp/cna-demos-441-contracts-validation.log exits 0. Both exact wrappers
-/tmp/cna-archive-441-contracts.py and finish helper /tmp/cna-441-contracts-finish.py pass;
-the generic comparator's review-required output is preserved and resolved by an exact one-added-
-ISSUE-048 assertion check, without deleting any older failure. Focused original streams/source
-hashes remain reports/checkpoint-441-contracts-focused-*.
+Build evidence: /tmp/cna-442-build.log completed 108 steps; automatic configure included vendored
+Draco CMP0148 developer warning, not a compiler warning/error. Final build /tmp/cna-442-final-build.log
+completed 86 steps after external C API changes. /tmp/cna-442-target-build.log then confirmed the
+strengthened final source up to date. Do not conflate those dependency rebuilds with demo defects.
+All /tmp/cna-multi-artifact-publication* drafts are APPLIED AND STALE; use repository sources.
+
+Latest complete checkpoint: 441-contracts at 2d28a13 (closure 89510ca); 454 enabled CTests pass,
+SOFTWARE 390/23/25/3, GL 411/24/3/3, exact 32/33 failed assertions, same normalized stderr and
+30 unchanged selected hashes. Original evidence under reports/checkpoint-441-contracts-*.
+Contract focused evidence remains /tmp/cna-441-values-* (14 native checks) and
+/tmp/cna-441-strictness-final-* (17 passes plus ISSUE-047/048); 24 targeted CTests passed.
 
 Both /tmp/cna-pipeline-value-contracts.cpp and /tmp/cna-xna-strictness.cpp drafts/generators are
 APPLIED AND STALE: repository contains the final labeled reproduction and extra returned-key
@@ -270,21 +277,18 @@ Previous complete checkpoint: 441-config at e3b8244 (closure e245a87); all 454 e
 SOFTWARE 390/23/25/3, OPENGLES3 411/24/3/3, exact 31/32 failures and unchanged normalized stderr.
 Archives reports/checkpoint-441-config-* include original streams, exact reviews and 30 hashes.
 
-Next deeper work: native writer additional outputs and actual compiler deployment/publication
-failure recovery. Source review only: tools/content/content.cpp PublishResult writes individual
-outputs sequentially with per-file atomic helpers; do not assume whole-node rollback. The public
-native AddDeploymentFile accepts a contained source and safe output path (separate from the XNA
-AddOutputFile ISSUE-047). A focused multi-artifact publication demo would add meaning beyond the
-existing single-output compiler controls. Prepared /tmp/cna-multi-artifact-publication.cpp and
-/tmp/cna-multi-artifact-publication-metadata.cpp (263 lines, twelve planned checks), NOT
-applied/compiled/run. One encounter source yields wave CNB + reward CNB (two declared schemas,
-real XREF) + native AddDeploymentFile source briefing. Real CLI manifest ownership/digests,
-unchanged skip, missing companion, edited briefing, a directory obstructing the final deployment
-filename, retry and clean with/without its ownership manifest are checked. The saved manifest is
-restored only after asserting that manifest-less clean preserves all artifacts and the unowned note. Obstruction is the final path, not its parent (the latter
-could fail during path canonicalization before publication). Actual failure stage still needs
-runtime confirmation; no whole-node rollback assumed. CMake draft is /tmp/cna-multi-artifact-publication-CMakeLists.txt, using the established
-incremental_compiler target linkage. 441-contracts is now fully archived; apply after this documentation commit.
+Multi-artifact publication now demonstrates native AddDeploymentFile with a source-contained
+briefing and separate output root, distinct from generated-output XNA ISSUE-047. After obstruction,
+actual waves=4/rewards=100 CNBs were already published while the successful manifest stayed old;
+removing the final-path directory lets retry complete the set. The ownership conflict edits arena
+4 -> 6 and adds bonus 5; both claim the fixed briefing destination and both get Graph refusals
+without changing prior artifacts. Only after observing that does the demo remove bonus and restore
+arena 4 for the unchanged-skip control. Manifest-less clean is checked before restoring its exact
+saved ownership record and exercising normal clean. No whole-node rollback/crash/concurrency claim.
+Next deeper gaps: actual content-build dependency scheduling/effective fingerprints/cycles, or
+remaining C ABI callback lifecycle contracts. Prefer a coherent extension where it fits; no per-
+getter or per-error demo proliferation. Source AddContentBuildDependency exists, but neither this
+publication example nor manually supplied ContentBuildSibling controls prove CLI graph scheduling.
 
 Initial config build /tmp/cna-441-config-build.log stopped in concurrently modified C API:
 CnaCApiDisplay.cpp:439 lacked the qualification/using for ToNativePresentationParameters. At later

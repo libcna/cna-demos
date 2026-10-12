@@ -189,7 +189,7 @@ a check that all authored colors remain visible and that a blank texture row can
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (42 demos; remaining below)
+## Phase 8 -- content 🟨 (43 demos; remaining below)
 - ✅ texture processor parameters (colour key, premultiplied alpha, mipmaps, power of two), XNB
   DXT textures (`content_xnb/`), CNJ curve, compiled WAV, ContentManager cache/Unload, several
   managers, missing assets, OpenStream override (ISSUE-012), Unload disposal (ISSUE-011), CNAEXT
@@ -210,6 +210,12 @@ a check that all authored colors remain visible and that a blank texture row can
   precomputation, deterministic CNB output, runtime loading and typed parameter diagnostics.
   Existing example now has 14 passing checks: copied carrier lifetime and separate stable-identity
   versus C++ payload guards at Import, Process and Write, with exact error context.
+  ✅ `content.custom.multi_artifact_publication`: a real compiler node publishes two declared CNB
+  schemas plus a briefing through native AddDeploymentFile. Fourteen focused checks cover digests,
+  XREF/ownership, skips, missing companion recovery, changed support input, Publish failure/retry,
+  graph refusal of two nodes claiming one destination, and clean with/without its manifest.
+  The failed deployment leaves newly published CNBs and the older manifest; no whole-node rollback
+  or crash/concurrent-publisher guarantee is claimed.
   ✅ Existing cache/Unload demo now shows root switching after Unload and exposes CNA's missing
   loaded-root guard (ISSUE-039). ✅ `content.custom.intermediate_serializer`: a separate build-time
   tool with named/optional/ignored fields, collection item names, absent/present/null distinctions,
