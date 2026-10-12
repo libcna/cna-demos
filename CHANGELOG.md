@@ -44,6 +44,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- The existing shadow receiver now compares one-tap, 3x3 and 5x5 visibility averages over
+  an authored depth edge. All seven GL controls pass; the inspected image marks the measured
+  positions and retains the original reception/bias/detachment controls.
 - Authored-map skinned shadow reception: four GL pixel controls compare disabled/enabled
   reception, depth bias and detachment while preserving ambient/emission. The capture was
   inspected; unsupported SOFTWARE rendering is explicitly skipped.

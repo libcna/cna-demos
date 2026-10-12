@@ -83,10 +83,10 @@ namespace
             effect_->getDirectionalLight2Property().setEnabledProperty(false);
             // Post-skin Z=-3 becomes clip Z=0, hence comparison depth=.5 after clip-to-map conversion.
             effect_->setLightViewProjectionEXT(Matrix::CreateTranslation(0, 0, 3));
-            effect_->setShadowFilterRadiusEXT(0); // isolate a single comparison, not PCF averaging
+            effect_->setShadowFilterRadiusEXT(0); // each panel selects its comparison kernel below
             batch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
-            Context().Print("The left half of the authored map stores 64/255, the right 192/255. Receiver depth=.5; only the left half is occluded. Ambient and emission remain. Bias=.3 deliberately removes that shadow, illustrating why excessive bias loses contact. This is receiver sampling, not shadow-map generation.");
+            Context().Print("The left half of the authored map stores 64/255, the right 192/255. Receiver depth=.5; only the left half is occluded. Ambient and emission remain. Bias=.3 deliberately removes that shadow, illustrating why excessive bias loses contact. The lower row compares visibility at world X=-.125: zero for one tap, 1/3 for 3x3 and 2/5 for 5x5. Each tap compares depth before visibility is averaged. This is receiver sampling, not shadow-map generation.");
         }
         void Draw(const GameTime& time) override
         {
@@ -98,11 +98,14 @@ namespace
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             device.SetVertexBuffer(vertices_.get());
             device.setIndicesProperty(indices_.get());
-            for (int panel = 0; panel < 4; ++panel)
+            for (int panel = 0; panel < 7; ++panel)
             {
-                const int left = full.getWidthProperty() * panel / 4;
-                const int right = full.getWidthProperty() * (panel + 1) / 4;
-                device.setViewportProperty(Viewport(left, 0, right - left, full.getHeightProperty()));
+                const int column = panel % 4, row = panel / 4;
+                const int left = full.getWidthProperty() * column / 4;
+                const int right = full.getWidthProperty() * (column + 1) / 4;
+                device.setViewportProperty(Viewport(left, row * full.getHeightProperty() / 2,
+                                                   right - left, full.getHeightProperty() / 2));
+                effect_->setShadowFilterRadiusEXT(panel < 4 ? 0 : panel - 4);
                 effect_->setShadowMapEXT(panel == 3 ? nullptr : shadow_.get());
                 effect_->setShadowsEnabledEXT(panel != 0);
                 effect_->setShadowDepthBiasEXT(panel == 2 ? .3f : 0.0f);
@@ -113,10 +116,21 @@ namespace
                 }
             }
             device.setViewportProperty(full);
-            const std::array<const char*, 4> labels{"Disabled", "Enabled", "Bias .3", "Detached"};
+            const std::array<const char*, 7> labels{
+                "Disabled", "Enabled", "Bias .3", "Detached", "1 tap: 0", "3x3: 1/3", "5x5: 2/5"};
             batch_->Begin();
-            for (int panel = 0; panel < 4; ++panel)
-                batch_->DrawString(*font_, labels[panel], Vector2(static_cast<float>(panel * full.getWidthProperty() / 4 + 8), 20), Color::White);
+            for (int panel = 0; panel < 7; ++panel)
+                batch_->DrawString(*font_, labels[panel], Vector2(
+                    static_cast<float>((panel % 4) * full.getWidthProperty() / 4 + 8),
+                    static_cast<float>((panel / 4) * full.getHeightProperty() / 2 + 20)), Color::White);
+            // Mark the horizontal position used by all three lower-row visibility checks.
+            for (int radius = 0; radius < 3; ++radius)
+                batch_->DrawString(*font_, "^", Vector2(
+                    static_cast<float>(radius * full.getWidthProperty() / 4 + full.getWidthProperty() * 3 / 32 - 3),
+                    static_cast<float>(full.getHeightProperty() * 9 / 10)), Color::White);
+            batch_->DrawString(*font_, "Visibility at\nmarked position", Vector2(
+                static_cast<float>(full.getWidthProperty() * 3 / 4 + 8),
+                static_cast<float>(full.getHeightProperty() * 3 / 4)), Color::White);
             batch_->End();
             if (FramesDrawn() == 0)
             {
@@ -133,8 +147,22 @@ namespace
                 {
                     const int left = pixels.Width() * panel / 4;
                     const int width = pixels.Width() / 4;
-                    Context().Check(CnaDemos::Near(pixels.At(left + width / 4, pixels.Height() / 2), panel == 1 ? occluded : lit, 1) &&
-                                    CnaDemos::Near(pixels.At(left + width * 3 / 4, pixels.Height() / 2), lit, 1), checks[panel]);
+                    Context().Check(CnaDemos::Near(pixels.At(left + width / 4, pixels.Height() / 4), panel == 1 ? occluded : lit, 1) &&
+                                    CnaDemos::Near(pixels.At(left + width * 3 / 4, pixels.Height() / 4), lit, 1), checks[panel]);
+                }
+                // At world X=-.125 (u near texel-center 3), the kernels include 0/1,
+                // 3/9 and 10/25 lit taps. Uniform rows isolate horizontal edge averaging.
+                const std::array<Color, 3> filtered{occluded, Color(71, 62, 43), Color(82, 69, 46)};
+                const std::array<const char*, 3> filterChecks{
+                    "one comparison keeps the selected depth-edge point fully occluded",
+                    "the 3x3 comparison kernel averages three lit taps out of nine",
+                    "the 5x5 comparison kernel averages ten lit taps out of twenty-five"};
+                for (int radius = 0; radius < 3; ++radius)
+                {
+                    const int width = pixels.Width() / 4;
+                    const int x = radius * width + width * 3 / 8;
+                    Context().Check(CnaDemos::Near(pixels.At(x, pixels.Height() * 3 / 4), filtered[radius], 1),
+                                    filterChecks[radius]);
                 }
             }
             Game::Draw(time);
@@ -152,7 +180,7 @@ CNA_DEMOS_GAME(ShadowReceiverDemo, {
     .id = "graphics.skinned_effect.shadow_receiver",
     .title = "Authored-map shadows on a skinned receiver",
     .description = "Samples an authored depth map after a bone transform, contrasts direct-light shadowing with the "
-                   "retained ambient/emissive floor, and compares disabled reception, depth bias and map detachment.",
+                   "retained ambient/emissive floor, and compares reception, bias, detachment and 1/9/25-tap visibility averaging.",
     .apis = {"SkinnedEffect::SetBoneTransforms", "SkinnedEffect::DiffuseColor", "SkinnedEffect::AmbientLightColor",
              "SkinnedEffect::EmissiveColor", "SkinnedEffect::PreferPerPixelLighting",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowMapEXT",
@@ -166,6 +194,6 @@ CNA_DEMOS_GAME(ShadowReceiverDemo, {
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "EasyGL OPENGLES3/OPENGL33 stock receiver path only; other renderers explicitly skipped. "
-                    "An authored Color map and single-tap comparisons do not establish map generation, PCF kernels, "
+                    "An authored Color map and 1/9/25-tap comparisons do not establish map generation, "
                     "cascades, punctual-light shadows, specular shadowing or other renderers.",
 })

@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-469 catalog demos (complete checkpoint469-shadow): math 78, game 33, graphics 160 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+469 catalog demos (focused469-pcf; last complete checkpoint469-shadow): math 78, game 33, graphics 160 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 28 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
@@ -241,18 +241,25 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: validate the same-ID PCF extension to shadow_receiver.
-Complete469-shadow session13123 is CLOSED0; source a4a2a31 is the comparison baseline.
-1. Review/apply /tmp/cna-skinned-shadow-pcf.cpp. It preserves all four original controls in
-   a top row and adds a lower-row one-tap baseline plus 3x3/5x5 visibility predictions.
-   Expected GL7 checks; SOFTWARE retains its exact skip. Do not reapply the old receiver draft.
-2. Watch CNA source inputs during the incremental build; consistency rebuild if they change.
-   Run focused and targeted checks, inspect the actual image, verify all eight original pixels
-   at y=120 and kernel samples at x=75/275/475,y=360 (800x480). No image-identity claim.
-3. Update semantic documentation, commit and complete full469-pcf validation, capturing
-   selected artifact hashes after build during CTest and preserving exact old outcomes.
-4. Close docs/handoff/history and immediately continue the next meaningful public behavior
-   gap. Cascades, punctual/specular shadows and audio lifecycle gaps remain separate decisions.
+HIGHEST PRIORITY: complete full469-pcf validation. PCF source is APPLIED AND STALE.
+Focused 469-pcf extends the existing shadow_receiver without adding an ID. Four original
+paired-pixel controls remain; a lower row compares one-tap, 3x3 and 5x5 visibility (0, 1/3,
+2/5). All seven GL checks pass; SOFTWARE retains its exact declared skip. The actual image
+was inspected and eleven selected pixels match within tolerance 1. No whole-image identity
+is claimed after rearranging the panels. Build44646 closed0, 9 scheduled / 8 numbered
+operations; all 3,906 watched CNA inputs unchanged at clean e842e7473. Metadata469/0.
+Focused/targeted24236 closed0; all25CLI/skinned CTests pass in3.67s, including the declared
+skip. Full469-pcf validation is pending. Evidence: checkpoint-469-pcf-focused-*.
+1. Commit focused source/docs and export /tmp/cna-catalog-469-pcf.json.
+2. Run /tmp/cna-run-469-pcf-validation.sh. After its build, during CTest, run
+   /tmp/cna-capture-469-pcf.py once. Freeze sources/assets/runtime during smoke phases.
+3. Archive both selections with /tmp/cna-archive-469-pcf.py into matching review logs,
+   then /tmp/cna-469-pcf-finish.py into /tmp/cna-469-pcf-finish-review.log.
+   Baseline complete469-shadow: sourcea4a2a31, closure6a555bf. Expected482enabled CTests;
+   SW406/27/33/3, GL434/29/3/3. Only GLshadow checks4->7 may change, plus separately reviewed
+   positive title Update variance. Preserve all38/42failures, child/network traces and stderr.
+4. Close full documentation/history/handoff and commit. Immediately continue470-cascades,
+   whose source-only draft and helper family are prepared, then the OcclusionQuery audit.
 
 ## 15. Assumptions the next session must know
 
@@ -264,16 +271,16 @@ Complete469-shadow session13123 is CLOSED0; source a4a2a31 is the comparison bas
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is469-shadow, source a4a2a31; its closure commit follows.
+Current complete baseline is469-shadow, source a4a2a31, closure6a555bf.
 All previous receiver, audio, XACT, reader, move, field, lighting, palette and EOF proposals
 are applied and stale. Preserve earlier evidence, including the initial XACT failure and
 inconclusive public probe. See docs/CHECKPOINT_HISTORY.md.
 
-Next unapplied source-only draft: /tmp/cna-skinned-shadow-pcf.cpp, prepared during full469-shadow.
+Applied PCF source: /tmp/cna-skinned-shadow-pcf.cpp, prepared during full469-shadow.
 It selects 1/9/25-tap kernels over the same authored depth edge. Predictions are visibility
 0,1/3,2/5 and RGB(20,28,26),(71,62,43),(82,69,46), tolerance1. See /tmp/cna-shadow-pcf-notes.md.
-The layout changes, so every original pixel control must be rechecked at its new coordinates.
-No PCF native/image evidence yet. Shadow-map generation, atlas borders/cross-fades, cascade
+The changed layout was inspected and every original pixel control rechecked at its new
+coordinates. All seven GL checks and the exact SWskip pass; focused evidence is archived. Shadow-map generation, atlas borders/cross-fades, cascade
 selection, punctual/specular shadows and other renderers remain outside this extension.
 
 Later source-only draft: /tmp/cna-skinned-shadow-cascades.cpp, syntax41794 CLOSED0 with empty
@@ -281,4 +288,4 @@ log. Six proposed controls cover near/split/far selection, half visibility, inde
 camera and Count0 fallback. Not applied or run; no actual image evidence. Recovery notes,
 source and syntax are checkpoint-469-shadow-next-*; finish PCF first.
 
-Additional source-only audit: /tmp/cna-occlusion-query-audit.md, recovered as checkpoint-469-shadow-next-occlusion-query-audit.md. It classifies existing visibility versus ordering/disposal gaps; no new runtime evidence. Queued after PCF and cascades. Current PCF draft includes sample-position markers, syntax62464 CLOSED0; recovery checkpoint-469-shadow-next-pcf-markers-*. Cascade focused/full helper drafts are prepared under /tmp/cna-*470-cascades*, recovered under checkpoint-469-shadow-next-validation-drafts-*. None have been run.
+Additional source-only audit: /tmp/cna-occlusion-query-audit.md, recovered as checkpoint-469-shadow-next-occlusion-query-audit.md. It classifies existing visibility versus ordering/disposal gaps; no new runtime evidence. Queued after PCF and cascades. Applied PCF source includes sample-position markers, syntax62464 CLOSED0; recovery checkpoint-469-shadow-next-pcf-markers-*. Cascade focused/full helper drafts are prepared under /tmp/cna-*470-cascades*, recovered under checkpoint-469-shadow-next-validation-drafts-*. None have been run.

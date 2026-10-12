@@ -863,3 +863,12 @@ These are selected artifact/source observations, not an atomic/full transitive i
 All capture/archive/finish helpers pass; immutable evidence: checkpoint-469-shadow-*.
 Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
 Semantic coverage remains incomplete; named-member counts do not establish all behaviors.
+
+Focused 469-pcf extends the existing shadow_receiver without adding an ID. Four original
+paired-pixel controls remain; a lower row compares one-tap, 3x3 and 5x5 visibility (0, 1/3,
+2/5). All seven GL checks pass; SOFTWARE retains its exact declared skip. The actual image
+was inspected and eleven selected pixels match within tolerance 1. No whole-image identity
+is claimed after rearranging the panels. Build44646 closed0, 9 scheduled / 8 numbered
+operations; all 3,906 watched CNA inputs unchanged at clean e842e7473. Metadata469/0.
+Focused/targeted24236 closed0; all25CLI/skinned CTests pass in3.67s, including the declared
+skip. Full469-pcf validation is pending. Evidence: checkpoint-469-pcf-focused-*.
