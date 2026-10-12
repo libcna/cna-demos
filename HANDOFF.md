@@ -97,17 +97,15 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **445-profile checkpoint passed**
-at e903a2e: tools/validate.sh exit 0, all 458 enabled CTests (213.83 s), both complete isolated-X11
-smoke runs and coverage regeneration. ORIGINAL 445 comparisons retain every older ID/status/
-knownIssue, all 32/33 failed assertions and existing content/24 host child checks. The existing
-resize demo extends one passing check to seven. All 32 selected binary and four explicit resize
-asset hashes match runtime capture. Normalized stderr is unchanged, with no GTK warnings and
-same 84 nonfatal GL X protocol lines. Original streams/reviews/build/CTest/hashes:
-reports/checkpoint-445-profile-*. Before/after resize captures were inspected and RGBA-identical
-within and across renderers. No new runtime failure; documentation-only ISSUE-049 records the
-stale public build-environment overview. The initial external dirty-CNA C API build failure and
-successful retry remain archived separately; no atomic/full-transitive dependency snapshot claim.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **445-callbacks checkpoint passed**
+at 016d515: tools/validate.sh exit 0, all 458 enabled CTests (164.11 s), both complete isolated-X11
+smoke runs and coverage regeneration. ORIGINAL 445-profile comparisons retain every older ID/
+status/knownIssue, all 32/33 failed assertions and every prior child assertion. Three existing C
+examples now have 29/18/26 checks for error handling/dispatch/host frames. All other C/custom
+content child lists and host trace are unchanged. All 32 selected binary and four explicit asset
+hashes match runtime capture. Normalized stderr is unchanged: no GTK warnings, same 84 nonfatal
+GL X protocol lines. Evidence: reports/checkpoint-445-callbacks-*. Both inspected focused host
+captures are RGBA-identical to prior images. No new CNA issue or full dependency snapshot claim.
 
 | Check | Result |
 |---|---|
@@ -119,7 +117,7 @@ successful retry remain archived separately; no atomic/full-transitive dependenc
 | OPENGLES3 smoke (explicit x11, private Xvfb) | 415 passed, 24 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | All 32/33 older failed assertions retained |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Resize before/after images inspected on both renderers; all four RGBA-identical (800x480) |
+| Screenshots | Host captures inspected on both renderers; RGBA-identical to original 444 images (800x480) |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -241,24 +239,20 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** commit the validated C callback/dispatch extensions and run complete
-445-callbacks against ORIGINAL checkpoint-445-profile. The catalog remains 445. error_handling
-passes 29 child checks (was 26), foreign_thread_dispatch 18 (was 14), host_frames 26 (was 24),
-or 28 with capture. All old assertion labels retained. Both renderer selections pass; every
-focused stderr stream is empty. Host trace remains ILBUbUbDeUDUrDsXEZ; both inspected 800x480
-captures are RGBA-identical to original 444 host images. No new CNA issue.
+**Immediate next action:** apply and validate the prepared SkinnedEffect clone ownership demo
+below. Full 445-callbacks at 016d515 is closed: all 458 enabled CTests (164.11 s), SOFTWARE
+394/23/25/3, OPENGLES3 415/24/3/3. Strict ORIGINAL 445-profile comparisons retain every older
+ID/status/knownIssue, exact 32/33 failed assertions, all old child assertions and host trace.
+The three existing C demos pass 29/18/26 child checks; every other C/custom content child list
+is unchanged. All 32 binary/four asset hashes match runtime capture; normalized stderr unchanged.
+Full original streams, reviews and helpers: reports/checkpoint-445-callbacks-*. Use this as the
+next complete baseline. No new CNA issue. The /tmp C drafts are APPLIED AND STALE.
 
-Build /tmp/cna-445-callbacks-build.log passed (87 targets, no compiler diagnostics); metadata
-445/0 and all 31 C/CLI CTests passed (6.80 s). Evidence and selected observed source hashes:
-reports/checkpoint-445-callbacks-focused-*. External CNA C API sources continue changing; no
-atomic dependency snapshot claim. /tmp/cna-review-callbacks-focused.py strictly compared old
-child assertions and images. /tmp/cna-archive-445-callbacks.py and /tmp/cna-445-callbacks-finish.py
-need the actual commit substituted for PENDING445CALLBACKS, fresh catalog and post-build
-32 binary/four resize-asset hashes. Expect unchanged full totals, exact 32/33 failures and
-normalized stderr. Freeze source/assets during runtime; all three /tmp C drafts are APPLIED
-AND STALE. Next productive read-only work: SkinnedEffect Clone/SetOwnedTexture palette and
-texture ownership semantics in COVERAGE_AUDIT.md, or remaining C dispatch drive/cancellation
-contracts. Do not infer queued cancellation from a worker's pre-call readiness flag.
+Focused C evidence: build passed (87 targets, no compiler diagnostics); metadata 445/0, all 31
+C/CLI CTests passed (6.80 s), both renderer selections pass, all six stderr streams empty.
+Host passes 28 child checks with captures (26 without); both inspected 800x480 images are
+RGBA-identical to original 444 host captures. Evidence: checkpoint-445-callbacks-focused-*.
+External CNA C API sources continue changing; no atomic dependency snapshot claim.
 
 Complete 445-profile is closed at e903a2e (closure 7eea0a3): 458 enabled CTests, SW 394/23/25/3,
 GL 415/24/3/3, exact original 32/33 failed assertions and all old content/host child lists retained.
@@ -285,6 +279,17 @@ prove error forwarding. Canonical message/type/parameter buffers are bounded and
 worker. Original C11 acquire/release and bounded timeout cleanup are unchanged. Hook-layout
 negative controls use fully allocated C objects, and actual next-frame traces verify preservation.
 Host run_frame_ext failure completion/documentation ambiguity remains untested.
+
+UNAPPLIED next-graphics draft: /tmp/cna-skinned-clone-ownership.cpp, proposed focused ID
+ graphics.skinned_effect.clone_ownership. Real Clone and SetOwnedTexture produce two independent
+one-bone palettes sharing a texture after the original effect/caller reference are released.
+Ten proposed checks include exact rendered colors/positions and weak_ptr lifetime through final
+clone destruction. A non-white tint texel distinguishes real texture use from a white fallback. An expired-texture guard avoids drawing through a dangling effect pointer if
+ownership is defective. No build/runtime/visual evidence yet; do not apply during 445-callbacks.
+The separate existing two_bones demo retains its own palette-validation/bending scenario.
+Prepared /tmp/cna-archive-446.py and /tmp/cna-446-finish.py use PENDING446, expect ten new
+checks and preserve every old C/content child list. They need the real source commit/catalog
+and fresh post-build hashes before use. No future checkpoint is claimed complete.
 
 445 evidence: /tmp/cna-demos-445-validation.log exit 0; all 458 enabled CTests (206.40 s), SW
 394/23/25/3, GL 415/24/3/3, exact 32/33 failed assertions unchanged, every older count/status/
