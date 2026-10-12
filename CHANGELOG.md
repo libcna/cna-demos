@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete473-music:486enabled CTests and both full smoke suites retain all previous
+  failure/child/network evidence; music import adds 15 explicitly reviewed child checks.
 - Added isolated tagged music import with populated albums, artists, genres and an M3U
   playlist; 15 exact child checks pass in both environments with borrowed object identity preserved.
 - Complete472-cuelimits:485enabled CTests and both full smoke suites retain all previous

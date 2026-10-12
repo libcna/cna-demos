@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-473 catalog demos (focused473-music; last complete checkpoint472-cuelimits): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+473 catalog demos (complete checkpoint473-music): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -103,48 +103,31 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **473-music** adds media.media_library.music_index, a standalone Linux workflow
-with 15 exact child checks in each requested environment. Each stderr has exactly six reviewed TitleContainer INFO
-lines for opening the three original assets. Parent JSON
-reports zero checks; the actual child lists are archived and compared. Both public XDG
-music/picture roots are verified private before library access. Three original tagged FLAC
-tracks yield two artists, two same-name albums distinguished by artist and unequal by Album::Equals, one genre and one
-M3U playlist. Public names/track numbers, group membership, shared Song back-references
-and reversed playlist order agree. All returned objects/views remain library-owned.
-No duration, playback, art, other-tag-format or other-platform claim. The fixture encoder
-produced identical bytes twice; ffprobe confirms tags, and all source/staged copies match.
-The initial reviewer refused its incorrect empty-stderr expectation. Original evidence and
-reviewer remain under checkpoint-473-music-focused-initial-stderr-refusal-*. Re-review accepts
-only the six exact INFO lines; no source change, logging suppression or native rerun.
-Watched build/gate, metadata473/0, two native runs, 28 enabled media/CLI CTests in 10.12s
-and focused reviewer pass before source commit. Full validation against complete472-cuelimits
-is pending. Evidence: checkpoint-473-music-focused-*.
-
-Last complete baseline:
-
-Complete checkpoint **472-cuelimits**, source `edc32f7`,
-extends instance_limits from 7 to 12 public checks, preserving its complete original
-category-limit scenario. With spare category capacity, one paused LowTone occupies its
-cue-definition slot and a duplicate is refused. A different same-category definition and
-a separate SoundBank loaded from the same file have independent capacity. Stop frees the
-relevant slot while those other voices remain paused. Two focused runs pass with empty
-stderr; 38 enabled audio/CLI CTests, watched build/gate and reviewer pass before source
-commit. No replacement-policy, fade, mixed-output or concurrency claim. The new 364-byte
-cue_limits.xsb reuses original PCM; all 8 old bank assets remain byte-identical and all
-9 source/staged bank pairs match. No extra demo ID.
-Full validation passes all 485 enabled CTests in 195.64s; three additional manual tests
-are disabled. SOFTWARE 407/27/35/3 and OPENGLES3 437/29/3/3 retain all 38/42 prior failed
-assertions, C/custom child evidence and five network controls. Reviewed count changes:
-{"OPENGLES3": {"audio.xact.instance_limits": {"after": 12, "before": 7, "reason": "Five per-cue definition capacity controls added; original seven category checks retained."}}, "SOFTWARE": {"audio.xact.instance_limits": {"after": 12, "before": 7, "reason": "Five per-cue definition capacity controls added; original seven category checks retained."}}}.
-All 35 selected binaries, four existing assets and 20 fixture hashes stay unchanged through
-runtime. Normalized stderr is identical, including 42 known GL X protocol records and the
-intentional shader error. Outer Xvfb has 14 exact amdgpu pairs (previous 18);
+Complete checkpoint **473-music**, source `979a99b`,
+adds an isolated tagged music-library workflow with 15 identical child checks in each
+requested environment. Focused stderr retains six exact TitleContainer requested/resolved
+INFO lines; the initial empty-stderr review refusal is preserved without changing code. Parent JSON has zero checks; the child
+lists are explicitly preserved. Both public XDG roots are verified private before library
+access. Three original tagged FLAC tracks create two artists, two same-name albums scoped
+by artist and unequal by Album::Equals, one genre and an ordered M3U playlist. Public metadata, group membership and
+Song back-references share library-owned objects. No duration, playback, album-art,
+other-tag-format or other-platform claim. Two private encodings produced identical bytes
+and ffprobe verified tags; all three source/staged fixtures match. Watched build/gate,
+28 enabled media/CLI CTests and focused reviewer pass before source commit.
+Full validation passes all 486 enabled CTests in 149.86s; three additional manual tests
+are disabled. SOFTWARE 408/27/35/3 and OPENGLES3 438/29/3/3 retain all 38/42 prior failed
+assertions, C/custom child evidence and five network controls. The new standalone's 15
+child checks match the focused run exactly. Reviewed old count changes:
+{"OPENGLES3": {}, "SOFTWARE": {}}.
+All 36 selected binaries, four existing assets and 26 fixture hashes stay unchanged through
+runtime. Normalized stderr adds only those six exact INFO lines, retaining 42 known GL X protocol records and the
+intentional shader error. Outer Xvfb has 20 exact amdgpu pairs (previous 14);
 independent inner/outer exits are zero. Capture CNA eff3131017
 (clean), final CNA eff3131017
 (clean). These are selected artifact/source
 observations, not an atomic or full transitive input snapshot. All capture/archive/finish
-helpers pass; immutable evidence: checkpoint-472-cuelimits-*. Generated coverage:
-293/329 types and 1386/2326 XNA members.
+helpers pass; immutable evidence: checkpoint-473-music-*. Generated coverage:
+297/329 types and 1400/2326 XNA members.
 Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is unchanged;
 ISSUE-057 retains its original staging refusal, private reproduction and 471-punctual
 recurrence. Subsequent clean runs do not establish a repair of that race.
@@ -268,18 +251,25 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-Focused473-music is complete; commit source/docs and run full validation next. Export catalog
-/tmp/cna-catalog-473-music.json. Capture ONCE after fullbuild during CTest:36selected binaries
-(including new standalone)/4assets/26fixture hashes (builtinXNB,9XACTbanks,3FLACs source/staged).
-Freeze through both smokes. Compare against472-cuelimits:486enabledCTest, SOFTWARE408/27/35/3,
-OPENGLES3 438/29/3/3; all38/42oldfailures/C/custom child lists/traces and5network controls exact.
-New music parentJSON PASSED/0 checks must retain15exact child checks from focused runs.
-Only positive titleUpdate variance may otherwise differ. Normalizedstderr adds only six exact TitleContainer INFO lines; all previous diagnostics remain.
-Preserve/refuse surprises; finish/close/reviewdiff/commit, then immediately continue category
-hierarchy. Drafts /tmp/cna-category-hierarchy.cpp and -files.py are UNAPPLIED; syntax60954
-and private fixture preservation only. Verify base hashes before applying; existing categories
-5->10plannedchecks with label correction (equality compares names), one160byteparent/childXGS.
-No category native evidence. Original mono streaming/ISSUE-038 and build-only ISSUE-057 intact.
+HIGHEST PRIORITY: authored XACT category hierarchy in the existing categories demo.
+Read checkpoint-472-banks-next-category-hierarchy-* and current public source. UNAPPLIED
+/tmp/cna-category-hierarchy.cpp and /tmp/cna-category-hierarchy-files.py pass refined
+syntax93473 (both-paused Stop guard;60954 superseded) and private generation. No native proof.
+Use checkpoint-473-music-next-hierarchy-refined-base.json for current hashes. Prepared UNRUN
+/tmp/cna-*473-hierarchy* helpers cover apply/build/focused/review/docs and full evidence.
+The generator base is the now-applied per-cue-limit generator. Original five category
+predicates remain; correct only the identity label because equality compares names.
+Five planned added controls observe live direct/descendant voices through parent Resume,
+parent Pause, child-only Resume and parent Stop. One160bytehierarchy.xgs makes Master the
+parent of SFX and reuses existing PCM. All9previous XACT assets must remain byte-identical.
+Do not infer inherited pause for future voices, volume output or category replacement fades.
+Run watchedbuild/gate, focused native/CTest checks and asset preservation before committing;
+then fullcheckpoint, capture once, freeze and compare all old failure/child/network evidence.
+Maintain the new music standalone's15child checks and36selected artifacts in future baselines.
+Finish/update/commit and immediately continue the next meaningful coverage workstream.
+Further UNAPPLIED follow-ups: checkpoint-473-music-next-duration-* (syntax87663), then
+next-album-art-* (syntax55056); no native evidence. MediaPlayer/MediaQueue member decisions
+are in COVERAGE_AUDIT. Original mono streaming/ISSUE-038 and build-only ISSUE-057 unchanged.
 
 ## 15. Assumptions the next session must know
 
@@ -291,8 +281,10 @@ No category native evidence. Original mono streaming/ISSUE-038 and build-only IS
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is472-cuelimits; source commit is in section7.
-All earlier drafts, including music import, per-cue limits, bank lifetime and spatial variables,
-are APPLIED AND STALE. Keep refused attempts and source/fixture observations immutable.
-Next hierarchy draft/audit/base: checkpoint-472-banks-next-category-hierarchy-*; no native proof.
-Retain existing architecture and stable IDs; never edit/revert sibling CNA from this task.
+Current complete baseline is473-music; source commit is in section7.
+All earlier drafts, including music import, per-cue limits, bank lifetime and spatial
+variables, are APPLIED AND STALE. Preserve original refusal evidence and source corrections.
+Next UNAPPLIED hierarchy audit: checkpoint-472-banks-next-category-hierarchy-*;
+use checkpoint-473-music-next-hierarchy-refined-base.json for the current draft hashes.
+Syntax/private fixture comparison is not native proof; verify current source before adding.
+Retain established architecture/stable IDs and never edit/revert sibling CNA from this task.

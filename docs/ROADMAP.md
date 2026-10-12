@@ -1570,3 +1570,34 @@ only the six exact INFO lines; no source change, logging suppression or native r
 Watched build/gate, metadata473/0, two native runs, 28 enabled media/CLI CTests in 10.12s
 and focused reviewer pass before source commit. Full validation against complete472-cuelimits
 is pending. Evidence: checkpoint-473-music-focused-*.
+
+## Complete473-music
+
+Complete checkpoint **473-music**, source `979a99b`,
+adds an isolated tagged music-library workflow with 15 identical child checks in each
+requested environment. Focused stderr retains six exact TitleContainer requested/resolved
+INFO lines; the initial empty-stderr review refusal is preserved without changing code. Parent JSON has zero checks; the child
+lists are explicitly preserved. Both public XDG roots are verified private before library
+access. Three original tagged FLAC tracks create two artists, two same-name albums scoped
+by artist and unequal by Album::Equals, one genre and an ordered M3U playlist. Public metadata, group membership and
+Song back-references share library-owned objects. No duration, playback, album-art,
+other-tag-format or other-platform claim. Two private encodings produced identical bytes
+and ffprobe verified tags; all three source/staged fixtures match. Watched build/gate,
+28 enabled media/CLI CTests and focused reviewer pass before source commit.
+Full validation passes all 486 enabled CTests in 149.86s; three additional manual tests
+are disabled. SOFTWARE 408/27/35/3 and OPENGLES3 438/29/3/3 retain all 38/42 prior failed
+assertions, C/custom child evidence and five network controls. The new standalone's 15
+child checks match the focused run exactly. Reviewed old count changes:
+{"OPENGLES3": {}, "SOFTWARE": {}}.
+All 36 selected binaries, four existing assets and 26 fixture hashes stay unchanged through
+runtime. Normalized stderr adds only those six exact INFO lines, retaining 42 known GL X protocol records and the
+intentional shader error. Outer Xvfb has 20 exact amdgpu pairs (previous 14);
+independent inner/outer exits are zero. Capture CNA eff3131017
+(clean), final CNA eff3131017
+(clean). These are selected artifact/source
+observations, not an atomic or full transitive input snapshot. All capture/archive/finish
+helpers pass; immutable evidence: checkpoint-473-music-*. Generated coverage:
+297/329 types and 1400/2326 XNA members.
+Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is unchanged;
+ISSUE-057 retains its original staging refusal, private reproduction and 471-punctual
+recurrence. Subsequent clean runs do not establish a repair of that race.
