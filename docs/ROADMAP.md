@@ -1522,3 +1522,32 @@ all9source/staged bank pairs match. Watched build/diagnostic gate, metadata472/0
 38enabled audio/CLI CTests in6.97s and focused reviewer pass before source commit.
 One additional manual microphone CTest is disabled. Full validation against complete472-banks
 is pending. Evidence: checkpoint-472-cuelimits-focused-*. No extra demo ID.
+
+## Complete472-cuelimits
+
+Complete checkpoint **472-cuelimits**, source `edc32f7`,
+extends instance_limits from 7 to 12 public checks, preserving its complete original
+category-limit scenario. With spare category capacity, one paused LowTone occupies its
+cue-definition slot and a duplicate is refused. A different same-category definition and
+a separate SoundBank loaded from the same file have independent capacity. Stop frees the
+relevant slot while those other voices remain paused. Two focused runs pass with empty
+stderr; 38 enabled audio/CLI CTests, watched build/gate and reviewer pass before source
+commit. No replacement-policy, fade, mixed-output or concurrency claim. The new 364-byte
+cue_limits.xsb reuses original PCM; all 8 old bank assets remain byte-identical and all
+9 source/staged bank pairs match. No extra demo ID.
+Full validation passes all 485 enabled CTests in 195.64s; three additional manual tests
+are disabled. SOFTWARE 407/27/35/3 and OPENGLES3 437/29/3/3 retain all 38/42 prior failed
+assertions, C/custom child evidence and five network controls. Reviewed count changes:
+{"OPENGLES3": {"audio.xact.instance_limits": {"after": 12, "before": 7, "reason": "Five per-cue definition capacity controls added; original seven category checks retained."}}, "SOFTWARE": {"audio.xact.instance_limits": {"after": 12, "before": 7, "reason": "Five per-cue definition capacity controls added; original seven category checks retained."}}}.
+All 35 selected binaries, four existing assets and 20 fixture hashes stay unchanged through
+runtime. Normalized stderr is identical, including 42 known GL X protocol records and the
+intentional shader error. Outer Xvfb has 14 exact amdgpu pairs (previous 18);
+independent inner/outer exits are zero. Capture CNA eff3131017
+(clean), final CNA eff3131017
+(clean). These are selected artifact/source
+observations, not an atomic or full transitive input snapshot. All capture/archive/finish
+helpers pass; immutable evidence: checkpoint-472-cuelimits-*. Generated coverage:
+293/329 types and 1386/2326 XNA members.
+Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is unchanged;
+ISSUE-057 retains its original staging refusal, private reproduction and 471-punctual
+recurrence. Subsequent clean runs do not establish a repair of that race.

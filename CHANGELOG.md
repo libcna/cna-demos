@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete472-cuelimits:485enabled CTests and both full smoke suites retain all previous
+  failure/child/network evidence; instance_limits adds five per-cue capacity controls.
 - XACT instance limits now distinguish per-cue definition capacity from category limits:
  12checks pass in both requested environments, retaining all seven original category checks.
 - Complete472-banks:485enabled CTests and both full smoke suites retain all previous

@@ -1061,10 +1061,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** runtime-confirmed XNA compatibility gap, not a demo workaround; no CNA source
   changed and no upstream report sent.
 
-### CNA-DEMOS-ISSUE-040 -- Picture thumbnail comment contradicts generated thumbnails
+### CNA-DEMOS-ISSUE-040 -- Picture and Album thumbnail comments contradict generation paths
 
-- **Area:** documentation only, Picture::GetThumbnail in
-  `modules/media/include/Microsoft/Xna/Framework/Media/Picture.hpp`.
+- **Area:** documentation only, Picture::GetThumbnail and Album::GetThumbnail in
+  `modules/media/include/Microsoft/Xna/Framework/Media/{Picture,Album}.hpp`, plus the
+  Album implementation comment described below.
 - **Related demo:** `media.media_library.save_picture` (normal thumbnail checks pass; its expected-failure
   marker belongs to the separate short-read ISSUE-041).
 - **Evidence:** the public comment says no separate thumbnail is generated and that GetThumbnail
@@ -1085,7 +1086,18 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   fallback. The current 128-pixel maximum is an implementation choice, not a universal XNA
   contract. The implementation's useful resizing behavior should not be removed to match the
   stale comment.
-- **Status:** confirmed header contradiction; no CNA source changed and no upstream report sent.
+- **Additional source-only observation (2026-10-13):** at clean CNA `eff31310179168fb4f47258e6226a5234c2140d0`,
+  `Album.hpp::GetThumbnail` repeats the unconditional claim that it returns the same image as
+  GetAlbumArt. `Album.cpp::GetThumbnail` instead calls CreatePngThumbnail for file-based art,
+  returning generated PNG bytes on success and the original FileStream on failure. Embedded
+  art follows a different branch and currently returns GetAlbumArt directly; its implementation
+  comment about downscaling decoded bytes also overstates that branch. This is a source-level
+  documentation contradiction, not a new executed Album test or a diagnosed image-output defect.
+  The proposed music_index workflow does not call either art method. Future album-art coverage
+  should distinguish file-based generation, embedded-art behavior and fallback. Source hashes:
+  `checkpoint-472-cuelimits-next-album-art-source.json`. No runtime knownIssue marker is added.
+- **Status:** confirmed header contradictions; Picture has the native evidence above, while the
+  Album follow-up is source-only. No CNA source changed and no upstream report sent.
 
 ### CNA-DEMOS-ISSUE-041 -- SavePicture ignores short reads and saves a zero-padded image
 
