@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-470 catalog demos (complete checkpoint470-border): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+470 catalog demos (complete checkpoint470-specular): math 78, game 33, graphics 161 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 29 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
@@ -103,45 +103,31 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **470-specular** extends shadow_receiver from seven to nine GL checks while
-preserving all original assertion labels. Two additional panels remove diffuse/ambient/
-emission and compare disabled/enabled reception of directional specular light. Both
-highlights remain RGB(76,38,13) with reception disabled; enabling it makes only the
-occluded half black. Actual three-row800x480 image inspected; all15 selected pixels,
-including all original controls at new coordinates, match within tolerance1. GL stderr
-is empty; SOFTWARE retains its exact declared skip. No whole-image identity, per-vertex,
-alpha, cascade or punctual-specular claim. Watched build10959 passes9scheduled/8numbered
-operations with all3,909inputs unchanged. Metadata470/0; focused/targeted75346 passes
-26CTests in2.64s (two declared shadow skips). Focused reviewer passes BEFORE source commit;
-evidence checkpoint-470-specular-focused-*. Last full baseline470-border; full run is next.
-
-Complete checkpoint **470-border**, source `54dfda7`,
-extends the existing cascade demo with two shared-boundary isolation controls. All eight
-GL checks pass; SOFTWARE retains its declared stock-path skip. The actual three-row image
-was inspected and six relocated original plus two new selected pixels match within 1.
-Both new controls use atlas UV (.5,.5), receiver depth .5 and requested radius 2. Selected
-near/far slices remain independently occluded/lit. This establishes slice isolation, not
-all 25 filter weights inside a cascade, arbitrary atlas layouts or other renderers.
-Watched build 36795 passes 9 scheduled / 8 numbered operations with all 3,909 watched inputs
-unchanged. Focused/targeted session 19479 passes 26 CTests in 2.69 s; original six labels retained.
-Full session 88833 builds in 7 scheduled operations without warning, validates 470 metadata entries with 0 problems
-and passes all 483 enabled CTests in 150.80 s (449 passed including 27 WILL_FAIL, 34 skips;
-three additional manual tests disabled). SOFTWARE 406/27/34/3, OPENGLES3 435/29/3/3.
-Every old 38/42 failed assertion, C/custom child list/trace and all five network controls
-remain exact. Reviewed JSON count differences:
-{"OPENGLES3": {"graphics.skinned_effect.shadow_cascades": {"after": 8, "before": 6, "reason": "Two shared-edge slice-isolation controls added; original six cascade predicates retained."}}, "SOFTWARE": {}}.
+Complete checkpoint **470-specular**, source `c9660d8`,
+extends the existing shadow receiver from seven to nine GL controls. All nine pass with
+empty focused stderr; SOFTWARE retains its exact declared stock-path skip. Seven original
+assertion labels remain unchanged. The actual three-row 800x480 image was inspected and
+all 15 selected pixels, including relocated original controls, match within tolerance 1.
+The new specular-only panels have zero diffuse, ambient and emission. Disabled reception
+preserves both RGB(76,38,13) highlights; enabled reception makes only the occluded half
+black. This is single-map per-pixel directional specular evidence, not per-vertex, alpha,
+cascade or punctual-specular behavior; no whole-image identity after the layout change.
+Watched build 10959 passes 9 scheduled / 8 numbered operations with all 3,909 watched
+inputs unchanged. Focused/targeted session 75346 passes 26 CTests in 2.64 s (two skips).
+Full session 80513 builds in 7 scheduled operations without warning, validates 470 metadata
+entries with 0 problems and passes all 483 enabled CTests in 150.15 s (449 passed,
+including 27 WILL_FAIL; 34 skips; three additional manual tests disabled).
+SOFTWARE 406/27/34/3, OPENGLES3 435/29/3/3. Every old 38/42 failed assertion, C/custom child
+list/trace and all five network controls remain exact. Reviewed JSON count differences:
+{"OPENGLES3": {"graphics.skinned_effect.shadow_receiver": {"after": 9, "before": 7, "reason": "Two isolated specular shadow controls added; original seven receiver predicates retained."}}, "SOFTWARE": {}}.
 All 35 selected binaries/four existing assets and reader fixture copies remain unchanged
-through runtime. Normalized application stderr is identical, including 42 known GL X protocol
-records and the intentional shader error. Outer Xvfb has 18 exact amdgpu pairs (previous 13);
-independent inner/outer exits 0. Capture CNA eff3131017 (clean),
-final CNA eff3131017 (clean).
+through runtime. Normalized application stderr is identical, including 42 known GL X
+protocol records and the intentional shader error. Outer Xvfb has 17 exact amdgpu
+pairs (previous 18); independent inner/outer exits 0. Capture CNA eff3131017
+(clean), final CNA eff3131017 (clean).
 These are selected artifact/source observations, not an atomic/full transitive input snapshot.
-All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-border-*.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-specular-*.
 Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
-The additional source-only spatial-audio audit classifies listener/emitter properties,
-Doppler, orientation, multi-listener approximation and Pan/3D mode changes. It corrects
-an old range-error gap: volume_pitch_pan already checks three refused ranges. No listening
-or runtime credit comes from that source review.
 No new ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057 stays
 open with its original refusal and independent private staging probe preserved.
 
@@ -264,19 +250,24 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: complete full470-specular, then apply the prepared loop-release extension.
-Specular is APPLIED; native, actual-image/15pixel, source-predicate and26targeted CTests pass.
-Commit source/docs and export /tmp/cna-catalog-470-specular.json. Run the prepared full
-validation shell, capture once after build during CTest, freeze artifacts through both
-smokes, archive SOFTWARE/OPENGLES3 and run /tmp/cna-470-specular-finish.py.
-Baseline470-border,483enabled CTests and unchanged470totals; only GLreceiver7->9checks plus
-separately reviewed positive title Update variance. Investigate any unexpected difference.
-Close full docs/history/HANDOFF and commit; immediately proceed to /tmp/cna-loop-release.cpp.
-Release draft is UNAPPLIED, syntax95961 passed, no native evidence. Prepared /tmp/cna-*470-release*
-helpers expect looping3->6checks on both selections, ten focused repetitions and all original
-function source through its first3checks unchanged. Baseline must be complete470-specular.
-After release, continue the public Pan/3D mode lifecycle from the spatial-audio audit.
-Open ISSUE-057 remains preserved; a clean build does not fix its staging diagnostic race.
+HIGHEST PRIORITY: apply and validate the same-ID 470-release looping extension.
+Full470-specular session80513 is CLOSED0; sourcec9660d8 is the comparison baseline.
+1. Apply /tmp/cna-loop-release.cpp to audio/sound_effect_instance/looping.cpp. Syntax95961
+   passed, no native evidence yet. Original three controls plus paused Stop(false), Resume
+   and bounded natural completion (six checks expected with dummy audio).
+2. Watched build /tmp/cna-build-470-release.py initial; consistency if inputs change.
+   Metadata, /tmp/cna-run-470-release-focused.py (five repetitions per requested renderer)
+   and targeted shell. Run /tmp/cna-review-470-release-focused.py BEFORE committing:
+   it requires the original function prefix through all three old checks unchanged.
+3. Update semantic docs, commit, export /tmp/cna-catalog-470-release.json; full wrapper,
+   capture once after build during CTest, freeze artifacts, archive both smokes and finish.
+   Baseline470-specular,483enabled CTests, unchanged470totals; looping3->6checks on both
+   selections only plus separately reviewed positive title Update variance.
+4. Close docs/history/HANDOFF and commit, then continue the prepared public Pan/3D mode
+   lifecycle /tmp/cna-spatial-mode.cpp. Syntax50498 passed, no native evidence yet.
+   Original audible sweep remains; source-only draft adds six public state/refusal checks.
+   Raw Pan changes on its refusal path must not be mistaken for observed output panning.
+Preserve the original ISSUE-057 refusal/probes and investigate any new diagnostic.
 
 ## 15. Assumptions the next session must know
 
@@ -288,33 +279,28 @@ Open ISSUE-057 remains preserved; a clean build does not fix its staging diagnos
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is470-border, source54dfda7; closure follows.
-All prior receiver/PCF/cascade/border/query, audio, XACT, reader, move, field, lighting,
-palette and EOF proposals are APPLIED AND STALE. Preserve all prior evidence, including
-failures/probes. See docs/CHECKPOINT_HISTORY.md; do not replace current source with stale drafts.
+Current complete baseline is470-specular, sourcec9660d8; closure follows.
+Prior receiver/PCF/cascade/border/specular/query, audio formats/XACT, reader, move, field,
+lighting, palette and EOF drafts are APPLIED AND STALE. Do not restore old /tmp source.
+Preserve history and immutable checkpoint evidence, including original failures/probes.
 
-APPLIED AND STALE: /tmp/cna-shadow-specular.cpp; syntax6913 CLOSED0, empty log. It isolates direct
-specular reception with diffuse/ambient/emission zero, power1 and RGB(76,38,13)/Black,
-tolerance1. Three-row layout requires actual image and15pixel review. Native/actual-image/15pixel review now passes. No
-per-vertex/alpha/cascade/punctual-specular evidence. Source/notes recovery under
-checkpoint-470-query-next-cna-shadow-specular* and checkpoint-470-query-next-specular-*.
-Specular focused helpers passed; full helpers next: /tmp/cna-*470-specular*, recovery under
-checkpoint-470-border-next-helper-*. Baseline470-border,483CTests, unchanged totals,
-GLreceiver7->9 only plus reviewed positive title variance. Run focused reviewer BEFORE
-committing because it compares the original seven assertion labels against HEAD.
+Next UNAPPLIED: /tmp/cna-loop-release.cpp, syntax95961 CLOSED0, empty log. Six checks
+expected, original three retained verbatim. Pause before Stop(false) prevents a racy
+immediate-Playing assertion; Resume then bounded3s completion observes loop release.
+No audible sample/tail-content or latency claim. Helpers /tmp/cna-*470-release* are ready,
+UNRUN; source/notes/helper recovery under checkpoint-470-border-next-*.
 
+Later UNAPPLIED: /tmp/cna-spatial-mode.cpp, syntax50498 CLOSED0, empty log. Existing
+apply_3d adds six mode/refusal controls before its original audible sweep (seven total).
+Uses only public Pan/Apply3D/Play/Pause/Stop/State, no internal mixer test access. A
+refused Pan stores its property before CNA's mode gate; no transactional rollback or
+output-pan change is assumed. Source notes/recovery checkpoint-470-specular-next-*.
+No native/image/listening evidence. Prepared UNRUN spatial helper family: /tmp/cna-*470-spatial*,
+recovery checkpoint-470-specular-next-helper-*. Baseline must be complete470-release.
+
+Spatial member decisions remain in COVERAGE_AUDIT; source review adds no runtime credit.
+Volume/pitch/pan already has three range refusals (five checks), corrected in470-border.
 Open build-only ISSUE-057: checkpoint-470-query-initial-staging-refusal-* and
-checkpoint-470-query-staging-probe-* preserve the original refusal and isolated reproduction.
-No CNA source modified, unknown staging tree removed or warning gate suppressed. A clean
-retry does not resolve the diagnostic race; original exact creation/teardown interleaving
-remains unknown. No runtime knownIssue flag was added for this build tool issue.
-
-After470-specular: /tmp/cna-loop-release.cpp (UNAPPLIED) extends looping3->6checks.
-Syntax95961 CLOSED0, emptylog; no native evidence. Pause, Stop(false), resume, bounded3s
-naturalcompletion distinguish release from immediateStop/infinite looping. Original3controls
-retained; no audible/tail-content or latency claim. Recovery: checkpoint-470-border-next-cna-loop-release*
-and checkpoint-470-border-next-loop-release-source-review.json. Prepared UNRUN release helper family: /tmp/cna-*470-release*, recovery checkpoint-470-border-next-helper-*. Baseline must be complete470-specular.
-
-Source-only spatial-audio audit is in COVERAGE_AUDIT, evidence checkpoint-470-border-spatial-source-audit.*.
-After prepared release work, Pan/3D refusal-and-reaim lifecycle is observable under dummy audio;
-actual spatial output still needs listening or a supported observation route. No runtime credit from source review.
+checkpoint-470-query-staging-probe-* preserve the original refusal and private reproduction.
+No warning gate suppressed, unknown staging directory removed or CNA source changed.
+Clean full validation does not resolve that race or establish its original interleaving.

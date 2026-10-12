@@ -2488,3 +2488,33 @@ an old range-error gap: volume_pitch_pan already checks three refused ranges. No
 or runtime credit comes from that source review.
 No new ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057 stays
 open with its original refusal and independent private staging probe preserved.
+
+## Complete470-specular
+
+Complete checkpoint **470-specular**, source `c9660d8`,
+extends the existing shadow receiver from seven to nine GL controls. All nine pass with
+empty focused stderr; SOFTWARE retains its exact declared stock-path skip. Seven original
+assertion labels remain unchanged. The actual three-row 800x480 image was inspected and
+all 15 selected pixels, including relocated original controls, match within tolerance 1.
+The new specular-only panels have zero diffuse, ambient and emission. Disabled reception
+preserves both RGB(76,38,13) highlights; enabled reception makes only the occluded half
+black. This is single-map per-pixel directional specular evidence, not per-vertex, alpha,
+cascade or punctual-specular behavior; no whole-image identity after the layout change.
+Watched build 10959 passes 9 scheduled / 8 numbered operations with all 3,909 watched
+inputs unchanged. Focused/targeted session 75346 passes 26 CTests in 2.64 s (two skips).
+Full session 80513 builds in 7 scheduled operations without warning, validates 470 metadata
+entries with 0 problems and passes all 483 enabled CTests in 150.15 s (449 passed,
+including 27 WILL_FAIL; 34 skips; three additional manual tests disabled).
+SOFTWARE 406/27/34/3, OPENGLES3 435/29/3/3. Every old 38/42 failed assertion, C/custom child
+list/trace and all five network controls remain exact. Reviewed JSON count differences:
+{"OPENGLES3": {"graphics.skinned_effect.shadow_receiver": {"after": 9, "before": 7, "reason": "Two isolated specular shadow controls added; original seven receiver predicates retained."}}, "SOFTWARE": {}}.
+All 35 selected binaries/four existing assets and reader fixture copies remain unchanged
+through runtime. Normalized application stderr is identical, including 42 known GL X
+protocol records and the intentional shader error. Outer Xvfb has 17 exact amdgpu
+pairs (previous 18); independent inner/outer exits 0. Capture CNA eff3131017
+(clean), final CNA eff3131017 (clean).
+These are selected artifact/source observations, not an atomic/full transitive input snapshot.
+All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-specular-*.
+Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
+No new ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057 stays
+open with its original refusal and independent private staging probe preserved.
