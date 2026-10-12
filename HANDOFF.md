@@ -103,6 +103,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **470-bounds** extends buffer_formats from16to20checks. Two dummy-audio runs
+(one per requested renderer environment) pass with empty stderr. Negative float offset
+and max-int count preserve the staged integer queue; negative count and end-offset with
+positive count preserve the staged float queue. Each refusal is ArgumentOutOfRangeException
+with Stopped/Pending1 retained. All16original assertion calls remain verbatim/in order,
+including original integer/float mode guards and playback transitions. No partial-float
+output, live-playing/concurrent-producer, sample-readback or listening claim.
+Watched build1507 passes9scheduled/8numbered operations with all3,909inputs unchanged and
+diagnostic gate0. Metadata470/0; focused/targeted14824 passes37enabled CTests in5.60s,
+one additional manual microphone disabled. Focused reviewer passes BEFORE source commit;
+evidence checkpoint-470-bounds-focused-*. Last full baseline470-spatial; full validation next.
+No new ID or genuine CNA problem found. Float alignment acceptance remains a source-only
+classification and must not be converted into an invented alignment exception.
+
 Complete checkpoint **470-spatial**, source `9a6234b`,
 extends the existing apply_3d demo from one to seven checks. Two dummy-audio runs (one per
 requested renderer environment) pass with empty stderr. The complete original audible
@@ -251,23 +265,20 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply and validate the same-ID 470-bounds float-range extension.
-Full470-spatial session17556 is CLOSED0; source9a6234b is the comparison baseline.
-1. Apply /tmp/cna-float-bounds.cpp to audio/dynamic_sound_effect_instance/buffer_formats.cpp.
-   Final syntax32693 passed; no native evidence yet. Four new range refusals,20checks total.
-2. Watched /tmp/cna-build-470-bounds.py initial; it gates warnings/errors as validate.sh does.
-   Consistency build if watched inputs change. Metadata, two focused runs and targeted shell.
-   /tmp/cna-review-470-bounds-focused.py must run BEFORE commit: it requires all16original
-   assertion calls verbatim/in order. Silent buffers establish no output-sample/audio quality.
-3. Update semantic docs, commit, export /tmp/cna-catalog-470-bounds.json. Full wrapper,
-   capture once after build during CTest, freeze artifacts, archive both smokes and finish.
-   Baseline470-spatial,483enabled CTests, unchanged470totals; buffer_formats16->20checks
-   only on both selections plus reviewed positive title Update variance. Preserve refusals.
-4. Close docs/history/HANDOFF and commit; immediately continue the deeper behavior audit.
-   Float ranges deliberately differ from integer frame alignment; do not invent a promised
-   alignment refusal. Consider public queue lifecycle, authored-region release, multi-listener
-   input handling or remaining cascade maximum/debug/punctual behavior as coherent next work.
-Open ISSUE-057's original refusal and independent staging probe remain preserved.
+HIGHEST PRIORITY: complete full470-bounds, then implement the reviewed paused queue-clear
+extension from the actual validated source. Bounds is APPLIED; watched build/diagnostic
+gate, metadata, two focused runs and37enabled targeted CTests pass. Original16assertion
+calls remain verbatim/in order. Commit source/docs, export /tmp/cna-catalog-470-bounds.json,
+run the prepared full wrapper; capture once after build during CTest, freeze artifacts,
+archive both selections and finish. Baseline470-spatial,483enabled CTests, unchanged470totals;
+buffer_formats16->20checks only plus reviewed positive title Update variance. Preserve refusals.
+Close docs/history/HANDOFF and commit; immediately continue /tmp/cna-dynamic-clear-audit.md.
+That source-only next decision proposes pausedClearBuffers, a still-refused float format
+change, and same-format refill (planned20->23checks). Generate from the actual source after
+bounds validation; no draft/syntax/native queue-clear evidence yet. Pending combines staged
+and submitted data and cannot alone prove QueueInitialBuffers transport or sample output.
+Leave original mono streaming and ISSUE-038 controls intact. Open ISSUE-057 retains its
+original staging refusal and independent probe; no gates or diagnostics may be suppressed.
 
 ## 15. Assumptions the next session must know
 
@@ -284,19 +295,19 @@ Prior shadow receiver/PCF/cascade/border/specular/query, looping release/spatial
 audio formats/XACT, reader, move, field, lighting, palette and EOF drafts are APPLIED AND
 STALE. Do not restore old /tmp source; preserve immutable runtime and original failures.
 
-Next UNAPPLIED: /tmp/cna-float-bounds.cpp. Final syntax32693 CLOSED0, empty log; original
+APPLIED AND STALE: /tmp/cna-float-bounds.cpp. Final syntax32693 CLOSED0, empty log; original
 syntax81703 preceded an assertion-wording correction. Four new float range refusals
 preserve staged integer/float data and all16original assertions (20checks total). Negative
 offset/max-int count occur before integer playback; negative count/end-offset positive
 count occur with the float queue staged. Original format guards will also check that
-invalid requests did not prematurely select float mode. No native evidence yet.
+invalid requests did not prematurely select float mode. Two focused20check runs now pass.
 CNA's float path does not enforce the integer whole-frame rule; an existing CNA test
 explicitly accepts3samples forStereo. This is not an invented alignment failure or a CNA
 issue. No partial-float playback/sample-output, concurrent-producer or listening claim.
 
 Current source/syntax recovery: checkpoint-470-release-next-final-*; initial notes/source
 review: checkpoint-470-release-next-float-bounds* and next-cna-float-bounds*. Helpers:
-/tmp/cna-*470-bounds*, UNRUN, recovery checkpoint-470-release-next-bounds-helper-*.
+/tmp/cna-*470-bounds*, focused passed/full next, recovery checkpoint-470-release-next-bounds-helper-*.
 The watched build gates warning/error/FAILED output without suppressing diagnostics.
 Focused reviewer checks the original16full assertion calls verbatim/in order BEFORE commit.
 Baseline must be complete470-spatial; no image inspection is applicable to these silent

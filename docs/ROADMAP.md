@@ -1176,3 +1176,19 @@ All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-spat
 Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
 No extra ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057
 stays open with its original refusal and independent private staging probe preserved.
+
+## Focused470-bounds
+
+Focused **470-bounds** extends buffer_formats from16to20checks. Two dummy-audio runs
+(one per requested renderer environment) pass with empty stderr. Negative float offset
+and max-int count preserve the staged integer queue; negative count and end-offset with
+positive count preserve the staged float queue. Each refusal is ArgumentOutOfRangeException
+with Stopped/Pending1 retained. All16original assertion calls remain verbatim/in order,
+including original integer/float mode guards and playback transitions. No partial-float
+output, live-playing/concurrent-producer, sample-readback or listening claim.
+Watched build1507 passes9scheduled/8numbered operations with all3,909inputs unchanged and
+diagnostic gate0. Metadata470/0; focused/targeted14824 passes37enabled CTests in5.60s,
+one additional manual microphone disabled. Focused reviewer passes BEFORE source commit;
+evidence checkpoint-470-bounds-focused-*. Last full baseline470-spatial; full validation next.
+No new ID or genuine CNA problem found. Float alignment acceptance remains a source-only
+classification and must not be converted into an invented alignment exception.
