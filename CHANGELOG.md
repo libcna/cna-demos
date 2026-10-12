@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Skinned fog now has a focused bone-depth scene: a shared bind mesh moves only through its
+  palette to the fog start, middle and end. Four rendered checks include a disabled-fog control;
+  both renderer captures were inspected and agree within the original one-channel-level tolerance.
 - Existing skinning-channel demo now renders through the final MaxBones palette slot, retaining
   its original short-palette controls. Seven checks pass on both renderers; image comparison
   confirms only the added cyan mesh changes, with all three earlier shapes intact.

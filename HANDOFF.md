@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
-* Mostly complete: 6 (effects and shaders, 24).
+* Mostly complete: 6 (effects and shaders, 25).
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 21 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -64,9 +64,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-448 demos: math 78, game 33, graphics 142 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
+449 demos: math 78, game 33, graphics 143 (19 SpriteBatch, 8 device, 9 texture2d, 1 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
-4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 16 other
+4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 17 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
@@ -245,40 +245,27 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** apply the skinned fog draft below, then build, inspect both rendered
-captures and complete the 449 checkpoint. Full 448-max-slot at f00543d is CLOSED: tools/validate.sh
-exit 0, 461 enabled CTests (191.49 s), SW 395/25/25/3, GL 416/26/3/3. Strict ORIGINAL 448
-comparisons preserve all 35/36 failures, older statuses/known issues and C/custom-content child
-checks/traces. Only weight_channels gains a semantic check (six -> seven); GL title varies 10 ->12
-with Update timing. Selected 33 binary/four asset hashes and normalized stderr match. New baseline:
-reports/checkpoint-448-max-slot-*. No runtime checkpoint is running. Do not reapply the final-slot
-draft: it is APPLIED AND STALE. Inventory remains 293/329 types, 1357/2326 members, 158/3210 C routes.
+**Immediate next action:** run and close full checkpoint 449 against ORIGINAL 448-max-slot,
+then continue with the normal-lighting draft below. The new graphics.skinned_effect.fog_depth
+is APPLIED; /tmp/cna-skinned-fog-depth.cpp is stale. Catalog 449/0; focused four PASS checks on
+SOFTWARE/OPENGLES3, empty stderr. Both 800x480 captures actually inspected: same silhouettes and
+endpoint colors; only 39,168 middle-card pixels differ in blue (119 SW / 118 GL), within original
+tolerance 1. Each card has 39,168 pixels. No RGBA-identity claim. The fog-disabled control and
+bone-only depth changes establish post-skin fog, not arbitrary material or perspective behavior.
 
-Focused final-slot evidence: 28-target clean incremental build, metadata 448/0, all 23 targeted
-CTests (6.94 s), seven PASS checks on both selections and empty stderr. Both images actually
-inspected, RGBA-identical; exactly 7,504 background pixels become cyan versus original 448, with
-all older colored regions unchanged. The short palette controls run every frame before the
-full-size indexed draw. reports/checkpoint-448-max-slot-focused-*.
+Focused build passed (57 scheduled targets, known Draco CMP0148 configure developer warning,
+no compiler diagnostics); all 41 targeted graphics/C API/CLI CTests pass (11.73 s), including
+three WILL_FAIL cases and one PBR capability skip. Evidence: reports/checkpoint-449-focused-*.
+External CNA C API work is ongoing at observed HEAD 16fde50c; no atomic input snapshot claimed.
+Prepared /tmp/cna-archive-449.py and /tmp/cna-449-finish.py compare with 448-max-slot but still
+need the actual source commit plus 33 binary/four asset hashes after the full build. Expected
+new four-PASS ID only; all old 35/36 failures and C/custom-content child lists must remain.
 
-Resume baseline passed all 461 enabled CTests (202.83 s); all 33 selected binaries/four assets
-then matched original 448. Later CNA render-target edits were incrementally rebuilt before the
-focused extension. Full build observed clean CNA 16fde50cdae016cbc0918259ea1afcdf26fc7656; external
-C API work was again uncommitted by runtime completion. Start/end observations are archived,
-selected artifacts stayed fixed, and no CNA source was edited here. Do not claim atomic inputs.
-
-Later work: UNAPPLIED /tmp/cna-skinned-fog-depth.cpp (133 lines), proposed
-`graphics.skinned_effect.fog_depth`. It uses one shared Z=0 bind mesh, one active bone and
-World translations only in X. Bone transforms supply depths2/4/6 under identity View and an
-orthographic projection. A fog-disabled gold control precedes fog-enabled draws at FogStart2,
-halfway4 and FogEnd6; expected colors Gold, (178,182,119) within1, CornflowerBlue. Background
-MidnightBlue differs from full fog. Four checks planned, no new file assets. Actual public fog
-setters and SkinnedEffect's post-skin fog-vector path were read; no build/runtime/visual evidence
-exists for this draft. Prepared /tmp/cna-{archive-449,449-finish,run-449-focused}.py need review,
-actual source commit/catalog449 and33 binary/four asset hash capture after future full build.
-Expected new PASS ID with4 JSON checks only; all old35/36 failures and child lists must remain.
-Preserve the current complete/focused weight-channel evidence before
-applying. Build, both renderer captures and actual inspection are mandatory; investigate any
-color/depth mismatch instead of adjusting expectations to the observed output.
+Last COMPLETE checkpoint: 448-max-slot at f00543d (closure af9d35c), tools/validate.sh exit 0,
+all 461 enabled CTests (191.49 s), SW 395/25/25/3, GL 416/26/3/3. ORIGINAL 448 comparisons add
+only the seventh weight_channels check, with GL title count 10 -> 12 from Update timing.
+All raw failures, child lists/traces and selected hashes retained; normalized stderr unchanged.
+Baseline/evidence/scripts: reports/checkpoint-448-max-slot-*. No full 449 runtime is running yet.
 
 After fog: /tmp/cna-normal-lighting.cpp is a new UNAPPLIED 131-line draft. /tmp/cna-prepare-normal-lighting.py generates an OLDER
 three-card draft; do not rerun it over the newer file. Proposed graphics.skinned_effect.normal_lighting uses
