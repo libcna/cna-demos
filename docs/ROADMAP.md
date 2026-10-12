@@ -386,7 +386,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - `content.content_reader.*`: custom `ContentTypeReader`, `ResourceContentManager`,
   `ContentManifestEntry`. ≈ 20
 
-## Phase 9 -- audio and media 🟨 (audio: 22 demos incl. 9 XACT, media: 11 incl. video)
+## Phase 9 -- audio and media 🟨 (audio: 23 demos incl. 10 XACT, media: 11 incl. video)
 - ✅ `audio.sound_effect.*`: Play, Play(volume, pitch, pan), MasterVolume, PCM buffer
   constructor, GetSampleDuration/GetSampleSizeInBytes, ✅ `audio.sound_effect.loop_region` (loop
   points), ✅ `audio.sound_effect.from_stream` (loose WAV; ISSUE-029).
@@ -409,6 +409,8 @@ a check that all authored colors remain visible and that a blank texture row can
   Immediate interruption;15checks pass in six dummy-audio runs, with no audible-envelope claim.
   ✅ `positional_cue` retains its audible loop and adds6owned-Cue Apply3D variable/state
   controls beforePlay and while paused; SmokeOnly remains and mixed output is not measured.
+  ✅ `bank_lifetime` distinguishes prepared and paused consuming cues during bank/engine
+  disposal, with12public ownership/event checks and caller-owned wrapper cleanup.
   ✅ `audio.xact.instance_limits`: authored category Fail/ReplaceOldest limits, paused slots,
   isolation and freed-slot reuse checked through public states. Remaining: RPC curves (a variable driving
   volume/pitch), complex variation selection and cue-level limits.
@@ -1458,3 +1460,18 @@ helpers pass; immutable evidence: checkpoint-471-cue3d-*. Generated coverage:
 Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is unchanged;
 ISSUE-057 retains its original staging refusal, private reproduction and471-punctual
 recurrence. Subsequent clean runs do not establish a repair of that race.
+
+## Focused472-banks
+
+Focused **472-banks** adds audio.xact.bank_lifetime with12 public ownership checks.
+Two dummy-audio runs pass with empty stderr. Prepared cues leave both banks idle; a paused
+consuming cue holds both banks in use. WaveBank disposal disposes that consumer while the
+prepared cue and sound bank survive. SoundBank disposal also disposes prepared cues.
+Public event senders/counts establish exactly-once notifications across repeated disposal
+and destruction of the disposed wrappers. Fresh banks register with the still-live engine;
+engine disposal cascades to both banks and both cue states. Caller-owned allocations remain
+unique_ptr-owned. No global callback-order, concurrent teardown or acoustic-latency claim.
+Watched build/diagnostic gate, metadata472/0, two focused runs and all38enabled audio/CLI
+CTests pass in6.23s before source commit; one additional manual microphone test is
+disabled. Original assets are reused. Full validation against complete471-cue3d is pending.
+Evidence: checkpoint-472-banks-focused-*.

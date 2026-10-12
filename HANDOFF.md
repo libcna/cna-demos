@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 38).
-* In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 22 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 19 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,10 +64,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-471 catalog demos (complete checkpoint471-cue3d): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+472 catalog demos (focused472-banks; last complete checkpoint471-cue3d): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
+effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
@@ -102,6 +102,21 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **472-banks** adds audio.xact.bank_lifetime with12 public ownership checks.
+Two dummy-audio runs pass with empty stderr. Prepared cues leave both banks idle; a paused
+consuming cue holds both banks in use. WaveBank disposal disposes that consumer while the
+prepared cue and sound bank survive. SoundBank disposal also disposes prepared cues.
+Public event senders/counts establish exactly-once notifications across repeated disposal
+and destruction of the disposed wrappers. Fresh banks register with the still-live engine;
+engine disposal cascades to both banks and both cue states. Caller-owned allocations remain
+unique_ptr-owned. No global callback-order, concurrent teardown or acoustic-latency claim.
+Watched build/diagnostic gate, metadata472/0, two focused runs and all38enabled audio/CLI
+CTests pass in6.23s before source commit; one additional manual microphone test is
+disabled. Original assets are reused. Full validation against complete471-cue3d is pending.
+Evidence: checkpoint-472-banks-focused-*.
+
+Last complete baseline:
 
 Complete checkpoint **471-cue3d**, source `057d783`,
 extends positional_cue from zero to six checks while retaining its entire original
@@ -248,24 +263,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: focused XACT bank/engine ownership and cascading disposal.
-Full471-cue3d is complete. Read checkpoint-471-punctual-next-bank-lifetime-audit.md
-and current public headers/source before implementation. UNAPPLIED
-/tmp/cna-bank-lifetime.cpp has a pre-native individual-event-counter correction; syntax60808 CLOSED0/emptylog (69584 superseded) with12planned checks;
-verify its corrected hash in checkpoint-471-cue3d-bank-lifetime-individual-counter-draft.json and absent targetID/path. No native proof yet; guarded apply/build/focused/reviewer/full helpers are prepared UNRUN under /tmp/cna-*472-banks*.
-One coherent bank_lifetime console demo can distinguish a prepared caller-owned cue
-from a paused consuming cue: wave-bank disposal disposes the latter, sound-bank disposal
-also disposes prepared cues, and engine disposal cascades to registered banks/cues.
-Observe public IsDisposed/IsInUse/state flags and Disposing sender/exactly-once counts.
-Declare callback storage before observed objects for unwind/destructor safety, retain
-caller-owned unique_ptr allocations, and avoid undocumented global event-order or output
-latency claims. Reuse original XACT assets; new fixtures are not needed for this scenario.
-After source review, draft, watchedbuild/diagnostic gate, metadata, focused dummy-audio
-checks and relevant CTests, update semantic docs/HANDOFF and commit. Then full validation,
-capture once post-build, freeze through runtime and compare every old failure/child/network
-control. Investigate surprises; keep original refusals visible. Close/commit and immediately
-continue the next public member/behavior gap. Do not equate member names with completeness.
-Original mono streaming/ISSUE-038 and open build-only ISSUE-057 remain intact.
+Focused472-banks is complete (build42649; focused/targeted94871 CLOSED0); full validation next. Commit source/docs and export catalog
+/tmp/cna-catalog-472-banks.json. Run prepared fullwrapper; capture ONCE after build during
+CTest, freeze35selected binaries/4assets/18fixture hashes through both smokes. Compare all
+old outcomes/38/42failures/C/custom child traces and5network controls against471-cue3d.
+Only newID audio.xact.bank_lifetime (12passing checks both) and positive titleUpdate variance
+may differ. Expected485enabledCTest; SOFTWARE407/27/35/3 and OPENGLES3 437/29/3/3.
+Normalized stderr unchanged. Preserve/refuse unexpected evidence; finish/close/review/commit.
+Next UNAPPLIED drafts /tmp/cna-cue-limits.cpp and /tmp/cna-cue-limits-files.py extend existing
+instance_limits from7to12plannedchecks. Syntax70248 passes; private generator review retains
+all8old assets byte-identical and creates one364bytebank. No native evidence. Audit/base/draft
+hashes: checkpoint-471-cue3d-next-cue-limits-*. Verify before applying after this full run.
+Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged.
 
 ## 15. Assumptions the next session must know
 
@@ -281,17 +290,10 @@ Current complete baseline is471-cue3d; source commit is in section7.
 All earlier drafts, including punctual shadows and Cue spatial variables, are APPLIED
 AND STALE. Preserve original refusal evidence and current source corrections.
 
-Next source-only bank/engine lifetime audit: checkpoint-471-punctual-next-bank-lifetime-*.
-UNAPPLIED /tmp/cna-bank-lifetime.cpp has a pre-native individual-event-counter correction; syntax60808 CLOSED0/emptylog (69584 superseded),12plannedchecks;
-verify corrected hash in checkpoint-471-cue3d-bank-lifetime-individual-counter-draft.json and absent targetID/path before adding. No native proof yet. Prepared UNRUN helpers: /tmp/cna-*472-banks*; recovery checkpoint-471-cue3d-next-banks-helper-*.
-Actual CNA source registers every returned Cue with its
-SoundBank, including prepared cues, but only consuming cues with WaveBank. Both bank
-Dispose methods call Cue::Dispose; WaveBank does not merely Stop it. AudioEngine disposal
-cascades to registered cues and banks. All child C++ allocations remain caller-owned.
-Public flags/events can demonstrate the coherent ownership distinction without private
-registries, mixer hooks or unsafe dangling-pointer access. Do not assert global callback
-order, asynchronous safety or audible stopping latency without separate evidence.
+Bank lifetime draft is APPLIED AND STALE; individual-event-counter correction passed syntax60808
+and two native runs. The older aggregate-counter draft/syntax69584 is superseded and preserved.
+Focused evidence is in section7; do not restore stale drafts.
 
-Keep existing architecture/stable IDs and original mono streaming/ISSUE-038. Never edit
-or revert sibling CNA from this task. ISSUE-057 retains initial/private probe and repeated
-471-punctual evidence; a clean checkpoint does not prove that race repaired.
+Next UNAPPLIED cue-limit drafts/audit/base hashes: checkpoint-471-cue3d-next-cue-limits-*.
+Syntax70248 and private generator preservation pass; no native cue-limit extension proof.
+Never edit/revert sibling CNA. Keep original failures, staging refusals and private reproduction.
