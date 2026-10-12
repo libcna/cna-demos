@@ -100,12 +100,16 @@ def xwb(bank: str, waves, streaming: bool = False) -> bytes:
     return bytes(out)
 
 
-def xsb(bank: str, wave_bank: str, cues, fade_out_ms: int | None = None) -> bytes:
+def xsb(bank: str, wave_bank: str, cues, fade_out_ms: int | None = None,
+        cue_limits=None) -> bytes:
     """One cue -> one sound -> one wave per entry. An authored fade uses complex
-    single-sound cue records; simple cues have no fade fields."""
+    single-sound cue records; simple cues have no fade or instance-limit fields.
+    Optional per-cue (count, policy) limits use the same complex record."""
     assert fade_out_ms is None or 0 <= fade_out_ms <= 65535
-    complex_cues = fade_out_ms is not None
     count = len(cues)
+    assert cue_limits is None or (len(cue_limits) == count and
+        all(0 <= limit <= 255 and 0 <= policy <= 4 for limit, policy in cue_limits))
+    complex_cues = fade_out_ms is not None or cue_limits is not None
     header = 138
     sound_off = header
     cue_off = sound_off + 12 * count
@@ -121,9 +125,11 @@ def xsb(bank: str, wave_bank: str, cues, fade_out_ms: int | None = None) -> byte
         out += struct.pack("<BHBhBHHB", 0, category, 180, 0, 255, 0, index, 0)     # simple sound
     for index in range(count):
         if complex_cues:
-            # SINGLE_SOUND, sound offset, no transition, unlimited instances, no fade-in,
-            # authored fade-out milliseconds, default Fail policy.
-            out += struct.pack("<BIIBHHB", 0x04, sound_off + 12 * index, 0, 255, 0, fade_out_ms, 0)
+            # SINGLE_SOUND, sound offset, no transition, instance limit, no fade-in,
+            # authored fade-out milliseconds and max-instance policy in bits 3..7.
+            limit, policy = (255, 0) if cue_limits is None else cue_limits[index]
+            out += struct.pack("<BIIBHHB", 0x04, sound_off + 12 * index, 0, limit, 0,
+                               fade_out_ms or 0, policy << 3)
         else:
             out += struct.pack("<BI", 0, sound_off + 12 * index)                   # simple cue -> sound
     out += name64(wave_bank)
@@ -146,6 +152,8 @@ def write_all(assets_root: Path) -> None:
         "release.xsb": xsb("ReleaseSounds", "Release", [("ReleaseTone", 329.6, 3.0, 0)], fade_out_ms=500),
         "tones.xwb": xwb("Tones", [sine(frequency, seconds) for _, frequency, seconds, _ in CUES]),
         "tones.xsb": xsb("ToneSounds", "Tones", CUES),
+        "cue_limits.xsb": xsb("LimitedToneSounds", "Tones", CUES,
+                              cue_limits=((1, 0), (255, 0), (255, 0), (255, 0))),
         "music.xwb": xwb("Music", [melody(MUSIC_NOTES, MUSIC_NOTE_SECONDS)], streaming=True),
         "music.xsb": xsb("MusicSounds", "Music", [("Theme", 0.0, 0.0, 0)]),
     }

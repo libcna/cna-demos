@@ -52,17 +52,54 @@ namespace
         older->Dispose();
         newer->Dispose();
         next->Dispose();
+
+        // A cue definition can impose its own limit, independently of category capacity.
+        // demo.xgs leaves categories unlimited; cue_limits.xsb limits LowTone to one / Fail.
+        AudioEngine cueEngine("assets/xact/demo.xgs");
+        WaveBank cueWaves(&cueEngine, "assets/xact/tones.xwb");
+        SoundBank cueSounds(&cueEngine, "assets/xact/cue_limits.xsb");
+        std::unique_ptr<Cue> first(cueSounds.GetCue("LowTone"));
+        first->Play();
+        first->Pause();
+        ctx.Check(first->getIsPausedProperty(), "the first instance occupies its authored cue-definition slot");
+        std::unique_ptr<Cue> duplicate(cueSounds.GetCue("LowTone"));
+        duplicate->Play();
+        ctx.Check(duplicate->getIsStoppedProperty() && first->getIsPausedProperty(),
+                  "the same definition refuses a second instance even with spare category capacity");
+        std::unique_ptr<Cue> otherName(cueSounds.GetCue("MidTone"));
+        otherName->Play();
+        otherName->Pause();
+        ctx.Check(otherName->getIsPausedProperty() && first->getIsPausedProperty(),
+                  "another definition in the same Music category has independent capacity");
+        SoundBank otherBank(&cueEngine, "assets/xact/cue_limits.xsb");
+        std::unique_ptr<Cue> otherCopy(otherBank.GetCue("LowTone"));
+        otherCopy->Play();
+        otherCopy->Pause();
+        ctx.Check(otherCopy->getIsPausedProperty() && first->getIsPausedProperty(),
+                  "loading the same sound-bank file again creates a separate cue-definition allowance");
+        first->Stop(AudioStopOptions::Immediate);
+        std::unique_ptr<Cue> replacement(cueSounds.GetCue("LowTone"));
+        replacement->Play();
+        replacement->Pause();
+        ctx.Check(replacement->getIsPausedProperty() && otherName->getIsPausedProperty() &&
+                  otherCopy->getIsPausedProperty(),
+                  "stopping frees that definition's slot without disturbing other definitions or banks");
+        first->Dispose();
+        duplicate->Dispose();
+        otherName->Dispose();
+        otherCopy->Dispose();
+        replacement->Dispose();
     }
 }
 
 CNA_DEMOS_CONSOLE(InstanceLimits, {
     .id = "audio.xact.instance_limits",
-    .title = "Authored XACT category instance limits",
+    .title = "Authored XACT category and cue instance limits",
     .description = "Uses two categories limited to one cue: Music refuses the second voice, while SFX replaces "
-                   "the oldest. Checks category isolation and reusing a freed slot through public cue states.",
+                   "the oldest. Contrasts per-category capacity with a per-cue limit scoped to a sound-bank instance.",
     .apis = {"AudioEngine::AudioEngine", "SoundBank::GetCue", "Cue::Play", "Cue::Stop",
              "Cue::IsPlaying", "Cue::IsPaused", "Cue::Pause", "Cue::IsStopped", "Cue::Dispose", "AudioStopOptions::Immediate"},
     .tags = {"audio", "xact", "category", "instance-limit", "voice"},
     .needs = CnaDemos::Need::Audio,
-    .assets = {"xact/limits.xgs", "xact/tones.xwb", "xact/tones.xsb"},
+    .assets = {"xact/limits.xgs", "xact/tones.xwb", "xact/tones.xsb", "xact/demo.xgs", "xact/cue_limits.xsb"},
 })

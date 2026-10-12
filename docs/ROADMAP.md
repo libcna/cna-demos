@@ -411,6 +411,8 @@ a check that all authored colors remain visible and that a blank texture row can
   controls beforePlay and while paused; SmokeOnly remains and mixed output is not measured.
   ✅ `bank_lifetime` distinguishes prepared and paused consuming cues during bank/engine
   disposal, with12public ownership/event checks and caller-owned wrapper cleanup.
+  ✅ `instance_limits` retains its category scenario and adds five per-cue definition
+  capacity controls;12checks pass using one extra original sound bank and existing PCM.
   ✅ `audio.xact.instance_limits`: authored category Fail/ReplaceOldest limits, paused slots,
   isolation and freed-slot reuse checked through public states. Remaining: RPC curves (a variable driving
   volume/pitch), complex variation selection and cue-level limits.
@@ -1504,3 +1506,19 @@ helpers pass; immutable evidence: checkpoint-472-banks-*. Generated coverage:
 Semantic coverage remains incomplete. Original mono streaming/ISSUE-038 is unchanged;
 ISSUE-057 retains its original staging refusal, private reproduction and471-punctual
 recurrence. Subsequent clean runs do not establish a repair of that race.
+
+## Focused472-cuelimits
+
+Focused **472-cuelimits** extends audio.xact.instance_limits from7to12 checks.
+Its complete original category-limit scenario remains verbatim. Five additional controls
+use unlimited categories and LowTone's authored1/Fail cue limit: a paused first instance
+occupies the slot, a duplicate is refused, another Music cue and another SoundBank loaded
+from the same file retain independent capacity, and Stop frees only the relevant slot.
+Two dummy-audio runs pass all12checks with empty stderr. Caller-owned cues remain
+unique_ptr-owned. No replacement-policy, fade, mixed-output or concurrency claim.
+The original generator gains optional per-cue limits in complex single-sound records;
+new cue_limits.xsb is364bytes and reuses original PCM. All8old assets remain byte-identical;
+all9source/staged bank pairs match. Watched build/diagnostic gate, metadata472/0,
+38enabled audio/CLI CTests in6.97s and focused reviewer pass before source commit.
+One additional manual microphone CTest is disabled. Full validation against complete472-banks
+is pending. Evidence: checkpoint-472-cuelimits-focused-*. No extra demo ID.

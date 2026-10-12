@@ -103,6 +103,22 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **472-cuelimits** extends audio.xact.instance_limits from7to12 checks.
+Its complete original category-limit scenario remains verbatim. Five additional controls
+use unlimited categories and LowTone's authored1/Fail cue limit: a paused first instance
+occupies the slot, a duplicate is refused, another Music cue and another SoundBank loaded
+from the same file retain independent capacity, and Stop frees only the relevant slot.
+Two dummy-audio runs pass all12checks with empty stderr. Caller-owned cues remain
+unique_ptr-owned. No replacement-policy, fade, mixed-output or concurrency claim.
+The original generator gains optional per-cue limits in complex single-sound records;
+new cue_limits.xsb is364bytes and reuses original PCM. All8old assets remain byte-identical;
+all9source/staged bank pairs match. Watched build/diagnostic gate, metadata472/0,
+38enabled audio/CLI CTests in6.97s and focused reviewer pass before source commit.
+One additional manual microphone CTest is disabled. Full validation against complete472-banks
+is pending. Evidence: checkpoint-472-cuelimits-focused-*. No extra demo ID.
+
+Last complete baseline:
+
 Complete checkpoint **472-banks**, source `5fe4921`,
 adds audio.xact.bank_lifetime with12 public ownership checks in each requested environment.
 A paused consuming cue holds both banks in use; WaveBank disposal disposes it while a
@@ -249,30 +265,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: extend existing audio.xact.instance_limits with authored per-cue limits.
-Complete472-banks is closed. Read checkpoint-471-cue3d-next-cue-limits-audit.md and current
-public implementation. UNAPPLIED /tmp/cna-cue-limits.cpp and /tmp/cna-cue-limits-files.py
-preserve the existing category scenario, add five planned controls and one original364byte
-cue_limits.xsb reusing existing PCM. Private generator review retains all8old assets exactly;
-this is not native parser evidence. Syntax70248 passes. Prepared UNRUN /tmp/cna-*472-cuelimits*
-helpers include guardedapply/generation, watchedbuild, focused/reviewer, full and closure/watch;
-recovery checkpoint-472-banks-next-cuelimits-helper-*. Verify base/draft hashes before applying. Limit1/Fail
-on LowTone should reject its duplicate while MidTone in the same category and LowTone in
-another SoundBank remain independent; Stop should free only the relevant definition slot.
-Keep public state checks visible; no private mixer or acoustic-output claims. Run watched
-build/gate, metadata, focused native checks and relevant CTests; investigate surprises.
-Update semantic docs/HANDOFF and commit, then full validation/capture once/freeze/compare
-all old evidence. A ninth XACT asset needs source/staged hashes in the next full capture.
-After cue limits, prioritize the isolated tagged music-library workflow for four uncovered
-types; source-only audit: checkpoint-472-banks-next-music-library-*. Unapplied main/metadata/CMake/asset-generator drafts exist; main syntax84913 passes with
-15planned child checks. Three private original FLAC fixtures have verified tags and repeated
-byte identity; no CNA native proof/helpers. Recovery: checkpoint-472-banks-next-music-index-*
-and next-music-library-fixtures.json. Reuse existing public XDG isolation; preserve the hierarchy draft as lower-priority work.
-Source-only category hierarchy/name-equality follow-up: checkpoint-472-banks-next-category-hierarchy-*.
-Existing category assertion label overstates identity; correct it with the future hierarchy batch.
-Future UNAPPLIED hierarchy drafts /tmp/cna-category-hierarchy{.cpp,-files.py} pass syntax60954
-and private generation of160byteXGS while retaining9future assets. Generator base depends
-on applying cue limits first. No native evidence/helpers or new CNA issue is inferred.
+Focused472-cuelimits is complete (build15664, focused/targeted10245 CLOSED0); sourcecommit
+and full validation next. Export catalog
+/tmp/cna-catalog-472-cuelimits.json and run prepared fullwrapper. Capture ONCE post-build
+while CTest runs:35selected binaries/4assets/20fixture hashes (builtinXNB and all9XACTbanks,
+source/staged). Freeze source/assets/build through runtime. Compare against472-banks:
+485enabledCTest; SOFTWARE407/27/35/3, OPENGLES3 437/29/3/3; all38/42oldfailures, C/custom
+child lists/traces and5network controls exact. Only instance_limits7->12 and positive title
+Update variance may change. Normalizedstderr unchanged; preserve/refuse any surprises.
+Finish/close/reviewdiff/commit; prioritize the isolated tagged music-library workflow for
+Album/Artist/Genre/Playlist. Read checkpoint-472-banks-next-music-library-*; no native proof
+exists yet. Reuse standalone private Linux XDG roots and actual tagged FLAC/M3U inputs.
+The syntax-only category-hierarchy drafts remain preserved as lower-priority work.
 Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged.
 
 ## 15. Assumptions the next session must know
@@ -286,10 +290,18 @@ Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is472-banks; source commit is in section7.
-Earlier drafts, including bank lifetime and Cue spatial variables, are APPLIED AND STALE.
-Next UNAPPLIED per-cue limit drafts/audit/base hashes: checkpoint-471-cue3d-next-cue-limits-*.
-CNA counts instances per SoundBank pointer and cue index; FAIL refuses the new cue.
-This differs from the existing category allowance. Replacement victim selection and fades
-are separate decisions; do not infer them from FAIL-policy checks. Source classification
-alone is not runtime coverage. No new draft has been applied or natively exercised yet.
-Retain immutable refusal evidence and current corrections. Never edit/revert sibling CNA.
+All earlier drafts, including cue-definition limits, bank lifetime and spatial variables,
+are APPLIED AND STALE. Keep original refused attempts and byte-preservation evidence.
+Next category hierarchy audit is source-only: checkpoint-472-banks-next-category-hierarchy-*.
+AudioCategory equality compares names; correct the old identity label when extending the
+category scenario. Ordinary category Stop forwards each cue's stop option; category-authored
+replacement fades and inherited future-cue pause are separate behaviors. Never edit/revert CNA.
+
+Next priority music-index drafts: /tmp/cna-music-index.cpp (syntax84913 CLOSED0/emptylog,
+15planned child checks), -metadata.cpp, -CMakeLists.txt and /tmp/cna-music-library-assets.py.
+Three original FLAC fixtures under /tmp/cna-music-library-authored were encoded twice
+byte-identically and their tags verified by ffprobe. No native proof/helpers; metadata
+has not been built. Recovery/base/draft hashes: checkpoint-472-banks-next-music-index-*
+and next-music-library-fixtures.json. Use36selected binaries/26fixtures for its future fullrun.
+Lower-priority hierarchy drafts remain UNAPPLIED, syntax60954; base now matches the
+current cue-limit generator. No hierarchy native evidence.

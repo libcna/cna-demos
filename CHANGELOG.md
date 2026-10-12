@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- XACT instance limits now distinguish per-cue definition capacity from category limits:
+ 12checks pass in both requested environments, retaining all seven original category checks.
 - Complete472-banks:485enabled CTests and both full smoke suites retain all previous
   failure/child/network evidence; the bank ownership demo adds12public state/event checks.
 - Added XACT bank/engine ownership demonstration:12public disposal/state/event checks
