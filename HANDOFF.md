@@ -97,26 +97,27 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **442 checkpoint passed** at bf1f674:
-tools/validate.sh exit 0, all 455 enabled CTests (208.27 s), both complete isolated-X11 smoke runs
-and coverage regeneration. ORIGINAL 441-contracts comparisons preserve every older ID/status/
-knownIssue/check count and all 32/33 failed assertions. The new publication demo contributes 14
-passing child checks matching focused evidence; all older compiler/XML/nested/adapter lists are
-unchanged. All 31 selected hashes match runtime capture. Normalized stderr adds exactly the six
-focused Publish/Graph lines and removes nothing; no GTK warnings, same 84 nonfatal GL X protocol
-lines. Original streams/reviews, build/CTest logs and hashes: reports/checkpoint-442-*.
-No new CNA issue, visual validation or full-transitive dependency snapshot claim.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **443 checkpoint passed** at 488208f:
+tools/validate.sh exit 0, all 456 enabled CTests (209.16 s), both complete isolated-X11 smoke runs
+and coverage regeneration. ORIGINAL 442 comparisons retain every older ID/status/knownIssue and
+all 32/33 failed assertions. Patrol adds its fifteenth check; GL game.window.title has 12 rather
+than 10 checks because the unchanged assertion runs per Update, not per rendered frame. The new
+graph tool's sixteen child checks match focused evidence, and all older content tool lists match.
+All 32 selected hashes match runtime capture. Normalized stderr adds exactly the thirteen focused
+graph lines (six debug loads, cycle/missing-node diagnostics), with no removals or GTK warnings;
+the same 84 nonfatal GL X protocol lines remain. Original streams/reviews, build/CTest logs and
+hashes: reports/checkpoint-443-*. No new CNA issue or full-transitive dependency snapshot claim.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
-| Metadata/assets --validate | 442 demos, 0 problems |
+| Metadata/assets --validate | 443 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 430 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 391 passed, 23 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 412 passed, 24 expected failures, 3 skipped, 3 manual not run |
+| CTest | 431 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 392 passed, 23 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 413 passed, 24 expected failures, 3 skipped, 3 manual not run |
 | Changed assertions | All 32/33 older failed assertions retained |
-| stderr | Only six expected publication/graph lines added; no GTK warnings; GL X protocol diagnostics unchanged |
+| stderr | Only thirteen expected graph/debug lines added; no GTK warnings; GL X protocol diagnostics unchanged |
 | Screenshots | Corrected Guide notification captured and inspected on both renderers |
 | Content build | Passed (CNB, XNB, media, content project) |
 
@@ -238,21 +239,27 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** new dependency_graph and existing patrol absence extension are built
-and focused-validated. Graph final /tmp/cna-443-graph-final-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}
-has 16 passes, retaining the initial thirteen. Patrol /tmp/cna-443-absence-* has 15 native passes.
-Two-worker importer overlap is observed via a bounded rendezvous; serial/parallel manifests and
-all three CNBs are byte-identical, and unchanged two-worker builds skip all importers/writers.
-No new CNA issue; actual cycle/missing-node Graph diagnostics are expected. Private trees are
-independently gone. Final build /tmp/cna-443-final-build.log is clean (11 steps), metadata 443/0.
-All 26 targeted CTests pass (6.10 s, /tmp/cna-443-targeted-ctest.log). Coverage regenerated against
-ORIGINAL full 442 reports honestly shows the new graph absent until the full run; type/member
-totals unchanged. Focused original streams/build/CTest logs are archived as
-reports/checkpoint-443-focused-*. Commit and run complete 443 against ORIGINAL checkpoint-442. Expect one new graph PASS, native patrol 14 -> 15 checks,
-unchanged old child lists and exact 32/33 failures. Capture 32 selected hashes (31 plus new graph
-exe) after full build; freeze source/assets while runtime checks run. Then continue the audit.
-All /tmp graph/absence/publication drafts are APPLIED AND STALE. Repository sources contain the
-final two-worker extension; do not reapply the old thirteen-check draft.
+**Immediate next action:** complete 443 is archived/reviewed at source 488208f. Continue the
+member audit with native build diagnostics and the existing C ABI host-frame hook lifecycle.
+Reviewed but UNAPPLIED drafts: /tmp/cna-pipeline-diagnostics.cpp (nine proposed checks; real
+opacity quantization loss, downstream logger, null sink, exact endpoints, import failure/retry)
+and /tmp/cna-host-hook-replacement.c (retains seventeen old checks; adds removal/replacement
+between host frames with a separate copied hook context). Build/run both, inspect host captures,
+update audit/status and perform the next complete checkpoint against ORIGINAL checkpoint-443.
+Prepared /tmp/cna-archive-444.py and /tmp/cna-444-finish.py still need the actual source commit
+and explicit host-child comparison before use. Do not treat draft code as validated.
+
+443 evidence: /tmp/cna-demos-443-validation.log exit 0; 456 enabled CTests, SOFTWARE 392/23/25/3,
+GL 413/24/3/3. Both original comparisons preserve exact 32/33 failures. Graph sixteen child checks
+match focused; patrol 14 -> 15. All 32 selected runtime hashes unchanged. Normalized stderr adds
+exactly the thirteen focused graph lines, no removals; GL keeps 84 X protocol lines, no GTK.
+Original reports/checkpoint-443-* include both streams, reviews, build/CTest logs and binary hashes.
+Focused graph final /tmp/cna-443-graph-final-* has sixteen passes; initial thirteen retained;
+patrol /tmp/cna-443-absence-* has fifteen. All 26 targeted CTests passed (6.10 s). Coverage now has
+complete runtime columns: 293/329 types, 1354/2326 named members, 158/3210 C routes. Semantic
+coverage remains incomplete; external source-root capabilities are now explicitly listed pending.
+All /tmp graph/absence/publication drafts are APPLIED AND STALE. Never reapply them over the final
+sixteen-check graph. Use ORIGINAL checkpoint-443 as the next full baseline.
 
 Original /tmp/cna-443-build.log completed 110 steps including external C API changes; its automatic
 configure includes vendored Draco's known CMP0148 developer warning, no compiler diagnostics.
