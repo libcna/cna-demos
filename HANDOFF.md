@@ -98,28 +98,29 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **446-reentry checkpoint passed**
-at e473144: tools/validate.sh exit 0, all 459 enabled CTests (149.41 s), both complete isolated-X11
-smoke runs and coverage regeneration. ORIGINAL 446-palette comparisons retain every ID/status/
-knownIssue and all 32/33 failed assertions. Lifecycle extends sixteen passing child checks to
-eighteen; all other C/custom-content child lists and host trace are unchanged. Selected 32 binary/
-four asset hashes match runtime capture. Normalized stderr is unchanged (no GTK warnings, same
-84 nonfatal GL X protocol lines). Evidence: reports/checkpoint-446-reentry-*; helpers remain in
-/tmp/cna-archive-446-reentry.py and /tmp/cna-446-reentry-finish.py. No new CNA issue from reentry.
-This is not a full dependency/input snapshot. Focused lifecycle images were actually inspected;
-their solid colors depend on game time, so no pixel-identity claim applies.
+Current environment: Linux, GCC 14.2, CMake 3.31.6. The full **446-owner checkpoint passed**
+at 9e7a27b: tools/validate.sh exit 0, all 459 enabled CTests (146.63 s), both complete isolated-X11
+smoke runs and coverage regeneration. ORIGINAL 446-reentry comparisons add exactly the two
+ISSUE-050 assertions (32/33 -> 34/35). Only foreign_thread_dispatch changes status/knownIssue;
+all eighteen old child checks survive (30 total, 28 PASS + two failures). Every other C/custom-
+content child list, host trace and prior failure remains unchanged. Selected 32 binary/four
+asset hashes match runtime capture; normalized stderr is unchanged (no GTK warnings, same 84
+nonfatal GL X protocol lines). Evidence: reports/checkpoint-446-owner-*; strict helpers remain
+in /tmp/cna-archive-446-owner.py and /tmp/cna-446-owner-finish.py. No new issue beyond the
+previously confirmed ISSUE-050. This is not a full dependency/input snapshot. No rendered
+scene changed; focused dispatch stdout is authoritative and both stderr streams are empty.
 
 | Check | Result |
 |---|---|
 | Configure + build linux-full (8 renderers, shared CNA + C API) | Passed; incremental build clean |
 | Metadata/assets --validate | 446 demos, 0 problems |
 | tools/validate.sh | Passed, both complete smoke runs and coverage regeneration |
-| CTest | 434 passed (including 23 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
-| SOFTWARE smoke | 395 passed, 23 expected failures, 25 skipped, 3 manual not run |
-| OPENGLES3 smoke (explicit x11, private Xvfb) | 416 passed, 24 expected failures, 3 skipped, 3 manual not run |
-| Changed assertions | All 32/33 older failed assertions retained |
+| CTest | 434 passed (including 24 WILL_FAIL), 25 skipped, 3 manual disabled; 0 failures |
+| SOFTWARE smoke | 394 passed, 24 expected failures, 25 skipped, 3 manual not run |
+| OPENGLES3 smoke (explicit x11, private Xvfb) | 415 passed, 25 expected failures, 3 skipped, 3 manual not run |
+| Changed assertions | All 32/33 older failures retained; exactly two ISSUE-050 assertions added (34/35) |
 | stderr | Unchanged normalized diagnostics; no GTK warnings; GL X protocol diagnostics unchanged |
-| Screenshots | Focused lifecycle images inspected on both renderers (800x480, time-dependent clear colors) |
+| Screenshots | Dispatch extension has no rendered scene; earlier lifecycle images were inspected |
 | Content build | Passed (CNB, XNB, media, content project) |
 
 Reports/logs: `build/linux-full/reports/`. An initial validation was interrupted during CTest;
@@ -242,31 +243,35 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** run the complete 446-owner checkpoint against ORIGINAL
-checkpoint-446-reentry. Source is applied and focused validation is complete: clean 11-target
-build (/tmp/cna-446-owner-build.log), metadata 446/0, all 31 C/CLI CTests (7.31 s), both renderer
-selections with exactly 28 PASS + 2 ISSUE-050 failures out of 30 child assertions. Every one of
-the old eighteen passes remains; stderr is empty. Both owner-only calls are cancelled with
-INVALID_STATE/STATE, the owner's target step remains unchanged and owner destruction succeeds.
-No Game loop or rendering; renderer initialization still occurs. Focused evidence archived as
-reports/checkpoint-446-owner-focused-*. Current known-issue demo count is 25; catalog remains 446.
+**Immediate next action:** apply and validate the cancellation extension described below.
+Complete 446-owner at 9e7a27b is CLOSED: tools/validate.sh exit 0; all 459 enabled CTests
+(146.63 s), SW 394/24/25/3, GL 415/25/3/3; raw failed assertions 34/35. Strict comparisons with
+ORIGINAL 446-reentry add only the two ISSUE-050 labels and the dispatch status/knownIssue change.
+All old child assertions, other C/custom-content lists and host trace remain. Selected 32 binary/
+four asset hashes and normalized stderr match. reports/checkpoint-446-owner-* is the new baseline.
+No runtime checkpoint is currently running. Source catalog446; known-issue demos25.
 
-Full helpers prepared: /tmp/cna-archive-446-owner.py and /tmp/cna-446-owner-finish.py. Replace
-PENDING446OWNER with the source commit before running. Catalog: /tmp/cna-catalog-446-owner.json.
-Capture 32 selected binary/four asset hashes AFTER full build. Expected totals SW 394/24/25/3,
-GL 415/25/3/3; all 459 enabled CTests (434 passed including 24 WILL_FAIL, 25 skips), three manual
-disabled. Exact comparison must add ONLY the two ISSUE-050 labels (raw 32/33 -> 34/35), preserve
-all older failures and every other ID/status/knownIssue/count/child list. Owner child 18 -> 30.
-Freeze source/assets during runtime. The owner draft is APPLIED AND STALE.
+Focused owner evidence: clean 11-target build, metadata446/0, all31 C/CLI CTests (7.31 s),
+28 PASS + two labeled failures on both renderer selections, empty stderr. All eighteen old checks
+remain. No Game loop or rendering; renderer initialization still occurs. The owner-only calls
+are cancelled with INVALID_STATE/STATE without pumping, and owner cleanup succeeds. Evidence:
+reports/checkpoint-446-owner-focused-*. Owner draft is APPLIED AND STALE.
 
-Latest COMPLETE baseline: 446-reentry at e473144 (closure aa76540), tools/validate.sh exit 0,
-459 enabled CTests (149.41 s), SW 395/23/25/3, GL 416/24/3/3; old failed assertions 32/33,
-lifecycle 18 PASS, all other old C/custom-content child lists retained. Selected hashes and
-normalized stderr unchanged. reports/checkpoint-446-reentry-*.
-
-Next useful work after closing owner: permitted queued resource/property cancellation and
-re-enabling dispatch, or host-run failure completion. Both are documented semantic gaps;
-neither follows merely from successfully serving a worker or cancelling a forbidden operation.
+Next useful work: UNAPPLIED /tmp/cna-cancel-dispatch.c, prepared by
+/tmp/cna-prepare-cancel-dispatch.py, adds permitted queued property cancellation and re-enabling
+dispatch to the existing demo (expected 30 -> 40 child checks, same two ISSUE-050 failures).
+The worker starts directly with a setter to a different target step; no owner pumping occurs
+until explicit shutdown releases it. Require actual INVALID_STATE/STATE cancellation, verify
+unchanged owner value, disabled pump and a fresh successfully served worker after re-enabling.
+This distinguishes real queuing from a delayed pre-call THREAD refusal. No runtime claim yet.
+Prepared helpers /tmp/cna-{archive-446-cancel,446-cancel-finish,run-446-cancel-focused}.py still
+need source commit/catalog/hash capture and actual evidence. Do not apply during the full owner
+checkpoint. Later gap: host-run failure completion versus the public exiting/end_run promise.
+UNCOMPILED /tmp/cna-host-failure-probe.c (76 lines) isolates two variable host frames, second
+Update failure, terminal no-replay and destruction. Expected correct trace ILBUDUXEZ; current
+source suggests ILBUDUZ because Invoke suppresses exiting/end_run after callbackFailure_.
+Exit 0 correct contract, 1 exact omitted-callback outcome, 2 other/inconclusive. No runtime
+claim or issue ID yet. Compile only into the existing build tree after the live checkpoint.
 Keep the existing focused examples and actual APIs visible; do not add a count-only variant.
 
 Earlier COMPLETE catalog checkpoint: 446-palette at 55ebc57 (closure 2c3f095), all 459 enabled

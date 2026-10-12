@@ -1340,8 +1340,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   Both cancellation results are INVALID_STATE/STATE; the owner remains usable and destroys the
   game. Delayed pre-call scheduling is separately inconclusive. Both stderr streams are empty.
   All 31 focused C/CLI CTests pass, including this expected-failure test (7.31 s). Source/logs:
-  reports/checkpoint-446-owner-focused-*. A full checkpoint is pending; the previous complete
-  446-reentry checkpoint predates this catalog integration.
+  reports/checkpoint-446-owner-focused-*. Complete 446-owner at 9e7a27b passes all 459 enabled
+  CTests and both full smoke runs. Exact ORIGINAL 446-reentry comparisons add only these two
+  failures (32/33 -> 34/35), retain all prior failures and preserve every other demo status/check
+  count and C/custom-content child list. Selected hashes and normalized stderr are unchanged.
+  Original evidence and strict reviews: reports/checkpoint-446-owner-*.
 
 ## Resolved
 
