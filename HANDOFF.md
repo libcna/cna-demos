@@ -243,32 +243,27 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-**Immediate next action:** extend the existing weight-channel demo with the final palette slot,
-using the UNAPPLIED draft below. Complete 448 at 11d29b3 is CLOSED: tools/validate.sh exit 0,
-all 461 enabled CTests (197.73 s), SW 395/25/25/3, GL 416/26/3/3. Exact ORIGINAL 447 comparisons
-add only weight_channels (six PASS checks); all old 35/36 failures, statuses/counts/known issues
-and child lists remain. Selected 33 binary/four asset hashes and normalized stderr match.
-reports/checkpoint-448-* is the new baseline. No runtime checkpoint is currently running.
-Inventory: 293/329 types, 1357/2326 XNA members, 158/3210 C routes; all runtime columns cover 448 IDs.
+**Immediate next action:** run and close the full 448-max-slot checkpoint against ORIGINAL
+checkpoint-448, then continue with fog below. The existing weight_channels extension is APPLIED;
+/tmp/cna-max-slot-render.cpp is now stale. Same 448 IDs, weight_channels six -> seven checks,
+expected old 35/36 failed assertions unchanged. Prepared helpers:
+/tmp/cna-archive-448-max-slot.py and /tmp/cna-448-max-slot-finish.py need the actual source commit
+and 33 binary/four asset hashes captured after the full build, before runtime checks.
 
-Focused weight-channel evidence: build 55 targets (known Draco CMP0148 developer warning on
-regeneration, no compiler diagnostics), metadata 448/0, all 23 targeted CTests (5.94 s: 22 passed
-including one WILL_FAIL, one PBR capability skip). Six checks pass on both renderers, stderr
-empty, both 800x480 images actually inspected and RGBA-identical, 7,504 pixels per colored mesh.
-reports/checkpoint-448-focused-*. The original weight-channel draft is APPLIED AND STALE.
+Focused extension: 28-target incremental build without compiler diagnostics, metadata 448/0,
+all 23 targeted CTests (6.94 s), seven PASS checks on both renderers, empty stderr. Both 800x480
+captures were actually inspected and are RGBA-identical. Comparing each against ORIGINAL 448
+changes exactly 7,504 MidnightBlue pixels to cyan; all older colored regions remain unchanged.
+The original short-palette controls run every frame before a fourth mesh addresses MaxBones-1
+with a distinct transform. Evidence: reports/checkpoint-448-max-slot-focused-*.
 
-Priority follow-up: /tmp/cna-max-slot-render.cpp (178 lines), prepared by
-/tmp/cna-prepare-max-slot.py, is UNAPPLIED. It extends the SAME weight_channels ID from six to
-seven checks. Each frame first draws the original three short-palette controls unchanged. A
-fourth cyan mesh then uses a MaxBones-sized palette and indices2,0,MaxBones-1,1, with a distinct
-last-slot translation(.5,.5) and weights(.1,.2,.3,.4). Its expected world center is(-.404,-.63).
-The last slot differs from every earlier authored slot, so clamping/wrapping cannot select an
-equivalent transform. The existing six checks remain, plus five pixel probes grouped into one
-new rendered boundary assertion. Original three colored regions should remain RGBA-identical;
-only a new cyan rectangle should replace background. This closes the actual last-slot rendering
-gap beyond two_bones' CPU palette readback, without another demo ID. No build/runtime/image
-validation yet. Apply only now that 448 is closed; verify both images and actual changed pixels,
-then full checkpoint with the same 448 IDs and old 35/36 failures. Fog remains the later draft.
+Resume baseline: incremental build and metadata 448/0 passed, all 461 enabled CTests passed
+(202.83 s). At that observation CNA was clean at fbaff069eb21cc9b069d7f19953ff864b37036b0 and
+all 33 selected binaries/four assets matched original 448. Later external C API render-target
+edits were present and included in the focused incremental build; no CNA files were edited here,
+and no atomic dependency snapshot is claimed. Baseline logs are archived as
+checkpoint-448-max-slot-baseline-*. Last COMPLETE checkpoint is still original 448 at 11d29b3:
+SW 395/25/25/3, GL 416/26/3/3, all old raw failures and C/custom-content child lists retained.
 
 Later work: UNAPPLIED /tmp/cna-skinned-fog-depth.cpp (133 lines), proposed
 `graphics.skinned_effect.fog_depth`. It uses one shared Z=0 bind mesh, one active bone and

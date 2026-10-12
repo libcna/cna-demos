@@ -138,7 +138,8 @@ a check that all authored colors remain visible and that a blank texture row can
   (needs a CNA build with `CNA_<RENDERER>_COMPILED_EFFECTS`), other dialects.
 - ✅ `graphics.skinned_effect.weight_channels`: one/two selected channels ignore deliberately
   nonzero inactive lanes, four active weights blend permuted bone indices, and near-edge pixels
-  check the translated shapes. Six checks pass on both renderers; inspected captures are RGBA-identical.
+  check the translated shapes. A fourth mesh now addresses the final MaxBones slot while preserving
+  all original controls: seven checks pass on both renderers; inspected captures are RGBA-identical.
 - ✅ `graphics.skinned_effect.clone_ownership`: copied independent palettes and shared owned
   texture lifetime after source/caller release; actual tinted pixels and final weak ownership release
   pass ten checks on both renderers. Explicit texture disposal and other skinning variants remain separate.

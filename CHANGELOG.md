@@ -46,6 +46,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Existing skinning-channel demo now renders through the final MaxBones palette slot, retaining
+  its original short-palette controls. Seven checks pass on both renderers; image comparison
+  confirms only the added cyan mesh changes, with all three earlier shapes intact.
 - Active skinning-channel demo verifies that one/two influences ignore nonzero unused lanes,
   and four weights blend the explicitly indexed palette. Six rendered checks pass on SOFTWARE
   and OPENGLES3; both inspected captures are pixel-identical. Other skinning scenes remain intact.

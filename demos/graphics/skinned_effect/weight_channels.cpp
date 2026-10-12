@@ -37,18 +37,22 @@ namespace
             auto& device = getGraphicsDeviceProperty();
             // Active weights sum to one for each mesh. The first two deliberately retain
             // nonzero unused lanes, so an implementation always summing four would draw wrongly.
-            const std::array<Vector4, 3> weights{Vector4(1, .25f, .5f, .75f),
-                Vector4(.25f, .75f, .5f, .25f), Vector4(.1f, .2f, .3f, .4f)};
-            const std::array<std::uint8_t, 4> indices{2, 0, 3, 1}; // index order differs from palette order
+            const std::array<Vector4, 4> weights{Vector4(1, .25f, .5f, .75f),
+                Vector4(.25f, .75f, .5f, .25f), Vector4(.1f, .2f, .3f, .4f), Vector4(.1f, .2f, .3f, .4f)};
+            static_assert(SkinnedEffect::MaxBones > 4 && SkinnedEffect::MaxBones <= 256);
             std::vector<VertexPositionNormalTextureSkinned> vertices;
-            for (const auto& weight : weights)
+            for (std::size_t mesh = 0; mesh < weights.size(); ++mesh)
+            {
+                std::array<std::uint8_t, 4> indices{2, 0, 3, 1};
+                if (mesh == 3) indices[2] = static_cast<std::uint8_t>(SkinnedEffect::MaxBones - 1);
                 for (const Vector2& position : {Vector2(-.14f, -.14f), Vector2(.14f, -.14f),
-                                               Vector2(.14f, .14f), Vector2(-.14f, .14f)})
+                                                Vector2(.14f, .14f), Vector2(-.14f, .14f)})
                     vertices.emplace_back(Vector3(position.X, position.Y, .5f), Vector3::UnitZ,
-                                          Vector2::Zero, weight, indices);
+                                          Vector2::Zero, weights[mesh], indices);
+            }
             vertices_ = std::make_unique<VertexBuffer>(device,
-                VertexPositionNormalTextureSkinned::getVertexDeclarationStatic(), 12, BufferUsage::WriteOnly);
-            vertices_->SetData(vertices.data(), 12);
+                VertexPositionNormalTextureSkinned::getVertexDeclarationStatic(), 16, BufferUsage::WriteOnly);
+            vertices_->SetData(vertices.data(), 16);
             indices_ = std::make_unique<IndexBuffer>(device, IndexElementSize::SixteenBits, 6, BufferUsage::WriteOnly);
             const std::array<std::uint16_t, 6> triangles{0, 1, 2, 0, 2, 3};
             indices_->SetData(triangles.data(), 6);
@@ -63,10 +67,15 @@ namespace
             effect_->getDirectionalLight0Property().setEnabledProperty(false);
             effect_->getDirectionalLight1Property().setEnabledProperty(false);
             effect_->getDirectionalLight2Property().setEnabledProperty(false);
-            effect_->SetBoneTransforms({Matrix::CreateTranslation(-.12f, -.4f, 0),
+            shortPose_ = {Matrix::CreateTranslation(-.12f, -.4f, 0),
                 Matrix::CreateTranslation(.5f, -.1f, 0), Matrix::CreateTranslation(-.3f, .4f, 0),
-                Matrix::CreateTranslation(.12f, .2f, 0)});
-            Context().Print("Gold: one active lane. Blue: two active lanes. Orange: four nonzero influences. Bone indices: 2,0,3,1; unused lanes in the first two meshes are deliberately nonzero.");
+                Matrix::CreateTranslation(.12f, .2f, 0)};
+            maximumPose_.assign(SkinnedEffect::MaxBones, Matrix::getIdentityProperty());
+            for (std::size_t i = 0; i < shortPose_.size(); ++i) maximumPose_[i] = shortPose_[i];
+            // Distinct from slot 3 and every earlier authored slot: clamping/wrapping the index
+            // cannot accidentally select an equivalent transform and pass the rendered check.
+            maximumPose_.back() = Matrix::CreateTranslation(.5f, .5f, 0);
+            Context().Print("Gold: one active lane. Blue: two active lanes. Orange: four nonzero influences. Bone indices: 2,0,3,1; unused lanes in the first two meshes are deliberately nonzero. Cyan additionally addresses the final MaxBones palette slot.");
         }
         void Draw(const GameTime& time) override
         {
@@ -77,6 +86,7 @@ namespace
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             device.SetVertexBuffer(vertices_.get());
             device.setIndicesProperty(indices_.get());
+            effect_->SetBoneTransforms(shortPose_); // preserve the original short-palette controls every frame
             const std::array<int, 3> counts{1, 2, 4};
             const std::array<Color, 3> colors{Color::Gold, Color::CornflowerBlue, Color::Orange};
             for (int mesh = 0; mesh < 3; ++mesh)
@@ -118,9 +128,35 @@ namespace
                                     "the mesh has left its unskinned bind-pose center");
                 }
             }
+            effect_->SetBoneTransforms(maximumPose_);
+            effect_->setWeightsPerVertexProperty(4);
+            effect_->setWorldProperty(Matrix::CreateTranslation(-.7f, -.7f, 0));
+            effect_->setDiffuseColorProperty(Color::Cyan.ToVector3());
+            for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
+            {
+                pass.Apply();
+                device.DrawIndexedPrimitives(PrimitiveType::TriangleList, 12, 0, 4, 0, 2);
+            }
+            if (FramesDrawn() == 0)
+            {
+                const CnaDemos::BackBufferPixels pixels(device);
+                // .1*bone2 + .2*bone0 + .3*last + .4*bone1, followed by World(-.7,-.7).
+                const Vector2 center(-.404f, -.63f);
+                bool matches = true;
+                for (const Vector2& offset : {Vector2::Zero, Vector2(-.12f, 0), Vector2(.12f, 0),
+                                              Vector2(0, -.12f), Vector2(0, .12f)})
+                {
+                    const auto point = center + offset;
+                    const int x = static_cast<int>((point.X + 1) * .5f * pixels.Width());
+                    const int y = static_cast<int>((1 - point.Y) * .5f * pixels.Height());
+                    matches = matches && CnaDemos::Near(pixels.At(x, y), Color::Cyan, 1);
+                }
+                Context().Check(matches, "the final MaxBones palette slot contributes to a rendered four-weight mesh");
+            }
             Game::Draw(time);
         }
     private:
+        std::vector<Matrix> shortPose_, maximumPose_;
         std::unique_ptr<VertexBuffer> vertices_;
         std::unique_ptr<IndexBuffer> indices_;
         std::unique_ptr<Texture2D> white_;
@@ -131,8 +167,9 @@ CNA_DEMOS_GAME(WeightChannelsDemo, {
     .id = "graphics.skinned_effect.weight_channels",
     .title = "Active skinning weight channels",
     .description = "Renders one-, two- and four-influence meshes with explicit bone indices; nonzero unused lanes "
-                   "test that WeightsPerVertex selects the active channels, while edge pixels verify the four-bone blend.",
-    .apis = {"SkinnedEffect::WeightsPerVertex", "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::World",
+                   "test that WeightsPerVertex selects the active channels, while edge pixels verify the four-bone blend; "
+                   "a separate mesh addresses the final MaxBones palette slot.",
+    .apis = {"SkinnedEffect::WeightsPerVertex", "SkinnedEffect::MaxBones", "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::World",
              "VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned"},
     .tags = {"skinning", "bones", "effect", "3d"},
     .needs = CnaDemos::Need::ThreeD,
