@@ -1252,6 +1252,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `69acd67e51b6ec542d8ad429825da3e5bfce89db`. The inspected pipeline header/implementation and
   XnaPipelineBridge.hpp had no uncommitted changes; other external C API work continues. This is
   not an atomic source/dependency snapshot. No CNA source was changed or upstream message sent.
+- **Complete checkpoint:** 441-contracts at 2d28a13 passes all 454 enabled CTests and both full
+  smoke runs. Exact comparisons with ORIGINAL 441-config add only this assertion (31/32 -> 32/33),
+  retain every prior failure and match focused adapter checks. Normalized stderr is unchanged;
+  all 30 selected runtime hashes match. Archives: `reports/checkpoint-441-contracts-*`.
 - **Status:** open; an observable public metadata/contract discrepancy, not a demo failure.
 
 ## Resolved
