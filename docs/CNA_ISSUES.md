@@ -1402,6 +1402,46 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 
+### CNA-DEMOS-ISSUE-054 -- Cube DDS loading ignores short reads and masks offset truncation
+
+- **Area/API:** `TextureCube::DDSFromStreamEXT`, `modules/graphics/src/Xna/TextureCube.cpp`.
+- **Demo:** `graphics.texture_cube.dds_streams`; five controls, three pass and two fail on both
+  SOFTWARE and OPENGLES3. The demo is marked with this issue and retains both failing assertions.
+- **Fixture and reproduction:** an original 506-byte RGB24 DDS contains six 4x4 faces and authored
+  2x2/1x1 levels, with colors varying by face and level and a final nonzero blue byte (255).
+  Load it from MemoryStream and verify all eighteen face/level images using public GetData.
+  Repeat from position 16 of a stream containing a sixteen-byte prefix plus the same payload.
+  Both complete controls pass and return size 4, three levels and opaque Color data.
+  Then use a MemoryStream subclass whose Read returns at most seven bytes. Finally remove the
+  same last payload byte and try it at positions zero and sixteen.
+- **Observed:** the legal short-read stream is read once (seven bytes) and rejected with
+  `TextureCube::DDSFromStreamEXT: invalid DDS flags`. Ordinary 505-byte truncation is correctly
+  refused with System::FormatException (`truncated DDS stream`). With the sixteen-byte prefix,
+  the same truncated payload is accepted and the decoded data no longer matches the full fixture.
+  Both renderers produce exactly the same two failed checks and empty stderr after the demo's
+  exception catch was corrected.
+- **Expected:** honor Stream::Read's documented returned byte count, accumulate positive short
+  reads until the intended payload is complete, and reject the same truncated encoded data
+  regardless of its starting position. Prefix bytes before Position are not unread DDS bytes.
+- **Source investigation:** the method allocates a zero-initialized buffer of total stream Length,
+  calls Read once and ignores its return value, then passes the total Length to DecodeDdsCube.
+  The prefixed truncated stream has total Length 521 but only 505 unread bytes. The extra zero
+  bytes make the decoder's 506-byte bounds check pass and replace the missing nonzero component.
+  The decoder itself correctly refuses the unprefixed truncation. This is a stream-consumption
+  defect in the cube loader, distinct from SavePicture's analogous ISSUE-041.
+- **Demo correction, not a CNA defect:** the first draft caught std::runtime_error for truncation;
+  CNA actually throws System::FormatException. Those initial runs stopped after three checks.
+  Their source/logs are retained as `checkpoint-459-initial-*`; the catch was corrected explicitly
+  before the five-check reproduction, archived as `checkpoint-459-dds-fixed-*` and
+  `checkpoint-459-dds-unmarked-source.cpp`. No reader workaround or failure suppression was added.
+- **Suggested repair:** read the actual remaining payload to completion (respecting each Read
+  result), and give the decoder only initialized bytes actually read; preserve truncation errors.
+  No CNA file was modified by this task.
+- **Environment/status:** Linux, GCC 14.2/CMake 3.31.6 linux-full, explicit X11/Xvfb and dummy audio.
+  CNA 2202cb4f1483f7bb54c12c9f9a88c0bf374fe0a6 observed after reproduction, with unrelated
+  documentation/content-test changes present. Source observations/hashes are archived separately;
+  no atomic build-input snapshot is claimed. Open; no upstream message or genuine-XNA execution.
+
 ## Resolved
 
 ### CNA-DEMOS-ISSUE-053 -- In-flight framework update registration uses an out-of-scope array

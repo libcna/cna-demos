@@ -52,6 +52,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   listing missing IDs so stale smoke evidence cannot silently appear current.
 
 ### Added
+- Portable shader packages now demonstrate owned stage/language pairs, live selection independent
+  of declaration order, incomplete/ambiguous refusals, owned diagnostics and checked shader pixels.
+- Cube DDS loading now checks every authored face/mip and stream boundaries. ISSUE-054 records
+  ignored short reads and acceptance of truncated payloads behind a prefix; both failures remain visible.
+- The existing C dispatch demo now verifies final owner destruction releases an actually queued
+  property call, preserves the worker error record and checks the invalidated game handle after joining.
 - Cube face transfers now demonstrate guarded source/destination windows, a rectangular face edit,
   independently authored mips, refused-transfer preservation and a readback atlas (eight checks).
 - Existing animation demos now distinguish local/world/skin transforms and verify nonidentity

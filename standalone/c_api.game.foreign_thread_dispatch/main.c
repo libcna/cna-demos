@@ -249,6 +249,56 @@ int main(int argc, char** argv)
                            "a fresh worker is served after re-enabling and sees no replay of the cancelled setter");
     }
     cna_demo_check_result(&demo, cna_game_set_foreign_thread_calls_ext(game, CNA_FALSE), "leave dispatch disabled");
-    cna_demo_check_result(&demo, cna_game_destroy(game), "destroy the game on its owner thread");
+    /* Re-enable only for the final destruction boundary: do not pump this permitted setter.
+       An INVALID_STATE worker result proves actual queue cancellation; a worker delayed until
+       after destruction sees an invalid handle and cannot pass that assertion. */
+    Request dying;
+    memset(&dying, 0, sizeof(dying));
+    dying.game = game;
+    dying.cancel_pending = 1;
+    atomic_init(&dying.done, 0);
+    thrd_t final_thread;
+    int final_started = 0, pending_at_destroy = 0;
+    const struct timespec final_pause = {0, 2000000L};
+    if (cna_demo_check_result(&demo, cna_game_set_foreign_thread_calls_ext(game, CNA_TRUE),
+                              "enable dispatch for owner-destruction cancellation"))
+        final_started = cna_demo_check(&demo, thrd_create(&final_thread, worker, &dying) == thrd_success,
+                                       "start a property worker before owner destruction");
+    if (final_started) {
+        for (int attempt = 0; attempt < 500 && !atomic_load_explicit(&dying.done, memory_order_acquire); ++attempt)
+            (void)thrd_sleep(&final_pause, NULL);
+        pending_at_destroy = !atomic_load_explicit(&dying.done, memory_order_acquire);
+        int64_t ticks = 0;
+        cna_demo_check(&demo, pending_at_destroy &&
+                       cna_game_get_target_elapsed_time_ticks(game, &ticks) == CNA_RESULT_SUCCESS && ticks == CHANGED_TICKS,
+                       "the unserved property worker waits while the owner retains its previous target step");
+    }
+    const CNA_Result destroy_result = cna_game_destroy(game);
+    cna_demo_check_result(&demo, destroy_result, "destroy the game on its owner thread");
+    if (final_started) {
+        if (destroy_result != CNA_RESULT_SUCCESS)
+            (void)cna_game_set_foreign_thread_calls_ext(game, CNA_FALSE); /* Failed-destroy cleanup only. */
+        for (int attempt = 0; attempt < 2500 && !atomic_load_explicit(&dying.done, memory_order_acquire); ++attempt)
+            (void)thrd_sleep(&final_pause, NULL);
+        if (!atomic_load_explicit(&dying.done, memory_order_acquire)) {
+            cna_demo_check(&demo, 0, "the property worker returns after bounded owner-destruction cleanup");
+            exit(EXIT_FAILURE);
+        }
+        int thread_result = 1;
+        const int joined = thrd_join(final_thread, &thread_result);
+        cna_demo_check(&demo, joined == thrd_success && thread_result == 0,
+                       "join the released property worker after owner destruction");
+        cna_demo_check(&demo, pending_at_destroy && destroy_result == CNA_RESULT_SUCCESS &&
+                       dying.result == CNA_RESULT_INVALID_STATE && dying.error_query == CNA_RESULT_SUCCESS &&
+                       dying.error.result == CNA_RESULT_INVALID_STATE && dying.error.category == CNA_ERROR_CATEGORY_STATE,
+                       "owner destruction cancels an actually queued call with the worker's INVALID_STATE error record");
+        int64_t untouched = INT64_C(-12345);
+        cna_demo_check(&demo, cna_game_get_target_elapsed_time_ticks(game, &untouched) == CNA_RESULT_INVALID_HANDLE &&
+                       untouched == INT64_C(-12345),
+                       "the destroyed owner handle is invalid and a refused query preserves its output");
+        printf("Destroyed property: pending=%d, result=%u, category=%u\n", pending_at_destroy,
+               (unsigned)dying.result, (unsigned)dying.error.category);
+    }
+    if (destroy_result != CNA_RESULT_SUCCESS) (void)cna_game_destroy(game);
     return cna_demo_finish(&demo);
 }

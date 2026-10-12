@@ -125,8 +125,11 @@ a check that all authored colors remain visible and that a blank texture row can
   rectangle windows, neighboring faces, authored mip levels and refused-call preservation.
   Both inspected readback-atlas captures are RGBA-identical; no direct GPU-readback claim.
   Full 457 passes all 470 enabled CTests and both smokes, retaining all original 35/36 failures.
+  🟨 `graphics.texture_cube.dds_streams`: full and prefixed RGB24 cubes/mips and ordinary
+  truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
+  selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (30 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (31 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and specular controls: emission/ambient/half-alpha composition, independent
   colored lights 1/2, their sum and shininess exponent. Both focused four-check scenes pass on
   SOFTWARE/OPENGLES3; four captures inspected, all cross-renderer differences within tolerance 1.
@@ -144,6 +147,10 @@ a check that all authored colors remain visible and that a blank texture row can
   `graphics.pbr_effect.texture_maps` (normal map with a Vector4 vertex tangent, emissive map,
   occlusion map on ambient light), ✅ `SkinnedPbrEffect` (`graphics.model.skinned_pbr`). Remaining:
   image-based lighting.
+- ✅ `graphics.shader_effect.portable_package`: owned language/stage pairs, order-independent
+  selection, incomplete/ambiguous refusals, owned exception diagnostics and actual RGB-to-GBR
+  pixels (eight GL checks, SOFTWARE capability skip). GL capture inspected; desktop/binary
+  variants and invalid-syntax compiler diagnostics remain distinct gaps.
 - 🟨 Custom shaders: ✅ `ShaderEffect` in 3D (toon shading), a heightmap read in the vertex shader
   (`graphics.shader_effect.vertex_displacement`) and in `SpriteBatch::Begin`
   (grayscale), GLSL chosen from `GetShaderDialectEXT()`. Remaining: compiled XNA `.fx` effects
@@ -472,6 +479,9 @@ survive. All previous assertions remain, with one host setup label updated.
 The new `c_api.game.launch_parameters` source demonstrates explicit UTF-8 spans, ownership,
 ordinal enumeration and count/copy boundaries. Both focused selections pass all fifteen child
 checks with empty stderr after the external ISSUE-053 repair; complete 456 validation passed all 469 enabled CTests and both smokes, preserving every old failure.
+The existing foreign_thread_dispatch now also tests final owner destruction cancelling a waiting
+property call: six new controls pass on both selections, preserving all forty original checks
+and both ISSUE-050 failures (44 passes/2 failures total). Full 459 validation is next.
 
 C API demos as standalone C programs (one C game per process), built only with
 `CNA_BUILD_C_API=ON` (experimental in CNA; on in the `linux-full` preset), `Need::CApi`:
