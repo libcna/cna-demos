@@ -1132,3 +1132,16 @@ All capture/archive/finish helpers pass; immutable evidence: checkpoint-470-rele
 Generated coverage: 293/329 types, 1374/2326 XNA members, 174/3210 C routes.
 No extra ID or issue marker. Semantic coverage remains incomplete; build-only ISSUE-057
 stays open with its original refusal and independent private staging probe preserved.
+
+## Focused470-spatial
+
+Focused **470-spatial** extends apply_3d from one to seven checks. Two dummy-audio runs
+(one per requested renderer environment) pass with empty stderr. Six public controls cover
+paused Pan/3D mode refusals, re-aiming after Stop, the Pan field assignment before its
+refusal, and switching back to pan. The complete original audible sweep/default-speed
+check source remains verbatim. No mixer-output panning, attenuation, Doppler or new
+listening evidence; SmokeOnly remains. Watched build53385 passes9scheduled/8numbered
+operations with all3,909inputs unchanged and diagnostic gate0. Metadata470/0;
+focused/targeted84713 passes37enabled CTests in5.60s (one manual microphone disabled).
+Focused reviewer passes BEFORE commit; evidence checkpoint-470-spatial-focused-*.
+Last full baseline470-release; full validation next. No extra ID or genuine CNA defect found.

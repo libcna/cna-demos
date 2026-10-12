@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Positional audio adds six public Pan/3D mode controls while retaining its original sweep.
+  Seven checks pass in both dummy-audio selections and 37 enabled targeted CTests pass.
 - Complete470-release: 483 enabled CTests and both full smoke suites retain all prior
   failure, child and network evidence; selected artifacts and normalized diagnostics stay stable.
 - Looping audio adds paused Stop(false)/Resume/natural-completion controls. All six checks

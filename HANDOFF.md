@@ -103,6 +103,17 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **470-spatial** extends apply_3d from one to seven checks. Two dummy-audio runs
+(one per requested renderer environment) pass with empty stderr. Six public controls cover
+paused Pan/3D mode refusals, re-aiming after Stop, the Pan field assignment before its
+refusal, and switching back to pan. The complete original audible sweep/default-speed
+check source remains verbatim. No mixer-output panning, attenuation, Doppler or new
+listening evidence; SmokeOnly remains. Watched build53385 passes9scheduled/8numbered
+operations with all3,909inputs unchanged and diagnostic gate0. Metadata470/0;
+focused/targeted84713 passes37enabled CTests in5.60s (one manual microphone disabled).
+Focused reviewer passes BEFORE commit; evidence checkpoint-470-spatial-focused-*.
+Last full baseline470-release; full validation next. No extra ID or genuine CNA defect found.
+
 Complete checkpoint **470-release**, source `f08554f`,
 extends the existing looping demo from three to six checks. Ten dummy-audio repetitions
 (five per requested renderer environment) pass with empty stderr. The complete original
@@ -250,23 +261,21 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply and validate the same-ID 470-spatial mode-lifecycle extension.
-Full470-release session59103 is CLOSED0; sourcef08554f is the comparison baseline.
-1. Apply /tmp/cna-spatial-mode.cpp to audio/sound_effect_instance/apply_3d.cpp. Syntax50498
-   passed, no native evidence yet. Original sweep/default check plus six public mode controls.
-2. Watched /tmp/cna-build-470-spatial.py initial; consistency if inputs change. Metadata,
-   /tmp/cna-run-470-spatial-focused.py (one run per selection), targeted shell and
-   /tmp/cna-review-470-spatial-focused.py BEFORE commit. Original sweep/default-check source
-   must remain verbatim; no listening or mixer-output credit from public state observations.
-3. Update semantic docs, commit, export /tmp/cna-catalog-470-spatial.json; full wrapper,
-   capture once after build during CTest, freeze artifacts, archive both smokes and finish.
-   Baseline470-release,483enabled CTests and unchanged470totals; apply_3d1->7checks on both
-   selections only plus separately reviewed positive title Update variance.
-4. Close docs/history/HANDOFF and commit; immediately select the next semantic coverage gap.
-   Revisit COVERAGE_AUDIT's audio lifecycle/multi-listener decisions, dynamic float alignment,
-   authored-region release, and remaining cascade maximum/debug/punctual behavior. Prefer
-   observable meaningful extensions; source-only classifications are not runtime coverage.
-Preserve ISSUE-057's original refusal/probes and investigate any new diagnostic.
+HIGHEST PRIORITY: complete full470-spatial, then apply the prepared float-bounds extension.
+Spatial is APPLIED; watched build/diagnostic gate, metadata, two focused runs and37enabled
+targeted CTests pass. Original audible sweep/default-check source remains verbatim.
+Commit source/docs, export /tmp/cna-catalog-470-spatial.json, run prepared full wrapper.
+Capture once after build during CTest, freeze artifacts, archive each renderer and finish.
+Baseline470-release,483enabled CTests, unchanged470totals; apply_3d1->7checks only on both
+selections plus separately reviewed positive title Update variance. Preserve any refusal.
+Close docs/history/HANDOFF and commit; immediately proceed to /tmp/cna-float-bounds.cpp.
+Bounds draft is UNAPPLIED, final syntax32693 passed. Four explicit float-range refusals
+preserve staged integer/float buffers; original16calls retained (20checks expected).
+Prepared /tmp/cna-*470-bounds* helpers require complete470-spatial. Focused reviewer runs
+BEFORE commit and requires original16assertion calls verbatim/in order. Do not invent float
+frame-alignment refusals: the extension intentionally lacks the integer PCM alignment guard.
+Open ISSUE-057 remains with original refusal/probe evidence; no native output/audio claim
+comes from merely reading source or observing stored properties.
 
 ## 15. Assumptions the next session must know
 
@@ -283,12 +292,12 @@ Prior receiver/PCF/cascade/border/specular/query, looping release/audio formats/
 move, field, lighting, palette and EOF drafts are APPLIED AND STALE. Do not restore old
 /tmp source. Preserve immutable prior evidence and source-only scope distinctions.
 
-Next UNAPPLIED: /tmp/cna-spatial-mode.cpp, syntax50498 CLOSED0, empty log. Six new public
+APPLIED AND STALE: /tmp/cna-spatial-mode.cpp, syntax50498 CLOSED0, empty log. Six new public
 mode/refusal controls before apply_3d's original audible sweep (seven total). Uses only
 Pan/Apply3D/Play/Pause/Stop/State. A refused Pan stores its public property before the mode
 gate; no transactional rollback or changed output pan is assumed. No internal mixer/test
 hooks, Doppler/output-pan or new listening proof. Recovery checkpoint-470-specular-next-*.
-Prepared UNRUN helper family: /tmp/cna-*470-spatial*, baseline complete470-release,
+Spatial focused helpers passed; full helper family next: /tmp/cna-*470-spatial*, baseline complete470-release,
 focused runs/reviewer now use two runs total; final recovery checkpoint-470-release-next-spatial-helper-*,
 recovery checkpoint-470-specular-next-helper-*. Focused reviewer must run BEFORE commit
 because it requires the original sweep/default-check source against HEAD verbatim.
