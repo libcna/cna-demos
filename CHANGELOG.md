@@ -38,6 +38,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   stable. Semantic auditing now distinguishes Texture3D transfer, sampling and lifetime gaps.
 
 ### Added
+- Stereo dynamic-audio buffer formats: byte/sample ranges, partial-frame rejection, preserved
+  paused streams and stopped integer/float transitions. Sixteen public-state controls pass
+  with dummy audio; the existing event-refill demo remains unchanged.
 - Existing XNB reader policies now include built-in factory withdrawal, cache independence and
   re-declaration by a subsequent Game. All23checks pass in an isolated console process;
   a deterministic signed primitive fixture supplements the unchanged schema fixtures.

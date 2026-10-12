@@ -17,7 +17,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 35).
-* In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 21 incl. 9 XACT, media 11 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 22 incl. 9 XACT, media 11 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
 * In progress: 14 (C API, 19 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
@@ -64,10 +64,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-467 catalog demos (complete checkpoint467-readers): math 78, game 33, graphics 159 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+468 catalog demos (focused468-formats; last complete checkpoint467-readers): math 78, game 33, graphics 159 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 27 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 21 (9 XACT), core 3 (2 logger),
+effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 22 (9 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 11 (compiled video and song), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
@@ -245,26 +245,22 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: apply and validate the prepared **468-formats** stereo buffer example.
-Full467-readers(session76468) is CLOSED0; capture/archive/finish helpers passed. Comparison
-baseline is source583ee6f. Do not reapply reader proposals or redo their completed before runs.
-1. /tmp/cna-dynamic-buffer-formats.cpp has syntax-only evidence (session71196, empty log).
-   Apply to demos/audio/dynamic_sound_effect_instance/buffer_formats.cpp. This is one new
-   coherent stereo buffer/format transition concept, not a variant per overload. Original
-   event-refill example must remain unchanged. Public APIs only; no private mixer inspection.
-2. Run /tmp/cna-build-468-formats.py initial, using a consistency phase if watched inputs change.
-   Metadata should468/0. Run /tmp/cna-run-468-formats-focused.py and the targeted shell.
-   Expected16checks both, empty stderr. No screenshots/renderer or audible-output claim.
-3. Execute /tmp/cna-review-468-formats-focused.py. Update semantic audit/status docs, commit,
-   export /tmp/cna-catalog-468-formats.json and run /tmp/cna-run-468-formats-validation.sh.
-4. During CTest, after the full build, /tmp/cna-capture-468-formats.py captures35binary/
-   fourexistingasset hashes plus the existing readerfixture copies. No rebuild/source/asset
-   mutation during smokes. Archive both renderers with /tmp/cna-archive-468-formats.py, then
-   /tmp/cna-468-formats-finish.py. Expected481enabled CTests, SW406/27/32/3, GL433/29/3/3;
-   all38/42old failures and every child/network control exact. No old count changes except
-   separately reviewed positive title Update variance.
-5. Close docs/handoff and immediately continue the deeper semantic audit. A renderer-scoped
-   authored-map SkinnedEffect shadow receiver is a source-reviewed candidate below, not yet drafted.
+HIGHEST PRIORITY: complete full **468-formats** validation. The stereo source is APPLIED,
+focused native/reviewer evidence COMPLETE. Watched build95230 closed0 (33scheduled/30numbered
+completions, no changed3,906watched inputs; known Draco CMake warning retained). Metadata468/0.
+Focused/targeted71117closed0:16checks both, empty stderr,37enabled CTests7.47s, one additional
+manual microphone disabled. Original event-refill source exact. No screenshot or audible credit.
+1. Commit source/docs and export /tmp/cna-catalog-468-formats.json.
+2. Run /tmp/cna-run-468-formats-validation.sh. After its build, during CTest,
+   /tmp/cna-capture-468-formats.py captures35binary/fourexistingasset hashes plus the existing
+   readerfixture copies. No rebuild/source/asset mutation during smokes; never recapture later.
+3. Archive both renderers with /tmp/cna-archive-468-formats.py, then run
+   /tmp/cna-468-formats-finish.py. Baseline is complete467-readers(source583ee6f,closure19ec32c).
+   Expected481enabled CTests, SW406/27/32/3, GL433/29/3/3; all38/42old failures and every
+   child/network control exact. Only separately reviewed positive title Update variance allowed
+   among old counts; new stereo demo must pass16. Close full status/handoff/history afterwards.
+4. Immediately continue the prepared469-shadow receiver proposal below; source-only/syntax
+   evidence exists, but its actual pixels and supported renderer scope remain to validate.
 
 ## 15. Assumptions the next session must know
 
@@ -276,7 +272,7 @@ baseline is source583ee6f. Do not reapply reader proposals or redo their complet
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is467-readers, source583ee6f; its closure commit follows. Older field, lighting,
+Current complete baseline is467-readers, source583ee6f, closure19ec32c. Older field, lighting,
 palette, EOF, kernel and move proposals are applied and stale. Do not reapply them. Exact
 history and immutable evidence references are in docs/CHECKPOINT_HISTORY.md.
 
@@ -285,15 +281,15 @@ with assets/versions/builtin_score.xnb. The two former /tmp proposals are APPLIE
 Focused review verifies original17source controls unchanged,23checks on both selections,
 empty stderr, all old fixture bytes preserved and the new90byte signed primitive reproduced.
 Console ownProcess is explained in architecture/authoring docs; no framework code changed.
-Current source observation at focused build: cleanCNA5a85d5ed2. Build27370 observed all3,906
+Reader focused-build source observation: cleanCNA5a85d5ed2. Build27370 observed all3,906
 watched CNA source/header/CMake hashes unchanged; this is not an atomic/full dependency snapshot.
 
-NOT-APPLIED next proposal after reader closure: /tmp/cna-dynamic-buffer-formats.cpp is a focused
+APPLIED AND STALE stereo buffer proposal: /tmp/cna-dynamic-buffer-formats.cpp is a focused
 console stereo buffer-format example (new meaningful concept, intended16checks). It separates
 integer byte ranges from float sample ranges, refuses partial integer frames without queue
 mutation, pauses/resumes and stops before both format transitions. Silent fixtures prove
 accepted ranges and playback states, not output samples or audio quality. Syntax-only71196
-passed with an empty log; no native execution. /tmp/cna-468-formats-syntax.py is prepared.
+passed with an empty log; focused native/reviewer evidence is now complete.
 Source/helper/hash review recovery: checkpoint-467-move-next-*. All original stream-refill
 checks/ISSUE038 remain separate. Do not claim float frame-alignment refusal or concurrent
 producer coverage. Duration helpers intentionally retain16-bit PCM meaning in float mode.
@@ -308,12 +304,11 @@ coordinates and an independently predicted ambient/emissive floor. Syntax84074pa
 an empty log; no native/image evidence. /tmp/cna-469-shadow-syntax.py is the syntax helper.
 Recovery source/hash review: checkpoint-467-readers-next-*. Run only after stereo format closure.
 
-Prepared for468-formats (NOT RUN): /tmp/cna-run-468-formats-focused.py, targeted shell,
-watched build helper, focused reviewer and full capture/archive/finish family. Expect one new
-ID,16checks,481enabled CTests and old38/42failures with exact child/network evidence. The
-new console creates no Game; no screenshot required. Recovery helpers: checkpoint-467-readers-next-*.
+The468-formats focused runner, targeted CTests, watched build and focused reviewer have all
+completed successfully. Full run-validation/capture/archive/finish helpers are prepared but
+NOT RUN; follow section14. Recovery helpers: checkpoint-467-readers-next-*.
 
 Prepared shadow helpers (NOT RUN): /tmp/cna-build-469-shadow.py,
 /tmp/cna-run-469-shadow-focused.py (GL screenshot only) and targeted shell. Expected4GLpixel
 checks/SWexplicit skip0; actual GL image must be inspected before any visual claim. Full
-shadow capture/archive/finish helpers are not prepared yet. Audio remains the next applied work.
+shadow capture/archive/finish helpers are not prepared yet. Audio full validation remains the next action.

@@ -1,0 +1,109 @@
+// SPDX-License-Identifier: MS-PL
+// Stereo stream buffers: byte/sample units, frame alignment and stop-before-format-change.
+#include <cstdint>
+#include <vector>
+
+#include "CnaDemos/Demo.hpp"
+#include "Microsoft/Xna/Framework/Audio/AudioChannels.hpp"
+#include "Microsoft/Xna/Framework/Audio/DynamicSoundEffectInstance.hpp"
+#include "Microsoft/Xna/Framework/Audio/SoundState.hpp"
+#include "System/ArgumentException.hpp"
+#include "System/InvalidOperationException.hpp"
+#include "System/TimeSpan.hpp"
+
+using namespace Microsoft::Xna::Framework::Audio;
+
+namespace
+{
+    void BufferFormats(CnaDemos::DemoContext& ctx)
+    {
+        constexpr int sampleRate = 24000;
+        constexpr int frames = 1200; // 50 ms, two interleaved channels per frame
+        constexpr int pcmBytes = frames * 2 * 2;
+        constexpr int floatSamples = frames * 2;
+        // One whole guard frame at each end; submit only the middle 50 ms.
+        std::vector<SharpRuntime::bytecs> pcm(pcmBytes + 8, 0);
+        std::vector<float> floats(floatSamples + 4, 0.0f);
+        DynamicSoundEffectInstance voice(sampleRate, AudioChannels::Stereo);
+        ctx.Check(voice.GetSampleSizeInBytes(System::TimeSpan::FromMilliseconds(50)) == pcmBytes,
+                  "50 ms of stereo 16-bit PCM is 4800 bytes, including both channels");
+        voice.SubmitBuffer(pcm, 4, pcmBytes);
+        ctx.Check(voice.getPendingBufferCountProperty() == 1,
+                  "a byte range starting after one stereo frame queues one integer buffer");
+
+        bool refused = false;
+        try { voice.SubmitBuffer(pcm, 2, pcmBytes); }
+        catch (const System::ArgumentException&) { refused = true; }
+        ctx.Check(refused && voice.getPendingBufferCountProperty() == 1,
+                  "an offset on a sample but between stereo frames is refused without adding a buffer");
+        refused = false;
+        try { voice.SubmitBuffer(pcm, 4, pcmBytes + 2); }
+        catch (const System::ArgumentException&) { refused = true; }
+        ctx.Check(refused && voice.getPendingBufferCountProperty() == 1,
+                  "a byte count ending between stereo frames is refused without changing the queue");
+
+        voice.Play();
+        ctx.Check(voice.getStateProperty() == SoundState::Playing, "the integer stream starts playing");
+        voice.Pause();
+        ctx.Check(voice.getStateProperty() == SoundState::Paused, "pausing retains the live integer stream");
+        const int pausedIntegerBuffers = voice.getPendingBufferCountProperty();
+        refused = false;
+        try { voice.SubmitFloatBufferEXT(floats, 2, floatSamples); }
+        catch (const System::InvalidOperationException&) { refused = true; }
+        ctx.Check(refused && voice.getStateProperty() == SoundState::Paused &&
+                  voice.getPendingBufferCountProperty() == pausedIntegerBuffers,
+                  "a float submission cannot change a paused integer stream or its pending buffers");
+        voice.Resume();
+        ctx.Check(voice.getStateProperty() == SoundState::Playing,
+                  "the original integer stream resumes after the refused format change");
+        voice.Stop();
+        ctx.Check(voice.getStateProperty() == SoundState::Stopped && voice.getPendingBufferCountProperty() == 0,
+                  "stopping the started integer stream clears old data before switching formats");
+
+        // Float offset/count are samples, not bytes. Select both channels of 1200 frames.
+        voice.SubmitFloatBufferEXT(floats, 2, floatSamples);
+        ctx.Check(voice.getPendingBufferCountProperty() == 1,
+                  "the stopped stream accepts one 2400-sample stereo float range");
+        // These XNA helpers deliberately retain their 16-bit meaning in CNA's float extension.
+        ctx.CheckNear(voice.GetSampleDuration(pcmBytes).getTotalMillisecondsProperty(), 50.0, 1e-6,
+                      "the XNA duration helper still interprets its byte count as 16-bit PCM");
+        voice.Play();
+        ctx.Check(voice.getStateProperty() == SoundState::Playing, "the replacement float stream starts playing");
+        voice.Pause();
+        ctx.Check(voice.getStateProperty() == SoundState::Paused, "pausing retains the live float stream");
+        const int pausedFloatBuffers = voice.getPendingBufferCountProperty();
+        refused = false;
+        try { voice.SubmitBuffer(pcm, 4, pcmBytes); }
+        catch (const System::InvalidOperationException&) { refused = true; }
+        ctx.Check(refused && voice.getStateProperty() == SoundState::Paused &&
+                  voice.getPendingBufferCountProperty() == pausedFloatBuffers,
+                  "an integer submission cannot change a paused float stream or its pending buffers");
+        voice.Stop();
+        ctx.Check(voice.getStateProperty() == SoundState::Stopped && voice.getPendingBufferCountProperty() == 0,
+                  "stopping the float stream clears its data before returning to integer PCM");
+        voice.SubmitBuffer(pcm, 4, pcmBytes);
+        voice.Play();
+        ctx.Check(voice.getStateProperty() == SoundState::Playing,
+                  "the same instance plays integer PCM again after the stopped format transition");
+        voice.Stop();
+        ctx.Print("Buffer units and stream state checked; silent fixtures do not measure output samples or audio quality.");
+    }
+}
+
+CNA_DEMOS_CONSOLE(BufferFormats, {
+    .id = "audio.dynamic_sound_effect_instance.buffer_formats",
+    .title = "Stereo buffers and stopped format transitions",
+    .description = "Submits stereo PCM byte ranges and float sample ranges, rejects partial integer frames, "
+                   "and demonstrates stopping before changing a live stream's sample format in either direction.",
+    .apis = {"DynamicSoundEffectInstance::DynamicSoundEffectInstance", "DynamicSoundEffectInstance::SubmitBuffer",
+             "Microsoft::Xna::Framework::Audio::DynamicSoundEffectInstance::SubmitFloatBufferEXT",
+             "DynamicSoundEffectInstance::PendingBufferCount", "DynamicSoundEffectInstance::GetSampleSizeInBytes",
+             "DynamicSoundEffectInstance::GetSampleDuration", "DynamicSoundEffectInstance::Play",
+             "DynamicSoundEffectInstance::Stop", "SoundEffectInstance::Pause", "SoundEffectInstance::Resume",
+             "SoundEffectInstance::State"},
+    .tags = {"audio", "streaming", "stereo", "pcm", "cnaext"},
+    .needs = CnaDemos::Need::Audio,
+    .restrictions = "Silent stereo fixtures establish accepted ranges, refusal preservation and playback states. "
+                    "No sample readback, audible quality, live-playing format-switch refusal, float alignment refusal "
+                    "or concurrent producer behavior is inferred.",
+})
