@@ -20,7 +20,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 68 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
+* In progress: 14 (C API, 69 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
 
@@ -64,23 +64,23 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-523 catalog demos (latest complete checkpoint521-C-effects plus focused texture batches): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+524 catalog demos (latest complete checkpoint521-C-effects plus focused texture batches): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 68 (standalone C programs). Every declared category has demos.
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 69 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog and complete521 runtime reports).
-Actual C ABI coverage is1101/3205: `input_gamepad.h`61/63,
+Actual C ABI coverage is1109/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
-`media_player.h`39/41, `texture.h`19/21 and `texture_volume.h`4/16.
+`media_player.h`39/41, `texture.h`19/21 and `texture_volume.h`12/16.
 Complete521 exercises all1083 baseline routes in both full smoke suites and includes focused505-521;
-the newer focused MediaPlayer and texture batches raise current source coverage to1101.
+the newer focused MediaPlayer and texture batches raise current source coverage to1109.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 32 (`c_api.graphics.pbr_effect_material_state` CNA-DEMOS-ISSUE-070,
 `c_api.graphics.draw_routes` CNA-DEMOS-ISSUE-066,
@@ -128,6 +128,19 @@ The build log is diagnostic-free. Clean sibling CNA is `a6bb279d47`; production 
 `730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`; `cna-demos` is
 `15adb468549aec96966f9a9f2a5bd2947ca0a3e9cdb4d3bb57e1023043965735`. No screenshot or visual
 inspection was performed. Evidence:`checkpoint-521-complete-*`.
+
+Focused **524-C-texture-volume** adds `c_api.graphics.texture_volume_data`, a19-control HiDef
+workflow covering all eight meaningful remaining `texture_volume.h` routes. Exact specific/common
+metadata, offset-window and raw-byte volume transfers, all six cube faces, atomic short reads and a
+generated in-memory DXT1 cube DDS pass directly and under both renderer selections with byte-
+identical output and empty stderr. The DDS source decodes to public Color storage; the initial demo
+expectation of retained DXT1 metadata was corrected and was not a CNA defect. All35 focused C
+Texture/Texture/CLI tests satisfy their contracts in23.95s with two declared SOFTWARE capability
+skips. Metadata is524/0 and coverage rises1101->1109/3205, with `texture_volume.h`4->12/16. Its
+four fixed type-name routes remain intentionally trivial/uncredited, completing the semantic audit.
+Nothing is sampled or drawn and no visual inspection is claimed. Clean sibling CNA is
+`b2ded99da9` and production library hashes are unchanged.
+Evidence:`checkpoint-524-c-texture-volume-focused-*`.
 
 Focused **523-C-texture2d-I/O** adds `c_api.graphics.texture2d_io`, a27-control standalone/device
 workflow covering all12 remaining meaningful `texture.h` resource routes. It proves empty versus
@@ -1267,10 +1280,9 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the12 uncredited `texture_volume.h` routes. Audit Texture3D and
-TextureCube information and typed transfer behavior plus cube DDS-memory creation as coherent
-resource workflows; keep their two fixed type-name pairs trivial unless they add a distinct
-contract. The completed290-route
+HIGHEST PRIORITY: run a complete524 checkpoint that absorbs the focused MediaPlayer and all three
+texture batches, compare every complete521 status/knownIssue pair, and refresh immutable baseline
+evidence. Then continue the next highest semantic C API gap. The completed290-route
 `effects.h` audit groups related lifetimes, metadata, typed values, collections, reflection and
 actual rendering behavior. The complete
 `graphics_device.h` audit is
@@ -1298,7 +1310,7 @@ preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067/068/069.
 Current complete baseline is521-C-effects; source commit, exact results, hashes and evidence are in
 section7. It includes focused503-C-draw-routes, focused504-C-occlusion-query/content-loss/device-
 capabilities/renderer-recreation and every focused505-521 effect batch through the ContentManager
-Effect load. Focused521-C-player-update and focused522-523 texture batches are the newer source/
+Effect load. Focused521-C-player-update and focused522-524 texture batches are the newer source/
 runtime evidence and are not yet part of a complete smoke checkpoint.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,

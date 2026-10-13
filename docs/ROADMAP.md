@@ -3371,3 +3371,17 @@ including two declared SOFTWARE capability skips. Metadata is523/0 and coverage 
 name already covered by CNA's generic C smoke, so the header's semantic audit is complete. No draw,
 screenshot or visual inspection is claimed. Clean sibling CNA is `b2ded99da9` and production
 library hashes are unchanged. Evidence:checkpoint-523-c-texture2d-io-focused-*.
+
+New `c_api.graphics.texture_volume_data` closes every meaningful `texture_volume.h` route in one
+19-control HiDef workflow. It verifies specific/common metadata for a2x2x2 Color volume, exact
+offset-window box transfers, atomic short reads and raw32-byte replacement; then round-trips
+distinct payloads through all six2x2 cube faces and checks another atomic short read. A generated
+176-byte DXT1 cube DDS decodes from memory into a4x4 one-level public Color cube on both selected
+renderers, while documented NOT_SUPPORTED remains a valid outcome for other backends. Direct and
+runner output is byte-identical with empty stderr. All35 focused C Texture/Texture/CLI tests satisfy
+their contracts in23.95s, including two declared SOFTWARE capability skips. Metadata is524/0 and
+coverage rises1101->1109/3205, with `texture_volume.h`4->12/16. Its remaining four routes are fixed
+Texture3D/TextureCube type-name pairs already covered by CNA's generic C smoke, so the header's
+semantic audit is complete. Nothing is sampled or drawn and no visual inspection is claimed.
+Clean sibling CNA is `b2ded99da9` and production library hashes are unchanged.
+Evidence:checkpoint-524-c-texture-volume-focused-*.

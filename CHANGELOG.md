@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.texture_volume_data`, a19-check C workflow covering Texture3D box and raw
+  byte transfers, all six TextureCube face payloads, atomic short reads and in-memory cube DDS
+  decoding.
 - Added `c_api.graphics.texture2d_io`, a27-check C workflow covering standalone and device-backed
   Texture2D construction, storage identity, exact full/rectangle transfers, atomic PNG/JPEG output,
   file round-tripping and encoded-memory resizing.
