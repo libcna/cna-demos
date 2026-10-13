@@ -2454,3 +2454,23 @@ establish `input_haptics.h`33/36. The three successful enumerated id/name routes
 physical force feedback remain hardware-manual. The unchanged external SDL_GPU source/header
 mismatch still blocks the standard/full checkpoint, so focused runtime uses the last built CNA
 libraries. Evidence:checkpoint-481-c-input-haptics-focused-*.
+
+## Focused482-C-sensor-values
+
+One deterministic C standalone separates pure sensor-reading values from acquisition and physical
+hardware. Both renderer selections pass identical34-label children with empty stderr. Five
+reading families preserve their versioned defaults and authored timestamp/data fields. Equal
+values hash equally; acceleration, angular velocity, rotation matrices, true heading, nested
+attitude and timestamps independently affect equality. Canonical strings expose only their
+documented subsets, including fused motion's acceleration/gravity but not attitude, and a short
+attitude buffer is refused without a write. Legacy accelerometer event values keep their distinct
+double-component constructor order and timestamp semantics; calibration's empty payload is
+represented by its exact type name.
+
+Direct C and metadata compilation is diagnostic-free; metadata is482/0 and all64 exact
+input/device/C-API/CLI CTests pass in44.98s with six declared skips. All50 value/event-description
+routes establish `sensors.h`50/144 and current-inventory C coverage472->522/3205. Concurrent
+sibling-CNA graphics retirement reduced the total declaration count by five; it did not remove any
+demonstrated route. No game, live acquisition or physical measurement is claimed. The unchanged
+SDL_GPU source/header timestamp still blocks the standard/full checkpoint, so focused runtime uses
+the last built CNA libraries. Evidence:checkpoint-482-c-sensor-values-focused-*.

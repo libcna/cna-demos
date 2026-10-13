@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: MS-PL
+#include "CnaDemos/Demo.hpp"
+
+CNA_DEMOS_STANDALONE({
+    .id = "c_api.devices.sensor_values",
+    .title = "Device sensors in C: reading values",
+    .description = "A C program constructs accelerometer, gyroscope, attitude, compass and fused-motion readings, "
+                   "shows which nested fields and timestamps participate in equality and hashing, and exercises "
+                   "their text, type-name and legacy accelerometer-event value contracts.",
+    .apis = {"cna_accelerometer_reading_init", "cna_accelerometer_reading_init_from_values",
+             "cna_accelerometer_reading_equals", "cna_accelerometer_reading_get_hash_code",
+             "cna_accelerometer_reading_get_string_size", "cna_accelerometer_reading_copy_string",
+             "cna_accelerometer_reading_get_type_name_size", "cna_accelerometer_reading_copy_type_name",
+             "cna_gyroscope_reading_init", "cna_gyroscope_reading_init_from_values",
+             "cna_gyroscope_reading_equals", "cna_gyroscope_reading_get_hash_code",
+             "cna_gyroscope_reading_get_string_size", "cna_gyroscope_reading_copy_string",
+             "cna_gyroscope_reading_get_type_name_size", "cna_gyroscope_reading_copy_type_name",
+             "cna_attitude_reading_init", "cna_attitude_reading_init_from_values",
+             "cna_attitude_reading_equals", "cna_attitude_reading_get_hash_code",
+             "cna_attitude_reading_get_string_size", "cna_attitude_reading_copy_string",
+             "cna_attitude_reading_get_type_name_size", "cna_attitude_reading_copy_type_name",
+             "cna_compass_reading_init", "cna_compass_reading_init_from_values",
+             "cna_compass_reading_equals", "cna_compass_reading_get_hash_code",
+             "cna_compass_reading_get_string_size", "cna_compass_reading_copy_string",
+             "cna_compass_reading_get_type_name_size", "cna_compass_reading_copy_type_name",
+             "cna_motion_reading_init", "cna_motion_reading_init_from_values",
+             "cna_motion_reading_equals", "cna_motion_reading_get_hash_code",
+             "cna_motion_reading_get_string_size", "cna_motion_reading_copy_string",
+             "cna_motion_reading_get_type_name_size", "cna_motion_reading_copy_type_name",
+             "cna_accelerometer_reading_event_info_init",
+             "cna_accelerometer_reading_event_info_init_from_values",
+             "cna_accelerometer_reading_event_info_equals",
+             "cna_accelerometer_reading_event_info_get_hash_code",
+             "cna_accelerometer_reading_event_info_get_string_size",
+             "cna_accelerometer_reading_event_info_copy_string",
+             "cna_accelerometer_reading_event_info_get_type_name_size",
+             "cna_accelerometer_reading_event_info_copy_type_name",
+             "cna_calibration_event_info_get_type_name_size",
+             "cna_calibration_event_info_copy_type_name"},
+    .tags = {"c", "binding", "devices", "sensors", "values", "accelerometer", "gyroscope", "compass", "motion"},
+    .needs = CnaDemos::Need::CApi,
+    .deterministic = true,
+    .restrictions = "Standalone C program; built only when CNA has its C API (CNA_BUILD_C_API=ON). Pure value "
+                    "operations need no game or physical sensor and do not claim live measurements.",
+})

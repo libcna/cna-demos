@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.devices.sensor_values`, a deterministic34-check C workflow covering all50 pure
+  reading/event-description routes in `sensors.h`, including nested/timestamp equality, hashing,
+  canonical text, short-buffer preservation and exact type names without requiring sensor hardware.
 - Added `c_api.input.haptics`, a24-check C workflow for direction/effect/capability values and the
   complete safe closed-device lifecycle;33of36 `input_haptics.h` routes now have semantic coverage
   while enumerated hardware names and physical feedback remain manual.
