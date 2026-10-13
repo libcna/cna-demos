@@ -103,6 +103,21 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **475-C-input-touch-state** adds one focused deterministic C program. Both renderers pass30
+identical child checks with empty stderr. Public fixture routes publish connected four-touch
+capabilities, then create empty, pressed, moved and released snapshots; id lookup distinguishes a
+match from the canonical invalid miss, and previous-location reconstruction covers invalid,
+Pressed and Moved predecessors. The process-wide fixture resets before destruction. All57input/CLI
+CTests pass in95.60s with six declared environment skips; metadata475/0. Both watched builds pass
+with3910unchanged CNA inputs/no diagnostics at cleanf44a8ff. Eight actual routes raise C ABI
+coverage231->239/3210, input.h10->14/15 and input_touch.h0->4/47. The final input.h route,
+`cna_gamepad_get_state_with_dead_zone`, is manual-deferred: without physical analog input all modes
+return the same disconnected snapshot, while the existing authored-value helper already shows the
+three algorithms. No physical touch, gesture, renderer-pixel or manual-input claim. Evidence:
+checkpoint-475-c-input-touch-lifecycle-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-C-input-keyboard-state**, source `a0ecf81`, extends
 c_api.input.keyboard_mouse from12to15checks under both renderers with empty stderr and no new
 ID/fixture. Removing three additions restores all12old labels in order. A known two-key snapshot
@@ -246,13 +261,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit `cna_gamepad_get_state_with_dead_zone` against the existing
-`c_api.input.gamepad` workflow and current complete474-C-input-keyboard-state baseline. Determine
-whether two live snapshots can meaningfully distinguish the explicit dead-zone mode without a
-physical controller; do not credit a redundant disconnected-state call. Then decide the four touch
-routes between deterministic empty-state/capability evidence and manual real-touch validation.
-Run focused/full validation for each applied batch and continue the next semantic C ABI gap. Keep
-the eight media.h reflection helpers intentionally uncredited and `media_player_update_ext`
+HIGHEST PRIORITY: run full475 validation for the focused C touch-state source against
+complete474-C-input-keyboard-state. Expect488enabled CTests and parent outcomes
+SOFTWARE410/27/35/3 and OPENGLES3440/29/3/3. Preserve all38/42old failures and every old
+C/custom list/trace; the one new demo must add exactly30passing child controls and parentJSON0.
+Capture the previous37 selected binaries plus the new standalone executable, the same four assets
+and30fixture paths. Archive/refuse any surprise, update the full audit/HANDOFF, then continue the
+next semantic C ABI header gap; leave the explicit live gamepad dead-zone route manual-deferred.
+Keep the eight media.h reflection helpers intentionally uncredited and `media_player_update_ext`
 deferred. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
@@ -266,6 +282,6 @@ deferred. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is474-C-input-keyboard-state; source commit is in section7.
-All earlier drafts and focused work are APPLIED AND STALE. The remaining `input.h` audit in
-section14 is live.
+All earlier drafts are APPLIED AND STALE. The focused touch-state batch in section7 is current; its
+full-validation task in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

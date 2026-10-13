@@ -6,12 +6,12 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**474 demos** in 18 categories. Kinds: console 161, game 272, standalone 41. Automation: automated 438, manual 3, smoke-only 33.
+**475 demos** in 18 categories. Kinds: console 161, game 272, standalone 42. Automation: automated 439, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
-| c_api | 19 | 18 | 1 | 0 | 16 / 0 / 3 / 0 / 0 | 16 / 0 / 3 / 0 / 0 |
+| c_api | 20 | 19 | 1 | 0 | 16 / 0 / 3 / 0 / 1 | 16 / 0 / 3 / 0 / 1 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `c_api.input.touch_state`.
+- OPENGLES3: absent from report: `c_api.input.touch_state`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -68,7 +70,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 231 of 3210** (7.2 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 239 of 3210** (7.4 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -81,9 +83,10 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `graphics_device.h` | 3 / 87 |
 | `graphics_state.h` | 2 / 14 |
 | `index_resources.h` | 3 / 10 |
-| `input.h` | 10 / 15 |
+| `input.h` | 14 / 15 |
 | `input_gamepad.h` | 4 / 63 |
 | `input_keyboard.h` | 1 / 17 |
+| `input_touch.h` | 4 / 47 |
 | `math.h` | 2 / 52 |
 | `matrix.h` | 7 / 57 |
 | `media.h` | 31 / 39 |
@@ -98,7 +101,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `vertex_resources.h` | 5 / 24 |
 | `vertex_values.h` | 1 / 13 |
 
-Headers without a demonstrated route: `cnb.h`, `color.h`, `content_readers.h`, `core_ext.h`, `curve.h`, `devices.h`, `display.h`, `gamer_services.h`, `geometry.h`, `graphics_ext.h`, `graphics_resource.h`, `input_cursor.h`, `input_devices.h`, `input_haptics.h`, `input_joystick.h`, `input_mouse.h`, `input_text.h`, `input_touch.h`, `media_library.h`, `models.h`, `net.h`, `net_gamers.h`, `net_sessions.h`, `packed_vectors.h`, `quaternion.h`, `runtime_graphics_manager.h`, `runtime_window.h`, `sensors.h`, `texture_volume.h`, `video.h`, `xact.h`.
+Headers without a demonstrated route: `cnb.h`, `color.h`, `content_readers.h`, `core_ext.h`, `curve.h`, `devices.h`, `display.h`, `gamer_services.h`, `geometry.h`, `graphics_ext.h`, `graphics_resource.h`, `input_cursor.h`, `input_devices.h`, `input_haptics.h`, `input_joystick.h`, `input_mouse.h`, `input_text.h`, `media_library.h`, `models.h`, `net.h`, `net_gamers.h`, `net_sessions.h`, `packed_vectors.h`, `quaternion.h`, `runtime_graphics_manager.h`, `runtime_window.h`, `sensors.h`, `texture_volume.h`, `video.h`, `xact.h`.
 
 ## CNA-specific and unmatched API names
 

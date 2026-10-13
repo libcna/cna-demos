@@ -532,6 +532,7 @@ C API demos as standalone C programs (one C game per process), built only with
 ✅ `c_api.graphics.sprite_batch` (texture from pixels, submit_many, back-buffer read-back),
 ✅ `c_api.content.content_manager` (texture, SpriteFont + atlas, draw_string, surviving manager Unload/destruction, retained-atlas release guard, root-change cache behavior and visible text),
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),
+✅ `c_api.input.touch_state` (deterministic press/move/release snapshots, id lookup and previous locations),
 ✅ `c_api.audio.sound_effect` (PCM16 effect, instance state, refused parent destruction and stale instance handles),
 ✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse, directions and bounded array ranges with refusal before writes),
 ✅ `c_api.graphics.basic_effect_3d` (stock declaration, vertex/index buffers, BasicEffect with the
@@ -2096,3 +2097,18 @@ tests; final CNA f44a8ff is clean and all selected runtime artifacts stayed fixe
 binary/runtime evidence rather than an atomic external-source snapshot. XNA coverage stays
 297/329types and1405/2326members; actual C ABI routes rise229->231/3210 and input.h8->10/15.
 Evidence:checkpoint-474-c-input-keyboard-state-*.
+
+## Focused475-C-input-touch-state
+
+`c_api.input.touch_state` adds one coherent deterministic standalone C program. Both renderers pass
+the same30child checks with empty stderr. CNA's public fixture routes publish connected four-touch
+capabilities and advance a finger through empty, Pressed, Moved and Released snapshots. ID lookup
+distinguishes the exact finger from a canonical invalid miss; previous-location queries write the
+invalid first predecessor and reconstruct the Pressed and Moved positions on later frames. The
+process-wide fixture resets before game destruction. All57input/CLI CTests pass in95.60s with six
+declared environment skips. Two watched builds pass with3910unchanged CNA inputs/no diagnostics at
+cleanf44a8ff; metadata is475/0. Eight actual routes raise C coverage231->239/3210, input.h10->14/15
+and input_touch.h0->4/47. The remaining explicit live gamepad dead-zone capture is manual-deferred
+because disconnected modes are indistinguishable and the authored-value helper already shows the
+algorithms. No physical touch, gesture, pressure or visual claim. Full475 is pending. Evidence:
+checkpoint-475-c-input-touch-lifecycle-focused-*.

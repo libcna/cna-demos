@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.input.touch_state`, a deterministic 30-check C press/move/release workflow covering
+  live capabilities, snapshots, id lookup and previous-location reconstruction without hardware.
 - Complete474-C-input-keyboard-state:487enabled CTests and both full smoke suites preserve all old
   evidence; the C keyboard demo adds three exact snapshot controls and two C ABI routes.
 - Extended the existing C keyboard/mouse workflow from12to15checks with complementary key-up
