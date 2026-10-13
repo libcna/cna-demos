@@ -3903,3 +3903,17 @@ compilation pass; the known-issue marker is present. Two supporting signed-gamer
 newly demonstrated, and `net_sessions.h` reaches88/104. Evidence:
 checkpoint-583-c-local-packets-focused-*-direct.*. No socket/wire delivery, voice audio,
 party-service interaction or project-built runner is claimed.
+
+## Focused584-C-network-session-construction
+
+`c_api.net.session_construction` adds the six remaining Local constructor/admission routes from
+`net_sessions.h` in28 renderer-free controls. One published signed-in gamer feeds the basic and
+property overloads; configured limits, private slots and copied property values survive, and a
+second signed-in gamer is admitted exactly once. The basic, properties and explicit-gamer async
+adapters each call their completion once before returning an owned session, with the last carrying
+both requested local gamers. All sessions are independently destroyed and process instance/action
+counts return to zero. Both renderer-labelled direct runs are byte-identical with empty stderr;
+strict C99 and metadata compilation pass. Two supporting signed-in collection routes are newly
+demonstrated, staged metadata reaches2148/3205 and `net_sessions.h` reaches94/104. Evidence:
+`checkpoint-584-c-session-construction-focused-*-direct.*`. No socket, service, concurrency,
+remote peer or project-built runner is claimed.

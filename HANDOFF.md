@@ -19,9 +19,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Mostly complete: 6 (effects and shaders, 41; the C `effects.h` route audit is complete).
 * In progress: 7 (models/glTF, 23), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
-  **12 (gamer services 19 incl. avatars and leaderboards; net 22 incl. complete C `net.h`/`net_gamers.h`, C discovery and Local session state/events/packets; remainders in ROADMAP)**.
+  **12 (gamer services 19 incl. avatars and leaderboards; net 23 incl. complete C `net.h`/`net_gamers.h`, C discovery and Local session state/events/packets; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 125 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 126 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -67,24 +67,24 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds55 staged standalone C IDs and should reach580 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds56 staged standalone C IDs and should reach581 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 26 (10 C++ XACT plus three C workflows), core 3 (2 logger),
 content 52 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 15 (compiled video and song, tagged library import and album art), gamer services 19
-(own process each; 5 avatar, 2 leaderboard), net 22 (own process each; 13 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and125 in the
+(own process each; 5 avatar, 2 leaderboard), net 23 (own process each; 14 standalone: two processes), devices 5, phone 1, design 4,
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and126 in the
 current source tree (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
 Latest generated project-built C ABI coverage is1116/3205. The current staged source metadata names
-2140/3205 routes, machine-counted directly from all public C headers and standalone metadata; that
+2148/3205 routes, machine-counted directly from all public C headers and standalone metadata; that
 staged figure is not yet a generated/project-built coverage checkpoint. Selected semantic totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
-`media_player.h`39/41, `net.h`51/51, `net_gamers.h`33/33, `net_sessions.h`88/104,
+`media_player.h`41/41, `net.h`51/51, `net_gamers.h`33/33, `net_sessions.h`94/104,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete524 exercises all1109 credited routes in both full smoke suites and includes the focused
@@ -1337,9 +1337,9 @@ route at54/62 demonstrated through the engine, live bank/category and caller-own
 other eight routes are fixed engine/wave-bank/sound-bank/cue reflection-name helpers and remain
 trivial/uncredited. `net.h` is complete at51/51 after its QoS/session-property and in-memory
 packet-buffer batches. `net_gamers.h` is complete at33/33 after the detached gamer/machine and
-versioned event-info batches. `net_sessions.h` is58/104 after its renderer-free discovered-session
-values/collection, Local session state/roster, live events and packet/voice/party batches. Continue
-with its final16 synchronous/async constructor and discovery/join routes. Avoid renderer-
+versioned event-info batches. `net_sessions.h` is94/104 after its renderer-free discovered-session
+values/collection, Local session state/roster, live events, packet/voice/party and constructor
+batches. Continue with its final10 synchronous/async discovery/join routes. Avoid renderer-
 dependent `graphics_ext.h` while
 the sibling renderer retirement is incoherent. The two
 remaining KeyboardState routes are fixed reflection
@@ -1873,6 +1873,23 @@ signed-gamer text routes are also newly demonstrated, and `net_sessions.h` reach
 delivery, voice audio or party-service interaction is claimed. Evidence:
 `checkpoint-583-c-local-packets-focused-*-direct.*`.
 
+The four final MediaQueue reflection buffer controls in `c_api.media.media_player` were re-audited
+before the next networking batch. Exact size, zero-capacity sizing, atomic short refusal and exact
+unterminated copying all remain present. A fresh strict C99 build and both Xvfb/dummy-audio runs
+pass all98 controls. This confirms the existing41/41 semantic disposition and corrects the stale
+39/41 summary above; no duplicate demo or coverage credit was added.
+
+`standalone/c_api.net.session_construction` adds the six remaining Local constructor/admission
+routes from `net_sessions.h` in28 controls. The basic and property overloads consume one published
+signed-in gamer, preserve limits/private slots/copied properties and admit a second local gamer
+exactly once. All three canonical async adapters invoke their callback once before returning an
+owned session, including the explicit two-gamer overload, and every instance/action count returns
+to zero. Both renderer-labelled direct runs are byte-identical with empty stderr; strict C99 and
+metadata compilation pass. The two supporting process-wide signed-in collection routes are also
+newly demonstrated, the staged metadata union reaches2148/3205 and `net_sessions.h` reaches94/104.
+No socket, service, concurrency, remote peer or project-built runner is claimed. Evidence:
+`checkpoint-584-c-session-construction-focused-*-direct.*`.
+
 The sibling CNA is currently at committed `22842c107d` (`refactor(Task RRC-034): retire METAL`) with
 263 externally modified paths, so it is still not a coherent source snapshot for reconfigure/build.
 It briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
@@ -1890,8 +1907,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose580 catalog IDs (complete524 plus SpriteFont and55
-additional new standalone IDs) and596 declared/593 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose581 catalog IDs (complete524 plus SpriteFont and56
+additional new standalone IDs) and597 declared/594 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 
