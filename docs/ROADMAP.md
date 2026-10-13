@@ -3205,3 +3205,15 @@ raise total C coverage963->982/3205, `effects.h`174->191/290 and `texture_volume
 sibling CNA is `a6bb279d47`; production library hashes remain unchanged. Apply is state-only; no
 draw, cube sampling, pixel result or visual inspection is claimed.
 Evidence:checkpoint-513-c-environment-map-effect-focused-*.
+
+New `c_api.graphics.skinned_effect_state` demonstrates every SkinnedEffect C route in one material,
+palette and ownership workflow. Thirty-five controls cover defaults and mutations, required
+lighting, the exact one/two/four weight contract, the copied 72-bone maximum, atomic short-buffer
+and invalid-count refusal, same-device texture validation and type-preserving clone survival after
+source destruction. Direct and both runner selections pass with byte-identical output and empty
+stderr; all26 focused C effect, C++ SkinnedEffect and CLI tests satisfy their contracts in15.47s
+(23 passed, three declared SOFTWARE capability skips). Metadata is514/0 and the incremental build
+is clean. All21 routes raise total C coverage982->1003/3205 and `effects.h`191->212/290. Clean
+sibling CNA is `a6bb279d47`; production library hashes remain unchanged. Apply is state-only; no
+skinned draw, vertex-weight, pixel result or visual inspection is claimed.
+Evidence:checkpoint-514-c-skinned-effect-focused-*.
