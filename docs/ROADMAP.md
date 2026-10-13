@@ -2161,3 +2161,21 @@ environment skips. Two watched builds pass with3910unchanged CNA inputs/no diagn
 CNAf44a8ff; metadata is476/0. Six actual routes raise C coverage254->260/3210 and
 input_touch.h19->25/47. No physical gesture detection, recognizer timing/threshold, callback-thread
 or renderer-pixel claim. Full476 is pending. Evidence:checkpoint-476-c-input-gesture-queue-focused-*.
+
+## Complete476-C-input-gesture-queue
+
+Complete checkpoint **476-C-input-gesture-queue**, source `972dc87`, adds the focused standalone
+unchanged. Full validation passes metadata476/0 and489enabled CTests in152.64s. SOFTWARE
+411/27/35/3 and OPENGLES3441/29/3/3 preserve all38/42old failures, every prior C/custom child list
+and protected trace, five network controls,18music checks and8album-art checks. The new ID
+contributes exactly its focused31 child controls and parentJSON0. All39selected runtime paths stay
+fixed through both smoke suites. Against complete475-C-input-touch-values, the catalog binary is
+the only changed old binary, the gesture executable is the only addition, and the other37 old
+binaries, four assets and30fixtures remain exact. Normalized stderr is identical. Outer Xvfb emits
+7exact amdgpu pairs (previous7), and both exits are zero. The post-build capture saw clean CNA
+f44a8ff; unrelated concurrent CNA work dirtied that sibling during smoke while every selected
+runtime artifact stayed fixed. This is immutable binary/runtime evidence for the clean captured
+source, not validation of the later dirty external tree or an atomic dependency snapshot. XNA
+coverage stays297/329types and1405/2326members; actual C ABI coverage is260/3210 and
+input_touch.h25/47. No physical detector, recognizer timing/threshold, callback-thread or visual
+claim. Evidence:checkpoint-476-c-input-gesture-queue-*.
