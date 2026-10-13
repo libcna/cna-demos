@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-474 catalog demos (complete checkpoint474-C-player-visualization): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+474 catalog demos (complete checkpoint474-C-player-single-song): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -103,37 +103,26 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-C-player-single-song**, source `a9aa6ce`, extends c_api.media.media_player
+Complete checkpoint **474-C-player-single-song**, source `a9aa6ce`, extends c_api.media.media_player
 from82to88checks under both renderers with empty stderr and no new ID/fixture. Removing six
 additions restores all82old labels in order. An independent caller-owned Song starts playback into
-one active queue entry; destroying
-the input leaves playback and the queue-owned copy live; Stop leaves the published copy readable;
+one active queue entry; destroying the input leaves playback and the queue-owned copy live; Stop
+leaves the published copy readable;
 the copy and queue view release independently. No queue-owned Song reaches Play, preserving
 ISSUE-058. Focused29media/CLI CTests pass in8.33s; metadata474/0. Both watched builds pass with
 3909unchanged CNA inputs/no diagnostics. One actual route raises C ABI coverage223->224/3210 and
-media_player.h36->37/41. No audible or event-timing claim. Evidence:
-checkpoint-474-c-player-single-song-focused-*.
+media_player.h36->37/41. No audible or event-timing claim.
 
-Last complete baseline:
-
-Complete checkpoint **474-C-player-visualization**, source `7f0ce57`, extends
-c_api.media.media_player from78to82checks under both renderers with empty stderr and no new
-ID/fixture. Removing four additions restores all78old labels in order. The C value initializes
-with version1 and two
-zeroed256-float arrays; visualization enables and reads back true; the live music produces nonzero
-frequency and sample data; disabling reads false and replaces deliberately poisoned prior arrays
-with zeros. Focused29media/CLI CTests
-pass in8.60s; metadata474/0. Both watched builds pass with3909unchanged CNA inputs/no diagnostics.
-Full tools/validate.sh passes metadata474/0 and487enabled CTests in158.33s. SOFTWARE409/27/35/3
+Full tools/validate.sh passes metadata474/0 and487enabled CTests in152.63s. SOFTWARE409/27/35/3
 and OPENGLES3439/29/3/3 preserve all38/42prior failures, every unrelated C/custom list/trace,
-five network controls,18music checks and8album-art checks. Only C media grows78->82; parentJSON
+five network controls,18music checks and8album-art checks. Only C media grows82->88; parentJSON
 remains0. All37selected binary paths, four assets and30fixture paths remain exact. Normalized
-stderr is identical to complete474-C-player-transport. Outer Xvfb has14exact amdgpu pairs
-(previous19); inner/outer exits are zero. Capture/final CNAeff3131017 are clean. Coverage stays
-297/329types and1405/2326XNA members; actual C ABI routes rise219->223/3210, media.h26->27/39 and
-media_player.h33->36/41. No audible output, FFT accuracy or exact-amplitude claim. Semantic
-coverage remains incomplete. Immutable evidence:checkpoint-474-c-player-visualization-*.
-Preserve refusals and ISSUE-038/057/058/059.
+stderr is identical to complete474-C-player-visualization. Outer Xvfb has16exact amdgpu pairs
+(previous14); inner/outer exits are zero. Capture/final CNAeff3131017 are clean. Coverage stays
+297/329types and1405/2326XNA members; actual C ABI routes rise223->224/3210 and
+media_player.h36->37/41. No audible or event-timing claim. Semantic coverage remains incomplete.
+Immutable evidence:checkpoint-474-c-player-single-song-*. Preserve refusals and
+ISSUE-038/057/058/059.
 
 ## 8. Exact commands that work
 
@@ -257,15 +246,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: run full474 validation for focused source `a9aa6ce` against
-complete474-C-player-visualization. Capture once after the full build during CTest: the
-same37selected binary paths/four assets/30fixture paths. Freeze source/assets/build through both
-smokes. Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
-OPENGLES3439/29/3/3. Preserve all38/42old failures, unrelated C/custom lists/traces, five network
-controls,18music and8album-art checks. Only c_api.media.media_player should grow82->88; parentJSON
-stays0 and normalized stderr should be identical. Archive/refuse any surprise; update full
-audit/HANDOFF and immediately continue the next semantic public-member gap. Never edit/revert CNA;
-preserve ISSUE-038/057/058/059.
+HIGHEST PRIORITY: audit the four remaining uncovered media_player.h routes against
+complete474-C-player-single-song: `cna_media_player_update_ext`,
+`cna_media_player_program_exit_ext` and the two MediaQueue type-name routes. Classify the type-name
+pair as trivial unless source/runtime behavior shows otherwise. Decide whether explicit maintenance
+outside an automatic game loop and early ProgramExit/restart form one coherent lifecycle batch or
+need a separate host-driven example; do not call an exit hook merely for route count. Implement the
+highest-value demonstrated behavior, run focused/full validation, update audit/HANDOFF and continue
+to media.h public-member gaps. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -277,7 +265,7 @@ preserve ISSUE-038/057/058/059.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is474-C-player-visualization; source commit is in section7.
-All earlier drafts are APPLIED AND STALE. The single-Song C Play batch is focused but has no
-complete checkpoint yet; section14 is the live task.
+Current complete baseline is474-C-player-single-song; source commit is in section7.
+All earlier drafts and focused work are APPLIED AND STALE. The remaining MediaPlayer lifecycle
+audit in section14 is the live task.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

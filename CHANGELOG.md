@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete474-C-player-single-song:487enabled CTests and both full smoke suites preserve all old
+  evidence; the C media demo adds six exact ownership checks and one C ABI route.
 - Extended the existing C media-player workflow from82to88checks with caller-owned single-Song
   Play, queue-copy ownership and independent release while preserving the ISSUE-058 boundary.
 - Complete474-C-player-visualization:487enabled CTests and both full smoke suites preserve all old

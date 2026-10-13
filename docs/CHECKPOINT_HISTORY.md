@@ -3024,3 +3024,14 @@ SOFTWARE409/27/35/3 and OPENGLES3439/29/3/3 retain all38/42old failures and prot
 has14known pairs, exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types
 and1405/2326members; C ABI routes rise219->223/3210. Evidence:
 checkpoint-474-c-player-visualization-*.
+
+## Complete474-C-player-single-song
+
+Complete checkpoint **474-C-player-single-song**, source `a9aa6ce`, extends the existing C media
+demo82->88checks with caller-owned Play, queue-copy ownership and independent release. Both
+renderers preserve all82old labels and pass six additions with empty demo stderr. Full validation
+passes metadata474/0 and487enabled CTests in152.63s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.37binaries, four assets
+and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has16known pairs,
+exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types and1405/2326members;
+C ABI routes rise223->224/3210. Evidence:checkpoint-474-c-player-single-song-*.
