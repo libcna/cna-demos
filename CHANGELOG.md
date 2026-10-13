@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete474-C-player-transport:487enabled CTests and both full smoke suites preserve all old
+  evidence; the C media demo adds three exact indexed-transport checks and two C ABI routes.
 - Extended the existing C media-player workflow from75to78checks with collection start-index,
   previous navigation and safe stopped-state restoration.
 - Complete474-C-player-settings:487enabled CTests and both full smoke suites preserve all old

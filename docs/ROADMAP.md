@@ -1940,3 +1940,17 @@ ISSUE-058. Focused29media/CLI CTests pass in8.58s. Two watched builds pass with3
 inputs/no diagnostics; metadata remains474/0. Two actual routes raise C coverage217->219/3210 and
 media_player.h31->33/41. No audible or immediate event-delivery claim. Full474 is pending.
 Evidence:checkpoint-474-c-player-transport-focused-*.
+
+## Complete474-C-player-transport
+
+Complete checkpoint **474-C-player-transport**, source `91dba1a`, extends the same C media demo
+75->78checks without another ID or fixture. Focused and full runs preserve all75old labels and add
+three exact controls for a nonzero collection start index, previous navigation and stopped-state
+restoration. No queue-owned Song reaches Play. Focused29media/CLI CTests pass.
+
+Full validation passes metadata474/0 and487enabled CTests in150.82s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected child/network evidence. C media
+alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain exact. Normalized
+stderr is identical. Outer Xvfb has19exact amdgpu pairs (previous8); exits are zero and CNA
+eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
+rise217->219/3210 and media_player.h31->33/41. Evidence:checkpoint-474-c-player-transport-*.
