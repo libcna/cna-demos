@@ -41,6 +41,125 @@ static int key_down(const CNA_KeyboardState* keyboard, CNA_Key key)
     return cna_keyboard_state_is_key_down(keyboard, key, &down) == CNA_RESULT_SUCCESS && down == CNA_TRUE;
 }
 
+static void demonstrate_keyboard_values(CnaDemo* demo, const CNA_KeyboardState* snapshot)
+{
+    static const CNA_Key reordered_keys[2] = {CNA_KEY_SPACE, CNA_KEY_LEFT};
+    static const CNA_Key a_key[1] = {CNA_KEY_A};
+    static const CNA_Key num_pad1_key[1] = {CNA_KEY_NUM_PAD1};
+    CNA_KeyboardState empty;
+    CNA_KeyboardState reordered;
+    CNA_KeyboardState a_state;
+    CNA_KeyboardState num_pad1_state;
+    CNA_KeyState left_state = CNA_KEY_STATE_UP;
+    CNA_KeyState up_state = CNA_KEY_STATE_DOWN;
+    CNA_Bool equal = CNA_FALSE;
+    CNA_Bool different = CNA_FALSE;
+    int32_t a_hash = 0;
+    int32_t num_pad1_hash = 1;
+
+    memset(&empty, 0x5a, sizeof(empty));
+    cna_demo_check(
+        demo,
+        cna_keyboard_state_init(&empty) == CNA_RESULT_SUCCESS &&
+            empty.struct_size == (uint32_t)sizeof(empty) && empty.struct_version == UINT32_C(1) &&
+            empty.pressed_key_words[0] == 0U && empty.pressed_key_words[1] == 0U &&
+            empty.pressed_key_words[2] == 0U && empty.pressed_key_words[3] == 0U,
+        "the default keyboard value has no pressed keys and initializes its versioned layout");
+
+    cna_demo_check(
+        demo,
+        cna_keyboard_state_get_key_state(snapshot, CNA_KEY_LEFT, &left_state) == CNA_RESULT_SUCCESS &&
+            left_state == CNA_KEY_STATE_DOWN &&
+            cna_keyboard_state_get_key_state(snapshot, CNA_KEY_UP, &up_state) == CNA_RESULT_SUCCESS &&
+            up_state == CNA_KEY_STATE_UP,
+        "the keyboard indexer reports Down for a held key and Up for a released key");
+
+    memset(&reordered, 0, sizeof(reordered));
+    cna_demo_check(
+        demo,
+        cna_keyboard_state_init_from_keys(reordered_keys, 2U, &reordered) == CNA_RESULT_SUCCESS &&
+            cna_keyboard_state_equals(snapshot, &reordered, &equal) == CNA_RESULT_SUCCESS && equal == CNA_TRUE &&
+            cna_keyboard_state_not_equals(snapshot, &empty, &different) == CNA_RESULT_SUCCESS &&
+            different == CNA_TRUE,
+        "keyboard equality ignores construction order while inequality detects a different pressed set");
+
+    memset(&a_state, 0, sizeof(a_state));
+    memset(&num_pad1_state, 0, sizeof(num_pad1_state));
+    cna_demo_check(
+        demo,
+        cna_keyboard_state_init_from_keys(a_key, 1U, &a_state) == CNA_RESULT_SUCCESS &&
+            cna_keyboard_state_init_from_keys(num_pad1_key, 1U, &num_pad1_state) == CNA_RESULT_SUCCESS &&
+            cna_keyboard_state_not_equals(&a_state, &num_pad1_state, &different) == CNA_RESULT_SUCCESS &&
+            different == CNA_TRUE &&
+            cna_keyboard_state_get_hash_code(&a_state, &a_hash) == CNA_RESULT_SUCCESS &&
+            cna_keyboard_state_get_hash_code(&num_pad1_state, &num_pad1_hash) == CNA_RESULT_SUCCESS &&
+            a_hash == num_pad1_hash,
+        "the canonical eight-word XOR hash permits the documented 32-slot A/NumPad1 collision");
+}
+
+static void demonstrate_keyboard_platform(CnaDemo* demo, CNA_Handle game)
+{
+    CNA_KeyboardState live;
+    CNA_KeyboardState player_one;
+    CNA_KeyboardState player_four;
+    CNA_Bool equal_one = CNA_FALSE;
+    CNA_Bool equal_four = CNA_FALSE;
+    CNA_KeyModifiers modifiers = UINT32_MAX;
+    CNA_Key mapped_key = CNA_KEY_NONE;
+    CNA_Key round_trip = CNA_KEY_NONE;
+    uint64_t bytes = 0U;
+    uint64_t copied = 0U;
+    char name[32];
+
+    (void)cna_keyboard_state_init(&live);
+    (void)cna_keyboard_state_init(&player_one);
+    (void)cna_keyboard_state_init(&player_four);
+    cna_demo_check(
+        demo,
+        cna_keyboard_get_state(game, &live) == CNA_RESULT_SUCCESS &&
+            cna_keyboard_get_state_for_player(game, CNA_PLAYER_INDEX_ONE, &player_one) == CNA_RESULT_SUCCESS &&
+            cna_keyboard_get_state_for_player(game, CNA_PLAYER_INDEX_FOUR, &player_four) == CNA_RESULT_SUCCESS &&
+            cna_keyboard_state_equals(&live, &player_one, &equal_one) == CNA_RESULT_SUCCESS &&
+            equal_one == CNA_TRUE &&
+            cna_keyboard_state_equals(&live, &player_four, &equal_four) == CNA_RESULT_SUCCESS &&
+            equal_four == CNA_TRUE,
+        "all player slots observe the same single live keyboard snapshot");
+
+    cna_demo_check(
+        demo,
+        cna_keyboard_get_mod_state_ext(game, &modifiers) == CNA_RESULT_SUCCESS &&
+            (modifiers & ~CNA_KEY_MODIFIER_ALL) == 0U,
+        "live keyboard modifiers contain only the public combinable modifier bits");
+    printf("keyboard modifiers: 0x%02x\n", (unsigned)modifiers);
+
+    memset(name, 0, sizeof(name));
+    cna_demo_check(
+        demo,
+        cna_keyboard_get_scancode_name_size_ext(game, CNA_KEY_A, &bytes) == CNA_RESULT_SUCCESS && bytes > 0U &&
+            bytes < (uint64_t)sizeof(name) &&
+            cna_keyboard_copy_scancode_name_ext(game, CNA_KEY_A, name, (uint64_t)sizeof(name), &copied) ==
+                CNA_RESULT_SUCCESS && copied == bytes &&
+            cna_keyboard_get_scancode_from_name_ext(game, (CNA_StringView){name, copied}, &round_trip) ==
+                CNA_RESULT_SUCCESS && round_trip == CNA_KEY_A,
+        "a physical A scancode name copies without a terminator and round-trips to the same scancode");
+
+    bytes = 0U;
+    copied = 0U;
+    round_trip = CNA_KEY_NONE;
+    memset(name, 0, sizeof(name));
+    cna_demo_check(
+        demo,
+        cna_keyboard_get_key_from_scancode_ext(game, CNA_KEY_A, &mapped_key) == CNA_RESULT_SUCCESS &&
+            mapped_key != CNA_KEY_NONE &&
+            cna_keyboard_get_key_name_size_ext(game, CNA_KEY_A, &bytes) == CNA_RESULT_SUCCESS && bytes > 0U &&
+            bytes < (uint64_t)sizeof(name) &&
+            cna_keyboard_copy_key_name_ext(game, CNA_KEY_A, name, (uint64_t)sizeof(name), &copied) ==
+                CNA_RESULT_SUCCESS && copied == bytes &&
+            cna_keyboard_get_key_from_name_ext(game, (CNA_StringView){name, copied}, &round_trip) ==
+                CNA_RESULT_SUCCESS && round_trip == mapped_key,
+        "the active layout maps physical A to the key recovered from its copied key name");
+}
+
 static void demonstrate_mouse_values(CnaDemo* demo)
 {
     static const char expected_text[] = "[MouseState X=12, Y=34, Buttons=Left Right, Wheel=120]";
@@ -330,6 +449,7 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
         result = cna_texture2d_set_data_rgba8(state->white, &white, 1U);
     }
     if (result == CNA_RESULT_SUCCESS) {
+        demonstrate_keyboard_platform(state->demo, game);
         demonstrate_mouse_platform(state->demo, game);
         demonstrate_mouse_cursors(state, game);
     }
@@ -474,6 +594,7 @@ int main(int argc, char** argv)
                        "pressed keys copy in ascending numeric order");
     }
 
+    demonstrate_keyboard_values(&demo, &snapshot);
     demonstrate_mouse_values(&demo);
 
     memset(&state, 0, sizeof(state));

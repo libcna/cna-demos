@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-476 catalog demos (focused checkpoint476-C-input-mouse-cursor): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+476 catalog demos (focused checkpoint476-C-input-keyboard): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -102,6 +102,19 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **476-C-input-keyboard** extends `c_api.input.keyboard_mouse` from32to40checks without a
+new ID or fixture. Both renderers pass identical child-label lists with empty stderr; filtering the
+eight additions restores all32complete-476 labels. Four value checks cover default initialization,
+the key-state indexer, equality/inequality and the documented A/NumPad1 hash collision. Four live
+checks cover player-slot equivalence, modifier bits, physical scancode names and active-layout key
+names. The exact58 input/C-API/CLI CTests pass in51.33s with six declared skips; metadata is476/0.
+After two successful builds were refused for concurrent unrelated CNA content drift, a stable
+watched build passes with3912 unchanged inputs/no diagnostics at dirty bb6820f. Actual C coverage
+rises293->307/3210 and `input_keyboard.h`1->15/17. The two remaining routes only size/copy a fixed
+type name and are intentionally uncredited. No physical input, alternate layout, lock toggle,
+scancode mode, other-desktop or visual claim. Full checkpoint pending.
+Evidence:checkpoint-476-c-input-keyboard-focused-*.
 
 Focused **476-C-input-mouse-cursor** extends `c_api.input.keyboard_mouse` from15to32checks without
 a new ID or fixture. Both renderers pass identical child-label lists with empty stderr; filtering17
@@ -283,14 +296,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit all17 public routes in C `input_keyboard.h` against the existing
-`c_api.input.keyboard_mouse` and C++ keyboard demos. Give every route a semantic disposition and
-extend the existing C demo only for coherent value equality/hash/key-state behavior, live
-player-state equivalence and meaningful key/scancode/name/modifier mapping. Do not duplicate
-generated argument checks or add independent controls for generic fixed type-name text. Leave live
-gamepad dead-zone and mouse-touch emulation manual-deferred, generic touch/media reflection
-uncredited and `media_player_update_ext` deferred. Never edit/revert CNA; preserve
-ISSUE-038/057/058/059/060/061.
+HIGHEST PRIORITY: run the complete476 checkpoint for focused keyboard source after its focused
+commit. Require the exact40 keyboard/mouse child labels, unchanged unrelated outcomes and fixed
+selected runtime artifacts. Then audit all63 public routes in C `input_gamepad.h` against the
+existing C and C++ gamepad demos. Give every route a semantic disposition before choosing a
+coherent extension; do not credit the live dead-zone overload on a disconnected neutral slot or
+duplicate generated argument checks. Leave mouse-touch emulation manual-deferred, generic
+touch/media reflection uncredited and `media_player_update_ext` deferred. Never edit/revert CNA;
+preserve ISSUE-038/057/058/059/060/061.
 
 ## 15. Assumptions the next session must know
 
@@ -302,6 +315,7 @@ ISSUE-038/057/058/059/060/061.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is476-C-input-mouse-cursor; source commit is in section7.
-All earlier drafts are APPLIED AND STALE. The `input_keyboard.h` C route audit in section14 is live.
+Current complete baseline is476-C-input-mouse-cursor; source commit is in section7. Focused
+476-C-input-keyboard is applied and awaits its full checkpoint. All earlier drafts are APPLIED AND
+STALE. The full keyboard checkpoint in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

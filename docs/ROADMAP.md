@@ -2251,3 +2251,20 @@ observations see clean CNAbb6820f. XNA coverage stays297/329types and1405/2326me
 coverage is293/3210, `input_mouse.h`20/20 and `input_cursor.h`6/6. ISSUE-061 remains a passing
 documentation mismatch. No physical mouse, cursor-shape visual or other-desktop claim. Evidence:
 checkpoint-476-c-input-mouse-cursor-*.
+
+## Focused476-C-input-keyboard
+
+The existing `c_api.input.keyboard_mouse` grows32->40checks without a new ID or fixture. Both
+renderers pass the same child-label list with empty stderr; filtering eight additions restores all
+32 complete476 labels in order. Four value controls cover default initialization, the key-state
+indexer, set equality/inequality and the documented A/NumPad1 32-slot XOR hash collision. Four live
+controls prove player slots One and Four match the ordinary snapshot, modifiers contain only public
+bits, physical A's copied scancode name round-trips, and the active layout's copied key name resolves
+to the key reported for that scancode. The exact58 input/C-API/CLI CTests pass in51.33s with six
+declared skips. Metadata is476/0. A stable watched build passes with3912 unchanged CNA inputs and no
+diagnostics after two successful builds were refused for concurrent unrelated content-source drift;
+the accepted CNA tree is dirty at bb6820f. Fourteen actual routes raise C coverage293->307/3210 and
+`input_keyboard.h`1->15/17. Its two fixed type-name size/copy routes remain intentionally uncredited
+as trivial reflection-buffer mechanics already covered by generated tests. No physical input,
+alternate layout, lock toggle, scancode mode, other-desktop or visual claim. Full476 is pending.
+Evidence:checkpoint-476-c-input-keyboard-focused-*.

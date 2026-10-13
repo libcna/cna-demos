@@ -68,7 +68,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 293 of 3210** (9.1 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 307 of 3210** (9.6 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -84,7 +84,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `input.h` | 14 / 15 |
 | `input_cursor.h` | 6 / 6 |
 | `input_gamepad.h` | 4 / 63 |
-| `input_keyboard.h` | 1 / 17 |
+| `input_keyboard.h` | 15 / 17 |
 | `input_mouse.h` | 20 / 20 |
 | `input_touch.h` | 32 / 47 |
 | `math.h` | 2 / 52 |
