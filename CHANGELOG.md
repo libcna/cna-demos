@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete492-C-device-presentation passes505 enabled CTests and both full smoke suites; the two
+  new display demos pass and every complete490 status and failed assertion remains exact.
 - Added `c_api.graphics.device_presentation`, a12-check live-device C workflow that changes,
   verifies and exactly restores presentation state, completing all22 `display.h` routes.
 - Added `c_api.graphics.adapter_capabilities`, a16-check C workflow covering all six adapter

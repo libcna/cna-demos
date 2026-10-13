@@ -2687,3 +2687,15 @@ and all59 enabled tests in the Xvfb-backed60-test C/API, graphics-adapter,
 graphics-device-manager and CLI selection pass with the declared fullscreen test disabled. Four
 routes raise C coverage665->669/3205 and `display.h`18->22/22. No rendering, pixels, native handle
 or visual inspection is claimed. Evidence:checkpoint-492-c-device-presentation-focused-*.
+
+## Complete492-C-device-presentation
+
+The two focused `display.h` batches now have a complete standard checkpoint. Full validation
+reports492/0 metadata and505/505 enabled CTests in258.17s, with three declared tests disabled.
+SOFTWARE is426/28/35/3 and OPENGLES3 is456/30/3/3; all failures are expected known issues.
+Comparison with complete490 finds only the two new passing display IDs, while every older status,
+known-issue marker and failed-assertion message/multiplicity remains exact at40/44. Coverage is
+297/329 types,1405/2326 XNA members and669/3205 C routes, with `display.h` complete at22/22. The
+sibling CNA source remains at `440af2a`; its unrelated uncommitted handoff documentation was not
+modified by cna-demos. No visual inspection is claimed. Evidence:
+checkpoint-492-c-device-presentation-*.
