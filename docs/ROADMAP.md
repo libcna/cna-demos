@@ -2048,3 +2048,21 @@ remains474/0. Four actual routes raise C coverage225->229/3210 and media.h27->31
 remaining media.h routes are generated fixed type-name size/copy pairs and are intentionally
 trivial. This is CNA's synthetic desktop source, not hardware discovery, hot-plug or Windows Media
 Connect evidence. Full474 is pending. Evidence:checkpoint-474-c-media-sources-focused-*.
+
+## Complete474-C-media-sources
+
+Complete checkpoint **474-C-media-sources**, source `48c9f0e`, extends the same C media demo
+89->92checks without another ID or fixture. Focused and full runs preserve all89old labels and add
+three exact controls for the one desktop Local Device, its type/name and upper-bound output
+preservation. Focused29media/CLI CTests pass.
+
+Full validation passes metadata474/0 and487enabled CTests in158.85s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected child/network evidence. C media
+alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain exact. Normalized
+stderr is identical. Outer Xvfb has15exact amdgpu pairs (previous15); exits are zero. Clean watched
+builds and focused reruns used CNAaa3f4e0. The full post-build capture observed concurrent
+CMake-only CNA edits at aa3f4e0; final checkout74194f4 is clean and all selected runtime artifacts
+stayed fixed. This is immutable runtime evidence, not an atomic external-source snapshot. XNA
+coverage stays297/329types and1405/2326members; actual C ABI routes rise225->229/3210 and
+media.h27->31/39. Evidence:checkpoint-474-c-media-sources-*; the earlier drifted full attempt is
+archived under checkpoint-474-c-media-sources-refused-cna-drift-*.

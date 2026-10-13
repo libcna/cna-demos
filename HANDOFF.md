@@ -103,40 +103,28 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-C-media-sources**, source `48c9f0e`, extends c_api.media.media_player from89to92checks
-under both renderers with empty stderr and no new ID/fixture. Removing three additions restores all89old
-labels in order. Desktop enumeration reports exactly one `LOCAL_DEVICE` named `Local Device`; the
-index equal to Count is refused before changing the preseeded type, byte count, copied count or
-destination. Focused29media/CLI CTests pass in11.23s; metadata474/0. Both watched builds pass with
-3909unchanged CNA inputs/no diagnostics. Four actual routes raise C ABI coverage225->229/3210 and
-media.h27->31/39. The eight remaining media.h type-name size/copy routes are intentionally trivial.
-This is CNA's synthetic desktop source, not hardware discovery, hot-plug or Windows Media Connect
-evidence. Evidence:checkpoint-474-c-media-sources-focused-*.
+Complete checkpoint **474-C-media-sources**, source `48c9f0e`, extends
+c_api.media.media_player from89to92checks under both renderers with empty stderr and no new
+ID/fixture. Removing three additions restores all89old labels in order. Desktop enumeration reports
+exactly one `LOCAL_DEVICE` named `Local Device`; the index equal to Count is refused before changing
+the preseeded type, byte count, copied count or destination. Focused29media/CLI CTests pass in
+11.23s. Four actual routes raise C ABI coverage225->229/3210 and media.h27->31/39. The eight
+remaining media.h type-name size/copy routes are intentionally trivial. This is CNA's synthetic
+desktop source, not hardware discovery, hot-plug or Windows Media Connect evidence.
 
-Last complete baseline:
-
-Complete checkpoint **474-C-player-program-exit**, source `aebc766`, extends
-c_api.media.media_player from88to89checks under both renderers with empty stderr and no new
-ID/fixture. Removing the one addition restores all88old labels in order. ProgramExit succeeds
-during live playback; the same independent caller-owned Song immediately restarts into one active
-queue entry, and the previously published owned copy remains readable. Source confirms resource
-release and Play reinitialization. No queue-owned Song reaches Play, preserving ISSUE-058.
-Focused29media/CLI CTests pass in8.66s; metadata474/0. Both watched builds pass with3909unchanged
-CNA inputs/no diagnostics. One actual route raises C ABI coverage224->225/3210 and
-media_player.h37->38/41. `update_ext` remains deferred to observable host-driven playback; the two
-generated MediaQueue type-name routes are intentionally trivial.
-
-Full tools/validate.sh passes metadata474/0 and487enabled CTests in157.51s. SOFTWARE409/27/35/3
+Full tools/validate.sh passes metadata474/0 and487enabled CTests in158.85s. SOFTWARE409/27/35/3
 and OPENGLES3439/29/3/3 preserve all38/42prior failures, every unrelated C/custom list/trace,
-five network controls,18music checks and8album-art checks. Only C media grows88->89; parentJSON
+five network controls,18music checks and8album-art checks. Only C media grows89->92; parentJSON
 remains0. All37selected binary paths, four assets and30fixture paths remain exact. Normalized
-stderr is identical to complete474-C-player-single-song. Outer Xvfb has15exact amdgpu pairs
-(previous16); inner/outer exits are zero. Capture/final CNAeff3131017 are clean. Coverage stays
-297/329types and1405/2326XNA members; actual C ABI routes rise224->225/3210 and
-media_player.h37->38/41. No audible, continuity, event-timing or ProgramExit state-transition claim.
-Semantic coverage remains incomplete. Immutable evidence:checkpoint-474-c-player-program-exit-*.
-Preserve refusals and
-ISSUE-038/057/058/059.
+stderr is identical to complete474-C-player-program-exit. Outer Xvfb has15exact amdgpu pairs
+(previous15); inner/outer exits are zero. Two watched builds and repeated focused runs used clean
+CNAaa3f4e0 with3909unchanged inputs. The full post-build capture observed concurrent CMake-only CNA
+edits at aa3f4e0; final checkout74194f4 is clean and every selected runtime artifact stayed fixed.
+This is immutable runtime evidence, not an atomic external-source snapshot. Coverage stays
+297/329types and1405/2326XNA members; actual C ABI routes rise225->229/3210 and media.h27->31/39.
+Semantic coverage remains incomplete. Immutable evidence:checkpoint-474-c-media-sources-*; the
+earlier drifted full attempt is archived as checkpoint-474-c-media-sources-refused-cna-drift-*.
+Preserve refusals and ISSUE-038/057/058/059.
 
 ## 8. Exact commands that work
 
@@ -260,15 +248,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: run full474 validation for the focused C MediaSource source against
-complete474-C-player-program-exit. Capture once after the full build during CTest: the same37
-selected binary paths/four assets/30fixture paths. Freeze source/assets/build through both smokes.
-Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
-OPENGLES3439/29/3/3. Preserve all38/42old failures, unrelated C/custom lists/traces, five network
-controls,18music and8album-art checks. Only c_api.media.media_player should grow89->92; parentJSON
-stays0 and normalized stderr should be identical. Archive/refuse any surprise; update full
-audit/HANDOFF and immediately continue the next semantic C ABI public-member gap. Do not credit the
-eight trivial media.h type-name helpers. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
+HIGHEST PRIORITY: audit the seven remaining `input.h` routes against
+complete474-C-media-sources. Extend `c_api.input.keyboard_mouse` if `is_key_up` and
+`copy_pressed_keys` add a coherent complement/count-copy/capacity behavior; do not add mere aliases.
+Audit `gamepad_get_state_with_dead_zone` against the existing C gamepad workflow separately. The
+four touch routes need an explicit decision between meaningful empty-state/capability evidence and
+manual real-touch validation. Run focused/full validation for each applied batch and continue the
+next semantic C ABI gap. Keep the eight media.h reflection helpers intentionally uncredited and
+`media_player_update_ext` deferred until an observable host-driven native-end transition exists.
+Never edit/revert CNA; preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -280,7 +268,6 @@ eight trivial media.h type-name helpers. Never edit/revert CNA; preserve ISSUE-0
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is474-C-player-program-exit; source commit is in section7.
-All earlier drafts are APPLIED AND STALE. The focused MediaSource batch in section7 is current; its
-full-validation task in section14 is live.
+Current complete baseline is474-C-media-sources; source commit is in section7.
+All earlier drafts and focused work are APPLIED AND STALE. The `input.h` audit in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.
