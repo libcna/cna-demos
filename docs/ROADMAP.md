@@ -4158,3 +4158,18 @@ metadata reaches2389/3205 and `gamer_services.h` reaches237/239. Its remaining G
 physical-headset routes are intentionally service/manual, so all239 routes now have semantic
 dispositions. Evidence:`checkpoint-600-c-avatar-renderer-focused-*-direct.*`. No service avatar,
 physical microphone or project-built execution is claimed.
+
+## Focused601-C-media-library-collection-lifetime
+
+`c_api.media.library_collections` adds33 `media_library.h` routes in34 controls against separate
+isolated empty Music/Pictures roots. Default and explicit Local Device construction report exact
+source identity and atomic UTF-8 copy semantics. All five music collections publish live handles,
+nonnegative counts and atomic upper-bound refusals. Library disposal is idempotent without erasing
+the catalog; after its public handle is released, every child still retains it. Album, artist,
+genre, playlist and song collection disposal then empties each collection, records disposal and
+remains idempotent, with stale ownership checked explicitly. SOFTWARE- and OPENGLES3-labelled
+Xvfb runs pass byte-identically with empty stderr; strict C99 and metadata compilation pass. Staged
+metadata reaches2422/3205 and `media_library.h` reaches33/148. Evidence:
+`checkpoint-601-c-media-library-collections-focused-*-direct.*`. Positive entity relationships,
+album art, pictures and save/import behavior remain for controlled fixtures; no host content,
+window, audio, image or project-built execution is claimed.
