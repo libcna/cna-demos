@@ -6,8 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
-- Added `c_api.graphics.device_clears`, a21-check pixel-readback workflow for normalized RGBA,
-  Color/depth and selected color/depth/stencil clears plus refusal and empty-mask preservation.
+- Added `c_api.graphics.device_clears`, a24-check pixel-readback workflow for normalized RGBA,
+  Color/depth and selected color/depth/stencil clears plus exact offset-window, refusal and
+  empty-mask preservation.
 - Complete500-C-buffer-bindings passes all513 enabled CTests and both full smoke suites; all three
   new graphics IDs pass and every complete497 status, known issue and failed assertion remains exact.
 - Added `c_api.graphics.buffer_bindings`, a20-check C workflow for single and ordered multi-stream

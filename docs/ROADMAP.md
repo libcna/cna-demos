@@ -2924,14 +2924,16 @@ Evidence:checkpoint-500-c-buffer-bindings-*.
 
 ## Focused501-C-device-clears
 
-New `c_api.graphics.device_clears` demonstrates all three graphics-device clear routes against an
-explicit HiDef Color/Depth24Stencil8 back buffer. Twenty-one controls clear normalized RGBA red,
-Color-plus-depth green and all three selected planes blue; complete RGBA8 readback samples both
-pairs of corners and the center exactly after each. Non-finite channels/depth and an unknown option
-bit are refused without changing the established color, while an empty mask succeeds as a no-op.
-SOFTWARE and OPENGLES3 produce identical output with empty stderr. Metadata is501/0, the exact demo,
-three related C++ clear/depth demos and three CLI tests pass7/7, and the incremental full build is
-clean. Three routes raise C coverage758->761/3205 and `graphics_device.h`42->45/84. Clean sibling
+New `c_api.graphics.device_clears` demonstrates all three graphics-device clear routes and windowed
+readback against an explicit HiDef Color/Depth24Stencil8 back buffer. Twenty-four controls clear
+normalized RGBA red, Color-plus-depth green and all three selected planes blue; complete RGBA8
+readback samples both pairs of corners and the center exactly after each. Non-finite channels/depth
+and an unknown option bit are refused without changing the established color, while an empty mask
+succeeds as a no-op. A2x2 source window writes exact pixels at destination offset2; short and
+malformed requests preserve all caller bytes. SOFTWARE and OPENGLES3 produce identical output with
+empty stderr. Metadata is501/0, the exact demo, four related C++ clear/readback/depth demos and three
+CLI tests pass8/8, and the incremental full build is clean. Four routes raise C coverage
+758->762/3205 and `graphics_device.h`42->46/84. Clean sibling
 CNA is `d7eff66ee`; production `libcna.so` remains byte-identical. Pixel values were read
 programmatically; no screenshot or visual inspection is claimed.
 Evidence:checkpoint-501-c-device-clears-focused-*.

@@ -61,6 +61,49 @@ static int backbuffer_has_color(
                           message);
 }
 
+static void check_windowed_readback(
+    CnaDemo* demo, CNA_Handle device, CNA_Color expected)
+{
+    CNA_Color pixels[8];
+    CNA_Color guard[8];
+    CNA_BackBufferReadback readback = {
+        sizeof(CNA_BackBufferReadback), UINT32_C(1), CNA_TRUE, {0U, 0U, 0U},
+        {1, 1, 2, 2}, UINT64_C(2), UINT64_C(4)};
+    CNA_BackBufferReadback malformed = readback;
+    uint32_t index;
+    int exact;
+
+    memset(guard, 0x5A, sizeof(guard));
+    memcpy(pixels, guard, sizeof(pixels));
+    exact = cna_graphics_device_get_backbuffer_data_window(
+                device, &readback, pixels, UINT64_C(8)) == CNA_RESULT_SUCCESS &&
+        color_equal(pixels[0], guard[0]) && color_equal(pixels[1], guard[1]) &&
+        color_equal(pixels[6], guard[6]) && color_equal(pixels[7], guard[7]);
+    for (index = 2U; index < 6U; ++index) {
+        exact = exact && color_equal(pixels[index], expected);
+    }
+    cna_demo_check(
+        demo, exact,
+        "a 2x2 source window writes four exact pixels at the requested destination offset");
+
+    memcpy(pixels, guard, sizeof(pixels));
+    cna_demo_check(
+        demo,
+        cna_graphics_device_get_backbuffer_data_window(
+            device, &readback, pixels, UINT64_C(5)) == CNA_RESULT_BUFFER_TOO_SMALL &&
+            memcmp(pixels, guard, sizeof(pixels)) == 0,
+        "a destination one pixel short is refused without a partial window write");
+
+    malformed.struct_version = UINT32_C(2);
+    memcpy(pixels, guard, sizeof(pixels));
+    cna_demo_check(
+        demo,
+        cna_graphics_device_get_backbuffer_data_window(
+            device, &malformed, pixels, UINT64_C(8)) == CNA_RESULT_INVALID_ARGUMENT &&
+            memcmp(pixels, guard, sizeof(pixels)) == 0,
+        "a malformed readback descriptor is refused before changing caller storage");
+}
+
 static CNA_Result update(
     CNA_Handle game, const CNA_GameTime* game_time, void* context,
     CNA_CallbackError* out_error)
@@ -176,6 +219,7 @@ static CNA_Result draw(
     backbuffer_has_color(
         state->demo, device, backbuffer, blue,
         "rejected options clears preserve the last complete clear result");
+    check_windowed_readback(state->demo, device, blue);
     return CNA_RESULT_SUCCESS;
 }
 
