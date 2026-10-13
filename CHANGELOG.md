@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.viewport`, a19-check C workflow for all11 Viewport value routes plus exact
+  live-device set/get/restoration, projection round trips and string-buffer atomicity.
+- Recorded CNA-DEMOS-ISSUE-064: `cna_viewport_init` correctly produces the all-zero XNA value,
+  while its public C comment incorrectly promises a maximum depth of one.
 - Complete497-C-sprite-states passes all510 enabled CTests and both full smoke suites; the five new
   graphics IDs pass and every complete492 status and failed assertion remains exact.
 - Extended `c_api.graphics.sprite_batch` from43to61 controls with pixel-proven explicit-state and

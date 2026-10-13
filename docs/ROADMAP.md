@@ -2825,3 +2825,20 @@ coverage is297/329 types,1405/2326 XNA members and718/3205 C routes. CNA advance
 from clean `e67c54936` to clean `d7eff66ee` through two documentation-only commits; both production
 library hashes stayed unchanged. No visual inspection is claimed.
 Evidence:checkpoint-497-c-sprite-states-*.
+
+## Focused498-C-viewport
+
+New `c_api.graphics.viewport` demonstrates all11 Viewport value routes plus the live device get/set
+pair in `graphics_device.h`. Nineteen controls distinguish the all-zero XNA value default from the
+parameterized constructors'0..1 depth range; derive aspect, bounds and desktop safe area; preserve
+depth while replacing bounds; round-trip identity and perspective projections; and prove exact,
+atomic canonical text copies. The callback saves a complete live viewport, applies and reads back
+a distinctive finite value, refuses infinity without mutation, then restores and verifies every
+original field. SOFTWARE and OPENGLES3 produce identical output with empty stderr. Metadata is
+498/0, all61 focused C/API, C++ Viewport, split-screen and CLI tests pass in35.43s, and a clean
+follow-up build passes. Thirteen routes establish `graphics_device.h`16/84; the newly named matrix
+identity route raises total C coverage718->732/3205. ISSUE-064 records the public C default-value
+comment that incorrectly promises MaxDepth1 although XNA, CNA, its pure-C test and both demo runs
+produce zero. Clean sibling CNA is `d7eff66ee`; the production library hash remains unchanged.
+Nothing is drawn and no visual inspection is claimed.
+Evidence:checkpoint-498-c-viewport-focused-*.

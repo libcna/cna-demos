@@ -20,7 +20,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 42 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
+* In progress: 14 (C API, 43 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
 
@@ -64,21 +64,22 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-497 catalog demos (latest complete checkpoint497-C-sprite-states): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+498 catalog demos (latest complete checkpoint497-C-sprite-states; one focused batch pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 42 (standalone C programs). Every declared category has demos.
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 43 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog with complete497 runtime reports). Actual C ABI
-coverage is718/3205: `input_gamepad.h`61/63,
+coverage is732/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10 and `graphics_state.h`14/14. Complete497 exercises all718 credited routes in
-both full smoke suites.
+`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`16/84. Complete497 exercises
+the first718 credited routes in both full smoke suites;14 new routes have focused dual-renderer
+evidence.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 30 (`c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
 `c_api.storage.save_game` CNA-DEMOS-ISSUE-056,
@@ -109,6 +110,28 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **498-C-viewport** adds `c_api.graphics.viewport` for all11 Viewport value routes and the
+live device get/set pair in `graphics_device.h`. Nineteen controls distinguish the all-zero XNA
+default value from the parameterized constructors'0..1 depth range; derive aspect, bounds and
+desktop safe area; preserve depth while changing bounds; round-trip identity and perspective
+projection; and prove canonical text's exact/atomic count-copy contract. The callback reads the
+live viewport, applies and exactly observes a distinctive finite value, refuses infinity without
+mutation, then restores and re-reads every original field. SOFTWARE and OPENGLES3 produce
+identical output with empty stderr. Metadata is498/0, all61 focused C/API, C++ Viewport,
+split-screen and CLI tests pass in35.43s, and a clean build follows. Thirteen routes raise
+`graphics_device.h`3->16/84; one newly named matrix identity route makes total C coverage
+718->732/3205. The default-value evidence also exposes passing documentation mismatch
+CNA-DEMOS-ISSUE-064. Clean sibling CNA is `d7eff66ee`; production `libcna.so` remains SHA-256
+`3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0`. Nothing is drawn and no
+visual inspection is claimed. Evidence:`checkpoint-498-c-viewport-focused-*`.
+
+The post-complete497 `media_player.h` audit confirms exactly three uncredited routes and the
+existing semantic decisions. `cna_media_player_update_ext` is still deferred until a host-driven
+example can observe a native track-end transition outside the automatic game loop; calling it
+while stopped would demonstrate no behavior. The queue type-name size/copy pair is fixed generic
+reflection text and remains intentionally trivial/uncredited. Every route in that header now has
+a recorded disposition; no demo or coverage count was added for this audit.
 
 Complete **497-C-sprite-states**, source `cfed648`, clears all seven focused graphics batches after
 complete492. Full `tools/validate.sh` passes metadata497/0 and all510 enabled CTests in308.90s;
@@ -617,7 +640,8 @@ Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untest
 
 ## 10. Known CNA issues
 
-See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-063 (synthetic-camera Closed comments contradict
+See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-064 (the C Viewport default comment promises
+MaxDepth1 while XNA/CNA produce zero), CNA-DEMOS-ISSUE-063 (synthetic-camera Closed comments contradict
 Opening behavior), CNA-DEMOS-ISSUE-062 (disposed Accelerometer/Gyroscope CurrentValue
 remains readable), CNA-DEMOS-ISSUE-057 (concurrent tool staging diagnostic race),
 CNA-DEMOS-ISSUE-059 (empty MediaQueue active-Song output contradicts its C documentation),
@@ -706,18 +730,19 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit the three currently uncredited `media_player.h` routes against the header,
-implementation, existing `c_api.media.media_player` workflow and current coverage matching. Decide
-each route semantically before coding. Take the next meaningful deterministic batch if one exists;
-do not add controls for generic reflection text or an internal update hook solely to raise the
-count. Then continue with the next highest-value incomplete C header/member behavior.
+HIGHEST PRIORITY: continue `graphics_device.h` with the coherent live scalar/device-identity state
+batch: lifecycle status, adapter/profile identity, scissor rectangle, blend factor, multisample
+mask and reference stencil. Use exact save/apply/read/restore behavior and preserve callback-scoped
+device ownership. Decide whether this belongs in the existing `c_api.graphics.device_states` demo
+or a new focused ID based on source clarity; do not mix in reset, owned-device construction,
+draw/binding, events or renderer-capability extensions merely to increase the route count.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
 Do not credit the separate live gamepad dead-zone overload on a disconnected neutral slot or
 duplicate generated argument checks. Leave mouse-touch emulation manual-deferred, generic
 touch/media reflection uncredited and `media_player_update_ext` deferred. Never edit/revert CNA;
-preserve ISSUE-038/057/058/059/060/061/062/063.
+preserve ISSUE-038/057/058/059/060/061/062/063/064.
 
 ## 15. Assumptions the next session must know
 
@@ -735,7 +760,8 @@ haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-t
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
 checkpoint. Adapter-capabilities and device-presentation are included in complete492. The later
 render-target-bindings, device-capabilities, sprite-scaled, resource-lifecycle, index-buffer,
-device-states and sprite-states batches are all included in complete497. That run began at clean
+device-states and sprite-states batches are all included in complete497. Focused viewport498 is
+newer and pending the next complete checkpoint. Complete497 began at clean
 docs-only sibling CNA `e67c54936` and ended at clean docs-only `d7eff66ee`; both used the same
 production library hash. Complete497 is the immutable full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain

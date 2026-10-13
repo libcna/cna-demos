@@ -15,6 +15,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-064 -- C Viewport default comment promises the wrong maximum depth
+
+- **Area/API:** `cna_viewport_init` and its public comment in
+  `modules/c-api/include/CNA/C/graphics_device.h`.
+- **Observed contract conflict:** the comment says the default initializer writes zero position
+  and size, `min_depth` zero and `max_depth` one. The generated route constructs the canonical
+  `Viewport()` value, whose six fields are all zero. CNA's own `GraphicsDeviceSmoke.c` explicitly
+  requires `max_depth == 0` and explains that XNA has no parameterless Viewport constructor, so
+  `default(Viewport)` is the all-zero value; only the bounds constructors install depth0..1.
+- **Runtime evidence:** `c_api.graphics.viewport` seeds every field with seven, calls the route and
+  observes six zero fields under both SOFTWARE and OPENGLES3. Its separate parameterized controls
+  observe depth0..1, so the two contracts cannot be confused. All19 demo controls pass identically
+  with empty stderr, and the focused61-test regression is green.
+- **Expected:** change the public C comment to promise `max_depth` zero for the default value and
+  reserve the0..1 statement for the two parameterized constructors. The current implementation
+  and tests match XNA value semantics; changing runtime behavior to match the stale sentence would
+  reintroduce the old contradiction described by CNA's own test.
+- **Scope/status:** passing documentation mismatch; no runtime knownIssue marker is needed. No CNA
+  source was modified or upstream message sent. Observed at clean CNA `d7eff66ee`; focused evidence
+  is archived as `checkpoint-498-c-viewport-focused-*`. Open.
+
 ### CNA-DEMOS-ISSUE-063 -- C synthetic-camera comments promise an unreachable Closed state
 
 - **Area/API:** `cna_camera_create_with_test_backend_ext`, `cna_camera_set_test_state_ext`,
