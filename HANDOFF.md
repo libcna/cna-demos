@@ -103,9 +103,10 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-C-player-visualization** extends c_api.media.media_player from78to82checks under both
-renderers with empty stderr and no new ID/fixture. Removing four additions restores all78old labels
-in order. The C value initializes with version1 and two zeroed256-float arrays; visualization
+Focused **474-C-player-visualization**, source `7f0ce57`, extends c_api.media.media_player
+from78to82checks under both renderers with empty stderr and no new ID/fixture. Removing four
+additions restores all78old labels in order. The C value initializes with version1 and two
+zeroed256-float arrays; visualization
 enables and reads back true; the live music produces nonzero frequency and sample data; disabling
 reads false and replaces deliberately poisoned prior arrays with zeros. Focused29media/CLI CTests
 pass in8.60s; metadata474/0. Both watched builds pass with3909unchanged CNA inputs/no diagnostics.
@@ -255,7 +256,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: run full474 validation for the focused C visualization source against
+HIGHEST PRIORITY: run full474 validation for focused source `7f0ce57` against
 complete474-C-player-transport. Capture once after the full build during CTest: the same37selected
 binary paths/four assets/30fixture paths. Freeze source/assets/build through both smokes.
 Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
