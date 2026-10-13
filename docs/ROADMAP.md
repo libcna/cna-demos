@@ -2643,5 +2643,17 @@ is diagnostic-free, metadata validates490/0 and the exact focused CTest passes. 
 graphics-adapter, graphics-device-manager and CLI regression selection passes all57 enabled tests;
 the declared manual fullscreen test is disabled. Seven routes raise current C coverage652->659/3205
 and `display.h`5->12/22. Host values are observations; no rendering, alternative monitor topology
-or visual inspection is claimed. The standard/full checkpoint remains pending until the current
-sibling-CNA state is tested. Evidence:checkpoint-490-c-adapter-snapshot-focused-*.
+or visual inspection is claimed. Evidence:checkpoint-490-c-adapter-snapshot-focused-*.
+
+## Complete490-C-adapter-snapshot
+
+The sixteen focused C batches after complete476 now have a complete standard checkpoint. Current
+CNA `440af2a` removed two capability enum values which cna-demos still named in unused framework
+requirements and in the capability listing; aligning those lists with CNA's17 public capabilities
+restored two clean standard builds. Full validation reports490/0 metadata and503/503 enabled CTests
+in224.48s, with three declared tests disabled. SOFTWARE is424/28/35/3 and OPENGLES3 is454/30/3/3;
+all failures are expected known issues. Against complete476, all prior statuses and known-issue
+metadata remain exact. Fourteen new C IDs comprise13passes and the documented sensor-lifecycle
+ISSUE-062 failure; only its two disposed-value assertions extend the failure multisets from38to40
+and42to44. Coverage is297/329 types,1405/2326 XNA members and659/3205 C routes. No visual
+inspection is claimed. Evidence:checkpoint-490-c-adapter-snapshot-*.

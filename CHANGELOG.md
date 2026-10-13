@@ -6,6 +6,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete490-C-adapter-snapshot clears the sixteen-batch checkpoint debt:503 enabled CTests and
+  both full smoke suites preserve every prior outcome, with only the two documented ISSUE-062
+  assertions added by the new sensor-lifecycle demo.
+- Aligned cna-demos capability metadata and the capability-listing demo with the17 capability
+  values currently exposed by CNA, removing two stale unused placeholders that blocked a full
+  rebuild.
 - Added `c_api.graphics.adapter_snapshot`, a15-check C workflow covering all seven read-only
   adapter enumeration, exact UTF-8 metadata and filtered display-mode routes before the first
   frame, including atomic short-buffer and upper-index refusal.
