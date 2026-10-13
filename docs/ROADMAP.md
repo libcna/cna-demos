@@ -4005,3 +4005,18 @@ the same passing output. Strict C99 and metadata compilation pass. Staged metada
 existing C++ CNA-DEMOS-ISSUE-017 reproduction. Evidence:
 `checkpoint-590-c-signed-in-achievements-focused-*-direct.*`. No online service, game, renderer,
 notification appearance or project-built runner is claimed.
+
+## Focused591-C-headless-guide-dialogs
+
+`c_api.gamer.guide_dialogs` adds all19 non-rendering keyboard-input and message-box Guide routes in
+23 renderer-free controls. Password input preserves exact title/description text, masks the
+default display text, atomically refuses a short copy and remains genuinely pending until a
+simulated cancellation invokes completion exactly once. Its empty canceled answer is repeatable
+until reset. A three-button box starts on the requested focus, survives an invalid click, then
+returns the exact simulated choice repeatedly. Active reset discards either dialog without a
+callback; completed reset removes the C adapter's cached End result. Both renderer-labelled direct
+runs pass byte-identically with empty stderr; strict C99 and metadata compilation pass. Staged
+metadata reaches2273/3205 and `gamer_services.h` reaches121/239. Evidence:
+`checkpoint-591-c-guide-dialogs-focused-*-direct.*`. The explicit headless simulation API is
+validated; no dialog rendering, real keyboard/controller/mouse input, game, visible appearance or
+project-built runner is claimed.
