@@ -103,6 +103,18 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **474-C-input-keyboard-state** extends c_api.input.keyboard_mouse from12to15checks under
+both renderers with empty stderr and no new ID/fixture. Removing three additions restores all12old
+labels in order. A known two-key snapshot proves `is_key_up` complements `is_key_down`; a short
+destination returns the exact required count without changing either sentinel, and the exact
+destination receives Space then Left in ascending numeric order. All56input/CLI CTests pass, with
+six declared environment skips. Metadata remains474/0. Both watched builds pass with3909unchanged
+CNA inputs/no diagnostics at clean74194f4. Two actual routes raise C ABI coverage229->231/3210 and
+input.h8->10/15. This is deterministic POD snapshot evidence, not live key-transition, keyboard
+layout or manual input validation. Evidence:checkpoint-474-c-input-keyboard-state-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-C-media-sources**, source `48c9f0e`, extends
 c_api.media.media_player from89to92checks under both renderers with empty stderr and no new
 ID/fixture. Removing three additions restores all89old labels in order. Desktop enumeration reports
@@ -248,15 +260,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit the seven remaining `input.h` routes against
-complete474-C-media-sources. Extend `c_api.input.keyboard_mouse` if `is_key_up` and
-`copy_pressed_keys` add a coherent complement/count-copy/capacity behavior; do not add mere aliases.
-Audit `gamepad_get_state_with_dead_zone` against the existing C gamepad workflow separately. The
-four touch routes need an explicit decision between meaningful empty-state/capability evidence and
-manual real-touch validation. Run focused/full validation for each applied batch and continue the
-next semantic C ABI gap. Keep the eight media.h reflection helpers intentionally uncredited and
-`media_player_update_ext` deferred until an observable host-driven native-end transition exists.
-Never edit/revert CNA; preserve ISSUE-038/057/058/059.
+HIGHEST PRIORITY: run full474 validation for the focused C keyboard-state source against
+complete474-C-media-sources. Expect487enabled CTests and unchanged parent outcomes
+SOFTWARE409/27/35/3 and OPENGLES3439/29/3/3. Preserve all38/42old failures and every unrelated
+C/custom list/trace; only c_api.input.keyboard_mouse should grow12->15 and parentJSON stays0.
+Archive/refuse any surprise, update the full audit/HANDOFF, then audit
+`cna_gamepad_get_state_with_dead_zone` against the existing C gamepad workflow. The four touch
+routes still need an explicit decision between meaningful empty-state/capability evidence and
+manual real-touch validation. Keep the eight media.h reflection helpers intentionally uncredited
+and `media_player_update_ext` deferred. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -269,5 +281,6 @@ Never edit/revert CNA; preserve ISSUE-038/057/058/059.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is474-C-media-sources; source commit is in section7.
-All earlier drafts and focused work are APPLIED AND STALE. The `input.h` audit in section14 is live.
+All earlier drafts are APPLIED AND STALE. The focused keyboard-state batch in section7 is current;
+its full-validation task in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

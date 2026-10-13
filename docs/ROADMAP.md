@@ -2066,3 +2066,15 @@ stayed fixed. This is immutable runtime evidence, not an atomic external-source 
 coverage stays297/329types and1405/2326members; actual C ABI routes rise225->229/3210 and
 media.h27->31/39. Evidence:checkpoint-474-c-media-sources-*; the earlier drifted full attempt is
 archived under checkpoint-474-c-media-sources-refused-cna-drift-*.
+
+## Focused474-C-input-keyboard-state
+
+The existing `c_api.input.keyboard_mouse` now grows12->15child checks without a new ID or fixture.
+Both renderers pass identical lists with empty stderr; removing three additions restores all12prior
+labels in order. A known two-key POD snapshot proves key-up/down complements, reports the exact
+required count without partial writes to a short buffer, then copies Space and Left in ascending
+numeric order to an exact buffer. All56input/CLI CTests pass, with six declared environment skips.
+Two watched builds pass with3909unchanged CNA inputs/no diagnostics at clean74194f4; metadata
+remains474/0. Two actual routes raise C coverage229->231/3210 and input.h8->10/15. This does not
+claim live key transitions, keyboard-layout mapping or manual input validation. Full474 is pending.
+Evidence:checkpoint-474-c-input-keyboard-state-focused-*.

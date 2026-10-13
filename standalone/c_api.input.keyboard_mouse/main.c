@@ -157,6 +157,9 @@ int main(int argc, char** argv)
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
     CNA_Handle manager = CNA_INVALID_HANDLE;
+    CNA_Key copied_keys[2] = {UINT32_MAX, UINT32_MAX};
+    CNA_Bool is_up = CNA_FALSE;
+    uint32_t copied_count = 0U;
     uint32_t pressed = 0U;
 
     cna_demo_init(&demo, "c_api.input.keyboard_mouse", argc, argv, 30);
@@ -173,6 +176,22 @@ int main(int argc, char** argv)
         cna_demo_check(&demo, key_down(&snapshot, CNA_KEY_LEFT) && key_down(&snapshot, CNA_KEY_SPACE) &&
                                   !key_down(&snapshot, CNA_KEY_UP),
                        "is_key_down: Left and Space down, Up not");
+        cna_demo_check(&demo,
+                       cna_keyboard_state_is_key_up(&snapshot, CNA_KEY_LEFT, &is_up) == CNA_RESULT_SUCCESS &&
+                           is_up == CNA_FALSE &&
+                           cna_keyboard_state_is_key_up(&snapshot, CNA_KEY_UP, &is_up) == CNA_RESULT_SUCCESS &&
+                           is_up == CNA_TRUE,
+                       "is_key_up complements the down state for held and released keys");
+        cna_demo_check(&demo,
+                       cna_keyboard_state_copy_pressed_keys(&snapshot, copied_keys, 1U, &copied_count) ==
+                               CNA_RESULT_BUFFER_TOO_SMALL &&
+                           copied_count == 2U && copied_keys[0] == UINT32_MAX && copied_keys[1] == UINT32_MAX,
+                       "a short pressed-key buffer reports the count without a partial copy");
+        cna_demo_check(&demo,
+                       cna_keyboard_state_copy_pressed_keys(&snapshot, copied_keys, 2U, &copied_count) ==
+                               CNA_RESULT_SUCCESS &&
+                           copied_count == 2U && copied_keys[0] == CNA_KEY_SPACE && copied_keys[1] == CNA_KEY_LEFT,
+                       "pressed keys copy in ascending numeric order");
     }
 
     memset(&state, 0, sizeof(state));
