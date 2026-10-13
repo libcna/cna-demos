@@ -4188,3 +4188,16 @@ OPENGLES3-labelled Xvfb runs pass byte-identically with empty stderr; strict C99
 compilation pass. Staged metadata reaches2464/3205 and `media_library.h` reaches75/148. Evidence:
 `checkpoint-602-c-media-library-values-focused-*-direct.*`. Album image bytes and the picture/save
 subsystem remain; no playback, audible quality, host media or project-built execution is claimed.
+
+## Focused603-C-media-library-album-art
+
+`c_api.media.library_album_art` adds the four album image-transfer routes in15 controls. A private
+Linux/XDG fixture holds two tagged albums and gives exactly one an original1666-byte PNG cover.
+The covered album returns the exact encoded bytes, both copy routes preserve caller storage on a
+short buffer, and the bare album refuses both size queries atomically with `INVALID_STATE`. The
+thumbnail is a distinct programmatically parsed128x64 PNG with the source's2:1 aspect ratio.
+SOFTWARE- and OPENGLES3-labelled Xvfb runs pass byte-identically with empty stderr; strict C99 and
+metadata compilation pass. Staged metadata reaches2468/3205 and `media_library.h` reaches79/148.
+Evidence:`checkpoint-603-c-media-library-album-art-focused-*-direct.*`. The picture hierarchy,
+tokens, collections and both save/import routes remain; no rendering, screenshot, visual
+inspection or project-built execution is claimed.
