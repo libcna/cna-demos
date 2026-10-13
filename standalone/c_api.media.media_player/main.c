@@ -122,6 +122,20 @@ static CNA_Result create_song_with_duration(CNA_Handle game, const char* name, c
                                          out_song);
 }
 
+static CNA_Result create_short_pump_song(CNA_Handle game, CNA_SongHandle* out_song)
+{
+    char path[1024];
+    uint64_t length = 0U;
+    CNA_Result result = cna_title_location_copy_path(game, path, sizeof(path) - 64U, &length);
+    if (result != CNA_RESULT_SUCCESS) {
+        return result;
+    }
+    length += (uint64_t)snprintf(path + length, sizeof(path) - (size_t)length,
+                                "/assets/sounds/tone_660.wav");
+    return cna_song_create_with_duration(game, view(path, length), view("Pump", sizeof("Pump") - 1U), 250,
+                                         out_song);
+}
+
 static CNA_Result build_song_path(CNA_Handle game, const char* file, char* path, size_t capacity,
                                   uint64_t* out_length)
 {
@@ -385,6 +399,7 @@ int main(int argc, char** argv)
     CNA_SongHandle identity_song = CNA_INVALID_HANDLE;
     CNA_SongHandle same_path_song = CNA_INVALID_HANDLE;
     CNA_SongHandle other_path_song = CNA_INVALID_HANDLE;
+    CNA_SongHandle pump_song = CNA_INVALID_HANDLE;
     CNA_SongHandle empty_song = CNA_INVALID_HANDLE;
     CNA_Bool active_available = CNA_FALSE;
     CNA_Bool collection_disposed = CNA_TRUE;
@@ -854,6 +869,36 @@ int main(int argc, char** argv)
         identity_song = CNA_INVALID_HANDLE;
         same_path_song = CNA_INVALID_HANDLE;
         other_path_song = CNA_INVALID_HANDLE;
+    }
+
+    /* The normal game loop calls MediaPlayer::Update for applications. Once that loop has ended,
+       the explicit C extension is the only maintenance pump: native playback can finish while the
+       public state remains Playing until this call consumes the pending end notification. */
+    if (cna_demo_check_result(&demo, create_short_pump_song(game, &pump_song),
+                              "create the short explicit-pump Song")) {
+        CNA_Result release_result;
+        int64_t elapsed_ticks = 0;
+        uint32_t attempts = 0U;
+        const CNA_Result play_result = cna_media_player_play_song(game, pump_song);
+        release_result = cna_song_destroy(pump_song);
+        pump_song = CNA_INVALID_HANDLE;
+        while (play_result == CNA_RESULT_SUCCESS && release_result == CNA_RESULT_SUCCESS &&
+               elapsed_ticks < TICKS_PER_SECOND && attempts < UINT32_C(25000000)) {
+            if (cna_media_player_get_play_position_ticks(game, &elapsed_ticks) != CNA_RESULT_SUCCESS) {
+                elapsed_ticks = -1;
+                break;
+            }
+            ++attempts;
+        }
+        cna_demo_check(&demo,
+                       play_result == CNA_RESULT_SUCCESS && release_result == CNA_RESULT_SUCCESS &&
+                           elapsed_ticks >= TICKS_PER_SECOND && media_state(game) == CNA_MEDIA_STATE_PLAYING &&
+                           cna_media_player_update_ext(game) == CNA_RESULT_SUCCESS &&
+                           media_state(game) == CNA_MEDIA_STATE_STOPPED,
+                       "an explicit update consumes a finished track outside the game loop");
+        if (media_state(game) != CNA_MEDIA_STATE_STOPPED) {
+            (void)cna_media_player_stop(game);
+        }
     }
     if (state.sprite_batch != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_sprite_batch_destroy(state.sprite_batch), "cna_sprite_batch_destroy");

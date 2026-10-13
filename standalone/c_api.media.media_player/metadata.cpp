@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Background music in C",
     .description = "A C program enumerates the desktop media source, plays retained songs as a queue, samples "
                    "visualization data, exercises transport and events, then contrasts collection lifecycle with "
-                   "caller-owned queue copies and bounds.",
+                   "caller-owned queue copies and bounds, including an explicit post-loop maintenance pump.",
     .apis = {"cna_song_create", "cna_song_create_from_uri", "cna_song_create_with_duration",
              "cna_song_get_handle_text_size_ext", "cna_song_copy_handle_text_ext", "cna_song_equals",
              "cna_song_get_hash_code", "cna_song_get_is_protected", "cna_song_get_is_rated",
@@ -17,7 +17,7 @@ CNA_DEMOS_STANDALONE({
              "cna_media_source_get_available_count", "cna_media_source_get_type_at",
              "cna_media_source_get_name_size_at", "cna_media_source_copy_name_at",
              "cna_media_player_play_song",
-             "cna_media_player_program_exit_ext",
+             "cna_media_player_program_exit_ext", "cna_media_player_update_ext",
              "cna_media_player_play_songs_from", "cna_media_player_get_queue",
              "cna_media_queue_get_active_song_index", "cna_media_player_move_next",
              "cna_media_player_move_previous",
@@ -42,9 +42,10 @@ CNA_DEMOS_STANDALONE({
     .tags = {"c", "binding", "media", "music", "song", "queue"},
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::Audio,
     .frames = 100,
-    .assets = {"music/rising.wav", "music/falling.wav"},
+    .assets = {"music/rising.wav", "music/falling.wav", "sounds/tone_660.wav"},
     .restrictions = "Standalone C program (one C game per process); built only when CNA has its C API "
                     "(CNA_BUILD_C_API=ON). Queue lifecycle and bounds checks run after Stop and never replay a "
                     "queue-owned Song. Media-source evidence covers CNA's desktop Local Device; no Windows Media "
-                    "Connect device, audible quality or unsafe active-Song replay validation.",
+                    "Connect device, audible quality or unsafe active-Song replay validation. The maintenance-pump "
+                    "check observes state after the game loop rather than measuring callback timing.",
 })

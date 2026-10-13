@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `c_api.media.media_player` to demonstrate `cna_media_player_update_ext` as an explicit
+  post-loop maintenance pump: a real short track finishes while public state remains Playing, and
+  the pump consumes the native end notification and transitions to Stopped.
 - Completed the521-demo full checkpoint: metadata521/0, all534 enabled CTests pass, both renderer
   smokes contain every demo, and all61 failures are declared CNA issues with no unexpected pass.
 - Extended `c_api.content.content_manager` with an authored BasicEffect CNJ, exact material-state

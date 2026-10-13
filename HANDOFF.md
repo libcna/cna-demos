@@ -73,13 +73,14 @@ joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 66 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog and complete521 runtime reports).
-Actual C ABI coverage is1083/3205: `input_gamepad.h`61/63,
+Actual C ABI coverage is1084/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
-`texture.h`2/21 and `texture_volume.h`4/16.
-Complete521 exercises all1083 credited routes in both full smoke suites and includes focused505-521.
+`media_player.h`39/41, `texture.h`2/21 and `texture_volume.h`4/16.
+Complete521 exercises all1083 baseline routes in both full smoke suites and includes focused505-521;
+the newer focused MediaPlayer batch raises current source coverage to1084.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 32 (`c_api.graphics.pbr_effect_material_state` CNA-DEMOS-ISSUE-070,
 `c_api.graphics.draw_routes` CNA-DEMOS-ISSUE-066,
@@ -127,6 +128,19 @@ The build log is diagnostic-free. Clean sibling CNA is `a6bb279d47`; production 
 `730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`; `cna-demos` is
 `15adb468549aec96966f9a9f2a5bd2947ca0a3e9cdb4d3bb57e1023043965735`. No screenshot or visual
 inspection was performed. Evidence:`checkpoint-521-complete-*`.
+
+Focused **521-C-player-update** extends `c_api.media.media_player` from92to94 controls without a new
+ID. After the game loop ends, a real short track finishes while the public state remains Playing;
+`cna_media_player_update_ext` then consumes the pending native end notification and transitions the
+one-song, non-repeating queue to Stopped. Direct execution and both runner selections pass;
+filtering the two additions restores all92 older labels in order, runner output is byte-identical
+and all three stderr files are empty. All23 focused MediaPlayer/Song/CLI CTests pass in44.43s,
+metadata remains521/0 and the incremental build is diagnostic-free. Coverage rises1083->1084/3205
+and `media_player.h`38->39/41. Its two remaining fixed MediaQueue type-name helpers are already
+verified by CNA's pure-C smoke and remain intentionally trivial/uncredited, completing the header's
+semantic audit. Clean sibling CNA is `a6bb279d47`; production library hashes are unchanged. No
+audible quality, callback-latency or visual claim is made.
+Evidence:`checkpoint-521-c-player-update-focused-*`.
 
 Focused **521-C-effect-load** extends `c_api.content.content_manager` with a deterministically
 generated, authored BasicEffect CNJ. The load preserves exact diffuse/emissive colors, specular
@@ -622,12 +636,11 @@ CNA-DEMOS-ISSUE-064. Clean sibling CNA is `d7eff66ee`; production `libcna.so` re
 `3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0`. Nothing is drawn and no
 visual inspection is claimed. Evidence:`checkpoint-498-c-viewport-focused-*`.
 
-The post-complete497 `media_player.h` audit confirms exactly three uncredited routes and the
-existing semantic decisions. `cna_media_player_update_ext` is still deferred until a host-driven
-example can observe a native track-end transition outside the automatic game loop; calling it
-while stopped would demonstrate no behavior. The queue type-name size/copy pair is fixed generic
-reflection text and remains intentionally trivial/uncredited. Every route in that header now has
-a recorded disposition; no demo or coverage count was added for this audit.
+The completed `media_player.h` audit demonstrates39/41 routes. The last behavioral route,
+`cna_media_player_update_ext`, observes a native track-end transition outside the automatic game
+loop. The queue type-name size/copy pair is fixed generic reflection text already covered by CNA's
+pure-C smoke and remains intentionally trivial/uncredited. Every route in the header has a recorded
+semantic disposition.
 
 Complete **497-C-sprite-states**, source `cfed648`, clears all seven focused graphics batches after
 complete492. Full `tools/validate.sh` passes metadata497/0 and all510 enabled CTests in308.90s;
@@ -1230,11 +1243,10 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit the remaining three `media_player.h` routes: the explicit maintenance pump
-and the MediaQueue fixed type-name size/copy pair. Keep fixed reflection names trivial/uncredited
-unless they add a meaningful contract; `media_player_update_ext` needs an observable host-driven
-state transition rather than a duplicate no-op call. Then continue the next highest semantic C API
-gaps. The completed290-route
+HIGHEST PRIORITY: continue the next semantic C API gaps, starting with the19 uncredited
+`texture.h` routes. Group coherent resource creation, storage-info, raw transfer and encoded/file
+round-trip behavior into existing or focused demos; keep its fixed type-name pair trivial unless it
+adds a distinct contract. The completed290-route
 `effects.h` audit groups related lifetimes, metadata, typed values, collections, reflection and
 actual rendering behavior. The complete
 `graphics_device.h` audit is
@@ -1245,8 +1257,8 @@ Preserve external state and do not claim a real dialog, URL launch, vibration or
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
 Do not credit the separate live gamepad dead-zone overload on a disconnected neutral slot or
-duplicate generated argument checks. Leave mouse-touch emulation manual-deferred, generic
-touch/media reflection uncredited and `media_player_update_ext` deferred. Never edit/revert CNA;
+duplicate generated argument checks. Leave mouse-touch emulation manual-deferred and generic
+touch/media reflection uncredited. Never edit/revert CNA;
 preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067/068/069.
 
 ## 15. Assumptions the next session must know
@@ -1262,7 +1274,8 @@ preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067/068/069.
 Current complete baseline is521-C-effects; source commit, exact results, hashes and evidence are in
 section7. It includes focused503-C-draw-routes, focused504-C-occlusion-query/content-loss/device-
 capabilities/renderer-recreation and every focused505-521 effect batch through the ContentManager
-Effect load. There is no newer focused source/runtime evidence yet.
+Effect load. Focused521-C-player-update is the newer source/runtime evidence and is not yet part of
+a complete smoke checkpoint.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete

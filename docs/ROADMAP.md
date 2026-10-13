@@ -3331,3 +3331,17 @@ diagnostic-free. Clean sibling CNA is `a6bb279d47`; production library hashes re
 the exercised `cna-demos` SHA-256 is
 `15adb468549aec96966f9a9f2a5bd2947ca0a3e9cdb4d3bb57e1023043965735`. No screenshot or visual
 inspection was performed. Evidence:checkpoint-521-complete-*.
+
+The existing `c_api.media.media_player` now closes the final meaningful `media_player.h` route
+without adding an ID. After the ordinary game loop has ended, it plays a real 250 ms track and
+waits long enough for native playback to finish without pumping MediaPlayer state. The public state
+is still Playing immediately before `cna_media_player_update_ext`; that explicit host maintenance
+call consumes the pending end notification and transitions the one-song, non-repeating queue to
+Stopped. Direct execution and both renderer selections pass all94 controls; filtering the two new
+labels restores all92 earlier controls in exact order, runner output is byte-identical and all
+stderr files are empty. All23 focused MediaPlayer/Song/CLI CTests pass in44.43s, metadata remains
+521/0 and the final incremental build is diagnostic-free. Coverage rises1083->1084/3205 and
+`media_player.h`38->39/41. Its remaining two routes only size/copy the fixed MediaQueue reflection
+name already verified by CNA's pure-C smoke, so they remain intentionally trivial and uncredited.
+No audible quality, callback-latency or visual claim is made. Clean sibling CNA is `a6bb279d47` and
+the production library hashes remain unchanged. Evidence:checkpoint-521-c-player-update-focused-*.
