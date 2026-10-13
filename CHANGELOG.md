@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added an isolated album-art workflow with folder/no-art branches, original and thumbnail
+  streams, public 128x64 decoding, and ownership checks after library destruction.
 - Complete473-duration:486enabled CTests and both full smoke suites preserve all old
   evidence; music import adds three positive-duration checks without playback.
 - Tagged music import now checks positive Song lengths and album/playlist member sums

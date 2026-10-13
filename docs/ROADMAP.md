@@ -1698,3 +1698,19 @@ checkpoint-473-duration-*. Generated coverage: 297/329 types,
 1402/2326 XNA members. Semantic coverage remains incomplete.
 Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged; clean runs do
 not establish a staging-race repair. Preserve all original refusals and reproduction evidence.
+
+## Focused474-album-art
+
+The new `media.media_library.album_art` standalone reuses two original tagged FLACs and the
+existing640x320panorama inside verified private Linux XDG roots. Two native runs pass eight
+identical child checks: two artist-specific albums, folder-art/no-art HasArt values, both
+missing-art InvalidOperationException branches, caller-owned nonnull streams, exact original
+bytes, a distinct public-decodable128x64thumbnail, and both streams readable after MediaLibrary
+destruction. Parent JSON remains PASSED/0; each stderr has six exact TitleContainer INFO lines.
+29enabled media/CLI CTests pass in7.69s. The first glob-triggered build attempt was refused only
+because sandbox permissions blocked CNA's CMake lock; its log is preserved. A separate watched
+consistency build passes with3909unchanged CNA inputs and an empty diagnostic gate. Metadata is
+474/0; original source/staged assets and audited CNA source hashes remain exact. ISSUE-040 now
+records native file-based Album evidence. No embedded-art, filename-priority, fallback,
+visual-quality, playback or other-platform claim. Full474 checkpoint is pending.
+Evidence:checkpoint-474-art-focused-* and checkpoint-474-art-*-build-*.
