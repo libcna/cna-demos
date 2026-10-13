@@ -506,7 +506,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
-## Phase 14 -- bindings 🟨 (22 C API demos)
+## Phase 14 -- bindings 🟨 (23 C API demos)
 The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks
 (28 with capture) and 31 error checks pass on both renderer selections. Larger version-one input
 and output prefixes retain their known behavior; unknown output tails and original diagnostics
@@ -534,6 +534,8 @@ C API demos as standalone C programs (one C game per process), built only with
 ✅ `c_api.input.keyboard_mouse` (state structs, snapshots from keys),
 ✅ `c_api.input.devices` (descriptor values, host enumeration, absent motion sensors, deterministic
 mouse/keyboard hot-plug events and one power snapshot),
+✅ `c_api.input.clipboard` (UTF-8 size/copy/has-text, atomic short-buffer refusal and exact
+desktop-state restoration),
 ✅ `c_api.input.touch_state` (deterministic press/move/release snapshots, id lookup and previous locations),
 ✅ `c_api.audio.sound_effect` (PCM16 effect, instance state, refused parent destruction and stale instance handles),
 ✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse, directions and bounded array ranges with refusal before writes),
@@ -2365,3 +2367,20 @@ CLI CTests pass in39.49s with six declared skips. Twenty-seven routes establish
 separate state-restoration concern. The same unrelated dirty CNA Vulkan source/header mismatch
 blocks a standard build and complete checkpoint; focused runtime is linked against the last built
 CNA libraries. Evidence:checkpoint-477-c-input-devices-focused-*.
+
+## Focused478-C-input-clipboard
+
+One small standalone keeps desktop-global clipboard mutation separate from host-device
+enumeration. Both renderer selections pass identical15-label children with empty stderr. The demo
+captures the original text with a bounded retry around the public count/copy race, requests an
+explicit multibyte UTF-8 value, checks has-text and the exact byte count/copy, and proves a
+one-byte-short copy reports the full requirement without changing any of128 guard bytes. Empty
+text clears has-text, reports zero and accepts a null zero-capacity copy. The captured bytes are
+then restored and reread exactly.
+
+Direct C and metadata compilation is diagnostic-free; metadata is478/0 and the expanded exact60
+input/C-API/CLI CTests pass in41.81s with six declared skips. Four routes raise actual C coverage
+391->395/3210 and `input_devices.h`27->31/37. The six remaining routes are successful sensor/touch
+metadata enumeration paths; Xvfb reports zero devices, so these stay hardware-manual even though
+their index-at-count refusals run. The unrelated in-progress CNA Vulkan mismatch still blocks the
+standard build and complete478 checkpoint. Evidence:checkpoint-478-c-input-clipboard-focused-*.

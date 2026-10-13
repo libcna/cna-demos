@@ -6,12 +6,12 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**477 demos** in 18 categories. Kinds: console 161, game 272, standalone 44. Automation: automated 441, manual 3, smoke-only 33.
+**478 demos** in 18 categories. Kinds: console 161, game 272, standalone 45. Automation: automated 442, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
-| c_api | 22 | 21 | 1 | 0 | 18 / 0 / 3 / 0 / 1 | 18 / 0 / 3 / 0 / 1 |
+| c_api | 23 | 22 | 1 | 0 | 18 / 0 / 3 / 0 / 2 | 18 / 0 / 3 / 0 / 2 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `c_api.input.devices`.
-- OPENGLES3: absent from report: `c_api.input.devices`.
+- SOFTWARE: absent from report: `c_api.input.clipboard`, `c_api.input.devices`.
+- OPENGLES3: absent from report: `c_api.input.clipboard`, `c_api.input.devices`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -70,7 +70,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 391 of 3210** (12.2 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 395 of 3210** (12.3 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -85,7 +85,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `index_resources.h` | 3 / 10 |
 | `input.h` | 14 / 15 |
 | `input_cursor.h` | 6 / 6 |
-| `input_devices.h` | 27 / 37 |
+| `input_devices.h` | 31 / 37 |
 | `input_gamepad.h` | 61 / 63 |
 | `input_keyboard.h` | 15 / 17 |
 | `input_mouse.h` | 20 / 20 |
