@@ -3795,3 +3795,15 @@ and a live registration observes the one engine disposal before releasing indepe
 Xvfb/dummy-audio selections are byte-identical with empty stderr; strict C99 and metadata
 compilation pass. `xact.h` reaches17/62 demonstrated. Evidence:
 checkpoint-573-c-xact-engine-focused-*-direct.*. No speaker output or scheduling effect is claimed.
+
+`c_api.audio.xact_banks` adds28 XACT routes in35 controls. It loads the generated resident tone bank,
+an actual prepared streaming music bank and a sound bank, with atomic missing resident paths and
+initial ownership/state. Two independent category lookups expose exact/atomic Music text, value
+equality and hashes. Live Music/SFX cues make category volume validation, selective Pause/Resume/
+Stop and paused bank use observable; fire-and-forget and positioned fire-and-forget cues are then
+retired through category Stop and Update. Engine/sound-bank parent release is refused while child
+handles remain, and both bank disposal subscriptions fire once before separate release. A first
+passing draft's redundant missing-streaming check emitted the canonical error log, so the corrected
+workflow keeps the real streaming success path and empty stderr. Both Xvfb/dummy-audio selections
+are byte-identical; strict C99 and metadata compilation pass. `xact.h` reaches45/62 demonstrated.
+Evidence:checkpoint-574-c-xact-banks-focused-*-direct.*. Gain and speaker output are not measured.
