@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the521-demo full checkpoint: metadata521/0, all534 enabled CTests pass, both renderer
+  smokes contain every demo, and all61 failures are declared CNA issues with no unexpected pass.
 - Extended `c_api.content.content_manager` with an authored BasicEffect CNJ, exact material-state
   checks, ordinary Effect application and owned usability after both manager unload and destruction;
   this closes the final `effects.h` C route.

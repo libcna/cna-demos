@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-521 catalog demos (latest complete checkpoint504-C-graphics-device plus focused505-521 effect batches): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+521 catalog demos (latest complete checkpoint521-C-effects): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -72,19 +72,14 @@ content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text in
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 66 (standalone C programs). Every declared category has demos.
-Coverage: see docs/COVERAGE.md (current catalog, complete504 runtime reports and focused505-521 source).
+Coverage: see docs/COVERAGE.md (current catalog and complete521 runtime reports).
 Actual C ABI coverage is1083/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
 `texture.h`2/21 and `texture_volume.h`4/16.
-Complete504 exercises the first797 credited routes in both full smoke suites; focused505 exercises
-the next22, focused506 the next17, focused507 the next10, focused508 the next31, focused509 the
-next18, focused510 the next4, focused511 the next42, focused512 the next22, focused513 the next19,
-focused514 the next21, focused515 the next7, focused516 the next31, focused517 the next10,
-focused518 the next5, focused519 the next10 and focused520 the next11 routes. Focused521 adds five
-texture/volume routes and then the final ContentManager Effect-load route under both selections.
+Complete521 exercises all1083 credited routes in both full smoke suites and includes focused505-521.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 32 (`c_api.graphics.pbr_effect_material_state` CNA-DEMOS-ISSUE-070,
 `c_api.graphics.draw_routes` CNA-DEMOS-ISSUE-066,
@@ -118,6 +113,20 @@ Passing documentation issues ISSUE-068, ISSUE-069 and ISSUE-071 do not add runti
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Complete **521-C-effects**, source `811d2f4`, absorbs all seventeen effect demos and the final
+ContentManager Effect-load extension added after complete504. `tools/validate.sh` passes metadata
+521/0 and all534 enabled CTests in233.86s; three declared tests remain disabled. SOFTWARE is453
+pass/30 known-fail/35 skip/3 not-run and OPENGLES3 is484/31/3/3, with zero unexpected passes.
+Against complete504, every one of the504 existing status/knownIssue pairs is unchanged; the17 new
+IDs contribute16 passes and the expected ISSUE-070 failure on each renderer. Fresh runtime coverage
+is297/329 types,1405/2326 XNA members and1083/3205 C routes; `effects.h` is complete290/290.
+The build log is diagnostic-free. Clean sibling CNA is `a6bb279d47`; production `libcna.so` and
+`libcna_c_api.so` remain SHA-256
+`3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0` and
+`730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`; `cna-demos` is
+`15adb468549aec96966f9a9f2a5bd2947ca0a3e9cdb4d3bb57e1023043965735`. No screenshot or visual
+inspection was performed. Evidence:`checkpoint-521-complete-*`.
 
 Focused **521-C-effect-load** extends `c_api.content.content_manager` with a deterministically
 generated, authored BasicEffect CNJ. The load preserves exact diffuse/emissive colors, specular
@@ -1221,9 +1230,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: run the complete all-demo checkpoint for the521-demo catalog, replacing the old
-complete504 baseline with combined runtime evidence for focused505-521. Then audit the remaining
-`media_player.h` routes and continue the next highest semantic C API gaps. The completed290-route
+HIGHEST PRIORITY: audit the remaining three `media_player.h` routes: the explicit maintenance pump
+and the MediaQueue fixed type-name size/copy pair. Keep fixed reflection names trivial/uncredited
+unless they add a meaningful contract; `media_player_update_ext` needs an observable host-driven
+state transition rather than a duplicate no-op call. Then continue the next highest semantic C API
+gaps. The completed290-route
 `effects.h` audit groups related lifetimes, metadata, typed values, collections, reflection and
 actual rendering behavior. The complete
 `graphics_device.h` audit is
@@ -1248,28 +1259,21 @@ preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067/068/069.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is504-C-graphics-device; source commit and exact results are in section7.
-Focused503-C-draw-routes plus focused504-C-occlusion-query, content-loss, device-capabilities and
-renderer-recreation are included in it.
-Focused505-C-effect-annotations, focused506-C-effect-parameter-values, focused507-C-effect-
-parameter-collections, focused508-C-effect-passes-techniques, focused509-C-effect-core,
-focused510-C-effect-concrete-types, focused511-C-basic-effect-state, focused512-C-unlit-stock-
-effects, focused513-C-environment-map-effect, focused514-C-skinned-effect, focused515-C-color-
-matrix-effect, focused516-C-pbr-material, focused517-C-pbr-textures, focused518-C-skinned-pbr,
-focused519-C-shader-state, focused520-C-shader-uniforms, focused521-C-shader-textures and the
-focused521 ContentManager Effect load are
-newer source/runtime evidence and are not yet in a full checkpoint.
+Current complete baseline is521-C-effects; source commit, exact results, hashes and evidence are in
+section7. It includes focused503-C-draw-routes, focused504-C-occlusion-query/content-loss/device-
+capabilities/renderer-recreation and every focused505-521 effect batch through the ContentManager
+Effect load. There is no newer focused source/runtime evidence yet.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
-checkpoint. Adapter-capabilities and device-presentation are included in complete492. The later
+checkpoint lineage. Adapter-capabilities and device-presentation are included in complete492. The later
 render-target-bindings, device-capabilities, sprite-scaled, resource-lifecycle, index-buffer,
 device-states and sprite-states batches are all included in complete497. Viewport, the later
 device-values and resource-events extensions, texture slots and buffer bindings are included in
 complete500. Device clears, owned-device lifecycle and device profile/policy state are included in
 complete502. The complete504 checkpoint binary was built with clean CNA `f37f8d184`; CNA advanced
 externally during smoke to clean `fbd8e64a3` through CI/CMake-test/docs/tooling-only changes, while
-both production library hashes stayed unchanged. Complete504 is the immutable full-runtime
-baseline.
+both production library hashes stayed unchanged. Complete504 remains immutable comparison evidence;
+complete521 is the current full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.

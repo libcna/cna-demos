@@ -3035,3 +3035,15 @@ OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.37binarie
 and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has16known pairs,
 exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types and1405/2326members;
 C ABI routes rise223->224/3210. Evidence:checkpoint-474-c-player-single-song-*.
+
+## Complete521-C-effects
+
+Complete checkpoint **521-C-effects**, source `811d2f4`, absorbs all seventeen effect demos and the
+ContentManager Effect-load extension added after complete504. Full validation passes metadata521/0
+and all534 enabled CTests in233.86s; three declared tests remain disabled. SOFTWARE is453pass/
+30known-fail/35skip/3not-run and OPENGLES3 is484/31/3/3, with no unexpected pass. All504 earlier
+status/knownIssue pairs remain exact; the17 new IDs add16 passes and the expected ISSUE-070 failure
+under each renderer. Runtime coverage is297/329 types,1405/2326 XNA members and1083/3205 C routes,
+including `effects.h`290/290. The diagnostic-free binary was built against clean CNA `a6bb279d47`;
+production library hashes remain unchanged. No screenshot or visual inspection was performed.
+Evidence:checkpoint-521-complete-*.

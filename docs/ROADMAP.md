@@ -3317,3 +3317,17 @@ coverage1082->1083/3205 and completes `effects.h`289->290/290. Clean sibling CNA
 the production library baseline is unchanged. Existing texture/font back-buffer pixels were read
 programmatically; no screenshot or visual inspection is claimed.
 Evidence:checkpoint-521-c-effect-load-focused-*.
+
+## Complete521-C-effects
+
+Complete checkpoint **521-C-effects**, source `811d2f4`, absorbs the seventeen focused effect demos
+and ContentManager Effect-load extension since complete504. Full `tools/validate.sh` passes metadata
+521/0 and all534 enabled CTests in233.86s; three declared tests remain disabled. SOFTWARE reports
+453pass/30known-fail/35skip/3not-run and OPENGLES3 reports484/31/3/3, with zero unexpected passes.
+Every one of the504 earlier status/knownIssue pairs is unchanged; the17 new IDs contribute16 passes
+and the expected ISSUE-070 failure on each renderer. Fresh runtime coverage is297/329 types,
+1405/2326 XNA members and1083/3205 C routes, including complete `effects.h`290/290. The build log is
+diagnostic-free. Clean sibling CNA is `a6bb279d47`; production library hashes remain unchanged and
+the exercised `cna-demos` SHA-256 is
+`15adb468549aec96966f9a9f2a5bd2947ca0a3e9cdb4d3bb57e1023043965735`. No screenshot or visual
+inspection was performed. Evidence:checkpoint-521-complete-*.
