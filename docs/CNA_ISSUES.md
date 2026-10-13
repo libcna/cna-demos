@@ -15,6 +15,40 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-059 -- Empty MediaQueue active-Song output contradicts its C documentation
+
+- **Area/API:** `cna_media_queue_get_active_song`,
+  `modules/c-api/include/CNA/C/media_player.h` and generated `MediaPlayer.inc`.
+- **Reproduction:** after the existing C media demo stops playback and safely clears the global
+  queue, initialize `out_song` with a still-valid shared Song handle and `out_available` with
+  `CNA_TRUE`, then call `cna_media_queue_get_active_song`. Repeat after deliberately storing the
+  documented unchecked active index 7 in the empty queue. Both SOFTWARE and OPENGLES3 runs use
+  the same public C route; neither dereferences the unavailable result.
+- **Observed:** both calls return `CNA_RESULT_SUCCESS`, set availability to `CNA_FALSE` and replace
+  the valid sentinel with `CNA_INVALID_HANDLE`. All53demo checks pass identically under both
+  renderers with empty stderr. The independently held sentinel Song remains valid and is released
+  once through its original handle. Generated `MediaPlayer.inc` explicitly assigns
+  `CNA_INVALID_HANDLE` before delegating to the queue lookup.
+- **Expected/documented:** the public header says `out_song` receives an owned handle when active
+  and is "untouched otherwise." An empty queue is the ordinary unavailable case, so overwriting a
+  valid caller value contradicts that statement. Either the route must preserve the output or,
+  consistently with its generated implementation and other handle-output routes, the header must
+  document initialization to `CNA_INVALID_HANDLE` when unavailable.
+- **Controls/scope:** `cna_media_queue_get_at` independently returns INVALID_ARGUMENT for index
+  zero on the empty queue and initializes its output to invalid; its header makes no untouched
+  output promise. The active-index setter stores 7 exactly as documented, active lookup remains
+  unavailable, and the demo restores -1 before cleanup. Collection disposal, idempotence and
+  retained-Song lifetime also pass. This is a documentation/implementation mismatch, not a
+  renderer, playback, ownership or memory-safety failure. ISSUE-058's unsafe replay is never
+  invoked.
+- **Evidence/environment:** Linux x86_64, GCC14.2/CMake3.31.6 linux-full, CNA clean at
+  `eff31310179168fb4f47258e6226a5234c2140d0`. Exact two-renderer logs, output lists, focused
+  review, targeted29-test log, observed CNA sources/hashes and watched3909-input build evidence
+  are archived under `build/linux-full/reports/checkpoint-474-c-media-bounds-focused-*`.
+- **Status/handling:** open documentation defect. No CNA source was edited and no upstream message
+  was sent. The passing demo names the behavior it actually observes and needs no runtime
+  knownIssue marker; revisit the wording or expectation after CNA resolves the contract.
+
 ### CNA-DEMOS-ISSUE-058 -- Replaying the active MediaQueue Song uses it after freeing it
 
 - **Area/API:** `MediaPlayer::Play(Song*)`, `MediaPlayer::Queue`, and

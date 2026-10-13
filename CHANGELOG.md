@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the existing C media-player workflow from46to53checks with SongCollection Dispose,
+  empty-queue bounds and unchecked active-index behavior; documented CNA-DEMOS-ISSUE-059.
 - Complete474-C-media-ownership:487enabled CTests and both full smoke suites preserve all old
   evidence; the existing C media demo adds14exact ownership controls and10actual C ABI routes.
 - Extended the existing C media-player workflow from32to46checks with collection retention,

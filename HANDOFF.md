@@ -103,6 +103,18 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **474-C-media-lifecycle-bounds** extends c_api.media.media_player from46to53checks under
+both renderers with empty stderr and no new ID/fixture. Removing seven new checks gives every old
+label in order. Collection count/disposal, idempotent Dispose and shared-Song survival pass. Empty
+active/get_at outputs initialize invalid, get_at rejects index0, the unchecked setter stores7 with
+no active Song and -1 is restored. The active output contradicts the header's "untouched otherwise"
+wording: documentation ISSUE-059, no runtime marker. ISSUE-058 replay remains uncalled. Focused29
+media/CLI CTests pass; metadata474/0. The sandbox-only ccache refusal is archived; the watched
+consistency build passes with3909unchanged CNA inputs/no diagnostics. C routes rise184->188/3210.
+Evidence:checkpoint-474-c-media-bounds-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-C-media-ownership**, source `7d23c6f`, extends the existing
 c_api.media.media_player from32to46child checks without a new ID or fixture. Both focused and full
 runs preserve the old32-line sequence and add14exact ownership controls with empty demo stderr.
@@ -159,6 +171,7 @@ Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untest
 ## 10. Known CNA issues
 
 See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-057 (concurrent tool staging diagnostic race),
+CNA-DEMOS-ISSUE-059 (empty MediaQueue active-Song output contradicts its C documentation),
 CNA-DEMOS-ISSUE-056 (FileStream position after EOF),
 CNA-DEMOS-ISSUE-055 (shader clone matrices/disposal),
 CNA-DEMOS-ISSUE-054 (cube DDS short reads and prefixed truncation),
@@ -244,17 +257,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the same C media workflow with collection lifecycle and empty-queue
-bounds; do not add an ID. Preserve all46current labels/order. Before collection destruction,
-observe initial IsDisposed=false/count2, Dispose clearing/count0/IsDisposed=true and idempotent
-Dispose while the already shared Song remains alive. After safe stopped queue_clear, observe empty
-active lookup, get_at bounds/output initialization and the documented unchecked active-index setter
-without dereferencing an invalid entry; restore index before cleanup. First probe the header's
-claim that empty get_active_song leaves out_song untouched: generated code initializes it to
-INVALID, so distinguish a documentation defect from a demo expectation and update CNA_ISSUES if
-runtime confirms. No Play(queueSong), live Clear, audible, failed-add or callback claim. Run watched
-build, focused renderers and media/CLI CTests, update audit/HANDOFF, commit, then full validation.
-Use complete474-C-media exact evidence as baseline. Never edit/revert CNA; preserve ISSUE-038/057/058.
+HIGHEST PRIORITY: commit the focused lifecycle/bounds source and documentation, then run the full
+474 validation against complete474-C-media-ownership. Capture once after the full build during
+CTest: the same37selected binaries/four assets/30fixture paths. Freeze source/assets/build through
+both smokes. Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3. Preserve all38/42old failures, every unrelated C/custom list/trace, five
+network controls,18music and8album-art checks. Only c_api.media.media_player grows46->53; parent
+JSON remains0. Normalized stderr should remain identical. Archive/refuse any surprise; then update
+full audit/HANDOFF and immediately continue the next semantic public-member gap. Never edit/revert
+CNA; preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -267,6 +278,6 @@ Use complete474-C-media exact evidence as baseline. Never edit/revert CNA; prese
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is474-C-media-ownership; source commit is in section7.
-All earlier drafts and focused ownership work are APPLIED AND STALE. Next lifecycle/bounds work
-has source evidence only and no applied draft yet.
+All earlier drafts and focused ownership work are APPLIED AND STALE. Lifecycle/bounds is applied
+and focused but has no complete checkpoint yet.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

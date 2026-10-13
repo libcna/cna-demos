@@ -1763,3 +1763,18 @@ alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain
 stderr is identical. Outer Xvfb has15exact amdgpu pairs (previous13); exits are zero and CNA
 eff3131017 remains clean. XNA coverage remains297/329types and1405/2326members; C ABI routes rise
 174->184/3210, media.h2->7/39 and media_player.h12->17/41. Evidence:checkpoint-474-c-media-*.
+
+## Focused474-C-media-lifecycle-bounds
+
+The same `c_api.media.media_player` now grows46->53child checks without a new ID or fixture.
+Both renderers pass the same exact list with empty stderr; removing seven lifecycle/bounds checks
+restores every prior label in order. The collection starts count2/not disposed, Dispose clears and
+marks it, a second Dispose succeeds, and the shared Rising handle stays live. After stopped Clear,
+empty active/get_at outputs initialize to invalid, get_at(0) returns INVALID_ARGUMENT, index7 is
+stored without an active Song and -1 is restored. The active-output result contradicts the header's
+"untouched otherwise" wording and is documented as ISSUE-059; no failure marker is appropriate.
+ISSUE-058 replay remains uncalled. Focused29media/CLI CTests pass. The initial ccache sandbox
+refusal is preserved; the watched consistency build passes with3909unchanged CNA inputs and no
+diagnostics. Metadata remains474/0 and actual C routes rise184->188/3210. No audible, failed-add,
+live-clear or callback-edge claim. Full474 checkpoint is pending.
+Evidence:checkpoint-474-c-media-bounds-focused-*.

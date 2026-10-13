@@ -306,7 +306,11 @@ int main(int argc, char** argv)
     CNA_SongHandle active_copy = CNA_INVALID_HANDLE;
     CNA_SongHandle appended = CNA_INVALID_HANDLE;
     CNA_SongHandle appended_copy = CNA_INVALID_HANDLE;
+    CNA_SongHandle empty_song = CNA_INVALID_HANDLE;
     CNA_Bool active_available = CNA_FALSE;
+    CNA_Bool collection_disposed = CNA_TRUE;
+    CNA_Bool empty_available = CNA_TRUE;
+    int32_t collection_count = -1;
     int32_t queue_count = -1;
 
     /* 100 frames at 60 per second cover the 1.4 s tour. */
@@ -347,8 +351,23 @@ int main(int argc, char** argv)
 
     /* The collection shares its retained Song, while queue accessors publish independent copies.
        Keep those handles across view/collection destruction and a safe stopped-queue Clear. */
+    cna_demo_check(&demo,
+                   cna_song_collection_get_count(state.songs, &collection_count) == CNA_RESULT_SUCCESS &&
+                       collection_count == 2 &&
+                       cna_song_collection_get_is_disposed(state.songs, &collection_disposed) == CNA_RESULT_SUCCESS &&
+                       collection_disposed == CNA_FALSE,
+                   "the SongCollection starts live with two songs");
     cna_demo_check_result(&demo, cna_song_collection_get_at(state.songs, 0, &collection_song),
                           "collection_get_at returns a shared retained Song handle");
+    cna_demo_check(&demo,
+                   cna_song_collection_dispose(state.songs) == CNA_RESULT_SUCCESS &&
+                       cna_song_collection_get_count(state.songs, &collection_count) == CNA_RESULT_SUCCESS &&
+                       collection_count == 0 &&
+                       cna_song_collection_get_is_disposed(state.songs, &collection_disposed) == CNA_RESULT_SUCCESS &&
+                       collection_disposed == CNA_TRUE && song_has_name(collection_song, "Rising"),
+                   "disposing the collection empties it but keeps the shared Song alive");
+    cna_demo_check_result(&demo, cna_song_collection_dispose(state.songs),
+                          "disposing the SongCollection twice is a successful no-op");
     cna_demo_check_result(&demo, cna_media_queue_get_at(state.queue, 0, &queue_first),
                           "queue_get_at returns an owned copy of Rising");
     cna_demo_check(&demo,
@@ -396,6 +415,29 @@ int main(int argc, char** argv)
                    cna_media_queue_get_count(state.queue, &queue_count) == CNA_RESULT_SUCCESS && queue_count == 0 &&
                        active_index(&state) == -1,
                    "queue_clear empties the queue and resets the active index");
+    empty_song = collection_song;
+    empty_available = CNA_TRUE;
+    cna_demo_check(&demo,
+                   cna_media_queue_get_active_song(state.queue, &empty_song, &empty_available) == CNA_RESULT_SUCCESS &&
+                       empty_available == CNA_FALSE && empty_song == CNA_INVALID_HANDLE,
+                   "an empty active-song lookup reports unavailable and initializes its output");
+    empty_song = collection_song;
+    cna_demo_check(&demo,
+                   cna_media_queue_get_at(state.queue, 0, &empty_song) == CNA_RESULT_INVALID_ARGUMENT &&
+                       empty_song == CNA_INVALID_HANDLE,
+                   "queue_get_at rejects an empty index and initializes its output");
+    empty_song = collection_song;
+    empty_available = CNA_TRUE;
+    cna_demo_check(&demo,
+                   cna_media_queue_set_active_song_index(state.queue, 7) == CNA_RESULT_SUCCESS &&
+                       active_index(&state) == 7 &&
+                       cna_media_queue_get_active_song(state.queue, &empty_song, &empty_available) == CNA_RESULT_SUCCESS &&
+                       empty_available == CNA_FALSE && empty_song == CNA_INVALID_HANDLE,
+                   "the unchecked active index is stored but has no active Song");
+    cna_demo_check(&demo,
+                   cna_media_queue_set_active_song_index(state.queue, -1) == CNA_RESULT_SUCCESS &&
+                       active_index(&state) == -1,
+                   "the active index can be restored after the bounds check");
     cna_demo_check(&demo,
                    song_has_name(queue_first, "Rising") && song_has_name(active_copy, "Falling") &&
                        song_has_name(appended_copy, "Appended"),
