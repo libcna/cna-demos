@@ -2268,3 +2268,22 @@ the accepted CNA tree is dirty at bb6820f. Fourteen actual routes raise C covera
 as trivial reflection-buffer mechanics already covered by generated tests. No physical input,
 alternate layout, lock toggle, scancode mode, other-desktop or visual claim. Full476 is pending.
 Evidence:checkpoint-476-c-input-keyboard-focused-*.
+
+## Complete476-C-input-keyboard
+
+Complete checkpoint **476-C-input-keyboard**, source `920a614`, extends the existing C
+keyboard/mouse child32->40checks without another ID or fixture. Full validation passes
+metadata476/0 and all489enabled CTests in289.65s. SOFTWARE411/27/35/3 and
+OPENGLES3441/29/3/3 preserve every parent outcome, the exact38/42 old failures, all unrelated
+C/custom child lists and protected traces, five network controls,18music checks and8album-art
+checks. Only the keyboard/mouse child grows to the exact focused40 controls; parentJSON remains0.
+All39 selected paths match the focused preflight and remain fixed through both smoke suites.
+Against complete476-C-input-mouse-cursor, the catalog and keyboard/mouse standalone carry this
+batch;15 other selected binaries carry the separately identified external CNA content work, while
+four assets and30fixtures remain exact. Normalized stderr is identical. Outer Xvfb emits6exact
+amdgpu pairs, and both exits are zero. Post-build capture sees the external bytes dirty at bb6820f;
+they become clean LINK-053 commit9edbf314 during smoke without changing any relevant keyboard
+source hash or selected runtime artifact. Coverage stays297/329types and1405/2326XNA members;
+actual C ABI coverage is307/3210 and `input_keyboard.h`15/17. The two omitted routes remain trivial
+fixed type-name reflection. No physical input, alternate layout, lock toggle, scancode mode,
+other-desktop or visual claim. Evidence:checkpoint-476-c-input-keyboard-*.

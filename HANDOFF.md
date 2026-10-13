@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-476 catalog demos (focused checkpoint476-C-input-keyboard): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+476 catalog demos (complete checkpoint476-C-input-keyboard): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -158,20 +158,22 @@ claim. Evidence:checkpoint-476-c-input-gesture-queue-focused-*.
 
 Last complete baseline:
 
-Complete checkpoint **476-C-input-mouse-cursor**, source `76fe296`, extends the existing C
-keyboard/mouse child15->32checks without another ID or fixture. Full tools/validate.sh passes
-metadata476/0 and all489enabled CTests in175.58s. SOFTWARE411/27/35/3 and
+Complete checkpoint **476-C-input-keyboard**, source `920a614`, extends the existing C
+keyboard/mouse child32->40checks without another ID or fixture. Full tools/validate.sh passes
+metadata476/0 and all489enabled CTests in289.65s. SOFTWARE411/27/35/3 and
 OPENGLES3441/29/3/3 preserve all38/42prior failures, every unrelated C/custom child list and
-protected trace, five network controls,18music checks and8album-art checks. Only the keyboard/mouse
-child grows to the exact focused32 controls; parentJSON remains0. All39 selected paths match
-preflight and stay fixed through both smoke suites. Against complete476-C-input-touch-scaling,
-only the catalog and keyboard/mouse standalone change; the other37 binaries, four assets and30
-fixtures are exact. Normalized stderr is identical. Outer Xvfb has7exact amdgpu pairs (previous6);
-both exits are zero. Post-build and final observations see clean CNAbb6820f. Coverage stays
-297/329types and1405/2326XNA members; actual C ABI coverage is293/3210,
-`input_mouse.h`20/20 and `input_cursor.h`6/6. ISSUE-061 remains a passing documentation mismatch.
-No physical mouse, cursor-shape visual or other-desktop claim. Complete evidence:
-checkpoint-476-c-input-mouse-cursor-*.
+protected trace, five network controls,18music checks and8album-art checks. Only the
+keyboard/mouse child grows to the exact focused40 controls; parentJSON remains0. All39 selected
+paths match preflight and stay fixed through both smoke suites. Against complete476-C-input-mouse-
+cursor, the catalog and keyboard/mouse standalone carry this batch;15 other selected binaries
+carry unrelated external CNA content work, while four assets and30fixtures are exact. Normalized
+stderr is identical. Outer Xvfb has6exact amdgpu pairs; both exits are zero. Post-build capture
+sees dirty CNAbb6820f; external LINK-053 commits those same content bytes as clean9edbf314 during
+smoke without changing relevant keyboard source hashes or selected runtime artifacts. Coverage
+stays297/329types and1405/2326XNA members; actual C ABI coverage is307/3210 and
+`input_keyboard.h`15/17. Its two fixed type-name routes remain intentionally uncredited. No
+physical input, alternate layout, lock toggle, scancode mode, other-desktop or visual claim.
+Complete evidence:checkpoint-476-c-input-keyboard-*.
 Preserve earlier refusal evidence and ISSUE-038/057/058/059/060/061.
 
 ## 8. Exact commands that work
@@ -296,14 +298,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: run the complete476 checkpoint for focused keyboard source after its focused
-commit. Require the exact40 keyboard/mouse child labels, unchanged unrelated outcomes and fixed
-selected runtime artifacts. Then audit all63 public routes in C `input_gamepad.h` against the
-existing C and C++ gamepad demos. Give every route a semantic disposition before choosing a
-coherent extension; do not credit the live dead-zone overload on a disconnected neutral slot or
-duplicate generated argument checks. Leave mouse-touch emulation manual-deferred, generic
-touch/media reflection uncredited and `media_player_update_ext` deferred. Never edit/revert CNA;
-preserve ISSUE-038/057/058/059/060/061.
+HIGHEST PRIORITY: audit all63 public routes in C `input_gamepad.h` against the existing C and C++
+gamepad demos. Give every route a semantic disposition before choosing a coherent extension; do
+not credit the live dead-zone overload on a disconnected neutral slot or duplicate generated
+argument checks. Prefer existing `c_api.input.gamepad` for cohesive value/capability/device/member
+behavior and avoid meaningless getter-per-check inflation. Leave mouse-touch emulation manual-
+deferred, generic touch/media reflection uncredited and `media_player_update_ext` deferred. Never
+edit/revert CNA; preserve ISSUE-038/057/058/059/060/061.
 
 ## 15. Assumptions the next session must know
 
@@ -315,7 +316,6 @@ preserve ISSUE-038/057/058/059/060/061.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is476-C-input-mouse-cursor; source commit is in section7. Focused
-476-C-input-keyboard is applied and awaits its full checkpoint. All earlier drafts are APPLIED AND
-STALE. The full keyboard checkpoint in section14 is live.
+Current complete baseline is476-C-input-keyboard; source commit is in section7. All earlier drafts
+are APPLIED AND STALE. The `input_gamepad.h` route audit in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.
