@@ -1,0 +1,17 @@
+{
+  "cnjVersion": 1,
+  "type": "BasicEffect",
+  "diffuseColor": [
+    0.125,
+    0.25,
+    0.5
+  ],
+  "emissiveColor": [
+    0.0625,
+    0.125,
+    0.25
+  ],
+  "specularPower": 17.0,
+  "alpha": 0.75,
+  "vertexColorEnabled": true
+}

@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `c_api.content.content_manager` with an authored BasicEffect CNJ, exact material-state
+  checks, ordinary Effect application and owned usability after both manager unload and destruction;
+  this closes the final `effects.h` C route.
 - Added `c_api.graphics.shader_effect_textures`, a20-check C workflow covering 2D/cube/3D sampler
   family validation, same-unit replacement and ownership retained through a surviving pass view.
 - Added `c_api.graphics.shader_effect_uniforms`, an18-check C workflow covering all loose typed

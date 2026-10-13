@@ -324,6 +324,23 @@ def custom_enemy_cnj() -> None:
         (directory / f"{name}.cnj").write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
 
 
+def stock_effect_cnj() -> None:
+    """A renderer-portable stock Effect descriptor for the C ContentManager workflow."""
+    document = {
+        "cnjVersion": 1,
+        "type": "BasicEffect",
+        "diffuseColor": [0.125, 0.25, 0.5],
+        "emissiveColor": [0.0625, 0.125, 0.25],
+        "specularPower": 17.0,
+        "alpha": 0.75,
+        "vertexColorEnabled": True,
+    }
+    directory = ROOT / "effects"
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "c_api_basic_effect.cnj").write_text(
+        json.dumps(document, indent=2) + "\n", encoding="utf-8")
+
+
 def custom_patrol_route() -> None:
     """A 3-4-5 triangle: open route length 7, closed patrol length 12."""
     directory = ROOT / "custom"
@@ -371,6 +388,7 @@ def main() -> None:
     melody("music/falling.wav", [81, 76, 72, 69, 76, 72, 69, 64], 0.25)  # A minor, downwards
     custom_level_xnb("levels/castle.xnb")
     custom_enemy_cnj()
+    stock_effect_cnj()
     custom_patrol_route()
     # The sources of the XNA content project content_project/Game.contentproj (written by hand).
     save_png(keyed_ship(64), "Textures/ship_source.png", CONTENT_PROJECT_ROOT)

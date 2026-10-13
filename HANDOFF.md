@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
-* Mostly complete: 6 (effects and shaders, 38).
+* Mostly complete: 6 (effects and shaders, 41; the C `effects.h` route audit is complete).
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -73,18 +73,18 @@ joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 66 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete504 runtime reports and focused505-521 source).
-Actual C ABI coverage is1082/3205: `input_gamepad.h`61/63,
+Actual C ABI coverage is1083/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`289/290,
+`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
 `texture.h`2/21 and `texture_volume.h`4/16.
 Complete504 exercises the first797 credited routes in both full smoke suites; focused505 exercises
 the next22, focused506 the next17, focused507 the next10, focused508 the next31, focused509 the
 next18, focused510 the next4, focused511 the next42, focused512 the next22, focused513 the next19,
 focused514 the next21, focused515 the next7, focused516 the next31, focused517 the next10,
-focused518 the next5, focused519 the next10, focused520 the next11 and focused521 the newest5
-routes under both renderer selections.
+focused518 the next5, focused519 the next10 and focused520 the next11 routes. Focused521 adds five
+texture/volume routes and then the final ContentManager Effect-load route under both selections.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 32 (`c_api.graphics.pbr_effect_material_state` CNA-DEMOS-ISSUE-070,
 `c_api.graphics.draw_routes` CNA-DEMOS-ISSUE-066,
@@ -118,6 +118,18 @@ Passing documentation issues ISSUE-068, ISSUE-069 and ISSUE-071 do not add runti
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **521-C-effect-load** extends `c_api.content.content_manager` with a deterministically
+generated, authored BasicEffect CNJ. The load preserves exact diffuse/emissive colors, specular
+power, alpha and vertex-color state; applies through the ordinary Effect interface; and remains
+authored and usable after both ContentManager.Unload and manager destruction before its independent
+handle releases. The existing texture/font/cache/root/draw workflow remains intact. All53 controls
+pass directly and through both runner selections with byte-identical runner output and empty stderr.
+All33 focused ContentManager/BasicEffect/CLI tests pass in14.38s. Metadata remains521/0 and the
+incremental build is clean. The final route raises coverage1082->1083/3205 and completes
+`effects.h`289->290/290. Clean sibling CNA is `a6bb279d47`; the production library baseline is
+unchanged. Back-buffer pixels for the existing texture/font draw were read programmatically; no
+screenshot or visual inspection is claimed. Evidence:`checkpoint-521-c-effect-load-focused-*`.
 
 Focused **521-C-shader-textures** adds `c_api.graphics.shader_effect_textures` for every ShaderEffect
 texture-binding route. Twenty controls create real 2D, cube and 3D resources under both requested
@@ -1209,11 +1221,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: close the final `effects.h` route with a coherent ContentManager effect-loading
-workflow, then run a complete all-demo checkpoint. Reuse the existing compiled shader and
-pixel demos for actual execution claims. Do not turn its290 routes into declaration-count variants: group
-related lifetimes,
-metadata, typed values, collections, reflection and actual rendering behavior. The complete
+HIGHEST PRIORITY: run the complete all-demo checkpoint for the521-demo catalog, replacing the old
+complete504 baseline with combined runtime evidence for focused505-521. Then audit the remaining
+`media_player.h` routes and continue the next highest semantic C API gaps. The completed290-route
+`effects.h` audit groups related lifetimes, metadata, typed values, collections, reflection and
+actual rendering behavior. The complete
 `graphics_device.h` audit is
 closed at80/84; keep context recovery manual/platform-specific, fixed type-name copies trivial/
 uncredited and the one-way string marker intentionally uncredited unless an observable consumer is
@@ -1244,7 +1256,8 @@ parameter-collections, focused508-C-effect-passes-techniques, focused509-C-effec
 focused510-C-effect-concrete-types, focused511-C-basic-effect-state, focused512-C-unlit-stock-
 effects, focused513-C-environment-map-effect, focused514-C-skinned-effect, focused515-C-color-
 matrix-effect, focused516-C-pbr-material, focused517-C-pbr-textures, focused518-C-skinned-pbr,
-focused519-C-shader-state, focused520-C-shader-uniforms and focused521-C-shader-textures are
+focused519-C-shader-state, focused520-C-shader-uniforms, focused521-C-shader-textures and the
+focused521 ContentManager Effect load are
 newer source/runtime evidence and are not yet in a full checkpoint.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,

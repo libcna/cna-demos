@@ -21,6 +21,7 @@ typedef struct ContentState {
     CNA_Handle checker;      /* owned Texture2D */
     CNA_Handle font;         /* owned SpriteFont */
     CNA_Handle font_atlas;   /* owned Texture2D the font draws from */
+    CNA_EffectHandle effect; /* owned BasicEffect loaded from an authored CNJ */
     CNA_Handle sprite_batch; /* owned */
     CNA_Vector2 text_size;
     int frames;
@@ -34,6 +35,22 @@ static CNA_StringView view(const char* s)
     v.data = s;
     v.byte_length = strlen(s);
     return v;
+}
+
+static int effect_has_authored_state(CNA_EffectHandle effect)
+{
+    CNA_Vector3 vector = {0};
+    CNA_Bool vertex_color = CNA_FALSE;
+    float scalar = 0.0F;
+    return cna_basic_effect_get_diffuse_color(effect, &vector) == CNA_RESULT_SUCCESS &&
+           vector.x == 0.125F && vector.y == 0.25F && vector.z == 0.5F &&
+           cna_basic_effect_get_emissive_color(effect, &vector) == CNA_RESULT_SUCCESS &&
+           vector.x == 0.0625F && vector.y == 0.125F && vector.z == 0.25F &&
+           cna_basic_effect_get_specular_power(effect, &scalar) == CNA_RESULT_SUCCESS &&
+           scalar == 17.0F &&
+           cna_basic_effect_get_alpha(effect, &scalar) == CNA_RESULT_SUCCESS && scalar == 0.75F &&
+           cna_basic_effect_get_vertex_color_enabled(effect, &vertex_color) == CNA_RESULT_SUCCESS &&
+           vertex_color == CNA_TRUE;
 }
 
 static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, void* context,
@@ -111,6 +128,21 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
         cna_demo_check(state->demo, result == CNA_RESULT_INVALID_STATE,
                       "the live font prevents destroying its retained atlas");
         if (result == CNA_RESULT_SUCCESS) state->font_atlas = CNA_INVALID_HANDLE;
+    }
+
+    /* A stock-effect CNJ avoids compiled-shader capability differences while still exercising the
+       canonical ContentManager.Load<Effect> path and authored material values. */
+    if (cna_demo_check_result(
+            state->demo,
+            cna_content_manager_load_effect(
+                state->content, view("effects/c_api_basic_effect"), &state->effect),
+            "load an authored BasicEffect through ContentManager.Load<Effect>")) {
+        cna_demo_check(
+            state->demo, effect_has_authored_state(state->effect),
+            "the loaded effect preserves every authored BasicEffect material value");
+        cna_demo_check_result(
+            state->demo, cna_effect_apply(state->effect),
+            "the loaded stock effect applies through the ordinary Effect interface");
     }
 
     /* This C setter explicitly preserves cached assets while changing uncached resolution.
@@ -211,6 +243,13 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
             cna_demo_check(state->demo, measured.x == state->text_size.x && measured.y == state->text_size.y,
                           "the owned font keeps its original metrics");
         }
+        cna_demo_check(
+            state->demo,
+            state->effect != CNA_INVALID_HANDLE && effect_has_authored_state(state->effect) &&
+                cna_effect_apply(state->effect) == CNA_RESULT_SUCCESS,
+            stage == 0
+                ? "the loaded Effect remains authored and usable after ContentManager.Unload"
+                : "the loaded Effect remains authored and usable after ContentManager destruction");
     }
     return cna_sprite_batch_create(graphics_device, &state->sprite_batch);
 }
@@ -333,7 +372,8 @@ int main(int argc, char** argv)
     cna_demo_init(&demo, "c_api.content.content_manager", argc, argv, 10);
     memset(&state, 0, sizeof(state));
     state.demo = &demo;
-    state.content = state.game_content = state.checker = state.font = state.font_atlas = state.sprite_batch = CNA_INVALID_HANDLE;
+    state.content = state.game_content = state.checker = state.font = state.font_atlas =
+        state.effect = state.sprite_batch = CNA_INVALID_HANDLE;
 
     memset(&callbacks, 0, sizeof(callbacks));
     callbacks.struct_size = (uint32_t)sizeof(callbacks);
@@ -366,6 +406,7 @@ int main(int argc, char** argv)
     release(&state, &state.font, cna_sprite_font_destroy, "cna_sprite_font_destroy (before its atlas)");
     release(&state, &state.font_atlas, cna_texture2d_destroy, "cna_texture2d_destroy (the font's atlas)");
     release(&state, &state.checker, cna_texture2d_destroy, "cna_texture2d_destroy (the checker)");
+    release(&state, &state.effect, cna_effect_destroy, "cna_effect_destroy (the loaded BasicEffect)");
     release(&state, &state.content, cna_content_manager_destroy, "cna_content_manager_destroy");
     cna_demo_check_result(&demo, cna_graphics_device_manager_destroy(manager), "cna_graphics_device_manager_destroy");
     /* A game-owned content borrow does not prevent game destruction; its old identifier expires. */

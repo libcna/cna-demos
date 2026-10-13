@@ -3305,3 +3305,15 @@ incremental build is clean. The three bindings plus Texture3D create/destroy rai
 only the known third-party Draco CMP0148 developer warning. Clean sibling CNA is `a6bb279d47`; the
 production library baseline is unchanged. No sampling, draw, pixel or visual inspection is claimed.
 Evidence:checkpoint-521-c-shader-textures-focused-*.
+
+The existing `c_api.content.content_manager` now loads a deterministically generated authored
+BasicEffect CNJ through `cna_content_manager_load_effect`. Its53-control workflow proves exact
+diffuse/emissive colors, specular power, alpha and vertex-color state, ordinary Effect application
+and independent usability after both manager unload and manager destruction while retaining every
+previous texture/font/cache/root/draw check. Direct and both runner selections pass with byte-
+identical output and empty stderr; all33 focused ContentManager, BasicEffect and CLI tests pass in
+14.38s. Metadata remains521/0 and the incremental build is clean. This final route raises total C
+coverage1082->1083/3205 and completes `effects.h`289->290/290. Clean sibling CNA is `a6bb279d47`;
+the production library baseline is unchanged. Existing texture/font back-buffer pixels were read
+programmatically; no screenshot or visual inspection is claimed.
+Evidence:checkpoint-521-c-effect-load-focused-*.
