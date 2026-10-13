@@ -4037,3 +4037,18 @@ stderr; strict C99 and metadata compilation pass. Staged metadata reaches2293/32
 `gamer_services.h` reaches141/239. Evidence:
 `checkpoint-592-c-guide-dispatcher-focused-*-direct.*`. No event delivery, visible Guide panel,
 user interaction, pixel appearance or project-built runner is claimed.
+
+## Focused593-C-guide-dialog-rendering
+
+`c_api.gamer.guide_rendering` adds both remaining dialog-render routes to a real HiDef C game. Its
+first frame opens and draws a password keyboard; the second cancels that request exactly once,
+resets it and opens and draws a focused three-button alert. Direct back-buffer inspection finds
+69,500 changed pixels over a464x151 region for the keyboard and100,004 changed pixels over a414x243
+region for the message box under both SOFTWARE and OPENGLES3. Separate one- and two-frame Xvfb
+captures give four800x480 screenshots; all were inspected and show readable labels, six masked
+password glyphs, the alert icon and the requested middle-button focus. All17 keyboard-capture and
+24 full-workflow controls pass with empty stderr; strict C99 and metadata compilation pass. Staged
+metadata reaches2295/3205 and `gamer_services.h` reaches143/239. Evidence:
+`checkpoint-593-c-guide-rendering-focused-*-direct.*`. Actual rendering and visible appearance are
+validated; real keyboard, mouse and controller interaction and project-built execution remain
+separate.
