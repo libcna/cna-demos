@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete473-hierarchy:486enabled CTests and both full smoke suites preserve all old
+  failures/child/network evidence; categories grows from five to ten checks.
 - XACT categories now contrast independent groups with authored parent/child pause, resume
   and stop: ten checks pass while all five original predicates remain.
 - Complete473-music:486enabled CTests and both full smoke suites retain all previous

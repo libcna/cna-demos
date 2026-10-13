@@ -1615,3 +1615,31 @@ test. Watched build/gate, metadata473/0 and focused reviewer pass before source 
 All nine old XACT files remain byte-identical; all ten source/staged pairs match.
 No future-voice pause inheritance, audible volume, deep hierarchy or category-fade claim.
 Full473-hierarchy is pending against complete473-music. Evidence:checkpoint-473-hierarchy-focused-*.
+
+## Complete473-hierarchy
+
+Complete checkpoint **473-hierarchy**, source `be5ac32`,
+extends categories from5to10checks while preserving all original predicates/independent
+Music/SFX behavior and correcting only the equality label to names. A separate160byteXGS
+makes Master parent of SFX: live paused direct/descendant voices, parent Resume/Pause,
+child-only Resume and parent Stop from verified both-paused state pass in two dummy-audio
+runs with empty stderr. All9oldXACTassets are unchanged; all10source/staged pairs match.
+Focused38enabled audio/CLI CTests and reviewer passed before source commit. No new ID,
+future-voice pause inheritance, audible volume, deep hierarchy or category-fade credit.
+
+Full tools/validate.sh passes metadata473/0 and486enabled CTests in 166.07s (three further
+manual tests disabled). SOFTWARE408/27/35/3 and OPENGLES3 438/29/3/3 preserve all38/42old
+failed assertions, C/custom child lists/traces and five network controls. Music import retains
+15exact child checks; parentJSON0. Count changes:
+{"OPENGLES3": {"audio.xact.categories": {"after": 10, "before": 5, "reason": "Five authored hierarchy controls added; original five predicates retained, name-equality label corrected."}}, "SOFTWARE": {"audio.xact.categories": {"after": 10, "before": 5, "reason": "Five authored hierarchy controls added; original five predicates retained, name-equality label corrected."}}}.
+All36selected binaries/four existing assets/28fixture hashes stay unchanged through runtime.
+Normalized stderr is identical, including six music TitleContainer INFO lines,42known GL
+X protocol records and the intentional shader error. Outer Xvfb has14exact amdgpu pairs
+(previous20); independent inner/outer exits are zero. Capture CNAeff3131017
+(clean), final CNAeff3131017
+(clean). These are selected artifact/source observations,
+not an atomic or full transitive input snapshot. All evidence helpers pass; immutable
+checkpoint-473-hierarchy-*. Generated coverage:297/329types,
+1400/2326XNA members. Semantic coverage remains incomplete.
+Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged; clean runs do
+not establish a repair of the staging race. Original refusals and reproduction remain archived.
