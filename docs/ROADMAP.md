@@ -446,7 +446,7 @@ a check that all authored colors remain visible and that a blank texture row can
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 18 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 19 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -3860,3 +3860,13 @@ leaderboard gamer/leaving validation are explicit. Both renderer-labelled direct
 identically with empty stderr; strict C99 and metadata compilation pass. `net_gamers.h` is33/33
 demonstrated. Evidence:checkpoint-579-c-net-event-values-focused-*-direct.*. The demo constructs
 event payloads and does not claim live dispatch or a project-built runner.
+
+`c_api.net.available_sessions` starts `net_sessions.h` with all21 synthetic discovery-value and
+collection routes in23 renderer-free controls. Exact roster/slot/type/port values, atomic host and
+address text, measured QoS, independent properties and value equality are visible across three
+descriptions. A two-entry collection snapshots released source handles, rejects invalid indexing,
+remains readable across idempotent disposal and returns an owned entry that survives collection
+release. Both renderer-labelled direct runs pass byte-identically with empty stderr; strict C99 and
+metadata compilation pass. `net_sessions.h` reaches21/104 demonstrated. Evidence:
+checkpoint-580-c-net-available-focused-*-direct.*. No discovery, join, socket, address reachability
+or project-built runner is claimed.
