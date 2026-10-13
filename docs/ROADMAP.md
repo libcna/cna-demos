@@ -3712,3 +3712,14 @@ Xvfb/dummy-audio selections are byte-identical with empty stderr; strict C99 and
 pass, and the cube asset regenerates byte-for-byte. `content.h` now has dispositions for every route
 at31/32 demonstrated. Evidence:checkpoint-564-c-content-manager-inspection-focused-*-direct.* and
 checkpoint-565-c-content-additional-loaders-focused-*-direct.*.
+
+`c_api.storage.members` demonstrates25 storage routes in35 controls without a game. Exact/atomic
+root and display names, all selector forms and synchronous completions, capacity, registration
+ownership, container identity, unordered directory/file listings, explicit share selection, flush,
+truncate/zero-extension and idempotent disposal/event delivery all pass. Actual device-set change
+delivery is not induced, and no share enforcement is claimed because the canonical implementation
+currently ignores those bits. The sandboxed attempts could not create the user storage root and are
+environment-only non-evidence; direct runs in both renderer-labelled environments are byte-identical
+with empty stderr. Strict C99 plus metadata compilation pass. `storage.h` now has dispositions for
+all49 routes at47 demonstrated; the fixed container reflection-name pair remains trivial/uncredited.
+Evidence:checkpoint-566-c-storage-members-focused-*-direct.*.
