@@ -96,6 +96,12 @@ foreach(_renderer IN LISTS CNA_DEMOS_TEST_RENDERERS)
         if(_needs MATCHES "(^|,)network(,|$)")
             set_tests_properties(${_name} PROPERTIES RESOURCE_LOCK cna_demos_system_link)
         endif()
+        # This demo verifies an immediate global-pointer warp and then restores the
+        # original desktop position. Any concurrent SDL process on the same display
+        # may move the shared pointer between those two observations.
+        if(_id STREQUAL "c_api.input.keyboard_mouse")
+            set_tests_properties(${_name} PROPERTIES RUN_SERIAL TRUE)
+        endif()
         # A demo that documents a recorded CNA defect is expected to fail; if it starts passing,
         # the test fails so the stale known-issue marker gets noticed.
         if(NOT _known_issue STREQUAL "-")
