@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete474-C-song-duration:487enabled CTests and both full smoke suites preserve all old
+  evidence; the C media demo adds six exact Song duration/disposal checks and six C ABI routes.
 - Extended the existing C media-player workflow from55to61checks with explicit Song duration,
   elapsed-time completion boundaries and idempotent Song disposal.
 - Complete474-C-media-events:487enabled CTests and both full smoke suites preserve all old

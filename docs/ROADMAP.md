@@ -1835,3 +1835,19 @@ watched consistency build passes with3909unchanged CNA inputs/no diagnostics. Me
 474/0. Six actual routes raise coverage192->198/3210, media.h10->15/39 and media_player.h22->23/41.
 No file-probe, audible timing, collection propagation or invalid-handle output claim. Full474 is
 pending. Evidence:checkpoint-474-c-song-duration-focused-*.
+
+## Complete474-C-song-duration
+
+Complete checkpoint **474-C-song-duration**, source `e3a566d`, extends the same C media demo
+55->61checks without another ID or fixture. Focused and full runs preserve all55old labels and add
+six exact controls for explicit duration conversion, the elapsed-time boundary, zero-duration
+fallback and idempotent disposal. The helper Song is never played or queued. Focused29media/CLI
+CTests pass.
+
+Full validation passes metadata474/0 and487enabled CTests in152.03s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected child/network evidence. C media
+alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain exact. Normalized
+stderr is identical. Outer Xvfb has12exact amdgpu pairs (previous16); exits are zero and CNA
+eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
+rise192->198/3210, media.h10->15/39 and media_player.h22->23/41.
+Evidence:checkpoint-474-c-song-duration-*.

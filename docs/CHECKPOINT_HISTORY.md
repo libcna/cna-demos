@@ -2957,3 +2957,14 @@ metadata474/0 and487enabled CTests in151.27s. SOFTWARE409/27/35/3 and OPENGLES34
 retain all38/42old failures and protected evidence.37binaries, four assets and30fixture paths
 remain exact; normalized stderr is identical. Outer Xvfb has16known pairs, exits are zero and
 CNAeff3131017 stays clean. C ABI routes rise188->192/3210. Evidence:checkpoint-474-c-media-events-*.
+
+## Complete474-C-song-duration
+
+Complete checkpoint **474-C-song-duration**, source `e3a566d`, extends the existing C media demo
+55->61checks with explicit Song duration boundaries, zero-duration fallback behavior and idempotent
+disposal. Both renderers preserve all55old labels and pass six additions with empty demo stderr.
+Full validation passes metadata474/0 and487enabled CTests in152.03s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.37binaries, four assets
+and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has12known pairs,
+exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types and1405/2326members;
+C ABI routes rise192->198/3210. Evidence:checkpoint-474-c-song-duration-*.

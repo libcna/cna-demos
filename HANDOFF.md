@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-474 catalog demos (complete checkpoint474-album-art): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+474 catalog demos (complete checkpoint474-C-song-duration): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -103,36 +103,24 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-C-song-duration** extends c_api.media.media_player from55to61checks under both
-renderers with empty stderr and no new ID/fixture. Removing six additions restores all55old labels
-in order. A caller-owned Song over rising.wav stores a deliberately distinct750ms as7,500,000
-ticks; fallback completion is false one tick before and true at the boundary. Setting duration0
-makes even ten elapsed seconds report not-ended. The Song starts live, Dispose is idempotent,
-IsDisposed becomes true and Duration remains readable before handle destruction. It is never
-played or queued. Focused29media/CLI CTests pass; metadata474/0. The ccache-only refusal is archived;
-the watched consistency build passes with3909unchanged CNA inputs/no diagnostics. Six actual routes
-raise coverage192->198/3210, media.h10->15/39 and media_player.h22->23/41.
-Evidence:checkpoint-474-c-song-duration-focused-*.
+Complete checkpoint **474-C-song-duration**, source `e3a566d`, extends c_api.media.media_player
+from55to61checks under both renderers with empty demo stderr and no new ID/fixture. Removing six
+additions restores all55old labels in order. A caller-owned rising.wav Song stores a deliberately
+distinct750ms as7,500,000ticks; fallback completion is false one tick before and true at the
+boundary. Duration0 remains not-ended after ten seconds. Dispose succeeds twice, sets IsDisposed
+and leaves Duration readable before destruction. The helper is never played or queued.
+Focused29media/CLI CTests pass; the ccache-only refusal is archived and the watched consistency
+build passes with3909unchanged CNA inputs/no diagnostics.
 
-Last complete baseline:
-
-Complete checkpoint **474-C-media-events**, source `02c81db`, extends c_api.media.media_player
-from53to55checks without a new ID or fixture. Both focused and full runs preserve all53old labels
-and add two exact process-wide event controls with empty demo stderr. Manual raises synchronously
-invoke both live registrations exactly once; after both existing unsubscribe checks, the same
-raises succeed without callbacks. Focused29media/CLI CTests pass. The initial ccache refusal is
-archived; the watched consistency build passes with3909unchanged CNA inputs/no diagnostics. No
-callback order/reentrancy/foreign-thread/destruction-cleanup claim; ISSUE-058/059 remain unchanged.
-
-Full tools/validate.sh passes metadata474/0 and487enabled CTests in151.27s. SOFTWARE409/27/35/3
+Full tools/validate.sh passes metadata474/0 and487enabled CTests in152.03s. SOFTWARE409/27/35/3
 and OPENGLES3439/29/3/3 preserve all38/42prior failures, every unrelated C/custom list/trace,
-five network controls,18music checks and8album-art checks. Only C media grows53->55; parentJSON
-remains0. All37selected binaries, four assets and30fixture paths stay unchanged. Normalized stderr
-is identical to complete474-C-media-lifecycle-bounds, including15INFO lines per renderer and42
-known GL X records. Outer Xvfb has16exact amdgpu pairs (previous14); inner/outer exits are zero.
-Capture/final CNAeff3131017 are clean. Coverage stays297/329types and1405/2326XNA members; actual
-C ABI routes rise188->192/3210 and media_player.h18->22/41. Semantic coverage remains incomplete.
-Immutable evidence:checkpoint-474-c-media-events-*. Preserve refusals and ISSUE-038/057/058/059.
+five network controls,18music checks and8album-art checks. Only C media grows55->61; parentJSON
+remains0. All37selected binary paths, four assets and30fixture paths remain exact. Normalized
+stderr is identical to complete474-C-media-events. Outer Xvfb has12exact amdgpu pairs (previous16);
+inner/outer exits are zero. Capture/final CNAeff3131017 are clean. Coverage stays297/329types and
+1405/2326XNA members; actual C ABI routes rise192->198/3210, media.h10->15/39 and
+media_player.h22->23/41. Semantic coverage remains incomplete. Immutable evidence:
+checkpoint-474-c-song-duration-*. Preserve refusals and ISSUE-038/057/058/059.
 
 ## 8. Exact commands that work
 
@@ -256,14 +244,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: commit the focused C Song duration/disposal source/docs, then run full474
-validation against complete474-C-media-events. Capture once after the full build during CTest: the
-same37selected binaries/four assets/30fixture paths. Freeze source/assets/build through both
-smokes. Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
-OPENGLES3439/29/3/3. Preserve all38/42old failures, unrelated C/custom lists/traces, five network
-controls,18music and8album-art checks. Only c_api.media.media_player grows55->61; parentJSON stays0
-and normalized stderr should be identical. Archive/refuse any surprise; update full audit/HANDOFF
-and immediately continue the next semantic public-member gap. Never edit/revert CNA; preserve
+HIGHEST PRIORITY: continue the audited `media.h` member gap in the existing
+`c_api.media.media_player` demo with one focused Song identity batch. Use `cna_song_create` for two
+caller-owned Songs over the same rising.wav path but different names, plus falling.wav as the
+unequal control. Demonstrate that the stored handle text is the exact path, equality is path-based
+rather than handle/name identity and equal Songs have equal hashes. Include the empty-name behavior
+only if it stays coherent with this identity example. Keep all61old labels/order, do not play or
+queue these helper Songs, and release every handle before game destruction. First preserve the
+complete474-C-song-duration baseline, audit the exact source/header contracts, then build with the
+3909-input consistency watch, run both focused renderers and relevant media/CLI CTests, regenerate
+coverage, update docs and run a new complete474 checkpoint. Never edit/revert CNA; preserve
 ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
@@ -276,7 +266,7 @@ ISSUE-038/057/058/059.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is474-C-media-events; source commit is in section7.
-All earlier drafts and focused C media work are APPLIED AND STALE. Explicit Song duration/disposal
-is applied and focused but has no complete checkpoint yet.
+Current complete baseline is474-C-song-duration; source commit is in section7.
+All earlier drafts and focused C media work are APPLIED AND STALE. Song identity/path/hash work
+is the next audited member batch and has not been implemented.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.
