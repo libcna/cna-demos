@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete497-C-sprite-states passes all510 enabled CTests and both full smoke suites; the five new
+  graphics IDs pass and every complete492 status and failed assertion remains exact.
 - Extended `c_api.graphics.sprite_batch` from43to61 controls with pixel-proven explicit-state and
   transformed default-effect Begin routes, completing all14 `graphics_state.h` routes.
 - Added `c_api.graphics.device_states`, a19-check audit of every graphics-state preset plus exact

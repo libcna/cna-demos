@@ -2812,3 +2812,16 @@ build passes. These final two routes raise C coverage716->718/3205 and complete
 `graphics_state.h` at14/14. Clean sibling CNA is docs-only `e67c54936`; production `libcna.so`
 remains unchanged. No screenshot or visual inspection is claimed.
 Evidence:checkpoint-497-c-sprite-states-focused-*.
+
+## Complete497-C-sprite-states
+
+Complete checkpoint source `cfed648` absorbs all seven focused graphics batches after complete492.
+`tools/validate.sh` reports metadata497/0 and passes all510 enabled CTests in308.90s; three declared
+tests remain disabled. SOFTWARE is431pass/28known-fail/35skip/3not-run and OPENGLES3 is
+461pass/30known-fail/3skip/3not-run. Comparison with complete492 shows all five new IDs passing,
+every existing status and known-issue value unchanged, and identical failed-assertion multisets of
+40 and44. The existing C SpriteBatch workflow alone grows43to61 passing child checks. Fresh runtime
+coverage is297/329 types,1405/2326 XNA members and718/3205 C routes. CNA advanced during the run
+from clean `e67c54936` to clean `d7eff66ee` through two documentation-only commits; both production
+library hashes stayed unchanged. No visual inspection is claimed.
+Evidence:checkpoint-497-c-sprite-states-*.

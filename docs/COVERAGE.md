@@ -11,7 +11,7 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
-| c_api | 42 | 41 | 1 | 0 | 33 / 0 / 4 / 0 / 5 | 33 / 0 / 4 / 0 / 5 |
+| c_api | 42 | 41 | 1 | 0 | 38 / 0 / 4 / 0 / 0 | 38 / 0 / 4 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,6 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `c_api.graphics.device_capabilities`, `c_api.graphics.device_states`, `c_api.graphics.index_buffer`, `c_api.graphics.render_target_bindings`, `c_api.graphics.resource_lifecycle`.
-- OPENGLES3: absent from report: `c_api.graphics.device_capabilities`, `c_api.graphics.device_states`, `c_api.graphics.index_buffer`, `c_api.graphics.render_target_bindings`, `c_api.graphics.resource_lifecycle`.
 
 ## XNA 4.0 API surface demonstrated
 
