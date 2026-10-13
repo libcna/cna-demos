@@ -64,21 +64,21 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-501 catalog demos (latest complete checkpoint500-C-buffer-bindings; one focused batch pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+502 catalog demos (latest complete checkpoint500-C-buffer-bindings; two focused batches pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 46 (standalone C programs). Every declared category has demos.
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 47 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog with complete500 runtime reports plus focused501
-source coverage). Actual C ABI coverage is762/3205: `input_gamepad.h`61/63,
+source coverage). Actual C ABI coverage is768/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`46/84. Complete500 exercises
-the first758 credited routes in both full smoke suites; four new routes have focused dual-renderer
+`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`52/84. Complete500 exercises
+the first758 credited routes in both full smoke suites; ten new routes have focused dual-renderer
 evidence.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 30 (`c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
@@ -110,6 +110,23 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **502-C-owned-device** adds `c_api.graphics.owned_device` for caller-owned graphics-device
+creation/destruction, manual presentation, both reset forms and no-payload lifecycle subscriptions.
+Twenty controls create two distinct HiDef devices outside any Game; query the first; subscribe its
+resetting/reset/lost/disposing events; clear and present it; and prove both ordinary and changed-
+parameter resets synchronously raise the exact resetting-then-reset order. The changed400x300
+presentation is read back field for field, while a null reset is refused before any callback. Reset
+and lost registrations release once; destroying the second device leaves the first live; destroying
+the first raises one exact disposing callback that safely releases its own registration before the
+native event source dies. Both selections produce byte-identical child output with empty stderr.
+Metadata is502/0 and the exact demo plus presentation/state/manager-event and CLI regressions pass
+8/8. Six routes raise coverage762->768/3205 and `graphics_device.h`46->52/84. The source audit also
+records passing documentation defect CNA-DEMOS-ISSUE-065. Clean sibling CNA is `d7eff66ee`;
+`cna-demos` is SHA-256 `4b38fbea8cd380e7ee0b572c5abb4a90f9c59f8ce3cffa4485596a1b87e1e926`,
+the standalone is `f7cf7fed096255010f98fe890de3e527f8ebd4b633b02484ef29e9755bf154a0`, and
+production `libcna.so` remains byte-identical. No displayed pixels, screenshot or visual inspection
+is claimed. Evidence:`checkpoint-502-c-owned-device-focused-*`.
 
 Focused **501-C-device-clears** adds `c_api.graphics.device_clears` for all three graphics-device
 clear routes and windowed backbuffer readback. Its explicit HiDef Color/Depth24Stencil8 back buffer
@@ -825,19 +842,20 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: implement the owned-device/reset/event batch from the now-complete
-`graphics_device.h` semantic audit. Keep create/destroy/present/reset/reset-with-parameters and the
-no-payload event subscription together as one lifecycle concept. After that, continue the assigned
-draw, occlusion-query, resource-loss and capability/color-space groups recorded in
-docs/COVERAGE_AUDIT.md. Build and run both renderer selections after each batch, and do not defer
-another complete checkpoint for multiple accumulated IDs.
+HIGHEST PRIORITY: continue the assigned `graphics_device.h` groups from the complete semantic audit.
+Add graphics-profile and unsupported-3D-policy round trips to the existing device-state workflow,
+then continue draw, occlusion-query, resource-loss and capability/color-space work recorded in
+docs/COVERAGE_AUDIT.md. Keep context-loss recovery manual/platform-specific and the one-way string
+marker intentionally uncredited unless an observable consumer is added. Build and run both
+renderer selections after each batch, and do not defer another complete checkpoint for multiple
+accumulated IDs.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
 Do not credit the separate live gamepad dead-zone overload on a disconnected neutral slot or
 duplicate generated argument checks. Leave mouse-touch emulation manual-deferred, generic
 touch/media reflection uncredited and `media_player_update_ext` deferred. Never edit/revert CNA;
-preserve ISSUE-038/057/058/059/060/061/062/063/064.
+preserve ISSUE-038/057/058/059/060/061/062/063/064/065.
 
 ## 15. Assumptions the next session must know
 
@@ -858,7 +876,7 @@ render-target-bindings, device-capabilities, sprite-scaled, resource-lifecycle, 
 device-states and sprite-states batches are all included in complete497. Viewport, the later
 device-values and resource-events extensions, texture slots and buffer bindings are included in
 complete500. Complete500 ran with clean sibling CNA `d7eff66ee`; the production library hash stayed
-unchanged. Complete500 is the immutable full-runtime baseline. The focused device-clears501 batch
-is newer and pending the next complete checkpoint.
+unchanged. Complete500 is the immutable full-runtime baseline. The focused device-clears501 and
+owned-device502 batches are newer and pending the next complete checkpoint.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.

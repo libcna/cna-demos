@@ -15,6 +15,26 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-065 -- C GraphicsDevice reset declaration is separated from its documentation
+
+- **Area/API:** `cna_graphics_device_reset` in
+  `modules/c-api/include/CNA/C/graphics_device.h`.
+- **Observed:** the complete documentation block for resetting with current presentation parameters
+  and the resetting/reset event order appears before the separate, complete documentation block for
+  `cna_graphics_device_create`. The create declaration, destroy documentation and destroy
+  declaration then intervene before the bare `cna_graphics_device_reset` declaration. A reader or
+  documentation generator cannot associate the reset contract with the reset declaration.
+- **Runtime/source evidence:** `c_api.graphics.owned_device` calls the bare-declared route on a
+  caller-owned device and observes SUCCESS plus the synchronous resetting-then-reset callback pair
+  under both SOFTWARE and OPENGLES3. The generated implementation calls canonical `Reset()`; the
+  behavior matches the displaced comment. All20 demo controls pass identically with empty stderr.
+- **Expected:** place the reset declaration immediately after its existing documentation block, or
+  move that block immediately above the existing declaration after destroy. No runtime change is
+  indicated by this evidence.
+- **Scope/status:** passing public-header documentation-placement defect; no runtime knownIssue
+  marker is needed. No CNA source was modified or upstream message sent. Observed at clean CNA
+  `d7eff66ee`; focused evidence is archived as `checkpoint-502-c-owned-device-focused-*`. Open.
+
 ### CNA-DEMOS-ISSUE-064 -- C Viewport default comment promises the wrong maximum depth
 
 - **Area/API:** `cna_viewport_init` and its public comment in

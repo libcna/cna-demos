@@ -2937,3 +2937,20 @@ CLI tests pass8/8, and the incremental full build is clean. Four routes raise C 
 CNA is `d7eff66ee`; production `libcna.so` remains byte-identical. Pixel values were read
 programmatically; no screenshot or visual inspection is claimed.
 Evidence:checkpoint-501-c-device-clears-focused-*.
+
+## Focused502-C-owned-device
+
+New `c_api.graphics.owned_device` demonstrates the six caller-owned lifecycle routes. Twenty
+controls create two distinct HiDef devices outside any Game, query the first, install all four
+no-payload event subscriptions, clear and present one frame, then reset with current and changed
+parameters. Both successful resets synchronously raise the exact resetting-then-reset order; the
+second applies an explicit adapter plus400x300 dimensions and interval one, while a null parameter
+set raises nothing. Reset/lost registrations release once. Destroying the second leaves the first
+live; destroying the first raises one exact disposing callback which releases its registration
+while the event source is still alive, and all stale handles are refused. SOFTWARE and OPENGLES3
+produce byte-identical output with20 passing checks and empty stderr. Metadata is502/0; the exact
+demo plus presentation/state/manager-event and CLI tests pass8/8. Six routes raise C coverage
+762->768/3205 and `graphics_device.h`46->52/84. The header placement defect found during source
+audit is recorded as ISSUE-065. Clean sibling CNA is `d7eff66ee`; production `libcna.so` remains
+byte-identical. No displayed pixels, screenshot or visual inspection is claimed.
+Evidence:checkpoint-502-c-owned-device-focused-*.

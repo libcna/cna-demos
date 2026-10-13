@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.owned_device`, a20-check two-device lifecycle workflow for caller ownership,
+  presentation, both reset forms, ordered callbacks, independent destruction and stale handles.
+- Recorded CNA-DEMOS-ISSUE-065: the public graphics-device header separates the reset declaration
+  from its documentation with the complete owned-device create/destroy declarations.
 - Added `c_api.graphics.device_clears`, a24-check pixel-readback workflow for normalized RGBA,
   Color/depth and selected color/depth/stencil clears plus exact offset-window, refusal and
   empty-mask preservation.
