@@ -3945,3 +3945,18 @@ NotSupported without completion. Both renderer-labelled direct runs are byte-ide
 stderr; strict C99 and metadata compilation pass. Staged metadata reaches2183/3205 and
 `gamer_services.h` reaches31/239. Evidence:`checkpoint-586-c-gamer-profile-focused-*-direct.*`.
 No online account lookup, token, profile picture, game, renderer or project-built runner is claimed.
+
+## Focused587-C-signed-in-gamer-state
+
+`c_api.gamer.signed_in_state` adds19 `gamer_services.h` routes in29 renderer-free controls. Explicit
+online-guest and offline-outside fixtures distinguish guest/service/player identities, mutable
+party size, exact structured presence, the non-mutating free-text extension and bounded canonical
+privileges. Offline friendship returns false and an owned empty collection. Publishing only player
+two makes positional and player-index lookups visibly distinct, while IndexOf/Contains, absent
+slots, upper bounds, independent borrowed handles and published retention are exact. Both
+renderer-labelled direct runs are byte-identical with empty stderr; strict C99 and metadata
+compilation pass. Staged metadata reaches2202/3205 and `gamer_services.h` reaches50/239. The passing
+demo exposes CNA-DEMOS-ISSUE-076: the header promises an absent player-index lookup preserves
+`out_gamer`, but the wrapper clears it. Evidence:`checkpoint-587-c-signed-in-state-focused-*-direct.*`.
+No service friendship, presence publication, microphone, game, renderer or project-built runner is
+claimed.

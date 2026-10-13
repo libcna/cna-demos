@@ -15,6 +15,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-076 -- Absent signed-in player lookup contradicts its output contract
+
+- **Area/API:** `cna_gamer_get_signed_in_gamer_at_player_index` in
+  `modules/c-api/include/CNA/C/gamer_services.h` and generated `Gamers.inc`.
+- **Reproduction:** create a valid signed-in gamer for player two but leave the process collection
+  empty, initialize `out_gamer` to a nonzero sentinel, then query player two. Repeat after publishing
+  player two while querying the unoccupied player-one slot.
+- **Observed:** both calls succeed with `out_has_gamer == CNA_FALSE` and replace the sentinel with
+  `CNA_INVALID_HANDLE`. The generated wrapper unconditionally assigns `*out_gamer` to the invalid
+  handle before the implementation determines whether the player slot is occupied.
+- **Expected:** the public header explicitly says `out_gamer` "is left exactly as the caller set it"
+  when `out_has_gamer` is false. Either preserve it for the ordinary absent result or update the
+  contract to promise deterministic invalid-handle initialization, matching the generated wrapper
+  and the broader C output policy.
+- **Scope/status:** passing public-header documentation mismatch; the demo follows the current
+  deterministic invalid-handle behavior and needs no runtime knownIssue marker. Both focused
+  renderer-labelled runs pass all29 controls with identical output and empty stderr. No CNA source
+  was modified or upstream message sent. Evidence:
+  `checkpoint-587-c-signed-in-state-focused-*-direct.*`; runtime uses the last completed CNA
+  libraries while current source contains the same unconditional generated assignment.
+
 ### CNA-DEMOS-ISSUE-075 -- C offset packet receive overwrites bytes outside the requested range
 
 - **Area/API:** `cna_local_network_gamer_receive_data_at` in

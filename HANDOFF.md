@@ -19,9 +19,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Mostly complete: 6 (effects and shaders, 41; the C `effects.h` route audit is complete).
 * In progress: 7 (models/glTF, 23), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
-  **12 (gamer services 20 incl. avatars, leaderboards and C Gamer/profile identity; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
+  **12 (gamer services 21 incl. avatars, leaderboards and C Gamer/profile/signed-in state; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 128 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 129 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -67,25 +67,25 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds58 staged standalone C IDs and should reach583 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds59 staged standalone C IDs and should reach584 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 26 (10 C++ XACT plus three C workflows), core 3 (2 logger),
 content 52 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
-joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 15 (compiled video and song, tagged library import and album art), gamer services 20
+joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 15 (compiled video and song, tagged library import and album art), gamer services 21
 (own process each; 5 avatar, 2 leaderboard), net 24 (own process each; 15 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and128 in the
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and129 in the
 current source tree (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
 Latest generated project-built C ABI coverage is1116/3205. The current staged source metadata names
-2183/3205 routes, machine-counted directly from all public C headers and standalone metadata; that
+2202/3205 routes, machine-counted directly from all public C headers and standalone metadata; that
 staged figure is not yet a generated/project-built coverage checkpoint. Selected semantic totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
 `media_player.h`41/41, `net.h`51/51, `net_gamers.h`33/33, `net_sessions.h`104/104,
-`gamer_services.h`31/239,
+`gamer_services.h`50/239,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete524 exercises all1109 credited routes in both full smoke suites and includes the focused
@@ -1341,8 +1341,8 @@ packet-buffer batches. `net_gamers.h` is complete at33/33 after the detached gam
 versioned event-info batches. `net_sessions.h` is complete at104/104 after its renderer-free
 discovered-session values/collection, Local session state/roster, live events, packet/voice/party,
 constructor and discovery/join batches. Continue with the independent `gamer_services.h` member
-audit. Gamer/profile identity is31/239; continue with coherent signed-in gamer state and
-process-wide collection behavior, then friend values/collections. Avoid renderer-
+audit. Gamer/profile and signed-in state reach50/239; continue with coherent friend values and
+mutable collection/enumerator behavior. Avoid renderer-
 dependent `graphics_ext.h` while
 the sibling renderer retirement is incoherent. The two
 remaining KeyboardState routes are fixed reflection
@@ -1364,7 +1364,7 @@ six host sensor/touch populated-metadata routes until suitable hardware executes
 Do not credit the separate live gamepad dead-zone overload on a disconnected neutral slot or
 duplicate generated argument checks. Leave mouse-touch emulation manual-deferred and generic
 reflection uncredited unless an audit identifies distinct public buffer behavior. Never edit/revert CNA;
-preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067/068/069/070/071/072/073/074.
+preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067/068/069/070/071/072/073/074/075/076.
 
 WORK IN PROGRESS: `standalone/c_api.graphics.vertex_values` contains the planned seven-check
 workflow and compiles cleanly with strict C99 warnings against the last completed C API binary. Its
@@ -1915,6 +1915,18 @@ metadata reaches2183/3205 and `gamer_services.h` reaches31/239. No online accoun
 profile picture, game, renderer or project-built runner is claimed. Evidence:
 `checkpoint-586-c-gamer-profile-focused-*-direct.*`.
 
+`standalone/c_api.gamer.signed_in_state` adds19 `gamer_services.h` routes in29 controls. Two
+explicit gamers distinguish guest/online/player identity, mutable party size, exact structured
+presence, non-mutating free-text presence and bounded canonical privileges. The offline friend
+query/collection is empty. Publishing only player two then distinguishes collection position from
+player index, proves IndexOf/Contains missing results, independent borrowed handles and published
+retention. Both renderer-labelled direct runs are byte-identical with empty stderr; strict C99 and
+metadata compilation pass. The staged union reaches2202/3205 and `gamer_services.h` reaches50/239.
+The passing workflow also records CNA-DEMOS-ISSUE-076: the public header says an absent player-index
+lookup preserves `out_gamer`, while the generated wrapper clears it. No service friendship,
+presence publication, microphone, game, renderer or project-built runner is claimed. Evidence:
+`checkpoint-587-c-signed-in-state-focused-*-direct.*`.
+
 The sibling CNA is currently at committed `22842c107d` (`refactor(Task RRC-034): retire METAL`) with
 263 externally modified paths, so it is still not a coherent source snapshot for reconfigure/build.
 It briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
@@ -1932,8 +1944,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose583 catalog IDs (complete524 plus SpriteFont and58
-additional new standalone IDs) and599 declared/596 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose584 catalog IDs (complete524 plus SpriteFont and59
+additional new standalone IDs) and600 declared/597 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 
