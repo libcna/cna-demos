@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.pbr_effect_material_state`, a33-check C workflow covering every non-texture
+  PbrEffect material route, shared effect interfaces and clone lifetime; four retained failures
+  establish CNA-DEMOS-ISSUE-070 for lost vertex-color and alpha-coverage clone state.
+- Recorded CNA-DEMOS-ISSUE-070: PbrEffect and SkinnedPbrEffect copy constructors omit four public
+  draw-affecting properties that their other material state preserves.
 - Added `c_api.graphics.color_matrix_effect_state`, a22-check C workflow covering every
   ColorMatrixEffect route, finite matrix/offset state, atomic non-finite refusal, the exact Rec. 709
   grayscale preset, reset and type-preserving clone survival after source destruction.

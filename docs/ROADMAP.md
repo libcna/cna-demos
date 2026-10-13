@@ -3228,3 +3228,16 @@ clean. All7 routes raise total C coverage1003->1010/3205 and `effects.h`212->219
 CNA is `a6bb279d47`; production library hashes remain unchanged. The existing C++ SOFTWARE demo
 supplies pixel validation; this C workflow makes no draw, transformed-pixel or visual-inspection
 claim. Evidence:checkpoint-515-c-color-matrix-effect-focused-*.
+
+New `c_api.graphics.pbr_effect_material_state` demonstrates every non-texture PbrEffect material
+route together with required lighting, matrices/fog and clone lifetime. Thirty-three controls cover
+exact core/glTF defaults, unclamped mutations, all alpha modes, invalid-value preservation and
+shared interfaces. Twenty-nine pass identically under SOFTWARE and OPENGLES3; four retained
+failures establish CNA-DEMOS-ISSUE-070 because clone resets vertex color, alpha mode, alpha cutoff
+and double-sided state while preserving the other material values and output encoding. Runner
+output is byte-identical and all three stderr files are empty; all19 focused PBR and CLI tests
+satisfy their contracts in5.94s (16 passed, three declared SOFTWARE capability skips). Metadata is
+516/0 and the incremental build is clean. Thirty-one routes raise total C coverage1010->1041/3205
+and `effects.h`219->250/290. Clean sibling CNA is `a6bb279d47`; production library hashes remain
+unchanged. Apply is state-only; no PBR draw, BRDF pixel or visual inspection is claimed.
+Evidence:checkpoint-516-c-pbr-material-focused-*.

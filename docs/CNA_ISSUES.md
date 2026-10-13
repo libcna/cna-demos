@@ -15,6 +15,30 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-070 -- PBR clones lose vertex-color and alpha-coverage state
+
+- **Area/API:** `PbrEffect::Clone`, `SkinnedPbrEffect::Clone`, and their shared C routes in
+  `modules/c-api/include/CNA/C/effects.h`.
+- **Runtime reproduction:** create a C `PbrEffect`, enable vertex color and double-sided rendering,
+  select blend alpha mode and set cutoff0.125, then clone it through `cna_effect_clone`, destroy the
+  source and query the clone through the same public PBR routes.
+- **Observed:** four focused controls fail under both SOFTWARE and OPENGLES3. The clone reports the
+  constructor defaults: vertex color false, opaque alpha mode, cutoff0.5 and double-sided false.
+  Core metallic-roughness/dielectric values and the separately stored output-encoding switch all
+  survive the same clone and source destruction, and the clone applies successfully.
+- **Expected:** `Clone()` creates an independent effect with its current public material state, as
+  the existing clone behavior and C route imply. These four draw-affecting properties must survive
+  like the other material fields.
+- **Source evidence:** both copy constructors explicitly copy the core and extension factors,
+  texture metadata and `encodeOutputToSrgb_`, but omit `VertexColorEnabledEXT`, `alphaMode_`,
+  `alphaCutoff_` and `doubleSided_`. The two implementations have the same omission. Existing CNA
+  clone tests cover several copied fields but do not set or assert these four.
+- **Scope/status:** renderer-independent runtime defect; `c_api.graphics.pbr_effect_material_state`
+  retains exactly the four failed assertions and is marked with this issue. No PBR draw, BRDF pixel
+  or visual result is claimed. No CNA source was modified or upstream message sent. Observed at
+  clean CNA `a6bb279d47`; focused evidence is archived as
+  `checkpoint-516-c-pbr-material-focused-*`. Open.
+
 ### CNA-DEMOS-ISSUE-069 -- C Effect clone comment overpromises concrete-type preservation
 
 - **Area/API:** `cna_effect_clone` in `modules/c-api/include/CNA/C/effects.h`.
