@@ -2,8 +2,9 @@
 /*
  * Graphics-state values and live device round trips from C. Every public preset is checked through
  * all fields, distinctive complete states are applied and read back, pixel/vertex sampler slots are
- * kept independent, and the callback restores the exact object, scalar and geometric state it
- * borrowed. Device identity and the game-owned disposal boundary are checked in the same loan.
+ * kept independent, and the callback restores the exact profile, policy, object, scalar and
+ * geometric state it borrowed. Device identity and the game-owned disposal boundary are checked
+ * in the same loan.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH] (nothing is drawn).
  * Exit code 0 passed, 1 failed.
@@ -328,6 +329,9 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     CNA_Bool disposed = CNA_TRUE;
     CNA_GraphicsDeviceStatus device_status = UINT32_MAX;
     CNA_GraphicsProfile profile = UINT32_MAX;
+    CNA_GraphicsProfile profile_copy = UINT32_MAX;
+    CNA_Unsupported3DGraphicsCallBehavior saved_unsupported_behavior = UINT32_MAX;
+    CNA_Unsupported3DGraphicsCallBehavior unsupported_behavior_copy = UINT32_MAX;
     uint32_t adapter_index = UINT32_MAX;
     uint64_t adapter_count = 0U;
     int32_t saved_mask = 0;
@@ -367,10 +371,13 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
             device_status == CNA_GRAPHICS_DEVICE_STATUS_NORMAL &&
             cna_graphics_device_get_graphics_profile(device, &profile) == CNA_RESULT_SUCCESS &&
             profile == CNA_GRAPHICS_PROFILE_HI_DEF &&
+            cna_graphics_device_get_unsupported_3d_call_behavior(
+                device, &saved_unsupported_behavior) == CNA_RESULT_SUCCESS &&
+            saved_unsupported_behavior == CNA_UNSUPPORTED_3D_GRAPHICS_CALL_BEHAVIOR_THROW &&
             cna_graphics_device_get_adapter_index(device, &adapter_index) == CNA_RESULT_SUCCESS &&
             cna_graphics_adapter_get_count(device, &adapter_count) == CNA_RESULT_SUCCESS &&
             (uint64_t)adapter_index < adapter_count,
-        "the live device is normal, undisposed, HiDef and attached to an enumerated adapter");
+        "the live device is normal, undisposed, HiDef, strict for unsupported 3D and attached to an enumerated adapter");
     cna_demo_check(
         state->demo,
         cna_graphics_device_dispose(device) == CNA_RESULT_NOT_SUPPORTED &&
@@ -379,6 +386,44 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
             cna_graphics_device_get_status(device, &device_status) == CNA_RESULT_SUCCESS &&
             device_status == CNA_GRAPHICS_DEVICE_STATUS_NORMAL,
         "C cannot dispose the callback-scoped game-owned device and it remains usable");
+
+    cna_demo_check(
+        state->demo,
+        cna_graphics_device_set_graphics_profile_ext(device, CNA_GRAPHICS_PROFILE_REACH) ==
+                CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_graphics_profile(device, &profile_copy) == CNA_RESULT_SUCCESS &&
+            profile_copy == CNA_GRAPHICS_PROFILE_REACH &&
+            cna_graphics_device_set_graphics_profile_ext(device, UINT32_C(2)) ==
+                CNA_RESULT_INVALID_ARGUMENT &&
+            cna_graphics_device_get_graphics_profile(device, &profile_copy) == CNA_RESULT_SUCCESS &&
+            profile_copy == CNA_GRAPHICS_PROFILE_REACH,
+        "the graphics profile changes to Reach and rejects an unknown identity without mutation");
+    cna_demo_check(
+        state->demo,
+        cna_graphics_device_set_unsupported_3d_call_behavior(
+            device, CNA_UNSUPPORTED_3D_GRAPHICS_CALL_BEHAVIOR_WARN_AND_STUB) ==
+                CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_unsupported_3d_call_behavior(
+                device, &unsupported_behavior_copy) == CNA_RESULT_SUCCESS &&
+            unsupported_behavior_copy ==
+                CNA_UNSUPPORTED_3D_GRAPHICS_CALL_BEHAVIOR_WARN_AND_STUB &&
+            cna_graphics_device_set_unsupported_3d_call_behavior(device, UINT32_C(2)) ==
+                CNA_RESULT_INVALID_ARGUMENT &&
+            cna_graphics_device_get_unsupported_3d_call_behavior(
+                device, &unsupported_behavior_copy) == CNA_RESULT_SUCCESS &&
+            unsupported_behavior_copy ==
+                CNA_UNSUPPORTED_3D_GRAPHICS_CALL_BEHAVIOR_WARN_AND_STUB,
+        "the unsupported-3D policy changes to warn-and-stub and rejects an unknown identity atomically");
+    cna_demo_check(
+        state->demo,
+        cna_graphics_device_set_graphics_profile_ext(device, profile) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_set_unsupported_3d_call_behavior(
+                device, saved_unsupported_behavior) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_graphics_profile(device, &profile_copy) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_unsupported_3d_call_behavior(
+                device, &unsupported_behavior_copy) == CNA_RESULT_SUCCESS &&
+            profile_copy == profile && unsupported_behavior_copy == saved_unsupported_behavior,
+        "restore and read back the exact borrowed graphics profile and unsupported-3D policy");
 
     initialize_output_prefixes(
         &saved_blend, &saved_depth, &saved_rasterizer, &saved_pixel, &saved_vertex);

@@ -2954,3 +2954,16 @@ demo plus presentation/state/manager-event and CLI tests pass8/8. Six routes rai
 audit is recorded as ISSUE-065. Clean sibling CNA is `d7eff66ee`; production `libcna.so` remains
 byte-identical. No displayed pixels, screenshot or visual inspection is claimed.
 Evidence:checkpoint-502-c-owned-device-focused-*.
+
+## Focused502-C-device-policy
+
+The existing `c_api.graphics.device_states` workflow grows from22to25 controls. Its live HiDef
+device begins with strict unsupported-3D handling. The callback changes the graphics profile to
+Reach and the policy to warn-and-stub, reads each back exactly and proves the first undefined enum
+identity is refused without mutation. Both original values are restored and re-read before the
+existing object, sampler, scalar and geometric state workflow continues. SOFTWARE and OPENGLES3
+produce byte-identical output with25 passing checks and empty stderr. Metadata remains502/0; seven
+focused C/API, profile, capability and CLI regressions pass in5.07s, followed by a clean incremental
+full build. Three routes raise C coverage768->771/3205 and `graphics_device.h`52->55/84. Clean
+sibling CNA is `d7eff66ee`; production `libcna.so` remains byte-identical. Nothing is drawn and no
+visual inspection is claimed. Evidence:checkpoint-502-c-device-policy-focused-*.

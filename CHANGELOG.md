@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `c_api.graphics.device_states` from22to25 controls with graphics-profile and
+  unsupported-3D-policy round trips, atomic invalid-enum refusal and exact restoration.
 - Added `c_api.graphics.owned_device`, a20-check two-device lifecycle workflow for caller ownership,
   presentation, both reset forms, ordered callbacks, independent destruction and stale handles.
 - Recorded CNA-DEMOS-ISSUE-065: the public graphics-device header separates the reset declaration
