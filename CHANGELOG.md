@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.skinned_pbr_effect_state`, a32-check C workflow covering SkinnedPbrEffect's
+  shared PBR/interface compatibility, weight modes, copied 72-bone palette and texture/material/
+  palette survival through cloning and source destruction.
 - Added `c_api.graphics.pbr_texture_slots`, a34-check C workflow covering all seven PBR texture
   slots, UV selectors, transforms, meaningful sRGB flags and retained ownership through cloning.
 - Recorded CNA-DEMOS-ISSUE-071: the public C texture getter says five slot identities although the

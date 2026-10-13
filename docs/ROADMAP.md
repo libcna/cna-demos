@@ -3254,3 +3254,17 @@ CNA-DEMOS-ISSUE-071 records the passing C-header documentation mismatch that cal
 identities five. Clean sibling CNA is `a6bb279d47`; production library hashes remain unchanged. No
 sampling, PBR draw, pixel result or visual inspection is claimed.
 Evidence:checkpoint-517-c-pbr-textures-focused-*.
+
+New `c_api.graphics.skinned_pbr_effect_state` demonstrates every SkinnedPbrEffect-specific C route
+and representative shared PBR/interface compatibility. Thirty-two controls cover the full default
+and authored 72-bone palettes, copied input, atomic short output, invalid-count preservation,
+one/two/four weights, material/matrix/fog/required-light state and a retained same-device base
+texture. A type-preserving clone keeps material, palette and texture after source destruction, then
+releases the texture independently. Direct and both runner selections pass with byte-identical
+runner output and empty stderr; all21 focused PBR and CLI tests satisfy their contracts in6.07s
+(18 passed, three declared SOFTWARE capability skips). Metadata is518/0 and the final incremental
+build is clean. Five routes raise total C coverage1051->1056/3205 and `effects.h`260->265/290. The
+initial configure build repeated the known transient CNA-DEMOS-ISSUE-057 staging warning but
+completed; the clean gate does not repeat it. Clean sibling CNA is `a6bb279d47`; production library
+hashes remain unchanged. Apply is state-only; no skinned PBR draw, deformation, BRDF pixel or visual
+inspection is claimed. Evidence:checkpoint-518-c-skinned-pbr-focused-*.
