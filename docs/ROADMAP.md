@@ -2305,3 +2305,20 @@ diagnostics at clean9edbf314; metadata is476/0. Thirty-four actual routes raise 
 307->341/3210 and `input_gamepad.h`4->38/63. Two fixed type-name routes remain trivial/uncredited;
 23 live device routes remain for disconnected and hardware-success dispositions. Full476 is
 pending. Evidence:checkpoint-476-c-input-gamepad-values-focused-*.
+
+## Complete476-C-input-gamepad-values
+
+Complete checkpoint **476-C-input-gamepad-values**, source `6ac3d08`, extends the existing C
+gamepad child28->47checks without another ID or fixture. Full validation passes metadata476/0 and
+all489enabled CTests in153.30s. SOFTWARE411/27/35/3 and OPENGLES3441/29/3/3 preserve every parent
+outcome, the exact38/42 old failures, all unrelated C/custom child lists and protected traces, five
+network controls,18music checks and8album-art checks. Only the C gamepad child grows to the exact
+focused47 controls; parentJSON remains0. All39 selected paths match focused preflight and remain
+fixed through both smoke suites. Against complete476-C-input-keyboard, only the catalog and C
+gamepad executable change; four assets and30fixtures remain exact. Normalized stderr is identical.
+Outer Xvfb emits6exact amdgpu pairs, and both exits are zero. Post-build capture sees clean
+CNA9edbf314; unrelated DirectX11 renderer/documentation retirement work appears during smoke at
+the same head without changing any relevant gamepad source hash or selected Linux runtime artifact.
+Coverage stays297/329types and1405/2326XNA members; actual C ABI coverage is341/3210 and
+`input_gamepad.h`38/63. No physical controller, device actuation/sensor, other-platform or new
+visual claim. Evidence:checkpoint-476-c-input-gamepad-values-*.
