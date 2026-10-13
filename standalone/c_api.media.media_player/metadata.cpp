@@ -6,7 +6,9 @@ CNA_DEMOS_STANDALONE({
     .title = "Background music in C",
     .description = "A C program plays retained songs as a queue, exercises transport and events, then contrasts "
                    "collection lifecycle with caller-owned queue copies, empty bounds and unchecked active indices.",
-    .apis = {"cna_song_create_from_uri", "cna_song_create_with_duration", "cna_song_get_duration",
+    .apis = {"cna_song_create", "cna_song_create_from_uri", "cna_song_create_with_duration",
+             "cna_song_get_handle_text_size_ext", "cna_song_copy_handle_text_ext", "cna_song_equals",
+             "cna_song_get_hash_code", "cna_song_get_duration",
              "cna_song_set_duration", "cna_song_get_is_disposed", "cna_song_dispose",
              "cna_song_collection_create", "cna_media_player_play_songs",
              "cna_media_player_get_queue", "cna_media_queue_get_active_song_index", "cna_media_player_move_next",

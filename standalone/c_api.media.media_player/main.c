@@ -93,6 +93,19 @@ static CNA_Result create_song_with_duration(CNA_Handle game, const char* name, c
                                          out_song);
 }
 
+static CNA_Result build_song_path(CNA_Handle game, const char* file, char* path, size_t capacity,
+                                  uint64_t* out_length)
+{
+    uint64_t length = 0U;
+    CNA_Result result = cna_title_location_copy_path(game, path, (uint64_t)capacity - 64U, &length);
+    if (result != CNA_RESULT_SUCCESS) {
+        return result;
+    }
+    length += (uint64_t)snprintf(path + length, capacity - (size_t)length, "/assets/music/%s", file);
+    *out_length = length;
+    return CNA_RESULT_SUCCESS;
+}
+
 static int song_has_name(CNA_SongHandle song, const char* expected)
 {
     char actual[64];
@@ -321,6 +334,9 @@ int main(int argc, char** argv)
     CNA_SongHandle appended = CNA_INVALID_HANDLE;
     CNA_SongHandle appended_copy = CNA_INVALID_HANDLE;
     CNA_SongHandle duration_song = CNA_INVALID_HANDLE;
+    CNA_SongHandle identity_song = CNA_INVALID_HANDLE;
+    CNA_SongHandle same_path_song = CNA_INVALID_HANDLE;
+    CNA_SongHandle other_path_song = CNA_INVALID_HANDLE;
     CNA_SongHandle empty_song = CNA_INVALID_HANDLE;
     CNA_Bool active_available = CNA_FALSE;
     CNA_Bool collection_disposed = CNA_TRUE;
@@ -541,6 +557,78 @@ int main(int argc, char** argv)
         cna_demo_check_result(&demo, cna_song_destroy(duration_song),
                               "destroy the explicit-duration Song handle");
         duration_song = CNA_INVALID_HANDLE;
+    }
+
+    /* Song identity is the stored file path, independent of the handle and display name. These
+       caller-owned helpers are never queued or played. */
+    {
+        char rising_path[1024];
+        char falling_path[1024];
+        char handle_text[1024];
+        uint64_t rising_length = 0U;
+        uint64_t falling_length = 0U;
+        uint64_t required = 0U;
+        uint64_t copied = 0U;
+        CNA_Bool equal_same_path = CNA_FALSE;
+        CNA_Bool equal_other_path = CNA_TRUE;
+        int32_t identity_hash = 0;
+        int32_t same_path_hash = 1;
+        CNA_Result result = build_song_path(game, "rising.wav", rising_path, sizeof(rising_path), &rising_length);
+        if (result == CNA_RESULT_SUCCESS) {
+            result = cna_song_create(game, view(rising_path, rising_length), view("Identity", 8U), &identity_song);
+        }
+        cna_demo_check_result(&demo, result, "create a caller-owned Song from a plain file path");
+
+        result = cna_song_create(game, view(rising_path, rising_length), view("Different name", 14U),
+                                 &same_path_song);
+        cna_demo_check_result(&demo, result, "create another named Song over the same file path");
+
+        result = build_song_path(game, "falling.wav", falling_path, sizeof(falling_path), &falling_length);
+        if (result == CNA_RESULT_SUCCESS) {
+            result = cna_song_create(game, view(falling_path, falling_length), view("", 0U), &other_path_song);
+        }
+        cna_demo_check_result(&demo, result, "create an empty-name Song over a different file path");
+
+        memset(handle_text, 0, sizeof(handle_text));
+        cna_demo_check(&demo,
+                       cna_song_get_handle_text_size_ext(identity_song, &required) == CNA_RESULT_SUCCESS &&
+                           required == rising_length &&
+                           cna_song_copy_handle_text_ext(identity_song, handle_text, sizeof(handle_text), &copied) ==
+                               CNA_RESULT_SUCCESS &&
+                           copied == rising_length && memcmp(handle_text, rising_path, (size_t)rising_length) == 0,
+                       "the Song handle text is the exact stored file path");
+        cna_demo_check(&demo,
+                       song_has_name(identity_song, "Identity") && song_has_name(same_path_song, "Different name") &&
+                           cna_song_equals(identity_song, same_path_song, &equal_same_path) == CNA_RESULT_SUCCESS &&
+                           equal_same_path == CNA_TRUE &&
+                           cna_song_equals(identity_song, other_path_song, &equal_other_path) == CNA_RESULT_SUCCESS &&
+                           equal_other_path == CNA_FALSE,
+                       "Song equality uses the path rather than handle or display-name identity");
+        cna_demo_check(&demo,
+                       cna_song_get_hash_code(identity_song, &identity_hash) == CNA_RESULT_SUCCESS &&
+                           cna_song_get_hash_code(same_path_song, &same_path_hash) == CNA_RESULT_SUCCESS &&
+                           identity_hash == same_path_hash,
+                       "equal Songs have equal path-based hash codes");
+        cna_demo_check(&demo, song_has_name(other_path_song, ""),
+                       "the plain-path constructor preserves an empty display name");
+        {
+            const CNA_Result identity_release = identity_song != CNA_INVALID_HANDLE
+                                                    ? cna_song_destroy(identity_song)
+                                                    : CNA_RESULT_SUCCESS;
+            const CNA_Result same_path_release = same_path_song != CNA_INVALID_HANDLE
+                                                     ? cna_song_destroy(same_path_song)
+                                                     : CNA_RESULT_SUCCESS;
+            const CNA_Result other_path_release = other_path_song != CNA_INVALID_HANDLE
+                                                      ? cna_song_destroy(other_path_song)
+                                                      : CNA_RESULT_SUCCESS;
+            cna_demo_check(&demo,
+                           identity_release == CNA_RESULT_SUCCESS && same_path_release == CNA_RESULT_SUCCESS &&
+                               other_path_release == CNA_RESULT_SUCCESS,
+                           "destroy all caller-owned Song identity handles independently");
+        }
+        identity_song = CNA_INVALID_HANDLE;
+        same_path_song = CNA_INVALID_HANDLE;
+        other_path_song = CNA_INVALID_HANDLE;
     }
     if (state.sprite_batch != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_sprite_batch_destroy(state.sprite_batch), "cna_sprite_batch_destroy");

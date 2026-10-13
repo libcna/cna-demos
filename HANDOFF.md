@@ -103,6 +103,18 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **474-C-song-identity** extends c_api.media.media_player from61to69checks under both
+renderers with empty stderr and no new ID/fixture. Removing eight additions restores all61old
+labels in order. Three caller-owned plain-path Songs prove exact stored handle text, path-based
+equality independent of handle/display name, an unequal different-path control, equal hashes for
+the equal pair and literal empty-name storage. All release independently and are never played or
+queued. Focused29media/CLI CTests pass in11.05s; metadata474/0. Both watched builds pass with
+3909unchanged CNA inputs/no diagnostics. Five actual routes raise C ABI coverage198->203/3210 and
+media.h15->20/39. No URI canonicalization, case/symlink equivalence, cross-process hash stability
+or playback identity claim. Evidence:checkpoint-474-c-song-identity-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-C-song-duration**, source `e3a566d`, extends c_api.media.media_player
 from55to61checks under both renderers with empty demo stderr and no new ID/fixture. Removing six
 additions restores all55old labels in order. A caller-owned rising.wav Song stores a deliberately
@@ -244,16 +256,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the audited `media.h` member gap in the existing
-`c_api.media.media_player` demo with one focused Song identity batch. Use `cna_song_create` for two
-caller-owned Songs over the same rising.wav path but different names, plus falling.wav as the
-unequal control. Demonstrate that the stored handle text is the exact path, equality is path-based
-rather than handle/name identity and equal Songs have equal hashes. Include the empty-name behavior
-only if it stays coherent with this identity example. Keep all61old labels/order, do not play or
-queue these helper Songs, and release every handle before game destruction. First preserve the
-complete474-C-song-duration baseline, audit the exact source/header contracts, then build with the
-3909-input consistency watch, run both focused renderers and relevant media/CLI CTests, regenerate
-coverage, update docs and run a new complete474 checkpoint. Never edit/revert CNA; preserve
+HIGHEST PRIORITY: commit the focused C Song identity/path/hash source/docs, then run full474
+validation against complete474-C-song-duration. Capture once after the full build during CTest:
+the same37selected binary paths/four assets/30fixture paths. Freeze source/assets/build through
+both smokes. Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3. Preserve all38/42old failures, unrelated C/custom lists/traces, five network
+controls,18music and8album-art checks. Only c_api.media.media_player grows61->69; parentJSON stays0
+and normalized stderr should be identical. Archive/refuse any surprise; update full audit/HANDOFF
+and immediately continue the next semantic public-member gap. Never edit/revert CNA; preserve
 ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
@@ -267,6 +277,6 @@ ISSUE-038/057/058/059.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is474-C-song-duration; source commit is in section7.
-All earlier drafts and focused C media work are APPLIED AND STALE. Song identity/path/hash work
-is the next audited member batch and has not been implemented.
+All earlier drafts and focused C media work are APPLIED AND STALE. Song identity/path/hash is
+applied and focused but has no complete checkpoint yet.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

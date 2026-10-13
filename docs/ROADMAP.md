@@ -1851,3 +1851,15 @@ stderr is identical. Outer Xvfb has12exact amdgpu pairs (previous16); exits are 
 eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
 rise192->198/3210, media.h10->15/39 and media_player.h22->23/41.
 Evidence:checkpoint-474-c-song-duration-*.
+
+## Focused474-C-song-identity
+
+The same `c_api.media.media_player` now grows61->69child checks without a new ID or fixture. Both
+renderers pass identical lists with empty stderr; removing eight additions restores all61prior
+labels in order. Three caller-owned plain-path Songs establish exact stored handle text, equality
+by path rather than handle or display name, an unequal different-path control, equal hashes for the
+equal pair and literal empty-name storage. All three release independently and are never played or
+queued. Focused29media/CLI CTests pass in11.05s. Two watched builds pass with3909unchanged CNA
+inputs/no diagnostics; metadata remains474/0. Five actual routes raise C coverage198->203/3210 and
+media.h15->20/39. No URI canonicalization, case/symlink equivalence, hash stability across processes
+or playback identity claim. Full474 is pending. Evidence:checkpoint-474-c-song-identity-focused-*.
