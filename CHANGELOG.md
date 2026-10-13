@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.effect_core`, a27-check C workflow covering the18 core Effect routes:
+  owned reflection and pass application, current-technique rules, clone/disposal isolation,
+  retained child views, constructor-format refusals and capability-gated compiled bytecode.
 - Added `c_api.graphics.effect_passes_techniques`, a27-check C workflow covering all31 ownerless
   pass/technique value and collection routes, including reflected indices and nested lifetimes.
 - Added `c_api.graphics.effect_parameter_collections`, a19-check C workflow covering stable shared

@@ -3137,3 +3137,21 @@ C/API, C++ effect and CLI tests pass in6.55s, and the incremental build is clean
 `a6bb279d47` through two docs-only commits; production library hashes remain unchanged. No effect-
 owned pass, game, graphics device, shader execution, drawing or visual inspection is claimed.
 Evidence:checkpoint-508-c-effect-passes-techniques-focused-*.
+
+## Focused509-C-effect-core
+
+New `c_api.graphics.effect_core` demonstrates the18 core Effect lifecycle, reflection and state
+routes. Twenty-seven controls cover the borrowed graphics device; exact type and empty source
+bytes; compiled/renderer/stock identity; the default parameter, technique and P0 graph; owned-pass
+application; null/foreign current-technique refusal without mutation; selection of an added owned
+technique; a fresh canonical clone; independent disposal; and descendant survival after root-handle
+destruction. The compiled constructor atomically distinguishes empty and malformed buffers, the
+foreign MGFX container and a committed genuine5000-byte XNA Effect Framework binary. SOFTWARE and
+OPENGLES3 both have their compiled-effect opt-ins disabled in this build, report the capability
+false and explicitly refuse the valid fixture; compiled reflection and execution are therefore not
+claimed. Direct execution passes, both runner outputs are byte-identical and all three stderr files
+are empty. Metadata is509/0, all12 focused C/API, C++ Effect and CLI tests pass in4.16s, and the
+incremental build is clean. Coverage rises877->895/3205 and `effects.h`88->106/290. Clean sibling
+CNA is `a6bb279d47`; production library hashes remain unchanged. No drawing, pixel result or visual
+inspection is claimed.
+Evidence:checkpoint-509-c-effect-core-focused-*.
