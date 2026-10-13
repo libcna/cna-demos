@@ -3090,3 +3090,18 @@ OPENGLES3. Metadata is505/0, all eight focused C/API, C++ effect-reflection and 
 9->31/290. Clean sibling CNA is `fbd8e64a3`; production library hashes remain unchanged. No game,
 graphics device, drawing or visual inspection is claimed.
 Evidence:checkpoint-505-c-effect-annotations-focused-*.
+
+## Focused506-C-effect-parameter-values
+
+New `c_api.graphics.effect_parameter_values` demonstrates the16 public mutable-parameter metadata
+and value routes plus the CPU-only Texture2D constructor needed for a real retained resource.
+Thirty controls cover copied and versioned shape/type metadata; atomic short and exact
+unterminated name, semantic and string copies; all nine tagged scalar and array families;
+ordinary and transposed non-symmetric matrices; bounded array retrieval; and independent typed
+Texture2D/base slots with exact retention and release. Direct execution passes. SOFTWARE and
+OPENGLES3 runner output is byte-identical and every stderr file is empty. Metadata is506/0, all
+eight focused C/API, C++ effect and CLI tests pass in4.57s, and the incremental build is clean.
+Coverage rises819->836/3205, `effects.h`31->47/290 and `texture.h`1->2/21. Clean sibling CNA is
+`fbd8e64a3`; production library hashes remain unchanged. No game, graphics device, shader
+execution, drawing or visual inspection is claimed.
+Evidence:checkpoint-506-c-effect-parameter-values-focused-*.

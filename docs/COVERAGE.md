@@ -6,12 +6,12 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**505 demos** in 18 categories. Kinds: console 161, game 272, standalone 72. Automation: automated 469, manual 3, smoke-only 33.
+**506 demos** in 18 categories. Kinds: console 161, game 272, standalone 73. Automation: automated 470, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
-| c_api | 50 | 49 | 1 | 0 | 44 / 0 / 5 / 0 / 1 | 45 / 0 / 4 / 0 / 1 |
+| c_api | 51 | 50 | 1 | 0 | 44 / 0 / 5 / 0 / 2 | 45 / 0 / 4 / 0 / 2 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `c_api.graphics.effect_annotations`.
-- OPENGLES3: absent from report: `c_api.graphics.effect_annotations`.
+- SOFTWARE: absent from report: `c_api.graphics.effect_annotations`, `c_api.graphics.effect_parameter_values`.
+- OPENGLES3: absent from report: `c_api.graphics.effect_annotations`, `c_api.graphics.effect_parameter_values`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -70,7 +70,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 819 of 3205** (25.6 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 836 of 3205** (26.1 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -80,7 +80,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `core.h` | 7 / 7 |
 | `devices.h` | 59 / 62 |
 | `display.h` | 22 / 22 |
-| `effects.h` | 31 / 290 |
+| `effects.h` | 47 / 290 |
 | `graphics.h` | 25 / 27 |
 | `graphics_device.h` | 80 / 84 |
 | `graphics_resource.h` | 12 / 12 |
@@ -106,7 +106,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `sensors.h` | 116 / 144 |
 | `sprite_font.h` | 2 / 9 |
 | `storage.h` | 22 / 49 |
-| `texture.h` | 1 / 21 |
+| `texture.h` | 2 / 21 |
 | `vectors.h` | 9 / 137 |
 | `vertex_resources.h` | 5 / 24 |
 | `vertex_values.h` | 1 / 13 |
