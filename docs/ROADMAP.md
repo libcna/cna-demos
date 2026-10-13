@@ -4101,3 +4101,17 @@ result also records CNA-DEMOS-ISSUE-079: the header promises to preserve the abs
 while the generated wrapper deterministically clears it. Evidence:
 `checkpoint-596-c-leaderboard-entries-focused-*-direct.*`. No game, renderer, service, persisted
 leaderboard or project-built execution is claimed.
+
+## Focused597-C-offline-leaderboard-readers
+
+`c_api.gamer.leaderboard_readers` adds the remaining15 leaderboard identity/reader routes in30
+renderer-free controls over separate isolated empty stores. All four canonical identities retain
+their exact NUL-padded key and requested mode, with atomic invalid-key and structure-version
+refusals. Explicit-page, pivot and gamer-restricted reads each return an owned empty reader through
+both synchronous and exactly-once callback forms. Exact info/identity output, the empty entry bound,
+synchronous and callback page-up toward zero, final-page page-down refusal and stale ownership are
+explicit. SOFTWARE- and OPENGLES3-labelled runs pass byte-identically with empty stderr; strict C99
+and metadata compilation pass. Staged metadata reaches2362/3205 and `gamer_services.h` reaches
+210/239. Evidence:`checkpoint-597-c-leaderboard-readers-focused-*-direct.*`. Positive entry
+lookup/page-down remains a persisted writer/service scenario because public C exposes no writer or
+reader fixture; no game, renderer, service, persisted row or project-built execution is claimed.
