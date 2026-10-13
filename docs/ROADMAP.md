@@ -3765,3 +3765,12 @@ dummy-audio runs are byte-identical with empty stderr. This is a demo deployment
 a CNA issue. Strict C99, metadata compilation and byte-identical asset regeneration pass.
 `content_readers.h` is complete at62/62. Evidence:
 checkpoint-570-c-object-dictionary-focused-*-direct.*.
+
+`c_api.media.video_asset` starts the public C video audit with19 routes in26 controls. The generated
+160x120/15fps WMV is probed for correlated individual/aggregate metadata, positive duration and
+device association; path and reflection text are exact/atomic and the versioned info structure
+rejects malformed use. Metadata-only construction preserves declared values without opening its
+missing path, accepts duration correction and defers track validation. The URI extension's literal-
+path behavior and independent owned handles are explicit. Both Xvfb/dummy-audio runs are byte-
+identical with empty stderr; strict C99 and metadata compilation pass. `video.h` is19/42
+demonstrated; the VideoPlayer batch remains. Evidence:checkpoint-571-c-video-asset-focused-*-direct.*.

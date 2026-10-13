@@ -18,9 +18,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 41; the C `effects.h` route audit is complete).
 * In progress: 7 (models/glTF, 23), 8 (content, 52), 9 (audio 23 incl. 10 XACT, media 13 incl. a
-  compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
+  compiled video and song, plus C video metadata), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 112 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 113 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -66,14 +66,14 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds42 staged standalone C IDs and should reach567 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds43 staged standalone C IDs and should reach568 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 52 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
-joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 13 (compiled video and song, tagged library import and album art), gamer services 19
+joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 14 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and112 in the
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and113 in the
 current source tree (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
 Actual C ABI coverage is1116/3205: `input_gamepad.h`61/63,
@@ -1325,8 +1325,8 @@ full-screen toggling kept platform/manual after the Xvfb mode switch timed out a
 constructor remains intentionally deferred until CNA exposes a real embedded-resource store.
 `storage.h` is dispositioned at47/49 demonstrated, with only its fixed container reflection-name
 pair trivial/uncredited. `content_readers.h` is complete at62/62 after the base reader/value,
-registry, reflective-builder and object-dictionary batches. Next select the highest-value stable C
-family from the remaining header/member audit rather than adding variants to this closed family.
+registry, reflective-builder and object-dictionary batches. `video.h` is19/42 demonstrated after
+the asset/metadata batch; next audit the23 VideoPlayer routes with real decoded-frame behavior.
 Once CNA becomes coherent, reconfigure
 `linux-full`, build every
 staged source, run focused validation and absorb the work in one complete checkpoint. Keep tagged
@@ -1707,6 +1707,16 @@ not a CNA defect. Strict C99, metadata compilation and deterministic asset regen
 `content_readers.h` is62/62 demonstrated. Evidence:
 `checkpoint-570-c-object-dictionary-focused-*-direct.*`.
 
+`standalone/c_api.media.video_asset` demonstrates the first19 `video.h` routes in26 controls. It
+resolves and probes the generated160x120/15fps WMV, correlates individual and aggregate metadata,
+checks positive duration and device association, exact/atomic path and reflection text, and proves
+versioned-structure refusal. A metadata-only missing-file Video preserves all declared values,
+accepts loader duration correction and defers track-index validation. The URI extension accepts a
+plain path but treats a scheme as literal path text, and all owned handles release independently.
+Both Xvfb/dummy-audio runs pass byte-identically with empty stderr; no playback, frame or audible/
+visual claim is made. Strict C99 and metadata compilation pass. `video.h` is19/42 demonstrated.
+Evidence: `checkpoint-571-c-video-asset-focused-*-direct.*`.
+
 The sibling CNA briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
 After `cna-demos` removed VULKAN from `linux-full`, configure succeeded, but concurrent external
 retirement edits changed CNA during the build: `GraphicsRendererType::DirectX11` disappeared while
@@ -1722,8 +1732,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose567 catalog IDs (complete524 plus SpriteFont and42
-additional new standalone IDs) and583 declared/580 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose568 catalog IDs (complete524 plus SpriteFont and43
+additional new standalone IDs) and584 declared/581 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 
