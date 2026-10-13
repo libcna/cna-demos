@@ -386,14 +386,41 @@ int main(int argc, char** argv)
                        cna_media_queue_get_at(state.queue, 2, &appended_copy) == CNA_RESULT_SUCCESS,
                    "the queue keeps three entries and publishes a copy of Appended");
 
+    /* Explicit raises run subscribed process-wide handlers synchronously. Releasing both
+       registrations then makes the same raises harmless while the game remains active. */
+    {
+        const int song_changes_before_raise = state.song_changes;
+        const int state_changes_before_raise = state.state_changes;
+        const CNA_Result song_raise = cna_media_player_raise_active_song_changed_ext(game);
+        const CNA_Result state_raise = cna_media_player_raise_media_state_changed_ext(game);
+        cna_demo_check(&demo,
+                       song_raise == CNA_RESULT_SUCCESS && state_raise == CNA_RESULT_SUCCESS &&
+                           state.song_changes == song_changes_before_raise + 1 &&
+                           state.state_changes == state_changes_before_raise + 1,
+                       "manual media-player raises invoke both subscribed handlers synchronously");
+    }
+
     /* Event registrations, the queue view and the collection go before the game. */
     if (state.state_changed != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_media_player_unsubscribe_ext(state.state_changed),
                               "cna_media_player_unsubscribe_ext");
+        state.state_changed = CNA_INVALID_HANDLE;
     }
     if (state.song_changed != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_media_player_unsubscribe_ext(state.song_changed),
                               "cna_media_player_unsubscribe_ext");
+        state.song_changed = CNA_INVALID_HANDLE;
+    }
+    {
+        const int song_changes_after_unsubscribe = state.song_changes;
+        const int state_changes_after_unsubscribe = state.state_changes;
+        const CNA_Result song_raise = cna_media_player_raise_active_song_changed_ext(game);
+        const CNA_Result state_raise = cna_media_player_raise_media_state_changed_ext(game);
+        cna_demo_check(&demo,
+                       song_raise == CNA_RESULT_SUCCESS && state_raise == CNA_RESULT_SUCCESS &&
+                           state.song_changes == song_changes_after_unsubscribe &&
+                           state.state_changes == state_changes_after_unsubscribe,
+                       "unsubscribed media-player handlers ignore later manual raises");
     }
     if (state.queue != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_media_queue_destroy(state.queue), "cna_media_queue_destroy (the view)");

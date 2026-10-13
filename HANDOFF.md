@@ -103,6 +103,18 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **474-C-media-events** extends c_api.media.media_player from53to55checks under both
+renderers with empty stderr and no new ID/fixture. Removing the two additions restores all53old
+labels in order. While subscribed, explicit active-song/media-state raises synchronously increment
+their counters exactly once; after both existing unsubscribe checks, the same raises succeed with
+unchanged counters. Focused29media/CLI CTests pass; metadata474/0. The initial ccache sandbox
+refusal is archived; the watched consistency build passes with3909unchanged CNA inputs and no
+diagnostics. Crediting both raises plus already demonstrated unsubscribe/queue count grows actual
+C routes188->192/3210 and media_player.h18->22/41. No callback order, reentrancy, foreign-thread
+delivery or game-destruction cleanup claim. Evidence:checkpoint-474-c-media-events-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-C-media-lifecycle-bounds**, source `5141458`, extends the existing
 c_api.media.media_player from46to53checks without a new ID or fixture. Both focused and full runs
 preserve all46old labels and add seven exact lifecycle/bounds controls with empty demo stderr.
@@ -245,15 +257,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the same C media workflow with process-wide event raise/unsubscribe
-semantics; do not add an ID. Preserve all53current labels/order. With both subscriptions still
-live after the tour, call both public raise routes and require synchronous exact counter increments.
-Then retain the two existing unsubscribe labels, invalidate their handles, raise both events again
-and require unchanged counters. Add the already meaningfully exercised queue_get_count and
-unsubscribe routes plus both raise routes to metadata. Do not claim callback ordering, reentrant
-mutation, foreign-thread delivery or game-destruction cleanup. Run watched build, both focused
-renderers and media/CLI CTests, update audit/HANDOFF, commit, then full validation. Use complete474-
-C-media-lifecycle-bounds as baseline. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
+HIGHEST PRIORITY: commit the focused C media event source/docs, then run full474 validation against
+complete474-C-media-lifecycle-bounds. Capture once after the full build during CTest: the same37
+selected binaries/four assets/30fixture paths. Freeze source/assets/build through both smokes.
+Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3. Preserve all38/42old failures, unrelated C/custom lists/traces, five network
+controls,18music and8album-art checks. Only c_api.media.media_player grows53->55; parentJSON
+remains0 and normalized stderr should be identical. Archive/refuse any surprise; update full
+audit/HANDOFF and immediately continue the next semantic public-member gap. Never edit/revert CNA;
+preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -266,6 +278,6 @@ C-media-lifecycle-bounds as baseline. Never edit/revert CNA; preserve ISSUE-038/
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is474-C-media-lifecycle-bounds; source commit is in section7.
-All earlier drafts and focused media work are APPLIED AND STALE. Event raise/unsubscribe has source
-evidence only and no applied draft yet.
+All earlier drafts and focused lifecycle/bounds work are APPLIED AND STALE. Event raise/unsubscribe
+is applied and focused but has no complete checkpoint yet.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

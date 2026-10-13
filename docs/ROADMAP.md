@@ -1793,3 +1793,16 @@ stderr is identical. Outer Xvfb has14exact amdgpu pairs (previous15); exits are 
 eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; C ABI routes rise
 184->188/3210, media.h7->10/39 and media_player.h17->18/41.
 Evidence:checkpoint-474-c-media-bounds-*.
+
+## Focused474-C-media-events
+
+The same `c_api.media.media_player` now grows53->55child checks without a new ID or fixture. Both
+renderers pass identical lists with empty stderr; removing the two new labels restores all53prior
+checks in order. Explicit active-song/media-state raises synchronously increment their subscribed
+counters exactly once. After both existing registration handles release, the same raises succeed
+without invoking either handler. Focused29media/CLI CTests pass. The initial ccache sandbox refusal
+is preserved; the watched consistency build passes with3909unchanged CNA inputs/no diagnostics.
+Metadata remains474/0. Adding both raises and crediting the already material queue-count/unsubscribe
+uses raises C routes188->192/3210 and media_player.h18->22/41. No callback order, reentrancy,
+foreign-thread delivery or game-destruction cleanup claim. Full474 checkpoint is pending.
+Evidence:checkpoint-474-c-media-events-focused-*.
