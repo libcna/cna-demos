@@ -6,7 +6,7 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**473 demos** in 18 categories. Kinds: console 161, game 272, standalone 40. Automation: automated 437, manual 3, smoke-only 33.
+**474 demos** in 18 categories. Kinds: console 161, game 272, standalone 41. Automation: automated 438, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -23,7 +23,7 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | graphics | 162 | 162 | 0 | 0 | 138 / 18 / 6 / 0 / 0 | 151 / 3 / 8 / 0 / 0 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
-| media | 12 | 11 | 1 | 0 | 11 / 0 / 1 / 0 / 0 | 11 / 0 / 1 / 0 / 0 |
+| media | 13 | 12 | 1 | 0 | 12 / 0 / 1 / 0 / 0 | 12 / 0 / 1 / 0 / 0 |
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
 | platform | 2 | 2 | 0 | 0 | 1 / 1 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
@@ -35,7 +35,7 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 297 of 329** (90.3 %).
-- **Methods, properties, constructors and events named by a demo: 1402 of 2326** (60.3 %).
+- **Methods, properties, constructors and events named by a demo: 1405 of 2326** (60.4 %).
 - Fields and enum values named by a demo: 137 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
@@ -49,7 +49,7 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 44 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
-| `Microsoft.Xna.Framework.Media` | 24 / 24 | 98 / 192 | 1 / 8 |
+| `Microsoft.Xna.Framework.Media` | 24 / 24 | 101 / 192 | 1 / 8 |
 | `Microsoft.Xna.Framework.Net` | 22 / 23 | 71 / 127 | 7 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
 

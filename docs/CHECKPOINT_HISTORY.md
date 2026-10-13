@@ -2911,3 +2911,16 @@ checkpoint-473-duration-*. Generated coverage: 297/329 types,
 1402/2326 XNA members. Semantic coverage remains incomplete.
 Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged; clean runs do
 not establish a staging-race repair. Preserve all original refusals and reproduction evidence.
+
+## Complete474-album-art
+
+Complete checkpoint **474-album-art**, source `2524511`, adds one coherent standalone over
+verified private Linux XDG roots. Two focused and two full-smoke runs pass eight identical child
+checks: folder-art/no-art HasArt, both missing-art exceptions, exact original bytes, a distinct
+public-decodable128x64thumbnail, and caller-owned streams after MediaLibrary destruction.
+Full validation passes metadata474/0 and487enabled CTests in162.75s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failed assertions and protected child/network evidence.
+The sole new ID adds eight exact checks.37selected binaries, four assets and30fixture paths remain
+unchanged. Stderr adds only six expected album-art INFO lines per renderer. Outer Xvfb has13
+exact amdgpu pairs (previous16); exits are zero and CNAeff3131017 stays clean. Coverage is
+297/329types and1405/2326members. Evidence:checkpoint-474-art-*.

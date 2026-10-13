@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-474 catalog demos (focused474-album-art; complete baseline473-duration): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+474 catalog demos (complete checkpoint474-album-art): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -103,47 +103,29 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-album-art** adds one coherent standalone and passes eight identical child checks
-under SOFTWARE/OPENGLES3: private roots, two albums, folder-art/no-art HasArt, both missing-art
-exceptions, nonnull caller-owned streams, exact original bytes, a distinct public-decodable
-128x64thumbnail and both streams readable after MediaLibrary destruction. ParentJSON is0;
-both stderr streams contain six exact TitleContainer INFO lines.29enabled media/CLI CTests pass
-in7.69s; metadata474/0. The first glob-triggered build was refused by sandbox permission on CNA's
-CMake lock and is preserved; the separate watched consistency build passes with3909unchanged
-CNA inputs and no diagnostics. Existing source/staged asset and audited CNA hashes remain exact.
-ISSUE-040 now has native file-based Album evidence. No embedded art, filename priority, fallback,
-visual quality, playback or other-platform claim. Full474 against complete473-duration is pending.
-Evidence:checkpoint-474-art-focused-* and checkpoint-474-art-*-build-*.
+Complete checkpoint **474-album-art**, source `2524511`, adds one coherent standalone over
+verified private Linux XDG roots. Two focused and two full-smoke runs pass eight identical child
+checks: two artist-specific albums, folder-art/no-art HasArt, both missing-art exceptions,
+nonnull caller-owned streams, exact original bytes, a distinct public-decodable128x64thumbnail,
+and both streams readable after MediaLibrary destruction. ParentJSON remains PASSED/0. No
+embedded art, filename priority, fallback, visual quality, playback or other-platform claim.
+Focused29enabled media/CLI CTests pass. The initial glob-triggered build refusal caused only by
+sandbox denial of CNA's CMake lock remains archived; a separate watched consistency build passed
+with3909unchanged inputs and no diagnostics. ISSUE-040 now has native file-based Album evidence.
 
-Last complete baseline:
-
-Complete checkpoint **473-duration**, source `65011a3`,
-extends music_index from 15 to 18 child checks. All original relationship and borrowed-object
-controls remain; three added checks establish Song durations of 250/500/375 ms, artist-specific
-Album sums of 750/375 ms and the two-track Playlist total of 750 ms excluding the third song.
-Two focused runs pass 18 identical child checks with the same six TitleContainer INFO lines;
-parent JSON remains PASSED/0. The current build has CNA_FFMPEG_AVAILABLE. The optional
-non-FFmpeg branch has syntax-only evidence, preserves the original relationship workflow and
-prints the unexercised duration boundary. No zero-sum, playback, audible timing or art claim.
-Focused 28 enabled media/CLI CTests, watched build/gate and reviewer passed before source commit.
-No new ID or fixture changes.
-
-Full tools/validate.sh passes metadata 473/0 and 486 enabled CTests in 159.22s (three further
-manual tests disabled). SOFTWARE 408/27/35/3 and OPENGLES3 438/29/3/3 preserve all 38/42 prior
-failed assertions, C/custom child lists/traces and five network controls. Music alone gains
-three exact child checks; all first 15 remain. Parent count changes:
-{"OPENGLES3": {}, "SOFTWARE": {}}.
-All 36 selected binaries, four existing assets and 28 fixture hashes stay unchanged through
-runtime. Normalized stderr is identical, retaining the six music INFO lines, 42 known GL
-X protocol records and intentional shader error. Outer Xvfb has 16 exact amdgpu pairs
-(previous 14); independent inner/outer exits are zero. Capture CNA eff3131017
-(clean), final CNA eff3131017
-(clean). Selected artifact/source observations are not
-an atomic or full transitive input snapshot. All evidence helpers pass; immutable archives:
-checkpoint-473-duration-*. Generated coverage: 297/329 types,
-1402/2326 XNA members. Semantic coverage remains incomplete.
-Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged; clean runs do
-not establish a staging-race repair. Preserve all original refusals and reproduction evidence.
+Full tools/validate.sh passes metadata474/0 and487enabled CTests in162.75s (three further manual
+tests disabled). SOFTWARE409/27/35/3 and OPENGLES3439/29/3/3 preserve all38/42prior failed
+assertions, every C/custom child list/trace, five network controls and all18music-index checks.
+The sole new ID adds exactly eight checks; no existing parent count changes. All37selected
+binaries, four general assets and30source/staged fixture paths stay unchanged through runtime.
+Normalized stderr adds only the six exact expected album-art TitleContainer INFO lines per
+renderer, retaining the prior music INFO lines,42known GL X protocol records and intentional
+shader error. Outer Xvfb has13exact amdgpu pairs (previous16); independent inner/outer exits are
+zero. Capture/final CNAeff3131017 are clean. Selected observations are not an atomic or complete
+dependency snapshot. Evidence helpers pass; immutable archives:checkpoint-474-art-*.
+Generated coverage:297/329types,1405/2326XNA members. Semantic coverage remains incomplete.
+Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged; clean runs do not
+establish a staging-race repair. Preserve all original refusals and reproduction evidence.
 
 ## 8. Exact commands that work
 
@@ -266,18 +248,19 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-Focused474-album-art is complete; commit source/docs and run the full checkpoint next.
-Use catalog /tmp/cna-catalog-474-art.json. Capture ONCE after fullbuild during CTest:
-37selected binaries/4existing assets/28fixture hashes. Freeze source/assets/build through both
-smokes. Expect487enabled CTests; SOFTWARE409/27/35/3, OPENGLES3439/29/3/3. Preserve all38/42
-old failures, every C/custom child list/trace, five network controls and music18checks exactly.
-Only album_art adds eight child checks and six TitleContainer INFO lines per renderer; parentJSON0.
-Only positive window.title Update variance may change another parent count. Archive the initial
-sandbox-refused build separately, preserve/refuse all surprises, close docs and commit.
-Then continue the public-member audit with the existing C media collection/queue ownership
-extension classified in COVERAGE_AUDIT; do not create a duplicate demo. Preserve ISSUE-058's
-unsafe replay reproducer outside normal smoke. Original mono streaming/ISSUE-038 and build-only
-ISSUE-057 remain unchanged. Never edit/revert the sibling CNA checkout from this task.
+HIGHEST PRIORITY: extend existing `c_api.media.media_player` with collection/queue ownership.
+Complete474-art preserves its32exact child checks on both renderers; parentJSON is0. Add controls
+after the stopped transport tour, without another demo ID: collection_get_at returns a shared
+handle that survives collection destruction; queue_get_at/get_active_song return owned copies;
+queue_add copies its caller's Song; destroying/reacquiring a queue view leaves the global queue;
+Clear empties/reset the queue while retained copies remain readable. Use public name routes to
+distinguish Rising/Falling/Appended. Preserve all32old labels/order and existing visual/transport
+behavior. Never pass a queue-owned Song to MediaPlayer::Play: ISSUE-058 proves that route has a
+heap-use-after-free and remains outside normal smoke. Empty/out-of-range, Dispose, failed-add and
+callback-unsubscribe edge behavior remain separate decisions. Source audit and exact baseline:
+checkpoint-473-hierarchy-next-c-media-members-*. Watch build/gate, run focused both renderers and
+targeted C/media CTests, update coverage/HANDOFF, commit, then full validation. No new fixtures.
+Preserve original mono streaming/ISSUE-038 and build-only ISSUE-057. Never edit/revert CNA.
 
 ## 15. Assumptions the next session must know
 
@@ -289,7 +272,7 @@ ISSUE-057 remain unchanged. Never edit/revert the sibling CNA checkout from this
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is473-duration; source commit is in section7.
+Current complete baseline is474-album-art; source commit is in section7.
 All earlier drafts, including album art, positive duration, category hierarchy and tagged import,
-are APPLIED AND STALE. Focused album-art native evidence is not a complete full checkpoint.
+are APPLIED AND STALE. Next work extends the existing C media demo; no draft is applied yet.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

@@ -1714,3 +1714,23 @@ consistency build passes with3909unchanged CNA inputs and an empty diagnostic ga
 records native file-based Album evidence. No embedded-art, filename-priority, fallback,
 visual-quality, playback or other-platform claim. Full474 checkpoint is pending.
 Evidence:checkpoint-474-art-focused-* and checkpoint-474-art-*-build-*.
+
+## Complete474-album-art
+
+Complete checkpoint **474-album-art**, source `2524511`, adds one coherent standalone over
+verified private Linux XDG roots. Two focused and two full-smoke runs pass eight identical child
+checks: two artist-specific albums, folder-art/no-art HasArt, both missing-art exceptions,
+nonnull caller-owned streams, exact original bytes, a distinct public-decodable128x64thumbnail,
+and both streams readable after MediaLibrary destruction. ParentJSON remains PASSED/0. No
+embedded art, filename priority, fallback, visual quality, playback or other-platform claim.
+Focused29enabled media/CLI CTests pass. The initial sandbox-only CMake-lock refusal is archived;
+the separate watched consistency build passed with3909unchanged inputs and no diagnostics.
+
+Full tools/validate.sh passes metadata474/0 and487enabled CTests in162.75s. SOFTWARE
+409/27/35/3 and OPENGLES3439/29/3/3 preserve all38/42old failed assertions, every C/custom
+child list/trace, five network controls and all18music checks. The sole new ID adds eight exact
+checks.37selected binaries, four general assets and30source/staged fixture paths remain exact.
+Normalized stderr adds only six expected album-art INFO lines per renderer. Outer Xvfb has13
+exact amdgpu pairs (previous16); inner/outer exits are zero. Capture/final CNAeff3131017 are
+clean. Coverage is297/329types and1405/2326members. Semantic coverage remains incomplete.
+Immutable evidence:checkpoint-474-art-*.
