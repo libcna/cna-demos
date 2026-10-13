@@ -11,7 +11,7 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
-| c_api | 49 | 48 | 1 | 0 | 43 / 0 / 4 / 0 / 2 | 43 / 0 / 4 / 0 / 2 |
+| c_api | 49 | 48 | 1 | 0 | 44 / 0 / 5 / 0 / 0 | 45 / 0 / 4 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,6 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `c_api.graphics.draw_routes`, `c_api.graphics.occlusion_query`.
-- OPENGLES3: absent from report: `c_api.graphics.draw_routes`, `c_api.graphics.occlusion_query`.
 
 ## XNA 4.0 API surface demonstrated
 

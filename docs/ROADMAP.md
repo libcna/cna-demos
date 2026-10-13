@@ -3055,3 +3055,23 @@ incremental build. One route raises coverage796->797/3205 and `graphics_device.h
 sibling CNA is `f37f8d184`; both production library hashes remain unchanged. No displayed pixels or
 visual inspection is claimed.
 Evidence:checkpoint-504-c-renderer-recreation-focused-*.
+
+## Complete504-C-graphics-device
+
+Complete checkpoint source `cf105b2` (functional graphics source through `2746fcc`) absorbs all
+five focused graphics-device batches after complete502. `tools/validate.sh` reports metadata504/0
+and passes all517 active CTests in413.76s; three declared tests remain disabled. SOFTWARE is
+437pass/29known-fail/35skip/3not-run and OPENGLES3 is468/30/3/3. Against complete502, both new IDs
+have their expected outcomes, every existing status and known-issue value is unchanged, SOFTWARE
+adds only the ISSUE-066 failed assertion (40->41), and OPENGLES3 retains the exact44-assertion
+multiset. Fresh runtime coverage is297/329 types,1405/2326 XNA members and797/3205 C routes.
+
+The first complete attempt exposed an intermittent global-pointer observation failure in
+`c_api.input.keyboard_mouse` while the other516 active tests passed. Ten isolated repetitions
+passed. Because the demo's global warp/read/restore sequence shares one X-server pointer with every
+SDL process, CTest now runs that demo serially. A targeted two-test schedule proves it starts only
+after the other process exits, and the fresh complete suite passes. This is a test-orchestration
+fix, not a CNA defect. CNA was clean `f37f8d184` for the18:09 build and advanced externally during
+smoke to clean `fbd8e64a3` through two CI/CMake-test/docs/tooling-only commits. Production CNA
+library hashes remain unchanged. No visual inspection was performed.
+Evidence:checkpoint-504-c-graphics-device-*.

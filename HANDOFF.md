@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-504 catalog demos (latest complete checkpoint502-C-device-policy plus focused503/504 graphics batches): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+504 catalog demos (latest complete checkpoint504-C-graphics-device): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -72,14 +72,13 @@ content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text in
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 49 (standalone C programs). Every declared category has demos.
-Coverage: see docs/COVERAGE.md (current catalog, complete502 runtime reports and focused graphics
-sources). Actual C ABI coverage is797/3205: `input_gamepad.h`61/63,
+Coverage: see docs/COVERAGE.md (current catalog and complete504 runtime reports). Actual C ABI
+coverage is797/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84 and `effects.h`9/290.
-Complete502 exercises the first771 credited routes in both full smoke suites; focused503/504
-exercise the26 newer routes under both renderer selections.
+Complete504 exercises all797 credited routes in both full smoke suites.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 31 (`c_api.graphics.draw_routes` CNA-DEMOS-ISSUE-066,
 `c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
@@ -111,6 +110,24 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Complete **504-C-graphics-device**, source `cf105b2` (graphics source through `2746fcc`), absorbs
+all five focused graphics batches after complete502. `tools/validate.sh` reports metadata504/0 and
+passes all517 active CTests in413.76s; three declared tests remain disabled. SOFTWARE is437pass/
+29known-fail/35skip/3not-run and OPENGLES3 is468/30/3/3. Comparison with complete502 shows both
+new IDs at their expected outcomes, every existing status and known-issue value unchanged,
+SOFTWARE adding exactly the one ISSUE-066 assertion (40->41), and OPENGLES3 retaining its exact44
+failed-assertion multiset. Fresh runtime coverage is297/329 types,1405/2326 XNA members and
+797/3205 C routes. The first full attempt exposed an intermittent global-desktop-pointer race in
+`c_api.input.keyboard_mouse`; ten isolated repeats passed, and `RUN_SERIAL` now protects its
+warp/read/restore interval. A targeted two-test run proves serial ordering, and the fresh complete
+suite passes. CNA was clean `f37f8d184` for the18:09 build, then advanced externally during smoke
+to clean `fbd8e64a3` through two CI/CMake-test/docs/tooling-only commits. Production `libcna.so`
+and `libcna_c_api.so` remain SHA-256
+`3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0` and
+`730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`; `cna-demos` remains
+`8ac27e51e2a40a9d12263883b0b6d9d6fdd93ac08a242601a2c282a55daa1c57`. No visual inspection was
+performed. Evidence:`checkpoint-504-c-graphics-device-*`.
 
 Focused **504-C-renderer-recreation** extends `c_api.graphics.owned_device` from20to23 controls
 while retaining every prior label. With zero tracked GPU resources, a negative multisample request
@@ -959,11 +976,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the assigned `graphics_device.h` groups from the complete semantic audit.
-All assigned executable groups now have focused evidence. Run the complete504 checkpoint against
-complete502, then continue the next highest-priority public C member/behavior audit. Keep context
-recovery manual/platform-specific, fixed type-name copies trivial/uncredited and the one-way string
-marker intentionally uncredited unless an observable consumer is added.
+HIGHEST PRIORITY: continue the public C member/behavior audit with coherent `effects.h` groups,
+starting with owned effect annotations and their collection/value semantics. Do not turn its290
+routes into declaration-count variants: group related lifetimes, metadata, typed values,
+collections, reflection and actual rendering behavior. The complete `graphics_device.h` audit is
+closed at80/84; keep context recovery manual/platform-specific, fixed type-name copies trivial/
+uncredited and the one-way string marker intentionally uncredited unless an observable consumer is
+added.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
@@ -982,9 +1001,9 @@ preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is502-C-device-policy; source commit and exact results are in section7.
+Current complete baseline is504-C-graphics-device; source commit and exact results are in section7.
 Focused503-C-draw-routes plus focused504-C-occlusion-query, content-loss, device-capabilities and
-renderer-recreation are newer source/runtime evidence and are not yet in a full checkpoint.
+renderer-recreation are included in it.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
@@ -993,8 +1012,9 @@ render-target-bindings, device-capabilities, sprite-scaled, resource-lifecycle, 
 device-states and sprite-states batches are all included in complete497. Viewport, the later
 device-values and resource-events extensions, texture slots and buffer bindings are included in
 complete500. Device clears, owned-device lifecycle and device profile/policy state are included in
-complete502. The checkpoint binary was built with clean CNA `d7eff66ee`; CNA advanced externally
-during smoke to clean `f37f8d184` through test/tooling-only changes, while both production library
-hashes stayed unchanged. Complete502 is the immutable full-runtime baseline.
+complete502. The complete504 checkpoint binary was built with clean CNA `f37f8d184`; CNA advanced
+externally during smoke to clean `fbd8e64a3` through CI/CMake-test/docs/tooling-only changes, while
+both production library hashes stayed unchanged. Complete504 is the immutable full-runtime
+baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.

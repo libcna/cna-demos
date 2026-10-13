@@ -6,6 +6,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete504-C-graphics-device passes all517 active CTests and both full smoke suites; the two new
+  IDs have their expected outcomes, every complete502 status and known issue remains exact, and
+  only SOFTWARE's documented ISSUE-066 assertion is added.
+- Serialized `c_api.input.keyboard_mouse` in CTest because its global pointer warp/read/restore
+  sequence shares desktop state with every concurrent SDL process; the targeted schedule and full
+  checkpoint now pass.
 - Extended `c_api.graphics.owned_device` from20to23 controls with resource-free renderer
   reconstruction, applied 4x/single-sample state, capability stability and no reset-event leakage.
 - Extended `c_api.graphics.device_capabilities` from20to24 controls with exact render-target-format
