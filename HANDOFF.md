@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-476 catalog demos (complete checkpoint476-C-input-keyboard): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+476 catalog demos (focused checkpoint476-C-input-gamepad-values): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -102,6 +102,18 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **476-C-input-gamepad-values** extends `c_api.input.gamepad` from28to47checks without a
+new ID or fixture. Both renderers pass identical child-label lists with empty stderr; filtering19
+additions restores all28 complete-476 labels. Button, D-pad, thumbstick and trigger value families
+cover construction, queries, equality/inequality and hashing; composed-state controls cover
+component construction/access, packet mutation and the button/packet-only hash. Default
+capabilities check every flag, and scalar dead-zone exclusion complements the existing full analog
+transforms. The exact58 input/C-API/CLI CTests pass in30.48s with six declared skips. Two watched
+builds pass with3912 unchanged CNA inputs/no diagnostics at clean9edbf314; metadata is476/0.
+Thirty-four actual routes raise C coverage307->341/3210 and `input_gamepad.h`4->38/63. Two fixed
+type-name routes remain trivial/uncredited;23 live device routes remain separately classified.
+Full checkpoint pending. Evidence:checkpoint-476-c-input-gamepad-values-focused-*.
 
 Focused **476-C-input-keyboard** extends `c_api.input.keyboard_mouse` from32to40checks without a
 new ID or fixture. Both renderers pass identical child-label lists with empty stderr; filtering the
@@ -298,13 +310,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit all63 public routes in C `input_gamepad.h` against the existing C and C++
-gamepad demos. Give every route a semantic disposition before choosing a coherent extension; do
-not credit the live dead-zone overload on a disconnected neutral slot or duplicate generated
-argument checks. Prefer existing `c_api.input.gamepad` for cohesive value/capability/device/member
-behavior and avoid meaningless getter-per-check inflation. Leave mouse-touch emulation manual-
-deferred, generic touch/media reflection uncredited and `media_player_update_ext` deferred. Never
-edit/revert CNA; preserve ISSUE-038/057/058/059/060/061.
+HIGHEST PRIORITY: run the complete476 checkpoint for focused gamepad-value source after its
+focused commit. Require the exact47 C gamepad labels, unchanged unrelated outcomes and fixed
+selected runtime artifacts. Then audit the remaining23 live `input_gamepad.h` routes as one
+disconnected-device contract, while explicitly leaving each hardware-success branch manual. Do
+not credit the separate live dead-zone overload on a disconnected neutral slot or duplicate
+generated argument checks. Leave mouse-touch emulation manual-deferred, generic touch/media
+reflection uncredited and `media_player_update_ext` deferred. Never edit/revert CNA; preserve
+ISSUE-038/057/058/059/060/061.
 
 ## 15. Assumptions the next session must know
 
@@ -316,6 +329,7 @@ edit/revert CNA; preserve ISSUE-038/057/058/059/060/061.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is476-C-input-keyboard; source commit is in section7. All earlier drafts
-are APPLIED AND STALE. The `input_gamepad.h` route audit in section14 is live.
+Current complete baseline is476-C-input-keyboard; source commit is in section7. Focused
+476-C-input-gamepad-values is applied and awaits its full checkpoint. All earlier drafts are
+APPLIED AND STALE. The full gamepad-value checkpoint in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

@@ -2287,3 +2287,21 @@ source hash or selected runtime artifact. Coverage stays297/329types and1405/232
 actual C ABI coverage is307/3210 and `input_keyboard.h`15/17. The two omitted routes remain trivial
 fixed type-name reflection. No physical input, alternate layout, lock toggle, scancode mode,
 other-desktop or visual claim. Evidence:checkpoint-476-c-input-keyboard-*.
+
+## Focused476-C-input-gamepad-values
+
+The existing `c_api.input.gamepad` grows28->47checks without a new ID or fixture. Both renderers
+pass identical child-label lists with empty stderr; filtering19 additions restores all28
+complete476 labels in order. Three button controls cover empty/mask/array construction, combined
+queries, equality and raw-mask hashing. Three D-pad controls prove non-directional array members are
+ignored, comparisons use only directional bits and Up+Left hashes to canonical weight10. Seven
+analog controls cover stick square clamping/exact equality and trigger0..1 clamping/epsilon
+equality plus both hashes. Four state controls reproduce the existing snapshot from components,
+round-trip its components, mutate packet7 and prove the canonical hash ignores an analog change
+that equality observes. The capability default checks every feature flag; scalar dead-zone
+exclusion checks interior zero and endpoint rescaling. All58 exact input/C-API/CLI CTests pass in
+30.48s with six declared skips. Two watched builds pass with3912 unchanged CNA inputs/no
+diagnostics at clean9edbf314; metadata is476/0. Thirty-four actual routes raise C coverage
+307->341/3210 and `input_gamepad.h`4->38/63. Two fixed type-name routes remain trivial/uncredited;
+23 live device routes remain for disconnected and hardware-success dispositions. Full476 is
+pending. Evidence:checkpoint-476-c-input-gamepad-values-focused-*.

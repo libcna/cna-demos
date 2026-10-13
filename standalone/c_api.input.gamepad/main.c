@@ -42,6 +42,193 @@ static int down(const CNA_GamePadState* state, CNA_GamePadButtonFlags buttons)
     return cna_gamepad_state_is_button_down(state, buttons, &is_down) == CNA_RESULT_SUCCESS && is_down == CNA_TRUE;
 }
 
+static float next_float_above(float value)
+{
+    uint32_t bits = 0U;
+    memcpy(&bits, &value, sizeof(bits));
+    ++bits;
+    memcpy(&value, &bits, sizeof(value));
+    return value;
+}
+
+static int capabilities_are_disconnected(const CNA_GamePadCapabilities* capabilities)
+{
+    return capabilities->gamepad_type == CNA_GAMEPAD_TYPE_UNKNOWN && capabilities->is_connected == CNA_FALSE &&
+           capabilities->has_a_button == CNA_FALSE && capabilities->has_b_button == CNA_FALSE &&
+           capabilities->has_x_button == CNA_FALSE && capabilities->has_y_button == CNA_FALSE &&
+           capabilities->has_back_button == CNA_FALSE && capabilities->has_start_button == CNA_FALSE &&
+           capabilities->has_big_button == CNA_FALSE && capabilities->has_dpad_up_button == CNA_FALSE &&
+           capabilities->has_dpad_down_button == CNA_FALSE && capabilities->has_dpad_left_button == CNA_FALSE &&
+           capabilities->has_dpad_right_button == CNA_FALSE &&
+           capabilities->has_left_shoulder_button == CNA_FALSE &&
+           capabilities->has_right_shoulder_button == CNA_FALSE &&
+           capabilities->has_left_stick_button == CNA_FALSE &&
+           capabilities->has_right_stick_button == CNA_FALSE &&
+           capabilities->has_left_x_thumb_stick == CNA_FALSE &&
+           capabilities->has_left_y_thumb_stick == CNA_FALSE &&
+           capabilities->has_right_x_thumb_stick == CNA_FALSE &&
+           capabilities->has_right_y_thumb_stick == CNA_FALSE &&
+           capabilities->has_left_trigger == CNA_FALSE && capabilities->has_right_trigger == CNA_FALSE &&
+           capabilities->has_left_vibration_motor == CNA_FALSE &&
+           capabilities->has_right_vibration_motor == CNA_FALSE &&
+           capabilities->has_voice_support == CNA_FALSE && capabilities->has_light_bar_ext == CNA_FALSE &&
+           capabilities->has_trigger_vibration_motors_ext == CNA_FALSE &&
+           capabilities->has_misc1_ext == CNA_FALSE && capabilities->has_paddle1_ext == CNA_FALSE &&
+           capabilities->has_paddle2_ext == CNA_FALSE && capabilities->has_paddle3_ext == CNA_FALSE &&
+           capabilities->has_paddle4_ext == CNA_FALSE && capabilities->has_touchpad_ext == CNA_FALSE &&
+           capabilities->has_gyro_ext == CNA_FALSE && capabilities->has_accelerometer_ext == CNA_FALSE &&
+           capabilities->reserved[0] == UINT8_C(0);
+}
+
+static void button_values(CnaDemo* demo)
+{
+    static const CNA_GamePadButtonFlags array[3] = {
+        CNA_GAMEPAD_BUTTON_A, CNA_GAMEPAD_BUTTON_B, CNA_GAMEPAD_BUTTON_A};
+    const CNA_GamePadButtonFlags expected = CNA_GAMEPAD_BUTTON_A | CNA_GAMEPAD_BUTTON_B;
+    CNA_GamePadButtonFlags empty = UINT32_MAX;
+    CNA_GamePadButtonFlags from_mask = 0U;
+    CNA_GamePadButtonFlags from_array = 0U;
+    CNA_Bool pressed = CNA_FALSE;
+    CNA_Bool equal = CNA_FALSE;
+    CNA_Bool different = CNA_FALSE;
+    int32_t hash = 0;
+
+    cna_demo_check(
+        demo,
+        cna_gamepad_buttons_init(&empty) == CNA_RESULT_SUCCESS && empty == CNA_GAMEPAD_BUTTON_NONE &&
+            cna_gamepad_buttons_init_from_mask(expected, &from_mask) == CNA_RESULT_SUCCESS &&
+            from_mask == expected &&
+            cna_gamepad_buttons_init_from_button_array(array, 3U, &from_array) == CNA_RESULT_SUCCESS &&
+            from_array == expected,
+        "button values build from empty, a mask or an array whose duplicate contributes once");
+    cna_demo_check(
+        demo,
+        cna_gamepad_buttons_is_pressed(from_array, CNA_GAMEPAD_BUTTON_A, &pressed) == CNA_RESULT_SUCCESS &&
+            pressed == CNA_TRUE &&
+            cna_gamepad_buttons_equals(from_mask, from_array, &equal) == CNA_RESULT_SUCCESS && equal == CNA_TRUE &&
+            cna_gamepad_buttons_not_equals(empty, from_array, &different) == CNA_RESULT_SUCCESS &&
+            different == CNA_TRUE,
+        "button queries, equality and inequality observe the combined mask");
+    cna_demo_check(
+        demo,
+        cna_gamepad_buttons_get_hash_code(from_array, &hash) == CNA_RESULT_SUCCESS && hash == (int32_t)expected,
+        "the canonical button hash is the mask reinterpreted as a signed value");
+}
+
+static void dpad_values(CnaDemo* demo)
+{
+    static const CNA_GamePadButtonFlags mixed[3] = {
+        CNA_GAMEPAD_BUTTON_A, CNA_GAMEPAD_BUTTON_DPAD_LEFT, CNA_GAMEPAD_BUTTON_START};
+    CNA_GamePadButtonFlags empty = UINT32_MAX;
+    CNA_GamePadButtonFlags up_left = 0U;
+    CNA_GamePadButtonFlags array_left = 0U;
+    CNA_Bool pressed = CNA_FALSE;
+    CNA_Bool equal = CNA_FALSE;
+    CNA_Bool different = CNA_FALSE;
+    int32_t hash = 0;
+
+    cna_demo_check(
+        demo,
+        cna_gamepad_dpad_init(&empty) == CNA_RESULT_SUCCESS && empty == CNA_GAMEPAD_BUTTON_NONE &&
+            cna_gamepad_dpad_init_from_states(CNA_TRUE, CNA_FALSE, CNA_TRUE, CNA_FALSE, &up_left) ==
+                CNA_RESULT_SUCCESS &&
+            up_left == (CNA_GAMEPAD_BUTTON_DPAD_UP | CNA_GAMEPAD_BUTTON_DPAD_LEFT) &&
+            cna_gamepad_dpad_init_from_button_array(mixed, 3U, &array_left) == CNA_RESULT_SUCCESS &&
+            array_left == CNA_GAMEPAD_BUTTON_DPAD_LEFT,
+        "D-pad values build from states or an array while ignoring non-directional identities");
+    cna_demo_check(
+        demo,
+        cna_gamepad_dpad_is_pressed(up_left, CNA_GAMEPAD_BUTTON_DPAD_LEFT, &pressed) == CNA_RESULT_SUCCESS &&
+            pressed == CNA_TRUE &&
+            cna_gamepad_dpad_equals(up_left, up_left | CNA_GAMEPAD_BUTTON_A, &equal) == CNA_RESULT_SUCCESS &&
+            equal == CNA_TRUE &&
+            cna_gamepad_dpad_not_equals(up_left, array_left, &different) == CNA_RESULT_SUCCESS &&
+            different == CNA_TRUE,
+        "D-pad queries and comparisons use only the four directional bits");
+    cna_demo_check(
+        demo,
+        cna_gamepad_dpad_get_hash_code(up_left, &hash) == CNA_RESULT_SUCCESS && hash == 10,
+        "the D-pad hash uses its canonical Down/Left/Right/Up weights rather than raw button bits");
+}
+
+static void analog_values(CnaDemo* demo)
+{
+    const CNA_Vector2 left = {0.25f, -0.5f};
+    const CNA_Vector2 right = {-0.75f, 0.125f};
+    const CNA_Vector2 outside = {2.0f, -2.0f};
+    CNA_GamePadThumbSticks empty_sticks;
+    CNA_GamePadThumbSticks sticks;
+    CNA_GamePadThumbSticks clamped;
+    CNA_GamePadThumbSticks other_sticks;
+    CNA_GamePadTriggers empty_triggers;
+    CNA_GamePadTriggers triggers;
+    CNA_GamePadTriggers other_triggers;
+    CNA_Bool equal = CNA_FALSE;
+    CNA_Bool different = CNA_FALSE;
+    int32_t hash = 0;
+    int32_t other_hash = 1;
+
+    cna_demo_check(
+        demo,
+        cna_gamepad_thumb_sticks_init(&empty_sticks) == CNA_RESULT_SUCCESS &&
+            empty_sticks.left.x == 0.0f && empty_sticks.left.y == 0.0f &&
+            empty_sticks.right.x == 0.0f && empty_sticks.right.y == 0.0f &&
+            cna_gamepad_thumb_sticks_init_from_positions(&left, &right, &sticks) == CNA_RESULT_SUCCESS &&
+            sticks.left.x == left.x && sticks.left.y == left.y &&
+            sticks.right.x == right.x && sticks.right.y == right.y &&
+            cna_gamepad_thumb_sticks_init_from_positions(&outside, &outside, &clamped) == CNA_RESULT_SUCCESS &&
+            clamped.left.x == 1.0f && clamped.left.y == -1.0f &&
+            clamped.right.x == 1.0f && clamped.right.y == -1.0f,
+        "thumbstick construction preserves in-range positions and square-clamps each outside component");
+
+    other_sticks = sticks;
+    cna_demo_check(
+        demo,
+        cna_gamepad_thumb_sticks_equals(&sticks, &other_sticks, &equal) == CNA_RESULT_SUCCESS &&
+            equal == CNA_TRUE &&
+            cna_gamepad_thumb_sticks_get_hash_code(&sticks, &hash) == CNA_RESULT_SUCCESS &&
+            cna_gamepad_thumb_sticks_get_hash_code(&other_sticks, &other_hash) == CNA_RESULT_SUCCESS &&
+            hash == other_hash,
+        "equal thumbstick pairs compare equal and produce the same canonical hash");
+    other_sticks.left.x = 0.5f;
+    cna_demo_check(
+        demo,
+        cna_gamepad_thumb_sticks_not_equals(&sticks, &other_sticks, &different) == CNA_RESULT_SUCCESS &&
+            different == CNA_TRUE,
+        "thumbstick inequality observes one exactly changed component");
+
+    cna_demo_check(
+        demo,
+        cna_gamepad_triggers_init(&empty_triggers) == CNA_RESULT_SUCCESS &&
+            empty_triggers.left == 0.0f && empty_triggers.right == 0.0f &&
+            cna_gamepad_triggers_init_from_positions(0.25f, 0.75f, &triggers) == CNA_RESULT_SUCCESS &&
+            triggers.left == 0.25f && triggers.right == 0.75f &&
+            cna_gamepad_triggers_init_from_positions(-1.0f, 2.0f, &other_triggers) == CNA_RESULT_SUCCESS &&
+            other_triggers.left == 0.0f && other_triggers.right == 1.0f,
+        "trigger construction starts at zero, preserves in-range positions and clamps to zero through one");
+
+    other_triggers = triggers;
+    cna_demo_check(
+        demo,
+        cna_gamepad_triggers_get_hash_code(&triggers, &hash) == CNA_RESULT_SUCCESS &&
+            cna_gamepad_triggers_get_hash_code(&other_triggers, &other_hash) == CNA_RESULT_SUCCESS &&
+            hash == other_hash,
+        "exactly equal trigger pairs produce the same canonical hash");
+    other_triggers.left = next_float_above(triggers.left);
+    cna_demo_check(
+        demo,
+        other_triggers.left != triggers.left &&
+            cna_gamepad_triggers_equals(&triggers, &other_triggers, &equal) == CNA_RESULT_SUCCESS &&
+            equal == CNA_TRUE,
+        "trigger equality accepts the next representable float through its epsilon comparison");
+    other_triggers.left = 0.5f;
+    cna_demo_check(
+        demo,
+        cna_gamepad_triggers_not_equals(&triggers, &other_triggers, &different) == CNA_RESULT_SUCCESS &&
+            different == CNA_TRUE,
+        "trigger inequality detects a difference larger than the comparison epsilon");
+}
+
 static void state_values(CnaDemo* demo)
 {
     static const CNA_GamePadButtonFlags held[2] = {CNA_GAMEPAD_BUTTON_A, CNA_GAMEPAD_BUTTON_DPAD_UP};
@@ -49,8 +236,16 @@ static void state_values(CnaDemo* demo)
     const CNA_Vector2 right = {0.0f, -1.0f};
     CNA_GamePadState rest;
     CNA_GamePadState state;
+    CNA_GamePadState component_state;
+    CNA_GamePadThumbSticks sticks;
+    CNA_GamePadTriggers triggers;
+    CNA_GamePadButtonFlags buttons = 0U;
     CNA_GamePadButtonFlags dpad = 0U;
+    CNA_Bool equal = CNA_FALSE;
+    CNA_Bool different = CNA_FALSE;
     CNA_Bool is_up = CNA_FALSE;
+    int32_t hash = 0;
+    int32_t component_hash = 1;
     const CNA_GamePadButtonFlags derived = CNA_GAMEPAD_BUTTON_LEFT_THUMBSTICK_RIGHT |
                                            CNA_GAMEPAD_BUTTON_RIGHT_THUMBSTICK_DOWN | CNA_GAMEPAD_BUTTON_LEFT_TRIGGER;
 
@@ -86,6 +281,47 @@ static void state_values(CnaDemo* demo)
                            CNA_RESULT_SUCCESS &&
                        is_up == CNA_TRUE,
                    "is_button_up: true when at least one is up");
+
+    blank_state(&component_state);
+    cna_demo_check(
+        demo,
+        cna_gamepad_thumb_sticks_init_from_positions(&left, &right, &sticks) == CNA_RESULT_SUCCESS &&
+            cna_gamepad_triggers_init_from_positions(0.5f, 0.0f, &triggers) == CNA_RESULT_SUCCESS &&
+            cna_gamepad_state_init_from_components(&sticks, &triggers, CNA_GAMEPAD_BUTTON_A,
+                                                   CNA_GAMEPAD_BUTTON_DPAD_UP, &component_state) ==
+                CNA_RESULT_SUCCESS &&
+            cna_gamepad_state_equals(&state, &component_state, &equal) == CNA_RESULT_SUCCESS && equal == CNA_TRUE,
+        "the same controls built from component values produce an equal connected snapshot");
+    cna_demo_check(
+        demo,
+        cna_gamepad_state_get_buttons(&state, &buttons) == CNA_RESULT_SUCCESS &&
+            buttons == state.pressed_buttons &&
+            cna_gamepad_state_get_thumb_sticks(&state, &sticks) == CNA_RESULT_SUCCESS &&
+            sticks.left.x == 1.0f && sticks.left.y == 0.0f &&
+            sticks.right.x == 0.0f && sticks.right.y == -1.0f &&
+            cna_gamepad_state_get_triggers(&state, &triggers) == CNA_RESULT_SUCCESS &&
+            triggers.left == 0.5f && triggers.right == 0.0f,
+        "state component getters recover the complete button, thumbstick and trigger values");
+
+    component_state = state;
+    cna_demo_check(
+        demo,
+        cna_gamepad_state_set_packet_number_ext(&component_state, 7) == CNA_RESULT_SUCCESS &&
+            component_state.packet_number == 7 &&
+            cna_gamepad_state_not_equals(&state, &component_state, &different) == CNA_RESULT_SUCCESS &&
+            different == CNA_TRUE,
+        "the packet-number extension mutates the snapshot and participates in inequality");
+
+    component_state = state;
+    component_state.analog.left_trigger = 0.75f;
+    cna_demo_check(
+        demo,
+        cna_gamepad_state_not_equals(&state, &component_state, &different) == CNA_RESULT_SUCCESS &&
+            different == CNA_TRUE &&
+            cna_gamepad_state_get_hash_code(&state, &hash) == CNA_RESULT_SUCCESS &&
+            cna_gamepad_state_get_hash_code(&component_state, &component_hash) == CNA_RESULT_SUCCESS &&
+            hash == component_hash,
+        "the canonical state hash ignores an analog difference that state equality observes");
 }
 
 static void dead_zones(CnaDemo* demo)
@@ -94,6 +330,10 @@ static void dead_zones(CnaDemo* demo)
     CNA_GamePadAnalogState none;
     CNA_GamePadAnalogState axes;
     CNA_GamePadAnalogState circular;
+    float inside = 1.0f;
+    float endpoint = 0.0f;
+    float outside = 0.0f;
+    const float expected = 0.01f / (1.0f - CNA_GAMEPAD_LEFT_DEAD_ZONE);
 
     /* A small diagonal push on the left stick: each axis alone is inside the dead zone
        (CNA_GAMEPAD_LEFT_DEAD_ZONE, about 0.24), their length is not. */
@@ -118,6 +358,17 @@ static void dead_zones(CnaDemo* demo)
     cna_demo_check(demo,
                    circular.left_thumb_stick.x > 0.0f && circular.left_thumb_stick.x == circular.left_thumb_stick.y,
                    "CIRCULAR measures the length and keeps the diagonal");
+    cna_demo_check(
+        demo,
+        cna_gamepad_exclude_axis_dead_zone(CNA_GAMEPAD_LEFT_DEAD_ZONE * 0.9f,
+                                           CNA_GAMEPAD_LEFT_DEAD_ZONE, &inside) == CNA_RESULT_SUCCESS &&
+            inside == 0.0f &&
+            cna_gamepad_exclude_axis_dead_zone(1.0f, CNA_GAMEPAD_LEFT_DEAD_ZONE, &endpoint) ==
+                CNA_RESULT_SUCCESS && endpoint == 1.0f &&
+            cna_gamepad_exclude_axis_dead_zone(CNA_GAMEPAD_LEFT_DEAD_ZONE + 0.01f,
+                                               CNA_GAMEPAD_LEFT_DEAD_ZONE, &outside) == CNA_RESULT_SUCCESS &&
+            outside > expected - 0.000001f && outside < expected + 0.000001f,
+        "scalar dead-zone exclusion zeros an interior value and rescales the remaining range to one");
 }
 
 static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, void* context,
@@ -162,9 +413,13 @@ static CNA_Result update(CNA_Handle game, const CNA_GameTime* game_time, void* c
     } else if (!state->agreement_checked) {
         CNA_GamePadCapabilities capabilities;
         state->agreement_checked = 1;
-        memset(&capabilities, 0, sizeof(capabilities));
-        capabilities.struct_size = (uint32_t)sizeof(capabilities);
-        capabilities.struct_version = UINT32_C(1);
+        memset(&capabilities, 0x5a, sizeof(capabilities));
+        cna_demo_check(
+            state->demo,
+            cna_gamepad_capabilities_init(&capabilities) == CNA_RESULT_SUCCESS &&
+                capabilities.struct_size == (uint32_t)sizeof(capabilities) &&
+                capabilities.struct_version == UINT32_C(1) && capabilities_are_disconnected(&capabilities),
+            "the default capability value is versioned, disconnected and has no reported features");
         if (cna_demo_check_result(state->demo, cna_gamepad_get_capabilities(game, CNA_PLAYER_INDEX_ONE, &capabilities),
                                   "cna_gamepad_get_capabilities")) {
             printf("  player one: %s\n", state->pad.is_connected ? "connected" : "no controller");
@@ -270,6 +525,9 @@ int main(int argc, char** argv)
     CNA_Handle manager = CNA_INVALID_HANDLE;
 
     cna_demo_init(&demo, "c_api.input.gamepad", argc, argv, 10);
+    button_values(&demo);
+    dpad_values(&demo);
+    analog_values(&demo);
     state_values(&demo);
     dead_zones(&demo);
 
