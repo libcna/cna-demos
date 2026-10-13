@@ -15,6 +15,43 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-058 -- Replaying the active MediaQueue Song uses it after freeing it
+
+- **Area/API:** `MediaPlayer::Play(Song*)`, `MediaPlayer::Queue`, and
+  `MediaQueue::ActiveSong`; `modules/media/src/Xna/MediaPlayer.cpp` and `MediaQueue.cpp`.
+- **Reproduction:** a private public-API probe appends a caller-created Song to the process-wide
+  queue, selects index zero, obtains the valid pointer returned by `ActiveSong`, and passes that
+  pointer to `MediaPlayer::Play`. A separate process passes an independently caller-owned Song
+  with the same 128-character name and audio path. The probe is linked with AddressSanitizer to
+  the unchanged linux-full `libcna.so`; leak detection is disabled because this is a bounded
+  input-alias lifetime check, not a leak audit. Both use SDL dummy audio and the same original
+  `rising.wav` fixture.
+- **Observed:** the caller-owned control copies the name into the queue and exits zero. The
+  queue-owned case reaches `Play` with a valid Song, then aborts with an ASan heap-use-after-free.
+  The freeing stack is `MediaPlayer::Play` -> `MediaQueue::Clear`; the subsequent read is
+  `MediaPlayer::LoadSong` copying `Song::getNameProperty`. The failing process never reaches its
+  post-Play check. This is a native memory-lifetime defect, not an acoustic-output discrepancy.
+- **Expected:** a Song returned by the public active-queue property is a valid input to the public
+  single-Song Play overload. Replacing the queue must snapshot or copy that input before deleting
+  its owning entry. The overload has no documented exclusion for the current queue entry.
+- **Source mechanism:** `Play(Song*)` saves a previous pointer, clears the queue, then calls
+  `LoadSong(song)` and later `PlaySong(song)`. `MediaQueue` owns its entries with `unique_ptr`, so
+  Clear destroys the object before either later call can read it. Merely moving the first name/
+  handle read before Clear would leave the later `PlaySong(song)` use invalid; a repair needs a
+  stable copy or must operate on the newly enqueued entry throughout.
+- **Evidence/environment:** Linux x86_64, GCC 14.2, CNA clean at
+  `eff31310179168fb4f47258e6226a5234c2140d0`. The caller control exits0; the queue case exits
+  by SIGABRT (`-6`) with the exact ASan allocation/free/read stacks. Probe source, build command,
+  executable hash, stdout/stderr/exits, source hashes and reviewed result JSON are archived under
+  `build/linux-full/reports/checkpoint-473-hierarchy-*queue-replay*`. All36selected project
+  binaries stayed unchanged through compile and both runs. This is selected-artifact evidence,
+  not an atomic dependency snapshot.
+- **Status/handling:** open. No CNA source was edited and no upstream message was sent. The normal
+  smoke catalog does not invoke undefined behavior merely to retain a failing assertion; this is
+  tracked as a probe-backed issue without a runtime knownIssue marker. Existing MediaPlayer queue
+  demos remain valid because they pass caller-owned Songs/collections. Revisit a safe regression
+  demo after CNA repairs the lifetime order.
+
 ### CNA-DEMOS-ISSUE-057 -- Content staging scavenger warns during normal concurrent lifecycle
 
 - **Area:** CNA content tools, `tools/common/CnaContentStaging.hpp`, consumed by `cna-content`

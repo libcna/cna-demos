@@ -221,7 +221,9 @@ CNA-DEMOS-ISSUE-038 (dynamic PendingBufferCount/IsLooped omit disposal guards),
 CNA-DEMOS-ISSUE-039 (ContentManager accepts root changes while assets remain loaded),
 CNA-DEMOS-ISSUE-040 (documentation only: Picture/Album thumbnail comments contradict generation paths),
 CNA-DEMOS-ISSUE-041 (SavePicture ignores short reads and writes zero-padded image data),
-CNA-DEMOS-ISSUE-042 (documentation only: root-prefix comments describe older mesh cancellation).
+CNA-DEMOS-ISSUE-042 (documentation only: root-prefix comments describe older mesh cancellation),
+CNA-DEMOS-ISSUE-058 (`MediaPlayer::Play` frees an active-queue Song before copying/playing it;
+ASan probe-backed, no runtime knownIssue marker).
 
 ## 11. Dependencies (pinned for CI; same as cna-template's dependencies.lock)
 
@@ -257,10 +259,10 @@ checkpoint-473-music-next-duration-*. Optional CNA_FFMPEG_AVAILABLE controls the
 without it retain meaningful tag/relationship checks and print the unexercised duration boundary.
 No zero-duration credit. Verify current source/draft hashes, build/gate, both native child lists,
 media/CLI CTests, then fullcheckpoint/capture/freeze/exact old evidence comparisons.
-Also investigate source-only queue replay lifetime:checkpoint-473-hierarchy-next-queue-replay-*.
-Private ASan probe /tmp/cna-media-queue-replay-probe compiles17876/emptylog, selected binaries
-unchanged. No native evidence yet; compare caller-owned control versus queue-owned input in
-separate processes only after this full checkpoint ends. Do not assign a CNA issue from source alone.
+Queue replay investigation is now CNA-DEMOS-ISSUE-058. The caller-owned control exits0; the
+active-queue Song case aborts under ASan with a direct Clear -> LoadSong heap-use-after-free.
+Original logs/exits/source/build/result JSON are checkpoint-473-hierarchy-*queue-replay*;
+all36selected binaries remained unchanged. No normal smoke knownIssue marker invokes this UB.
 C media queue/view/copy audit is in COVERAGE_AUDIT; its32old child checks are explicitly retained.
 After closing the duration batch, continue Album art/thumbnail owned streams and public-member audit.
 Album thumbnail comments are already source-only ISSUE-040; do not claim runtime/art proof.

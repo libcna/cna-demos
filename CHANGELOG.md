@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Recorded CNA-DEMOS-ISSUE-058: an ASan public-API probe shows `MediaPlayer::Play`
+  frees an active-queue Song before reading it; the independent caller-owned control passes.
 - Complete473-hierarchy:486enabled CTests and both full smoke suites preserve all old
   failures/child/network evidence; categories grows from five to ten checks.
 - XACT categories now contrast independent groups with authored parent/child pause, resume

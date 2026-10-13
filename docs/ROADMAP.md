@@ -1643,3 +1643,14 @@ checkpoint-473-hierarchy-*. Generated coverage:297/329types,
 1400/2326XNA members. Semantic coverage remains incomplete.
 Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged; clean runs do
 not establish a repair of the staging race. Original refusals and reproduction remain archived.
+
+## Queue replay lifetime investigation
+
+A public-API ASan probe after complete473-hierarchy confirms CNA-DEMOS-ISSUE-058. Passing an
+independently caller-owned Song to `MediaPlayer::Play` succeeds, while passing the valid current
+`MediaPlayer::Queue.ActiveSong` aborts: Play clears the owning queue and then reads the freed Song
+in LoadSong. Exact allocation/free/read stacks, original streams and exits are archived under
+`checkpoint-473-hierarchy-*queue-replay*`; all36selected project binaries remained unchanged.
+No catalog knownIssue marker deliberately executes this undefined behavior. No CNA source was
+edited and no playback-quality conclusion is drawn. The next semantic work remains positive
+imported duration aggregation, followed by the separate Album art owned-stream workflow.
