@@ -3217,3 +3217,14 @@ is clean. All21 routes raise total C coverage982->1003/3205 and `effects.h`191->
 sibling CNA is `a6bb279d47`; production library hashes remain unchanged. Apply is state-only; no
 skinned draw, vertex-weight, pixel result or visual inspection is claimed.
 Evidence:checkpoint-514-c-skinned-effect-focused-*.
+
+New `c_api.graphics.color_matrix_effect_state` demonstrates every ColorMatrixEffect C route in one
+finite-state and clone workflow. Twenty-two controls cover exact identity/zero defaults, a complete
+authored row-major transform and unclamped offset, atomic NaN/infinity refusal, the Rec. 709
+grayscale preset, reset and clone survival after source destruction. Direct and both runner
+selections pass, runner output is byte-identical and all three stderr files are empty; all17 focused
+C/C++ ColorMatrixEffect and CLI tests pass in6.73s. Metadata is515/0 and the incremental build is
+clean. All7 routes raise total C coverage1003->1010/3205 and `effects.h`212->219/290. Clean sibling
+CNA is `a6bb279d47`; production library hashes remain unchanged. The existing C++ SOFTWARE demo
+supplies pixel validation; this C workflow makes no draw, transformed-pixel or visual-inspection
+claim. Evidence:checkpoint-515-c-color-matrix-effect-focused-*.
