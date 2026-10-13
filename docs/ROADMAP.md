@@ -2569,6 +2569,26 @@ compilation is diagnostic-free and metadata validates487/0. Eleven routes raise 
 coverage621->632/3205 and `devices.h`33->44/62. All69 exact input/device/C-API/CLI CTests pass in
 198.53s with six declared skips and one known-issue expected failure. The real
 `cna_system_tray_create` route remains manual because successful execution creates a host icon; no
-icon appearance, native click delivery or callback thread is
-claimed. The standard/full checkpoint remains blocked by the unchanged external SDL_GPU mismatch.
+icon appearance, native click delivery or callback thread is claimed. The standard/full checkpoint
+remains blocked by the unchanged external SDL_GPU mismatch.
 Evidence:checkpoint-487-c-system-tray-focused-*.
+
+## Focused488-C-camera-frames
+
+A new C standalone covers fourteen of fifteen camera routes in `devices.h` without opening camera
+hardware. It initializes the descriptor, reads driver support/count, enumerates every current
+facing/name with exact buffers and validates the upper bound. CNA's synthetic camera then
+round-trips permission-pending, denied and lost states, refuses unreachable/undefined states and
+invalid frames, publishes exact2x2 RGBA data and copies every channel into a caller-owned Color
+texture. Wrong-size and absent frames return ordinary false; clearing restores zero-size Opening;
+the acquired texture remains readable after the camera handle is released.
+
+Both renderer selections pass identical23-control output with empty stderr. Direct C and metadata
+compilation is diagnostic-free and metadata validates488/0. Fourteen routes raise current C
+coverage632->646/3205 and `devices.h`44->58/62. All70 exact input/device/C-API/CLI CTests pass in
+221.19s with six declared skips and one known-issue expected failure. ISSUE-063 records that the
+public C comments still promise Closed after synthetic creation/clear even though implementation,
+CNA smoke and this runtime use Opening and refuse Closed. Real `cna_camera_create` remains manual;
+no permission prompt, capture, preview, display or
+visual inspection is claimed. The standard/full checkpoint remains blocked by the unchanged
+external SDL_GPU mismatch. Evidence:checkpoint-488-c-camera-frames-focused-*.

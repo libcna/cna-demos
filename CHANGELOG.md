@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.devices.camera_frames`, a23-check C workflow covering14 camera descriptor,
+  enumeration, synthetic-state, exact RGBA transfer and ownership routes without opening hardware.
+- Recorded CNA-DEMOS-ISSUE-063: the C camera test-backend comments promise `Closed` after creation
+  and frame clearing, while the implementation returns `Opening` and refuses the defined `Closed`
+  state under the current platform-opened camera model.
 - Added `c_api.devices.system_tray`, a16-check C workflow covering11 in-memory tray routes for
   owned lifetime, menu state, upper bounds and callbacks; real host-icon creation remains manual.
 - Added `c_api.devices.dialogs`, a20-check C workflow covering all10 message-box and file-dialog

@@ -15,6 +15,31 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-063 -- C synthetic-camera comments promise an unreachable Closed state
+
+- **Area/API:** `cna_camera_create_with_test_backend_ext`, `cna_camera_set_test_state_ext`,
+  `cna_camera_set_test_frame_ext` and their comments in
+  `modules/c-api/include/CNA/C/devices.h`.
+- **Observed contract conflict:** the creation comment says the synthetic camera starts closed,
+  and the frame-publishing comment says a null pixel pointer clears the frame and closes the
+  camera. Actual creation reports `CNA_CAMERA_STATE_OPENING` with zero dimensions; clearing a
+  frame restores the same Opening state. Passing the defined `CNA_CAMERA_STATE_CLOSED` identity to
+  the documented state setter returns `CNA_RESULT_INVALID_ARGUMENT`, as does NotSupported.
+- **Runtime/source evidence:** `c_api.devices.camera_frames` observes Opening at creation, then
+  round-trips Denied, Lost and Opening, proves Closed/NotSupported/undefined states are refused
+  without mutation, publishes and acquires an exact synthetic frame, and observes Opening again
+  after clearing it. All23 controls pass under SOFTWARE and OPENGLES3 with identical output and
+  empty stderr. `CameraTestState` initializes to Opening; `CameraSetTestStateExt` explicitly
+  refuses Closed/NotSupported; the null-frame branch explicitly assigns Opening. CNA's own pure-C
+  smoke expects the same behavior and explains that the platform now hands out only opened devices.
+- **Expected:** update all three public comments to describe the current platform-opened model and
+  list the two defined but rejected identities, or restore the documented Closed lifecycle and
+  make it reachable consistently. The current words and behavior cannot both be correct.
+- **Scope/status:** passing documentation mismatch; no runtime knownIssue marker is needed. The
+  real `cna_camera_create` route is deliberately not invoked, so no camera is opened and no
+  permission prompt is claimed. No CNA source was modified or upstream message sent. Open; focused
+  evidence is archived as `checkpoint-488-c-camera-frames-focused-*`.
+
 ### CNA-DEMOS-ISSUE-062 -- Disposed accelerometer and gyroscope retain readable CurrentValue
 
 - **Area/API:** `cna_accelerometer_get_current_value`, `cna_gyroscope_get_current_value`, their
