@@ -1903,3 +1903,14 @@ alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain
 stderr is identical. Outer Xvfb has17exact amdgpu pairs (previous8); exits are zero and CNA
 eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
 rise203->209/3210 and media.h20->26/39. Evidence:checkpoint-474-c-song-metadata-*.
+
+## Focused474-C-player-settings
+
+The same `c_api.media.media_player` now grows71->75child checks without a new ID or fixture. Both
+renderers pass identical lists with empty stderr; removing four additions restores all71prior labels
+in order. After playback is stopped, mute/repeat/shuffle each round-trip true then restored false;
+volume clamps -0.25to0 and1.25to1 before restoring1. Focused29media/CLI CTests pass in8.56s. Two
+watched builds pass with3909unchanged CNA inputs/no diagnostics; metadata remains474/0. Eight
+actual routes raise C coverage209->217/3210 and media_player.h23->31/41. No audible-volume,
+queue-order, repeated-playback or persistence claim. Full474 is pending.
+Evidence:checkpoint-474-c-player-settings-focused-*.

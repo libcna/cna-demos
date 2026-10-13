@@ -380,6 +380,44 @@ int main(int argc, char** argv)
         (void)cna_media_player_stop(game); /* keep the ownership exercise independent of live playback */
     }
 
+    /* Process-wide playback settings remain directly observable while stopped. Restore their
+       ordinary values before the ownership and lifecycle checks below. */
+    {
+        CNA_Bool setting = CNA_FALSE;
+        float volume = -1.0f;
+        cna_demo_check(&demo,
+                       cna_media_player_set_is_muted(game, CNA_TRUE) == CNA_RESULT_SUCCESS &&
+                           cna_media_player_get_is_muted(game, &setting) == CNA_RESULT_SUCCESS &&
+                           setting == CNA_TRUE &&
+                           cna_media_player_set_is_muted(game, CNA_FALSE) == CNA_RESULT_SUCCESS &&
+                           cna_media_player_get_is_muted(game, &setting) == CNA_RESULT_SUCCESS &&
+                           setting == CNA_FALSE,
+                       "mute can be enabled, read back and restored while stopped");
+        cna_demo_check(&demo,
+                       cna_media_player_set_is_repeating(game, CNA_TRUE) == CNA_RESULT_SUCCESS &&
+                           cna_media_player_get_is_repeating(game, &setting) == CNA_RESULT_SUCCESS &&
+                           setting == CNA_TRUE &&
+                           cna_media_player_set_is_repeating(game, CNA_FALSE) == CNA_RESULT_SUCCESS &&
+                           cna_media_player_get_is_repeating(game, &setting) == CNA_RESULT_SUCCESS &&
+                           setting == CNA_FALSE,
+                       "repeat can be enabled, read back and restored while stopped");
+        cna_demo_check(&demo,
+                       cna_media_player_set_is_shuffled(game, CNA_TRUE) == CNA_RESULT_SUCCESS &&
+                           cna_media_player_get_is_shuffled(game, &setting) == CNA_RESULT_SUCCESS &&
+                           setting == CNA_TRUE &&
+                           cna_media_player_set_is_shuffled(game, CNA_FALSE) == CNA_RESULT_SUCCESS &&
+                           cna_media_player_get_is_shuffled(game, &setting) == CNA_RESULT_SUCCESS &&
+                           setting == CNA_FALSE,
+                       "shuffle can be enabled, read back and restored while stopped");
+        cna_demo_check(&demo,
+                       cna_media_player_set_volume(game, -0.25f) == CNA_RESULT_SUCCESS &&
+                           cna_media_player_get_volume(game, &volume) == CNA_RESULT_SUCCESS && volume == 0.0f &&
+                           cna_media_player_set_volume(game, 1.25f) == CNA_RESULT_SUCCESS &&
+                           cna_media_player_get_volume(game, &volume) == CNA_RESULT_SUCCESS && volume == 1.0f &&
+                           cna_media_player_set_volume(game, 1.0f) == CNA_RESULT_SUCCESS,
+                       "volume clamps below zero and above one before full volume is restored");
+    }
+
     /* The collection shares its retained Song, while queue accessors publish independent copies.
        Keep those handles across view/collection destruction and a safe stopped-queue Clear. */
     cna_demo_check(&demo,

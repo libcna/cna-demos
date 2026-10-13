@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the existing C media-player workflow from71to75checks with stopped-state mute, repeat,
+  shuffle and clamped-volume round trips.
 - Complete474-C-song-metadata:487enabled CTests and both full smoke suites preserve all old
   evidence; the C media demo adds two exact Song metadata checks and six C ABI routes.
 - Extended the existing C media-player workflow from69to71checks with plain-path Song metadata
