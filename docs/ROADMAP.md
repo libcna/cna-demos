@@ -2699,3 +2699,18 @@ known-issue marker and failed-assertion message/multiplicity remains exact at40/
 sibling CNA source remains at `440af2a`; its unrelated uncommitted handoff documentation was not
 modified by cna-demos. No visual inspection is claimed. Evidence:
 checkpoint-492-c-device-presentation-*.
+
+## Focused493-C-render-target-bindings
+
+New `c_api.graphics.render_target_bindings` completes the nine previously uncovered
+`render_target.h` routes. Twenty-two controls classify Discard/Preserve/Platform usage; create
+matching bindable2D and cube targets; read their complete applied state; bind and copy a real
+two-entry2D/cube MRT array in order; prove atomic short-buffer refusal; replace it with one selected
+cube face; and restore/copy the empty backbuffer state. ContentLost registration is valid, remains
+silent during ordinary binding on both current non-device-losing renderers, releases once and is
+then invalid. Both renderer selections pass identical output with empty stderr. Metadata is493/0,
+the exact CTest passes, and an Xvfb-backed68-test C/API, render-target, device-manager and CLI
+selection has no failures:66pass, the SOFTWARE custom-effect MRT scene declares a skip, and the
+fullscreen test remains disabled. Nine routes raise C coverage669->678/3205 and complete
+`render_target.h` at12/12. No device-loss notification, pixels or visual inspection is claimed.
+Evidence:checkpoint-493-c-render-target-bindings-focused-*.
