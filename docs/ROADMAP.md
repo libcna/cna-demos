@@ -2875,3 +2875,18 @@ Metadata remains498/0, all67 focused C/API, C++ graphics-device/resource and CLI
 `graphics_device.h`29->33/84. Clean sibling CNA is `d7eff66ee`; production `libcna.so` remains
 byte-identical. Nothing is drawn and no visual inspection is claimed.
 Evidence:checkpoint-498-c-resource-events-focused-*.
+
+## Focused499-C-texture-slots
+
+New `c_api.graphics.texture_slots` demonstrates the three graphics-device texture-collection routes.
+Sixteen controls start from two empty high pixel slots on a fresh HiDef device; bind one owned Color
+Texture2D and read its exact native occupancy and C-handle identity; clear only one slot with the
+invalid handle; bind the same texture into both slots; clear both through whole-device unbinding;
+and prove repeated unbinding is an idempotent no-op. A final rebind followed by typed destruction
+clears the slot automatically and invalidates the stale handle. Every returned slot structure has
+exact size/version and zero reserved bytes. SOFTWARE and OPENGLES3 produce identical output with
+empty stderr. Metadata is499/0, all68 focused C/API, C++ graphics-device/resource and CLI tests
+pass in40.15s, and a clean1696-step full build follows. Three routes raise C coverage749->752/3205
+and `graphics_device.h`33->36/84. Clean sibling CNA is `d7eff66ee`; production `libcna.so` remains
+byte-identical. No vertex-stage format support, drawing or visual inspection is claimed.
+Evidence:checkpoint-499-c-texture-slots-focused-*.

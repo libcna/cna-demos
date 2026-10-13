@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.texture_slots`, a16-check C workflow for exact pixel-stage slot identity,
+  selective and whole-device unbinding, idempotence and destruction cleanup.
 - Extended `c_api.graphics.resource_lifecycle` from25to30 controls with synchronous
   graphics-device resource creation/destruction payloads, tracked-count transitions and
   registration unsubscription behavior.
