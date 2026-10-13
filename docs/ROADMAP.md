@@ -2148,3 +2148,16 @@ stderr is identical. Outer Xvfb emits7exact amdgpu pairs (previous8), both exits
 is cleanf44a8ff at post-build and final observation. XNA coverage stays297/329types and
 1405/2326members; C coverage remains254/3210 after the focused increase. Evidence:
 checkpoint-475-c-input-touch-values-*.
+
+## Focused476-C-input-gesture-queue
+
+`c_api.input.gesture_queue` adds one distinct deterministic C standalone. Both renderers pass the
+same31 child checks with empty stderr. Reset proves the default None mask and empty queue;
+Tap|FreeDrag round-trips exactly. Two explicit samples retain timestamps, both finger ids and all
+four vectors. Disabling detection after enqueue preserves the pending entries, reads return exact
+FIFO Tap then FreeDrag values, availability follows the queue, and an empty read returns
+INVALID_STATE without changing its output. All58input/CLI CTests pass in123.46s with six declared
+environment skips. Two watched builds pass with3910unchanged CNA inputs/no diagnostics at clean
+CNAf44a8ff; metadata is476/0. Six actual routes raise C coverage254->260/3210 and
+input_touch.h19->25/47. No physical gesture detection, recognizer timing/threshold, callback-thread
+or renderer-pixel claim. Full476 is pending. Evidence:checkpoint-476-c-input-gesture-queue-focused-*.
