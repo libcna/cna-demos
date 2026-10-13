@@ -3774,3 +3774,14 @@ missing path, accepts duration correction and defers track validation. The URI e
 path behavior and independent owned handles are explicit. Both Xvfb/dummy-audio runs are byte-
 identical with empty stderr; strict C99 and metadata compilation pass. `video.h` is19/42
 demonstrated; the VideoPlayer batch remains. Evidence:checkpoint-571-c-video-asset-focused-*-direct.*.
+
+`c_api.media.video_player` closes the other23 `video.h` routes in31 controls against the real
+generated WMV. It covers stopped defaults, configuration and clamping, exact/atomic type text,
+active Video identity, decoded-frame descriptors and invalidation of each borrowed texture on the
+next player call. A pause holds its clock across updates, Resume continues it and the paced run
+observes the authored end wrap while state remains Playing. Stop resets state without resetting the
+monotonic frame generation, replay advances it, and disposal makes playback routes reject access.
+Both Xvfb/dummy-audio selections are byte-identical with empty stderr; strict C99 and metadata
+compilation pass. `video.h` is42/42 demonstrated. Evidence:
+checkpoint-572-c-video-player-focused-*-direct.*. Pixels, audible quality and visual inspection are
+not claimed.

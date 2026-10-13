@@ -17,10 +17,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 41; the C `effects.h` route audit is complete).
-* In progress: 7 (models/glTF, 23), 8 (content, 52), 9 (audio 23 incl. 10 XACT, media 13 incl. a
-  compiled video and song, plus C video metadata), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
+* In progress: 7 (models/glTF, 23), 8 (content, 52), 9 (audio 23 incl. 10 XACT, media 15 incl. a
+  compiled video and song plus C video asset/player audits), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 113 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 114 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -66,14 +66,14 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds43 staged standalone C IDs and should reach568 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds44 staged standalone C IDs and should reach569 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 52 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
-joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 14 (compiled video and song, tagged library import and album art), gamer services 19
+joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 15 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and113 in the
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and114 in the
 current source tree (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
 Actual C ABI coverage is1116/3205: `input_gamepad.h`61/63,
@@ -1325,8 +1325,9 @@ full-screen toggling kept platform/manual after the Xvfb mode switch timed out a
 constructor remains intentionally deferred until CNA exposes a real embedded-resource store.
 `storage.h` is dispositioned at47/49 demonstrated, with only its fixed container reflection-name
 pair trivial/uncredited. `content_readers.h` is complete at62/62 after the base reader/value,
-registry, reflective-builder and object-dictionary batches. `video.h` is19/42 demonstrated after
-the asset/metadata batch; next audit the23 VideoPlayer routes with real decoded-frame behavior.
+registry, reflective-builder and object-dictionary batches. `video.h` is complete at42/42 after
+the asset/metadata and real VideoPlayer batches. Next close the two dynamic KeyboardState text
+routes in the existing keyboard-state demo, then select another stable public C family.
 Once CNA becomes coherent, reconfigure
 `linux-full`, build every
 staged source, run focused validation and absorb the work in one complete checkpoint. Keep tagged
@@ -1717,6 +1718,16 @@ Both Xvfb/dummy-audio runs pass byte-identically with empty stderr; no playback,
 visual claim is made. Strict C99 and metadata compilation pass. `video.h` is19/42 demonstrated.
 Evidence: `checkpoint-571-c-video-asset-focused-*-direct.*`.
 
+`standalone/c_api.media.video_player` closes the remaining23 `video.h` routes in31 controls. A real
+decode proves fresh state/configuration, volume clamping, exact/atomic reflection text, active Video
+identity, the versioned frame descriptor and the one-call lifetime of borrowed texture handles.
+The paced run holds a pause across multiple updates, resumes and observes the authored three-second
+clip wrap while the player remains Playing. Stop clears its public state, replay advances the
+lifetime generation strictly, and the caller-owned Video plus disposed player each release once.
+Both Xvfb/dummy-audio selections pass byte-identically with empty stderr. Strict C99 and metadata
+compilation pass. `video.h` is42/42 demonstrated. No pixel correctness, audible quality or visual
+inspection is claimed. Evidence: `checkpoint-572-c-video-player-focused-*-direct.*`.
+
 The sibling CNA briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
 After `cna-demos` removed VULKAN from `linux-full`, configure succeeded, but concurrent external
 retirement edits changed CNA during the build: `GraphicsRendererType::DirectX11` disappeared while
@@ -1732,8 +1743,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose568 catalog IDs (complete524 plus SpriteFont and43
-additional new standalone IDs) and584 declared/581 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose569 catalog IDs (complete524 plus SpriteFont and44
+additional new standalone IDs) and585 declared/582 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 
