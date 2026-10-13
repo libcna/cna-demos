@@ -15,6 +15,28 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-074 -- C assembly-title route misstates malformed-text result
+
+- **Area/API:** `cna_assembly_set_title_ext` in
+  `modules/c-api/include/CNA/C/core_ext.h`.
+- **Observed contract conflict:** the route-specific return documentation lists
+  `CNA_RESULT_INVALID_ARGUMENT` for a malformed string view. An otherwise valid five-byte view
+  containing an embedded NUL returns `CNA_RESULT_ENCODING` and leaves the existing title intact.
+  The generated adapter explicitly uses `ReadText(..., EmbeddedNul::Refused)`, whose documented
+  result set includes `ENCODING`; CNA's general `STRINGS_AND_BUFFERS.md` likewise says semantic
+  text values reject embedded U+0000 with `CNA_RESULT_ENCODING`.
+- **Runtime evidence:** `c_api.platform.host_identity` first installs and exactly copies an
+  authored title, submits `{'b','a','d','\0','x'}`, observes `ENCODING`, and copies the unchanged
+  authored bytes before restoring the previous process title. Both focused direct renderer
+  selections pass with identical output and empty stderr after correcting the demo's initial
+  expectation. Evidence:`checkpoint-556-c-platform-host-identity-focused-*-direct.*`.
+- **Expected:** list `CNA_RESULT_ENCODING` for malformed UTF-8 or forbidden embedded NUL text,
+  while retaining `CNA_RESULT_INVALID_ARGUMENT` for an invalid pointer/count pair. The
+  implementation and shared text contract should stay as-is.
+- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
+  needed. No CNA source was modified or upstream message sent. Direct runtime uses the last
+  completed CNA libraries while unrelated external renderer-retirement work remains in flight.
+
 ### CNA-DEMOS-ISSUE-073 -- Refused live-3D pan setter changes the public pan value
 
 - **Area/API:** `SoundEffectInstance::setPanProperty` and the C

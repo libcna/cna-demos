@@ -3621,3 +3621,21 @@ path without duplicating the distinct-slope ISSUE-036 failure; the existing C++ 
 expose that and ISSUE-002's Step defect. Both direct selections are byte-identical with empty
 stderr, and strict C99 plus metadata compilation pass. Checkpoints552-554 close `curve.h` at45/45.
 Evidence:checkpoint-554-c-curve-evaluation-focused-*-direct.*.
+
+`c_api.core.logger` demonstrates all19 logger routes from `core_ext.h` in10 controls. A caller sink
+captures exact formatted borrowed text and distinct severity/category identities from all seven
+direct and all seven conditional helpers plus the general route. The workflow proves false
+suppression, category validation, minimum-level filtering, atomic refusal of malformed identities,
+booleans and views, then restores both process-global settings. Both direct selections are byte-
+identical with empty stderr, and strict C99 plus metadata compilation pass. This establishes
+`core_ext.h` at19/57. Evidence:checkpoint-555-c-core-logger-focused-*-direct.*.
+
+`c_api.platform.host_identity` demonstrates the eight stable platform, desktop-OS and assembly-
+title routes from `core_ext.h` in10 controls. Portable target/Apple/mobile/desktop facts agree;
+the platform name and process title use exact unterminated/atomic-short copy contracts; the prior
+title is restored after valid, short and malformed input checks. Embedded NUL returns the shared
+text contract's `ENCODING`, while the route-specific header only documents `INVALID_ARGUMENT`;
+passing documentation ISSUE-074 records that mismatch. Both direct selections are byte-identical
+with empty stderr, and strict C99 plus metadata compilation pass. Stable `core_ext.h` coverage is
+27/57; its renderer-selection half awaits a coherent external renderer-retirement revision.
+Evidence:checkpoint-556-c-platform-host-identity-focused-*-direct.*.

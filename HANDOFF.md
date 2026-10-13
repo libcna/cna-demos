@@ -20,7 +20,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 97 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 99 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -66,7 +66,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds26 staged standalone C IDs and should reach551 after the external build blocker clears: math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds28 staged standalone C IDs and should reach553 after the external build blocker clears: math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -115,7 +115,8 @@ CNA-DEMOS-ISSUE-022, `graphics.model.gltf_cameras` CNA-DEMOS-ISSUE-023, `math.fo
 CNA-DEMOS-ISSUE-024, `net.network_session.simulated_conditions` CNA-DEMOS-ISSUE-030,
 `graphics.model.clip_interpolation` CNA-DEMOS-ISSUE-031, `net.network_session.join_refused`
 CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE-034 and -035).
-Passing documentation issues ISSUE-068, ISSUE-069 and ISSUE-071 do not add runtime knownIssue markers.
+Passing documentation issues ISSUE-068, ISSUE-069, ISSUE-071, ISSUE-072 and ISSUE-074 do not add
+runtime knownIssue markers.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -1312,8 +1313,10 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: keep the staged C work intact while sibling CNA's renderer-retirement work is
-again incoherent. The renderer-independent `curve.h` audit is now complete at45/45; select the
-next coherent public C header/member family from the current-source route audit. Once CNA becomes coherent, reconfigure
+again incoherent. The renderer-independent `curve.h` audit is complete at45/45 and the stable
+logger/platform/assembly families establish27/57 `core_ext.h` routes. Defer its remaining graphics-
+backend/renderer-selection routes until the external retirement work is coherent, and select the
+next independent public C family. Once CNA becomes coherent, reconfigure
 `linux-full`, build every
 staged source, run focused validation and absorb the work in one complete checkpoint. Keep tagged
 unions, public element
@@ -1330,7 +1333,7 @@ six host sensor/touch populated-metadata routes until suitable hardware executes
 Do not credit the separate live gamepad dead-zone overload on a disconnected neutral slot or
 duplicate generated argument checks. Leave mouse-touch emulation manual-deferred and generic
 reflection uncredited unless an audit identifies distinct public buffer behavior. Never edit/revert CNA;
-preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067/068/069/070/071/072/073.
+preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067/068/069/070/071/072/073/074.
 
 WORK IN PROGRESS: `standalone/c_api.graphics.vertex_values` contains the planned seven-check
 workflow and compiles cleanly with strict C99 warnings against the last completed C API binary. Its
@@ -1542,6 +1545,24 @@ the distinct-slope and Step compatibility defects remain explicitly demonstrated
 ISSUE-036 and ISSUE-002 C++ demos. Checkpoints552-554 close `curve.h` at45/45. Evidence:
 `checkpoint-554-c-curve-evaluation-focused-*-direct.*`.
 
+`standalone/c_api.core.logger` demonstrates all19 logger routes from `core_ext.h` in10 controls.
+It captures all seven severity-specific and conditional forms, the general condition/category
+route, exact formatted borrowed text, minimum-level filtering, invalid identities/booleans/views,
+and restores the process-global sink and prior minimum. Both direct selections are byte-identical
+with empty stderr, and strict C99 plus metadata compilation pass. This establishes `core_ext.h`
+at19/57 without relying on logger calls hidden in the common demo scaffold. Evidence:
+`checkpoint-555-c-core-logger-focused-*-direct.*`.
+
+`standalone/c_api.platform.host_identity` demonstrates the eight platform, desktop-OS and assembly-
+title routes from `core_ext.h` in10 controls. It correlates portable target/Apple/mobile/desktop
+facts, copies the exact unterminated platform name with atomic short refusal, owns/restores the
+process title and proves exact/atomic title copies. Embedded NUL returns the shared text contract's
+`ENCODING` and preserves the title; the route-specific header omits that result, recorded as passing
+documentation ISSUE-074. Both direct selections are byte-identical with empty stderr, and strict
+C99 plus metadata compilation pass. Stable `core_ext.h` coverage is27/57; the remaining graphics-
+backend/renderer-selection routes are deferred while that CNA subsystem changes externally.
+Evidence:`checkpoint-556-c-platform-host-identity-focused-*-direct.*`.
+
 The sibling CNA briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
 After `cna-demos` removed VULKAN from `linux-full`, configure succeeded, but concurrent external
 retirement edits changed CNA during the build: `GraphicsRendererType::DirectX11` disappeared while
@@ -1557,8 +1578,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose551 catalog IDs (complete524 plus SpriteFont and26
-additional new standalone IDs) and567 declared/564 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose553 catalog IDs (complete524 plus SpriteFont and28
+additional new standalone IDs) and569 declared/566 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 
