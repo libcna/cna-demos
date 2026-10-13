@@ -2890,3 +2890,21 @@ pass in40.15s, and a clean1696-step full build follows. Three routes raise C cov
 and `graphics_device.h`33->36/84. Clean sibling CNA is `d7eff66ee`; production `libcna.so` remains
 byte-identical. No vertex-stage format support, drawing or visual inspection is claimed.
 Evidence:checkpoint-499-c-texture-slots-focused-*.
+
+## Focused500-C-buffer-bindings
+
+New `c_api.graphics.buffer_bindings` demonstrates all eight graphics-device vertex/index binding
+routes. Twenty controls begin with empty device state and create two real vertex buffers sharing one
+declaration plus one index buffer. The single and offset vertex overloads round-trip exact handles
+and offsets. An ordered two-stream array preserves both offsets and a nonzero instance frequency;
+a short destination reports the complete count without mutation, and a negative second offset is
+refused before either applied binding changes. The index binding round-trips its exact owned handle.
+Empty bindings clear the device explicitly; after rebinding, destroying one vertex owner detaches
+the whole multi-stream set and destroying the index owner clears its slot. SOFTWARE and OPENGLES3
+produce identical output with empty stderr. Metadata is500/0, all76 focused C/API, C++ graphics
+device/resource/buffer and CLI tests pass in59.02s, and a clean1699-step full build follows. The two
+simple setters were already used by the pixel-validated BasicEffect cube; six newly named routes
+raise C coverage752->758/3205 and `graphics_device.h`36->42/84. Clean sibling CNA is `d7eff66ee`;
+production `libcna.so` remains byte-identical. No buffer data, drawing or visual inspection is
+claimed.
+Evidence:checkpoint-500-c-buffer-bindings-focused-*.

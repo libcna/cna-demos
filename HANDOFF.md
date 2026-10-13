@@ -20,7 +20,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 44 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
+* In progress: 14 (C API, 45 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
 
@@ -64,21 +64,21 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-499 catalog demos (latest complete checkpoint497-C-sprite-states; four focused batches pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+500 catalog demos (latest complete checkpoint497-C-sprite-states; five focused batches pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 44 (standalone C programs). Every declared category has demos.
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 45 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog with complete497 runtime reports). Actual C ABI
-coverage is752/3205: `input_gamepad.h`61/63,
+coverage is758/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`36/84. Complete497 exercises
-the first718 credited routes in both full smoke suites;34 new routes have focused dual-renderer
+`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`42/84. Complete497 exercises
+the first718 credited routes in both full smoke suites;40 new routes have focused dual-renderer
 evidence.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 30 (`c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
@@ -110,6 +110,23 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **500-C-buffer-bindings** adds `c_api.graphics.buffer_bindings` for all eight device buffer-
+binding routes. Twenty controls start with empty vertex/index bindings; create two real vertex
+buffers sharing one declaration plus one index buffer; prove the single and offset overloads;
+round-trip an ordered two-stream array with distinct offsets and instance frequency; prove atomic
+short-copy and whole-array validation; apply/read/clear the exact index handle; and show that
+destroying a bound vertex owner detaches the whole multi-stream set while destroying the bound index
+owner clears its slot. SOFTWARE and OPENGLES3 produce identical output with empty stderr. Metadata
+is500/0, all76 focused C/API, C++ graphics device/resource/buffer and CLI tests pass in59.02s, and a
+clean1699-step full build follows. The simple vertex/index setters were already used by the pixel-
+validated BasicEffect cube; six newly named routes raise C coverage752->758/3205 and
+`graphics_device.h`36->42/84. Clean sibling CNA is `d7eff66ee`; `cna-demos` is SHA-256
+`1d9c8b68182c4061f7cac667483e956946121265ba6f139e7daf3501850bc708`, the standalone is
+`8f876e91eb123e7dd6a7f589a4810132d21d64eed841ecf6e85d547109946d7f`, and production
+`libcna.so` remains `3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0`.
+Nothing is drawn and no visual inspection is claimed. Evidence:
+`checkpoint-500-c-buffer-bindings-focused-*`.
 
 Focused **499-C-texture-slots** adds `c_api.graphics.texture_slots` for the three device texture-
 collection routes. Sixteen controls start from two empty high pixel slots on a fresh HiDef device;
@@ -779,12 +796,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue `graphics_device.h` with a coherent vertex/index binding batch. Audit
-the exact single-vertex-buffer, multi-binding copy/count and index-buffer get/set routes against the
-existing C vertex/index resource demos. Demonstrate real owned buffers, offsets and the applied
-binding order, preserve or clear every device binding before destruction, and keep primitive draws
-as a separate pixel-evidence batch. Extend an existing buffer demo only if the combined source
-still presents one clear concept; otherwise add one focused ID.
+HIGHEST PRIORITY: run a complete 500-demo checkpoint from focused source commit after recording it.
+Use the documented isolated X11 environment and `tools/validate.sh`; archive configure/build/CTest,
+both renderer reports/stdout/stderr, coverage, catalog, validation, comparison and binary hashes as
+`checkpoint-500-c-buffer-bindings-*`. Compare all pre-existing statuses, known-issue metadata and
+failed-assertion multisets against complete497. Investigate every difference before updating this
+handoff. After the checkpoint, continue the remaining `graphics_device.h` audit; keep clear/draw
+routes as pixel-evidence work and owned-device/reset/event behavior as separate lifecycle work.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
@@ -810,8 +828,8 @@ clipboard-acceptance, display-value and adapter-snapshot batches are all include
 checkpoint. Adapter-capabilities and device-presentation are included in complete492. The later
 render-target-bindings, device-capabilities, sprite-scaled, resource-lifecycle, index-buffer,
 device-states and sprite-states batches are all included in complete497. Focused viewport498 plus
-the later device-values and resource-events extensions and focused texture-slots499 are newer and
-pending the next complete checkpoint. Complete497 began at clean
+the later device-values and resource-events extensions, texture-slots499 and buffer-bindings500 are
+newer and pending the next complete checkpoint. Complete497 began at clean
 docs-only sibling CNA `e67c54936` and ended at clean docs-only `d7eff66ee`; both used the same
 production library hash. Complete497 is the immutable full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
