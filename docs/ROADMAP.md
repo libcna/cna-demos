@@ -2474,3 +2474,28 @@ sibling-CNA graphics retirement reduced the total declaration count by five; it 
 demonstrated route. No game, live acquisition or physical measurement is claimed. The unchanged
 SDL_GPU source/header timestamp still blocks the standard/full checkpoint, so focused runtime uses
 the last built CNA libraries. Evidence:checkpoint-482-c-sensor-values-focused-*.
+
+## Focused483-C-sensor-lifecycle
+
+A second C standalone keeps device acquisition and event ownership separate from the pure reading
+values. It reports the real availability of Accelerometer, Gyroscope, Compass and Motion, then uses
+the public supported/started switches or supplied C test backends to execute the otherwise
+unreachable supported paths without hardware. Synthetic acceleration is converted from metres per
+second squared to g and reaches CurrentValueChanged before the legacy ReadingChanged callback;
+selective unsubscribe leaves the current event attached. Gyroscope preserves radians/second.
+Authored Compass and fused-Motion values become valid current readings, and their context-only
+calibration events stop after individual unsubscribe. Each family round-trips its interval,
+observes Stop/backend retention and releases its registration, disposed object and handle.
+
+Both renderer selections produce identical40-label children with empty stderr:38 pass and exactly
+two fail. CNA-DEMOS-ISSUE-062 records that disposed Accelerometer and Gyroscope handles still return
+SUCCESS plus cached CurrentValue even though `sensors.h` promises INVALID_STATE; source inspection
+finds the shared getter checks support but not disposal. Compass/Motion refuse in this workflow
+after backend removal. Metadata validates483/0 and all65 exact input/device/C-API/CLI CTests pass
+in45.45s with six declared skips and one known-issue expected failure. Sixty-six routes raise
+current C coverage522->588/3205 and `sensors.h`50->116/144. The remaining eight fixed handle
+type-name helpers and twenty low-level Accelerometer/Gyroscope dispatcher/failure-injection test
+diagnostics are intentionally uncredited: their generated buffer mechanics or CNA-internal test
+plumbing do not justify app-facing demo controls. No physical measurement or callback-thread claim
+is made. The standard/full checkpoint remains blocked by the unchanged external SDL_GPU mismatch.
+Evidence:checkpoint-483-c-sensor-lifecycle-focused-*.

@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.devices.sensor_lifecycle`, a40-check C workflow for four sensor acquisition/event
+  lifecycles;66 additional `sensors.h` routes now have semantic coverage through deterministic
+  synthetic backends, with no physical-hardware claim.
+- Recorded CNA-DEMOS-ISSUE-062: disposed Accelerometer and Gyroscope handles still expose cached
+  CurrentValue even though the C contract requires an invalid-state refusal.
 - Added `c_api.devices.sensor_values`, a deterministic34-check C workflow covering all50 pure
   reading/event-description routes in `sensors.h`, including nested/timestamp equality, hashing,
   canonical text, short-buffer preservation and exact type names without requiring sensor hardware.

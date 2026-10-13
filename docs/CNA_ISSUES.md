@@ -15,6 +15,37 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-062 -- Disposed accelerometer and gyroscope retain readable CurrentValue
+
+- **Area/API:** `cna_accelerometer_get_current_value`, `cna_gyroscope_get_current_value`, their
+  disposal contracts in `modules/c-api/include/CNA/C/sensors.h`, and
+  `Microsoft::Devices::Sensors::SensorBase<T>::getCurrentValueProperty()`.
+- **Reproduction:** create each sensor on the game thread, use the documented supported/started
+  test switches, inject one deterministic reading, read it successfully, stop and unsubscribe,
+  then dispose the sensor. A second Dispose correctly returns `CNA_RESULT_INVALID_STATE`. Before
+  destroying the still-owned handle, call its CurrentValue route again.
+- **Observed:** both disposed CurrentValue calls return `CNA_RESULT_SUCCESS` and copy the last
+  synthetic reading. The new `c_api.devices.sensor_lifecycle` child therefore has exactly two
+  failed checks out of40 under both SOFTWARE and OPENGLES3; its other38 controls pass, both stderr
+  streams are empty and the complete outputs are identical. Compass and Motion return
+  `INVALID_STATE` in the same workflow after their test
+  backends are removed; this entry makes no claim about which internal condition produces those
+  two refusals.
+- **Expected:** both routes document `CNA_RESULT_INVALID_STATE` for a disposed sensor. The
+  Accelerometer disposal section is stronger: every other route is said to report the same
+  use-after-disposal failure. A retained owned handle must therefore refuse CurrentValue instead
+  of exposing cached data.
+- **Cause observed in source:** the shared `SensorBase<T>::getCurrentValueProperty()` locks the
+  object and checks only `isSupported_`; it never checks `disposed_`. The synthetic support switch
+  leaves `isSupported_` true through Accelerometer/Gyroscope disposal, so the cached value remains
+  readable. Start/Stop and the second Dispose have separate explicit disposal guards and correctly
+  refuse the calls.
+- **Suggested repair/status:** make the shared property enforce disposed state before support/data
+  access, then retain the existing unsupported-sensor error for live objects. Also audit other
+  shared getters against the header's broad post-disposal statement. No CNA source was modified or
+  upstream message sent. Open; focused catalog evidence is archived as
+  `checkpoint-483-c-sensor-lifecycle-focused-*`.
+
 ### CNA-DEMOS-ISSUE-061 -- C default mouse-cursor documentation contradicts the Arrow constructor
 
 - **Area/API:** `cna_mouse_cursor_create_ext`,
