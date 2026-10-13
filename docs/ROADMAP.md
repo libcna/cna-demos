@@ -3932,3 +3932,16 @@ empty stderr; strict C99 and metadata compilation pass. Staged metadata reaches2
 `net_sessions.h` is104/104. Evidence:
 `checkpoint-585-c-session-discovery-join-focused-*-direct.*`. No socket, authenticated directory,
 accepted invite, address reachability, remote peer or project-built runner is claimed.
+
+## Focused586-C-gamer-profile-identity
+
+`c_api.gamer.profile_identity` starts `gamer_services.h` with25 routes in19 renderer-free controls.
+An explicit offline SignedInGamer demonstrates exact/atomic gamertag buffers, malformed UTF-8
+display-name refusal followed by copied mutation, the display-based text form, live state and a
+full 64-bit caller tag. Synchronous and asynchronous owned profiles expose a canonical numeric
+snapshot, motto/region count-copy contracts and an absent picture before independent release. The
+runtime's unsupported global gamertag lookup and partner-token size/copy/async forms return
+NotSupported without completion. Both renderer-labelled direct runs are byte-identical with empty
+stderr; strict C99 and metadata compilation pass. Staged metadata reaches2183/3205 and
+`gamer_services.h` reaches31/239. Evidence:`checkpoint-586-c-gamer-profile-focused-*-direct.*`.
+No online account lookup, token, profile picture, game, renderer or project-built runner is claimed.
