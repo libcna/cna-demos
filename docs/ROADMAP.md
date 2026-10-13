@@ -3268,3 +3268,14 @@ initial configure build repeated the known transient CNA-DEMOS-ISSUE-057 staging
 completed; the clean gate does not repeat it. Clean sibling CNA is `a6bb279d47`; production library
 hashes remain unchanged. Apply is state-only; no skinned PBR draw, deformation, BRDF pixel or visual
 inspection is claimed. Evidence:checkpoint-518-c-skinned-pbr-focused-*.
+
+New `c_api.graphics.shader_effect_state` demonstrates source construction, canonical validity and
+renderer ownership, empty successful compiler diagnostics and independent World/View/Projection
+state. Seventeen controls pass directly and under both renderer selections with byte-identical
+runner output and empty stderr. The supplied dialect-correct shader must compile and apply whenever
+the renderer advertises source execution; non-executing renderers retain their documented object
+contract. All24 focused ShaderEffect and CLI tests satisfy their contracts in19.54s (16 passed,
+eight declared SOFTWARE capability skips). Metadata is519/0 and the incremental build is clean.
+Ten routes raise total C coverage1056->1066/3205 and `effects.h`265->275/290. Clean sibling CNA is
+`a6bb279d47`; the production library baseline is unchanged. No draw, pixel or visual inspection is
+claimed. Evidence:checkpoint-519-c-shader-state-focused-*.

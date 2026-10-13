@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.shader_effect_state`, a17-check C workflow covering source construction,
+  canonical validity/renderer ownership, empty successful diagnostics and independent World/View/
+  Projection matrix state across executing and non-executing renderer contracts.
 - Added `c_api.graphics.skinned_pbr_effect_state`, a32-check C workflow covering SkinnedPbrEffect's
   shared PBR/interface compatibility, weight modes, copied 72-bone palette and texture/material/
   palette survival through cloning and source destruction.
