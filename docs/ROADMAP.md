@@ -1654,3 +1654,17 @@ in LoadSong. Exact allocation/free/read stacks, original streams and exits are a
 No catalog knownIssue marker deliberately executes this undefined behavior. No CNA source was
 edited and no playback-quality conclusion is drawn. The next semantic work remains positive
 imported duration aggregation, followed by the separate Album art owned-stream workflow.
+
+## Focused473-duration
+
+Focused **473-duration** extends music_index from15to18child checks, preserving all
+original tagged-library relationships and object identity checks. With CNA_FFMPEG_AVAILABLE,
+Song durations match the original250/500/375msFLAC sample counts; artist-specific Album sums
+are750/375ms and the two-track Playlist totals750ms while excluding the third song.
+Two native runs pass18identical child checks; parentJSON remains PASSED/0. Both stderr streams
+retain the same six exact TitleContainer INFO lines.28enabled media/CLI CTests pass in
+7.58s. Watched build/gate, metadata473/0, unchanged fixtures and focused reviewer pass
+before source commit. No zero-sum, playback, acoustic-duration or album-art claim.
+The optional non-FFmpeg branch was syntax-checked only (1074), not natively exercised here;
+it retains the15relationship checks and explicitly prints the unexercised duration boundary.
+Full473-duration against complete473-hierarchy is pending. Evidence:checkpoint-473-duration-focused-*.

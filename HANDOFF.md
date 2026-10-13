@@ -103,6 +103,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **473-duration** extends music_index from15to18child checks, preserving all
+original tagged-library relationships and object identity checks. With CNA_FFMPEG_AVAILABLE,
+Song durations match the original250/500/375msFLAC sample counts; artist-specific Album sums
+are750/375ms and the two-track Playlist totals750ms while excluding the third song.
+Two native runs pass18identical child checks; parentJSON remains PASSED/0. Both stderr streams
+retain the same six exact TitleContainer INFO lines.28enabled media/CLI CTests pass in
+7.58s. Watched build/gate, metadata473/0, unchanged fixtures and focused reviewer pass
+before source commit. No zero-sum, playback, acoustic-duration or album-art claim.
+The optional non-FFmpeg branch was syntax-checked only (1074), not natively exercised here;
+it retains the15relationship checks and explicitly prints the unexercised duration boundary.
+Full473-duration against complete473-hierarchy is pending. Evidence:checkpoint-473-duration-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **473-hierarchy**, source `be5ac32`,
 extends categories from5to10checks while preserving all original predicates/independent
 Music/SFX behavior and correcting only the equality label to names. A separate160byteXGS
@@ -250,23 +264,20 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: positive imported Song/Album/Playlist duration aggregation in music_index.
-Use actual public duration getters and original250/500/375msFLAC samples. Retain all15music
-relationship/ownership checks. Three added checks should establish positive per-song lengths,
-artist-specific album sums and selected-playlist sum excluding the third song, without playback.
-UNAPPLIED /tmp/cna-music-duration.cpp and -metadata.cpp; base/hash/audit records under
-checkpoint-473-music-next-duration-*. Optional CNA_FFMPEG_AVAILABLE controls the extra checks;
-without it retain meaningful tag/relationship checks and print the unexercised duration boundary.
-No zero-duration credit. Verify current source/draft hashes, build/gate, both native child lists,
-media/CLI CTests, then fullcheckpoint/capture/freeze/exact old evidence comparisons.
-Queue replay investigation is now CNA-DEMOS-ISSUE-058. The caller-owned control exits0; the
-active-queue Song case aborts under ASan with a direct Clear -> LoadSong heap-use-after-free.
-Original logs/exits/source/build/result JSON are checkpoint-473-hierarchy-*queue-replay*;
-all36selected binaries remained unchanged. No normal smoke knownIssue marker invokes this UB.
-C media queue/view/copy audit is in COVERAGE_AUDIT; its32old child checks are explicitly retained.
-After closing the duration batch, continue Album art/thumbnail owned streams and public-member audit.
-Album thumbnail comments are already source-only ISSUE-040; do not claim runtime/art proof.
-Keep original mono streaming/ISSUE-038 and build-only ISSUE-057 intact. No CNA sibling edits.
+Focused473-duration is complete; commit source/docs and run the full checkpoint next.
+Helpers /tmp/cna-*473-duration*; export catalog /tmp/cna-catalog-473-duration.json.
+Capture ONCE after fullbuild during CTest:36selected binaries/4existing assets/28fixture hashes.
+Freeze through both smokes. Expect486enabledCTest; SOFTWARE408/27/35/3, OPENGLES3438/29/3/3.
+All38/42oldfailures/C/custom child lists/traces and5network controls must remain exact.
+Music child checks alone grow15->18, preserving the first15; parentJSON remains0. Only
+positive window.title Update variance may change a parent count. Normalized stderr identical.
+Preserve/refuse surprises, finish/close/reviewdiff/commit and continue Album art streams.
+Unapplied /tmp/cna-album-art.cpp and -metadata.cpp, syntax55056/8plannedchildchecks, recovery
+checkpoint-473-music-next-album-art-*. Distinguish folder art from no-art albums, exact original
+bytes, a smaller decodable thumbnail and caller-owned streams after library destruction.
+No native/art evidence yet. Reuse existing original FLAC/PNG fixtures and keep private root
+verification. Preserve all18music checks and baseline hashes when adding this focused demo.
+Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged.
 
 ## 15. Assumptions the next session must know
 
@@ -280,6 +291,6 @@ Keep original mono streaming/ISSUE-038 and build-only ISSUE-057 intact. No CNA s
 
 Current complete baseline is473-hierarchy; source commit is in section7.
 All earlier drafts, including category hierarchy, music import and per-cue limits, are
-APPLIED AND STALE. Next duration draft remains UNAPPLIED; syntax is not native proof.
+APPLIED AND STALE. Duration drafts are APPLIED AND STALE. Next album-art draft remains UNAPPLIED; syntax is not native proof.
 Preserve original refusal evidence and source/fixture observations. Retain the established
 architecture/stable IDs; never edit/revert sibling CNA from this task.

@@ -178,6 +178,23 @@ namespace
         check(selected->getNameProperty() == "Selected" && selectedSongs && selectedSongs->getCountProperty() == 2 &&
               (*selectedSongs)[0] == dusk && (*selectedSongs)[1] == dawn,
               "M3U order reverses the first two library songs without duplicating their objects");
+        // Duration comes from the optional FFmpeg metadata probe, without starting playback.
+#ifdef CNA_FFMPEG_AVAILABLE
+        const auto dawnDuration = dawn->getDurationProperty();
+        const auto duskDuration = dusk->getDurationProperty();
+        const auto echoDuration = echo->getDurationProperty();
+        check(dawnDuration.getTotalMillisecondsProperty() == 250.0 &&
+              duskDuration.getTotalMillisecondsProperty() == 500.0 &&
+              echoDuration.getTotalMillisecondsProperty() == 375.0,
+              "Song durations match the three authored positive FLAC sample counts");
+        check(firstAlbum->getDurationProperty() == dawnDuration + duskDuration &&
+              secondAlbum->getDurationProperty() == echoDuration,
+              "each album duration sums only its own artist-specific member songs");
+        check(selected->getDurationProperty() == duskDuration + dawnDuration,
+              "playlist duration sums its selected members and excludes the third song");
+#else
+        std::cout << "Duration aggregation not exercised: CNA was built without FFmpeg metadata probing\n";
+#endif
         std::cout << (passed ? "PASSED" : "FAILED") << " (" << checks << " checks)\n";
         // Library destruction releases all borrowed objects before cleanup removes the private files.
         return passed ? 0 : 1;
