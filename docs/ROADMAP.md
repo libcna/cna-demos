@@ -2762,3 +2762,22 @@ passes. Twelve routes raise C coverage689->701/3205. Sibling CNA advanced extern
 test-only `b45024c79` during validation while the production library hash remained unchanged. No
 rendering or visual inspection is claimed.
 Evidence:checkpoint-495-c-resource-lifecycle-focused-*.
+
+## Focused496-C-index-buffer
+
+New `c_api.graphics.index_buffer` demonstrates the five remaining meaningful routes in
+`index_resources.h`. Eighteen controls create a dynamic four-entry16-bit buffer, validate every
+field of its applied state, upload from a nonzero caller-array window, prove atomic short-buffer
+read-back and copy into an exact shifted destination. A second caller window patches two entries at
+byte offset four; complete read-back proves the two untouched indices survive. The owned
+ContentLost registration stays silent during ordinary transfers on SOFTWARE and OPENGLES3,
+releases once and refuses the stale handle. Both selections produce identical output with empty
+stderr. Metadata is496/0, all59 focused C/API, C++ IndexBuffer and CLI tests pass in documented
+isolated X11, and a clean follow-up build passes. Five routes raise C coverage701->706/3205 and
+`index_resources.h`3->8/10. Its fixed type-name size/copy pair remains trivial/uncredited, giving
+all ten routes a semantic disposition. An inherited-Wayland diagnostic also exposed and led to a
+separate fix for the adapter demo's strict XNA `>1.6` widescreen boundary; its original mouse-warp
+check passes unchanged under the required X11 isolation. Sibling CNA later advanced to clean
+docs-only `e67c54936` without changing the exercised production library. No drawing, device-loss
+notification or visual inspection is claimed.
+Evidence:checkpoint-496-c-index-buffer-focused-*.

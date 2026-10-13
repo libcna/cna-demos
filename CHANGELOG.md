@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.index_buffer`, an18-check dynamic 16-bit transfer, read-back, partial-update
+  and ContentLost-lifetime workflow that gives every `index_resources.h` route a semantic disposition.
 - Corrected the C adapter snapshot's widescreen cross-check to use XNA's strict `> 1.6` boundary,
   including an exact 16:10 mode.
 - Added `c_api.graphics.resource_lifecycle`, a25-check C workflow covering all12 generic
