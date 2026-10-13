@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `c_api.graphics.render_target_bindings` from22to25 controls with explicit device-wide
+  ContentLost delivery, exact per-resource lost flags and selective restoration by rebinding.
 - Added `c_api.graphics.occlusion_query`, a23-check C workflow for the complete eight-route owned
   query lifecycle, invalid state ordering, bounded completion and exact-versus-boolean visible
   sample results.

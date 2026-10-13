@@ -73,13 +73,13 @@ joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 49 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete502 runtime reports and focused graphics
-sources). Actual C ABI coverage is789/3205: `input_gamepad.h`61/63,
+sources). Actual C ABI coverage is790/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`72/84 and `effects.h`9/290.
+`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`73/84 and `effects.h`9/290.
 Complete502 exercises the first771 credited routes in both full smoke suites; focused503/504
-exercise the18 newer routes under both renderer selections.
+exercise the19 newer routes under both renderer selections.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 31 (`c_api.graphics.draw_routes` CNA-DEMOS-ISSUE-066,
 `c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
@@ -111,6 +111,22 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **504-C-content-loss** extends `c_api.graphics.render_target_bindings` from22to25 controls.
+After restoring the backbuffer, explicit device notification marks both tracked2D/cube targets lost
+and synchronously raises the cube's subscribed ContentLost event once. Rebinding only the2D target
+clears only its flag; the cube remains lost until its own successful face bind, which clears it
+without another event. The delivered registration still releases once. SOFTWARE and OPENGLES3
+produce byte-identical output with25 passing checks and empty stderr. Metadata remains504/0, and
+all28 focused C/API, render-target, dynamic-buffer and CLI tests pass in30.37s with one declared
+SOFTWARE MRT skip. One route raises coverage789->790/3205 and `graphics_device.h`72->73/84. Clean
+sibling CNA is `f37f8d184`; production `libcna.so` and `libcna_c_api.so` remain SHA-256
+`3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0` and
+`730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`. `cna-demos` is
+`ad02769b94813ab72fcdf002249f9bacbb01892af510fed586ed21fbf51dec84` and the standalone is
+`a1466b2c9606ae6cf3fbea538e39bb9d5693475e150c27a69beb71770fc9228f`. This deterministic
+route does not claim an actual platform context loss or visual inspection. Evidence:
+`checkpoint-504-c-content-loss-focused-*`.
 
 Focused **504-C-occlusion-query** adds `c_api.graphics.occlusion_query` for all eight public query
 routes. Twenty-three controls prove a fresh owned HiDef query's renderer, precision and unavailable-
@@ -909,9 +925,9 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the assigned `graphics_device.h` groups from the complete semantic audit.
-The draw and occlusion-query batches are complete and awaiting the next full checkpoint. Implement
-explicit content-loss notification next, then the six capability/color-space routes recorded in
-docs/COVERAGE_AUDIT.md. Keep renderer recreation with lifecycle/reset evidence, context recovery
+The draw, occlusion-query and content-loss batches are complete and awaiting the next full
+checkpoint. Implement the six capability/color-space routes recorded in docs/COVERAGE_AUDIT.md.
+Keep renderer recreation with lifecycle/reset evidence, context recovery
 manual/platform-specific and the one-way string
 marker intentionally uncredited unless an observable consumer is added. Build and run both renderer
 selections after each batch.
@@ -934,8 +950,8 @@ preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is502-C-device-policy; source commit and exact results are in section7.
-Focused503-C-draw-routes and focused504-C-occlusion-query are newer source/runtime evidence and are
-not yet in a full checkpoint.
+Focused503-C-draw-routes, focused504-C-occlusion-query and focused504-C-content-loss are newer
+source/runtime evidence and are not yet in a full checkpoint.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete

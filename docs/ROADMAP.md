@@ -3011,3 +3011,17 @@ capability and CLI tests pass in9.96s, and the final incremental build is clean.
 coverage781->789/3205 and `graphics_device.h`64->72/84. Clean sibling CNA is `f37f8d184`; both
 production library hashes remain unchanged. No screenshot or visual inspection is claimed.
 Evidence:checkpoint-504-c-occlusion-query-focused-*.
+
+## Focused504-C-content-loss
+
+The existing `c_api.graphics.render_target_bindings` workflow grows from22to25 controls. After its
+binding audit restores the backbuffer, explicit device-wide notification marks both tracked targets
+lost and raises the cube's subscribed ContentLost event exactly once. Rebinding only the2D target
+clears only its flag; the cube remains lost until its own successful face bind, which clears it
+without another event. SOFTWARE and OPENGLES3 produce byte-identical output with25 passing checks
+and empty stderr. Metadata remains504/0; all28 focused C/API, render-target, dynamic-buffer and CLI
+tests pass in30.37s with one declared SOFTWARE MRT skip, followed by a clean incremental build. One
+route raises coverage789->790/3205 and `graphics_device.h`72->73/84. Clean sibling CNA is
+`f37f8d184`; both production library hashes remain unchanged. This deterministic route does not
+claim an actual platform context loss or visual inspection.
+Evidence:checkpoint-504-c-content-loss-focused-*.

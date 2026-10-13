@@ -6,17 +6,18 @@ CNA_DEMOS_STANDALONE({
     .title = "Render-target bindings in C",
     .description = "A C game creates matching 2D and cube render targets, inspects their applied state, binds "
                    "both as an MRT array with atomic read-back, replaces it with one cube face, restores the "
-                   "backbuffer and demonstrates the silent ContentLost subscription lifecycle.",
+                   "backbuffer, raises device-wide ContentLost and restores each target by rebinding it.",
     .apis = {"cna_render_target_usage_preserves_contents", "cna_render_target_cube_create",
              "cna_render_target_get_info", "cna_graphics_device_set_render_target_cube",
              "cna_graphics_device_set_render_targets", "cna_graphics_device_get_render_target_count",
              "cna_graphics_device_copy_render_targets", "cna_render_target_subscribe_content_lost",
-             "cna_render_target_unsubscribe_content_lost", "CNA_RenderTargetInfo",
+             "cna_render_target_unsubscribe_content_lost",
+             "cna_graphics_device_notify_content_lost_resources_ext", "CNA_RenderTargetInfo",
              "CNA_RenderTargetBinding"},
     .tags = {"c", "binding", "graphics", "render-target", "cube", "mrt", "events", "buffers"},
     .needs = CnaDemos::Need::CApi,
     .frames = 1,
-    .restrictions = "Standalone C program; current Linux renderers do not lose devices, so ContentLost "
-                    "registration is exercised but notification delivery remains renderer-specific. No pixels "
-                    "or visual result are claimed. Built only with CNA_BUILD_C_API=ON.",
+    .restrictions = "Standalone C program; ContentLost is raised through the explicit deterministic device "
+                    "notification route, not a real platform context loss. No pixels or visual result are "
+                    "claimed. Built only with CNA_BUILD_C_API=ON.",
 })
