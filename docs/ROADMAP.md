@@ -3754,3 +3754,14 @@ form. Both renderer-labelled direct runs are byte-identical with empty stderr an
 renderer; strict C99 and metadata compilation pass. `content_readers.h` reaches46/62 demonstrated;
 the object-dictionary extension family remains. Evidence:
 checkpoint-569-c-reflective-reader-focused-*-direct.*.
+
+`c_api.content.object_dictionary` closes the final16 reader routes in47 controls. A deterministic
+generated XNB provides16 sorted entries: every public fixed scalar kind, a string, packed Vector3
+array, shared caller-created object and deliberately unknown UInt32 with a readable diagnostic type.
+The demo covers runtime naming, indexed keys, entry descriptors, exact/atomic copies, wrong-kind
+refusal, cached reader reuse, independent handles and stale-handle rejection. The initial run only
+showed that the staged asset was absent from the old build tree; after exact deployment both Xvfb/
+dummy-audio runs are byte-identical with empty stderr. This is a demo deployment prerequisite, not
+a CNA issue. Strict C99, metadata compilation and byte-identical asset regeneration pass.
+`content_readers.h` is complete at62/62. Evidence:
+checkpoint-570-c-object-dictionary-focused-*-direct.*.

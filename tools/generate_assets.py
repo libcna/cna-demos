@@ -36,6 +36,7 @@ import xnb_external_assets
 import xnb_versions
 import xnb_resolution
 import xnb_ownership
+import xnb_object_dictionary
 import nested_build_assets
 import media_files
 import music_library_assets
@@ -378,6 +379,7 @@ def main() -> None:
     xnb_versions.write_all(ROOT)
     xnb_resolution.write_all(ROOT)
     xnb_ownership.write_all(ROOT)
+    xnb_object_dictionary.write_all(ROOT)
     nested_build_assets.write_all(ROOT)
     xact_files.write_all(ROOT)
     media_files.write_all(CONTENT_MEDIA_ROOT)
