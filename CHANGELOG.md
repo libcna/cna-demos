@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete475-C-input-touch-values:488enabled CTests and both full smoke suites preserve all
+  unrelated evidence; only the existing C touch demo grows from30to60 exact child controls.
 - Extended the C touch workflow from30to60checks with pressure-independent identity, atomic
   insertion-copy and ordered collection mutation through15 additional C ABI routes.
 - Complete475-C-input-touch-state:488enabled CTests and both full smoke suites preserve all old

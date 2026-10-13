@@ -2123,7 +2123,7 @@ cleanf44a8ff. This is selected immutable runtime evidence rather than an atomic 
 snapshot. XNA coverage stays297/329types and1405/2326members; C coverage remains239/3210 after the
 focused increase. Evidence:checkpoint-475-c-input-touch-state-*.
 
-## Focused475-C-input-touch-values
+## Complete475-C-input-touch-values
 
 The existing `c_api.input.touch_state` workflow grows30->60checks without another demo ID or
 fixture. Both renderers produce the same output with empty stderr, and removing the30 additions
@@ -2135,5 +2135,16 @@ inserts both entries and shifts the old tail. All57input/CLI CTests pass in95.90
 environment skips. Two watched builds pass with3910unchanged CNA inputs/no diagnostics at clean
 CNAf44a8ff; metadata remains475/0. Fifteen actual routes raise C coverage239->254/3210 and
 input_touch.h4->19/47. This is authored POD and fixed-capacity collection evidence, not physical
-pressure sensing, concurrency or unbounded growth. Full same-ID checkpoint is pending. Evidence:
+pressure sensing, concurrency or unbounded growth. Focused evidence:
 checkpoint-475-c-input-touch-values-focused-*.
+
+Full validation passes metadata475/0 and488enabled CTests in189.40s. SOFTWARE410/27/35/3 and
+OPENGLES3440/29/3/3 preserve all38/42old failures and every unrelated C/custom child list,
+protected trace, network control, music check and album-art check. Only the touch child list grows
+30->60 while parentJSON remains0. The selected38 runtime paths are fixed through both smokes;
+against complete475-C-input-touch-state only the metadata-bearing catalog binary and touch
+standalone differ, while the other36 binaries, four assets and30fixtures remain exact. Normalized
+stderr is identical. Outer Xvfb emits7exact amdgpu pairs (previous8), both exits are zero, and CNA
+is cleanf44a8ff at post-build and final observation. XNA coverage stays297/329types and
+1405/2326members; C coverage remains254/3210 after the focused increase. Evidence:
+checkpoint-475-c-input-touch-values-*.

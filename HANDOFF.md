@@ -103,7 +103,7 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **475-C-input-touch-values**, source `6aa1e0a`, extends the existing C touch demo from
+Complete checkpoint **475-C-input-touch-values**, source `6aa1e0a`, extends the existing C touch demo from
 30to60checks without another ID or fixture. Both renderers produce identical child output with
 empty stderr; removing the30 additions restores the complete lifecycle baseline exactly. Authored
 locations differing only in pressure compare equal, hash equally and match collection
@@ -115,31 +115,19 @@ inputs/no diagnostics at cleanf44a8ff; metadata remains475/0. Fifteen actual rou
 coverage239->254/3210 and input_touch.h4->19/47. No physical pressure, concurrency or unbounded
 collection claim. Evidence:checkpoint-475-c-input-touch-values-focused-*.
 
-Last complete baseline:
-
-Complete checkpoint **475-C-input-touch-state**, source `6e7de78`, adds one focused deterministic C
-program. Both renderers pass30 identical child checks with empty stderr. Public fixture routes
-publish connected four-touch capabilities, then create empty, pressed, moved and released
-snapshots; id lookup distinguishes a match from the canonical invalid miss, and previous-location
-reconstruction covers invalid, Pressed and Moved predecessors. A second empty-slot frame retires
-the release, and the process-wide fixture resets before destruction. All57input/CLI CTests pass in
-95.60s with six declared environment skips. Both watched builds pass with3910unchanged CNA inputs,
-no diagnostics and clean CNAf44a8ff.
-
-Full tools/validate.sh passes metadata475/0 and488enabled CTests in152.96s. SOFTWARE410/27/35/3
+Full tools/validate.sh passes metadata475/0 and488enabled CTests in189.40s. SOFTWARE410/27/35/3
 and OPENGLES3440/29/3/3 preserve all38/42prior failures, every old C/custom list and protected
-trace, five network controls,18music checks and8album-art checks. The one new ID contributes the
-same30passing child controls and parentJSON0. All38selected binary paths, four assets and30fixture
-paths remain exact through both smoke suites. Normalized stderr is identical to
-complete474-C-input-keyboard-state. Outer Xvfb has8exact amdgpu pairs (previous12); inner/outer
-exits are zero. The post-build capture and final observation both saw clean CNAf44a8ff. This is
-immutable selected-runtime evidence, not an atomic full dependency snapshot. Coverage stays
-297/329types and1405/2326XNA members; eight actual routes raise C ABI coverage231->239/3210,
-input.h10->14/15 and input_touch.h0->4/47. The final input.h route,
-`cna_gamepad_get_state_with_dead_zone`, is manual-deferred because disconnected modes are
-indistinguishable and the authored-value helper already shows the algorithms. No physical touch,
-gesture, pressure, renderer-pixel or manual-input claim. Evidence:
-checkpoint-475-c-input-touch-lifecycle-focused-* and checkpoint-475-c-input-touch-state-*.
+trace, five network controls,18music checks and8album-art checks. Only the touch child list grows
+30->60; parentJSON remains0. All38selected runtime paths remain fixed through both smoke suites.
+Compared with complete475-C-input-touch-state, the catalog binary and rebuilt touch standalone are
+the only changed binaries; the other36 binaries, four assets and30fixture paths are exact.
+Normalized stderr is identical. Outer Xvfb has7exact amdgpu pairs (previous8); inner/outer exits
+are zero. The post-build capture and final observation both saw clean CNAf44a8ff. This is immutable
+selected-runtime evidence, not an atomic full dependency snapshot. Coverage stays297/329types and
+1405/2326XNA members; actual C ABI coverage rises239->254/3210 and input_touch.h4->19/47. The
+complete per-route disposition selects a distinct gesture-queue batch next. No physical pressure,
+concurrency, unbounded collection or visual claim. Complete evidence:
+checkpoint-475-c-input-touch-values-*.
 Preserve earlier refusal evidence and ISSUE-038/057/058/059.
 
 ## 8. Exact commands that work
@@ -264,14 +252,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: commit the focused C touch-value batch, then run its full same-ID checkpoint
-against complete475-C-input-touch-state. Expect488enabled CTests and unchanged parent outcomes
-SOFTWARE410/27/35/3 and OPENGLES3440/29/3/3. Preserve all38/42old failures and every unrelated
-C/custom list/trace; only `c_api.input.touch_state` may grow30->60 child checks while parentJSON
-stays0. Of the same38 selected binaries, only the touch standalone may change; four assets and30
-fixture paths must remain exact. After closure, continue the distinct focused C gesture-queue batch
-identified in the member audit: explicit sample values, enabled mask, FIFO availability/read and
-empty refusal. Leave live gamepad dead-zone and mouse-touch emulation manual-deferred; keep generic
+HIGHEST PRIORITY: implement the distinct focused C gesture-queue batch identified in the complete
+`input_touch.h` audit. Prefer a new `c_api.input.gesture_queue` standalone because authored gesture
+samples, enabled-mask state, FIFO enqueue/read, availability transitions and empty-read refusal are
+one coherent concept independent of touch snapshots. Demonstrate explicit sample fields, preserve
+process-wide state with reset, and do not claim detector timing or physical input. Build, run both
+renderers and the input/CLI CTests, update coverage/audit/HANDOFF, then run the next complete
+checkpoint. Leave live gamepad dead-zone and mouse-touch emulation manual-deferred; keep generic
 touch/media reflection routes intentionally uncredited and `media_player_update_ext` deferred.
 Never edit/revert CNA; preserve ISSUE-038/057/058/059.
 
@@ -285,7 +272,7 @@ Never edit/revert CNA; preserve ISSUE-038/057/058/059.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is475-C-input-touch-state; source commit is in section7.
-All earlier drafts are APPLIED AND STALE. The focused touch-value batch in section7 is current; its
-same-ID full-validation task in section14 is live.
+Current complete baseline is475-C-input-touch-values; source commit is in section7.
+All earlier drafts are APPLIED AND STALE. The complete touch-value batch in section7 is current;
+the C gesture-queue task in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.
