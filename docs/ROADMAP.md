@@ -4201,3 +4201,19 @@ metadata compilation pass. Staged metadata reaches2468/3205 and `media_library.h
 Evidence:`checkpoint-603-c-media-library-album-art-focused-*-direct.*`. The picture hierarchy,
 tokens, collections and both save/import routes remain; no rendering, screenshot, visual
 inspection or project-built execution is claimed.
+
+## Focused604-C-media-library-pictures-and-imports
+
+`c_api.media.library_pictures` adds all43 meaningful picture, picture-album, collection, token and
+save routes in57 controls. A private Linux/XDG tree contains a640x320 panorama under Family and a
+64x64 checker under Vacation/Day 2. Exact atomic names/tokens, dimensions, timestamps, hierarchy,
+ordered membership, bounds, equality/hashes, byte-exact images, a parsed128x64 thumbnail and token
+lookup all pass. Saving that thumbnail from memory and the checker from a rewound public storage
+stream grows all live views and preserves both encoded payloads. Shared disposal, collection
+emptying, child-retained lifetime and complete cleanup are explicit. SOFTWARE- and OPENGLES3-
+labelled Xvfb runs pass byte-identically with empty stderr; strict C99 and metadata compilation
+pass. Staged metadata reaches2511/3205 and `media_library.h` reaches122/148. Its other26 routes are
+fixed reflection type-name pairs and intentionally trivial/uncredited, completing semantic
+dispositions for all148 routes. Evidence:
+`checkpoint-604-c-media-library-pictures-focused-*-direct.*`. No rendering, screenshot, visual
+inspection, host media or project-built execution is claimed.
