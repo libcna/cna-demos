@@ -1928,3 +1928,15 @@ alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain
 stderr is identical. Outer Xvfb has8exact amdgpu pairs (previous17); exits are zero and CNA
 eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
 rise209->217/3210 and media_player.h23->31/41. Evidence:checkpoint-474-c-player-settings-*.
+
+## Focused474-C-player-transport
+
+The same `c_api.media.media_player` now grows75->78child checks without a new ID or fixture. Both
+renderers pass identical lists with empty stderr; removing three additions restores all75prior
+labels in order. With the live collection and stopped player, play_songs_from starts its second
+Song at index1, move_previous returns to index0, and existing move_next plus Stop restore the
+previous index1/stopped state before ownership checks. No queue-owned Song reaches Play, preserving
+ISSUE-058. Focused29media/CLI CTests pass in8.58s. Two watched builds pass with3909unchanged CNA
+inputs/no diagnostics; metadata remains474/0. Two actual routes raise C coverage217->219/3210 and
+media_player.h31->33/41. No audible or immediate event-delivery claim. Full474 is pending.
+Evidence:checkpoint-474-c-player-transport-focused-*.

@@ -103,6 +103,17 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **474-C-player-transport** extends c_api.media.media_player from75to78checks under both
+renderers with empty stderr and no new ID/fixture. Removing three additions restores all75old labels
+in order. With the live collection and stopped player, play_songs_from starts its second Song at
+index1, move_previous returns to index0, and existing move_next plus Stop restore index1/stopped
+before ownership checks. No queue-owned Song reaches Play, preserving ISSUE-058. Focused29media/CLI
+CTests pass in8.58s; metadata474/0. Both watched builds pass with3909unchanged CNA inputs/no
+diagnostics. Two actual routes raise C ABI coverage217->219/3210 and media_player.h31->33/41. No
+audible or immediate event-delivery claim. Evidence:checkpoint-474-c-player-transport-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-C-player-settings**, source `eac3fa7`, extends c_api.media.media_player
 from71to75checks under both renderers with empty demo stderr and no new ID/fixture. Removing four
 additions restores all71old labels in order. After playback is stopped, mute/repeat/shuffle each
@@ -242,15 +253,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the audited `media_player.h` transport gap in the existing
-`c_api.media.media_player` demo. While the original SongCollection is still live and playback is
-stopped, start its second song with `cna_media_player_play_songs_from`, verify index1/Playing, move
-previous to index0, then use the already covered move-next route to restore index1 and stop before
-the ownership checks. Credit `play_songs_from` and `move_previous`; keep all75old labels in order.
-Do not pass a queue-owned Song to Play (ISSUE-058), and make no audible or event-delivery claim for
-the immediate transport calls. Audit source/header contracts first, build with the3909-input
-consistency watch, run both focused renderers and relevant media/CLI CTests, regenerate coverage,
-update docs and run a new complete474 checkpoint. Never edit/revert CNA; preserve
+HIGHEST PRIORITY: commit the focused C MediaPlayer transport source/docs, then run full474
+validation against complete474-C-player-settings. Capture once after the full build during CTest:
+the same37selected binary paths/four assets/30fixture paths. Freeze source/assets/build through
+both smokes. Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3. Preserve all38/42old failures, unrelated C/custom lists/traces, five network
+controls,18music and8album-art checks. Only c_api.media.media_player grows75->78; parentJSON stays0
+and normalized stderr should be identical. Archive/refuse any surprise; update full audit/HANDOFF
+and immediately continue the next semantic public-member gap. Never edit/revert CNA; preserve
 ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
@@ -265,5 +275,5 @@ ISSUE-038/057/058/059.
 
 Current complete baseline is474-C-player-settings; source commit is in section7.
 All earlier drafts and focused C media work are APPLIED AND STALE. Collection start-index and
-previous-navigation transport are the next audited member batch and have not been implemented.
+previous-navigation transport are applied and focused but have no complete checkpoint yet.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

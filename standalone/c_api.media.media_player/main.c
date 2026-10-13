@@ -418,6 +418,23 @@ int main(int argc, char** argv)
                        "volume clamps below zero and above one before full volume is restored");
     }
 
+    /* Rebuild the queue from the still-live collection at a chosen start index, navigate backward,
+       then restore the second-song stopped state expected by the ownership checks. */
+    cna_demo_check(&demo,
+                   cna_media_player_play_songs_from(game, state.songs, 1) == CNA_RESULT_SUCCESS &&
+                       media_state(game) == CNA_MEDIA_STATE_PLAYING && active_index(&state) == 1 &&
+                       cna_media_queue_get_count(state.queue, &queue_count) == CNA_RESULT_SUCCESS &&
+                       queue_count == 2,
+                   "play_songs_from starts the live collection at its second Song");
+    cna_demo_check(&demo,
+                   cna_media_player_move_previous(game) == CNA_RESULT_SUCCESS && active_index(&state) == 0,
+                   "move_previous returns from the second queued Song to the first");
+    cna_demo_check(&demo,
+                   cna_media_player_move_next(game) == CNA_RESULT_SUCCESS && active_index(&state) == 1 &&
+                       cna_media_player_stop(game) == CNA_RESULT_SUCCESS &&
+                       media_state(game) == CNA_MEDIA_STATE_STOPPED,
+                   "move_next and stop restore the prior stopped queue state");
+
     /* The collection shares its retained Song, while queue accessors publish independent copies.
        Keep those handles across view/collection destruction and a safe stopped-queue Clear. */
     cna_demo_check(&demo,
