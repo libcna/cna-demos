@@ -15,6 +15,25 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-071 -- C PBR texture getter documents five of its seven slots
+
+- **Area/API:** `cna_pbr_effect_get_texture` in
+  `modules/c-api/include/CNA/C/effects.h`.
+- **Observed contract conflict:** its `slot` parameter says "One of the five `CNA_PBR_TEXTURE_*`
+  identities." The same public header defines seven identities from base color0 through specular
+  color6, makes6 `CNA_PBR_TEXTURE_MAXIMUM`, and describes the coordinate/transform routes as
+  accepting all of them. The generated texture getter/setter accept every identity through6.
+- **Runtime evidence:** `c_api.graphics.pbr_texture_slots` gets and sets exact retained handles in
+  all seven slots, independently round-trips each slot's UV selector and transform, and confirms the
+  three color-carrying sRGB identities. Two textures survive cloning and source destruction through
+  five core and two specular slots respectively, then release after their last slot clears. All34
+  controls pass identically under SOFTWARE and OPENGLES3 with empty stderr.
+- **Expected:** say seven defined slot identities, or refer to the inclusive named range, so the
+  public C contract includes its two specular extension slots.
+- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
+  needed. No CNA source was modified or upstream message sent. Observed at clean CNA `a6bb279d47`;
+  focused evidence is archived as `checkpoint-517-c-pbr-textures-focused-*`. Open.
+
 ### CNA-DEMOS-ISSUE-070 -- PBR clones lose vertex-color and alpha-coverage state
 
 - **Area/API:** `PbrEffect::Clone`, `SkinnedPbrEffect::Clone`, and their shared C routes in

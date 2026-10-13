@@ -3241,3 +3241,16 @@ satisfy their contracts in5.94s (16 passed, three declared SOFTWARE capability s
 and `effects.h`219->250/290. Clean sibling CNA is `a6bb279d47`; production library hashes remain
 unchanged. Apply is state-only; no PBR draw, BRDF pixel or visual inspection is claimed.
 Evidence:checkpoint-516-c-pbr-material-focused-*.
+
+New `c_api.graphics.pbr_texture_slots` demonstrates the complete seven-slot PBR texture surface.
+Thirty-four controls cover transform initialization/equality, all default and authored per-slot UV/
+transform/sRGB values, invalid-value preservation, same-device validation and two real textures
+retained by five core plus two specular slots through cloning and source destruction. Each resource
+releases only when its final clone slot clears. Direct and both runner selections pass with byte-
+identical runner output and empty stderr; all20 focused PBR and CLI tests satisfy their contracts in
+5.44s (17 passed, three declared SOFTWARE capability skips). Metadata is517/0 and the incremental
+build is clean. Ten routes raise total C coverage1041->1051/3205 and `effects.h`250->260/290.
+CNA-DEMOS-ISSUE-071 records the passing C-header documentation mismatch that calls these seven
+identities five. Clean sibling CNA is `a6bb279d47`; production library hashes remain unchanged. No
+sampling, PBR draw, pixel result or visual inspection is claimed.
+Evidence:checkpoint-517-c-pbr-textures-focused-*.

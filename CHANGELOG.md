@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.pbr_texture_slots`, a34-check C workflow covering all seven PBR texture
+  slots, UV selectors, transforms, meaningful sRGB flags and retained ownership through cloning.
+- Recorded CNA-DEMOS-ISSUE-071: the public C texture getter says five slot identities although the
+  same header and implementation expose seven.
 - Added `c_api.graphics.pbr_effect_material_state`, a33-check C workflow covering every non-texture
   PbrEffect material route, shared effect interfaces and clone lifetime; four retained failures
   establish CNA-DEMOS-ISSUE-070 for lost vertex-color and alpha-coverage clone state.
