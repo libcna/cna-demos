@@ -103,8 +103,8 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-C-media-sources** extends c_api.media.media_player from89to92checks under both
-renderers with empty stderr and no new ID/fixture. Removing three additions restores all89old
+Focused **474-C-media-sources**, source `48c9f0e`, extends c_api.media.media_player from89to92checks
+under both renderers with empty stderr and no new ID/fixture. Removing three additions restores all89old
 labels in order. Desktop enumeration reports exactly one `LOCAL_DEVICE` named `Local Device`; the
 index equal to Count is refused before changing the preseeded type, byte count, copied count or
 destination. Focused29media/CLI CTests pass in11.23s; metadata474/0. Both watched builds pass with
