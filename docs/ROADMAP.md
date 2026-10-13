@@ -1821,3 +1821,17 @@ alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain
 stderr is identical. Outer Xvfb has16exact amdgpu pairs (previous14); exits are zero and CNA
 eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; C ABI routes rise
 188->192/3210 and media_player.h18->22/41. Evidence:checkpoint-474-c-media-events-*.
+
+## Focused474-C-song-duration
+
+The same `c_api.media.media_player` now grows55->61child checks without a new ID or fixture. Both
+renderers pass identical lists with empty stderr; removing six new labels restores all55prior checks
+in order. A caller-owned Song over rising.wav stores explicit750ms as7,500,000ticks; fallback
+completion is false one tick before and true at the boundary. After duration is set to zero, ten
+elapsed seconds remain not-ended. IsDisposed starts false; Dispose succeeds twice, sets it true and
+leaves Duration readable before the handle is destroyed. The helper is never played or queued.
+Focused29media/CLI CTests pass. The initial ccache refusal is sandbox-only and preserved; the
+watched consistency build passes with3909unchanged CNA inputs/no diagnostics. Metadata remains
+474/0. Six actual routes raise coverage192->198/3210, media.h10->15/39 and media_player.h22->23/41.
+No file-probe, audible timing, collection propagation or invalid-handle output claim. Full474 is
+pending. Evidence:checkpoint-474-c-song-duration-focused-*.

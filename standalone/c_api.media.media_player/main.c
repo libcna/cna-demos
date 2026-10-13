@@ -79,6 +79,20 @@ static CNA_Result create_song(CNA_Handle game, const char* name, const char* fil
     return cna_song_create_from_uri(game, view(name, strlen(name)), view(path, length), out_song);
 }
 
+static CNA_Result create_song_with_duration(CNA_Handle game, const char* name, const char* file,
+                                            int32_t duration_milliseconds, CNA_SongHandle* out_song)
+{
+    char path[1024];
+    uint64_t length = 0U;
+    CNA_Result result = cna_title_location_copy_path(game, path, sizeof(path) - 64U, &length);
+    if (result != CNA_RESULT_SUCCESS) {
+        return result;
+    }
+    length += (uint64_t)snprintf(path + length, sizeof(path) - (size_t)length, "/assets/music/%s", file);
+    return cna_song_create_with_duration(game, view(path, length), view(name, strlen(name)), duration_milliseconds,
+                                         out_song);
+}
+
 static int song_has_name(CNA_SongHandle song, const char* expected)
 {
     char actual[64];
@@ -306,6 +320,7 @@ int main(int argc, char** argv)
     CNA_SongHandle active_copy = CNA_INVALID_HANDLE;
     CNA_SongHandle appended = CNA_INVALID_HANDLE;
     CNA_SongHandle appended_copy = CNA_INVALID_HANDLE;
+    CNA_SongHandle duration_song = CNA_INVALID_HANDLE;
     CNA_SongHandle empty_song = CNA_INVALID_HANDLE;
     CNA_Bool active_available = CNA_FALSE;
     CNA_Bool collection_disposed = CNA_TRUE;
@@ -482,6 +497,51 @@ int main(int argc, char** argv)
     cna_demo_check_result(&demo, cna_media_queue_destroy(state.queue),
                           "destroy the reacquired queue view");
     state.queue = CNA_INVALID_HANDLE;
+
+    /* An explicit duration is caller metadata, independent of the file's real two-second length.
+       The fallback end detector uses that metadata and treats zero as unknown rather than ended. */
+    if (cna_demo_check_result(&demo, create_song_with_duration(game, "Timed", "rising.wav", 750, &duration_song),
+                              "create a Song with an explicit 750 ms duration")) {
+        const int64_t explicit_ticks = TICKS_PER_SECOND * 3 / 4;
+        int64_t duration_ticks = -1;
+        CNA_Bool ended_below = CNA_TRUE;
+        CNA_Bool ended_at = CNA_FALSE;
+        CNA_Bool ended_without_duration = CNA_TRUE;
+        CNA_Bool song_disposed = CNA_TRUE;
+        const CNA_Result duration_result = cna_song_get_duration(duration_song, &duration_ticks);
+        const CNA_Result below_result = cna_media_player_detect_song_ended_by_elapsed_time_ext(
+            duration_song, explicit_ticks - 1, &ended_below);
+        const CNA_Result at_result = cna_media_player_detect_song_ended_by_elapsed_time_ext(
+            duration_song, explicit_ticks, &ended_at);
+        cna_demo_check(&demo,
+                       duration_result == CNA_RESULT_SUCCESS && duration_ticks == explicit_ticks &&
+                           below_result == CNA_RESULT_SUCCESS && ended_below == CNA_FALSE &&
+                           at_result == CNA_RESULT_SUCCESS && ended_at == CNA_TRUE,
+                       "the explicit duration controls the elapsed-time end boundary exactly");
+        cna_demo_check(&demo,
+                       cna_song_set_duration(duration_song, 0) == CNA_RESULT_SUCCESS &&
+                           cna_song_get_duration(duration_song, &duration_ticks) == CNA_RESULT_SUCCESS &&
+                           duration_ticks == 0 &&
+                           cna_media_player_detect_song_ended_by_elapsed_time_ext(
+                               duration_song, TICKS_PER_SECOND * 10, &ended_without_duration) == CNA_RESULT_SUCCESS &&
+                           ended_without_duration == CNA_FALSE,
+                       "a zero Song duration never reports elapsed-time completion");
+        cna_demo_check(&demo,
+                       cna_song_get_is_disposed(duration_song, &song_disposed) == CNA_RESULT_SUCCESS &&
+                           song_disposed == CNA_FALSE,
+                       "the explicit-duration Song starts live");
+        cna_demo_check(&demo,
+                       cna_song_dispose(duration_song) == CNA_RESULT_SUCCESS &&
+                           cna_song_dispose(duration_song) == CNA_RESULT_SUCCESS &&
+                           cna_song_get_is_disposed(duration_song, &song_disposed) == CNA_RESULT_SUCCESS &&
+                           song_disposed == CNA_TRUE &&
+                           cna_song_get_duration(duration_song, &duration_ticks) == CNA_RESULT_SUCCESS &&
+                           duration_ticks == 0,
+                       "Song Dispose is idempotent and leaves Duration readable");
+        cna_demo_check_result(&demo, cna_song_destroy(duration_song),
+                              "destroy the explicit-duration Song handle");
+        duration_song = CNA_INVALID_HANDLE;
+    }
     if (state.sprite_batch != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_sprite_batch_destroy(state.sprite_batch), "cna_sprite_batch_destroy");
     }

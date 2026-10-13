@@ -103,6 +103,19 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **474-C-song-duration** extends c_api.media.media_player from55to61checks under both
+renderers with empty stderr and no new ID/fixture. Removing six additions restores all55old labels
+in order. A caller-owned Song over rising.wav stores a deliberately distinct750ms as7,500,000
+ticks; fallback completion is false one tick before and true at the boundary. Setting duration0
+makes even ten elapsed seconds report not-ended. The Song starts live, Dispose is idempotent,
+IsDisposed becomes true and Duration remains readable before handle destruction. It is never
+played or queued. Focused29media/CLI CTests pass; metadata474/0. The ccache-only refusal is archived;
+the watched consistency build passes with3909unchanged CNA inputs/no diagnostics. Six actual routes
+raise coverage192->198/3210, media.h10->15/39 and media_player.h22->23/41.
+Evidence:checkpoint-474-c-song-duration-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-C-media-events**, source `02c81db`, extends c_api.media.media_player
 from53to55checks without a new ID or fixture. Both focused and full runs preserve all53old labels
 and add two exact process-wide event controls with empty demo stderr. Manual raises synchronously
@@ -243,16 +256,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the same C media workflow with explicit Song duration and disposal; do
-not add an ID or fixture. Preserve all55current labels/order. Create a caller-owned Song over the
-existing rising.wav with a deliberately distinct750ms duration; verify the exact tick conversion
-and elapsed-time detector just below/at the boundary. Set duration to zero and prove zero never
-reports ended. Verify initial/live IsDisposed, idempotent Dispose and post-Dispose duration access,
-then destroy the handle. Credit create_with_duration, duration get/set, ended detector and Song
-disposal state/routes. Do not play this helper Song or claim file probing, acoustic timing,
-collection propagation or invalid-handle output behavior. Run watched build, both focused
-renderers and media/CLI CTests, update audit/HANDOFF, commit, then full validation. Use
-complete474-C-media-events as baseline. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
+HIGHEST PRIORITY: commit the focused C Song duration/disposal source/docs, then run full474
+validation against complete474-C-media-events. Capture once after the full build during CTest: the
+same37selected binaries/four assets/30fixture paths. Freeze source/assets/build through both
+smokes. Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3. Preserve all38/42old failures, unrelated C/custom lists/traces, five network
+controls,18music and8album-art checks. Only c_api.media.media_player grows55->61; parentJSON stays0
+and normalized stderr should be identical. Archive/refuse any surprise; update full audit/HANDOFF
+and immediately continue the next semantic public-member gap. Never edit/revert CNA; preserve
+ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -266,5 +278,5 @@ complete474-C-media-events as baseline. Never edit/revert CNA; preserve ISSUE-03
 
 Current complete baseline is474-C-media-events; source commit is in section7.
 All earlier drafts and focused C media work are APPLIED AND STALE. Explicit Song duration/disposal
-has source evidence only and no applied draft yet.
+is applied and focused but has no complete checkpoint yet.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.
