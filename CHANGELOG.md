@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.effect_passes_techniques`, a27-check C workflow covering all31 ownerless
+  pass/technique value and collection routes, including reflected indices and nested lifetimes.
 - Added `c_api.graphics.effect_parameter_collections`, a19-check C workflow covering stable shared
   parameter views, name/semantic lookup and descendant lifetimes across nested collections.
 - Added `c_api.graphics.effect_parameter_values`, a30-check C workflow covering mutable parameter

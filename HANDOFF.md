@@ -20,7 +20,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 52 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
+* In progress: 14 (C API, 53 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
 
@@ -64,23 +64,24 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-507 catalog demos (latest complete checkpoint504-C-graphics-device plus focused505-507 effect batches): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+508 catalog demos (latest complete checkpoint504-C-graphics-device plus focused505-508 effect batches): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 52 (standalone C programs). Every declared category has demos.
-Coverage: see docs/COVERAGE.md (current catalog, complete504 runtime reports and focused505-507 source).
-Actual C ABI coverage is846/3205: `input_gamepad.h`61/63,
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 53 (standalone C programs). Every declared category has demos.
+Coverage: see docs/COVERAGE.md (current catalog, complete504 runtime reports and focused505-508 source).
+Actual C ABI coverage is877/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`57/290 and
+`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`88/290 and
 `texture.h`2/21.
 Complete504 exercises the first797 credited routes in both full smoke suites; focused505 exercises
-the next22, focused506 the next17 and focused507 the newest10 routes under both renderer selections.
+the next22, focused506 the next17, focused507 the next10 and focused508 the newest31 routes under
+both renderer selections.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 31 (`c_api.graphics.draw_routes` CNA-DEMOS-ISSUE-066,
 `c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
@@ -112,6 +113,21 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **508-C-effect-passes-techniques** adds
+`c_api.graphics.effect_passes_techniques` for all31 ownerless pass, technique and collection routes.
+Twenty-seven controls prove copied names with atomic short/exact copies; nonzero distinct technique
+identities; ordinary and reflected runtime indices; empty versus canonical-P0 construction;
+separate pass/technique annotation views; documented ownerless no-op Apply; stable element views
+after32 insertions; exact case-sensitive lookup and bounds; and nested P0 survival after root
+collections, technique handles and nested collection views are destroyed. Direct execution passes,
+SOFTWARE and OPENGLES3 runner output is byte-identical, and all three stderr files are empty.
+Metadata is508/0, all ten focused C/API, C++ effect and CLI tests pass in6.55s, and the final
+incremental build is clean. Coverage rises846->877/3205 and `effects.h`57->88/290. CNA advanced
+externally from clean `fbd8e64a3` to clean `a6bb279d47` through two docs-only commits; production
+library hashes remain unchanged. No effect-owned pass, game, graphics device, shader execution,
+drawing or visual inspection is claimed.
+Evidence:`checkpoint-508-c-effect-passes-techniques-focused-*`.
 
 Focused **507-C-effect-parameter-collections** adds
 `c_api.graphics.effect_parameter_collections` for all ten remaining parameter and parameter-
@@ -1018,8 +1034,9 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the public C member/behavior audit with owned effect-pass and technique
-values, collections, lookup semantics and lifetimes in the next coherent `effects.h`
+HIGHEST PRIORITY: continue the public C member/behavior audit with core Effect lifecycle,
+parameter/technique reflection, current-technique behavior and owned-pass application in the next
+coherent `effects.h`
 group. Do not turn its290 routes into declaration-count variants: group related lifetimes,
 metadata, typed values, collections, reflection and actual rendering behavior. The complete
 `graphics_device.h` audit is
@@ -1047,8 +1064,9 @@ preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067/068.
 Current complete baseline is504-C-graphics-device; source commit and exact results are in section7.
 Focused503-C-draw-routes plus focused504-C-occlusion-query, content-loss, device-capabilities and
 renderer-recreation are included in it.
-Focused505-C-effect-annotations, focused506-C-effect-parameter-values and focused507-C-effect-
-parameter-collections are newer source/runtime evidence and are not yet in a full checkpoint.
+Focused505-C-effect-annotations, focused506-C-effect-parameter-values, focused507-C-effect-
+parameter-collections and focused508-C-effect-passes-techniques are newer source/runtime evidence
+and are not yet in a full checkpoint.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete

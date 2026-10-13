@@ -3121,3 +3121,19 @@ clean. Coverage rises836->846/3205 and `effects.h`47->57/290. Clean sibling CNA 
 production library hashes remain unchanged. No game, graphics device, shader execution, drawing or
 visual inspection is claimed.
 Evidence:checkpoint-507-c-effect-parameter-collections-focused-*.
+
+## Focused508-C-effect-passes-techniques
+
+New `c_api.graphics.effect_passes_techniques` demonstrates all31 ownerless pass, technique and
+collection routes. Twenty-seven controls prove copied names with atomic short/exact copies;
+distinct nonzero technique identities; ordinary and reflected runtime indices; empty versus
+canonical-P0 construction; independent pass/technique annotation views; documented ownerless
+no-op Apply; stable element views after substantial collection growth; exact case-sensitive
+lookup and upper-bound refusal; and nested P0 survival after root collections, technique handles
+and nested collection views are destroyed. Direct execution passes. SOFTWARE and OPENGLES3
+runner output is byte-identical and every stderr file is empty. Metadata is508/0, all ten focused
+C/API, C++ effect and CLI tests pass in6.55s, and the incremental build is clean. Coverage rises
+846->877/3205 and `effects.h`57->88/290. CNA advanced externally from clean `fbd8e64a3` to clean
+`a6bb279d47` through two docs-only commits; production library hashes remain unchanged. No effect-
+owned pass, game, graphics device, shader execution, drawing or visual inspection is claimed.
+Evidence:checkpoint-508-c-effect-passes-techniques-focused-*.
