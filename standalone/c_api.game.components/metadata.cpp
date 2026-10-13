@@ -9,6 +9,7 @@ CNA_DEMOS_STANDALONE({
                    "game's collection, then the game lowers a draw order, hides a panel, disables and removes the "
                    "clock, and each change raises its event.",
     .apis = {"cna_game_component_create", "cna_drawable_game_component_create", "cna_game_component_callbacks_init",
+             "cna_game_component_get_is_drawable", "cna_drawable_game_component_get_graphics_device",
              "cna_drawable_game_component_set_draw_order", "cna_drawable_game_component_set_visible",
              "cna_game_component_set_enabled", "cna_game_component_subscribe", "cna_game_components_add",
              "cna_game_components_remove", "cna_game_components_get_count", "cna_game_components_subscribe_added",

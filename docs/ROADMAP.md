@@ -3665,3 +3665,19 @@ native-window fields without dereferencing them. Both Xvfb direct selections are
 with empty stderr, and strict C99 plus metadata compilation pass. Together with checkpoint558's
 title accessors this closes `runtime_window.h` at20/20. Evidence:
 checkpoint-559-c-window-state-focused-*-direct.*.
+
+`c_api.game.component_members` demonstrates14 previously uncredited component-member routes in23
+controls. Owner identity, property defaults/readback, change-only events, the canonical inverted
+update-order comparison, explicit lifecycle calls despite disabled/invisible state, idempotent
+disposal and one-shot registration ownership all pass. Its first comparison draft mistakenly used
+the changed DrawOrder when the route compares UpdateOrder; the identical +/-4 runtime result under
+both renderers identified a demo defect, which was corrected. `c_api.game.component_collection`
+demonstrates the remaining eight meaningful collection/service routes in19 controls: indexed
+mutation and bounds, absence semantics, reusable ownership, per-item clear events, named-service
+lookup and idempotent removal. The existing components demo now credits its already-visible
+drawable classification and graphics-device borrow. Both new Xvfb selections are byte-identical
+with empty stderr; strict C99 plus metadata compilation pass. `runtime_components.h` is35/39
+demonstrated, and its four fixed reflection-name size/copy helpers remain intentionally trivial and
+uncredited because CNA's pure-C contract test already checks the generic buffer behavior. Evidence:
+checkpoint-560-c-component-members-focused-*-direct.* and
+checkpoint-561-c-component-collection-focused-*-direct.*.
