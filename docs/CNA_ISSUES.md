@@ -37,7 +37,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Scope/status:** passing documentation mismatch; cursor creation, installation and lifetime
   succeed, so no runtime knownIssue marker is needed. Focused source hashes, exact child controls
   and both renderer logs are archived under `checkpoint-476-c-input-mouse-cursor-focused-*`.
-  No CNA file was edited and no upstream message was sent. Open.
+  Complete476 preserves every prior parent outcome and38/42 failures while only this child grows
+  15->32; evidence is under `checkpoint-476-c-input-mouse-cursor-*`. No CNA file was edited and no
+  upstream message was sent. Open.
 
 ### CNA-DEMOS-ISSUE-060 -- Raised C touch-event documentation contradicts its gesture-only implementation
 

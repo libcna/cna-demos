@@ -115,7 +115,8 @@ input/C-API/CLI CTests pass in52.10s with six declared skips. Two watched builds
 unchanged CNA inputs/no diagnostics at clean bb6820f; metadata476/0. Actual C coverage rises
 267->293/3210: `input_mouse.h`20/20 and `input_cursor.h`6/6. ISSUE-061 records the C header's
 empty/default-cursor claim versus the direct Arrow constructor path. No physical transition,
-confinement, pointer-shape visual, other-desktop or callback-thread claim. Full476 is pending.
+confinement, pointer-shape visual, other-desktop or callback-thread claim. The complete checkpoint
+is recorded below.
 Evidence:checkpoint-476-c-input-mouse-cursor-focused-*.
 
 Focused **476-C-input-touch-scaling** extends `c_api.input.gesture_queue` from31to64checks without
@@ -144,21 +145,20 @@ claim. Evidence:checkpoint-476-c-input-gesture-queue-focused-*.
 
 Last complete baseline:
 
-Complete checkpoint **476-C-input-touch-scaling**, source `87cc277`, extends the same gesture demo
-31->64checks without another ID or fixture. Full tools/validate.sh passes metadata476/0 and489
-enabled CTests in161.14s. SOFTWARE411/27/35/3 and OPENGLES3441/29/3/3 preserve all38/42prior
-failures, every unrelated C/custom child list and protected trace, five network controls,18music
-checks and8album-art checks. Only the gesture child grows to the exact focused64 controls;
-parentJSON remains0. All39selected paths match preflight and stay fixed through both smoke suites.
-Against complete476-C-input-gesture-queue, the catalog and gesture standalone carry this batch;
-`libcna.so` and `libcna_c_api.so` already carried unrelated external dependency drift, while the
-other35 binaries, four assets and30fixtures are exact. Normalized stderr is identical. Outer Xvfb
-has6exact amdgpu pairs (previous7); both exits are zero. Focused preflight saw those dependency
-bytes as dirty CNAf44a8ff; full post-build and final observations see their clean commit bb6820f
-with the same hashes. Coverage stays297/329types and1405/2326XNA members; actual C ABI coverage is
-267/3210 and input_touch.h32/47. ISSUE-060 remains a passing documentation mismatch. No physical
-touch, orientation rotation, threshold-boundary, snapshot-injection or visual claim. Complete
-evidence:checkpoint-476-c-input-touch-scaling-*.
+Complete checkpoint **476-C-input-mouse-cursor**, source `76fe296`, extends the existing C
+keyboard/mouse child15->32checks without another ID or fixture. Full tools/validate.sh passes
+metadata476/0 and all489enabled CTests in175.58s. SOFTWARE411/27/35/3 and
+OPENGLES3441/29/3/3 preserve all38/42prior failures, every unrelated C/custom child list and
+protected trace, five network controls,18music checks and8album-art checks. Only the keyboard/mouse
+child grows to the exact focused32 controls; parentJSON remains0. All39 selected paths match
+preflight and stay fixed through both smoke suites. Against complete476-C-input-touch-scaling,
+only the catalog and keyboard/mouse standalone change; the other37 binaries, four assets and30
+fixtures are exact. Normalized stderr is identical. Outer Xvfb has7exact amdgpu pairs (previous6);
+both exits are zero. Post-build and final observations see clean CNAbb6820f. Coverage stays
+297/329types and1405/2326XNA members; actual C ABI coverage is293/3210,
+`input_mouse.h`20/20 and `input_cursor.h`6/6. ISSUE-061 remains a passing documentation mismatch.
+No physical mouse, cursor-shape visual or other-desktop claim. Complete evidence:
+checkpoint-476-c-input-mouse-cursor-*.
 Preserve earlier refusal evidence and ISSUE-038/057/058/059/060/061.
 
 ## 8. Exact commands that work
@@ -283,13 +283,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: commit the focused `input_mouse.h`/`input_cursor.h` batch, then run one complete
-476-demo checkpoint against complete476-C-input-touch-scaling. Require the exact15->32 C child
-change, unchanged unrelated C/custom children and protected traces, the old38/42 failure multiset,
-stable selected runtime paths and explicit CNA source/artifact observations. Then continue the next
-public C input-header audit; leave live gamepad dead-zone and mouse-touch emulation manual-deferred,
-generic touch/media reflection uncredited and `media_player_update_ext` deferred. Never edit/revert
-CNA; preserve ISSUE-038/057/058/059/060/061.
+HIGHEST PRIORITY: audit all17 public routes in C `input_keyboard.h` against the existing
+`c_api.input.keyboard_mouse` and C++ keyboard demos. Give every route a semantic disposition and
+extend the existing C demo only for coherent value equality/hash/key-state behavior, live
+player-state equivalence and meaningful key/scancode/name/modifier mapping. Do not duplicate
+generated argument checks or add independent controls for generic fixed type-name text. Leave live
+gamepad dead-zone and mouse-touch emulation manual-deferred, generic touch/media reflection
+uncredited and `media_player_update_ext` deferred. Never edit/revert CNA; preserve
+ISSUE-038/057/058/059/060/061.
 
 ## 15. Assumptions the next session must know
 
@@ -301,7 +302,6 @@ CNA; preserve ISSUE-038/057/058/059/060/061.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is476-C-input-touch-scaling; source commit is in section7.
-All earlier drafts are APPLIED AND STALE. The focused mouse/cursor audit is applied and its full
-checkpoint is the live task.
+Current complete baseline is476-C-input-mouse-cursor; source commit is in section7.
+All earlier drafts are APPLIED AND STALE. The `input_keyboard.h` C route audit in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

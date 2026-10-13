@@ -2234,3 +2234,20 @@ ISSUE-061 records that the C default-cursor documentation says empty/no-op while
 source path constructs Arrow. No physical mouse transition, confinement, cursor-shape visual,
 other desktop or thread/reentrancy claim. Full476 is pending. Evidence:
 checkpoint-476-c-input-mouse-cursor-focused-*.
+
+## Complete476-C-input-mouse-cursor
+
+Complete checkpoint **476-C-input-mouse-cursor**, source `76fe296`, extends the existing C
+keyboard/mouse demo15->32checks without another ID or fixture. Full validation passes
+metadata476/0 and all489enabled CTests in175.58s. SOFTWARE411/27/35/3 and
+OPENGLES3441/29/3/3 preserve every parent outcome, the exact38/42old failures, all unrelated
+C/custom child lists and protected traces, five network controls,18music checks and8album-art
+checks. Only the keyboard/mouse child grows to the focused32 controls; parentJSON stays0. All39
+selected paths match the focused preflight and remain fixed through both smokes. Against
+complete476-C-input-touch-scaling, only the catalog and keyboard/mouse standalone change; the
+other37 binaries, four assets and30fixtures remain exact. Normalized stderr is identical. Outer
+Xvfb emits7exact amdgpu pairs (previous6), and both exits are zero. Post-build and final
+observations see clean CNAbb6820f. XNA coverage stays297/329types and1405/2326members; actual C ABI
+coverage is293/3210, `input_mouse.h`20/20 and `input_cursor.h`6/6. ISSUE-061 remains a passing
+documentation mismatch. No physical mouse, cursor-shape visual or other-desktop claim. Evidence:
+checkpoint-476-c-input-mouse-cursor-*.
