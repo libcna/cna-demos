@@ -371,6 +371,131 @@ static void dead_zones(CnaDemo* demo)
         "scalar dead-zone exclusion zeros an interior value and rescales the remaining range to one");
 }
 
+static int same_vector3(const CNA_Vector3* value, float x, float y, float z)
+{
+    return value->x == x && value->y == y && value->z == z;
+}
+
+static int same_touchpad_finger(const CNA_GamePadTouchpadFinger* value)
+{
+    return value->is_down == UINT8_C(9) && value->reserved[0] == UINT8_C(8) &&
+           value->reserved[1] == UINT8_C(7) && value->reserved[2] == UINT8_C(6) &&
+           value->x == 5.0f && value->y == 4.0f && value->pressure == 3.0f;
+}
+
+static void disconnected_device_contract(CNA_Handle game, CnaDemo* demo)
+{
+    typedef CNA_Result (*text_size_route)(CNA_Handle, CNA_PlayerIndex, uint64_t*);
+    typedef CNA_Result (*text_copy_route)(CNA_Handle, CNA_PlayerIndex, char*, uint64_t, uint64_t*);
+    static const text_size_route text_sizes[4] = {
+        cna_gamepad_get_guid_size_ext,
+        cna_gamepad_get_name_size_ext,
+        cna_gamepad_get_path_size_ext,
+        cna_gamepad_get_serial_size_ext,
+    };
+    static const text_copy_route text_copies[4] = {
+        cna_gamepad_copy_guid_ext,
+        cna_gamepad_copy_name_ext,
+        cna_gamepad_copy_path_ext,
+        cna_gamepad_copy_serial_ext,
+    };
+    CNA_PlayerIndex player = CNA_PLAYER_INDEX_ONE;
+    CNA_GamePadState snapshot;
+    CNA_Bool applied = UINT8_C(9);
+    CNA_Bool available = UINT8_C(9);
+    CNA_Vector3 reading = {1.0f, 2.0f, 3.0f};
+    CNA_PowerState power = UINT32_C(99);
+    CNA_GamePadButtonLabel label = UINT32_C(99);
+    CNA_GamePadConnectionState connection = UINT32_C(99);
+    CNA_GamePadTouchpadFinger finger = {UINT8_C(9), {UINT8_C(8), UINT8_C(7), UINT8_C(6)},
+                                        5.0f, 4.0f, 3.0f};
+    int32_t player_number = 99;
+    int32_t percent = 99;
+    int32_t touchpads = 99;
+    int32_t fingers = 99;
+    uint16_t firmware = UINT16_C(99);
+    uint64_t steam_handle = UINT64_C(99);
+    int found = 0;
+    int text_ok = 1;
+    size_t index;
+
+    for (player = CNA_PLAYER_INDEX_ONE; player <= CNA_PLAYER_INDEX_FOUR; ++player) {
+        blank_state(&snapshot);
+        if (cna_gamepad_get_state(game, player, &snapshot) == CNA_RESULT_SUCCESS &&
+            snapshot.is_connected == CNA_FALSE) {
+            found = 1;
+            break;
+        }
+    }
+    if (!cna_demo_check(demo, found, "one player slot is disconnected for the empty-device contract")) {
+        return;
+    }
+
+    cna_demo_check(
+        demo,
+        cna_gamepad_set_vibration(game, player, 0.5f, 0.75f, &applied) == CNA_RESULT_SUCCESS &&
+            applied == CNA_FALSE &&
+            ((applied = UINT8_C(9)),
+             cna_gamepad_set_trigger_vibration_ext(game, player, 0.25f, 1.0f, &applied) == CNA_RESULT_SUCCESS) &&
+            applied == CNA_FALSE &&
+            cna_gamepad_set_light_bar_ext(game, player, (CNA_Color){10U, 20U, 30U, 255U}) ==
+                CNA_RESULT_SUCCESS,
+        "a disconnected slot refuses both vibration kinds while its light-bar request is a successful no-op");
+
+    cna_demo_check(
+        demo,
+        cna_gamepad_get_gyro_ext(game, player, &reading, &available) == CNA_RESULT_SUCCESS &&
+            available == CNA_FALSE && same_vector3(&reading, 1.0f, 2.0f, 3.0f) &&
+            ((available = UINT8_C(9)),
+             cna_gamepad_get_accelerometer_ext(game, player, &reading, &available) == CNA_RESULT_SUCCESS) &&
+            available == CNA_FALSE && same_vector3(&reading, 1.0f, 2.0f, 3.0f),
+        "disconnected motion sensors report unavailable without changing either vector output");
+
+    cna_demo_check(
+        demo,
+        cna_gamepad_get_player_index_ext(game, player, &player_number) == CNA_RESULT_SUCCESS &&
+            player_number == -1 &&
+            cna_gamepad_set_player_index_ext(game, player, 2, &applied) == CNA_RESULT_SUCCESS &&
+            applied == CNA_FALSE,
+        "a disconnected controller has player index -1 and refuses an attempted index assignment");
+
+    cna_demo_check(
+        demo,
+        cna_gamepad_get_power_info_ext(game, player, &power, &percent) == CNA_RESULT_SUCCESS &&
+            power == CNA_POWER_STATE_ERROR && percent == -1 &&
+            cna_gamepad_get_button_label_ext(game, player, CNA_GAMEPAD_BUTTON_A, &label) == CNA_RESULT_SUCCESS &&
+            label == CNA_GAMEPAD_BUTTON_LABEL_UNKNOWN &&
+            cna_gamepad_get_connection_state_ext(game, player, &connection) == CNA_RESULT_SUCCESS &&
+            connection == CNA_GAMEPAD_CONNECTION_STATE_UNKNOWN,
+        "disconnected power, face-button label and connection report Error/-1, Unknown and Unknown");
+
+    for (index = 0U; index < 4U; ++index) {
+        uint64_t size = UINT64_C(99);
+        uint64_t copied = UINT64_C(99);
+        text_ok = text_ok && text_sizes[index](game, player, &size) == CNA_RESULT_SUCCESS && size == 0U &&
+                  text_copies[index](game, player, NULL, 0U, &copied) == CNA_RESULT_SUCCESS && copied == 0U;
+    }
+    cna_demo_check(
+        demo, text_ok,
+        "GUID, name, path and serial all use zero-byte size/copy answers for a disconnected slot");
+
+    cna_demo_check(
+        demo,
+        cna_gamepad_get_firmware_version_ext(game, player, &firmware) == CNA_RESULT_SUCCESS && firmware == 0U &&
+            cna_gamepad_get_steam_handle_ext(game, player, &steam_handle) == CNA_RESULT_SUCCESS &&
+            steam_handle == 0U,
+        "disconnected firmware and Steam identities are both zero");
+
+    cna_demo_check(
+        demo,
+        cna_gamepad_get_touchpad_count_ext(game, player, &touchpads) == CNA_RESULT_SUCCESS && touchpads == 0 &&
+            cna_gamepad_get_touchpad_finger_count_ext(game, player, 0, &fingers) == CNA_RESULT_SUCCESS &&
+            fingers == 0 &&
+            cna_gamepad_get_touchpad_finger_ext(game, player, 0, 0, &finger, &available) == CNA_RESULT_SUCCESS &&
+            available == CNA_FALSE && same_touchpad_finger(&finger),
+        "a disconnected controller has no touchpads and preserves the unavailable finger output");
+}
+
 static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, void* context,
                                CNA_CallbackError* out_error)
 {
@@ -381,6 +506,7 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     CNA_Result result;
     (void)game_time;
     (void)out_error;
+    disconnected_device_contract(game, state->demo);
     result = cna_game_get_graphics_device(game, &graphics_device);
     if (result != CNA_RESULT_SUCCESS) {
         return result;

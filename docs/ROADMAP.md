@@ -2322,3 +2322,24 @@ the same head without changing any relevant gamepad source hash or selected Linu
 Coverage stays297/329types and1405/2326XNA members; actual C ABI coverage is341/3210 and
 `input_gamepad.h`38/63. No physical controller, device actuation/sensor, other-platform or new
 visual claim. Evidence:checkpoint-476-c-input-gamepad-values-*.
+
+## Focused476-C-input-gamepad-device
+
+The same C gamepad demo grows47->55checks and credits all23 remaining live device routes in
+`input_gamepad.h` as one disconnected-slot contract. It selects an empty slot from the four player
+slots, then proves both vibration requests are refused while the void light-bar request succeeds;
+motion sensors report unavailable and preserve their output; player index, power, face-label and
+connection return their exact absent sentinels. GUID/name/path/serial share one zero-byte
+size/copy check rather than eight getter-shaped checks. Firmware and Steam identities are zero;
+touchpad counts are zero and an unavailable finger preserves all fields. Both renderer selections
+pass the same55 labels with empty stderr, and removing the eight additions restores all47 previous
+labels. The exact58 input/C-API/CLI CTests pass in33.63s with six declared skips. Metadata is476/0;
+coverage rises341->364/3210 and `input_gamepad.h`38->61/63. The remaining two routes only expose a
+fixed GamePadState type name. Physical actuation, sensor values, device identities and touch input
+remain manual.
+
+The ordinary watched build is temporarily blocked by unrelated concurrent sibling-CNA work:
+dirty9edbf314 has incompatible in-progress Vulkan source/header reductions. Both changed demo
+translation units compile cleanly, and the focused executables were manually linked against the
+last built CNA libraries for the recorded runtime. This evidence is intentionally focused; the
+complete476 checkpoint remains pending. Evidence:checkpoint-476-c-input-gamepad-device-focused-*.
