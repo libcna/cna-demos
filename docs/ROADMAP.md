@@ -2609,3 +2609,21 @@ hardware or trigger permission. Their trivial refusal paths do not justify cover
 the public test paths already demonstrate CNA-owned behavior. The standard/full checkpoint remains
 blocked by the unchanged external SDL_GPU mismatch.
 Evidence:checkpoint-488-c-clipboard-acceptance-focused-*.
+
+## Focused489-C-display-values
+
+New `c_api.graphics.display_values` covers the five renderer-independent value routes that begin
+`display.h`. Eight controls demonstrate complete versioned DisplayMode initialization, computed
+16:9 and zero-height aspect ratios, equality over width/height/format rather than the cached ratio,
+the complete PresentationParameters defaults, native cloning, derived zero-origin bounds and
+refusal before output mutation for an invalid reserved byte. The clone deliberately follows CNA's
+native XNA implementation: every XNA field survives while the CNA-only `headless_ext` returns to
+false. Source, C API documentation and runtime agree, so this is not recorded as a CNA issue.
+
+Both renderer selections pass identical output with empty stderr. Direct C and metadata compilation
+is diagnostic-free, metadata validates489/0 and the exact focused CTest passes. A57-test C/API,
+graphics-adapter, graphics-device-manager and CLI regression selection passes all56 enabled tests;
+the declared manual fullscreen test is disabled. Five routes raise current C coverage647->652/3205
+and establish `display.h`5/22. No game, device, window, adapter query, rendering or visual inspection
+is claimed. The standard/full checkpoint remains blocked by the external sibling-CNA renderer
+source/header mismatch. Evidence:checkpoint-489-c-display-values-focused-*.

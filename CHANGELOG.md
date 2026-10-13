@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.display_values`, an eight-check renderer-independent C workflow covering
+  all five `DisplayMode` and `PresentationParameters` value routes, including native clone
+  treatment of CNA's non-XNA headless extension and refusal before output mutation.
 - Extended `c_api.input.clipboard` so the device-layer write reports actual platform acceptance
   before the existing exact read-back and desktop-clipboard restoration workflow.
 - Added `c_api.devices.camera_frames`, a23-check C workflow covering14 camera descriptor,
