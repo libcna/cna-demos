@@ -22,6 +22,12 @@ typedef struct DeviceCapabilityState {
     int loads;
 } DeviceCapabilityState;
 
+/* ISSUE-067: the public C routes accept these native ordinals but define no C identity names. */
+#define DISPLAY_COLOR_SPACE_SRGB UINT32_C(0)
+#define DISPLAY_COLOR_SPACE_SCRGB UINT32_C(1)
+#define DISPLAY_COLOR_SPACE_HDR10 UINT32_C(2)
+#define DISPLAY_COLOR_SPACE_MAXIMUM DISPLAY_COLOR_SPACE_HDR10
+
 static int all_bytes_are(const void* data, size_t count, unsigned char value)
 {
     const unsigned char* bytes = (const unsigned char*)data;
@@ -217,15 +223,26 @@ static void audit_formats(DeviceCapabilityState* state, CNA_Handle device)
     CNA_SurfaceFormat format;
     unsigned classified_formats = 0U;
     int coherent = 1;
+    int direct_agreement = 1;
     int color_baseline = 0;
     for (format = CNA_SURFACE_FORMAT_COLOR; format <= CNA_SURFACE_FORMAT_USHORT_EXT; ++format) {
         CNA_RendererFormatUsageFlags known = UINT32_MAX;
         CNA_RendererFormatUsageFlags supported = UINT32_MAX;
+        CNA_Bool direct = UINT32_C(7);
         CNA_Result result = cna_graphics_device_get_surface_format_support_ext(
             device, format, &known, &supported);
+        CNA_Result direct_result =
+            cna_graphics_device_supports_surface_format_as_render_target_ext(
+                device, format, &direct);
         if (result != CNA_RESULT_SUCCESS || (known & ~CNA_RENDERER_FORMAT_USAGE_ALL) != 0U ||
             (supported & ~known) != 0U) {
             coherent = 0;
+        }
+        if (direct_result != CNA_RESULT_SUCCESS || direct > CNA_TRUE ||
+            direct != ((supported & CNA_RENDERER_FORMAT_USAGE_RENDER_TARGET) != 0U
+                    ? CNA_TRUE
+                    : CNA_FALSE)) {
+            direct_agreement = 0;
         }
         if (known != 0U) {
             ++classified_formats;
@@ -244,8 +261,120 @@ static void audit_formats(DeviceCapabilityState* state, CNA_Handle device)
     cna_demo_check(
         state->demo, color_baseline,
         "Color classifies the baseline storage, render-target and color-transfer usages");
+    cna_demo_check(
+        state->demo, direct_agreement,
+        "the direct render-target verdict agrees with every detailed format-usage mask");
     printf("  surface formats with classified usages: %u of %u\n", classified_formats,
            (unsigned)CNA_SURFACE_FORMAT_USHORT_EXT + 1U);
+}
+
+static void audit_execution_and_color_space(
+    DeviceCapabilityState* state, CNA_Handle device, const CNA_RendererInfo* info)
+{
+    CNA_Bool executes_source = UINT32_C(7);
+    CNA_Bool supports_ibl = UINT32_C(7);
+    uint32_t original = UINT32_MAX;
+    CNA_Bool supported[DISPLAY_COLOR_SPACE_MAXIMUM + UINT32_C(1)];
+    uint32_t space;
+    int execution_coherent;
+    int support_coherent = 1;
+    int set_coherent = 1;
+
+    execution_coherent =
+        cna_graphics_device_executes_shader_effect_source_ext(
+            device, &executes_source) == CNA_RESULT_SUCCESS &&
+        cna_graphics_device_supports_image_based_lighting_ext(
+            device, &supports_ibl) == CNA_RESULT_SUCCESS &&
+        executes_source <= CNA_TRUE && supports_ibl <= CNA_TRUE;
+    if (info->renderer_type == CNA_GRAPHICS_RENDERER_SOFTWARE) {
+        execution_coherent = execution_coherent && executes_source == CNA_FALSE &&
+            supports_ibl == CNA_FALSE;
+    } else if (info->renderer_type == CNA_GRAPHICS_RENDERER_OPENGLES3 ||
+               info->renderer_type == CNA_GRAPHICS_RENDERER_OPENGL33) {
+        execution_coherent = execution_coherent && executes_source == CNA_TRUE &&
+            supports_ibl == CNA_TRUE;
+    }
+    cna_demo_check(
+        state->demo, execution_coherent,
+        "effect-source execution and image-based lighting report renderer-specific truth");
+    printf(
+        "  executes effect source: %s, image-based lighting: %s\n",
+        executes_source == CNA_TRUE ? "yes" : "no",
+        supports_ibl == CNA_TRUE ? "yes" : "no");
+
+    if (cna_graphics_device_get_display_color_space_ext(device, &original) !=
+            CNA_RESULT_SUCCESS ||
+        original > DISPLAY_COLOR_SPACE_MAXIMUM) {
+        support_coherent = 0;
+        set_coherent = 0;
+    }
+    for (space = DISPLAY_COLOR_SPACE_SRGB;
+         space <= DISPLAY_COLOR_SPACE_MAXIMUM; ++space) {
+        uint32_t after = UINT32_MAX;
+        supported[space] = UINT32_C(7);
+        if (cna_graphics_device_supports_display_color_space_ext(
+                device, space, &supported[space]) != CNA_RESULT_SUCCESS ||
+            supported[space] > CNA_TRUE ||
+            cna_graphics_device_get_display_color_space_ext(device, &after) !=
+                CNA_RESULT_SUCCESS ||
+            after != original) {
+            support_coherent = 0;
+        }
+    }
+    if (original <= DISPLAY_COLOR_SPACE_MAXIMUM && supported[original] != CNA_TRUE) {
+        support_coherent = 0;
+    }
+    cna_demo_check(
+        state->demo, support_coherent,
+        "all three display-color-space probes are bounded and preserve the active space");
+
+    for (space = DISPLAY_COLOR_SPACE_SRGB;
+         space <= DISPLAY_COLOR_SPACE_MAXIMUM; ++space) {
+        CNA_Bool changed = UINT32_C(7);
+        uint32_t after = UINT32_MAX;
+        if (cna_graphics_device_set_display_color_space_ext(
+                device, space, &changed) != CNA_RESULT_SUCCESS ||
+            changed != supported[space] ||
+            cna_graphics_device_get_display_color_space_ext(device, &after) !=
+                CNA_RESULT_SUCCESS ||
+            after != (supported[space] == CNA_TRUE ? space : original)) {
+            set_coherent = 0;
+        }
+        if (supported[space] == CNA_TRUE && space != original) {
+            changed = CNA_FALSE;
+            if (cna_graphics_device_set_display_color_space_ext(
+                    device, original, &changed) != CNA_RESULT_SUCCESS ||
+                changed != CNA_TRUE) {
+                set_coherent = 0;
+            }
+        }
+    }
+    {
+        CNA_Bool changed = UINT32_C(9);
+        CNA_Bool unsupported = UINT32_C(9);
+        uint32_t restored = UINT32_MAX;
+        if (cna_graphics_device_set_display_color_space_ext(
+                device, DISPLAY_COLOR_SPACE_MAXIMUM + UINT32_C(1), &changed) !=
+                CNA_RESULT_INVALID_ARGUMENT ||
+            changed != UINT32_C(9) ||
+            cna_graphics_device_supports_display_color_space_ext(
+                device, DISPLAY_COLOR_SPACE_MAXIMUM + UINT32_C(1), &unsupported) !=
+                CNA_RESULT_INVALID_ARGUMENT ||
+            unsupported != UINT32_C(9) ||
+            cna_graphics_device_get_display_color_space_ext(device, &restored) !=
+                CNA_RESULT_SUCCESS ||
+            restored != original) {
+            set_coherent = 0;
+        }
+    }
+    cna_demo_check(
+        state->demo, set_coherent,
+        "color-space changes follow support, restore the original and atomically refuse identity three");
+    printf(
+        "  display color space %u; support sRGB/scRGB/HDR10: %u/%u/%u\n",
+        (unsigned)original, (unsigned)supported[DISPLAY_COLOR_SPACE_SRGB],
+        (unsigned)supported[DISPLAY_COLOR_SPACE_SCRGB],
+        (unsigned)supported[DISPLAY_COLOR_SPACE_HDR10]);
 }
 
 static void audit_report(DeviceCapabilityState* state, CNA_Handle device, const char* renderer_name)
@@ -361,6 +490,7 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
         audit_detailed_features(state, device);
         audit_limits(state, device, &info);
         audit_formats(state, device);
+        audit_execution_and_color_space(state, device, &info);
         audit_report(state, device, renderer_name);
         audit_dialect_and_backbuffer(state, device);
     }

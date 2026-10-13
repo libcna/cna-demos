@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `c_api.graphics.device_capabilities` from20to24 controls with exact render-target-format
+  verdict agreement, effect-source/IBL execution truth and restored display-color-space probing.
+- Recorded CNA-DEMOS-ISSUE-067: the public C display-color-space routes expose bare integer
+  ordinals without a C identity type, named constants or an ordinal mapping.
 - Extended `c_api.graphics.render_target_bindings` from22to25 controls with explicit device-wide
   ContentLost delivery, exact per-resource lost flags and selective restoration by rebinding.
 - Added `c_api.graphics.occlusion_query`, a23-check C workflow for the complete eight-route owned

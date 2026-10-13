@@ -15,6 +15,28 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-067 -- C display-color-space routes expose unnamed integer ordinals
+
+- **Area/API:** `cna_graphics_device_get_display_color_space_ext`,
+  `cna_graphics_device_set_display_color_space_ext` and
+  `cna_graphics_device_supports_display_color_space_ext` in
+  `modules/c-api/include/CNA/C/graphics_device.h`.
+- **Observed:** all three public C signatures use plain `uint32_t`. The C headers define no
+  `CNA_DisplayColorSpace` identity type, no sRGB/scRGB/HDR10 constants and no prose mapping from
+  names to ordinals. The implementation privately accepts0..2 by casting to the C++
+  `CNA::DisplayColorSpace` enum, so a C caller cannot name a valid nondefault request from the
+  public C contract alone.
+- **Runtime evidence:** `c_api.graphics.device_capabilities` locally names the three implementation
+  ordinals solely to exercise the otherwise unreachable contract. SOFTWARE and OPENGLES3 both
+  report current sRGB0, support `1/0/0` for sRGB/scRGB/HDR10, preserve the original state through
+  all support probes and rejected changes, and atomically reject ordinal3. All24 controls pass.
+- **Expected:** expose a fixed-width `CNA_DisplayColorSpace` typedef plus named sRGB, scRGB and
+  HDR10 constants, use that type in the three declarations, and document its defined range.
+- **Scope/status:** public C API completeness/documentation defect; runtime behavior is coherent, so
+  no expected-failure marker is needed. No CNA source was modified or upstream message sent.
+  Observed at clean CNA `f37f8d184`; focused evidence is archived as
+  `checkpoint-504-c-device-capabilities-focused-*`. Open.
+
 ### CNA-DEMOS-ISSUE-066 -- SOFTWARE ignores GraphicsDevice's direct blend-enable toggle
 
 - **Area/API:** `GraphicsDevice::SetBlendEnabled`,

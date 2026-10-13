@@ -6,12 +6,19 @@ CNA_DEMOS_STANDALONE({
     .title = "Graphics device capabilities in C",
     .description = "A C game borrows its live graphics device and audits its renderer identity, legacy and "
                    "detailed capability profiles, numeric limits, surface-format support, shader dialect, "
-                   "English diagnostic report and logical backbuffer information.",
+                   "effect/IBL execution truth, display color-space restoration, English diagnostic report and "
+                   "logical backbuffer information.",
     .apis = {"cna_graphics_device_get_renderer_info", "cna_graphics_device_copy_renderer_name",
              "cna_graphics_device_supports_capability",
              "cna_graphics_device_get_renderer_feature_support_ext",
              "cna_graphics_device_get_renderer_limit_ext",
              "cna_graphics_device_get_surface_format_support_ext",
+             "cna_graphics_device_supports_surface_format_as_render_target_ext",
+             "cna_graphics_device_executes_shader_effect_source_ext",
+             "cna_graphics_device_supports_image_based_lighting_ext",
+             "cna_graphics_device_get_display_color_space_ext",
+             "cna_graphics_device_set_display_color_space_ext",
+             "cna_graphics_device_supports_display_color_space_ext",
              "cna_graphics_device_get_capability_report_size_ext",
              "cna_graphics_device_copy_capability_report_ext",
              "cna_graphics_device_get_shader_dialect_ext",
@@ -21,7 +28,8 @@ CNA_DEMOS_STANDALONE({
     .tags = {"c", "binding", "graphics", "device", "renderer", "capabilities", "formats", "diagnostics"},
     .needs = CnaDemos::Need::CApi,
     .frames = 1,
-    .restrictions = "Standalone C program; capability values are renderer and host specific. The English report "
-                    "is diagnostic text rather than a machine protocol. No rendering or visual result is claimed. "
-                    "Built only with CNA_BUILD_C_API=ON.",
+    .restrictions = "Standalone C program; capability values are renderer and host specific. Display color-space "
+                    "probes restore the original state. ISSUE-067: the public C header exposes only raw ordinals "
+                    "for those spaces. The English report is diagnostic text rather than a machine protocol. No "
+                    "rendering or visual result is claimed. Built only with CNA_BUILD_C_API=ON.",
 })

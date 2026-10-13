@@ -73,13 +73,13 @@ joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 49 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete502 runtime reports and focused graphics
-sources). Actual C ABI coverage is790/3205: `input_gamepad.h`61/63,
+sources). Actual C ABI coverage is796/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`73/84 and `effects.h`9/290.
+`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`79/84 and `effects.h`9/290.
 Complete502 exercises the first771 credited routes in both full smoke suites; focused503/504
-exercise the19 newer routes under both renderer selections.
+exercise the25 newer routes under both renderer selections.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 31 (`c_api.graphics.draw_routes` CNA-DEMOS-ISSUE-066,
 `c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
@@ -111,6 +111,23 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **504-C-device-capabilities** extends `c_api.graphics.device_capabilities` from20to24
+controls. All27 direct render-target-format verdicts agree with the detailed supported-usage masks.
+SOFTWARE reports no shader-source execution and no IBL; OPENGLES3 reports both. All three display-
+color-space probes preserve the original state; set results agree with support, any successful
+alternate would be restored, and undefined ordinal3 is refused without changing output or state.
+Both report current sRGB0 and support `1/0/0` for sRGB/scRGB/HDR10. Direct and runner executions
+pass with empty stderr. Metadata remains504/0, and all37 focused capability, presentation, render-
+target, PBR/shader and CLI tests pass in17.95s with11 declared SOFTWARE skips. Six routes raise
+coverage790->796/3205 and `graphics_device.h`73->79/84. ISSUE-067 records the missing public C type
+and names for those accepted color-space ordinals. Clean sibling CNA is `f37f8d184`; production
+`libcna.so` and `libcna_c_api.so` remain SHA-256
+`3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0` and
+`730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`. `cna-demos` is
+`dc5069f58016d555e831129813238f7ec6a3b63660c0ea4ccba86c623d8a3f7e` and the standalone is
+`b756c44fdfad6b813cdd0a2b07a43cdfe1dec390216b6b8d6826245c339b18ce`. No rendering or visual
+inspection is claimed. Evidence:`checkpoint-504-c-device-capabilities-focused-*`.
 
 Focused **504-C-content-loss** extends `c_api.graphics.render_target_bindings` from22to25 controls.
 After restoring the backbuffer, explicit device notification marks both tracked2D/cube targets lost
@@ -832,7 +849,8 @@ Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untest
 
 ## 10. Known CNA issues
 
-See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-066 (SOFTWARE ignores the direct GraphicsDevice
+See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-067 (C display-color-space routes expose unnamed
+integer ordinals), CNA-DEMOS-ISSUE-066 (SOFTWARE ignores the direct GraphicsDevice
 blend-enable toggle), CNA-DEMOS-ISSUE-065 (the C GraphicsDevice reset declaration is
 separated from its documentation), CNA-DEMOS-ISSUE-064 (the C Viewport default comment promises
 MaxDepth1 while XNA/CNA produce zero), CNA-DEMOS-ISSUE-063 (synthetic-camera Closed comments contradict
@@ -925,9 +943,9 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the assigned `graphics_device.h` groups from the complete semantic audit.
-The draw, occlusion-query and content-loss batches are complete and awaiting the next full
-checkpoint. Implement the six capability/color-space routes recorded in docs/COVERAGE_AUDIT.md.
-Keep renderer recreation with lifecycle/reset evidence, context recovery
+The draw, occlusion-query, content-loss and capability/color-space batches are complete and await
+the next full checkpoint. Implement renderer recreation with lifecycle/reset evidence, then run a
+complete checkpoint. Keep context recovery
 manual/platform-specific and the one-way string
 marker intentionally uncredited unless an observable consumer is added. Build and run both renderer
 selections after each batch.
@@ -937,7 +955,7 @@ six host sensor/touch populated-metadata routes until suitable hardware executes
 Do not credit the separate live gamepad dead-zone overload on a disconnected neutral slot or
 duplicate generated argument checks. Leave mouse-touch emulation manual-deferred, generic
 touch/media reflection uncredited and `media_player_update_ext` deferred. Never edit/revert CNA;
-preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066.
+preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067.
 
 ## 15. Assumptions the next session must know
 
@@ -950,8 +968,8 @@ preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is502-C-device-policy; source commit and exact results are in section7.
-Focused503-C-draw-routes, focused504-C-occlusion-query and focused504-C-content-loss are newer
-source/runtime evidence and are not yet in a full checkpoint.
+Focused503-C-draw-routes plus focused504-C-occlusion-query, content-loss and device-capabilities are
+newer source/runtime evidence and are not yet in a full checkpoint.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete

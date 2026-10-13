@@ -3025,3 +3025,18 @@ route raises coverage789->790/3205 and `graphics_device.h`72->73/84. Clean sibli
 `f37f8d184`; both production library hashes remain unchanged. This deterministic route does not
 claim an actual platform context loss or visual inspection.
 Evidence:checkpoint-504-c-content-loss-focused-*.
+
+## Focused504-C-device-capabilities
+
+The existing `c_api.graphics.device_capabilities` workflow grows from20to24 controls. All27 direct
+render-target-format verdicts agree with the detailed supported-usage masks. SOFTWARE reports that
+it executes neither shader source nor IBL, while OPENGLES3 reports both. All three color-space
+support probes preserve the active state; set results agree with support, successful alternate
+states would be restored, and undefined ordinal3 is refused atomically. Both renderers report sRGB0
+with support `1/0/0` for sRGB/scRGB/HDR10. Both direct and runner executions pass with empty stderr.
+Metadata remains504/0; all37 focused capability, presentation, render-target, PBR/shader and CLI
+tests pass in17.95s with11 declared SOFTWARE skips, followed by a clean incremental build. Six
+routes raise coverage790->796/3205 and `graphics_device.h`73->79/84. ISSUE-067 records the missing
+C type/names for the color-space ordinals. Clean sibling CNA is `f37f8d184`; both production library
+hashes remain unchanged. No rendering or visual inspection is claimed.
+Evidence:checkpoint-504-c-device-capabilities-focused-*.
