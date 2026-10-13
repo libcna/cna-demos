@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.occlusion_query`, a23-check C workflow for the complete eight-route owned
+  query lifecycle, invalid state ordering, bounded completion and exact-versus-boolean visible
+  sample results.
 - Added `c_api.graphics.draw_routes`, a24-check pixel-readback workflow for bound, instanced,
   caller-vertex and caller-indexed primitives plus explicit effect, blend, depth-test and depth-write
   control.

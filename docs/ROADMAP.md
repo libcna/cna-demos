@@ -2997,3 +2997,17 @@ coverage771->781/3205, `graphics_device.h`55->64/84 and `effects.h`8->9/290. Cle
 `f37f8d184`; both production library hashes remain unchanged. Pixel values were read
 programmatically; no screenshot or visual inspection is claimed.
 Evidence:checkpoint-503-c-draw-routes-focused-*.
+
+## Focused504-C-occlusion-query
+
+New `c_api.graphics.occlusion_query` demonstrates all eight public C query routes through a real
+owned HiDef query and full-screen visible draw. Twenty-three controls cover renderer presence,
+precision, fresh-result refusal, Begin/End pairing, the required completion observation, bounded
+polling, result interpretation, destruction and stale-handle preservation. A center-pixel readback
+proves the measured quad is exact red and synchronizes pending work. SOFTWARE reports a precise
+count of384000 for the800x480 buffer; OPENGLES3 reports its documented boolean mode and count one.
+Both direct and runner executions pass with empty stderr. Metadata is504/0, all19 focused query,
+capability and CLI tests pass in9.96s, and the final incremental build is clean. Eight routes raise
+coverage781->789/3205 and `graphics_device.h`64->72/84. Clean sibling CNA is `f37f8d184`; both
+production library hashes remain unchanged. No screenshot or visual inspection is claimed.
+Evidence:checkpoint-504-c-occlusion-query-focused-*.
