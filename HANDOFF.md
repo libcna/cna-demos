@@ -103,9 +103,10 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-C-player-single-song** extends c_api.media.media_player from82to88checks under both
-renderers with empty stderr and no new ID/fixture. Removing six additions restores all82old labels
-in order. An independent caller-owned Song starts playback into one active queue entry; destroying
+Focused **474-C-player-single-song**, source `a9aa6ce`, extends c_api.media.media_player
+from82to88checks under both renderers with empty stderr and no new ID/fixture. Removing six
+additions restores all82old labels in order. An independent caller-owned Song starts playback into
+one active queue entry; destroying
 the input leaves playback and the queue-owned copy live; Stop leaves the published copy readable;
 the copy and queue view release independently. No queue-owned Song reaches Play, preserving
 ISSUE-058. Focused29media/CLI CTests pass in8.33s; metadata474/0. Both watched builds pass with
@@ -256,7 +257,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: run full474 validation for the focused C single-Song source against
+HIGHEST PRIORITY: run full474 validation for focused source `a9aa6ce` against
 complete474-C-player-visualization. Capture once after the full build during CTest: the
 same37selected binary paths/four assets/30fixture paths. Freeze source/assets/build through both
 smokes. Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
