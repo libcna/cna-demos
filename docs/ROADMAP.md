@@ -4217,3 +4217,18 @@ fixed reflection type-name pairs and intentionally trivial/uncredited, completin
 dispositions for all148 routes. Evidence:
 `checkpoint-604-c-media-library-pictures-focused-*-direct.*`. No rendering, screenshot, visual
 inspection, host media or project-built execution is claimed.
+
+## Focused605-C-CNB-foundations
+
+`c_api.content.cnb_foundations` opens the previously untouched `cnb.h` audit with26 pure routes in
+25 controls. It fixes the CNB v1 layout and magic, little-endian and sanitized chunk identities,
+mandatory flags, exact built-in/reserved/custom type names, deterministic custom IDs, raw logical-
+name verdicts, versioned allocation ceilings and atomic checked arithmetic. One-shot, split and
+portable CRC-32C agree with the published iSCSI check vector. Stored compression round-trips exact
+bytes, unimplemented codecs return `NOT_SUPPORTED`, and the available Zstandard implementation
+clamps effort, genuinely shrinks and restores a repetitive payload. Both renderer-labelled direct
+runs are byte-identical with empty stderr; strict C99 and metadata compilation pass. Staged
+metadata reaches2537/3205 and `cnb.h` reaches26/272. Evidence:
+`checkpoint-605-c-cnb-foundations-focused-*-direct.*`. No game, renderer, filesystem, compiled
+asset or project-built execution is claimed. Bounded reader and byte-writer serialization remain
+the next foundation batch.
