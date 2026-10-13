@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.texture_formats`, a deterministic six-check C audit of every public
+  SurfaceFormat's compression footprint, storage-unit size, pixel alignment, compatible transfer
+  widths and renderer-independent base Texture support policy.
 - Extended `c_api.media.media_player` to demonstrate `cna_media_player_update_ext` as an explicit
   post-loop maintenance pump: a real short track finishes while public state remains Playing, and
   the pump consumes the native end notification and transitions to Stopped.

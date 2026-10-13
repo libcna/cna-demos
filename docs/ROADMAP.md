@@ -3345,3 +3345,16 @@ stderr files are empty. All23 focused MediaPlayer/Song/CLI CTests pass in44.43s,
 name already verified by CNA's pure-C smoke, so they remain intentionally trivial and uncredited.
 No audible quality, callback-latency or visual claim is made. Clean sibling CNA is `a6bb279d47` and
 the production library hashes remain unchanged. Evidence:checkpoint-521-c-player-update-focused-*.
+
+New `c_api.graphics.texture_formats` begins the deeper `texture.h` audit with the five
+renderer-independent format routes. Six deterministic controls cover all27 public SurfaceFormat
+identities: exact compressed-block footprint, texel/block byte size, pixel-store alignment,
+compatible transfer element widths and the base Texture policy that accepts Color while returning
+NOT_SUPPORTED for every other valid format. Invalid identities and a nonpositive width are refused
+without changing getter output. Direct execution and both renderer selections pass with byte-
+identical output and empty stderr. All32 focused Texture/CLI CTests satisfy their contracts in
+34.25s, including two declared SOFTWARE capability skips. Metadata is522/0 and coverage rises
+1084->1089/3205, with `texture.h`2->7/21. No texture is allocated and no renderer format-support,
+pixel or visual claim is made. Final observation sees clean sibling CNA `b2ded99da9`; its only
+change since the media batch is documentation and the production library hashes remain unchanged.
+Evidence:checkpoint-522-c-texture-formats-focused-*.
