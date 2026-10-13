@@ -1981,3 +1981,15 @@ stderr is identical. Outer Xvfb has14exact amdgpu pairs (previous19); exits are 
 eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
 rise219->223/3210, media.h26->27/39 and media_player.h33->36/41.
 Evidence:checkpoint-474-c-player-visualization-*.
+
+## Focused474-C-player-single-song
+
+The same `c_api.media.media_player` now grows82->88child checks without a new ID or fixture. Both
+renderers pass identical lists with empty stderr; removing six additions restores all82prior labels
+in order. After the old queue is cleared, an independent caller-owned Song starts playback into one
+active queue entry. Destroying the input leaves playback and the published queue copy live; Stop
+leaves the copy readable, and copy/view release independently. No queue-owned Song reaches Play,
+preserving ISSUE-058. Focused29media/CLI CTests pass in8.33s. Two watched builds pass with
+3909unchanged CNA inputs/no diagnostics; metadata remains474/0. One actual route raises C coverage
+223->224/3210 and media_player.h36->37/41. No audible or event-timing claim. Full474 is pending.
+Evidence:checkpoint-474-c-player-single-song-focused-*.

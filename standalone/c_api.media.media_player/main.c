@@ -378,6 +378,8 @@ int main(int argc, char** argv)
     CNA_SongHandle active_copy = CNA_INVALID_HANDLE;
     CNA_SongHandle appended = CNA_INVALID_HANDLE;
     CNA_SongHandle appended_copy = CNA_INVALID_HANDLE;
+    CNA_SongHandle single_song = CNA_INVALID_HANDLE;
+    CNA_SongHandle single_copy = CNA_INVALID_HANDLE;
     CNA_SongHandle duration_song = CNA_INVALID_HANDLE;
     CNA_SongHandle identity_song = CNA_INVALID_HANDLE;
     CNA_SongHandle same_path_song = CNA_INVALID_HANDLE;
@@ -633,6 +635,38 @@ int main(int argc, char** argv)
     cna_demo_check_result(&demo, cna_media_queue_destroy(state.queue),
                           "destroy the reacquired queue view");
     state.queue = CNA_INVALID_HANDLE;
+
+    /* Play receives an independent caller-owned Song and copies it into the empty queue. Never
+       pass a queue-owned handle back to Play: that unsafe case is CNA-DEMOS-ISSUE-058. */
+    if (cna_demo_check_result(&demo, create_song(game, "Single", "rising.wav", &single_song),
+                              "create the caller-owned single Song")) {
+        cna_demo_check(&demo,
+                       cna_media_player_play_song(game, single_song) == CNA_RESULT_SUCCESS &&
+                           media_state(game) == CNA_MEDIA_STATE_PLAYING && song_has_name(single_song, "Single"),
+                       "play_song starts the independent caller-owned Song");
+        cna_demo_check(&demo,
+                       cna_media_player_get_queue(game, &state.queue) == CNA_RESULT_SUCCESS &&
+                           cna_media_queue_get_count(state.queue, &queue_count) == CNA_RESULT_SUCCESS &&
+                           queue_count == 1 && active_index(&state) == 0 &&
+                           cna_media_queue_get_at(state.queue, 0, &single_copy) == CNA_RESULT_SUCCESS &&
+                           song_has_name(single_copy, "Single"),
+                       "play_song publishes one active owned queue copy");
+        cna_demo_check(&demo,
+                       cna_song_destroy(single_song) == CNA_RESULT_SUCCESS &&
+                           media_state(game) == CNA_MEDIA_STATE_PLAYING && song_has_name(single_copy, "Single"),
+                       "the queue copy remains live after destroying the Play input");
+        single_song = CNA_INVALID_HANDLE;
+        cna_demo_check(&demo,
+                       cna_media_player_stop(game) == CNA_RESULT_SUCCESS &&
+                           media_state(game) == CNA_MEDIA_STATE_STOPPED && song_has_name(single_copy, "Single"),
+                       "stopping preserves the published single-Song copy");
+        cna_demo_check(&demo,
+                       cna_song_destroy(single_copy) == CNA_RESULT_SUCCESS &&
+                           cna_media_queue_destroy(state.queue) == CNA_RESULT_SUCCESS,
+                       "release the single-Song copy and queue view independently");
+        single_copy = CNA_INVALID_HANDLE;
+        state.queue = CNA_INVALID_HANDLE;
+    }
 
     /* An explicit duration is caller metadata, independent of the file's real two-second length.
        The fallback end detector uses that metadata and treats zero as unknown rather than ended. */
