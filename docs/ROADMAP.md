@@ -3744,3 +3744,13 @@ labelled direct runs are byte-identical with empty stderr and initialize no rend
 metadata compilation pass. `content_readers.h` is35/62 demonstrated; reflective builders and the
 object-dictionary family remain. Evidence:
 checkpoint-568-c-content-type-reader-registry-focused-*-direct.*.
+
+`c_api.content.reflective_reader` covers the next11 reader routes in40 controls. It publishes exact
+and atomic reflective/enum canonical names, rejects malformed declarations, snapshots the first
+idempotent registration and maps every one of the14 public inline field kinds plus an enum and a
+custom callback into caller-owned C storage. The callback proves scoped reader borrowing, builder
+destruction leaves registrations live, and a second builder proves the shared/reference-shaped
+form. Both renderer-labelled direct runs are byte-identical with empty stderr and initialize no
+renderer; strict C99 and metadata compilation pass. `content_readers.h` reaches46/62 demonstrated;
+the object-dictionary extension family remains. Evidence:
+checkpoint-569-c-reflective-reader-focused-*-direct.*.
