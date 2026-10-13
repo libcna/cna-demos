@@ -64,21 +64,21 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-494 catalog demos (latest complete checkpoint492-C-device-presentation; three focused batches pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+495 catalog demos (latest complete checkpoint492-C-device-presentation; four focused batches pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 39 (standalone C programs). Every declared category has demos.
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 40 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog with complete492 runtime reports). Actual C ABI
-coverage is689/3205: `input_gamepad.h`61/63,
+coverage is701/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
-`render_target.h`12/12, and `graphics.h`25/27. Complete492 exercises the first669 routes in both
-full smoke suites; twenty new render-target and graphics routes have focused evidence under both
-renderers.
+`render_target.h`12/12, `graphics.h`25/27 and `graphics_resource.h`12/12. Complete492 exercises the
+first669 routes in both full smoke suites;32 new render-target and graphics routes have focused
+evidence under both renderers.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 30 (`c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
 `c_api.storage.save_game` CNA-DEMOS-ISSUE-056,
@@ -109,6 +109,21 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **495-C-resource-lifecycle** adds `c_api.graphics.resource_lifecycle` and demonstrates all12
+routes in `graphics_resource.h` through a real device-owned Texture2D. Twenty-five controls match
+the callback-scoped owning device; distinguish empty Name from the unnamed `Texture2D` string;
+prove atomic size/copy behavior; round-trip a non-ASCII UTF-8 name and a full-width opaque tag;
+refuse embedded NUL without mutation; and establish synchronous one-shot Disposing delivery.
+The callback observes the resource live, the still-valid C handle then observes it disposed,
+repeated disposal is a no-op, the registration releases once, and typed destruction finally
+invalidates the handle. SOFTWARE and OPENGLES3 produce identical output with empty stderr.
+Metadata is495/0, the exact CTest and all56 C/API, GraphicsResource and CLI regression tests pass,
+and a clean build follows. Twelve routes raise C coverage689->701/3205 and complete
+`graphics_resource.h` at12/12. During validation sibling CNA advanced externally to clean
+test-only `b45024c79`; production `libcna.so` stayed byte-identical at SHA-256
+`3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0`. No rendering or visual
+inspection is claimed. Evidence:`checkpoint-495-c-resource-lifecycle-focused-*`.
 
 Focused **494-C-sprite-scaled** extends the existing `c_api.graphics.sprite_batch` workflow from30
 to43 controls without adding a demo ID. A two-command position/scale array selects cyan and magenta
@@ -635,13 +650,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: cover the coherent12-route `graphics_resource.h` lifecycle in one focused C demo.
-Use a real device-owned resource and keep every generic resource call visible: borrowed owner,
-disposal state, exact/atomic UTF-8 name and string copies, opaque tag round trip, synchronous
-Disposing subscription, idempotent explicit disposal, one-shot callback delivery and owned
-registration release. Release the typed handle after disposal and distinguish explicit native
-resource disposal from C-handle destruction. Do not turn generated null/wrong-kind checks into
-demo content. Then reassess `index_resources.h` and `graphics_state.h` as the next graphics gaps.
+HIGHEST PRIORITY: add one focused dynamic IndexBuffer C workflow for the five meaningful uncovered
+routes in `index_resources.h`: complete applied info, atomic readback into a caller-array window,
+byte-offset partial update preserving untouched indices, and a silent ContentLost subscription
+lifecycle on the current non-device-losing renderers. Use actual16-bit data and retain the existing
+full upload/create/destroy coverage. Keep the fixed IndexBuffer type-name size/copy pair
+trivial/uncredited; after the batch every10 header routes must have a semantic disposition.
+Do not turn generated null/wrong-kind checks into demo content. Reassess `graphics_state.h` next.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
@@ -665,8 +680,9 @@ All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, t
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
 checkpoint. Adapter-capabilities and device-presentation are included in complete492. The focused
-render-target-bindings, device-capabilities and sprite-scaled batches are applied and await a later
-complete checkpoint. Focused494 was built against clean sibling CNA `3b5755944`; complete492
-remains the immutable full-runtime baseline at `440af2a`.
+render-target-bindings, device-capabilities, sprite-scaled and resource-lifecycle batches are
+applied and await a later complete checkpoint. Focused495 was built against production binaries
+unchanged from `3b5755944`; sibling CNA then advanced externally to clean test-only `b45024c79`.
+Complete492 remains the immutable full-runtime baseline at `440af2a`.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.

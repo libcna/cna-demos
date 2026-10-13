@@ -2746,3 +2746,19 @@ One route raises C coverage688->689/3205 and `graphics.h`24->25/27. The only two
 are fixed SpriteBatch type-name helpers, so every route in this header now has a semantic
 disposition. No screenshot or visual inspection is claimed.
 Evidence:checkpoint-494-c-sprite-scaled-focused-*.
+
+## Focused495-C-resource-lifecycle
+
+New `c_api.graphics.resource_lifecycle` completes all12 routes in `graphics_resource.h` through one
+real device-owned Texture2D. Twenty-five controls recover its callback-scoped owner; distinguish an
+empty Name from the unnamed `Texture2D` string; verify atomic short and exact copies; round-trip a
+non-ASCII UTF-8 name and opaque64-bit tag; and refuse an embedded NUL without replacing the name.
+An owned Disposing registration receives exactly one synchronous callback while the resource still
+reports live. The retained C handle then sees the disposed state, repeated disposal is a successful
+no-op, subscription release is one-shot and typed Texture2D destruction finally invalidates the
+handle. Both renderers produce identical output with empty stderr. Metadata is495/0, the exact
+CTest and all56 focused C/API, GraphicsResource and CLI tests pass, and the clean follow-up build
+passes. Twelve routes raise C coverage689->701/3205. Sibling CNA advanced externally to clean
+test-only `b45024c79` during validation while the production library hash remained unchanged. No
+rendering or visual inspection is claimed.
+Evidence:checkpoint-495-c-resource-lifecycle-focused-*.
