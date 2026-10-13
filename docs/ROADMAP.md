@@ -2908,18 +2908,6 @@ raise C coverage752->758/3205 and `graphics_device.h`36->42/84. Clean sibling CN
 production `libcna.so` remains byte-identical. No buffer data, drawing or visual inspection is
 claimed.
 
-## Focused588-C-friend-gamer-collection
-
-`c_api.gamer.friend_collection` adds19 `gamer_services.h` routes in20 renderer-free controls. Two
-synthetic friend records preserve independent request, online, playing, away and busy predicates;
-free-text presence uses exact atomic buffers. A retained two-entry collection demonstrates ordered
-indexing, both bounds, IndexOf/Contains, short atomic and sufficient shifted copies, complete/reset
-cursor traversal, removal including an absent no-op, re-addition and Clear. The cursor, collection
-and both sources release independently and exactly once. Both renderer-labelled direct runs are
-byte-identical with empty stderr; strict C99 and metadata compilation pass. Staged metadata reaches
-2221/3205 and `gamer_services.h` reaches69/239. Evidence:
-`checkpoint-588-c-friend-collection-focused-*-direct.*`. No live account friend graph, service
-state, game, renderer or project-built runner is claimed.
 Evidence:checkpoint-500-c-buffer-bindings-focused-*.
 
 ## Complete500-C-buffer-bindings
@@ -3973,3 +3961,16 @@ demo exposes CNA-DEMOS-ISSUE-076: the header promises an absent player-index loo
 `out_gamer`, but the wrapper clears it. Evidence:`checkpoint-587-c-signed-in-state-focused-*-direct.*`.
 No service friendship, presence publication, microphone, game, renderer or project-built runner is
 claimed.
+
+## Focused588-C-friend-gamer-collection
+
+`c_api.gamer.friend_collection` adds19 `gamer_services.h` routes in20 renderer-free controls. Two
+synthetic friend records preserve independent request, online, playing, away and busy predicates;
+free-text presence uses exact atomic buffers. A retained two-entry collection demonstrates ordered
+indexing, both bounds, IndexOf/Contains, short atomic and sufficient shifted copies, complete/reset
+cursor traversal, removal including an absent no-op, re-addition and Clear. The cursor, collection
+and both sources release independently and exactly once. Both renderer-labelled direct runs are
+byte-identical with empty stderr; strict C99 and metadata compilation pass. Staged metadata reaches
+2221/3205 and `gamer_services.h` reaches69/239. Evidence:
+`checkpoint-588-c-friend-collection-focused-*-direct.*`. No live account friend graph, service
+state, game, renderer or project-built runner is claimed.
