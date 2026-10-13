@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete475-C-input-touch-state:488enabled CTests and both full smoke suites preserve all old
+  evidence; the new C touch demo adds30 exact lifecycle controls and eight C ABI routes.
 - Added `c_api.input.touch_state`, a deterministic 30-check C press/move/release workflow covering
   live capabilities, snapshots, id lookup and previous-location reconstruction without hardware.
 - Complete474-C-input-keyboard-state:487enabled CTests and both full smoke suites preserve all old

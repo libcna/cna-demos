@@ -2098,7 +2098,7 @@ binary/runtime evidence rather than an atomic external-source snapshot. XNA cove
 297/329types and1405/2326members; actual C ABI routes rise229->231/3210 and input.h8->10/15.
 Evidence:checkpoint-474-c-input-keyboard-state-*.
 
-## Focused475-C-input-touch-state
+## Complete475-C-input-touch-state
 
 `c_api.input.touch_state` adds one coherent deterministic standalone C program. Both renderers pass
 the same30child checks with empty stderr. CNA's public fixture routes publish connected four-touch
@@ -2110,5 +2110,15 @@ declared environment skips. Two watched builds pass with3910unchanged CNA inputs
 cleanf44a8ff; metadata is475/0. Eight actual routes raise C coverage231->239/3210, input.h10->14/15
 and input_touch.h0->4/47. The remaining explicit live gamepad dead-zone capture is manual-deferred
 because disconnected modes are indistinguishable and the authored-value helper already shows the
-algorithms. No physical touch, gesture, pressure or visual claim. Full475 is pending. Evidence:
+algorithms. No physical touch, gesture, pressure or visual claim. Focused evidence:
 checkpoint-475-c-input-touch-lifecycle-focused-*.
+
+Full validation passes metadata475/0 and488enabled CTests in152.96s. SOFTWARE410/27/35/3 and
+OPENGLES3440/29/3/3 preserve all38/42old failures, every old C/custom child list and protected
+trace, five network controls,18music checks and8album-art checks. The new ID contributes exactly
+the focused30 checks and parentJSON0. All38selected binaries, four assets and30fixture paths remain
+hash-identical; normalized stderr matches complete474-C-input-keyboard-state. Outer Xvfb emits
+8exact amdgpu pairs (previous12), and both wrapper exits are zero. Post-build and final CNA state is
+cleanf44a8ff. This is selected immutable runtime evidence rather than an atomic dependency-source
+snapshot. XNA coverage stays297/329types and1405/2326members; C coverage remains239/3210 after the
+focused increase. Evidence:checkpoint-475-c-input-touch-state-*.
