@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.device_presentation`, a12-check live-device C workflow that changes,
+  verifies and exactly restores presentation state, completing all22 `display.h` routes.
 - Added `c_api.graphics.adapter_capabilities`, a16-check C workflow covering all six adapter
   capability, format, preference and explicit-limitation routes with exact preference restoration.
 - Complete490-C-adapter-snapshot clears the sixteen-batch checkpoint debt:503 enabled CTests and

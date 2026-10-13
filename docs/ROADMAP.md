@@ -2673,3 +2673,17 @@ checks, while the Xvfb rerun passes them; this is an environment requirement rat
 issue. Six routes raise C coverage659->665/3205 and `display.h`12->18/22. No monitor handle, cache
 refresh, rendering or visual inspection is claimed. Evidence:
 checkpoint-491-c-adapter-capabilities-focused-*.
+
+## Focused492-C-device-presentation
+
+New `c_api.graphics.device_presentation` completes the last four `display.h` routes through one
+callback-scoped graphics-device loan. Twelve controls read and validate every public field of the
+applied presentation parameters, change the presentation interval and observe it with every other
+field preserved, restore and re-read the exact original value, obtain a coherent device display
+mode, and establish that the device-level native-window route returns NOT_SUPPORTED with zero
+output. SOFTWARE and OPENGLES3 pass the same checks with empty stderr; their device-mode
+observations are respectively800x480 and1280x1024. Metadata validates492/0, the exact CTest passes,
+and all59 enabled tests in the Xvfb-backed60-test C/API, graphics-adapter,
+graphics-device-manager and CLI selection pass with the declared fullscreen test disabled. Four
+routes raise C coverage665->669/3205 and `display.h`18->22/22. No rendering, pixels, native handle
+or visual inspection is claimed. Evidence:checkpoint-492-c-device-presentation-focused-*.

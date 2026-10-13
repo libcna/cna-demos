@@ -64,20 +64,20 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-491 catalog demos (latest complete checkpoint490-C-adapter-snapshot; one focused batch pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+492 catalog demos (latest complete checkpoint490-C-adapter-snapshot; two focused batches pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 36 (standalone C programs). Every declared category has demos.
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 37 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (regenerated from the current catalog and complete490 reports). The
-latest focused batch raises actual C ABI coverage to665/3205: `input_gamepad.h`61/63,
+latest focused batches raise actual C ABI coverage to669/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
-`input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62 and `display.h`18/22. Complete490
-exercises the first659 routes in both full smoke suites; the six new display routes have focused
-evidence under both renderers.
+`input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62 and `display.h`22/22. Complete490
+exercises the first659 routes in both full smoke suites; all ten additional display routes have
+focused evidence under both renderers.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 30 (`c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
 `c_api.storage.save_game` CNA-DEMOS-ISSUE-056,
@@ -108,6 +108,18 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **492-C-device-presentation** adds `c_api.graphics.device_presentation` and completes all22
+routes in `display.h`. A callback-scoped device returns a complete applied presentation value; the
+demo changes its presentation interval, reads the exact change with every other public field
+preserved, then restores and verifies every original public field before leaving the callback. It
+also reads a coherent current device mode and establishes the device-level zero-output
+NOT_SUPPORTED native-window contract. SOFTWARE and OPENGLES3 pass the same12 checks with empty
+stderr; their expected renderer-specific mode observations are800x480 and1280x1024. Metadata is492/0,
+the exact CTest passes, and the Xvfb-backed60-test C/API/adapter/device-manager/CLI selection passes
+all59 enabled tests with one declared fullscreen test disabled. Four routes raise C
+coverage665->669/3205 and `display.h`18->22/22. No pixels, native handle or visual inspection is
+claimed. Evidence:`checkpoint-492-c-device-presentation-focused-*`.
 
 Focused **491-C-adapter-capabilities** adds `c_api.graphics.adapter_capabilities` for the six
 remaining adapter capability, format, preference and explicit-limitation routes in `display.h`.
@@ -571,10 +583,10 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: complete the `display.h` audit at18/22 with the four live graphics-device
-presentation/display/native-window routes as a separate coherent batch. Preserve and restore the
-active presentation parameters exactly; do not credit a same-value setter call as behavior by
-itself.
+HIGHEST PRIORITY: run a complete492 checkpoint for the two focused display batches, compare both
+renderers with complete490 and archive the evidence. Then use the semantic C-route audit and
+ROADMAP priorities to select the next coherent uncovered behavior batch rather than maximizing
+demo count.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
@@ -597,6 +609,7 @@ Current complete baseline is490-C-adapter-snapshot; source commit and exact resu
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
-checkpoint. Focused491 adapter-capabilities is applied and awaits a later complete checkpoint.
+checkpoint. Focused491 adapter-capabilities and focused492 device-presentation are applied and
+await the complete492 checkpoint named in section14.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.
