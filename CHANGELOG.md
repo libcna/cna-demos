@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the C touch workflow from30to60checks with pressure-independent identity, atomic
+  insertion-copy and ordered collection mutation through15 additional C ABI routes.
 - Complete475-C-input-touch-state:488enabled CTests and both full smoke suites preserve all old
   evidence; the new C touch demo adds30 exact lifecycle controls and eight C ABI routes.
 - Added `c_api.input.touch_state`, a deterministic 30-check C press/move/release workflow covering

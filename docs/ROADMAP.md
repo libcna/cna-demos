@@ -2122,3 +2122,18 @@ hash-identical; normalized stderr matches complete474-C-input-keyboard-state. Ou
 cleanf44a8ff. This is selected immutable runtime evidence rather than an atomic dependency-source
 snapshot. XNA coverage stays297/329types and1405/2326members; C coverage remains239/3210 after the
 focused increase. Evidence:checkpoint-475-c-input-touch-state-*.
+
+## Focused475-C-input-touch-values
+
+The existing `c_api.input.touch_state` workflow grows30->60checks without another demo ID or
+fixture. Both renderers produce the same output with empty stderr, and removing the30 additions
+restores every complete lifecycle label in order. Two authored locations differing only in pressure
+compare equal, hash equally and match Contains/IndexOf/Remove. A disconnected two-touch snapshot
+reports advisory IsReadOnly=true while ordered Insert/RemoveAt/Add/Clear operations still work. A
+short insertion-copy returns required count4 without touching its destination; exact capacity
+inserts both entries and shifts the old tail. All57input/CLI CTests pass in95.90s with six declared
+environment skips. Two watched builds pass with3910unchanged CNA inputs/no diagnostics at clean
+CNAf44a8ff; metadata remains475/0. Fifteen actual routes raise C coverage239->254/3210 and
+input_touch.h4->19/47. This is authored POD and fixed-capacity collection evidence, not physical
+pressure sensing, concurrency or unbounded growth. Full same-ID checkpoint is pending. Evidence:
+checkpoint-475-c-input-touch-values-focused-*.
