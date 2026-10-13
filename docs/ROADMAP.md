@@ -1778,3 +1778,18 @@ refusal is preserved; the watched consistency build passes with3909unchanged CNA
 diagnostics. Metadata remains474/0 and actual C routes rise184->188/3210. No audible, failed-add,
 live-clear or callback-edge claim. Full474 checkpoint is pending.
 Evidence:checkpoint-474-c-media-bounds-focused-*.
+
+## Complete474-C-media-lifecycle-bounds
+
+Complete checkpoint **474-C-media-lifecycle-bounds**, source `5141458`, extends the same C media
+demo46->53checks without another ID or fixture. Focused and full runs preserve all46old labels and
+add seven exact collection lifecycle and empty-queue bounds controls. ISSUE-059 records the active
+output documentation mismatch; ISSUE-058 replay remains uncalled. Focused29media/CLI CTests pass.
+
+Full validation passes metadata474/0 and487enabled CTests in171.80s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected child/network evidence. C media
+alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain exact. Normalized
+stderr is identical. Outer Xvfb has14exact amdgpu pairs (previous15); exits are zero and CNA
+eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; C ABI routes rise
+184->188/3210, media.h7->10/39 and media_player.h17->18/41.
+Evidence:checkpoint-474-c-media-bounds-*.

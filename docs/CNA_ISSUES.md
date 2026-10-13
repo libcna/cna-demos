@@ -47,7 +47,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   are archived under `build/linux-full/reports/checkpoint-474-c-media-bounds-focused-*`.
 - **Status/handling:** open documentation defect. No CNA source was edited and no upstream message
   was sent. The passing demo names the behavior it actually observes and needs no runtime
-  knownIssue marker; revisit the wording or expectation after CNA resolves the contract.
+  knownIssue marker; revisit the wording or expectation after CNA resolves the contract. Complete
+  checkpoint474-C-media-lifecycle-bounds preserves all prior full-smoke outcomes and the exact
+  seven-check extension under both renderers; evidence: `checkpoint-474-c-media-bounds-*`.
 
 ### CNA-DEMOS-ISSUE-058 -- Replaying the active MediaQueue Song uses it after freeing it
 

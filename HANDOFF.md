@@ -103,37 +103,25 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-C-media-lifecycle-bounds** extends c_api.media.media_player from46to53checks under
-both renderers with empty stderr and no new ID/fixture. Removing seven new checks gives every old
-label in order. Collection count/disposal, idempotent Dispose and shared-Song survival pass. Empty
-active/get_at outputs initialize invalid, get_at rejects index0, the unchecked setter stores7 with
-no active Song and -1 is restored. The active output contradicts the header's "untouched otherwise"
-wording: documentation ISSUE-059, no runtime marker. ISSUE-058 replay remains uncalled. Focused29
-media/CLI CTests pass; metadata474/0. The sandbox-only ccache refusal is archived; the watched
-consistency build passes with3909unchanged CNA inputs/no diagnostics. C routes rise184->188/3210.
-Evidence:checkpoint-474-c-media-bounds-focused-*.
-
-Last complete baseline:
-
-Complete checkpoint **474-C-media-ownership**, source `7d23c6f`, extends the existing
-c_api.media.media_player from32to46child checks without a new ID or fixture. Both focused and full
-runs preserve the old32-line sequence and add14exact ownership controls with empty demo stderr.
-A collection-shared Rising handle survives collection destruction; queue accessors publish owned
-Rising/Falling copies; queue_add retains Appended after its caller handle is destroyed; a new view
-sees the same three-entry global queue; stopped queue_clear empties/resets it while retained copies
-remain readable and release independently. ISSUE-058 replay is never called. Focused29enabled
+Complete checkpoint **474-C-media-lifecycle-bounds**, source `5141458`, extends the existing
+c_api.media.media_player from46to53checks without a new ID or fixture. Both focused and full runs
+preserve all46old labels and add seven exact lifecycle/bounds controls with empty demo stderr.
+Collection Dispose state/idempotence/shared-Song lifetime and empty-queue output/index behavior
+pass. The active output contradicts the header's "untouched otherwise" wording and is recorded as
+documentation ISSUE-059 without a runtime marker. ISSUE-058 replay remains uncalled. Focused29
 media/CLI CTests pass; the sandbox-only ccache refusal is archived and the watched consistency
-build passed with3909unchanged CNA inputs/no diagnostics.
+build passes with3909unchanged CNA inputs/no diagnostics.
 
-Full tools/validate.sh passes metadata474/0 and487enabled CTests in154.33s. SOFTWARE409/27/35/3
+Full tools/validate.sh passes metadata474/0 and487enabled CTests in171.80s. SOFTWARE409/27/35/3
 and OPENGLES3439/29/3/3 preserve all38/42prior failures, every unrelated C/custom list/trace,
-five network controls,18music checks and8album-art checks. C media alone grows32->46; parentJSON
-remains0. All37selected binaries, four assets and30fixture paths stay unchanged. Normalized
-stderr is identical to complete474-art, including15INFO lines per renderer and42known GL X
-records. Outer Xvfb has15exact amdgpu pairs (previous13); inner/outer exits are zero. Capture/final
-CNAeff3131017 are clean. Coverage stays297/329types and1405/2326XNA members; actual C ABI routes
-rise174->184/3210, media.h2->7/39 and media_player.h12->17/41. Semantic coverage remains
-incomplete. Immutable evidence:checkpoint-474-c-media-*. Preserve refusals and ISSUE-038/057.
+five network controls,18music checks and8album-art checks. Only C media grows46->53; parentJSON
+remains0. All37selected binaries, four assets and30fixture paths stay unchanged. Normalized stderr
+is identical to complete474-C-media-ownership, including15INFO lines per renderer and42known GL
+X records. Outer Xvfb has14exact amdgpu pairs (previous15); inner/outer exits are zero.
+Capture/final CNAeff3131017 are clean. Coverage stays297/329types and1405/2326XNA members; actual
+C ABI routes rise184->188/3210, media.h7->10/39 and media_player.h17->18/41. Semantic coverage
+remains incomplete. Immutable evidence:checkpoint-474-c-media-bounds-*. Preserve refusals and
+ISSUE-038/057/058/059.
 
 ## 8. Exact commands that work
 
@@ -257,15 +245,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: commit the focused lifecycle/bounds source and documentation, then run the full
-474 validation against complete474-C-media-ownership. Capture once after the full build during
-CTest: the same37selected binaries/four assets/30fixture paths. Freeze source/assets/build through
-both smokes. Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
-OPENGLES3439/29/3/3. Preserve all38/42old failures, every unrelated C/custom list/trace, five
-network controls,18music and8album-art checks. Only c_api.media.media_player grows46->53; parent
-JSON remains0. Normalized stderr should remain identical. Archive/refuse any surprise; then update
-full audit/HANDOFF and immediately continue the next semantic public-member gap. Never edit/revert
-CNA; preserve ISSUE-038/057/058/059.
+HIGHEST PRIORITY: continue the same C media workflow with process-wide event raise/unsubscribe
+semantics; do not add an ID. Preserve all53current labels/order. With both subscriptions still
+live after the tour, call both public raise routes and require synchronous exact counter increments.
+Then retain the two existing unsubscribe labels, invalidate their handles, raise both events again
+and require unchanged counters. Add the already meaningfully exercised queue_get_count and
+unsubscribe routes plus both raise routes to metadata. Do not claim callback ordering, reentrant
+mutation, foreign-thread delivery or game-destruction cleanup. Run watched build, both focused
+renderers and media/CLI CTests, update audit/HANDOFF, commit, then full validation. Use complete474-
+C-media-lifecycle-bounds as baseline. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -277,7 +265,7 @@ CNA; preserve ISSUE-038/057/058/059.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is474-C-media-ownership; source commit is in section7.
-All earlier drafts and focused ownership work are APPLIED AND STALE. Lifecycle/bounds is applied
-and focused but has no complete checkpoint yet.
+Current complete baseline is474-C-media-lifecycle-bounds; source commit is in section7.
+All earlier drafts and focused media work are APPLIED AND STALE. Event raise/unsubscribe has source
+evidence only and no applied draft yet.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

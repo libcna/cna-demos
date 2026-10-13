@@ -2935,3 +2935,15 @@ OPENGLES3439/29/3/3 preserve all38/42old failures and protected evidence.37binar
 and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has15known pairs,
 exits are zero and CNAeff3131017 remains clean. C ABI route coverage rises174->184/3210.
 Evidence:checkpoint-474-c-media-*.
+
+## Complete474-C-media-lifecycle-bounds
+
+Complete checkpoint **474-C-media-lifecycle-bounds**, source `5141458`, extends the existing C
+media demo46->53checks with collection Dispose/idempotence/shared-handle lifetime and empty-queue
+bounds/output/index behavior. Both renderers preserve all46old labels and pass seven additions;
+ISSUE-059 records the active-output documentation mismatch without a failure marker. Full
+validation passes metadata474/0 and487enabled CTests in171.80s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.37binaries, four assets
+and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has14known pairs,
+exits are zero and CNAeff3131017 stays clean. C ABI routes rise184->188/3210.
+Evidence:checkpoint-474-c-media-bounds-*.

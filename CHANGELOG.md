@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete474-C-media-lifecycle-bounds:487enabled CTests and both full smoke suites preserve all
+  old evidence; the C media demo adds seven exact checks and four actual C ABI routes.
 - Extended the existing C media-player workflow from46to53checks with SongCollection Dispose,
   empty-queue bounds and unchecked active-index behavior; documented CNA-DEMOS-ISSUE-059.
 - Complete474-C-media-ownership:487enabled CTests and both full smoke suites preserve all old
