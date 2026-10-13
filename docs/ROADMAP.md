@@ -3990,3 +3990,18 @@ Staged metadata reaches2250/3205 and `gamer_services.h` reaches98/239. One-line 
 missing from the five preceding staged directories were restored before this checkpoint. Evidence:
 `checkpoint-589-c-achievement-collection-focused-*-direct.*`. No catalog-backed picture/how-to
 text, gamer service, game, renderer or project-built runner is claimed.
+
+## Focused590-C-signed-in-achievements
+
+`c_api.gamer.signed_in_achievements` adds the final four signed-in achievement routes in28
+renderer-free controls. It selects a dedicated persistent application store, reads the deployed
+three-entry offline catalog, verifies catalog score/name/how-to data, awards one key synchronously
+and another through the exactly-once callback adapter, then reads through both synchronous and
+callback routes. Re-award preserves both count and first-earned timestamp, and a fresh gamer object
+for the same tag reloads both exact timestamps. Fresh SOFTWARE and OPENGLES3-labelled stores pass
+byte-identically with empty stderr; a repeated SOFTWARE run over its populated store also produces
+the same passing output. Strict C99 and metadata compilation pass. Staged metadata reaches
+2254/3205 and `gamer_services.h` reaches102/239. The demo deliberately leaves EarnedOnline to the
+existing C++ CNA-DEMOS-ISSUE-017 reproduction. Evidence:
+`checkpoint-590-c-signed-in-achievements-focused-*-direct.*`. No online service, game, renderer,
+notification appearance or project-built runner is claimed.
