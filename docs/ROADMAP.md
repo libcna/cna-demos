@@ -4020,3 +4020,20 @@ metadata reaches2273/3205 and `gamer_services.h` reaches121/239. Evidence:
 `checkpoint-591-c-guide-dialogs-focused-*-direct.*`. The explicit headless simulation API is
 validated; no dialog rendering, real keyboard/controller/mouse input, game, visible appearance or
 project-built runner is claimed.
+
+## Focused592-C-guide-dispatcher-lifecycle
+
+`c_api.gamer.guide_dispatcher` adds20 Guide, dispatcher, canonical component and event-registration
+routes in22 Xvfb controls. Before initialization both dispatcher pumps are harmless, visibility is
+unavailable, an opaque 64-bit window value round-trips, notification identities validate
+atomically and simulated trial state is stored without prematurely changing the trial result.
+Adding the canonical GamerServicesComponent to a real game and running one frame installs the
+dispatcher/Guide with the actual window handle. Subsequent updates latch trial state, async update
+reports initialized work, duplicate initialization is refused and retired identity count remains
+zero. The screen-saver flag toggles/restores through the platform. Three registrations attach,
+remain silent with a dedicated empty local-profile store and release exactly once through the
+shared route. Both SOFTWARE and OPENGLES3 Xvfb/dummy-audio runs pass byte-identically with empty
+stderr; strict C99 and metadata compilation pass. Staged metadata reaches2293/3205 and
+`gamer_services.h` reaches141/239. Evidence:
+`checkpoint-592-c-guide-dispatcher-focused-*-direct.*`. No event delivery, visible Guide panel,
+user interaction, pixel appearance or project-built runner is claimed.
