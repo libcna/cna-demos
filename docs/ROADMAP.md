@@ -2714,3 +2714,20 @@ selection has no failures:66pass, the SOFTWARE custom-effect MRT scene declares 
 fullscreen test remains disabled. Nine routes raise C coverage669->678/3205 and complete
 `render_target.h` at12/12. No device-loss notification, pixels or visual inspection is claimed.
 Evidence:checkpoint-493-c-render-target-bindings-focused-*.
+
+## Focused494-C-device-capabilities
+
+New `c_api.graphics.device_capabilities` demonstrates the ten remaining meaningful graphics-device
+introspection routes in `graphics.h`. Twenty controls copy renderer identity through the versioned
+summary and atomic UTF-8 buffer pair; prove all17 individual legacy capability answers equal their
+summary bits; enumerate all live detailed features and limits while refusing the retired gaps;
+validate the known/supported masks of all27 surface formats; atomically copy the complete English
+capability report; and relate the renderer-specific shader dialect and logical backbuffer to the
+applied presentation state. SOFTWARE reports15 supported detailed features and dialect Unknown;
+OPENGLES3 reports20 and GLSL ES. Both pass with empty stderr. Metadata is494/0, the exact CTest
+passes, and an Xvfb-backed68-test C/API, graphics-device, device-manager and CLI selection passes
+all67 active tests with fullscreen disabled. Ten routes raise C coverage678->688/3205 and
+`graphics.h`14->24/27. Its remaining meaningful route is the scaled SpriteBatch array submission;
+the two fixed type-name helpers are trivial/uncredited. The externally advanced clean CNA source
+was `3b5755944`; no pixels or visual inspection is claimed.
+Evidence:checkpoint-494-c-device-capabilities-focused-*.

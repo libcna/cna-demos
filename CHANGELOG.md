@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.device_capabilities`, a20-check C audit of all ten remaining
+  graphics-device identity, capability-profile, report, shader-dialect and backbuffer routes.
 - Added `c_api.graphics.render_target_bindings`, a22-check C workflow covering real2D/cube MRT
   state, atomic binding read-back and the silent ContentLost lifecycle, completing `render_target.h`.
 - Complete492-C-device-presentation passes505 enabled CTests and both full smoke suites; the two

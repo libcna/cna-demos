@@ -17,10 +17,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 38).
-* In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 12 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 33 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
+* In progress: 14 (C API, 39 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
 
@@ -64,20 +64,21 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-493 catalog demos (latest complete checkpoint492-C-device-presentation; one focused batch pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+494 catalog demos (latest complete checkpoint492-C-device-presentation; two focused batches pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 38 (standalone C programs). Every declared category has demos.
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 39 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog with complete492 runtime reports). Actual C ABI
-coverage is678/3205: `input_gamepad.h`61/63,
+coverage is688/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
-`render_target.h`12/12. Complete492 exercises the first669 routes in both full smoke suites; the
-nine new render-target routes have focused evidence under both renderers.
+`render_target.h`12/12, and `graphics.h`24/27. Complete492 exercises the first669 routes in both
+full smoke suites; nineteen new render-target and graphics-device routes have focused evidence
+under both renderers.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 30 (`c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
 `c_api.storage.save_game` CNA-DEMOS-ISSUE-056,
@@ -108,6 +109,21 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **494-C-device-capabilities** adds `c_api.graphics.device_capabilities` for the ten
+remaining meaningful graphics-device introspection routes in `graphics.h`. Twenty controls copy
+the exact renderer name atomically; cross-check all17 legacy capability queries against the
+summary bit set; enumerate every live and reserved detailed feature and limit identity; validate
+all27 surface-format masks; copy the English diagnostic report atomically; and relate the shader
+dialect and complete logical backbuffer information to the applied presentation state. SOFTWARE
+reports15 supported detailed features, dialect Unknown and a6427-byte report; OPENGLES3 reports20,
+GLSL ES and6423 bytes. Both pass every control with empty stderr. Metadata is494/0, the exact CTest
+passes, and all67 active tests in the Xvfb-backed68-test C/API/device/device-manager/CLI selection
+pass; fullscreen remains disabled. Ten routes raise C coverage678->688/3205 and `graphics.h`
+14->24/27. The two fixed SpriteBatch type-name helpers remain trivial/uncredited. The sibling CNA
+advanced externally from the complete baseline's `440af2a` to clean docs-only `3b5755944`; this
+focused build used `libcna.so` SHA-256 `3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0`.
+No pixels or visual inspection is claimed. Evidence:`checkpoint-494-c-device-capabilities-focused-*`.
 
 Focused **493-C-render-target-bindings** adds `c_api.graphics.render_target_bindings` and completes
 all12 routes in `render_target.h`. It classifies all three content-usage values, creates matching
@@ -606,12 +622,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the semantic C-route audit with the ten uncovered graphics-device
-introspection routes in `graphics.h` (renderer identity/info, capability/feature/limit/format
-queries, capability report, shader dialect and backbuffer info). Keep the fixed SpriteBatch type
-name helpers classified as trivial, and handle `cna_sprite_batch_submit_scaled_many` in the
-existing sprite-batch workflow rather than inflating this device-query batch. Preserve the
-renderer-specific answers instead of assuming both backends expose the same capabilities.
+HIGHEST PRIORITY: extend the existing `c_api.graphics.sprite_batch` workflow with the one remaining
+meaningful `graphics.h` route, `cna_sprite_batch_submit_scaled_many`. Demonstrate the position,
+source, origin and nonuniform-scale semantics with stable pixel evidence, plus the whole-array
+preflight/retention contract where it adds distinct value. Do not add a new demo ID. Keep the two
+fixed SpriteBatch type-name helpers classified as trivial/uncredited; after this route is covered,
+record `graphics.h` as semantically disposed (25 demonstrated routes plus two trivial helpers) and
+refresh the remaining C-route density audit for the next coherent public header.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
@@ -635,6 +652,8 @@ All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, t
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
 checkpoint. Adapter-capabilities and device-presentation are included in complete492. The focused
-render-target-bindings batch is applied and awaits a later complete checkpoint.
+render-target-bindings and device-capabilities batches are applied and await a later complete
+checkpoint. Focused494 was built against clean sibling CNA `3b5755944`; complete492 remains the
+immutable full-runtime baseline at `440af2a`.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.
