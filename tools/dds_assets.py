@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MS-PL
-"""Original DXT1 DDS with four vertical stripes and independently authored solid-color mips."""
+"""Original DXT1 DDS fixtures for 2D mip and cube content-loading demonstrations."""
 import struct
 from pathlib import Path
 
@@ -20,3 +20,15 @@ def write_all(assets_root: Path) -> None:
     path = assets_root / 'textures' / 'striped_mips.dds'
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(header + payload)
+
+    # A minimal 4x4 DXT1 cube: one block for each face. The legacy caps2 mask marks all six faces.
+    cube_header = bytearray(128)
+    cube_header[:4] = b'DDS '
+    cube_fields = {4: 124, 8: 0x6, 12: 4, 16: 4, 28: 1,
+                   76: 32, 80: 4, 84: int.from_bytes(b'DXT1', 'little'),
+                   108: 0x1000, 112: 0xFE00}
+    for offset, value in cube_fields.items():
+        struct.pack_into('<I', cube_header, offset, value)
+    cube_payload = b''.join(block(color) for color in
+                            (0xF800, 0x07E0, 0x001F, 0xFFE0, 0xF81F, 0x07FF))
+    (path.parent / 'cube_faces.dds').write_bytes(cube_header + cube_payload)

@@ -17,10 +17,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 7).
 * Mostly complete: 6 (effects and shaders, 41; the C `effects.h` route audit is complete).
-* In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 48), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 105 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 107 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -66,14 +66,14 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds35 staged standalone C IDs and should reach560 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds37 staged standalone C IDs and should reach562 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
-content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 48 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and105 in the
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and107 in the
 current source tree (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
 Actual C ABI coverage is1116/3205: `input_gamepad.h`61/63,
@@ -1320,8 +1320,10 @@ next independent public C family. `runtime.h` and `runtime_window.h` are complet
 `runtime_components.h` has semantic dispositions for all39 routes, with35 demonstrated and four
 fixed reflection-name helpers intentionally trivial/uncredited. `runtime_graphics_manager.h` now
 has dispositions for all38 routes:33 demonstrated, four fixed-name helpers trivial/uncredited and
-full-screen toggling kept platform/manual after the Xvfb mode switch timed out asynchronously. Next
-audit the22 remaining stable `content.h` routes.
+full-screen toggling kept platform/manual after the Xvfb mode switch timed out asynchronously.
+`content.h` now has semantic dispositions for all32 routes at31 demonstrated; the resource-backed
+constructor remains intentionally deferred until CNA exposes a real embedded-resource store. Next
+audit the27 remaining stable `storage.h` routes.
 Once CNA becomes coherent, reconfigure
 `linux-full`, build every
 staged source, run focused validation and absorb the work in one complete checkpoint. Keep tagged
@@ -1629,6 +1631,23 @@ timeout and reverted, so that attempt is not credited as deterministic behavior 
 issue. Evidence:`checkpoint-562-c-graphics-preferences-focused-*-direct.*` and
 `checkpoint-563-c-graphics-manager-lifecycle-focused-*-direct.*`.
 
+`standalone/c_api.content.manager_inspection` demonstrates17 previously uncredited content routes
+in18 controls: exact/atomic resolved paths, normalized keys, idempotent built-in registration,
+service/device association, unordered manifest traversal, native/XNB entry details and the sorted
+reader-usage summary. `standalone/c_api.content.additional_loaders` demonstrates four more routes
+in15 controls through a decoded WAV, a deterministic generated six-face DDS and a caller-owned CNJ
+object whose bounded JSON, cache reuse, missing-type failure and post-Unload re-invocation are
+observable. The initial cube check incorrectly expected the retained DXT1 storage identity; CNA
+decodes this content path to Color, so that was a demo defect. An initial resource-manager check
+also exposed that the old linked checkpoint library predates current CNA's placeholder behavior and
+still fell back to loose files. It was removed rather than treated as current-source evidence;
+`create_resource` retains the existing intentional unsupported/deferred disposition. Both corrected
+Xvfb/dummy-audio selections are byte-identical with empty stderr; strict C99 and metadata compilation
+pass. The generated `assets/textures/cube_faces.dds` reproduces byte-for-byte. `content.h` is31/32
+demonstrated with all routes dispositioned. Evidence:
+`checkpoint-564-c-content-manager-inspection-focused-*-direct.*` and
+`checkpoint-565-c-content-additional-loaders-focused-*-direct.*`.
+
 The sibling CNA briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
 After `cna-demos` removed VULKAN from `linux-full`, configure succeeded, but concurrent external
 retirement edits changed CNA during the build: `GraphicsRendererType::DirectX11` disappeared while
@@ -1644,8 +1663,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose560 catalog IDs (complete524 plus SpriteFont and35
-additional new standalone IDs) and576 declared/573 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose562 catalog IDs (complete524 plus SpriteFont and37
+additional new standalone IDs) and578 declared/575 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 

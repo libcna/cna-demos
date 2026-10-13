@@ -3697,3 +3697,18 @@ trivial/uncredited, and `toggle_full_screen` remains platform/manual because Xvf
 but SDL asynchronously timed out and reverted the mode switch. Evidence:
 checkpoint-562-c-graphics-preferences-focused-*-direct.* and
 checkpoint-563-c-graphics-manager-lifecycle-focused-*-direct.*.
+
+`c_api.content.manager_inspection` demonstrates17 content routes in18 controls: exact and atomic
+resolved paths, normalized cache keys, built-in registration, service/device association, unordered
+manifest entries with native/XNB details and the sorted XNB-reader usage summary.
+`c_api.content.additional_loaders` demonstrates four further routes in15 controls using a real WAV,
+a deterministic generated six-face DDS and a caller-defined CNJ object with bounded JSON, caching,
+missing-type failure and post-Unload reload. The first cube assertion expected DXT1 after the content
+loader had decoded it to Color; this was a demo defect. A removed ResourceContentManager assertion
+showed only that the linked checkpoint library predates current CNA's explicit no-resource-family
+placeholder and still loaded loose files. It is not current-source evidence or a new CNA issue, and
+the route keeps its existing intentionally unsupported/deferred disposition. Both corrected
+Xvfb/dummy-audio selections are byte-identical with empty stderr; strict C99 and metadata compilation
+pass, and the cube asset regenerates byte-for-byte. `content.h` now has dispositions for every route
+at31/32 demonstrated. Evidence:checkpoint-564-c-content-manager-inspection-focused-*-direct.* and
+checkpoint-565-c-content-additional-loaders-focused-*-direct.*.
