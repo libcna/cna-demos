@@ -103,6 +103,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **474-C-player-program-exit** extends c_api.media.media_player from88to89checks under both
+renderers with empty stderr and no new ID/fixture. Removing the one addition restores all88old
+labels in order. ProgramExit succeeds during live playback; the same independent caller-owned Song
+immediately restarts into one active queue entry, and the previously published owned copy remains
+readable. Source confirms resource release and Play reinitialization. No queue-owned Song reaches
+Play, preserving ISSUE-058. Focused29media/CLI CTests pass in8.66s; metadata474/0. Both watched
+builds pass with3909unchanged CNA inputs/no diagnostics. One actual route raises C ABI coverage
+224->225/3210 and media_player.h37->38/41. `update_ext` is deferred to observable host-driven
+playback; the two generated MediaQueue type-name routes are intentionally trivial. No audible,
+continuity, event-timing or ProgramExit state-transition claim. Evidence:
+checkpoint-474-c-player-program-exit-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-C-player-single-song**, source `a9aa6ce`, extends c_api.media.media_player
 from82to88checks under both renderers with empty stderr and no new ID/fixture. Removing six
 additions restores all82old labels in order. An independent caller-owned Song starts playback into
@@ -246,14 +260,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit the four remaining uncovered media_player.h routes against
-complete474-C-player-single-song: `cna_media_player_update_ext`,
-`cna_media_player_program_exit_ext` and the two MediaQueue type-name routes. Classify the type-name
-pair as trivial unless source/runtime behavior shows otherwise. Decide whether explicit maintenance
-outside an automatic game loop and early ProgramExit/restart form one coherent lifecycle batch or
-need a separate host-driven example; do not call an exit hook merely for route count. Implement the
-highest-value demonstrated behavior, run focused/full validation, update audit/HANDOFF and continue
-to media.h public-member gaps. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
+HIGHEST PRIORITY: run full474 validation for the focused C ProgramExit source against
+complete474-C-player-single-song. Capture once after the full build during CTest: the same37selected
+binary paths/four assets/30fixture paths. Freeze source/assets/build through both smokes. Expect
+487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and OPENGLES3439/29/3/3.
+Preserve all38/42old failures, unrelated C/custom lists/traces, five network controls,18music and
+8album-art checks. Only c_api.media.media_player should grow88->89; parentJSON stays0 and normalized
+stderr should be identical. Archive/refuse any surprise; update full audit/HANDOFF and immediately
+continue the `media.h` public-member gaps. Leave `update_ext` deferred until a host-driven native-end
+transition is observable; do not credit the two trivial MediaQueue type-name helpers. Never
+edit/revert CNA; preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -266,6 +282,6 @@ to media.h public-member gaps. Never edit/revert CNA; preserve ISSUE-038/057/058
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is474-C-player-single-song; source commit is in section7.
-All earlier drafts and focused work are APPLIED AND STALE. The remaining MediaPlayer lifecycle
-audit in section14 is the live task.
+All earlier drafts are APPLIED AND STALE. The focused ProgramExit batch in section7 is current; its
+full-validation task in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

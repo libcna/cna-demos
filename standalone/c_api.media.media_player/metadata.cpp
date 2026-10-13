@@ -14,6 +14,7 @@ CNA_DEMOS_STANDALONE({
              "cna_song_set_duration", "cna_song_get_is_disposed", "cna_song_dispose",
              "cna_song_collection_create", "cna_media_player_play_songs",
              "cna_media_player_play_song",
+             "cna_media_player_program_exit_ext",
              "cna_media_player_play_songs_from", "cna_media_player_get_queue",
              "cna_media_queue_get_active_song_index", "cna_media_player_move_next",
              "cna_media_player_move_previous",

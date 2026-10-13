@@ -2008,3 +2008,17 @@ alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain
 stderr is identical. Outer Xvfb has16exact amdgpu pairs (previous14); exits are zero and CNA
 eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
 rise223->224/3210 and media_player.h36->37/41. Evidence:checkpoint-474-c-player-single-song-*.
+
+## Focused474-C-player-program-exit
+
+The same `c_api.media.media_player` now grows88->89child checks without a new ID or fixture. Both
+renderers pass identical lists with empty stderr; removing the one addition restores all88prior
+labels in order. During live playback, ProgramExit succeeds and the same independent caller-owned
+Song immediately restarts into one active queue entry; the earlier published owned copy stays
+readable. Source confirms the initialized media resources are released and the next Play
+reinitializes them. No queue-owned Song reaches Play. Focused29media/CLI CTests pass in8.66s. Two
+watched builds pass with3909unchanged CNA inputs/no diagnostics; metadata remains474/0. One actual
+route raises C coverage224->225/3210 and media_player.h37->38/41. The remaining update route is
+deferred to an observable host-driven playback pump; the two generated queue type-name routes are
+intentionally trivial. No audible, continuity, event-timing or ProgramExit state-transition claim.
+Full474 is pending. Evidence:checkpoint-474-c-player-program-exit-focused-*.

@@ -652,6 +652,14 @@ int main(int argc, char** argv)
                            song_has_name(single_copy, "Single"),
                        "play_song publishes one active owned queue copy");
         cna_demo_check(&demo,
+                       cna_media_player_program_exit_ext(game) == CNA_RESULT_SUCCESS &&
+                           cna_media_player_play_song(game, single_song) == CNA_RESULT_SUCCESS &&
+                           media_state(game) == CNA_MEDIA_STATE_PLAYING &&
+                           cna_media_queue_get_count(state.queue, &queue_count) == CNA_RESULT_SUCCESS &&
+                           queue_count == 1 && active_index(&state) == 0 &&
+                           song_has_name(single_song, "Single") && song_has_name(single_copy, "Single"),
+                       "program_exit releases live media resources and Play restarts them");
+        cna_demo_check(&demo,
                        cna_song_destroy(single_song) == CNA_RESULT_SUCCESS &&
                            media_state(game) == CNA_MEDIA_STATE_PLAYING && song_has_name(single_copy, "Single"),
                        "the queue copy remains live after destroying the Play input");
