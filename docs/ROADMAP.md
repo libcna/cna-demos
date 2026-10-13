@@ -4248,3 +4248,19 @@ metadata compilation, diff checks and validation self-tests pass. Staged metadat
 and `cnb.h` reaches64/272. Evidence:
 `checkpoint-606-c-cnb-byte-io-focused-*-direct.*`. No game, renderer, filesystem, complete CNB
 document or project-built execution is claimed. Document/writer round-trip behavior is next.
+
+## Focused607-C-CNB-document-and-writer
+
+`c_api.content.cnb_document` adds all40 container document/writer routes in51 renderer-free
+controls. Its deterministic Curve writer owns four copied schema chunks, canonical metadata and a
+cleared/replaced external reference; it enforces parse-compatible limits, selects Zstandard when
+available, proves exact repeated builds, preserves a short destination and writes one temporary
+file. Memory and file parsers recover six table entries with exact origin, versions, asset
+identity, chunk records and logical bytes. Multi/single/required lookup, mandatory-type rules,
+metadata and reference records/strings, asset requirements, limits, stale handles and borrowed-
+reader lifetime all pass. Truncated, garbage and absent-file inputs publish no partial documents.
+Both renderer-labelled direct runs pass byte-identically with empty stderr; strict C99, metadata
+compilation, diff checks and validation self-tests pass. Staged metadata reaches2615/3205 and
+`cnb.h` reaches104/272. Evidence:`checkpoint-607-c-cnb-document-focused-*-direct.*`. No game,
+renderer, decoded asset or project-built execution is claimed. Texture format, representation and
+codec families are next.

@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: MS-PL
+#include "CnaDemos/Demo.hpp"
+
+CNA_DEMOS_STANDALONE({
+    .id = "c_api.content.cnb_document",
+    .title = "CNB document round trip in C",
+    .description = "A renderer-free C program assembles a deterministic CNB document, writes and parses it, "
+                   "then validates its metadata, references, chunks, limits and borrowed-reader lifetime.",
+    .apis = {"cna_cnb_document_parse", "cna_cnb_document_parse_file",
+             "cna_cnb_document_destroy", "cna_cnb_document_get_origin_size",
+             "cna_cnb_document_copy_origin", "cna_cnb_document_get_container_major",
+             "cna_cnb_document_get_container_minor", "cna_cnb_document_get_asset_type_id",
+             "cna_cnb_document_get_asset_schema_version", "cna_cnb_document_get_chunk_count",
+             "cna_cnb_document_get_chunk", "cna_cnb_document_copy_chunk_data",
+             "cna_cnb_document_open_chunk", "cna_cnb_document_find_all",
+             "cna_cnb_document_find_single", "cna_cnb_document_require_single",
+             "cna_cnb_document_require_mandatory_chunks_understood",
+             "cna_cnb_document_get_metadata",
+             "cna_cnb_document_get_metadata_asset_type_name_size",
+             "cna_cnb_document_copy_metadata_asset_type_name",
+             "cna_cnb_document_get_metadata_content_name_size",
+             "cna_cnb_document_copy_metadata_content_name",
+             "cna_cnb_document_get_external_reference_count",
+             "cna_cnb_document_get_external_reference",
+             "cna_cnb_document_get_external_reference_name_size",
+             "cna_cnb_document_copy_external_reference_name",
+             "cna_cnb_document_require_asset", "cna_cnb_document_get_limits",
+             "cna_cnb_writer_create", "cna_cnb_writer_destroy",
+             "cna_cnb_writer_set_metadata", "cna_cnb_writer_add_external_reference",
+             "cna_cnb_writer_clear_external_references", "cna_cnb_writer_add_chunk",
+             "cna_cnb_writer_get_schema_chunk_count", "cna_cnb_writer_set_compression",
+             "cna_cnb_writer_set_limits", "cna_cnb_writer_get_limits",
+             "cna_cnb_writer_build", "cna_cnb_writer_write_to_file"},
+    .tags = {"c", "binding", "content", "cnb", "document", "writer", "filesystem"},
+    .needs = CnaDemos::Need::CApi,
+    .frames = 1,
+    .deterministic = true,
+    .restrictions = "Uses one fixed temporary path and removes it before exit. The document is synthetic and "
+                    "exercises the container layer rather than an asset-specific decoder.",
+})

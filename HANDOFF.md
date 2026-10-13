@@ -21,7 +21,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 148 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 149 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -67,25 +67,25 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds78 staged standalone C IDs and should reach603 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds79 staged standalone C IDs and should reach604 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 26 (10 C++ XACT plus three C workflows), core 3 (2 logger),
 content 52 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 15 (compiled video and song, tagged library import and album art), gamer services 33
 (own process each; 5 avatar, 2 leaderboard), net 24 (own process each; 15 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and148 in the
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and149 in the
 current source tree (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
 Latest generated project-built C ABI coverage is1116/3205. The current staged source metadata names
-2575/3205 routes, machine-counted directly from all public C headers and standalone metadata; that
+2615/3205 routes, machine-counted directly from all public C headers and standalone metadata; that
 staged figure is not yet a generated/project-built coverage checkpoint. Selected semantic totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
 `media_player.h`41/41, `net.h`51/51, `net_gamers.h`33/33, `net_sessions.h`104/104,
-`gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`64/272,
+`gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`104/272,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete524 exercises all1109 credited routes in both full smoke suites and includes the focused
@@ -1355,9 +1355,9 @@ renderer-independent `media_library.h` member audit is complete semantically: it
 music values, album art and picture/save batches demonstrate122/148 routes. The other26 are fixed
 reflection type-name pairs and remain intentionally trivial/uncredited. Begin the entirely
 uncovered renderer-independent `cnb.h` audit. Its format/chunk identifiers, validation, checked
-arithmetic, CRC and compression foundation plus bounded primitive byte I/O establish64/272 routes.
-Continue with a document/writer round trip covering metadata, chunk and reference ownership and
-parse limits. Avoid other renderer-
+arithmetic, CRC/compression, bounded byte I/O and document/writer batches establish104/272 routes.
+Continue with the renderer-free texture format, representation and encode/decode families. Avoid
+other renderer-
 dependent `graphics_ext.h` while
 the sibling renderer retirement is incoherent. The two
 remaining KeyboardState routes are fixed reflection
@@ -2175,6 +2175,19 @@ reaches2575/3205 and `cnb.h` reaches64/272. No game, renderer, filesystem, compl
 project-built execution is claimed. Evidence:
 `checkpoint-606-c-cnb-byte-io-focused-*-direct.*`.
 
+`standalone/c_api.content.cnb_document` adds all40 document/writer routes in51 controls. A
+deterministic Curve container owns four copied schema chunks, canonical metadata and one replaced
+external reference. Writer counts, limits, optional Zstandard selection, exact repeat builds,
+atomic short-buffer refusal, file output and stale ownership all pass. Memory and file parsing
+recover six table entries; exact origin/version/type/schema facts, chunk metadata/data, duplicate
+lookup, required/mandatory rules, metadata strings, reference records/names, asset requirements and
+parse limits are explicit. A borrowed chunk reader prevents premature document destruction, while
+truncated, garbage and absent-file inputs publish no partial handle. Both renderer-labelled direct
+runs pass the same51 controls byte-for-byte with empty stderr; strict C99 and metadata compilation,
+diff checks and validation self-tests pass. Staged metadata reaches2615/3205 and `cnb.h` reaches
+104/272. No game, renderer, decoded asset or project-built execution is claimed. Evidence:
+`checkpoint-607-c-cnb-document-focused-*-direct.*`.
+
 The sibling CNA is currently at committed `387b5c20c6` (`refactor(Task RRC-036): stop describing
 the retired renderers as present`) with125 externally modified paths, so it is still not a coherent
 source snapshot for reconfigure/build.
@@ -2193,8 +2206,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose603 catalog IDs (complete524 plus SpriteFont and78
-additional new standalone IDs) and619 declared/616 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose604 catalog IDs (complete524 plus SpriteFont and79
+additional new standalone IDs) and620 declared/617 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 
