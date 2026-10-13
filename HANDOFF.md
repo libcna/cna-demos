@@ -103,43 +103,25 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-C-media-ownership** extends the existing c_api.media.media_player from32to46child
-checks under both renderers with empty stderr and no new ID/fixture. Filtering14new controls gives
-the exact old32-line sequence. A collection-shared Rising handle survives collection destruction;
-queue accessors publish owned Rising/Falling copies; queue_add retains Appended after its caller
-handle is destroyed; a replacement view sees the same three-entry queue; stopped queue_clear
-empties/resets it while every retained copy remains readable and independently releasable.
-29enabled media/CLI CTests pass in9.96s; metadata474/0. The first build was refused only by
-sandboxed ccache and is preserved; the watched consistency build passes with3909unchanged CNA
-inputs/no diagnostics. ISSUE-058 replay is never called. No audible, empty/out-of-range, Dispose,
-failed-add, live-clear or callback-edge claim. Full474 against complete474-art is pending.
-Evidence:checkpoint-474-c-media-focused-* and checkpoint-474-c-media-*-build-*.
+Complete checkpoint **474-C-media-ownership**, source `7d23c6f`, extends the existing
+c_api.media.media_player from32to46child checks without a new ID or fixture. Both focused and full
+runs preserve the old32-line sequence and add14exact ownership controls with empty demo stderr.
+A collection-shared Rising handle survives collection destruction; queue accessors publish owned
+Rising/Falling copies; queue_add retains Appended after its caller handle is destroyed; a new view
+sees the same three-entry global queue; stopped queue_clear empties/resets it while retained copies
+remain readable and release independently. ISSUE-058 replay is never called. Focused29enabled
+media/CLI CTests pass; the sandbox-only ccache refusal is archived and the watched consistency
+build passed with3909unchanged CNA inputs/no diagnostics.
 
-Last complete baseline:
-
-Complete checkpoint **474-album-art**, source `2524511`, adds one coherent standalone over
-verified private Linux XDG roots. Two focused and two full-smoke runs pass eight identical child
-checks: two artist-specific albums, folder-art/no-art HasArt, both missing-art exceptions,
-nonnull caller-owned streams, exact original bytes, a distinct public-decodable128x64thumbnail,
-and both streams readable after MediaLibrary destruction. ParentJSON remains PASSED/0. No
-embedded art, filename priority, fallback, visual quality, playback or other-platform claim.
-Focused29enabled media/CLI CTests pass. The initial glob-triggered build refusal caused only by
-sandbox denial of CNA's CMake lock remains archived; a separate watched consistency build passed
-with3909unchanged inputs and no diagnostics. ISSUE-040 now has native file-based Album evidence.
-
-Full tools/validate.sh passes metadata474/0 and487enabled CTests in162.75s (three further manual
-tests disabled). SOFTWARE409/27/35/3 and OPENGLES3439/29/3/3 preserve all38/42prior failed
-assertions, every C/custom child list/trace, five network controls and all18music-index checks.
-The sole new ID adds exactly eight checks; no existing parent count changes. All37selected
-binaries, four general assets and30source/staged fixture paths stay unchanged through runtime.
-Normalized stderr adds only the six exact expected album-art TitleContainer INFO lines per
-renderer, retaining the prior music INFO lines,42known GL X protocol records and intentional
-shader error. Outer Xvfb has13exact amdgpu pairs (previous16); independent inner/outer exits are
-zero. Capture/final CNAeff3131017 are clean. Selected observations are not an atomic or complete
-dependency snapshot. Evidence helpers pass; immutable archives:checkpoint-474-art-*.
-Generated coverage:297/329types,1405/2326XNA members. Semantic coverage remains incomplete.
-Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged; clean runs do not
-establish a staging-race repair. Preserve all original refusals and reproduction evidence.
+Full tools/validate.sh passes metadata474/0 and487enabled CTests in154.33s. SOFTWARE409/27/35/3
+and OPENGLES3439/29/3/3 preserve all38/42prior failures, every unrelated C/custom list/trace,
+five network controls,18music checks and8album-art checks. C media alone grows32->46; parentJSON
+remains0. All37selected binaries, four assets and30fixture paths stay unchanged. Normalized
+stderr is identical to complete474-art, including15INFO lines per renderer and42known GL X
+records. Outer Xvfb has15exact amdgpu pairs (previous13); inner/outer exits are zero. Capture/final
+CNAeff3131017 are clean. Coverage stays297/329types and1405/2326XNA members; actual C ABI routes
+rise174->184/3210, media.h2->7/39 and media_player.h12->17/41. Semantic coverage remains
+incomplete. Immutable evidence:checkpoint-474-c-media-*. Preserve refusals and ISSUE-038/057.
 
 ## 8. Exact commands that work
 
@@ -262,16 +244,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-Focused474-C-media-ownership is complete; commit source/docs and run full validation next.
-Capture ONCE after fullbuild during CTest: the same37selected binaries/4assets/30fixture paths.
-Freeze source/assets/build through both smokes. Expect487enabled CTests and the same outcomes:
-SOFTWARE409/27/35/3, OPENGLES3439/29/3/3. Preserve all38/42old failures, all C/custom lists and
-traces, five network controls, music18checks and album-art8checks. Only
-`c_api.media.media_player` child stdout grows32->46; parentJSON stays0. Normalized stderr should
-remain identical to complete474-art. Archive ccache refusal separately; preserve/refuse surprises.
-After closure continue the public-member audit from COVERAGE_AUDIT. Candidate next work must be
-chosen semantically; do not add a variant solely for member count. Preserve ISSUE-058 outside
-normal smoke, mono streaming/ISSUE-038 and build-only ISSUE-057. Never edit/revert CNA.
+HIGHEST PRIORITY: continue the same C media workflow with collection lifecycle and empty-queue
+bounds; do not add an ID. Preserve all46current labels/order. Before collection destruction,
+observe initial IsDisposed=false/count2, Dispose clearing/count0/IsDisposed=true and idempotent
+Dispose while the already shared Song remains alive. After safe stopped queue_clear, observe empty
+active lookup, get_at bounds/output initialization and the documented unchecked active-index setter
+without dereferencing an invalid entry; restore index before cleanup. First probe the header's
+claim that empty get_active_song leaves out_song untouched: generated code initializes it to
+INVALID, so distinguish a documentation defect from a demo expectation and update CNA_ISSUES if
+runtime confirms. No Play(queueSong), live Clear, audible, failed-add or callback claim. Run watched
+build, focused renderers and media/CLI CTests, update audit/HANDOFF, commit, then full validation.
+Use complete474-C-media exact evidence as baseline. Never edit/revert CNA; preserve ISSUE-038/057/058.
 
 ## 15. Assumptions the next session must know
 
@@ -283,7 +266,7 @@ normal smoke, mono streaming/ISSUE-038 and build-only ISSUE-057. Never edit/reve
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is474-album-art; source commit is in section7.
-All earlier drafts, including album art, duration, hierarchy and tagged import, are APPLIED AND
-STALE. C media ownership is applied/focused but not yet a complete checkpoint.
+Current complete baseline is474-C-media-ownership; source commit is in section7.
+All earlier drafts and focused ownership work are APPLIED AND STALE. Next lifecycle/bounds work
+has source evidence only and no applied draft yet.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

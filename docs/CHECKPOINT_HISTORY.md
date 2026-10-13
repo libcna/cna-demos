@@ -2924,3 +2924,14 @@ The sole new ID adds eight exact checks.37selected binaries, four assets and30fi
 unchanged. Stderr adds only six expected album-art INFO lines per renderer. Outer Xvfb has13
 exact amdgpu pairs (previous16); exits are zero and CNAeff3131017 stays clean. Coverage is
 297/329types and1405/2326members. Evidence:checkpoint-474-art-*.
+
+## Complete474-C-media-ownership
+
+Complete checkpoint **474-C-media-ownership**, source `7d23c6f`, extends the existing C media
+demo from32to46child checks without another ID or fixture. Both focused and full runs retain all
+32old labels and add14exact collection/queue ownership controls with empty demo stderr. Full
+validation passes metadata474/0 and487enabled CTests in154.33s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected evidence.37binaries, four assets
+and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has15known pairs,
+exits are zero and CNAeff3131017 remains clean. C ABI route coverage rises174->184/3210.
+Evidence:checkpoint-474-c-media-*.

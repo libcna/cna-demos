@@ -1748,3 +1748,18 @@ ccache sandbox-only and archived; the watched consistency build passes with3909u
 inputs and no diagnostics. ISSUE-058's unsafe active-queue replay is never invoked. No audible,
 empty/out-of-range, Dispose, failed-add, live-clear or callback edge claim. Full474 checkpoint
 against complete474-album-art is pending. Evidence:checkpoint-474-c-media-focused-*.
+
+## Complete474-C-media-ownership
+
+Complete checkpoint **474-C-media-ownership**, source `7d23c6f`, extends the existing C media
+demo from32to46child checks without another ID or fixture. Both focused and full runs retain all
+32old labels in order and add14exact ownership controls with empty demo stderr. Collection sharing,
+queue-owned copies, queue_add copying, view replacement and safe stopped-queue Clear all pass;
+ISSUE-058 replay is never invoked. Focused29media/CLI CTests pass.
+
+Full validation passes metadata474/0 and487enabled CTests in154.33s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected child/network evidence. C media
+alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain exact. Normalized
+stderr is identical. Outer Xvfb has15exact amdgpu pairs (previous13); exits are zero and CNA
+eff3131017 remains clean. XNA coverage remains297/329types and1405/2326members; C ABI routes rise
+174->184/3210, media.h2->7/39 and media_player.h12->17/41. Evidence:checkpoint-474-c-media-*.
