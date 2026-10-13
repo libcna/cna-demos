@@ -15,6 +15,48 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-073 -- Refused live-3D pan setter changes the public pan value
+
+- **Area/API:** `SoundEffectInstance::setPanProperty` and the C
+  `cna_sound_effect_instance_set_pan`/`cna_sound_effect_instance_get_info` routes.
+- **Reproduction:** create a mono `SoundEffect`, create an instance, call `Apply3D` before `Play`,
+  start playback, then request direct pan0.5. The setter correctly refuses the incompatible mode
+  with `CNA_RESULT_INVALID_STATE`; immediately read the instance snapshot.
+- **Observed:** the snapshot reports pan0.5 even though the setter failed. The canonical setter
+  stores `Pan_ = pan` before checking the latched live-3D state and throwing. The real spatial mixer
+  still selects its separate `spatialPan_`, so this is a public property/failed-operation side
+  effect rather than an audible-output observation.
+- **Expected:** validate the live-3D state before assigning `Pan_`, so a refused setter leaves the
+  public property unchanged at its prior value (zero in the focused reproduction).
+- **Scope/status:** open CNA implementation defect. The focused C demo retains one expected failing
+  assertion and continues through cleanup; no CNA source was modified or upstream message sent.
+  Direct runtime currently uses the last completed CNA libraries from `b2ded99da9`; project-built
+  evidence awaits completion of the unrelated in-progress Vulkan retirement. Both direct renderer
+  selections pass21 of22 controls with identical stdout and empty stderr; evidence is archived as
+  `checkpoint-530-c-spatial-state-focused-*-direct.*`.
+
+### CNA-DEMOS-ISSUE-072 -- C SoundEffectInstance snapshot promises pitch clamping
+
+- **Area/API:** `CNA_SoundEffectInstanceInfo.pitch` and
+  `cna_sound_effect_instance_set_pitch` in `modules/c-api/include/CNA/C/audio.h`.
+- **Observed contract conflict:** the public snapshot field says it reports the pitch "after CNA
+  clamping to `[-1, 1]`", and the setter only documents a finite input. Passing2.0 actually returns
+  `CNA_RESULT_INVALID_ARGUMENT`; setting1.0 succeeds and the snapshot returns1.0. The generated C
+  adapter checks finiteness and then calls `SoundEffectInstance::setPitchProperty`, whose canonical
+  implementation deliberately throws for every value outside the closed interval. CNA's pure-C
+  `AudioSmoke.c` also explicitly requires rejection of2.0 and describes that as XNA behavior.
+- **Runtime evidence:** `c_api.audio.sound_effect_instance_state` range-checks2.0, then configures
+  pitch1.0 with volume, pan and looping. The complete property snapshot and all later Play/Pause/
+  Resume/release/replay controls pass in five repeated SOFTWARE direct runs and one OPENGLES3
+  direct run with byte-identical output and empty stderr.
+- **Expected:** document pitch as range-checked to `[-1, 1]` and list out-of-range input among the
+  setter's invalid-argument outcomes. The implementation and its canonical test should stay as-is.
+- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
+  needed. No CNA source was modified or upstream message sent. Direct runtime currently uses the
+  last completed CNA libraries from `b2ded99da9`; project-built evidence awaits completion of the
+  unrelated in-progress Vulkan retirement. Open; direct evidence is archived as
+  `checkpoint-529-c-sound-instance-state-focused-*-direct.*`.
+
 ### CNA-DEMOS-ISSUE-071 -- C PBR texture getter documents five of its seven slots
 
 - **Area/API:** `cna_pbr_effect_get_texture` in

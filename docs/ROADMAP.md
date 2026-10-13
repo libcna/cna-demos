@@ -3413,3 +3413,127 @@ SpriteFont, C++ SpriteFont/CNJ and CLI tests pass in12.78s. Metadata is525/0 and
 1109->1116/3205, completing `sprite_font.h`2->9/9. The incremental build is diagnostic-free. Clean
 sibling CNA is `b2ded99da9` and production library hashes remain unchanged. Nothing is drawn and no
 screenshot or visual inspection is claimed. Evidence:checkpoint-525-c-sprite-font-focused-*.
+
+## Staged526-536-C-member-audit
+
+Nine new standalone IDs and two existing-demo extensions continue the deeper C member/behavior
+audit. They are source-complete and have strict direct builds plus focused execution against the
+last completed CNA libraries. The ordinary project build, catalog, CTests and generated coverage
+remain pending because the sibling CNA checkout is in the middle of a large Vulkan-retirement
+refactor; none of the following is claimed as project-built runner evidence yet.
+
+`c_api.graphics.vertex_values` passes seven controls for public declaration/value records.
+`c_api.graphics.vertex_buffer_data` passes36 controls for copied declarations, retained buffer
+metadata, typed and raw caller windows, dynamic options, a binding descriptor and ContentLost
+registration ownership. Both selected environments are byte-identical with empty stderr and the
+latter covers all15 meaningful previously uncredited `vertex_resources.h` routes; its four fixed
+reflection-name routes remain trivial. Evidence:checkpoint-526-c-vertex-values-focused-*-direct.*
+and checkpoint-527-c-vertex-buffer-data-focused-*-direct.*.
+
+`c_api.audio.sound_effect_sources` passes22 controls for exact sample conversion, PCM/encoded/file
+source ownership, atomic name copies, disposal, master-volume restoration and one-shot Play.
+`c_api.audio.sound_effect_instance_state` passes19 controls, including five repeated SOFTWARE
+runs, for mixing state and the complete ordinary transport lifecycle. ISSUE-072 records the public
+header's incorrect pitch-clamping wording; actual CNA consistently rejects out-of-range pitch.
+Evidence:checkpoint-528-c-sound-effect-sources-focused-*-direct.* and
+checkpoint-529-c-sound-instance-state-focused-*-direct.*.
+
+`c_api.audio.spatial_state` passes21 of22 controls identically on both selections and preserves the
+single ISSUE-073 failure: a refused live-3D pan write changes the public property snapshot.
+`c_api.audio.dynamic_streaming` passes21 controls for conversions, copied PCM/float submission,
+latched-format refusal, queue/update behavior, three BufferNeeded requests and unsubscribe.
+`c_api.audio.microphone_availability` passes20 controls against SDL dummy's capture device for
+enumeration, exact names, duration/state, real BufferReady/GetData, conversions, pump, unsubscribe
+and upper-bound refusals. Current-source metadata reaches66/74 `audio.h` routes; the eight remaining
+routes are four fixed reflection-name pairs. No audible quality, physical microphone or callback-
+latency claim is made. Evidence:checkpoint-530-c-spatial-state-focused-*-direct.*,
+checkpoint-532-c-dynamic-streaming-focused-*-direct.* and
+checkpoint-533-c-microphone-availability-focused-*-direct.*.
+
+The existing `c_api.media.media_player` adds four controls for the final MediaQueue reflection
+buffer pair: exact size, zero-capacity sizing, atomic short refusal and exact unterminated copy.
+Both direct selections pass98 controls with empty stderr; check outcomes match and only the existing
+live-position diagnostic varies. Current-source metadata completes `media_player.h` at41/41.
+Evidence:checkpoint-531-c-media-queue-type-name-focused-*-direct.*.
+
+`c_api.graphics.packed_vectors` passes nine byte-identical controls without creating a game or
+device. It covers all17 formats, exact bits/canonical expansion, width-aware equality, atomic
+invalid-bit and nonfinite handling, unused-component behavior and binary16 precision/special
+values. All7 `packed_vectors.h` routes are credited. Evidence:
+checkpoint-534-c-packed-vectors-focused-*-direct.*.
+
+The existing `c_api.input.touch_state` adds pure gesture, capability, location and state
+construction, exact TouchLocation text and the live false/true touch-device getter around its
+existing fixture. The final direct workflow passes72 byte-identical controls with empty stderr and
+credits43/47 `input_touch.h` routes. The two mouse-emulation routes remain manual and the two opaque
+window-handle routes remain platform integration. Evidence:
+checkpoint-535-c-touch-values-focused-*-direct.* and
+checkpoint-536-c-touch-device-exists-focused-*-direct.*.
+
+`c_api.math.color_values` closes all24 `color.h` routes in one15-control value workflow. Every
+constructor family establishes channel clamping and rounding; packed, vector, debug-text and
+canonical-text views are exact and short text writes are atomic; equality and hashing observe the
+same four channels; named constants establish packed ordering and aliases; interpolation, scaling,
+both premultiplication families and native NaN/infinity packing retain XNA behavior. Both direct
+selections are byte-identical with empty stderr, and strict C99 plus metadata compilation pass.
+No game, device, image, colour-space or display-quality claim is made. Evidence:
+checkpoint-537-c-color-values-focused-*-direct.*.
+
+`c_api.math.quaternion_values` closes all28 `quaternion.h` routes in one15-control value workflow.
+It distinguishes C's zero value from rotation identity; relates construction, equality/hash,
+length, returned/in-place conjugation and normalization; performs exact and atomic text copies;
+separates component arithmetic from multiplication and XNA concatenation order; and compares
+axis-angle, matrix, yaw-pitch-roll, inverse/division, dot and distinct Lerp/Slerp paths. Both direct
+selections are byte-identical with empty stderr, and strict C99 plus metadata compilation pass.
+No game, graphics device, transformed geometry or renderer claim is made. Evidence:
+checkpoint-538-c-quaternion-values-focused-*-direct.*.
+
+`c_api.math.scalar_helpers` demonstrates all15 scalar-helper routes from `math.h` in11 controls.
+It covers exact constants, affine and curved interpolation, SmoothStep endpoints, float/integer
+clamping and NaN propagation, distance/min/max, angle conversion and wrapping, the strict epsilon
+boundary, and bounded MSAA power selection with atomic negative-input refusal. Both direct
+selections are byte-identical with empty stderr, and strict C99 plus metadata compilation pass.
+An initial overly tight degree round-trip assertion was corrected from `1e-5` to the established
+single-precision `1e-3`; it was a demo defect. No device MSAA support is claimed. Evidence:
+checkpoint-539-c-scalar-helpers-focused-*-direct.*.
+
+`c_api.math.point_values` demonstrates all12 Point routes from `math.h` in seven controls. It
+relates default initialization to Zero, checks authored identity/hash and exact/atomic text, then
+contrasts ordinary component arithmetic with defined two's-complement wraparound and atomic
+zero-divisor/overflow refusal. Both direct selections are byte-identical with empty stderr, and
+strict C99 plus metadata compilation pass. Evidence:
+checkpoint-540-c-point-values-focused-*-direct.*.
+
+`c_api.math.rectangle_values` demonstrates all25 Rectangle routes in12 controls. It covers
+empty/authored construction, derived edges/location/center, defined edge wraparound, half-open
+coordinate/Point/rectangle containment, location/offset/inflate mutation, identity/hash,
+exact/atomic text, strict positive-area overlap, exact intersection and union. Both direct
+selections are byte-identical with empty stderr, and strict C99 plus metadata compilation pass.
+The scalar, Point and Rectangle batches together close `math.h` at52/52. No clipping,
+rasterization or pixel-coverage claim is made. Evidence:
+checkpoint-541-c-rectangle-values-focused-*-direct.*.
+
+`c_api.math.vector2_values` demonstrates all41 Vector2 routes in15 controls. It covers constructors
+and constants, equality/hash, length and both normalization forms, exact/atomic text,
+component/scalar arithmetic and IEEE zero division, metrics, curve/bound interpolation,
+reflection, distinct matrix point/normal and quaternion transforms, all three bounded array forms,
+and atomic invalid-window refusal. Both direct selections are byte-identical with empty stderr,
+and strict C99 plus metadata compilation pass. No rendered geometry or SIMD-performance claim is
+made. Evidence:checkpoint-542-c-vector2-values-focused-*-direct.*.
+
+`c_api.math.vector3_values` demonstrates all50 Vector3 routes in17 controls. It adds all three unit
+axes and six named XNA directions with negative-Z Forward, zero normalization, cross product,
+3D point/normal/quaternion transforms and all three bounded array routes to the shared value,
+arithmetic, metric, interpolation, reflection and atomic-window contracts. Both direct selections
+are byte-identical with empty stderr, and strict C99 plus metadata compilation pass. No rendered
+geometry or SIMD-performance claim is made. Evidence:
+checkpoint-543-c-vector3-values-focused-*-direct.*.
+
+`c_api.math.vector4_values` demonstrates all46 Vector4 routes in17 controls. Constructors extend
+Vector2/3 values and define four unit axes; value, arithmetic, metric, interpolation and atomic-text
+contracts include zero normalization. Homogeneous matrix transforms show implicit W one for
+Vector2/3 and translation scaled by authored Vector4 W, while quaternion transforms preserve W.
+Both bounded array forms and atomic invalid-window refusal pass. Both direct selections are byte-
+identical with empty stderr, and strict C99 plus metadata compilation pass. Checkpoints542-544
+together close `vectors.h` at137/137. No projection, clipping, rendered geometry or SIMD claim is
+made. Evidence:checkpoint-544-c-vector4-values-focused-*-direct.*.

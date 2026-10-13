@@ -646,6 +646,41 @@ int main(int argc, char** argv)
                    cna_media_player_get_queue(game, &state.queue) == CNA_RESULT_SUCCESS &&
                        cna_media_queue_get_count(state.queue, &queue_count) == CNA_RESULT_SUCCESS && queue_count == 3,
                    "a new queue view sees all entries after the first view is destroyed");
+    {
+        static const char QueueTypeName[] = "Microsoft.Xna.Framework.Media.MediaQueue";
+        char exact_name[sizeof(QueueTypeName)];
+        char short_name[sizeof(QueueTypeName)];
+        char untouched[sizeof(QueueTypeName)];
+        uint64_t required = UINT64_C(0);
+        uint64_t copied = UINT64_C(0);
+
+        cna_demo_check(&demo,
+                       cna_media_queue_get_type_name_size(state.queue, &required) == CNA_RESULT_SUCCESS &&
+                           required == sizeof(QueueTypeName) - 1U,
+                       "the queue reports its exact fully-qualified type-name byte count");
+        copied = UINT64_C(0);
+        cna_demo_check(&demo,
+                       cna_media_queue_copy_type_name(state.queue, NULL, 0U, &copied) ==
+                               CNA_RESULT_BUFFER_TOO_SMALL &&
+                           copied == required,
+                       "a zero-capacity queue type-name query still reports the required size");
+        memset(short_name, 0xA5, sizeof(short_name));
+        memset(untouched, 0xA5, sizeof(untouched));
+        copied = UINT64_C(0);
+        cna_demo_check(&demo,
+                       cna_media_queue_copy_type_name(
+                           state.queue, short_name, required - 1U, &copied) == CNA_RESULT_BUFFER_TOO_SMALL &&
+                           copied == required && memcmp(short_name, untouched, sizeof(short_name)) == 0,
+                       "a short queue type-name buffer is refused atomically");
+        memset(exact_name, 0xA5, sizeof(exact_name));
+        copied = UINT64_C(0);
+        cna_demo_check(&demo,
+                       cna_media_queue_copy_type_name(state.queue, exact_name, required, &copied) ==
+                               CNA_RESULT_SUCCESS &&
+                           copied == required && memcmp(exact_name, QueueTypeName, (size_t)required) == 0 &&
+                           (unsigned char)exact_name[required] == 0xA5U,
+                       "the exact queue type name is copied without an appended terminator");
+    }
     cna_demo_check_result(&demo, cna_media_queue_clear(state.queue),
                           "queue_clear releases its entries while the player is stopped");
     cna_demo_check(&demo,

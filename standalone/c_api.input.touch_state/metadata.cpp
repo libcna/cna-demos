@@ -6,15 +6,21 @@ CNA_DEMOS_STANDALONE({
     .title = "Input in C: touch snapshots and values",
     .description = "A C program uses CNA's public touch fixture routes to create a deterministic press, move and "
                    "release, captures each CNA_TouchState, finds the finger by id and reconstructs its previous "
-                   "location. Local touch values then show pressure-independent identity, insertion-copy and "
-                   "collection edits without requiring touch hardware.",
+                   "location. Pure gesture, capability, location and empty-state construction then leads into "
+                   "pressure-independent identity, text, insertion-copy and collection edits.",
     .apis = {"cna_touch_get_capabilities", "cna_touch_get_state", "cna_touch_state_find_by_id",
              "cna_touch_location_try_get_previous", "cna_touch_panel_set_touch_device_exists_ext",
+             "cna_touch_panel_get_touch_device_exists_ext",
              "cna_touch_panel_set_finger_ext", "cna_touch_panel_update_ext",
              "cna_touch_panel_reset_for_tests_ext", "CNA_TouchCapabilities", "CNA_TouchState",
-             "CNA_TouchLocation", "cna_touch_location_init_with_previous_ext",
+             "CNA_TouchLocation", "cna_gesture_sample_init", "cna_gesture_sample_init_from_values",
+             "cna_touch_capabilities_init", "cna_touch_capabilities_init_from_values_ext",
+             "cna_touch_location_init", "cna_touch_location_init_from_values",
+             "cna_touch_location_init_with_previous", "cna_touch_location_init_with_previous_ext",
              "cna_touch_location_init_from_values_ext", "cna_touch_location_equals",
-             "cna_touch_location_get_hash_code", "cna_touch_state_init_from_locations",
+             "cna_touch_location_get_hash_code", "cna_touch_location_get_string_size",
+             "cna_touch_location_copy_string", "cna_touch_state_init",
+             "cna_touch_state_init_from_locations",
              "cna_touch_state_get_is_read_only", "cna_touch_state_get_is_empty_ext",
              "cna_touch_state_contains", "cna_touch_state_index_of", "cna_touch_state_copy_to",
              "cna_touch_state_add", "cna_touch_state_clear", "cna_touch_state_remove",

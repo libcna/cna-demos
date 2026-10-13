@@ -40,9 +40,14 @@ int main(int argc, char** argv)
     CnaDemo demo;
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_GestureSample gesture;
     CNA_TouchCapabilities capabilities;
+    CNA_TouchCapabilities value_capabilities;
     CNA_TouchState state;
+    CNA_TouchState empty_state;
     CNA_TouchLocation location;
+    CNA_TouchLocation plain;
+    CNA_TouchLocation plain_previous;
     CNA_TouchLocation previous;
     CNA_TouchLocation low_pressure;
     CNA_TouchLocation high_pressure;
@@ -58,12 +63,116 @@ int main(int argc, char** argv)
     CNA_Bool read_only = CNA_FALSE;
     CNA_Bool removed = CNA_FALSE;
     CNA_Bool empty = CNA_FALSE;
+    CNA_Bool device_exists = CNA_TRUE;
     int32_t low_hash = 0;
     int32_t high_hash = 0;
     int32_t index = -1;
     uint64_t copied_count = 0U;
+    uint64_t text_bytes = 0U;
+    char text[64];
+    char untouched_text[64];
 
     cna_demo_init(&demo, "c_api.input.touch_state", argc, argv, 0);
+    memset(&gesture, 0xA5, sizeof(gesture));
+    cna_demo_check(
+        &demo,
+        cna_gesture_sample_init(&gesture) == CNA_RESULT_SUCCESS &&
+            gesture.struct_size == sizeof(gesture) && gesture.struct_version == UINT32_C(1) &&
+            gesture.gesture_type == CNA_GESTURE_TYPE_NONE &&
+            gesture.finger_id_ext == CNA_TOUCH_NO_FINGER &&
+            gesture.finger_id2_ext == CNA_TOUCH_NO_FINGER && gesture.reserved == 0U &&
+            gesture.timestamp_ticks == 0 && same_position(gesture.position, 0.0f, 0.0f) &&
+            same_position(gesture.position2, 0.0f, 0.0f) &&
+            same_position(gesture.delta, 0.0f, 0.0f) &&
+            same_position(gesture.delta2, 0.0f, 0.0f),
+        "the default gesture initializer writes the complete canonical empty value");
+    cna_demo_check(
+        &demo,
+        cna_gesture_sample_init_from_values(
+            CNA_GESTURE_TYPE_TAP | CNA_GESTURE_TYPE_FLICK, INT64_C(1234567),
+            (CNA_Vector2){1.0f, 2.0f}, (CNA_Vector2){3.0f, 4.0f},
+            (CNA_Vector2){5.0f, 6.0f}, (CNA_Vector2){7.0f, 8.0f}, &gesture) ==
+                CNA_RESULT_SUCCESS &&
+            gesture.gesture_type == (CNA_GESTURE_TYPE_TAP | CNA_GESTURE_TYPE_FLICK) &&
+            gesture.finger_id_ext == CNA_TOUCH_NO_FINGER &&
+            gesture.finger_id2_ext == CNA_TOUCH_NO_FINGER &&
+            gesture.timestamp_ticks == INT64_C(1234567) &&
+            same_position(gesture.position, 1.0f, 2.0f) &&
+            same_position(gesture.position2, 3.0f, 4.0f) &&
+            same_position(gesture.delta, 5.0f, 6.0f) &&
+            same_position(gesture.delta2, 7.0f, 8.0f),
+        "the value gesture initializer stores combined flags and leaves both fingers unset");
+    memset(&value_capabilities, 0xA5, sizeof(value_capabilities));
+    cna_demo_check(
+        &demo,
+        cna_touch_capabilities_init(&value_capabilities) == CNA_RESULT_SUCCESS &&
+            value_capabilities.struct_size == sizeof(value_capabilities) &&
+            value_capabilities.struct_version == UINT32_C(1) &&
+            value_capabilities.is_connected == CNA_FALSE &&
+            value_capabilities.maximum_touch_count == 0U &&
+            cna_touch_capabilities_init_from_values_ext(
+                CNA_TRUE, 4, &value_capabilities) == CNA_RESULT_SUCCESS &&
+            value_capabilities.is_connected == CNA_TRUE &&
+            value_capabilities.maximum_touch_count == 4U &&
+            cna_touch_capabilities_init_from_values_ext(
+                CNA_TRUE, -1, &value_capabilities) == CNA_RESULT_INVALID_ARGUMENT &&
+            value_capabilities.is_connected == CNA_TRUE &&
+            value_capabilities.maximum_touch_count == 4U,
+        "capability initializers distinguish disconnected defaults and atomic authored values");
+    memset(&plain, 0xA5, sizeof(plain));
+    cna_demo_check(
+        &demo,
+        cna_touch_location_init(&plain) == CNA_RESULT_SUCCESS && plain.id == 0 &&
+            plain.state == CNA_TOUCH_LOCATION_INVALID &&
+            same_position(plain.position, 0.0f, 0.0f) &&
+            plain.previous_state == CNA_TOUCH_LOCATION_INVALID &&
+            same_position(plain.previous_position, 0.0f, 0.0f) && plain.pressure == 0.0f,
+        "the default location uses id zero and invalid current and previous states");
+    cna_demo_check(
+        &demo,
+        cna_touch_location_init_from_values(
+            7, CNA_TOUCH_LOCATION_MOVED, (CNA_Vector2){3.0f, 4.0f}, &plain) ==
+                CNA_RESULT_SUCCESS &&
+            plain.id == 7 && plain.state == CNA_TOUCH_LOCATION_MOVED &&
+            same_position(plain.position, 3.0f, 4.0f) &&
+            plain.previous_state == CNA_TOUCH_LOCATION_INVALID && plain.pressure == 0.0f &&
+            cna_touch_location_init_with_previous(
+                7, CNA_TOUCH_LOCATION_MOVED, (CNA_Vector2){3.0f, 4.0f},
+                CNA_TOUCH_LOCATION_PRESSED, (CNA_Vector2){1.0f, 2.0f}, &plain_previous) ==
+                CNA_RESULT_SUCCESS &&
+            plain_previous.previous_state == CNA_TOUCH_LOCATION_PRESSED &&
+            same_position(plain_previous.previous_position, 1.0f, 2.0f) &&
+            plain_previous.pressure == 0.0f,
+        "plain location constructors distinguish absent and authored previous values");
+    memset(text, 0xA5, sizeof(text));
+    cna_demo_check(
+        &demo,
+        cna_touch_location_get_string_size(&plain, &text_bytes) == CNA_RESULT_SUCCESS &&
+            text_bytes == sizeof("{Position:{X:3 Y:4}}") - 1U &&
+            cna_touch_location_copy_string(&plain, text, text_bytes, &copied_count) ==
+                CNA_RESULT_SUCCESS &&
+            copied_count == text_bytes &&
+            memcmp(text, "{Position:{X:3 Y:4}}", (size_t)text_bytes) == 0 &&
+            (unsigned char)text[text_bytes] == 0xA5U,
+        "location text reports only the exact position without appending a terminator");
+    memset(text, 0xA5, sizeof(text));
+    memset(untouched_text, 0xA5, sizeof(untouched_text));
+    copied_count = 0U;
+    cna_demo_check(
+        &demo,
+        cna_touch_location_copy_string(
+            &plain, text, text_bytes - 1U, &copied_count) == CNA_RESULT_BUFFER_TOO_SMALL &&
+            copied_count == text_bytes && memcmp(text, untouched_text, sizeof(text)) == 0,
+        "a short location-text destination is refused without a partial write");
+    memset(&empty_state, 0xA5, sizeof(empty_state));
+    cna_demo_check(
+        &demo,
+        cna_touch_state_init(&empty_state) == CNA_RESULT_SUCCESS &&
+            empty_state.struct_size == sizeof(empty_state) &&
+            empty_state.struct_version == UINT32_C(1) &&
+            empty_state.is_connected == CNA_FALSE && empty_state.touch_count == 0U,
+        "the empty touch-state initializer writes a disconnected versioned snapshot");
+
     memset(&create_info, 0, sizeof(create_info));
     create_info.struct_size = (uint32_t)sizeof(create_info);
     create_info.struct_version = UINT32_C(1);
@@ -74,8 +183,23 @@ int main(int argc, char** argv)
 
     cna_demo_check_result(&demo, cna_touch_panel_reset_for_tests_ext(game),
                           "reset the process-wide touch fixture");
+    if (cna_demo_check_result(
+            &demo,
+            cna_touch_panel_get_touch_device_exists_ext(game, &device_exists),
+            "read the reset touch-device existence state")) {
+        cna_demo_check(&demo, device_exists == CNA_FALSE,
+                       "the reset fixture reports no live touch device");
+    }
     cna_demo_check_result(&demo, cna_touch_panel_set_touch_device_exists_ext(game, CNA_TRUE),
                           "publish a synthetic touch device");
+    device_exists = CNA_FALSE;
+    if (cna_demo_check_result(
+            &demo,
+            cna_touch_panel_get_touch_device_exists_ext(game, &device_exists),
+            "read the published touch-device existence state")) {
+        cna_demo_check(&demo, device_exists == CNA_TRUE,
+                       "the published fixture reports a live touch device");
+    }
     blank_capabilities(&capabilities);
     if (cna_demo_check_result(&demo, cna_touch_get_capabilities(game, &capabilities),
                               "cna_touch_get_capabilities")) {
