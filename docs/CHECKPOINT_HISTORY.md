@@ -2968,3 +2968,14 @@ OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.37binarie
 and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has12known pairs,
 exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types and1405/2326members;
 C ABI routes rise192->198/3210. Evidence:checkpoint-474-c-song-duration-*.
+
+## Complete474-C-song-identity
+
+Complete checkpoint **474-C-song-identity**, source `52b4163`, extends the existing C media demo
+61->69checks with plain-path construction, exact handle text, path-based equality/hash behavior and
+literal empty-name storage. Both renderers preserve all61old labels and pass eight additions with
+empty demo stderr. Full validation passes metadata474/0 and487enabled CTests in195.21s. SOFTWARE
+409/27/35/3 and OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.37binaries,
+four assets and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has8known
+pairs, exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types and
+1405/2326members; C ABI routes rise198->203/3210. Evidence:checkpoint-474-c-song-identity-*.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete474-C-song-identity:487enabled CTests and both full smoke suites preserve all old
+  evidence; the C media demo adds eight exact Song identity checks and five C ABI routes.
 - Extended the existing C media-player workflow from61to69checks with plain-path Song creation,
   exact handle text, path-based equality/hash semantics and literal empty-name storage.
 - Complete474-C-song-duration:487enabled CTests and both full smoke suites preserve all old

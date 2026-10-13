@@ -1863,3 +1863,18 @@ queued. Focused29media/CLI CTests pass in11.05s. Two watched builds pass with390
 inputs/no diagnostics; metadata remains474/0. Five actual routes raise C coverage198->203/3210 and
 media.h15->20/39. No URI canonicalization, case/symlink equivalence, hash stability across processes
 or playback identity claim. Full474 is pending. Evidence:checkpoint-474-c-song-identity-focused-*.
+
+## Complete474-C-song-identity
+
+Complete checkpoint **474-C-song-identity**, source `52b4163`, extends the same C media demo
+61->69checks without another ID or fixture. Focused and full runs preserve all61old labels and add
+eight exact controls for plain-path construction, stored path text, equality/hash semantics,
+different-path inequality, empty-name storage and independent release. The helper Songs are never
+played or queued. Focused29media/CLI CTests pass.
+
+Full validation passes metadata474/0 and487enabled CTests in195.21s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected child/network evidence. C media
+alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain exact. Normalized
+stderr is identical. Outer Xvfb has8exact amdgpu pairs (previous12); exits are zero and CNA
+eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
+rise198->203/3210 and media.h15->20/39. Evidence:checkpoint-474-c-song-identity-*.
