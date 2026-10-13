@@ -446,7 +446,7 @@ a check that all authored colors remain visible and that a blank texture row can
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 17 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 18 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -3852,3 +3852,11 @@ one-shot ownership. Both renderer-labelled direct runs pass byte-identically wit
 strict C99 and metadata compilation pass. `net_gamers.h` reaches26/33 demonstrated. Evidence:
 checkpoint-578-c-net-gamer-values-focused-*-direct.*. Populated machine borrowing, local-gamer
 ready publication, successful removal and a project-built runner remain unclaimed.
+
+`c_api.net.session_event_values` closes the final seven `net_gamers.h` routes in15 renderer-free
+controls. Canonical and malformed game-transition prefixes, exact joined/left/old/new gamer
+identities, atomic stale-handle refusal, all four session-end reasons, zero reserved storage and
+leaderboard gamer/leaving validation are explicit. Both renderer-labelled direct runs pass byte-
+identically with empty stderr; strict C99 and metadata compilation pass. `net_gamers.h` is33/33
+demonstrated. Evidence:checkpoint-579-c-net-event-values-focused-*-direct.*. The demo constructs
+event payloads and does not claim live dispatch or a project-built runner.
