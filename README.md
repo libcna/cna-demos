@@ -65,7 +65,7 @@ tests, cna-samples and cna-examples is explained in [docs/PROJECT.md](docs/PROJE
       libx11-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxfixes-dev \
       libxss-dev libxtst-dev libwayland-dev wayland-protocols libxkbcommon-dev \
       libgl1-mesa-dev libegl-dev libasound2-dev libpulse-dev
-  # optional: VULKAN and SDL_GPU renderers
+  # optional: SDL_GPU renderer and its Vulkan runtime driver
   sudo apt-get install -y libvulkan-dev libshaderc-dev glslang-tools mesa-vulkan-drivers
   ```
 
@@ -80,7 +80,7 @@ git -C cna submodule update --init third_party/SDL third_party/SDL_image third_p
 git clone https://github.com/libcna/cna-demos.git
 cd cna-demos
 
-cmake --preset linux-multi          # or: windowless, default, linux-full (adds VULKAN/SDL_GPU)
+cmake --preset linux-multi          # or: windowless, default, linux-full (adds SDL_GPU + C API)
 cmake --build --preset linux-multi
 ```
 
@@ -92,7 +92,7 @@ minutes. `cmake --list-presets` shows all presets:
 | `default` | CNA's platform default (OPENGLES3 on Linux, SDL_RENDERER elsewhere) | a display for running |
 | `windowless` | SOFTWARE (default), HEADLESS, STUB | nothing -- no display, no GL siblings; used by CI |
 | `linux-multi` | OPENGLES3 (default), OPENGL33, SDL_RENDERER, SOFTWARE, HEADLESS, STUB | easy-gl/meta-gl |
-| `linux-full` | linux-multi + VULKAN, SDL_GPU | Vulkan headers/loader, libshaderc |
+| `linux-full` | linux-multi + SDL_GPU, C API | libshaderc; a supported SDL GPU runtime driver |
 
 Without presets: `cmake -S . -B build -DCNA_ROOT_DIR=/path/to/cna -DCNA_GRAPHICS_RENDERER=...`.
 `CNA_ROOT_DIR` may also be set in the environment. Renderer options are CNA's own
@@ -153,7 +153,8 @@ described in [docs/AUTOMATION.md](docs/AUTOMATION.md). `python3 tools/coverage_r
 ## Platform caveats
 
 * Developed and tested on Linux (Ubuntu 24.04, GCC 14): SOFTWARE, HEADLESS, STUB without a display;
-  OPENGLES3/OPENGL33/SDL_RENDERER/VULKAN under Xvfb with Mesa's software drivers. Windows, macOS,
+  OPENGLES3/OPENGL33/SDL_RENDERER under Xvfb with Mesa's software drivers. Historical checkpoints
+  also exercised CNA's since-retired VULKAN renderer. Windows, macOS,
   web and Android builds follow CNA's support matrix but have **not** been tested for cna-demos
   yet -- see HANDOFF.md for exactly what was exercised.
 * Input demos need a person (they are smoke-tested unattended only). Audio demos need an audio

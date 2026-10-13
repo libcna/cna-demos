@@ -20,7 +20,8 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 70 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
+* In progress: 14 (C API, 94 standalone C demos in the source tree; `linux-full` builds CNA with
+  `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
 
@@ -64,14 +65,16 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-525 catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
+current source tree adds23 staged standalone C IDs and should reach548 after the external build blocker clears: math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 (standalone C programs). Every declared category has demos.
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and94 in the
+current source tree (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
 Actual C ABI coverage is1116/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -1206,7 +1209,8 @@ python3 tools/coverage_report.py --exe build/linux-full/bin/cna-demos --cna-root
 |---|---|
 | SOFTWARE | full smoke suite run with declared capability skips and manual exclusions; selected screenshots inspected |
 | OPENGLES3 | full smoke suite run under Xvfb + Mesa llvmpipe with declared skips/manual exclusions; selected screenshots inspected |
-| HEADLESS, STUB, OPENGL33, SDL_RENDERER, VULKAN, SDL_GPU | compiled in; not yet run in a recorded session |
+| HEADLESS, STUB, OPENGL33, SDL_RENDERER, SDL_GPU | compiled in; not yet run in a recorded session |
+| VULKAN | exercised by historical checkpoints; retired by CNA at `fe5e25994a` and removed from current presets |
 | WEBGL2, WEBGPU, DIRECTX9, DIRECTX11, METAL, FNA3D | not built (other platforms / extra deps) |
 
 Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untested.
@@ -1307,11 +1311,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: keep the staged C batches below intact while the sibling CNA checkout is
-incoherent, and continue the renderer-independent `matrix.h` audit in coherent construction and
-operation workflows. As soon
-as CNA becomes clean/coherent, reconfigure `linux-full`, build every staged source, run focused
-validation and then absorb the work in one complete checkpoint. Keep tagged unions, public element
+HIGHEST PRIORITY: keep the staged C work intact while sibling CNA's renderer-retirement work is
+again incoherent, and continue the renderer-independent C math audit with the45 `curve.h` routes
+in coherent key/value, collection and evaluation workflows. Once CNA becomes coherent, reconfigure
+`linux-full`, build every
+staged source, run focused validation and absorb the work in one complete checkpoint. Keep tagged
+unions, public element
 records and transfer descriptors visible in C. The completed290-route `effects.h` audit groups
 related lifetimes, metadata, typed values, collections, reflection and actual rendering behavior.
 The complete
@@ -1461,22 +1466,73 @@ invalid windows are explicit. Both direct selections are byte-identical with emp
 C99 and metadata compilation pass. Checkpoints542-544 close `vectors.h` at137/137. Evidence:
 `checkpoint-544-c-vector4-values-focused-*-direct.*`.
 
-The ordinary `linux-full` build is temporarily blocked outside this project: sibling CNA has a
-large uncommitted renderer-retirement edit in progress, last observed on `357642c7d3` with about533
-dirty paths. Earlier observations saw the Vulkan-retirement work on `b1ec33424`; do not infer
-coherence from the newer commit while the worktree remains this large. It
-removed `GraphicsRendererType::Vulkan` before removing the still-generated Vulkan descriptor target;
-the failed886-step build stopped in `VulkanRendererDescriptor.cpp`. Do not edit or revert CNA.
-Resume the normal build/metadata/runner/CTest/coverage validation after the sibling checkout becomes
-a coherent clean revision. Evidence so far:`checkpoint-526-c-vertex-values-focused-*-direct.*`,
+`standalone/c_api.math.matrix_values` demonstrates all35 non-factory Matrix routes in18 renderer-
+independent controls: zero/Identity construction, all16 fields, six signed direction properties,
+translation, determinant, equality/hash, successful and singular decomposition, exact/atomic text,
+component arithmetic, row-vector composition order, transpose, inverse and quaternion transform.
+Both direct selections are byte-identical with empty stderr; strict C99 and metadata compilation
+pass. Evidence:`checkpoint-545-c-matrix-values-focused-*-direct.*`.
+
+`standalone/c_api.math.matrix_factories` demonstrates all22 factory routes in13 controls. It covers
+ordinary and coincident/fallback billboards, constrained orientation, equivalent and direct
+rotation factories, paired world/view frames, centered/off-center projections with atomic invalid
+ranges, scaling, offset-plane shadow/reflection and translations. Both direct selections are byte-
+identical with empty stderr; strict C99 and metadata compilation pass. Checkpoints545-546 close
+`matrix.h` at57/57. Evidence:`checkpoint-546-c-matrix-factories-focused-*-direct.*`.
+
+`standalone/c_api.math.plane_values` demonstrates all20 Plane routes from `geometry.h` in nine
+renderer-independent controls. Five constructors, the three dot forms, identity/hash, both
+normalization paths, exact/atomic text, box/sphere/frustum classification, matrix translation and
+quaternion rotation pass in both direct selections with byte-identical output and empty stderr;
+strict C99 and metadata compilation pass. Evidence:
+`checkpoint-547-c-plane-values-focused-*-direct.*`.
+
+`standalone/c_api.math.ray_values` demonstrates all11 Ray routes from `geometry.h` in seven
+renderer-independent controls. Construction, identity/hash, box/sphere/plane/frustum distances and
+exact/atomic legacy text pass in both direct selections with byte-identical output and empty
+stderr; strict C99 and metadata compilation pass. Evidence:
+`checkpoint-548-c-ray-values-focused-*-direct.*`.
+
+`standalone/c_api.math.bounding_box_values` demonstrates all20 BoundingBox routes from
+`geometry.h` in11 renderer-independent controls. Construction, all containment classes, atomic XNA-
+ordered corners, ray/frustum/sphere/box/plane intersections, identity/hash, exact/atomic text,
+three enclosing factories and empty-point refusal pass in both direct selections with byte-
+identical output and empty stderr; strict C99 and metadata compilation pass. Evidence:
+`checkpoint-549-c-bounding-box-values-focused-*-direct.*`.
+
+`standalone/c_api.math.bounding_sphere_values` demonstrates all21 BoundingSphere routes from
+`geometry.h` in12 renderer-independent controls. Construction, transform radius, all containment
+classes, identity/hash, four enclosing factories, atomic empty-input refusal, five intersection
+forms and exact/atomic text pass in both direct selections with byte-identical output and empty
+stderr; strict C99 and metadata compilation pass. The first draft's exact-centered frustum sphere
+assumption exceeded the documented enclosure contract and was corrected; this was a demo defect.
+Evidence:`checkpoint-550-c-bounding-sphere-values-focused-*-direct.*`.
+
+`standalone/c_api.math.bounding_frustum_values` demonstrates all22 BoundingFrustum routes from
+`geometry.h` in13 renderer-independent controls. The retained matrix, six derived planes, all
+containment classes, atomic ordered corners, volume/plane/ray intersections including the
+documented boundary-origin refusal, identity/hash and exact/atomic text pass in both direct
+selections with byte-identical output and empty stderr; strict C99 and metadata compilation pass.
+Checkpoints547-551 close `geometry.h` at94/94. Evidence:
+`checkpoint-551-c-bounding-frustum-values-focused-*-direct.*`.
+
+The sibling CNA briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
+After `cna-demos` removed VULKAN from `linux-full`, configure succeeded, but concurrent external
+retirement edits changed CNA during the build: `GraphicsRendererType::DirectX11` disappeared while
+`GraphicsBackendCategory.hpp` and `GraphicsBackendMaturity.hpp` still referenced it. The build
+failed in `GraphicsRendererSelection.cpp` after four of1083 steps. CNA then grew back to hundreds
+of dirty paths (374 at the latest observation). This is an external transient build blocker, not a
+demo failure; do not edit/revert CNA. The earlier incoherent state had similarly removed Vulkan's
+identity before its generated descriptor target and failed in `VulkanRendererDescriptor.cpp`.
+Evidence so far:`checkpoint-526-c-vertex-values-focused-*-direct.*`,
 `checkpoint-527-c-vertex-buffer-data-focused-*-direct.*` and
 `checkpoint-528-c-sound-effect-sources-focused-*-direct.*`; none is yet a project-built runner
 checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose541 catalog IDs (complete524 plus SpriteFont and16
-additional new standalone IDs) and557 declared/554 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose548 catalog IDs (complete524 plus SpriteFont and23
+additional new standalone IDs) and564 declared/561 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 

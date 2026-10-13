@@ -3414,7 +3414,7 @@ SpriteFont, C++ SpriteFont/CNJ and CLI tests pass in12.78s. Metadata is525/0 and
 sibling CNA is `b2ded99da9` and production library hashes remain unchanged. Nothing is drawn and no
 screenshot or visual inspection is claimed. Evidence:checkpoint-525-c-sprite-font-focused-*.
 
-## Staged526-536-C-member-audit
+## Staged526-551-C-member-audit
 
 Nine new standalone IDs and two existing-demo extensions continue the deeper C member/behavior
 audit. They are source-complete and have strict direct builds plus focused execution against the
@@ -3537,3 +3537,61 @@ Both bounded array forms and atomic invalid-window refusal pass. Both direct sel
 identical with empty stderr, and strict C99 plus metadata compilation pass. Checkpoints542-544
 together close `vectors.h` at137/137. No projection, clipping, rendered geometry or SIMD claim is
 made. Evidence:checkpoint-544-c-vector4-values-focused-*-direct.*.
+
+`c_api.math.matrix_values` demonstrates all35 non-factory `matrix.h` routes in18 controls. It
+distinguishes zero initialization from Identity, maps all16 row-major fields, establishes the six
+signed directional properties and translation row, then covers determinant, identity/hash,
+successful and singular decomposition, exact/atomic text, component arithmetic, row-vector
+composition order, transpose, inverse and quaternion transform. Both direct selections are byte-
+identical with empty stderr, and strict C99 plus metadata compilation pass. Evidence:
+checkpoint-545-c-matrix-values-focused-*-direct.*.
+
+`c_api.math.matrix_factories` demonstrates all22 `cna_matrix_create_*` routes in13 controls.
+Ordinary and coincident/fallback billboards, constrained orientation, four equivalent Z-rotation
+paths, direct X/Y rotation, paired world/look-at frames, centered and off-center projections,
+atomic invalid perspective ranges, three scale forms, offset-plane shadow/reflection and both
+translation forms are explicit. Both direct selections are byte-identical with empty stderr, and
+strict C99 plus metadata compilation pass. Checkpoints545-546 close `matrix.h` at57/57. No game,
+graphics device, clipping, rendered geometry or visual result is claimed. Evidence:
+checkpoint-546-c-matrix-factories-focused-*-direct.*.
+
+`c_api.math.plane_values` demonstrates all20 Plane routes from `geometry.h` in nine controls. Five
+construction forms converge on exact public fields; the three dot products separate homogeneous,
+coordinate and direction behavior; identity/hash, returned/in-place normalization, exact/atomic
+text, box/sphere/frustum classification, matrix translation and quaternion rotation are explicit.
+Both direct selections are byte-identical with empty stderr, and strict C99 plus metadata
+compilation pass. No game, device, culling pipeline or rendered geometry is claimed. Evidence:
+checkpoint-547-c-plane-values-focused-*-direct.*.
+
+`c_api.math.ray_values` demonstrates all11 Ray routes from `geometry.h` in seven controls. It
+covers zero/authored construction, identity/hash, equal nearest-hit distances for a unit box and
+sphere, forward-hit and away-miss plane behavior, inside and forward-miss frustum behavior, and
+exact/atomic legacy double-brace text. Both direct selections are byte-identical with empty stderr,
+and strict C99 plus metadata compilation pass. No physics, acceleration structure or rendering is
+claimed. Evidence:checkpoint-548-c-ray-values-focused-*-direct.*.
+
+`c_api.math.bounding_box_values` demonstrates all20 BoundingBox routes from `geometry.h` in11
+controls. It covers zero/min-max construction; Contains, Intersects and Disjoint across boxes,
+spheres, a point and a frustum; atomic copying in XNA's eight-corner order; hit/miss ray distance;
+frustum/sphere/box/plane intersections; identity/hash; exact/atomic legacy text; point, sphere and
+merge factories; and atomic empty-point refusal. Both direct selections are byte-identical with
+empty stderr, and strict C99 plus metadata compilation pass. No collision response, broad phase or
+rendering is claimed. Evidence:checkpoint-549-c-bounding-box-values-focused-*-direct.*.
+
+`c_api.math.bounding_sphere_values` demonstrates all21 BoundingSphere routes from `geometry.h` in
+12 controls. It covers construction, largest-axis transform scaling, all containment classes,
+identity/hash, enclosing box/frustum/point/merge factories, atomic empty-point refusal,
+box/frustum/tangent-sphere/ray/plane intersections and exact/atomic text. An initial demo defect
+assumed `CreateFromFrustum` promised the exact centered minimum; the API promises only enclosure,
+and the corrected check proves all eight source corners lie inside CNA's Ritter-style result. Both
+direct selections are byte-identical with empty stderr, and strict C99 plus metadata compilation
+pass. Evidence:checkpoint-550-c-bounding-sphere-values-focused-*-direct.*.
+
+`c_api.math.bounding_frustum_values` demonstrates all22 BoundingFrustum routes from `geometry.h`
+in13 controls. It covers the retained matrix, six exact identity clipping planes, all containment
+classes, atomic XNA-ordered corners, frustum/box/sphere/plane intersections, ray inside/miss
+semantics, the documented atomic `NOT_SUPPORTED` boundary-origin case, identity/hash and exact/
+atomic six-plane text. Both direct selections are byte-identical with empty stderr, and strict C99
+plus metadata compilation pass. Checkpoints547-551 close `geometry.h` at94/94. No graphics device,
+rendered culling or visibility-performance claim is made. Evidence:
+checkpoint-551-c-bounding-frustum-values-focused-*-direct.*.

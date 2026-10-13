@@ -42,12 +42,12 @@
     {
       "name": "linux-full",
       "inherits": "base",
-      "displayName": "Linux: every Linux renderer including VULKAN and SDL_GPU, plus the C API",
-      "description": "Adds VULKAN (Vulkan loader + headers) and SDL_GPU (libshaderc) to linux-multi, and builds CNA's experimental C API (CNA::CApi) for the c_api standalone demos.",
+      "displayName": "Linux: every supported Linux renderer including SDL_GPU, plus the C API",
+      "description": "Adds SDL_GPU (libshaderc) to linux-multi and builds CNA's experimental C API (CNA::CApi) for the c_api standalone demos.",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "cacheVariables": {
         "CNA_GRAPHICS_RENDERER": "OPENGLES3",
-        "CNA_GRAPHICS_RENDERERS": "OPENGLES3;OPENGL33;SDL_RENDERER;VULKAN;SDL_GPU;SOFTWARE;HEADLESS;STUB",
+        "CNA_GRAPHICS_RENDERERS": "OPENGLES3;OPENGL33;SDL_RENDERER;SDL_GPU;SOFTWARE;HEADLESS;STUB",
         "CNA_BUILD_C_API": "ON",
         "CNA_C_API_BUILD_STATIC": "OFF"
       }

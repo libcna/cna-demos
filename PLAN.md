@@ -13,10 +13,11 @@ concrete areas is [docs/ROADMAP.md](docs/ROADMAP.md); the current state is [HAND
   content-pipeline, storage, devices, devices-ext, phone, design, diagnostics, inspector,
   graphics-ext (CNAEXT), net, gamer-services (incl. avatars), platform, c-api, 12 renderer
   families.
-* **Renderers:** 14 public identities -- SDL_RENDERER, OPENGLES3, OPENGL33, WEBGL2, VULKAN, WEBGPU,
+* **Renderers:** 13 public identities -- SDL_RENDERER, OPENGLES3, OPENGL33, WEBGL2, WEBGPU,
   HEADLESS, SOFTWARE, STUB, DIRECTX9, DIRECTX11, SDL_GPU, METAL, FNA3D. Compile-time selection plus
   an opt-in multi-renderer mode with runtime selection (`CNA::GraphicsRendererSelection`, latched
-  at the first GraphicsDevice; `CNA_GRAPHICS_RENDERER` environment variable).
+  at the first GraphicsDevice; `CNA_GRAPHICS_RENDERER` environment variable). VULKAN was retired
+  on 2026-10-13 and its C ABI identity remains reserved.
 * **Build/consumption:** no installed CMake package; consumers `add_subdirectory()` a CNA source
   checkout and link the `CNA` umbrella (cna-template, cna-examples, cna-samples all do this).
   Siblings: `../sharp-runtime` (always), `../easy-gl` + `../meta-gl` (GL renderers). Submodules:
