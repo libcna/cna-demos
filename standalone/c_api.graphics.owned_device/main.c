@@ -1,8 +1,8 @@
 /* SPDX-License-Identifier: MS-PL */
 /*
  * Caller-owned GraphicsDevice lifecycle from C. Two devices coexist outside any Game. The first
- * presents, resets twice with exact event ordering, applies new presentation parameters and emits
- * one disposing callback that releases its own registration before the native event source dies.
+ * rebuilds its resource-free renderer, presents, resets twice with exact event ordering, applies
+ * new presentation parameters and emits one disposing callback that releases its own registration.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH] (ignored; no pixels are inspected).
  * Exit code 0 passed, 1 failed.
@@ -10,6 +10,7 @@
 #include <CNA/C/cna.h>
 
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "CnaDemos/CApiDemo.h"
@@ -102,6 +103,9 @@ int main(int argc, char** argv)
     CNA_GraphicsDeviceEventRegistrationHandle invalid_registration = CNA_INVALID_HANDLE;
     CNA_Bool disposed = CNA_TRUE;
     CNA_GraphicsProfile profile = UINT32_MAX;
+    CNA_RendererInfo renderer_before;
+    CNA_RendererInfo renderer_after;
+    uint64_t tracked_resources = UINT64_MAX;
     uint32_t adapter_index = 0U;
     int sequence_before;
 
@@ -190,6 +194,55 @@ int main(int argc, char** argv)
                 CNA_RESULT_INVALID_ARGUMENT &&
             invalid_registration == CNA_INVALID_HANDLE,
         "an undefined device-event identity is refused without a registration");
+
+    memset(&renderer_before, 0, sizeof(renderer_before));
+    renderer_before.struct_size = (uint32_t)sizeof(renderer_before);
+    renderer_before.struct_version = UINT32_C(1);
+    cna_demo_check(
+        &demo,
+        cna_graphics_device_get_renderer_info(first, &renderer_before) ==
+                CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_tracked_resource_count(first, &tracked_resources) ==
+                CNA_RESULT_SUCCESS &&
+            tracked_resources == UINT64_C(0) &&
+            cna_graphics_device_recreate_renderer_for_multi_sample_count_ext(first, -1) ==
+                CNA_RESULT_INVALID_ARGUMENT &&
+            cna_graphics_device_get_presentation_parameters(first, &observed) ==
+                CNA_RESULT_SUCCESS &&
+            observed.multi_sample_count == initial.multi_sample_count &&
+            state.sequence_count == 0 && state.lost_count == 0 &&
+            state.disposing_count == 0,
+        "negative renderer recreation is refused while the resource-free device stays unchanged");
+
+    memset(&renderer_after, 0, sizeof(renderer_after));
+    renderer_after.struct_size = (uint32_t)sizeof(renderer_after);
+    renderer_after.struct_version = UINT32_C(1);
+    cna_demo_check(
+        &demo,
+        cna_graphics_device_recreate_renderer_for_multi_sample_count_ext(first, 4) ==
+                CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_renderer_info(first, &renderer_after) ==
+                CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_presentation_parameters(first, &observed) ==
+                CNA_RESULT_SUCCESS &&
+            renderer_after.renderer_type == renderer_before.renderer_type &&
+            renderer_after.capability_flags == renderer_before.capability_flags &&
+            observed.multi_sample_count >= 0 && observed.multi_sample_count <= 4 &&
+            state.sequence_count == 0 && state.lost_count == 0 &&
+            state.disposing_count == 0,
+        "renderer recreation keeps its family and capabilities without lifecycle events");
+    printf(
+        "  renderer recreation: requested 4 samples, applied %d\n",
+        observed.multi_sample_count);
+    cna_demo_check(
+        &demo,
+        cna_graphics_device_recreate_renderer_for_multi_sample_count_ext(first, 0) ==
+                CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_presentation_parameters(first, &observed) ==
+                CNA_RESULT_SUCCESS &&
+            observed.multi_sample_count == 0 && state.sequence_count == 0 &&
+            state.lost_count == 0 && state.disposing_count == 0,
+        "a second reconstruction restores single-sample presentation without reset events");
 
     cna_demo_check_result(
         &demo, cna_graphics_device_clear_rgba(first, 0.0F, 0.0F, 0.0F, 1.0F),

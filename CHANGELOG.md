@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `c_api.graphics.owned_device` from20to23 controls with resource-free renderer
+  reconstruction, applied 4x/single-sample state, capability stability and no reset-event leakage.
 - Extended `c_api.graphics.device_capabilities` from20to24 controls with exact render-target-format
   verdict agreement, effect-source/IBL execution truth and restored display-color-space probing.
 - Recorded CNA-DEMOS-ISSUE-067: the public C display-color-space routes expose bare integer

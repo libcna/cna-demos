@@ -3040,3 +3040,18 @@ routes raise coverage790->796/3205 and `graphics_device.h`73->79/84. ISSUE-067 r
 C type/names for the color-space ordinals. Clean sibling CNA is `f37f8d184`; both production library
 hashes remain unchanged. No rendering or visual inspection is claimed.
 Evidence:checkpoint-504-c-device-capabilities-focused-*.
+
+## Focused504-C-renderer-recreation
+
+The existing `c_api.graphics.owned_device` workflow grows from20to23 controls while retaining every
+prior label. With zero tracked GPU resources, a negative multisample reconstruction is refused
+without presentation or event changes. A4-sample request rebuilds the same renderer family,
+preserves its capability bits, applies4 samples on SOFTWARE and OPENGLES3 and raises no lifecycle
+event; clear/present remain operational. A second reconstruction restores exact single-sample state
+before the existing reset workflow. Both renderers produce byte-identical output with23 passing
+checks and empty stderr. Metadata remains504/0; all27 enabled focused lifecycle, multisampling,
+selection and CLI tests pass in11.94s, with one manual fullscreen test disabled, followed by a clean
+incremental build. One route raises coverage796->797/3205 and `graphics_device.h`79->80/84. Clean
+sibling CNA is `f37f8d184`; both production library hashes remain unchanged. No displayed pixels or
+visual inspection is claimed.
+Evidence:checkpoint-504-c-renderer-recreation-focused-*.

@@ -73,13 +73,13 @@ joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 49 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete502 runtime reports and focused graphics
-sources). Actual C ABI coverage is796/3205: `input_gamepad.h`61/63,
+sources). Actual C ABI coverage is797/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`79/84 and `effects.h`9/290.
+`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84 and `effects.h`9/290.
 Complete502 exercises the first771 credited routes in both full smoke suites; focused503/504
-exercise the25 newer routes under both renderer selections.
+exercise the26 newer routes under both renderer selections.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 31 (`c_api.graphics.draw_routes` CNA-DEMOS-ISSUE-066,
 `c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
@@ -111,6 +111,23 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **504-C-renderer-recreation** extends `c_api.graphics.owned_device` from20to23 controls
+while retaining every prior label. With zero tracked GPU resources, a negative multisample request
+is refused without presentation or event changes. A request for4 rebuilds the same renderer family,
+preserves its capability bits, applies4 samples under both tested backends and raises no reset,
+lost or disposing event; the old clear/present controls remain green. A second reconstruction
+restores exact single-sample state before the existing reset workflow. SOFTWARE and OPENGLES3
+produce byte-identical output with23 passing checks and empty stderr. Metadata remains504/0, and
+all27 enabled focused lifecycle, multisampling, renderer-selection and CLI tests pass in11.94s;
+one manual fullscreen test is disabled. One route raises coverage796->797/3205 and
+`graphics_device.h`79->80/84. Clean sibling CNA is `f37f8d184`; production `libcna.so` and
+`libcna_c_api.so` remain SHA-256
+`3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0` and
+`730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`. `cna-demos` is
+`8ac27e51e2a40a9d12263883b0b6d9d6fdd93ac08a242601a2c282a55daa1c57` and the standalone is
+`8a49e13217635efbcca4b232f6cace128eae724aac87e8f4ec2adb3084277447`. No displayed pixels or
+visual inspection is claimed. Evidence:`checkpoint-504-c-renderer-recreation-focused-*`.
 
 Focused **504-C-device-capabilities** extends `c_api.graphics.device_capabilities` from20to24
 controls. All27 direct render-target-format verdicts agree with the detailed supported-usage masks.
@@ -943,12 +960,10 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the assigned `graphics_device.h` groups from the complete semantic audit.
-The draw, occlusion-query, content-loss and capability/color-space batches are complete and await
-the next full checkpoint. Implement renderer recreation with lifecycle/reset evidence, then run a
-complete checkpoint. Keep context recovery
-manual/platform-specific and the one-way string
-marker intentionally uncredited unless an observable consumer is added. Build and run both renderer
-selections after each batch.
+All assigned executable groups now have focused evidence. Run the complete504 checkpoint against
+complete502, then continue the next highest-priority public C member/behavior audit. Keep context
+recovery manual/platform-specific, fixed type-name copies trivial/uncredited and the one-way string
+marker intentionally uncredited unless an observable consumer is added.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
@@ -968,8 +983,8 @@ preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is502-C-device-policy; source commit and exact results are in section7.
-Focused503-C-draw-routes plus focused504-C-occlusion-query, content-loss and device-capabilities are
-newer source/runtime evidence and are not yet in a full checkpoint.
+Focused503-C-draw-routes plus focused504-C-occlusion-query, content-loss, device-capabilities and
+renderer-recreation are newer source/runtime evidence and are not yet in a full checkpoint.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
