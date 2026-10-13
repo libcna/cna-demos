@@ -2179,3 +2179,19 @@ source, not validation of the later dirty external tree or an atomic dependency 
 coverage stays297/329types and1405/2326members; actual C ABI coverage is260/3210 and
 input_touch.h25/47. No physical detector, recognizer timing/threshold, callback-thread or visual
 claim. Evidence:checkpoint-476-c-input-gesture-queue-*.
+
+## Focused476-C-input-touch-scaling
+
+The same `c_api.input.gesture_queue` grows31->64checks without a new ID or fixture. Both renderers
+pass identical lists with empty stderr; removing33 additions restores all31complete-476 labels in
+order. Reset exposes width0, height0 and Default orientation. Normalized events before a published
+size succeed as drops; a later FreeDrag on640x480 yields exact position(480,240), delta(320,120)
+and finger23 while the touch snapshot stays empty. Portrait round-trips, an undefined state is
+refused, release adds no disabled DragComplete, and reset clears all display properties. The exact
+58input/C-API/CLI CTests pass in43.67s with six declared environment skips. Two watched builds pass
+with3911unchanged CNA inputs/no diagnostics; external unrelated CNA work remains dirty at f44a8ff,
+so no clean-source claim is made. Metadata stays476/0. Seven actual routes raise C coverage
+260->267/3210 and input_touch.h25->32/47. ISSUE-060 records the header's contradictory claim that
+the gesture-only raise route also fills the event-driven touch map. No physical touch,
+orientation-driven rotation, threshold boundary, snapshot injection or visual claim. Full476 is
+pending. Evidence:checkpoint-476-c-input-touch-scaling-focused-*.

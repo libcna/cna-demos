@@ -15,6 +15,31 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-060 -- Raised C touch-event documentation contradicts its gesture-only implementation
+
+- **Area/API:** `cna_touch_panel_raise_touch_event_ext`,
+  `modules/c-api/include/CNA/C/input_touch.h`, generated `Input.inc`, `TouchPanel.cpp` and
+  `SdlInputBridge.cpp`.
+- **Observed contract conflict:** one public-header paragraph says the route feeds "gesture
+  detection and the event-driven touch map, not the slot array," then says a raised event never
+  appears in the snapshot. Those statements cannot both describe CNA's current `GetState`
+  fallback, which reads the event-driven map when the slot array is empty.
+- **Implementation and runtime evidence:** the generated C route calls only
+  `TouchPanel::INTERNAL_onTouchEvent`, which scales the normalized coordinates and feeds the
+  gesture detector. The real SDL bridge separately calls `INTERNAL_setTouchState` before that
+  gesture call; the C route does not. The extended `c_api.input.gesture_queue` workflow raises a
+  deterministic FreeDrag, reads its exact 640x480-scaled position/delta, then observes an empty
+  `CNA_TouchState`. This agrees with the latter sentence and CNA's pure-C smoke expectation.
+- **Expected:** describe the route as gesture-processing input only, or make it update the
+  event-driven state map as the first sentence promises. If behavior changes, clarify identifier,
+  pressure and previous-location semantics rather than silently treating the gesture event as a
+  complete platform touch event.
+- **Scope/status:** documentation mismatch; no renderer, physical-device or gesture-timing defect
+  is claimed. The passing demo records actual behavior and needs no runtime knownIssue marker. Both
+  focused renderer runs pass64 identical controls with empty stderr; source hashes and the exact
+  31->64 comparison are archived under `checkpoint-476-c-input-touch-scaling-focused-*`. No CNA
+  file was edited and no upstream message was sent. Open.
+
 ### CNA-DEMOS-ISSUE-059 -- Empty MediaQueue active-Song output contradicts its C documentation
 
 - **Area/API:** `cna_media_queue_get_active_song`,

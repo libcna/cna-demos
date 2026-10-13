@@ -103,6 +103,19 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **476-C-input-touch-scaling** extends `c_api.input.gesture_queue` from31to64checks without
+a new ID or fixture. Both renderers pass identical lists with empty stderr; filtering33 additions
+restores all31complete-476 labels in order. Reset reports width0, height0 and Default orientation;
+zero-size normalized events are successful drops. With640x480 published, a raised FreeDrag returns
+finger23, position(480,240) and delta(320,120), while `CNA_TouchState` stays empty. Portrait
+round-trips, an invalid state is refused, and reset clears all three display properties. The exact
+58input/C-API/CLI CTests pass in43.67s with six declared environment skips. Two watched builds pass
+with3911unchanged CNA inputs/no diagnostics; unrelated external CNA work remains dirty at f44a8ff,
+so this is not a clean-source claim. Metadata stays476/0. Seven actual routes raise C ABI coverage
+260->267/3210 and input_touch.h25->32/47. ISSUE-060 records the public comment's event-map versus
+gesture-only contradiction. No physical touch, orientation-driven rotation, threshold-boundary,
+snapshot-injection or visual claim. Evidence:checkpoint-476-c-input-touch-scaling-focused-*.
+
 Focused **476-C-input-gesture-queue**, source `972dc87`, adds one deterministic C standalone.
 Both renderers pass31 identical child checks with empty stderr. Reset proves the default None mask
 and empty queue; Tap|FreeDrag round-trips exactly. Explicit Tap and FreeDrag samples retain their
@@ -255,10 +268,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit/implement the coherent display width/height/orientation plus normalized
-raised-touch scaling/event-source batch selected by the complete input_touch.h disposition. Extend
-the existing touch-state standalone if the source audit confirms the behaviors form one lifecycle;
-preserve its exact60 older child labels and the separate gesture queue. Leave live gamepad
+HIGHEST PRIORITY: commit the focused C touch-scaling batch, then run a complete same-ID476
+checkpoint against complete476-C-input-gesture-queue. Expect489enabled CTests and parent outcomes
+SOFTWARE411/27/35/3 and OPENGLES3441/29/3/3. Preserve all38/42old failures and every unrelated
+C/custom child list/trace; only `c_api.input.gesture_queue` may grow31->64 child controls and its
+parentJSON must remain0. Capture the same39 runtime paths; compared with the complete baseline only
+the catalog and gesture standalone binaries may differ, while the other37 binaries, four assets and
+30fixtures must remain exact. After closure select the next header/member audit from coverage data.
+Leave live gamepad
 dead-zone and mouse-touch emulation manual-deferred; keep generic touch/media reflection routes
 intentionally uncredited and `media_player_update_ext` deferred. Never edit/revert CNA; preserve
 ISSUE-038/057/058/059.
@@ -274,5 +291,6 @@ ISSUE-038/057/058/059.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is476-C-input-gesture-queue; source commit is in section7.
-All earlier drafts are APPLIED AND STALE. The display/orientation/scaling task in section14 is live.
+All earlier drafts are APPLIED AND STALE. The focused touch-scaling batch in section7 is current;
+its full same-ID476 task in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

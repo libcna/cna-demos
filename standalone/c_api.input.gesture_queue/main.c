@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: MS-PL */
 /*
- * Gesture queues from C: construct two complete gesture values, enable a detection mask, enqueue
- * both values, change the mask without dropping pending samples, and read them back in FIFO order.
+ * Gesture queues from C: construct and queue complete values, then publish display metrics and
+ * raise a normalized free drag to observe pixel scaling and the gesture-only event source.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH] (ignored: nothing is drawn).
  * Exit code 0 passed, 1 failed.
@@ -16,6 +16,13 @@ static void blank_sample(CNA_GestureSample* sample)
     memset(sample, 0, sizeof(*sample));
     sample->struct_size = (uint32_t)sizeof(*sample);
     sample->struct_version = UINT32_C(1);
+}
+
+static void blank_touch_state(CNA_TouchState* state)
+{
+    memset(state, 0, sizeof(*state));
+    state->struct_size = (uint32_t)sizeof(*state);
+    state->struct_version = UINT32_C(1);
 }
 
 static int same_vector(CNA_Vector2 value, float x, float y)
@@ -34,6 +41,10 @@ int main(int argc, char** argv)
     CNA_GestureSample drag;
     CNA_GestureSample read_back;
     CNA_GestureSample before_refusal;
+    CNA_TouchState touch_state;
+    CNA_DisplayOrientation orientation = CNA_DISPLAY_ORIENTATION_PORTRAIT;
+    int32_t display_width = -1;
+    int32_t display_height = -1;
 
     cna_demo_init(&demo, "c_api.input.gesture_queue", argc, argv, 0);
     memset(&create_info, 0, sizeof(create_info));
@@ -147,8 +158,117 @@ int main(int argc, char** argv)
                        memcmp(&read_back, &before_refusal, sizeof(read_back)) == 0,
                    "an empty read is refused without changing the output sample");
 
+    cna_demo_check_result(&demo, cna_touch_panel_get_display_width(game, &display_width),
+                          "read the reset display width");
+    cna_demo_check_result(&demo, cna_touch_panel_get_display_height(game, &display_height),
+                          "read the reset display height");
+    cna_demo_check_result(&demo, cna_touch_panel_get_display_orientation(game, &orientation),
+                          "read the reset display orientation");
+    cna_demo_check(&demo,
+                   display_width == 0 && display_height == 0 &&
+                       orientation == CNA_DISPLAY_ORIENTATION_DEFAULT,
+                   "the reset panel has no display metrics and uses the default orientation");
+
+    cna_demo_check_result(&demo,
+                          cna_touch_panel_set_enabled_gestures(game, CNA_GESTURE_TYPE_FREE_DRAG),
+                          "enable free-drag detection for raised events");
+    cna_demo_check_result(
+        &demo,
+        cna_touch_panel_raise_touch_event_ext(
+            game, INT32_C(23), CNA_TOUCH_LOCATION_PRESSED, 0.25f, 0.25f, 0.0f, 0.0f),
+        "raise a normalized press before publishing display metrics");
+    cna_demo_check_result(
+        &demo,
+        cna_touch_panel_raise_touch_event_ext(
+            game, INT32_C(23), CNA_TOUCH_LOCATION_MOVED, 0.75f, 0.50f, 0.50f, 0.25f),
+        "raise a normalized move before publishing display metrics");
+    if (cna_demo_check_result(&demo, cna_touch_panel_get_is_gesture_available(game, &available),
+                              "query the queue after zero-size events")) {
+        cna_demo_check(&demo, available == CNA_FALSE,
+                       "events are dropped rather than collapsed to the origin without a display size");
+    }
+
+    cna_demo_check_result(&demo, cna_touch_panel_set_display_width(game, INT32_C(640)),
+                          "publish a 640-pixel touch display width");
+    cna_demo_check_result(&demo, cna_touch_panel_set_display_height(game, INT32_C(480)),
+                          "publish a 480-pixel touch display height");
+    cna_demo_check_result(&demo, cna_touch_panel_get_display_width(game, &display_width),
+                          "read the published display width");
+    cna_demo_check_result(&demo, cna_touch_panel_get_display_height(game, &display_height),
+                          "read the published display height");
+    cna_demo_check(&demo, display_width == 640 && display_height == 480,
+                   "display dimensions round-trip independently");
+    cna_demo_check_result(
+        &demo,
+        cna_touch_panel_set_display_orientation(game, CNA_DISPLAY_ORIENTATION_PORTRAIT),
+        "publish the portrait touch orientation");
+    if (cna_demo_check_result(&demo, cna_touch_panel_get_display_orientation(game, &orientation),
+                              "read the published display orientation")) {
+        cna_demo_check(&demo, orientation == CNA_DISPLAY_ORIENTATION_PORTRAIT,
+                       "the portrait orientation round-trips exactly");
+    }
+
+    cna_demo_check_result(
+        &demo,
+        cna_touch_panel_raise_touch_event_ext(
+            game, INT32_C(23), CNA_TOUCH_LOCATION_PRESSED, 0.25f, 0.25f, 0.0f, 0.0f),
+        "raise a normalized press on the published display");
+    cna_demo_check_result(
+        &demo,
+        cna_touch_panel_raise_touch_event_ext(
+            game, INT32_C(23), CNA_TOUCH_LOCATION_MOVED, 0.75f, 0.50f, 0.50f, 0.25f),
+        "raise a normalized free-drag move");
+    if (cna_demo_check_result(&demo, cna_touch_panel_get_is_gesture_available(game, &available),
+                              "query the detector-produced gesture")) {
+        cna_demo_check(&demo, available == CNA_TRUE,
+                       "the large normalized move produces a free-drag sample");
+    }
+    blank_sample(&read_back);
+    if (cna_demo_check_result(&demo, cna_touch_panel_read_gesture(game, &read_back),
+                              "read the detector-produced free drag")) {
+        cna_demo_check(&demo,
+                       read_back.gesture_type == CNA_GESTURE_TYPE_FREE_DRAG &&
+                           read_back.finger_id_ext == INT32_C(23) &&
+                           read_back.finger_id2_ext == CNA_TOUCH_NO_FINGER &&
+                           same_vector(read_back.position, 480.0f, 240.0f) &&
+                           same_vector(read_back.delta, 320.0f, 120.0f),
+                       "normalized position and delta scale independently to exact display pixels");
+    }
+    blank_touch_state(&touch_state);
+    if (cna_demo_check_result(&demo, cna_touch_get_state(game, &touch_state),
+                              "capture touch state after the raised gesture event")) {
+        cna_demo_check(&demo, touch_state.touch_count == 0U,
+                       "the gesture-only raise route does not populate the touch snapshot");
+    }
+    cna_demo_check(
+        &demo,
+        cna_touch_panel_raise_touch_event_ext(
+            game, INT32_C(23), UINT32_C(4), 0.75f, 0.50f, 0.0f, 0.0f) ==
+            CNA_RESULT_INVALID_ARGUMENT,
+        "an undefined touch-location state is refused");
+    cna_demo_check_result(
+        &demo,
+        cna_touch_panel_raise_touch_event_ext(
+            game, INT32_C(23), CNA_TOUCH_LOCATION_RELEASED, 0.75f, 0.50f, 0.0f, 0.0f),
+        "release the raised drag finger");
+    if (cna_demo_check_result(&demo, cna_touch_panel_get_is_gesture_available(game, &available),
+                              "query the queue after the free-drag release")) {
+        cna_demo_check(&demo, available == CNA_FALSE,
+                       "release adds nothing when drag-complete detection is disabled");
+    }
+
     cna_demo_check_result(&demo, cna_touch_panel_reset_for_tests_ext(game),
                           "restore the process-wide gesture fixture");
+    cna_demo_check_result(&demo, cna_touch_panel_get_display_width(game, &display_width),
+                          "read display width after fixture restoration");
+    cna_demo_check_result(&demo, cna_touch_panel_get_display_height(game, &display_height),
+                          "read display height after fixture restoration");
+    cna_demo_check_result(&demo, cna_touch_panel_get_display_orientation(game, &orientation),
+                          "read display orientation after fixture restoration");
+    cna_demo_check(&demo,
+                   display_width == 0 && display_height == 0 &&
+                       orientation == CNA_DISPLAY_ORIENTATION_DEFAULT,
+                   "fixture restoration clears display metrics and orientation");
     cna_demo_check_result(&demo, cna_game_destroy(game), "cna_game_destroy");
     return cna_demo_finish(&demo);
 }

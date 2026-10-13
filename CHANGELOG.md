@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the C gesture workflow from31to64checks with display/orientation round trips, zero-size
+  event dropping, exact normalized FreeDrag scaling and gesture/snapshot source separation.
+- Recorded CNA-DEMOS-ISSUE-060: the raised C touch-event comment contradicts its gesture-only
+  implementation by also claiming the event-driven touch map is populated.
 - Complete476-C-input-gesture-queue:489enabled CTests and both full smoke suites preserve every
   prior result and child trace; the new C standalone adds31 exact gesture-queue controls.
 - Added `c_api.input.gesture_queue`, a deterministic31-check C FIFO workflow for complete authored
