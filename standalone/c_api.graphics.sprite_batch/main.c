@@ -4,7 +4,8 @@
  * draws a ring of tinted, rotating copies of it. A whole frame of sprites is one array of
  * CNA_SpriteCommand handed to cna_sprite_batch_submit_many between begin and end. The final frame
  * also uses CNA_SpriteScaledCommand to place two selected texels by position, origin and
- * nonuniform scale, with exact pixel and texture-retention checks.
+ * nonuniform scale, with exact pixel and texture-retention checks. Explicit state and transformed
+ * default-effect Begin routes draw two more probes whose back-buffer pixels verify their behavior.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH]. Exit code 0 passed, 1 failed.
  */
@@ -334,6 +335,117 @@ cleanup:
     if (texture != CNA_INVALID_HANDLE) (void)cna_texture2d_destroy(texture);
 }
 
+/* These two Begin routes need behavioral evidence beyond accepting their arguments. Opaque makes
+   the half-alpha red texel replace the clear colour without blending, while the default sprite
+   effect applies a nonidentity transform to move the green command sixty pixels to the right. */
+static void check_stateful_batch(SpriteState* state, CNA_Handle graphics_device)
+{
+    CNA_Handle texture = CNA_INVALID_HANDLE;
+    CNA_Handle batch = CNA_INVALID_HANDLE;
+    CNA_Texture2DCreateInfo texture_info;
+    CNA_BlendState blend;
+    CNA_SamplerState sampler;
+    CNA_DepthStencilState depth;
+    CNA_RasterizerState rasterizer;
+    CNA_SpriteCommand command;
+    CNA_Matrix translation;
+    const CNA_Color pixels[2] = {{128, 0, 0, 128}, {0, 255, 0, 255}};
+    CNA_Result result;
+
+    memset(&texture_info, 0, sizeof(texture_info));
+    texture_info.struct_size = (uint32_t)sizeof(texture_info);
+    texture_info.struct_version = UINT32_C(1);
+    texture_info.width = 2;
+    texture_info.height = 1;
+    texture_info.format = CNA_SURFACE_FORMAT_COLOR;
+    if (!cna_demo_check_result(
+            state->demo, cna_texture2d_create(graphics_device, &texture_info, &texture),
+            "create the stateful-Begin source strip"))
+        goto cleanup;
+    if (!cna_demo_check_result(
+            state->demo, cna_texture2d_set_data_rgba8(texture, pixels, UINT64_C(2)),
+            "upload half-alpha red and opaque green stateful-Begin texels"))
+        goto cleanup;
+    if (!cna_demo_check_result(
+            state->demo, cna_sprite_batch_create(graphics_device, &batch),
+            "create an independently owned stateful-Begin batch"))
+        goto cleanup;
+    if (!cna_demo_check_result(
+            state->demo, cna_blend_state_init(CNA_BLEND_STATE_PRESET_OPAQUE, &blend),
+            "initialize the explicit Opaque blend state"))
+        goto cleanup;
+    if (!cna_demo_check_result(
+            state->demo, cna_sampler_state_init(CNA_SAMPLER_STATE_PRESET_POINT_CLAMP, &sampler),
+            "initialize the explicit PointClamp sampler state"))
+        goto cleanup;
+    if (!cna_demo_check_result(
+            state->demo, cna_depth_stencil_state_init(CNA_DEPTH_STENCIL_STATE_PRESET_NONE, &depth),
+            "initialize the explicit depth/stencil None state"))
+        goto cleanup;
+    if (!cna_demo_check_result(
+            state->demo, cna_rasterizer_state_init(CNA_RASTERIZER_STATE_PRESET_CULL_NONE, &rasterizer),
+            "initialize the explicit CullNone rasterizer state"))
+        goto cleanup;
+
+    memset(&command, 0, sizeof(command));
+    command.struct_size = (uint32_t)sizeof(command);
+    command.struct_version = UINT32_C(1);
+    command.texture = texture;
+    command.destination = (CNA_Rectangle){100, 90, 12, 12};
+    command.source = (CNA_Rectangle){0, 0, 1, 1};
+    command.color = (CNA_Color){255, 255, 255, 255};
+    if (!cna_demo_check_result(
+            state->demo,
+            cna_sprite_batch_begin_with_states(
+                batch, CNA_SPRITE_SORT_MODE_DEFERRED, &blend, &sampler, &depth, &rasterizer),
+            "begin with explicit Opaque, PointClamp, None and CullNone states"))
+        goto cleanup;
+    if (!cna_demo_check_result(
+            state->demo, cna_sprite_batch_submit_many(batch, &command, UINT64_C(1)),
+            "queue the half-alpha red explicit-state command"))
+        goto cleanup;
+    if (!cna_demo_check_result(
+            state->demo, cna_sprite_batch_end(batch),
+            "End flushes the explicit-state command"))
+        goto cleanup;
+
+    if (!cna_demo_check_result(
+            state->demo, cna_matrix_create_translation_xyz(60.0f, 0.0f, 0.0f, &translation),
+            "create the nonidentity SpriteBatch translation"))
+        goto cleanup;
+    command.destination = (CNA_Rectangle){100, 120, 12, 12};
+    command.source = (CNA_Rectangle){1, 0, 1, 1};
+    if (!cna_demo_check_result(
+            state->demo,
+            cna_sprite_batch_begin_with_effect(
+                batch, CNA_SPRITE_SORT_MODE_DEFERRED, &blend, &sampler, &depth, &rasterizer,
+                CNA_INVALID_HANDLE, &translation),
+            "begin with the default effect and a sixty-pixel translation"))
+        goto cleanup;
+    if (!cna_demo_check_result(
+            state->demo, cna_sprite_batch_submit_many(batch, &command, UINT64_C(1)),
+            "queue the green transformed-effect command"))
+        goto cleanup;
+    if (!cna_demo_check_result(
+            state->demo, cna_sprite_batch_end(batch),
+            "End flushes the transformed default-effect command"))
+        goto cleanup;
+
+    result = cna_texture2d_destroy(texture);
+    if (cna_demo_check_result(
+            state->demo, result,
+            "both stateful End calls release the shared probe texture"))
+        texture = CNA_INVALID_HANDLE;
+    result = cna_sprite_batch_destroy(batch);
+    if (cna_demo_check_result(
+            state->demo, result, "destroy the completed stateful-Begin batch"))
+        batch = CNA_INVALID_HANDLE;
+
+cleanup:
+    if (batch != CNA_INVALID_HANDLE) (void)cna_sprite_batch_destroy(batch);
+    if (texture != CNA_INVALID_HANDLE) (void)cna_texture2d_destroy(texture);
+}
+
 static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* context, CNA_CallbackError* out_error)
 {
     const double pi = 3.14159265358979323846;
@@ -400,6 +512,7 @@ static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* con
         check_cancelled_batch(state, graphics_device);
         check_completed_batch(state, graphics_device);
         check_scaled_batch(state, graphics_device);
+        check_stateful_batch(state, graphics_device);
         readback = cna_graphics_device_get_backbuffer_data_rgba8(graphics_device, pixels, 800U * 480U, &count);
         if (readback == CNA_RESULT_NOT_SUPPORTED) {
             printf("  this renderer cannot read its back buffer back; pixel checks skipped\n");
@@ -417,6 +530,9 @@ static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* con
             const CNA_Color magenta_last = pixels[68 * 800 + 84];
             const CNA_Color magenta_left = pixels[62 * 800 + 79];
             const CNA_Color magenta_below = pixels[70 * 800 + 82];
+            const CNA_Color opaque_red = pixels[95 * 800 + 105];
+            const CNA_Color untranslated_green = pixels[125 * 800 + 105];
+            const CNA_Color translated_green = pixels[125 * 800 + 165];
             printf("  centre %u,%u,%u  corner %u,%u,%u\n", centre.r, centre.g, centre.b, corner.r, corner.g,
                    corner.b);
             cna_demo_check(state->demo, centre.r > 240 && centre.g > 240 && centre.b > 240,
@@ -447,6 +563,16 @@ static CNA_Result draw(CNA_Handle game, const CNA_GameTime* game_time, void* con
                     magenta_left.b == background.b && magenta_below.r == background.r &&
                     magenta_below.g == background.g && magenta_below.b == background.b,
                 "the selected magenta texel starts at its position and spans 6x14 pixels");
+            cna_demo_check(
+                state->demo,
+                opaque_red.r == 128 && opaque_red.g == 0 && opaque_red.b == 0,
+                "the explicit Opaque state writes the half-alpha source without blending");
+            cna_demo_check(
+                state->demo,
+                untranslated_green.r == background.r && untranslated_green.g == background.g &&
+                    untranslated_green.b == background.b && translated_green.r == 0 &&
+                    translated_green.g == 255 && translated_green.b == 0,
+                "the transformed default effect moves the green command sixty pixels right");
         }
         cna_demo_capture(state->demo, graphics_device);
     }

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `c_api.graphics.sprite_batch` from43to61 controls with pixel-proven explicit-state and
+  transformed default-effect Begin routes, completing all14 `graphics_state.h` routes.
 - Added `c_api.graphics.device_states`, a19-check audit of every graphics-state preset plus exact
   live-device blend, depth/stencil, rasterizer and independent pixel/vertex sampler round trips.
 - Added `c_api.graphics.index_buffer`, an18-check dynamic 16-bit transfer, read-back, partial-update

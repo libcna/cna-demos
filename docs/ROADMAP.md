@@ -2797,3 +2797,18 @@ routes are assigned to the existing pixel-validated C SpriteBatch demo. Clean si
 docs-only `e67c54936`; the production library hash remains unchanged. No drawing or visual
 inspection is claimed.
 Evidence:checkpoint-497-c-device-states-focused-*.
+
+## Focused497-C-sprite-states
+
+The existing `c_api.graphics.sprite_batch` workflow grows from43to61 controls without another demo
+ID. Its explicit-state Begin uses Opaque, PointClamp, depth/stencil None and CullNone; exact
+backbuffer read-back proves the half-alpha red source replaces the clear colour as raw RGB128. Its
+effect-bearing Begin selects the default effect with `CNA_INVALID_HANDLE` and supplies a
+nonidentity translation; the original destination stays clear and the opaque green command appears
+exactly sixty pixels to the right. Both intervals share one owned texture and batch and retain
+successful End/release checks. SOFTWARE and OPENGLES3 produce identical output with empty stderr.
+Metadata is497/0, all76 focused C/API, C++ SpriteBatch and CLI tests pass, and a clean follow-up
+build passes. These final two routes raise C coverage716->718/3205 and complete
+`graphics_state.h` at14/14. Clean sibling CNA is docs-only `e67c54936`; production `libcna.so`
+remains unchanged. No screenshot or visual inspection is claimed.
+Evidence:checkpoint-497-c-sprite-states-focused-*.
