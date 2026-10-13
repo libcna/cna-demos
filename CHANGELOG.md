@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Corrected the C adapter snapshot's widescreen cross-check to use XNA's strict `> 1.6` boundary,
+  including an exact 16:10 mode.
 - Added `c_api.graphics.resource_lifecycle`, a25-check C workflow covering all12 generic
   GraphicsResource ownership, name/string, tag, disposal and event-lifetime routes.
 - Extended `c_api.graphics.sprite_batch` from30to43 controls with position/source/origin/nonuniform-

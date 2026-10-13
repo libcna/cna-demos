@@ -164,8 +164,8 @@ int main(int argc, char** argv)
                 CNA_RESULT_SUCCESS &&
             mode_is_coherent(&current) &&
             info.is_wide_screen ==
-                (CNA_Bool)((int64_t)current.width * INT64_C(3) >
-                                   (int64_t)current.height * INT64_C(4)
+                (CNA_Bool)((int64_t)current.width * INT64_C(5) >
+                                   (int64_t)current.height * INT64_C(8)
                                ? CNA_TRUE
                                : CNA_FALSE),
         "the current display mode is coherent with the adapter's widescreen flag");
