@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.texture2d_io`, a27-check C workflow covering standalone and device-backed
+  Texture2D construction, storage identity, exact full/rectangle transfers, atomic PNG/JPEG output,
+  file round-tripping and encoded-memory resizing.
 - Added `c_api.graphics.texture_formats`, a deterministic six-check C audit of every public
   SurfaceFormat's compression footprint, storage-unit size, pixel alignment, compatible transfer
   widths and renderer-independent base Texture support policy.

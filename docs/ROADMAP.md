@@ -3358,3 +3358,16 @@ identical output and empty stderr. All32 focused Texture/CLI CTests satisfy thei
 pixel or visual claim is made. Final observation sees clean sibling CNA `b2ded99da9`; its only
 change since the media batch is documentation and the production library hashes remain unchanged.
 Evidence:checkpoint-522-c-texture-formats-focused-*.
+
+New `c_api.graphics.texture2d_io` closes every meaningful `texture.h` resource route in one
+27-control workflow. It contrasts an empty standalone texture with a PNG-loaded CPU-backed one;
+performs exact full RGBA and offset-window rectangle transfers with atomic short readback; sizes and
+copies PNG/JPEG output; saves, reloads and removes a private PNG; and uses one live device callback
+for file, authored-RGBA and encoded-memory creation, exact raw replacement, resize/crop behavior and
+complete child cleanup. Direct execution and both renderer selections pass with byte-identical
+output and empty stderr. All34 focused C Texture/Texture/CLI tests satisfy their contracts in18.83s,
+including two declared SOFTWARE capability skips. Metadata is523/0 and coverage rises1089->
+1101/3205, with `texture.h`7->19/21. Its remaining pair only size/copies the fixed Texture2D type
+name already covered by CNA's generic C smoke, so the header's semantic audit is complete. No draw,
+screenshot or visual inspection is claimed. Clean sibling CNA is `b2ded99da9` and production
+library hashes are unchanged. Evidence:checkpoint-523-c-texture2d-io-focused-*.
