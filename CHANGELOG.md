@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.adapter_snapshot`, a15-check C workflow covering all seven read-only
+  adapter enumeration, exact UTF-8 metadata and filtered display-mode routes before the first
+  frame, including atomic short-buffer and upper-index refusal.
 - Added `c_api.graphics.display_values`, an eight-check renderer-independent C workflow covering
   all five `DisplayMode` and `PresentationParameters` value routes, including native clone
   treatment of CNA's non-XNA headless extension and refusal before output mutation.

@@ -2627,3 +2627,21 @@ the declared manual fullscreen test is disabled. Five routes raise current C cov
 and establish `display.h`5/22. No game, device, window, adapter query, rendering or visual inspection
 is claimed. The standard/full checkpoint remains blocked by the external sibling-CNA renderer
 source/header mismatch. Evidence:checkpoint-489-c-display-values-focused-*.
+
+## Focused490-C-adapter-snapshot
+
+New `c_api.graphics.adapter_snapshot` covers all seven read-only adapter routes in `display.h`
+through the active game's own handle before its first frame. Fifteen controls enumerate the one
+Xvfb adapter; validate the versioned default-adapter metadata and nonempty names; copy exact
+unterminated description and device-name bytes; prove both short buffers are unchanged; read a
+coherent current mode; count/copy complete and Color-filtered mode arrays with guard preservation;
+and refuse the index equal to adapter count through all six index-bearing routes before output
+mutation. This host reports `screen`, `\\.\DISPLAY1` and one1280x1024 Color mode.
+
+Both renderer selections pass identical output with empty stderr. Direct C and metadata compilation
+is diagnostic-free, metadata validates490/0 and the exact focused CTest passes. A58-test C/API,
+graphics-adapter, graphics-device-manager and CLI regression selection passes all57 enabled tests;
+the declared manual fullscreen test is disabled. Seven routes raise current C coverage652->659/3205
+and `display.h`5->12/22. Host values are observations; no rendering, alternative monitor topology
+or visual inspection is claimed. The standard/full checkpoint remains pending until the current
+sibling-CNA state is tested. Evidence:checkpoint-490-c-adapter-snapshot-focused-*.
