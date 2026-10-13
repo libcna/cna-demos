@@ -2657,3 +2657,19 @@ metadata remain exact. Fourteen new C IDs comprise13passes and the documented se
 ISSUE-062 failure; only its two disposed-value assertions extend the failure multisets from38to40
 and42to44. Coverage is297/329 types,1405/2326 XNA members and659/3205 C routes. No visual
 inspection is claimed. Evidence:checkpoint-490-c-adapter-snapshot-*.
+
+## Focused491-C-adapter-capabilities
+
+New `c_api.graphics.adapter_capabilities` covers the six remaining adapter capability, format,
+preference and explicit-limitation routes in `display.h`. Sixteen controls establish Reach support;
+exact Color/None/0 render-target and backbuffer selections with complete versioned outputs; a
+one-flag preference change followed by exact two-flag restoration before device creation; and the
+stable ABI's zero-output NOT_SUPPORTED monitor-handle and callback-scoped refresh contracts. Both
+renderer selections pass identical output with empty stderr. Metadata validates491/0, the exact
+CTest passes, and all58 enabled tests in an Xvfb-backed59-test C/API, graphics-adapter,
+graphics-device-manager and CLI selection pass with the declared fullscreen test disabled. A
+deliberate no-display diagnostic run fails only the existing desktop clipboard and mouse/cursor
+checks, while the Xvfb rerun passes them; this is an environment requirement rather than a new CNA
+issue. Six routes raise C coverage659->665/3205 and `display.h`12->18/22. No monitor handle, cache
+refresh, rendering or visual inspection is claimed. Evidence:
+checkpoint-491-c-adapter-capabilities-focused-*.
