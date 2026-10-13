@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.shader_effect_textures`, a20-check C workflow covering 2D/cube/3D sampler
+  family validation, same-unit replacement and ownership retained through a surviving pass view.
 - Added `c_api.graphics.shader_effect_uniforms`, an18-check C workflow covering all loose typed
   uniform setters, tightly packed float/vec2/vec3/mat4 arrays, malformed inputs and portable std140
   block declarations against active shader uniforms.

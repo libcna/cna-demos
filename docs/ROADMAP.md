@@ -3292,3 +3292,16 @@ third-party Draco CMP0148 developer warning. Clean sibling CNA is `a6bb279d47`; 
 library baseline is unchanged. Existing pixel demos cover rendered uniform behavior; this workflow
 draws nothing and claims no pixel or visual inspection.
 Evidence:checkpoint-520-c-shader-uniforms-focused-*.
+
+New `c_api.graphics.shader_effect_textures` demonstrates all three ShaderEffect texture setters and
+the first C Texture3D resource lifetime. Twenty controls create real 2D, cube and 1x1x1 volume
+textures under both requested renderers; refuse negative units and wrong-family handles; replace
+2D with cube and cube with volume on one sampler unit; and retain the volume through Effect
+destruction until the last pass view releases. Direct and both runner selections pass with byte-
+identical output and empty stderr; all26 focused ShaderEffect and CLI tests satisfy their contracts
+in6.57s (18 passed, eight declared SOFTWARE capability skips). Metadata is521/0 and the final
+incremental build is clean. The three bindings plus Texture3D create/destroy raise total C coverage
+1077->1082/3205, `effects.h`286->289/290 and `texture_volume.h`2->4/16. The configure build emitted
+only the known third-party Draco CMP0148 developer warning. Clean sibling CNA is `a6bb279d47`; the
+production library baseline is unchanged. No sampling, draw, pixel or visual inspection is claimed.
+Evidence:checkpoint-521-c-shader-textures-focused-*.
