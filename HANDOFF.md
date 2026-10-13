@@ -17,10 +17,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 41; the C `effects.h` route audit is complete).
-* In progress: 7 (models/glTF, 23), 8 (content, 49), 9 (audio 23 incl. 10 XACT, media 13 incl. a
+* In progress: 7 (models/glTF, 23), 8 (content, 50), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 109 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 110 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -66,14 +66,14 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds39 staged standalone C IDs and should reach564 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds40 staged standalone C IDs and should reach565 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
-content 49 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
+content 50 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and109 in the
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and110 in the
 current source tree (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
 Actual C ABI coverage is1116/3205: `input_gamepad.h`61/63,
@@ -1324,8 +1324,8 @@ full-screen toggling kept platform/manual after the Xvfb mode switch timed out a
 `content.h` has semantic dispositions for all32 routes at31 demonstrated; the resource-backed
 constructor remains intentionally deferred until CNA exposes a real embedded-resource store.
 `storage.h` is dispositioned at47/49 demonstrated, with only its fixed container reflection-name
-pair trivial/uncredited. `content_readers.h` is20/62 demonstrated after the base reader/value batch;
-next audit the type-reader registry, placeholder and callback behavior.
+pair trivial/uncredited. `content_readers.h` is35/62 demonstrated after the base reader/value and
+type-reader registry batches; next audit the reflective reader builders and their callbacks.
 Once CNA becomes coherent, reconfigure
 `linux-full`, build every
 staged source, run focused validation and absorb the work in one complete checkpoint. Keep tagged
@@ -1672,6 +1672,17 @@ initialized. Strict C99 and metadata compilation pass. `content_readers.h` is20/
 its registry, placeholder, caller-supplied, reflective and object-dictionary routes remain for the
 next batches. Evidence: `checkpoint-567-c-content-reader-values-focused-*-direct.*`.
 
+`standalone/c_api.content.type_reader_registry` demonstrates the next15 `content_readers.h` routes
+in37 controls. Its isolated process registry covers clearing, the idempotent currently empty known-
+unsupported hook, missing-name resolution, explicit placeholder identity/refusal, exact/atomic
+target names, versions and initialization. A caller-owned factory then proves malformed and
+duplicate registration refusal, fresh per-lookup instances, callback-scoped reader usability and
+post-callback invalidation, read-failure propagation, instance survival after unregistration,
+one-shot cleanup and immediate name reuse. Both renderer-labelled direct runs are byte-identical
+with empty stderr; no renderer is initialized. Strict C99 and metadata compilation pass.
+`content_readers.h` is35/62 demonstrated. Evidence:
+`checkpoint-568-c-content-type-reader-registry-focused-*-direct.*`.
+
 The sibling CNA briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
 After `cna-demos` removed VULKAN from `linux-full`, configure succeeded, but concurrent external
 retirement edits changed CNA during the build: `GraphicsRendererType::DirectX11` disappeared while
@@ -1687,8 +1698,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose564 catalog IDs (complete524 plus SpriteFont and39
-additional new standalone IDs) and580 declared/577 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose565 catalog IDs (complete524 plus SpriteFont and40
+additional new standalone IDs) and581 declared/578 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 

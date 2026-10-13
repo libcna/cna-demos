@@ -3733,3 +3733,14 @@ environments are byte-identical with empty stderr; no renderer is initialized. S
 metadata compilation pass. `content_readers.h` is20/62 demonstrated; registry, placeholder,
 caller-supplied, reflective and object-dictionary batches remain. Evidence:
 checkpoint-567-c-content-reader-values-focused-*-direct.*.
+
+`c_api.content.type_reader_registry` covers the next15 reader routes in37 controls. The isolated
+process registry proves clearing, the idempotent currently empty unsupported-reader hook, missing
+resolution, explicit placeholder identity/refusal, exact/atomic target naming, versions and
+initialization. A caller-owned factory adds malformed/duplicate refusal, fresh instances,
+callback-scoped reader validity and immediate invalidation, propagated read failure, survival of an
+existing instance after unregistration, one-shot cleanup and canonical-name reuse. Both renderer-
+labelled direct runs are byte-identical with empty stderr and initialize no renderer; strict C99 and
+metadata compilation pass. `content_readers.h` is35/62 demonstrated; reflective builders and the
+object-dictionary family remain. Evidence:
+checkpoint-568-c-content-type-reader-registry-focused-*-direct.*.
