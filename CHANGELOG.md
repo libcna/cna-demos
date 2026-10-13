@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete500-C-buffer-bindings passes all513 enabled CTests and both full smoke suites; all three
+  new graphics IDs pass and every complete497 status, known issue and failed assertion remains exact.
 - Added `c_api.graphics.buffer_bindings`, a20-check C workflow for single and ordered multi-stream
   vertex bindings, atomic copy/preflight, index binding and destruction-driven device cleanup.
 - Added `c_api.graphics.texture_slots`, a16-check C workflow for exact pixel-stage slot identity,

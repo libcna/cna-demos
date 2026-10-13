@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-500 catalog demos (latest complete checkpoint497-C-sprite-states; five focused batches pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+500 catalog demos (latest complete checkpoint500-C-buffer-bindings): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -72,14 +72,13 @@ content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text in
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 45 (standalone C programs). Every declared category has demos.
-Coverage: see docs/COVERAGE.md (current catalog with complete497 runtime reports). Actual C ABI
+Coverage: see docs/COVERAGE.md (current catalog with complete500 runtime reports). Actual C ABI
 coverage is758/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`42/84. Complete497 exercises
-the first718 credited routes in both full smoke suites;40 new routes have focused dual-renderer
-evidence.
+`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`42/84. Complete500 exercises
+all758 credited routes in both full smoke suites.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 30 (`c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
 `c_api.storage.save_game` CNA-DEMOS-ISSUE-056,
@@ -110,6 +109,19 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Complete **500-C-buffer-bindings**, source `dee3837`, clears all five focused graphics batches
+after complete497. Full `tools/validate.sh` passes metadata500/0 and all513 enabled CTests in
+170.48s; three declared tests remain disabled. SOFTWARE is434/28/35/3 and OPENGLES3 is
+464/30/3/3, with every failure expected. Against complete497, the three new IDs
+`c_api.graphics.viewport`, `c_api.graphics.texture_slots` and
+`c_api.graphics.buffer_bindings` all pass, every older ID retains status and known-issue metadata,
+and the failed-assertion multisets remain exactly40/44. The extended device-state and
+resource-lifecycle children pass22 and30 controls on both renderers. Coverage is297/329 types,
+1405/2326 XNA members and758/3205 C routes. Sibling CNA stayed clean and unchanged at `d7eff66ee`;
+production `libcna.so` remains SHA-256
+`3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0`. No visual inspection is
+claimed. Evidence:`checkpoint-500-c-buffer-bindings-*`.
 
 Focused **500-C-buffer-bindings** adds `c_api.graphics.buffer_bindings` for all eight device buffer-
 binding routes. Twenty controls start with empty vertex/index bindings; create two real vertex
@@ -796,13 +808,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: run a complete 500-demo checkpoint from focused source commit after recording it.
-Use the documented isolated X11 environment and `tools/validate.sh`; archive configure/build/CTest,
-both renderer reports/stdout/stderr, coverage, catalog, validation, comparison and binary hashes as
-`checkpoint-500-c-buffer-bindings-*`. Compare all pre-existing statuses, known-issue metadata and
-failed-assertion multisets against complete497. Investigate every difference before updating this
-handoff. After the checkpoint, continue the remaining `graphics_device.h` audit; keep clear/draw
-routes as pixel-evidence work and owned-device/reset/event behavior as separate lifecycle work.
+HIGHEST PRIORITY: continue the remaining `graphics_device.h` audit from complete500. Record a
+semantic disposition for all42 uncredited routes, then implement the next coherent batch. Keep
+clear/draw routes as pixel-evidence work and owned-device/reset/event behavior as separate
+lifecycle work; generic type-name reflection may remain trivial/uncredited where existing string
+contracts already demonstrate the behavior. Build and run both renderer selections after each
+batch, and do not defer another complete checkpoint for multiple accumulated IDs.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
@@ -821,16 +832,15 @@ preserve ISSUE-038/057/058/059/060/061/062/063/064.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is497-C-sprite-states; source commit and exact results are in section7.
+Current complete baseline is500-C-buffer-bindings; source commit and exact results are in section7.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
 checkpoint. Adapter-capabilities and device-presentation are included in complete492. The later
 render-target-bindings, device-capabilities, sprite-scaled, resource-lifecycle, index-buffer,
-device-states and sprite-states batches are all included in complete497. Focused viewport498 plus
-the later device-values and resource-events extensions, texture-slots499 and buffer-bindings500 are
-newer and pending the next complete checkpoint. Complete497 began at clean
-docs-only sibling CNA `e67c54936` and ended at clean docs-only `d7eff66ee`; both used the same
-production library hash. Complete497 is the immutable full-runtime baseline.
+device-states and sprite-states batches are all included in complete497. Viewport, the later
+device-values and resource-events extensions, texture slots and buffer bindings are included in
+complete500. Complete500 ran with clean sibling CNA `d7eff66ee`; the production library hash stayed
+unchanged. Complete500 is the immutable full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.

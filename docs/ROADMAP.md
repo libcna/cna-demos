@@ -2908,3 +2908,16 @@ raise C coverage752->758/3205 and `graphics_device.h`36->42/84. Clean sibling CN
 production `libcna.so` remains byte-identical. No buffer data, drawing or visual inspection is
 claimed.
 Evidence:checkpoint-500-c-buffer-bindings-focused-*.
+
+## Complete500-C-buffer-bindings
+
+Complete checkpoint source `dee3837` absorbs the five focused graphics batches after complete497.
+`tools/validate.sh` reports metadata500/0 and passes all513 enabled CTests in170.48s; three declared
+tests remain disabled. SOFTWARE is434pass/28known-fail/35skip/3not-run and OPENGLES3 is
+464pass/30known-fail/3skip/3not-run. Comparison with complete497 shows all three new IDs passing,
+every existing status and known-issue value unchanged, and identical failed-assertion multisets of
+40 and44. The extended C device-state and resource-lifecycle children pass22 and30 checks on both
+renderers. Fresh runtime coverage is297/329 types,1405/2326 XNA members and758/3205 C routes. CNA
+remained clean and unchanged at `d7eff66ee`, and the production library hash stayed unchanged. No
+visual inspection is claimed.
+Evidence:checkpoint-500-c-buffer-bindings-*.
