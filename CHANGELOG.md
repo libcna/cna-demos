@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `c_api.graphics.resource_lifecycle` from25to30 controls with synchronous
+  graphics-device resource creation/destruction payloads, tracked-count transitions and
+  registration unsubscription behavior.
 - Extended `c_api.graphics.device_states` from19to22 controls with live device identity and
   ownership checks plus exact scissor-rectangle, blend-factor, multisample-mask and
   reference-stencil save/apply/read/restore behavior.

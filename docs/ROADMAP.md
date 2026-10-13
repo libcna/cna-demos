@@ -2858,3 +2858,20 @@ routes raise C coverage732->745/3205 and `graphics_device.h`16->29/84. Clean sib
 `d7eff66ee`; production `libcna.so` remains byte-identical. Nothing is drawn and no visual
 inspection is claimed.
 Evidence:checkpoint-498-c-device-values-focused-*.
+
+## Focused498-C-resource-events
+
+The existing `c_api.graphics.resource_lifecycle` workflow grows from25to30 controls without
+another demo ID. Before creating its real Texture2D, the callback records the tracked-resource
+baseline and subscribes to the graphics device's resource-created and resource-destroyed events.
+Creation synchronously reports a complete versioned presence payload after tracking grows by one.
+Explicit disposal first raises the resource's Disposing callback and then reports the exact
+non-ASCII UTF-8 name while the resource is still tracked; native tag presence remains false because
+the demonstrated full-width opaque C tag token is owned by the C handle table. The count then
+returns to baseline. Both registrations release once, refuse stale handles and silence a second
+create/destroy cycle. SOFTWARE and OPENGLES3 produce identical30-check output with empty stderr.
+Metadata remains498/0, all67 focused C/API, C++ graphics-device/resource and CLI tests pass in
+39.99s, and a clean1693-step full build follows. Four routes raise C coverage745->749/3205 and
+`graphics_device.h`29->33/84. Clean sibling CNA is `d7eff66ee`; production `libcna.so` remains
+byte-identical. Nothing is drawn and no visual inspection is claimed.
+Evidence:checkpoint-498-c-resource-events-focused-*.
