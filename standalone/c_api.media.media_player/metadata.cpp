@@ -4,8 +4,8 @@
 CNA_DEMOS_STANDALONE({
     .id = "c_api.media.media_player",
     .title = "Background music in C",
-    .description = "A C program plays retained songs as a queue, exercises transport and events, then contrasts "
-                   "collection lifecycle with caller-owned queue copies, empty bounds and unchecked active indices.",
+    .description = "A C program plays retained songs as a queue, samples visualization data, exercises transport "
+                   "and events, then contrasts collection lifecycle with caller-owned queue copies and bounds.",
     .apis = {"cna_song_create", "cna_song_create_from_uri", "cna_song_create_with_duration",
              "cna_song_get_handle_text_size_ext", "cna_song_copy_handle_text_ext", "cna_song_equals",
              "cna_song_get_hash_code", "cna_song_get_is_protected", "cna_song_get_is_rated",
@@ -21,6 +21,8 @@ CNA_DEMOS_STANDALONE({
              "cna_media_player_get_is_repeating", "cna_media_player_set_is_repeating",
              "cna_media_player_get_is_shuffled", "cna_media_player_set_is_shuffled",
              "cna_media_player_get_volume", "cna_media_player_set_volume",
+             "cna_visualization_data_init", "cna_media_player_get_is_visualization_enabled",
+             "cna_media_player_set_is_visualization_enabled", "cna_media_player_get_visualization_data",
              "cna_media_player_get_state", "cna_media_player_get_play_position_ticks",
              "cna_media_player_get_game_has_control", "cna_media_player_subscribe_media_state_changed_ext",
              "cna_media_player_subscribe_active_song_changed_ext", "cna_song_collection_get_at",

@@ -103,6 +103,18 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **474-C-player-visualization** extends c_api.media.media_player from78to82checks under both
+renderers with empty stderr and no new ID/fixture. Removing four additions restores all78old labels
+in order. The C value initializes with version1 and two zeroed256-float arrays; visualization
+enables and reads back true; the live music produces nonzero frequency and sample data; disabling
+reads false and replaces deliberately poisoned prior arrays with zeros. Focused29media/CLI CTests
+pass in8.60s; metadata474/0. Both watched builds pass with3909unchanged CNA inputs/no diagnostics.
+Four actual routes raise C ABI coverage219->223/3210, media.h26->27/39 and
+media_player.h33->36/41. No audible output, FFT accuracy or exact-amplitude claim. Evidence:
+checkpoint-474-c-player-visualization-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-C-player-transport**, source `91dba1a`, extends
 c_api.media.media_player from75to78checks under both renderers with empty demo stderr and no new
 ID/fixture. Removing three additions restores all75old labels in order. With the live collection
@@ -243,16 +255,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: extend `c_api.media.media_player` with one coherent C visualization batch against
-complete474-C-player-transport. Preserve all78old labels in order and add no ID/fixture. Exercise
-`cna_visualization_data_init`, visualization enabled/readback, live `get_visualization_data`
-frequency/sample output and disabled zero-buffer behavior, restoring the process-wide flag. The
-existing C++ visualization demo proves live spectrum energy; source review says the disabled route
-zeros both arrays. Do not claim audible output, FFT accuracy or exact amplitude. Add the four actual
-routes to metadata, run the watched build/input gate, focused SOFTWARE/OPENGLES3 reviews and29
-media/CLI CTests, regenerate coverage, update the audit/HANDOFF and commit. Then run its full474
-checkpoint against complete474-C-player-transport. Never edit/revert CNA; preserve
-ISSUE-038/057/058/059.
+HIGHEST PRIORITY: run full474 validation for the focused C visualization source against
+complete474-C-player-transport. Capture once after the full build during CTest: the same37selected
+binary paths/four assets/30fixture paths. Freeze source/assets/build through both smokes.
+Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3. Preserve all38/42old failures, unrelated C/custom lists/traces, five network
+controls,18music and8album-art checks. Only c_api.media.media_player should grow78->82; parentJSON
+stays0 and normalized stderr should be identical. Archive/refuse any surprise; update full
+audit/HANDOFF and immediately continue the next semantic public-member gap. Never edit/revert CNA;
+preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -265,6 +276,6 @@ ISSUE-038/057/058/059.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is474-C-player-transport; source commit is in section7.
-All earlier drafts and focused C media work are APPLIED AND STALE. The next live batch is the C
-visualization work named in section14.
+All earlier drafts are APPLIED AND STALE. C visualization is focused but has no complete checkpoint
+yet; section14 is the live task.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

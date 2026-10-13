@@ -2,8 +2,9 @@
 /*
  * Background music from C: two songs are created from files under the title's path, put in a song
  * collection (which keeps them alive, so the program releases its own song handles at once) and
- * played as a queue. The program moves to the second song, pauses, resumes and stops, and counts
- * the MediaPlayer's two events -- which are process-wide, so their subscriptions take no game.
+ * played as a queue. The program samples C visualization data, moves to the second song, pauses,
+ * resumes and stops, and counts the MediaPlayer's two events -- which are process-wide, so their
+ * subscriptions take no game.
  * After stopping, it contrasts a collection-shared Song handle with owned queue copies across
  * collection/view destruction and a safe queue Clear. Bars show the position in each song.
  *
@@ -26,6 +27,7 @@ typedef struct PlayerState {
     CNA_MediaQueueHandle queue; /* a view of the process-wide queue; released like any handle */
     CNA_MediaPlayerEventRegistrationHandle state_changed;
     CNA_MediaPlayerEventRegistrationHandle song_changed;
+    CNA_VisualizationData visualization;
     int state_changes;
     int song_changes;
     int song_changes_before_next;
@@ -63,6 +65,32 @@ static int32_t active_index(const PlayerState* state)
     int32_t index = -2;
     (void)cna_media_queue_get_active_song_index(state->queue, &index);
     return index;
+}
+
+static int visualization_is_zero(const CNA_VisualizationData* data)
+{
+    uint32_t i;
+    for (i = 0U; i < CNA_VISUALIZATION_DATA_SIZE; ++i) {
+        if (data->frequencies[i] != 0.0f || data->samples[i] != 0.0f) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+static int visualization_has_signal(const CNA_VisualizationData* data)
+{
+    float frequency_energy = 0.0f;
+    float sample_peak = 0.0f;
+    uint32_t i;
+    for (i = 0U; i < CNA_VISUALIZATION_DATA_SIZE; ++i) {
+        const float sample = data->samples[i] < 0.0f ? -data->samples[i] : data->samples[i];
+        frequency_energy += data->frequencies[i];
+        if (sample > sample_peak) {
+            sample_peak = sample;
+        }
+    }
+    return frequency_energy > 0.0f && sample_peak > 0.0f;
 }
 
 /* A Song from a file under the title's path (relative paths resolve against the working
@@ -127,6 +155,7 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     CNA_Texture2DCreateInfo info;
     CNA_SongHandle songs[2] = {CNA_INVALID_HANDLE, CNA_INVALID_HANDLE};
     CNA_Bool has_control = CNA_FALSE;
+    CNA_Bool visualization_enabled = CNA_FALSE;
     int32_t count = 0;
     CNA_Result result;
     (void)game_time;
@@ -185,6 +214,18 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
                        has_control == CNA_TRUE,
                    "the game has control of the music (always on a desktop)");
     cna_demo_check(state->demo, media_state(game) == CNA_MEDIA_STATE_STOPPED, "the player starts out Stopped");
+    cna_demo_check(state->demo,
+                   cna_visualization_data_init(&state->visualization) == CNA_RESULT_SUCCESS &&
+                       state->visualization.struct_size == (uint32_t)sizeof(state->visualization) &&
+                       state->visualization.struct_version == UINT32_C(1) &&
+                       visualization_is_zero(&state->visualization),
+                   "visualization data initializes as a versioned zero buffer");
+    cna_demo_check(state->demo,
+                   cna_media_player_set_is_visualization_enabled(game, CNA_TRUE) == CNA_RESULT_SUCCESS &&
+                       cna_media_player_get_is_visualization_enabled(game, &visualization_enabled) ==
+                           CNA_RESULT_SUCCESS &&
+                       visualization_enabled == CNA_TRUE,
+                   "visualization capture can be enabled and read back");
 
     if (cna_demo_check_result(state->demo, cna_media_player_play_songs(game, state->songs),
                               "cna_media_player_play_songs") &&
@@ -218,6 +259,10 @@ static CNA_Result update(CNA_Handle game, const CNA_GameTime* game_time, void* c
         }
     } else if (state->step == 1 && now >= TICKS_PER_SECOND) {
         state->step = 2;
+        cna_demo_check(state->demo,
+                       cna_media_player_get_visualization_data(game, &state->visualization) == CNA_RESULT_SUCCESS &&
+                           visualization_has_signal(&state->visualization),
+                       "playing music produces nonzero frequency and sample data");
         /* The events are raised by the game loop's FrameworkDispatcher update, after the call. */
         printf("  active-song-changed raised %d time(s) since move_next\n",
                state->song_changes - state->song_changes_before_next);
@@ -378,6 +423,26 @@ int main(int argc, char** argv)
     }
     if (media_state(game) != CNA_MEDIA_STATE_STOPPED) {
         (void)cna_media_player_stop(game); /* keep the ownership exercise independent of live playback */
+    }
+
+    /* Disabled visualization returns its canonical zero buffer even after live data was captured.
+       This is a state/data contract only; it does not measure audible output or FFT accuracy. */
+    {
+        CNA_Bool visualization_enabled = CNA_TRUE;
+        uint32_t i;
+        for (i = 0U; i < CNA_VISUALIZATION_DATA_SIZE; ++i) {
+            state.visualization.frequencies[i] = 1.0f;
+            state.visualization.samples[i] = -1.0f;
+        }
+        cna_demo_check(&demo,
+                       cna_media_player_set_is_visualization_enabled(game, CNA_FALSE) == CNA_RESULT_SUCCESS &&
+                           cna_media_player_get_is_visualization_enabled(game, &visualization_enabled) ==
+                               CNA_RESULT_SUCCESS &&
+                           visualization_enabled == CNA_FALSE &&
+                           cna_media_player_get_visualization_data(game, &state.visualization) ==
+                               CNA_RESULT_SUCCESS &&
+                           visualization_is_zero(&state.visualization),
+                       "disabled visualization reports false and replaces prior data with zeros");
     }
 
     /* Process-wide playback settings remain directly observable while stopped. Restore their
