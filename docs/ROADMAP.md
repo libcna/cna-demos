@@ -4142,3 +4142,19 @@ stderr; strict C99 and metadata compilation pass. Staged metadata reaches2378/32
 built-in presets have no timeline and zero length, contrary to the runtime and canonical C++ API.
 Evidence:`checkpoint-599-c-avatar-animations-focused-*-direct.*`. No game, renderer, composed
 skeleton, pixels or project-built execution is claimed.
+
+## Focused600-C-avatar-renderer-and-skeleton
+
+`c_api.gamer.avatar_renderer` adds all11 avatar-renderer routes in a real C game with an installed
+`GamerServicesComponent`. Its43 controls cover canonical-boolean creation refusal, description
+retention, versioned Loading/Ready state, default and authored world/view/projection, optional
+outputs, exact lighting and atomic non-finite refusal, all71 canonical parent links, finite bind
+poses, composed human-scale head height, bounds and one-shot ownership. A Wave clip is drawn once
+through `draw_animation`, then through caller-supplied71 bones and an explicit smile/wink expression;
+both paths pass substantial two-dimensional back-buffer checks. SOFTWARE and OPENGLES3 runs pass
+with byte-identical normalized output and empty stderr. Their inspected800x480 screenshots show a
+complete waving avatar on the clear background; strict C99 and metadata compilation pass. Staged
+metadata reaches2389/3205 and `gamer_services.h` reaches237/239. Its remaining Guide-delay and
+physical-headset routes are intentionally service/manual, so all239 routes now have semantic
+dispositions. Evidence:`checkpoint-600-c-avatar-renderer-focused-*-direct.*`. No service avatar,
+physical microphone or project-built execution is claimed.
