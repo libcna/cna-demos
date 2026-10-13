@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.device_states`, a19-check audit of every graphics-state preset plus exact
+  live-device blend, depth/stencil, rasterizer and independent pixel/vertex sampler round trips.
 - Added `c_api.graphics.index_buffer`, an18-check dynamic 16-bit transfer, read-back, partial-update
   and ContentLost-lifetime workflow that gives every `index_resources.h` route a semantic disposition.
 - Corrected the C adapter snapshot's widescreen cross-check to use XNA's strict `> 1.6` boundary,

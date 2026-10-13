@@ -2781,3 +2781,19 @@ check passes unchanged under the required X11 isolation. Sibling CNA later advan
 docs-only `e67c54936` without changing the exercised production library. No drawing, device-loss
 notification or visual inspection is claimed.
 Evidence:checkpoint-496-c-index-buffer-focused-*.
+
+## Focused497-C-device-states
+
+New `c_api.graphics.device_states` demonstrates the ten uncovered preset and live-device routes in
+`graphics_state.h`. Nineteen controls validate every field of all5 blend,3 depth/stencil,4
+rasterizer and7 sampler presets. The callback saves the active blend, depth, rasterizer and
+pixel/vertex sampler-slot3 values; applies distinctive complete descriptors; reads each back field
+for field; and proves the two sampler collections stay independent. It then attempts all five
+restore operations independently and re-reads the exact original values before returning. SOFTWARE
+and OPENGLES3 produce identical output with empty stderr. Metadata is497/0, all74 focused C/API,
+C++ graphics-state and CLI tests pass, and a clean follow-up build passes. Ten routes raise C
+coverage706->716/3205 and `graphics_state.h`2->12/14. The remaining state/effect SpriteBatch Begin
+routes are assigned to the existing pixel-validated C SpriteBatch demo. Clean sibling CNA is
+docs-only `e67c54936`; the production library hash remains unchanged. No drawing or visual
+inspection is claimed.
+Evidence:checkpoint-497-c-device-states-focused-*.
