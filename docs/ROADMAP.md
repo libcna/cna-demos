@@ -3819,3 +3819,14 @@ pass. `xact.h` has semantic dispositions for all62 routes at54 demonstrated; the
 name size/copy helpers for engine, wave bank, sound bank and Cue remain trivial/uncredited. Evidence:
 checkpoint-575-c-xact-cue-focused-*-direct.*. No acoustic position, fade shape or audio quality is
 claimed.
+
+`c_api.net.session_properties` starts the public C networking audit with22 `net.h` routes in20
+renderer-free controls. It initializes unavailable and one-sample QualityOfService structures with
+version refusal, then observes that an ordinary handle failure produces no per-thread join error.
+The canonical eight-slot session-property list demonstrates absent/present values, indexed writes
+and bounds, IndexOf/Contains, every structural refusal, atomic shifted CopyTo, ordered live
+enumeration, reset/end states and child-before-parent destruction. Both renderer-labelled direct
+runs are byte-identical with empty stderr; strict C99 and metadata compilation pass. `net.h` reaches
+22/51 demonstrated, leaving the coherent29-route packet buffer family. Evidence:
+checkpoint-576-c-net-properties-focused-*-direct.*. No session, socket, join or throughput is
+claimed.
