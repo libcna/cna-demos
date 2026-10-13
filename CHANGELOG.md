@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.effect_concrete_types`, a22-check C workflow for EffectMaterial texture
+  ownership and inherited base cloning plus SpriteEffect stock identity and type-preserving cloning.
+- Recorded CNA-DEMOS-ISSUE-069: the generic C Effect clone comment promises concrete-type
+  preservation even though canonical `EffectMaterial.Clone()` deliberately returns a base Effect.
 - Added `c_api.graphics.effect_core`, a27-check C workflow covering the18 core Effect routes:
   owned reflection and pass application, current-technique rules, clone/disposal isolation,
   retained child views, constructor-format refusals and capability-gated compiled bytecode.

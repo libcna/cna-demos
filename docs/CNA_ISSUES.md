@@ -15,6 +15,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-069 -- C Effect clone comment overpromises concrete-type preservation
+
+- **Area/API:** `cna_effect_clone` in `modules/c-api/include/CNA/C/effects.h`.
+- **Observed contract conflict:** the public C comment says the result is "an owned clone of the
+  same concrete native type." `EffectMaterial` deliberately has no `Clone` override, so its
+  inherited canonical `Effect::Clone()` returns an independent base `Effect`. CNA's public
+  software-renderer documentation and dedicated C++ tests identify this as recovered Microsoft XNA
+  and FNA behavior; changing the runtime to preserve `EffectMaterial` would be a regression.
+- **Runtime evidence:** `c_api.graphics.effect_concrete_types` creates an `EffectMaterial`, clones
+  it through the public C route and observes the exact base type name
+  `Microsoft.Xna.Framework.Graphics.Effect`; the clone applies successfully but both
+  EffectMaterial-only ownership routes refuse it. In the same run, `SpriteEffect.Clone()` preserves
+  its concrete type and exact stock-sprite identity. All22 controls pass identically under SOFTWARE
+  and OPENGLES3 with empty stderr.
+- **Expected:** document the independent clone and the `EffectMaterial` exception instead of
+  promising concrete-type preservation for every effect. No runtime change is indicated.
+- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
+  needed. No CNA source was modified or upstream message sent. Observed at clean CNA `a6bb279d47`.
+  Open; focused evidence will be archived as
+  `checkpoint-510-c-effect-concrete-types-focused-*`.
+
 ### CNA-DEMOS-ISSUE-068 -- C effect-parameter semantic lookup misstates case matching
 
 - **Area/API:** `cna_effect_parameter_collection_find_semantic` in

@@ -3155,3 +3155,19 @@ incremental build is clean. Coverage rises877->895/3205 and `effects.h`88->106/2
 CNA is `a6bb279d47`; production library hashes remain unchanged. No drawing, pixel result or visual
 inspection is claimed.
 Evidence:checkpoint-509-c-effect-core-focused-*.
+
+## Focused510-C-effect-concrete-types
+
+New `c_api.graphics.effect_concrete_types` demonstrates all four EffectMaterial and SpriteEffect
+construction/ownership routes. Twenty-two controls prove exact concrete type and borrowed device;
+EffectMaterial-only rejection on a base Effect; null no-op and invalid-family preservation; two
+owned list entries for one CPU Texture2D surviving caller-handle destruction; the canonical
+EffectMaterial inherited clone returning an independent base Effect; source destruction survival;
+exact stock SpriteEffect identity; type-preserving SpriteEffect clone; and independent disposal.
+ISSUE-069 records that the generic C clone comment promises same-concrete-type output despite the
+deliberate XNA EffectMaterial exception. Direct execution passes, SOFTWARE and OPENGLES3 runner
+output is byte-identical and all three stderr files are empty. Metadata is510/0, all14 focused
+C/API, C++ Effect/SpriteBatch and CLI tests pass in3.70s, and the incremental build is clean.
+Coverage rises895->899/3205 and `effects.h`106->110/290. Clean sibling CNA is `a6bb279d47`;
+production library hashes remain unchanged. No draw, pixel result or visual inspection is claimed.
+Evidence:checkpoint-510-c-effect-concrete-types-focused-*.
