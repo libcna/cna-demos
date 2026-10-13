@@ -2555,3 +2555,20 @@ coverage611->621/3205 and `devices.h`23->33/62. All68 exact input/device/C-API/C
 response, external filesystem access or callback-thread behavior is claimed. The standard/full
 checkpoint remains blocked by the unchanged external SDL_GPU mismatch.
 Evidence:checkpoint-486-c-dialogs-focused-*.
+
+## Focused487-C-system-tray
+
+A new C standalone covers eleven of the twelve system-tray routes in `devices.h` without creating
+external host UI. It reads real availability, then creates CNA's per-handle in-memory tray and
+demonstrates owned lifetime, tooltip mutation, contiguous menu indices, initial and mutable
+checked/enabled state, label mutation, canonical ignored upper-bound mutations/false reads, exact
+callback context selection, silent no-handler activation, invalid click bounds and stale handles.
+
+Both renderer selections pass identical16-control output with empty stderr. Direct C and metadata
+compilation is diagnostic-free and metadata validates487/0. Eleven routes raise current C
+coverage621->632/3205 and `devices.h`33->44/62. All69 exact input/device/C-API/CLI CTests pass in
+198.53s with six declared skips and one known-issue expected failure. The real
+`cna_system_tray_create` route remains manual because successful execution creates a host icon; no
+icon appearance, native click delivery or callback thread is
+claimed. The standard/full checkpoint remains blocked by the unchanged external SDL_GPU mismatch.
+Evidence:checkpoint-487-c-system-tray-focused-*.

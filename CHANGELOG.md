@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.devices.system_tray`, a16-check C workflow covering11 in-memory tray routes for
+  owned lifetime, menu state, upper bounds and callbacks; real host-icon creation remains manual.
 - Added `c_api.devices.dialogs`, a20-check C workflow covering all10 message-box and file-dialog
   routes through immediate test services, including callback-owned copies, cancellation, request
   validation and platform-service restoration without opening real UI.
