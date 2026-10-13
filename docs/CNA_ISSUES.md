@@ -15,6 +15,30 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-061 -- C default mouse-cursor documentation contradicts the Arrow constructor
+
+- **Area/API:** `cna_mouse_cursor_create_ext`,
+  `modules/c-api/include/CNA/C/input_cursor.h`, `CnaCApiInput.cpp` and the public C++
+  `MouseCursor.hpp`/`MouseCursor.cpp`.
+- **Observed contract conflict:** the C header says this route creates an empty cursor that wraps
+  no native cursor and that setting it changes nothing. The route actually allocates
+  `MouseCursor()`. That public C++ constructor is documented as creating the default Arrow and its
+  implementation leaves `systemShape_` at `ShapeArrow`, `isCustom_` false and `isDisposed_` false;
+  `Mouse::SetCursor` therefore selects the platform Arrow.
+- **Runtime/source evidence:** the extended `c_api.input.keyboard_mouse` creates the owned default,
+  installs it successfully under both renderer selections, disposes it twice and destroys its
+  handle. Separate controls show that a borrowed stock Arrow survives Dispose and that a
+  texture-derived cursor can be installed before restoring the stock Arrow. The run does not use
+  pixel or pointer-shape inspection, so the Arrow identity is established by the direct public
+  constructor/setter source path rather than a visual claim.
+- **Expected:** describe the C route as an owned default Arrow cursor, matching the public C++
+  constructor, or change the implementation and the underlying cursor model if a distinct empty
+  cursor is really intended. The current API has no separate empty shape identity.
+- **Scope/status:** passing documentation mismatch; cursor creation, installation and lifetime
+  succeed, so no runtime knownIssue marker is needed. Focused source hashes, exact child controls
+  and both renderer logs are archived under `checkpoint-476-c-input-mouse-cursor-focused-*`.
+  No CNA file was edited and no upstream message was sent. Open.
+
 ### CNA-DEMOS-ISSUE-060 -- Raised C touch-event documentation contradicts its gesture-only implementation
 
 - **Area/API:** `cna_touch_panel_raise_touch_event_ext`,

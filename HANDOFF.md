@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-476 catalog demos (focused checkpoint476-C-input-gesture-queue): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+476 catalog demos (focused checkpoint476-C-input-mouse-cursor): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -102,6 +102,21 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **476-C-input-mouse-cursor** extends `c_api.input.keyboard_mouse` from15to32checks without
+a new ID or fixture. Both renderers pass identical child-label lists with empty stderr; filtering17
+additions restores all15complete-476 labels. Six value checks cover constructors, equality/hash and
+field-bearing text. Both selections round-trip their window token, observe SetPosition and an exact
+restored global warp, exercise capture, clicked callback/unsubscribe/reset and owned/default,
+borrowed-stock and texture cursor lifetimes. OPENGLES3 has a nonzero token, toggles/restores
+relative mode and applies capture/release. SOFTWARE has token0, its void relative setter succeeds
+without changing false, capture reports not applied and release reports applied. The exact58
+input/C-API/CLI CTests pass in52.10s with six declared skips. Two watched builds pass with3911
+unchanged CNA inputs/no diagnostics at clean bb6820f; metadata476/0. Actual C coverage rises
+267->293/3210: `input_mouse.h`20/20 and `input_cursor.h`6/6. ISSUE-061 records the C header's
+empty/default-cursor claim versus the direct Arrow constructor path. No physical transition,
+confinement, pointer-shape visual, other-desktop or callback-thread claim. Full476 is pending.
+Evidence:checkpoint-476-c-input-mouse-cursor-focused-*.
 
 Focused **476-C-input-touch-scaling** extends `c_api.input.gesture_queue` from31to64checks without
 a new ID or fixture. Both renderers pass identical lists with empty stderr; filtering33 additions
@@ -144,7 +159,7 @@ with the same hashes. Coverage stays297/329types and1405/2326XNA members; actual
 267/3210 and input_touch.h32/47. ISSUE-060 remains a passing documentation mismatch. No physical
 touch, orientation rotation, threshold-boundary, snapshot-injection or visual claim. Complete
 evidence:checkpoint-476-c-input-touch-scaling-*.
-Preserve earlier refusal evidence and ISSUE-038/057/058/059/060.
+Preserve earlier refusal evidence and ISSUE-038/057/058/059/060/061.
 
 ## 8. Exact commands that work
 
@@ -268,13 +283,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit all public routes in C `input_mouse.h` and `input_cursor.h` against the
-existing `c_api.input.keyboard_mouse` behavior. Give every route a semantic disposition and select
-only coherent automation that demonstrates live mouse state, relative/capture/warp behavior or
-cursor ownership without duplicating existing C++ demos or generated argument checks. Leave live gamepad
-dead-zone and mouse-touch emulation manual-deferred; keep generic touch/media reflection routes
-intentionally uncredited and `media_player_update_ext` deferred. Never edit/revert CNA; preserve
-ISSUE-038/057/058/059.
+HIGHEST PRIORITY: commit the focused `input_mouse.h`/`input_cursor.h` batch, then run one complete
+476-demo checkpoint against complete476-C-input-touch-scaling. Require the exact15->32 C child
+change, unchanged unrelated C/custom children and protected traces, the old38/42 failure multiset,
+stable selected runtime paths and explicit CNA source/artifact observations. Then continue the next
+public C input-header audit; leave live gamepad dead-zone and mouse-touch emulation manual-deferred,
+generic touch/media reflection uncredited and `media_player_update_ext` deferred. Never edit/revert
+CNA; preserve ISSUE-038/057/058/059/060/061.
 
 ## 15. Assumptions the next session must know
 
@@ -287,5 +302,6 @@ ISSUE-038/057/058/059.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is476-C-input-touch-scaling; source commit is in section7.
-All earlier drafts are APPLIED AND STALE. The mouse/cursor C route audit in section14 is live.
+All earlier drafts are APPLIED AND STALE. The focused mouse/cursor audit is applied and its full
+checkpoint is the live task.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

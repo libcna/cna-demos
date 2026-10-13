@@ -2214,3 +2214,23 @@ snapshot. XNA coverage stays297/329types and1405/2326members; actual C ABI cover
 input_touch.h32/47. ISSUE-060 remains a passing documentation mismatch; no physical touch,
 orientation-driven rotation, threshold boundary, snapshot injection or visual claim. Evidence:
 checkpoint-476-c-input-touch-scaling-*.
+
+## Focused476-C-input-mouse-cursor
+
+The existing `c_api.input.keyboard_mouse` grows15->32checks without a new ID or fixture. Both
+renderers pass the same child-label list with empty stderr, and removing17 additions restores every
+complete476 label in order. Six value controls cover default/ordinary/extended construction,
+equality, the position/vertical-wheel-only hash and field-bearing text. Both renderers round-trip
+their window token, observe SetPosition and an exact global warp before restoration, exercise
+capture results, synchronously deliver/unsubscribe/reset clicked callbacks and pass owned/default,
+borrowed-stock and copied-texture cursor lifetimes. OPENGLES3 exposes a nonzero window token,
+toggles/restores relative mode and applies capture/release; SOFTWARE exposes token0, retains false
+through its successful void relative setter, reports capture not applied and applies release.
+Those outcomes are asserted rather than skipped. All58 exact input/C-API/CLI CTests pass in52.10s
+with six declared environment skips. The initial watched build passes with3911unchanged CNA inputs
+and no diagnostics at clean bb6820f; metadata is476/0. All20 `input_mouse.h` and all6
+`input_cursor.h` routes now have coherent runtime evidence, raising actual C coverage267->293/3210.
+ISSUE-061 records that the C default-cursor documentation says empty/no-op while the direct public
+source path constructs Arrow. No physical mouse transition, confinement, cursor-shape visual,
+other desktop or thread/reentrancy claim. Full476 is pending. Evidence:
+checkpoint-476-c-input-mouse-cursor-focused-*.

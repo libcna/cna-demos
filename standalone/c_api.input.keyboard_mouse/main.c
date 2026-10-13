@@ -23,10 +23,286 @@ typedef struct InputState {
     int polls_failed;
 } InputState;
 
+typedef struct ClickRecord {
+    int count;
+    int32_t last_button;
+} ClickRecord;
+
+static void mouse_clicked(int32_t button, void* context)
+{
+    ClickRecord* record = (ClickRecord*)context;
+    ++record->count;
+    record->last_button = button;
+}
+
 static int key_down(const CNA_KeyboardState* keyboard, CNA_Key key)
 {
     CNA_Bool down = CNA_FALSE;
     return cna_keyboard_state_is_key_down(keyboard, key, &down) == CNA_RESULT_SUCCESS && down == CNA_TRUE;
+}
+
+static void demonstrate_mouse_values(CnaDemo* demo)
+{
+    static const char expected_text[] = "[MouseState X=12, Y=34, Buttons=Left Right, Wheel=120]";
+    CNA_MouseState empty;
+    CNA_MouseState ordinary;
+    CNA_MouseState extended;
+    CNA_Bool equal = CNA_TRUE;
+    CNA_Bool different = CNA_FALSE;
+    int32_t ordinary_hash = 0;
+    int32_t extended_hash = 1;
+    uint64_t bytes = 0U;
+    char text[96];
+
+    memset(&empty, 0x5a, sizeof(empty));
+    cna_demo_check(
+        demo,
+        cna_mouse_state_init(&empty) == CNA_RESULT_SUCCESS && empty.x == 0 && empty.y == 0 &&
+            empty.scroll_wheel == 0 && empty.horizontal_scroll_wheel == 0 && empty.pressed_buttons == 0U,
+        "the default mouse value is at the origin with no buttons or wheel movement");
+
+    memset(&ordinary, 0, sizeof(ordinary));
+    cna_demo_check(
+        demo,
+        cna_mouse_state_init_from_values(
+            12, 34, 120, CNA_MOUSE_BUTTON_LEFT | CNA_MOUSE_BUTTON_RIGHT, &ordinary) == CNA_RESULT_SUCCESS &&
+            ordinary.x == 12 && ordinary.y == 34 && ordinary.scroll_wheel == 120 &&
+            ordinary.horizontal_scroll_wheel == 0 &&
+            ordinary.pressed_buttons == (CNA_MOUSE_BUTTON_LEFT | CNA_MOUSE_BUTTON_RIGHT),
+        "the ordinary mouse constructor maps position, wheel and button bits and leaves the horizontal wheel zero");
+
+    memset(&extended, 0, sizeof(extended));
+    cna_demo_check(
+        demo,
+        cna_mouse_state_init_from_values_ext(
+            12, 34, 120, -240, CNA_MOUSE_BUTTON_MIDDLE, &extended) == CNA_RESULT_SUCCESS &&
+            extended.x == 12 && extended.y == 34 && extended.scroll_wheel == 120 &&
+            extended.horizontal_scroll_wheel == -240 && extended.pressed_buttons == CNA_MOUSE_BUTTON_MIDDLE,
+        "the extended mouse constructor also preserves the horizontal wheel");
+
+    cna_demo_check(
+        demo,
+        cna_mouse_state_equals(&ordinary, &extended, &equal) == CNA_RESULT_SUCCESS && equal == CNA_FALSE &&
+            cna_mouse_state_not_equals(&ordinary, &extended, &different) == CNA_RESULT_SUCCESS &&
+            different == CNA_TRUE,
+        "mouse equality includes buttons and the horizontal wheel");
+    cna_demo_check(
+        demo,
+        cna_mouse_state_get_hash_code(&ordinary, &ordinary_hash) == CNA_RESULT_SUCCESS &&
+            cna_mouse_state_get_hash_code(&extended, &extended_hash) == CNA_RESULT_SUCCESS &&
+            ordinary_hash == extended_hash,
+        "the canonical mouse hash uses position and the vertical wheel only");
+
+    memset(text, 0, sizeof(text));
+    cna_demo_check(
+        demo,
+        cna_mouse_state_get_string_size(&ordinary, &bytes) == CNA_RESULT_SUCCESS &&
+            bytes == (uint64_t)strlen(expected_text) &&
+            cna_mouse_state_copy_string(&ordinary, text, (uint64_t)sizeof(text), &bytes) == CNA_RESULT_SUCCESS &&
+            bytes == (uint64_t)strlen(expected_text) && strcmp(text, expected_text) == 0,
+        "mouse text reports position, named buttons and the vertical wheel");
+}
+
+static void demonstrate_mouse_platform(CnaDemo* demo, CNA_Handle game)
+{
+    CNA_MouseState original;
+    CNA_MouseState moved;
+    CNA_MouseEventRegistrationHandle registration = CNA_INVALID_HANDLE;
+    ClickRecord clicks = {0, -1};
+    uint64_t window = 0U;
+    uint64_t round_trip = 0U;
+    CNA_Bool relative_before = CNA_FALSE;
+    CNA_Bool relative_changed = CNA_FALSE;
+    CNA_Bool relative_restored = CNA_FALSE;
+    CNA_Bool capture_enabled = CNA_FALSE;
+    CNA_Bool capture_disabled = CNA_FALSE;
+    CNA_Bool warp_applied = CNA_FALSE;
+    CNA_Bool restore_applied = CNA_FALSE;
+    CNA_Result relative_change_result;
+    CNA_Result relative_restore_result = CNA_RESULT_SUCCESS;
+    CNA_Result capture_enable_result;
+    CNA_Result capture_disable_result;
+    CNA_Result original_result;
+    CNA_Result position_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result moved_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result position_restore_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result global_result;
+    CNA_Result warp_result;
+    CNA_Result warped_result;
+    CNA_Result warp_restore_result = CNA_RESULT_INVALID_STATE;
+    int32_t global_x = 0;
+    int32_t global_y = 0;
+    int32_t warped_x = 0;
+    int32_t warped_y = 0;
+
+    memset(&original, 0, sizeof(original));
+    original.struct_size = (uint32_t)sizeof(original);
+    original.struct_version = UINT32_C(1);
+    memset(&moved, 0, sizeof(moved));
+    moved.struct_size = (uint32_t)sizeof(moved);
+    moved.struct_version = UINT32_C(1);
+
+    cna_demo_check(
+        demo,
+        cna_mouse_get_window_handle(game, &window) == CNA_RESULT_SUCCESS &&
+            cna_mouse_set_window_handle(game, window) == CNA_RESULT_SUCCESS &&
+            cna_mouse_get_window_handle(game, &round_trip) == CNA_RESULT_SUCCESS && round_trip == window,
+        "the mouse window token round-trips, including a renderer's explicit zero token");
+
+    original_result = cna_mouse_get_state(game, &original);
+    if (original_result == CNA_RESULT_SUCCESS) {
+        position_result = cna_mouse_set_position(game, 123, 77);
+        moved_result = cna_mouse_get_state(game, &moved);
+        position_restore_result = cna_mouse_set_position(game, original.x, original.y);
+    }
+    cna_demo_check(
+        demo,
+        original_result == CNA_RESULT_SUCCESS && position_result == CNA_RESULT_SUCCESS &&
+            moved_result == CNA_RESULT_SUCCESS && moved.x == 123 && moved.y == 77 &&
+            position_restore_result == CNA_RESULT_SUCCESS,
+        "SetPosition is visible in the next live mouse snapshot before the original position is restored");
+
+    if (cna_mouse_get_is_relative_mouse_mode_ext(game, &relative_before) == CNA_RESULT_SUCCESS) {
+        relative_change_result = cna_mouse_set_is_relative_mouse_mode_ext(
+            game, relative_before == CNA_TRUE ? CNA_FALSE : CNA_TRUE);
+        (void)cna_mouse_get_is_relative_mouse_mode_ext(game, &relative_changed);
+        if (relative_change_result == CNA_RESULT_SUCCESS) {
+            relative_restore_result = cna_mouse_set_is_relative_mouse_mode_ext(game, relative_before);
+        }
+        (void)cna_mouse_get_is_relative_mouse_mode_ext(game, &relative_restored);
+    } else {
+        relative_change_result = CNA_RESULT_INVALID_STATE;
+        relative_restore_result = CNA_RESULT_INVALID_STATE;
+    }
+    printf("relative mode: window=%llu before=%u change_result=%u changed=%u restore_result=%u restored=%u\n",
+           (unsigned long long)window, (unsigned)relative_before, (unsigned)relative_change_result,
+           (unsigned)relative_changed, (unsigned)relative_restore_result, (unsigned)relative_restored);
+    cna_demo_check(
+        demo,
+        ((relative_change_result == CNA_RESULT_SUCCESS && relative_restore_result == CNA_RESULT_SUCCESS &&
+             relative_restored == relative_before &&
+             (relative_changed != relative_before || (window == 0U && relative_changed == relative_before))) ||
+            (relative_change_result == CNA_RESULT_PLATFORM && window == 0U &&
+             relative_changed == relative_before && relative_restored == relative_before)),
+        "relative mode toggles and restores, or stays unchanged without a renderer window");
+
+    capture_enable_result = cna_mouse_set_capture_ext(game, CNA_TRUE, &capture_enabled);
+    capture_disable_result = cna_mouse_set_capture_ext(game, CNA_FALSE, &capture_disabled);
+    printf("capture: enable_result=%u applied=%u disable_result=%u applied=%u\n",
+           (unsigned)capture_enable_result, (unsigned)capture_enabled,
+           (unsigned)capture_disable_result, (unsigned)capture_disabled);
+    cna_demo_check(
+        demo,
+        capture_enable_result == CNA_RESULT_SUCCESS && capture_disable_result == CNA_RESULT_SUCCESS &&
+            (capture_enabled == CNA_TRUE || capture_enabled == CNA_FALSE) &&
+            (capture_disabled == CNA_TRUE || capture_disabled == CNA_FALSE),
+        "capture and release report whether the active renderer applied each request");
+
+    global_result = cna_mouse_get_global_position_ext(game, &global_x, &global_y);
+    warp_result = cna_mouse_warp_global_ext(game, 17, 19, &warp_applied);
+    warped_result = cna_mouse_get_global_position_ext(game, &warped_x, &warped_y);
+    if (global_result == CNA_RESULT_SUCCESS && warp_applied == CNA_TRUE) {
+        warp_restore_result = cna_mouse_warp_global_ext(game, global_x, global_y, &restore_applied);
+    }
+    cna_demo_check(
+        demo,
+        global_result == CNA_RESULT_SUCCESS && warp_result == CNA_RESULT_SUCCESS &&
+            warped_result == CNA_RESULT_SUCCESS && warp_applied == CNA_TRUE &&
+            warped_x == 17 && warped_y == 19 && warp_restore_result == CNA_RESULT_SUCCESS &&
+            restore_applied == CNA_TRUE,
+        "a global warp is observable and the original desktop position is restored");
+
+    cna_demo_check(
+        demo,
+        cna_mouse_subscribe_clicked_ext(mouse_clicked, &clicks, &registration) == CNA_RESULT_SUCCESS &&
+            registration != CNA_INVALID_HANDLE &&
+            cna_mouse_raise_clicked_ext(game, 3) == CNA_RESULT_SUCCESS && clicks.count == 1 &&
+            clicks.last_button == 3,
+        "the clicked callback runs synchronously with its native button number");
+    cna_demo_check(
+        demo,
+        cna_mouse_unsubscribe_clicked_ext(registration) == CNA_RESULT_SUCCESS &&
+            cna_mouse_raise_clicked_ext(game, 4) == CNA_RESULT_SUCCESS && clicks.count == 1,
+        "unsubscribing stops later clicked notifications");
+
+    registration = CNA_INVALID_HANDLE;
+    clicks.count = 0;
+    cna_demo_check(
+        demo,
+        cna_mouse_subscribe_clicked_ext(mouse_clicked, &clicks, &registration) == CNA_RESULT_SUCCESS &&
+            cna_mouse_reset_for_tests_ext(game) == CNA_RESULT_SUCCESS &&
+            cna_mouse_set_window_handle(game, window) == CNA_RESULT_SUCCESS &&
+            cna_mouse_raise_clicked_ext(game, 5) == CNA_RESULT_SUCCESS && clicks.count == 0 &&
+            cna_mouse_unsubscribe_clicked_ext(registration) == CNA_RESULT_SUCCESS,
+        "mouse reset drops registrations and the released registration remains safely owned");
+}
+
+static void demonstrate_mouse_cursors(InputState* state, CNA_Handle game)
+{
+    CNA_MouseCursorHandle owned_default = CNA_INVALID_HANDLE;
+    CNA_MouseCursorHandle stock_arrow = CNA_INVALID_HANDLE;
+    CNA_MouseCursorHandle custom = CNA_INVALID_HANDLE;
+    CNA_Result create_result;
+    CNA_Result set_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result first_dispose_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result second_dispose_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result destroy_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result stock_result;
+    CNA_Result stock_dispose_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result stock_set_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result custom_result;
+    CNA_Result custom_set_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result arrow_restore_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result custom_first_dispose_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result custom_second_dispose_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result custom_destroy_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result stock_destroy_result = CNA_RESULT_INVALID_STATE;
+
+    create_result = cna_mouse_cursor_create_ext(&owned_default);
+    if (create_result == CNA_RESULT_SUCCESS) {
+        set_result = cna_mouse_set_cursor_ext(game, owned_default);
+        first_dispose_result = cna_mouse_cursor_dispose(owned_default);
+        second_dispose_result = cna_mouse_cursor_dispose(owned_default);
+        destroy_result = cna_mouse_cursor_destroy(owned_default);
+    }
+    cna_demo_check(
+        state->demo,
+        create_result == CNA_RESULT_SUCCESS && set_result == CNA_RESULT_SUCCESS &&
+            first_dispose_result == CNA_RESULT_SUCCESS && second_dispose_result == CNA_RESULT_SUCCESS &&
+            destroy_result == CNA_RESULT_SUCCESS,
+        "an owned default cursor can be installed, disposed idempotently and destroyed");
+
+    stock_result = cna_mouse_cursor_get_stock_ext(game, CNA_MOUSE_CURSOR_STOCK_ARROW, &stock_arrow);
+    if (stock_result == CNA_RESULT_SUCCESS) {
+        stock_dispose_result = cna_mouse_cursor_dispose(stock_arrow);
+        stock_set_result = cna_mouse_set_cursor_ext(game, stock_arrow);
+    }
+    cna_demo_check(
+        state->demo,
+        stock_result == CNA_RESULT_SUCCESS && stock_dispose_result == CNA_RESULT_SUCCESS &&
+            stock_set_result == CNA_RESULT_SUCCESS,
+        "disposing a borrowed stock Arrow is a no-op and it remains installable");
+
+    custom_result = cna_mouse_cursor_create_from_texture2d(game, state->white, 0, 0, &custom);
+    if (custom_result == CNA_RESULT_SUCCESS) {
+        custom_set_result = cna_mouse_set_cursor_ext(game, custom);
+        if (stock_arrow != CNA_INVALID_HANDLE) {
+            arrow_restore_result = cna_mouse_set_cursor_ext(game, stock_arrow);
+        }
+        custom_first_dispose_result = cna_mouse_cursor_dispose(custom);
+        custom_second_dispose_result = cna_mouse_cursor_dispose(custom);
+        custom_destroy_result = cna_mouse_cursor_destroy(custom);
+    }
+    if (stock_arrow != CNA_INVALID_HANDLE) {
+        stock_destroy_result = cna_mouse_cursor_destroy(stock_arrow);
+    }
+    cna_demo_check(
+        state->demo,
+        custom_result == CNA_RESULT_SUCCESS && custom_set_result == CNA_RESULT_SUCCESS &&
+            arrow_restore_result == CNA_RESULT_SUCCESS && custom_first_dispose_result == CNA_RESULT_SUCCESS &&
+            custom_second_dispose_result == CNA_RESULT_SUCCESS && custom_destroy_result == CNA_RESULT_SUCCESS &&
+            stock_destroy_result == CNA_RESULT_SUCCESS,
+        "a texture cursor owns copied pixels and releases after the stock Arrow is restored");
 }
 
 static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, void* context,
@@ -52,6 +328,10 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     result = cna_texture2d_create(graphics_device, &info, &state->white);
     if (result == CNA_RESULT_SUCCESS) {
         result = cna_texture2d_set_data_rgba8(state->white, &white, 1U);
+    }
+    if (result == CNA_RESULT_SUCCESS) {
+        demonstrate_mouse_platform(state->demo, game);
+        demonstrate_mouse_cursors(state, game);
     }
     if (result == CNA_RESULT_SUCCESS) {
         result = cna_sprite_batch_create(graphics_device, &state->sprite_batch);
@@ -193,6 +473,8 @@ int main(int argc, char** argv)
                            copied_count == 2U && copied_keys[0] == CNA_KEY_SPACE && copied_keys[1] == CNA_KEY_LEFT,
                        "pressed keys copy in ascending numeric order");
     }
+
+    demonstrate_mouse_values(&demo);
 
     memset(&state, 0, sizeof(state));
     state.demo = &demo;

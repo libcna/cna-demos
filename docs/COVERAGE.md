@@ -68,7 +68,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 267 of 3210** (8.3 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 293 of 3210** (9.1 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -82,8 +82,10 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `graphics_state.h` | 2 / 14 |
 | `index_resources.h` | 3 / 10 |
 | `input.h` | 14 / 15 |
+| `input_cursor.h` | 6 / 6 |
 | `input_gamepad.h` | 4 / 63 |
 | `input_keyboard.h` | 1 / 17 |
+| `input_mouse.h` | 20 / 20 |
 | `input_touch.h` | 32 / 47 |
 | `math.h` | 2 / 52 |
 | `matrix.h` | 7 / 57 |
@@ -99,7 +101,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `vertex_resources.h` | 5 / 24 |
 | `vertex_values.h` | 1 / 13 |
 
-Headers without a demonstrated route: `cnb.h`, `color.h`, `content_readers.h`, `core_ext.h`, `curve.h`, `devices.h`, `display.h`, `gamer_services.h`, `geometry.h`, `graphics_ext.h`, `graphics_resource.h`, `input_cursor.h`, `input_devices.h`, `input_haptics.h`, `input_joystick.h`, `input_mouse.h`, `input_text.h`, `media_library.h`, `models.h`, `net.h`, `net_gamers.h`, `net_sessions.h`, `packed_vectors.h`, `quaternion.h`, `runtime_graphics_manager.h`, `runtime_window.h`, `sensors.h`, `texture_volume.h`, `video.h`, `xact.h`.
+Headers without a demonstrated route: `cnb.h`, `color.h`, `content_readers.h`, `core_ext.h`, `curve.h`, `devices.h`, `display.h`, `gamer_services.h`, `geometry.h`, `graphics_ext.h`, `graphics_resource.h`, `input_devices.h`, `input_haptics.h`, `input_joystick.h`, `input_text.h`, `media_library.h`, `models.h`, `net.h`, `net_gamers.h`, `net_sessions.h`, `packed_vectors.h`, `quaternion.h`, `runtime_graphics_manager.h`, `runtime_window.h`, `sensors.h`, `texture_volume.h`, `video.h`, `xact.h`.
 
 ## CNA-specific and unmatched API names
 
