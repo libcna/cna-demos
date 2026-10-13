@@ -1914,3 +1914,17 @@ watched builds pass with3909unchanged CNA inputs/no diagnostics; metadata remain
 actual routes raise C coverage209->217/3210 and media_player.h23->31/41. No audible-volume,
 queue-order, repeated-playback or persistence claim. Full474 is pending.
 Evidence:checkpoint-474-c-player-settings-focused-*.
+
+## Complete474-C-player-settings
+
+Complete checkpoint **474-C-player-settings**, source `eac3fa7`, extends the same C media demo
+71->75checks without another ID or fixture. Focused and full runs preserve all71old labels and add
+four exact stopped-state controls for mute, repeat, shuffle and clamped volume, restoring ordinary
+settings before teardown. Focused29media/CLI CTests pass.
+
+Full validation passes metadata474/0 and487enabled CTests in169.00s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected child/network evidence. C media
+alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain exact. Normalized
+stderr is identical. Outer Xvfb has8exact amdgpu pairs (previous17); exits are zero and CNA
+eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
+rise209->217/3210 and media_player.h23->31/41. Evidence:checkpoint-474-c-player-settings-*.

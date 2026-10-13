@@ -2990,3 +2990,14 @@ OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.37binarie
 and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has17known pairs,
 exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types and1405/2326members;
 C ABI routes rise203->209/3210. Evidence:checkpoint-474-c-song-metadata-*.
+
+## Complete474-C-player-settings
+
+Complete checkpoint **474-C-player-settings**, source `eac3fa7`, extends the existing C media demo
+71->75checks with stopped-state mute, repeat, shuffle and clamped-volume round trips. Both
+renderers preserve all71old labels and pass four additions with empty demo stderr. Full validation
+passes metadata474/0 and487enabled CTests in169.00s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.37binaries, four assets
+and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has8known pairs,
+exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types and1405/2326members;
+C ABI routes rise209->217/3210. Evidence:checkpoint-474-c-player-settings-*.
