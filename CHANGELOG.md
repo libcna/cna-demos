@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.shader_effect_uniforms`, an18-check C workflow covering all loose typed
+  uniform setters, tightly packed float/vec2/vec3/mat4 arrays, malformed inputs and portable std140
+  block declarations against active shader uniforms.
 - Added `c_api.graphics.shader_effect_state`, a17-check C workflow covering source construction,
   canonical validity/renderer ownership, empty successful diagnostics and independent World/View/
   Projection matrix state across executing and non-executing renderer contracts.

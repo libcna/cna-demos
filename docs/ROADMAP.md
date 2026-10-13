@@ -3279,3 +3279,16 @@ eight declared SOFTWARE capability skips). Metadata is519/0 and the incremental 
 Ten routes raise total C coverage1056->1066/3205 and `effects.h`265->275/290. Clean sibling CNA is
 `a6bb279d47`; the production library baseline is unchanged. No draw, pixel or visual inspection is
 claimed. Evidence:checkpoint-519-c-shader-state-focused-*.
+
+New `c_api.graphics.shader_effect_uniforms` demonstrates all eleven loose typed and uniform-block
+ShaderEffect routes. Eighteen controls exercise active matrix/vector/scalar/integer uniforms,
+float/vec2 arrays, tightly packed vec3/mat4 arrays, empty-null forms, malformed arrays, an embedded-
+NUL name and a two-member std140 declaration/clear after overwriting caller storage. Direct and
+both runner selections pass with byte-identical output and empty stderr; all25 focused ShaderEffect
+and CLI tests satisfy their contracts in5.64s (17 passed, eight declared SOFTWARE capability
+skips). Metadata is520/0 and the final incremental build is clean. Eleven routes raise total C
+coverage1066->1077/3205 and `effects.h`275->286/290. The configure build emitted only the known
+third-party Draco CMP0148 developer warning. Clean sibling CNA is `a6bb279d47`; the production
+library baseline is unchanged. Existing pixel demos cover rendered uniform behavior; this workflow
+draws nothing and claims no pixel or visual inspection.
+Evidence:checkpoint-520-c-shader-uniforms-focused-*.
