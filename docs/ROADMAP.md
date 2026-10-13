@@ -4052,3 +4052,22 @@ metadata reaches2295/3205 and `gamer_services.h` reaches143/239. Evidence:
 `checkpoint-593-c-guide-rendering-focused-*-direct.*`. Actual rendering and visible appearance are
 validated; real keyboard, mouse and controller interaction and project-built execution remain
 separate.
+
+## Focused594-C-guide-sign-in-and-offline-social
+
+`c_api.gamer.guide_social_offline` adds all14 remaining Guide screen routes in a real dispatcher
+game with an isolated empty profile store. Invalid pane count and unavailable online-only mode
+leave the Guide closed; ordinary offline sign-in opens and automatically draws the local-profile
+picker. After20 frames, exact back-buffer samples prove its dimmed background, orange header and
+panel; the SOFTWARE and OPENGLES3 screenshots are byte-identical and were inspected. Escape
+simulation closes it. Valid text, recipient and target handles then reach every service-backed
+social route: compose, friend request, friends, both invitations, gamer card, messages, party,
+party sessions, review, players and achievements give their documented not-supported results,
+while marketplace gives its distinct missing-profile/privilege invalid-state result. None leaves a
+partial overlay. Both26-control Xvfb runs pass with empty stderr; strict C99 and metadata
+compilation pass. The first one-frame OPENGLES3 probe had captured only the valid black opening
+transition; using the complete20-frame interval corrected that demo timing defect. Staged metadata
+reaches2309/3205 and `gamer_services.h` reaches157/239. Evidence:
+`checkpoint-594-c-guide-social-offline-focused-*-direct.*`. Real service screens and user input
+remain service/manual. `cna_guide_delay_notifications` remains intentionally uncredited because
+its effect requires a delivered service invitation and exposes no public C readback.
