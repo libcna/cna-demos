@@ -446,7 +446,7 @@ a check that all authored colors remain visible and that a blank texture row can
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 19 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 20 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -3870,3 +3870,15 @@ release. Both renderer-labelled direct runs pass byte-identically with empty std
 metadata compilation pass. `net_sessions.h` reaches21/104 demonstrated. Evidence:
 checkpoint-580-c-net-available-focused-*-direct.*. No discovery, join, socket, address reachability
 or project-built runner is claimed.
+
+`c_api.net.local_session_state` adds37 `net_sessions.h` routes in30 renderer-free controls. An
+explicit signed-in gamer and copied properties create a single Local session whose four rosters,
+host/local/find-by-id views and owned count agree, while borrowed views prevent early destruction.
+Host/join policy, slot limits, simulated latency/loss, independent property replacement, exact type
+text, zero traffic and process counts are visible. Ready publication/reset and queued StartGame/
+EndGame transitions become observable through Update; idempotent disposal refuses later updates and
+all ownership returns to zero instances. Both renderer-labelled direct runs pass byte-identically
+with empty stderr; strict C99 and metadata compilation pass. Two supporting signed-gamer routes are
+also newly demonstrated, and `net_sessions.h` reaches58/104. Evidence:
+checkpoint-581-c-net-local-state-focused-*-direct.*. No socket, remote machine, measured throughput,
+cross-machine propagation or project-built runner is claimed.
