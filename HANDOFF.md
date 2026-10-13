@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-498 catalog demos (latest complete checkpoint497-C-sprite-states; one focused batch pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+498 catalog demos (latest complete checkpoint497-C-sprite-states; two focused batches pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -73,12 +73,12 @@ joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 43 (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog with complete497 runtime reports). Actual C ABI
-coverage is732/3205: `input_gamepad.h`61/63,
+coverage is745/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`16/84. Complete497 exercises
-the first718 credited routes in both full smoke suites;14 new routes have focused dual-renderer
+`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`29/84. Complete497 exercises
+the first718 credited routes in both full smoke suites;27 new routes have focused dual-renderer
 evidence.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 30 (`c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
@@ -110,6 +110,21 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **498-C-device-values** extends `c_api.graphics.device_states` from19to22 controls without
+adding an ID. The callback proves the live game device is undisposed, Normal, HiDef and owned by a
+currently enumerated adapter; its borrowed handle refuses direct disposal and remains live. It
+saves, applies and exactly reads a distinctive scissor rectangle, blend factor, multisample mask
+and reference stencil alongside the existing complete object and sampler states, then restores and
+re-reads every original value. SOFTWARE and OPENGLES3 produce identical output with empty stderr.
+Metadata is498/0, all83 focused C/API, C++ graphics-device/state and CLI tests pass in49.86s, and a
+clean build follows. Thirteen routes raise total C coverage732->745/3205 and
+`graphics_device.h`16->29/84. Clean sibling CNA is `d7eff66ee`; `cna-demos` is SHA-256
+`3fedc1edb7fa5d6a5141d207d27db937414f11a225240905dfe9a9ffeb9b767e`, the extended standalone is
+`a485768ec03ccd4362ceeeef53a3ef197a8214c35735ec9dcbc13d67cc38f60e`, and production
+`libcna.so` remains `3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0`.
+Nothing is drawn and no visual inspection is claimed. Evidence:
+`checkpoint-498-c-device-values-focused-*`.
 
 Focused **498-C-viewport** adds `c_api.graphics.viewport` for all11 Viewport value routes and the
 live device get/set pair in `graphics_device.h`. Nineteen controls distinguish the all-zero XNA
@@ -730,12 +745,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue `graphics_device.h` with the coherent live scalar/device-identity state
-batch: lifecycle status, adapter/profile identity, scissor rectangle, blend factor, multisample
-mask and reference stencil. Use exact save/apply/read/restore behavior and preserve callback-scoped
-device ownership. Decide whether this belongs in the existing `c_api.graphics.device_states` demo
-or a new focused ID based on source clarity; do not mix in reset, owned-device construction,
-draw/binding, events or renderer-capability extensions merely to increase the route count.
+HIGHEST PRIORITY: continue `graphics_device.h` with a coherent resource-event and tracking batch.
+Use one real named/tagged texture to demonstrate synchronous resource-created and
+resource-destroyed payloads, tracked-resource count changes and registration release/stale-handle
+refusal. Extend the existing `c_api.graphics.resource_lifecycle` demo if its source remains focused;
+otherwise use one new focused ID. Keep device loss/reset/disposal events separate because the
+borrowed game device cannot safely trigger them, and do not add silent subscriptions merely for
+route count.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
@@ -760,8 +776,8 @@ haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-t
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
 checkpoint. Adapter-capabilities and device-presentation are included in complete492. The later
 render-target-bindings, device-capabilities, sprite-scaled, resource-lifecycle, index-buffer,
-device-states and sprite-states batches are all included in complete497. Focused viewport498 is
-newer and pending the next complete checkpoint. Complete497 began at clean
+device-states and sprite-states batches are all included in complete497. Focused viewport498 and
+the later device-values extension are newer and pending the next complete checkpoint. Complete497 began at clean
 docs-only sibling CNA `e67c54936` and ended at clean docs-only `d7eff66ee`; both used the same
 production library hash. Complete497 is the immutable full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain

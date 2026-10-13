@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `c_api.graphics.device_states` from19to22 controls with live device identity and
+  ownership checks plus exact scissor-rectangle, blend-factor, multisample-mask and
+  reference-stencil save/apply/read/restore behavior.
 - Added `c_api.graphics.viewport`, a19-check C workflow for all11 Viewport value routes plus exact
   live-device set/get/restoration, projection round trips and string-buffer atomicity.
 - Recorded CNA-DEMOS-ISSUE-064: `cna_viewport_init` correctly produces the all-zero XNA value,

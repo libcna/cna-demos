@@ -2842,3 +2842,19 @@ comment that incorrectly promises MaxDepth1 although XNA, CNA, its pure-C test a
 produce zero. Clean sibling CNA is `d7eff66ee`; the production library hash remains unchanged.
 Nothing is drawn and no visual inspection is claimed.
 Evidence:checkpoint-498-c-viewport-focused-*.
+
+## Focused498-C-device-values
+
+The existing `c_api.graphics.device_states` workflow grows from19to22 controls without another
+demo ID. Its callback proves the game-owned device is undisposed, Normal, HiDef and tied to a
+currently enumerated adapter; a direct disposal request returns NOT_SUPPORTED and leaves it live.
+The existing complete blend, depth/stencil, rasterizer and independent sampler round trips now save,
+apply and exactly read a distinctive scissor rectangle, blend factor, multisample mask and
+reference stencil too. All original object and scalar/geometric values are restored independently,
+then one final aggregate read verifies every field before callback return. SOFTWARE and OPENGLES3
+produce identical output with empty stderr. Metadata remains498/0, all83 focused C/API, C++
+graphics-device/state and CLI tests pass in49.86s, and a clean follow-up build passes. Thirteen
+routes raise C coverage732->745/3205 and `graphics_device.h`16->29/84. Clean sibling CNA is
+`d7eff66ee`; production `libcna.so` remains byte-identical. Nothing is drawn and no visual
+inspection is claimed.
+Evidence:checkpoint-498-c-device-values-focused-*.

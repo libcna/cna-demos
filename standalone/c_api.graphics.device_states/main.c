@@ -2,7 +2,8 @@
 /*
  * Graphics-state values and live device round trips from C. Every public preset is checked through
  * all fields, distinctive complete states are applied and read back, pixel/vertex sampler slots are
- * kept independent, and the callback restores the exact state it borrowed.
+ * kept independent, and the callback restores the exact object, scalar and geometric state it
+ * borrowed. Device identity and the game-owned disposal boundary are checked in the same loan.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH] (nothing is drawn).
  * Exit code 0 passed, 1 failed.
@@ -22,6 +23,12 @@ static int color_equal(CNA_Color left, CNA_Color right)
 {
     return left.r == right.r && left.g == right.g && left.b == right.b &&
         left.a == right.a;
+}
+
+static int rectangle_equal(CNA_Rectangle left, CNA_Rectangle right)
+{
+    return left.x == right.x && left.y == right.y && left.width == right.width &&
+        left.height == right.height;
 }
 
 static int blend_equal(const CNA_BlendState* left, const CNA_BlendState* right)
@@ -314,6 +321,19 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     CNA_RasterizerState rasterizer_copy;
     CNA_SamplerState pixel_copy;
     CNA_SamplerState vertex_copy;
+    CNA_Rectangle saved_scissor;
+    CNA_Rectangle scissor_copy;
+    CNA_Color saved_factor;
+    CNA_Color factor_copy;
+    CNA_Bool disposed = CNA_TRUE;
+    CNA_GraphicsDeviceStatus device_status = UINT32_MAX;
+    CNA_GraphicsProfile profile = UINT32_MAX;
+    uint32_t adapter_index = UINT32_MAX;
+    uint64_t adapter_count = 0U;
+    int32_t saved_mask = 0;
+    int32_t saved_reference = 0;
+    int32_t mask_copy = 0;
+    int32_t reference_copy = 0;
     CNA_Result get_blend;
     CNA_Result get_depth;
     CNA_Result get_rasterizer;
@@ -339,6 +359,27 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     check_rasterizer_presets(state->demo);
     check_sampler_presets(state->demo);
 
+    cna_demo_check(
+        state->demo,
+        cna_graphics_device_get_is_disposed(device, &disposed) == CNA_RESULT_SUCCESS &&
+            disposed == CNA_FALSE &&
+            cna_graphics_device_get_status(device, &device_status) == CNA_RESULT_SUCCESS &&
+            device_status == CNA_GRAPHICS_DEVICE_STATUS_NORMAL &&
+            cna_graphics_device_get_graphics_profile(device, &profile) == CNA_RESULT_SUCCESS &&
+            profile == CNA_GRAPHICS_PROFILE_HI_DEF &&
+            cna_graphics_device_get_adapter_index(device, &adapter_index) == CNA_RESULT_SUCCESS &&
+            cna_graphics_adapter_get_count(device, &adapter_count) == CNA_RESULT_SUCCESS &&
+            (uint64_t)adapter_index < adapter_count,
+        "the live device is normal, undisposed, HiDef and attached to an enumerated adapter");
+    cna_demo_check(
+        state->demo,
+        cna_graphics_device_dispose(device) == CNA_RESULT_NOT_SUPPORTED &&
+            cna_graphics_device_get_is_disposed(device, &disposed) == CNA_RESULT_SUCCESS &&
+            disposed == CNA_FALSE &&
+            cna_graphics_device_get_status(device, &device_status) == CNA_RESULT_SUCCESS &&
+            device_status == CNA_GRAPHICS_DEVICE_STATUS_NORMAL,
+        "C cannot dispose the callback-scoped game-owned device and it remains usable");
+
     initialize_output_prefixes(
         &saved_blend, &saved_depth, &saved_rasterizer, &saved_pixel, &saved_vertex);
     get_blend = cna_graphics_device_get_blend_state(device, &saved_blend);
@@ -348,12 +389,20 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
         device, CNA_SHADER_STAGE_PIXEL, UINT32_C(3), &saved_pixel);
     get_vertex = cna_graphics_device_get_sampler_state(
         device, CNA_SHADER_STAGE_VERTEX, UINT32_C(3), &saved_vertex);
+    memset(&saved_scissor, 0, sizeof(saved_scissor));
+    memset(&saved_factor, 0, sizeof(saved_factor));
     saved = cna_demo_check(
         state->demo,
         get_blend == CNA_RESULT_SUCCESS && get_depth == CNA_RESULT_SUCCESS &&
             get_rasterizer == CNA_RESULT_SUCCESS && get_pixel == CNA_RESULT_SUCCESS &&
-            get_vertex == CNA_RESULT_SUCCESS,
-        "save the complete active pipeline states and both sampler-stage slots");
+            get_vertex == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_scissor_rectangle(device, &saved_scissor) ==
+                CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_blend_factor(device, &saved_factor) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_multi_sample_mask(device, &saved_mask) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_reference_stencil(device, &saved_reference) ==
+                CNA_RESULT_SUCCESS,
+        "save all object, sampler, scalar and geometric device state values");
     if (!saved) {
         return CNA_RESULT_SUCCESS;
     }
@@ -464,6 +513,26 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
             sampler_equal(&vertex_copy, &custom_vertex),
         "a distinctive vertex sampler round-trips while the pixel-stage slot stays independent");
 
+    cna_demo_check(
+        state->demo,
+        cna_graphics_device_set_scissor_rectangle(
+            device, (CNA_Rectangle){11, 13, 101, 79}) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_set_blend_factor(
+                device, (CNA_Color){91U, 82U, 73U, 64U}) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_set_multi_sample_mask(device, INT32_C(0x2468ace0)) ==
+                CNA_RESULT_SUCCESS &&
+            cna_graphics_device_set_reference_stencil(device, 113) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_scissor_rectangle(device, &scissor_copy) ==
+                CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_blend_factor(device, &factor_copy) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_multi_sample_mask(device, &mask_copy) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_reference_stencil(device, &reference_copy) ==
+                CNA_RESULT_SUCCESS &&
+            rectangle_equal(scissor_copy, (CNA_Rectangle){11, 13, 101, 79}) &&
+            color_equal(factor_copy, (CNA_Color){91U, 82U, 73U, 64U}) &&
+            mask_copy == INT32_C(0x2468ace0) && reference_copy == 113,
+        "distinctive scissor, blend-factor, sample-mask and stencil-reference values round-trip");
+
     restore_blend = cna_graphics_device_set_blend_state(device, &saved_blend);
     restore_depth = cna_graphics_device_set_depth_stencil_state(device, &saved_depth);
     restore_rasterizer = cna_graphics_device_set_rasterizer_state(device, &saved_rasterizer);
@@ -475,8 +544,14 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
         state->demo,
         restore_blend == CNA_RESULT_SUCCESS && restore_depth == CNA_RESULT_SUCCESS &&
             restore_rasterizer == CNA_RESULT_SUCCESS && restore_pixel == CNA_RESULT_SUCCESS &&
-            restore_vertex == CNA_RESULT_SUCCESS,
-        "restore all saved graphics-device state values before leaving the callback");
+            restore_vertex == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_set_scissor_rectangle(device, saved_scissor) ==
+                CNA_RESULT_SUCCESS &&
+            cna_graphics_device_set_blend_factor(device, saved_factor) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_set_multi_sample_mask(device, saved_mask) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_set_reference_stencil(device, saved_reference) ==
+                CNA_RESULT_SUCCESS,
+        "restore all saved object, sampler, scalar and geometric states before leaving the callback");
 
     initialize_output_prefixes(
         &blend_copy, &depth_copy, &rasterizer_copy, &pixel_copy, &vertex_copy);
@@ -493,11 +568,19 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
             cna_graphics_device_get_sampler_state(
                 device, CNA_SHADER_STAGE_VERTEX, UINT32_C(3), &vertex_copy) ==
                 CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_scissor_rectangle(device, &scissor_copy) ==
+                CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_blend_factor(device, &factor_copy) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_multi_sample_mask(device, &mask_copy) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_get_reference_stencil(device, &reference_copy) ==
+                CNA_RESULT_SUCCESS &&
             blend_equal(&blend_copy, &saved_blend) && depth_equal(&depth_copy, &saved_depth) &&
             rasterizer_equal(&rasterizer_copy, &saved_rasterizer) &&
             sampler_equal(&pixel_copy, &saved_pixel) &&
-            sampler_equal(&vertex_copy, &saved_vertex),
-        "read back the exact original blend, depth, rasterizer and sampler states after restoration");
+            sampler_equal(&vertex_copy, &saved_vertex) &&
+            rectangle_equal(scissor_copy, saved_scissor) && color_equal(factor_copy, saved_factor) &&
+            mask_copy == saved_mask && reference_copy == saved_reference,
+        "read back every exact original device state after restoration");
     return CNA_RESULT_SUCCESS;
 }
 
