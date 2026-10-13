@@ -4232,3 +4232,19 @@ metadata reaches2537/3205 and `cnb.h` reaches26/272. Evidence:
 `checkpoint-605-c-cnb-foundations-focused-*-direct.*`. No game, renderer, filesystem, compiled
 asset or project-built execution is claimed. Bounded reader and byte-writer serialization remain
 the next foundation batch.
+
+## Focused606-C-CNB-bounded-byte-I/O
+
+`c_api.content.cnb_byte_io` adds38 `cnb.h` routes in27 renderer-free controls. Its writer builds an
+exact52-byte little-endian payload with every integer and floating-point primitive, a length-
+prefixed UTF-8 string, a count, raw bytes and zero padding. Initial-byte copying, exact size/copy
+queries and ownership-transferring take behavior are explicit, including atomic short-buffer
+refusal. A bounded reader owns its input and context copies, reports exact cursor state, restores
+all values, retains the last decoded string, preserves its cursor on a short raw destination and
+distinguishes trailing data, exact exhaustion, EOF and explicit schema failure. A released handle
+refuses stale access, and the UTF-8 predicate distinguishes valid multibyte text from malformed
+bytes. Both renderer-labelled direct runs pass byte-identically with empty stderr; strict C99,
+metadata compilation, diff checks and validation self-tests pass. Staged metadata reaches2575/3205
+and `cnb.h` reaches64/272. Evidence:
+`checkpoint-606-c-cnb-byte-io-focused-*-direct.*`. No game, renderer, filesystem, complete CNB
+document or project-built execution is claimed. Document/writer round-trip behavior is next.
