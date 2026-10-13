@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.basic_effect_state`, a40-check C workflow covering BasicEffect material,
+  matrices, fog, lighting, same-device texture retention and standalone/nested DirectionalLight
+  ownership, including stable member views that outlive their root Effect handle.
 - Added `c_api.graphics.effect_concrete_types`, a22-check C workflow for EffectMaterial texture
   ownership and inherited base cloning plus SpriteEffect stock identity and type-preserving cloning.
 - Recorded CNA-DEMOS-ISSUE-069: the generic C Effect clone comment promises concrete-type

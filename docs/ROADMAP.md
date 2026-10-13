@@ -3171,3 +3171,14 @@ C/API, C++ Effect/SpriteBatch and CLI tests pass in3.70s, and the incremental bu
 Coverage rises895->899/3205 and `effects.h`106->110/290. Clean sibling CNA is `a6bb279d47`;
 production library hashes remain unchanged. No draw, pixel result or visual inspection is claimed.
 Evidence:checkpoint-510-c-effect-concrete-types-focused-*.
+
+New `c_api.graphics.basic_effect_state` demonstrates the remaining BasicEffect state routes, all
+shared IEffectMatrices/IEffectFog/IEffectLights accessors and DirectionalLight ownership. Forty
+controls establish exact defaults and mutations, stable nested views, the canonical three-light
+preset, plain-Effect interface refusal, root-handle survival and a real retained same-device
+Texture2D. Direct and both runner selections pass with byte-identical output and empty stderr;
+all24 focused C/API, C++ BasicEffect/Effect/SpriteEffect and CLI tests pass in15.82s. Metadata is
+511/0 and the incremental build is clean. Forty-two routes raise total C coverage899->941/3205 and
+`effects.h`110->152/290. Clean sibling CNA is `a6bb279d47`; production library hashes remain
+unchanged. Apply is state-only; no draw, pixel result or visual inspection is claimed.
+Evidence:checkpoint-511-c-basic-effect-state-focused-*.
