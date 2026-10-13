@@ -3785,3 +3785,13 @@ Both Xvfb/dummy-audio selections are byte-identical with empty stderr; strict C9
 compilation pass. `video.h` is42/42 demonstrated. Evidence:
 checkpoint-572-c-video-player-focused-*-direct.*. Pixels, audible quality and visual inspection are
 not claimed.
+
+`c_api.audio.xact_engine` starts the public C XACT audit with17 routes in17 controls. It opens the
+generated version46 settings through the ordinary and explicit look-ahead/renderer constructors,
+then inspects CNA's single renderer through nonempty friendly/id text, the friendly ToString value,
+atomic short-buffer refusal, bounds, equality and a stable process hash. The authored SpeedOfSound
+global changes and clamps while cue-scoped Intensity remains inaccessible; Update pumps bookkeeping
+and a live registration observes the one engine disposal before releasing independently. Both
+Xvfb/dummy-audio selections are byte-identical with empty stderr; strict C99 and metadata
+compilation pass. `xact.h` reaches17/62 demonstrated. Evidence:
+checkpoint-573-c-xact-engine-focused-*-direct.*. No speaker output or scheduling effect is claimed.
