@@ -3012,3 +3012,15 @@ and OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.37bin
 and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has19known pairs,
 exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types and1405/2326members;
 C ABI routes rise217->219/3210. Evidence:checkpoint-474-c-player-transport-*.
+
+## Complete474-C-player-visualization
+
+Complete checkpoint **474-C-player-visualization**, source `7f0ce57`, extends the existing C media
+demo78->82checks with versioned zero initialization, enabled readback, live frequency/sample data
+and disabled zero-buffer behavior. Both renderers preserve all78old labels and pass four additions
+with empty demo stderr. Full validation passes metadata474/0 and487enabled CTests in158.33s.
+SOFTWARE409/27/35/3 and OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.
+37binaries, four assets and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb
+has14known pairs, exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types
+and1405/2326members; C ABI routes rise219->223/3210. Evidence:
+checkpoint-474-c-player-visualization-*.

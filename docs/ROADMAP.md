@@ -1966,3 +1966,18 @@ in8.60s. Two watched builds pass with3909unchanged CNA inputs/no diagnostics; me
 474/0. Four actual routes raise C coverage219->223/3210, media.h26->27/39 and
 media_player.h33->36/41. No audible, FFT-accuracy, exact-amplitude, paused-data or rendered-pixel
 claim. Full474 is pending. Evidence:checkpoint-474-c-player-visualization-focused-*.
+
+## Complete474-C-player-visualization
+
+Complete checkpoint **474-C-player-visualization**, source `7f0ce57`, extends the same C media demo
+78->82checks without another ID or fixture. Focused and full runs preserve all78old labels and add
+four exact controls for versioned zero initialization, enabled readback, live frequency/sample data
+and disabled zero-buffer behavior. Focused29media/CLI CTests pass.
+
+Full validation passes metadata474/0 and487enabled CTests in158.33s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected child/network evidence. C media
+alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain exact. Normalized
+stderr is identical. Outer Xvfb has14exact amdgpu pairs (previous19); exits are zero and CNA
+eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
+rise219->223/3210, media.h26->27/39 and media_player.h33->36/41.
+Evidence:checkpoint-474-c-player-visualization-*.
