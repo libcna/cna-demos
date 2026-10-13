@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.devices.host_info`, a12-check read-only C workflow covering all14 environment,
+  extension-availability, power, CPU/RAM, preferred-locale and display-information routes in
+  `devices.h`; host values and windowless/windowed display answers are reported without mutation.
 - Added `c_api.devices.sensor_lifecycle`, a40-check C workflow for four sensor acquisition/event
   lifecycles;66 additional `sensors.h` routes now have semantic coverage through deterministic
   synthetic backends, with no physical-hardware claim.

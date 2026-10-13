@@ -2499,3 +2499,22 @@ diagnostics are intentionally uncredited: their generated buffer mechanics or CN
 plumbing do not justify app-facing demo controls. No physical measurement or callback-thread claim
 is made. The standard/full checkpoint remains blocked by the unchanged external SDL_GPU mismatch.
 Evidence:checkpoint-483-c-sensor-lifecycle-focused-*.
+
+## Focused484-C-host-info
+
+A new read-only C standalone starts the `devices.h` audit with the fourteen routes that describe
+the executing environment. It distinguishes Device/Emulator identity and extension availability,
+reads a coherent power state, battery percentage and remaining-time sentinel, requires positive
+logical CPU and RAM capacities, and enumerates every preferred locale through exact language and
+country size/copy pairs. The upper-bound locale index is refused by all four routes without
+touching a guarded destination.
+
+Both renderer selections pass the same12 controls with empty stderr. Their only textual difference
+is meaningful host state: SOFTWARE has no window and reports scale0 with a0x0 safe area, while
+OPENGLES3 reports scale1 and800x480 under Xvfb. Direct C and metadata compilation is
+diagnostic-free and metadata validates484/0. Fourteen routes establish `devices.h`14/62 and raise
+current C coverage588->602/3205. All66 exact input/device/C-API/CLI CTests pass in182.31s with six
+declared skips and one known-issue expected failure. No power transition, locale mutation, drawing,
+screenshot or visual inspection is claimed. The standard/full checkpoint remains blocked by the
+unchanged external SDL_GPU mismatch.
+Evidence:checkpoint-484-c-host-info-focused-*.
