@@ -20,7 +20,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 69 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
+* In progress: 14 (C API, 70 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
 
@@ -64,23 +64,25 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-524 catalog demos (latest complete checkpoint524-C-textures): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+525 catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 69 (standalone C programs). Every declared category has demos.
-Coverage: see docs/COVERAGE.md (current catalog and complete521 runtime reports).
-Actual C ABI coverage is1109/3205: `input_gamepad.h`61/63,
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 (standalone C programs). Every declared category has demos.
+Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
+Actual C ABI coverage is1116/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
-`media_player.h`39/41, `texture.h`19/21 and `texture_volume.h`12/16.
+`media_player.h`39/41, `texture.h`19/21, `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete524 exercises all1109 credited routes in both full smoke suites and includes the focused
-MediaPlayer and texture batches after complete521.
+MediaPlayer and texture batches after complete521. The focused SpriteFont result exercises the
+seven later routes under both selected renderers; it is not a replacement for the complete524
+baseline.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 32 (`c_api.graphics.pbr_effect_material_state` CNA-DEMOS-ISSUE-070,
 `c_api.graphics.draw_routes` CNA-DEMOS-ISSUE-066,
@@ -114,6 +116,18 @@ Passing documentation issues ISSUE-068, ISSUE-069 and ISSUE-071 do not add runti
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **525-C-sprite-font** adds `c_api.graphics.sprite_font_state`, a26-control caller-built
+SpriteFont workflow covering all seven previously uncredited `sprite_font.h` routes. It proves the
+constructor copies caller glyph storage, both parallel collections preserve exact order and are
+atomic on short output, asymmetric bounds/cropping/kerning drive exact multiline measurement,
+valid mutable fallback/spacing state survives rejected changes, clearing fallback restores missing-
+glyph refusal, and the font retains its atlas. Direct execution plus SOFTWARE and OPENGLES3 runner
+selections pass with byte-identical output and empty stderr. All24 focused C SpriteFont, C++
+SpriteFont/CNJ and CLI tests pass in12.78s. Metadata is525/0 and coverage rises1109->1116/3205,
+completing `sprite_font.h`2->9/9. The incremental build is diagnostic-free. Clean sibling CNA is
+`b2ded99da9`; production library hashes remain unchanged. Nothing is drawn and no screenshot or
+visual inspection is claimed. Evidence:`checkpoint-525-c-sprite-font-focused-*`.
 
 Complete **524-C-textures**, source `b5b4ec2`, absorbs the explicit MediaPlayer pump and all three
 texture batches after complete521. `tools/validate.sh` passes metadata524/0 and all537 enabled
@@ -1293,11 +1307,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit the seven uncredited `sprite_font.h` routes as one caller-built SpriteFont
-workflow: copied glyph/character tables, mutable layout/default state, measurement and atlas
-retention. Keep the public constructor and state visible in C. The completed290-route
-`effects.h` audit groups related lifetimes, metadata, typed values, collections, reflection and
-actual rendering behavior. The complete
+HIGHEST PRIORITY: audit the twelve uncredited `vertex_values.h` routes as one renderer-independent
+built-in vertex/value-declaration workflow. Cover all seven vertex identities semantically through
+defaults, packed strides and canonical declaration elements; group equality/hash/string behavior
+without multiplying demos per vertex family; and exercise atomic short copies. Keep the tagged
+union and public element records visible in C. The completed290-route `effects.h` audit groups
+related lifetimes, metadata, typed values, collections, reflection and actual rendering behavior.
+The complete
 `graphics_device.h` audit is
 closed at80/84; keep context recovery manual/platform-specific, fixed type-name copies trivial/
 uncredited and the one-way string marker intentionally uncredited unless an observable consumer is
@@ -1323,8 +1339,9 @@ preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067/068/069.
 Current complete baseline is524-C-textures; source commit, exact results, hashes and evidence are in
 section7. It includes focused503-C-draw-routes, focused504-C-occlusion-query/content-loss/device-
 capabilities/renderer-recreation, every focused505-521 effect batch through the ContentManager
-Effect load, focused521-C-player-update and focused522-524 texture batches. There is no newer
-focused source/runtime evidence yet.
+Effect load, focused521-C-player-update and focused522-524 texture batches. Focused525-C-sprite-font
+is the newer incremental source/runtime evidence and closes `sprite_font.h`; it has not yet been
+absorbed by a complete checkpoint.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete

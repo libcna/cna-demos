@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.sprite_font_state`, a26-check caller-built SpriteFont workflow covering
+  copied glyph/character tables, atomic short reads, asymmetric layout measurement, mutable
+  fallback/spacing state and atlas retention; this completes all nine `sprite_font.h` routes.
 - Completed the524-demo texture checkpoint: metadata524/0, all537 enabled CTests pass, all three
   new texture IDs pass under both full smokes, and every complete521 status/known-issue pair remains
   exact.

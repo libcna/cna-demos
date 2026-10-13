@@ -3399,3 +3399,17 @@ diagnostic-free. Clean sibling CNA is `b2ded99da9`; production library hashes re
 the exercised `cna-demos` SHA-256 is
 `3cc772719b3e44c5c57dea583c0d611ed3319f3fc100d1b520bf8e465aca03bd`. No screenshot or visual
 inspection was performed. Evidence:checkpoint-524-complete-*.
+
+## Focused525-C-sprite-font
+
+New `c_api.graphics.sprite_font_state` closes every remaining `sprite_font.h` route in one
+26-control caller-built workflow. It creates a real atlas and three asymmetric glyph records,
+proves constructor copy ownership, atomically reads the parallel character/glyph tables, verifies
+canonical output metadata, measures exact multiline layout before and after fallback/spacing
+changes, preserves state across rejected setters, clears fallback and observes missing-glyph
+refusal, and establishes atlas retention through font destruction. Direct execution plus SOFTWARE
+and OPENGLES3 runner selections pass with byte-identical output and empty stderr. All24 focused C
+SpriteFont, C++ SpriteFont/CNJ and CLI tests pass in12.78s. Metadata is525/0 and C coverage rises
+1109->1116/3205, completing `sprite_font.h`2->9/9. The incremental build is diagnostic-free. Clean
+sibling CNA is `b2ded99da9` and production library hashes remain unchanged. Nothing is drawn and no
+screenshot or visual inspection is claimed. Evidence:checkpoint-525-c-sprite-font-focused-*.

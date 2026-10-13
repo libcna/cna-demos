@@ -6,12 +6,12 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**524 demos** in 18 categories. Kinds: console 161, game 272, standalone 91. Automation: automated 488, manual 3, smoke-only 33.
+**525 demos** in 18 categories. Kinds: console 161, game 272, standalone 92. Automation: automated 489, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
-| c_api | 69 | 68 | 1 | 0 | 63 / 0 / 6 / 0 / 0 | 64 / 0 / 5 / 0 / 0 |
+| c_api | 70 | 69 | 1 | 0 | 64 / 0 / 6 / 0 / 0 | 65 / 0 / 5 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -68,7 +68,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 1109 of 3205** (34.6 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 1116 of 3205** (34.8 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -102,7 +102,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `runtime.h` | 24 / 45 |
 | `runtime_components.h` | 13 / 39 |
 | `sensors.h` | 116 / 144 |
-| `sprite_font.h` | 2 / 9 |
+| `sprite_font.h` | 9 / 9 |
 | `storage.h` | 22 / 49 |
 | `texture.h` | 19 / 21 |
 | `texture_volume.h` | 12 / 16 |
