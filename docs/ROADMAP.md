@@ -506,7 +506,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
-## Phase 14 -- bindings 🟨 (24 C API demos)
+## Phase 14 -- bindings 🟨 (25 C API demos)
 The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks
 (28 with capture) and 31 error checks pass on both renderer selections. Larger version-one input
 and output prefixes retain their known behavior; unknown output tails and original diagnostics
@@ -538,6 +538,8 @@ mouse/keyboard hot-plug events and one power snapshot),
 desktop-state restoration),
 ✅ `c_api.input.text_input` (deterministic committed UTF-16, UTF-8 composition/candidates,
 registration/reset lifecycle and bound/unbound activation),
+✅ `c_api.input.joystick` (descriptor values, disconnected owned raw-state snapshots and
+deterministic connected/disconnected event lifecycle),
 ✅ `c_api.input.touch_state` (deterministic press/move/release snapshots, id lookup and previous locations),
 ✅ `c_api.audio.sound_effect` (PCM16 effect, instance state, refused parent destruction and stale instance handles),
 ✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse, directions and bounded array ranges with refusal before writes),
@@ -2407,3 +2409,25 @@ declared skips. All17 `input_text.h` routes gain semantic credit and total C cov
 395->412/3210. Physical typing and platform IME/keyboard presentation remain manual. The
 unrelated in-progress CNA Vulkan work still prevents a standard build and complete479 checkpoint;
 focused runtime uses the last built CNA libraries. Evidence:checkpoint-479-c-input-text-focused-*.
+
+## Focused480-C-input-joystick
+
+One C standalone separates the raw-joystick C contract from the visual/manual C++ state display.
+Both renderer selections pass the same23 labels with empty stderr, and Xvfb enumerates zero raw
+joysticks. Descriptor defaults/equality cover id, physical type and UTF-8 name. Capability defaults
+represent a disconnected device with unknown charge, while equality observes hardware fields,
+name and GUID. The absent-id live query returns that exact value and zero-byte name/GUID size/copy
+answers without changing guard bytes.
+
+Two absent ids create independent owned snapshots. All four axis/button/hat/trackball count and
+copy pairs report empty arrays without changing destinations; the snapshots compare equal and
+release independently. Public connected/disconnected raises deliver exact ids synchronously,
+selective unsubscribe preserves the other handler, and reset removes it before its registration
+releases safely. Direct C and metadata compilation is diagnostic-free; metadata is480/0 and all62
+exact input/C-API/CLI CTests pass in30.94s with six declared skips. Twenty-seven routes raise C
+coverage412->439/3210 and establish `input_joystick.h`27/30. The three successful enumerated
+info/name routes remain uncredited until hardware executes them; physical axes, buttons, hats,
+trackballs and feedback are likewise manual. The watched standard build sees3898 unchanged CNA
+inputs at dirty d71308d3 but fails in unrelated `SdlGpuRenderer.cpp` definitions whose concurrently
+reduced header removed compute/storage/indirect members. Focused runtime therefore uses the last
+built libraries and is not a complete-build claim. Evidence:checkpoint-480-c-input-joystick-focused-*.

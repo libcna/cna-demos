@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.input.joystick`, a23-check C workflow for descriptor values, disconnected owned
+  state snapshots and deterministic hot-plug lifetime;27of30 `input_joystick.h` routes now have
+  semantic demo coverage and the three populated enumeration routes remain hardware-manual.
 - Added `c_api.input.text_input`, a deterministic20-check C workflow for committed UTF-16,
   UTF-8 composition/candidates, registration/reset lifetime and bound/unbound activation; all17
   public `input_text.h` routes now have semantic demo coverage.
