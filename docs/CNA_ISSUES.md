@@ -38,7 +38,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   is claimed. The passing demo records actual behavior and needs no runtime knownIssue marker. Both
   focused renderer runs pass64 identical controls with empty stderr; source hashes and the exact
   31->64 comparison are archived under `checkpoint-476-c-input-touch-scaling-focused-*`. No CNA
-  file was edited and no upstream message was sent. Open.
+  file was edited and no upstream message was sent. Complete476 preserves every prior parent and
+  unrelated child result while this demo alone grows31->64 controls; evidence:
+  `checkpoint-476-c-input-touch-scaling-*`. Open.
 
 ### CNA-DEMOS-ISSUE-059 -- Empty MediaQueue active-Song output contradicts its C documentation
 

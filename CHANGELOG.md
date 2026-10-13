@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete476-C-input-touch-scaling:489enabled CTests and both full smoke suites preserve every
+  parent outcome and unrelated child trace; only the gesture demo grows31to64 controls.
 - Extended the C gesture workflow from31to64checks with display/orientation round trips, zero-size
   event dropping, exact normalized FreeDrag scaling and gesture/snapshot source separation.
 - Recorded CNA-DEMOS-ISSUE-060: the raised C touch-event comment contradicts its gesture-only

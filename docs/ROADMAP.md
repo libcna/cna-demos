@@ -2195,3 +2195,22 @@ so no clean-source claim is made. Metadata stays476/0. Seven actual routes raise
 the gesture-only raise route also fills the event-driven touch map. No physical touch,
 orientation-driven rotation, threshold boundary, snapshot injection or visual claim. Full476 is
 pending. Evidence:checkpoint-476-c-input-touch-scaling-focused-*.
+
+## Complete476-C-input-touch-scaling
+
+Complete checkpoint **476-C-input-touch-scaling**, source `87cc277`, extends the same gesture demo
+31->64checks without another ID or fixture. Full validation passes metadata476/0 and489enabled
+CTests in161.14s. SOFTWARE411/27/35/3 and OPENGLES3441/29/3/3 preserve all38/42old failures,
+every unrelated C/custom child list and protected trace, five network controls,18music checks and
+8album-art checks. Only the gesture child grows to the exact focused64 controls; parentJSON stays0.
+All39selected paths match the focused preflight and stay fixed through both smoke suites. Against
+complete476-C-input-gesture-queue, the catalog and gesture standalone carry this batch; two CNA
+libraries already carried unrelated dependency drift, while the other35 binaries, four assets and
+30fixtures remain exact. Normalized stderr is identical. Outer Xvfb emits6exact amdgpu pairs
+(previous7), and both exits are zero. Focused preflight saw the external bytes as dirty CNAf44a8ff;
+the full post-build capture and final observation see their clean commit bb6820f with identical
+runtime hashes. This is immutable selected-runtime evidence rather than an atomic dependency-source
+snapshot. XNA coverage stays297/329types and1405/2326members; actual C ABI coverage is267/3210 and
+input_touch.h32/47. ISSUE-060 remains a passing documentation mismatch; no physical touch,
+orientation-driven rotation, threshold boundary, snapshot injection or visual claim. Evidence:
+checkpoint-476-c-input-touch-scaling-*.

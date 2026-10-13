@@ -129,22 +129,22 @@ claim. Evidence:checkpoint-476-c-input-gesture-queue-focused-*.
 
 Last complete baseline:
 
-Complete checkpoint **476-C-input-gesture-queue**, source `972dc87`, adds the focused standalone
-unchanged. Full tools/validate.sh passes metadata476/0 and489enabled CTests in152.64s. SOFTWARE
-411/27/35/3 and OPENGLES3441/29/3/3 preserve all38/42prior failures, every old C/custom child list
-and protected trace, five network controls,18music checks and8album-art checks. The new ID adds
-exactly31 focused child controls and parentJSON0. All39selected runtime paths stay fixed through
-both smoke suites. Against complete475-C-input-touch-values, only the catalog binary changes among
-the old set, the gesture standalone is the only addition, and the other37 old binaries, four assets
-and30fixtures are exact. Normalized stderr is identical. Outer Xvfb has7exact amdgpu pairs
-(previous7); inner/outer exits are zero. The post-build capture saw clean CNAf44a8ff; unrelated
-concurrent CNA work dirtied that sibling during smoke while all selected runtime artifacts stayed
-fixed. This is immutable binary/runtime evidence for the captured clean source, not validation of
-the later dirty external tree or an atomic dependency snapshot. Coverage stays297/329types and
-1405/2326XNA members; actual C ABI coverage is260/3210 and input_touch.h25/47. No physical gesture
-detection, recognizer timing/threshold, callback-thread or visual claim. Complete evidence:
-checkpoint-476-c-input-gesture-queue-*.
-Preserve earlier refusal evidence and ISSUE-038/057/058/059.
+Complete checkpoint **476-C-input-touch-scaling**, source `87cc277`, extends the same gesture demo
+31->64checks without another ID or fixture. Full tools/validate.sh passes metadata476/0 and489
+enabled CTests in161.14s. SOFTWARE411/27/35/3 and OPENGLES3441/29/3/3 preserve all38/42prior
+failures, every unrelated C/custom child list and protected trace, five network controls,18music
+checks and8album-art checks. Only the gesture child grows to the exact focused64 controls;
+parentJSON remains0. All39selected paths match preflight and stay fixed through both smoke suites.
+Against complete476-C-input-gesture-queue, the catalog and gesture standalone carry this batch;
+`libcna.so` and `libcna_c_api.so` already carried unrelated external dependency drift, while the
+other35 binaries, four assets and30fixtures are exact. Normalized stderr is identical. Outer Xvfb
+has6exact amdgpu pairs (previous7); both exits are zero. Focused preflight saw those dependency
+bytes as dirty CNAf44a8ff; full post-build and final observations see their clean commit bb6820f
+with the same hashes. Coverage stays297/329types and1405/2326XNA members; actual C ABI coverage is
+267/3210 and input_touch.h32/47. ISSUE-060 remains a passing documentation mismatch. No physical
+touch, orientation rotation, threshold-boundary, snapshot-injection or visual claim. Complete
+evidence:checkpoint-476-c-input-touch-scaling-*.
+Preserve earlier refusal evidence and ISSUE-038/057/058/059/060.
 
 ## 8. Exact commands that work
 
@@ -268,14 +268,10 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: commit the focused C touch-scaling batch, then run a complete same-ID476
-checkpoint against complete476-C-input-gesture-queue. Expect489enabled CTests and parent outcomes
-SOFTWARE411/27/35/3 and OPENGLES3441/29/3/3. Preserve all38/42old failures and every unrelated
-C/custom child list/trace; only `c_api.input.gesture_queue` may grow31->64 child controls and its
-parentJSON must remain0. Capture the same39 runtime paths; compared with the complete baseline only
-the catalog and gesture standalone binaries may differ, while the other37 binaries, four assets and
-30fixtures must remain exact. After closure select the next header/member audit from coverage data.
-Leave live gamepad
+HIGHEST PRIORITY: audit all public routes in C `input_mouse.h` and `input_cursor.h` against the
+existing `c_api.input.keyboard_mouse` behavior. Give every route a semantic disposition and select
+only coherent automation that demonstrates live mouse state, relative/capture/warp behavior or
+cursor ownership without duplicating existing C++ demos or generated argument checks. Leave live gamepad
 dead-zone and mouse-touch emulation manual-deferred; keep generic touch/media reflection routes
 intentionally uncredited and `media_player_update_ext` deferred. Never edit/revert CNA; preserve
 ISSUE-038/057/058/059.
@@ -290,7 +286,6 @@ ISSUE-038/057/058/059.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is476-C-input-gesture-queue; source commit is in section7.
-All earlier drafts are APPLIED AND STALE. The focused touch-scaling batch in section7 is current;
-its full same-ID476 task in section14 is live.
+Current complete baseline is476-C-input-touch-scaling; source commit is in section7.
+All earlier drafts are APPLIED AND STALE. The mouse/cursor C route audit in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.
