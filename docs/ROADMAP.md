@@ -446,7 +446,7 @@ a check that all authored colors remain visible and that a blank texture row can
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 21 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 22 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -3892,3 +3892,14 @@ Local workflow, so their delivery is not claimed. Both renderer-labelled direct 
 identically with empty stderr; strict C99 and metadata compilation pass. `net_sessions.h` reaches
 72/104. Evidence:checkpoint-582-c-net-events-focused-*-direct.*. No socket, service event, remote
 machine or project-built runner is claimed.
+
+`c_api.net.local_gamer_packets` adds all16 LocalNetworkGamer routes from `net_sessions.h` in28
+renderer-free controls. Standalone/session local identity, borrowed signed-in text, voice/party
+validation, injected queue availability, plain/offset/PacketReader receives, scoped sender handles,
+queue clearing and all six byte/PacketWriter send forms are explicit. Both renderer-labelled runs
+are byte-identical with empty stderr:27 controls pass and one retains CNA-DEMOS-ISSUE-075, where
+offset receive zeroes destination bytes outside the requested range. Strict C99 and metadata
+compilation pass; the known-issue marker is present. Two supporting signed-gamer text routes are
+newly demonstrated, and `net_sessions.h` reaches88/104. Evidence:
+checkpoint-583-c-local-packets-focused-*-direct.*. No socket/wire delivery, voice audio,
+party-service interaction or project-built runner is claimed.
