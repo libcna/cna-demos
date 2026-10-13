@@ -506,7 +506,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
-## Phase 14 -- bindings 🟨 (25 C API demos)
+## Phase 14 -- bindings 🟨 (26 C API demos)
 The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks
 (28 with capture) and 31 error checks pass on both renderer selections. Larger version-one input
 and output prefixes retain their known behavior; unknown output tails and original diagnostics
@@ -540,6 +540,8 @@ desktop-state restoration),
 registration/reset lifecycle and bound/unbound activation),
 ✅ `c_api.input.joystick` (descriptor values, disconnected owned raw-state snapshots and
 deterministic connected/disconnected event lifecycle),
+✅ `c_api.input.haptics` (direction/effect/capability values and complete safe closed-device
+rumble/effect/control/ownership behavior),
 ✅ `c_api.input.touch_state` (deterministic press/move/release snapshots, id lookup and previous locations),
 ✅ `c_api.audio.sound_effect` (PCM16 effect, instance state, refused parent destruction and stale instance handles),
 ✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse, directions and bounded array ranges with refusal before writes),
@@ -2431,3 +2433,24 @@ trackballs and feedback are likewise manual. The watched standard build sees3898
 inputs at dirty d71308d3 but fails in unrelated `SdlGpuRenderer.cpp` definitions whose concurrently
 reduced header removed compute/storage/indirect members. Focused runtime therefore uses the last
 built libraries and is not a complete-build claim. Evidence:checkpoint-480-c-input-joystick-focused-*.
+
+## Focused481-C-input-haptics
+
+One C standalone separates deterministic haptic values and the safe closed-device contract from
+hardware actuation. Both renderer selections pass identical24-label children with empty stderr;
+Xvfb reports zero haptic devices. Direction equality observes even unused polar components. Effect
+equality observes a field unused by the constant family and caller-owned custom samples.
+Capabilities retain -1 for unknown closed-device limits, and equality observes feature bits and
+the external UTF-8 name.
+
+An absent id opens as an owned closed handle. Its name is empty without a destination write and
+its capabilities are the canonical closed value. Effect support, all three rumble operations,
+effect create/update/run/status/stop/destroy, global stop, gain, autocenter, pause and resume all
+return their documented false/no-op outcomes. Dispose is idempotent and destroy releases the
+handle. Mouse and absent-joystick query/open paths produce coherent owned results. Direct C and
+metadata compilation is diagnostic-free; metadata is481/0 and all63 exact input/C-API/CLI CTests
+pass in43.85s with six declared skips. Thirty-three routes raise C coverage439->472/3210 and
+establish `input_haptics.h`33/36. The three successful enumerated id/name routes, effect upload and
+physical force feedback remain hardware-manual. The unchanged external SDL_GPU source/header
+mismatch still blocks the standard/full checkpoint, so focused runtime uses the last built CNA
+libraries. Evidence:checkpoint-481-c-input-haptics-focused-*.

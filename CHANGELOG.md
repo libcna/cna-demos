@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.input.haptics`, a24-check C workflow for direction/effect/capability values and the
+  complete safe closed-device lifecycle;33of36 `input_haptics.h` routes now have semantic coverage
+  while enumerated hardware names and physical feedback remain manual.
 - Added `c_api.input.joystick`, a23-check C workflow for descriptor values, disconnected owned
   state snapshots and deterministic hot-plug lifetime;27of30 `input_joystick.h` routes now have
   semantic demo coverage and the three populated enumeration routes remain hardware-manual.
