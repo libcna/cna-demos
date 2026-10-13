@@ -571,8 +571,13 @@ int main(int argc, char** argv)
         uint64_t copied = 0U;
         CNA_Bool equal_same_path = CNA_FALSE;
         CNA_Bool equal_other_path = CNA_TRUE;
+        CNA_Bool is_protected = CNA_TRUE;
+        CNA_Bool is_rated = CNA_TRUE;
         int32_t identity_hash = 0;
         int32_t same_path_hash = 1;
+        int32_t play_count = -1;
+        int32_t rating = -1;
+        int32_t track_number = -1;
         CNA_Result result = build_song_path(game, "rising.wav", rising_path, sizeof(rising_path), &rising_length);
         if (result == CNA_RESULT_SUCCESS) {
             result = cna_song_create(game, view(rising_path, rising_length), view("Identity", 8U), &identity_song);
@@ -611,6 +616,22 @@ int main(int argc, char** argv)
                        "equal Songs have equal path-based hash codes");
         cna_demo_check(&demo, song_has_name(other_path_song, ""),
                        "the plain-path constructor preserves an empty display name");
+        cna_demo_check(&demo,
+                       cna_song_get_is_protected(identity_song, &is_protected) == CNA_RESULT_SUCCESS &&
+                           is_protected == CNA_FALSE &&
+                           cna_song_get_is_rated(identity_song, &is_rated) == CNA_RESULT_SUCCESS &&
+                           is_rated == CNA_FALSE &&
+                           cna_song_get_rating(identity_song, &rating) == CNA_RESULT_SUCCESS && rating == 0 &&
+                           cna_song_get_track_number(identity_song, &track_number) == CNA_RESULT_SUCCESS &&
+                           track_number == 0 &&
+                           cna_song_get_play_count(identity_song, &play_count) == CNA_RESULT_SUCCESS &&
+                           play_count == 0,
+                       "a plain-path Song starts unprotected, unrated and without library counters");
+        cna_demo_check(&demo,
+                       cna_song_set_play_count(identity_song, 42) == CNA_RESULT_SUCCESS &&
+                           cna_song_get_play_count(identity_song, &play_count) == CNA_RESULT_SUCCESS &&
+                           play_count == 42,
+                       "the caller can update and read back the Song play count");
         {
             const CNA_Result identity_release = identity_song != CNA_INVALID_HANDLE
                                                     ? cna_song_destroy(identity_song)

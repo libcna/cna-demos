@@ -1878,3 +1878,14 @@ alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain
 stderr is identical. Outer Xvfb has8exact amdgpu pairs (previous12); exits are zero and CNA
 eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
 rise198->203/3210 and media.h15->20/39. Evidence:checkpoint-474-c-song-identity-*.
+
+## Focused474-C-song-metadata
+
+The same `c_api.media.media_player` now grows69->71child checks without a new ID or fixture. Both
+renderers pass identical lists with empty stderr; removing two additions restores all69prior labels
+in order. The existing unplayed caller-owned plain-path Song reports unprotected/unrated with
+rating0, track number0 and play count0, then stores and reads back play count42. Focused29media/CLI
+CTests pass in8.52s. Two watched builds pass with3909unchanged CNA inputs/no diagnostics; metadata
+remains474/0. Six actual routes raise C coverage203->209/3210 and media.h20->26/39. No tagged-song
+mutation, persistence or automatic playback-count claim; trivial type-name routes do not justify
+separate controls. Full474 is pending. Evidence:checkpoint-474-c-song-metadata-focused-*.

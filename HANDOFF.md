@@ -103,6 +103,17 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **474-C-song-metadata** extends c_api.media.media_player from69to71checks under both
+renderers with empty stderr and no new ID/fixture. Removing two additions restores all69old labels
+in order. The existing unplayed caller-owned plain-path Song reports unprotected/unrated with
+rating0, track number0 and play count0, then stores and reads back play count42. Focused29media/CLI
+CTests pass in8.52s; metadata474/0. Both watched builds pass with3909unchanged CNA inputs/no
+diagnostics. Six actual routes raise C ABI coverage203->209/3210 and media.h20->26/39. No
+tagged-song mutation, persistence or automatic playback-count claim; type-name formatting is
+intentionally not an independent check. Evidence:checkpoint-474-c-song-metadata-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-C-song-identity**, source `52b4163`, extends c_api.media.media_player
 from61to69checks under both renderers with empty demo stderr and no new ID/fixture. Removing eight
 additions restores all61old labels in order. Three caller-owned plain-path Songs prove exact stored
@@ -243,15 +254,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the audited `media.h` member gap in the existing
-`c_api.media.media_player` demo with a focused Song metadata batch. Reuse one unplayed caller-owned
-plain-path helper and demonstrate the coherent default record: not protected, not rated, rating0,
-track number0 and play count0; then set play count to a nonzero value and read it back. Credit the
-six actual `is_protected`/`is_rated`/rating/track/play-count get/set routes. Keep all69old labels in
-order, do not turn trivial type-name formatting into independent checks, and release the helper
-before game destruction. Audit source/header contracts first, build with the3909-input consistency
-watch, run both focused renderers and relevant media/CLI CTests, regenerate coverage, update docs
-and run a new complete474 checkpoint. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
+HIGHEST PRIORITY: commit the focused C Song metadata source/docs, then run full474 validation
+against complete474-C-song-identity. Capture once after the full build during CTest: the same
+37selected binary paths/four assets/30fixture paths. Freeze source/assets/build through both smokes.
+Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3. Preserve all38/42old failures, unrelated C/custom lists/traces, five network
+controls,18music and8album-art checks. Only c_api.media.media_player grows69->71; parentJSON stays0
+and normalized stderr should be identical. Archive/refuse any surprise; update full audit/HANDOFF
+and immediately continue the next semantic public-member gap. Never edit/revert CNA; preserve
+ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -265,5 +276,5 @@ and run a new complete474 checkpoint. Never edit/revert CNA; preserve ISSUE-038/
 
 Current complete baseline is474-C-song-identity; source commit is in section7.
 All earlier drafts and focused C media work are APPLIED AND STALE. Song metadata defaults and
-mutable play count are the next audited member batch and have not been implemented.
+mutable play count are applied and focused but have no complete checkpoint yet.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.
