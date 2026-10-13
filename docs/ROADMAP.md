@@ -3385,3 +3385,17 @@ Texture3D/TextureCube type-name pairs already covered by CNA's generic C smoke, 
 semantic audit is complete. Nothing is sampled or drawn and no visual inspection is claimed.
 Clean sibling CNA is `b2ded99da9` and production library hashes are unchanged.
 Evidence:checkpoint-524-c-texture-volume-focused-*.
+
+## Complete524-C-textures
+
+Complete checkpoint **524-C-textures**, source `b5b4ec2`, absorbs the explicit MediaPlayer pump and
+all three texture batches since complete521. Full `tools/validate.sh` passes metadata524/0 and all
+537 enabled CTests in271.80s; three declared tests remain disabled. SOFTWARE reports456pass/
+30known-fail/35skip/3not-run and OPENGLES3 reports487/31/3/3, with zero unexpected passes. Every
+one of the521 earlier status/knownIssue pairs is unchanged; the three new texture IDs pass on both
+renderers, while the MediaPlayer extension preserves its existing ID's passing status. Fresh
+runtime coverage is297/329 types,1405/2326 XNA members and1109/3205 C routes. The build log is
+diagnostic-free. Clean sibling CNA is `b2ded99da9`; production library hashes remain unchanged and
+the exercised `cna-demos` SHA-256 is
+`3cc772719b3e44c5c57dea583c0d611ed3319f3fc100d1b520bf8e465aca03bd`. No screenshot or visual
+inspection was performed. Evidence:checkpoint-524-complete-*.

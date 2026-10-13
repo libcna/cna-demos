@@ -3047,3 +3047,14 @@ under each renderer. Runtime coverage is297/329 types,1405/2326 XNA members and1
 including `effects.h`290/290. The diagnostic-free binary was built against clean CNA `a6bb279d47`;
 production library hashes remain unchanged. No screenshot or visual inspection was performed.
 Evidence:checkpoint-521-complete-*.
+
+## Complete524-C-textures
+
+Complete checkpoint **524-C-textures**, source `b5b4ec2`, absorbs the explicit MediaPlayer pump and
+three focused texture IDs after complete521. Full validation passes metadata524/0 and all537
+enabled CTests in271.80s; three declared tests remain disabled. SOFTWARE is456pass/30known-fail/
+35skip/3not-run and OPENGLES3 is487/31/3/3, with no unexpected pass. All521 earlier status/
+knownIssue pairs remain exact, and all three new IDs pass under both renderers. Runtime coverage is
+297/329 types,1405/2326 XNA members and1109/3205 C routes. The diagnostic-free binary was built
+against clean CNA `b2ded99da9`; production library hashes remain unchanged. No screenshot or visual
+inspection was performed. Evidence:checkpoint-524-complete-*.

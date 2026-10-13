@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the524-demo texture checkpoint: metadata524/0, all537 enabled CTests pass, all three
+  new texture IDs pass under both full smokes, and every complete521 status/known-issue pair remains
+  exact.
 - Added `c_api.graphics.texture_volume_data`, a19-check C workflow covering Texture3D box and raw
   byte transfers, all six TextureCube face payloads, atomic short reads and in-memory cube DDS
   decoding.
