@@ -103,7 +103,8 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **475-C-input-touch-state** adds one focused deterministic C program. Both renderers pass30
+Focused **475-C-input-touch-state**, source `6e7de78`, adds one focused deterministic C program.
+Both renderers pass30
 identical child checks with empty stderr. Public fixture routes publish connected four-touch
 capabilities, then create empty, pressed, moved and released snapshots; id lookup distinguishes a
 match from the canonical invalid miss, and previous-location reconstruction covers invalid,
