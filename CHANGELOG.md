@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.devices.vibration`, an18-check C workflow covering all nine vibration routes through
+  exact in-memory request logs, bounds, clamping, device-name buffers and backend restoration
+  without actuating or claiming a physical motor.
 - Added `c_api.devices.host_info`, a12-check read-only C workflow covering all14 environment,
   extension-availability, power, CPU/RAM, preferred-locale and display-information routes in
   `devices.h`; host values and windowless/windowed display answers are reported without mutation.

@@ -2518,3 +2518,22 @@ declared skips and one known-issue expected failure. No power transition, locale
 screenshot or visual inspection is claimed. The standard/full checkpoint remains blocked by the
 unchanged external SDL_GPU mismatch.
 Evidence:checkpoint-484-c-host-info-focused-*.
+
+## Focused485-C-vibration
+
+A new C standalone completes the nine vibration routes in `devices.h`. It reads the real supported
+flag and exact device-name bytes but does not send a request to that platform backend. CNA's public
+in-memory test backend then makes delivery observable: a versioned log records full-intensity and
+explicit-intensity starts, independent large/small motors, stops and exact durations. The demo
+checks the inclusive zero/five-second duration limits, refusal immediately outside them without a
+log change, below/above-range clamps and NaN-to-zero normalization. Exact name copying and
+short-buffer preservation, idle Stop, backend replacement with a reset log and final platform
+restoration are included.
+
+Both renderer selections pass identical18-control output with empty stderr. Direct C and metadata
+compilation is diagnostic-free and metadata validates485/0. The nine routes raise current C
+coverage602->611/3205 and `devices.h`14->23/62. All67 exact input/device/C-API/CLI CTests pass in
+115.45s with six declared skips and one known-issue expected failure. No physical actuation,
+haptic sensation, request timing or platform motor success is claimed. The standard/full
+checkpoint remains blocked by the unchanged external SDL_GPU
+mismatch. Evidence:checkpoint-485-c-vibration-focused-*.
