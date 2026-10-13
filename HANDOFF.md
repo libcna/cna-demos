@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-473 catalog demos (complete checkpoint473-hierarchy): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+473 catalog demos (complete checkpoint473-duration): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -103,45 +103,33 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **473-duration** extends music_index from15to18child checks, preserving all
-original tagged-library relationships and object identity checks. With CNA_FFMPEG_AVAILABLE,
-Song durations match the original250/500/375msFLAC sample counts; artist-specific Album sums
-are750/375ms and the two-track Playlist totals750ms while excluding the third song.
-Two native runs pass18identical child checks; parentJSON remains PASSED/0. Both stderr streams
-retain the same six exact TitleContainer INFO lines.28enabled media/CLI CTests pass in
-7.58s. Watched build/gate, metadata473/0, unchanged fixtures and focused reviewer pass
-before source commit. No zero-sum, playback, acoustic-duration or album-art claim.
-The optional non-FFmpeg branch was syntax-checked only (1074), not natively exercised here;
-it retains the15relationship checks and explicitly prints the unexercised duration boundary.
-Full473-duration against complete473-hierarchy is pending. Evidence:checkpoint-473-duration-focused-*.
+Complete checkpoint **473-duration**, source `65011a3`,
+extends music_index from 15 to 18 child checks. All original relationship and borrowed-object
+controls remain; three added checks establish Song durations of 250/500/375 ms, artist-specific
+Album sums of 750/375 ms and the two-track Playlist total of 750 ms excluding the third song.
+Two focused runs pass 18 identical child checks with the same six TitleContainer INFO lines;
+parent JSON remains PASSED/0. The current build has CNA_FFMPEG_AVAILABLE. The optional
+non-FFmpeg branch has syntax-only evidence, preserves the original relationship workflow and
+prints the unexercised duration boundary. No zero-sum, playback, audible timing or art claim.
+Focused 28 enabled media/CLI CTests, watched build/gate and reviewer passed before source commit.
+No new ID or fixture changes.
 
-Last complete baseline:
-
-Complete checkpoint **473-hierarchy**, source `be5ac32`,
-extends categories from5to10checks while preserving all original predicates/independent
-Music/SFX behavior and correcting only the equality label to names. A separate160byteXGS
-makes Master parent of SFX: live paused direct/descendant voices, parent Resume/Pause,
-child-only Resume and parent Stop from verified both-paused state pass in two dummy-audio
-runs with empty stderr. All9oldXACTassets are unchanged; all10source/staged pairs match.
-Focused38enabled audio/CLI CTests and reviewer passed before source commit. No new ID,
-future-voice pause inheritance, audible volume, deep hierarchy or category-fade credit.
-
-Full tools/validate.sh passes metadata473/0 and486enabled CTests in 166.07s (three further
-manual tests disabled). SOFTWARE408/27/35/3 and OPENGLES3 438/29/3/3 preserve all38/42old
-failed assertions, C/custom child lists/traces and five network controls. Music import retains
-15exact child checks; parentJSON0. Count changes:
-{"OPENGLES3": {"audio.xact.categories": {"after": 10, "before": 5, "reason": "Five authored hierarchy controls added; original five predicates retained, name-equality label corrected."}}, "SOFTWARE": {"audio.xact.categories": {"after": 10, "before": 5, "reason": "Five authored hierarchy controls added; original five predicates retained, name-equality label corrected."}}}.
-All36selected binaries/four existing assets/28fixture hashes stay unchanged through runtime.
-Normalized stderr is identical, including six music TitleContainer INFO lines,42known GL
-X protocol records and the intentional shader error. Outer Xvfb has14exact amdgpu pairs
-(previous20); independent inner/outer exits are zero. Capture CNAeff3131017
-(clean), final CNAeff3131017
-(clean). These are selected artifact/source observations,
-not an atomic or full transitive input snapshot. All evidence helpers pass; immutable
-checkpoint-473-hierarchy-*. Generated coverage:297/329types,
-1400/2326XNA members. Semantic coverage remains incomplete.
+Full tools/validate.sh passes metadata 473/0 and 486 enabled CTests in 159.22s (three further
+manual tests disabled). SOFTWARE 408/27/35/3 and OPENGLES3 438/29/3/3 preserve all 38/42 prior
+failed assertions, C/custom child lists/traces and five network controls. Music alone gains
+three exact child checks; all first 15 remain. Parent count changes:
+{"OPENGLES3": {}, "SOFTWARE": {}}.
+All 36 selected binaries, four existing assets and 28 fixture hashes stay unchanged through
+runtime. Normalized stderr is identical, retaining the six music INFO lines, 42 known GL
+X protocol records and intentional shader error. Outer Xvfb has 16 exact amdgpu pairs
+(previous 14); independent inner/outer exits are zero. Capture CNA eff3131017
+(clean), final CNA eff3131017
+(clean). Selected artifact/source observations are not
+an atomic or full transitive input snapshot. All evidence helpers pass; immutable archives:
+checkpoint-473-duration-*. Generated coverage: 297/329 types,
+1402/2326 XNA members. Semantic coverage remains incomplete.
 Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged; clean runs do
-not establish a repair of the staging race. Original refusals and reproduction remain archived.
+not establish a staging-race repair. Preserve all original refusals and reproduction evidence.
 
 ## 8. Exact commands that work
 
@@ -264,20 +252,24 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-Focused473-duration is complete; commit source/docs and run the full checkpoint next.
-Helpers /tmp/cna-*473-duration*; export catalog /tmp/cna-catalog-473-duration.json.
-Capture ONCE after fullbuild during CTest:36selected binaries/4existing assets/28fixture hashes.
-Freeze through both smokes. Expect486enabledCTest; SOFTWARE408/27/35/3, OPENGLES3438/29/3/3.
-All38/42oldfailures/C/custom child lists/traces and5network controls must remain exact.
-Music child checks alone grow15->18, preserving the first15; parentJSON remains0. Only
-positive window.title Update variance may change a parent count. Normalized stderr identical.
-Preserve/refuse surprises, finish/close/reviewdiff/commit and continue Album art streams.
-Unapplied /tmp/cna-album-art.cpp and -metadata.cpp, syntax55056/8plannedchildchecks, recovery
-checkpoint-473-music-next-album-art-*. Distinguish folder art from no-art albums, exact original
-bytes, a smaller decodable thumbnail and caller-owned streams after library destruction.
-No native/art evidence yet. Reuse existing original FLAC/PNG fixtures and keep private root
-verification. Preserve all18music checks and baseline hashes when adding this focused demo.
-Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged.
+HIGHEST PRIORITY: focused Album cover/thumbnail owned-stream workflow.
+UNAPPLIED /tmp/cna-album-art.cpp and -metadata.cpp pass syntax55056 with eight planned child
+checks; no native or visual proof. Recovery/base/source audit:checkpoint-473-music-next-album-art-*.
+Two existing original tagged FLACs go into separate verified private Linux XDG folders; only
+one receives the existing640x320panorama as cover.png. Public HasArt, missing-art exceptions,
+original bytes, a smaller decoded thumbnail and stream survival after library destruction
+form one coherent concept, distinct from music_index's borrowed metadata/group relationships.
+Use visible public Album methods and caller-owned unique_ptr streams; never use borrowed
+Album pointers after library destruction. Public SavePicture/Picture dimensions may inspect
+the returned thumbnail in the private library; no internal image decoder in demo source.
+No embedded-art, filename-priority, small-image/corrupt fallback or visual-quality claims.
+ISSUE-040 currently has source-only Album comment contradictions; native behavior must be
+observed before extending its evidence. Keep all18music checks and existing failure/child
+baselines exact. Add a one-line standalone CMake file only when applying; watch build/gate,
+run focused/native/media CTests and then complete full validation with a single runtime capture.
+Update coverage/HANDOFF, commit and continue the public-member audit. MediaPlayer/MediaQueue
+follow-ups are classified in COVERAGE_AUDIT. Preserve original mono streaming/ISSUE-038 and
+build-only ISSUE-057. Never edit/revert the sibling CNA checkout from this task.
 
 ## 15. Assumptions the next session must know
 
@@ -289,8 +281,7 @@ Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is473-hierarchy; source commit is in section7.
-All earlier drafts, including category hierarchy, music import and per-cue limits, are
-APPLIED AND STALE. Duration drafts are APPLIED AND STALE. Next album-art draft remains UNAPPLIED; syntax is not native proof.
-Preserve original refusal evidence and source/fixture observations. Retain the established
-architecture/stable IDs; never edit/revert sibling CNA from this task.
+Current complete baseline is473-duration; source commit is in section7.
+All earlier drafts, including positive duration, category hierarchy and tagged import, are
+APPLIED AND STALE. Album-art drafts remain UNAPPLIED; syntax is not native proof.
+Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

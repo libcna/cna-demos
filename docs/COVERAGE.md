@@ -35,7 +35,7 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 297 of 329** (90.3 %).
-- **Methods, properties, constructors and events named by a demo: 1400 of 2326** (60.2 %).
+- **Methods, properties, constructors and events named by a demo: 1402 of 2326** (60.3 %).
 - Fields and enum values named by a demo: 137 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
@@ -49,7 +49,7 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 44 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
-| `Microsoft.Xna.Framework.Media` | 24 / 24 | 96 / 192 | 1 / 8 |
+| `Microsoft.Xna.Framework.Media` | 24 / 24 | 98 / 192 | 1 / 8 |
 | `Microsoft.Xna.Framework.Net` | 22 / 23 | 71 / 127 | 7 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
 

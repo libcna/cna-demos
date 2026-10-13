@@ -1668,3 +1668,33 @@ before source commit. No zero-sum, playback, acoustic-duration or album-art clai
 The optional non-FFmpeg branch was syntax-checked only (1074), not natively exercised here;
 it retains the15relationship checks and explicitly prints the unexercised duration boundary.
 Full473-duration against complete473-hierarchy is pending. Evidence:checkpoint-473-duration-focused-*.
+
+## Complete473-duration
+
+Complete checkpoint **473-duration**, source `65011a3`,
+extends music_index from 15 to 18 child checks. All original relationship and borrowed-object
+controls remain; three added checks establish Song durations of 250/500/375 ms, artist-specific
+Album sums of 750/375 ms and the two-track Playlist total of 750 ms excluding the third song.
+Two focused runs pass 18 identical child checks with the same six TitleContainer INFO lines;
+parent JSON remains PASSED/0. The current build has CNA_FFMPEG_AVAILABLE. The optional
+non-FFmpeg branch has syntax-only evidence, preserves the original relationship workflow and
+prints the unexercised duration boundary. No zero-sum, playback, audible timing or art claim.
+Focused 28 enabled media/CLI CTests, watched build/gate and reviewer passed before source commit.
+No new ID or fixture changes.
+
+Full tools/validate.sh passes metadata 473/0 and 486 enabled CTests in 159.22s (three further
+manual tests disabled). SOFTWARE 408/27/35/3 and OPENGLES3 438/29/3/3 preserve all 38/42 prior
+failed assertions, C/custom child lists/traces and five network controls. Music alone gains
+three exact child checks; all first 15 remain. Parent count changes:
+{"OPENGLES3": {}, "SOFTWARE": {}}.
+All 36 selected binaries, four existing assets and 28 fixture hashes stay unchanged through
+runtime. Normalized stderr is identical, retaining the six music INFO lines, 42 known GL
+X protocol records and intentional shader error. Outer Xvfb has 16 exact amdgpu pairs
+(previous 14); independent inner/outer exits are zero. Capture CNA eff3131017
+(clean), final CNA eff3131017
+(clean). Selected artifact/source observations are not
+an atomic or full transitive input snapshot. All evidence helpers pass; immutable archives:
+checkpoint-473-duration-*. Generated coverage: 297/329 types,
+1402/2326 XNA members. Semantic coverage remains incomplete.
+Original mono streaming/ISSUE-038 and build-only ISSUE-057 remain unchanged; clean runs do
+not establish a staging-race repair. Preserve all original refusals and reproduction evidence.

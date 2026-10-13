@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete473-duration:486enabled CTests and both full smoke suites preserve all old
+  evidence; music import adds three positive-duration checks without playback.
 - Tagged music import now checks positive Song lengths and album/playlist member sums
   with the optional FFmpeg probe;18child checks preserve all15original relationships.
 - Recorded CNA-DEMOS-ISSUE-058: an ASan public-API probe shows `MediaPlayer::Play`
