@@ -446,7 +446,7 @@ a check that all authored colors remain visible and that a blank texture row can
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 20 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 21 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -3882,3 +3882,13 @@ with empty stderr; strict C99 and metadata compilation pass. Two supporting sign
 also newly demonstrated, and `net_sessions.h` reaches58/104. Evidence:
 checkpoint-581-c-net-local-state-focused-*-direct.*. No socket, remote machine, measured throughput,
 cross-machine propagation or project-built runner is claimed.
+
+`c_api.net.session_events` adds14 `net_sessions.h` routes in19 renderer-free controls. All nine
+instance event families and the global invite event obtain owned registrations. Existing/late
+GamerJoined, remote GamerLeft, queued GameStarted/GameEnded and injected HostChanged/SessionEnded
+callbacks carry exact versioned state; each callback gamer is usable only during the call. Every
+registration releases once. Leaderboard-write and invite registrations remain silent under this
+Local workflow, so their delivery is not claimed. Both renderer-labelled direct runs pass byte-
+identically with empty stderr; strict C99 and metadata compilation pass. `net_sessions.h` reaches
+72/104. Evidence:checkpoint-582-c-net-events-focused-*-direct.*. No socket, service event, remote
+machine or project-built runner is claimed.
