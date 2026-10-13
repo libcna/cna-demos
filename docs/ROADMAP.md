@@ -3075,3 +3075,18 @@ fix, not a CNA defect. CNA was clean `f37f8d184` for the18:09 build and advanced
 smoke to clean `fbd8e64a3` through two CI/CMake-test/docs/tooling-only commits. Production CNA
 library hashes remain unchanged. No visual inspection was performed.
 Evidence:checkpoint-504-c-graphics-device-*.
+
+## Focused505-C-effect-annotations
+
+New `c_api.graphics.effect_annotations` demonstrates all22 public annotation and annotation-
+collection routes. Twenty-one controls prove copied non-ASCII UTF-8 name, semantic, cached string
+and raw payload ownership; exact and atomic short-buffer text copies; complete versioned shape/type
+metadata; Boolean, integer-bit, float, Vector2/3/4 and Matrix views; a separate signed-integer
+value; insertion order and exact case-sensitive lookup; collection value copying; owned result
+copies surviving their source handles and collection; bounds refusal and one-shot destruction.
+Direct and runner executions produce identical output with empty stderr on SOFTWARE and
+OPENGLES3. Metadata is505/0, all eight focused C/API, C++ effect-reflection and CLI tests pass in
+9.04s, and the final incremental build is clean. Coverage rises797->819/3205 and `effects.h`
+9->31/290. Clean sibling CNA is `fbd8e64a3`; production library hashes remain unchanged. No game,
+graphics device, drawing or visual inspection is claimed.
+Evidence:checkpoint-505-c-effect-annotations-focused-*.

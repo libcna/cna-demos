@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.effect_annotations`, a21-check C workflow covering all22 immutable
+  annotation and collection routes, including copied UTF-8/raw values, typed views, exact lookup,
+  collection value copies and independent owned lifetimes.
 - Complete504-C-graphics-device passes all517 active CTests and both full smoke suites; the two new
   IDs have their expected outcomes, every complete502 status and known issue remains exact, and
   only SOFTWARE's documented ISSUE-066 assertion is added.
