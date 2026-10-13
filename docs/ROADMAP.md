@@ -3917,3 +3917,18 @@ strict C99 and metadata compilation pass. Two supporting signed-in collection ro
 demonstrated, staged metadata reaches2148/3205 and `net_sessions.h` reaches94/104. Evidence:
 `checkpoint-584-c-session-construction-focused-*-direct.*`. No socket, service, concurrency,
 remote peer or project-built runner is claimed.
+
+## Focused585-C-network-session-discovery-join
+
+`c_api.net.session_discovery_join` closes the final ten `net_sessions.h` routes in32 renderer-free
+controls. Implicit and explicit LocalWithLeaderboards searches return empty owned collections in
+both synchronous and asynchronous forms; each successful async call completes once before return.
+A synthetic PlayerMatch description is insufficient without an authenticated live search, while a
+synthetic Local description exercises both generic Join adapters and preserves its Local type and
+joining-peer role. All four invitation overloads truthfully return NotSupported without a service
+and never invoke completion. Every collection, description and session is released and process
+instance/action counts return to zero. Both renderer-labelled direct runs are byte-identical with
+empty stderr; strict C99 and metadata compilation pass. Staged metadata reaches2158/3205 and
+`net_sessions.h` is104/104. Evidence:
+`checkpoint-585-c-session-discovery-join-focused-*-direct.*`. No socket, authenticated directory,
+accepted invite, address reachability, remote peer or project-built runner is claimed.
