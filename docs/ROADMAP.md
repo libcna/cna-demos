@@ -4129,3 +4129,16 @@ stderr; strict C99 and metadata compilation pass. Staged metadata reaches2371/32
 `gamer_services.h` reaches219/239. Evidence:
 `checkpoint-598-c-avatar-descriptions-focused-*-direct.*`. Service-driven Changed delivery, game,
 renderer, drawing and project-built execution remain separate.
+
+## Focused599-C-avatar-animation-clips
+
+`c_api.gamer.avatar_animations` adds all seven avatar-animation routes in17 renderer-free controls.
+All31 defined presets expose71 local transforms and real lengths from2.5 to10 seconds. The Wave
+right elbow changes at1.2 seconds; position clamps, non-looping advance, looping remainder,
+canonical-boolean refusal, Celebration's keyed happy-to-laughing face, version/bone bounds and
+one-shot ownership are explicit. Both renderer-labelled runs pass byte-identically with empty
+stderr; strict C99 and metadata compilation pass. Staged metadata reaches2378/3205 and
+`gamer_services.h` reaches226/239. CNA-DEMOS-ISSUE-080 records that the C info comment still says
+built-in presets have no timeline and zero length, contrary to the runtime and canonical C++ API.
+Evidence:`checkpoint-599-c-avatar-animations-focused-*-direct.*`. No game, renderer, composed
+skeleton, pixels or project-built execution is claimed.

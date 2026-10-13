@@ -15,6 +15,26 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-080 -- C avatar animation info claims built-in clips have no timeline
+
+- **Area/API:** `CNA_AvatarAnimationInfo` documentation in
+  `modules/c-api/include/CNA/C/gamer_services.h`; the canonical `AvatarAnimation` implementation
+  and `cna_avatar_animation_*` adapters.
+- **Reproduction:** create each defined `CNA_AVATAR_ANIMATION_PRESET_*`, call
+  `cna_avatar_animation_get_info`, then sample Wave at zero and1.2 seconds and inspect its right-
+  elbow transform.
+- **Observed:** all31 presets report71 bones and real lengths from2.5 to10 seconds. Wave's elbow
+  changes substantially at1.2 seconds; direct position, clamped/looping update and Celebration's
+  keyed facial expression all work. This agrees with the canonical C++ header, implementation and
+  tests.
+- **Expected:** the C info documentation currently says a built-in preset has no timeline and
+  `length_ticks` stays zero until a real clip is loaded. It should describe the built-in original
+  CNA clips and their real timeline, bone and expression sampling.
+- **Scope/status:** passing C-header documentation mismatch. The renderer-free demo validates CPU
+  animation data only and needs no runtime knownIssue marker. Both focused renderer-labelled direct
+  runs pass17 byte-identical controls with empty stderr. No CNA source was modified or upstream
+  message sent. Evidence:`checkpoint-599-c-avatar-animations-focused-*-direct.*`.
+
 ### CNA-DEMOS-ISSUE-079 -- Anonymous leaderboard entry clears an output promised unchanged
 
 - **Area/API:** `cna_leaderboard_entry_get_gamer` in
