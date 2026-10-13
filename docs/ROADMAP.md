@@ -3639,3 +3639,29 @@ passing documentation ISSUE-074 records that mismatch. Both direct selections ar
 with empty stderr, and strict C99 plus metadata compilation pass. Stable `core_ext.h` coverage is
 27/57; its renderer-selection half awaits a coherent external renderer-retirement revision.
 Evidence:checkpoint-556-c-platform-host-identity-focused-*-direct.*.
+
+`c_api.game.title_content` demonstrates the remaining three TitleLocation/TitleContainer routes
+with the previously credited path copy in11 controls. It atomically copies the executable root,
+moves it to deployed assets, sizes and reads the complete256-byte checker PNG into caller storage,
+maps a missing file to IO, and restores the process root. Both Xvfb direct selections are byte-
+identical with empty stderr, and strict C99 plus metadata compilation pass. Evidence:
+checkpoint-557-c-title-content-focused-*-direct.*.
+
+`c_api.game.runtime_controls` demonstrates the final18 `runtime.h` routes in14 controls, plus two
+`runtime_window.h` title accessors. It verifies exact/atomic title state; mouse, timing, sleep and
+run-loop properties; FPS/millisecond derivation; idle reset/dispatcher requests; one-draw
+suppression across two explicit ticks; and independent Disposed registration ownership. The first
+draft incorrectly treated game destruction as registration-handle release; runtime and source show
+detachment followed by one caller release, so this was a demo defect. Both Xvfb direct selections
+are byte-identical with empty stderr, and strict C99 plus metadata compilation pass. Checkpoints557-
+558 close `runtime.h` at45/45 and establish `runtime_window.h` at2/20. Evidence:
+checkpoint-558-c-runtime-controls-focused-*-direct.*.
+
+`c_api.game.window_state` demonstrates the remaining18 `runtime_window.h` routes in19 controls.
+It round-trips and restores resizing/border policies; reads client bounds/orientation; copies exact
+and atomic screen/type names; accepts documented platform refusals for state requests; brackets a
+real client resize and synchronous event; and validates both legacy token and versioned borrowed
+native-window fields without dereferencing them. Both Xvfb direct selections are byte-identical
+with empty stderr, and strict C99 plus metadata compilation pass. Together with checkpoint558's
+title accessors this closes `runtime_window.h` at20/20. Evidence:
+checkpoint-559-c-window-state-focused-*-direct.*.

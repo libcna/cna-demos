@@ -20,7 +20,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 99 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 102 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -66,7 +66,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds28 staged standalone C IDs and should reach553 after the external build blocker clears: math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds31 staged standalone C IDs and should reach556 after the external build blocker clears: math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -1316,7 +1316,9 @@ HIGHEST PRIORITY: keep the staged C work intact while sibling CNA's renderer-ret
 again incoherent. The renderer-independent `curve.h` audit is complete at45/45 and the stable
 logger/platform/assembly families establish27/57 `core_ext.h` routes. Defer its remaining graphics-
 backend/renderer-selection routes until the external retirement work is coherent, and select the
-next independent public C family. Once CNA becomes coherent, reconfigure
+next independent public C family. `runtime.h` and `runtime_window.h` are now complete at45/45 and
+20/20; next audit the26 remaining `runtime_components.h` component/collection/service routes.
+Once CNA becomes coherent, reconfigure
 `linux-full`, build every
 staged source, run focused validation and absorb the work in one complete checkpoint. Keep tagged
 unions, public element
@@ -1563,6 +1565,33 @@ C99 plus metadata compilation pass. Stable `core_ext.h` coverage is27/57; the re
 backend/renderer-selection routes are deferred while that CNA subsystem changes externally.
 Evidence:`checkpoint-556-c-platform-host-identity-focused-*-direct.*`.
 
+`standalone/c_api.game.title_content` demonstrates the three previously uncredited TitleLocation/
+TitleContainer routes alongside the existing path-copy route in11 controls. It moves the process
+root from the executable directory to deployed assets, verifies exact/atomic path copies, sizes and
+reads the complete256-byte checker PNG into caller storage, maps a missing file to IO, restores the
+root and destroys the owner game. Both Xvfb direct selections are byte-identical with empty stderr;
+strict C99 and metadata compilation pass. The first sandboxed attempt could not open an X display
+and supplied no runtime evidence. Evidence:`checkpoint-557-c-title-content-focused-*-direct.*`.
+
+`standalone/c_api.game.runtime_controls` demonstrates the final18 `runtime.h` routes in14 controls,
+plus the two window-title accessors that verify its title setter. Timing/mouse/run-loop state,
+derived FPS/milliseconds, an idle framework pump, ResetElapsedTime request, observable one-draw
+Suppression across two explicit Ticks and independent Disposed registrations all pass. A first
+draft wrongly expected game destruction to release the registration handle; the correct ownership
+is detached-then-caller-release, and this was a demo defect. Both Xvfb direct selections are byte-
+identical with empty stderr; strict C99 and metadata compilation pass. Checkpoints557-558 close
+`runtime.h` at45/45 and establish `runtime_window.h` at2/20. No wall-clock pacing, focus event,
+pixel or visual claim is made. Evidence:`checkpoint-558-c-runtime-controls-focused-*-direct.*`.
+
+`standalone/c_api.game.window_state` demonstrates the remaining18 `runtime_window.h` routes in19
+controls. It reads/restores resizing and border policies, validates bounds/orientation, exact/atomic
+screen and reflection names, brackets a synchronous client-size change and its event, accepts the
+documented platform refusal for state requests, and classifies the versioned borrowed native
+descriptor without dereferencing it. Both Xvfb direct selections are byte-identical with empty
+stderr; strict C99 and metadata compilation pass. Together with checkpoint558's title pair this
+closes `runtime_window.h` at20/20. No appearance, manual interaction or borrowed-pointer lifetime
+beyond game destruction is claimed. Evidence:`checkpoint-559-c-window-state-focused-*-direct.*`.
+
 The sibling CNA briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
 After `cna-demos` removed VULKAN from `linux-full`, configure succeeded, but concurrent external
 retirement edits changed CNA during the build: `GraphicsRendererType::DirectX11` disappeared while
@@ -1578,8 +1607,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose553 catalog IDs (complete524 plus SpriteFont and28
-additional new standalone IDs) and569 declared/566 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose556 catalog IDs (complete524 plus SpriteFont and31
+additional new standalone IDs) and572 declared/569 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 
