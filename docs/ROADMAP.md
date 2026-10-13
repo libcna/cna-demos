@@ -3105,3 +3105,19 @@ Coverage rises819->836/3205, `effects.h`31->47/290 and `texture.h`1->2/21. Clean
 `fbd8e64a3`; production library hashes remain unchanged. No game, graphics device, shader
 execution, drawing or visual inspection is claimed.
 Evidence:checkpoint-506-c-effect-parameter-values-focused-*.
+
+## Focused507-C-effect-parameter-collections
+
+New `c_api.graphics.effect_parameter_collections` demonstrates all ten remaining mutable-parameter
+and collection routes. Nineteen controls prove copied add-create metadata; stable mutable element
+views after substantial collection growth; shared identity across index, exact-name and semantic
+lookups; case-sensitive names, case-insensitive first semantic matching and upper-bound refusal;
+distinct element, structure-member and annotation collections; and owned descendant lifetimes after
+both root handles and nested collection views are destroyed. ISSUE-068 records that the public C
+comment calls the deliberately case-insensitive semantic match exact. Direct execution passes.
+SOFTWARE and OPENGLES3 runner output is byte-identical and every stderr file is empty. Metadata is
+507/0, all nine focused C/API, C++ effect and CLI tests pass in4.66s, and the incremental build is
+clean. Coverage rises836->846/3205 and `effects.h`47->57/290. Clean sibling CNA is `fbd8e64a3`;
+production library hashes remain unchanged. No game, graphics device, shader execution, drawing or
+visual inspection is claimed.
+Evidence:checkpoint-507-c-effect-parameter-collections-focused-*.

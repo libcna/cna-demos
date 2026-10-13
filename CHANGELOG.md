@@ -6,9 +6,13 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.effect_parameter_collections`, a19-check C workflow covering stable shared
+  parameter views, name/semantic lookup and descendant lifetimes across nested collections.
 - Added `c_api.graphics.effect_parameter_values`, a30-check C workflow covering mutable parameter
   metadata, all tagged scalar and array families, string-buffer contracts and typed texture
   retention/release without creating a graphics device.
+- Recorded CNA-DEMOS-ISSUE-068: the C parameter-collection header calls semantic lookup exact even
+  though its documented C++ target deliberately matches ordinally without case.
 - Added `c_api.graphics.effect_annotations`, a21-check C workflow covering all22 immutable
   annotation and collection routes, including copied UTF-8/raw values, typed views, exact lookup,
   collection value copies and independent owned lifetimes.

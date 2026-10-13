@@ -15,6 +15,25 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-068 -- C effect-parameter semantic lookup misstates case matching
+
+- **Area/API:** `cna_effect_parameter_collection_find_semantic` in
+  `modules/c-api/include/CNA/C/effects.h`.
+- **Observed contract conflict:** the public C comment calls its input an "Exact UTF-8 semantic",
+  but the route delegates to `EffectParameterCollection::GetParameterBySemantic`. The public C++
+  header documents case-insensitive matching, its implementation uses `OrdinalIgnoreCase`, and its
+  tests require mixed-case matching plus first-insertion wins for semantic duplicates.
+- **Runtime evidence:** `c_api.graphics.effect_parameter_collections` stores `POSITION` followed by
+  `Position`; a lookup for lowercase `position` returns the first parameter and its current value77
+  under both tested renderer selections. Name lookup in the same collection remains case-sensitive.
+- **Expected:** describe the C route as ordinal case-insensitive and state that the first matching
+  parameter is returned, aligning the public binding contract with the behavior it deliberately
+  exposes. No runtime change is indicated.
+- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
+  needed. No CNA source was modified or upstream message sent. Observed at clean CNA `fbd8e64a3`.
+  Open; focused evidence will be archived as
+  `checkpoint-507-c-effect-parameter-collections-focused-*`.
+
 ### CNA-DEMOS-ISSUE-067 -- C display-color-space routes expose unnamed integer ordinals
 
 - **Area/API:** `cna_graphics_device_get_display_color_space_ext`,
