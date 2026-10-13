@@ -3595,3 +3595,29 @@ atomic six-plane text. Both direct selections are byte-identical with empty stde
 plus metadata compilation pass. Checkpoints547-551 close `geometry.h` at94/94. No graphics device,
 rendered culling or visibility-performance claim is made. Evidence:
 checkpoint-551-c-bounding-frustum-values-focused-*-direct.*.
+
+`c_api.math.curve_key_values` demonstrates all17 CurveKey routes from `curve.h` in nine controls.
+It establishes the fixed five-field layout with a strict-C99 alignment probe; constructor defaults
+and full authored values; every getter and mutable field; atomic invalid-continuity refusal; clone
+independence; position-only ordering; and equality/hash behavior across all fields. Both direct
+selections are byte-identical with empty stderr, and strict C99 plus metadata compilation pass. An
+initial use of C11 `_Alignof` was corrected as a demo portability defect. Evidence:
+checkpoint-552-c-curve-key-values-focused-*-direct.*.
+
+`c_api.math.curve_key_collection` demonstrates all14 owned CurveKeyCollection routes in11
+controls: empty mutable creation, sorted insertion and access, full-key membership/indexing,
+replacement reordering, atomic short and exact offset copies, invalid-key preservation, deep clone,
+clear, value/index removal, invalid-index preservation and handle destruction. Both direct
+selections are byte-identical with empty stderr, and strict C99 plus metadata compilation pass.
+Checkpoints552-553 establish31/45 `curve.h` routes. Evidence:
+checkpoint-553-c-curve-key-collection-focused-*-direct.*.
+
+`c_api.math.curve_evaluation` demonstrates all14 Curve routes in15 controls. It uses the retained
+mutable key view to move from empty through one and three keys; evaluates interpolation; computes
+matching/separate whole-curve and per-key tangents; reads, sets and evaluates every loop mode;
+rejects invalid modes atomically; deep-clones keys and loop state; and proves key views retain the
+curve after its public handle is destroyed. Equal endpoint slopes establish the ordinary Linear
+path without duplicating the distinct-slope ISSUE-036 failure; the existing C++ demos continue to
+expose that and ISSUE-002's Step defect. Both direct selections are byte-identical with empty
+stderr, and strict C99 plus metadata compilation pass. Checkpoints552-554 close `curve.h` at45/45.
+Evidence:checkpoint-554-c-curve-evaluation-focused-*-direct.*.

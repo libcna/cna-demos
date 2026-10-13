@@ -20,7 +20,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 94 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 97 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -66,7 +66,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds23 staged standalone C IDs and should reach548 after the external build blocker clears: math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds26 staged standalone C IDs and should reach551 after the external build blocker clears: math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -1312,8 +1312,8 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: keep the staged C work intact while sibling CNA's renderer-retirement work is
-again incoherent, and continue the renderer-independent C math audit with the45 `curve.h` routes
-in coherent key/value, collection and evaluation workflows. Once CNA becomes coherent, reconfigure
+again incoherent. The renderer-independent `curve.h` audit is now complete at45/45; select the
+next coherent public C header/member family from the current-source route audit. Once CNA becomes coherent, reconfigure
 `linux-full`, build every
 staged source, run focused validation and absorb the work in one complete checkpoint. Keep tagged
 unions, public element
@@ -1516,6 +1516,32 @@ selections with byte-identical output and empty stderr; strict C99 and metadata 
 Checkpoints547-551 close `geometry.h` at94/94. Evidence:
 `checkpoint-551-c-bounding-frustum-values-focused-*-direct.*`.
 
+`standalone/c_api.math.curve_key_values` demonstrates all17 `cna_curve_key_*` routes in nine
+renderer-independent controls. It fixes the five-field record layout with a C99-compatible
+alignment probe; checks all constructor defaults and authored fields, getters/setters, atomic
+continuity refusal, clone independence, position-only ordering, equality and hash consistency.
+Both direct selections are byte-identical with empty stderr, and strict C99 plus metadata
+compilation pass. The first draft used C11 `_Alignof`; replacing it was a demo portability fix,
+not a CNA defect. Evidence:`checkpoint-552-c-curve-key-values-focused-*-direct.*`.
+
+`standalone/c_api.math.curve_key_collection` demonstrates all14 owned collection routes in11
+renderer-independent controls. It covers empty mutable construction, out-of-order insertion and
+sorted access, full-key membership/indexing, reorder after replacement, atomic short and exact
+indexed copies, invalid-key atomicity, deep-clone independence, clear, both removal forms, invalid
+indexes and stale-handle refusal. Both direct selections are byte-identical with empty stderr, and
+strict C99 plus metadata compilation pass. Together checkpoints552-553 put `curve.h` at31/45.
+Evidence:`checkpoint-553-c-curve-key-collection-focused-*-direct.*`.
+
+`standalone/c_api.math.curve_evaluation` demonstrates all14 curve/evaluation routes in15
+renderer-independent controls. It covers empty/single/multi-key constant state, a mutable retained
+key view, interpolation, all four whole-curve/per-key tangent forms, every loop mode, property
+readback, atomic invalid requests, independent cloning and view retention after the public curve
+handle is destroyed. Both direct selections are byte-identical with empty stderr, and strict C99
+plus metadata compilation pass. Equal authored endpoint slopes exercise ordinary Linear looping;
+the distinct-slope and Step compatibility defects remain explicitly demonstrated by the existing
+ISSUE-036 and ISSUE-002 C++ demos. Checkpoints552-554 close `curve.h` at45/45. Evidence:
+`checkpoint-554-c-curve-evaluation-focused-*-direct.*`.
+
 The sibling CNA briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
 After `cna-demos` removed VULKAN from `linux-full`, configure succeeded, but concurrent external
 retirement edits changed CNA during the build: `GraphicsRendererType::DirectX11` disappeared while
@@ -1531,8 +1557,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose548 catalog IDs (complete524 plus SpriteFont and23
-additional new standalone IDs) and564 declared/561 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose551 catalog IDs (complete524 plus SpriteFont and26
+additional new standalone IDs) and567 declared/564 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 
