@@ -2731,3 +2731,18 @@ all67 active tests with fullscreen disabled. Ten routes raise C coverage678->688
 the two fixed type-name helpers are trivial/uncredited. The externally advanced clean CNA source
 was `3b5755944`; no pixels or visual inspection is claimed.
 Evidence:checkpoint-494-c-device-capabilities-focused-*.
+
+## Focused494-C-sprite-scaled
+
+The existing `c_api.graphics.sprite_batch` workflow grows from30to43 controls without a new demo
+ID. A rejected two-command scaled array proves whole-array preflight before its valid first command
+can draw. The accepted array selects separate cyan and magenta source texels, retains their texture
+until End and then releases it while emitted pixels remain. Exact backbuffer points establish that
+the cyan command's one-texel origin is multiplied by its12x8 nonuniform scale before offsetting its
+position, while the magenta command begins at its own position and spans6x14. Both renderers produce
+identical43-control output with empty stderr. Metadata remains494/0, the exact CTest and all73 tests
+in the C/API, SpriteBatch and CLI regression selection pass, and the clean follow-up build passes.
+One route raises C coverage688->689/3205 and `graphics.h`24->25/27. The only two uncredited routes
+are fixed SpriteBatch type-name helpers, so every route in this header now has a semantic
+disposition. No screenshot or visual inspection is claimed.
+Evidence:checkpoint-494-c-sprite-scaled-focused-*.

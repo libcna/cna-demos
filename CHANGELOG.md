@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `c_api.graphics.sprite_batch` from30to43 controls with position/source/origin/nonuniform-
+  scale geometry, whole-array preflight and texture retention for `cna_sprite_batch_submit_scaled_many`.
 - Added `c_api.graphics.device_capabilities`, a20-check C audit of all ten remaining
   graphics-device identity, capability-profile, report, shader-dialect and backbuffer routes.
 - Added `c_api.graphics.render_target_bindings`, a22-check C workflow covering real2D/cube MRT
