@@ -2036,3 +2036,15 @@ alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain
 stderr is identical. Outer Xvfb has15exact amdgpu pairs (previous16); exits are zero and CNA
 eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
 rise224->225/3210 and media_player.h37->38/41. Evidence:checkpoint-474-c-player-program-exit-*.
+
+## Focused474-C-media-sources
+
+The same `c_api.media.media_player` now grows89->92child checks without a new ID or fixture. Both
+renderers pass identical lists with empty stderr; removing three additions restores all89prior
+labels in order. Desktop enumeration reports exactly one `LOCAL_DEVICE` named `Local Device`; the
+index equal to Count is refused before changing four preseeded outputs. Focused29media/CLI CTests
+pass in11.23s. Two watched builds pass with3909unchanged CNA inputs/no diagnostics; metadata
+remains474/0. Four actual routes raise C coverage225->229/3210 and media.h27->31/39. The eight
+remaining media.h routes are generated fixed type-name size/copy pairs and are intentionally
+trivial. This is CNA's synthetic desktop source, not hardware discovery, hot-plug or Windows Media
+Connect evidence. Full474 is pending. Evidence:checkpoint-474-c-media-sources-focused-*.

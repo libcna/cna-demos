@@ -5,6 +5,7 @@
  * played as a queue. The program samples C visualization data, moves to the second song, pauses,
  * resumes and stops, and counts the MediaPlayer's two events -- which are process-wide, so their
  * subscriptions take no game.
+ * It also enumerates the desktop's local media source and its public name.
  * After stopping, it contrasts a collection-shared Song handle with owned queue copies across
  * collection/view destruction and a safe queue Clear. Bars show the position in each song.
  *
@@ -425,6 +426,47 @@ int main(int argc, char** argv)
     }
     if (media_state(game) != CNA_MEDIA_STATE_STOPPED) {
         (void)cna_media_player_stop(game); /* keep the ownership exercise independent of live playback */
+    }
+
+    /* Desktop CNA exposes one synthetic local-device source. Each C route takes a fresh snapshot,
+       so an index at the reported count must fail without changing caller storage. */
+    {
+        uint32_t source_count = UINT32_C(99);
+        CNA_MediaSourceType source_type = CNA_MEDIA_SOURCE_TYPE_WINDOWS_MEDIA_CONNECT;
+        uint64_t name_bytes = UINT64_C(77);
+        uint64_t copied = UINT64_C(88);
+        char source_name[32];
+        cna_demo_check(&demo,
+                       cna_media_source_get_available_count(game, &source_count) == CNA_RESULT_SUCCESS &&
+                           source_count == 1U,
+                       "desktop media-source enumeration reports one source");
+        memset(source_name, 0, sizeof(source_name));
+        cna_demo_check(&demo,
+                       cna_media_source_get_type_at(game, 0U, &source_type) == CNA_RESULT_SUCCESS &&
+                           source_type == CNA_MEDIA_SOURCE_TYPE_LOCAL_DEVICE &&
+                           cna_media_source_get_name_size_at(game, 0U, &name_bytes) == CNA_RESULT_SUCCESS &&
+                           name_bytes == sizeof("Local Device") - 1U &&
+                           cna_media_source_copy_name_at(game, 0U, source_name, sizeof(source_name), &copied) ==
+                               CNA_RESULT_SUCCESS &&
+                           copied == name_bytes &&
+                           memcmp(source_name, "Local Device", sizeof("Local Device") - 1U) == 0,
+                       "the desktop source is the named local device");
+        source_type = CNA_MEDIA_SOURCE_TYPE_WINDOWS_MEDIA_CONNECT;
+        name_bytes = UINT64_C(77);
+        copied = UINT64_C(88);
+        memset(source_name, 0x7F, sizeof(source_name));
+        cna_demo_check(&demo,
+                       cna_media_source_get_type_at(game, source_count, &source_type) ==
+                               CNA_RESULT_INVALID_ARGUMENT &&
+                           source_type == CNA_MEDIA_SOURCE_TYPE_WINDOWS_MEDIA_CONNECT &&
+                           cna_media_source_get_name_size_at(game, source_count, &name_bytes) ==
+                               CNA_RESULT_INVALID_ARGUMENT &&
+                           name_bytes == UINT64_C(77) &&
+                           cna_media_source_copy_name_at(
+                               game, source_count, source_name, sizeof(source_name), &copied) ==
+                               CNA_RESULT_INVALID_ARGUMENT &&
+                           copied == UINT64_C(88) && (unsigned char)source_name[0] == 0x7FU,
+                       "the media-source upper bound is refused before changing outputs");
     }
 
     /* Disabled visualization returns its canonical zero buffer even after live data was captured.

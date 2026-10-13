@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the existing C media workflow from89to92checks with desktop MediaSource enumeration,
+  exact type/name reporting and upper-bound output preservation.
 - Complete474-C-player-program-exit:487enabled CTests and both full smoke suites preserve all old
   evidence; the C media demo adds one exact early-release/restart check and one C ABI route.
 - Extended the existing C media-player workflow from88to89checks with early ProgramExit during

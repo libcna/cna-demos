@@ -103,6 +103,18 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **474-C-media-sources** extends c_api.media.media_player from89to92checks under both
+renderers with empty stderr and no new ID/fixture. Removing three additions restores all89old
+labels in order. Desktop enumeration reports exactly one `LOCAL_DEVICE` named `Local Device`; the
+index equal to Count is refused before changing the preseeded type, byte count, copied count or
+destination. Focused29media/CLI CTests pass in11.23s; metadata474/0. Both watched builds pass with
+3909unchanged CNA inputs/no diagnostics. Four actual routes raise C ABI coverage225->229/3210 and
+media.h27->31/39. The eight remaining media.h type-name size/copy routes are intentionally trivial.
+This is CNA's synthetic desktop source, not hardware discovery, hot-plug or Windows Media Connect
+evidence. Evidence:checkpoint-474-c-media-sources-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-C-player-program-exit**, source `aebc766`, extends
 c_api.media.media_player from88to89checks under both renderers with empty stderr and no new
 ID/fixture. Removing the one addition restores all88old labels in order. ProgramExit succeeds
@@ -248,16 +260,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit the12remaining `media.h` routes against
-complete474-C-player-program-exit. Eight are generated size/copy pairs for fixed reflection type
-names (VisualizationData, MediaSource, Song and SongCollection); classify them as trivial unless a
-real diagnostic/text workflow needs them. The four meaningful MediaSource routes enumerate the
-current source count, type and display name. CNA source and native tests establish one desktop
-`Local Device`; extend the existing C media demo with a focused enumeration and upper-bound/output
-preservation controls, without inventing a Windows Media Connect device. Run focused/full
-validation, update the audit/HANDOFF, then continue the next semantic C ABI member gap. Leave
-`media_player_update_ext` deferred until a host-driven native-end transition is observable. Never
-edit/revert CNA; preserve ISSUE-038/057/058/059.
+HIGHEST PRIORITY: run full474 validation for the focused C MediaSource source against
+complete474-C-player-program-exit. Capture once after the full build during CTest: the same37
+selected binary paths/four assets/30fixture paths. Freeze source/assets/build through both smokes.
+Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3. Preserve all38/42old failures, unrelated C/custom lists/traces, five network
+controls,18music and8album-art checks. Only c_api.media.media_player should grow89->92; parentJSON
+stays0 and normalized stderr should be identical. Archive/refuse any surprise; update full
+audit/HANDOFF and immediately continue the next semantic C ABI public-member gap. Do not credit the
+eight trivial media.h type-name helpers. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -270,6 +281,6 @@ edit/revert CNA; preserve ISSUE-038/057/058/059.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is474-C-player-program-exit; source commit is in section7.
-All earlier drafts and focused work are APPLIED AND STALE. The `media.h` audit and MediaSource
-enumeration in section14 are live.
+All earlier drafts are APPLIED AND STALE. The focused MediaSource batch in section7 is current; its
+full-validation task in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.
