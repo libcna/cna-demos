@@ -1889,3 +1889,17 @@ CTests pass in8.52s. Two watched builds pass with3909unchanged CNA inputs/no dia
 remains474/0. Six actual routes raise C coverage203->209/3210 and media.h20->26/39. No tagged-song
 mutation, persistence or automatic playback-count claim; trivial type-name routes do not justify
 separate controls. Full474 is pending. Evidence:checkpoint-474-c-song-metadata-focused-*.
+
+## Complete474-C-song-metadata
+
+Complete checkpoint **474-C-song-metadata**, source `85260eb`, extends the same C media demo
+69->71checks without another ID or fixture. Focused and full runs preserve all69old labels and add
+two exact controls for unprotected/unrated plain-path defaults, zero rating/track/play count and a
+mutable play-count round trip. The helper Song remains unplayed. Focused29media/CLI CTests pass.
+
+Full validation passes metadata474/0 and487enabled CTests in172.79s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected child/network evidence. C media
+alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain exact. Normalized
+stderr is identical. Outer Xvfb has17exact amdgpu pairs (previous8); exits are zero and CNA
+eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; actual C ABI routes
+rise203->209/3210 and media.h20->26/39. Evidence:checkpoint-474-c-song-metadata-*.

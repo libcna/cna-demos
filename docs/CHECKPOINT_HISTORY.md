@@ -2979,3 +2979,14 @@ empty demo stderr. Full validation passes metadata474/0 and487enabled CTests in1
 four assets and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has8known
 pairs, exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types and
 1405/2326members; C ABI routes rise198->203/3210. Evidence:checkpoint-474-c-song-identity-*.
+
+## Complete474-C-song-metadata
+
+Complete checkpoint **474-C-song-metadata**, source `85260eb`, extends the existing C media demo
+69->71checks with plain-path Song metadata defaults and mutable play-count round-trip behavior.
+Both renderers preserve all69old labels and pass two additions with empty demo stderr. Full
+validation passes metadata474/0 and487enabled CTests in172.79s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.37binaries, four assets
+and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has17known pairs,
+exits are zero and CNAeff3131017 stays clean. XNA coverage remains297/329types and1405/2326members;
+C ABI routes rise203->209/3210. Evidence:checkpoint-474-c-song-metadata-*.
