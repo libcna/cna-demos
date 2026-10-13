@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.unlit_stock_effects`, a33-check C workflow covering every AlphaTestEffect
+  and DualTextureEffect route, their shared matrix/fog interfaces and retained texture ownership
+  through independent slots, clones, source destruction and final release.
 - Added `c_api.graphics.basic_effect_state`, a40-check C workflow covering BasicEffect material,
   matrices, fog, lighting, same-device texture retention and standalone/nested DirectionalLight
   ownership, including stable member views that outlive their root Effect handle.

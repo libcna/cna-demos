@@ -6,12 +6,12 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**511 demos** in 18 categories. Kinds: console 161, game 272, standalone 78. Automation: automated 475, manual 3, smoke-only 33.
+**512 demos** in 18 categories. Kinds: console 161, game 272, standalone 79. Automation: automated 476, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
-| c_api | 56 | 55 | 1 | 0 | 44 / 0 / 5 / 0 / 7 | 45 / 0 / 4 / 0 / 7 |
+| c_api | 57 | 56 | 1 | 0 | 44 / 0 / 5 / 0 / 8 | 45 / 0 / 4 / 0 / 8 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `c_api.graphics.basic_effect_state`, `c_api.graphics.effect_annotations`, `c_api.graphics.effect_concrete_types`, `c_api.graphics.effect_core`, `c_api.graphics.effect_parameter_collections`, `c_api.graphics.effect_parameter_values`, `c_api.graphics.effect_passes_techniques`.
-- OPENGLES3: absent from report: `c_api.graphics.basic_effect_state`, `c_api.graphics.effect_annotations`, `c_api.graphics.effect_concrete_types`, `c_api.graphics.effect_core`, `c_api.graphics.effect_parameter_collections`, `c_api.graphics.effect_parameter_values`, `c_api.graphics.effect_passes_techniques`.
+- SOFTWARE: absent from report: `c_api.graphics.basic_effect_state`, `c_api.graphics.effect_annotations`, `c_api.graphics.effect_concrete_types`, `c_api.graphics.effect_core`, `c_api.graphics.effect_parameter_collections`, `c_api.graphics.effect_parameter_values`, `c_api.graphics.effect_passes_techniques`, `c_api.graphics.unlit_stock_effects`.
+- OPENGLES3: absent from report: `c_api.graphics.basic_effect_state`, `c_api.graphics.effect_annotations`, `c_api.graphics.effect_concrete_types`, `c_api.graphics.effect_core`, `c_api.graphics.effect_parameter_collections`, `c_api.graphics.effect_parameter_values`, `c_api.graphics.effect_passes_techniques`, `c_api.graphics.unlit_stock_effects`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -70,7 +70,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 941 of 3205** (29.4 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 963 of 3205** (30.0 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -80,7 +80,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `core.h` | 7 / 7 |
 | `devices.h` | 59 / 62 |
 | `display.h` | 22 / 22 |
-| `effects.h` | 152 / 290 |
+| `effects.h` | 174 / 290 |
 | `graphics.h` | 25 / 27 |
 | `graphics_device.h` | 80 / 84 |
 | `graphics_resource.h` | 12 / 12 |

@@ -3182,3 +3182,14 @@ all24 focused C/API, C++ BasicEffect/Effect/SpriteEffect and CLI tests pass in15
 `effects.h`110->152/290. Clean sibling CNA is `a6bb279d47`; production library hashes remain
 unchanged. Apply is state-only; no draw, pixel result or visual inspection is claimed.
 Evidence:checkpoint-511-c-basic-effect-state-focused-*.
+
+New `c_api.graphics.unlit_stock_effects` demonstrates all AlphaTestEffect and DualTextureEffect C
+routes as one coherent unlit-material and ownership workflow. Thirty-three controls cover defaults,
+unclamped alpha/reference state, comparison and vertex-color selection, concrete-type refusal,
+independent shared matrix/fog state, invalid layer atomicity and two same-device textures retained
+across type-preserving clones and source destruction. Direct and both runner selections pass with
+byte-identical output and empty stderr; all14 focused C effect, C++ alpha-test/dual-texture and CLI
+tests pass in9.09s. Metadata is512/0 and the incremental build is clean. All22 concrete routes raise
+total C coverage941->963/3205 and `effects.h`152->174/290. Clean sibling CNA is `a6bb279d47`;
+production library hashes remain unchanged. Apply is state-only; no draw, alpha-test pixel,
+sampling or visual inspection is claimed. Evidence:checkpoint-512-c-unlit-stock-effects-focused-*.
