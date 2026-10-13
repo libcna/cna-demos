@@ -4173,3 +4173,18 @@ metadata reaches2422/3205 and `media_library.h` reaches33/148. Evidence:
 `checkpoint-601-c-media-library-collections-focused-*-direct.*`. Positive entity relationships,
 album art, pictures and save/import behavior remain for controlled fixtures; no host content,
 window, audio, image or project-built execution is claimed.
+
+## Focused602-C-media-library-music-values
+
+`c_api.media.library_music_values` adds42 `media_library.h` routes in33 controls. Before any CNA
+platform call it creates private Linux/XDG Music/Pictures roots, copies three original tagged FLAC
+tones through the public title reader and writes a two-entry M3U. The resulting exact catalog has
+three songs, two same-title albums kept distinct by artist, two artists, one shared genre and one
+playlist. Atomic entity strings, track tags, equality/hash, every album/artist/genre/playlist
+collection relationship, Song back-references, reversed playlist order, exact duration sums,
+missing-art state and shared idempotent disposal all pass after top-level collection and library
+handles are released. Every retained handle then releases successfully. SOFTWARE- and
+OPENGLES3-labelled Xvfb runs pass byte-identically with empty stderr; strict C99 and metadata
+compilation pass. Staged metadata reaches2464/3205 and `media_library.h` reaches75/148. Evidence:
+`checkpoint-602-c-media-library-values-focused-*-direct.*`. Album image bytes and the picture/save
+subsystem remain; no playback, audible quality, host media or project-built execution is claimed.
