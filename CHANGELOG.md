@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete474-C-media-events:487enabled CTests and both full smoke suites preserve all old
+  evidence; the C media demo adds two exact event lifecycle checks and four credited C ABI routes.
 - Extended the existing C media-player workflow from53to55checks with synchronous manual event
   raises and post-unsubscribe controls; credited four meaningfully exercised C ABI routes.
 - Complete474-C-media-lifecycle-bounds:487enabled CTests and both full smoke suites preserve all

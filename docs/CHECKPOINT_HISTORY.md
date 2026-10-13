@@ -2947,3 +2947,13 @@ OPENGLES3439/29/3/3 retain all38/42old failures and protected evidence.37binarie
 and30fixture paths remain exact; normalized stderr is identical. Outer Xvfb has14known pairs,
 exits are zero and CNAeff3131017 stays clean. C ABI routes rise184->188/3210.
 Evidence:checkpoint-474-c-media-bounds-*.
+
+## Complete474-C-media-events
+
+Complete checkpoint **474-C-media-events**, source `02c81db`, extends the existing C media demo
+53->55checks with synchronous manual event raises and post-unsubscribe controls. Both renderers
+preserve all53old labels and pass two additions with empty demo stderr. Full validation passes
+metadata474/0 and487enabled CTests in151.27s. SOFTWARE409/27/35/3 and OPENGLES3439/29/3/3
+retain all38/42old failures and protected evidence.37binaries, four assets and30fixture paths
+remain exact; normalized stderr is identical. Outer Xvfb has16known pairs, exits are zero and
+CNAeff3131017 stays clean. C ABI routes rise188->192/3210. Evidence:checkpoint-474-c-media-events-*.

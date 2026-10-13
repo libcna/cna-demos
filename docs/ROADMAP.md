@@ -1806,3 +1806,18 @@ Metadata remains474/0. Adding both raises and crediting the already material que
 uses raises C routes188->192/3210 and media_player.h18->22/41. No callback order, reentrancy,
 foreign-thread delivery or game-destruction cleanup claim. Full474 checkpoint is pending.
 Evidence:checkpoint-474-c-media-events-focused-*.
+
+## Complete474-C-media-events
+
+Complete checkpoint **474-C-media-events**, source `02c81db`, extends the same C media demo
+53->55checks without another ID or fixture. Focused and full runs preserve all53old labels and add
+two exact controls: both process-wide manual raises invoke live handlers synchronously, then invoke
+neither after both registrations release. Focused29media/CLI CTests pass. No callback ordering,
+reentrancy, foreign-thread delivery or game-destruction cleanup claim.
+
+Full validation passes metadata474/0 and487enabled CTests in151.27s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected child/network evidence. C media
+alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain exact. Normalized
+stderr is identical. Outer Xvfb has16exact amdgpu pairs (previous14); exits are zero and CNA
+eff3131017 remains clean. XNA coverage stays297/329types and1405/2326members; C ABI routes rise
+188->192/3210 and media_player.h18->22/41. Evidence:checkpoint-474-c-media-events-*.
