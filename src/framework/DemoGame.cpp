@@ -41,8 +41,6 @@ namespace CnaDemos
             {Need::FloatRenderTargets, CNA::GraphicsCapability::FloatRenderTargets},
             {Need::HalfFloatRenderTargets, CNA::GraphicsCapability::HalfFloatRenderTargets},
             {Need::AnisotropicFiltering, CNA::GraphicsCapability::AnisotropicFiltering},
-            {Need::IndirectDraw, CNA::GraphicsCapability::IndirectDraw},
-            {Need::ComputeShaders, CNA::GraphicsCapability::ComputeShaders},
         };
 
         std::string WindowTitle(const DemoEntry& entry)

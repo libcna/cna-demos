@@ -28,8 +28,6 @@ namespace CnaDemos
             {Need::FloatRenderTargets, "float-render-targets"},
             {Need::HalfFloatRenderTargets, "half-float-render-targets"},
             {Need::AnisotropicFiltering, "anisotropic-filtering"},
-            {Need::IndirectDraw, "indirect-draw"},
-            {Need::ComputeShaders, "compute-shaders"},
             {Need::CApi, "c-api"},
         };
         return needs;

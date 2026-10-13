@@ -132,8 +132,6 @@ namespace CnaDemos
         case FloatRenderTargets: return "FloatRenderTargets";
         case HalfFloatRenderTargets: return "HalfFloatRenderTargets";
         case HalfFloatTextureLinearFiltering: return "HalfFloatTextureLinearFiltering";
-        case ComputeShaders: return "ComputeShaders";
-        case IndirectDraw: return "IndirectDraw";
         }
         return "?";
     }

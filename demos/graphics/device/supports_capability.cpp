@@ -28,8 +28,6 @@ namespace
         CNA::GraphicsCapability::FloatRenderTargets,
         CNA::GraphicsCapability::HalfFloatRenderTargets,
         CNA::GraphicsCapability::HalfFloatTextureLinearFiltering,
-        CNA::GraphicsCapability::ComputeShaders,
-        CNA::GraphicsCapability::IndirectDraw,
     };
 
     class SupportsCapabilityDemo final : public CnaDemos::DemoGame
