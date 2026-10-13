@@ -103,6 +103,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **475-C-input-touch-values**, source `6aa1e0a`, extends the existing C touch demo from
+30to60checks without another ID or fixture. Both renderers produce identical child output with
+empty stderr; removing the30 additions restores the complete lifecycle baseline exactly. Authored
+locations differing only in pressure compare equal, hash equally and match collection
+Contains/IndexOf/Remove. A disconnected two-touch snapshot reports advisory IsReadOnly=true while
+Insert/RemoveAt/Add/Clear still succeed. Short insertion-copy returns required count4 without a
+partial write; exact capacity inserts both entries and shifts the old tail. All57input/CLI CTests
+pass in95.90s with six declared environment skips. Two watched builds pass with3910unchanged CNA
+inputs/no diagnostics at cleanf44a8ff; metadata remains475/0. Fifteen actual routes raise C ABI
+coverage239->254/3210 and input_touch.h4->19/47. No physical pressure, concurrency or unbounded
+collection claim. Evidence:checkpoint-475-c-input-touch-values-focused-*.
+
+Last complete baseline:
+
 Complete checkpoint **475-C-input-touch-state**, source `6e7de78`, adds one focused deterministic C
 program. Both renderers pass30 identical child checks with empty stderr. Public fixture routes
 publish connected four-touch capabilities, then create empty, pressed, moved and released
@@ -250,15 +264,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: audit the remaining `input_touch.h` public routes against the new deterministic
-C touch lifecycle and the existing C++ touch demos. Choose the next coherent behavior batch rather
-than crediting trivial reflection/getters. Prefer extending `c_api.input.touch_state` when value
-construction or collection behavior belongs to the same snapshot story; use a new focused demo
-only for a distinct concept such as gesture queueing. Build, run both renderer selections and the
-input/CLI CTests, update the member audit and HANDOFF, then run the next complete checkpoint. Leave
-the explicit live gamepad dead-zone route manual-deferred. Keep the eight `media.h` reflection
-helpers intentionally uncredited and `media_player_update_ext` deferred. Never edit/revert CNA;
-preserve ISSUE-038/057/058/059.
+HIGHEST PRIORITY: commit the focused C touch-value batch, then run its full same-ID checkpoint
+against complete475-C-input-touch-state. Expect488enabled CTests and unchanged parent outcomes
+SOFTWARE410/27/35/3 and OPENGLES3440/29/3/3. Preserve all38/42old failures and every unrelated
+C/custom list/trace; only `c_api.input.touch_state` may grow30->60 child checks while parentJSON
+stays0. Of the same38 selected binaries, only the touch standalone may change; four assets and30
+fixture paths must remain exact. After closure, continue the distinct focused C gesture-queue batch
+identified in the member audit: explicit sample values, enabled mask, FIFO availability/read and
+empty refusal. Leave live gamepad dead-zone and mouse-touch emulation manual-deferred; keep generic
+touch/media reflection routes intentionally uncredited and `media_player_update_ext` deferred.
+Never edit/revert CNA; preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -271,6 +286,6 @@ preserve ISSUE-038/057/058/059.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is475-C-input-touch-state; source commit is in section7.
-All earlier drafts are APPLIED AND STALE. The complete touch-state batch in section7 is current;
-the `input_touch.h` audit in section14 is live.
+All earlier drafts are APPLIED AND STALE. The focused touch-value batch in section7 is current; its
+same-ID full-validation task in section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.
