@@ -253,8 +253,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: commit the focused C MediaPlayer transport source/docs, then run full474
-validation against complete474-C-player-settings. Capture once after the full build during CTest:
+HIGHEST PRIORITY: run full474 validation for focused source `91dba1a` against
+complete474-C-player-settings. Capture once after the full build during CTest:
 the same37selected binary paths/four assets/30fixture paths. Freeze source/assets/build through
 both smokes. Expect487enabled CTests and unchanged parent outcomes SOFTWARE409/27/35/3 and
 OPENGLES3439/29/3/3. Preserve all38/42old failures, unrelated C/custom lists/traces, five network
@@ -275,5 +275,6 @@ ISSUE-038/057/058/059.
 
 Current complete baseline is474-C-player-settings; source commit is in section7.
 All earlier drafts and focused C media work are APPLIED AND STALE. Collection start-index and
-previous-navigation transport are applied and focused but have no complete checkpoint yet.
+previous-navigation transport are committed at `91dba1a` and focused but have no complete
+checkpoint yet.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.
