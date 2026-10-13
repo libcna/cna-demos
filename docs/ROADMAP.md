@@ -446,7 +446,7 @@ a check that all authored colors remain visible and that a blank texture row can
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 16 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 17 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -3842,3 +3842,13 @@ only I/O exhaustion; removing that assertion was a demo correction. Both rendere
 runs pass byte-identically with empty stderr; strict C99 and metadata compilation pass. `net.h` is
 51/51 demonstrated. Evidence:checkpoint-577-c-net-packets-focused-*-direct.*. No socket, wire
 transport, peer interoperability, network byte order or project-built runner is claimed.
+
+`c_api.net.gamer_machine_values` covers all26 non-event `net_gamers.h` routes in17 renderer-free
+controls. A detached named gamer exposes all neutral role, voice, ready, talking, identifier,
+round-trip and session defaults before exact transport-owned departure, host, identifier and timing
+mutations. Noncanonical booleans and remote ready publication are atomic refusals. A separately
+owned empty machine proves count/bounds/removal refusal, copy-on-set, independent copy-out and
+one-shot ownership. Both renderer-labelled direct runs pass byte-identically with empty stderr;
+strict C99 and metadata compilation pass. `net_gamers.h` reaches26/33 demonstrated. Evidence:
+checkpoint-578-c-net-gamer-values-focused-*-direct.*. Populated machine borrowing, local-gamer
+ready publication, successful removal and a project-built runner remain unclaimed.
