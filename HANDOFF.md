@@ -64,21 +64,22 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-500 catalog demos (latest complete checkpoint500-C-buffer-bindings): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+501 catalog demos (latest complete checkpoint500-C-buffer-bindings; one focused batch pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 45 (standalone C programs). Every declared category has demos.
-Coverage: see docs/COVERAGE.md (current catalog with complete500 runtime reports). Actual C ABI
-coverage is758/3205: `input_gamepad.h`61/63,
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 46 (standalone C programs). Every declared category has demos.
+Coverage: see docs/COVERAGE.md (current catalog with complete500 runtime reports plus focused501
+source coverage). Actual C ABI coverage is761/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`42/84. Complete500 exercises
-all758 credited routes in both full smoke suites.
+`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`45/84. Complete500 exercises
+the first758 credited routes in both full smoke suites; three new routes have focused dual-renderer
+evidence.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 30 (`c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
 `c_api.storage.save_game` CNA-DEMOS-ISSUE-056,
@@ -109,6 +110,20 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Focused **501-C-device-clears** adds `c_api.graphics.device_clears` for all three graphics-device
+clear routes. Its explicit HiDef Color/Depth24Stencil8 back buffer lets21 controls clear normalized
+RGBA red, Color-plus-depth green and all three selected planes blue. Full RGBA8 readback after each
+accepted operation samples both pairs of corners and the center exactly. Non-finite channels/depth,
+an unknown option bit and an empty accepted mask also prove refusal/no-op preservation of the last
+complete color result. SOFTWARE and OPENGLES3 produce identical child output with empty stderr.
+Metadata is501/0, the exact demo and three related C++ clear/depth demos plus three CLI tests all
+pass (7/7), and the incremental full build is clean. Three routes raise coverage758->761/3205 and
+`graphics_device.h`42->45/84. Clean sibling CNA is `d7eff66ee`; `cna-demos` is SHA-256
+`3290c2fed0a5465a90ad93891e1bda18cb6c5cfea3c9e21b5525c6bba3ca27d2`, the standalone is
+`1b34c5c4914d18bf1ff72bf7972b16406bb20e97d60e40d6d026e24506c9072a`, and production
+`libcna.so` remains `3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0`.
+No screenshot or visual inspection is claimed. Evidence:`checkpoint-501-c-device-clears-focused-*`.
 
 Complete **500-C-buffer-bindings**, source `dee3837`, clears all five focused graphics batches
 after complete497. Full `tools/validate.sh` passes metadata500/0 and all513 enabled CTests in
@@ -808,12 +823,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the remaining `graphics_device.h` audit from complete500. Record a
-semantic disposition for all42 uncredited routes, then implement the next coherent batch. Keep
-clear/draw routes as pixel-evidence work and owned-device/reset/event behavior as separate
-lifecycle work; generic type-name reflection may remain trivial/uncredited where existing string
-contracts already demonstrate the behavior. Build and run both renderer selections after each
-batch, and do not defer another complete checkpoint for multiple accumulated IDs.
+HIGHEST PRIORITY: continue the remaining `graphics_device.h` audit after the focused clear batch.
+Record a semantic disposition for all39 uncredited routes, then implement the next coherent batch.
+Keep draw routes as pixel-evidence work and owned-device/reset/event behavior as separate lifecycle
+work; generic type-name reflection may remain trivial/uncredited where existing string contracts
+already demonstrate the behavior. Build and run both renderer selections after each batch, and do
+not defer another complete checkpoint for multiple accumulated IDs.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
@@ -841,6 +856,7 @@ render-target-bindings, device-capabilities, sprite-scaled, resource-lifecycle, 
 device-states and sprite-states batches are all included in complete497. Viewport, the later
 device-values and resource-events extensions, texture slots and buffer bindings are included in
 complete500. Complete500 ran with clean sibling CNA `d7eff66ee`; the production library hash stayed
-unchanged. Complete500 is the immutable full-runtime baseline.
+unchanged. Complete500 is the immutable full-runtime baseline. The focused device-clears501 batch
+is newer and pending the next complete checkpoint.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.

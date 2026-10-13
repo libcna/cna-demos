@@ -2921,3 +2921,17 @@ renderers. Fresh runtime coverage is297/329 types,1405/2326 XNA members and758/3
 remained clean and unchanged at `d7eff66ee`, and the production library hash stayed unchanged. No
 visual inspection is claimed.
 Evidence:checkpoint-500-c-buffer-bindings-*.
+
+## Focused501-C-device-clears
+
+New `c_api.graphics.device_clears` demonstrates all three graphics-device clear routes against an
+explicit HiDef Color/Depth24Stencil8 back buffer. Twenty-one controls clear normalized RGBA red,
+Color-plus-depth green and all three selected planes blue; complete RGBA8 readback samples both
+pairs of corners and the center exactly after each. Non-finite channels/depth and an unknown option
+bit are refused without changing the established color, while an empty mask succeeds as a no-op.
+SOFTWARE and OPENGLES3 produce identical output with empty stderr. Metadata is501/0, the exact demo,
+three related C++ clear/depth demos and three CLI tests pass7/7, and the incremental full build is
+clean. Three routes raise C coverage758->761/3205 and `graphics_device.h`42->45/84. Clean sibling
+CNA is `d7eff66ee`; production `libcna.so` remains byte-identical. Pixel values were read
+programmatically; no screenshot or visual inspection is claimed.
+Evidence:checkpoint-501-c-device-clears-focused-*.

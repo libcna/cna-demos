@@ -6,12 +6,12 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**500 demos** in 18 categories. Kinds: console 161, game 272, standalone 67. Automation: automated 464, manual 3, smoke-only 33.
+**501 demos** in 18 categories. Kinds: console 161, game 272, standalone 68. Automation: automated 465, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
-| c_api | 45 | 44 | 1 | 0 | 41 / 0 / 4 / 0 / 0 | 41 / 0 / 4 / 0 / 0 |
+| c_api | 46 | 45 | 1 | 0 | 41 / 0 / 4 / 0 / 1 | 41 / 0 / 4 / 0 / 1 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `c_api.graphics.device_clears`.
+- OPENGLES3: absent from report: `c_api.graphics.device_clears`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -68,7 +70,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 758 of 3205** (23.7 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 761 of 3205** (23.7 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -80,7 +82,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `display.h` | 22 / 22 |
 | `effects.h` | 8 / 290 |
 | `graphics.h` | 25 / 27 |
-| `graphics_device.h` | 42 / 84 |
+| `graphics_device.h` | 45 / 84 |
 | `graphics_resource.h` | 12 / 12 |
 | `graphics_state.h` | 14 / 14 |
 | `index_resources.h` | 8 / 10 |
