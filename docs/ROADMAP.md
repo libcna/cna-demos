@@ -3723,3 +3723,13 @@ environment-only non-evidence; direct runs in both renderer-labelled environment
 with empty stderr. Strict C99 plus metadata compilation pass. `storage.h` now has dispositions for
 all49 routes at47 demonstrated; the fixed container reflection-name pair remains trivial/uncredited.
 Evidence:checkpoint-566-c-storage-members-focused-*-direct.*.
+
+`c_api.content.reader_values` starts the public C content-reader audit with20 routes in33 controls.
+A deterministic synthetic storage stream covers standalone identity, exact/atomic asset-name
+copying, version/platform state, empty type-reader and shared-resource tables, a null object tag,
+all seven value readers, collection/decoded-size limits, exact-byte capacity and truncation, the
+exclusive stream borrow and one-shot reader/stream releases. Direct runs in both renderer-labelled
+environments are byte-identical with empty stderr; no renderer is initialized. Strict C99 and
+metadata compilation pass. `content_readers.h` is20/62 demonstrated; registry, placeholder,
+caller-supplied, reflective and object-dictionary batches remain. Evidence:
+checkpoint-567-c-content-reader-values-focused-*-direct.*.
