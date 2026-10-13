@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.input.text_input`, a deterministic20-check C workflow for committed UTF-16,
+  UTF-8 composition/candidates, registration/reset lifetime and bound/unbound activation; all17
+  public `input_text.h` routes now have semantic demo coverage.
 - Complete476-C-input-touch-scaling:489enabled CTests and both full smoke suites preserve every
   parent outcome and unrelated child trace; only the gesture demo grows31to64 controls.
 - Extended the C gesture workflow from31to64checks with display/orientation round trips, zero-size

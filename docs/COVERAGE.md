@@ -6,12 +6,12 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**478 demos** in 18 categories. Kinds: console 161, game 272, standalone 45. Automation: automated 442, manual 3, smoke-only 33.
+**479 demos** in 18 categories. Kinds: console 161, game 272, standalone 46. Automation: automated 443, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
-| c_api | 23 | 22 | 1 | 0 | 18 / 0 / 3 / 0 / 2 | 18 / 0 / 3 / 0 / 2 |
+| c_api | 24 | 23 | 1 | 0 | 18 / 0 / 3 / 0 / 3 | 18 / 0 / 3 / 0 / 3 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 37 / 0 / 9 / 0 / 0 | 37 / 0 / 9 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-13 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `c_api.input.clipboard`, `c_api.input.devices`.
-- OPENGLES3: absent from report: `c_api.input.clipboard`, `c_api.input.devices`.
+- SOFTWARE: absent from report: `c_api.input.clipboard`, `c_api.input.devices`, `c_api.input.text_input`.
+- OPENGLES3: absent from report: `c_api.input.clipboard`, `c_api.input.devices`, `c_api.input.text_input`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -70,7 +70,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 395 of 3210** (12.3 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 412 of 3210** (12.8 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -89,6 +89,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `input_gamepad.h` | 61 / 63 |
 | `input_keyboard.h` | 15 / 17 |
 | `input_mouse.h` | 20 / 20 |
+| `input_text.h` | 17 / 17 |
 | `input_touch.h` | 32 / 47 |
 | `math.h` | 2 / 52 |
 | `matrix.h` | 7 / 57 |
@@ -104,7 +105,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `vertex_resources.h` | 5 / 24 |
 | `vertex_values.h` | 1 / 13 |
 
-Headers without a demonstrated route: `cnb.h`, `color.h`, `content_readers.h`, `core_ext.h`, `curve.h`, `devices.h`, `display.h`, `gamer_services.h`, `geometry.h`, `graphics_ext.h`, `graphics_resource.h`, `input_haptics.h`, `input_joystick.h`, `input_text.h`, `media_library.h`, `models.h`, `net.h`, `net_gamers.h`, `net_sessions.h`, `packed_vectors.h`, `quaternion.h`, `runtime_graphics_manager.h`, `runtime_window.h`, `sensors.h`, `texture_volume.h`, `video.h`, `xact.h`.
+Headers without a demonstrated route: `cnb.h`, `color.h`, `content_readers.h`, `core_ext.h`, `curve.h`, `devices.h`, `display.h`, `gamer_services.h`, `geometry.h`, `graphics_ext.h`, `graphics_resource.h`, `input_haptics.h`, `input_joystick.h`, `media_library.h`, `models.h`, `net.h`, `net_gamers.h`, `net_sessions.h`, `packed_vectors.h`, `quaternion.h`, `runtime_graphics_manager.h`, `runtime_window.h`, `sensors.h`, `texture_volume.h`, `video.h`, `xact.h`.
 
 ## CNA-specific and unmatched API names
 

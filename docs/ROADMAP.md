@@ -506,7 +506,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
   (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
 
-## Phase 14 -- bindings 🟨 (23 C API demos)
+## Phase 14 -- bindings 🟨 (24 C API demos)
 The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks
 (28 with capture) and 31 error checks pass on both renderer selections. Larger version-one input
 and output prefixes retain their known behavior; unknown output tails and original diagnostics
@@ -536,6 +536,8 @@ C API demos as standalone C programs (one C game per process), built only with
 mouse/keyboard hot-plug events and one power snapshot),
 ✅ `c_api.input.clipboard` (UTF-8 size/copy/has-text, atomic short-buffer refusal and exact
 desktop-state restoration),
+✅ `c_api.input.text_input` (deterministic committed UTF-16, UTF-8 composition/candidates,
+registration/reset lifecycle and bound/unbound activation),
 ✅ `c_api.input.touch_state` (deterministic press/move/release snapshots, id lookup and previous locations),
 ✅ `c_api.audio.sound_effect` (PCM16 effect, instance state, refused parent destruction and stale instance handles),
 ✅ `c_api.math.vectors_and_matrices` (value types, world matrix, inverse, directions and bounded array ranges with refusal before writes),
@@ -2384,3 +2386,24 @@ input/C-API/CLI CTests pass in41.81s with six declared skips. Four routes raise 
 metadata enumeration paths; Xvfb reports zero devices, so these stay hardware-manual even though
 their index-at-count refusals run. The unrelated in-progress CNA Vulkan mismatch still blocks the
 standard build and complete478 checkpoint. Evidence:checkpoint-478-c-input-clipboard-focused-*.
+
+## Focused479-C-input-text
+
+One new C standalone keeps deterministic event delivery and the platform activation lifecycle in
+one coherent text-input workflow. Both renderer selections pass the same20 labels with empty
+stderr. Public raises synchronously deliver exact UTF-16 code units including a surrogate pair,
+copy a multibyte UTF-8 composition while preserving deliberately out-of-range byte offsets, and
+copy two candidate views plus orientation and an unchecked selected index. Selective unsubscribe
+removes only committed text; reset removes every remaining handler and all registration handles
+then release safely.
+
+The demo captures the actual backend window token, forces zero to establish false activation and
+screen-keyboard answers plus successful no-op start/placement/stop, and accepts all nine text-input
+hints while refusing the first undefined identity. It restores the backend token for one real-path
+start/placement/visibility/stop cycle without assuming that a keyboard is visible, then proves
+reset clears the binding and restores the original token. Direct C and metadata compilation is
+diagnostic-free; metadata is479/0 and all61 exact input/C-API/CLI CTests pass in31.40s with six
+declared skips. All17 `input_text.h` routes gain semantic credit and total C coverage rises
+395->412/3210. Physical typing and platform IME/keyboard presentation remain manual. The
+unrelated in-progress CNA Vulkan work still prevents a standard build and complete479 checkpoint;
+focused runtime uses the last built CNA libraries. Evidence:checkpoint-479-c-input-text-focused-*.
