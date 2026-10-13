@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.devices.dialogs`, a20-check C workflow covering all10 message-box and file-dialog
+  routes through immediate test services, including callback-owned copies, cancellation, request
+  validation and platform-service restoration without opening real UI.
 - Added `c_api.devices.vibration`, an18-check C workflow covering all nine vibration routes through
   exact in-memory request logs, bounds, clamping, device-name buffers and backend restoration
   without actuating or claiming a physical motor.

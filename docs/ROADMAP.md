@@ -2535,5 +2535,23 @@ compilation is diagnostic-free and metadata validates485/0. The nine routes rais
 coverage602->611/3205 and `devices.h`14->23/62. All67 exact input/device/C-API/CLI CTests pass in
 115.45s with six declared skips and one known-issue expected failure. No physical actuation,
 haptic sensation, request timing or platform motor success is claimed. The standard/full
-checkpoint remains blocked by the unchanged external SDL_GPU
-mismatch. Evidence:checkpoint-485-c-vibration-focused-*.
+checkpoint remains blocked by the unchanged external SDL_GPU mismatch.
+Evidence:checkpoint-485-c-vibration-focused-*.
+
+## Focused486-C-dialogs
+
+A new C standalone completes all ten message-box and file-dialog routes in `devices.h`. It reads
+the two real availability flags without displaying UI, then installs CNA's public immediate dialog
+services. Message boxes demonstrate versioned request-log reset, dismiss-only severity, two-button
+choice, closure without a choice, request validation before dispatch and platform restoration.
+File dialogs demonstrate a versioned filter, two-path open selection, one-path save and folder
+answers, copying callback-borrowed strings during delivery, canonical empty/null cancellation,
+invalid callbacks/filter arrays/filter versions and platform restoration.
+
+Both renderer selections pass identical20-control output with empty stderr. Direct C and metadata
+compilation is diagnostic-free and metadata validates486/0. The ten routes raise current C
+coverage611->621/3205 and `devices.h`23->33/62. All68 exact input/device/C-API/CLI CTests pass in
+117.99s with six declared skips and one known-issue expected failure. No real window, manual
+response, external filesystem access or callback-thread behavior is claimed. The standard/full
+checkpoint remains blocked by the unchanged external SDL_GPU mismatch.
+Evidence:checkpoint-486-c-dialogs-focused-*.
