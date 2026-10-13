@@ -4087,3 +4087,17 @@ strict C99 and metadata compilation pass. Staged metadata reaches2339/3205 and
 `gamer_services.h` reaches187/239. Evidence:
 `checkpoint-595-c-game-defaults-properties-focused-*-direct.*`. No game, renderer, service, stream
 payload or project-built execution is claimed.
+
+## Focused596-C-leaderboard-entry-values
+
+`c_api.gamer.leaderboard_entries` adds all eight leaderboard-entry routes in23 renderer-free
+controls. Gamer-backed, independently equal and anonymous values expose exact versioned
+ranking/rating/presence state. The borrowed gamer's exact identity, the entry's live mutable columns
+dictionary, columns-after-entry retention, equality across gamer/rating/ranking but not columns, a
+single replaceable/detachable rating hook and stale ownership are all explicit. Both
+renderer-labelled runs pass byte-identically with empty stderr; strict C99 and metadata compilation
+pass. Staged metadata reaches2347/3205 and `gamer_services.h` reaches195/239. The anonymous-gamer
+result also records CNA-DEMOS-ISSUE-079: the header promises to preserve the absent handle output,
+while the generated wrapper deterministically clears it. Evidence:
+`checkpoint-596-c-leaderboard-entries-focused-*-direct.*`. No game, renderer, service, persisted
+leaderboard or project-built execution is claimed.

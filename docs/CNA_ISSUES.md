@@ -15,6 +15,28 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-079 -- Anonymous leaderboard entry clears an output promised unchanged
+
+- **Area/API:** `cna_leaderboard_entry_get_gamer` in
+  `modules/c-api/include/CNA/C/gamer_services.h` and generated `Leaderboards.inc`.
+- **Reproduction:** create a leaderboard entry with `CNA_INVALID_HANDLE` as its optional gamer,
+  initialize `out_gamer` to a nonzero sentinel and call `cna_leaderboard_entry_get_gamer`.
+- **Observed:** the call succeeds with `out_has_gamer == CNA_FALSE` and replaces the sentinel with
+  `CNA_INVALID_HANDLE`. The generated wrapper unconditionally clears `*out_gamer` before the helper
+  discovers that the entry has no gamer.
+- **Expected:** the public header explicitly says the gamer output "is left exactly as the caller
+  set it" when the presence flag is false. Either preserve it for the ordinary absent result or
+  document deterministic invalid-handle initialization, matching the wrapper and the wider C
+  output policy.
+- **Positive controls:** gamer-backed borrowing, exact entry info, rating mutation/hook behavior,
+  equality, live mutable columns, alias retention and stale-handle refusal all pass. Both focused
+  renderer-labelled direct runs pass all23 controls with byte-identical output and empty stderr.
+- **Scope/status:** passing public-header documentation mismatch; the demo asserts the current
+  deterministic result and needs no runtime knownIssue marker. No CNA source was modified or
+  upstream message sent. Evidence:`checkpoint-596-c-leaderboard-entries-focused-*-direct.*`;
+  runtime uses the last completed CNA libraries while current source contains the same generated
+  assignment.
+
 ### CNA-DEMOS-ISSUE-078 -- Missing C achievement key escapes as an internal failure
 
 - **Area/API:** `cna_achievement_collection_get_by_key` in
