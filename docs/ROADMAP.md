@@ -3807,3 +3807,15 @@ passing draft's redundant missing-streaming check emitted the canonical error lo
 workflow keeps the real streaming success path and empty stderr. Both Xvfb/dummy-audio selections
 are byte-identical; strict C99 and metadata compilation pass. `xact.h` reaches45/62 demonstrated.
 Evidence:checkpoint-574-c-xact-banks-focused-*-direct.*. Gain and speaker output are not measured.
+
+`c_api.audio.xact_cue` closes the nine meaningful Cue routes in33 controls. Exact/atomic authored
+names accompany two independent Intensity values whose mutation and clamping do not cross Cue
+instances. Apply3D publishes exact Distance, OrientationAngle and neutral DopplerPitchScalar before
+Play and updates Distance while paused. Versioned snapshots expose Pause/Resume/Immediate Stop, and
+a generated release Cue distinguishes AsAuthored's live Stopping phase from Immediate interruption.
+Its disposal subscription fires once and outlives the sender until separately released. Both Xvfb/
+dummy-audio selections are byte-identical with empty stderr; strict C99 and metadata compilation
+pass. `xact.h` has semantic dispositions for all62 routes at54 demonstrated; the eight fixed type-
+name size/copy helpers for engine, wave bank, sound bank and Cue remain trivial/uncredited. Evidence:
+checkpoint-575-c-xact-cue-focused-*-direct.*. No acoustic position, fade shape or audio quality is
+claimed.
