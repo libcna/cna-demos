@@ -4071,3 +4071,19 @@ reaches2309/3205 and `gamer_services.h` reaches157/239. Evidence:
 `checkpoint-594-c-guide-social-offline-focused-*-direct.*`. Real service screens and user input
 remain service/manual. `cna_guide_delay_notifications` remains intentionally uncredited because
 its effect requires a delivered service invitation and exposes no public C readback.
+
+## Focused595-C-game-defaults-and-properties
+
+`c_api.gamer.game_defaults_properties` adds all30 GameDefaults and PropertyDictionary routes in24
+renderer-free controls. The canonical initializer and an explicit offline gamer agree on every
+default enum, flag, reserved byte and absent color, while a version-2 output is rejected atomically.
+The empty dictionary exposes the canonical read-only/writable contradiction, then holds and
+identifies all eight kinds C can write. Every typed getter round-trips its exact value; copied input
+text, atomic output text, ascending key enumeration, kind replacement, invalid outcome and typed
+getter refusals, removal, clearing and one-shot ownership are explicit. The stream-size extension
+resets its outputs before refusing a non-stream; a positive stream remains service-only because C
+has no stream setter. SOFTWARE- and OPENGLES3-labelled runs pass byte-identically with empty stderr;
+strict C99 and metadata compilation pass. Staged metadata reaches2339/3205 and
+`gamer_services.h` reaches187/239. Evidence:
+`checkpoint-595-c-game-defaults-properties-focused-*-direct.*`. No game, renderer, service, stream
+payload or project-built execution is claimed.
