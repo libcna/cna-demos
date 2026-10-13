@@ -3974,3 +3974,19 @@ byte-identical with empty stderr; strict C99 and metadata compilation pass. Stag
 2221/3205 and `gamer_services.h` reaches69/239. Evidence:
 `checkpoint-588-c-friend-collection-focused-*-direct.*`. No live account friend graph, service
 state, game, renderer or project-built runner is claimed.
+
+## Focused589-C-achievement-values-and-collection
+
+`c_api.gamer.achievement_collection` adds all29 achievement value and collection routes from
+`gamer_services.h` in30 renderer-free controls. Synthetic values expose their versioned numeric
+state, exact/atomic key/name/description buffers, empty how-to text, unavailable artwork and
+complete value equality. A collection copies its inputs and returns owned index/key/copy results;
+membership, both bounds, unknown-key output clearing, short atomic shifted CopyTo and every public
+mutation are explicit. Both renderer-labelled direct runs are byte-identical with empty stderr;
+29 controls pass and one retains CNA-DEMOS-ISSUE-077 because successful mutators coexist with a
+true read-only property. The passing unknown-key control records CNA-DEMOS-ISSUE-078 because its
+documented invalid argument is translated to Internal. Strict C99 and metadata compilation pass.
+Staged metadata reaches2250/3205 and `gamer_services.h` reaches98/239. One-line build registrations
+missing from the five preceding staged directories were restored before this checkpoint. Evidence:
+`checkpoint-589-c-achievement-collection-focused-*-direct.*`. No catalog-backed picture/how-to
+text, gamer service, game, renderer or project-built runner is claimed.
