@@ -103,7 +103,7 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-C-input-keyboard-state** extends c_api.input.keyboard_mouse from12to15checks under
+Focused **474-C-input-keyboard-state**, source `a0ecf81`, extends c_api.input.keyboard_mouse from12to15checks under
 both renderers with empty stderr and no new ID/fixture. Removing three additions restores all12old
 labels in order. A known two-key snapshot proves `is_key_up` complements `is_key_down`; a short
 destination returns the exact required count without changing either sentinel, and the exact
