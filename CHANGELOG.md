@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Complete502-C-device-policy passes all515 enabled CTests and both full smoke suites; both new
+  graphics IDs pass and every complete500 status, known issue and failed assertion remains exact.
 - Extended `c_api.graphics.device_states` from22to25 controls with graphics-profile and
   unsupported-3D-policy round trips, atomic invalid-enum refusal and exact restoration.
 - Added `c_api.graphics.owned_device`, a20-check two-device lifecycle workflow for caller ownership,

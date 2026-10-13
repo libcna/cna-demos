@@ -2967,3 +2967,17 @@ focused C/API, profile, capability and CLI regressions pass in5.07s, followed by
 full build. Three routes raise C coverage768->771/3205 and `graphics_device.h`52->55/84. Clean
 sibling CNA is `d7eff66ee`; production `libcna.so` remains byte-identical. Nothing is drawn and no
 visual inspection is claimed. Evidence:checkpoint-502-c-device-policy-focused-*.
+
+## Complete502-C-device-policy
+
+Complete checkpoint source `1398d9d` absorbs device clears, caller-owned device lifecycle and the
+profile/policy state extension after complete500. `tools/validate.sh` reports metadata502/0 and
+passes all515 enabled CTests in208.32s; three declared tests remain disabled. SOFTWARE is436 pass,
+28 known-fail,35 skip and3 not-run; OPENGLES3 is466/30/3/3. Comparison with complete500 shows both
+new IDs passing, every existing status and known-issue value unchanged, and identical failed-
+assertion multisets of40 and44. The extended C device-state child passes25 focused controls under
+both renderers. Fresh runtime coverage is297/329 types,1405/2326 XNA members and771/3205 C routes.
+CNA was clean at `d7eff66ee` for the checkpoint build, then advanced externally during smoke to
+clean `f37f8d184` through changes confined to one test and three tooling files. The production CNA
+and C ABI library hashes remained unchanged. No visual inspection was performed.
+Evidence:checkpoint-502-c-device-policy-*.

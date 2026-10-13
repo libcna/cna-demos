@@ -20,7 +20,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 45 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
+* In progress: 14 (C API, 47 standalone C demos; `linux-full` builds CNA with `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
 
@@ -64,7 +64,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-502 catalog demos (latest complete checkpoint500-C-buffer-bindings; two focused IDs and one state extension pending): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+502 catalog demos (latest complete checkpoint502-C-device-policy): math 78, game 33, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
@@ -72,14 +72,13 @@ content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text in
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
 diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 47 (standalone C programs). Every declared category has demos.
-Coverage: see docs/COVERAGE.md (current catalog with complete500 runtime reports plus focused501/502
-source coverage). Actual C ABI coverage is771/3205: `input_gamepad.h`61/63,
+Coverage: see docs/COVERAGE.md (current catalog and complete502 runtime reports). Actual C ABI
+coverage is771/3205: `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`55/84. Complete500 exercises
-the first758 credited routes in both full smoke suites; thirteen new routes have focused dual-renderer
-evidence.
+`index_resources.h`8/10, `graphics_state.h`14/14 and `graphics_device.h`55/84. Complete502 exercises
+all771 credited routes in both full smoke suites.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 30 (`c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
 `c_api.storage.save_game` CNA-DEMOS-ISSUE-056,
@@ -110,6 +109,21 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Complete **502-C-device-policy**, source `1398d9d`, clears the device-clears, owned-device and policy
+batches after complete500. Full `tools/validate.sh` passes metadata502/0 and all515 enabled CTests
+in208.32s; three declared tests remain disabled. SOFTWARE is436/28/35/3 and OPENGLES3 is
+466/30/3/3, with every failure expected. Against complete500, both new IDs pass, every older ID
+retains status and known-issue metadata, and the failed-assertion multisets remain exactly40/44;
+stderr changes only in generated temporary-directory identities. The extended `device_states`
+child passes25 focused controls under both renderers. Coverage is297/329 types,1405/2326 XNA
+members and771/3205 C routes. CNA was clean at `d7eff66ee` for the17:07 build, then advanced
+externally during smoke through test/tooling-only commits to clean `f37f8d184`; no CNA production
+binary was rebuilt and `libcna.so` remains SHA-256
+`3b533283162bbcc5a0fe9a9f6c767f52f91eefe557dda2ee04d5f1cbdcc604e0`.
+`cna-demos` is `c30cde5e514948d8b40b6265dc26aed6728f1261fbe5a52d389a4c3f42ff5a7b` and
+`libcna_c_api.so` remains `730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`.
+No visual inspection was performed. Evidence:`checkpoint-502-c-device-policy-*`.
 
 Focused **502-C-device-policy** extends `c_api.graphics.device_states` from22to25 controls. Its live
 HiDef device begins with the strict unsupported-3D policy; the demo changes the profile to Reach and
@@ -856,12 +870,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: run the complete502 checkpoint now, because two new IDs plus the focused state
-extension are pending after complete500. Compare both renderer reports exactly with complete500,
-then continue the assigned draw, occlusion-query, resource-loss and capability/color-space groups
-recorded in docs/COVERAGE_AUDIT.md. Keep context-loss recovery manual/platform-specific and the
-one-way string marker intentionally uncredited unless an observable consumer is added. Build and
-run both renderer selections after each batch.
+HIGHEST PRIORITY: continue the assigned `graphics_device.h` groups from the complete semantic audit.
+Implement the remaining draw-family/current-effect/pipeline-toggle work with pixel-proven behavior,
+then continue occlusion-query, resource-loss and capability/color-space work recorded in
+docs/COVERAGE_AUDIT.md. Keep context-loss recovery manual/platform-specific and the one-way string
+marker intentionally uncredited unless an observable consumer is added. Build and run both renderer
+selections after each batch.
 Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
 when a public test backend is the executed path. Do not credit the three joystick, three haptic or
 six host sensor/touch populated-metadata routes until suitable hardware executes them.
@@ -880,7 +894,7 @@ preserve ISSUE-038/057/058/059/060/061/062/063/064/065.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is500-C-buffer-bindings; source commit and exact results are in section7.
+Current complete baseline is502-C-device-policy; source commit and exact results are in section7.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
@@ -888,8 +902,9 @@ checkpoint. Adapter-capabilities and device-presentation are included in complet
 render-target-bindings, device-capabilities, sprite-scaled, resource-lifecycle, index-buffer,
 device-states and sprite-states batches are all included in complete497. Viewport, the later
 device-values and resource-events extensions, texture slots and buffer bindings are included in
-complete500. Complete500 ran with clean sibling CNA `d7eff66ee`; the production library hash stayed
-unchanged. Complete500 is the immutable full-runtime baseline. The focused device-clears501,
-owned-device502 and device-policy502 batches are newer and pending the next complete checkpoint.
+complete500. Device clears, owned-device lifecycle and device profile/policy state are included in
+complete502. The checkpoint binary was built with clean CNA `d7eff66ee`; CNA advanced externally
+during smoke to clean `f37f8d184` through test/tooling-only changes, while both production library
+hashes stayed unchanged. Complete502 is the immutable full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.
