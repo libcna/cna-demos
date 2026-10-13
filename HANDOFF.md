@@ -103,40 +103,26 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-C-input-keyboard-state**, source `a0ecf81`, extends c_api.input.keyboard_mouse from12to15checks under
-both renderers with empty stderr and no new ID/fixture. Removing three additions restores all12old
-labels in order. A known two-key snapshot proves `is_key_up` complements `is_key_down`; a short
-destination returns the exact required count without changing either sentinel, and the exact
-destination receives Space then Left in ascending numeric order. All56input/CLI CTests pass, with
-six declared environment skips. Metadata remains474/0. Both watched builds pass with3909unchanged
-CNA inputs/no diagnostics at clean74194f4. Two actual routes raise C ABI coverage229->231/3210 and
-input.h8->10/15. This is deterministic POD snapshot evidence, not live key-transition, keyboard
-layout or manual input validation. Evidence:checkpoint-474-c-input-keyboard-state-focused-*.
+Complete checkpoint **474-C-input-keyboard-state**, source `a0ecf81`, extends
+c_api.input.keyboard_mouse from12to15checks under both renderers with empty stderr and no new
+ID/fixture. Removing three additions restores all12old labels in order. A known two-key snapshot
+proves `is_key_up` complements `is_key_down`; a short destination returns count2 without changing
+either sentinel, and the exact destination receives Space then Left in ascending numeric order.
+All56input/CLI CTests pass, with six declared environment skips. This is deterministic POD snapshot
+evidence, not live key-transition, keyboard-layout or manual input validation.
 
-Last complete baseline:
-
-Complete checkpoint **474-C-media-sources**, source `48c9f0e`, extends
-c_api.media.media_player from89to92checks under both renderers with empty stderr and no new
-ID/fixture. Removing three additions restores all89old labels in order. Desktop enumeration reports
-exactly one `LOCAL_DEVICE` named `Local Device`; the index equal to Count is refused before changing
-the preseeded type, byte count, copied count or destination. Focused29media/CLI CTests pass in
-11.23s. Four actual routes raise C ABI coverage225->229/3210 and media.h27->31/39. The eight
-remaining media.h type-name size/copy routes are intentionally trivial. This is CNA's synthetic
-desktop source, not hardware discovery, hot-plug or Windows Media Connect evidence.
-
-Full tools/validate.sh passes metadata474/0 and487enabled CTests in158.85s. SOFTWARE409/27/35/3
+Full tools/validate.sh passes metadata474/0 and487enabled CTests in162.80s. SOFTWARE409/27/35/3
 and OPENGLES3439/29/3/3 preserve all38/42prior failures, every unrelated C/custom list/trace,
-five network controls,18music checks and8album-art checks. Only C media grows89->92; parentJSON
+five network controls,18music checks and8album-art checks. Only C keyboard grows12->15; parentJSON
 remains0. All37selected binary paths, four assets and30fixture paths remain exact. Normalized
-stderr is identical to complete474-C-player-program-exit. Outer Xvfb has15exact amdgpu pairs
-(previous15); inner/outer exits are zero. Two watched builds and repeated focused runs used clean
-CNAaa3f4e0 with3909unchanged inputs. The full post-build capture observed concurrent CMake-only CNA
-edits at aa3f4e0; final checkout74194f4 is clean and every selected runtime artifact stayed fixed.
+stderr is identical to complete474-C-media-sources. Outer Xvfb has12exact amdgpu pairs
+(previous15); inner/outer exits are zero. Two watched focused builds used clean CNA74194f4 with
+3909unchanged inputs. The full post-build capture also saw clean74194f4; external LINK-050 then
+advanced only CNA CMake tests to clean f44a8ff while all selected runtime artifacts stayed fixed.
 This is immutable runtime evidence, not an atomic external-source snapshot. Coverage stays
-297/329types and1405/2326XNA members; actual C ABI routes rise225->229/3210 and media.h27->31/39.
-Semantic coverage remains incomplete. Immutable evidence:checkpoint-474-c-media-sources-*; the
-earlier drifted full attempt is archived as checkpoint-474-c-media-sources-refused-cna-drift-*.
-Preserve refusals and ISSUE-038/057/058/059.
+297/329types and1405/2326XNA members; actual C ABI routes rise229->231/3210 and input.h8->10/15.
+Semantic coverage remains incomplete. Evidence:checkpoint-474-c-input-keyboard-state-*.
+Preserve earlier refusal evidence and ISSUE-038/057/058/059.
 
 ## 8. Exact commands that work
 
@@ -260,15 +246,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: run full474 validation for the focused C keyboard-state source against
-complete474-C-media-sources. Expect487enabled CTests and unchanged parent outcomes
-SOFTWARE409/27/35/3 and OPENGLES3439/29/3/3. Preserve all38/42old failures and every unrelated
-C/custom list/trace; only c_api.input.keyboard_mouse should grow12->15 and parentJSON stays0.
-Archive/refuse any surprise, update the full audit/HANDOFF, then audit
-`cna_gamepad_get_state_with_dead_zone` against the existing C gamepad workflow. The four touch
-routes still need an explicit decision between meaningful empty-state/capability evidence and
-manual real-touch validation. Keep the eight media.h reflection helpers intentionally uncredited
-and `media_player_update_ext` deferred. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
+HIGHEST PRIORITY: audit `cna_gamepad_get_state_with_dead_zone` against the existing
+`c_api.input.gamepad` workflow and current complete474-C-input-keyboard-state baseline. Determine
+whether two live snapshots can meaningfully distinguish the explicit dead-zone mode without a
+physical controller; do not credit a redundant disconnected-state call. Then decide the four touch
+routes between deterministic empty-state/capability evidence and manual real-touch validation.
+Run focused/full validation for each applied batch and continue the next semantic C ABI gap. Keep
+the eight media.h reflection helpers intentionally uncredited and `media_player_update_ext`
+deferred. Never edit/revert CNA; preserve ISSUE-038/057/058/059.
 
 ## 15. Assumptions the next session must know
 
@@ -280,7 +265,7 @@ and `media_player_update_ext` deferred. Never edit/revert CNA; preserve ISSUE-03
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is474-C-media-sources; source commit is in section7.
-All earlier drafts are APPLIED AND STALE. The focused keyboard-state batch in section7 is current;
-its full-validation task in section14 is live.
+Current complete baseline is474-C-input-keyboard-state; source commit is in section7.
+All earlier drafts and focused work are APPLIED AND STALE. The remaining `input.h` audit in
+section14 is live.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

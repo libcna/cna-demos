@@ -2078,3 +2078,21 @@ Two watched builds pass with3909unchanged CNA inputs/no diagnostics at clean7419
 remains474/0. Two actual routes raise C coverage229->231/3210 and input.h8->10/15. This does not
 claim live key transitions, keyboard-layout mapping or manual input validation. Full474 is pending.
 Evidence:checkpoint-474-c-input-keyboard-state-focused-*.
+
+## Complete474-C-input-keyboard-state
+
+Complete checkpoint **474-C-input-keyboard-state**, source `a0ecf81`, extends the existing C
+keyboard/mouse demo12->15checks without another ID or fixture. Focused and full runs preserve all12
+old labels and add three exact controls for complementary key-up queries, atomic insufficient-buffer
+reporting and ascending exact-buffer enumeration. All56input/CLI CTests pass with six declared
+environment skips.
+
+Full validation passes metadata474/0 and487enabled CTests in162.80s. SOFTWARE409/27/35/3 and
+OPENGLES3439/29/3/3 preserve all38/42old failures and protected child/network evidence. C keyboard
+alone grows; parentJSON stays0.37binaries, four assets and30fixture paths remain exact. Normalized
+stderr is identical. Outer Xvfb has12exact amdgpu pairs (previous15); exits are zero. Focused builds
+and the full post-build capture used clean CNA74194f4. External LINK-050 later changed only CMake
+tests; final CNA f44a8ff is clean and all selected runtime artifacts stayed fixed. This is immutable
+binary/runtime evidence rather than an atomic external-source snapshot. XNA coverage stays
+297/329types and1405/2326members; actual C ABI routes rise229->231/3210 and input.h8->10/15.
+Evidence:checkpoint-474-c-input-keyboard-state-*.
