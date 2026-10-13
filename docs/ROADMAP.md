@@ -4115,3 +4115,17 @@ and metadata compilation pass. Staged metadata reaches2362/3205 and `gamer_servi
 210/239. Evidence:`checkpoint-597-c-leaderboard-readers-focused-*-direct.*`. Positive entry
 lookup/page-down remains a persisted writer/service scenario because public C exposes no writer or
 reader fixture; no game, renderer, service, persisted row or project-built execution is claimed.
+
+## Focused598-C-avatar-descriptions
+
+`c_api.gamer.avatar_descriptions` adds expression initialization and all eight avatar-description
+routes in26 renderer-free controls. A foreign-format exact1021-byte value proves copy-on-create,
+valid/unmeasured defaults, version refusal and atomic copy-out. Unconstrained and explicit
+female/male random avatars are valid and measured, and the public bytes round-trip body type,
+height and validity. An offline gamer read completes exactly once with its invalid default
+description; its per-instance Changed registration attaches, stays correctly silent without a
+change source and releases once. Both renderer-labelled runs pass byte-identically with empty
+stderr; strict C99 and metadata compilation pass. Staged metadata reaches2371/3205 and
+`gamer_services.h` reaches219/239. Evidence:
+`checkpoint-598-c-avatar-descriptions-focused-*-direct.*`. Service-driven Changed delivery, game,
+renderer, drawing and project-built execution remain separate.
