@@ -3193,3 +3193,15 @@ tests pass in9.09s. Metadata is512/0 and the incremental build is clean. All22 c
 total C coverage941->963/3205 and `effects.h`152->174/290. Clean sibling CNA is `a6bb279d47`;
 production library hashes remain unchanged. Apply is state-only; no draw, alpha-test pixel,
 sampling or visual inspection is claimed. Evidence:checkpoint-512-c-unlit-stock-effects-focused-*.
+
+New `c_api.graphics.environment_map_effect_state` demonstrates every EnvironmentMapEffect C route,
+its required-lighting contract and distinct 2D/cube texture ownership. Thirty controls cover exact
+defaults and material/map mutations, shared matrix/fog state, refused lighting disable, the
+canonical three-light preset, retained same-device handles and type-preserving clone survival after
+source destruction. Direct and both runner selections pass with byte-identical output and empty
+stderr; all14 focused C effect, C++ EnvironmentMapEffect and CLI tests pass in7.57s. Metadata is
+513/0 and the incremental build is clean. Seventeen effect routes plus TextureCube create/destroy
+raise total C coverage963->982/3205, `effects.h`174->191/290 and `texture_volume.h`0->2/16. Clean
+sibling CNA is `a6bb279d47`; production library hashes remain unchanged. Apply is state-only; no
+draw, cube sampling, pixel result or visual inspection is claimed.
+Evidence:checkpoint-513-c-environment-map-effect-focused-*.

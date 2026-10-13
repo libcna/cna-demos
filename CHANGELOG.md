@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.environment_map_effect_state`, a30-check C workflow covering every
+  EnvironmentMapEffect route, required lighting/default lights, shared matrix/fog state and
+  separate Texture2D/TextureCube ownership across cloning and source destruction.
 - Added `c_api.graphics.unlit_stock_effects`, a33-check C workflow covering every AlphaTestEffect
   and DualTextureEffect route, their shared matrix/fog interfaces and retained texture ownership
   through independent slots, clones, source destruction and final release.
