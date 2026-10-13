@@ -20,7 +20,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 23), 8 (content, 46), 9 (audio 23 incl. 10 XACT, media 13 incl. a
   compiled video and song), **12 (gamer services 19 incl. avatars and leaderboards; net 14; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 103 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 105 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -66,14 +66,14 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds33 staged standalone C IDs and should reach558 after the external build blocker clears: math 78, game 35, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds35 staged standalone C IDs and should reach560 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 23 (10 XACT), core 3 (2 logger),
 content 46 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 7, media 13 (compiled video and song, tagged library import and album art), gamer services 19
 (own process each; 5 avatar, 2 leaderboard), net 14 (own process each; 5 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and103 in the
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and105 in the
 current source tree (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
 Actual C ABI coverage is1116/3205: `input_gamepad.h`61/63,
@@ -1318,8 +1318,10 @@ logger/platform/assembly families establish27/57 `core_ext.h` routes. Defer its 
 backend/renderer-selection routes until the external retirement work is coherent, and select the
 next independent public C family. `runtime.h` and `runtime_window.h` are complete at45/45 and20/20;
 `runtime_components.h` has semantic dispositions for all39 routes, with35 demonstrated and four
-fixed reflection-name helpers intentionally trivial/uncredited. Next audit the38 routes in
-`runtime_graphics_manager.h`.
+fixed reflection-name helpers intentionally trivial/uncredited. `runtime_graphics_manager.h` now
+has dispositions for all38 routes:33 demonstrated, four fixed-name helpers trivial/uncredited and
+full-screen toggling kept platform/manual after the Xvfb mode switch timed out asynchronously. Next
+audit the22 remaining stable `content.h` routes.
 Once CNA becomes coherent, reconfigure
 `linux-full`, build every
 staged source, run focused validation and absorb the work in one complete checkpoint. Keep tagged
@@ -1611,6 +1613,22 @@ already covered by CNA's pure-C contract test. Evidence:
 `checkpoint-560-c-component-members-focused-*-direct.*` and
 `checkpoint-561-c-component-collection-focused-*-direct.*`.
 
+`standalone/c_api.game.graphics_preferences` demonstrates24 previously uncredited manager/value
+routes in21 controls: versioned/nested device-information cloning, single-manager ownership, the
+callback-scoped device borrow and every manager preference with round-trip or atomic-refusal
+behavior. `standalone/c_api.game.graphics_manager_lifecycle` demonstrates nine more routes in24
+controls: all event shapes, mutable prepared settings that affect the active device, ignored invalid
+mutations, apply/recreate, an explicit draw bracket, idempotent disposal/service removal and one-
+shot handle destruction. The first lifecycle draft incorrectly expected a mutable event write to
+replace the manager's stored preference; corrected checks distinguish the per-preparation candidate
+from the stored default. Both corrected Xvfb direct selections are byte-identical with empty stderr;
+strict C99 and metadata compilation pass. `runtime_graphics_manager.h` is33/38 demonstrated. Four
+fixed reflection-name size/copy routes are trivial/uncredited. `toggle_full_screen` is intentionally
+platform/manual: under Xvfb both renderers returned success but SDL later logged a mode-switch
+timeout and reverted, so that attempt is not credited as deterministic behavior and is not a CNA
+issue. Evidence:`checkpoint-562-c-graphics-preferences-focused-*-direct.*` and
+`checkpoint-563-c-graphics-manager-lifecycle-focused-*-direct.*`.
+
 The sibling CNA briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
 After `cna-demos` removed VULKAN from `linux-full`, configure succeeded, but concurrent external
 retirement edits changed CNA during the build: `GraphicsRendererType::DirectX11` disappeared while
@@ -1626,8 +1644,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose558 catalog IDs (complete524 plus SpriteFont and33
-additional new standalone IDs) and574 declared/571 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose560 catalog IDs (complete524 plus SpriteFont and35
+additional new standalone IDs) and576 declared/573 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 

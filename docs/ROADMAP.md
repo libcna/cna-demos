@@ -3681,3 +3681,19 @@ demonstrated, and its four fixed reflection-name size/copy helpers remain intent
 uncredited because CNA's pure-C contract test already checks the generic buffer behavior. Evidence:
 checkpoint-560-c-component-members-focused-*-direct.* and
 checkpoint-561-c-component-collection-focused-*-direct.*.
+
+`c_api.game.graphics_preferences` demonstrates24 manager/value routes in21 controls: validated
+device-information cloning, single-manager ownership, callback-scoped device borrowing and all ten
+preference getter/setter pairs with meaningful round-trip or refusal behavior.
+`c_api.game.graphics_manager_lifecycle` demonstrates nine more routes in24 controls through all
+manager event shapes, mutable prepared settings observed on the active device, ignored invalid
+mutations, apply/recreate, an explicit draw bracket, idempotent disposal and one-shot destruction.
+Its first draft treated a per-preparation mutable event write as a replacement for the stored manager
+preference; the identical failure under both renderers exposed a demo defect, and the corrected
+checks distinguish those states. Both corrected Xvfb selections are byte-identical with empty
+stderr; strict C99 and metadata compilation pass. `runtime_graphics_manager.h` has semantic
+dispositions for every route at33/38 demonstrated: four fixed reflection-name helpers remain
+trivial/uncredited, and `toggle_full_screen` remains platform/manual because Xvfb accepted the call
+but SDL asynchronously timed out and reverted the mode switch. Evidence:
+checkpoint-562-c-graphics-preferences-focused-*-direct.* and
+checkpoint-563-c-graphics-manager-lifecycle-focused-*-direct.*.
