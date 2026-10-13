@@ -103,7 +103,7 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Focused **474-C-player-program-exit** extends c_api.media.media_player from88to89checks under both
+Focused **474-C-player-program-exit**, source `aebc766`, extends c_api.media.media_player from88to89checks under both
 renderers with empty stderr and no new ID/fixture. Removing the one addition restores all88old
 labels in order. ProgramExit succeeds during live playback; the same independent caller-owned Song
 immediately restarts into one active queue entry, and the previously published owned copy remains
