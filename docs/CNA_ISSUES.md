@@ -15,6 +15,26 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-066 -- SOFTWARE ignores GraphicsDevice's direct blend-enable toggle
+
+- **Area/API:** `GraphicsDevice::SetBlendEnabled`,
+  `cna_graphics_device_set_blend_enabled` and the SOFTWARE renderer.
+- **Observed:** after applying Opaque state, enabling blending and drawing two identical
+  half-alpha instances over black, SOFTWARE reads back the unchanged source pixel
+  `(255,0,0,128)`. Disabling blending produces the same RGB result. OPENGLES3 instead reads the
+  expected accumulated red value near192, then full red after blending is disabled. All other
+  bound/user/indexed/instanced, current-effect and depth-toggle controls pass on both renderers.
+- **Source evidence:** `SoftwareRenderer::SetBlendEnabled(bool)` in
+  `modules/renderers/software/src/SoftwareRenderer2DState.cpp` has an empty body. The EasyGL
+  implementation changes native blending and installs source-alpha/inverse-source-alpha factors;
+  the public GraphicsDevice method and C route forward directly to these renderer methods.
+- **Expected:** enabling blending on SOFTWARE must affect subsequent 3D draws consistently with
+  the renderer-neutral GraphicsDevice contract; disabling it must restore overwrite behavior.
+- **Scope/status:** renderer-specific runtime defect. `c_api.graphics.draw_routes` retains the
+  failed pixel assertion with `knownIssueRenderers={"SOFTWARE"}`; OPENGLES3 must continue to pass.
+  No CNA source was modified or upstream message sent. Observed at clean CNA `f37f8d184`; focused
+  evidence is archived as `checkpoint-503-c-draw-routes-focused-*`. Open.
+
 ### CNA-DEMOS-ISSUE-065 -- C GraphicsDevice reset declaration is separated from its documentation
 
 - **Area/API:** `cna_graphics_device_reset` in

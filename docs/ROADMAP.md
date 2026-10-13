@@ -2981,3 +2981,19 @@ CNA was clean at `d7eff66ee` for the checkpoint build, then advanced externally 
 clean `f37f8d184` through changes confined to one test and three tooling files. The production CNA
 and C ABI library hashes remained unchanged. No visual inspection was performed.
 Evidence:checkpoint-502-c-device-policy-*.
+
+## Focused503-C-draw-routes
+
+New `c_api.graphics.draw_routes` demonstrates all five remaining draw-family routes, the primitive-
+count helper, explicit current-effect selection and all three direct pipeline toggles. Twenty-four
+controls pixel-prove all five primitive topologies; bound, caller-vertex, caller-indexed and repeated-
+instance geometry; effect refusal/selection; blend enable/disable; and depth-test/depth-write
+behavior. OPENGLES3 passes24/24. SOFTWARE passes23 and retains one expected ISSUE-066 failure:
+its empty direct blend-enable implementation leaves two half-alpha instances at `(255,0,0,128)`
+instead of accumulating near `(192,0,0,159)`. Both stderr files are empty and both batch wrappers
+accept exactly their declared outcomes. Metadata is503/0, all19 focused C/API, C++ primitive/state
+and CLI tests pass in23.69s, and the final incremental full build is clean. Ten routes raise total C
+coverage771->781/3205, `graphics_device.h`55->64/84 and `effects.h`8->9/290. Clean sibling CNA is
+`f37f8d184`; both production library hashes remain unchanged. Pixel values were read
+programmatically; no screenshot or visual inspection is claimed.
+Evidence:checkpoint-503-c-draw-routes-focused-*.

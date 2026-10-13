@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `c_api.graphics.draw_routes`, a24-check pixel-readback workflow for bound, instanced,
+  caller-vertex and caller-indexed primitives plus explicit effect, blend, depth-test and depth-write
+  control.
+- Recorded CNA-DEMOS-ISSUE-066: SOFTWARE's direct blend-enable route is a no-op, so repeated
+  half-alpha geometry overwrites instead of accumulating while OPENGLES3 blends it correctly.
 - Complete502-C-device-policy passes all515 enabled CTests and both full smoke suites; both new
   graphics IDs pass and every complete500 status, known issue and failed assertion remains exact.
 - Extended `c_api.graphics.device_states` from22to25 controls with graphics-profile and
