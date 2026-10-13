@@ -446,7 +446,7 @@ a check that all authored colors remain visible and that a blank texture row can
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 14 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 16 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -3830,3 +3830,15 @@ runs are byte-identical with empty stderr; strict C99 and metadata compilation p
 22/51 demonstrated, leaving the coherent29-route packet buffer family. Evidence:
 checkpoint-576-c-net-properties-focused-*-direct.*. No session, socket, join or throughput is
 claimed.
+
+`c_api.net.packet_buffers` closes all29 remaining `net.h` routes in20 renderer-free controls. One
+ordered132-byte PacketWriter payload contains every public Color, vector, quaternion, matrix and
+scalar value; exact and short atomic copies, seeking, overwrite without truncation and length/
+position state are explicit. A separately owned PacketReader copies and restores every value,
+supports position-independent copies and seeking, reports end-of-input, accepts an empty null reset
+and rejects a nonempty null view. Both handles have one-shot ownership. The first run expected an
+undersized compound Color read to leave the reader position unchanged, although the header promises
+only I/O exhaustion; removing that assertion was a demo correction. Both renderer-labelled direct
+runs pass byte-identically with empty stderr; strict C99 and metadata compilation pass. `net.h` is
+51/51 demonstrated. Evidence:checkpoint-577-c-net-packets-focused-*-direct.*. No socket, wire
+transport, peer interoperability, network byte order or project-built runner is claimed.
