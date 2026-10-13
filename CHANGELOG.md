@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the existing C media-player workflow from32to46checks with collection retention,
+  queue-owned copies, view replacement, queue_add copying and safe stopped-queue Clear.
 - Complete474-album-art:487enabled CTests and both full smoke suites preserve all old
   evidence; the new standalone adds eight exact album stream/thumbnail controls.
 - Added an isolated album-art workflow with folder/no-art branches, original and thumbnail

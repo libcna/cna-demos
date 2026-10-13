@@ -4,7 +4,8 @@
  * collection (which keeps them alive, so the program releases its own song handles at once) and
  * played as a queue. The program moves to the second song, pauses, resumes and stops, and counts
  * the MediaPlayer's two events -- which are process-wide, so their subscriptions take no game.
- * Bars show the position in each song.
+ * After stopping, it contrasts a collection-shared Song handle with owned queue copies across
+ * collection/view destruction and a safe queue Clear. Bars show the position in each song.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH]. Exit code 0 passed, 1 failed.
  */
@@ -76,6 +77,18 @@ static CNA_Result create_song(CNA_Handle game, const char* name, const char* fil
     }
     length += (uint64_t)snprintf(path + length, sizeof(path) - (size_t)length, "/assets/music/%s", file);
     return cna_song_create_from_uri(game, view(name, strlen(name)), view(path, length), out_song);
+}
+
+static int song_has_name(CNA_SongHandle song, const char* expected)
+{
+    char actual[64];
+    uint64_t required = 0U;
+    uint64_t copied = 0U;
+    const uint64_t expected_length = (uint64_t)strlen(expected);
+    memset(actual, 0, sizeof(actual));
+    return cna_song_get_name_size(song, &required) == CNA_RESULT_SUCCESS && required == expected_length &&
+           cna_song_copy_name(song, actual, sizeof(actual), &copied) == CNA_RESULT_SUCCESS &&
+           copied == expected_length && memcmp(actual, expected, (size_t)expected_length) == 0;
 }
 
 static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, void* context,
@@ -288,6 +301,13 @@ int main(int argc, char** argv)
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
     CNA_Handle manager = CNA_INVALID_HANDLE;
+    CNA_SongHandle collection_song = CNA_INVALID_HANDLE;
+    CNA_SongHandle queue_first = CNA_INVALID_HANDLE;
+    CNA_SongHandle active_copy = CNA_INVALID_HANDLE;
+    CNA_SongHandle appended = CNA_INVALID_HANDLE;
+    CNA_SongHandle appended_copy = CNA_INVALID_HANDLE;
+    CNA_Bool active_available = CNA_FALSE;
+    int32_t queue_count = -1;
 
     /* 100 frames at 60 per second cover the 1.4 s tour. */
     cna_demo_init(&demo, "c_api.media.media_player", argc, argv, 100);
@@ -321,6 +341,31 @@ int main(int argc, char** argv)
     if (demo.automated) {
         cna_demo_check(&demo, state.step == 4, "the whole tour ran");
     }
+    if (media_state(game) != CNA_MEDIA_STATE_STOPPED) {
+        (void)cna_media_player_stop(game); /* keep the ownership exercise independent of live playback */
+    }
+
+    /* The collection shares its retained Song, while queue accessors publish independent copies.
+       Keep those handles across view/collection destruction and a safe stopped-queue Clear. */
+    cna_demo_check_result(&demo, cna_song_collection_get_at(state.songs, 0, &collection_song),
+                          "collection_get_at returns a shared retained Song handle");
+    cna_demo_check_result(&demo, cna_media_queue_get_at(state.queue, 0, &queue_first),
+                          "queue_get_at returns an owned copy of Rising");
+    cna_demo_check(&demo,
+                   cna_media_queue_get_active_song(state.queue, &active_copy, &active_available) == CNA_RESULT_SUCCESS &&
+                       active_available == CNA_TRUE,
+                   "queue_get_active_song returns an owned copy of the stopped active song");
+    cna_demo_check_result(&demo, create_song(game, "Appended", "rising.wav", &appended),
+                          "create the caller-owned Song used by queue_add");
+    cna_demo_check_result(&demo, cna_media_queue_add(state.queue, appended),
+                          "queue_add copies the caller-owned Song");
+    cna_demo_check_result(&demo, cna_song_destroy(appended),
+                          "destroy the queue_add input handle");
+    appended = CNA_INVALID_HANDLE;
+    cna_demo_check(&demo,
+                   cna_media_queue_get_count(state.queue, &queue_count) == CNA_RESULT_SUCCESS && queue_count == 3 &&
+                       cna_media_queue_get_at(state.queue, 2, &appended_copy) == CNA_RESULT_SUCCESS,
+                   "the queue keeps three entries and publishes a copy of Appended");
 
     /* Event registrations, the queue view and the collection go before the game. */
     if (state.state_changed != CNA_INVALID_HANDLE) {
@@ -333,10 +378,41 @@ int main(int argc, char** argv)
     }
     if (state.queue != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_media_queue_destroy(state.queue), "cna_media_queue_destroy (the view)");
+        state.queue = CNA_INVALID_HANDLE;
     }
     if (state.songs != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_song_collection_destroy(state.songs), "cna_song_collection_destroy");
+        state.songs = CNA_INVALID_HANDLE;
     }
+    cna_demo_check(&demo, song_has_name(collection_song, "Rising"),
+                   "the shared collection Song survives collection destruction");
+    cna_demo_check(&demo,
+                   cna_media_player_get_queue(game, &state.queue) == CNA_RESULT_SUCCESS &&
+                       cna_media_queue_get_count(state.queue, &queue_count) == CNA_RESULT_SUCCESS && queue_count == 3,
+                   "a new queue view sees all entries after the first view is destroyed");
+    cna_demo_check_result(&demo, cna_media_queue_clear(state.queue),
+                          "queue_clear releases its entries while the player is stopped");
+    cna_demo_check(&demo,
+                   cna_media_queue_get_count(state.queue, &queue_count) == CNA_RESULT_SUCCESS && queue_count == 0 &&
+                       active_index(&state) == -1,
+                   "queue_clear empties the queue and resets the active index");
+    cna_demo_check(&demo,
+                   song_has_name(queue_first, "Rising") && song_has_name(active_copy, "Falling") &&
+                       song_has_name(appended_copy, "Appended"),
+                   "owned queue copies remain readable after queue_clear");
+    {
+        const CNA_Result collection_release = cna_song_destroy(collection_song);
+        const CNA_Result first_release = cna_song_destroy(queue_first);
+        const CNA_Result active_release = cna_song_destroy(active_copy);
+        const CNA_Result appended_release = cna_song_destroy(appended_copy);
+        cna_demo_check(&demo,
+                       collection_release == CNA_RESULT_SUCCESS && first_release == CNA_RESULT_SUCCESS &&
+                           active_release == CNA_RESULT_SUCCESS && appended_release == CNA_RESULT_SUCCESS,
+                       "all retained and copied Song handles release independently");
+    }
+    cna_demo_check_result(&demo, cna_media_queue_destroy(state.queue),
+                          "destroy the reacquired queue view");
+    state.queue = CNA_INVALID_HANDLE;
     if (state.sprite_batch != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_sprite_batch_destroy(state.sprite_batch), "cna_sprite_batch_destroy");
     }

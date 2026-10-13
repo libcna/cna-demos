@@ -103,6 +103,20 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
+Focused **474-C-media-ownership** extends the existing c_api.media.media_player from32to46child
+checks under both renderers with empty stderr and no new ID/fixture. Filtering14new controls gives
+the exact old32-line sequence. A collection-shared Rising handle survives collection destruction;
+queue accessors publish owned Rising/Falling copies; queue_add retains Appended after its caller
+handle is destroyed; a replacement view sees the same three-entry queue; stopped queue_clear
+empties/resets it while every retained copy remains readable and independently releasable.
+29enabled media/CLI CTests pass in9.96s; metadata474/0. The first build was refused only by
+sandboxed ccache and is preserved; the watched consistency build passes with3909unchanged CNA
+inputs/no diagnostics. ISSUE-058 replay is never called. No audible, empty/out-of-range, Dispose,
+failed-add, live-clear or callback-edge claim. Full474 against complete474-art is pending.
+Evidence:checkpoint-474-c-media-focused-* and checkpoint-474-c-media-*-build-*.
+
+Last complete baseline:
+
 Complete checkpoint **474-album-art**, source `2524511`, adds one coherent standalone over
 verified private Linux XDG roots. Two focused and two full-smoke runs pass eight identical child
 checks: two artist-specific albums, folder-art/no-art HasArt, both missing-art exceptions,
@@ -248,19 +262,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: extend existing `c_api.media.media_player` with collection/queue ownership.
-Complete474-art preserves its32exact child checks on both renderers; parentJSON is0. Add controls
-after the stopped transport tour, without another demo ID: collection_get_at returns a shared
-handle that survives collection destruction; queue_get_at/get_active_song return owned copies;
-queue_add copies its caller's Song; destroying/reacquiring a queue view leaves the global queue;
-Clear empties/reset the queue while retained copies remain readable. Use public name routes to
-distinguish Rising/Falling/Appended. Preserve all32old labels/order and existing visual/transport
-behavior. Never pass a queue-owned Song to MediaPlayer::Play: ISSUE-058 proves that route has a
-heap-use-after-free and remains outside normal smoke. Empty/out-of-range, Dispose, failed-add and
-callback-unsubscribe edge behavior remain separate decisions. Source audit and exact baseline:
-checkpoint-473-hierarchy-next-c-media-members-*. Watch build/gate, run focused both renderers and
-targeted C/media CTests, update coverage/HANDOFF, commit, then full validation. No new fixtures.
-Preserve original mono streaming/ISSUE-038 and build-only ISSUE-057. Never edit/revert CNA.
+Focused474-C-media-ownership is complete; commit source/docs and run full validation next.
+Capture ONCE after fullbuild during CTest: the same37selected binaries/4assets/30fixture paths.
+Freeze source/assets/build through both smokes. Expect487enabled CTests and the same outcomes:
+SOFTWARE409/27/35/3, OPENGLES3439/29/3/3. Preserve all38/42old failures, all C/custom lists and
+traces, five network controls, music18checks and album-art8checks. Only
+`c_api.media.media_player` child stdout grows32->46; parentJSON stays0. Normalized stderr should
+remain identical to complete474-art. Archive ccache refusal separately; preserve/refuse surprises.
+After closure continue the public-member audit from COVERAGE_AUDIT. Candidate next work must be
+chosen semantically; do not add a variant solely for member count. Preserve ISSUE-058 outside
+normal smoke, mono streaming/ISSUE-038 and build-only ISSUE-057. Never edit/revert CNA.
 
 ## 15. Assumptions the next session must know
 
@@ -273,6 +284,6 @@ Preserve original mono streaming/ISSUE-038 and build-only ISSUE-057. Never edit/
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
 Current complete baseline is474-album-art; source commit is in section7.
-All earlier drafts, including album art, positive duration, category hierarchy and tagged import,
-are APPLIED AND STALE. Next work extends the existing C media demo; no draft is applied yet.
+All earlier drafts, including album art, duration, hierarchy and tagged import, are APPLIED AND
+STALE. C media ownership is applied/focused but not yet a complete checkpoint.
 Preserve refusal evidence and source/fixture observations. Retain architecture/stable IDs.

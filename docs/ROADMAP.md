@@ -1734,3 +1734,17 @@ Normalized stderr adds only six expected album-art INFO lines per renderer. Oute
 exact amdgpu pairs (previous16); inner/outer exits are zero. Capture/final CNAeff3131017 are
 clean. Coverage is297/329types and1405/2326members. Semantic coverage remains incomplete.
 Immutable evidence:checkpoint-474-art-*.
+
+## Focused474-C-media-ownership
+
+The existing `c_api.media.media_player` grows from32to46child checks without a new ID or fixture.
+Both renderers pass identical lists with empty stderr; removing the14new controls yields every
+old label in its original order. A collection-shared Rising handle survives collection destruction;
+queue accessors return independent Rising/Falling copies; queue_add retains Appended after its
+caller handle is destroyed; a replacement view sees the same three-entry global queue; stopped
+queue_clear empties/resets it while every retained copy remains readable and releases independently.
+29enabled media/CLI CTests pass in9.96s. Metadata remains474/0. The initial build refusal is
+ccache sandbox-only and archived; the watched consistency build passes with3909unchanged CNA
+inputs and no diagnostics. ISSUE-058's unsafe active-queue replay is never invoked. No audible,
+empty/out-of-range, Dispose, failed-add, live-clear or callback edge claim. Full474 checkpoint
+against complete474-album-art is pending. Evidence:checkpoint-474-c-media-focused-*.
