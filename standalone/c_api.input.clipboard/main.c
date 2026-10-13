@@ -71,6 +71,7 @@ static CNA_Result update(CNA_Handle game, const CNA_GameTime* game_time, void* c
     uint64_t original_bytes = UINT64_C(0);
     uint64_t restored_bytes = UINT64_C(0);
     uint64_t bytes = UINT64_C(99);
+    CNA_Bool accepted = UINT8_C(9);
     CNA_Bool has_text = UINT8_C(9);
     CNA_Result capture;
     CNA_Result restore = CNA_RESULT_INVALID_STATE;
@@ -86,9 +87,12 @@ static CNA_Result update(CNA_Handle game, const CNA_GameTime* game_time, void* c
         return CNA_RESULT_SUCCESS;
     }
 
-    cna_demo_check_result(demo,
-                          cna_clipboard_set_text(game, text_view(probe, (uint64_t)strlen(probe))),
-                          "request the explicit UTF-8 clipboard value");
+    cna_demo_check(
+        demo,
+        cna_devices_clipboard_set_text_ext(
+            game, text_view(probe, (uint64_t)strlen(probe)), &accepted) == CNA_RESULT_SUCCESS &&
+            accepted == CNA_TRUE,
+        "the device extension reports that the desktop accepted the explicit UTF-8 value");
     cna_demo_check(
         demo,
         cna_clipboard_get_has_text(game, &has_text) == CNA_RESULT_SUCCESS && has_text == CNA_TRUE,

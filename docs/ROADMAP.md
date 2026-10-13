@@ -2589,6 +2589,23 @@ coverage632->646/3205 and `devices.h`44->58/62. All70 exact input/device/C-API/C
 221.19s with six declared skips and one known-issue expected failure. ISSUE-063 records that the
 public C comments still promise Closed after synthetic creation/clear even though implementation,
 CNA smoke and this runtime use Opening and refuse Closed. Real `cna_camera_create` remains manual;
-no permission prompt, capture, preview, display or
-visual inspection is claimed. The standard/full checkpoint remains blocked by the unchanged
+no permission prompt, capture, preview, display or visual inspection is claimed. The standard/full
+checkpoint remains blocked by the unchanged
 external SDL_GPU mismatch. Evidence:checkpoint-488-c-camera-frames-focused-*.
+
+## Focused488-C-clipboard-acceptance
+
+The existing `c_api.input.clipboard` now uses the device extension for its explicit multibyte probe
+write and requires the returned platform-acceptance flag before the unchanged exact read-back. Its
+other14 controls retain size/copy/has-text, atomic short-buffer, empty-text and captured-value
+restoration behavior; the later writes still exercise the plain clipboard setter.
+
+Both renderer selections pass identical15-control output with empty stderr, metadata remains488/0
+and the exact focused CTest passes. The one added route raises current C coverage646->647/3205 and
+`devices.h`58->59/62 without adding a demo. Another process can still race the shared clipboard.
+The three remaining header routes are deliberately manual: a real URL launch hands control to
+another application, real tray creation publishes host UI, and real camera creation may activate
+hardware or trigger permission. Their trivial refusal paths do not justify coverage credit, while
+the public test paths already demonstrate CNA-owned behavior. The standard/full checkpoint remains
+blocked by the unchanged external SDL_GPU mismatch.
+Evidence:checkpoint-488-c-clipboard-acceptance-focused-*.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `c_api.input.clipboard` so the device-layer write reports actual platform acceptance
+  before the existing exact read-back and desktop-clipboard restoration workflow.
 - Added `c_api.devices.camera_frames`, a23-check C workflow covering14 camera descriptor,
   enumeration, synthetic-state, exact RGBA transfer and ownership routes without opening hardware.
 - Recorded CNA-DEMOS-ISSUE-063: the C camera test-backend comments promise `Closed` after creation
