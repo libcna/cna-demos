@@ -4514,3 +4514,19 @@ reaches2880/3205 and `models.h` reaches97/216. Evidence:
 `checkpoint-624-c-models-focused-*-direct.*`. No ContentManager, imported glTF, animation player,
 screenshot, visual-quality assessment or project-built execution is claimed. Morph-target data,
 weight tracks, CPU blending and ModelMeshPart attachment are next.
+
+## Focused625-C-morph-target-data-tracks-and-part-upload
+
+`c_api.graphics.morph_targets` adds all26 morph-related `models.h` routes in29 controls. One
+deep-copied32-byte base vertex, two position targets, an optional normal stream, tangent deltas,
+current weights and complete track keys survive caller-buffer overwrite. Linear, step and cubic
+evaluation are distinguished numerically; CPU blend produces the exact combined position,
+renormalized normal and untouched UV bytes. Flat-normal flags and triangle indices enforce their
+atomic contracts. A ModelMeshPart retains the data beyond its original handle, then weights
+(0.5,0.25) upload the independently predicted position(0.5,0,0.5), confirmed by direct
+VertexBuffer readback. Both SOFTWARE and OPENGLES3 Xvfb direct runs pass29/29 with byte-identical
+stdout and empty stderr; strict C99 and metadata compilation, diff checks and validation self-tests
+pass. Staged metadata reaches2906/3205 and `models.h` reaches123/216. Evidence:
+`checkpoint-625-c-morph-targets-focused-*-direct.*`. No mesh, Model, ContentManager, animation
+player, draw call, screenshot, visual result or project-built execution is claimed. The
+SkinnedModelEXT skeleton, clips, transforms, part ownership and move routes are next.
