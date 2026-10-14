@@ -7592,3 +7592,19 @@ immediate `-j1` repetition was clean. Metadata remains636/0, validator/checkpoin
 and4/4, and generated runtime coverage remains302/329 types,2114/2326 non-field members,169/753
 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-806-xact-engine-post-dispose-*` and
 `/tmp/checkpoint-806-coverage.md`. Continue with XACT bank construction/refusal boundaries.
+
+## Focused807-XACT-bank-construction-boundaries
+
+`audio.xact.bank_lifetime` grows from seventeen to twenty-three controls. Both WaveBank and
+SoundBank reject a null engine and empty filename. Missing eager `.xwb`/`.xsb` inputs throw
+FileNotFoundException, while an existing non-XWB file creates an unprepared WaveBank stub, an
+existing non-XSB file creates a live SoundBank stub with no valid cues, and a missing streaming
+wave bank remains an unprepared stub without throwing. Existing lifecycle checks remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass23/23 with byte-identical stdout. Both stderr
+files contain the same three expected parse/open diagnostics from the deliberate stub probes. The
+warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-807-xact-bank-construction-*` and `/tmp/checkpoint-807-coverage.md`.
+Continue with the streaming constructor's ignored offset/packet contract.

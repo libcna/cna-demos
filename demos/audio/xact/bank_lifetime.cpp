@@ -7,7 +7,10 @@
 #include "Microsoft/Xna/Framework/Audio/Cue.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
+#include "System/ArgumentNullException.hpp"
 #include "System/EventArgs.hpp"
+#include "System/InvalidOperationException.hpp"
+#include "System/IO/FileNotFoundException.hpp"
 #include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
@@ -15,10 +18,49 @@ namespace
 {
     void BankLifetime(CnaDemos::DemoContext& ctx)
     {
+        bool nullWaveRefused = false;
+        bool nullSoundRefused = false;
+        try { WaveBank unexpected(nullptr, "assets/xact/tones.xwb"); }
+        catch (const System::ArgumentNullException&) { nullWaveRefused = true; }
+        try { SoundBank unexpected(nullptr, "assets/xact/tones.xsb"); }
+        catch (const System::ArgumentNullException&) { nullSoundRefused = true; }
+        ctx.Check(nullWaveRefused && nullSoundRefused,
+                  "both bank constructors reject a null owning engine");
+
         // Callback storage precedes every observed object, including during exception unwinding.
         int engineEvents = 0, waveEvents = 0, soundEvents = 0, preparedEvents = 0, activeEvents = 0;
         bool engineSender = true, waveSender = true, soundSender = true, cueSenders = true;
         AudioEngine engine("assets/xact/demo.xgs");
+        bool emptyWaveRefused = false;
+        bool emptySoundRefused = false;
+        bool missingWaveRefused = false;
+        bool missingSoundRefused = false;
+        try { WaveBank unexpected(&engine, ""); }
+        catch (const System::ArgumentNullException&) { emptyWaveRefused = true; }
+        try { SoundBank unexpected(&engine, ""); }
+        catch (const System::ArgumentNullException&) { emptySoundRefused = true; }
+        try { WaveBank unexpected(&engine, "assets/xact/missing.xwb"); }
+        catch (const System::IO::FileNotFoundException&) { missingWaveRefused = true; }
+        try { SoundBank unexpected(&engine, "assets/xact/missing.xsb"); }
+        catch (const System::IO::FileNotFoundException&) { missingSoundRefused = true; }
+        ctx.Check(emptyWaveRefused && emptySoundRefused,
+                  "both bank constructors reject an empty filename");
+        ctx.Check(missingWaveRefused && missingSoundRefused,
+                  "missing eager wave and sound banks are FileNotFoundException");
+
+        WaveBank corruptWaves(&engine, "assets/xact/demo.xgs");
+        SoundBank corruptSounds(&engine, "assets/xact/demo.xgs");
+        bool corruptSoundLookupRefused = false;
+        try { static_cast<void>(corruptSounds.GetCue("MidTone")); }
+        catch (const System::InvalidOperationException&) { corruptSoundLookupRefused = true; }
+        ctx.Check(!corruptWaves.getIsDisposedProperty() && !corruptWaves.getIsPreparedProperty(),
+                  "an existing non-XWB file creates an unprepared wave-bank stub");
+        ctx.Check(!corruptSounds.getIsDisposedProperty() && corruptSoundLookupRefused,
+                  "an existing non-XSB file creates a live sound-bank stub with no cues");
+
+        WaveBank missingStream(&engine, "assets/xact/missing-stream.xwb", 0, 16);
+        ctx.Check(!missingStream.getIsDisposedProperty() && !missingStream.getIsPreparedProperty(),
+                  "a missing streaming wave bank remains an unprepared stub without throwing");
         engine.Disposing.Add([&](System::Object* sender, const System::EventArgs&) {
             ++engineEvents;
             engineSender = engineSender && sender == &engine;
@@ -158,8 +200,8 @@ namespace
 CNA_DEMOS_CONSOLE(BankLifetime, {
     .id = "audio.xact.bank_lifetime",
     .title = "XACT bank and engine disposal",
-    .description = "Contrasts prepared and paused consuming cues during bank/engine disposal, checking dependent "
-                   "ownership, notifications and AudioEngine method behavior after disposal.",
+    .description = "Checks XACT bank construction failures and stub states, then contrasts prepared and paused cues "
+                   "during bank/engine disposal and verifies AudioEngine behavior afterward.",
     .apis = {"AudioEngine::Dispose", "AudioEngine::IsDisposed", "AudioEngine::Disposing", "AudioEngine::Update",
              "AudioEngine::RendererDetails", "AudioEngine::GetCategory", "AudioEngine::GetGlobalVariable",
              "AudioEngine::SetGlobalVariable",

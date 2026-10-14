@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added XACT WaveBank/SoundBank null, empty and missing-input boundaries plus CNA's corrupt-bank
+  and missing-stream stub behavior to the existing bank lifecycle workflow.
 - Extended the XACT bank/engine lifetime workflow with AudioEngine post-dispose renderer state,
   category/global-variable refusals and the safe Update no-op.
 - Extended the XACT renderer workflow with AudioEngine construction boundaries for empty, missing

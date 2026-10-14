@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-806 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-807 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1796,9 +1796,11 @@ cascade and the replaced wrapper's non-disposing lifetime. The core SoundEffect 
 closed aside from explicitly unclaimed acoustic and broader-codec behavior. XACT AudioEngine
 construction/refusal boundaries and CNA's arbitrary-renderer fallback are now covered in the
 existing renderer workflow. AudioEngine disposal now covers its cleared-but-queryable renderer
-list, category/global-variable refusals and safe Update no-op. Continue with the remaining XACT
-bank construction/refusal boundaries, then deeper cue/category behavior. Do not add isolated getter
-demos. Build with at most three compile jobs and keep focused evidence current.
+list, category/global-variable refusals and safe Update no-op. XACT bank construction now covers
+null/empty/missing inputs and the distinct corrupt-eager/missing-stream stub outcomes. Continue
+with the streaming constructor's ignored offset/packet contract, then deeper cue/category behavior.
+Do not add isolated getter demos. Build with at most three compile jobs and keep focused evidence
+current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2784,6 +2786,20 @@ stderr. The `-j3` build succeeded with the already-recorded ISSUE-057 staging-sc
 immediate `-j1` repetition was clean. Metadata and coverage remain unchanged.
 Evidence:`/tmp/checkpoint-806-xact-engine-post-dispose-*`. Continue with XACT bank
 construction/refusal boundaries.
+
+### Focused807-XACT-bank-construction-boundaries
+
+`audio.xact.bank_lifetime` grows from seventeen to twenty-three controls. Both WaveBank and
+SoundBank reject a null engine and empty filename. Missing eager `.xwb`/`.xsb` inputs throw
+FileNotFoundException, while an existing non-XWB file creates an unprepared WaveBank stub, an
+existing non-XSB file creates a live SoundBank stub with no valid cues, and a missing streaming
+wave bank remains an unprepared stub without throwing. Existing lifecycle checks remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass23/23 with byte-identical stdout. Both stderr
+files contain the same three expected parse/open diagnostics from the deliberate stub probes. The
+warning-free incremental build uses at most three jobs; metadata and coverage remain unchanged.
+Evidence:`/tmp/checkpoint-807-xact-bank-construction-*`. Continue with the streaming constructor's
+ignored offset/packet contract.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
