@@ -21,7 +21,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 170 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 171 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -67,25 +67,25 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds100 staged standalone C IDs and should reach625 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds101 staged standalone C IDs and should reach626 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 26 (10 C++ XACT plus three C workflows), core 3 (2 logger),
 content 52 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 15 (compiled video and song, tagged library import and album art), gamer services 33
 (own process each; 5 avatar, 2 leaderboard), net 24 (own process each; 15 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and170 in the
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and171 in the
 current source tree (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
 Latest generated project-built C ABI coverage is1116/3205. The current staged source metadata names
-2975/3205 routes, machine-counted directly from all public C headers and standalone metadata; that
+2991/3205 routes, machine-counted directly from all public C headers and standalone metadata; that
 staged figure is not yet a generated/project-built coverage checkpoint. Selected semantic totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
 `media_player.h`41/41, `net.h`51/51, `net_gamers.h`33/33, `net_sessions.h`104/104,
-`gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`192/216,
+`gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`208/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete524 exercises all1109 credited routes in both full smoke suites and includes the focused
@@ -1357,10 +1357,9 @@ reflection type-name pairs and remain intentionally trivial/uncredited. Begin th
 uncovered renderer-independent `cnb.h` audit. Its format/chunk identifiers, validation, checked
 arithmetic, CRC/compression, byte I/O, documents, textures, complete neutral model data/codecs and
 filesystem CNJ model compiler result, all neutral schemas/codecs and the loader registry establish
-272/272 routes, completing its semantic audit. `models.h` now establishes192/216 routes. Continue
-with the remaining camera, skin, bounding-sphere, material-variant and infinite-projection routes
-as one coherent ancillary Model scene-metadata batch. Then audit the three content-load/tag routes
-as a separate content boundary batch. Avoid
+272/272 routes, completing its semantic audit. `models.h` now establishes208/216 routes. Complete
+its last eight routes with a real content-loaded material-variant model: five variant values and
+selection behaviors plus the Model content-load and dictionary/foreign-object Tag boundaries. Avoid
 other renderer-
 dependent `graphics_ext.h` while
 the sibling renderer retirement is incoherent. The two
@@ -2431,7 +2430,19 @@ reaches2975/3205 and `models.h` reaches192/216. No vertex/index buffer, texture,
 result or project-built execution is claimed. Evidence:
 `checkpoint-628-c-model-animations-focused-*-direct.*`.
 
-During final focused628 review the sibling CNA was observed at committed `33ccbda367` with14
+`standalone/c_api.graphics.model_scene_metadata` adds16 `models.h` routes in28 controls. An authored
+infinite perspective camera round-trips all flags, scalar values, matrices and atomic name copies.
+A one-bone SkinningData maps to a real Model mesh by index, survives source release through a fresh
+owned handle and distinguishes an unrigged skin. The aggregate sphere exactly places center
+(1,2,3), radius2 through root translation x=10. The initial demo expected zero aspect ratio to be
+rejected; source review showed the native XNA factory accepts it, so the check was corrected and was
+not a CNA defect. Both SOFTWARE and OPENGLES3 Xvfb direct runs pass28/28 with byte-identical stdout
+and empty stderr; strict C99 and metadata compilation, diff checks and validation self-tests pass.
+Staged metadata reaches2991/3205 and `models.h` reaches208/216. No material, buffer, texture, draw
+call, visual result or project-built execution is claimed. Evidence:
+`checkpoint-629-c-model-scene-metadata-focused-*-direct.*`.
+
+During final focused629 review the sibling CNA was observed at committed `33ccbda367` with14
 externally modified paths, including renderer source/plan/tool edits, so it is not a clean coherent source
 snapshot for reconfigure/build. The exercised `libcna_c_api.so` remains the stable SHA-256
 `730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`. Earlier focused620 had
@@ -2451,8 +2462,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose625 catalog IDs (complete524 plus SpriteFont and100
-additional new standalone IDs) and641 declared/638 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose626 catalog IDs (complete524 plus SpriteFont and101
+additional new standalone IDs) and642 declared/639 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 
@@ -2571,3 +2582,19 @@ metadata reaches2975/3205 and `models.h` reaches192/216. Evidence:
 `checkpoint-628-c-model-animations-focused-*-direct.*`. No vertex/index buffer, texture, draw call,
 screenshot, visual result or project-built execution is claimed. Ancillary Model cameras, skins,
 bounds, material variants and infinite projection are next.
+
+## Focused629-C-Model-camera-skin-bounds-and-infinite-projection
+
+`c_api.graphics.model_scene_metadata` adds16 `models.h` routes in28 controls. An authored camera
+deep-copies and returns its exact scene-node index, flags, infinite projection, world transform,
+scalars and atomic UTF-8 name. A one-bone skeleton maps to a real Model mesh index, remains reachable
+through a fresh owned handle after source release, distinguishes an unrigged skin and survives list
+clear through the issued handle. The Model's aggregate sphere exactly places a local center(1,2,3),
+radius2 through root translation x=10. The first invalid-input check assumed zero aspect ratio was
+rejected; source review showed XNA's native finite and infinite factories both accept it, so that was
+a demo error rather than a CNA defect. SOFTWARE and OPENGLES3 Xvfb direct runs pass28/28 with byte-
+identical stdout and empty stderr; strict C99 and metadata compilation, diff checks and validation
+self-tests pass. Staged metadata reaches2991/3205 and `models.h` reaches208/216. Evidence:
+`checkpoint-629-c-model-scene-metadata-focused-*-direct.*`. No material, buffer, texture, draw call,
+screenshot, visual result or project-built execution is claimed. The real content-loaded material-
+variant and Tag boundary is next.

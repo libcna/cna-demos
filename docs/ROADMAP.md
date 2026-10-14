@@ -4574,3 +4574,18 @@ compilation, diff checks and validation self-tests pass. Staged metadata reaches
 `models.h` reaches192/216. Evidence:`checkpoint-628-c-model-animations-focused-*-direct.*`. No
 vertex/index buffer, texture, draw call, screenshot, visual result or project-built execution is
 claimed. Ancillary Model cameras, skins, bounds, material variants and infinite projection are next.
+
+## Focused629-C-Model-camera-skin-bounds-and-infinite-projection
+
+`c_api.graphics.model_scene_metadata` adds16 `models.h` routes in28 controls. An authored camera
+deep-copies every scene-node, projection, placement, scalar and text value. A one-bone skeleton maps
+to a real Model mesh index, survives source release through a new owned handle and distinguishes a
+legal unrigged skin. The aggregate sphere places local center(1,2,3), radius2 through root
+translation x=10. The first check expected zero aspect ratio to be refused; source review showed
+both native XNA perspective factories accept it, so the expectation was corrected as a demo error.
+Both SOFTWARE and OPENGLES3 Xvfb direct runs pass28/28 with byte-identical stdout and empty stderr;
+strict C99 and metadata compilation, diff checks and validation self-tests pass. Staged metadata
+reaches2991/3205 and `models.h` reaches208/216. Evidence:
+`checkpoint-629-c-model-scene-metadata-focused-*-direct.*`. No material, buffer, texture, draw call,
+screenshot, visual result or project-built execution is claimed. A real content-loaded material-
+variant model and its Tag boundary are next.
