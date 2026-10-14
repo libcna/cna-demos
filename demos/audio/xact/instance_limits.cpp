@@ -112,18 +112,41 @@ namespace
         bankOldest->Dispose();
         triggerA->Dispose();
         triggerB->Dispose();
+
+        // priority.xgs gives SFX capacity two / ReplaceLowestPriority. The sound bank authors
+        // High=200, Low=10 and New=100, while playback order puts High before Low.
+        AudioEngine priorityEngine("assets/xact/priority.xgs");
+        WaveBank priorityWaves(&priorityEngine, "assets/xact/tones.xwb");
+        SoundBank prioritySounds(&priorityEngine, "assets/xact/priority.xsb");
+        std::unique_ptr<Cue> high(prioritySounds.GetCue("PriorityHigh"));
+        std::unique_ptr<Cue> low(prioritySounds.GetCue("PriorityLow"));
+        std::unique_ptr<Cue> added(prioritySounds.GetCue("PriorityNew"));
+        high->Play();
+        high->Pause();
+        low->Play();
+        low->Pause();
+        ctx.Check(high->getIsPausedProperty() && low->getIsPausedProperty(),
+                  "two differently prioritized SFX cues fit the category capacity");
+        added->Play();
+        ctx.Check(low->getIsStoppedProperty(),
+                  "ReplaceLowestPriority evicts the lowest-priority cue rather than the oldest");
+        ctx.Check(high->getIsPausedProperty() && added->getIsPlayingProperty(),
+                  "the older high-priority cue survives while the new cue starts");
+        high->Dispose();
+        low->Dispose();
+        added->Dispose();
     }
 }
 
 CNA_DEMOS_CONSOLE(InstanceLimits, {
     .id = "audio.xact.instance_limits",
     .title = "Authored XACT category and cue instance limits",
-    .description = "Contrasts category and cue-definition limits, including Fail, category ReplaceOldest and FACT's "
-                   "bank-wide victim search for cue-level ReplaceOldest.",
+    .description = "Contrasts category and cue-definition limits, including Fail, ReplaceOldest, "
+                   "ReplaceLowestPriority and FACT's bank-wide cue-level victim search.",
     .apis = {"AudioEngine::AudioEngine", "SoundBank::GetCue", "Cue::Play", "Cue::Stop",
              "Cue::IsPlaying", "Cue::IsPaused", "Cue::Pause", "Cue::IsStopped", "Cue::Dispose", "AudioStopOptions::Immediate"},
     .tags = {"audio", "xact", "category", "instance-limit", "voice"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"xact/limits.xgs", "xact/tones.xwb", "xact/tones.xsb", "xact/demo.xgs", "xact/cue_limits.xsb",
-               "xact/cue_replace.xsb"},
+               "xact/cue_replace.xsb", "xact/priority.xgs", "xact/priority.xsb"},
 })

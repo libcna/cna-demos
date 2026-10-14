@@ -106,7 +106,7 @@ def xwb(bank: str, waves, streaming: bool = False) -> bytes:
 
 
 def xsb(bank: str, wave_bank: str, cues, fade_out_ms: int | None = None,
-        cue_limits=None) -> bytes:
+        cue_limits=None, priorities=None) -> bytes:
     """One cue -> one sound -> one wave per entry. An authored fade uses complex
     single-sound cue records; simple cues have no fade or instance-limit fields.
     Optional per-cue (count, policy) limits use the same complex record."""
@@ -114,6 +114,7 @@ def xsb(bank: str, wave_bank: str, cues, fade_out_ms: int | None = None,
     count = len(cues)
     assert cue_limits is None or (len(cue_limits) == count and
         all(0 <= limit <= 255 and 0 <= policy <= 4 for limit, policy in cue_limits))
+    assert priorities is None or (len(priorities) == count and all(0 <= priority <= 255 for priority in priorities))
     complex_cues = fade_out_ms is not None or cue_limits is not None
     header = 138
     sound_off = header
@@ -127,7 +128,8 @@ def xsb(bank: str, wave_bank: str, cues, fade_out_ms: int | None = None,
     out += name64(bank)
     assert len(out) == header
     for index, (_, _, _, category) in enumerate(cues):
-        out += struct.pack("<BHBhBHHB", 0, category, 180, 0, 255, 0, index, 0)     # simple sound
+        priority = 255 if priorities is None else priorities[index]
+        out += struct.pack("<BHBhBHHB", 0, category, 180, 0, priority, 0, index, 0) # simple sound
     for index in range(count):
         if complex_cues:
             # SINGLE_SOUND, sound offset, no transition, instance limit, no fade-in,
@@ -153,6 +155,7 @@ def write_all(assets_root: Path) -> None:
     files = {
         "demo.xgs": xgs(),
         "limits.xgs": xgs(((1, 0), (1, 2))),
+        "priority.xgs": xgs(((255, 0), (2, 4))),
         "hierarchy.xgs": xgs(category_parents=(0xFFFF, 0), category_names=("Master", "SFX")),
         "release.xwb": xwb("Release", [sine(329.6, 3.0)]),
         "release.xsb": xsb("ReleaseSounds", "Release", [("ReleaseTone", 329.6, 3.0, 0)], fade_out_ms=500),
@@ -162,6 +165,11 @@ def write_all(assets_root: Path) -> None:
                               cue_limits=((1, 0), (255, 0), (255, 0), (255, 0))),
         "cue_replace.xsb": xsb("ReplacingToneSounds", "Tones", CUES,
                                cue_limits=((255, 0), (1, 2), (255, 0), (255, 0))),
+        "priority.xsb": xsb("PriorityToneSounds", "Tones",
+                            (("PriorityHigh", 0.0, 0.0, 1),
+                             ("PriorityLow", 0.0, 0.0, 1),
+                             ("PriorityNew", 0.0, 0.0, 1)),
+                            priorities=(200, 10, 100)),
         "music.xwb": xwb("Music", [melody(MUSIC_NOTES, MUSIC_NOTE_SECONDS)], streaming=True),
         "music.xsb": xsb("MusicSounds", "Music", [("Theme", 0.0, 0.0, 0)]),
     }

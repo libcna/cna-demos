@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-814 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1805,10 +1805,11 @@ global variables now also cover both clamps and symmetric empty/unknown-name ref
 transport now covers repeated Play across Playing/Paused/Stopped and post-dispose transport
 asymmetry. A newly authored PUBLIC|READONLY global now proves silent write refusal. Continue with
 the remaining instance-limit/RPC/variation decisions, prioritizing publicly observable state over
-private mixer data. Cue-level ReplaceOldest now captures its definition-local count and FACT's
-bank-wide victim search. Audit category ReplaceLowestPriority next; classify output-only RPC and
-variation behavior honestly. Do not add isolated getter demos. Build with at most three compile
-jobs and keep focused evidence current.
+private mixer data. Cue-level ReplaceOldest captures its definition-local count and FACT's bank-wide
+victim search; category ReplaceLowestPriority now distinguishes priority from play order. Audit the
+remaining RPC/variation surface and record which behavior needs acoustic/manual or private-state
+evidence, then move to the next uncovered public subsystem. Do not add isolated getter demos. Build
+with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2903,6 +2904,19 @@ SOFTWARE and OPENGLES3 dummy-audio direct runs pass15/15 with byte-identical std
 stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
 unchanged. Evidence:`/tmp/checkpoint-814-xact-cue-replace-oldest-*`. Continue with category
 ReplaceLowestPriority, then classify output-only RPC/variation behavior.
+
+### Focused815-XACT-category-ReplaceLowestPriority
+
+The deterministic generator adds `priority.xgs` with SFX capacity2/ReplaceLowestPriority and
+`priority.xsb` with three SFX cues authored at priorities200,10 and100. `audio.xact.instance_limits`
+grows from fifteen to eighteen controls. High starts before Low and both occupy the category; New
+then evicts Low, preserving the older High cue. Public state therefore distinguishes genuine
+priority selection from ReplaceOldest without private mixer access.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass18/18 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
+unchanged. Evidence:`/tmp/checkpoint-815-xact-category-priority-*`. Audit and classify the remaining
+RPC/variation behavior, then move to the next uncovered public subsystem.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

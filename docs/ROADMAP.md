@@ -7721,3 +7721,19 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-814-xact-cue-replace-oldest-*` and
 `/tmp/checkpoint-814-coverage.md`. Continue with category ReplaceLowestPriority, then classify
 output-only RPC/variation behavior.
+
+## Focused815-XACT-category-ReplaceLowestPriority
+
+The deterministic generator adds `priority.xgs` with SFX capacity2/ReplaceLowestPriority and
+`priority.xsb` with three SFX cues authored at priorities200,10 and100. `audio.xact.instance_limits`
+grows from fifteen to eighteen controls. High starts before Low and both occupy the category; New
+then evicts Low, preserving the older High cue. Public state therefore distinguishes genuine
+priority selection from ReplaceOldest without private mixer access.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass18/18 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-815-xact-category-priority-*` and
+`/tmp/checkpoint-815-coverage.md`. Audit and classify the remaining RPC/variation behavior, then
+move to the next uncovered public subsystem.
