@@ -1342,14 +1342,15 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused644 projects XNA-member coverage to1502/2326 and closes MediaQueue.Item with
-queue-copy ownership and range behavior. Audit `media.media_library.collections` next for
-MediaSource.ToString and returned-record ownership. The current range-for discards raw pointers
-allocated by GetAvailableMediaSources; adopt every returned record with unique_ptr, verify exact
-name/text/type for the actual records, and preserve the machine-dependent collection reporting.
-Run in a process whose XDG music/picture roots point to fresh empty `/tmp` directories so no real
-user library is indexed; run both requested renderer environments and the focused SOFTWARE CTest.
-Do not claim device enumeration beyond CNA's returned desktop source. Then continue.
+baseline. Focused645 projects XNA-member coverage to1505/2326 and closes MediaSource.ToString,
+MediaLibrary.MediaSource and the already-executed MediaLibrary.IsDisposed check while fixing demo
+ownership of returned raw source pointers. Audit `media.media_library.save_picture` next. Use the
+existing reopened independent library and Picture token extension to exercise public
+MediaLibrary.GetPictureFromToken, Picture.Date/value identity and PictureAlbum value identity;
+credit PictureCollection/PictureAlbumCollection Item only where directly indexed. Preserve the14
+existing checks and visible ISSUE-041 failure, do not dispose borrowed picture/album views merely
+for flags, and do not claim visual quality. Run both standalone runner selections, compare the
+expected child output/stderr, and run the focused known-issue SOFTWARE CTest before continuing.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2539,6 +2540,19 @@ stdout and empty stderr; the focused SOFTWARE CTest passes. Temporary coverage p
 Evidence:`/tmp/checkpoint-644-media-queue-*` and `/tmp/checkpoint-644-coverage.md`. No screenshot or
 visual inspection was performed. Final build is diagnostic-free against clean CNA `09c3108e5`;
 no CNA source was edited.
+
+Focused645 extends `media.media_library.collections` from one to three controls and fixes its
+returned-record ownership. Every raw MediaSource pointer is adopted by unique_ptr; CNA's actual
+Local Device record has matching nonempty Name/ToString. Constructing MediaLibrary from that record
+publishes a distinct copied MediaSource with the same name/type/text, and the existing false
+IsDisposed assertion now receives metadata credit. SOFTWARE and OPENGLES3 pass3/3 with byte-
+identical stdout and empty stderr; the focused SOFTWARE CTest passes. All runs use fresh empty XDG
+music/picture directories, report zero library items and leave those directories empty, so no real
+user library was read. Temporary coverage projects1502->1505/2326 with no catalog/type/C-route
+change. This is CNA's one returned desktop source, not wider device enumeration. Evidence:
+`/tmp/checkpoint-645-media-source-*` and `/tmp/checkpoint-645-coverage.md`. No playback, listening,
+screenshot or visual inspection was performed. Final build is diagnostic-free against clean CNA
+`09c3108e5`; no CNA source was edited.
 
 ## 15. Assumptions the next session must know
 

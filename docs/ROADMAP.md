@@ -4827,3 +4827,20 @@ playback quality or listening evidence. Evidence:`/tmp/checkpoint-644-media-queu
 `/tmp/checkpoint-644-coverage.md`. No screenshot or visual inspection was performed. Audit the
 MediaSource records next: own every pointer returned by GetAvailableMediaSources and verify
 ToString against the actual names without reading a real user library during validation.
+
+## Focused645-MediaSource-record-ownership-and-library-copy
+
+`media.media_library.collections` now adopts every raw pointer returned by
+GetAvailableMediaSources instead of leaking the records. CNA's actual Local Device record has a
+nonempty Name equal to ToString; the MediaLibrary source constructor publishes a distinct copied
+record with the same name, type and text; and the existing IsDisposed=false assertion is now
+credited. SOFTWARE and OPENGLES3 pass3/3 with byte-identical stdout and empty stderr; the focused
+SOFTWARE CTest passes. Both direct runs and the CTest use fresh empty XDG music/picture roots,
+report zero items and leave the roots empty, so no real user library was read. Temporary coverage
+moves the XNA-member projection1502->1505/2326 through MediaSource.ToString,
+MediaLibrary.MediaSource and MediaLibrary.IsDisposed without changing the627-demo/type/C-route
+counts. This establishes CNA's one returned desktop source and source-copy ownership, not wider
+device enumeration. Evidence:`/tmp/checkpoint-645-media-source-*` and
+`/tmp/checkpoint-645-coverage.md`. No playback, listening, screenshot or visual inspection was
+performed. Audit Picture token/date/value identity and PictureAlbum identity next in the existing
+isolated save_picture workflow while preserving visible ISSUE-041.
