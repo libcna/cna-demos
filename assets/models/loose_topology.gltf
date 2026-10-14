@@ -87,6 +87,118 @@
    "componentType": 5123,
    "count": 5,
    "type": "SCALAR"
+  },
+  {
+   "bufferView": 9,
+   "componentType": 5126,
+   "count": 3,
+   "type": "VEC3",
+   "min": [
+    -0.8,
+    0.55,
+    0.5
+   ],
+   "max": [
+    -0.5,
+    0.7,
+    0.5
+   ]
+  },
+  {
+   "bufferView": 10,
+   "componentType": 5126,
+   "count": 3,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 11,
+   "componentType": 5123,
+   "count": 3,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 12,
+   "componentType": 5126,
+   "count": 3,
+   "type": "VEC3",
+   "min": [
+    0.25,
+    0.45,
+    0.5
+   ],
+   "max": [
+    0.43,
+    0.75,
+    0.5
+   ]
+  },
+  {
+   "bufferView": 13,
+   "componentType": 5126,
+   "count": 3,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 14,
+   "componentType": 5123,
+   "count": 3,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 15,
+   "componentType": 5126,
+   "count": 3,
+   "type": "VEC3",
+   "min": [
+    -0.2,
+    0.55,
+    0.5
+   ],
+   "max": [
+    0.2,
+    0.75,
+    0.5
+   ]
+  },
+  {
+   "bufferView": 16,
+   "componentType": 5126,
+   "count": 3,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 17,
+   "componentType": 5123,
+   "count": 3,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 18,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    0.45,
+    0.45,
+    0.5
+   ],
+   "max": [
+    0.9,
+    0.8,
+    0.5
+   ]
+  },
+  {
+   "bufferView": 19,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 20,
+   "componentType": 5123,
+   "count": 4,
+   "type": "SCALAR"
   }
  ],
  "bufferViews": [
@@ -143,12 +255,84 @@
    "byteOffset": 380,
    "byteLength": 10,
    "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 392,
+   "byteLength": 36,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 428,
+   "byteLength": 48,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 476,
+   "byteLength": 6,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 484,
+   "byteLength": 36,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 520,
+   "byteLength": 48,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 568,
+   "byteLength": 6,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 576,
+   "byteLength": 36,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 612,
+   "byteLength": 48,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 660,
+   "byteLength": 6,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 668,
+   "byteLength": 48,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 716,
+   "byteLength": 64,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 780,
+   "byteLength": 8,
+   "target": 34963
   }
  ],
  "buffers": [
   {
-   "byteLength": 390,
-   "uri": "data:application/octet-stream;base64,ZmZmv5qZmb4AAAA/AAAAv5qZmb4AAAA/AAAAv5qZmT4AAAA/ZmZmv5qZmT4AAAA/AACAP9jXVz8AAAAAAACAPwAAgD/Y11c/AAAAAAAAgD8AAIA/2NdXPwAAAAAAAIA/AACAP9jXVz8AAAAAAACAPwAAAQACAAMAAACAvpqZmb4AAAA/AACAPpqZmb4AAAA/AACAvpqZmT4AAAA/AACAPpqZmT4AAAA/AACAPwAAAAAAAAAAAACAPwAAgD8AAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAAAAAACAPwAAAQACAAMAZmbmPpqZmb4AAAA/ZmZmP5qZmb4AAAA/ZmZmP83MzD0AAAA/MzMzPzMzsz4AAAA/ZmbmPs3MzD0AAAA/AAAAAAAAgD8AAAAAAACAPwAAAAAAAIA/AAAAAAAAgD8AAAAAAACAPwAAAAAAAIA/AAAAAAAAgD8AAAAAAACAPwAAAAAAAIA/AAAAAAAAgD8AAAEAAgADAAQA"
+   "byteLength": 788,
+   "uri": "data:application/octet-stream;base64,ZmZmv5qZmb4AAAA/AAAAv5qZmb4AAAA/AAAAv5qZmT4AAAA/ZmZmv5qZmT4AAAA/AACAP9jXVz8AAAAAAACAPwAAgD/Y11c/AAAAAAAAgD8AAIA/2NdXPwAAAAAAAIA/AACAP9jXVz8AAAAAAACAPwAAAQACAAMAAACAvpqZmb4AAAA/AACAPpqZmb4AAAA/AACAvpqZmT4AAAA/AACAPpqZmT4AAAA/AACAPwAAAAAAAAAAAACAPwAAgD8AAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAAAAAACAPwAAAQACAAMAZmbmPpqZmb4AAAA/ZmZmP5qZmb4AAAA/ZmZmP83MzD0AAAA/MzMzPzMzsz4AAAA/ZmbmPs3MzD0AAAA/AAAAAAAAgD8AAAAAAACAPwAAAAAAAIA/AAAAAAAAgD8AAAAAAACAPwAAAAAAAIA/AAAAAAAAgD8AAAAAAACAPwAAAAAAAIA/AAAAAAAAgD8AAAEAAgADAAQAAADNzEy/ZmYmPwAAAD9mZia/zcwMPwAAAD8AAAC/MzMzPwAAAD8AAAAAAACAPwAAgD8AAIA/AAAAAAAAgD8AAIA/AACAPwAAAAAAAIA/AACAPwAAgD8AAAEAAgAAAAAAgD5mZuY+AAAAP3sUrj4AAEA/AAAAP/Yo3D5mZuY+AAAAPwAAAAAAAAAAAACAPwAAgD8AAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAQACAAAAzcxMvs3MDD8AAAA/zcxMPs3MDD8AAAA/zcxMPgAAQD8AAAA/AACAPwAAAAAAAIA/AACAPwAAgD8AAAAAAACAPwAAgD8AAIA/AAAAAAAAgD8AAIA/AAABAAIAAABmZuY+ZmbmPgAAAD9mZmY/ZmbmPgAAAD/NzCw/zcxMPwAAAD/NzCw/UrgePwAAAD8AAIA/AAAAPwAAAAAAAIA/AACAPwAAAD8AAAAAAACAPwAAgD8AAAA/AAAAAAAAgD8AAIA/AAAAPwAAAAAAAIA/AAABAAIAAwA="
   }
  ],
  "meshes": [
@@ -193,6 +377,62 @@
      "indices": 8
     }
    ]
+  },
+  {
+   "name": "Points",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 9,
+      "COLOR_0": 10
+     },
+     "mode": 0,
+     "material": 3,
+     "indices": 11
+    }
+   ]
+  },
+  {
+   "name": "OpenLineStrip",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 12,
+      "COLOR_0": 13
+     },
+     "mode": 3,
+     "material": 4,
+     "indices": 14
+    }
+   ]
+  },
+  {
+   "name": "IncompleteLines",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 15,
+      "COLOR_0": 16
+     },
+     "mode": 1,
+     "material": 5,
+     "indices": 17
+    }
+   ]
+  },
+  {
+   "name": "IncompleteTriangles",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 18,
+      "COLOR_0": 19
+     },
+     "mode": 4,
+     "material": 6,
+     "indices": 20
+    }
+   ]
   }
  ],
  "nodes": [
@@ -207,6 +447,22 @@
   {
    "name": "Fan",
    "mesh": 2
+  },
+  {
+   "name": "Points",
+   "mesh": 3
+  },
+  {
+   "name": "OpenLineStrip",
+   "mesh": 4
+  },
+  {
+   "name": "IncompleteLines",
+   "mesh": 5
+  },
+  {
+   "name": "IncompleteTriangles",
+   "mesh": 6
   }
  ],
  "materials": [
@@ -227,6 +483,30 @@
    "extensions": {
     "KHR_materials_unlit": {}
    }
+  },
+  {
+   "name": "Points",
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  },
+  {
+   "name": "OpenLineStrip",
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  },
+  {
+   "name": "IncompleteLines",
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  },
+  {
+   "name": "IncompleteTriangles",
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
   }
  ],
  "extensionsUsed": [
@@ -238,7 +518,11 @@
    "nodes": [
     0,
     1,
-    2
+    2,
+    3,
+    4,
+    5,
+    6
    ]
   }
  ],

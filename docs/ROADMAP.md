@@ -266,9 +266,10 @@ a check that all authored colors remain visible and that a blank texture row can
   retained non-joint ancestry, ignored mesh-node placement, selective bind-pose restoration and
   live bounds responding to a controlled distant palette before the final rendered pose (21 checks).
   ISSUE-042 records stale root-prefix comments only; the runtime workflow passes.
-- ✅ `graphics.model.imported_topology`: line-loop closure and strip/fan normalization, exact
-  public index ranges and topology-dependent counts, plus actual outline/filled pixels (18 checks).
-- Remaining: points/incomplete primitive tails, specular slots, more skin weighting/material variants and other
+- ✅ `graphics.model.imported_topology`: all seven glTF primitive modes, line-loop closure,
+  strip/fan normalization, exact public index ranges and topology-dependent counts, incomplete
+  line/triangle-tail diagnostics, plus actual point/line/filled pixels (39 checks).
+- Remaining: specular slots, more skin weighting/material variants and other
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
@@ -8127,3 +8128,22 @@ values and check counts match the OPENGLES3 Complete744 baseline. `portable_pack
 Metadata remains648/0. Evidence:`/tmp/checkpoint-836-shader-effect-OPENGL33.json`. No screenshot or
 manual visual inspection was performed. Move to the next unresolved public behavior family rather
 than adding scalar/array spelling variants.
+
+## Focused837-all-glTF-topologies-and-incomplete-tails
+
+The existing `graphics.model.imported_topology` now exercises every glTF primitive mode in one
+coherent imported fixture. The original LINE_LOOP, TRIANGLE_STRIP and TRIANGLE_FAN controls remain,
+while POINTS preserves three independent point primitives, a direct LINE_STRIP stays open, and
+LINES/TRIANGLES retain their complete primitive while dropping one dangling index apiece. All seven
+parts expose the exact expected `PrimitiveTypeEXT`, vertex count, primitive count and normalized or
+trimmed index sequence.
+
+The public import report contains exactly two `incomplete-indices-dropped` diagnostics, one naming
+each malformed primitive and one dropped index each. Pixel checks prove all three cyan points, both
+blue open-strip segments, the complete magenta line and orange triangle, while the omitted tails do
+not invent geometry. SOFTWARE and OPENGLES3 pass39/39; their inspected800x480 captures are
+byte-identical (`ae738f...4967`). The build used at most three jobs, the exact SOFTWARE CTest passes,
+metadata remains648/0, both validation self-test suites pass and temporary coverage remains302/329
+types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-837-topology-*` and `/tmp/checkpoint-837-coverage.md`. No CNA defect appeared.
+The next explicit Phase7 remainder is imported specular-slot behavior.

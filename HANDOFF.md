@@ -171,6 +171,8 @@ Focused835 adds exact rigid-World and skinned-bone fog at start/midpoint/end, co
 observable PBR-family remainder identified by the declaration-level audit.
 Focused836 completes the37-declaration ShaderEffect disposition and runs all eight project scenes
 on OPENGL33: seven pass and clone_state retains its sole expected ISSUE-055 failure.
+Focused837 extends imported_topology to all seven glTF modes plus exact diagnostics and rendered
+evidence for incomplete LINES/TRIANGLES tails; both renderers pass39/39 with identical captures.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3392,6 +3394,25 @@ vec3/mat4 uniform paths all draw successfully. Metadata remains648/0. Evidence:
 `/tmp/checkpoint-836-shader-effect-OPENGL33.json`. No screenshot or manual visual inspection was
 performed. Select the next non-ShaderEffect member/behavior family; do not create inert uniform-
 setter variants.
+
+### Focused837-all-glTF-topologies-and-incomplete-tails
+
+The existing `graphics.model.imported_topology` fixture now contains every glTF primitive mode.
+POINTS preserves three indices and draws all three cyan pixels; a direct LINE_STRIP preserves two
+segments and visibly stays open. LINES and TRIANGLES each author one dangling final index: their
+public part data retains only `{0,1}` and `{0,1,2}`, exposes primitive count one, and the public
+`GltfImportReportEXT` returns two `incomplete-indices-dropped` entries naming the two source
+primitives with count one each. The complete magenta line and orange triangle render without
+geometry from either discarded tail. Original loop/strip/fan controls remain exact.
+
+SOFTWARE and OPENGLES3 pass39/39. The inspected800x480 captures are byte-identical with SHA-256
+`ae738f113251722a49f1cbda4b3c2009b42a513010f20537a2370d1bca2c4967`; the expected importer
+warnings are visible in both runs. The incremental build used `-j3`, exact SOFTWARE CTest passes,
+metadata remains648/0, both tool self-test suites pass and temporary coverage remains302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-837-topology-*` and `/tmp/checkpoint-837-coverage.md`. No CNA defect appeared.
+Audit imported specular-slot behavior next, then continue with skin-weight/material variants or the
+next concrete member gap if source review shows those variants are already semantically covered.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

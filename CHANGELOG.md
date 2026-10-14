@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the imported-topology scene to all seven glTF primitive modes with exact point/open-line
+  pixels and public diagnostics for discarded incomplete line and triangle tails.
 - Completed the ShaderEffect public-member disposition, confirmed sampled coverage for all four
   uniform-array families, and ran all eight shader scenes on OPENGL33 with only expected ISSUE-055.
 - Added exact start/midpoint/end fog controls through rigid World and skinned bone depth, completing

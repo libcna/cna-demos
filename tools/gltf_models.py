@@ -599,21 +599,34 @@ def multiple_skins(path: Path) -> None:
 def imported_topology(path: Path) -> None:
     doc = Document()
     shapes = [
-        ('Loop', 2, [(-.9, -.3, .5), (-.5, -.3, .5), (-.5, .3, .5), (-.9, .3, .5)], (1, 215/255, 0, 1)),
-        ('Strip', 5, [(-.25, -.3, .5), (.25, -.3, .5), (-.25, .3, .5), (.25, .3, .5)], (1, 0, 0, 1)),
-        ('Fan', 6, [(.45, -.3, .5), (.9, -.3, .5), (.9, .1, .5), (.7, .35, .5), (.45, .1, .5)], (0, 1, 0, 1)),
+        ('Loop', 2, [(-.9, -.3, .5), (-.5, -.3, .5), (-.5, .3, .5), (-.9, .3, .5)],
+         [0, 1, 2, 3], (1, 215/255, 0, 1)),
+        ('Strip', 5, [(-.25, -.3, .5), (.25, -.3, .5), (-.25, .3, .5), (.25, .3, .5)],
+         [0, 1, 2, 3], (1, 0, 0, 1)),
+        ('Fan', 6, [(.45, -.3, .5), (.9, -.3, .5), (.9, .1, .5), (.7, .35, .5), (.45, .1, .5)],
+         [0, 1, 2, 3, 4], (0, 1, 0, 1)),
+        ('Points', 0, [(-.8, .65, .5), (-.65, .55, .5), (-.5, .7, .5)],
+         [0, 1, 2], (0, 1, 1, 1)),
+        ('OpenLineStrip', 3, [(.25, .45, .5), (.34, .75, .5), (.43, .45, .5)],
+         [0, 1, 2], (0, 0, 1, 1)),
+        # The last index in each following run deliberately cannot make a whole primitive. CNA
+        # drops and reports the line-list singleton and triangle-list singleton independently.
+        ('IncompleteLines', 1, [(-.2, .55, .5), (.2, .55, .5), (.2, .75, .5)],
+         [0, 1, 2], (1, 0, 1, 1)),
+        ('IncompleteTriangles', 4, [(.45, .45, .5), (.9, .45, .5), (.675, .8, .5), (.675, .62, .5)],
+         [0, 1, 2, 3], (1, .5, 0, 1)),
     ]
     doc.gltf['materials'] = []
-    for i, (name, mode, points, color) in enumerate(shapes):
+    for i, (name, mode, points, indices, color) in enumerate(shapes):
         attrs = {'POSITION': doc.accessor(points, 'VEC3', minmax=True),
                  'COLOR_0': doc.accessor([color] * len(points), 'VEC4')}
         primitive = {'attributes': attrs, 'mode': mode, 'material': i,
-                     'indices': doc.accessor(list(range(len(points))), 'SCALAR', UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER)}
+                     'indices': doc.accessor(indices, 'SCALAR', UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER)}
         doc.gltf['meshes'].append({'name': name, 'primitives': [primitive]})
         doc.gltf['nodes'].append({'name': name, 'mesh': i})
         doc.gltf['materials'].append({'name': name, 'extensions': {'KHR_materials_unlit': {}}})
     doc.gltf['extensionsUsed'] = ['KHR_materials_unlit']
-    doc.gltf['scenes'] = [{'name': 'Imported topology', 'nodes': [0, 1, 2]}]
+    doc.gltf['scenes'] = [{'name': 'Imported topology', 'nodes': list(range(len(shapes)))}]
     doc.gltf['scene'] = 0
     doc.save(path)
 
