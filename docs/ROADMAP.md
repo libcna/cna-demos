@@ -4467,3 +4467,17 @@ compilation, diff checks and validation self-tests pass. Staged metadata reaches
 `models.h` reaches17/216. Evidence:`checkpoint-621-c-model-bones-focused-*-direct.*`. No Model,
 mesh, ContentManager, graphics device, renderer, animation player, draw call, visual result or
 project-built execution is claimed. Standalone ModelMeshPart values and collections are next.
+
+## Focused622-C-ModelMeshPart-values-samplers-and-collections
+
+`c_api.graphics.model_mesh_parts` adds21 more `models.h` routes in23 renderer-free controls.
+Default and explicit parts retain all four signed scalar fields across their complete ranges, the
+opaque64-bit tag, every primitive topology and all seven independent material/specular sampler
+slots. Invalid topology, sampler version/slot and collection inputs are atomic. An ordered
+collection snapshot owns the exact live parts independently of its caller array and original
+handles; stable aliases share mutation and survive collection release. Both renderer-labelled
+direct runs are byte-identical with empty stderr; strict C99, metadata compilation, diff checks and
+validation self-tests pass. Staged metadata reaches2821/3205 and `models.h` reaches38/216.
+Evidence:`checkpoint-622-c-model-mesh-parts-focused-*-direct.*`. No effect, buffer, Model, mesh,
+graphics device, renderer, draw call, visual result or project-built execution is claimed.
+ModelMeshPart resources plus ModelMesh drawing and collections are next.
