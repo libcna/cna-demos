@@ -7217,3 +7217,20 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-783-media-queue-end-*` and `/tmp/checkpoint-783-coverage.md`. No acoustic
 quality, exact callback-latency, screenshot or manual inspection is claimed. Exercise Add/Clear and
 the active-index setter on a separate scratch MediaQueue next.
+
+## Focused784-MediaQueue-owned-mutation
+
+The same `media.media_player.queue_and_repeat` retains its fifteen transport controls and adds three
+on a separate local `MediaQueue`. Construction exposes count zero, index -1 and null ActiveSong.
+Two public Add calls transfer ordered Falling/Rising records; setting ActiveSongIndex to one makes
+ActiveSong equal the second indexed object. Clear then releases both owned records and restores all
+three empty-state observations. The live MediaPlayer queue is never mutated through these CNAEXT
+helpers.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass18/18 controls with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-784-media-queue-mutation-*` and `/tmp/checkpoint-784-coverage.md`. No
+acoustic quality, screenshot or manual inspection is claimed. Add Volume boundary clamping and
+correct the mute check's state-only wording next.

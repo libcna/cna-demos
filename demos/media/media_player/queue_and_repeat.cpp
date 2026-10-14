@@ -141,6 +141,22 @@ namespace
                       Active() == "Alternate Rising",
                   "the replacement queue keeps its copied entries after the caller collection is destroyed");
 
+        MediaQueue scratch;
+        ctx.Check(scratch.getCountProperty() == 0 && scratch.getActiveSongIndexProperty() == -1 &&
+                      scratch.getActiveSongProperty() == nullptr,
+                  "a standalone MediaQueue starts empty with no active entry");
+        scratch.Add(Song::FromUri("Scratch Falling", TitleLocation::Path() + "/assets/music/falling.wav"));
+        scratch.Add(Song::FromUri("Scratch Rising", TitleLocation::Path() + "/assets/music/rising.wav"));
+        scratch.setActiveSongIndexProperty(1);
+        ctx.Check(scratch.getCountProperty() == 2 && scratch.getActiveSongProperty() == scratch[1] &&
+                      scratch[0]->getNameProperty() == "Scratch Falling" &&
+                      scratch[1]->getNameProperty() == "Scratch Rising",
+                  "Add transfers two ordered songs and the active-index setter selects the second");
+        scratch.Clear();
+        ctx.Check(scratch.getCountProperty() == 0 && scratch.getActiveSongIndexProperty() == -1 &&
+                      scratch.getActiveSongProperty() == nullptr,
+                  "Clear releases every owned song and restores the empty active state");
+
         MediaPlayer::Stop();
         FrameworkDispatcher::Update();
     }
@@ -151,10 +167,11 @@ CNA_DEMOS_CONSOLE(QueueAndRepeat, {
     .title = "Playlists and repeat",
     .description = "Plays and replaces SongCollections from default and nonzero starting entries, walks the MediaPlayer "
                    "Queue with MoveNext and MovePrevious, and shows IsRepeating wrapping around the ends "
-                   "(IsShuffled for random order).",
+                   "(IsShuffled for random order); a separate queue shows explicit Add, selection and Clear.",
     .apis = {"MediaPlayer::Play", "MediaPlayer::Queue", "MediaPlayer::MoveNext", "MediaPlayer::MovePrevious",
              "MediaPlayer::IsRepeating", "MediaPlayer::IsShuffled", "MediaQueue::ActiveSong",
-             "MediaQueue::ActiveSongIndex", "MediaQueue::Count", "MediaQueue::Item", "SongCollection"},
+             "MediaQueue::ActiveSongIndex", "MediaQueue::Count", "MediaQueue::Item", "MediaQueue::MediaQueue",
+             "MediaQueue::Add", "MediaQueue::Clear", "SongCollection"},
     .tags = {"media", "music", "playlist", "queue", "repeat", "shuffle"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"music/rising.wav", "music/falling.wav"},

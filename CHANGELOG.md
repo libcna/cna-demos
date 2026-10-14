@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the MediaQueue mutation workflow on an isolated queue: empty construction, ordered
+  ownership through Add, explicit active-index selection and Clear restoring the empty state.
 - Added bounded automatic MediaPlayer queue progression: completion advances from the first Song
   to the second, then the final nonrepeating entry stops without wrapping or changing its index.
 - Deepened MediaPlayer event coverage with exact deferred active-song/state ordering, pre-pump
