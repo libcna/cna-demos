@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended SoundEffect FromStream with current-position consumption, decoded lifetime beyond the
+  source stream, and uniform empty/non-audio/truncated NotSupportedException handling.
 - Deepened raw SoundEffect PCM construction with a nonzero aligned window, XNA helper rounding and
   whole-frame sizing, invalid-format zeros, and distinct range versus format exceptions.
 - Distinguished SoundEffect fire-and-forget behavior for clamped pitch, rejected pan and disposed

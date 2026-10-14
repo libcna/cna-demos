@@ -7511,3 +7511,19 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-801-audio-pcm-contracts-*` and `/tmp/checkpoint-801-coverage.md`. No decoded
 sample equality, audible quality or listening result is claimed. Audit SoundEffect FromStream
 malformed-input and ownership behavior next.
+
+## Focused802-SoundEffect-FromStream-boundaries
+
+`audio.sound_effect.from_stream` grows from six to eight controls. Its original file stream still
+produces the exact half-second unnamed effect, accepts a caller name and plays to bounded natural
+completion. A prefixed in-memory stream is positioned at the WAV start; the returned unique_ptr
+retains its decoded duration after the source stream is destroyed. Empty, non-audio and half-
+truncated WAV streams each throw NotSupportedException, with unexpected raw returns owned safely.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass8/8 with empty stderr; stdout is identical after
+normalizing only the measured completion time. The warning-free incremental build uses at most
+three jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated
+runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C
+routes. Evidence:`/tmp/checkpoint-802-audio-from-stream-*` and `/tmp/checkpoint-802-coverage.md`. No
+arbitrary stream implementation, complete WAV-codec/chunk or audible-quality claim is made.
+Complete the loop-region invalid start/length matrix next.

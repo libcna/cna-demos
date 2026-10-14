@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-801 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-802 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1788,9 +1788,11 @@ MasterVolume now covers exact endpoints, finite/NaN refusal, preservation and pr
 restoration in `play_parameters`. The same demo now distinguishes Play's finite pitch clamp, pan
 refusal, disposed false return and disposed CreateInstance exception. Raw PCM now covers nonzero
 windows, XNA-specific helper arithmetic, invalid-format zeros and range/format exception classes.
-Audit SoundEffect FromStream malformed-input and ownership behavior next, then continue through the
-remaining audio behavior rows. Do not add isolated getter demos. Build with at most three compile
-jobs and keep focused evidence current.
+SoundEffect FromStream now covers current-position consumption, result lifetime after stream
+destruction and empty/non-audio/truncated NotSupported refusals. Complete the loop-region invalid
+start/length matrix in the existing authored-loop workflow next, then continue through the remaining
+audio behavior rows. Do not add isolated getter demos. Build with at most three compile jobs and
+keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2704,6 +2706,20 @@ The warning-free incremental build uses at most three jobs; metadata and coverag
 Evidence:`/tmp/checkpoint-801-audio-pcm-contracts-*`. No decoded sample equality, audible quality or
 listening result is claimed. Audit SoundEffect FromStream malformed-input and ownership behavior
 next.
+
+### Focused802-SoundEffect-FromStream-boundaries
+
+`audio.sound_effect.from_stream` grows from six to eight controls. Its original file stream still
+produces the exact half-second unnamed effect, accepts a caller name and plays to bounded natural
+completion. A prefixed in-memory stream is positioned at the WAV start; the returned unique_ptr
+retains its decoded duration after the source stream is destroyed. Empty, non-audio and half-
+truncated WAV streams each throw NotSupportedException, with unexpected raw returns owned safely.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass8/8 with empty stderr; stdout is identical after
+normalizing only the measured completion time. The warning-free incremental build uses at most
+three jobs; metadata and coverage remain unchanged. Evidence:`/tmp/checkpoint-802-audio-from-stream-*`.
+No arbitrary stream implementation, complete WAV-codec/chunk or audible-quality claim is made.
+Complete the loop-region invalid start/length matrix next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
