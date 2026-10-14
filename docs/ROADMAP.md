@@ -4394,3 +4394,17 @@ validation self-tests pass. Staged metadata reaches2744/3205 and `cnb.h` reaches
 `checkpoint-616-c-cnb-media-metadata-focused-*-direct.*`. No media file, ContentManager, decoder,
 audio/video device, playback, rendering or project-built execution is claimed. Curve and
 AnimationClip shared-runtime codecs are next.
+
+## Focused617-C-CNB-Curve-AnimationClip-and-keyframes
+
+`c_api.content.cnb_curve_animation` adds all11 Curve, AnimationClip and shared byte-format routes
+in29 renderer-free controls. A two-key Curve with distinct loops, tangents and continuities encodes
+and decodes into the ordinary runtime handle. A two-track scene-node clip owns copied borrowed
+keys, reports exact shape/target space, rejects Count, copies rows atomically and remains live after
+its document is released. The common keyframe writer emits exactly the published48 bytes, the
+reader restores every component and rejects truncation, and both write/read sides guard times no
+`TimeSpan` can represent without changing prior state or output. Both renderer-labelled direct
+runs are byte-identical with empty stderr; strict C99, metadata compilation, diff checks and
+validation self-tests pass. Staged metadata reaches2755/3205 and `cnb.h` reaches244/272. Evidence:
+`checkpoint-617-c-cnb-curve-animation-focused-*-direct.*`. No model, animation player, graphics
+device, renderer, drawing or project-built execution is claimed. The loader registry is next.
