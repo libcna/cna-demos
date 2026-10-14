@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MS-PL
 // SoundEffect::Play(volume, pitch, pan) and the master volume: fire-and-forget sounds with settings.
+#include <limits>
 #include <optional>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundEffect.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Audio;
@@ -27,15 +29,35 @@ namespace
         ctx.Check(previous == 1.0f, "MasterVolume starts at 1");
         SoundEffect::setMasterVolumeProperty(0.5f);
         ctx.Check(SoundEffect::getMasterVolumeProperty() == 0.5f, "MasterVolume can be lowered for all sounds");
+        SoundEffect::setMasterVolumeProperty(0.0f);
+        ctx.Check(SoundEffect::getMasterVolumeProperty() == 0.0f, "MasterVolume accepts the silent lower boundary");
+        SoundEffect::setMasterVolumeProperty(1.0f);
+        ctx.Check(SoundEffect::getMasterVolumeProperty() == 1.0f, "MasterVolume accepts the full upper boundary");
+
+        SoundEffect::setMasterVolumeProperty(0.5f);
+        bool highRejected = false;
+        bool negativeRejected = false;
+        bool nanRejected = false;
+        try { SoundEffect::setMasterVolumeProperty(1.5f); }
+        catch (const System::ArgumentOutOfRangeException&) { highRejected = true; }
+        try { SoundEffect::setMasterVolumeProperty(-0.1f); }
+        catch (const System::ArgumentOutOfRangeException&) { negativeRejected = true; }
+        try { SoundEffect::setMasterVolumeProperty(std::numeric_limits<float>::quiet_NaN()); }
+        catch (const System::ArgumentOutOfRangeException&) { nanRejected = true; }
+        ctx.Check(highRejected && negativeRejected && nanRejected &&
+                      SoundEffect::getMasterVolumeProperty() == 0.5f,
+                  "finite and NaN range failures preserve the prior MasterVolume");
         SoundEffect::setMasterVolumeProperty(previous);
+        ctx.Check(SoundEffect::getMasterVolumeProperty() == previous,
+                  "the demo restores the original process-global MasterVolume");
     }
 }
 
 CNA_DEMOS_CONSOLE(PlayParameters, {
     .id = "audio.sound_effect.play_parameters",
     .title = "Play with volume, pitch and pan",
-    .description = "Plays one sound three times with SoundEffect::Play(volume, pitch, pan) -- left, centre and "
-                   "right, at three pitches -- and changes SoundEffect::MasterVolume.",
+    .description = "Plays one sound with three volume/pitch/pan combinations, then checks exact MasterVolume "
+                   "boundaries, atomic range failures and process-global restoration.",
     .apis = {"SoundEffect::Play", "SoundEffect::MasterVolume", "ContentManager::ContentManager"},
     .tags = {"audio", "volume", "pitch", "pan"},
     .needs = CnaDemos::Need::Audio,

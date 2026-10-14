@@ -7463,3 +7463,19 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-798-audio-emitter-doppler-*` and `/tmp/checkpoint-798-coverage.md`. These
 are property/range observations; no audible Doppler effect or listening result is claimed. Audit
 SoundEffect MasterVolume endpoint and refusal behavior next.
+
+## Focused799-SoundEffect-MasterVolume-boundaries
+
+`audio.sound_effect.play_parameters` grows from five to nine controls while retaining its three
+successful fire-and-forget Play calls. MasterVolume still starts at and restores one, round-trips
+one-half, accepts exact zero and one, and rejects high, negative and NaN inputs without changing the
+last valid one-half value. The demo explicitly restores and rechecks the original process-global
+setting.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass9/9 with byte-identical stdout and empty stderr.
+The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-799-audio-master-volume-*` and `/tmp/checkpoint-799-coverage.md`. These are
+return/property/range observations; no audible gain or listening result is claimed. Audit the Play
+overload's pitch clamp, pan refusal and disposed return next.

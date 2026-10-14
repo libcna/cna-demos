@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed SoundEffect MasterVolume scalar contracts with exact endpoints, finite/NaN refusals,
+  atomic preservation and explicit restoration of the process-global value.
 - Completed AudioEmitter DopplerScale state boundaries with positive and zero acceptance, negative
   refusal with preservation, and restoration before the existing spatial sweep.
 - Exercised Apply3D collection and pointer/count overloads with two listeners plus distinct empty,
