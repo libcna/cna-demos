@@ -5,11 +5,14 @@ CNA_DEMOS_STANDALONE({
     .id = "net.network_session.find_and_join",
     .title = "Find and join a System Link game",
     .description = "Two processes on one machine: the first hosts a System Link session, the second finds it with "
-                   "NetworkSession::Find (host gamertag, open slots, QualityOfService), joins it and leaves; the "
-                   "host sees GamerJoined and GamerLeft.",
+                   "NetworkSession::Find (host gamertag, public/private slots, sparse properties and "
+                   "QualityOfService), joins it, disposes the search results and leaves; the host sees GamerJoined "
+                   "and GamerLeft.",
     .apis = {"NetworkSession::Find", "NetworkSession::Join", "AvailableNetworkSessionCollection",
-             "AvailableNetworkSessionCollection::Dispose", "AvailableNetworkSession::HostGamertag",
+             "AvailableNetworkSessionCollection::Dispose", "AvailableNetworkSessionCollection::IsDisposed",
+             "AvailableNetworkSession::HostGamertag",
              "AvailableNetworkSession::CurrentGamerCount", "AvailableNetworkSession::OpenPublicGamerSlots",
+             "AvailableNetworkSession::OpenPrivateGamerSlots", "AvailableNetworkSession::SessionProperties",
              "AvailableNetworkSession::QualityOfService", "QualityOfService::AverageRoundtripTime",
              "QualityOfService::MinimumRoundtripTime", "QualityOfService::IsAvailable", "NetworkSession::GamerLeft",
              "GamerLeftEventArgs::Gamer", "NetworkSession::GamerJoined", "NetworkSession::Create",

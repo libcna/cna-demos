@@ -45,6 +45,7 @@
 #include "Microsoft/Xna/Framework/Net/NetworkSessionType.hpp"
 #include "Microsoft/Xna/Framework/Net/QualityOfService.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::GamerServices;
@@ -183,8 +184,13 @@ namespace
             if (!session_)
             {
                 // A System Link session is visible to every machine on the local network: up to
-                // one local gamer here, two gamers in all.
-                session_.reset(NetworkSession::Create(NetworkSessionType::SystemLink, 1, 2));
+                // one local gamer here, three gamers in all. Reserve one private slot so the
+                // public listing has one joinable slot, and advertise two sparse lobby values.
+                NetworkSessionProperties advertised;
+                advertised[0] = 2026;
+                advertised[5] = -41;
+                session_.reset(NetworkSession::Create(
+                    NetworkSessionType::SystemLink, 1, 3, 1, std::move(advertised)));
                 joinedToken_ = session_->GamerJoined.Add([this](System::Object*, const GamerJoinedEventArgs& args) {
                     if (!args.getGamerProperty()->getIsLocalProperty())
                     {
@@ -256,7 +262,30 @@ namespace
                     report_.Check(available.getCurrentGamerCountProperty() == 1 &&
                                       available.getOpenPublicGamerSlotsProperty() == 1,
                           "the session holds its host and has one open slot");
+                    const NetworkSessionProperties& advertised = available.getSessionPropertiesProperty();
+                    report_.Check(available.getOpenPrivateGamerSlotsProperty() == 1 &&
+                                      available.getOpenPublicGamerSlotsProperty() == 1,
+                          "the discovered session advertises one private and one public slot");
+                    report_.Check(advertised.getCountProperty() == 8 && advertised.getItem(0) == 2026 &&
+                                      !advertised.getItem(1).has_value() && advertised.getItem(5) == -41,
+                          "the discovered session preserves both sparse advertised property values");
+                    report_.Check(!found.getIsDisposedProperty(),
+                                  "the search-result collection is live while its listing is joined");
+                    const AvailableNetworkSession stale = available;
                     session_.reset(NetworkSession::Join(&available));
+                    found.Dispose();
+                    found.Dispose();
+                    bool staleRefused = false;
+                    try
+                    {
+                        std::unique_ptr<NetworkSession> unused(NetworkSession::Join(&stale));
+                    }
+                    catch (const System::ObjectDisposedException&)
+                    {
+                        staleRefused = true;
+                    }
+                    report_.Check(found.getIsDisposedProperty() && found.getCountProperty() > 0 && staleRefused,
+                                  "collection disposal is idempotent, retains listings and makes their copies unjoinable");
                     report_.Log("joined");
                     report_.Check(!session_->getIsHostProperty(), "the joiner is not the host");
                     report_.Check(session_->getHostProperty() != nullptr &&

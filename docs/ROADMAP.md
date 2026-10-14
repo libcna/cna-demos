@@ -5661,3 +5661,18 @@ explicit-interface, platform or unavailable-toolchain artifacts. Evidence:`/tmp/
 and `/tmp/checkpoint-694-coverage.md`. Pixel checks used programmatic readback; no screenshot or
 visual inspection was performed. Continue with AvailableNetworkSession properties and collection
 lifetime next.
+
+## Focused695-available-session-properties-and-search-lifetime
+
+The two-process find/join workflow now advertises one private and one public slot plus two sparse
+session-property values. The joiner observes those exact public listing values, joins while the
+result collection is live, disposes the collection idempotently and proves a retained listing copy
+can no longer be joined while the established NetworkSession remains usable.
+
+SOFTWARE and OPENGLES3/X11 both pass all12 host/joiner controls with empty stderr; only the ordering
+of two concurrent departure log lines differs. The focused SOFTWARE CTest, metadata validation and
+validator self-tests pass. Temporary coverage moves2041->2044/2326 at632 demos,301/329 types and
+156/753 fields; Net moves76->79/127. Evidence:`/tmp/checkpoint-695-find-*` and
+`/tmp/checkpoint-695-coverage.md`. This is Linux local-network evidence; no second physical machine,
+screenshot or visual result is claimed. Continue with remote NetworkGamer departure/history,
+session identity and round-trip behavior next.

@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused694
-projects the632-demo staged catalog to2041/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused695
+projects the632-demo staged catalog to2044/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1379,10 +1379,12 @@ C++ range syntax. Input.Touch now likewise retains only six CLR enumerator artif
 Graphics audit is complete; its remaining56 entries are already dispositioned finalizers, protected
 OnApply hooks, explicit-interface aliases, collection enumerators, environment-only exception paths,
 EffectMaterial construction, DeviceLost and ModelMesh.Tag. Storage's three gaps are also dispositioned
-as CLR Finalize, an event with no CNA production raiser and the removed-device exception path. Continue
-the Net audit with AvailableNetworkSession.OpenPrivateGamerSlots, SessionProperties and collection
-lifetime in the existing two-process find/join workflow. Then continue with the next high-value behavior family,
-rebuilding, running both renderers where
+as CLR Finalize, an event with no CNA production raiser and the removed-device exception path.
+AvailableNetworkSession public/private capacity and sparse advertised properties are now covered,
+as is shared search-collection disposal and copied-listing refusal. Continue the Net audit with the
+remote NetworkGamer departure/history/session/round-trip behavior in the existing two-process
+find/join workflow, then session bandwidth counters and ready-state reset in their existing packet
+and game-flow workflows. Continue with the next high-value behavior family, rebuilding and running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
@@ -1390,7 +1392,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused694 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused695 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3413,6 +3415,24 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 programmatic readback; no screenshot or visual inspection was performed. Sibling CNA remained clean
 external `f698d0f548`; no CNA source was edited. Storage's three generated gaps are dispositioned by
 source audit; continue AvailableNetworkSession and collection lifetime next.
+
+Focused695 extends the two-process System Link find/join workflow with the last ordinary available-
+session members. The host reserves one private slot, leaves one public slot and advertises two sparse
+session values. The joiner observes both capacities and exact values, joins from a live result
+collection, disposes that collection twice and proves its retained copied listing now refuses Join
+with ObjectDisposedException while the joined session remains usable.
+
+SOFTWARE and OPENGLES3/X11 both pass all12 host/joiner controls with empty stderr. Their only stdout
+difference is nondeterministic ordering of concurrent host-left and joiner-left log lines. The
+focused SOFTWARE CTest passes; metadata validation is632/0 and the five validator self-tests pass.
+Temporary coverage moves2041->2044/2326 at632 demos,301/329 types and156/753 fields; Net moves
+76->79/127. Evidence:`/tmp/checkpoint-695-find-*` and `/tmp/checkpoint-695-coverage.md`. Runner
+SHA-256 is `3cc513ec1930448c93b86b23fc4e164131a4f7bef3b7da4c064d6835ac729561`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. This is Linux local UDP
+discovery/session evidence; no second physical machine, screenshot or visual result is claimed.
+Sibling CNA remained clean external `f698d0f548`; no CNA source was edited. Continue with remote
+NetworkGamer departure/history/session/round-trip behavior next.
 
 ## 15. Assumptions the next session must know
 

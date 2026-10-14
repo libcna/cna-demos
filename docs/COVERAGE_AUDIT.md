@@ -103,7 +103,7 @@ Decisions:
 | Type | Decision |
 |---|---|
 | GameStartedEventArgs, GameEndedEventArgs | shown in `net.network_session.game_flow` |
-| AvailableNetworkSession, AvailableNetworkSessionCollection, QualityOfService | demo: `net.network_session.find_and_join` (two processes) |
+| AvailableNetworkSession, AvailableNetworkSessionCollection, QualityOfService | demo: `net.network_session.find_and_join` (two processes). The listing exposes exact public/private capacity and sparse advertised properties; disposal is idempotent, retains readable listings and prevents Join through both original and copied entries. |
 | NetworkSessionJoinError, NetworkSessionJoinException | demo: `net.network_session.join_refused` (a game in progress; expected failure, CNA-DEMOS-ISSUE-032). A full session cannot be shown: `Find` lists only sessions with room for the searcher's gamers |
 | GamerLeftEventArgs | demo: `net.network_session.find_and_join`, `net.network_session.host_leaves` |
 | HostChangedEventArgs, NetworkSessionEndReason, NetworkSessionEndedEventArgs | demo: `net.network_session.host_leaves` (two processes) |
@@ -1176,6 +1176,22 @@ quality or audible-quality claim was made. Evidence: `/tmp/checkpoint-639-video-
 | SimulatedLatency, SimulatedPacketLoss, SendDataOptions::None/Reliable | Existing two-process demo now uses 24 authored packet pairs per phase, separate baseline/delay/full-outage phases, and a recovery interval with loss disabled while the sender stays connected. Checks use exact sequence counts, not the span between first/last arrivals, which hid missing endpoints. The latency phase checks a lower bound on every arrival and full reliable delivery; scheduling can add extra delay. The outage checks zero unreliable arrivals and exposes ISSUE-030 as zero reliable deliveries even after recovery. |
 | Random loss probabilities, unsimulated unreliable delivery | The old >90% baseline and 50..90% simulated-delivery gates were empirical assumptions, not guarantees of SendDataOptions::None. A full semantic-409 SOFTWARE run observed 79% baseline delivery; a follow-up observed 42% under 0.3 simulated loss. Those raw logs remain archived. Arbitrary probability sampling is now observational/deferred; do not infer statistical distribution coverage from the deterministic endpoint test. |
 | Test coordination, deadlines and platforms | Local temporary marker files control phase boundaries independently of the impaired game packets. Wall-clock pacing avoids fixed-step catch-up bursts; both processes pump the session while settling and recovering. Initial 466 SOFTWARE hit the demo's single 20-second aggregate deadline after outage recovery began, before Evaluate; the exact raw comparison rejected that substituted failure instead of accepting its known-issue status. The unchanged isolated demo retained all five original child checks on both selections, as does the repaired version with a 20-second watchdog per finite startup/burst/recovery phase. Resets occur only on real phase transitions, and sign-in cannot bypass the watchdog. All 24 packet pairs, 20 ms pacing, 600 ms settling, 1-second recovery and delivery/latency predicates are unchanged. Both repaired focused stderr streams are empty; the affected CTest passes its expected-failure contract. Full466-timing preserves all five host checks and all37/41 old suite failures. A controlled native SOFTWARE regression adds identical8-second delays at the three host phase transitions: the original sender times out at22.88s and the host evaluates incomplete phases; the repaired37.41s exchange retains all five checks with only ISSUE-030. Both host/child renderer selections are explicit, and selected project binary hashes remain unchanged. This is a demo orchestration fix, not new CNA delivery evidence or a claim of native stalled-peer injection. This is Linux loopback validation, not wide-area QoS or genuine-XNA runtime evidence. Ordinary transport/network-session lifecycle and voice remain separate behaviors. |
+
+### Available sessions and search-result lifetime
+
+`net.network_session.find_and_join` now creates its real System Link host with three total slots,
+one reserved private slot and sparse advertised values in properties0 and5. Both requested
+renderers pass exact discovery checks for one occupied gamer, one open public slot, one open private
+slot and the complete eight-value property shape. The joiner observes `IsDisposed=false`, joins,
+then disposes the result collection twice. CNA intentionally leaves the read-only listing storage
+visible after disposal, but the shared disposal token also reaches a previously copied listing;
+joining that copy throws ObjectDisposedException while the already established session continues.
+
+This credits `AvailableNetworkSession::OpenPrivateGamerSlots`, `SessionProperties` and
+`AvailableNetworkSessionCollection::IsDisposed` as one coherent lobby/lifetime behavior. Direct
+SOFTWARE and OPENGLES3/X11 executions pass all12 host/joiner controls with empty stderr; the focused
+SOFTWARE CTest passes. Evidence:`/tmp/checkpoint-695-find-*`. Discovery uses Linux local UDP on one
+machine; no service directory, remote host, screenshot or visual result is claimed.
 
 ### C ABI selected diagnostics, ownership, dispatch and math
 
