@@ -1361,18 +1361,19 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused684
-projects the632-demo staged catalog to1961/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused685
+projects the632-demo staged catalog to1966/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
 machinery. The stock-effect families now retain only dispositioned protected OnApply hooks and one
 SkinnedEffect explicit-interface inventory artifact; real pass application reaches the hooks and
 focused671 proved the override dispatch contract. RenderTargetCube and VertexBufferBinding now have
-no member gap. GraphicsAdapter and the complete PackedVector namespace now have no member gap.
-Continue with PacketReader::ReadDouble, ReadMatrix, ReadQuaternion, ReadVector2 and ReadVector4 in
-the existing coherent packet transport workflow; its matching PacketWriter overloads are already
-demonstrated. Then continue with the next high-value behavior family,
+no member gap. GraphicsAdapter, the complete PackedVector namespace and PacketReader now have no
+member gap. Continue with the Design type-converter member audit in the four existing converter
+workflows, starting with the concrete converter constructors and missing ConvertFrom/ConvertTo
+directions, and add CreateInstance only where the public property-editing contract is meaningful.
+Then continue with the next high-value behavior family,
 rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1381,7 +1382,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused684 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused685 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3214,6 +3215,25 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No rendering, screenshot or
 visual inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was
 edited. Continue with the five remaining PacketReader typed reads next.
+
+Focused685 extends `net.packet.send_and_receive` to close PacketReader's final five member gaps:
+ReadDouble, ReadVector2, ReadVector4, ReadQuaternion and ReadMatrix. A real local System Link packet
+now carries scalar, Color, vector, quaternion and matrix state in one fixed order. The receiver
+requires every value to round-trip exactly and consumes the full141-byte packet. Its established
+sender identity, writer rewind and arrival controls remain intact.
+
+SOFTWARE and OPENGLES3 pass6/6 with two automatic local profiles, byte-identical stdout and empty
+stderr. The focused SOFTWARE CTest initially failed because the sandbox refused ENet host creation;
+the authorized rerun with the same profiles passes. Temporary coverage moves1961->1966/2326 at632
+demos,301/329 types and156/753 fields; PacketReader has no remaining member gap. Evidence:
+`/tmp/checkpoint-685-*` and `/tmp/checkpoint-685-coverage.md`. Runner SHA-256 is
+`70f3159fecf292f169fde38f2a9e97b4fde23492f02f25cafa9efecc9707edcc`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No screenshot or visual
+inspection was used. The passing transport also exposes stale CNA public documentation and a stale
+bundled example for the already fixed Color round trip; this is recorded as CNA-DEMOS-ISSUE-084.
+Sibling CNA remained clean external `f698d0f548`; no CNA source was edited. Continue with the Design
+type-converter member audit next.
 
 ## 15. Assumptions the next session must know
 

@@ -15,6 +15,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-084 -- PacketReader documentation and example still describe the fixed Color mismatch
+
+- **Area/API:** `PacketReader::ReadColor`, `PacketWriter::Write(Color)`, the public
+  `PacketReader.hpp` contract and `modules/net/examples/demo_packet_roundtrip`.
+- **Reproduction:** run `net.packet.send_and_receive` with two local profiles. The demo writes
+  `Color::Orange` through PacketWriter, sends the packet through a real local System Link session
+  and reads it through PacketReader before reading the following double, vectors, quaternion and
+  matrix. Compare this with the public header and the bundled roundtrip example.
+- **Observed:** the implementation reads four byte channels and the complete 141-byte packet
+  round-trips exactly on SOFTWARE and OPENGLES3. CNA's public header still says ReadColor reads four
+  floats, is not the inverse of Write(Color), and preserves that behavior for fidelity. The bundled
+  example likewise expects the former 4-byte/16-byte mismatch and treats its exception as a quirk.
+  CNA's own `BINDFIX-022` record says that mismatch was fixed.
+- **Expected:** public documentation and the bundled example should describe and exercise the
+  current inverse four-byte behavior, so users are not told to avoid a working API or to expect an
+  exception that no longer occurs.
+- **Scope/status:** open documentation/example defect against clean external CNA `f698d0f548`.
+  Runtime color and every following typed read pass; no runtime knownIssue marker is needed. Both
+  renderer runs have byte-identical stdout and empty stderr. Evidence:`/tmp/checkpoint-685-*`. No
+  CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-083 -- Adapter back-buffer query reports zero samples before a multisampled device is created
 
 - **Area/API:** `GraphicsAdapter::QueryBackBufferFormat`,

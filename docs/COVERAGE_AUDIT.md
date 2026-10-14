@@ -471,6 +471,22 @@ all six focused SOFTWARE CTests pass. Temporary coverage moves1909->1961/2326 an
 reaches164/164 members. Evidence:`/tmp/checkpoint-684-*` and `/tmp/checkpoint-684-coverage.md`.
 These are CPU value tests; no renderer, vertex fetch, screenshot or visual result is claimed.
 
+### Complete PacketReader typed payloads
+
+`net.packet.send_and_receive` now places a double, Vector2, Vector4, Quaternion and Matrix after its
+established position, scalar, string and Color fields. A real local System Link hop carries the
+141-byte packet between two local signed-in gamers. The receiver reads every field in order,
+requires exact equality, verifies the sender and consumes the full packet. This closes the five
+remaining PacketReader typed-read members while retaining the real PacketWriter, SendData and
+ReceiveData path.
+
+Focused685 passes6/6 on SOFTWARE and OPENGLES3 with byte-identical stdout and empty stderr. The
+focused SOFTWARE CTest passes outside the socket-restricted sandbox; its first sandboxed attempt
+failed at ENet host creation before demo behavior. Temporary coverage moves1961->1966/2326.
+Evidence:`/tmp/checkpoint-685-*` and `/tmp/checkpoint-685-coverage.md`. The current four-byte Color
+round trip also contradicts stale CNA header/example text; CNA-DEMOS-ISSUE-084 records that
+documentation defect. No screenshot or visual inspection was used.
+
 ### Graphics-state lifetime and complete sampler presets
 
 | Members / behavior | Decision and evidence |

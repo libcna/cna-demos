@@ -15,6 +15,7 @@
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteFont.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteSortMode.hpp"
+#include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Net/LocalNetworkGamer.hpp"
 #include "Microsoft/Xna/Framework/Net/NetworkGamer.hpp"
 #include "Microsoft/Xna/Framework/Net/NetworkSession.hpp"
@@ -22,8 +23,10 @@
 #include "Microsoft/Xna/Framework/Net/PacketReader.hpp"
 #include "Microsoft/Xna/Framework/Net/PacketWriter.hpp"
 #include "Microsoft/Xna/Framework/Net/SendDataOptions.hpp"
+#include "Microsoft/Xna/Framework/Quaternion.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
+#include "Microsoft/Xna/Framework/Vector4.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::GamerServices;
@@ -94,6 +97,11 @@ namespace
                 writer.Write(42);                         // score
                 writer.Write(std::string("jump"));        // last action
                 writer.Write(Color::Orange);              // team colour
+                writer.Write(123456.25);                  // authoritative simulation time
+                writer.Write(Vector2(-2.5f, 0.75f));      // planar velocity
+                writer.Write(Vector4(0.25f, 0.5f, 0.75f, 1.0f)); // material tint
+                writer.Write(Quaternion(0.0f, 0.0f, 0.0f, 1.0f)); // orientation
+                writer.Write(Matrix::CreateTranslation(10.0f, 20.0f, -30.0f)); // world transform
                 ctx.Print("packet: {} bytes", writer.getLengthProperty());
                 // To one gamer, reliably and in order (SendDataOptions say what the game needs).
                 sender->SendData(writer, SendDataOptions::ReliableInOrder, receiver);
@@ -113,6 +121,11 @@ namespace
                 const int score = reader.ReadInt32();
                 const std::string action = reader.ReadString();
                 const Color team = reader.ReadColor();
+                const double simulationTime = reader.ReadDouble();
+                const Vector2 velocity = reader.ReadVector2();
+                const Vector4 tint = reader.ReadVector4();
+                const Quaternion orientation = reader.ReadQuaternion();
+                const Matrix world = reader.ReadMatrix();
                 received_ = {from->getGamertagProperty() + " -> " + receiver->getGamertagProperty() + ", " +
                                  std::to_string(bytes) + " bytes",
                              "position (" + std::to_string(position.X) + ", " + std::to_string(position.Y) + ", " +
@@ -127,6 +140,11 @@ namespace
                 ctx.Check(position == Vector3(12.5f, 0.0f, -3.25f) && heading == 1.5f && score == 42 &&
                               action == "jump" && team == Color::Orange,
                           "every value reads back exactly, in the order written");
+                ctx.Check(simulationTime == 123456.25 && velocity == Vector2(-2.5f, 0.75f) &&
+                              tint == Vector4(0.25f, 0.5f, 0.75f, 1.0f) &&
+                              orientation == Quaternion(0.0f, 0.0f, 0.0f, 1.0f) &&
+                              world == Matrix::CreateTranslation(10.0f, 20.0f, -30.0f),
+                          "double, Vector2, Vector4, Quaternion and Matrix payloads round-trip exactly");
                 ctx.Check(reader.getPositionProperty() == reader.getLengthProperty(), "the whole packet was read");
                 teamColor_ = team;
             }
@@ -176,13 +194,14 @@ CNA_DEMOS_GAME(SendAndReceiveDemo, {
     .id = "net.packet.send_and_receive",
     .title = "Sending game data",
     .description = "In a System Link session of two local players, the first writes a state packet with "
-                   "PacketWriter (position, heading, score, action, team colour) and sends it reliably in order to "
+                   "PacketWriter (scalar, colour, vector, quaternion and matrix state) and sends it reliably in order to "
                    "the second, who receives it with ReceiveData and reads the values back with PacketReader.",
     .apis = {"PacketWriter::PacketWriter", "PacketWriter::Write", "PacketWriter::Length", "PacketWriter::Position",
              "LocalNetworkGamer::SendData", "LocalNetworkGamer::ReceiveData", "LocalNetworkGamer::IsDataAvailable",
              "PacketReader::PacketReader", "PacketReader::ReadVector3", "PacketReader::ReadColor",
              "PacketReader::Position", "PacketReader::Length", "SendDataOptions", "NetworkSessionType",
-             "PacketReader::ReadSingle"},
+             "PacketReader::ReadSingle", "PacketReader::ReadDouble", "PacketReader::ReadVector2",
+             "PacketReader::ReadVector4", "PacketReader::ReadQuaternion", "PacketReader::ReadMatrix"},
     .tags = {"net", "packet", "serialization", "system-link", "multiplayer"},
     .needs = CnaDemos::Need::Network,
     .frames = 30,

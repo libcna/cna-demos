@@ -5504,3 +5504,19 @@ byte-identical with empty stderr; all six focused SOFTWARE CTests pass. Temporar
 1909->1961/2326 at632 demos,301/329 types and156/753 fields; PackedVector reaches164/164 members.
 Evidence:`/tmp/checkpoint-684-*` and `/tmp/checkpoint-684-coverage.md`. No rendering, screenshot or
 visual inspection was used. Continue the five remaining PacketReader typed reads next.
+
+## Focused685-complete-packet-reader-typed-payloads
+
+The existing real System Link packet workflow closes PacketReader's final five member gaps. One
+ordered141-byte packet now carries a double, Vector2, Vector4, Quaternion and Matrix after the
+established position, scalar, string and Color fields. The receiver requires every value to
+round-trip exactly, verifies the sender and consumes the whole packet; writer rewind and arrival
+controls remain intact.
+
+SOFTWARE and OPENGLES3 pass6/6 with two automatic local profiles, byte-identical stdout and empty
+stderr. The focused SOFTWARE CTest passes outside the socket-restricted sandbox; its first sandboxed
+attempt failed at ENet host creation before demo behavior. Temporary coverage moves1961->1966/2326
+at632 demos,301/329 types and156/753 fields. Evidence:`/tmp/checkpoint-685-*` and
+`/tmp/checkpoint-685-coverage.md`. The passing four-byte Color round trip exposes stale CNA public
+header and example claims, recorded as CNA-DEMOS-ISSUE-084. No screenshot or visual inspection was
+used. Continue the Design type-converter member audit next.
