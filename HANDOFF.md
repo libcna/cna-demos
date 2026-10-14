@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-775 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-776 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1753,8 +1753,10 @@ writer now covers identity/lifecycle, Windows Phone/HiDef context, compression r
 typed/raw nested writer dispatch, dynamic reference dispatch, shared-resource identity and external
 path normalization. Audit the remaining custom writer null/refusal contracts and ContentCompiler
 inspection/freeze behavior against existing demos before adding controls. Ordinary, shared and
-external nulls now round-trip too; raw-null and missing/foreign writer refusals are next. Do not add
-isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
+external nulls now round-trip too; raw-null and missing/foreign writer refusals are covered. Audit
+ContentCompiler inventory/freeze behavior next, then disposition implementation-facing registry and
+active-writer helpers. Do not add isolated getter demos. Build with at most three compile jobs and
+keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2247,6 +2249,25 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-775-xnb-null-*` and
 `/tmp/checkpoint-775-coverage.md`. No rendering, screenshot or manual inspection was used. Audit
 raw-null and missing/foreign writer refusals next, then disposition ContentCompiler inspection and
 freeze members against the existing registry/compiler workflows.
+
+### Focused776 custom XNB writer refusals
+
+Three focused public ContentCompiler::Compile probes now exercise writer failures after the main
+source-pipeline workflow. WriteRawObject rejects a null reference because a raw payload has no type
+marker. Base-typed WriteObject refuses a RareBadgeSource when only the base Badge writer is
+registered, naming both dynamic and declared types. The explicit-writer overload refuses a valid
+Vital writer obtained from another compiler before it emits the value. Each probe keeps the public
+ContentWriter call visible and checks its actionable PipelineException diagnostic.
+
+SOFTWARE and OPENGLES3/Xvfb each pass19/20 controls and fail only established ISSUE-090; stdout and
+the intentional compiler/debug diagnostics match after normalizing the private temporary path. The
+exact expected-failure SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, known-issue demos remain42, validator/checkpoint self-tests pass5/5
+and4/4, and generated runtime coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-776-xnb-refusals-*` and
+`/tmp/checkpoint-776-coverage.md`. No rendering, screenshot or manual inspection was used. Audit
+ContentCompiler inventory/freeze behavior next, then disposition implementation-facing registry
+and active-writer helpers.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

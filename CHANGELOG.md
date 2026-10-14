@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added direct custom XNB compiler refusals for raw null references, unregistered dynamic types and
+  explicit nested writers owned by another compiler.
 - Added custom XNB null-reference coverage for ordinary objects, shared resources and external
   references, including the absence of deferred fixups.
 - Extended the real custom XNB graph with derived reference dispatch, an independent inline copy,

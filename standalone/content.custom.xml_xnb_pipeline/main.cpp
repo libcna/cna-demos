@@ -202,6 +202,39 @@ namespace
     private:
         std::shared_ptr<Compiler::ContentTypeWriterBase> nested_;
     };
+    enum class WriterProbeMode { RawNull, MissingDynamic, ForeignWriter };
+    struct WriterProbeSource : System::Object
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.WriterProbeSource";
+        const std::string& GetTypeName() const override
+        {
+            static const std::string name(XnaTypeName); return name;
+        }
+        WriterProbeMode mode = WriterProbeMode::RawNull;
+        std::shared_ptr<BadgeSource> badge;
+    };
+    std::shared_ptr<Compiler::ContentTypeWriterBase> foreignVitalWriter;
+    class WriterProbeWriter final : public Compiler::ContentTypeWriter<WriterProbeSource>
+    {
+    public:
+        std::string GetRuntimeReader(Xna::TargetPlatform) const override { return "CnaDemos.UnusedProbeReader"; }
+    protected:
+        void Write(Compiler::ContentWriter& output, const TargetCarrier& value) override
+        {
+            switch (value->mode)
+            {
+                case WriterProbeMode::RawNull:
+                    output.WriteRawObject<BadgeSource>(nullptr);
+                    break;
+                case WriterProbeMode::MissingDynamic:
+                    output.WriteObject<BadgeSource>(value->badge);
+                    break;
+                case WriterProbeMode::ForeignWriter:
+                    output.WriteObject<Vital>(Vital{5}, *foreignVitalWriter);
+                    break;
+            }
+        }
+    };
     class VitalReader final : public Runtime::ContentTypeReader<Vital>
     {
     public:
@@ -402,6 +435,40 @@ int main()
                   "the arbitrary XML object route refuses CNB without inventing a game-specific CNB schema");
         }
         check(!std::filesystem::exists(directory), "the demo removes its private XML sources and compiler outputs");
+
+        const auto compileProbe = [](const WriterProbeMode mode) {
+            std::unique_ptr<Compiler::ContentCompiler> foreignCompiler;
+            if (mode == WriterProbeMode::ForeignWriter)
+            {
+                foreignCompiler = std::make_unique<Compiler::ContentCompiler>();
+                foreignVitalWriter = foreignCompiler->AddTypeWriter<VitalWriter>();
+            }
+            Compiler::ContentCompiler compiler;
+            (void)compiler.AddTypeWriter<VitalWriter>();
+            (void)compiler.AddTypeWriter<BadgeWriter>();
+            (void)compiler.AddTypeWriter<WriterProbeWriter>();
+            auto value = std::make_shared<WriterProbeSource>();
+            value->mode = mode;
+            if (mode == WriterProbeMode::MissingDynamic)
+                value->badge = std::make_shared<RareBadgeSource>();
+            Compiler::CompileOptions options;
+            options.assetName = "writer-probe";
+            std::string diagnostic;
+            try { (void)compiler.Compile<WriterProbeSource>(value, options); }
+            catch (const Xna::PipelineException& error) { diagnostic = error.what(); }
+            foreignVitalWriter.reset();
+            return diagnostic;
+        };
+        const auto rawNull = compileProbe(WriterProbeMode::RawNull);
+        check(rawNull.find("null reference has no raw form") != std::string::npos,
+              "WriteRawObject refuses a null reference because raw payloads have no type marker");
+        const auto missingDynamic = compileProbe(WriterProbeMode::MissingDynamic);
+        check(missingDynamic.find("No ContentTypeWriter is registered for 'CnaDemos.RareBadgeSource'") != std::string::npos &&
+              missingDynamic.find("declared as 'CnaDemos.BadgeSource'") != std::string::npos,
+              "base-typed dynamic dispatch refuses a derived object with no exact writer");
+        const auto foreignWriter = compileProbe(WriterProbeMode::ForeignWriter);
+        check(foreignWriter.find("does not belong to the compiler writing this file") != std::string::npos,
+              "an explicit nested writer from another compiler is refused before emitting its value");
 
         std::promise<bool> probePromise;
         auto probeResult = probePromise.get_future();
