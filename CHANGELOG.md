@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added SoundEffect spatial-global range and restoration behavior for DistanceScale, DopplerScale
+  and SpeedOfSound without claiming an acoustic result from dummy audio.
 - Extended SoundEffectInstance disposal coverage across Volume, Pitch, Pan and the one-way
   IsLooped mutation lock, including preservation of every refused property value.
 - Completed SoundEffectInstance Volume/Pitch/Pan scalar boundaries with exact inclusive endpoints,

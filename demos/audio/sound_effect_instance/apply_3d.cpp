@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // Positional sound: AudioListener and AudioEmitter with SoundEffectInstance::Apply3D.
 #include <chrono>
+#include <limits>
 #include <thread>
 
 #include "CnaDemos/Demo.hpp"
@@ -11,6 +12,7 @@
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundState.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
 #include "System/InvalidOperationException.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -114,14 +116,59 @@ namespace
         ctx.Print("DistanceScale {}, DopplerScale {}, SpeedOfSound {}", SoundEffect::getDistanceScaleProperty(),
                   SoundEffect::getDopplerScaleProperty(), SoundEffect::getSpeedOfSoundProperty());
         ctx.Check(SoundEffect::getSpeedOfSoundProperty() > 300.0f, "SpeedOfSound defaults to air (343.5 units/s)");
+
+        const float originalDistance = SoundEffect::getDistanceScaleProperty();
+        const float originalDoppler = SoundEffect::getDopplerScaleProperty();
+        const float originalSpeed = SoundEffect::getSpeedOfSoundProperty();
+        SoundEffect::setDistanceScaleProperty(2.0f);
+        SoundEffect::setDopplerScaleProperty(0.0f);
+        SoundEffect::setSpeedOfSoundProperty(300.0f);
+        ctx.Check(SoundEffect::getDistanceScaleProperty() == 2.0f &&
+                      SoundEffect::getDopplerScaleProperty() == 0.0f &&
+                      SoundEffect::getSpeedOfSoundProperty() == 300.0f,
+                  "the global spatial scales retain valid authored values");
+        SoundEffect::setDistanceScaleProperty(0.0f);
+        ctx.Check(SoundEffect::getDistanceScaleProperty() == std::numeric_limits<float>::denorm_min(),
+                  "zero DistanceScale is lifted to the smallest positive float");
+
+        bool distanceRejected = false;
+        bool dopplerNegativeRejected = false;
+        bool dopplerNanRejected = false;
+        bool speedZeroRejected = false;
+        bool speedNanRejected = false;
+        const float nan = std::numeric_limits<float>::quiet_NaN();
+        try { SoundEffect::setDistanceScaleProperty(-1.0f); }
+        catch (const System::ArgumentOutOfRangeException&) { distanceRejected = true; }
+        try { SoundEffect::setDopplerScaleProperty(-0.1f); }
+        catch (const System::ArgumentOutOfRangeException&) { dopplerNegativeRejected = true; }
+        try { SoundEffect::setDopplerScaleProperty(nan); }
+        catch (const System::ArgumentOutOfRangeException&) { dopplerNanRejected = true; }
+        try { SoundEffect::setSpeedOfSoundProperty(0.0f); }
+        catch (const System::ArgumentOutOfRangeException&) { speedZeroRejected = true; }
+        try { SoundEffect::setSpeedOfSoundProperty(nan); }
+        catch (const System::ArgumentOutOfRangeException&) { speedNanRejected = true; }
+        ctx.Check(distanceRejected && dopplerNegativeRejected && dopplerNanRejected && speedZeroRejected &&
+                      speedNanRejected &&
+                      SoundEffect::getDistanceScaleProperty() == std::numeric_limits<float>::denorm_min() &&
+                      SoundEffect::getDopplerScaleProperty() == 0.0f &&
+                      SoundEffect::getSpeedOfSoundProperty() == 300.0f,
+                  "invalid global spatial scales are rejected without changing valid state");
+
+        SoundEffect::setDistanceScaleProperty(originalDistance);
+        SoundEffect::setDopplerScaleProperty(originalDoppler);
+        SoundEffect::setSpeedOfSoundProperty(originalSpeed);
+        ctx.Check(SoundEffect::getDistanceScaleProperty() == originalDistance &&
+                      SoundEffect::getDopplerScaleProperty() == originalDoppler &&
+                      SoundEffect::getSpeedOfSoundProperty() == originalSpeed,
+                  "the demo restores every process-global spatial scale");
     }
 }
 
 CNA_DEMOS_CONSOLE(Apply3DDemo, {
     .id = "audio.sound_effect_instance.apply_3d",
     .title = "Positional (3D) sound",
-    .description = "Moves an AudioEmitter from the listener's left to its right, calling SoundEffectInstance::Apply3D "
-                   "each step; listen for the tone panning across. Public state checks first demonstrate paused Pan/3D refusals and switching modes after Stop.",
+    .description = "Moves an AudioEmitter across a listener, checks paused Pan/3D mode changes, and exercises the "
+                   "SoundEffect spatial-scale ranges while restoring every process-global value.",
     .apis = {"SoundEffectInstance::Apply3D", "AudioListener::AudioListener", "AudioListener::Position",
              "AudioListener::Forward", "AudioListener::Up", "AudioListener::Velocity", "AudioEmitter::AudioEmitter",
              "AudioEmitter::Position", "AudioEmitter::Up", "SoundEffect::DistanceScale",

@@ -7418,3 +7418,19 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-795-audio-disposed-properties-*` and `/tmp/checkpoint-795-coverage.md`. No
 audible output or genuine-XNA runtime execution is claimed. Audit the SoundEffect spatial globals in
 `apply_3d` next.
+
+## Focused796-SoundEffect-spatial-global-ranges
+
+`audio.sound_effect_instance.apply_3d` grows from ten to fourteen controls. It retains its default
+speed check, round-trips DistanceScale2, DopplerScale0 and SpeedOfSound300, proves DistanceScale0
+normalizes to the smallest positive float, and rejects negative distance, negative/NaN Doppler and
+zero/NaN speed without changing the last valid values. It then restores and rechecks all three
+original process-global values.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass14/14 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-796-audio-spatial-globals-*` and `/tmp/checkpoint-796-coverage.md`. These
+are property and refusal checks; no acoustic attenuation, Doppler, pitch or listening result is
+claimed. Audit Apply3D vector and pointer/count input boundaries next.
