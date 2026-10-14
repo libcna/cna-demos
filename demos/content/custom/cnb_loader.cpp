@@ -2,6 +2,7 @@
 // A game's binary asset schema and its process-wide CNA loader.
 #include <array>
 #include <chrono>
+#include <cstdint>
 #include <filesystem>
 #include <memory>
 #include <string>
@@ -19,9 +20,15 @@ using namespace CNA::Content::Cnb;
 namespace
 {
     struct Rules { std::string name; float gravity; std::uint32_t lives; };
+    struct CollisionAsset { std::uint8_t marker; };
     struct LoaderState { int reads = 0; };
     constexpr auto RulesChunk = MakeChunkId('R', 'U', 'L', 'E');
+    constexpr auto CollisionChunk = MakeChunkId('M', 'A', 'R', 'K');
     constexpr const char* RulesName = "CnaDemos.GameRules";
+    // These distinct names deliberately share the same 31-bit FNV-1a custom identifier. Keeping
+    // the pair fixed makes the collision defense deterministic instead of doing a search at run time.
+    constexpr const char* CollisionAlpha = "CnaDemos.CollisionAsset.AlphavbnQ8GeK";
+    constexpr const char* CollisionBeta = "CnaDemos.CollisionAsset.Beta9nGwK9Ry";
 
     struct TemporaryContent
     {
@@ -117,12 +124,88 @@ namespace
         payload.WriteF32(1.62f);
         payload.WriteU32(3);
         const auto bytes = payload.Take();
+
+        // A custom file must identify the exact canonical type behind its 31-bit identifier. The
+        // writer catches missing metadata and an ordinary wrong hash before publishing a file.
+        bool missingNameRefused = false, wrongHashRefused = false;
+        CnbWriter unnamed(typeId, 1);
+        unnamed.AddChunk(RulesChunk, bytes, CnbChunkFlags::Mandatory);
+        try { (void)unnamed.Build(); }
+        catch (const ContentLoadException& error)
+        {
+            missingNameRefused = true;
+            ctx.Print("Unnamed custom file refused: {}", error.what());
+        }
+        CnbWriter wrongHash(typeId, 1);
+        wrongHash.SetMetadata("CnaDemos.OtherRules", "wrong_hash");
+        wrongHash.AddChunk(RulesChunk, bytes, CnbChunkFlags::Mandatory);
+        try { (void)wrongHash.Build(); }
+        catch (const ContentLoadException& error)
+        {
+            wrongHashRefused = true;
+            ctx.Print("Wrong custom name refused: {}", error.what());
+        }
+        ctx.Check(missingNameRefused && wrongHashRefused,
+                  "the writer refuses a custom file with missing or differently hashed canonical metadata");
+
         CnbWriter writer(typeId, 1);
         writer.SetMetadata(RulesName, "rules");
         writer.AddChunk(RulesChunk, bytes, CnbChunkFlags::Mandatory);
+        const auto validImage = writer.Build();
+        const auto validDocument = CnbDocument::Parse(validImage, "rules identity probe");
+        bool wrongTypeRefused = false;
+        try { validDocument.RequireAsset(CnbAssetTypeIdFromName("CnaDemos.OtherRules"), 1); }
+        catch (const ContentLoadException& error)
+        {
+            wrongTypeRefused = true;
+            ctx.Print("Wrong requested asset type refused: {}", error.what());
+        }
+        ctx.Check(wrongTypeRefused,
+                  "RequireAsset rejects a valid document when the decoder requests another asset type");
         writer.WriteToFile((path / "rules.cnb").string());
 
+        // A real hash collision passes the writer's hash check, so dispatch must compare the full
+        // canonical name before invoking a candidate factory. Repair the same path afterwards to
+        // prove the rejected file did not enter the manager cache.
+        const auto collisionId = CnbAssetTypeIdFromName(CollisionAlpha);
+        ctx.Check(std::string(CollisionAlpha) != CollisionBeta &&
+                      collisionId == CnbAssetTypeIdFromName(CollisionBeta),
+                  "two distinct canonical names demonstrate a real custom identifier collision");
+        auto collisionReads = std::make_shared<int>(0);
+        ContentManager::RegisterCnbLoaderEXT<CollisionAsset>(
+            collisionId, CollisionAlpha,
+            [collisionReads, collisionId](const CnbDocument& document, ContentManager&) {
+                document.RequireAsset(collisionId, 1);
+                const auto payload = document.ChunkData(document.RequireSingle(CollisionChunk));
+                ++*collisionReads;
+                return CollisionAsset{payload.empty() ? std::uint8_t{0} : payload.front()};
+            });
+        CnbWriter colliding(collisionId, 1);
+        colliding.SetMetadata(CollisionBeta, "collision");
+        colliding.AddChunk(CollisionChunk, {42}, CnbChunkFlags::Mandatory);
+        colliding.WriteToFile((path / "collision.cnb").string());
+
         ContentManager content(nullptr, path.string());
+        bool collisionRefused = false;
+        try { (void)content.Load<CollisionAsset>("collision"); }
+        catch (const ContentLoadException& error)
+        {
+            const std::string diagnostic = error.what();
+            collisionRefused = diagnostic.find(CollisionAlpha) != std::string::npos &&
+                               diagnostic.find(CollisionBeta) != std::string::npos &&
+                               diagnostic.find("collid") != std::string::npos;
+            ctx.Print("Colliding custom type refused: {}", diagnostic);
+        }
+        ctx.Check(collisionRefused && *collisionReads == 0,
+                  "dispatch rejects a colliding canonical name before the candidate factory runs");
+        CnbWriter repairedCollision(collisionId, 1);
+        repairedCollision.SetMetadata(CollisionAlpha, "collision");
+        repairedCollision.AddChunk(CollisionChunk, {42}, CnbChunkFlags::Mandatory);
+        repairedCollision.WriteToFile((path / "collision.cnb").string());
+        const CollisionAsset collisionAsset = content.Load<CollisionAsset>("collision");
+        ctx.Check(collisionAsset.marker == 42 && *collisionReads == 1,
+                  "the same manager loads the repaired canonical name after collision refusal");
+
         const Rules rules = content.Load<Rules>("rules");
         ctx.Print("{}: gravity {}, lives {}", rules.name, rules.gravity, rules.lives);
         ctx.Check(rules.name == "Moon" && rules.lives == 3 && ReadCount() == 1,
@@ -228,8 +311,8 @@ namespace
 CNA_DEMOS_CONSOLE(CnbLoader, {
     .id = "content.custom.cnb_loader",
     .title = "A custom CNB asset schema (CNAEXT)",
-    .description = "Writes a game-rules CNB asset, checks first-wins typed-loader registration and capture lifetime, "
-                   "per-manager caching, extensions, retry after repair and invalid schema layouts.",
+    .description = "Writes a game-rules CNB asset, checks canonical custom-type identity and collision refusal, "
+                   "first-wins registration, caching, extensions, retry after repair and invalid schema layouts.",
     .apis = {"ContentManager::RegisterCnbLoaderEXT", "ContentManager::Load",
              "CNA::Content::Cnb::CnbAssetTypeIdFromName", "CNA::Content::Cnb::CnbWriter::SetMetadata",
              "CNA::Content::Cnb::CnbWriter::AddChunk", "CNA::Content::Cnb::CnbWriter::WriteToFile",

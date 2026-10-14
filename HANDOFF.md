@@ -1738,14 +1738,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-760 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-761 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries, with new ISSUE-087 for omitted disposable shared-table values. Continue with
-the existing `content.custom.cnb_loader` workflow at the custom-file identity boundary: exercise
-the writer's missing/colliding canonical-metadata refusals and `CnbDocument::RequireAsset` type
-mismatch without adding a guard-only ID. Then disposition the remaining physical CNB table/header
-hardening cases against CNA's unit coverage, adding only a compact diagnostic behavior that teaches
-something distinct. Build with at most three compile jobs and keep focused evidence current.
+the existing `content.custom.cnb_external_references` workflow: add an actual child artifact whose
+file type disagrees with the XREF's declared/expected profile type, verify parent failure before
+publication, then repair the same path and retry through the same manager. Keep cycle handling and
+automatic child compilation explicitly dispositioned unless the public custom-schema contract
+provides them. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1950,6 +1950,25 @@ pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 members,16
 2999/3205 C routes. Evidence:`/tmp/checkpoint-760-cnb-limits-*` and
 `/tmp/checkpoint-760-coverage.md`. No rendering, screenshot or manual inspection was used, and no
 CNA issue was found.
+
+### Focused761 CNB custom-type identity and real hash collision
+
+`content.custom.cnb_loader` grows from seventeen to twenty-two controls. The writer now visibly
+refuses a custom file with no canonical metadata and one whose name hashes to another identifier;
+a parsed valid rules document also refuses a direct `RequireAsset` request for the wrong numeric
+type. A fixed pair of distinct canonical names demonstrates a real collision at `0xB412AA0B`.
+The writer accepts the Beta file because its own name hashes correctly, but ContentManager compares
+that full name with the registered Alpha name and refuses it before Alpha's factory runs. Rewriting
+the same path with Alpha then loads marker42 through the same manager, proving the failure was not
+cached.
+
+SOFTWARE and OPENGLES3/Xvfb pass22/22, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses `-j3`; metadata remains636/0, known-issue demos remain40, tool self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 members,169/753 fields and
+2999/3205 C routes. Evidence:`/tmp/checkpoint-761-cnb-loader-*` and
+`/tmp/checkpoint-761-coverage.md`. No rendering, screenshot or manual inspection was used, and no
+CNA issue was found. The remaining physical header/table corruption variants are intentionally
+left to CNA's exhaustive container unit tests rather than repeated as demo assertions.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

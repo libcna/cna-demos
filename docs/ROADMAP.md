@@ -6774,3 +6774,22 @@ or manual inspection was used. No CNA issue was found. Continue the existing cus
 the file-identity boundary: missing/colliding canonical metadata and exact RequireAsset type
 mismatch before deciding whether any physical table/header case adds demo-level value beyond CNA's
 unit hardening suite.
+
+## Focused761-CNB-custom-type-identity-and-real-collision
+
+`content.custom.cnb_loader` adds five controls, reaching22. CnbWriter refuses missing canonical
+metadata and a name whose hash differs from the custom identifier. `RequireAsset` directly refuses
+a valid document requested as another numeric type. Two fixed, distinct canonical names then prove
+a real `0xB412AA0B` collision: each independently satisfies the writer, but ContentManager rejects
+the Beta file before invoking the loader registered for Alpha. Rewriting the same path with Alpha
+loads marker42 through the same manager, proving the collision failure was not cached.
+
+SOFTWARE and OPENGLES3/Xvfb pass22/22, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, known-issue demos remain40,
+validator/checkpoint self-tests pass5/5 and4/4, and generated coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-761-cnb-loader-*` and `/tmp/checkpoint-761-coverage.md`. No rendering, screenshot
+or manual inspection was used. No CNA issue was found. The remaining physical header/table
+corruption variants are intentionally dispositioned to CNA's exhaustive container unit tests.
+Continue `content.custom.cnb_external_references` with an actual child-file type mismatch and
+same-manager repair/retry.

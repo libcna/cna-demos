@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the custom CNB loader with authoring-time canonical-name requirements, direct
+  `RequireAsset` type refusal and a real 31-bit hash collision rejected before factory dispatch.
 - Completed the CNB read-limit audit with aligned-chunk publication and symmetric writer/reader
   checks for chunk-count, chunk-alignment, CMET string and XREF row-count budgets.
 - Extended the XNB shared-resource graph with supplied ReadAsset recorder coverage, exposing
