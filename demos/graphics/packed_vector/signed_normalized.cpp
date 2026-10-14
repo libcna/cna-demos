@@ -33,6 +33,20 @@ namespace
         const Vector4 back = precise.ToVector4();
         ctx.CheckNear(Vector3::Distance(Vector3(back.X, back.Y, back.Z), normal), 0.0, 1e-4, "16 bits keep it within 0.01 %");
 
+        NormalizedByte4 packedNormalCopy;
+        packedNormalCopy.setPackedValueProperty(packedNormal.getPackedValueProperty());
+        ctx.Check(packedNormal.getPackedValueProperty() == 0x00409926u && packedNormalCopy == packedNormal &&
+                      !(packedNormalCopy != packedNormal) && packedNormal.Equals(packedNormalCopy) &&
+                      packedNormal.Equals(std::any(packedNormalCopy)) && !packedNormal.Equals(std::any(precise)) &&
+                      packedNormalCopy.GetHashCode() == packedNormal.GetHashCode() &&
+                      packedNormal.ToString() == "00409926",
+                  "NormalizedByte4 preserves its packed value, equality, hash and eight-digit text");
+        NormalizedByte4 byte4Interface;
+        IPackedVector& packedByte4 = byte4Interface;
+        packedByte4.PackFromVector4(Vector4(-1.0f, 1.0f, 0.0f, 0.0f));
+        ctx.Check(packedByte4.ToVector4() == Vector4(-1.0f, 1.0f, 0.0f, 0.0f),
+                  "NormalizedByte4's IPackedVector path preserves all four channel endpoints");
+
         // Out-of-range input clamps to -1..1.
         const NormalizedByte2 bytePair(Vector2(-1.0f, 1.0f));
         const NormalizedShort2 shortPair(Vector2(-1.0f, 1.0f));
@@ -89,7 +103,11 @@ CNA_DEMOS_CONSOLE(SignedNormalized, {
     .title = "Signed normalized formats",
     .description = "Stores a unit normal in NormalizedByte4 and NormalizedShort4, compares their precision, and "
                    "shows NormalizedByte2/NormalizedShort2 clamping to -1..1.",
-    .apis = {"NormalizedByte4::NormalizedByte4", "NormalizedByte4::ToVector4", "NormalizedShort4::NormalizedShort4",
+    .apis = {"NormalizedByte4::NormalizedByte4", "NormalizedByte4::ToVector4", "NormalizedByte4::PackedValue",
+             "NormalizedByte4::Equals", "NormalizedByte4::GetHashCode", "NormalizedByte4::op_Equality",
+             "NormalizedByte4::op_Inequality", "NormalizedByte4::ToString",
+             "NormalizedByte4::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
+             "NormalizedShort4::NormalizedShort4",
              "NormalizedShort4::ToVector4", "NormalizedShort4::PackedValue", "NormalizedShort4::Equals",
              "NormalizedShort4::GetHashCode", "NormalizedShort4::op_Equality", "NormalizedShort4::op_Inequality",
              "NormalizedShort4::ToString",
@@ -103,7 +121,6 @@ CNA_DEMOS_CONSOLE(SignedNormalized, {
              "NormalizedShort2::Equals", "NormalizedShort2::GetHashCode", "NormalizedShort2::op_Equality",
              "NormalizedShort2::op_Inequality", "NormalizedShort2::ToString",
              "NormalizedShort2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
-             "NormalizedShort2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#ToVector4",
-             "NormalizedByte4::PackedValue"},
+             "NormalizedShort2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#ToVector4"},
     .tags = {"packed", "normal", "snorm", "vertex-format"},
 })

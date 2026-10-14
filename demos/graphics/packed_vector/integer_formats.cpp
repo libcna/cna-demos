@@ -23,6 +23,17 @@ namespace
         ctx.Check(bones.getPackedValueProperty() == 0xFF2A1103u, "X is the lowest byte, W the highest");
         ctx.Check(Byte4(300.0f, -5.0f, 1.4f, 1.6f).ToVector4() == Vector4(255.0f, 0.0f, 1.0f, 2.0f),
                   "values round and clamp to 0..255");
+        Byte4 bonesCopy;
+        bonesCopy.setPackedValueProperty(bones.getPackedValueProperty());
+        ctx.Check(bonesCopy == bones && !(bonesCopy != bones) && bones.Equals(bonesCopy) &&
+                      bones.Equals(std::any(bonesCopy)) && !bones.Equals(std::any(Vector4())) &&
+                      bonesCopy.GetHashCode() == bones.GetHashCode() && bones.ToString() == "FF2A1103",
+                  "Byte4 preserves its packed value, equality, hash and eight-digit text");
+        Byte4 bonesInterface;
+        IPackedVector& packedBones = bonesInterface;
+        packedBones.PackFromVector4(Vector4(3.0f, 17.0f, 42.0f, 255.0f));
+        ctx.Check(packedBones.ToVector4() == bones.ToVector4(),
+                  "Byte4's IPackedVector path preserves all four integer components");
 
         // Signed 16-bit integers.
         const Short2 offset(-1200.0f, 40000.0f);
@@ -63,7 +74,10 @@ CNA_DEMOS_CONSOLE(IntegerFormats, {
     .title = "Integer packed formats",
     .description = "Packs bone indices into Byte4 and signed values into Short2 and Short4, showing the byte layout, "
                    "rounding and clamping.",
-    .apis = {"Byte4::Byte4", "Byte4::ToVector4", "Byte4::PackedValue", "Short2::Short2", "Short2::ToVector2",
+    .apis = {"Byte4::Byte4", "Byte4::ToVector4", "Byte4::PackedValue", "Byte4::Equals",
+             "Byte4::GetHashCode", "Byte4::op_Equality", "Byte4::op_Inequality", "Byte4::ToString",
+             "Byte4::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
+             "Short2::Short2", "Short2::ToVector2",
              "Short2::PackedValue", "Short2::Equals", "Short2::GetHashCode", "Short2::op_Equality",
              "Short2::op_Inequality", "Short2::ToString",
              "Short2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",

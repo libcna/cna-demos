@@ -29,6 +29,19 @@ namespace
         ctx.CheckNear(HalfSingle(1.0f / 3.0f).ToSingle(), 1.0 / 3.0, 2e-4, "1/3 keeps about three digits");
         ctx.Check(HalfSingle(1000.25f).ToSingle() != 1000.25f, "fractions are lost at large magnitudes");
 
+        const HalfSingle one(1.0f);
+        HalfSingle oneCopy;
+        oneCopy.setPackedValueProperty(one.getPackedValueProperty());
+        ctx.Check(one.getPackedValueProperty() == 0x3C00u && oneCopy == one && !(oneCopy != one) &&
+                      one.Equals(oneCopy) && one.Equals(std::any(oneCopy)) && !one.Equals(std::any(1.0f)) &&
+                      oneCopy.GetHashCode() == one.GetHashCode() && one.ToString() == "1",
+                  "HalfSingle preserves its packed value, equality, hash and expanded text");
+        HalfSingle singleInterface;
+        IPackedVector& packedSingle = singleInterface;
+        packedSingle.PackFromVector4(Vector4(1.0f, 9.0f, -4.0f, 0.0f));
+        ctx.Check(packedSingle.ToVector4() == Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+                  "HalfSingle's IPackedVector path consumes X and supplies canonical YZW");
+
         // Two and four halves pack into 32 and 64 bits (HDR colour, texture coordinates).
         const HalfVector2 uv(0.25f, 0.75f);
         const HalfVector4 hdr(Vector4(4.0f, 2.0f, 0.5f, 1.0f));
@@ -68,7 +81,12 @@ CNA_DEMOS_CONSOLE(HalfPrecision, {
     .title = "Half-precision floats",
     .description = "Packs values into HalfSingle, HalfVector2 and HalfVector4 and shows the precision and range of "
                    "16-bit floating point.",
-    .apis = {"HalfSingle::HalfSingle", "HalfSingle::ToSingle", "HalfSingle::PackedValue", "HalfVector2::HalfVector2",
+    .apis = {"HalfSingle::HalfSingle", "HalfSingle::ToSingle", "HalfSingle::PackedValue", "HalfSingle::Equals",
+             "HalfSingle::GetHashCode", "HalfSingle::op_Equality", "HalfSingle::op_Inequality",
+             "HalfSingle::ToString",
+             "HalfSingle::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
+             "HalfSingle::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#ToVector4",
+             "HalfVector2::HalfVector2",
              "HalfVector2::ToVector2", "HalfVector2::PackedValue", "HalfVector2::Equals",
              "HalfVector2::GetHashCode", "HalfVector2::op_Equality", "HalfVector2::op_Inequality",
              "HalfVector2::ToString",

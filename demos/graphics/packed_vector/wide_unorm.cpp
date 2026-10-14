@@ -63,6 +63,18 @@ namespace
         const Rgba64 rgba64(value.X, value.Y, value.Z, value.W);
         ctx.Print("Rgba64      -> {} (0x{:016X})", rgba64.ToVector4().ToString(), rgba64.getPackedValueProperty());
         ctx.CheckNear(rgba64.ToVector4().W, 0.4, 1.0 / 65535.0, "Rgba64 keeps alpha precise too");
+        Rgba64 rgba64Copy;
+        rgba64Copy.setPackedValueProperty(rgba64.getPackedValueProperty());
+        ctx.Check(rgba64.getPackedValueProperty() == 0x66664CCC3333199Aull && rgba64Copy == rgba64 &&
+                      !(rgba64Copy != rgba64) && rgba64.Equals(rgba64Copy) && rgba64.Equals(std::any(rgba64Copy)) &&
+                      !rgba64.Equals(std::any(rgb10)) && rgba64Copy.GetHashCode() == rgba64.GetHashCode() &&
+                      rgba64.ToString() == "66664CCC3333199A",
+                  "Rgba64 preserves its packed value, equality, hash and sixteen-digit text");
+        Rgba64 rgba64Interface;
+        IPackedVector& packedRgba64 = rgba64Interface;
+        packedRgba64.PackFromVector4(value);
+        ctx.Check(packedRgba64.ToVector4() == rgba64.ToVector4(),
+                  "Rgba64's IPackedVector path preserves all four quantized channels");
     }
 }
 
@@ -79,6 +91,8 @@ CNA_DEMOS_CONSOLE(WideUnorm, {
              "Rg32::op_Inequality", "Rg32::ToString",
              "Rg32::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
              "Rg32::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#ToVector4",
-             "Rgba64::ToVector4", "Rgba64::PackedValue"},
+             "Rgba64::ToVector4", "Rgba64::PackedValue", "Rgba64::Equals", "Rgba64::GetHashCode",
+             "Rgba64::op_Equality", "Rgba64::op_Inequality", "Rgba64::ToString",
+             "Rgba64::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4"},
     .tags = {"packed", "unorm", "precision"},
 })

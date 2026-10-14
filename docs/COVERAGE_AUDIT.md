@@ -453,6 +453,24 @@ with empty stderr; all four focused SOFTWARE CTests pass. Temporary coverage mov
 Evidence:`/tmp/checkpoint-683-*` and `/tmp/checkpoint-683-coverage.md`. These are CPU value tests; no
 renderer, vertex fetch, screenshot or visual result is claimed.
 
+### Complete packed-vector value contracts
+
+Alpha8, Bgr565, Bgra4444, Bgra5551, Byte4, HalfSingle, NormalizedByte4 and Rgba64 remain in five
+existing precision-family demos. Each now copies exact PackedValue state, checks == and != together
+with typed and boxed Equals, rejects a boxed different type, requires equal hashes, validates exact
+XNA text and packs through IPackedVector. The scalar and RGB types also prove their interface-only
+Vector4 expansion: Alpha8 supplies zero RGB, Bgr565 supplies opaque alpha and HalfSingle supplies
+canonical Y=Z=0/W=1. The existing interface workflow uses CNA's IPackedVectorT<uint16_t> to prove
+typed packed storage; this is the C++ representation of the CLR generic IPackedVector<T>.PackedValue
+inventory item.
+
+Focused684 credits all52 remaining namespace members across six IDs. Compact color and half
+precision pass12/12; integer formats and wide UNorm pass10/10; signed normalized passes12/12; the
+interface workflow passes5/5. SOFTWARE and OPENGLES3 output is byte-identical with empty stderr;
+all six focused SOFTWARE CTests pass. Temporary coverage moves1909->1961/2326 and PackedVector
+reaches164/164 members. Evidence:`/tmp/checkpoint-684-*` and `/tmp/checkpoint-684-coverage.md`.
+These are CPU value tests; no renderer, vertex fetch, screenshot or visual result is claimed.
+
 ### Graphics-state lifetime and complete sampler presets
 
 | Members / behavior | Decision and evidence |

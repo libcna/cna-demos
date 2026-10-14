@@ -5487,3 +5487,20 @@ Temporary coverage moves1881->1909/2326 at632 demos,301/329 types and156/753 fie
 `/tmp/checkpoint-683-*` and `/tmp/checkpoint-683-coverage.md`. No rendering, screenshot or visual
 inspection was used. Continue the remaining compact color and scalar packed-vector value contracts
 next.
+
+## Focused684-complete-packed-vector-value-contracts
+
+Five existing conversion IDs close all51 remaining concrete-type members on Alpha8, Bgr565,
+Bgra4444, Bgra5551, Byte4, HalfSingle, NormalizedByte4 and Rgba64. Exact PackedValue copies agree
+across equality/inequality, typed and boxed Equals, reject a boxed different type, keep equal hashes
+and validate exact XNA text. IPackedVector packing remains in each type's precision context, while
+Alpha8, Bgr565 and HalfSingle also establish their interface-only Vector4 expansion conventions.
+The existing interface ID closes the final namespace member through CNA's real
+IPackedVectorT<uint16_t> typed PackedValue get/set, representing the CLR generic interface property.
+
+Compact color and half precision pass12/12; integer formats and wide UNorm pass10/10; signed
+normalized passes12/12; the interface workflow passes5/5. SOFTWARE and OPENGLES3 output is
+byte-identical with empty stderr; all six focused SOFTWARE CTests pass. Temporary coverage moves
+1909->1961/2326 at632 demos,301/329 types and156/753 fields; PackedVector reaches164/164 members.
+Evidence:`/tmp/checkpoint-684-*` and `/tmp/checkpoint-684-coverage.md`. No rendering, screenshot or
+visual inspection was used. Continue the five remaining PacketReader typed reads next.

@@ -1361,18 +1361,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused683
-projects the632-demo staged catalog to1909/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused684
+projects the632-demo staged catalog to1961/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
 machinery. The stock-effect families now retain only dispositioned protected OnApply hooks and one
 SkinnedEffect explicit-interface inventory artifact; real pass application reaches the hooks and
 focused671 proved the override dispatch contract. RenderTargetCube and VertexBufferBinding now have
-no member gap. GraphicsAdapter and the audited two- and four-component packed-vector types now have
-no member gap. Continue the packed-vector value-member audit with Alpha8, Bgr565, HalfSingle,
-Bgra4444, Bgra5551, Byte4, NormalizedByte4 and Rgba64 in their existing coherent workflows. Avoid
-one demo per method. Then continue with the next high-value behavior family,
+no member gap. GraphicsAdapter and the complete PackedVector namespace now have no member gap.
+Continue with PacketReader::ReadDouble, ReadMatrix, ReadQuaternion, ReadVector2 and ReadVector4 in
+the existing coherent packet transport workflow; its matching PacketWriter overloads are already
+demonstrated. Then continue with the next high-value behavior family,
 rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1381,7 +1381,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused683 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused684 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3194,6 +3194,26 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No rendering, screenshot or
 visual inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was
 edited. Continue with the remaining compact color and scalar packed-vector value contracts next.
+
+Focused684 extends five existing packed-vector conversion IDs and the existing interface ID to
+close all52 remaining members in the PackedVector namespace. Alpha8, Bgr565, Bgra4444, Bgra5551,
+Byte4, HalfSingle, NormalizedByte4 and Rgba64 now reconstruct exact PackedValue state, agree across
+==/!=, typed and boxed Equals, reject a boxed different type, preserve equal hashes and exact text,
+and pack through IPackedVector. Alpha8, Bgr565 and HalfSingle additionally prove their interface-only
+Vector4 expansion conventions. The interface workflow addresses CNA's real IPackedVectorT<uint16_t>
+typed PackedValue get/set, which represents the CLR generic IPackedVector<T>.PackedValue inventory
+item. All retained precision, quantization and clamping checks remain intact.
+
+Compact color and half precision pass12/12; integer formats and wide UNorm pass10/10; signed
+normalized passes12/12; the interface workflow passes5/5. SOFTWARE and OPENGLES3 outputs are
+byte-identical with empty stderr; all six focused SOFTWARE CTests pass. Temporary coverage moves
+1909->1961/2326 at632 demos,301/329 types and156/753 fields; PackedVector reaches164/164 members.
+Evidence:`/tmp/checkpoint-684-*` and `/tmp/checkpoint-684-coverage.md`. Runner SHA-256 is
+`0199b37520950fa0ae976dbcf89fc036030badcda8912f997f30dbc5243e44dd`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No rendering, screenshot or
+visual inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was
+edited. Continue with the five remaining PacketReader typed reads next.
 
 ## 15. Assumptions the next session must know
 

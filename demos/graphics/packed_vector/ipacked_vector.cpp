@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Treating any packed format the same way through the IPackedVector interface.
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <utility>
@@ -35,6 +36,12 @@ namespace
             ctx.Print("{:<16} {}", name, back.ToString());
             ctx.CheckNear(Vector4::Distance(back, value), 0.0, 0.05, name + " round-trips the value approximately");
         }
+
+        Bgra4444 typedStorage;
+        IPackedVectorT<std::uint16_t>& typed = typedStorage;
+        typed.setPackedValueProperty(0xF00Fu);
+        ctx.Check(typed.getPackedValueProperty() == 0xF00Fu && typedStorage.ToString() == "F00F",
+                  "the generic packed-vector interface exposes exact typed storage");
     }
 }
 
@@ -43,6 +50,6 @@ CNA_DEMOS_CONSOLE(PackedVectorInterface, {
     .title = "The IPackedVector interface",
     .description = "Converts one value through several packed formats using only the IPackedVector interface: "
                    "PackFromVector4 and ToVector4.",
-    .apis = {"IPackedVector::PackFromVector4", "IPackedVector::ToVector4"},
+    .apis = {"IPackedVector::PackFromVector4", "IPackedVector::ToVector4", "IPackedVector::PackedValue"},
     .tags = {"packed", "interface", "generic"},
 })
