@@ -66,10 +66,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-637 project-built catalog demos in18 categories: math78, game33, graphics170, audio23, core3,
+638 project-built catalog demos in18 categories: math78, game33, graphics170, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api173. Kinds are163 console,279 game and195 standalone;
-601 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api174. Kinds are163 console,279 game and196 standalone;
+602 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input_gamepad.h`61/63,
@@ -129,6 +129,8 @@ EasyGL device is destroyed; SOFTWARE remains a12/12 pass.
 Focused817 stages a38th runtime marker: `c_api.graphics.image_based_light_values` names
 CNA-DEMOS-ISSUE-091 on both renderers because live non-texture handles pass the C image-based-light
 validity predicate. It adds the first3 `graphics_ext.h` routes, for3002/3205 staged C routes.
+Focused818 adds the next24 `graphics_ext.h` routes without another issue, bringing that header to
+27/42 and staged C coverage to3026/3205.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -1812,9 +1814,10 @@ private mixer data. Cue-level ReplaceOldest captures its definition-local count 
 victim search; category ReplaceLowestPriority now distinguishes priority from play order. The
 remaining RPC/variation surface and all seven uncredited Audio members are now dispositioned in
 focused816. Focused817 begins the previously untouched public C `graphics_ext.h` surface with
-availability/image-based-light values and exposes ISSUE-091. Continue with coherent retro-effect
-state/draw and DebugDraw workflows. Do not add isolated getter demos. Build with at most three
-compile jobs and keep focused evidence current.
+availability/image-based-light values and exposes ISSUE-091; focused818 covers all CRT, Depth and
+ASCII routes. Continue with the remaining15 DebugDraw routes as one coherent frame/list/geometry
+workflow. Do not add isolated getter demos. Build with at most three compile jobs and keep focused
+evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2962,6 +2965,24 @@ warning. Metadata is637/0 and temporary coverage is302/329 types,
 2114/2326 members,169/753 fields and3002/3205 C routes. Evidence:`/tmp/checkpoint-817-ibl-*` and
 `/tmp/checkpoint-817-coverage.md`. No PBR effect, draw, screenshot or visual inspection is claimed.
 Continue with the device-backed CRT/Depth/ASCII routes, followed by DebugDraw.
+
+### Focused818-C-graphics-extension-retro-effects
+
+New `c_api.graphics.retro_effects` adds24 `graphics_ext.h` routes in32 controls. CRT state covers all
+five defaults, independent mutation, scalar clamping, nonfinite/unknown-value preservation, null
+outputs and ordinary Effect destruction. Depth state round-trips all seven color/palette modes and
+three dither modes and preserves the last valid pair across unknown identities. ASCII state covers
+defaults, mutation and refusals, then uploads a deterministic16x16 color field and executes actual
+explicit-destination Color and whole-viewport monochrome draws. Their exact source grids are4x8
+and2x2; stale-source and repeated-destroy handling complete the owned lifetime.
+
+SOFTWARE and OPENGLES3/Xvfb pass32/32 with byte-identical stdout and empty stderr. The exact
+SOFTWARE CTest passes. Compilation is warning-free with at most three jobs; CMake regeneration
+emits only the existing Draco CMP0148 developer warning. Metadata is638/0 and temporary coverage is
+302/329 types,2114/2326 members,169/753 fields and3026/3205 C routes; `graphics_ext.h` is27/42.
+Evidence:`/tmp/checkpoint-818-retro-*` and `/tmp/checkpoint-818-coverage.md`. No screenshot or
+manual visual-quality inspection is claimed, and detailed CRT/Depth pixel behavior remains covered
+by the existing C++ CNAEXT scenes. Continue with the remaining15 DebugDraw routes.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

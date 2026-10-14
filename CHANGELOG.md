@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added one C CRT/Depth/ASCII workflow covering 24 more `graphics_ext.h` routes, including scalar
+  clamps/refusals, every depth/dither mode and two real ASCII quantize/draw grid sizes.
 - Added a C image-based-light value workflow covering the first three `graphics_ext.h` routes and
   exposing wrong-kind live handles being accepted as textures (CNA-DEMOS-ISSUE-091).
 - Classified the remaining XACT RPC/variation observation limits and all seven generated Audio

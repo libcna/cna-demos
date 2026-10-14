@@ -7770,3 +7770,18 @@ members,169/753 fields and3002/3205 C routes. The incremental build used at most
 effect, draw, screenshot or visual inspection is claimed. Evidence:`/tmp/checkpoint-817-ibl-*` and
 `/tmp/checkpoint-817-coverage.md`. Continue with the device-backed CRT/Depth/ASCII routes, followed
 by DebugDraw.
+
+## Focused818-C-graphics-extension-retro-effects
+
+New `c_api.graphics.retro_effects` covers all24 CRT, color-depth and ASCII post-process routes in
+`graphics_ext.h`. Thirty-two controls establish CRT defaults, mutation, clamps and refusals; all
+seven depth modes and three dither modes; and ASCII default/mutated state, invalid-input
+preservation, two real quantize/draw passes with exact4x8 and2x2 source grids, stale-source refusal
+and repeated destruction.
+
+SOFTWARE and OPENGLES3/Xvfb pass32/32 with byte-identical stdout and empty stderr; the exact
+SOFTWARE CTest passes. The `-j3` compilation is warning-free apart from the existing CMake Draco
+CMP0148 developer warning during regeneration. Metadata is638/0 and temporary coverage is302/329
+types,2114/2326 members,169/753 fields and3026/3205 C routes, with `graphics_ext.h` at27/42. No
+screenshot or manual visual inspection is claimed. Evidence:`/tmp/checkpoint-818-retro-*` and
+`/tmp/checkpoint-818-coverage.md`. Continue with the remaining15 DebugDraw routes.
