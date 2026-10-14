@@ -4560,3 +4560,17 @@ compilation, diff checks and validation self-tests pass. Staged metadata reaches
 `checkpoint-627-c-skinning-data-player-focused-*-direct.*`. No Model, ContentManager, graphics
 device, renderer, draw call, screenshot, visual result or project-built execution is claimed. The
 renderer-independent ModelAnimationsEXT collection and direct Model pose helpers are next.
+
+## Focused628-C-ModelAnimations-and-direct-posing
+
+`c_api.graphics.model_animations` adds11 `models.h` routes in29 controls. Deep-copied named clips
+preserve sorted exact metadata, reject duplicates and keep target index space explicit. A real
+two-bone Model refuses joint-palette posing, applies the same clip in scene-node space at half time,
+keeps the untracked child local transform intact, composes the hierarchy, clamps at duration and
+rejects non-finite time without mutation. A separate two-bone SkinningData bind pose uploads to one
+real retained SkinnedEffect and reports exactly one posed effect. Both SOFTWARE and OPENGLES3 Xvfb
+direct runs pass29/29 with byte-identical stdout and empty stderr; strict C99 and metadata
+compilation, diff checks and validation self-tests pass. Staged metadata reaches2975/3205 and
+`models.h` reaches192/216. Evidence:`checkpoint-628-c-model-animations-focused-*-direct.*`. No
+vertex/index buffer, texture, draw call, screenshot, visual result or project-built execution is
+claimed. Ancillary Model cameras, skins, bounds, material variants and infinite projection are next.
