@@ -1751,3 +1751,44 @@ reader workflow. Collection enumerators and routine Dispose/IsDisposed repetitio
 to semantic disposition rather than automatic demo expansion. Evidence:
 `build/linux-full/reports/checkpoint-647-complete-*`. No screenshot, listening test or manual
 visual inspection was performed.
+
+### Remaining XNA member dispositions after focused716
+
+The generated inventory has exactly212 uncredited non-field entries after focused716. They are
+grouped below by why another metadata credit or demo would be misleading. This closes the current
+generated-gap review; it does not claim that every overload, error path, renderer, service,
+hardware device or visual behavior has been exercised.
+
+| Namespace | Uncredited | Semantic disposition |
+|---|---:|---|
+| `Microsoft.Xna.Framework` | 8 | Both `CurveKeyCollection` enumerator spellings are already exercised through real C++ range iteration. `Game` and `GameComponent` finalizers map to native destructor/lifetime behavior already demonstrated. `Game::ShowMissingRequirementMessage` is a protected default-false hook, while the three `GameWindow::On*` entries are protected empty platform hooks; calling subclasses solely to name those defaults would add no user-visible behavior. |
+| `.Audio` | 7 | Four finalizers are native destruction machinery already covered by owned-bank, engine, wave-bank and instance lifetimes. The three exception constructors represent missing hardware, missing microphone and instance-limit failure paths. The first two remain environmental/manual; CNA declares the instance-limit type but its production XACT path does not throw it. Directly constructing exceptions would demonstrate no audio behavior. |
+| `.Content` | 7 | These are constructors/properties on four nominal serializer attribute wrappers. Focused687 covers the configurable `ContentSerializerAttribute` state and real XML descriptor behavior, including collection names, ignored members, runtime types and versions. Wrapper-only value checks would inflate the catalog without another serialization concept. |
+| `.GamerServices` | 77 | Achievement/PropertyDictionary collection aliases and GamerCollection enumerator machinery are already represented by their real C++ collection workflows. Avatar finalizers are destructor plumbing. Avatar `Changed` and dispatcher `InstallingTitleUpdate` have no offline production trigger. Friend states, gamertag/partner tokens, social Guide overlays, invites, party/headset state and friend lookup require service identities, another user or hardware. Event-argument and exception constructors are framework-created/error payload plumbing. Keep these service/manual or intentionally uncredited. |
+| `.Graphics` | 56 | Collection/nested enumerators and explicit `IVertexType`/`IEffectLights` aliases are represented by real range iteration and stock-type/effect use. Protected `OnApply` hooks are reached through actual effect passes; finalizers are native lifetimes. `DeviceLost` and device exceptions need a real platform loss, and `EffectMaterial` needs a compiled-FX material environment. `ModelMesh::Tag` is an arbitrary caller payload already dispositioned with the model collection audit. |
+| `.Input.Touch` | 6 | These are the nested/non-generic CLR enumerator surface. Real `TouchCollection` range iteration, lookup, copy and mutation are already covered; no distinct CNA C++ entry point exists. |
+| `.Media` | 14 | Seven collection types retain only generic/non-generic CLR `GetEnumerator` spellings. Their actual album, artist, genre, picture, picture-album, playlist and song ranges are traversed in populated library workflows. |
+| `.Net` | 34 | Event-argument constructors and `NetworkSessionProperties` CLR aliases are already represented by real events and the fixed-shape C++ collection contract. Voice/talking/mute, guest identity, invitations and leaderboard callbacks require hardware or service participants. The real refused join covers `NetworkSessionJoinException::JoinError`; explicit construction/CLR serialization adds no network behavior. |
+| `.Storage` | 3 | `StorageContainer::Finalize` is native lifetime plumbing. `StorageDevice::DeviceChanged` has no CNA production raiser, and the disconnected-device exception requires removable-device loss. These remain platform/manual rather than synthetic event or exception construction. |
+
+Thus the212-entry generated difference is a reviewed mixture of already demonstrated semantics,
+CLR aliases, protected/native machinery and truthful platform/service/manual work; it is not a list
+of212 missing coherent demos. Fields/constants remain a separate inventory, and comprehensive CNA
+behavioral coverage is still not declared.
+
+### Complete717 generated runtime checkpoint
+
+The consolidated dispositions above are backed by full current-catalog execution. SOFTWARE/X11
+reports558 pass,36 expected fail,35 skip and3 manual; OPENGLES3/X11 reports590/36/3/3. Both cover
+all632 IDs with zero unexpected failures or unexpected passes. All645 enabled CTests pass and three
+manual tests remain disabled. Generated coverage is301/329 types,2114/2326 non-field members,
+157/753 fields and2999/3205 C routes.
+
+Three failures found while assembling the checkpoint were demo assumptions and are corrected: a
+windowless native system may lack desktop-global pointer/cursor control, fixed-step timing can
+legitimately issue multiple Updates before a draw, and exact explicit Tick accounting must avoid
+fixed-step catch-up. Repeated focused runs and the final complete suites validate the corrections.
+Evidence:`build/linux-full/reports/checkpoint-717-complete-*`. This checkpoint used incrementally
+rebuilt cna-demos executables against the existing production libraries; `HANDOFF.md` records the
+exact hashes and the required next full build. No screenshot, listening test, physical input,
+service session or manual visual-quality inspection was performed.

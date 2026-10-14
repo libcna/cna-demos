@@ -66,12 +66,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-627 project-built catalog demos in18 categories: math78, game33, graphics162, audio23, core3,
-content46, input39, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api172. Kinds are161 console,272 game and194 standalone;
-591 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: see generated docs/COVERAGE.md from complete checkpoint647. It records297/329 XNA types,
-1519/2326 XNA members and2999/3205 public C ABI routes. Selected semantic totals are `input_gamepad.h`61/63,
+632 project-built catalog demos in18 categories: math78, game33, graphics166, audio23, core3,
+content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
+diagnostics2, cnaext4, platform2 and c_api172. Kinds are162 console,276 game and194 standalone;
+596 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: see generated docs/COVERAGE.md from complete checkpoint717. It records301/329 XNA types,
+2114/2326 XNA members and2999/3205 public C ABI routes. Selected semantic totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
@@ -80,11 +80,11 @@ Coverage: see generated docs/COVERAGE.md from complete checkpoint647. It records
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete647 exercises all2999 credited C routes and all current catalog IDs in both full smoke
+Complete717 exercises all2999 credited C routes and all current catalog IDs in both full smoke
 suites. It absorbs every staged C batch through complete `models.h`, the focused SpriteFont route,
-and the deeper XNA member batches through Picture/PictureAlbum identity.
+and the deeper XNA member audit through focused716.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
-Complete647 has 35 known-issue demos. The staged catalog has36 after focused660 adds
+Complete717 has36 known-issue demos after focused660 adds
 `game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
 `graphics.sprite_batch.begin_end_rules` CNA-DEMOS-ISSUE-082,
 `c_api.gamer.achievement_collection` CNA-DEMOS-ISSUE-077,
@@ -123,6 +123,32 @@ runtime knownIssue markers.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Complete **717-member-gap-disposition-runtime** is the current full-runtime baseline. Exact-current
+metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
+645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
+smoke is558 pass/36 expected fail/35 skip/3 manual, while OPENGLES3/X11 is590/36/3/3. Both execute
+all632 catalog IDs with zero unexpected failures or unexpected passes. Generated coverage is
+301/329 XNA types,2114/2326 non-field members,157/753 fields and2999/3205 public C ABI routes.
+
+The checkpoint also reviews every one of the212 remaining generated non-field gaps in
+`docs/COVERAGE_AUDIT.md`: they are already represented collection semantics, CLR aliases,
+protected/finalizer machinery or truthful platform/service/hardware work, rather than212 missing
+coherent demos. The first smoke attempts exposed three demo defects that are fixed and revalidated:
+the C keyboard/mouse demo now skips when no desktop-global pointer/cursor exists, fixed-step
+method-order accepts legitimate catch-up Updates, and the C SuppressDraw control switches to
+variable-step timing before exact Tick accounting.
+
+This is an incremental/runtime checkpoint against the existing production libraries, not a fresh
+whole-project build. During the work the sibling CNA checkout carried unrelated external changes,
+so only the exact changed cna-demos objects and executables were compiled/relinked. Tested SHA-256:
+`cna-demos` `e1e7932acb863e40c2830f84e3066dec704768f6fdb313a4cea8e898d42e44d8`,
+`libcna.so` `e2c8c9dbd6ef8fb4e611a6f0818ebec6290c34d738930c3e9f1dbb4a55ba9aeb`, and
+`libcna_c_api.so` `471f0a12b6b167262d18ae8fb763f4c10b07e7bc478f72f0bbfd5a2879b193ef`.
+Evidence is archived as `build/linux-full/reports/checkpoint-717-complete-*`. After capture the CNA
+checkout became clean at external `0c83dcc9dc`; the next task is a full documented rebuild against
+that source before further runtime claims. No screenshot, listening test, physical input, service
+session or manual visual-quality inspection was performed.
 
 Complete **647-member-audit-integration** is the current full-runtime baseline. The documented
 outer-Xvfb `tools/validate.sh` invocation passes metadata627/0 and all640 enabled CTests; three
@@ -1361,8 +1387,21 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused711
-projects the632-demo staged catalog to2102/2326 XNA members and157/753 fields at301/329 types.
+HIGHEST PRIORITY: Complete717 is the current runtime baseline and the212 remaining generated
+non-field gaps are dispositioned in `docs/COVERAGE_AUDIT.md`. First run a full documented build of
+all cna-demos targets against the now-clean sibling CNA checkout at external `0c83dcc9dc`; the
+Complete717 executables were only incrementally relinked while unrelated CNA work was in progress.
+Re-run metadata validation, validator self-tests and the relevant runtime suites if the rebuilt
+production binaries change. Then audit the28 generated types without direct metadata credit. Start
+with the concrete `GraphicsDeviceStatus` omission: `graphics.device.owned_lifecycle` already checks
+the enum meaningfully, so credit that type in its metadata and validate the existing behavior.
+Explicitly disposition the remaining exception/environment types, nominal serializer wrappers,
+CLR collection enumerators and service-only event payloads instead of inflating the demo count.
+After that inventory pass, select the next high-value public behavior family and continue in
+validated batches.
+
+Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
+members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1419,10 +1458,8 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout. During focused711 it advanced externally through committed `192c2e629`;
-the full documented build completed from those compiled artifacts. Another unrelated renderer/docs
-worktree edit began after the build. Recheck that moving checkout before every build and do not
-absorb or revert its uncommitted work.
+the sibling CNA checkout. It is currently clean at external `0c83dcc9dc`; recheck the moving
+checkout before every build and do not absorb or revert external work.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
 `standalone/c_api.graphics.vertex_values` contains the planned seven-check

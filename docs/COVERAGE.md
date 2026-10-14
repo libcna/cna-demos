@@ -6,7 +6,7 @@ Generated 2026-10-14 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**627 demos** in 18 categories. Kinds: console 161, game 272, standalone 194. Automation: automated 591, manual 3, smoke-only 33.
+**632 demos** in 18 categories. Kinds: console 162, game 276, standalone 194. Automation: automated 596, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -18,10 +18,10 @@ Generated 2026-10-14 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
-| game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
-| gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 162 | 162 | 0 | 0 | 137 / 18 / 7 / 0 / 0 | 151 / 3 / 8 / 0 / 0 |
-| input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
+| game | 33 | 28 | 4 | 1 | 23 / 7 / 2 / 1 / 0 | 30 / 0 / 2 / 1 / 0 |
+| gamer_services | 19 | 18 | 0 | 1 | 16 / 0 / 2 / 1 / 0 | 16 / 0 / 2 / 1 / 0 |
+| graphics | 166 | 166 | 0 | 0 | 141 / 18 / 7 / 0 / 0 | 155 / 3 / 8 / 0 / 0 |
+| input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 13 | 12 | 1 | 0 | 12 / 0 / 1 / 0 / 0 | 12 / 0 / 1 / 0 / 0 |
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
@@ -34,34 +34,33 @@ Generated 2026-10-14 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 297 of 329** (90.3 %).
-- **Methods, properties, constructors and events named by a demo: 1519 of 2326** (65.3 %).
-- Fields and enum values named by a demo: 151 of 753 (reported separately: a demo per enum value is not a goal).
+- **Types with at least one demo: 301 of 329** (91.5 %).
+- **Methods, properties, constructors and events named by a demo: 2114 of 2326** (90.9 %).
+- Fields and enum values named by a demo: 157 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
-| `Microsoft.Xna.Framework` | 40 / 42 | 478 / 643 | 34 / 78 |
-| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 109 / 121 | 6 / 11 |
-| `Microsoft.Xna.Framework.Content` | 7 / 11 | 23 / 48 | 0 / 0 |
-| `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
-| `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 352 / 550 | 102 / 192 |
-| `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 44 / 164 | 0 / 0 |
-| `Microsoft.Xna.Framework.Input` | 17 / 17 | 105 / 113 | 0 / 202 |
-| `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
-| `Microsoft.Xna.Framework.Media` | 24 / 24 | 150 / 192 | 1 / 8 |
-| `Microsoft.Xna.Framework.Net` | 22 / 23 | 71 / 127 | 7 / 22 |
+| `Microsoft.Xna.Framework` | 42 / 42 | 635 / 643 | 36 / 78 |
+| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 114 / 121 | 6 / 11 |
+| `Microsoft.Xna.Framework.Content` | 7 / 11 | 41 / 48 | 0 / 0 |
+| `Microsoft.Xna.Framework.Design` | 13 / 13 | 51 / 51 | 0 / 2 |
+| `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 167 / 244 | 1 / 223 |
+| `Microsoft.Xna.Framework.Graphics` | 90 / 99 | 494 / 550 | 105 / 192 |
+| `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 164 / 164 | 0 / 0 |
+| `Microsoft.Xna.Framework.Input` | 17 / 17 | 113 / 113 | 0 / 202 |
+| `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 42 / 48 | 0 / 15 |
+| `Microsoft.Xna.Framework.Media` | 24 / 24 | 178 / 192 | 1 / 8 |
+| `Microsoft.Xna.Framework.Net` | 22 / 23 | 93 / 127 | 8 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
 
 ### Types without a demo yet
 
 The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
-- `Microsoft.Xna.Framework`: IDrawable, IUpdateable
 - `Microsoft.Xna.Framework.Audio`: InstancePlayLimitException, NoAudioHardwareException, NoMicrophoneConnectedException
 - `Microsoft.Xna.Framework.Content`: ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute
 - `Microsoft.Xna.Framework.GamerServices`: FriendCollection, FriendGamer, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, GamerPrivilegeException, InviteAcceptedEventArgs, NetworkException, NetworkNotAvailableException
-- `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, EffectAnnotation, EffectAnnotationCollection, EffectMaterial, GraphicsDeviceStatus, ModelBoneCollection.Enumerator, ModelEffectCollection.Enumerator, ModelMeshCollection.Enumerator, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException
+- `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, EffectMaterial, GraphicsDeviceStatus, ModelBoneCollection.Enumerator, ModelEffectCollection.Enumerator, ModelMeshCollection.Enumerator, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException
 - `Microsoft.Xna.Framework.Input.Touch`: TouchCollection.Enumerator
 - `Microsoft.Xna.Framework.Net`: WriteLeaderboardsEventArgs
 - `Microsoft.Xna.Framework.Storage`: StorageDeviceNotConnectedException
@@ -141,6 +140,15 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Accelerometer::Stop` -- devices.sensors.keyboard_accelerometer
 - `AccelerometerFailedException` -- devices.sensors.availability
 - `AccelerometerReading::Acceleration` -- devices.sensors.keyboard_accelerometer
+- `AchievementCollection::Add` -- gamer_services.achievement.award
+- `AchievementCollection::Clear` -- gamer_services.achievement.award
+- `AchievementCollection::Contains` -- gamer_services.achievement.award
+- `AchievementCollection::CopyTo` -- gamer_services.achievement.award
+- `AchievementCollection::IndexOf` -- gamer_services.achievement.award
+- `AchievementCollection::Insert` -- gamer_services.achievement.award
+- `AchievementCollection::IsReadOnly` -- gamer_services.achievement.award
+- `AchievementCollection::Remove` -- gamer_services.achievement.award
+- `AchievementCollection::RemoveAt` -- gamer_services.achievement.award
 - `ActivatedEventArgs::IsApplicationInstancePreserved` -- phone.phone_application_service.lifecycle
 - `AnimationClip` -- graphics.model.skinned_animation
 - `AnimationClipEXT` -- graphics.model.clip_interpolation, graphics.model.node_animation
@@ -400,7 +408,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ContentReader::ReadString` -- content.xnb.custom_type_reader, content.xnb.shared_resources
 - `ContentTypeReaderManager::AddTypeCreator` -- content.content_manager.asset_precedence, content.content_manager.read_asset_ownership, content.xnb.custom_type_reader, content.xnb.existing_objects, content.xnb.external_references, content.xnb.reader_versions, content.xnb.shared_resources
 - `DynamicSoundEffectInstance::Stop` -- audio.dynamic_sound_effect_instance.buffer_formats, audio.dynamic_sound_effect_instance.streaming
-- `Effect::Apply` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.uniform_palettes
+- `Effect::Apply` -- graphics.effect.custom_apply_lifecycle, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.uniform_palettes
 - `Environment::DeviceType` -- devices.sensors.availability
 - `EvaluateMorphWeightsEXT` -- graphics.model.morph_targets
 - `FileAccess` -- storage.storage_container.file_modes
@@ -452,6 +460,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GestureSample::GestureSample` -- input.touch.gesture_queue
 - `GltfImportDiagnosticEXT` -- graphics.model.import_report
 - `GltfImportReportEXT` -- graphics.model.import_report
+- `GraphicsAdapter::GetCurrentDeviceTypeEXT` -- graphics.graphics_adapter.display_modes
+- `GraphicsAdapter::GetRequiredRendererEXT` -- graphics.graphics_adapter.display_modes
 - `GraphicsDevice::ExecutesShaderEffectSourceEXT` -- graphics.shader_effect.toon_shading
 - `GraphicsDevice::GetGraphicsRendererName` -- graphics.device.supports_capability, platform.renderer_selection.set_preferred
 - `GraphicsDevice::GetMaxTextureDimension` -- graphics.device.capability_report
@@ -459,6 +469,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GraphicsDevice::GetRendererLimitEXT` -- graphics.device.capability_report
 - `GraphicsDevice::GetShaderDialectEXT` -- graphics.shader_effect.toon_shading
 - `GraphicsDevice::SupportsCapability` -- graphics.device.supports_capability
+- `GraphicsDeviceManager::BeginDraw` -- game.graphics_device_manager.device_events
+- `GraphicsDeviceManager::CreateDevice` -- game.graphics_device_manager.device_events
+- `GraphicsDeviceManager::EndDraw` -- game.graphics_device_manager.device_events
 - `Guide::GetPendingKeyboardInputDisplayTextForTestingEXT` -- gamer_services.guide.keyboard_input
 - `Guide::HasPendingKeyboardInputEXT` -- gamer_services.guide.keyboard_input
 - `Guide::HasPendingMessageBoxEXT` -- gamer_services.guide.message_box
@@ -604,7 +617,16 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `MouseCursor::SizeWE` -- input.mouse.cursors
 - `MouseCursor::Wait` -- input.mouse.cursors
 - `MouseCursor::WaitArrow` -- input.mouse.cursors
-- `MouseState::HorizontalScrollWheelValueEXT` -- input.mouse.get_state
+- `MouseState::HorizontalScrollWheelValueEXT` -- input.mouse.get_state, input.mouse.state_values
+- `NetworkSessionProperties::Add` -- net.network_session.session_properties
+- `NetworkSessionProperties::Clear` -- net.network_session.session_properties
+- `NetworkSessionProperties::Contains` -- net.network_session.session_properties
+- `NetworkSessionProperties::CopyTo` -- net.network_session.session_properties
+- `NetworkSessionProperties::IndexOf` -- net.network_session.session_properties
+- `NetworkSessionProperties::Insert` -- net.network_session.session_properties
+- `NetworkSessionProperties::IsReadOnly` -- net.network_session.session_properties
+- `NetworkSessionProperties::Remove` -- net.network_session.session_properties
+- `NetworkSessionProperties::RemoveAt` -- net.network_session.session_properties
 - `OcclusionQuery::isPixelCountPreciseEXT` -- graphics.occlusion_query.visible_pixels
 - `PbrEffect` -- graphics.model.gltf_lights
 - `PbrEffect::AmbientLightColor` -- graphics.pbr_effect.texture_maps
@@ -627,6 +649,14 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `PhoneApplicationService::State` -- phone.phone_application_service.lifecycle
 - `Picture::TokenEXT` -- media.media_library.save_picture
 - `PreparingDeviceSettingsEventArgs::getGraphicsDeviceInformationEXT` -- game.graphics_device_manager.preparing_device_settings
+- `PropertyDictionary::Add` -- gamer_services.leaderboard.paging
+- `PropertyDictionary::Clear` -- gamer_services.leaderboard.paging
+- `PropertyDictionary::Contains` -- gamer_services.leaderboard.paging
+- `PropertyDictionary::CopyTo` -- gamer_services.leaderboard.paging
+- `PropertyDictionary::IsReadOnly` -- gamer_services.leaderboard.paging
+- `PropertyDictionary::Keys` -- gamer_services.leaderboard.paging
+- `PropertyDictionary::Remove` -- gamer_services.leaderboard.paging
+- `PropertyDictionary::Values` -- gamer_services.leaderboard.paging
 - `RectangleConverter::ConvertFrom` -- design.type_converter.string_round_trip
 - `ResourceManager::ResourceManager` -- content.content_manager.resource_content_manager
 - `SensorBase::CurrentValue` -- devices.sensors.keyboard_accelerometer
@@ -677,6 +707,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `TextInputEXT::TextInput` -- input.text_input.composition, input.text_input.typing
 - `TextureCube::DDSFromStreamEXT` -- graphics.texture_cube.dds_streams
 - `TitleLocation::Path` -- media.media_player.play_song
+- `TouchLocation::PressureEXT` -- input.touch.touch_values
 - `TouchPanel::EnqueueGesture` -- input.touch.gesture_queue
 - `TouchPanel::MouseTouchEmulationEnabledEXT` -- input.touch.get_state
 - `VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned` -- graphics.skinned_effect.two_bones, graphics.skinned_effect.weight_channels

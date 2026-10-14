@@ -6019,3 +6019,31 @@ demos,301/329 types and157/753 fields; Audio moves111->114/121. Evidence:
 delivery, listening test or recording-quality result is claimed. Continue with a consolidated
 disposition audit of the remaining Audio, Media, Net and platform-dependent XNA gaps before the
 next full checkpoint.
+
+## Complete717-member-gap-disposition-runtime
+
+The generated audit now dispositioned all212 remaining non-field XNA inventory entries after
+focused716. They are already represented collection semantics, CLR aliases/enumerators,
+protected/finalizer machinery or truthful platform, service and hardware paths; the detailed
+namespace table is in `docs/COVERAGE_AUDIT.md`. This is not a claim that every overload, failure
+path, renderer, service or visual behavior is covered.
+
+Both full632-demo smoke suites complete with zero unexpected failures or unexpected passes.
+SOFTWARE/X11 reports558 pass/36 expected fail/35 skip/3 manual, and OPENGLES3/X11 reports
+590/36/3/3. All645 enabled CTests pass in273.41s, three declared manual tests remain disabled,
+metadata validation is632/0 and all five validator self-tests pass. Generated coverage is301/329
+XNA types,2114/2326 non-field members,157/753 fields and2999/3205 public C routes.
+
+The initial full runs exposed three demo defects rather than CNA defects. The C keyboard/mouse demo
+now skips when the host has no desktop-global pointer/cursor; fixed-step lifecycle ordering accepts
+legitimate catch-up Updates; and the C SuppressDraw control selects variable-step timing before
+exact Tick accounting. Each correction passed repeated focused SOFTWARE and OPENGLES3 runs before
+the complete checkpoint.
+
+This is an incremental/runtime checkpoint against the then-current production libraries. The
+sibling CNA checkout contained unrelated external work during compilation, so only changed
+cna-demos objects and executables were rebuilt. Evidence is archived under
+`build/linux-full/reports/checkpoint-717-complete-*`; tested hashes are recorded in `HANDOFF.md`.
+After capture CNA became clean at external `0c83dcc9dc`; perform a full documented build against
+that source before making a newer runtime claim. No screenshot, listening test, physical input,
+service session or manual visual-quality inspection was performed.
