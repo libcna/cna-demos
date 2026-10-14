@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added direct cube-face orientation checks: four authored +X corner texels are sampled at their
+  exact GLSL direction-vector centers while the existing center and rebinding controls remain.
 - Extended the ShaderEffect cube-sampler workflow with an observable same-unit texture replacement:
   retained red and rebound white regions prove the second TextureCube replaces the first binding.
 - Added a stock-effect SpriteBatch example whose pixel checks prove AlphaTestEffect Projection and

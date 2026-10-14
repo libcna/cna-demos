@@ -54,13 +54,21 @@ void main() { FragColor = texture(retainedCube, direction); }
             shader_ = std::make_unique<ShaderEffect>(device, header + Vertex, header + Fragment);
             if (!Context().Check(shader_->IsEffectValid(), "the custom samplerCube program compiles"))
                 throw std::runtime_error(shader_->GetCompileErrorEXT());
-            TextureCube original(device, 2, false, SurfaceFormat::Color);
-            std::array<Color, 4> facePixels;
+            TextureCube original(device, 4, false, SurfaceFormat::Color);
+            std::array<Color, 16> facePixels;
             for (std::size_t face = 0; face < colors_.size(); ++face)
             {
                 facePixels.fill(colors_[face]);
-                original.SetData(static_cast<CubeMapFace>(face), facePixels.data(), 4);
+                original.SetData(static_cast<CubeMapFace>(face), facePixels.data(), 16);
             }
+            // Keep the +X centre red but author four distinct corners. GLSL's +X cube mapping is
+            // s=(-Z/X+1)/2, t=(-Y/X+1)/2, so later directions can address these exact texel centres.
+            facePixels.fill(Color::Red);
+            facePixels[0] = Color::White;
+            facePixels[3] = Color::Yellow;
+            facePixels[12] = Color::Cyan;
+            facePixels[15] = Color::Magenta;
+            original.SetData(CubeMapFace::PositiveX, facePixels.data(), 16);
             survivor_.emplace(original); // actual CNA shared-resource value copy
             original.setNameProperty("source wrapper");
             survivor_->setNameProperty("surviving wrapper");
@@ -68,21 +76,21 @@ void main() { FragColor = texture(retainedCube, direction); }
                             survivor_->getNameProperty() == "surviving wrapper",
                             "shared resource wrappers retain independent names");
             facePixels.fill(Color::Orange);
-            original.SetData(CubeMapFace::PositiveZ, facePixels.data(), 4);
-            std::array<Color, 4> observed;
-            survivor_->GetData(CubeMapFace::PositiveZ, observed.data(), 4);
+            original.SetData(CubeMapFace::PositiveZ, facePixels.data(), 16);
+            std::array<Color, 16> observed;
+            survivor_->GetData(CubeMapFace::PositiveZ, observed.data(), 16);
             Context().Check(observed == facePixels,
                             "a complete Color face upload remains shared through the cube value copy");
             colors_[4] = Color::Orange;
             original.Dispose();
-            survivor_->GetData(CubeMapFace::PositiveZ, observed.data(), 4);
+            survivor_->GetData(CubeMapFace::PositiveZ, observed.data(), 16);
             Context().Check(original.getIsDisposedProperty() && !survivor_->getIsDisposedProperty() &&
                             observed == facePixels,
                             "disposing the source wrapper leaves the copied cube alive with the shared edit");
-            replacement_.emplace(device, 2, false, SurfaceFormat::Color);
+            replacement_.emplace(device, 4, false, SurfaceFormat::Color);
             facePixels.fill(Color::White);
             for (int face = 0; face < 6; ++face)
-                replacement_->SetData(static_cast<CubeMapFace>(face), facePixels.data(), 4);
+                replacement_->SetData(static_cast<CubeMapFace>(face), facePixels.data(), 16);
             batch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             white_.emplace(device, 1, 1);
@@ -109,15 +117,32 @@ void main() { FragColor = texture(retainedCube, direction); }
                 batch_->Draw(*white_, Rectangle(80 + (face % 3) * 240, 90 + (face / 3) * 190, 160, 120), Color::White);
                 batch_->End();
             }
+            // Sample the four authored +X corners at exact texel centres. The small top swatches
+            // retain the uploaded row order and leave the red centre of the face visible below.
+            const std::array<Vector3, 4> cornerDirections{
+                Vector3(1.0f, 0.75f, 0.75f), Vector3(1.0f, 0.75f, -0.75f),
+                Vector3(1.0f, -0.75f, 0.75f), Vector3(1.0f, -0.75f, -0.75f)};
+            for (int corner = 0; corner < 4; ++corner)
+            {
+                shader_->Apply();
+                shader_->SetTexture(1, *survivor_);
+                shader_->SetUniformInt("retainedCube", 1);
+                const Vector3& direction = cornerDirections[corner];
+                shader_->SetUniformVec3("direction", direction.X, direction.Y, direction.Z);
+                batch_->Begin(SpriteSortMode::Deferred, &BlendState::Opaque, &SamplerState::PointClamp,
+                              nullptr, nullptr, shader_.get());
+                batch_->Draw(*white_, Rectangle(80 + corner * 40, 90, 40, 40), Color::White);
+                batch_->End();
+            }
             // Unit one is already occupied by survivor_. Rebinding a different cube must replace
-            // that object: overwrite only the right side of the +X card with the white cube.
+            // that object: overwrite only the lower-right of the +X card with the white cube.
             shader_->Apply();
             shader_->SetTexture(1, *replacement_);
             shader_->SetUniformInt("retainedCube", 1);
             shader_->SetUniformVec3("direction", 1.0f, 0.0f, 0.0f);
             batch_->Begin(SpriteSortMode::Deferred, &BlendState::Opaque, &SamplerState::PointClamp,
                           nullptr, nullptr, shader_.get());
-            batch_->Draw(*white_, Rectangle(170, 90, 70, 120), Color::White);
+            batch_->Draw(*white_, Rectangle(190, 160, 50, 50), Color::White);
             batch_->End();
             batch_->Begin();
             batch_->DrawString(*font_, "Copied cube after original disposal", Vector2(80, 20), Color::White);
@@ -133,7 +158,15 @@ void main() { FragColor = texture(retainedCube, direction); }
                     allFaces = allFaces && CnaDemos::Near(screen.At(160 + (face % 3) * 240,
                                                                  150 + (face / 3) * 190), colors_[face], 1);
                 Context().Check(allFaces, "the custom sampler reads all six surviving faces including the shared +Z edit");
-                Context().Check(screen.At(120, 150) == Color::Red && screen.At(205, 150) == Color::White,
+                const std::array<Color, 4> expectedCorners{
+                    Color::White, Color::Yellow, Color::Cyan, Color::Magenta};
+                bool orientedCorners = true;
+                for (int corner = 0; corner < 4; ++corner)
+                    orientedCorners = orientedCorners &&
+                        CnaDemos::Near(screen.At(100 + corner * 40, 110), expectedCorners[corner], 1);
+                Context().Check(orientedCorners,
+                                "+X cube directions preserve the uploaded top-left through bottom-right corner order");
+                Context().Check(screen.At(120, 185) == Color::Red && screen.At(215, 185) == Color::White,
                                 "rebinding unit one replaces the red survivor cube with the white cube");
             }
             DemoGame::Draw(time);
@@ -151,7 +184,7 @@ void main() { FragColor = texture(retainedCube, direction); }
 CNA_DEMOS_GAME(CubeSamplerOwnershipDemo, {
     .id = "graphics.texture_cube.sampler_ownership",
     .title = "Copied cube lifetime and custom sampling",
-    .description = "Edits a shared cube face, disposes the source wrapper, samples all six surviving faces and replaces the cube already bound to the same ShaderEffect unit.",
+    .description = "Edits a shared cube face, disposes the source wrapper, samples all six surviving faces plus the four oriented +X corners, and replaces the cube already bound to the same ShaderEffect unit.",
     .apis = {"TextureCube::TextureCube", "TextureCube::SetData", "TextureCube::GetData", "GraphicsResource::Dispose", "GraphicsResource::Name",
              "ShaderEffect::SetTexture", "ShaderEffect::SetUniformInt", "ShaderEffect::SetUniformVec3"},
     .tags = {"texture", "cube", "shader", "ownership", "cnaext"},
@@ -159,5 +192,5 @@ CNA_DEMOS_GAME(CubeSamplerOwnershipDemo, {
     .frames = 1,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "GLSL source compilation and cube sampling required. Solid base-level faces establish ownership, face selection and binding replacement, not orientation within a face, filtering or physical GPU readback.",
+    .restrictions = "GLSL source compilation and cube sampling required. Base-level faces establish ownership, face selection, +X orientation and binding replacement, not seams, mip filtering or physical GPU readback.",
 })

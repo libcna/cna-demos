@@ -397,6 +397,20 @@ validator self-tests and all four checkpoint-comparison tests pass, and temporar
 `/tmp/checkpoint-741-cube-rebinding-*` and `/tmp/checkpoint-741-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
 
+Focused **742-ShaderEffect-cube-face-orientation** extends the same demo from six to seven controls.
+The surviving cube is now4x4: its +X face keeps a red centre but authors White/Yellow/Cyan/Magenta
+at top-left/top-right/bottom-left/bottom-right. Directions `(1,+.75,+.75)`, `(1,+.75,-.75)`,
+`(1,-.75,+.75)` and `(1,-.75,-.75)` address the exact four texel centres under GLSL's +X mapping
+`s=(-Z/X+1)/2`, `t=(-Y/X+1)/2`. Four framebuffer swatches preserve that order while the red centre
+and white same-unit replacement controls remain independently visible.
+
+OPENGLES3/X11 passes7/7; SOFTWARE retains its explicit CustomEffects skip and exact skipped CTest.
+The incremental build is warning-free, metadata remains636/0, all five validator self-tests and all
+four checkpoint-comparison tests pass, and temporary coverage remains302/329 types,2114/2326
+non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-742-cube-orientation-*` and `/tmp/checkpoint-742-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1660,11 +1674,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-741 are
-staged after it. Audit cube in-face orientation in `graphics.texture_cube.sampler_ownership` against
-the public CubeMapFace upload order and actual GLSL samplerCube coordinates. Add a small authored
-corner pattern only if its expected orientation is portable and independently checkable; otherwise
-record the renderer-specific disposition. Keep mip filtering as a separate decision afterward.
+HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-742 are
+staged after it. Audit texture mip filtering as the last explicit ShaderEffect texture-sampling gap.
+Use an authored mip chain and a derivative/LOD-controlled observation only if the result is stable
+and meaningful on the available OPENGLES3 path; otherwise record the API/renderer boundary instead
+of adding a fragile picture. Keep this separate from the already complete base-level filter checks.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

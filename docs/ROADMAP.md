@@ -6438,3 +6438,17 @@ validator self-tests and all four checkpoint-comparison tests pass. Temporary co
 302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-741-cube-rebinding-*` and `/tmp/checkpoint-741-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
+## Focused742-ShaderEffect-cube-face-orientation
+
+`graphics.texture_cube.sampler_ownership` expands its survivor to4x4 and authors distinct
+White/Yellow/Cyan/Magenta +X corner texels around a red centre. Four exact-centre directions apply
+GLSL's +X s=-Z/X and t=-Y/X mapping and preserve the uploaded top-left through bottom-right order.
+The original centre/other-face checks and the separate white same-unit replacement remain intact.
+
+OPENGLES3/X11 passes7/7; SOFTWARE retains its explicit CustomEffects skip and exact skipped CTest.
+The incremental build is warning-free, metadata remains636/0, all five validator self-tests and all
+four checkpoint-comparison tests pass. Temporary coverage remains302/329 types,2114/2326 non-field
+members,167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-742-cube-orientation-*` and
+`/tmp/checkpoint-742-coverage.md`. Pixel readback was programmatic; no screenshot or manual visual
+inspection was performed. No CNA issue was found.
