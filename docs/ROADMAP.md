@@ -4437,3 +4437,18 @@ self-tests pass. Staged metadata reaches2771/3205 and `cnb.h` reaches260/272. Ev
 `checkpoint-619-c-cnb-importers-focused-*-direct.*`. No ContentManager, graphics/audio device,
 rendering, playback, audible/visual quality or project-built execution is claimed. The generic
 CNJ-to-CNB result family is next.
+
+## Focused620-C-generic-CNJ-to-CNB-result
+
+`c_api.content.cnb_compile_cnj` adds the final12 generic compiler-result routes in22 renderer-free
+controls. A private Model CNJ and two binary sidecars produce deterministic complete CNB bytes,
+the exact canonical asset identity/name, a CNJ-first authored absorbed-file list and two sorted
+external dependencies. Text and byte transfers are atomic, Count bounds preserve output, copied
+bytes outlive the result and parse/decode into the expected derived quad graph. Stale access plus
+missing and unsupported documents fail without partial result handles. Both renderer-labelled
+direct runs are byte-identical with empty stderr; strict C99, metadata compilation, diff checks and
+validation self-tests pass. Staged metadata reaches2783/3205 and `cnb.h` reaches272/272, completing
+the header's semantic route audit. Evidence:`checkpoint-620-c-cnb-compile-cnj-focused-*-direct.*`.
+No ContentManager, graphics device, renderer, animation playback, draw call, visual result or
+project-built execution is claimed. The entirely uncovered `models.h` audit begins with its
+renderer-independent ModelBone graph and collection routes.
