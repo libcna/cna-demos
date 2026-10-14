@@ -49,11 +49,17 @@ namespace
                 Texture2D texture(device, 16, 16);
                 Context().Check(createdCount_ == 1 && lastCreated_ == &texture,
                                 "ResourceCreated fired for the new texture, with the texture as Resource");
+                Context().Check(texture.getGraphicsDeviceProperty() == &device,
+                                "GraphicsDevice identifies the device that owns the resource");
+                Context().Check(texture.ToString() == texture.GetTypeName(),
+                                "an unnamed resource formats as its runtime type name");
 
                 // Name and Tag are free for the game: a debug name, and any object to find the
                 // owner again (XNA's Tag is an object reference; in CNA a System::Object*).
                 texture.setNameProperty("player-portrait");
                 texture.setTagProperty(&owner_);
+                Context().Check(texture.ToString() == "player-portrait",
+                                "a named resource formats as its debug name");
 
                 bool disposing = false;
                 texture.Disposing += [&disposing](System::Object*, const System::EventArgs&) { disposing = true; };
@@ -99,7 +105,8 @@ CNA_DEMOS_GAME(LifetimeEventsDemo, {
                    "is created and disposed, and the texture's own Disposing event.",
     .apis = {"GraphicsDevice::ResourceCreated", "GraphicsDevice::ResourceDestroyed", "ResourceCreatedEventArgs::Resource",
              "ResourceDestroyedEventArgs::Name", "ResourceDestroyedEventArgs::Tag", "GraphicsResource::Name",
-             "GraphicsResource::Tag", "GraphicsResource::Disposing", "GraphicsResource::IsDisposed",
+             "GraphicsResource::Tag", "GraphicsResource::GraphicsDevice", "GraphicsResource::ToString",
+             "GraphicsResource::Disposing", "GraphicsResource::IsDisposed",
              "GraphicsResource::Dispose"},
     .tags = {"resource", "dispose", "event", "lifetime"},
     .frames = 1,

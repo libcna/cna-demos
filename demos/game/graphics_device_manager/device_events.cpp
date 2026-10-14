@@ -7,6 +7,7 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Microsoft/Xna/Framework/Graphics/IGraphicsDeviceService.hpp"
 #include "System/EventArgs.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -18,16 +19,17 @@ namespace
     public:
         DeviceEventsDemo()
         {
-            Graphics().getDeviceCreatedEvent() += [this](System::Object*, const System::EventArgs&) { ++created_; };
-            Graphics().getDeviceResettingEvent() += [this](System::Object*, const System::EventArgs&) {
+            Graphics::IGraphicsDeviceService& service = Graphics();
+            service.getDeviceCreatedEvent() += [this](System::Object*, const System::EventArgs&) { ++created_; };
+            service.getDeviceResettingEvent() += [this](System::Object*, const System::EventArgs&) {
                 ++resetting_;
                 order_.push_back("manager.DeviceResetting");
             };
-            Graphics().getDeviceResetEvent() += [this](System::Object*, const System::EventArgs&) {
+            service.getDeviceResetEvent() += [this](System::Object*, const System::EventArgs&) {
                 ++reset_;
                 order_.push_back("manager.DeviceReset");
             };
-            Graphics().getDeviceDisposingEvent() +=
+            service.getDeviceDisposingEvent() +=
                 [this](System::Object*, const System::EventArgs&) { ++disposing_; };
             Graphics().Disposed += [this](System::Object*, const System::EventArgs&) { ++disposed_; };
         }
@@ -113,6 +115,8 @@ CNA_DEMOS_GAME(DeviceEventsDemo, {
              "GraphicsDeviceManager::Microsoft#Xna#Framework#IGraphicsDeviceManager#CreateDevice",
              "GraphicsDeviceManager::Microsoft#Xna#Framework#IGraphicsDeviceManager#BeginDraw",
              "GraphicsDeviceManager::Microsoft#Xna#Framework#IGraphicsDeviceManager#EndDraw",
+             "IGraphicsDeviceService::DeviceCreated", "IGraphicsDeviceService::DeviceDisposing",
+             "IGraphicsDeviceService::DeviceResetting", "IGraphicsDeviceService::DeviceReset",
              "GraphicsDeviceManager::ApplyChanges",
              "GraphicsDevice::DeviceResetting", "GraphicsDevice::DeviceReset",
              "GraphicsDeviceManager::PreferredBackBufferWidth", "GraphicsDeviceManager::PreferredBackBufferHeight"},

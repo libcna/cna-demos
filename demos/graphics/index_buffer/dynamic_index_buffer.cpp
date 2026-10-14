@@ -60,9 +60,13 @@ namespace
             // Room for every tile; each frame uses only the visible ones.
             indices_ = std::make_unique<DynamicIndexBuffer>(device, IndexElementSize::SixteenBits, Cells * Cells * 6,
                                                             BufferUsage::WriteOnly);
+            indices_->ContentLost += [this](System::Object*, const System::EventArgs&) { ++contentLost_; };
+            indices_->NotifyContentLostEXT();
             Context().Check(indices_->getIndexCountProperty() == Cells * Cells * 6 &&
                                 indices_->getIndexElementSizeProperty() == IndexElementSize::SixteenBits,
                             "IndexCount and IndexElementSize describe the buffer");
+            Context().Check(indices_->getIsContentLostProperty() && contentLost_ == 1,
+                            "a content-loss notification raises ContentLost and marks the buffer lost");
         }
 
         void Update(GameTime& gameTime) override
@@ -121,6 +125,7 @@ namespace
     private:
         float time_ = 0.0f;
         bool checked_ = false;
+        int contentLost_ = 0;
         std::unique_ptr<BasicEffect> effect_;
         std::unique_ptr<VertexBuffer> vertices_;
         std::unique_ptr<DynamicIndexBuffer> indices_;
@@ -132,7 +137,8 @@ CNA_DEMOS_GAME(DynamicIndexBufferDemo, {
     .title = "Dynamic index buffer",
     .description = "Keeps an 8x8 board of tiles in a fixed VertexBuffer and rewrites a DynamicIndexBuffer every frame "
                    "with SetDataOptions::Discard to draw only the tiles a moving wave shows.",
-    .apis = {"DynamicIndexBuffer::DynamicIndexBuffer", "DynamicIndexBuffer::SetData", "DynamicIndexBuffer::IsContentLost",
+    .apis = {"DynamicIndexBuffer::DynamicIndexBuffer", "DynamicIndexBuffer::SetData",
+             "DynamicIndexBuffer::ContentLost", "DynamicIndexBuffer::IsContentLost",
              "IndexBuffer::IndexCount", "IndexBuffer::IndexElementSize", "SetDataOptions::Discard",
              "GraphicsDevice::Indices", "GraphicsDevice::DrawIndexedPrimitives"},
     .tags = {"3d", "buffer", "indices", "dynamic", "gpu"},

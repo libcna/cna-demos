@@ -26,6 +26,10 @@ namespace
             // A 128x128 off-screen colour buffer. RenderTarget2D derives from Texture2D, so once
             // rendered it can be drawn like any texture.
             target_ = std::make_unique<RenderTarget2D>(device, 128, 128);
+            target_->ContentLost += [this](System::Object*, const System::EventArgs&) { ++contentLost_; };
+            target_->NotifyContentLostEXT();
+            Context().Check(target_->getIsContentLostProperty() && contentLost_ == 1,
+                            "a content-loss notification raises ContentLost and marks the target lost");
         }
 
         void UnloadContent() override
@@ -41,6 +45,12 @@ namespace
 
             // 1. Draw into the render target.
             device.SetRenderTarget(target_.get());
+            if (!checkedRestore_)
+            {
+                checkedRestore_ = true;
+                Context().Check(!target_->getIsContentLostProperty(),
+                                "binding the target for new rendering clears its lost-content state");
+            }
             device.Clear(Color::DarkSlateGray);
             spriteBatch_->Begin();
             spriteBatch_->Draw(arrow_, Rectangle(32, 32, 64, 64), Color::White);
@@ -63,6 +73,8 @@ namespace
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::unique_ptr<RenderTarget2D> target_;
         Texture2D arrow_;
+        int contentLost_ = 0;
+        bool checkedRestore_ = false;
     };
 }
 
@@ -71,7 +83,8 @@ CNA_DEMOS_GAME(RenderTarget2DDemo, {
     .title = "Render to a texture",
     .description = "Draws a sprite into a RenderTarget2D, switches back to the back buffer with "
                    "SetRenderTarget(nullptr) and draws the render target as an ordinary texture at several sizes and with a tint.",
-    .apis = {"RenderTarget2D::RenderTarget2D", "GraphicsDevice::SetRenderTarget", "GraphicsResource::Dispose",
+    .apis = {"RenderTarget2D::RenderTarget2D", "RenderTarget2D::ContentLost", "RenderTarget2D::IsContentLost",
+             "GraphicsDevice::SetRenderTarget", "GraphicsResource::Dispose",
              "GraphicsResource::IsDisposed"},
     .tags = {"offscreen", "render-to-texture"},
     .frames = 10,

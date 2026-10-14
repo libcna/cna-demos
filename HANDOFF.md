@@ -1361,13 +1361,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused661
-projects the628-demo staged catalog to1702/2326 XNA members and153/753 fields at299/329 types.
-GameServiceContainer has no remaining gap; Game retains only CLR Finalize and the currently unused
-platform ShowMissingRequirementMessage hook, while GameWindow retains only three empty, uncalled
-protected hooks by explicit disposition. Audit the core GraphicsResource, VertexBuffer,
-IndexBuffer, DynamicIndexBuffer, RenderTarget2D and IGraphicsDeviceService lifetime/property gaps
-next in their existing resource/service workflows.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused662
+projects the628-demo staged catalog to1714/2326 XNA members and153/753 fields at299/329 types.
+VertexBuffer, IndexBuffer, DynamicIndexBuffer, RenderTarget2D and IGraphicsDeviceService have no
+remaining generated gap; GraphicsResource retains only CLR Finalize by disposition. Audit the
+adjacent presentation value family next: PresentationParameters construction/window handle,
+RenderTargetBinding target/face identity, DisplayMode safe area/text and Viewport Y, using their
+existing presentation/render-target/viewport workflows.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1376,7 +1376,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused661 last observed external `0562550c3` with six uncommitted
+the sibling CNA checkout; focused662 last observed external `0562550c3` with six uncommitted
 renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2814,6 +2814,22 @@ edited here. The focused runs use runner
 `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and libcna_c_api.so
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`; these production-library
 hashes supersede complete647 only for focused661 and are not yet a complete-smoke baseline.
+
+Focused662 extends six existing resource/service IDs and closes12 members. GraphicsResource
+lifetime grows7->10 controls with creating-device identity plus unnamed/type and named/debug text.
+Readable VertexBuffer grows3->5 with BufferUsage and explicit disposal; the indexed cube grows1->2
+with WriteOnly usage and disposal. DynamicIndexBuffer grows2->3 and RenderTarget2D grows1->3: each
+uses the explicit CNA notification seam to observe one public ContentLost event/flag, then proves
+the next upload or render-target bind clears the flag before real drawing. This does not claim a
+physical/context device loss. Device events subscribe through IGraphicsDeviceService itself and
+retain all six passing creation/reset/disposal controls. SOFTWARE and OPENGLES3 pass every ID with
+byte-identical per-ID stdout and empty stderr; all six SOFTWARE CTests pass. Temporary coverage
+projects1702->1714/2326. GraphicsResource retains only CLR Finalize by disposition; VertexBuffer,
+IndexBuffer, DynamicIndexBuffer, RenderTarget2D and IGraphicsDeviceService have no member gap.
+Evidence:`/tmp/checkpoint-662-*` and `/tmp/checkpoint-662-coverage.md`. No screenshot or visual
+inspection was used. Sibling CNA remained external dirty `0562550c3` with six observed paths; no
+CNA source was edited. Production library hashes remain focused661; the runner is
+`fa6ea3e8a14c65cbf35383db39e93e2a81fb3230648729869b868c2c7b91d4a6`.
 
 ## 15. Assumptions the next session must know
 

@@ -5109,3 +5109,23 @@ member audit intentionally does not create a probe whose sole behavior is a no-o
 `/tmp/checkpoint-661-*` and `/tmp/checkpoint-661-coverage.md`. No screenshot, manual interaction or
 visual inspection was used. Audit GraphicsResource and buffer/render-target/service lifetime gaps
 next.
+
+## Focused662-graphics-resource-buffer-and-service-lifetime
+
+Six existing IDs close12 members. `graphics.graphics_resource.lifetime_events` grows7->10 controls
+with creating-device identity plus unnamed/type-name and named/debug-name formatting. The readable
+VertexBuffer workflow grows3->5 with BufferUsage and explicit UnloadContent disposal; the indexed
+cube grows1->2 with WriteOnly usage and disposal. DynamicIndexBuffer grows2->3 and RenderTarget2D
+grows1->3: each observes one public ContentLost event and lost flag delivered by CNA's explicit
+notification seam, then proves its next upload or render-target bind clears the flag before real
+drawing. This checks recovery semantics without claiming a physical or context device loss.
+`game.graphics_device_manager.device_events` now subscribes through IGraphicsDeviceService itself
+and retains six passing creation/reset/disposal controls.
+
+SOFTWARE and OPENGLES3 pass every ID with byte-identical per-ID stdout and empty stderr; all six
+focused SOFTWARE CTests pass and the build is diagnostic-free. Temporary coverage moves1702->
+1714/2326 at299/329 types and153/753 fields. GraphicsResource retains only CLR Finalize by
+disposition; VertexBuffer, IndexBuffer, DynamicIndexBuffer, RenderTarget2D and
+IGraphicsDeviceService have no generated member gap. Evidence:`/tmp/checkpoint-662-*` and
+`/tmp/checkpoint-662-coverage.md`. No screenshot or visual inspection was used. Audit the adjacent
+presentation value family next.

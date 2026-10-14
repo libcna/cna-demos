@@ -231,6 +231,23 @@ Five portable IDs have byte-identical renderer output; the two window-only IDs p
 and declare SOFTWARE skips. The back-buffer ID retains only ISSUE-083's expected query mismatch.
 No screenshot or manual interaction was used.
 
+### Graphics resource, buffer and device-service lifetime
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| GraphicsResource.GraphicsDevice and ToString | `graphics.graphics_resource.lifetime_events` now proves a Texture2D retains its creating device, an unnamed resource formats as its runtime type and a named resource formats as its debug name before the established Tag/event/idempotent-disposal checks. Both renderers pass10 controls. |
+| GraphicsResource.Finalize | CLR finalizer inventory entry. Explicit/idempotent disposal, C++ destruction and device ResourceDestroyed are demonstrated; no artificial finalizer demo. |
+| VertexBuffer.BufferUsage and Dispose | The readable-buffer workflow checks its `BufferUsage::None` property, performs complete and ranged readback plus drawing, then explicitly disposes the buffer during UnloadContent. Both renderers pass5 controls. |
+| IndexBuffer.BufferUsage and Dispose | The indexed-cube workflow checks its 36-entry 16-bit WriteOnly shape, performs the actual indexed draw and explicitly disposes during UnloadContent. Both renderers pass2 controls. |
+| DynamicIndexBuffer.ContentLost | The dynamic board attaches the public event, uses the CNA test seam to deliver one content-loss notification, checks event plus lost state, then proves its next SetData clears the flag before actual indexed drawing. This validates recovery semantics without claiming either exercised renderer really lost a device. Both renderers pass3 controls. |
+| RenderTarget2D.ContentLost and IsContentLost | The render-to-texture workflow similarly observes one explicit notification and lost flag, then proves binding for replacement rendering clears the flag before the target is drawn and sampled. Both renderers pass3 controls. No physical/context device loss is claimed. |
+| IGraphicsDeviceService lifecycle events | `game.graphics_device_manager.device_events` now subscribes through the interface itself before device creation. It observes created, resetting, reset and disposing around actual manager creation, ApplyChanges and Dispose, retaining its six passing lifecycle controls on both renderers. |
+
+Focused662 adds12 member credits without a new ID, moving temporary coverage1702->1714/2326.
+All six IDs pass on SOFTWARE and OPENGLES3 with byte-identical output and empty stderr; all six
+focused CTests pass. GraphicsResource retains only CLR Finalize by disposition, and the other five
+target types have no generated member gap.
+
 ### ContentManager (including CNA extensions)
 
 | Members / behavior | Decision and evidence |

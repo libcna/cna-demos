@@ -44,6 +44,8 @@ namespace
             };
             buffer_ = std::make_unique<VertexBuffer>(device, VertexPositionColor::getVertexDeclarationStatic(),
                                                      static_cast<int>(quad.size()), BufferUsage::None);
+            Context().Check(buffer_->getBufferUsageProperty() == BufferUsage::None,
+                            "BufferUsage reports the readable usage chosen at construction");
             buffer_->SetData(quad.data(), static_cast<int>(quad.size()));
 
             // Read everything back...
@@ -84,6 +86,12 @@ namespace
             Game::Draw(gameTime);
         }
 
+        void UnloadContent() override
+        {
+            buffer_->Dispose();
+            Context().Check(buffer_->getIsDisposedProperty(), "VertexBuffer.Dispose releases the readable buffer");
+        }
+
     private:
         std::unique_ptr<BasicEffect> effect_;
         std::unique_ptr<VertexBuffer> buffer_;
@@ -96,7 +104,8 @@ CNA_DEMOS_GAME(GetDataDemo, {
     .description = "Fills a readable VertexBuffer (BufferUsage::None) with a coloured quad, reads all of it and a "
                    "range of it back with GetData, computes the geometry's bounds from the read-back vertices and "
                    "draws the quad.",
-    .apis = {"VertexBuffer::GetData", "VertexBuffer::SetData", "BufferUsage::None", "VertexBuffer::VertexBuffer",
+    .apis = {"VertexBuffer::GetData", "VertexBuffer::SetData", "VertexBuffer::BufferUsage",
+             "VertexBuffer::Dispose", "BufferUsage::None", "VertexBuffer::VertexBuffer",
              "VertexDeclaration::VertexStride"},
     .tags = {"3d", "buffer", "vertices", "readback", "tools"},
     .needs = CnaDemos::Need::ThreeD,

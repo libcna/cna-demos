@@ -64,8 +64,9 @@ namespace
             indices_ = std::make_unique<IndexBuffer>(device, IndexElementSize::SixteenBits, 36, BufferUsage::WriteOnly);
             indices_->SetData(faces.data(), static_cast<int>(faces.size()));
             Context().Check(indices_->getIndexCountProperty() == 36 &&
-                                indices_->getIndexElementSizeProperty() == IndexElementSize::SixteenBits,
-                            "36 sixteen-bit indices");
+                                indices_->getIndexElementSizeProperty() == IndexElementSize::SixteenBits &&
+                                indices_->getBufferUsageProperty() == BufferUsage::WriteOnly,
+                            "36 write-only sixteen-bit indices");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -88,6 +89,12 @@ namespace
             Game::Draw(gameTime);
         }
 
+        void UnloadContent() override
+        {
+            indices_->Dispose();
+            Context().Check(indices_->getIsDisposedProperty(), "IndexBuffer.Dispose releases the index buffer");
+        }
+
     private:
         std::unique_ptr<BasicEffect> effect_;
         std::unique_ptr<VertexBuffer> vertices_;
@@ -100,7 +107,8 @@ CNA_DEMOS_GAME(IndexedCubeDemo, {
     .title = "Indexed cube",
     .description = "Draws a vertex-coloured cube from a VertexBuffer with 8 corners and an IndexBuffer with 36 "
                    "16-bit indices through GraphicsDevice::DrawIndexedPrimitives.",
-    .apis = {"IndexBuffer::IndexBuffer", "IndexBuffer::SetData", "IndexBuffer::IndexCount", "IndexBuffer::IndexElementSize",
+    .apis = {"IndexBuffer::IndexBuffer", "IndexBuffer::SetData", "IndexBuffer::IndexCount",
+             "IndexBuffer::IndexElementSize", "IndexBuffer::BufferUsage", "IndexBuffer::Dispose",
              "GraphicsDevice::Indices", "GraphicsDevice::DrawIndexedPrimitives", "IndexElementSize::SixteenBits"},
     .tags = {"3d", "cube", "indices", "buffer", "mesh"},
     .needs = CnaDemos::Need::ThreeD,
