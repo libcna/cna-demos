@@ -1362,9 +1362,9 @@ real content-loaded glTF proves all five variant routes through exact names, sta
 two private XNB fixtures prove the Model content-load plus dictionary/foreign-object Tag boundaries.
 This completes the header's semantic route audit. The remaining206 uncredited public C routes are
 already dispositioned largely as fixed reflection names, hardware/service/manual observations or
-renderer-specific work. Start the next deeper public API member/behavior audit from the generated
-XNA member gaps, prioritizing an existing model/content demo that can gain a coherent observable
-behavior without adding a meaningless ID. Avoid other renderer-
+renderer-specific work. The deeper XNA member/behavior audit has now extended
+`graphics.model.bones` for pose-array and collection contracts. Continue with the documented
+`graphics.model.mesh_parts` null-effect skip gap, using actual pixels and the existing ID. Avoid other renderer-
 dependent `graphics_ext.h` while
 the sibling renderer retirement is incoherent. The two
 remaining KeyboardState routes are fixed reflection
@@ -2618,3 +2618,18 @@ completing its semantic route audit. Evidence:
 `checkpoint-630-c-model-loading-focused-*-direct.*`. Pixel readback was programmatic; no screenshot
 or visual inspection was performed. Project-built runner validation still awaits a coherent sibling
 CNA checkout. Begin the deeper XNA public member/behavior gap audit next.
+
+## Focused631-Model-pose-arrays-and-collection-contracts
+
+The existing `graphics.model.bones` keeps its four original assertions and adds eight member-
+behavior controls. Bone, child and mesh name lookup/membership agree with indexed identity and
+distinguish missing/detached objects. `CopyBoneTransformsFrom` refuses a short source atomically,
+applies a complete local pose while safely ignoring one extra source entry, composes a root +X
+translation through the Forearm absolute transform and restores every authored local value. Short
+local and absolute outputs retain all sentinels. The updated object compiles cleanly and an isolated
+relink against the last complete object/library set passes12/12 on SOFTWARE and OPENGLES3 with
+byte-identical stdout and empty stderr. A temporary coverage generation projects XNA members
+1405->1408/2326; no demo ID or C-route count changes. Evidence:
+`checkpoint-631-model-bones-members-focused-*`. No screenshot or visual inspection was performed,
+and full project validation remains blocked by the external sibling state. Extend the existing
+`graphics.model.mesh_parts` workflow with its still-unproved null-effect skip behavior next.

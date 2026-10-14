@@ -410,6 +410,20 @@ whole-image identity or fixed GPU completion-latency claim is made.
 | Dispose, IsDisposed, HasRenderer and disposed operations | Normal query ownership is demonstrated by unique_ptr cleanup. The scratch-query preflight now ends the native pair, calls public Dispose, verifies IsDisposed and HasRenderer=false, and requires ObjectDisposedException from subsequent Begin and PixelCount. Both renderers pass these controls. Other disposed-operation permutations, repeated Dispose and disposal of an actively open pair are not independently established. HasRenderer is a small lifetime diagnostic, not an independent scene. A general GraphicsResource demo does not establish every query-specific disposed operation. Query destruction after earlier device/context teardown is a separate lifecycle scenario; no device-loss or all-backend teardown proof is claimed. |
 | GetTypeName, inherited Name/Tag and protected Dispose(bool) | Reflection identity and inherited resource bookkeeping do not justify duplicate demos per subclass. The protected hook is framework lifecycle plumbing; applications use public Dispose. The public preflight avoids internal query handles and renderer bridges. |
 
+### Model, ModelBone and collection pose workflow
+
+Source review at CNA `49b1d3a998`: public Model/ModelBone collection headers and implementations,
+plus the existing `graphics.model.bones` and XNB model examples. The bones demo now adds eight
+focused controls and passes all12 checks under both requested renderers through an isolated relink
+against the last complete libraries. The stdout files are byte-identical and stderr is empty.
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Bones, Meshes, Root; bone Name/Index/Parent/Children; collection Item/Count, TryGetValue and Contains | bones retains its authored four-node hierarchy and all four original checks. Exact bone and mesh lookups return the same objects as indexed access; missing names clear their output pointers; membership rejects detached/null objects; and Forearm is found through UpperArm.Children. Existing C++ range-for loops traverse both collections. The explicit CLR-style Enumerator structs remain language interop machinery and do not justify separate demos. |
+| CopyBoneTransformsFrom, CopyBoneTransformsTo and CopyAbsoluteBoneTransformsTo | A complete local array moves the root by +1 on X while preserving every descendant local value. Local readback is exact, the Forearm's absolute translation gains exactly UnitX through hierarchy composition, an extra source value is ignored by CNA's documented C++ safety behavior and a larger destination keeps its sentinel tail. The original authored array is restored exactly before LoadContent returns. |
+| Short transform arrays and atomicity | A short source throws ArgumentOutOfRangeException before changing any local transform. Short local and absolute destinations both throw while preserving every sentinel element. This is the useful array-boundary contract; null/raw arrays do not exist in the C++ vector API, and repeating each possible deficit adds no behavior. |
+| Model constructors, Tag, owned resources and drawing | Existing procedural mesh and C ABI workflows cover constructor graph ownership; node_animation/skinned_animation use typed Tag payloads; Model.Draw has exact pixels in draw and mesh_effects. Arbitrary Tag setter/getter identity and setOwnedResources are carrier/plumbing operations and do not justify independent scenes. The null-effect part behavior remains a focused gap in mesh_parts below. |
+
 ### ModelMesh and ModelMeshPart
 
 The existing model examples load authored glTF/CNB geometry. That does not establish every

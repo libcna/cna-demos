@@ -4605,3 +4605,18 @@ reaches2999/3205 and `models.h` reaches216/216, completing its semantic route au
 performed, and project-built execution still awaits a coherent sibling CNA checkout. Continue with
 the deeper generated XNA public member/behavior gaps rather than adding demos for the intentionally
 uncredited fixed-name, hardware, service, manual or renderer-specific C routes.
+
+## Focused631-Model-pose-arrays-and-collection-contracts
+
+The existing `graphics.model.bones` retains its four original controls and adds eight for the
+deeper XNA member audit. Exact bone, child and mesh lookup/membership return the same objects as
+indexed access and distinguish absent or detached objects. `CopyBoneTransformsFrom` atomically
+refuses a short source, applies a complete pose while ignoring one safe extra value, composes a
+root +X change through the Forearm absolute transform and restores the authored locals. Short local
+and absolute destinations preserve all sentinels. An isolated relink of the strictly compiled
+updated object against the last complete build passes12/12 under SOFTWARE and OPENGLES3 with byte-
+identical stdout and empty stderr. A temporary coverage report moves the generated XNA member
+projection1405->1408/2326 without adding a demo ID. Evidence:
+`checkpoint-631-model-bones-members-focused-*`. No screenshot or visual inspection was performed;
+the sibling CNA checkout is still unsuitable for a full project reconfigure. The null-effect part
+skip identified in the ModelMesh audit is the next focused model behavior.
