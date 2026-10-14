@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
-* Mostly complete: 6 (effects and shaders, 44; the C `effects.h` route audit is complete).
+* Mostly complete: 6 (effects and shaders, 45; the C `effects.h` route audit is complete).
 * In progress: 7 (models/glTF, 23), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
@@ -66,10 +66,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-644 project-built catalog demos in18 categories: math78, game33, graphics173, audio23, core3,
+645 project-built catalog demos in18 categories: math78, game33, graphics174, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,282 game and199 standalone;
-608 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,283 game and199 standalone;
+609 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -151,6 +151,8 @@ Focused826 adds controlled pixel evidence for `KHR_materials_ior`/`KHR_materials
 and both optional maps, including exact dielectric F0 and texture-channel effects.
 Focused827 adds actual dual-UV PBR drawing plus independent base-color/emissive
 `KHR_texture_transform` sampling on CNA's canonical60-byte vertex record.
+Focused828 adds exact base-color, emissive and specular-color sRGB decoding plus final output
+encoding, including proof that the final RGB transfer preserves alpha.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3184,6 +3186,25 @@ tool self-test suites pass and temporary coverage remains302/329 types,2114/2326
 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-827-pbr-uv-*` and
 `/tmp/checkpoint-827-coverage.md`. No physical-GPU claim is made. Continue with actual base-color,
 emissive and specular-colour sRGB decode plus output-encode behavior.
+
+### Focused828-PbrEffect-colour-space-transfers
+
+New `graphics.pbr_effect.color_spaces` isolates all four public PBR colour-space switches. Two
+state controls prove their enabled defaults and disabled round-trip. Eight point-sampled panels
+then show a mid-gray128 texel staying128 as linear and decoding to exact linear55 as sRGB through
+the base-color, emissive and specular-color paths. The specular pair uses black irradiance, a white
+prefiltered cube, scale-one/bias-zero BRDF lookup, IOR2 and intensity9 so its output equals the
+texture sample. The final pair keeps decoding off: output encode changes linear128 to sRGB188 while
+both pixels retain authored alpha96.
+
+Two OPENGLES3/Xvfb runs pass10/10 with identical values. The inspected800x480 capture shows three
+matching128/55 pairs and the final128/188 pair. SOFTWARE takes the declared PBR capability skip
+and its exact CTest passes as skipped. The `-j3` incremental build emits only the established Draco
+CMP0148 configure warning; metadata is645/0, both tool self-test suites pass and temporary coverage
+remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-828-pbr-color-*` and `/tmp/checkpoint-828-coverage.md`. No physical-GPU or HDR
+claim is made. Audit the remaining observable PBR material controls next, beginning with normal-map
+scale and occlusion strength in the existing texture-map workflow.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

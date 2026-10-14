@@ -145,7 +145,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (44 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (45 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
   diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
   specular_lights now has eight on both renderers with inspected labeled comparisons.
@@ -167,7 +167,9 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `graphics.pbr_effect.specular_material` isolates observable `KHR_materials_ior` and
   `KHR_materials_specular` factors plus both maps. ✅ `graphics.pbr_effect.texture_coordinates`
   draws CNA's dual-UV vertex and independently selects/transforms base-color and emissive samples.
-  Remaining: the newer colour-space controls.
+  ✅ `graphics.pbr_effect.color_spaces` gives exact rendered evidence for all three texture decode
+  switches and final output encoding. Remaining observable material controls include normal-map
+  scale and occlusion strength.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
@@ -7943,3 +7945,21 @@ metadata is644/0, self-tests pass5/5 and4/4, and temporary coverage remains302/3
 2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-827-pbr-uv-*` and `/tmp/checkpoint-827-coverage.md`. Continue with actual
 base-color/emissive/specular-colour sRGB decode and output-encode behavior.
+
+## Focused828-PbrEffect-colour-space-transfers
+
+New `graphics.pbr_effect.color_spaces` isolates the three PBR texture-decode switches and final
+output encoding. Two state controls verify their enabled defaults and disabled round-trip. The
+eight rendered panels show an authored gray128 sample remaining128 in linear mode and decoding to
+exact linear55 in sRGB mode through base-color, emissive and specular-color paths. The controlled
+specular environment uses IOR2 and intensity9 so its output equals the sampled colour. The final
+pair changes linear128 to sRGB188 while authored alpha96 remains unchanged.
+
+Two OPENGLES3/Xvfb runs pass10/10 identically; the inspected800x480 capture shows three matching
+128/55 pairs and the final128/188 pair. SOFTWARE takes its declared PBR capability skip and the
+exact CTest passes as skipped. The incremental build uses at most three jobs and emits only the
+known Draco CMP0148 configure warning; metadata is645/0, self-tests pass5/5 and4/4, and temporary
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-828-pbr-color-*` and `/tmp/checkpoint-828-coverage.md`. Audit the remaining
+observable PBR material controls next, beginning with normal-map scale and occlusion strength in
+the existing texture-map workflow.

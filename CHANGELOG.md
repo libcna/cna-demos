@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added exact PBR base-color, emissive and specular-color sRGB decode checks plus final output
+  encoding with unchanged alpha.
 - Added a focused dual-UV PBR scene with independent base-color/emissive coordinate selection and
   full scale-rotate-translate texture transforms, verified through exact sampled pixels.
 - Added a focused PBR dielectric-specular scene covering IOR, scalar/color factors and the

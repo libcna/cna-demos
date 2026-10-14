@@ -2440,3 +2440,18 @@ runs pass8/8 identically. The inspected capture shows red/green/green above blac
 SOFTWARE remains a declared fallback skip. This establishes renderer consumption of independent
 UV selectors and `KHR_texture_transform` state; sRGB transfer behavior remains the next separate
 audit batch.
+
+### PbrEffect texture and output colour spaces
+
+New `graphics.pbr_effect.color_spaces` turns all four colour-space switches into sampled evidence.
+An authored gray128 texel remains exact128 with decoding disabled and becomes exact linear55 with
+sRGB decoding enabled through each of the base-color, emissive and specular-color paths. The
+specular pair uses black irradiance, a white prefiltered cube, scale-one/bias-zero BRDF lookup,
+IOR2 and intensity9, making the isolated dielectric result equal to the map sample. The output pair
+keeps texture decoding disabled and changes linear128 to sRGB188 while preserving alpha96, proving
+that final encoding affects RGB only. Default-enabled and disabled round-trip state is also checked.
+
+Two OPENGLES3/Xvfb runs pass10/10 with identical values. The inspected capture shows three matching
+128/55 pairs and the final128/188 pair. SOFTWARE remains a declared fallback skip. This proves the
+transfer controls in the rigid shader on an 8-bit target; it does not claim HDR, physical-GPU or
+parallel skinned-shader output.
