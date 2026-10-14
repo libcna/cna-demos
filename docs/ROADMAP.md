@@ -6403,3 +6403,24 @@ all five validator self-tests and all four checkpoint-comparison tests pass. Tem
 remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-739-layer-depth-*` and `/tmp/checkpoint-739-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
+## Focused740-SpriteBatch-stock-effect-and-custom-effect-disposition
+
+New `graphics.sprite_batch.stock_effect` demonstrates the portable stock-Effect path through
+SpriteBatch::Begin. AlphaTestEffect Projection places red in the top-right model-space quadrant;
+BasicEffect adds a Y-flipping World and places blue in the bottom-right. Black left-side and corner
+samples distinguish those results from ordinary pixel-space SpriteBatch projection. Deferred and
+Immediate modes both participate, and the relevant public effect argument remains visible.
+
+The custom-effect audit found that both primary compiled-effect options are OFF in the current
+baseline. SOFTWARE also lacks CustomEffects; OPENGLES3 already executes the GLSL `sprite_shader`
+and `portable_package` demos. The existing C API core-effect workflow supplies the valid compiled
+fixture and verifies explicit refusal. CNA's compiled-effect renderer suites cover SpriteBatch,
+multi-pass ordering and alternation for enabled configurations, but were not executed here. A new
+compiled demo would therefore duplicate the current refusal rather than demonstrate behavior.
+
+SOFTWARE and OPENGLES3/X11 pass2/2, and the exact SOFTWARE CTest passes. Metadata is636/0, all five
+validator self-tests and all four checkpoint-comparison tests pass. Temporary coverage remains
+302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-740-stock-effect-*` and `/tmp/checkpoint-740-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.

@@ -66,10 +66,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-635 project-built catalog demos in18 categories: math78, game33, graphics169, audio23, core3,
+636 project-built catalog demos in18 categories: math78, game33, graphics170, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api172. Kinds are163 console,278 game and194 standalone;
-599 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api172. Kinds are163 console,279 game and194 standalone;
+600 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete735 at635 demos,302/329 XNA
 types,2114/2326 XNA members,167/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input_gamepad.h`61/63,
@@ -361,6 +361,28 @@ remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C r
 range-loop copy warning; changing the loop variable to a reference produced a warning-free rebuild
 before runtime validation. Pixel readback was programmatic; no screenshot or manual visual
 inspection was performed. No CNA issue was found.
+
+Focused **740-SpriteBatch-stock-effect-and-custom-effect-disposition** adds
+`graphics.sprite_batch.stock_effect`. An AlphaTestEffect Projection maps a red sprite into the
+top-right model-space quadrant; a BasicEffect with the same Projection and a Y-flipping World maps
+a blue sprite into the bottom-right quadrant. Exact samples also keep the left half and original
+pixel-space corner black. This demonstrates the portable stock-Effect argument to
+SpriteBatch::Begin in both Deferred and Immediate modes without hiding the relevant calls.
+
+The adjacent custom-effect audit found no portable compiled-effect workflow in the current
+baseline: `CNA_EASYGL_COMPILED_EFFECTS` and `CNA_SOFTWARE_COMPILED_EFFECTS` are both OFF, SOFTWARE
+does not advertise `custom-effects`, and `c_api.graphics.effect_core` already passes by checking
+explicit refusal of the valid `CnaConformanceEffect.fxb`. The existing GLSL `sprite_shader` and
+`portable_package` cover executable source effects on OPENGLES3. CNA contains renderer conformance
+tests for compiled SpriteBatch, multi-pass ordering and effect alternation when compiled effects
+are enabled, but those tests were inspected rather than run here. A new `.fxb` demo would only
+duplicate a refusal in this build, so none was added.
+
+SOFTWARE and OPENGLES3/X11 pass2/2; the exact SOFTWARE CTest passes. Metadata is636/0, all five
+validator self-tests and all four checkpoint-comparison tests pass, and temporary coverage remains
+302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-740-stock-effect-*` and `/tmp/checkpoint-740-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
 
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
@@ -1625,12 +1647,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-739 are
-staged after it. Audit SpriteBatch custom-effect coverage against `shader_effect.sprite_shader`,
-`portable_package` and the compiled `CnaConformanceEffect.fxb`. Decide whether a focused compiled
-effect/multiple-pass Begin workflow adds portable behavior on both primary renderers; otherwise
-record the renderer/toolchain disposition and move to the next graphics behavior gap. Do not add a
-second GLSL-only variant of behavior already proven by the existing shader demos.
+HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-740 are
+staged after it. Audit the remaining ShaderEffect texture-binding behaviors in
+`graphics.texture_cube.sampler_ownership` and `graphics.texture3d.sampler_coordinates`. Prefer an
+in-place control proving replacement of an already-bound texture if it adds observable semantics;
+classify cube in-face orientation and mip filtering separately rather than expanding one demo into
+an unfocused sampler matrix. Keep the declared OPENGLES3-only execution boundary explicit.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

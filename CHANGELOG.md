@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a stock-effect SpriteBatch example whose pixel checks prove AlphaTestEffect Projection and
+  BasicEffect World matrices replace ordinary sprite pixel-space placement on both renderers.
+- Classified compiled/multi-pass SpriteBatch effects as build- and renderer-specific: the current
+  SOFTWARE and EasyGL compiled-effect options are disabled, while the valid `.fxb` refusal path is
+  already exercised by the C API effect lifecycle demo.
 - Extended SpriteBatch sorting with XNA's observable unstable equal-depth ordering and paired
   depth-disabled/enabled checks proving layer depth reaches the depth buffer as vertex Z.
 - Added compiled SpriteFont framebuffer checks for exact CRLF/LF LineSpacing placement and visible
