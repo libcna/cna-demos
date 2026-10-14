@@ -249,6 +249,18 @@ external SDL GPU test change was subsequently committed in the sibling checkout 
 `d23e139de`; that checkout is clean and one commit ahead of its origin, while both production
 library hashes remain exact from Complete724.
 
+Focused **730-SpriteBatch-disposed-texture-refusal** extends the existing known-issue
+`graphics.sprite_batch.begin_end_rules` from12 to14 controls. Draw rejects an explicitly disposed
+Texture2D with ObjectDisposedException before queueing, then the same still-open deferred batch
+successfully draws a valid texture and ends. SOFTWARE and OPENGLES3/X11 each retain only the exact
+prior CNA-DEMOS-ISSUE-082 active-accounting failure, with thirteen passing controls and the same
+failure message. The known-issue SOFTWARE CTest passes, metadata remains634/0, the five validator
+self-tests and four checkpoint-comparison tests pass, and coverage remains302/329 types,
+2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-730-disposed-texture-*`. No screenshot or manual visual inspection was performed.
+Sibling CNA is clean at test-only `d23e139de`; production library hashes remain exact from
+Complete724.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1512,14 +1524,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-729 are
-staged after it. Extend the existing `graphics.sprite_batch.begin_end_rules` diagnostic workflow
-with a disposed-texture Draw refusal and prove the still-open batch remains usable afterward.
-Then audit the distinct cross-device texture refusal; add it only if a stable owned second device
-can be exercised on both primary renderers without conflating device construction with the Draw
-rule. Degenerate rectangles and non-finite numeric arguments are deliberately unchecked XNA input,
-while oversized source rectangles feed sampler addressing and are already demonstrated by
-`tiling_with_wrap`; do not misclassify these as missing argument validation.
+HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-730 are
+staged after it. Audit the distinct SpriteBatch cross-device texture refusal. Use the established
+owned-device construction pattern only if it runs stably on both primary renderers, prove refusal
+happens at Draw before queueing, and prove the original batch accepts a same-device texture and End
+afterward. Keep this in the existing `graphics.sprite_batch.begin_end_rules` diagnostic workflow
+if the second device does not obscure the rule. Then continue the SpriteBatch member/behavior audit
+with transformed/rotated pixel bounds or layer-depth text overlap, selecting whichever adds the
+stronger distinct contract without multiplying overload variants.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

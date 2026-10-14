@@ -17,6 +17,7 @@
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "System/EventArgs.hpp"
+#include "System/Exception.hpp"
 #include "System/InvalidOperationException.hpp"
 #include "System/ObjectDisposedException.hpp"
 
@@ -41,6 +42,27 @@ namespace
             batch.Begin();
             Expect("Begin twice without End", [&] { batch.Begin(); });
             batch.End();
+
+            // A dead texture is rejected at Draw, before Deferred can retain or queue it. The
+            // still-open batch must remain usable for a valid texture and End afterward.
+            Texture2D disposedTexture(device, 1, 1);
+            disposedTexture.Dispose();
+            batch.Begin();
+            ExpectDisposed("Draw a disposed texture",
+                           [&] { batch.Draw(disposedTexture, Vector2::Zero, Color::White); });
+            bool recoveredAfterDisposedTexture = true;
+            try
+            {
+                batch.Draw(texture, Vector2::Zero, Color::White);
+                batch.End();
+            }
+            catch (const System::Exception& e)
+            {
+                recoveredAfterDisposedTexture = false;
+                Context().Print("valid Draw/End after disposed texture -> {}", e.what());
+            }
+            Context().Check(recoveredAfterDisposedTexture,
+                            "a disposed-texture refusal leaves the deferred batch usable");
 
             // Several deferred batches may be open at once on one device...
             batch.Begin();
@@ -156,14 +178,14 @@ namespace
 CNA_DEMOS_GAME(BeginEndRulesDemo, {
     .id = "graphics.sprite_batch.begin_end_rules",
     .title = "SpriteBatch Begin/End rules",
-    .description = "Exercises SpriteBatch's Begin/End errors, explicit disposal and a deferred texture whose caller "
-                   "wrapper leaves scope before End.",
+    .description = "Exercises SpriteBatch's Begin/End errors, disposed-resource rejection and a deferred texture "
+                   "whose caller wrapper leaves scope before End.",
     .apis = {"SpriteBatch::Begin", "SpriteBatch::End", "SpriteBatch::Draw", "SpriteBatch::Dispose",
              "SpriteSortMode::Immediate", "GraphicsResource::Disposing", "GraphicsResource::IsDisposed",
              "GraphicsDevice::GetBackBufferData"},
     .tags = {"sprite", "errors", "rules", "dispose", "lifetime"},
     .frames = 1,
     .deterministic = true,
-    .restrictions = "CNA-DEMOS-ISSUE-082: disposing an open batch leaves the device's active-batch counter set.",
+    .restrictions = "CNA-DEMOS-ISSUE-082: disposing an open batch leaves the device's active-batch counter set; cross-device texture rejection is audited separately.",
     .knownIssue = "CNA-DEMOS-ISSUE-082",
 })

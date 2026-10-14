@@ -6240,3 +6240,19 @@ all five validator self-tests and all four checkpoint-comparison tests pass, and
 visual inspection was performed. Audit the remaining meaningful SpriteBatch Draw rejection and
 lifetime paths next; unchecked degenerate numeric input and sampler-governed oversized sources are
 already intentional contracts rather than argument-refusal gaps.
+
+## Focused730-SpriteBatch-disposed-texture-refusal
+
+The existing known-issue `graphics.sprite_batch.begin_end_rules` grows from12 to14 controls. A
+Texture2D explicitly disposed before Draw is rejected with ObjectDisposedException before the
+deferred queue can retain it; the same still-open SpriteBatch then accepts a valid texture and End,
+proving the refusal does not poison batch state. The established active-batch-accounting failure is
+unchanged.
+
+SOFTWARE and OPENGLES3/X11 each execute thirteen passing controls plus only the expected
+CNA-DEMOS-ISSUE-082 failure. Their JSON reports retain the exact prior failure message, and the
+known-issue SOFTWARE CTest passes. Metadata remains634/0, all five validator self-tests and all
+four checkpoint-comparison tests pass, and coverage remains302/329 types,2114/2326 non-field
+members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-730-disposed-texture-*`. No screenshot or manual visual inspection was performed.
+Audit the distinct cross-device texture Draw refusal next.

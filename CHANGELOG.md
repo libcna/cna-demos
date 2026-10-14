@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `graphics.sprite_batch.begin_end_rules` with disposed-texture Draw rejection and
+  proof that the same deferred batch remains usable after the refusal.
 - Added exact-bound and normalized-pattern framebuffer checks to
   `graphics.sprite_batch.destination_rectangle` for uniform and nonuniform scaling.
 - Added representative framebuffer checks to `graphics.sprite_batch.tint_and_transparency` for

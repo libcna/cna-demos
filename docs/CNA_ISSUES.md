@@ -106,8 +106,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Observed:** Dispose raises Disposing once, clears the queue, publishes IsDisposed and correctly
   makes subsequent Begin, End and Draw calls throw ObjectDisposedException. The unrelated
   Immediate Begin nevertheless throws InvalidOperationException claiming another batch remains
-  active. SOFTWARE and OPENGLES3 execute the same twelve checks with byte-identical stdout and
-  empty stderr: eleven positive controls pass and only the active-accounting assertion fails.
+  active. SOFTWARE and OPENGLES3 execute the same fourteen checks: thirteen positive controls pass
+  and only the active-accounting assertion fails.
 - **Cause observed in source:** successful Begin increments the GraphicsDevice counters.
   `SpriteBatch::End` has a `releaseDeviceAccounting` path, but `Dispose(bool)` only clears the
   renderer, queue and `begun` flag before delegating to GraphicsResource. Once disposed, End cannot
@@ -115,14 +115,16 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Expected:** disposing an open batch should retire the accounting established by its successful
   Begin so it cannot poison other SpriteBatch values on the device. Public Dispose may abandon the
   disposed batch's queued work, but unrelated batching must remain usable.
-- **Positive controls/scope:** all older sequencing refusals pass. A deferred command retains the
+- **Positive controls/scope:** all older sequencing refusals pass. Drawing an explicitly disposed
+  Texture2D throws ObjectDisposedException before queueing, after which the same deferred batch
+  accepts a valid Draw and End. A deferred command also retains the
   renderer payload of a temporary Texture2D whose C++ wrapper leaves scope before End and produces
   exact orange/black framebuffer samples on both renderers. This is programmatic readback; no
-  screenshot or visual inspection was performed. Explicitly disposing a queued Texture2D, renderer
-  End failures, cross-device resources and device teardown are not claimed.
-- **Status:** open against clean CNA `09c3108e5`; runtime marker applies to both exercised renderers.
-  No CNA source was modified and no upstream message was sent. Unmarked evidence:
-  `/tmp/checkpoint-637-sprite-batch-unmarked-*`.
+  screenshot or visual inspection was performed. Explicitly disposing a texture after it has been
+  queued, renderer End failures, cross-device resources and device teardown are not claimed.
+- **Status:** open and reconfirmed against clean test-only CNA `d23e139de`; runtime marker applies
+  to both exercised renderers. No CNA source was modified and no upstream message was sent.
+  Current evidence: `/tmp/checkpoint-730-disposed-texture-*`.
 
 ### CNA-DEMOS-ISSUE-081 -- ModelMesh construction omits pre-attached part effects
 
