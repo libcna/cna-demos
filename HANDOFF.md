@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused702
-projects the632-demo staged catalog to2058/2326 XNA members and157/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused703
+projects the632-demo staged catalog to2069/2326 XNA members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1390,10 +1390,11 @@ NetworkSession disposal state, post-dispose roster safety, the fixed-shape C++
 NetworkSessionProperties collection contract and the offline LocalWithLeaderboards creation path
 are now covered. The
 remaining event-payload constructors, voice, invites, leaderboard callbacks and CLR serialization
-members are dispositioned in COVERAGE_AUDIT. Audit the remaining ordinary GamerServices members
-next, beginning with the existing leaderboard workflows rather than adding variants for CLR
-collection machinery. Continue the next high-value behavior family after each batch, rebuilding and
-running both renderers where
+members are dispositioned in COVERAGE_AUDIT. The existing leaderboard paging workflow now covers
+offline Begin/End read and navigation, identity and reader disposal. Continue ordinary
+GamerServices members with PropertyDictionary's typed value and actual C++ collection behavior;
+do not name its CLR explicit-interface aliases merely to raise coverage. Continue the next
+high-value behavior family after each batch, rebuilding and running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
@@ -1401,7 +1402,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused702 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused703 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3571,6 +3572,26 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 leaderboard write, screenshot or visual result is claimed. Sibling CNA remained clean external
 `f698d0f548`; no CNA source was edited. Continue with the ordinary GamerServices member audit,
 starting in the existing leaderboard workflows.
+
+Focused703 extends `gamer_services.leaderboard.paging` without adding a variant ID. The initial
+offline page now comes from BeginRead/EndRead; its token completes synchronously, calls back once
+with exact caller state and retains the requested LeaderboardIdentity Key/GameMode. PageDown and
+PageUp keep their original synchronous traversal and additionally execute both Begin/End pairs with
+the same callback contract. The reader is disposed twice and reports disposed after its real
+four-player, two-page workflow.
+
+The first two direct SOFTWARE attempts failed before controls because only XDG_CONFIG_HOME had been
+redirected while StorageDevice roots use XDG_DATA_HOME. Fresh isolated writable data roots fixed
+the environment error; this was not a demo or CNA defect. SOFTWARE and OPENGLES3/X11 then pass13/13
+with byte-identical stdout and empty stderr. The focused SOFTWARE CTest, metadata validation and five
+validator self-tests pass. Temporary coverage moves2058->2069/2326 at632 demos,301/329 types and
+157/753 fields; GamerServices moves116->127/244. Evidence:
+`/tmp/checkpoint-703-leaderboard-reader-*` and `/tmp/checkpoint-703-coverage.md`. Runner SHA-256 is
+`c452a7a94ccf99fa271b7ad0032370c1c7f91fdcae48118193745961af66f555`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No service, network,
+screenshot or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
+source was edited. Continue with PropertyDictionary's meaningful typed and collection surface.
 
 ## 15. Assumptions the next session must know
 

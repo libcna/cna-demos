@@ -1290,6 +1290,21 @@ Both renderers pass5/5 with identical stdout and empty stderr. Evidence:
 the type's gameplay purpose; this control establishes its offline policy branch without claiming a
 configured service, transport, leaderboard write, rendered result or additional demo variant.
 
+### LeaderboardReader asynchronous paging and lifecycle
+
+`gamer_services.leaderboard.paging` retains its four real local entries, two-row pages and typed
+columns while using BeginRead/EndRead for the initial page. The offline token is synchronously
+complete, invokes one callback with exact caller state and produces a reader whose
+LeaderboardIdentity retains the requested Key and GameMode. Both page directions now execute their
+Begin/End pairs with the same token contract; a subsequent synchronous PageDown/PageUp cycle
+preserves the prior direct-method evidence. Repeated Dispose finally publishes IsDisposed.
+
+SOFTWARE and OPENGLES3/X11 pass13/13 with identical stdout and empty stderr. Evidence:
+`/tmp/checkpoint-703-leaderboard-reader-*`. Initial read-only lock failures came from redirecting
+XDG_CONFIG_HOME while StorageDevice uses XDG_DATA_HOME; isolated writable data roots resolved them.
+This demonstrates local-store behavior and the public async contract. It does not establish a
+service-backed deferred callback, remote paging, concurrent requests or post-dispose service guards.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

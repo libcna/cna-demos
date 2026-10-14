@@ -5783,3 +5783,20 @@ at632 demos and301/329 types; fields move156->157/753 and Net fields7->8/22. Evi
 `/tmp/checkpoint-702-session-types-*` and `/tmp/checkpoint-702-coverage.md`. No service, network,
 leaderboard write, screenshot or visual result is claimed. The remaining ordinary Net gaps are
 semantically dispositioned. Continue the ordinary GamerServices member audit in existing workflows.
+
+## Focused703-LeaderboardReader-async-lifecycle
+
+The existing four-player leaderboard paging workflow now obtains its first page through
+BeginRead/EndRead, checks synchronous offline completion, one callback and exact caller state, and
+retains the requested LeaderboardIdentity Key/GameMode. Both navigation directions execute their
+Begin/End pairs with the same token contract while the established synchronous PageDown/PageUp
+traversal remains. The reader is disposed twice after real two-page use and reports disposed.
+
+Two initial direct attempts redirected XDG_CONFIG_HOME but not StorageDevice's XDG_DATA_HOME and
+failed before controls with a read-only local-store lock. Fresh isolated writable data roots fixed
+that environment error without source changes. SOFTWARE and OPENGLES3/X11 pass13/13 with
+byte-identical stdout and empty stderr. The focused SOFTWARE CTest, metadata validation and validator
+self-tests pass. Temporary coverage moves2058->2069/2326 at632 demos,301/329 types and157/753
+fields; GamerServices moves116->127/244. Evidence:`/tmp/checkpoint-703-leaderboard-reader-*` and
+`/tmp/checkpoint-703-coverage.md`. No service, network, screenshot or visual result is claimed.
+Continue with PropertyDictionary's meaningful typed and C++ collection behavior.

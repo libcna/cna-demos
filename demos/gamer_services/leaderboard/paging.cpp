@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // LeaderboardReader paging: a board read a page at a time, each row with the columns the game wrote.
+#include <any>
 #include <memory>
 #include <optional>
 #include <string>
@@ -170,8 +171,26 @@ namespace
         void ReadPages(const LeaderboardIdentity& board)
         {
             auto& ctx = Context();
-            // The first page; the reader knows the board's size and whether more pages exist.
-            LeaderboardReader reader = LeaderboardReader::Read(board, 0, PageSize);
+            // Offline leaderboard work completes synchronously, but the public Begin/End contract
+            // still invokes its callback once and preserves caller state.
+            int readCallbacks = 0;
+            bool readStateMatched = false;
+            std::unique_ptr<System::IAsyncResult> readResult(LeaderboardReader::BeginRead(
+                board, 0, PageSize,
+                [&readCallbacks, &readStateMatched](System::IAsyncResult& result) {
+                    ++readCallbacks;
+                    readStateMatched = std::any_cast<std::string>(result.getAsyncStateProperty()) == "initial page";
+                },
+                std::string("initial page")));
+            ctx.Check(readCallbacks == 1 && readStateMatched && readResult->getIsCompletedProperty() &&
+                          readResult->getCompletedSynchronouslyProperty(),
+                      "BeginRead completes offline, invokes one callback, and preserves caller state");
+            LeaderboardReader reader = LeaderboardReader::EndRead(readResult.get());
+            ctx.Check(reader.getLeaderboardIdentityProperty().getKeyProperty() == board.getKeyProperty() &&
+                          reader.getLeaderboardIdentityProperty().getGameModeProperty() == board.getGameModeProperty(),
+                      "EndRead retains the requested leaderboard key and game mode");
+
+            // The first page knows the board's size and whether more pages exist.
             ListPage(reader);
             ctx.Check(reader.getTotalLeaderboardSizeProperty() == 4 && reader.getEntriesProperty().getCountProperty() == 2,
                       "the first page holds two of the four rows");
@@ -181,8 +200,19 @@ namespace
             ctx.Check(first[0].getColumnsProperty().GetValueOutcome("Result") == LeaderboardOutcome::Win,
                       "the leader's row reads back Result = Win");
 
-            // PageDown moves the same reader to the next rows.
-            reader.PageDown();
+            // BeginPageDown/EndPageDown move the same reader to the next rows.
+            int downCallbacks = 0;
+            bool downStateMatched = false;
+            std::unique_ptr<System::IAsyncResult> downResult(reader.BeginPageDown(
+                [&downCallbacks, &downStateMatched](System::IAsyncResult& result) {
+                    ++downCallbacks;
+                    downStateMatched = std::any_cast<int>(result.getAsyncStateProperty()) == 2;
+                },
+                2));
+            ctx.Check(downCallbacks == 1 && downStateMatched && downResult->getIsCompletedProperty() &&
+                          downResult->getCompletedSynchronouslyProperty(),
+                      "BeginPageDown completes offline with one callback and its caller state");
+            reader.EndPageDown(downResult.get());
             ListPage(reader);
             ctx.Check(reader.getPageStartProperty() == 2 && !reader.getCanPageDownProperty() &&
                           reader.getCanPageUpProperty(),
@@ -194,11 +224,32 @@ namespace
                           third.GetValueTimeSpan("Time") == System::TimeSpan::FromSeconds(141),
                       "Third Player's row reads back Result = Loss and Time = 2:21");
 
-            reader.PageUp();
+            int upCallbacks = 0;
+            bool upStateMatched = false;
+            std::unique_ptr<System::IAsyncResult> upResult(reader.BeginPageUp(
+                [&upCallbacks, &upStateMatched](System::IAsyncResult& result) {
+                    ++upCallbacks;
+                    upStateMatched = std::any_cast<std::string>(result.getAsyncStateProperty()) == "first page";
+                },
+                std::string("first page")));
+            ctx.Check(upCallbacks == 1 && upStateMatched && upResult->getIsCompletedProperty() &&
+                          upResult->getCompletedSynchronouslyProperty(),
+                      "BeginPageUp completes offline with one callback and its caller state");
+            reader.EndPageUp(upResult.get());
             const auto again = reader.getEntriesProperty();
             ctx.Check(reader.getPageStartProperty() == 0 &&
                           again[0].getGamerProperty()->getGamertagProperty() == "Demo Player",
                       "PageUp returns to the first page");
+
+            reader.PageDown();
+            const bool synchronousDown = reader.getPageStartProperty() == 2;
+            reader.PageUp();
+            ctx.Check(synchronousDown && reader.getPageStartProperty() == 0,
+                      "the synchronous PageDown and PageUp pair traverses the same two pages");
+
+            reader.Dispose();
+            reader.Dispose();
+            ctx.Check(reader.getIsDisposedProperty(), "the reader reports disposed after idempotent cleanup");
         }
 
         bool done_ = false;
@@ -213,13 +264,17 @@ CNA_DEMOS_GAME(PagingDemo, {
     .id = "gamer_services.leaderboard.paging",
     .title = "Leaderboard pages and columns",
     .description = "Four local players write a round to a board -- rating plus a LeaderboardOutcome and a TimeSpan "
-                   "column -- and LeaderboardReader reads it two rows at a time with PageDown and PageUp, the "
-                   "columns read back with GetValueOutcome and GetValueTimeSpan.",
-    .apis = {"LeaderboardReader::PageDown", "LeaderboardReader::PageUp", "LeaderboardReader::CanPageDown",
+                   "column -- and LeaderboardReader reads it two rows at a time through the offline Begin/End read "
+                   "and paging contracts, preserving callback state, board identity and explicit disposal.",
+    .apis = {"LeaderboardReader::PageDown", "LeaderboardReader::PageUp", "LeaderboardReader::BeginPageDown",
+             "LeaderboardReader::EndPageDown", "LeaderboardReader::BeginPageUp", "LeaderboardReader::EndPageUp",
+             "LeaderboardReader::BeginRead", "LeaderboardReader::EndRead", "LeaderboardReader::CanPageDown",
              "LeaderboardReader::CanPageUp", "LeaderboardReader::PageStart", "LeaderboardReader::TotalLeaderboardSize",
-             "LeaderboardReader::Read", "LeaderboardOutcome", "PropertyDictionary::GetValueOutcome",
-             "PropertyDictionary::GetValueTimeSpan", "PropertyDictionary::SetValue", "LeaderboardEntry::Columns",
-             "LeaderboardEntry::RankingEXT", "LeaderboardReader::Entries"},
+             "LeaderboardReader::LeaderboardIdentity", "LeaderboardReader::Dispose",
+             "LeaderboardReader::IsDisposed", "LeaderboardIdentity::Key", "LeaderboardIdentity::GameMode",
+             "LeaderboardOutcome", "PropertyDictionary::GetValueOutcome", "PropertyDictionary::GetValueTimeSpan",
+             "PropertyDictionary::SetValue", "LeaderboardEntry::Columns", "LeaderboardEntry::RankingEXT",
+             "LeaderboardReader::Entries"},
     .tags = {"gamer-services", "leaderboard", "high-score", "paging", "offline"},
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},
