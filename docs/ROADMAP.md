@@ -5676,3 +5676,18 @@ validator self-tests pass. Temporary coverage moves2041->2044/2326 at632 demos,3
 `/tmp/checkpoint-695-coverage.md`. This is Linux local-network evidence; no second physical machine,
 screenshot or visual result is claimed. Continue with remote NetworkGamer departure/history,
 session identity and round-trip behavior next.
+
+## Focused696-remote-gamer-departure-history
+
+The real two-process leave now checks the NetworkGamer lifecycle around GamerLeft. The joined remote
+object begins live and bound to the host session. The leave event returns that same object after it
+is removed from the live roster; it reports HasLeftSession, remains tied to its original session,
+appears as the sole PreviousGamers item and retains a non-negative transport RoundtripTime. Zero is
+valid on local loopback or before a transport sample, so no positive-latency claim is made.
+
+SOFTWARE and OPENGLES3/X11 pass all16 host/joiner controls with byte-identical stdout and empty
+stderr. The focused SOFTWARE CTest, metadata validation and validator self-tests pass. Temporary
+coverage moves2044->2048/2326 at632 demos,301/329 types and156/753 fields; Net moves79->83/127.
+Evidence:`/tmp/checkpoint-696-find-*` and `/tmp/checkpoint-696-coverage.md`. This is Linux local UDP
+evidence; no second physical machine, screenshot or visual result is claimed. Continue with session
+bandwidth counters in an existing packet workflow next.

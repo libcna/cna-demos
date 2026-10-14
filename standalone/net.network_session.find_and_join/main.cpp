@@ -194,13 +194,26 @@ namespace
                 joinedToken_ = session_->GamerJoined.Add([this](System::Object*, const GamerJoinedEventArgs& args) {
                     if (!args.getGamerProperty()->getIsLocalProperty())
                     {
-                        report_.Log("GamerJoined: " + args.getGamerProperty()->getGamertagProperty() + " (remote)");
-                        remoteJoined_ = args.getGamerProperty()->getGamertagProperty();
+                        NetworkGamer* gamer = args.getGamerProperty();
+                        report_.Log("GamerJoined: " + gamer->getGamertagProperty() + " (remote)");
+                        remoteJoined_ = gamer->getGamertagProperty();
+                        remoteGamer_ = gamer;
+                        report_.Check(!gamer->getHasLeftSessionProperty() && gamer->getSessionProperty() == session_.get(),
+                                      "the joined remote gamer is live and belongs to the host session");
                     }
                 });
                 leftToken_ = session_->GamerLeft.Add([this](System::Object*, const GamerLeftEventArgs& args) {
-                    report_.Log("GamerLeft: " + args.getGamerProperty()->getGamertagProperty());
-                    remoteLeft_ = args.getGamerProperty()->getGamertagProperty();
+                    NetworkGamer* gamer = args.getGamerProperty();
+                    report_.Log("GamerLeft: " + gamer->getGamertagProperty());
+                    remoteLeft_ = gamer->getGamertagProperty();
+                    report_.Check(gamer == remoteGamer_ && gamer->getHasLeftSessionProperty(),
+                                  "GamerLeft identifies the joined gamer and marks it as departed");
+                    const auto& previous = session_->getPreviousGamersProperty();
+                    report_.Check(previous.getCountProperty() == 1 && previous[0] == gamer &&
+                                      gamer->getSessionProperty() == session_.get(),
+                                  "PreviousGamers retains the departed gamer in its original session");
+                    report_.Check(gamer->getRoundtripTimeProperty().getTotalMillisecondsProperty() >= 0.0,
+                                  "the departed gamer retains a non-negative measured round trip");
                 });
                 report_.Log("hosting a System Link session as " + std::string(HostGamertag));
 
@@ -350,6 +363,7 @@ namespace
         std::atomic<int> joinerExit_{-1};
         std::string remoteJoined_;
         std::string remoteLeft_;
+        NetworkGamer* remoteGamer_ = nullptr;
         Clock::time_point started_{};
         Clock::time_point joinedAt_{};
         bool finished_ = false;

@@ -1193,6 +1193,22 @@ SOFTWARE and OPENGLES3/X11 executions pass all12 host/joiner controls with empty
 SOFTWARE CTest passes. Evidence:`/tmp/checkpoint-695-find-*`. Discovery uses Linux local UDP on one
 machine; no service directory, remote host, screenshot or visual result is claimed.
 
+### Remote gamer departure and history
+
+The focused extension to `net.network_session.find_and_join` retains the exact remote gamer pointer
+raised by GamerJoined. It is initially live and its Session points to the host's real
+NetworkSession. CNA moves it out of the active roster before raising GamerLeft; that event supplies
+the same pointer with HasLeftSession set, while PreviousGamers contains it as its sole member and
+Session still identifies the owner. RoundtripTime remains publicly readable and non-negative after
+departure. A zero value is valid on fast local loopback or before a native sample, so this does not
+claim positive WAN latency or RTT accuracy.
+
+This credits `NetworkGamer::HasLeftSession`, `Session`, `RoundtripTime` and
+`NetworkSession::PreviousGamers` as one coherent production lifecycle. SOFTWARE and OPENGLES3/X11
+pass all16 host/joiner controls with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. Evidence:`/tmp/checkpoint-696-find-*`. No stale access after session disposal, remote
+machine, service directory or voice state is inferred.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

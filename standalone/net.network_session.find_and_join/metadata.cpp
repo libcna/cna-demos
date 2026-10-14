@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "Two processes on one machine: the first hosts a System Link session, the second finds it with "
                    "NetworkSession::Find (host gamertag, public/private slots, sparse properties and "
                    "QualityOfService), joins it, disposes the search results and leaves; the host sees GamerJoined "
-                   "and GamerLeft.",
+                   "and GamerLeft, then retains the departed gamer in PreviousGamers.",
     .apis = {"NetworkSession::Find", "NetworkSession::Join", "AvailableNetworkSessionCollection",
              "AvailableNetworkSessionCollection::Dispose", "AvailableNetworkSessionCollection::IsDisposed",
              "AvailableNetworkSession::HostGamertag",
@@ -16,6 +16,8 @@ CNA_DEMOS_STANDALONE({
              "AvailableNetworkSession::QualityOfService", "QualityOfService::AverageRoundtripTime",
              "QualityOfService::MinimumRoundtripTime", "QualityOfService::IsAvailable", "NetworkSession::GamerLeft",
              "GamerLeftEventArgs::Gamer", "NetworkSession::GamerJoined", "NetworkSession::Create",
+             "NetworkGamer::HasLeftSession", "NetworkGamer::RoundtripTime", "NetworkGamer::Session",
+             "NetworkSession::PreviousGamers",
              "NetworkSessionType::SystemLink"},
     .tags = {"net", "multiplayer", "system-link", "lan", "lobby"},
     .needs = CnaDemos::Need::Network,
