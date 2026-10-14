@@ -4349,3 +4349,18 @@ metadata reaches2714/3205 and `cnb.h` reaches203/272. Evidence:
 `checkpoint-613-c-cnb-model-from-cnj-focused-*-direct.*`. No ContentManager, graphics device,
 renderer, draw call or project-built execution is claimed. Neutral SpriteFont data and its codec
 are next.
+
+## Focused614-C-CNB-SpriteFont-data-and-codec
+
+`c_api.content.cnb_sprite_font_data` adds all11 neutral SpriteFont routes in24 renderer-free
+controls. An empty description receives exact metrics, two complete glyph rows and a copied8x4
+Rgba8 atlas. Derived glyph counts, canonical booleans, invalid-row rollback, Count bounds and
+independent atlas copies pass. The encoder rejects the intentionally descending character map;
+replacing those same rows in strict order enables atomic sizing, short-buffer refusal and two
+byte-identical complete images. Parse/decode restores every metric, glyph field and atlas byte in
+an independently owned font. Both renderer-labelled direct runs are byte-identical with empty
+stderr; strict C99, metadata compilation, diff checks and validation self-tests pass. Staged
+metadata reaches2725/3205 and `cnb.h` reaches214/272. Evidence:
+`checkpoint-614-c-cnb-sprite-font-data-focused-*-direct.*`. No ContentManager, graphics device,
+renderer, text layout, draw call or project-built execution is claimed. Audio formats and neutral
+SoundEffect data are next.
