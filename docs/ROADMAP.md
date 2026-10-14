@@ -168,8 +168,9 @@ a check that all authored colors remain visible and that a blank texture row can
   `KHR_materials_specular` factors plus both maps. ✅ `graphics.pbr_effect.texture_coordinates`
   draws CNA's dual-UV vertex and independently selects/transforms base-color and emissive samples.
   ✅ `graphics.pbr_effect.color_spaces` gives exact rendered evidence for all three texture decode
-  switches and final output encoding. Remaining observable material controls include normal-map
-  scale and occlusion strength.
+  switches and final output encoding. `graphics.pbr_effect.texture_maps` now also proves normal-map
+  scale and occlusion strength at one and zero. Remaining observable material controls include the
+  two specular maps' UV selectors/transforms and alpha/double-sided/vertex-colour behavior.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
@@ -7963,3 +7964,18 @@ coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C ro
 `/tmp/checkpoint-828-pbr-color-*` and `/tmp/checkpoint-828-coverage.md`. Audit the remaining
 observable PBR material controls next, beginning with normal-map scale and occlusion strength in
 the existing texture-map workflow.
+
+## Focused829-PbrEffect-normal-scale-and-occlusion-strength
+
+The existing `graphics.pbr_effect.texture_maps` grows from four to eight controls. It preserves
+flat, normal-map, emissive and occlusion evidence while adding exact factor behavior: scale-one
+normal bumps read189/62 versus scale-zero132/132, and strength-one occlusion reads194/82 versus
+strength-zero194/194. Default-one and independent fractional state round-trips are also checked.
+
+Two OPENGLES3/Xvfb runs pass8/8 identically; the inspected800x480 capture clearly shows the six
+flat/bumped/flat, striped/grooved/uniform panels. SOFTWARE takes its declared fallback skip and the
+exact CTest passes as skipped. The warning-free incremental compile uses at most three jobs;
+metadata remains645/0, self-tests pass5/5 and4/4, and temporary coverage remains302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-829-pbr-map-scales-*` and `/tmp/checkpoint-829-coverage.md`. Continue with sampled
+dual-UV selector/transform behavior for both specular maps.

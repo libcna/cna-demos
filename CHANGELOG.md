@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the PBR texture-map scene with exact normal-scale and occlusion-strength behavior at
+  one and zero.
 - Added exact PBR base-color, emissive and specular-color sRGB decode checks plus final output
   encoding with unchanged alpha.
 - Added a focused dual-UV PBR scene with independent base-color/emissive coordinate selection and

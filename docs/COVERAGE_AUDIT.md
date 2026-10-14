@@ -2455,3 +2455,15 @@ Two OPENGLES3/Xvfb runs pass10/10 with identical values. The inspected capture s
 128/55 pairs and the final128/188 pair. SOFTWARE remains a declared fallback skip. This proves the
 transfer controls in the rigid shader on an 8-bit target; it does not claim HDR, physical-GPU or
 parallel skinned-shader output.
+
+### PbrEffect normal scale and occlusion strength
+
+The existing `graphics.pbr_effect.texture_maps` now makes the two remaining scalar map controls
+observable. Its authored normal bumps yield green189 on the light-facing side and62 on the opposite
+side at scale one; scale zero makes the same samples132/132, matching the flat basis. Ambient-only
+occlusion yields194 in an open texel and82 in a groove at strength one; strength zero makes both
+exact194. Default-one and independent fractional state round-trips precede the draw.
+
+Two OPENGLES3/Xvfb runs pass8/8 identically. The inspected capture shows the expected relief and
+grooves beside their uniform zero-factor counterparts. SOFTWARE remains a declared fallback skip.
+No new ID was needed because the controls refine the exact maps already demonstrated here.

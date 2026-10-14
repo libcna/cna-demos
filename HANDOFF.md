@@ -153,6 +153,8 @@ Focused827 adds actual dual-UV PBR drawing plus independent base-color/emissive
 `KHR_texture_transform` sampling on CNA's canonical60-byte vertex record.
 Focused828 adds exact base-color, emissive and specular-color sRGB decoding plus final output
 encoding, including proof that the final RGB transfer preserves alpha.
+Focused829 extends the existing PBR texture-map workflow with sampled normal-scale and
+occlusion-strength behavior at one and zero.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3205,6 +3207,23 @@ remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evi
 `/tmp/checkpoint-828-pbr-color-*` and `/tmp/checkpoint-828-coverage.md`. No physical-GPU or HDR
 claim is made. Audit the remaining observable PBR material controls next, beginning with normal-map
 scale and occlusion strength in the existing texture-map workflow.
+
+### Focused829-PbrEffect-normal-scale-and-occlusion-strength
+
+`graphics.pbr_effect.texture_maps` grows from four to eight controls without adding an ID. Its
+original flat, normal, emissive and occlusion evidence remains, now arranged with two factor-zero
+controls. Exact sampled greens are flat133/133, normal-scale-one189/62 and normal-scale-zero132/132;
+emissive stripes remain208 versus132; occlusion-strength-one is194/82 while strength-zero is
+194/194. Defaults at one and independent fractional state round-trips are checked before drawing.
+
+Two OPENGLES3/Xvfb runs pass8/8 with identical values. The inspected800x480 capture shows a flat
+panel, relief bumps, their scale-zero flat counterpart, emissive stripes, occlusion grooves and the
+strength-zero uniform counterpart. SOFTWARE retains the declared PBR fallback skip and its exact
+CTest passes as skipped. The warning-free incremental compile uses `-j3`; metadata remains645/0,
+both tool self-test suites pass and temporary coverage stays302/329 types,2114/2326 members,
+169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-829-pbr-map-scales-*` and
+`/tmp/checkpoint-829-coverage.md`. No physical-GPU claim is made. Next add sampled dual-UV selector
+and transform behavior for the specular strength and colour maps to the existing specular workflow.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

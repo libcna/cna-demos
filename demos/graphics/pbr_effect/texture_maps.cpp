@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MS-PL
-// CNAEXT PbrEffect texture maps: a normal map, an emissive map and an occlusion map, each on a
-// panel of its own beside a panel with none.
+// CNAEXT PbrEffect texture maps plus normal scale and occlusion strength.
 #include <array>
 #include <cmath>
 #include <cstddef>
@@ -111,7 +110,11 @@ namespace
         return texture;
     }
 
-    constexpr std::array<float, 4> PanelX = {-2.4f, -0.8f, 0.8f, 2.4f};
+    constexpr float Half = 0.52f;
+    constexpr std::array<Vector2, 6> PanelPositions = {
+        Vector2(-1.8f, 0.75f), Vector2(0.0f, 0.75f), Vector2(1.8f, 0.75f),
+        Vector2(-1.8f, -0.75f), Vector2(0.0f, -0.75f), Vector2(1.8f, -0.75f),
+    };
 
     class TextureMapsDemo final : public CnaDemos::DemoGame
     {
@@ -130,15 +133,14 @@ namespace
             occlusionMap_ = MakeTexture(device, OcclusionMap());
 
             // One quad facing the camera; texture u runs along +x, so the tangent is +x.
-            constexpr float H = 0.7f;
             const Vector3 normal(0.0f, 0.0f, 1.0f);
             const Vector4 tangent(1.0f, 0.0f, 0.0f, 1.0f);
-            quad_ = {PbrVertex{Vector3(-H, H, 0.0f), normal, tangent, Vector2(0.0f, 0.0f)},
-                     PbrVertex{Vector3(H, H, 0.0f), normal, tangent, Vector2(1.0f, 0.0f)},
-                     PbrVertex{Vector3(-H, -H, 0.0f), normal, tangent, Vector2(0.0f, 1.0f)},
-                     PbrVertex{Vector3(H, H, 0.0f), normal, tangent, Vector2(1.0f, 0.0f)},
-                     PbrVertex{Vector3(H, -H, 0.0f), normal, tangent, Vector2(1.0f, 1.0f)},
-                     PbrVertex{Vector3(-H, -H, 0.0f), normal, tangent, Vector2(0.0f, 1.0f)}};
+            quad_ = {PbrVertex{Vector3(-Half, Half, 0.0f), normal, tangent, Vector2(0.0f, 0.0f)},
+                     PbrVertex{Vector3(Half, Half, 0.0f), normal, tangent, Vector2(1.0f, 0.0f)},
+                     PbrVertex{Vector3(-Half, -Half, 0.0f), normal, tangent, Vector2(0.0f, 1.0f)},
+                     PbrVertex{Vector3(Half, Half, 0.0f), normal, tangent, Vector2(1.0f, 0.0f)},
+                     PbrVertex{Vector3(Half, -Half, 0.0f), normal, tangent, Vector2(1.0f, 1.0f)},
+                     PbrVertex{Vector3(-Half, -Half, 0.0f), normal, tangent, Vector2(0.0f, 1.0f)}};
 
             effect_ = std::make_unique<PbrEffect>(device);
             effect_->setViewProperty(Matrix::CreateLookAt(Vector3(0.0f, 0.0f, 5.5f), Vector3::Zero, Vector3::Up));
@@ -153,6 +155,15 @@ namespace
             light.setDirectionProperty(Vector3::Normalize(Vector3(1.0f, -1.0f, -0.6f)));
             light.setDiffuseColorProperty(Vector3(2.5f, 2.5f, 2.5f));
             light.setSpecularColorProperty(Vector3(1.0f, 1.0f, 1.0f));
+
+            Context().Check(effect_->getNormalScaleEXTProperty() == 1.0f &&
+                                effect_->getOcclusionStrengthEXTProperty() == 1.0f,
+                            "normal scale and occlusion strength default to one");
+            effect_->setNormalScaleEXTProperty(0.25f);
+            effect_->setOcclusionStrengthEXTProperty(0.75f);
+            Context().Check(effect_->getNormalScaleEXTProperty() == 0.25f &&
+                                effect_->getOcclusionStrengthEXTProperty() == 0.75f,
+                            "normal scale and occlusion strength round-trip independently");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -162,18 +173,24 @@ namespace
             device.setDepthStencilStateProperty(DepthStencilState::Default);
             device.setRasterizerStateProperty(RasterizerState::CullCounterClockwise);
 
-            // 1: no maps. 2: NormalMap. 3: EmissiveMap (times EmissiveFactor). 4: OcclusionMap,
-            // lit by ambient light only: occlusion darkens ambient (indirect) light, not lights.
-            for (std::size_t panel = 0; panel < PanelX.size(); ++panel)
+            // Top: no map, normal scale 1, normal scale 0. Bottom: emissive, occlusion strength 1,
+            // occlusion strength 0. Occlusion panels use ambient light only because the map affects
+            // indirect light, not direct lights.
+            for (std::size_t panel = 0; panel < PanelPositions.size(); ++panel)
             {
-                effect_->setNormalMapProperty(panel == 1 ? normalMap_.get() : nullptr);
-                effect_->setEmissiveMapProperty(panel == 2 ? emissiveMap_.get() : nullptr);
-                effect_->setEmissiveFactorProperty(panel == 2 ? Vector3(1.0f, 1.0f, 1.0f) : Vector3::Zero);
-                effect_->setOcclusionMapProperty(panel == 3 ? occlusionMap_.get() : nullptr);
-                effect_->getDirectionalLight0Property().setEnabledProperty(panel != 3);
-                effect_->setAmbientLightColorProperty(panel == 3 ? Vector3(0.9f, 0.9f, 0.9f)
-                                                                 : Vector3(0.08f, 0.08f, 0.08f));
-                effect_->setWorldProperty(Matrix::CreateTranslation(PanelX[panel], 0.0f, 0.0f));
+                const bool normalPanel = panel == 1 || panel == 2;
+                const bool occlusionPanel = panel == 4 || panel == 5;
+                effect_->setNormalMapProperty(normalPanel ? normalMap_.get() : nullptr);
+                effect_->setNormalScaleEXTProperty(panel == 2 ? 0.0f : 1.0f);
+                effect_->setEmissiveMapProperty(panel == 3 ? emissiveMap_.get() : nullptr);
+                effect_->setEmissiveFactorProperty(panel == 3 ? Vector3::One : Vector3::Zero);
+                effect_->setOcclusionMapProperty(occlusionPanel ? occlusionMap_.get() : nullptr);
+                effect_->setOcclusionStrengthEXTProperty(panel == 5 ? 0.0f : 1.0f);
+                effect_->getDirectionalLight0Property().setEnabledProperty(!occlusionPanel);
+                effect_->setAmbientLightColorProperty(occlusionPanel ? Vector3(0.9f, 0.9f, 0.9f)
+                                                                     : Vector3(0.08f, 0.08f, 0.08f));
+                effect_->setWorldProperty(Matrix::CreateTranslation(
+                    PanelPositions[panel].X, PanelPositions[panel].Y, 0.0f));
                 for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
                 {
                     pass.Apply();
@@ -193,8 +210,9 @@ namespace
         Point At(std::size_t panel, float u, float v)
         {
             const Vector3 p = getGraphicsDeviceProperty().getViewportProperty().Project(
-                Vector3(PanelX[panel] - 0.7f + 1.4f * u, 0.7f - 1.4f * v, 0.0f), effect_->getProjectionProperty(),
-                effect_->getViewProperty(), Matrix::getIdentityProperty());
+                Vector3(PanelPositions[panel].X - Half + 2.0f * Half * u,
+                        PanelPositions[panel].Y + Half - 2.0f * Half * v, 0.0f),
+                effect_->getProjectionProperty(), effect_->getViewProperty(), Matrix::getIdentityProperty());
             return Point(static_cast<int>(p.X), static_cast<int>(p.Y));
         }
 
@@ -209,19 +227,29 @@ namespace
             // flat panel both points are alike. (Cell 1,1 spans u, v = 0.25 .. 0.5.)
             const int flatLit = green(0, 0.33f, 0.33f), flatShade = green(0, 0.42f, 0.42f);
             const int bumpLit = green(1, 0.33f, 0.33f), bumpShade = green(1, 0.42f, 0.42f);
-            Context().Print("flat panel {} / {}, normal-mapped bump {} / {}", flatLit, flatShade, bumpLit, bumpShade);
+            const int zeroLit = green(2, 0.33f, 0.33f), zeroShade = green(2, 0.42f, 0.42f);
+            Context().Print("flat {} / {}, normal scale 1 {} / {}, scale 0 {} / {}",
+                            flatLit, flatShade, bumpLit, bumpShade, zeroLit, zeroShade);
             Context().Check(std::abs(flatLit - flatShade) < 12, "without a normal map the panel is evenly lit");
             Context().Check(bumpLit > bumpShade + 30, "NormalMap: a bump's side facing the light is brighter");
+            Context().Check(std::abs(zeroLit - zeroShade) < 12,
+                            "NormalScaleEXT zero removes the map's tangent-space perturbation");
 
             // Emissive stripe rows (v in 0 .. 0.125 of each quarter) glow, the others do not.
-            const int glow = green(2, 0.5f, 0.06f + 0.25f), dark = green(2, 0.5f, 0.19f + 0.25f);
+            const int glow = green(3, 0.5f, 0.06f + 0.25f), dark = green(3, 0.5f, 0.19f + 0.25f);
             Context().Print("emissive stripe {}, between stripes {}", glow, dark);
             Context().Check(glow > dark + 60, "EmissiveMap: the stripes glow");
 
             // Occlusion grooves (the first 4 of every 16 texels) take less ambient light.
-            const int open = green(3, 0.5f + 0.15f, 0.5f + 0.15f), groove = green(3, 0.5f + 0.03f, 0.5f + 0.15f);
-            Context().Print("ambient-lit panel {}, in a groove {}", open, groove);
+            const int open = green(4, 0.5f + 0.15f, 0.5f + 0.15f);
+            const int groove = green(4, 0.5f + 0.03f, 0.5f + 0.15f);
+            const int disabledOpen = green(5, 0.5f + 0.15f, 0.5f + 0.15f);
+            const int disabledGroove = green(5, 0.5f + 0.03f, 0.5f + 0.15f);
+            Context().Print("occlusion strength 1 {} / {}, strength 0 {} / {}",
+                            open, groove, disabledOpen, disabledGroove);
             Context().Check(groove + 40 < open, "OcclusionMap: the grooves are darker in ambient light");
+            Context().Check(std::abs(disabledOpen - disabledGroove) < 8,
+                            "OcclusionStrengthEXT zero removes the map's ambient darkening");
         }
 
         std::unique_ptr<PbrEffect> effect_;
@@ -235,10 +263,11 @@ namespace
 CNA_DEMOS_GAME(TextureMapsDemo, {
     .id = "graphics.pbr_effect.texture_maps",
     .title = "PBR texture maps",
-    .description = "Four PbrEffect panels: none, a NormalMap of bumps (with a vertex tangent), an EmissiveMap of "
-                   "glowing stripes and an OcclusionMap of grooves that darkens ambient light only.",
+    .description = "Six PbrEffect panels compare flat and normal-mapped lighting at scale one/zero, "
+                   "emissive stripes, and ambient occlusion at strength one/zero.",
     .apis = {"PbrEffect::NormalMap", "PbrEffect::EmissiveMap", "PbrEffect::EmissiveFactor", "PbrEffect::OcclusionMap",
-             "PbrEffect::AmbientLightColor", "VertexElementUsage::Tangent", "VertexElementFormat::Vector4"},
+             "PbrEffect::NormalScaleEXT", "PbrEffect::OcclusionStrengthEXT", "PbrEffect::AmbientLightColor",
+             "VertexElementUsage::Tangent", "VertexElementFormat::Vector4"},
     .tags = {"3d", "pbr", "normal-map", "emissive", "occlusion", "gltf", "cnaext"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
