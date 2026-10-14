@@ -4452,3 +4452,18 @@ the header's semantic route audit. Evidence:`checkpoint-620-c-cnb-compile-cnj-fo
 No ContentManager, graphics device, renderer, animation playback, draw call, visual result or
 project-built execution is claimed. The entirely uncovered `models.h` audit begins with its
 renderer-independent ModelBone graph and collection routes.
+
+## Focused621-C-ModelBone-graph-and-collections
+
+`c_api.graphics.model_bones` adds the first17 `models.h` routes in25 renderer-free controls.
+Default and named bones preserve empty/copied UTF-8 text, signed indices and exact local matrices.
+A child collection acquired before mutation stays live across a two-level retained hierarchy;
+indexed and named lookup, membership and parent views identify the same nodes, enforce Count
+bounds and retain them beyond their original handles. Self-parenting, ancestor cycles, malformed
+UTF-8 and stale access are refused atomically. The first draft expected malformed UTF-8 to return
+`INVALID_ARGUMENT`; the string boundary's correct `ENCODING` result made that a demo bug. Both
+renderer-labelled direct runs are byte-identical with empty stderr; strict C99, metadata
+compilation, diff checks and validation self-tests pass. Staged metadata reaches2800/3205 and
+`models.h` reaches17/216. Evidence:`checkpoint-621-c-model-bones-focused-*-direct.*`. No Model,
+mesh, ContentManager, graphics device, renderer, animation player, draw call, visual result or
+project-built execution is claimed. Standalone ModelMeshPart values and collections are next.
