@@ -39,6 +39,7 @@ namespace
             // The collection keeps the component alive (shared_ptr overload, CNA's ownership
             // model for what C# leaves to the garbage collector).
             counter_ = std::make_shared<FrameCounter>(*this);
+            counter_->Disposed += [this](System::Object*, const System::EventArgs&) { ++disposedEvents_; };
             getComponentsProperty().Add(counter_);
         }
 
@@ -56,16 +57,21 @@ namespace
 
         void EndRun() override
         {
-            Context().Print("game updates: {}, component updates: {}", updates_, counter_->updates);
+            Context().Print("component initialized {}, updated {} times before disable",
+                            counter_->initialized, counter_->updates);
             Context().Check(counter_->initialized == 1, "Game::Initialize initialized the component");
             Context().Check(counter_->updates == 5, "the component updated until it was disabled");
             Context().Check(!counter_->getEnabledProperty(), "Enabled reads back false");
             Context().Check(&counter_->getGameProperty() == this, "a component knows its Game");
+            counter_->Dispose();
+            counter_->Dispose();
+            Context().Check(disposedEvents_ == 1, "Dispose is idempotent and raises Disposed exactly once");
         }
 
     private:
         std::shared_ptr<FrameCounter> counter_;
         int updates_ = 0;
+        int disposedEvents_ = 0;
     };
 }
 
@@ -75,7 +81,8 @@ CNA_DEMOS_GAME(GameComponentDemo, {
     .description = "Adds a GameComponent to Game.Components so the game initializes and updates it, then disables "
                    "it through its Enabled property.",
     .apis = {"GameComponent::GameComponent", "GameComponent::Initialize", "GameComponent::Update",
-             "GameComponent::Enabled", "GameComponent::Game", "Game::Components", "GameComponentCollection::Add"},
+             "GameComponent::Dispose", "GameComponent::Disposed", "GameComponent::Enabled", "GameComponent::Game",
+             "IGameComponent::Initialize", "IUpdateable::Update", "Game::Components", "GameComponentCollection::Add"},
     .tags = {"component", "architecture"},
     .frames = 10,
 })

@@ -15,6 +15,10 @@ namespace
     protected:
         void Initialize() override
         {
+            GameComponentCollection detached;
+            Context().Check(detached.getCountProperty() == 0,
+                            "a directly constructed component collection starts empty");
+
             auto& components = getComponentsProperty();
             components.ComponentAdded += [this](System::Object*, const GameComponentCollectionEventArgs& e) {
                 ++added_;
@@ -26,6 +30,9 @@ namespace
 
             auto first = std::make_shared<GameComponent>(*this);
             auto second = std::make_shared<GameComponent>(*this);
+            const GameComponentCollectionEventArgs explicitArgs(first.get());
+            Context().Check(explicitArgs.getGameComponentProperty() == first.get(),
+                            "explicit collection event args retain their component pointer");
             components.Add(first);
             components.Add(second);
             Context().Check(lastAdded_ == second.get(), "the event carries the component that was added");
@@ -50,8 +57,10 @@ CNA_DEMOS_GAME(CollectionEventsDemo, {
     .title = "Component collection events",
     .description = "Subscribes to GameComponentCollection's ComponentAdded and ComponentRemoved events and uses "
                    "Contains, IndexOf and Remove.",
-    .apis = {"GameComponentCollection::ComponentAdded", "GameComponentCollection::ComponentRemoved",
+    .apis = {"GameComponentCollection::GameComponentCollection", "GameComponentCollection::ComponentAdded",
+             "GameComponentCollection::ComponentRemoved",
              "GameComponentCollection::Contains", "GameComponentCollection::IndexOf", "GameComponentCollection::Remove",
+             "GameComponentCollectionEventArgs::GameComponentCollectionEventArgs",
              "GameComponentCollectionEventArgs::GameComponent",
              "IGameComponent"},
     .tags = {"component", "event"},

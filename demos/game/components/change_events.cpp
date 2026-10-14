@@ -22,6 +22,7 @@ namespace
         explicit Spawner(Game& game) : GameComponent(game) {}
 
         int timerRestarts = 0;
+        int updateOrderChanges = 0;
 
     protected:
         void OnEnabledChanged(System::Object* sender, const System::EventArgs& args) override
@@ -32,6 +33,12 @@ namespace
             }
             GameComponent::OnEnabledChanged(sender, args);
         }
+
+        void OnUpdateOrderChanged(System::Object* sender, const System::EventArgs& args) override
+        {
+            ++updateOrderChanges;
+            GameComponent::OnUpdateOrderChanged(sender, args);
+        }
     };
 
     // Draws the score.
@@ -39,6 +46,22 @@ namespace
     {
     public:
         explicit Hud(Game& game) : DrawableGameComponent(game) {}
+
+        int visibleChanges = 0;
+        int drawOrderChanges = 0;
+
+    protected:
+        void OnVisibleChanged(System::Object* sender, const System::EventArgs& args) override
+        {
+            ++visibleChanges;
+            DrawableGameComponent::OnVisibleChanged(sender, args);
+        }
+
+        void OnDrawOrderChanged(System::Object* sender, const System::EventArgs& args) override
+        {
+            ++drawOrderChanges;
+            DrawableGameComponent::OnDrawOrderChanged(sender, args);
+        }
     };
 
     class ChangeEventsDemo final : public CnaDemos::DemoGame
@@ -97,6 +120,8 @@ namespace
             };
             ctx.Check(log_ == expected, "each real change raised its event once, in order; a repeated value none");
             ctx.Check(spawner_->timerRestarts == 1, "the spawner's OnEnabledChanged saw it switched back on");
+            ctx.Check(spawner_->updateOrderChanges == 1 && hud_->drawOrderChanges == 1 && hud_->visibleChanges == 2,
+                      "protected order and visibility callbacks observe each corresponding real change");
         }
 
     private:
@@ -114,9 +139,13 @@ CNA_DEMOS_GAME(ChangeEventsDemo, {
                    "DrawableGameComponent::VisibleChanged/DrawOrderChanged; the component itself reacts through the "
                    "OnEnabledChanged hook.",
     .apis = {"GameComponent::EnabledChanged", "GameComponent::UpdateOrderChanged", "GameComponent::OnEnabledChanged",
-             "DrawableGameComponent::VisibleChanged", "DrawableGameComponent::DrawOrderChanged",
+             "GameComponent::OnUpdateOrderChanged", "DrawableGameComponent::VisibleChanged",
+             "DrawableGameComponent::DrawOrderChanged", "DrawableGameComponent::OnVisibleChanged",
+             "DrawableGameComponent::OnDrawOrderChanged",
              "GameComponent::Enabled", "GameComponent::UpdateOrder", "DrawableGameComponent::Visible",
-             "DrawableGameComponent::DrawOrder"},
+             "DrawableGameComponent::DrawOrder", "IUpdateable::Enabled", "IUpdateable::EnabledChanged",
+             "IUpdateable::UpdateOrder", "IUpdateable::UpdateOrderChanged", "IDrawable::Visible",
+             "IDrawable::VisibleChanged", "IDrawable::DrawOrder", "IDrawable::DrawOrderChanged"},
     .tags = {"component", "event", "pause"},
     .frames = 3,
 })

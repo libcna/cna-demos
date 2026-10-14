@@ -1359,11 +1359,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused657
-projects the628-demo staged catalog to1639/2326 XNA members and closes every callable CurveKey and
-CurveKeyCollection member; the two CLR GetEnumerator aliases are dispositioned because C++ exposes
-begin/end instead. Audit the core GameComponent/DrawableGameComponent interfaces, order/visibility
-callbacks, disposal events and unload lifecycle next in the existing component workflows.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused658
+projects the628-demo staged catalog to1660/2326 XNA members and raises type coverage to299/329;
+every callable GameComponent/DrawableGameComponent/IGameComponent/IUpdateable/IDrawable and
+component-collection member is covered, with CLR Finalize dispositioned. Audit
+GraphicsDeviceInformation value identity plus GraphicsDeviceManager construction, device/service
+lifecycle, events and preference members next in the existing graphics-manager workflows.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1372,7 +1373,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused657 last observed external `73991b01f7` with six uncommitted
+the sibling CNA checkout; focused658 last observed external `73991b01f7` with six uncommitted
 renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2735,6 +2736,23 @@ route count changes. Evidence:`/tmp/checkpoint-657-*` and `/tmp/checkpoint-657-c
 rendering, screenshot or visual inspection was used. Production library hashes remain complete647;
 the runner is `464337875c4f14424ca1cb4b1a0e53a7f8665b9c59fa406d3b45529f281283d7`.
 Sibling CNA remained external dirty `73991b01f7` with six observed paths; no CNA source was edited.
+
+Focused658 extends four existing component IDs. `change_events` grows2->3 controls and proves the
+protected update-order, draw-order and visibility callbacks beside their public events.
+`collection_events` grows4->6 with direct empty-collection and explicit event-args construction.
+`game_component` grows4->5 with idempotent Dispose and one Disposed event, while
+`drawable_game_component` grows3->4 with one content unload through the public base dispose entry.
+Metadata maps the same real derived calls to IGameComponent, IUpdateable and IDrawable. SOFTWARE
+and OPENGLES3 Xvfb runs pass3/3,6/6,5/5 and4/4 with byte-identical stabilized per-ID stdout and
+empty stderr; all four focused SOFTWARE CTests pass. The first build called a C++ name-hidden
+Dispose overload directly and was corrected as a demo bug. The first successful GameComponent
+pair printed renderer-dependent total game ticks (10/11); the unasserted diagnostic was replaced
+with its stable asserted component count and both runs were repeated. Temporary coverage projects
+1639->1660/2326 and297->299/329 types; only CLR GameComponent.Finalize remains in this family by
+disposition. Evidence:`/tmp/checkpoint-658-*` and `/tmp/checkpoint-658-coverage.md`. No screenshot
+or visual inspection was used. Production library hashes remain complete647; the runner is
+`71db4fa0a80c545943805c137d79db38d4ed6b09d49f69507d8df02ed2cf5443`. Sibling CNA remained
+external dirty `73991b01f7` with six observed paths; no CNA source was edited.
 
 ## 15. Assumptions the next session must know
 

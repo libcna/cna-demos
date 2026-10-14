@@ -5031,3 +5031,21 @@ iteration as begin/end. Evidence:`/tmp/checkpoint-657-*` and `/tmp/checkpoint-65
 rendering, screenshot or visual inspection was used. Audit core GameComponent and
 DrawableGameComponent interface, callback, disposal-event and unload lifecycle behavior next in
 the existing component workflows.
+
+## Focused658-component-interfaces-callbacks-and-disposal
+
+Four existing component IDs close21 members. `change_events` grows2->3 controls for protected
+update-order, draw-order and visibility callbacks beside their public events. `collection_events`
+grows4->6 with direct empty-collection and explicit event-args construction. `game_component`
+grows4->5 with idempotent Dispose and one Disposed event; `drawable_game_component` grows3->4 and
+unloads content once through the inherited public dispose entry. The same real derived execution
+credits IGameComponent, IUpdateable and IDrawable. SOFTWARE and OPENGLES3 Xvfb runs pass3/3,6/6,
+5/5 and4/4 with byte-identical stabilized per-ID stdout and empty stderr; all four focused
+SOFTWARE CTests pass. The first build's direct drawable Dispose call encountered ordinary C++ name
+hiding and was corrected as a demo bug. The first passing GameComponent pair exposed an unasserted
+10/11 total-game-tick diagnostic; it was replaced by the stable asserted component count and both
+runs were repeated. Temporary coverage moves1639->1660/2326 and297->299/329 types without changing
+the628-demo/C-route counts. Only CLR GameComponent.Finalize remains by disposition in this family.
+Evidence:`/tmp/checkpoint-658-*` and `/tmp/checkpoint-658-coverage.md`. No screenshot or visual
+inspection was used. Audit GraphicsDeviceInformation identity plus GraphicsDeviceManager
+construction, service/device lifecycle, events and preference members next.

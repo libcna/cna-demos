@@ -22,6 +22,7 @@ namespace
 
         int loads = 0;
         int draws = 0;
+        int unloads = 0;
 
     protected:
         void LoadContent() override
@@ -31,6 +32,14 @@ namespace
             pixel_ = std::make_unique<Texture2D>(getGraphicsDeviceProperty(), 1, 1);
             const Color white = Color::White;
             pixel_->SetData(&white, 1);
+        }
+
+        void UnloadContent() override
+        {
+            ++unloads;
+            pixel_.reset();
+            spriteBatch_.reset();
+            DrawableGameComponent::UnloadContent();
         }
 
     public:
@@ -75,6 +84,11 @@ namespace
             Context().Check(top_->loads == 1 && bottom_->loads == 1, "each component loaded its content once");
             Context().Check(top_->draws > 0, "the visible component drew every frame");
             Context().Check(bottom_->draws == 0, "the invisible component was never drawn");
+            // DrawableGameComponent's protected Dispose(bool) hides the inherited public overload
+            // in C++; call that public IDisposable entry point through the base reference.
+            static_cast<GameComponent&>(*top_).Dispose();
+            static_cast<GameComponent&>(*top_).Dispose();
+            Context().Check(top_->unloads == 1, "disposing a drawable component unloads its content exactly once");
         }
 
     private:
@@ -89,7 +103,9 @@ CNA_DEMOS_GAME(DrawableComponentDemo, {
     .description = "Builds DrawableGameComponents that load their own content and draw themselves when the game "
                    "draws; one is hidden with the Visible property.",
     .apis = {"DrawableGameComponent::DrawableGameComponent", "DrawableGameComponent::LoadContent",
-             "DrawableGameComponent::Draw", "DrawableGameComponent::Visible", "DrawableGameComponent::GraphicsDevice"},
+             "DrawableGameComponent::UnloadContent", "DrawableGameComponent::Initialize",
+             "DrawableGameComponent::Dispose", "DrawableGameComponent::Draw", "DrawableGameComponent::Visible",
+             "DrawableGameComponent::GraphicsDevice", "IDrawable::Draw"},
     .tags = {"component", "drawing"},
     .frames = 10,
     .deterministic = true,
