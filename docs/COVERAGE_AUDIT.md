@@ -1388,6 +1388,23 @@ through the public disposal path but is not separately nameable; CLR Finalize is
 native destruction and remains intentionally uncredited. The run inspects values and automated
 rendering, not a screenshot or manual animation quality.
 
+### AvatarRenderer lighting and lifetime
+
+`gamer_services.avatar.render` now supplies distinguishable LightColor, LightDirection and
+AmbientLightColor values and verifies their exact getters. Once Update has observed the async
+renderer reach Ready, the demo captures the same Wave frame three ways: with the authored lights,
+with both light colors zeroed and with the key direction reversed. Each alteration changes thousands
+of sampled avatar pixels on SOFTWARE and OPENGLES3, so the properties have demonstrated rendering
+effect as well as value storage. The ready renderer finally accepts Dispose twice, reports
+IsDisposed and throws ObjectDisposedException from both State and Draw.
+
+Both renderers pass7/7 with empty stderr. Their stdout differs in the randomly generated avatar's
+height and exact changed-pixel counts, as expected. Evidence:
+`/tmp/checkpoint-710-avatar-renderer-final-*`. This credits the three lighting properties, Dispose
+and IsDisposed. Protected Dispose(bool) is reached through the public cleanup path but is not
+separately named; CLR Finalize remains intentionally uncredited as native destruction. The pixel
+readback is programmatic; no screenshot or manual lighting-quality judgment is claimed.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

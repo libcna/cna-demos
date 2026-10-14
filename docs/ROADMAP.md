@@ -5902,3 +5902,20 @@ at632 demos,301/329 types and157/753 fields; GamerServices moves149->153/244. Ev
 graphics/sampler edits appeared after their CNA objects had compiled; no CNA source was changed
 here. No service, screenshot or manual visual result is claimed. Continue with AvatarRenderer
 lighting values and lifetime behavior.
+
+## Focused710-AvatarRenderer-lighting-and-lifetime
+
+The existing animated-avatar demo now sets and reads exact directional and ambient light values.
+After Update observes Ready, one Wave frame is captured with those lights, with both light colors
+zeroed and with the key direction reversed. Removing color and reversing direction each changes
+thousands of sampled avatar pixels on SOFTWARE and OPENGLES3, proving that all three properties
+reach rendering rather than stopping at storage. The ready renderer then survives repeated Dispose,
+sets IsDisposed and rejects State plus Draw. CLR Finalize remains a native-destruction disposition.
+
+The full documented build completed after CNA advanced externally to committed `67585f9de`.
+Both renderers pass7/7 with empty stderr; random avatar selection explains their distinct height and
+pixel-count stdout. The focused SOFTWARE CTest, metadata validation and validator self-tests pass.
+Temporary coverage moves2095->2100/2326 at632 demos,301/329 types and157/753 fields;
+GamerServices moves153->158/244. Evidence:`/tmp/checkpoint-710-avatar-renderer-final-*` and
+`/tmp/checkpoint-710-avatar-renderer-final-coverage.md`. No screenshot or manual visual-quality
+assessment is claimed. Continue with AvatarDescription Begin/End retrieval and Changed behavior.
