@@ -36,7 +36,7 @@ namespace
             // CNA documents PbrEffect and SkinnedPbrEffect as an unlit fallback on these renderers,
             // with no capability query for it (CNA-DEMOS-ISSUE-006).
             const std::string_view renderer = getGraphicsDeviceProperty().GetGraphicsRendererName();
-            if (renderer == "SOFTWARE" || renderer == "HEADLESS" || renderer == "SDL_RENDERER")
+            if (renderer == "SOFTWARE" || renderer == "HEADLESS")
                 ctx.Skip(std::string(renderer) + " draws SkinnedPbrEffect as an unlit fallback");
 
             // content/models/painted_column.gltf: the bending strip's rig and clip on a square column
@@ -130,6 +130,6 @@ CNA_DEMOS_GAME(SkinnedPbrDemo, {
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
     .assets = {"models/painted_column.cnb"},
-    .restrictions = "Skipped on SOFTWARE, HEADLESS and SDL_RENDERER, where CNA draws SkinnedPbrEffect as an unlit "
+    .restrictions = "Skipped on SOFTWARE and HEADLESS, where CNA draws SkinnedPbrEffect as an unlit "
                     "fallback.",
 })

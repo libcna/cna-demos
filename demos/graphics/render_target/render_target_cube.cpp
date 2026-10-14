@@ -201,6 +201,4 @@ CNA_DEMOS_GAME(RenderTargetCubeDemo, {
     .tags = {"3d", "render-target", "cubemap", "reflection"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 30,
-    .knownIssue = "CNA-DEMOS-ISSUE-021",
-    .knownIssueRenderers = {"OPENGLES3", "OPENGL33"},
 })

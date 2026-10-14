@@ -16,7 +16,7 @@
       "name": "default",
       "inherits": "base",
       "displayName": "CNA's default renderer for this platform",
-      "description": "One renderer: OPENGLES3 on Linux, SDL_RENDERER on Windows/macOS. Needs ../cna, ../sharp-runtime (and ../easy-gl, ../meta-gl on Linux)."
+      "description": "One renderer: CNA's current platform default (OPENGLES3 on Linux, SDL_GPU on Windows/macOS). Needs ../cna, ../sharp-runtime (and ../easy-gl, ../meta-gl on Linux)."
     },
     {
       "name": "windowless",
@@ -31,12 +31,12 @@
     {
       "name": "linux-multi",
       "inherits": "base",
-      "displayName": "Linux: GL, SDL_RENDERER and the windowless renderers in one binary",
-      "description": "OPENGLES3 (default);OPENGL33;SDL_RENDERER;SOFTWARE;HEADLESS;STUB. Choose at runtime with --renderer.",
+      "displayName": "Linux: GL and the windowless renderers in one binary",
+      "description": "OPENGLES3 (default);OPENGL33;SOFTWARE;HEADLESS;STUB. Choose at runtime with --renderer.",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "cacheVariables": {
         "CNA_GRAPHICS_RENDERER": "OPENGLES3",
-        "CNA_GRAPHICS_RENDERERS": "OPENGLES3;OPENGL33;SDL_RENDERER;SOFTWARE;HEADLESS;STUB"
+        "CNA_GRAPHICS_RENDERERS": "OPENGLES3;OPENGL33;SOFTWARE;HEADLESS;STUB"
       }
     },
     {
@@ -47,7 +47,7 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "cacheVariables": {
         "CNA_GRAPHICS_RENDERER": "OPENGLES3",
-        "CNA_GRAPHICS_RENDERERS": "OPENGLES3;OPENGL33;SDL_RENDERER;SDL_GPU;SOFTWARE;HEADLESS;STUB",
+        "CNA_GRAPHICS_RENDERERS": "OPENGLES3;OPENGL33;SDL_GPU;SOFTWARE;HEADLESS;STUB",
         "CNA_BUILD_C_API": "ON",
         "CNA_C_API_BUILD_STATIC": "OFF"
       }

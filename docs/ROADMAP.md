@@ -115,8 +115,9 @@ a check that all authored colors remain visible and that a blank texture row can
   per-instance world matrix from the instance stream).
 - ✅ (9) `graphics.render_target.*`: render to texture, `RenderTargetUsage` Discard/Preserve,
   read back with GetData, own depth buffer, mipmapped target, multisampling, ✅
-  `graphics.render_target.render_target_cube` (dynamic environment map; ISSUE-021 on the GL
-  renderers), ✅ `graphics.render_target.multiple_render_targets` (two targets, a two-output GLSL
+  `graphics.render_target.render_target_cube` (dynamic environment map; rendered cube faces are
+  upright on the GL renderers since CNA `a6e8104d2`, resolving ISSUE-021), ✅
+  `graphics.render_target.multiple_render_targets` (two targets, a two-output GLSL
   ShaderEffect), ✅ `graphics.render_target.hdr_blendable` (values past 1.0 in an HdrBlendable
   target; ISSUE-027 found on SOFTWARE).
 - ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
@@ -4651,3 +4652,19 @@ programmatically; no screenshot or visual inspection was performed. The current 
 clean at `cc547f5224`, while this checkpoint deliberately retains the stable library hash
 `730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`; assess the clean checkout
 before the next complete rebuild.
+
+## Complete634-retired-renderers-and-full-staged-baseline
+
+The first full build since complete524 absorbs every focused batch through checkpoint633. The
+catalog now has627 demos and validates without metadata problems; all640 enabled CTests pass, with
+three declared tests disabled. Complete SOFTWARE smoke is556 pass/33 expected fail/35 skip/3
+manual, and OPENGLES3 is588/33/3/3; neither has an unexpected pass. Generated coverage is297/329
+XNA types,1417/2326 XNA members and2999/3205 C routes.
+
+The integration removed CNA's retired SDL_RENDERER identity from presets, documentation and dead
+PBR restriction branches. It also corrected two C Guide demo assertions, isolated the cold-start
+ResourceContentManager workflow so global reader registration cannot hide ISSUE-012, and retired
+the ISSUE-021 marker after CNA `a6e8104d2` fixed rendered-cube sampling on both EasyGL renderers.
+Clean CNA `53aba6ef15` and all final binary hashes are recorded in HANDOFF.md. Continue Phase15 with
+the existing stock-vertex declaration/value workflow, then select the next high-value public member
+behavior instead of increasing demo count mechanically.

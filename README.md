@@ -89,9 +89,9 @@ minutes. `cmake --list-presets` shows all presets:
 
 | Preset | Renderers | Needs |
 |---|---|---|
-| `default` | CNA's platform default (OPENGLES3 on Linux, SDL_RENDERER elsewhere) | a display for running |
+| `default` | CNA's platform default (OPENGLES3 on Linux, SDL_GPU on Windows/macOS) | a display for running |
 | `windowless` | SOFTWARE (default), HEADLESS, STUB | nothing -- no display, no GL siblings; used by CI |
-| `linux-multi` | OPENGLES3 (default), OPENGL33, SDL_RENDERER, SOFTWARE, HEADLESS, STUB | easy-gl/meta-gl |
+| `linux-multi` | OPENGLES3 (default), OPENGL33, SOFTWARE, HEADLESS, STUB | easy-gl/meta-gl |
 | `linux-full` | linux-multi + SDL_GPU, C API | libshaderc; a supported SDL GPU runtime driver |
 
 Without presets: `cmake -S . -B build -DCNA_ROOT_DIR=/path/to/cna -DCNA_GRAPHICS_RENDERER=...`.
@@ -153,8 +153,8 @@ described in [docs/AUTOMATION.md](docs/AUTOMATION.md). `python3 tools/coverage_r
 ## Platform caveats
 
 * Developed and tested on Linux (Ubuntu 24.04, GCC 14): SOFTWARE, HEADLESS, STUB without a display;
-  OPENGLES3/OPENGL33/SDL_RENDERER under Xvfb with Mesa's software drivers. Historical checkpoints
-  also exercised CNA's since-retired VULKAN renderer. Windows, macOS,
+  OPENGLES3/OPENGL33 under Xvfb with Mesa's software drivers. Historical checkpoints also
+  exercised CNA's since-retired SDL_RENDERER and VULKAN renderers. Windows, macOS,
   web and Android builds follow CNA's support matrix but have **not** been tested for cna-demos
   yet -- see HANDOFF.md for exactly what was exercised.
 * Input demos need a person (they are smoke-tested unattended only). Audio demos need an audio

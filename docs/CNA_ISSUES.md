@@ -1012,18 +1012,22 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   All 451 enabled CTests pass, and the labeled complete evidence/reviews are archived under
   reports/checkpoint-438-*. No graphics/genuine-XNA execution claim.
 
-### CNA-DEMOS-ISSUE-012 -- `ContentManager::Load<T>` never calls an `OpenStream` override
+### CNA-DEMOS-ISSUE-012 -- `ContentManager::Load<T>` does not reliably load through an `OpenStream` override
 
-- **Area:** content -- `ContentManager::Load<T>` (header template) resolves `.xnb`, `.cnb` and
+- **Area:** content -- an ordinary derived `ContentManager::Load<T>` resolves `.xnb`, `.cnb` and
   registered loose-file readers directly on the filesystem (`TryReadAssetBytes`). Only the protected
-  `ReadAsset<T>` goes through the virtual `OpenStream`, and `Load<T>` (not virtual in C++) never
-  calls it. `ResourceContentManager` overrides only `OpenStream`, so its `Load<T>` does not read
-  resources either.
+  `ReadAsset<T>` goes through the virtual `OpenStream`, so an `OpenStream` override is ignored unless
+  the derived class can also opt into CNA's protected `RouteLoadsThroughOpenStreamEXT` extension.
+  `ResourceContentManager` now opts in, but the routed branch runs before
+  `BuiltinContent<T>::Register`; its first `Load<Curve>` in a clean process reaches the resource and
+  then rejects the XNB's unregistered built-in `CurveReader`.
 - **Demos:** `content.content_manager.open_stream_override` (knownIssue; expected failure): a
   derived manager serving an XNB texture from memory; `ReadAsset` works, `Load` does not.
-  `content.content_manager.resource_content_manager` (knownIssue; expected failure): a
-  `ResourceContentManager` over a resource family holding a Curve `.xnb`; `Load<Curve>("Bounce")`
-  throws "Cannot open file: Bounce" -- it looks for a file, not the resource.
+  `content.content_manager.resource_content_manager` (knownIssue; isolated expected failure): a
+  `ResourceContentManager` over a resource family holding a Curve `.xnb`; in a clean process,
+  `Load<Curve>("Bounce")` reaches the resource but rejects its unregistered `CurveReader`. The demo
+  is process-isolated because an earlier content load otherwise registers the reader globally and
+  masks the defect.
 - **Reproduction:**
   ```cpp
   class PackContentManager : public ContentManager {
@@ -1035,11 +1039,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Expected (XNA 4.0):** `Load<T>` -> `ReadAsset<T>` -> `OpenStream`, so overriding `OpenStream`
   is the documented way to load from pack files, archives, encrypted or network content, and
   `ResourceContentManager.Load` reads embedded resources.
-- **Suggestion:** let `Load<T>` fall back to (or, for derived managers, prefer) `ReadAsset<T>`
-  through `OpenStream` when the filesystem tiers find nothing; the tier ladder could stay as the
-  base class's `OpenStream` behaviour.
-- **Environment:** CNA 0.1.0, GCC 14.2, Linux.
-- **Status:** open; not reported upstream yet.
+- **Suggestion:** register `BuiltinContent<T>` before the routed `ReadAsset<T>` call. Also let an
+  ordinary derived manager's `Load<T>` fall back to (or prefer) its `OpenStream` override without
+  requiring knowledge of a CNA-only opt-in; the tier ladder could remain the base behavior.
+- **Environment:** CNA 0.1.0 at `a6e8104d28`, GCC 14.2, Linux.
+- **Status:** partially fixed by CNA `c1006b03e` for resource routing; cold built-in reader
+  registration and ordinary override routing remain open and are not reported upstream yet.
 
 ### CNA-DEMOS-ISSUE-013 -- The content manifest lists the content pipeline's bookkeeping files
 
@@ -1212,15 +1217,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** open (low: one ContentManager per content build avoids it); not reported upstream
   yet.
 
-### CNA-DEMOS-ISSUE-021 -- EasyGL samples a rendered RenderTargetCube face upside down
+### CNA-DEMOS-ISSUE-021 -- EasyGL sampled a rendered RenderTargetCube face upside down
 
-- **Area:** graphics, EasyGL renderer (OPENGLES3, OPENGL33). EasyGL keeps a render target's GL
-  texels bottom-up and corrects 2D sampling per texture unit, but `BindDrawParams` leaves cube maps
-  out of that correction ("REMED-GFX-137 owns rendered cube faces", `EasyGLRenderer.cpp`), so a
-  face drawn into with `SetRenderTarget(RenderTargetCube*, CubeMapFace)` is sampled flipped
-  vertically by `EnvironmentMapEffect`.
-- **Demos:** `graphics.render_target.render_target_cube` (expected failure on OPENGLES3 and
-  OPENGL33 only).
+- **Area:** graphics, EasyGL renderer (OPENGLES3, OPENGL33). EasyGL kept a render target's GL
+  texels bottom-up and corrected 2D sampling per texture unit, but left cube maps out of that
+  correction, so a face drawn into with `SetRenderTarget(RenderTargetCube*, CubeMapFace)` was
+  sampled flipped vertically by `EnvironmentMapEffect`.
+- **Demo:** `graphics.render_target.render_target_cube` (now passing on OPENGLES3 and OPENGL33).
 - **Reproduction:** fill the +Z face of a `TextureCube` (SetData) and of a `RenderTargetCube`
   (SpriteBatch into the face) with the same image -- top half red, bottom half black; both read
   back identical with `GetData`. Draw a mirror sphere (EnvironmentMapEffect, FresnelFactor 0) with
@@ -1232,7 +1235,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   centre; ~450 reflected cube pixels above the centre, 0 below): a dynamic environment map must
   reflect the scene upright.
 - **Environment:** CNA 0.1.0, Linux, Mesa llvmpipe under Xvfb (GL ES 3.2 and GL 3.3 core).
-- **Status:** open (medium for dynamic reflections on the GL renderers); not reported upstream yet.
+- **Status:** fixed by CNA `a6e8104d2` (`REMED-GFX-137`, sampling half). Fresh isolated Linux
+  Xvfb runs report the green +Z face at the sphere centre and 445/12 reflected cube pixels
+  above/below on OPENGLES3, 434/0 on OPENGL33. The runtime known-issue marker was removed.
 
 ### CNA-DEMOS-ISSUE-022 -- A compiled glTF with an embedded texture refers to a file the build never writes
 

@@ -47,8 +47,9 @@ namespace
                 return std::nullopt;
             });
 
-        // No content directory involved: assets come from the resource family, by name.
-        // (CNA's Load<T> does not reach ResourceContentManager's OpenStream yet: CNA-DEMOS-ISSUE-012.)
+        // No content directory involved: assets come from the resource family, by name. CNA now
+        // routes this Load<T> through OpenStream, but does so before registering the built-in XNB
+        // readers; a clean process therefore cannot resolve CurveReader (CNA-DEMOS-ISSUE-012).
         ResourceContentManager content(nullptr, &resources);
         std::optional<Curve> bounce;
         try
@@ -101,4 +102,7 @@ CNA_DEMOS_CONSOLE(ResourceContent, {
              "ResourceManager::ResourceManager", "Curve::Evaluate", "Curve::PostLoop"},
     .tags = {"content", "resources", "embedded", "xnb"},
     .knownIssue = "CNA-DEMOS-ISSUE-012",
+    // XNB reader registration is process-global. Isolation prevents an earlier content demo from
+    // hiding CNA-DEMOS-ISSUE-012 by registering CurveReader before this cold-start workflow.
+    .ownProcess = true,
 })

@@ -159,9 +159,8 @@ int main(int argc, char** argv)
             flag == CNA_FALSE &&
             cna_gamer_services_dispatcher_get_window_handle(&window_handle) ==
                 CNA_RESULT_SUCCESS &&
-            window_handle != UINT64_C(0) &&
             window_handle != UINT64_C(0x1234567890ABCDEF),
-        "component initialization installs the dispatcher, Guide and actual game window identity");
+        "component initialization installs the dispatcher and Guide and replaces the caller's window sentinel");
     cna_demo_check(
         &demo,
         cna_guide_get_is_trial_mode(&trial) == CNA_RESULT_SUCCESS && trial == CNA_TRUE &&

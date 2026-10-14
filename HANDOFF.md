@@ -66,20 +66,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds102 staged standalone C IDs and should reach627 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
-4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
-4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
-effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 26 (10 C++ XACT plus three C workflows), core 3 (2 logger),
-content 52 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
-joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 15 (compiled video and song, tagged library import and album art), gamer services 33
-(own process each; 5 avatar, 2 leaderboard), net 24 (own process each; 15 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and172 in the
-current source tree (standalone C programs). Every declared category has demos.
-Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
-Latest generated project-built C ABI coverage is1116/3205. The current staged source metadata names
-2999/3205 routes, machine-counted directly from all public C headers and standalone metadata; that
-staged figure is not yet a generated/project-built coverage checkpoint. Selected semantic totals are `input_gamepad.h`61/63,
+627 project-built catalog demos in18 categories: math78, game33, graphics162, audio23, core3,
+content46, input39, storage7, media13, gamer services19, net14, devices5, phone1, design4,
+diagnostics2, cnaext4, platform2 and c_api172. Kinds are161 console,272 game and194 standalone;
+591 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: see generated docs/COVERAGE.md from complete checkpoint634. It records297/329 XNA types,
+1417/2326 XNA members and2999/3205 public C ABI routes. Selected semantic totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
@@ -88,13 +80,13 @@ staged figure is not yet a generated/project-built coverage checkpoint. Selected
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete524 exercises all1109 credited routes in both full smoke suites and includes the focused
-MediaPlayer and texture batches after complete521. The focused SpriteFont result exercises the
-seven later routes under both selected renderers; it is not a replacement for the complete524
-baseline.
+Complete634 exercises all2999 credited C routes and all current catalog IDs in both full smoke
+suites. It absorbs every staged C batch through complete `models.h`, the focused SpriteFont route,
+and the deeper XNA member batches through VertexElement.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 34 (`c_api.gamer.achievement_collection` CNA-DEMOS-ISSUE-077,
 `c_api.net.local_gamer_packets` CNA-DEMOS-ISSUE-075,
+`c_api.audio.spatial_state` CNA-DEMOS-ISSUE-073,
 `c_api.graphics.pbr_effect_material_state` CNA-DEMOS-ISSUE-070,
 `c_api.graphics.draw_routes` CNA-DEMOS-ISSUE-066,
 `c_api.devices.sensor_lifecycle` CNA-DEMOS-ISSUE-062,
@@ -117,8 +109,7 @@ Known-issue demos: 34 (`c_api.gamer.achievement_collection` CNA-DEMOS-ISSUE-077,
 `content.content_manager.open_stream_override` and `content.content_manager.resource_content_manager`
 CNA-DEMOS-ISSUE-012,
 `gamer_services.achievement.award` CNA-DEMOS-ISSUE-017,
-`game.time_step.reset_elapsed_time` CNA-DEMOS-ISSUE-019; and on OPENGLES3/OPENGL33 only,
-`graphics.render_target.render_target_cube` CNA-DEMOS-ISSUE-021; `graphics.model.textured_gltf`
+`game.time_step.reset_elapsed_time` CNA-DEMOS-ISSUE-019; `graphics.model.textured_gltf`
 CNA-DEMOS-ISSUE-022, `graphics.model.gltf_cameras` CNA-DEMOS-ISSUE-023, `math.formatting.to_string`
 CNA-DEMOS-ISSUE-024, `net.network_session.simulated_conditions` CNA-DEMOS-ISSUE-030,
 `graphics.model.clip_interpolation` CNA-DEMOS-ISSUE-031, `net.network_session.join_refused`
@@ -129,6 +120,33 @@ runtime knownIssue markers.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+Complete **634-retired-renderers-and-full-staged-baseline** is the current full-runtime baseline.
+The `linux-full` configure now follows CNA's renderer retirement: OPENGLES3, OPENGL33, SDL_GPU,
+SOFTWARE, HEADLESS and STUB are compiled, with no stale SDL_RENDERER request or dead PBR branch.
+`tools/validate.sh` passes metadata627/0 and all640 enabled CTests; three declared tests remain
+disabled. SOFTWARE is556 pass/33 known-fail/35 skip/3 not-run and OPENGLES3 is588/33/3/3, with
+zero unexpected passes. Fresh generated coverage is297/329 XNA types,1417/2326 XNA members and
+2999/3205 C routes.
+
+The first CTest attempt found two demo defects, not CNA defects: Guide social sampled one fixed
+pixel while its card was still translated by the entrance animation, and Guide dispatcher assumed
+the SOFTWARE renderer's documented zero legacy window handle was impossible. Whole-frame accent/
+panel counts and sentinel replacement now pass directly on SOFTWARE and OPENGLES3; five repeated
+SOFTWARE CTest runs also pass. A later smoke exposed process-order contamination in
+`resource_content_manager`: CNA `c1006b03e` routes ResourceContentManager through OpenStream before
+registering built-in readers, so a prior demo could hide the cold-start ISSUE-012 failure. The demo
+now owns its process and both content-manager batches report zero unexpected passes. The same audit
+confirmed CNA `a6e8104d2` fixes rendered RenderTargetCube orientation; ISSUE-021 is resolved and its
+runtime marker is removed after isolated OPENGLES3 and OPENGL33 pixel checks.
+
+The final build uses clean sibling CNA `53aba6ef15`. SHA-256: `cna-demos`
+`17c86d6692c3b87332152c17cb8db1ca82fa4af339e50692e7805687b5b099bf`, `libcna.so`
+`1f54d1a7f969d9ca1258ec75f76a9a75549d1bf20313a63c6734606c10abc8f9`, and
+`libcna_c_api.so` `fedaef026b8c52d619905f6f2aee1553e6def843ce407f8290c45c16857b6f19`.
+Evidence is archived as `build/linux-full/reports/checkpoint-634-complete-*`; the complete run made
+no screenshot or manual visual-quality claim. A separate diagnostic Guide screenshot was actually
+inspected while identifying the moving-pixel demo defect.
 
 Focused **525-C-sprite-font** adds `c_api.graphics.sprite_font_state`, a26-control caller-built
 SpriteFont workflow covering all seven previously uncredited `sprite_font.h` routes. It proves the
@@ -1219,9 +1237,10 @@ python3 tools/coverage_report.py --exe build/linux-full/bin/cna-demos --cna-root
 |---|---|
 | SOFTWARE | full smoke suite run with declared capability skips and manual exclusions; selected screenshots inspected |
 | OPENGLES3 | full smoke suite run under Xvfb + Mesa llvmpipe with declared skips/manual exclusions; selected screenshots inspected |
-| HEADLESS, STUB, OPENGL33, SDL_RENDERER, SDL_GPU | compiled in; not yet run in a recorded session |
-| VULKAN | exercised by historical checkpoints; retired by CNA at `fe5e25994a` and removed from current presets |
-| WEBGL2, WEBGPU, DIRECTX9, DIRECTX11, METAL, FNA3D | not built (other platforms / extra deps) |
+| HEADLESS, STUB, OPENGL33, SDL_GPU | compiled in; not yet run in a recorded session |
+| SDL_RENDERER, VULKAN | exercised by historical checkpoints; retired by CNA and removed from current presets |
+| WEBGL2, WEBGPU, DIRECTX9, FNA3D | not built (other platforms / extra deps) |
+| DIRECTX11, METAL | retired by CNA; never exercised by this project |
 
 Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untested.
 
@@ -1267,8 +1286,8 @@ executable -- worked around in our CMake by naming libcna.so first), CNA-DEMOS-I
 (`Game::ResetElapsedTime` is ignored with a fixed time step, FNA's rule), CNA-DEMOS-ISSUE-020
 (a compiled Song/Video stream is resolved from the ContentManager's root, not beside the asset:
 the media content build in `assets/media` gets its own ContentManager rooted there),
-CNA-DEMOS-ISSUE-021 (EasyGL -- OPENGLES3, OPENGL33 -- samples a rendered RenderTargetCube face
-upside down; SOFTWARE, VULKAN and SDL_GPU are right), CNA-DEMOS-ISSUE-022 (a compiled glTF with an
+CNA-DEMOS-ISSUE-021 (resolved by CNA `a6e8104d2`: EasyGL samples rendered RenderTargetCube faces
+upright), CNA-DEMOS-ISSUE-022 (a compiled glTF with an
 embedded texture refers to a `<name>_tex0.png` the build never writes), CNA-DEMOS-ISSUE-023
 (compiled glTF models lose their cameras; the run-time import keeps both), CNA-DEMOS-ISSUE-024
 (`BoundingBox`/`Ray` ToString print doubled braces, following FNA), CNA-DEMOS-ISSUE-025 (offline,
@@ -1321,78 +1340,23 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: keep the staged C work intact while sibling CNA's renderer-retirement work is
-again incoherent. The renderer-independent `curve.h` audit is complete at45/45 and the stable
-logger/platform/assembly families establish27/57 `core_ext.h` routes. Defer its remaining graphics-
-backend/renderer-selection routes until the external retirement work is coherent, and select the
-next independent public C family. `runtime.h` and `runtime_window.h` are complete at45/45 and20/20;
-`runtime_components.h` has semantic dispositions for all39 routes, with35 demonstrated and four
-fixed reflection-name helpers intentionally trivial/uncredited. `runtime_graphics_manager.h` now
-has dispositions for all38 routes:33 demonstrated, four fixed-name helpers trivial/uncredited and
-full-screen toggling kept platform/manual after the Xvfb mode switch timed out asynchronously.
-`content.h` has semantic dispositions for all32 routes at31 demonstrated; the resource-backed
-constructor remains intentionally deferred until CNA exposes a real embedded-resource store.
-`storage.h` is dispositioned at47/49 demonstrated, with only its fixed container reflection-name
-pair trivial/uncredited. `content_readers.h` is complete at62/62 after the base reader/value,
-registry, reflective-builder and object-dictionary batches. `video.h` is complete at42/42 after
-the asset/metadata and real VideoPlayer batches. `xact.h` has a semantic disposition for every
-route at54/62 demonstrated through the engine, live bank/category and caller-owned Cue batches. Its
-other eight routes are fixed engine/wave-bank/sound-bank/cue reflection-name helpers and remain
-trivial/uncredited. `net.h` is complete at51/51 after its QoS/session-property and in-memory
-packet-buffer batches. `net_gamers.h` is complete at33/33 after the detached gamer/machine and
-versioned event-info batches. `net_sessions.h` is complete at104/104 after its renderer-free
-discovered-session values/collection, Local session state/roster, live events, packet/voice/party,
-constructor and discovery/join batches. `gamer_services.h` now has a semantic disposition for all
-239 routes:237 are demonstrated through Gamer/profile, signed-in, friend-collection, achievement,
-Guide/dispatcher, GameDefaults, PropertyDictionary, complete leaderboard and the complete avatar
-description/animation/renderer workflows. Local sign-in and both avatar draw inputs have inspected
-pixels, and every service-backed social screen has an honest no-service result with valid inputs.
-`cna_guide_delay_notifications` has no public C
-observation without a delivered service invitation, so keep it intentionally uncredited and
-service/manual until such an environment exists. `cna_signed_in_gamer_is_headset` remains a real
-microphone/hardware observation rather than a useful neutral-fixture control. Continue with the
-renderer-independent `media_library.h` member audit is complete semantically: its library/source,
-music values, album art and picture/save batches demonstrate122/148 routes. The other26 are fixed
-reflection type-name pairs and remain intentionally trivial/uncredited. Begin the entirely
-uncovered renderer-independent `cnb.h` audit. Its format/chunk identifiers, validation, checked
-arithmetic, CRC/compression, byte I/O, documents, textures, complete neutral model data/codecs and
-filesystem CNJ model compiler result, all neutral schemas/codecs and the loader registry establish
-272/272 routes, completing its semantic audit. `models.h` now establishes216/216 routes after a
-real content-loaded glTF proves all five variant routes through exact names, state and pixels, and
-two private XNB fixtures prove the Model content-load plus dictionary/foreign-object Tag boundaries.
-This completes the header's semantic route audit. The remaining206 uncredited public C routes are
-already dispositioned largely as fixed reflection names, hardware/service/manual observations or
-renderer-specific work. The deeper XNA member/behavior audit has now extended
-`graphics.model.bones` for pose-array/collection contracts, `graphics.model.mesh_parts` for
-null-effect versus zero-primitive omission and `graphics.vertex_declaration.custom_vertex` for
-complete VertexElement layout/value behavior plus actual layout-driven drawing. The remaining
-core Model inventory is dispositioned: CLR enumerators and the arbitrary `ModelMesh::Tag` carrier
-do not justify new demos. Continue through the highest-value XNA member/behavior gaps, extending
-existing IDs where one coherent workflow already exists. The sibling CNA checkout is now clean at
-`cc547f5224`; assess its renderer-retirement result and attempt the deferred full reconfigure/build
-before relying on more isolated relinks. The two
-remaining KeyboardState routes are fixed reflection
-text already classified as trivial/uncredited, so do not add controls merely to raise the count.
-Once CNA becomes coherent, reconfigure
-`linux-full`, build every
-staged source, run focused validation and absorb the work in one complete checkpoint. Keep tagged
-unions, public element
-records and transfer descriptors visible in C. The completed290-route `effects.h` audit groups
-related lifetimes, metadata, typed values, collections, reflection and actual rendering behavior.
-The complete
-`graphics_device.h` audit is
-closed at80/84; keep context recovery manual/platform-specific, fixed type-name copies trivial/
-uncredited and the one-way string marker intentionally uncredited unless an observable consumer is
-added.
-Preserve external state and do not claim a real dialog, URL launch, vibration or tray interaction
-when a public test backend is the executed path. Do not credit the three joystick, three haptic or
-six host sensor/touch populated-metadata routes until suitable hardware executes them.
-Do not credit the separate live gamepad dead-zone overload on a disconnected neutral slot or
-duplicate generated argument checks. Leave mouse-touch emulation manual-deferred and generic
-reflection uncredited unless an audit identifies distinct public buffer behavior. Never edit/revert CNA;
-preserve ISSUE-038/057/058/059/060/061/062/063/064/065/066/067/068/069/070/071/072/073/074/075/076.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
+baseline. Audit `graphics.vertex_declaration.stock_vertex_types` next: it already obtains all four
+stock declarations through `IVertexType` and draws `VertexPositionColorTexture`, so extend that
+coherent ID for exact static declaration metadata and only the value/equality behavior that teaches
+something beyond boilerplate. Decide explicitly whether each uncovered stock-vertex member is
+already demonstrated, belongs in this demo, or is trivial. Build and run it on SOFTWARE and
+OPENGLES3, update generated/member coverage and immediately continue to the next high-value gap.
 
-WORK IN PROGRESS: `standalone/c_api.graphics.vertex_values` contains the planned seven-check
+The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
+hardware/service/manual observations or renderer-specific work. Do not create controls merely to
+raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
+the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
+claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
+the sibling CNA checkout; complete634 used its clean `53aba6ef15` state.
+
+HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
+`standalone/c_api.graphics.vertex_values` contains the planned seven-check
 workflow and compiles cleanly with strict C99 warnings against the last completed C API binary. Its
 direct, SOFTWARE-environment and OPENGLES3-environment runs are byte-identical passes with empty
 stderr. `standalone/c_api.graphics.vertex_buffer_data` is also staged: its36 checks coherently cover
@@ -2450,30 +2414,12 @@ Staged metadata reaches2991/3205 and `models.h` reaches208/216. No material, buf
 call, visual result or project-built execution is claimed. Evidence:
 `checkpoint-629-c-model-scene-metadata-focused-*-direct.*`.
 
-During final focused630 review the sibling CNA was observed at committed `49b1d3a998` with9
-externally modified paths, including renderer source/plan/tool edits, so it is not a clean coherent source
-snapshot for reconfigure/build. The exercised `libcna_c_api.so` remains the stable SHA-256
-`730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`. Earlier focused620 had
-observed committed `c1006b03e5` with126 modified paths.
-It briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
-After `cna-demos` removed VULKAN from `linux-full`, configure succeeded, but concurrent external
-retirement edits changed CNA during the build: `GraphicsRendererType::DirectX11` disappeared while
-`GraphicsBackendCategory.hpp` and `GraphicsBackendMaturity.hpp` still referenced it. The build
-failed in `GraphicsRendererSelection.cpp` after four of1083 steps. CNA then grew back to hundreds
-of dirty paths (374 at the latest observation). This is an external transient build blocker, not a
-demo failure; do not edit/revert CNA. The earlier incoherent state had similarly removed Vulkan's
-identity before its generated descriptor target and failed in `VulkanRendererDescriptor.cpp`.
-Evidence so far:`checkpoint-526-c-vertex-values-focused-*-direct.*`,
-`checkpoint-527-c-vertex-buffer-data-focused-*-direct.*` and
-`checkpoint-528-c-sound-effect-sources-focused-*-direct.*`; none is yet a project-built runner
-checkpoint. The instance-state evidence is
-`checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
-dirty count; record its final clean revision before rebuilding.
-
-The next coherent reconfigure should expose627 catalog IDs (complete524 plus SpriteFont and102
-additional new standalone IDs) and643 declared/640 enabled CTests if no external catalog policy
-changed. These are expectations for comparison, not validated counts; use the actual generated
-catalog and CTest inventory as authority.
+The external renderer-retirement blocker observed during focused526-630 is resolved. Complete634
+configured and built the full current tree against clean CNA `53aba6ef15`, validating the actual
+627 catalog IDs and643 declared/640 enabled CTests. All focused evidence from checkpoints526-633 is
+now absorbed into a project-built runner checkpoint; retain those focused logs only as diagnostic
+history. Future CNA changes may still occur externally, so record its state before each complete
+build and never edit or revert it from this project.
 
 ## 15. Assumptions the next session must know
 
@@ -2485,12 +2431,10 @@ catalog and CTest inventory as authority.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is524-C-textures; source commit, exact results, hashes and evidence are in
-section7. It includes focused503-C-draw-routes, focused504-C-occlusion-query/content-loss/device-
-capabilities/renderer-recreation, every focused505-521 effect batch through the ContentManager
-Effect load, focused521-C-player-update and focused522-524 texture batches. Focused525-C-sprite-font
-is the newer incremental source/runtime evidence and closes `sprite_font.h`; it has not yet been
-absorbed by a complete checkpoint.
+Current complete baseline is634-retired-renderers-and-full-staged-baseline; exact results, hashes
+and evidence are in section7. It absorbs every earlier focused batch through checkpoint633,
+including all102 previously staged standalone C IDs, SpriteFont and the Model/VertexElement member
+extensions. Use its627-demo coverage and runtime reports as the comparison baseline.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
@@ -2501,8 +2445,8 @@ device-values and resource-events extensions, texture slots and buffer bindings 
 complete500. Device clears, owned-device lifecycle and device profile/policy state are included in
 complete502. The complete504 checkpoint binary was built with clean CNA `f37f8d184`; CNA advanced
 externally during smoke to clean `fbd8e64a3` through CI/CMake-test/docs/tooling-only changes, while
-both production library hashes stayed unchanged. Complete504 remains immutable comparison evidence;
-complete524 is the current full-runtime baseline.
+both production library hashes stayed unchanged. Complete504 and complete524 remain immutable
+historical comparison evidence; complete634 is the current full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.
 

@@ -145,10 +145,10 @@ static CNA_Result end_draw(
     uint64_t pixel_count;
     uint64_t copied = 0U;
     uint64_t changed = 0U;
+    uint64_t accent_pixels = 0U;
+    uint64_t panel_pixels = 0U;
     uint64_t index;
     CNA_Color corner = {0U, 0U, 0U, 0U};
-    CNA_Color header = {0U, 0U, 0U, 0U};
-    CNA_Color panel = {0U, 0U, 0U, 0U};
     CNA_Result result;
     (void)game_time;
     (void)out_error;
@@ -182,25 +182,29 @@ static CNA_Result end_draw(
                 pixel.b != Background.b || pixel.a != Background.a) {
                 ++changed;
             }
+            if (pixel.r > 240U && pixel.g > 100U && pixel.g < 160U &&
+                pixel.b > 50U && pixel.b < 120U) {
+                ++accent_pixels;
+            }
+            if (pixel.r == 21U && pixel.g == 27U && pixel.b == 38U) {
+                ++panel_pixels;
+            }
         }
         if (info.width == 800U && info.height == 480U && copied == pixel_count) {
             corner = pixels[10U * info.width + 10U];
-            header = pixels[104U * info.width + 110U];
-            panel = pixels[300U * info.width + 120U];
         }
     }
     free(pixels);
     printf(
-        "  local sign-in changed %llu of %llu pixels; header %u,%u,%u\n",
+        "  local sign-in changed %llu of %llu pixels; accent %llu, panel %llu\n",
         (unsigned long long)changed, (unsigned long long)pixel_count,
-        (unsigned)header.r, (unsigned)header.g, (unsigned)header.b);
+        (unsigned long long)accent_pixels, (unsigned long long)panel_pixels);
     cna_demo_check(
         state->demo,
         result == CNA_RESULT_SUCCESS && copied == pixel_count && changed == pixel_count &&
             info.width == 800U && info.height == 480U && corner.r < Background.r &&
-            corner.g < Background.g && header.r > 240U && header.g > 100U &&
-            header.g < 160U && header.b > 50U && header.b < 120U &&
-            panel.r > corner.r && panel.g > corner.g,
+            corner.g < Background.g && accent_pixels > UINT64_C(1000) &&
+            panel_pixels > UINT64_C(10000),
         "the dimmed background, orange header and panel prove the local sign-in screen is visible");
     cna_demo_capture(state->demo, device);
     return CNA_RESULT_SUCCESS;

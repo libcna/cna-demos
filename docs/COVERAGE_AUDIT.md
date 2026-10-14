@@ -333,7 +333,7 @@ public readback through Texture2D; it does not establish direct GPU readback or 
 
 | Public members / behavior | Decision and evidence |
 |---|---|
-| Constructor, Size, inherited Format/LevelCount; CubeMapFace | reflection already authors six solid Color faces and checks actual +Z reflection and Fresnel contrast. render_target_cube demonstrates attachment/rendering through the derived type, with ISSUE-021 on EasyGL. face_transfers now checks size 4, Color format and the full 4x4/2x2/1x1 chain as part of actual transfer behavior; no independent enum/size getter demos. |
+| Constructor, Size, inherited Format/LevelCount; CubeMapFace | reflection already authors six solid Color faces and checks actual +Z reflection and Fresnel contrast. render_target_cube demonstrates attachment/rendering through the derived type; its upright reflected-face checks now pass on EasyGL after the ISSUE-021 fix. face_transfers now checks size 4, Color format and the full 4x4/2x2/1x1 chain as part of actual transfer behavior; no independent enum/size getter demos. |
 | SetData/GetData Color overload families | face_transfers writes six independent faces, updates +Y's central rectangle through source offset 1, reads it to destination offset 2 and checks allocated guard elements. All six base faces are read and compared after the patch, mip edits and a refused write. The +Y atlas checks four texels and the untouched blue border. Both renderer selections pass; EasyGL's public GetData uses its CPU shadow, so this is not proof of GPU readback. |
 | Explicit mip-level transfers | face_transfers explicitly uploads and reads a cyan 2x2 level and magenta 1x1 level, independent of the patched blue base face. Null rectangles select those level dimensions, and actual atlas pixels show the two authored colors on both renderers. Filtered cube sampling between mips remains separate. |
 | Typed packed, float, raw-value and byte transfers | compressed_blocks now passes eight checks on SOFTWARE/OPENGLES3 with empty stderr. Original DXT1 faces use 32 bytes for 8x8; a 4x4 region copies 8 bytes through guarded source/destination windows, while 4x4/2x2/1x1 authored mips each retain one padded 8-byte block. Short writes and misaligned writes/reads are refused, preserving every neighbor block/face/mip and read guard. Only constructor capability refusal can skip. These are public compressed-byte results, not direct GPU readback, sampling, DDS decoding or DXT3/DXT5 alpha coverage. typed_payloads now adds eight passing checks on both selections: four Bgr565 PackedValues transfer as explicit little-endian 16-bit words through guarded windows, while Vector4 payloads preserve negative/above-one channels, expose sixteen scalar elements for four texels and accept a one-texel typed patch. Oversized element types and short logical scalar counts leave caller buffers unchanged. The observed Bgr565 C++ object size is 16 bytes here, but transferred word width is two; no ABI-size assertion or C++ object reinterpretation is used. Both stderr files are empty. Other packed/half/raw-value types and sampling remain separate; no format-per-demo series is justified. The Color path repacks CNA's polymorphic Color; never reinterpret those objects as texture/vertex bytes. |
@@ -846,3 +846,18 @@ the complete ABI still needs a wider audit. C++ behavior does not automatically 
 Remaining audit scope: other XNA public members, overload families and behaviors, CNA-specific
 headers, renderer-specific execution, and manual/service scenarios. Neither these tables
 nor the existing type decisions constitute a complete public API audit.
+
+### Complete634 generated checkpoint
+
+The focused member work through VertexElement is now included in a complete project build and both
+full smoke suites. Generated coverage is627 demos,297/329 types,1417/2326 XNA members and
+2999/3205 C routes. SOFTWARE reports556 pass/33 expected fail/35 skip/3 manual; OPENGLES3 reports
+588/33/3/3, both with zero unexpected passes. This replaces temporary projections through
+checkpoint633 with generated runtime-backed data.
+
+The checkpoint also changes two audit dispositions. `ResourceContentManager` remains an expected
+ISSUE-012 failure but is now process-isolated because prior process-global XNB reader registration
+could mask its cold-start failure. RenderTargetCube attachment/sampling is now a passing EasyGL
+behavior after CNA `a6e8104d2`, so ISSUE-021 no longer contributes a runtime marker. The next focused
+member audit is the existing `graphics.vertex_declaration.stock_vertex_types` workflow: decide its
+four static declaration members and stock value semantics without creating redundant demos.

@@ -45,7 +45,7 @@ namespace
             // CNA documents PbrEffect as an unlit fallback on these renderers, with no capability
             // query for it (CNA-DEMOS-ISSUE-006).
             const std::string_view renderer = device.GetGraphicsRendererName();
-            if (renderer == "SOFTWARE" || renderer == "HEADLESS" || renderer == "SDL_RENDERER")
+            if (renderer == "SOFTWARE" || renderer == "HEADLESS")
                 Context().Skip(std::string(renderer) + " draws PbrEffect as an unlit fallback");
 
             spriteBatch_ = std::make_unique<SpriteBatch>(device);
@@ -147,5 +147,5 @@ CNA_DEMOS_GAME(MetallicRoughnessDemo, {
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "Skipped on SOFTWARE, HEADLESS and SDL_RENDERER, where CNA draws PbrEffect as an unlit fallback.",
+    .restrictions = "Skipped on SOFTWARE and HEADLESS, where CNA draws PbrEffect as an unlit fallback.",
 })

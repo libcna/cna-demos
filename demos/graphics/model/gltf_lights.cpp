@@ -35,7 +35,7 @@ namespace
             GraphicsDevice& device = getGraphicsDeviceProperty();
             // CNA documents PbrEffect as an unlit fallback on these renderers.
             const std::string_view renderer = device.GetGraphicsRendererName();
-            if (renderer == "SOFTWARE" || renderer == "HEADLESS" || renderer == "SDL_RENDERER")
+            if (renderer == "SOFTWARE" || renderer == "HEADLESS")
                 Context().Skip(std::string(renderer) + " draws PbrEffect as an unlit fallback");
 
             // lit_sphere.gltf: a white metallic-roughness sphere and two directional lights,
@@ -113,5 +113,5 @@ CNA_DEMOS_GAME(GltfLightsDemo, {
     .frames = 3,
     .deterministic = true,
     .assets = {"models/lit_sphere.cnb"},
-    .restrictions = "Skipped on SOFTWARE, HEADLESS and SDL_RENDERER, where CNA draws PbrEffect as an unlit fallback.",
+    .restrictions = "Skipped on SOFTWARE and HEADLESS, where CNA draws PbrEffect as an unlit fallback.",
 })
