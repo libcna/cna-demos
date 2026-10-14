@@ -4,8 +4,8 @@
 CNA_DEMOS_STANDALONE({
     .id = "media.media_library.music_index",
     .title = "Tagged music library and shared collection views",
-    .description = "Imports three original tagged FLAC tracks and an M3U into a private Linux library, "
-                   "then checks album, artist and genre membership, Song back-references, playlist ordering and optional positive duration aggregation.",
+    .description = "Imports three original tagged FLAC tracks and an M3U into a private Linux library; checks its shared relationships, "
+                   "optional durations and the distinct disposal behavior of object views, collection views and the library.",
     .apis = {"MediaLibrary::MediaLibrary", "MediaLibrary::Songs", "MediaLibrary::Albums", "MediaLibrary::Artists",
              "MediaLibrary::Genres", "MediaLibrary::Playlists", "Song::Name", "Song::TrackNumber",
              "Song::Album", "Song::Artist", "Song::Genre", "Album::Name", "Album::Artist", "Album::Genre",
@@ -18,11 +18,16 @@ CNA_DEMOS_STANDALONE({
              "Artist::Equals", "Artist::GetHashCode", "Artist::op_Equality", "Artist::op_Inequality", "Artist::ToString",
              "Genre::Equals", "Genre::GetHashCode", "Genre::op_Equality", "Genre::op_Inequality", "Genre::ToString",
              "Playlist::Equals", "Playlist::GetHashCode", "Playlist::op_Equality", "Playlist::op_Inequality",
-             "Playlist::ToString"},
+             "Playlist::ToString",
+             "Album::Dispose", "Album::IsDisposed", "AlbumCollection::Dispose", "AlbumCollection::IsDisposed",
+             "Artist::Dispose", "Artist::IsDisposed", "ArtistCollection::Dispose", "ArtistCollection::IsDisposed",
+             "Genre::Dispose", "Genre::IsDisposed", "GenreCollection::Dispose", "GenreCollection::IsDisposed",
+             "Playlist::Dispose", "Playlist::IsDisposed", "PlaylistCollection::Dispose", "PlaylistCollection::IsDisposed",
+             "SongCollection::Dispose", "SongCollection::IsDisposed", "MediaLibrary::Dispose", "MediaLibrary::IsDisposed"},
     .tags = {"media", "library", "metadata", "album", "artist", "genre", "playlist", "ownership"},
     .deterministic = true,
     .assets = {"media/library_music/track_a.flac", "media/library_music/track_b.flac", "media/library_music/track_c.flac"},
     .restrictions = "Standalone process selects private XDG roots before first CNA/SDL use. Linux/XDG resolution is required; "
-                    "otherwise skipped before accessing a library. All collection entries are library-owned. "
+                    "otherwise skipped before accessing a library. All collection entries are library-owned; disposal is observed before destruction. "
                     "Positive duration checks require CNA_FFMPEG_AVAILABLE; other builds retain the relationship checks. No playback or album-art validation.",
 })

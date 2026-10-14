@@ -238,6 +238,52 @@ namespace
                   selected->ToString() == "Selected" &&
                   !selected->Equals(static_cast<const System::Object*>(mirrorInstrumental)),
               "playlist identity, hash and text use its name and reject another media type");
+
+        check(!firstAlbum->getIsDisposedProperty() && !ensemble->getIsDisposedProperty() &&
+                  !instrumental->getIsDisposedProperty() && !selected->getIsDisposedProperty(),
+              "library-owned album, artist, genre and playlist views start live");
+        firstAlbum->Dispose();
+        ensemble->Dispose();
+        instrumental->Dispose();
+        selected->Dispose();
+        firstAlbum->Dispose();
+        ensemble->Dispose();
+        instrumental->Dispose();
+        selected->Dispose();
+        check(firstAlbum->getIsDisposedProperty() && ensemble->getIsDisposedProperty() &&
+                  instrumental->getIsDisposedProperty() && selected->getIsDisposedProperty() &&
+                  !secondAlbum->getIsDisposedProperty() && !secondEnsemble->getIsDisposedProperty() &&
+                  firstAlbum->getSongsProperty() == firstSongs && selected->getSongsProperty() == selectedSongs,
+              "object disposal is idempotent, marks only that borrowed view and preserves its relationships");
+
+        check(!songs->getIsDisposedProperty() && !albums->getIsDisposedProperty() &&
+                  !artists->getIsDisposedProperty() && !genres->getIsDisposedProperty() &&
+                  !playlists->getIsDisposedProperty(),
+              "the five top-level music collections remain live after individual view disposal");
+        songs->Dispose();
+        albums->Dispose();
+        artists->Dispose();
+        genres->Dispose();
+        playlists->Dispose();
+        songs->Dispose();
+        albums->Dispose();
+        artists->Dispose();
+        genres->Dispose();
+        playlists->Dispose();
+        check(songs->getIsDisposedProperty() && albums->getIsDisposedProperty() &&
+                  artists->getIsDisposedProperty() && genres->getIsDisposedProperty() &&
+                  playlists->getIsDisposedProperty() && songs->getCountProperty() == 0 &&
+                  albums->getCountProperty() == 0 && artists->getCountProperty() == 0 &&
+                  genres->getCountProperty() == 0 && playlists->getCountProperty() == 0 &&
+                  secondAlbum->getNameProperty() == "Field Notes",
+              "collection disposal is idempotent and clears each non-owning view without destroying its objects");
+
+        check(!mirror.getIsDisposedProperty(), "the independent mirror library starts live");
+        mirror.Dispose();
+        mirror.Dispose();
+        check(mirror.getIsDisposedProperty() && mirror.getAlbumsProperty() == mirrorAlbums &&
+                  mirrorAlbums->getCountProperty() == 2 && !mirrorFirstAlbum->getIsDisposedProperty(),
+              "library disposal is idempotent and does not cascade into its borrowed object graph");
         std::cout << (passed ? "PASSED" : "FAILED") << " (" << checks << " checks)\n";
         // Library destruction releases all borrowed objects before cleanup removes the private files.
         return passed ? 0 : 1;

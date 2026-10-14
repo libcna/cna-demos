@@ -5582,3 +5582,19 @@ at632 demos,301/329 types and156/753 fields; Input reaches113/113 members. Evide
 `/tmp/checkpoint-689-*` and `/tmp/checkpoint-689-coverage.md`. No cursor motion, synthetic mouse
 event, screenshot or visual result is claimed. Continue Media object/collection lifetime behavior
 next.
+
+## Focused690-music-library-lifetime
+
+The existing private-XDG music-index workflow now distinguishes all three CNA Media disposal
+layers. Album, Artist, Genre and Playlist views begin live; repeated disposal marks only the
+selected object and preserves its relationships. The five top-level music collections remain live,
+then repeated disposal marks and clears their non-owning views without deleting saved objects. A
+separately indexed MediaLibrary is marked disposed without cascading into its collection/object
+graph.
+
+SOFTWARE and OPENGLES3 selections pass29/29 authoritative child controls with byte-identical stdout
+and the same six reviewed TitleContainer INFO lines. The focused SOFTWARE CTest passes. Temporary
+coverage moves2009->2028/2326 at632 demos,301/329 types and156/753 fields; Media moves150->169/192.
+Evidence:`/tmp/checkpoint-690-music-*` and `/tmp/checkpoint-690-coverage.md`. No playback, listening,
+screenshot or visual result is claimed. Continue picture-object and picture-collection lifetime in
+the existing save-picture workflow next.

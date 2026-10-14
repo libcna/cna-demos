@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused689
-projects the632-demo staged catalog to2009/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused690
+projects the632-demo staged catalog to2028/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1372,9 +1372,11 @@ focused671 proved the override dispatch contract. RenderTargetCube and VertexBuf
 no member gap. GraphicsAdapter, the complete PackedVector namespace, PacketReader, all Design
 converter types and the ordinary Content surface now have no member gap. The seven remaining Content
 entries are four nominal .NET attribute-wrapper types and are dispositioned rather than inflated
-into inert wrapper demos. Input now has no member gap. Audit Media object and collection lifetime
-next through existing synthetic MediaLibrary workflows: Dispose/IsDisposed deserve coherent state
-coverage, while CLR collection enumerator plumbing should be dispositioned separately. Then continue
+into inert wrapper demos. Input now has no member gap. Music-library object, collection and library
+lifetime is covered. Continue Media lifetime with Picture, PictureAlbum, PictureCollection and
+PictureAlbumCollection in the existing isolated save-picture workflow. Then cover
+VisualizationData's zero-initializing constructor and explicitly disposition the seven collections'
+CLR GetEnumerator inventory entries rather than adding metadata for C++ range syntax. Then continue
 with the next high-value behavior family,
 rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
@@ -1384,7 +1386,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused689 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused690 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3315,6 +3317,24 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No screenshot or visual
 inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was edited.
 Continue with Media object/collection lifetime behavior next.
+
+Focused690 extends the existing private-XDG `media.media_library.music_index` workflow with the
+three distinct CNA Media disposal layers. Album, Artist, Genre and Playlist begin live; repeated
+Dispose marks only the selected borrowed view and retains its relationships. The five top-level
+music collections remain independent, then repeated Dispose marks and clears each non-owning view
+without deleting saved object pointers. Repeated MediaLibrary.Dispose marks a separately indexed
+library without cascading into its live collection/object graph.
+
+SOFTWARE and OPENGLES3 selections each pass29/29 authoritative child controls with byte-identical
+stdout and the same six reviewed TitleContainer INFO lines on stderr. The focused SOFTWARE CTest
+passes. Temporary coverage moves2009->2028/2326 at632 demos,301/329 types and156/753 fields; Media
+moves150->169/192. Evidence:`/tmp/checkpoint-690-music-*` and
+`/tmp/checkpoint-690-coverage.md`. Runner SHA-256 is
+`41e51d8daa2a24f14a3f5022ceaa158e18d199ac33ece22cf10d021e1b1bf408`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No playback, screenshot,
+listening or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
+source was edited. Continue picture-object and picture-collection lifetime in `save_picture` next.
 
 ## 15. Assumptions the next session must know
 
