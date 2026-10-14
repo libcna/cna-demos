@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a standalone C renderer-selection workflow that performs a real absent-backend fallback,
+  inspects selected versus active identity, latch state and exact diagnostic history.
 - Added a renderer-independent C metadata workflow covering all public renderer categories,
   maturities and their stable names plus the compiled-in renderer identity/name contract.
 - Added a C DebugDraw workflow covering all 15 remaining `graphics_ext.h` routes, including depth

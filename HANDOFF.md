@@ -21,7 +21,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 174 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 175 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -66,10 +66,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-640 project-built catalog demos in18 categories: math78, game33, graphics170, audio23, core3,
+641 project-built catalog demos in18 categories: math78, game33, graphics170, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api176. Kinds are163 console,279 game and198 standalone;
-604 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,279 game and199 standalone;
+605 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input_gamepad.h`61/63,
@@ -135,6 +135,8 @@ Focused819 covers all15 DebugDraw routes, completes `graphics_ext.h` at42/42 and
 coverage to3041/3205. Every public C header now has at least one demonstrated route.
 Focused820 adds all11 renderer metadata/classification routes, brings `core_ext.h` to38/57 and
 staged C coverage to3052/3205.
+Focused821 adds all18 production renderer selection/fallback routes, brings `core_ext.h` to56/57
+and staged C coverage to3070/3205. Its only gap is the explicitly test-only reset route.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -1820,11 +1822,13 @@ remaining RPC/variation surface and all seven uncredited Audio members are now d
 focused816. Focused817 begins the previously untouched public C `graphics_ext.h` surface with
 availability/image-based-light values and exposes ISSUE-091; focused818 covers all CRT, Depth and
 ASCII routes; focused819 closes `graphics_ext.h` with the remaining DebugDraw frame/list/geometry
-surface. Focused820 covers all renderer category/maturity and compiled-in identity/name metadata.
-Continue with the18 production renderer selection/fallback routes in `core_ext.h`; disposition the
-test-only reset route without credit. Then audit the remaining135 public C routes, classifying
-trivial fixed type-name helpers instead of inflating demo count. Build with at most three compile
-jobs and keep focused evidence current.
+surface. Focused820 covers all renderer category/maturity and compiled-in identity/name metadata;
+focused821 covers all18 production selection/fallback routes with a real absent-renderer
+substitution. The remaining `core_ext.h` reset route is explicitly test-only and intentionally
+uncredited. Audit the remaining135 public C routes next, classifying test scaffolding and trivial
+fixed type-name helpers instead of inflating demo count. Prioritize the remaining production input
+and device descriptor behavior. Build with at most three compile jobs and keep focused evidence
+current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -3024,6 +3028,24 @@ with `core_ext.h` at38/57. Evidence:`/tmp/checkpoint-820-renderer-metadata-*` an
 `/tmp/checkpoint-820-coverage.md`. The demo creates no device and does not claim availability or
 capability. Continue with the18 production selection/fallback routes; classify the remaining reset
 route as test-only rather than presenting it as application behavior.
+
+### Focused821-C-renderer-selection-and-real-fallback
+
+New `c_api.platform.renderer_selection` covers all18 production selection/fallback routes in
+`core_ext.h`. Eighteen controls inspect the six-backend available set atomically, correlate all ten
+live identities with availability, parse names case-insensitively, exercise both preference forms,
+toggle automatic fallback and reject malformed chains. It then requests absent WEBGL2 with the
+command-line-selected renderer as an explicit fallback, creates a real device and proves selected
+and active identities diverge, the choice latches and the one-entry history contains exact
+NotCompiledIn reason/name/message behavior. Every mutator is refused after the latch.
+
+SOFTWARE and OPENGLES3/Xvfb pass18/18 with byte-identical stdout and empty stderr; the exact
+SOFTWARE CTest passes. The incremental build uses at most three jobs, metadata is641/0 and temporary
+coverage is302/329 types,2114/2326 members,169/753 fields and3070/3205 C routes. `core_ext.h` is
+56/57: `cna_graphics_renderer_reset_selection_for_tests_ext` is explicitly test-only and remains
+intentionally uncredited. Evidence:`/tmp/checkpoint-821-renderer-selection-*` and
+`/tmp/checkpoint-821-coverage.md`. No screenshot or visual-quality claim is made. Continue the
+remaining C-route audit with production input/device descriptor behavior.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

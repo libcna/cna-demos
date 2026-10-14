@@ -7819,3 +7819,21 @@ with `core_ext.h` at38/57. Evidence:`/tmp/checkpoint-820-renderer-metadata-*` an
 `/tmp/checkpoint-820-coverage.md`. The demo creates no device and does not claim availability or
 capability. Continue with the18 production selection/fallback routes; classify the remaining reset
 route as test-only rather than presenting it as application behavior.
+
+## Focused821-C-renderer-selection-and-real-fallback
+
+New `c_api.platform.renderer_selection` covers all18 production selection/fallback routes in
+`core_ext.h`. Eighteen controls inspect the six-backend available set atomically, correlate all ten
+live identities with availability, parse names case-insensitively, exercise both preference forms,
+toggle automatic fallback and reject malformed chains. It then requests absent WEBGL2 with the
+command-line-selected renderer as an explicit fallback, creates a real device and proves selected
+and active identities diverge, the choice latches and the one-entry history contains exact
+NotCompiledIn reason/name/message behavior. Every mutator is refused after the latch.
+
+SOFTWARE and OPENGLES3/Xvfb pass18/18 with byte-identical stdout and empty stderr; the exact
+SOFTWARE CTest passes. The incremental build uses at most three jobs, metadata is641/0 and temporary
+coverage is302/329 types,2114/2326 members,169/753 fields and3070/3205 C routes. `core_ext.h` is
+56/57: `cna_graphics_renderer_reset_selection_for_tests_ext` is explicitly test-only and remains
+intentionally uncredited. Evidence:`/tmp/checkpoint-821-renderer-selection-*` and
+`/tmp/checkpoint-821-coverage.md`. No screenshot or visual-quality claim is made. Continue the
+remaining C-route audit with production input/device descriptor behavior.
