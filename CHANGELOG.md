@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added MediaPlayer Volume boundary clamping and corrected the mute assertion to claim only the
+  stored state observed under dummy audio, while retaining MasterVolume isolation.
 - Completed the MediaQueue mutation workflow on an isolated queue: empty construction, ordered
   ownership through Add, explicit active-index selection and Clear restoring the empty state.
 - Added bounded automatic MediaPlayer queue progression: completion advances from the first Song

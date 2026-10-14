@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-784 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-785 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1764,8 +1764,9 @@ queue index/identity/state consistency without assuming a random order; Pause fr
 Resume advances it and Stop resets it. Deferred media events now cover exact active-before-state
 ordering, pre-pump state coalescing, canonical payloads and listener removal. Automatic two-song
 advancement and the nonrepeating final stop are covered. An isolated `MediaQueue` now covers empty
-construction, Add ownership, active-index selection and Clear reset. Close the remaining volume
-clamp/state wording gap next, then reassess the Media family. Do not add
+construction, Add ownership, active-index selection and Clear reset. Volume now proves both clamp
+boundaries and makes only state-level mute claims. Close repeated transport no-op behavior next,
+then add the disabled-visualization zeroing contract before reassessing Media. Do not add
 isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
@@ -2421,6 +2422,22 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-784-media-queue-mutation-*` and `/tmp/checkpoint-784-coverage.md`. No
 acoustic quality, screenshot or manual inspection is claimed. Add Volume boundary clamping and
 correct the mute check's state-only wording next.
+
+### Focused785-MediaPlayer-volume-boundaries
+
+`media.media_player.volume_and_mute` retains its three prior controls and adds one range contract.
+The public setter maps -0.25 exactly to zero and 1.25 exactly to one before restoring the original
+0.5 playback setting. The mute check now states only that IsMuted reads true while stored Volume
+remains 0.5; it no longer claims silence from a dummy-audio run. SoundEffect MasterVolume isolation
+and final state restoration remain intact.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass4/4 controls with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-785-media-volume-*` and `/tmp/checkpoint-785-coverage.md`. No audible
+attenuation/muting, screenshot or manual inspection is claimed. Close repeated Pause/Resume/Stop
+no-op transitions in the existing dispatcher workflow next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

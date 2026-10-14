@@ -7234,3 +7234,19 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-784-media-queue-mutation-*` and `/tmp/checkpoint-784-coverage.md`. No
 acoustic quality, screenshot or manual inspection is claimed. Add Volume boundary clamping and
 correct the mute check's state-only wording next.
+
+## Focused785-MediaPlayer-volume-boundaries
+
+`media.media_player.volume_and_mute` retains its three prior controls and adds one range contract.
+The public setter maps -0.25 exactly to zero and 1.25 exactly to one before restoring the original
+0.5 playback setting. The mute check now states only that IsMuted reads true while stored Volume
+remains 0.5; it no longer claims silence from a dummy-audio run. SoundEffect MasterVolume isolation
+and final state restoration remain intact.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass4/4 controls with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-785-media-volume-*` and `/tmp/checkpoint-785-coverage.md`. No audible
+attenuation/muting, screenshot or manual inspection is claimed. Close repeated Pause/Resume/Stop
+no-op transitions in the existing dispatcher workflow next.
