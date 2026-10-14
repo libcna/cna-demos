@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added XACT SoundBank input boundaries for empty and unknown names through both GetCue and PlayCue,
+  followed by successful valid playback to prove retry safety.
 - Completed SoundEffectInstance lifetime edges: disposed Resume refusal with safe Pause/Stop, and
   move assignment that correctly transfers live playback and parent-disposal registration.
 - Extended SoundEffectInstance transport behavior before first playback and after Stop, and used a

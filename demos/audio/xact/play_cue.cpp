@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: MS-PL
 // XACT: an AudioEngine, a WaveBank and a SoundBank -- and a cue played by name.
 #include <chrono>
+#include <memory>
 #include <thread>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Audio/AudioEngine.hpp"
+#include "Microsoft/Xna/Framework/Audio/Cue.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
+#include "System/ArgumentNullException.hpp"
+#include "System/InvalidOperationException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
 
@@ -31,6 +35,31 @@ namespace
         WaveBank waves(&engine, "assets/xact/tones.xwb");
         SoundBank sounds(&engine, "assets/xact/tones.xsb");
         ctx.Check(waves.getIsPreparedProperty(), "an in-memory wave bank is prepared as soon as it loads");
+
+        bool emptyGetRefused = false;
+        bool unknownGetRefused = false;
+        bool emptyPlayRefused = false;
+        bool unknownPlayRefused = false;
+        try
+        {
+            const std::unique_ptr<Cue> unexpected(sounds.GetCue(""));
+            static_cast<void>(unexpected);
+        }
+        catch (const System::ArgumentNullException&) { emptyGetRefused = true; }
+        try
+        {
+            const std::unique_ptr<Cue> unexpected(sounds.GetCue("MissingCue"));
+            static_cast<void>(unexpected);
+        }
+        catch (const System::InvalidOperationException&) { unknownGetRefused = true; }
+        try { sounds.PlayCue(""); }
+        catch (const System::ArgumentNullException&) { emptyPlayRefused = true; }
+        try { sounds.PlayCue("MissingCue"); }
+        catch (const System::InvalidOperationException&) { unknownPlayRefused = true; }
+        ctx.Check(emptyGetRefused, "GetCue rejects an empty cue name with ArgumentNullException");
+        ctx.Check(unknownGetRefused, "GetCue rejects an unknown cue name with InvalidOperationException");
+        ctx.Check(emptyPlayRefused, "PlayCue rejects an empty cue name with ArgumentNullException");
+        ctx.Check(unknownPlayRefused, "PlayCue rejects an unknown cue name with InvalidOperationException");
 
         // Fire and forget: the sound designer decided what "LowTone" sounds like; the game only
         // names the cue.
@@ -58,11 +87,10 @@ namespace
 CNA_DEMOS_CONSOLE(PlayCue, {
     .id = "audio.xact.play_cue",
     .title = "Play an XACT cue",
-    .description = "Loads XACT settings, a wave bank and a sound bank with AudioEngine, WaveBank and SoundBank, plays "
-                   "cues by name with SoundBank::PlayCue and pumps AudioEngine::Update, checking IsPrepared and "
-                   "IsInUse.",
+    .description = "Loads XACT settings, a wave bank and a sound bank, rejects empty and unknown cue names through "
+                   "GetCue and PlayCue, then plays valid cues while pumping AudioEngine::Update.",
     .apis = {"AudioEngine::AudioEngine", "AudioEngine::Update", "WaveBank::WaveBank", "WaveBank::IsPrepared",
-             "SoundBank::SoundBank", "SoundBank::PlayCue", "SoundBank::IsInUse"},
+             "SoundBank::SoundBank", "SoundBank::GetCue", "SoundBank::PlayCue", "SoundBank::IsInUse"},
     .tags = {"audio", "xact", "cue", "sound-bank", "wave-bank"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb"},

@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-789 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-790 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1771,7 +1771,8 @@ enabled positive-spectrum path; paused-buffer freshness and acoustic/FFT quality
 unclaimed. The MediaPlayer audit is closed. Continue with the SoundEffectInstance lifecycle gaps:
 Pause/Resume before first playback and after Stop plus repeated Play are now covered. Audit disposed
 Resume and safe post-dispose Pause/Stop behavior plus move-assignment parent registration are now
-covered. Audit SoundBank empty/unknown cue refusal through the existing XACT workflow next. Do not add
+covered. SoundBank GetCue/PlayCue now distinguish empty and unknown names with successful retry.
+Audit disposed SoundBank lookup/play refusal in the existing bank-lifetime workflow next. Do not add
 isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
@@ -2514,6 +2515,22 @@ remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runti
 Evidence:`/tmp/checkpoint-789-audio-instance-lifetime-*` and `/tmp/checkpoint-789-coverage.md`. No
 audible quality, screenshot or manual inspection is claimed. Exercise SoundBank empty and unknown
 cue-name refusals in an existing XACT workflow next.
+
+### Focused790-XACT-SoundBank-name-refusals
+
+`audio.xact.play_cue` retains its three prepared/in-use/idle controls and adds four public input
+boundaries. GetCue and PlayCue each reject an empty name with `ArgumentNullException` and an unknown
+`MissingCue` with `InvalidOperationException`. The original valid LowTone runs immediately after all
+four failures, enters InUse and returns to idle, proving the refusals leave the SoundBank usable.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass7/7 controls with empty stderr and matching outcomes;
+only the printed natural-completion measurements differ (0.322s versus0.338s). The focused SOFTWARE
+CTest passes. The warning-free build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-790-xact-cue-refusals-*` and `/tmp/checkpoint-790-coverage.md`. No audible
+duration/quality or exact scheduling claim is made. Audit GetCue/PlayCue after explicit SoundBank
+disposal in the existing lifetime workflow next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
