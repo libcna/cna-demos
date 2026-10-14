@@ -64,26 +64,31 @@ namespace
         voice.Stop();
         ctx.Check(voice.getStateProperty() == SoundState::Stopped, "Stop ends the loop");
 
-        // A region that reaches past the samples is refused.
-        bool refused = false;
-        try
-        {
-            SoundEffect bad(pcm, 0, static_cast<int>(pcm.size()), Rate, AudioChannels::Mono, IntroSamples, LoopSamples + 1);
-        }
-        catch (const System::ArgumentException&)
-        {
-            refused = true;
-        }
-        ctx.Check(refused, "a loop region outside the sound is an ArgumentException");
+        // A region ending exactly at the final sample is valid above; negative values and any
+        // region reaching farther are rejected before they reach the audio backend.
+        const auto loopRegionRejected = [&](int start, int length) {
+            bool refused = false;
+            try
+            {
+                SoundEffect bad(pcm, 0, static_cast<int>(pcm.size()), Rate, AudioChannels::Mono, start, length);
+            }
+            catch (const System::ArgumentException&)
+            {
+                refused = true;
+            }
+            return refused;
+        };
+        ctx.Check(loopRegionRejected(IntroSamples, LoopSamples + 1) && loopRegionRejected(-1, LoopSamples) &&
+                      loopRegionRejected(IntroSamples, -1),
+                  "past-end, negative-start and negative-length loop regions are refused");
     }
 }
 
 CNA_DEMOS_CONSOLE(LoopRegion, {
     .id = "audio.sound_effect.loop_region",
     .title = "A loop region",
-    .description = "Builds a SoundEffect from PCM with loopStart and loopLength -- a short intro followed by a "
-                   "region that repeats while a looped SoundEffectInstance plays -- and shows that a region outside "
-                   "the samples is refused.",
+    .description = "Builds a SoundEffect from PCM with an exact-end loop region, plays its intro and repeating "
+                   "section, and refuses past-end or negative loop coordinates.",
     .apis = {"SoundEffect::SoundEffect", "SoundEffect::Duration", "SoundEffectInstance::IsLooped",
              "SoundEffectInstance::Play", "SoundEffectInstance::State", "SoundEffectInstance::Stop",
              "ArgumentException", "SoundEffect::CreateInstance"},

@@ -7527,3 +7527,18 @@ runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields
 routes. Evidence:`/tmp/checkpoint-802-audio-from-stream-*` and `/tmp/checkpoint-802-coverage.md`. No
 arbitrary stream implementation, complete WAV-codec/chunk or audible-quality claim is made.
 Complete the loop-region invalid start/length matrix next.
+
+## Focused803-SoundEffect-loop-region-validation
+
+`audio.sound_effect.loop_region` retains four focused controls. Its active authored region already
+ends exactly at the full PCM frame count, stays Playing beyond two buffer durations and stops on
+request. The final constructor check now requires ArgumentException for all three invalid coordinate
+classes together: one sample beyond the end, a negative start and a negative length.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass4/4 with byte-identical stdout and empty stderr.
+The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-803-audio-loop-region-*` and `/tmp/checkpoint-803-coverage.md`. No decoded
+sample equality, click-free continuity, exact audio timing or listening result is claimed. Audit
+SoundEffect move construction/assignment and their child ownership effects next.

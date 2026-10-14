@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-802 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-803 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1789,10 +1789,11 @@ restoration in `play_parameters`. The same demo now distinguishes Play's finite 
 refusal, disposed false return and disposed CreateInstance exception. Raw PCM now covers nonzero
 windows, XNA-specific helper arithmetic, invalid-format zeros and range/format exception classes.
 SoundEffect FromStream now covers current-position consumption, result lifetime after stream
-destruction and empty/non-audio/truncated NotSupported refusals. Complete the loop-region invalid
-start/length matrix in the existing authored-loop workflow next, then continue through the remaining
-audio behavior rows. Do not add isolated getter demos. Build with at most three compile jobs and
-keep focused evidence current.
+destruction and empty/non-audio/truncated NotSupported refusals. The authored-loop workflow now
+covers its exact-end acceptance plus past-end, negative-start and negative-length refusals. Audit
+SoundEffect move construction/assignment and their child-instance ownership effects next, then
+continue through the remaining audio behavior rows. Do not add isolated getter demos. Build with at
+most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2720,6 +2721,19 @@ normalizing only the measured completion time. The warning-free incremental buil
 three jobs; metadata and coverage remain unchanged. Evidence:`/tmp/checkpoint-802-audio-from-stream-*`.
 No arbitrary stream implementation, complete WAV-codec/chunk or audible-quality claim is made.
 Complete the loop-region invalid start/length matrix next.
+
+### Focused803-SoundEffect-loop-region-validation
+
+`audio.sound_effect.loop_region` retains four focused controls. Its active authored region already
+ends exactly at the full PCM frame count, stays Playing beyond two buffer durations and stops on
+request. The final constructor check now requires ArgumentException for all three invalid coordinate
+classes together: one sample beyond the end, a negative start and a negative length.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass4/4 with byte-identical stdout and empty stderr.
+The warning-free incremental build uses at most three jobs; metadata and coverage remain unchanged.
+Evidence:`/tmp/checkpoint-803-audio-loop-region-*`. No decoded sample equality, click-free
+continuity, exact audio timing or listening result is claimed. Audit SoundEffect move
+construction/assignment and their child ownership effects next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

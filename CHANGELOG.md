@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed authored SoundEffect loop-coordinate validation for an accepted exact-end region plus
+  past-end, negative-start and negative-length refusals in the existing playback workflow.
 - Extended SoundEffect FromStream with current-position consumption, decoded lifetime beyond the
   source stream, and uniform empty/non-audio/truncated NotSupportedException handling.
 - Deepened raw SoundEffect PCM construction with a nonzero aligned window, XNA helper rounding and
