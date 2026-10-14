@@ -6002,3 +6002,20 @@ at632 demos,301/329 types and157/753 fields; Audio moves109->111/121. Evidence:
 `/tmp/checkpoint-715-cue-state-coverage.md`. No listening test or audible-quality result is claimed.
 Continue with Microphone All, GetSampleDuration and IsHeadset in the existing hardware-manual
 workflow, preserving a truthful skip when no recording device exists.
+
+## Focused716-Microphone-enumeration-format-and-classification
+
+The manual input-level workflow now enumerates `Microphone::All`, requires Default to be its first
+entry, uses `IsHeadset` in the displayed device classification and round-trips the generated 100 ms
+mono byte count through `GetSampleDuration`. The existing capture, BufferReady and input-level UI
+remain unchanged.
+
+One-frame SOFTWARE and OPENGLES3 direct runs against SDL's dummy recording backend pass2/2 with
+byte-identical stdout and empty stderr. The ordinary manual CTest remains correctly disabled;
+metadata validation and validator self-tests pass. Temporary coverage moves2111->2114/2326 at632
+demos,301/329 types and157/753 fields; Audio moves111->114/121. Evidence:
+`/tmp/checkpoint-716-microphone-direct-*` and
+`/tmp/checkpoint-716-microphone-coverage.md`. No physical microphone, live samples, BufferReady
+delivery, listening test or recording-quality result is claimed. Continue with a consolidated
+disposition audit of the remaining Audio, Media, Net and platform-dependent XNA gaps before the
+next full checkpoint.

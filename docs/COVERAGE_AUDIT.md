@@ -1481,6 +1481,20 @@ control timing rather than output-sample timing. Evidence:`/tmp/checkpoint-715-c
 This credits both remaining Cue state properties without implying that CNA exposes an asynchronous
 XSB preparation interval. No listening test or audible-quality result is claimed.
 
+### Microphone enumeration, format conversion and headset classification
+
+The manual `audio.microphone.input_level` workflow now enumerates `Microphone::All` before choosing
+Default. With SDL's dummy recording backend, both renderer selections expose the same single
+`System audio recording device`; Default is its first entry, `IsHeadset` classifies it as an
+ordinary microphone for the UI, and `GetSampleDuration` reverses the exact byte count generated
+for a 100 ms mono buffer. Both one-frame direct runs pass2/2 with byte-identical stdout and empty
+stderr. Evidence:`/tmp/checkpoint-716-microphone-direct-*`.
+
+This credits All, GetSampleDuration and IsHeadset through an actual enumerated recording-provider
+object. The ordinary manual CTest remains declared disabled, as designed. Dummy capture does not
+establish physical headset detection, live samples, BufferReady delivery, input-level movement or
+recording quality; those remain manual hardware observations.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

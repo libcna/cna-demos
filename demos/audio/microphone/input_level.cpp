@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <memory>
 #include <optional>
+#include <string>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
@@ -33,9 +34,17 @@ namespace
     protected:
         void LoadContent() override
         {
+            const auto& microphones = Microphone::getAllProperty();
             microphone_ = Microphone::getDefaultProperty();
             if (microphone_ == nullptr)
+            {
+                Context().Check(microphones.empty(), "All is empty when there is no default microphone");
                 Context().Skip("no microphone is connected");
+            }
+
+            Context().Check(!microphones.empty() && microphones.front() == microphone_,
+                            "Default is the first device enumerated by All");
+            isHeadset_ = microphone_->getIsHeadsetProperty();
 
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
@@ -46,9 +55,13 @@ namespace
             // Audio arrives in buffers of BufferDuration; BufferReady says one is waiting.
             microphone_->setBufferDurationProperty(System::TimeSpan::FromMilliseconds(100));
             buffer_.resize(static_cast<std::size_t>(microphone_->GetSampleSizeInBytes(microphone_->getBufferDurationProperty())));
+            Context().Check(microphone_->GetSampleDuration(static_cast<int>(buffer_.size())) ==
+                                microphone_->getBufferDurationProperty(),
+                            "GetSampleDuration reverses the 100 ms mono capture buffer size");
             microphone_->BufferReady += [this](System::Object*, const System::EventArgs&) { ReadBuffer(); };
             microphone_->Start();
-            Context().Print("recording at {} Hz", microphone_->getSampleRateProperty());
+            Context().Print("recording {} at {} Hz ({})", microphone_->Name, microphone_->getSampleRateProperty(),
+                            isHeadset_ ? "headset" : "not a headset");
         }
 
         void UnloadContent() override
@@ -61,7 +74,9 @@ namespace
         {
             getGraphicsDeviceProperty().Clear(Color::Black);
             spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
-            spriteBatch_->DrawString(*font_, "Speak into the microphone (Escape to quit)", Vector2(40.0f, 40.0f),
+            const std::string prompt = std::string(isHeadset_ ? "Headset microphone: " : "Microphone: ") +
+                "speak into it (Escape to quit)";
+            spriteBatch_->DrawString(*font_, prompt, Vector2(40.0f, 40.0f),
                                      Color::White);
             spriteBatch_->Draw(*pixel_, Rectangle(40, 200, static_cast<int>(720.0 * level_), 60), Color::LimeGreen);
             spriteBatch_->End();
@@ -85,6 +100,7 @@ namespace
         }
 
         Microphone* microphone_ = nullptr;
+        bool isHeadset_ = false;
         std::vector<SharpRuntime::bytecs> buffer_;
         double level_ = 0.0;
         std::unique_ptr<SpriteBatch> spriteBatch_;
@@ -96,12 +112,12 @@ namespace
 CNA_DEMOS_GAME(InputLevelDemo, {
     .id = "audio.microphone.input_level",
     .title = "Microphone input level",
-    .description = "Records from Microphone::Default in 100 ms buffers, reads each with GetData in the BufferReady "
-                   "event and shows the input level as a bar.",
-    .apis = {"Microphone::Default", "Microphone::BufferDuration", "Microphone::BufferReady", "Microphone::GetData",
-             "Microphone::GetSampleSizeInBytes", "Microphone::SampleRate", "Microphone::Start", "Microphone::Stop",
-             "Microphone::State",
-             "MicrophoneState"},
+    .description = "Enumerates Microphone::All, classifies the default as a headset or ordinary microphone, records "
+                   "100 ms buffers and shows their input level while checking byte/duration conversion.",
+    .apis = {"Microphone::All", "Microphone::Default", "Microphone::BufferDuration", "Microphone::BufferReady",
+             "Microphone::GetData", "Microphone::GetSampleDuration", "Microphone::GetSampleSizeInBytes",
+             "Microphone::IsHeadset", "Microphone::SampleRate", "Microphone::Start", "Microphone::Stop",
+             "Microphone::State", "MicrophoneState"},
     .tags = {"audio", "microphone", "recording", "voice"},
     .automation = CnaDemos::Automation::Manual,
     .needs = CnaDemos::Need::Microphone,
