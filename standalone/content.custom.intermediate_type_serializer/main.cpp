@@ -126,6 +126,50 @@ namespace
             type.Field("Damage", &Attack::damage);
         }
     };
+
+    struct TypedEnvelope
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.TypedEnvelope";
+        DiceRoll payload;
+        bool operator==(const TypedEnvelope&) const = default;
+    };
+
+    class TypedEnvelopeSerializer final : public ContentTypeSerializer<TypedEnvelope>
+    {
+    public:
+        TypedEnvelopeSerializer() : ContentTypeSerializer<TypedEnvelope>("typedEnvelope") {}
+
+    protected:
+        void Serialize(IntermediateWriter& output, const TypedEnvelope& value,
+                       const ContentSerializerAttribute&) override
+        {
+            auto& payloadSerializer =
+                output.getSerializerProperty().GetTypeSerializer(System::Type::From<DiceRoll>());
+            auto& xml = output.getXmlProperty();
+            xml.WriteStartElement("Payload");
+            output.WriteTypeName(System::Type::From<DiceRoll>());
+            ContentSerializerAttribute raw;
+            raw.setElementNameProperty("Payload");
+            raw.setFlattenContentProperty(true);
+            output.WriteRawObject<DiceRoll>(value.payload, raw, payloadSerializer);
+            xml.WriteEndElement();
+        }
+
+        TypedEnvelope Deserialize(IntermediateReader& input, const ContentSerializerAttribute&,
+                                  TypedEnvelope) override
+        {
+            if (!input.MoveToElement("Payload"))
+                throw InvalidContentException("Typed envelope requires a Payload element.");
+            const std::string spelledType = input.getXmlProperty().GetAttribute("Type");
+            const System::Type payloadType = input.ReadTypeName();
+            if (payloadType != System::Type::From<DiceRoll>())
+                throw InvalidContentException("Typed envelope does not accept payload type '" + spelledType + "'.");
+            auto& payloadSerializer = input.getSerializerProperty().GetTypeSerializer(payloadType);
+            ContentSerializerAttribute payload;
+            payload.setElementNameProperty("Payload");
+            return {input.ReadObject<DiceRoll>(payload, payloadSerializer)};
+        }
+    };
 }
 
 int main()
@@ -165,6 +209,70 @@ int main()
         check(attack.name == "Spark" && attack.damage == roll &&
               attackXml.find("<Damage>2d6</Damage>") != std::string::npos,
               "described parent fields dispatch to the same registered custom serializer");
+
+        (void)IntermediateSerializer::AddTypeSerializer<TypedEnvelopeSerializer>();
+        const TypedEnvelope envelope{{3, 8}};
+        std::unique_ptr<System::Xml::XmlWriter> envelopeWriter(
+            System::Xml::XmlWriter::CreateToString(settings));
+        IntermediateSerializer::Serialize<TypedEnvelope>(*envelopeWriter, envelope, "");
+        const std::string envelopeXml = envelopeWriter->ToString();
+        std::cout << envelopeXml << '\n';
+        check(envelopeXml.find("<Payload Type=\"dice\">3d8</Payload>") != std::string::npos,
+              "the envelope writes a nested dynamic type name and compact payload");
+        const auto readEnvelope = [](const std::string& document) {
+            std::unique_ptr<System::Xml::XmlReader> typedReader(
+                System::Xml::XmlReader::CreateFromString(document));
+            return IntermediateSerializer::Deserialize<TypedEnvelope>(*typedReader, "");
+        };
+        check(readEnvelope(envelopeXml) == envelope,
+              "reader context resolves the nested type and dispatches its registered serializer");
+
+        const auto payloadStart = envelopeXml.find("<Payload");
+        const auto payloadEnd = envelopeXml.find("</Payload>", payloadStart);
+        if (payloadStart == std::string::npos || payloadEnd == std::string::npos)
+            throw std::runtime_error("Typed envelope payload missing.");
+        auto missingPayload = envelopeXml;
+        missingPayload.erase(payloadStart, payloadEnd + std::string_view("</Payload>").size() - payloadStart);
+        bool missingPayloadRejected = false;
+        try { (void)readEnvelope(missingPayload); }
+        catch (const InvalidContentException& error)
+        {
+            missingPayloadRejected = std::string(error.what()).find("requires a Payload") != std::string::npos;
+        }
+        check(missingPayloadRejected, "MoveToElement exposes a missing required typed payload");
+
+        const auto typeAt = envelopeXml.find(" Type=\"dice\"", payloadStart);
+        if (typeAt == std::string::npos) throw std::runtime_error("Typed payload Type attribute missing.");
+        auto missingType = envelopeXml;
+        missingType.erase(typeAt, std::string_view(" Type=\"dice\"").size());
+        bool missingTypeRejected = false;
+        try { (void)readEnvelope(missingType); }
+        catch (const InvalidContentException& error)
+        {
+            missingTypeRejected = std::string(error.what()).find("missing a \"Type\"") != std::string::npos;
+        }
+        check(missingTypeRejected, "ReadTypeName rejects a nested payload without its Type attribute");
+
+        auto unknownType = envelopeXml;
+        unknownType.replace(typeAt + std::string_view(" Type=\"").size(), 4, "unknownDice");
+        bool unknownTypeRejected = false;
+        try { (void)readEnvelope(unknownType); }
+        catch (const std::exception& error)
+        {
+            unknownTypeRejected = std::string(error.what()).find("Cannot find type") != std::string::npos;
+        }
+        check(unknownTypeRejected, "ReadTypeName rejects an unregistered nested payload type");
+
+        auto unrelatedType = envelopeXml;
+        unrelatedType.replace(typeAt + std::string_view(" Type=\"").size(), 4, "string");
+        bool unrelatedTypeRejected = false;
+        try { (void)readEnvelope(unrelatedType); }
+        catch (const InvalidContentException& error)
+        {
+            unrelatedTypeRejected = std::string(error.what()).find("payload type 'string'") != std::string::npos;
+        }
+        check(unrelatedTypeRejected,
+              "the custom schema rejects a registered but unrelated nested payload type before dispatch");
 
         const auto payload = xml.find("2d6");
         if (payload == std::string::npos) throw std::runtime_error("Serialized dice payload missing");

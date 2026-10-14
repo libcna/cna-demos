@@ -6936,3 +6936,22 @@ not duplicated: tinyxml2's roughly500-level XML ceiling is reached before the re
 guard, and CNA's own hardening suite already checks malformed550-level refusal and400-level input.
 Evidence:`/tmp/checkpoint-768-intermediate-depth-*` and `/tmp/checkpoint-768-coverage.md`. No
 rendering, screenshot or manual inspection was used. No CNA issue was found.
+
+## Focused769-intermediate-typed-envelope-context
+
+`content.custom.intermediate_type_serializer` adds six passing controls while retaining
+CNA-DEMOS-ISSUE-088's one failure, reaching15/16 passes. A custom typed envelope resolves the dice
+codec through the active writer Serializer, emits a nested `Type="dice"` with WriteTypeName, then
+uses MoveToElement, reader Xml/Serializer, ReadTypeName and explicit ReadObject dispatch to restore
+the value. Focused malformed documents prove that an absent Payload, missing Type, unknown Type and
+a registered but schema-incompatible string Type all fail at their intended boundary.
+
+SOFTWARE and OPENGLES3/Xvfb reproduce the same15 passes and one established failure with byte-
+identical stdout and empty stderr; the expected-failure SOFTWARE CTest passes. The warning-free
+incremental builds use at most three jobs; metadata remains636/0, known-issue demos remain41,
+validator/checkpoint self-tests pass5/5 and4/4, and generated runtime coverage remains302/329
+types,2114/2326 non-field members,169/753 fields and2999/3205 C routes. The build-time pipeline APIs
+are listed as CNA-specific/unmatched by that runtime inventory. Evidence:
+`/tmp/checkpoint-769-intermediate-context-*` and `/tmp/checkpoint-769-coverage.md`. No rendering,
+screenshot or manual inspection was used. No new CNA issue was found. Audit the custom serializer
+Initialize/ScanChildren namespace prepass next.

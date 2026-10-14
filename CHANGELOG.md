@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the custom intermediate serializer with a typed nested envelope that writes and reads
+  dynamic type metadata through the public reader/writer context, including missing, unknown and
+  unrelated-type refusals.
 - Added the public intermediate-writer depth boundary: a non-shared self-cycle is refused at
   `MaxNestingDepth` with an actionable diagnostic instead of recursing without a bound.
 - Extended shared-resource intermediate XML coverage with XNA's root self-cycle behavior: the
