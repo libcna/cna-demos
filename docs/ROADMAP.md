@@ -5354,3 +5354,18 @@ reached by these draws and dispositioned after focused671 proved the override co
 readback; no screenshot or visual inspection was used. Finish AlphaTestEffect's Alpha,
 VertexColorEnabled and Clone behavior next, then DualTextureEffect and the remaining environment
 material terms.
+
+## Focused676-AlphaTestEffect-alpha-vertex-color-and-clone
+
+`graphics.alpha_test_effect.cutout` grows2->5 controls and closes AlphaTestEffect's three remaining
+caller-visible members. The rendered right effect is a clone retaining texture, projection,
+threshold, Alpha=.75 and enabled vertex colors; changing the source to alpha.25/vertex-color-off
+does not affect it. A cyan vertex tint with half red yields exact center RGBA(96,191,191,191), and
+the discarded near corner reveals the tinted orange far circle at RGBA(96,124,0,191).
+
+SOFTWARE and OPENGLES3 pass with byte-identical stdout and empty stderr; the focused SOFTWARE CTest
+passes. Temporary coverage moves1810->1813/2326 at632 demos,301/329 types and155/753 fields.
+AlphaTestEffect retains only protected OnApply, dispositioned through its actual pass draws and the
+base dispatch workflow. Evidence:`/tmp/checkpoint-676-*` and `/tmp/checkpoint-676-coverage.md`.
+Pixels were inspected programmatically; no screenshot or visual inspection was used. Audit
+DualTextureEffect's matrices, fog, material/vertex color and clone next.

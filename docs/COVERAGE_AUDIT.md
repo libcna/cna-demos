@@ -239,6 +239,22 @@ on SOFTWARE and OPENGLES3 with byte-identical stdout and empty stderr; both focu
 pass. Evidence:`/tmp/checkpoint-675-*` and `/tmp/checkpoint-675-coverage.md`. Pixel validation used
 programmatic readback; no screenshot or visual inspection was used.
 
+### AlphaTestEffect alpha, vertex color and clone
+
+`cutout` now creates the rendered right-hand effect by cloning a fully configured source. Texture,
+projection, compare/reference threshold, alpha and vertex-color state survive, then source changes
+prove the clone independent. Its colored vertex format supplies cyan with half red, and Alpha=.75
+premultiplies the opaque texture center to exact RGBA(96,191,191,191). The discarded near corner
+reveals the farther orange circle as exact RGBA(96,124,0,191), so both the vertex-color shader
+variant and alpha-test/depth behavior affect pixels.
+
+Focused676 grows the ID from2 to5 controls and credits Alpha, VertexColorEnabled and Clone, moving
+temporary coverage1810->1813/2326. SOFTWARE and OPENGLES3 pass with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. AlphaTestEffect retains only its protected OnApply hook,
+already dispositioned through real pass dispatch. Evidence:`/tmp/checkpoint-676-*` and
+`/tmp/checkpoint-676-coverage.md`. Pixel validation used programmatic readback; no screenshot or
+visual inspection was used.
+
 ### ShaderEffect and shader dialect selection
 
 Source review of ShaderEffect.hpp/.cpp, Effect::Clone's public contract, the four GLSL shader/MRT

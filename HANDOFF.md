@@ -1361,15 +1361,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused675
-projects the632-demo staged catalog to1810/2326 XNA members and155/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused676
+projects the632-demo staged catalog to1813/2326 XNA members and155/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
-machinery. Finish AlphaTestEffect's Alpha, VertexColorEnabled and Clone behavior in its rendered
-cutout workflow next. Then audit DualTextureEffect's11 gaps and EnvironmentMapEffect's remaining
+machinery. AlphaTestEffect retains only its dispositioned OnApply override. Audit
+DualTextureEffect's11 gaps next: use the existing light-map draw for meaningful matrix/fog,
+material/vertex color and clone independence, then finish EnvironmentMapEffect's remaining
 Alpha/EmissiveColor/EnvironmentMapSpecular. Per-effect protected OnApply entries are dispositioned:
-real pass application reaches them and focused671 already proved the override dispatch contract.
+real pass application reaches them and focused671 proved the override dispatch contract.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1378,7 +1379,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused675 built against external `1ad225ae28`. That checkout currently
+the sibling CNA checkout; focused676 built against external `1ad225ae28`. That checkout currently
 has six externally owned documentation/FNA3D paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3044,6 +3045,21 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 programmatic; no screenshot or visual inspection was used. Sibling CNA remained external
 `1ad225ae28` with six dirty documentation/FNA3D paths; no CNA source was edited. Finish
 AlphaTestEffect next.
+
+Focused676 extends `graphics.alpha_test_effect.cutout` from2 to5 controls. A fully configured
+source is cloned; the clone retains texture, projection, threshold, Alpha=.75 and enabled vertex
+colors, then remains independent when the source changes. The rendered colored-vertex path yields
+exact RGBA(96,191,191,191) at the opaque center and RGBA(96,124,0,191) where the near corner is
+discarded and exposes the far tinted orange circle. SOFTWARE and OPENGLES3 outputs are byte-
+identical with empty stderr; the focused SOFTWARE CTest passes. Temporary coverage moves1810->
+1813/2326 at632 demos,301/329 types and155/753 fields. AlphaTestEffect retains only dispositioned
+protected OnApply. Evidence:`/tmp/checkpoint-676-*` and `/tmp/checkpoint-676-coverage.md`. Runner
+SHA-256 is `7d1e918f125963ca6d3061e64d5500597f9f5a7817f1f3a0215f3f257d61a12f`; production library
+hashes remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Pixel validation was
+programmatic; no screenshot or visual inspection was used. Sibling CNA remained external
+`1ad225ae28` with six dirty documentation/FNA3D paths; no CNA source was edited. Audit
+DualTextureEffect next.
 
 ## 15. Assumptions the next session must know
 
