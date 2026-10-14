@@ -7608,3 +7608,19 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 2114/2326 non-field members,169/753 fields and2999/3205 C routes.
 Evidence:`/tmp/checkpoint-807-xact-bank-construction-*` and `/tmp/checkpoint-807-coverage.md`.
 Continue with the streaming constructor's ignored offset/packet contract.
+
+## Focused808-XACT-streaming-compatibility-parameters
+
+`audio.xact.streaming_wave_bank` grows from five to six controls. A separate engine/bank uses the
+same valid streaming file with deliberately unusual negative offset and packet-size values and
+still prepares. This demonstrates CNA's source-documented FNA-compatible standard-file path, where
+neither constructor argument reaches FACT I/O. The original offset0/packet16 playback and IsInUse
+workflow remains intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass6/6 with byte-identical stdout and empty stderr.
+The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-808-xact-streaming-parameters-*` and
+`/tmp/checkpoint-808-coverage.md`. This does not measure streaming memory residency or packetized
+I/O. Continue with deeper AudioCategory boundaries.

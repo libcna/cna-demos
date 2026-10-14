@@ -2,6 +2,7 @@
 // A streaming WaveBank: music played from the file as it goes, instead of loaded into memory.
 #include <chrono>
 #include <memory>
+#include <string>
 #include <thread>
 
 #include "CnaDemos/Demo.hpp"
@@ -18,13 +19,23 @@ namespace
 {
     void StreamingWaveBank(CnaDemos::DemoContext& ctx)
     {
+        const std::string musicPath =
+            Microsoft::Xna::Framework::TitleLocation::Path() + "/assets/xact/music.xwb";
+
+        // FNA's standard file I/O path does not forward either compatibility argument to FACT.
+        // CNA matches it: even deliberately unusual values still select the same streaming bank.
+        AudioEngine compatibilityEngine("assets/xact/demo.xgs");
+        WaveBank compatibilityBank(&compatibilityEngine, musicPath, -4096, -1);
+        ctx.Check(compatibilityBank.getIsPreparedProperty(),
+                  "streaming offset and packet size are accepted compatibility arguments");
+
         AudioEngine engine("assets/xact/demo.xgs");
         // Short effects live in an in-memory bank; long music is authored as a streaming bank
         // and opened with the streaming constructor: offset 0 into the file, packets of 16
         // sectors (the minimum is 2). Only the bank's header is read here. (CNA opens a relative
         // streaming path from the working directory, unlike the other XACT files: the path is
         // built from TitleLocation, CNA-DEMOS-ISSUE-028.)
-        WaveBank music(&engine, Microsoft::Xna::Framework::TitleLocation::Path() + "/assets/xact/music.xwb", 0, 16);
+        WaveBank music(&engine, musicPath, 0, 16);
         SoundBank sounds(&engine, "assets/xact/music.xsb");
 
         // On XNA a streaming bank becomes prepared during AudioEngine::Update, once it has read
@@ -63,9 +74,8 @@ namespace
 CNA_DEMOS_CONSOLE(StreamingWaveBank, {
     .id = "audio.xact.streaming_wave_bank",
     .title = "Streaming wave bank (music)",
-    .description = "Opens a streaming XACT wave bank with WaveBank's streaming constructor (offset, packet size), "
-                   "waits for IsPrepared through AudioEngine::Update, and plays its music cue; IsInUse follows the "
-                   "playback.",
+    .description = "Shows the streaming WaveBank constructor's compatibility arguments, waits for IsPrepared through "
+                   "AudioEngine::Update, and plays a music cue while IsInUse follows playback.",
     .apis = {"WaveBank::WaveBank", "WaveBank::IsPrepared", "WaveBank::IsInUse", "AudioEngine::Update",
              "SoundBank::GetCue", "Cue::Play", "Cue::Stop"},
     .tags = {"audio", "xact", "music", "streaming"},

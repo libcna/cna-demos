@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-807 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-808 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1797,10 +1797,10 @@ closed aside from explicitly unclaimed acoustic and broader-codec behavior. XACT
 construction/refusal boundaries and CNA's arbitrary-renderer fallback are now covered in the
 existing renderer workflow. AudioEngine disposal now covers its cleared-but-queryable renderer
 list, category/global-variable refusals and safe Update no-op. XACT bank construction now covers
-null/empty/missing inputs and the distinct corrupt-eager/missing-stream stub outcomes. Continue
-with the streaming constructor's ignored offset/packet contract, then deeper cue/category behavior.
-Do not add isolated getter demos. Build with at most three compile jobs and keep focused evidence
-current.
+null/empty/missing inputs and the distinct corrupt-eager/missing-stream stub outcomes. The
+streaming workflow now demonstrates CNA/FNA's ignored offset/packet compatibility inputs. Continue
+with deeper AudioCategory boundaries, then remaining cue/variable behavior. Do not add isolated
+getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2800,6 +2800,19 @@ files contain the same three expected parse/open diagnostics from the deliberate
 warning-free incremental build uses at most three jobs; metadata and coverage remain unchanged.
 Evidence:`/tmp/checkpoint-807-xact-bank-construction-*`. Continue with the streaming constructor's
 ignored offset/packet contract.
+
+### Focused808-XACT-streaming-compatibility-parameters
+
+`audio.xact.streaming_wave_bank` grows from five to six controls. A separate engine/bank uses the
+same valid streaming file with deliberately unusual negative offset and packet-size values and
+still prepares. This demonstrates CNA's source-documented FNA-compatible standard-file path, where
+neither constructor argument reaches FACT I/O. The original offset0/packet16 playback and IsInUse
+workflow remains intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass6/6 with byte-identical stdout and empty stderr.
+The warning-free incremental build uses at most three jobs; metadata and coverage remain unchanged.
+Evidence:`/tmp/checkpoint-808-xact-streaming-parameters-*`. This does not measure streaming memory
+residency or packetized I/O. Continue with deeper AudioCategory boundaries.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
