@@ -4364,3 +4364,18 @@ metadata reaches2725/3205 and `cnb.h` reaches214/272. Evidence:
 `checkpoint-614-c-cnb-sprite-font-data-focused-*-direct.*`. No ContentManager, graphics device,
 renderer, text layout, draw call or project-built execution is claimed. Audio formats and neutral
 SoundEffect data are next.
+
+## Focused615-C-CNB-SoundEffect-data-and-codec
+
+`c_api.content.cnb_sound_effect_data` adds all nine audio-format and neutral SoundEffect routes in
+17 renderer-free controls. Frozen format values, fixed frame sizes and exact atomic names cover
+all six identities plus an unknown value. A copied stereo PCM8 payload with an interior loop keeps
+its bytes after caller mutation, encodes twice into an identical schema-two document and decodes
+with exact shape and samples after the original is released. Sample/document short buffers are
+atomic, stale access fails and the encoder catches both a stored byte-count mismatch and a named
+packet format without a codec. Both renderer-labelled direct runs are byte-identical with empty
+stderr; strict C99, metadata compilation, diff checks and validation self-tests pass. Staged
+metadata reaches2734/3205 and `cnb.h` reaches223/272. Evidence:
+`checkpoint-615-c-cnb-sound-effect-data-focused-*-direct.*`. No SoundEffect runtime object, audio
+device, playback, audible output or project-built execution is claimed. Song and Video metadata
+documents are next.
