@@ -92,6 +92,37 @@ namespace
         ctx.Check(assigned.getIsDisposedProperty() && assigned.getStateProperty() == SoundState::Stopped,
                   "disposing the source parent follows move assignment and disposes the transferred voice");
 
+        SoundEffect parentMoveSource(path);
+        SoundEffectInstance parentMoveChild = parentMoveSource.CreateInstance();
+        parentMoveChild.setIsLoopedProperty(true);
+        parentMoveChild.Play();
+        SoundEffect parentMoveTarget(std::move(parentMoveSource));
+        ctx.Check(!parentMoveTarget.getIsDisposedProperty() && !parentMoveChild.getIsDisposedProperty() &&
+                      parentMoveChild.getStateProperty() == SoundState::Playing,
+                  "move construction preserves a SoundEffect resource and its active child");
+        parentMoveTarget.Dispose();
+        ctx.Check(parentMoveChild.getIsDisposedProperty() && parentMoveChild.getStateProperty() == SoundState::Stopped,
+                  "disposing the moved-to SoundEffect still cascades to its original child");
+
+        SoundEffect replacedParent(path);
+        SoundEffect incomingParent(path);
+        SoundEffectInstance replacedChild = replacedParent.CreateInstance();
+        SoundEffectInstance incomingChild = incomingParent.CreateInstance();
+        replacedChild.setIsLoopedProperty(true);
+        incomingChild.setIsLoopedProperty(true);
+        replacedChild.Play();
+        incomingChild.Play();
+        replacedParent = std::move(incomingParent);
+        ctx.Check(replacedChild.getStateProperty() == SoundState::Playing &&
+                      incomingChild.getStateProperty() == SoundState::Playing &&
+                      !replacedParent.getIsDisposedProperty(),
+                  "move assignment transfers the incoming parent without explicitly disposing the replaced wrapper");
+        replacedParent.Dispose();
+        ctx.Check(incomingChild.getIsDisposedProperty() && !replacedChild.getIsDisposedProperty() &&
+                      replacedChild.getStateProperty() == SoundState::Playing,
+                  "the assigned parent cascades only to the incoming resource's registered child");
+        replacedChild.Dispose();
+
         SoundEffect effect(path);
         SoundEffectInstance first = effect.CreateInstance();
         SoundEffectInstance idle = effect.CreateInstance();
@@ -115,8 +146,8 @@ namespace
 CNA_DEMOS_CONSOLE(InstanceLifetime, {
     .id = "audio.sound_effect_instance.lifetime",
     .title = "Sound data ownership and explicit disposal",
-    .description = "Keeps a voice after its temporary C++ sound wrapper is destroyed, exercises moves across parent "
-                   "cascades, and checks idempotent post-dispose transport and property behavior.",
+    .description = "Keeps voices across C++ wrapper and parent/child moves, verifies disposal cascades, and checks "
+                   "idempotent post-dispose transport and property behavior.",
     .apis = {"SoundEffect::SoundEffect", "SoundEffect::CreateInstance", "SoundEffect::Dispose", "SoundEffect::IsDisposed",
              "SoundEffectInstance::SoundEffectInstance", "SoundEffectInstance::Play", "SoundEffectInstance::State",
              "SoundEffectInstance::Pause", "SoundEffectInstance::Resume", "SoundEffectInstance::Stop",

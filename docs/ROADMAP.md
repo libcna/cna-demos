@@ -7542,3 +7542,20 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-803-audio-loop-region-*` and `/tmp/checkpoint-803-coverage.md`. No decoded
 sample equality, click-free continuity, exact audio timing or listening result is claimed. Audit
 SoundEffect move construction/assignment and their child ownership effects next.
+
+## Focused804-SoundEffect-parent-move-ownership
+
+`audio.sound_effect_instance.lifetime` grows from thirteen to seventeen controls. Move construction
+of a SoundEffect preserves an active child's registry and the moved-to parent's Dispose reaches it.
+Move assignment leaves both the replaced and incoming children playing: replacing a C++ wrapper is
+not explicit disposal. Disposing the assigned target then reaches only the incoming resource's
+child; the old child remains active until its explicit cleanup. Existing voice moves, disposal
+guards and parent cascades remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass17/17 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-804-audio-parent-moves-*` and `/tmp/checkpoint-804-coverage.md`. These are
+C++ ownership/state observations; no audible output or genuine-XNA runtime execution is claimed.
+Continue with XACT AudioEngine construction/refusal boundaries.

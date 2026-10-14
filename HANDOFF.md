@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-803 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-804 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1791,9 +1791,11 @@ windows, XNA-specific helper arithmetic, invalid-format zeros and range/format e
 SoundEffect FromStream now covers current-position consumption, result lifetime after stream
 destruction and empty/non-audio/truncated NotSupported refusals. The authored-loop workflow now
 covers its exact-end acceptance plus past-end, negative-start and negative-length refusals. Audit
-SoundEffect move construction/assignment and their child-instance ownership effects next, then
-continue through the remaining audio behavior rows. Do not add isolated getter demos. Build with at
-most three compile jobs and keep focused evidence current.
+SoundEffect parent move construction/assignment now cover active-child registry transfer, target
+cascade and the replaced wrapper's non-disposing lifetime. The core SoundEffect behavior audit is
+closed aside from explicitly unclaimed acoustic and broader-codec behavior. Continue with XACT
+AudioEngine construction/refusal boundaries, then the remaining XACT behavior rows. Do not add
+isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2734,6 +2736,21 @@ The warning-free incremental build uses at most three jobs; metadata and coverag
 Evidence:`/tmp/checkpoint-803-audio-loop-region-*`. No decoded sample equality, click-free
 continuity, exact audio timing or listening result is claimed. Audit SoundEffect move
 construction/assignment and their child ownership effects next.
+
+### Focused804-SoundEffect-parent-move-ownership
+
+`audio.sound_effect_instance.lifetime` grows from thirteen to seventeen controls. Move construction
+of a SoundEffect preserves an active child's registry and the moved-to parent's Dispose reaches it.
+Move assignment leaves both the replaced and incoming children playing: replacing a C++ wrapper is
+not explicit disposal. Disposing the assigned target then reaches only the incoming resource's
+child; the old child remains active until its explicit cleanup. Existing voice moves, disposal
+guards and parent cascades remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass17/17 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
+unchanged. Evidence:`/tmp/checkpoint-804-audio-parent-moves-*`. These are C++ ownership/state
+observations; no audible output or genuine-XNA runtime execution is claimed. Continue with XACT
+AudioEngine construction/refusal boundaries.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
