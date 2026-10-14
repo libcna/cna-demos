@@ -1359,12 +1359,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. The
-complete checkpoint absorbs focused635 through646 and establishes1519/2326 runtime-backed XNA
-members. Audit the still-uncredited ContentReader scalar/math reads in the existing custom reader
-workflow next: verify which public ReadColor/ReadDouble/ReadMatrix/ReadQuaternion/ReadSingle and
-ReadVector2/3/4 paths already execute, add coherent authored-value controls where useful, and
-disposition any implementation or reader-access constraints rather than creating artificial IDs.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused648
+projects XNA-member coverage to1527/2326 and closes the useful fixed ContentReader scalar/math
+family in the existing custom Level workflow. Audit the still-uncredited MouseState constructor,
+typed/boxed equality, operators, hash and text together with adjacent KeyboardState hash behavior
+in the existing input state workflows. Keep disconnected/hardware-dependent behavior distinct.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1373,8 +1372,8 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; complete647 began against clean `09c3108e58`, but final observation found
-external `af798b73a4` plus four uncommitted FNA3D build/patch paths. Recheck it before every build.
+the sibling CNA checkout; focused648 last observed external `af798b73a4` plus seven uncommitted
+FNA3D/MojoShader/content-pipeline build/test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
 `standalone/c_api.graphics.vertex_values` contains the planned seven-check
@@ -2595,6 +2594,19 @@ hashes are recorded in section7. Evidence:`build/linux-full/reports/checkpoint-6
 No screenshot, listening test or manual visual inspection was performed. The run began with clean
 CNA `09c3108e58`; final capture found the externally changed dirty CNA state documented above, so
 this is immutable binary/runtime evidence rather than a claim about that later source tree.
+
+Focused648 extends `content.xnb.custom_type_reader` from five to10 controls and its original
+generated XNB from118 to250 bytes. One coherent Level state block supplies an exact float/double,
+nontrivial RGBA color, all16 row-major matrix elements, quaternion XYZW and Vector2/3/4 values;
+LevelReader calls all eight public ContentReader helpers directly and the demo checks every field.
+SOFTWARE and OPENGLES3 pass10/10 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. The updated asset regenerates deterministically, the build is diagnostic-free, and
+temporary coverage projects1519->1527/2326 without a catalog/type/C-route change. Evidence:
+`/tmp/checkpoint-648-content-reader-*` and `/tmp/checkpoint-648-coverage.md`. No screenshot or
+visual inspection was performed. The exercised production libraries retain the complete647 hashes;
+the runner hash is `f162068386348d2b43e93b6a512b589fe47b85759fc5180a6c3dd53ba2b33220`.
+Sibling CNA remained at `af798b73a4` while its externally owned dirty paths grew to seven; no CNA
+source was edited or reverted here.
 
 ## 15. Assumptions the next session must know
 

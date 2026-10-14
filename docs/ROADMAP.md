@@ -4879,3 +4879,17 @@ library hashes remained identical to complete634. Exact binary hashes and source
 in HANDOFF.md; runtime evidence is archived as `checkpoint-647-complete-*`. No screenshot,
 listening test or manual visual inspection was performed. Continue the public-member audit with
 the ContentReader scalar/math read family in the existing custom reader workflow.
+
+## Focused648-ContentReader-scalar-and-math-values
+
+`content.xnb.custom_type_reader` retains its original custom Level/cache workflow and extends the
+generated Level XNB with one authored scalar/color/math state block. LevelReader now directly calls
+ReadSingle, ReadDouble, ReadColor, ReadMatrix, ReadQuaternion and ReadVector2/3/4. Five new controls
+check exact scalars, RGBA byte order, all16 row-major matrix elements, quaternion XYZW and every
+vector component. SOFTWARE and OPENGLES3 each pass10/10 with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The asset regenerates deterministically and the build is
+diagnostic-free. Temporary coverage moves1519->1527/2326 XNA members without changing the627-demo,
+type or C-route counts. Evidence:`/tmp/checkpoint-648-content-reader-*` and
+`/tmp/checkpoint-648-coverage.md`. No screenshot or visual inspection was performed. Audit the
+MouseState constructor/value contract and adjacent KeyboardState hash behavior next in the existing
+input state workflows.
