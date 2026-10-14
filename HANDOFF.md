@@ -1359,12 +1359,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused658
-projects the628-demo staged catalog to1660/2326 XNA members and raises type coverage to299/329;
-every callable GameComponent/DrawableGameComponent/IGameComponent/IUpdateable/IDrawable and
-component-collection member is covered, with CLR Finalize dispositioned. Audit
-GraphicsDeviceInformation value identity plus GraphicsDeviceManager construction, device/service
-lifecycle, events and preference members next in the existing graphics-manager workflows.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused659
+projects the628-demo staged catalog to1687/2326 XNA members at299/329 types. Every
+GraphicsDeviceInformation, PreparingDeviceSettingsEventArgs and IGraphicsDeviceManager member is
+covered; GraphicsDeviceManager now lacks only its two public default-size constants and the
+PreferMultiSampling/PreferredBackBufferFormat preference pair. Audit those four members through
+actual applied presentation parameters in the existing graphics-manager workflows next.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1373,7 +1373,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused658 last observed external `73991b01f7` with six uncommitted
+the sibling CNA checkout; focused659 last observed external `73991b01f7` with six uncommitted
 renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2752,6 +2752,23 @@ with its stable asserted component count and both runs were repeated. Temporary 
 disposition. Evidence:`/tmp/checkpoint-658-*` and `/tmp/checkpoint-658-coverage.md`. No screenshot
 or visual inspection was used. Production library hashes remain complete647; the runner is
 `71db4fa0a80c545943805c137d79db38d4ed6b09d49f69507d8df02ed2cf5443`. Sibling CNA remained
+external dirty `73991b01f7` with six observed paths; no CNA source was edited.
+
+Focused659 extends two existing graphics-manager IDs. `preparing_device_settings` grows3->8
+controls: direct GraphicsDeviceInformation defaults, all mutable properties, deep clone,
+typed/boxed equality and hash are exercised alongside explicit event-args construction; a small
+derived probe calls protected device selection, ranking and reset suitability against real manager
+defaults. `device_events` grows4->6 controls, confirms the manager and Game expose the same device,
+then disposes the manager twice and requires exactly one DeviceDisposing/Disposed pair plus a
+released device reference. The actual creation/draw/reset/disposal lifecycle credits the protected
+callbacks and public/explicit IGraphicsDeviceManager and IDisposable routes. SOFTWARE and
+OPENGLES3 Xvfb runs pass8/8 and6/6 with byte-identical per-ID stdout and empty stderr; both focused
+SOFTWARE CTests pass. The build is diagnostic-free. Temporary coverage projects1660->1687/2326;
+GraphicsDeviceInformation, PreparingDeviceSettingsEventArgs and IGraphicsDeviceManager have no
+remaining gap, while GraphicsDeviceManager retains only its two default-size constants and two
+preference properties. Evidence:`/tmp/checkpoint-659-*` and `/tmp/checkpoint-659-coverage.md`. No
+screenshot or visual inspection was used. Production library hashes remain complete647; the runner
+is `e80a8122118ad5f5a99251aa8c6cacf3f5e4a098e1ecc88a174829fd609cdede`. Sibling CNA remained
 external dirty `73991b01f7` with six observed paths; no CNA source was edited.
 
 ## 15. Assumptions the next session must know

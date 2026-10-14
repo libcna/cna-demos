@@ -27,6 +27,9 @@ namespace
                 ++reset_;
                 order_.push_back("manager.DeviceReset");
             };
+            Graphics().getDeviceDisposingEvent() +=
+                [this](System::Object*, const System::EventArgs&) { ++disposing_; };
+            Graphics().Disposed += [this](System::Object*, const System::EventArgs&) { ++disposed_; };
         }
 
     protected:
@@ -71,13 +74,21 @@ namespace
             const auto reset = std::find(order_.begin(), order_.end(), "device.DeviceReset");
             Context().Check(resetting != order_.end() && reset != order_.end() && resetting < reset,
                             "the device raises its own DeviceResetting, then DeviceReset");
+            Context().Check(Graphics().getGraphicsDeviceProperty() == &getGraphicsDeviceProperty(),
+                            "the manager exposes the same device owned by the game");
             DemoGame::EndRun();
+            Graphics().Dispose();
+            Graphics().Dispose();
+            Context().Check(disposing_ == 1 && disposed_ == 1 && Graphics().getGraphicsDeviceProperty() == nullptr,
+                            "manager disposal raises both lifetime events once and releases its device reference");
         }
 
     private:
         int created_ = 0;
         int resetting_ = 0;
         int reset_ = 0;
+        int disposing_ = 0;
+        int disposed_ = 0;
         int updates_ = 0;
         std::vector<std::string> order_;
     };
@@ -89,8 +100,20 @@ CNA_DEMOS_GAME(DeviceEventsDemo, {
     .description = "Counts GraphicsDeviceManager's DeviceCreated, DeviceResetting and DeviceReset events while a "
                    "settings change is applied with ApplyChanges, and the order in which the manager and the "
                    "GraphicsDevice itself raise DeviceResetting and DeviceReset.",
-    .apis = {"GraphicsDeviceManager::DeviceCreated", "GraphicsDeviceManager::DeviceResetting",
-             "GraphicsDeviceManager::DeviceReset", "GraphicsDeviceManager::ApplyChanges",
+    .apis = {"GraphicsDeviceManager::GraphicsDeviceManager", "GraphicsDeviceManager::GraphicsDevice",
+             "GraphicsDeviceManager::DeviceCreated", "GraphicsDeviceManager::DeviceDisposing",
+             "GraphicsDeviceManager::DeviceResetting", "GraphicsDeviceManager::DeviceReset",
+             "GraphicsDeviceManager::Disposed", "GraphicsDeviceManager::Dispose",
+             "GraphicsDeviceManager::System#IDisposable#Dispose",
+             "GraphicsDeviceManager::CreateDevice", "GraphicsDeviceManager::BeginDraw",
+             "GraphicsDeviceManager::EndDraw", "GraphicsDeviceManager::OnDeviceCreated",
+             "GraphicsDeviceManager::OnDeviceDisposing", "GraphicsDeviceManager::OnDeviceResetting",
+             "GraphicsDeviceManager::OnDeviceReset", "IGraphicsDeviceManager::CreateDevice",
+             "IGraphicsDeviceManager::BeginDraw", "IGraphicsDeviceManager::EndDraw",
+             "GraphicsDeviceManager::Microsoft#Xna#Framework#IGraphicsDeviceManager#CreateDevice",
+             "GraphicsDeviceManager::Microsoft#Xna#Framework#IGraphicsDeviceManager#BeginDraw",
+             "GraphicsDeviceManager::Microsoft#Xna#Framework#IGraphicsDeviceManager#EndDraw",
+             "GraphicsDeviceManager::ApplyChanges",
              "GraphicsDevice::DeviceResetting", "GraphicsDevice::DeviceReset",
              "GraphicsDeviceManager::PreferredBackBufferWidth", "GraphicsDeviceManager::PreferredBackBufferHeight"},
     .tags = {"device", "event", "reset"},

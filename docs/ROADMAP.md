@@ -5049,3 +5049,21 @@ the628-demo/C-route counts. Only CLR GameComponent.Finalize remains by dispositi
 Evidence:`/tmp/checkpoint-658-*` and `/tmp/checkpoint-658-coverage.md`. No screenshot or visual
 inspection was used. Audit GraphicsDeviceInformation identity plus GraphicsDeviceManager
 construction, service/device lifecycle, events and preference members next.
+
+## Focused659-graphics-manager-selection-lifecycle-and-identity
+
+Two existing graphics-manager IDs close27 members without adding a catalog variant.
+`preparing_device_settings` grows from three to eight controls: direct
+GraphicsDeviceInformation defaults, every mutable property, deep clone, typed/boxed equality and
+hash are checked beside explicit PreparingDeviceSettingsEventArgs construction. A minimal derived
+probe directly exercises protected CanResetDevice, FindBestDevice and RankDevices with the real
+default adapter and presentation defaults. `device_events` grows from four to six controls, proves
+the manager exposes Game's device, then calls Dispose twice and requires one DeviceDisposing and
+Disposed event plus a cleared device reference. Its actual create/draw/reset/dispose lifecycle
+also covers the protected callbacks and public/explicit IGraphicsDeviceManager and IDisposable
+routes. SOFTWARE and OPENGLES3 pass8/8 and6/6 under Xvfb with byte-identical per-ID stdout and
+empty stderr; both focused SOFTWARE CTests pass and the build is diagnostic-free. Temporary
+coverage moves1660->1687/2326 at299/329 types, leaving only GraphicsDeviceManager's two default-size
+constants and PreferMultiSampling/PreferredBackBufferFormat properties in this family. Evidence:
+`/tmp/checkpoint-659-*` and `/tmp/checkpoint-659-coverage.md`. No screenshot or visual inspection
+was used. Exercise those four members through actual applied presentation parameters next.
