@@ -1738,15 +1738,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-766 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-767 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values and ISSUE-088 records partial intermediate-serializer registration.
-Continue in `content.custom.intermediate_shared_resources`: audit root-as-shared-resource identity
-and self-cycle behavior against the public fixup contract. Add a focused control only if the source
-contract can preserve or explicitly refuse it; otherwise disposition it and move to the public
-MaxNestingDepth malformed-graph boundary. Build with at most three compile jobs and keep focused
-evidence current.
+Root-as-shared-resource identity and self-cycle behavior now match the measured XNA contract in
+`content.custom.intermediate_shared_resources`. Continue with the public `MaxNestingDepth`
+malformed-graph boundary: demonstrate a non-shared member cycle being refused at the documented
+writer guard and decide whether a focused readable-depth control adds value beyond CNA's own
+hardening test. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2067,6 +2067,23 @@ increase40->41, tool self-tests pass5/5 and4/4, and generated coverage remains30
 `/tmp/checkpoint-766-intermediate-registration-*` and `/tmp/checkpoint-766-coverage.md`. No
 rendering, screenshot or manual inspection was used. Continue with root-as-shared-resource identity
 and self-cycle behavior in `content.custom.intermediate_shared_resources`.
+
+### Focused767 intermediate root self-cycle
+
+`content.custom.intermediate_shared_resources` adds three passing controls, reaching19/19. A root
+LootTable whose shared Fallback points back to itself follows the measured XNA contract: the XML
+writes the root again as exactly one Resource and both Fallback edges target that resource. After
+deserialization the root and resource are distinct copies, while the resource's edge closes on its
+own identity. Explicit unlinking and weak handles prove that the authored root and both loaded
+identities are released.
+
+SOFTWARE and OPENGLES3/Xvfb pass19/19 with byte-identical stdout and empty stderr; the exact
+SOFTWARE CTest passes. The warning-free incremental build uses at most three jobs; metadata remains
+636/0, known-issue demos remain41, validator/checkpoint self-tests pass5/5 and4/4, and generated
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-767-intermediate-shared-*` and `/tmp/checkpoint-767-coverage.md`. No
+rendering, screenshot or manual inspection was used. No CNA issue was found. Continue with the
+public MaxNestingDepth boundary for malformed non-shared object graphs.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

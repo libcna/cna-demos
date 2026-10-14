@@ -217,6 +217,50 @@ int main()
               "scoped unlinking releases both authored cycle nodes");
         check(restoredOwnersObserved && restoredFirst.expired() && restoredSecond.expired(),
               "scoped unlinking releases both loaded cycle nodes");
+
+        // XNA does not special-case the root when a shared edge points back to it. The root is
+        // written again as a resource, and the resource copy's edge closes on that resource.
+        std::weak_ptr<LootTable> authoredRoot, loadedRoot, loadedResource;
+        bool rootCycleObserved = false;
+        {
+            auto root = std::make_shared<LootTable>();
+            UnlinkFallbacks unlinkAuthored{root, nullptr};
+            root->items = {"Crown"};
+            root->fallback = root;
+            authoredRoot = root;
+
+            std::unique_ptr<System::Xml::XmlWriter> rootWriter(
+                System::Xml::XmlWriter::CreateToString(settings));
+            IntermediateSerializer::Serialize<LootTable>(*rootWriter, root, "");
+            const auto rootXml = rootWriter->ToString();
+            std::cout << "Root self-cycle:\n" << rootXml << '\n';
+            int rootResources = 0;
+            for (std::size_t at = 0; (at = rootXml.find("<Resource ID=", at)) != std::string::npos; ++at)
+                ++rootResources;
+            const auto firstReference = rootXml.find("<Fallback>#Resource1</Fallback>");
+            const auto secondReference = firstReference == std::string::npos
+                ? std::string::npos
+                : rootXml.find("<Fallback>#Resource1</Fallback>", firstReference + 1);
+            check(rootResources == 1 && firstReference != std::string::npos && secondReference != std::string::npos,
+                  "a root self-cycle writes one resource copy and both edges target it");
+
+            std::unique_ptr<System::Xml::XmlReader> rootReader(
+                System::Xml::XmlReader::CreateFromString(rootXml));
+            const auto restored = IntermediateSerializer::Deserialize<LootTable>(*rootReader, "");
+            UnlinkFallbacks unlinkRestored{restored, restored ? restored->fallback : nullptr};
+            rootCycleObserved = restored && restored->fallback && restored != restored->fallback &&
+                restored->fallback->fallback == restored->fallback && restored->items == root->items &&
+                restored->fallback->items == root->items;
+            check(rootCycleObserved,
+                  "root and resource load as distinct copies while the self-cycle closes on the resource");
+            if (restored)
+            {
+                loadedRoot = restored;
+                loadedResource = restored->fallback;
+            }
+        }
+        check(rootCycleObserved && authoredRoot.expired() && loadedRoot.expired() && loadedResource.expired(),
+              "scoped unlinking releases the authored root and both loaded identities");
         return passed ? 0 : 1;
     }
     catch (const std::exception& error)

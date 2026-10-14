@@ -6901,3 +6901,20 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-766-intermediate-registration-*` and `/tmp/checkpoint-766-coverage.md`.
 No rendering, screenshot or manual inspection was used. Continue with root-as-shared-resource
 identity and self-cycle behavior in the existing intermediate shared-resource workflow.
+
+## Focused767-intermediate-root-self-cycle
+
+`content.custom.intermediate_shared_resources` adds three passing controls, reaching19/19. A root
+LootTable whose shared Fallback points back to itself follows the measured XNA contract: the XML
+writes the root again as exactly one Resource and both Fallback edges target that resource. After
+deserialization the root and resource are distinct copies, while the resource's edge closes on its
+own identity. Explicit unlinking and weak handles prove that the authored root and both loaded
+identities are released.
+
+SOFTWARE and OPENGLES3/Xvfb pass19/19 with byte-identical stdout and empty stderr; the exact
+SOFTWARE CTest passes. The warning-free incremental build uses at most three jobs; metadata remains
+636/0, known-issue demos remain41, validator/checkpoint self-tests pass5/5 and4/4, and generated
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-767-intermediate-shared-*` and `/tmp/checkpoint-767-coverage.md`. No
+rendering, screenshot or manual inspection was used. No CNA issue was found. Continue with the
+public MaxNestingDepth boundary for malformed non-shared object graphs.
