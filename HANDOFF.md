@@ -1359,12 +1359,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused653
-projects the628-demo staged catalog to1573/2326 XNA members and closes BoundingFrustum's six-plane
-value presentation plus Plane's remaining Dot/identity members. Audit Color and Rectangle value
-identity next in their existing construction/edge workflows, including typed/boxed equality,
-operators and hashes; keep IPackedVector behavior in the existing packed-value workflow rather than
-crediting it from identity alone.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused654
+projects the628-demo staged catalog to1582/2326 XNA members and closes Color/Rectangle identity plus
+Color's explicit IPackedVector packing behavior. Audit Matrix and Quaternion construction, value
+identity and their still-uncredited arithmetic operators next in the existing element-operation and
+quaternion workflows.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1373,7 +1372,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused653 last observed external `af798b73a4` with twelve uncommitted
+the sibling CNA checkout; focused654 last observed external `73991b01f7` with six uncommitted
 renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2680,6 +2679,19 @@ SOFTWARE CTests pass and the build is diagnostic-free. Temporary coverage projec
 Production library hashes remain complete647; the runner is
 `91f4946b17f20fdfbddb4a1cfa54b4a0de216e9cbf7bf329caa6a5eee1865bf3`. Sibling CNA remained
 external dirty `af798b73a4` with twelve observed paths; no CNA source was edited here.
+
+Focused654 extends `math.color.construct` from six to eight controls,
+`math.color.packed_value` from three to four and `math.rectangle.edges_and_center` from five to
+seven. Real authored values exercise typed/boxed equality, wrong/empty boxes, both operators, equal
+hashes and changed fields. Color additionally packs through its actual non-generic IPackedVector
+base, proving midpoint rounding and high/low saturation in the packed-value workflow. SOFTWARE and
+OPENGLES3 pass8/8,4/4 and7/7 with byte-identical per-ID stdout and empty stderr; all three focused
+SOFTWARE CTests pass and the build is diagnostic-free. Temporary coverage projects1573->
+1582/2326 without a catalog/type/C-route change. Evidence:`/tmp/checkpoint-654-*` and
+`/tmp/checkpoint-654-coverage.md`. No rendering, screenshot or visual inspection was used.
+Production library hashes remain complete647; the runner is
+`76646cd7957e0a3581b3920a3423acffd1303797fc44653f2c337573aab90a50`. Sibling CNA advanced
+externally to dirty `73991b01f7` with six observed paths; no CNA source was edited here.
 
 ## 15. Assumptions the next session must know
 

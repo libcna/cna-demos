@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // Making colours from bytes, ints, floats and vectors -- and how out-of-range values clamp.
+#include <any>
+
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
@@ -33,6 +35,14 @@ namespace
         Color edited = Color::Black;
         edited.setGProperty(200);
         ctx.Check(edited == Color(0, 200, 0), "channels can be set one by one");
+
+        const Color same(255, 128, 0);
+        const Color changed(255, 128, 1);
+        ctx.Check(fromInts.Equals(same) && fromInts.Equals(std::any{same}) &&
+                      !fromInts.Equals(std::any{42}) && !fromInts.Equals(std::any{}),
+                  "typed and boxed equality accept only the same packed colour");
+        ctx.Check(fromInts == same && fromInts != changed && fromInts.GetHashCode() == same.GetHashCode(),
+                  "colour operators and hashes follow all four channels");
     }
 }
 
@@ -41,6 +51,7 @@ CNA_DEMOS_CONSOLE(ColorConstruct, {
     .title = "Construct colours",
     .description = "Creates Color values from ints, floats, Vector3 and Vector4, shows that out-of-range channels "
                    "clamp, and edits single channels through the R/G/B/A properties.",
-    .apis = {"Color::Color", "Color::R", "Color::G", "Color::B", "Color::A", "Color::ToString"},
+    .apis = {"Color::Color", "Color::R", "Color::G", "Color::B", "Color::A", "Color::Equals",
+             "Color::GetHashCode", "Color::op_Equality", "Color::op_Inequality", "Color::ToString"},
     .tags = {"color", "rgba"},
 })

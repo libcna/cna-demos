@@ -4,6 +4,8 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PackedVector/IPackedVector.hpp"
+#include "Microsoft/Xna/Framework/Vector4.hpp"
 
 using namespace Microsoft::Xna::Framework;
 
@@ -24,6 +26,12 @@ namespace
         ctx.Print("PackedValue 0xFF0000FF = {}", fromPacked.ToString());
         ctx.Check(fromPacked == Color::Red, "0xFF0000FF is opaque red");
         ctx.Check(Color::Transparent.getPackedValueProperty() == 0u, "Color::Transparent packs to zero");
+
+        // Color implements the non-generic packed-vector interface used by format-agnostic converters.
+        Graphics::PackedVector::IPackedVector& packedColor = fromPacked;
+        packedColor.PackFromVector4(Vector4(0.0f, 0.5f, 1.5f, 0.25f));
+        ctx.Check(fromPacked == Color(0, 128, 255, 64),
+                  "IPackedVector packing rounds unit values and saturates out-of-range channels");
     }
 }
 
@@ -32,6 +40,7 @@ CNA_DEMOS_CONSOLE(ColorPackedValue, {
     .title = "Packed colour value",
     .description = "Reads and writes Color::PackedValue to show the 0xAABBGGRR layout that SurfaceFormat::Color "
                    "pixel data uses.",
-    .apis = {"Color::PackedValue", "Color::Transparent", "Color::Red"},
+    .apis = {"Color::PackedValue", "Color::Transparent", "Color::Red",
+             "Color::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4"},
     .tags = {"color", "pixel", "binary"},
 })

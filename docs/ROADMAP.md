@@ -4969,3 +4969,18 @@ is diagnostic-free. Temporary coverage moves1559->1573/2326 without changing the
 route counts. Evidence:`/tmp/checkpoint-653-*` and `/tmp/checkpoint-653-coverage.md`. No rendering,
 screenshot or visual inspection was used. Audit Color and Rectangle value identity next in their
 existing construction/edge workflows, keeping IPackedVector packing as a separate behavior check.
+
+## Focused654-Color-and-Rectangle-value-contracts
+
+Three existing value demos close this adjacent family without adding variants.
+`math.color.construct` grows from six to eight controls and
+`math.rectangle.edges_and_center` from five to seven, using real authored values to establish
+typed/boxed equality, wrong/empty-box refusal, both operators, equal hashes and changed-component
+inequality. `math.color.packed_value` grows from three to four and invokes Color through its actual
+non-generic IPackedVector base; the result proves midpoint rounding and saturation outside the unit
+range. SOFTWARE and OPENGLES3 pass8/8,4/4 and7/7 with byte-identical per-ID stdout and empty
+stderr; all three focused SOFTWARE CTests pass and the build is diagnostic-free. Temporary coverage
+moves1573->1582/2326 without changing the628-demo/type/C-route counts. Evidence:
+`/tmp/checkpoint-654-*` and `/tmp/checkpoint-654-coverage.md`. No rendering, screenshot or visual
+inspection was used. Audit Matrix and Quaternion construction, identity and still-uncredited
+arithmetic operators next in their existing workflows.
