@@ -5706,3 +5706,17 @@ self-tests pass. Temporary coverage moves2048->2050/2326 at632 demos,301/329 typ
 fields; Net moves83->85/127. Evidence:`/tmp/checkpoint-697-bandwidth-*` and
 `/tmp/checkpoint-697-coverage.md`. This is Linux loopback traffic; no WAN throughput, screenshot or
 visual result is claimed. Continue with ready-state reset next.
+
+## Focused698-ready-state-reset
+
+The existing Local-session game flow now resets the lobby after only one of two players becomes
+ready and requires both player flags plus IsEveryoneReady to clear. Both players ready again and
+start the round; ResetReady during Playing throws InvalidOperationException without changing their
+flags, and the established EndGame path later clears them normally.
+
+SOFTWARE and OPENGLES3/X11 pass8/8 with byte-identical stdout and empty stderr. The focused SOFTWARE
+CTest, metadata validation and validator self-tests pass. Temporary coverage moves2050->2051/2326
+at632 demos,301/329 types and156/753 fields; Net moves85->86/127. Evidence:
+`/tmp/checkpoint-698-reset-ready-*` and `/tmp/checkpoint-698-coverage.md`. State was checked
+programmatically; no screenshot or visual result is claimed. Classify the remaining Net inventory
+next.

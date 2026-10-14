@@ -21,6 +21,7 @@
 #include "Microsoft/Xna/Framework/Net/NetworkSessionState.hpp"
 #include "Microsoft/Xna/Framework/Net/NetworkSessionType.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/InvalidOperationException.hpp"
 #include "System/Object.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -96,8 +97,18 @@ namespace
                 log_.push_back(Player(0)->getGamertagProperty() + " is ready");
                 ctx.Check(!session_->getIsEveryoneReadyProperty(), "one ready player is not everyone");
             }
+            else if (updates_ == 15)
+            {
+                session_->ResetReady();
+                log_.push_back("host reset every player's ready state");
+                ctx.Check(!Player(0)->getIsReadyProperty() && !Player(1)->getIsReadyProperty() &&
+                              !session_->getIsEveryoneReadyProperty(),
+                          "ResetReady clears the entire lobby's ready state");
+            }
             else if (updates_ == 20)
             {
+                Player(0)->setIsReadyProperty(true);
+                log_.push_back(Player(0)->getGamertagProperty() + " is ready again");
                 Player(1)->setIsReadyProperty(true);
                 log_.push_back(Player(1)->getGamertagProperty() + " is ready");
                 ctx.Check(session_->getIsEveryoneReadyProperty(), "IsEveryoneReady once both are");
@@ -109,6 +120,17 @@ namespace
             {
                 ctx.Check(session_->getSessionStateProperty() == NetworkSessionState::Playing && log_.back() == "GameStarted",
                           "the session is Playing and GameStarted was raised");
+                bool refused = false;
+                try
+                {
+                    session_->ResetReady();
+                }
+                catch (const System::InvalidOperationException&)
+                {
+                    refused = true;
+                }
+                ctx.Check(refused && Player(0)->getIsReadyProperty() && Player(1)->getIsReadyProperty(),
+                          "ResetReady is a lobby-only operation and preserves Playing state on refusal");
             }
             else if (updates_ == 50)
             {
@@ -164,13 +186,15 @@ namespace
 CNA_DEMOS_GAME(GameFlowDemo, {
     .id = "net.network_session.game_flow",
     .title = "Lobby and game flow",
-    .description = "Walks a Local session through a round: both players set IsReady, IsEveryoneReady turns true, "
-                   "the host's StartGame makes the session Playing (GameStarted) at the next Update, and EndGame "
-                   "returns it to the Lobby (GameEnded) with every IsReady cleared.",
+    .description = "Walks a Local session through a round: the host resets the lobby's ready state, both players "
+                   "then set IsReady, IsEveryoneReady turns true, StartGame makes the session Playing "
+                   "(GameStarted) at the next Update, and EndGame returns it to the Lobby (GameEnded) with every "
+                   "IsReady cleared.",
     .apis = {"NetworkGamer::IsReady", "NetworkSession::IsEveryoneReady", "NetworkSession::StartGame",
              "NetworkSession::EndGame", "NetworkSession::GameStarted", "NetworkSession::GameEnded",
              "NetworkSession::SessionState", "NetworkSessionState", "NetworkSession::Update",
-             "GameStartedEventArgs", "GameEndedEventArgs", "NetworkSession::LocalGamers"},
+             "NetworkSession::ResetReady", "GameStartedEventArgs", "GameEndedEventArgs",
+             "NetworkSession::LocalGamers"},
     .tags = {"net", "session", "lobby", "ready", "multiplayer"},
     .frames = 70,
     .assets = {"fonts/pixel_font.cnb"},

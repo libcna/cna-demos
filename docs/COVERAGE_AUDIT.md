@@ -1210,6 +1210,19 @@ pass all16 host/joiner controls with byte-identical stdout and empty stderr; the
 CTest passes. Evidence:`/tmp/checkpoint-696-find-*`. No stale access after session disposal, remote
 machine, service directory or voice state is inferred.
 
+### Ready-state reset and round boundaries
+
+`net.network_session.game_flow` now uses `ResetReady` between two authored lobby attempts. The
+first player becomes ready, then the host clears both player flags and IsEveryoneReady together.
+Both become ready again and enter Playing. A second reset is refused there with
+InvalidOperationException and leaves both flags intact; the existing EndGame transition returns to
+Lobby and clears them through the separate round-end path. Both renderers pass8/8 with identical
+stdout and empty stderr. Evidence:`/tmp/checkpoint-698-reset-ready-*`.
+
+This credits `NetworkSession::ResetReady` through successful state mutation and its key state guard,
+rather than a setter-only assertion. It does not establish cross-machine ready propagation, a
+non-host call or online-service synchronization.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

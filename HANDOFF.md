@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused697
-projects the632-demo staged catalog to2050/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused698
+projects the632-demo staged catalog to2051/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1383,9 +1383,10 @@ as CLR Finalize, an event with no CNA production raiser and the removed-device e
 AvailableNetworkSession public/private capacity and sparse advertised properties are now covered,
 as is shared search-collection disposal and copied-listing refusal. Remote NetworkGamer
 departure/history/session/round-trip behavior is also covered by the same real two-process leave.
-The simulated-conditions packet workflow now samples positive sent/received session bandwidth.
-Continue the Net audit with ready-state reset in the existing game-flow workflow, then disposition
-the remaining ordinary versus service/voice/CLR Net inventory. Continue with the next high-value behavior family, rebuilding and running both renderers where
+The simulated-conditions packet workflow now samples positive sent/received session bandwidth, and
+game_flow covers successful lobby ResetReady plus Playing-state refusal. Disposition the remaining
+ordinary versus service/voice/CLR Net inventory, then continue the next high-value behavior family,
+rebuilding and running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
@@ -1393,7 +1394,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused697 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused698 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3470,6 +3471,22 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. This is Linux loopback
 traffic; no WAN throughput, screenshot or visual result is claimed. Sibling CNA remained clean
 external `f698d0f548`; no CNA source was edited. Continue with ready-state reset next.
+
+Focused698 extends `net.network_session.game_flow` with the remaining ordinary ready-state member.
+After one local player becomes ready, the host calls ResetReady in Lobby and requires both players
+and IsEveryoneReady to clear. Both players become ready again and start the round; a ResetReady call
+in Playing must throw InvalidOperationException without changing either ready flag, after which the
+existing EndGame transition clears them normally.
+
+SOFTWARE and OPENGLES3/X11 pass8/8 with byte-identical stdout and empty stderr. The focused SOFTWARE
+CTest passes; metadata is632/0 and all five validator self-tests pass. Temporary coverage moves
+2050->2051/2326 at632 demos,301/329 types and156/753 fields; Net moves85->86/127. Evidence:
+`/tmp/checkpoint-698-reset-ready-*` and `/tmp/checkpoint-698-coverage.md`. Runner SHA-256 is
+`45b16dbe61b1c4ae4de6e46a211eddade60918490359077173c164996e6f9b96`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. State was checked
+programmatically; no screenshot or visual result is claimed. Sibling CNA remained clean external
+`f698d0f548`; no CNA source was edited. Classify the remaining Net inventory next.
 
 ## 15. Assumptions the next session must know
 
