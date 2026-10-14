@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MS-PL
 // 16-bit floating point: HalfSingle, HalfVector2 and HalfVector4.
 #include <cmath>
+#include <any>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PackedVector/HalfSingle.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PackedVector/HalfVector2.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PackedVector/HalfVector4.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PackedVector/IPackedVector.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "Microsoft/Xna/Framework/Vector4.hpp"
 
@@ -33,6 +35,18 @@ namespace
         ctx.Print("HalfVector2 -> {}, HalfVector4 -> {}", uv.ToVector2().ToString(), hdr.ToVector4().ToString());
         ctx.Check(uv.ToVector2() == Vector2(0.25f, 0.75f), "quarters are exact in half precision");
         ctx.Check(hdr.ToVector4().X == 4.0f, "values above 1 survive (unlike normalized formats)");
+
+        HalfVector2 uvCopy;
+        uvCopy.setPackedValueProperty(uv.getPackedValueProperty());
+        ctx.Check(uvCopy == uv && !(uvCopy != uv) && uv.Equals(uvCopy) && uv.Equals(std::any(uvCopy)) &&
+                      !uv.Equals(std::any(hdr)) && uvCopy.GetHashCode() == uv.GetHashCode() &&
+                      uv.ToString() == "{X:0.25 Y:0.75}",
+                  "HalfVector2 packed copies preserve equality, boxed equality, hash and expanded text");
+        HalfVector2 interfaceUv;
+        IPackedVector& packedUv = interfaceUv;
+        packedUv.PackFromVector4(Vector4(0.25f, 0.75f, 9.0f, -3.0f));
+        ctx.Check(packedUv.ToVector4() == Vector4(0.25f, 0.75f, 0.0f, 1.0f),
+                  "HalfVector2's IPackedVector path consumes XY and supplies canonical ZW");
     }
 }
 
@@ -42,6 +56,11 @@ CNA_DEMOS_CONSOLE(HalfPrecision, {
     .description = "Packs values into HalfSingle, HalfVector2 and HalfVector4 and shows the precision and range of "
                    "16-bit floating point.",
     .apis = {"HalfSingle::HalfSingle", "HalfSingle::ToSingle", "HalfSingle::PackedValue", "HalfVector2::HalfVector2",
-             "HalfVector2::ToVector2", "HalfVector4::HalfVector4", "HalfVector4::ToVector4"},
+             "HalfVector2::ToVector2", "HalfVector2::PackedValue", "HalfVector2::Equals",
+             "HalfVector2::GetHashCode", "HalfVector2::op_Equality", "HalfVector2::op_Inequality",
+             "HalfVector2::ToString",
+             "HalfVector2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
+             "HalfVector2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#ToVector4",
+             "HalfVector4::HalfVector4", "HalfVector4::ToVector4"},
     .tags = {"packed", "half", "hdr", "float16"},
 })

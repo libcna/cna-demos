@@ -423,6 +423,21 @@ CTest passes. Display/mode output differs by the real fallback versus Xvfb envir
 Evidence:`/tmp/checkpoint-681-*` and `/tmp/checkpoint-681-coverage.md`. No drawing, screenshot or
 visual inspection was used.
 
+### Two-component packed-vector value contracts
+
+HalfVector2, NormalizedByte2, NormalizedShort2, Rg32 and Short2 stay in their existing coherent
+precision-family demos. Each now copies exact PackedValue state, checks == and != together with
+typed and boxed Equals, rejects a boxed sibling packed type, requires equal hashes and validates
+its XNA text form. A second value is addressed through IPackedVector, receives a Vector4 and returns
+the type's XY with canonical Z=0/W=1. This covers value semantics as one contract per type rather
+than creating method-count variants.
+
+Focused682 credits all40 remaining members across four IDs. Half precision and signed normalized
+pass8/8; wide UNorm and integer formats pass6/6. SOFTWARE and OPENGLES3 output is byte-identical
+with empty stderr; all four focused SOFTWARE CTests pass. Temporary coverage moves1841->1881/2326.
+Evidence:`/tmp/checkpoint-682-*` and `/tmp/checkpoint-682-coverage.md`. These are CPU value tests;
+no renderer, vertex fetch, screenshot or visual result is claimed.
+
 ### Graphics-state lifetime and complete sampler presets
 
 | Members / behavior | Decision and evidence |

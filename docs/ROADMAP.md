@@ -5458,3 +5458,17 @@ CNA selection mapping is the asserted consequence. Temporary coverage moves1834-
 demos,301/329 types and156/753 fields. Evidence:`/tmp/checkpoint-681-*` and
 `/tmp/checkpoint-681-coverage.md`. No drawing, screenshot or visual inspection was used. Begin the
 packed-vector value-member audit next.
+
+## Focused682-two-component-packed-vector-value-contracts
+
+Four existing conversion IDs close all40 remaining members on HalfVector2, NormalizedByte2,
+NormalizedShort2, Rg32 and Short2. Each exact PackedValue copy agrees across equality/inequality,
+typed and boxed Equals, rejects a boxed sibling type, keeps an equal hash and the XNA string form.
+Each also packs through IPackedVector and expands XY with canonical Z=0/W=1. Existing half,
+normalized, UNorm and integer precision/clamping checks remain unchanged.
+
+Half precision and signed normalized pass8/8; wide UNorm and integer formats pass6/6. SOFTWARE and
+OPENGLES3 output is byte-identical with empty stderr; all four focused SOFTWARE CTests pass.
+Temporary coverage moves1841->1881/2326 at632 demos,301/329 types and156/753 fields. Evidence:
+`/tmp/checkpoint-682-*` and `/tmp/checkpoint-682-coverage.md`. No rendering, screenshot or visual
+inspection was used. Continue the four-component packed-vector value contracts next.

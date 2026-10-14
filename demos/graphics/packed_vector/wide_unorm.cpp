@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MS-PL
 // Higher-precision unsigned normalized formats: Rgba1010102, Rg32 and Rgba64.
+#include <any>
+
 #include "CnaDemos/Demo.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PackedVector/IPackedVector.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PackedVector/Rg32.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PackedVector/Rgba1010102.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PackedVector/Rgba64.hpp"
@@ -27,6 +30,21 @@ namespace
         ctx.Print("Rg32        -> {}", rg.ToVector2().ToString());
         ctx.CheckNear(rg.ToVector2().Y, 0.123456, 1.0 / 65535.0, "16-bit channels are accurate to 1/65535");
 
+        const Rg32 endpoints(Vector2(0.0f, 1.0f));
+        Rg32 endpointsCopy;
+        endpointsCopy.setPackedValueProperty(endpoints.getPackedValueProperty());
+        ctx.Check(endpoints.getPackedValueProperty() == 0xFFFF0000u && endpointsCopy == endpoints &&
+                      !(endpointsCopy != endpoints) && endpoints.Equals(endpointsCopy) &&
+                      endpoints.Equals(std::any(endpointsCopy)) && !endpoints.Equals(std::any(rgb10)) &&
+                      endpointsCopy.GetHashCode() == endpoints.GetHashCode() &&
+                      endpoints.ToString() == "FFFF0000",
+                  "Rg32 preserves its packed value, equality, hash and eight-digit text");
+        Rg32 interfaceRg;
+        IPackedVector& packedRg = interfaceRg;
+        packedRg.PackFromVector4(Vector4(0.0f, 1.0f, 8.0f, -4.0f));
+        ctx.Check(packedRg.ToVector4() == Vector4(0.0f, 1.0f, 0.0f, 1.0f),
+                  "Rg32's IPackedVector path consumes XY and supplies canonical ZW");
+
         // Four 16-bit channels in 64 bits.
         const Rgba64 rgba64(value.X, value.Y, value.Z, value.W);
         ctx.Print("Rgba64      -> {} (0x{:016X})", rgba64.ToVector4().ToString(), rgba64.getPackedValueProperty());
@@ -39,6 +57,10 @@ CNA_DEMOS_CONSOLE(WideUnorm, {
     .title = "High-precision normalized formats",
     .description = "Packs values into Rgba1010102, Rg32 and Rgba64 and compares their per-channel precision.",
     .apis = {"Rgba1010102::Rgba1010102", "Rgba1010102::ToVector4", "Rg32::Rg32", "Rg32::ToVector2", "Rgba64::Rgba64",
+             "Rg32::PackedValue", "Rg32::Equals", "Rg32::GetHashCode", "Rg32::op_Equality",
+             "Rg32::op_Inequality", "Rg32::ToString",
+             "Rg32::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
+             "Rg32::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#ToVector4",
              "Rgba64::ToVector4", "Rgba64::PackedValue"},
     .tags = {"packed", "unorm", "precision"},
 })

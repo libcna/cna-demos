@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MS-PL
 // Integer packed formats: Byte4, Short2 and Short4 (bone indices, integer coordinates).
+#include <any>
+
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PackedVector/Byte4.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PackedVector/IPackedVector.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PackedVector/Short2.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PackedVector/Short4.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
@@ -25,6 +28,18 @@ namespace
         const Short2 offset(-1200.0f, 40000.0f);
         ctx.Print("Short2(-1200, 40000) -> {}", offset.ToVector2().ToString());
         ctx.Check(offset.ToVector2() == Vector2(-1200.0f, 32767.0f), "Short2 clamps to -32768..32767");
+        Short2 offsetCopy;
+        offsetCopy.setPackedValueProperty(offset.getPackedValueProperty());
+        ctx.Check(offset.getPackedValueProperty() == 0x7FFFFB50u && offsetCopy == offset &&
+                      !(offsetCopy != offset) && offset.Equals(offsetCopy) && offset.Equals(std::any(offsetCopy)) &&
+                      !offset.Equals(std::any(bones)) && offsetCopy.GetHashCode() == offset.GetHashCode() &&
+                      offset.ToString() == "7FFFFB50",
+                  "Short2 preserves its packed value, equality, hash and eight-digit text");
+        Short2 interfaceOffset;
+        IPackedVector& packedOffset = interfaceOffset;
+        packedOffset.PackFromVector4(Vector4(-1200.0f, 40000.0f, 8.0f, -4.0f));
+        ctx.Check(packedOffset.ToVector4() == Vector4(-1200.0f, 32767.0f, 0.0f, 1.0f),
+                  "Short2's IPackedVector path consumes XY and supplies canonical ZW");
         ctx.Check(Short4(1.0f, -2.0f, 3.0f, -4.0f).ToVector4() == Vector4(1.0f, -2.0f, 3.0f, -4.0f),
                   "Short4 keeps small integers exactly");
     }
@@ -36,6 +51,10 @@ CNA_DEMOS_CONSOLE(IntegerFormats, {
     .description = "Packs bone indices into Byte4 and signed values into Short2 and Short4, showing the byte layout, "
                    "rounding and clamping.",
     .apis = {"Byte4::Byte4", "Byte4::ToVector4", "Byte4::PackedValue", "Short2::Short2", "Short2::ToVector2",
+             "Short2::PackedValue", "Short2::Equals", "Short2::GetHashCode", "Short2::op_Equality",
+             "Short2::op_Inequality", "Short2::ToString",
+             "Short2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
+             "Short2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#ToVector4",
              "Short4::Short4", "Short4::ToVector4"},
     .tags = {"packed", "integer", "skinning", "vertex-format"},
 })

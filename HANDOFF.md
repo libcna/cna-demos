@@ -1361,18 +1361,19 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused681
-projects the632-demo staged catalog to1841/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused682
+projects the632-demo staged catalog to1881/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
 machinery. The stock-effect families now retain only dispositioned protected OnApply hooks and one
 SkinnedEffect explicit-interface inventory artifact; real pass application reaches the hooks and
 focused671 proved the override dispatch contract. RenderTargetCube and VertexBufferBinding now have
-no member gap. GraphicsAdapter now has no member gap. Begin the packed-vector value-member audit,
-starting with the five eight-gap two-component types and extending existing coherent conversion
-workflows with equality, typed Equals, hashing, string and IPackedVector round trips without one
-demo per method. Then continue with the next high-value behavior family, rebuilding, running both renderers where
+no member gap. GraphicsAdapter and the five two-component packed-vector types now have no member
+gap. Continue the packed-vector value-member audit with HalfVector4, NormalizedShort4,
+Rgba1010102 and Short4 in the same existing coherent workflows, then the remaining compact color
+and scalar types. Avoid one demo per method. Then continue with the next high-value behavior family,
+rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
@@ -1380,7 +1381,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused681 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused682 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3161,6 +3162,22 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No drawing, screenshot or
 visual inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was
 edited. Begin the packed-vector value-member audit next.
+
+Focused682 extends four existing packed-vector conversion IDs and closes all40 value members on
+HalfVector2, NormalizedByte2, NormalizedShort2, Rg32 and Short2. Each reconstructs itself through
+PackedValue, agrees across ==/!=, typed and boxed Equals, rejects a boxed sibling type, preserves
+equal hashes and exact XNA text, then packs through IPackedVector and returns canonical Z=0/W=1.
+The retained conversion/clamping checks remain intact.
+
+Half precision and signed normalized pass8/8; wide UNorm and integer formats pass6/6. SOFTWARE and
+OPENGLES3 outputs are byte-identical with empty stderr; all four focused SOFTWARE CTests pass.
+Temporary coverage moves1841->1881/2326 at632 demos,301/329 types and156/753 fields. Evidence:
+`/tmp/checkpoint-682-*` and `/tmp/checkpoint-682-coverage.md`. Runner SHA-256 is
+`92d27727f5633116213d80eada189c4f9f595153f3cf4d4f0c8d097190bbb71e`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No rendering, screenshot or
+visual inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was
+edited. Continue with the four-component packed-vector value contracts next.
 
 ## 15. Assumptions the next session must know
 
