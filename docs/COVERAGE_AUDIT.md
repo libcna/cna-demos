@@ -425,6 +425,25 @@ the last complete libraries. Both runs have byte-identical stdout and empty stde
 | Actual layout consumption | A first-frame readback finds a white center and black exterior on both renderers. This proves that Position and packed Color at the audited offsets drive the visible fan while the extra TextureCoordinate1 field remains legal and unused by BasicEffect. Pixels were read programmatically; no screenshot or visual inspection was performed. |
 | VertexDeclaration Dispose and inherited resource plumbing | The declaration is owned for the demo lifetime and bound by the draw. Explicit flag-only disposal, type names and protected hooks do not teach a separate vertex-layout concept; disposal while bound or after device teardown belongs to broader GraphicsResource lifetime testing. |
 
+### Stock vertex declarations and value semantics
+
+Source review at CNA `09c3108e5`: the four stock vertex headers and implementations, `IVertexType`,
+and the existing `graphics.vertex_declaration.stock_vertex_types` example. The example retains its
+original rendered checker/tint workflow and now has eight focused controls. SOFTWARE and
+OPENGLES3 pass all eight through the project build, with byte-identical stdout and empty stderr.
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Static VertexDeclaration and IVertexType property | Each of VertexPositionColor, VertexPositionColorTexture, VertexPositionNormalTexture and VertexPositionTexture returns the same stable declaration object through its static member and IVertexType property. The declarations are compared element-for-element: packed strides are 16, 24, 32 and 20 bytes, with exact Position, Color, Normal and TextureCoordinate offsets, formats, usages and usage indices. The explicit CLR inventory aliases for interface implementation remain intentionally uncredited because the same C++ property path is executed directly. |
+| Constructors and public fields | Independently authored Position, Color, Normal and TextureCoordinate values survive all four public constructors and are read back from every public field. These checks document actual packed-value state in the same workflow; constructor or field-per-demo expansion would add no coherent concept. |
+| Equality, inequality, typed/boxed Equals and GetHashCode | Copies of every stock value compare equal through the operators and typed/boxed Equals, while changing one field makes each value unequal. Boxed equality rejects another stock vertex type, and equal copies produce equal hashes. This is one shared value-identity contract rather than four independent examples. |
+| ToString | Exact field-labelled output is checked for all four values, including Normal and TextureCoordinate. Diagnostic formatting belongs with value semantics and does not justify a separate demo. |
+| Actual declaration consumption | The retained VertexPositionColorTexture quad still reaches DrawUserPrimitives without an explicit declaration argument. Programmatic samples find the same white and orange checker/tint pixels under both renderers, tying the audited declaration to drawing. No screenshot or visual inspection was performed. |
+
+Temporary generated coverage moves the complete634 XNA-member baseline from1417 to1437/2326;
+the demo count, type count and C-route count do not change. The projection will replace generated
+`docs/COVERAGE.md` only at the next complete runtime checkpoint.
+
 ### Model, ModelBone and collection pose workflow
 
 Source review at CNA `49b1d3a998`: public Model/ModelBone collection headers and implementations,

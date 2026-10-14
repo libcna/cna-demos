@@ -4668,3 +4668,18 @@ the ISSUE-021 marker after CNA `a6e8104d2` fixed rendered-cube sampling on both 
 Clean CNA `53aba6ef15` and all final binary hashes are recorded in HANDOFF.md. Continue Phase15 with
 the existing stock-vertex declaration/value workflow, then select the next high-value public member
 behavior instead of increasing demo count mechanically.
+
+## Focused635-stock-vertex-declarations-and-values
+
+The existing `graphics.vertex_declaration.stock_vertex_types` retains its original stride and
+rendered checker/tint checks and adds six coherent controls. All four IVertexType properties return
+their stable static declarations; the exact packed Position/Color/Normal/TextureCoordinate elements
+produce strides16/24/32/20. Independently authored constructors expose every public field. Equality,
+inequality, typed and boxed Equals, wrong-type rejection, equal hashes and exact field-labelled
+ToString values cover the shared stock-value contract without adding redundant demos. The project
+build passes8/8 under SOFTWARE and OPENGLES3 with byte-identical stdout and empty stderr; the target
+SOFTWARE CTest also passes. Temporary generated coverage moves XNA members1417->1437/2326 with no
+demo, type or C-route count change. Evidence:`checkpoint-635-stock-*-direct.*` and
+`/tmp/checkpoint-635-coverage.md`. Pixel readback was programmatic; no screenshot or visual
+inspection was performed. The four explicit CLR interface aliases remain intentionally uncredited
+because the same C++ IVertexType property is executed. Audit the existing SpriteFont workflows next.

@@ -1341,12 +1341,13 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Audit `graphics.vertex_declaration.stock_vertex_types` next: it already obtains all four
-stock declarations through `IVertexType` and draws `VertexPositionColorTexture`, so extend that
-coherent ID for exact static declaration metadata and only the value/equality behavior that teaches
-something beyond boilerplate. Decide explicitly whether each uncovered stock-vertex member is
-already demonstrated, belongs in this demo, or is trivial. Build and run it on SOFTWARE and
-OPENGLES3, update generated/member coverage and immediately continue to the next high-value gap.
+baseline. Focused635 completes the coherent stock-vertex declaration/value audit and projects
+XNA-member coverage to1437/2326. Audit the existing SpriteFont workflows next. Prefer extensions to
+`graphics.sprite_font.glyph_constructor`, `default_character`, `measure_string` and `spacing` for
+the meaningful pending behaviors already classified in docs/COVERAGE_AUDIT.md: asymmetric/negative
+cropping and table validation, fallback reset/refusal, carriage-return and empty measurement,
+copy-independent negative spacing, and the four public glyph-layout inspection extensions. Keep
+each control with the workflow it teaches and do not create getter- or overload-per-demo variants.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2420,6 +2421,17 @@ configured and built the full current tree against clean CNA `53aba6ef15`, valid
 now absorbed into a project-built runner checkpoint; retain those focused logs only as diagnostic
 history. Future CNA changes may still occur externally, so record its state before each complete
 build and never edit or revert it from this project.
+
+Focused635 extends `graphics.vertex_declaration.stock_vertex_types` in place. Its eight controls
+cover stable IVertexType/static declaration identity, all exact packed declaration elements and
+strides, every authored public field, equality/inequality, typed and boxed Equals with wrong-type
+rejection, equal hashes, exact field-labelled text, and the retained checker/tint draw. The project
+build passes8/8 under SOFTWARE and OPENGLES3 with byte-identical stdout and empty stderr; the
+SOFTWARE target CTest passes too. Temporary generated coverage projects1417->1437/2326 XNA members
+without changing demo/type/C-route counts. Evidence:`/tmp/checkpoint-635-stock-*.{out,err,json}` and
+`/tmp/checkpoint-635-coverage.md`. Pixel readback was programmatic; no screenshot or visual
+inspection was performed. The four explicit CLR interface aliases remain intentionally uncredited
+because the exact C++ property path is executed. Focused635 used clean sibling CNA `09c3108e5`.
 
 ## 15. Assumptions the next session must know
 
