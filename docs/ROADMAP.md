@@ -5169,3 +5169,21 @@ the public profile contract and matching renderer output; no CNA issue was filed
 `/tmp/checkpoint-664-*` and `/tmp/checkpoint-664-coverage.md`. No screenshot or visual inspection
 was used. Finish the remaining MRT write masks/sample coverage, stencil outcome/mask behavior and
 rasterizer multisample/slope-bias members next.
+
+## Focused665-stencil-masks-and-failure-outcomes
+
+One new focused ID and one extended workflow close all six remaining DepthStencilState members.
+`stencil_outcomes` uses explicitly clockwise and counter-clockwise triangles to select stencil-test
+failure and depth-test failure on each face tuple. Four distinct Replace references are revealed as
+four exact colors, with a fifth clear outside control. `stencil_mask` grows3->4 controls: stencil
+starts at binary10, two failure paths replace only bit0, an exact comparison proves the write mask
+preserved the high bit, and a later read mask of1 makes stored3 match reference1 for the established
+checker reveal.
+
+Both IDs pass under SOFTWARE and OPENGLES3 with byte-identical stdout and empty stderr, and both
+focused SOFTWARE CTests pass. Temporary coverage moves1726->1732/2326 and fields154->155/753 at
+629 demos and299/329 types, leaving no DepthStencilState gap. The first compile rejected a non-
+literal constexpr demo table; changing it to const fixed that demo bug. Evidence:
+`/tmp/checkpoint-665-*` and `/tmp/checkpoint-665-coverage.md`. Pixel validation used programmatic
+readback; no screenshot or visual inspection was used. Finish the three per-MRT write masks,
+sample-coverage mask, multisample toggle and slope-scale depth bias next.

@@ -279,6 +279,20 @@ and reverse-subtract alpha mismatch were demo expectation errors corrected from 
 contract and actual matching renderer output; no CNA issue was filed. No screenshot or visual
 inspection was used.
 
+### Stencil masks and failure outcomes
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| StencilMask and StencilWriteMask | `graphics.depth_stencil_state.stencil_mask` clears stencil to binary10, then writes reference bit0 through a write mask of1. An exact comparison proves the protected high bit remains and the stored value is3; after a color-only clear, a read mask of1 lets stored3 match reference1 and reveal the checker only inside the plus shape. Both renderers pass4 pixel controls. |
+| StencilFail and StencilDepthBufferFail | The same plus uses two real failure paths: the vertical arm replaces stencil after a `Never` stencil comparison, while the horizontal arm passes stencil and replaces it after a `Never` depth comparison. The final image proves their union. |
+| CounterClockwiseStencilFail and CounterClockwiseStencilDepthBufferFail | New focused ID `graphics.depth_stencil_state.stencil_outcomes` draws explicit clockwise and counter-clockwise triangles. For each winding, one state selects stencil-test failure and one selects depth-test failure; four distinct replacement references are independently revealed as four exact colors, with a clear outside control. Both renderers pass5 controls. |
+
+Focused665 adds one coherent ID and6 member credits, moving the staged catalog to629 demos and
+temporary coverage1726->1732/2326 at155/753 fields. DepthStencilState now has no generated member
+gap. Both IDs have byte-identical SOFTWARE/OPENGLES3 output and empty stderr, and both focused
+SOFTWARE CTests pass. Pixel validation used programmatic readback; no screenshot or visual
+inspection was used.
+
 ### ContentManager (including CNA extensions)
 
 | Members / behavior | Decision and evidence |

@@ -1361,13 +1361,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused664
-projects the628-demo staged catalog to1726/2326 XNA members and154/753 fields at299/329 types.
-SamplerState has no remaining generated gap, and disposal is covered across all four state classes.
-Finish the graphics-state family next: BlendState ColorWriteChannels1/2/3 and MultiSampleMask;
-DepthStencilState clockwise/counter-clockwise fail, depth-fail and read/write mask behavior; and
-RasterizerState MultiSampleAntiAlias/SlopeScaleDepthBias. Prefer actual pixel behavior in existing
-MRT, stencil, multisampling and depth-bias workflows over property-list assertions.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused665
+projects the629-demo staged catalog to1732/2326 XNA members and155/753 fields at299/329 types.
+DepthStencilState and SamplerState have no remaining generated gap, and disposal is covered across
+all four state classes. Finish the final six graphics-state members next: BlendState
+ColorWriteChannels1/2/3 and MultiSampleMask, plus RasterizerState MultiSampleAntiAlias and
+SlopeScaleDepthBias. Prefer actual MRT, multisample and sloped-depth pixel behavior over property-
+list assertions.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1376,9 +1376,8 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; after focused664 runtime validation it advanced externally to
-`f00150424` with two uncommitted handoff/renderer-retirement plan paths. Recheck it before every
-build.
+the sibling CNA checkout; focused665 built against external `f00150424` with two uncommitted
+handoff/renderer-retirement plan paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
 `standalone/c_api.graphics.vertex_values` contains the planned seven-check
@@ -2866,6 +2865,23 @@ and `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`; runner
 `7cfb850fb681be30594d3f1ce7634e4e6b3c3c9aadf203d8df7b3d9d4025c69e`. Sibling CNA advanced
 externally after runtime validation to `f00150424` with two observed dirty documentation paths; no
 CNA source was edited. Finish the12 remaining graphics-state members next.
+
+Focused665 adds `graphics.depth_stencil_state.stencil_outcomes` and extends the existing stencil
+mask. The new five-control ID writes four distinct stencil references through actual clockwise and
+counter-clockwise stencil-test-fail and depth-test-fail branches, then independently reveals the
+four triangle regions as exact colors and keeps an outside pixel clear. The mask ID grows3->4:
+stencil starts at binary10, two failure paths replace only bit0, an exact comparison proves stored3
+preserved the high bit, and a later read mask of1 makes stored3 match reference1 for the established
+checker reveal. Both IDs pass on SOFTWARE and OPENGLES3 with byte-identical stdout and empty
+stderr; both focused SOFTWARE CTests pass. Temporary coverage moves1726->1732/2326 and fields154->
+155/753 at629 demos, leaving no DepthStencilState gap. Evidence:`/tmp/checkpoint-665-*` and
+`/tmp/checkpoint-665-coverage.md`. Pixel validation used programmatic readback; no screenshot or
+visual inspection was used. The successful reconfigure/build used external `f00150424`; production
+library hashes remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`, runner
+`98d1abb28db323c133a2ee348c63050719c872560d375d4ac89eee3d0b0faa69`. The first compile rejected
+a non-literal constexpr demo table; changing it to const fixed the demo bug. No CNA source was
+edited. Finish the six BlendState/RasterizerState members next.
 
 ## 15. Assumptions the next session must know
 
