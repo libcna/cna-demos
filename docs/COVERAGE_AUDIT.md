@@ -255,6 +255,24 @@ already dispositioned through real pass dispatch. Evidence:`/tmp/checkpoint-676-
 `/tmp/checkpoint-676-coverage.md`. Pixel validation used programmatic readback; no screenshot or
 visual inspection was used.
 
+### DualTextureEffect matrices, material, fog, vertex color and clone
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| World / View | The source uses nonidentity +5/-5 X translations that cancel in the real draw. Exact clone readback proves both survive independently rather than relying on the unchanged screen position alone. |
+| DiffuseColor / Alpha / VertexColorEnabled | Diffuse(1,.5,1), Alpha=.8 and a packed cyan vertex tint with half red all enter the rendered quad. The brightest pixel's near-equal red/green, doubled blue and alpha204 distinguish their combined terms. |
+| FogEnabled / FogColor / FogStart / FogEnd | Enabled black fog from0 to2 attenuates the constant object-space z=-1 quad by one half. Exact clone readback covers every value and the exact pixel result proves the enabled fog path. |
+| Clone | The clone preserves both exact texture identities, matrices, material, vertex-color selection and fog state. Subsequent source Alpha/vertex-color/fog mutations do not change the rendered clone. |
+| OnApply | The protected hook is reached by every real pass draw and its override dispatch contract was proved by focused671. It is dispositioned without synthetic direct-member credit. |
+
+Focused677 grows `light_map` from2 to4 controls and credits all ten caller-visible gaps, moving
+temporary coverage1813->1823/2326. SOFTWARE and OPENGLES3 pass4/4 with byte-identical stdout and
+empty stderr; the focused SOFTWARE CTest passes. Exact programmatic readback is brightest
+RGBA(102,102,203,204) and dark-corner RGBA(16,16,32,204). A first raw-vertex layout and first
+pixel estimate were demo errors corrected before validation; neither exposed a CNA defect.
+Evidence:`/tmp/checkpoint-677-*` and `/tmp/checkpoint-677-coverage.md`. No screenshot or visual
+inspection was used.
+
 ### ShaderEffect and shader dialect selection
 
 Source review of ShaderEffect.hpp/.cpp, Effect::Clone's public contract, the four GLSL shader/MRT

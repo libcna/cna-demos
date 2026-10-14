@@ -1361,15 +1361,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused676
-projects the632-demo staged catalog to1813/2326 XNA members and155/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused677
+projects the632-demo staged catalog to1823/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
-machinery. AlphaTestEffect retains only its dispositioned OnApply override. Audit
-DualTextureEffect's11 gaps next: use the existing light-map draw for meaningful matrix/fog,
-material/vertex color and clone independence, then finish EnvironmentMapEffect's remaining
-Alpha/EmissiveColor/EnvironmentMapSpecular. Per-effect protected OnApply entries are dispositioned:
+machinery. AlphaTestEffect and DualTextureEffect retain only their dispositioned OnApply overrides.
+Finish EnvironmentMapEffect's remaining Alpha/EmissiveColor/EnvironmentMapSpecular behavior in its
+existing reflected-sphere clone workflow. Per-effect protected OnApply entries are dispositioned:
 real pass application reaches them and focused671 proved the override dispatch contract.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
@@ -1379,8 +1378,8 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused676 built against external `1ad225ae28`. That checkout currently
-has six externally owned documentation/FNA3D paths. Recheck it before every build.
+the sibling CNA checkout; focused677 built while external CNA was at clean `f698d0f548`. Recheck
+that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
 `standalone/c_api.graphics.vertex_values` contains the planned seven-check
@@ -3005,7 +3004,7 @@ Single Texture2D binds by exact identity in vertex slot1 while pixel slot1 remai
 changes only the vertex sampler while the pixel sampler remains LinearWrap. Color-format
 replacement throws atomically, and disposing the floating texture clears its vertex slot.
 SOFTWARE and OPENGLES3 pass4/4 with byte-identical stdout and empty stderr; the focused SOFTWARE
-CTest passes. Temporary coverage moves1783->1785/2326 at631 demos,301/329 types and155/753 fields.
+CTest passes. Temporary coverage moves1783->1785/2326 at631 demos,301/329 types and156/753 fields.
 The demo does not claim compiled vertex-shader sampling. Evidence:`/tmp/checkpoint-673-*` and
 `/tmp/checkpoint-673-coverage.md`. Runner SHA-256 is
 `0ce5a5581704a1cfd493701be25d63aaf366f5fffc6b929dcc91cb0ec596d8ee`; production library hashes
@@ -3019,7 +3018,7 @@ HiDef device starts live at256x144, clears/presents, resets to320x180 with exact
 event order while retaining an owned texture, then clears/presents again. Dispose marks the device
 before its one event, disposes the texture once, rejects later Present/Reset and is idempotent.
 SOFTWARE and OPENGLES3 pass7/7 with byte-identical stdout and empty stderr; the focused SOFTWARE
-CTest passes. Temporary coverage moves1785->1791/2326 at632 demos,301/329 types and155/753 fields.
+CTest passes. Temporary coverage moves1785->1791/2326 at632 demos,301/329 types and156/753 fields.
 GraphicsDevice retains only dispositioned DeviceLost (documented absent on desktop and observed
 zero through reset/disposal) and CLR Finalize. Evidence:`/tmp/checkpoint-674-*` and
 `/tmp/checkpoint-674-coverage.md`. Runner SHA-256 is
@@ -3036,7 +3035,7 @@ clones its fully configured first effect: exact diffuse/ambient, two texture ide
 three enabled lights survive, while transform/Fresnel mutations remain independent and preserve
 the established exact center pixels. SOFTWARE and OPENGLES3 outputs are byte-identical with empty
 stderr; both focused SOFTWARE CTests pass. Temporary coverage moves1791->1810/2326 at632 demos,
-301/329 types and155/753 fields. IEffectLights has no gap; protected per-effect OnApply entries are
+301/329 types and156/753 fields. IEffectLights has no gap; protected per-effect OnApply entries are
 dispositioned as real pass-dispatch hooks already proven by focused671. Evidence:
 `/tmp/checkpoint-675-*` and `/tmp/checkpoint-675-coverage.md`. Runner SHA-256 is
 `ab2bc040bee473cf2a8518bdb2def27925ede9ba5e410de978bfa25576859acc`; production library hashes
@@ -3052,7 +3051,7 @@ colors, then remains independent when the source changes. The rendered colored-v
 exact RGBA(96,191,191,191) at the opaque center and RGBA(96,124,0,191) where the near corner is
 discarded and exposes the far tinted orange circle. SOFTWARE and OPENGLES3 outputs are byte-
 identical with empty stderr; the focused SOFTWARE CTest passes. Temporary coverage moves1810->
-1813/2326 at632 demos,301/329 types and155/753 fields. AlphaTestEffect retains only dispositioned
+1813/2326 at632 demos,301/329 types and156/753 fields. AlphaTestEffect retains only dispositioned
 protected OnApply. Evidence:`/tmp/checkpoint-676-*` and `/tmp/checkpoint-676-coverage.md`. Runner
 SHA-256 is `7d1e918f125963ca6d3061e64d5500597f9f5a7817f1f3a0215f3f257d61a12f`; production library
 hashes remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
@@ -3060,6 +3059,28 @@ hashes remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da`
 programmatic; no screenshot or visual inspection was used. Sibling CNA remained external
 `1ad225ae28` with six dirty documentation/FNA3D paths; no CNA source was edited. Audit
 DualTextureEffect next.
+
+Focused677 extends `graphics.dual_texture_effect.light_map` from2 to4 controls and closes all ten
+remaining caller-visible DualTextureEffect members. Its clone retains both texture identities,
+nonidentity World/View transforms that cancel spatially, material/alpha, vertex-color selection
+and enabled black fog from0 to2, then remains independent from three source mutations. Packed cyan
+vertex colors, diffuse(1,.5,1), Alpha=.8 and the half-fogged z=-1 quad produce exact brightest
+RGBA(102,102,203,204); the dark light-map corner remains RGBA(16,16,32,204).
+
+SOFTWARE and OPENGLES3 pass4/4 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. The first draft used CNA's non-trivial Color class directly inside a raw vertex and
+failed the demo's own layout assertion; replacing it with the documented packed uint32_t was a
+demo correction. The first pixel estimate also omitted DualTextureEffect's `2 * base` term; source
+review accounted for the measured value before the final check. Temporary coverage moves1813->
+1823/2326 at632 demos,301/329 types and156/753 fields. DualTextureEffect retains only protected
+OnApply, dispositioned through the real draw and base dispatch workflow. Evidence:
+`/tmp/checkpoint-677-*` and `/tmp/checkpoint-677-coverage.md`. Runner SHA-256 is
+`f89d962792fa89163ee6cf8462cefa5f9d1f5b5ea018140c087bd919adee950d`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Pixel validation was
+programmatic; no screenshot or visual inspection was used. Sibling CNA advanced externally to
+clean `f698d0f548`; no CNA source was edited. Finish EnvironmentMapEffect's Alpha, EmissiveColor and
+EnvironmentMapSpecular behavior next.
 
 ## 15. Assumptions the next session must know
 

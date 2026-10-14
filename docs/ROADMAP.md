@@ -5311,7 +5311,7 @@ sampler remains LinearWrap. Replacing the floating texture with Color throws wit
 binding, and disposing the bound texture clears the slot.
 
 SOFTWARE and OPENGLES3 pass4/4 with byte-identical stdout and empty stderr; the focused SOFTWARE
-CTest passes. Temporary coverage moves1783->1785/2326 at631 demos,301/329 types and155/753 fields.
+CTest passes. Temporary coverage moves1783->1785/2326 at631 demos,301/329 types and156/753 fields.
 The workflow validates public binding, format and lifetime state; it does not claim compiled
 vertex-shader sampling. Evidence:`/tmp/checkpoint-673-*` and
 `/tmp/checkpoint-673-coverage.md`. No drawing, screenshot or visual inspection was used. Finish
@@ -5327,7 +5327,7 @@ Dispose marks the device before its one Disposing event, disposes the texture on
 Present/Reset and remains idempotent.
 
 SOFTWARE and OPENGLES3 pass7/7 with byte-identical stdout and empty stderr; the focused SOFTWARE
-CTest passes. Temporary coverage moves1785->1791/2326 at632 demos,301/329 types and155/753 fields.
+CTest passes. Temporary coverage moves1785->1791/2326 at632 demos,301/329 types and156/753 fields.
 GraphicsDevice retains only DeviceLost, documented never to fire on desktop and observed zero
 through reset/disposal, plus CLR Finalize represented by C++ destruction. Neither gets artificial
 member credit. Evidence:`/tmp/checkpoint-674-*` and `/tmp/checkpoint-674-coverage.md`. Clear and
@@ -5348,7 +5348,7 @@ configured first. Both exact texture identities, diffuse material, ambient value
 enabled default lights survive; transform/Fresnel changes remain independent and the two established
 center pixels stay exact. SOFTWARE and OPENGLES3 outputs are byte-identical, stderr is empty and
 both focused SOFTWARE CTests pass. Temporary coverage moves1791->1810/2326 at632 demos,301/329
-types and155/753 fields. Protected per-effect OnApply entries are actual pass-dispatch hooks already
+types and156/753 fields. Protected per-effect OnApply entries are actual pass-dispatch hooks already
 reached by these draws and dispositioned after focused671 proved the override contract. Evidence:
 `/tmp/checkpoint-675-*` and `/tmp/checkpoint-675-coverage.md`. Pixel validation used programmatic
 readback; no screenshot or visual inspection was used. Finish AlphaTestEffect's Alpha,
@@ -5364,8 +5364,28 @@ does not affect it. A cyan vertex tint with half red yields exact center RGBA(96
 the discarded near corner reveals the tinted orange far circle at RGBA(96,124,0,191).
 
 SOFTWARE and OPENGLES3 pass with byte-identical stdout and empty stderr; the focused SOFTWARE CTest
-passes. Temporary coverage moves1810->1813/2326 at632 demos,301/329 types and155/753 fields.
+passes. Temporary coverage moves1810->1813/2326 at632 demos,301/329 types and156/753 fields.
 AlphaTestEffect retains only protected OnApply, dispositioned through its actual pass draws and the
 base dispatch workflow. Evidence:`/tmp/checkpoint-676-*` and `/tmp/checkpoint-676-coverage.md`.
 Pixels were inspected programmatically; no screenshot or visual inspection was used. Audit
 DualTextureEffect's matrices, fog, material/vertex color and clone next.
+
+## Focused677-DualTextureEffect-complete-state-and-pixel-chain
+
+`graphics.dual_texture_effect.light_map` grows2->4 controls and closes its ten remaining
+caller-visible members. A clone retains both texture identities, mutually cancelling nonidentity
+World/View transforms, diffuse/alpha, vertex-color selection and enabled black fog from0 to2;
+changing the source's Alpha, vertex-color and fog flags then proves independent state. The z=-1
+quad uses packed cyan vertex colors, diffuse(1,.5,1) and Alpha=.8. Together with the effect's
+`2 * base * light-map` rule and half fog this yields exact brightest RGBA(102,102,203,204), while
+the dark corner remains RGBA(16,16,32,204).
+
+SOFTWARE and OPENGLES3 pass4/4 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. A first raw-vertex draft incorrectly stored CNA's non-trivial Color object, and a
+first pixel estimate omitted the effect's doubling term; both were demo errors corrected from the
+public packed-color convention and CNA stock-effect source. Temporary coverage moves1813->
+1823/2326 at632 demos,301/329 types and156/753 fields. DualTextureEffect retains only protected
+OnApply, dispositioned through its actual pass draw and the base dispatch workflow. Evidence:
+`/tmp/checkpoint-677-*` and `/tmp/checkpoint-677-coverage.md`. Pixel readback was programmatic; no
+screenshot or visual inspection was used. Finish EnvironmentMapEffect's Alpha, EmissiveColor and
+EnvironmentMapSpecular next.
