@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended XACT bank disposal with valid-name GetCue and PlayCue refusals after Dispose while
+  retaining exactly-once disposal events and idempotent repeated cleanup.
 - Added XACT SoundBank input boundaries for empty and unknown names through both GetCue and PlayCue,
   followed by successful valid playback to prove retry safety.
 - Completed SoundEffectInstance lifetime edges: disposed Resume refusal with safe Pause/Stop, and

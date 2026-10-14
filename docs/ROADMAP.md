@@ -7337,3 +7337,18 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-790-xact-cue-refusals-*` and `/tmp/checkpoint-790-coverage.md`. No audible
 duration/quality or exact scheduling claim is made. Audit GetCue/PlayCue after explicit SoundBank
 disposal in the existing lifetime workflow next.
+
+## Focused791-XACT-disposed-SoundBank-refusal
+
+`audio.xact.bank_lifetime` retains its twelve ownership/event controls and adds one post-dispose
+boundary. After SoundBank disposal has released the prepared cue, valid-name GetCue and PlayCue both
+throw `ObjectDisposedException`. A following repeated Dispose still leaves the existing sound-bank
+event count exactly one, so refusal and idempotence are verified in the same object lifecycle.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass13/13 controls with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free build uses at most three jobs; metadata
+remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains
+302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-791-xact-bank-disposed-*` and `/tmp/checkpoint-791-coverage.md`. No global
+callback ordering, concurrent teardown or audible result is claimed. Continue with meaningful
+DynamicSoundEffectInstance refill/underrun behavior rather than scalar settings getters.

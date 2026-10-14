@@ -7,6 +7,7 @@
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
 #include "System/EventArgs.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
 namespace
@@ -64,6 +65,18 @@ namespace
             ctx.Check(sounds.getIsDisposedProperty() && prepared->getIsDisposedProperty() &&
                       prepared->getIsStoppedProperty(),
                       "disposing the sound bank also disposes its never-played prepared cue");
+            bool getCueRefused = false;
+            bool playCueRefused = false;
+            try
+            {
+                const std::unique_ptr<Cue> unexpected(sounds.GetCue("MidTone"));
+                static_cast<void>(unexpected);
+            }
+            catch (const System::ObjectDisposedException&) { getCueRefused = true; }
+            try { sounds.PlayCue("MidTone"); }
+            catch (const System::ObjectDisposedException&) { playCueRefused = true; }
+            ctx.Check(getCueRefused && playCueRefused,
+                      "a disposed sound bank refuses both controlled and fire-and-forget cue creation");
             sounds.Dispose();
             ctx.Check(soundEvents == 1 && soundSender && preparedEvents == 1 && activeEvents == 1 && cueSenders,
                       "sound-bank disposal identifies the remaining cue without repeating prior notifications");
@@ -123,11 +136,12 @@ CNA_DEMOS_CONSOLE(BankLifetime, {
     .id = "audio.xact.bank_lifetime",
     .title = "XACT bank and engine disposal",
     .description = "Contrasts prepared and paused consuming cues during wave-bank, sound-bank and engine disposal, "
-                   "checking public ownership state and one Disposing notification per released object.",
+                   "checking post-dispose cue refusal, public ownership state and one Disposing notification per object.",
     .apis = {"AudioEngine::Dispose", "AudioEngine::IsDisposed", "AudioEngine::Disposing",
              "WaveBank::Dispose", "WaveBank::IsDisposed", "WaveBank::IsInUse", "WaveBank::Disposing",
              "SoundBank::Dispose", "SoundBank::IsDisposed", "SoundBank::IsInUse", "SoundBank::Disposing",
-             "SoundBank::GetCue", "Cue::IsPrepared", "Cue::IsDisposed", "Cue::IsStopped", "Cue::Disposing"},
+             "SoundBank::GetCue", "SoundBank::PlayCue", "Cue::IsPrepared", "Cue::IsDisposed", "Cue::IsStopped",
+             "Cue::Disposing"},
     .tags = {"audio", "xact", "lifetime", "ownership", "events"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb"},
