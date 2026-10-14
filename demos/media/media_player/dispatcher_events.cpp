@@ -61,6 +61,10 @@ namespace
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         MediaPlayer::Pause();
         FrameworkDispatcher::Update();
+        const std::size_t afterPauseEvent = events.size();
+        MediaPlayer::Pause();
+        FrameworkDispatcher::Update();
+        const bool repeatedPauseStayedQuiet = events.size() == afterPauseEvent;
         const double pausedPosition = MediaPlayer::getPlayPositionProperty().getTotalSecondsProperty();
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         const double pausedLater = MediaPlayer::getPlayPositionProperty().getTotalSecondsProperty();
@@ -70,6 +74,10 @@ namespace
 
         MediaPlayer::Resume();
         FrameworkDispatcher::Update();
+        const std::size_t afterResumeEvent = events.size();
+        MediaPlayer::Resume();
+        FrameworkDispatcher::Update();
+        const bool repeatedResumeStayedQuiet = events.size() == afterResumeEvent;
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         ctx.Check(MediaPlayer::getStateProperty() == MediaState::Playing &&
                       MediaPlayer::getPlayPositionProperty().getTotalSecondsProperty() > pausedPosition + 0.05,
@@ -77,9 +85,15 @@ namespace
 
         MediaPlayer::Stop();
         FrameworkDispatcher::Update();
+        const std::size_t afterStopEvent = events.size();
+        MediaPlayer::Stop();
+        FrameworkDispatcher::Update();
+        const bool repeatedStopStayedQuiet = events.size() == afterStopEvent;
         ctx.Check(MediaPlayer::getStateProperty() == MediaState::Stopped &&
                       MediaPlayer::getPlayPositionProperty().getTotalSecondsProperty() == 0.0,
                   "Stop resets the state and PlayPosition");
+        ctx.Check(repeatedPauseStayedQuiet && repeatedResumeStayedQuiet && repeatedStopStayedQuiet,
+                  "repeated Pause, Resume and Stop calls matching the current state raise no event");
 
         MediaPlayer::Play(song.get());
         FrameworkDispatcher::Update();

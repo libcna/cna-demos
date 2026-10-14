@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-785 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-786 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1765,8 +1765,9 @@ Resume advances it and Stop resets it. Deferred media events now cover exact act
 ordering, pre-pump state coalescing, canonical payloads and listener removal. Automatic two-song
 advancement and the nonrepeating final stop are covered. An isolated `MediaQueue` now covers empty
 construction, Add ownership, active-index selection and Clear reset. Volume now proves both clamp
-boundaries and makes only state-level mute claims. Close repeated transport no-op behavior next,
-then add the disabled-visualization zeroing contract before reassessing Media. Do not add
+boundaries and makes only state-level mute claims. Repeated Pause/Resume/Stop calls in their matching
+states now prove quiet no-op behavior. Add the disabled-visualization zeroing contract next, then
+reassess and close the remaining MediaPlayer behavior decisions. Do not add
 isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
@@ -2438,6 +2439,23 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-785-media-volume-*` and `/tmp/checkpoint-785-coverage.md`. No audible
 attenuation/muting, screenshot or manual inspection is claimed. Close repeated Pause/Resume/Stop
 no-op transitions in the existing dispatcher workflow next.
+
+### Focused786-MediaPlayer-repeated-transport-noops
+
+`media.media_player.dispatcher_events` retains its nine prior controls and adds one combined no-op
+contract. After the first Pause, Resume and Stop each establishes its target state and delivers its
+event, the same call is repeated and followed by another dispatcher pump. None of the three repeats
+adds an event. The existing paused-position, resumed-progress and exact-zero Stop checks remain in
+the same sequence, so quiet notification behavior is tied to coherent transport state.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass10/10 controls with byte-identical stdout and empty
+stderr; the exact ten-row event sequence is unchanged and the focused SOFTWARE CTest passes. The
+warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-786-media-transport-noops-*` and `/tmp/checkpoint-786-coverage.md`. No
+acoustic quality, callback-thread, screenshot or manual inspection is claimed. Add disabled
+GetVisualizationData zeroing to the existing visualization workflow next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

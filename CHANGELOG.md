@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Verified repeated Pause, Resume and Stop calls in their matching states are quiet no-ops that do
+  not add deferred MediaPlayer events or disturb the established position semantics.
 - Added MediaPlayer Volume boundary clamping and corrected the mute assertion to claim only the
   stored state observed under dummy audio, while retaining MasterVolume isolation.
 - Completed the MediaQueue mutation workflow on an isolated queue: empty construction, ordered
