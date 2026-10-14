@@ -181,16 +181,19 @@ a check that all authored colors remain visible and that a blank texture row can
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
   capability skip. Full 461 passes 474 enabled CTests and both smokes; all old failures are retained.
-- ✅ `graphics.shader_effect.uniform_palettes`: four GL checks verify two matrix/vec3 entries,
-  explicit payload layout/counts, caller-buffer overwrite and same-program updates. The image
-  was inspected; SOFTWARE capability skip. Other array families remain separate gaps.
+- ✅ `graphics.shader_effect.uniform_palettes`: six GL checks verify two matrix/vec3 entries,
+  explicit payload layout/counts, caller-buffer overwrite, same-program updates, a parent matrix
+  and all four channels of a premultiplied tint. The image
+  was inspected; SOFTWARE capability skip. Together with `sample_kernel`, all four public array
+  setter families now have sampled behavior; C validates their empty/invalid count contracts.
 - ✅ `graphics.shader_effect.compiler_diagnostics`: seven GL checks retain raw/owned diagnostics
   after destroying a rejected syntactically invalid replacement; the valid program still draws
   checked cyan pixels. Image inspected, intentional compiler stderr preserved, SOFTWARE skip.
 - ✅ `graphics.shader_effect.portable_package`: owned language/stage pairs, order-independent
   selection, incomplete/ambiguous refusals, owned exception diagnostics and actual RGB-to-GBR
   pixels (eight GL checks, SOFTWARE capability skip). GL capture inspected; desktop/binary
-  variants and additional compiler-stage/link failures remain distinct gaps.
+  package selection now also passes on OPENGL33; binary variants and additional compiler-stage/
+  link failures remain renderer-specific gaps.
 - 🟨 Custom shaders: ✅ `ShaderEffect` in 3D (toon shading), a heightmap read in the vertex shader
   (`graphics.shader_effect.vertex_displacement`) and in `SpriteBatch::Begin`
   (grayscale), GLSL chosen from `GetShaderDialectEXT()`. Remaining: compiled XNA `.fx` effects
@@ -8101,3 +8104,26 @@ coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C ro
 PBR-family public surface is now dispositioned and observably covered on the pinned baseline except
 for the recorded ISSUE-070 and declared renderer limitations. Resume the highest-priority unresolved
 member/behavior family rather than adding redundant PBR variants.
+
+## Focused836-ShaderEffect-public-surface-and-desktop-GLSL
+
+The declaration-level audit now assigns all37 public `ShaderEffect` entries. Existing draw scenes
+provide actual pixels for float/int/vec2/vec3/vec4/mat4 scalars and every offered array family:
+float/vec2 in `sample_kernel`, vec3/mat4 in `uniform_palettes`. The C uniform workflow covers empty
+sequences, null/negative refusals and owned uniform-block declaration/clear inputs. Source/type
+getters are diagnostic identity; renderer pointers, the draw-parameter bridge and protected
+lifecycle hooks are integration members consumed by normal draws rather than demo concepts.
+
+`DeclareUniformBlockEXT` remains intentionally platform-specific: it is the WGSL/WebGPU bridge from
+names to byte offsets and a no-op on loose-uniform renderers. This build does not contain WebGPU, so
+the audit claims only the demonstrated C argument/lifetime contract, not runtime block pixels.
+Other binary/source languages require their matching renderer. ISSUE-055 remains the explicit clone
+defect; no extra clone variant is warranted.
+
+A complete `graphics.shader_effect` batch on OPENGL33 runs all eight IDs: seven pass and
+`clone_state` retains exactly its three expected ISSUE-055 failures. All statuses, known-issue
+values and check counts match the OPENGLES3 Complete744 baseline. `portable_package` selects
+`GlslDesktop`; compiler diagnostics and all four array families execute on the desktop source path.
+Metadata remains648/0. Evidence:`/tmp/checkpoint-836-shader-effect-OPENGL33.json`. No screenshot or
+manual visual inspection was performed. Move to the next unresolved public behavior family rather
+than adding scalar/array spelling variants.

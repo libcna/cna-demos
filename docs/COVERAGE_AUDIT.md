@@ -315,6 +315,20 @@ explicit code/package language are distinct APIs.
 | Source properties, GetVertexSource/GetFragmentSource, GetTypeName | Source accessors are useful diagnostics but do not justify independent getter demos; incorporate source ownership/identity only where a compile or clone workflow needs them. GetTypeName is routine reflection identity. |
 | GetEffectRendererPtr, FillGpuDrawParams, protected OnApply/Dispose and portable fallback constructor | Renderer/subclass integration points. Normal draws already reach the apply/parameter bridge; avoid a game demo that merely exposes internal renderer pointers/structures. Protected fallback construction belongs to a real derived-effect integration, not a synthetic constructor-count example. |
 
+Focused836 closes this table's declaration-level disposition. `sample_kernel` provides actual
+float/vec2-array pixels and `uniform_palettes` provides actual vec3/mat4-array pixels, so all four
+public array families are sampled; the C workflow owns the empty/null/negative validation cases.
+`DeclareUniformBlockEXT` is explicitly a WGSL/WebGPU name-to-offset bridge and a no-op for loose
+uniforms. WebGPU is absent from this build, so runtime block pixels remain renderer-specific rather
+than being inferred from the C state call or an OpenGL no-op.
+
+All eight ShaderEffect project scenes also run on OPENGL33 under Xvfb. Seven pass and `clone_state`
+retains only its three expected ISSUE-055 failures. Statuses, known-issue values and check counts
+match the OPENGLES3 Complete744 baseline; the package selects `GlslDesktop`, and the diagnostic and
+uniform paths use the desktop compiler/runtime branch. No screenshot or manual visual inspection
+was performed. HLSL/MSL/WGSL/SPIR-V execution remains tied to an available renderer, not a reason
+to multiply GLSL demos.
+
 Full 461 at a447ad2 passes all 474 enabled CTests and both complete smokes. Every original 459
 outcome/child check is retained; GL adds exactly the three clone assertions (38 ->41), SOFTWARE
 keeps 37. Stable selected runtime hashes and exact skip/compiler stderr deltas are archived.

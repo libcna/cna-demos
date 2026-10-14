@@ -169,6 +169,8 @@ Focused834 extends the PBR surface scene with sampled material alpha and its mul
 vertex alpha; fog is now the only remaining PBR-family sampled gap from Focused832.
 Focused835 adds exact rigid-World and skinned-bone fog at start/midpoint/end, completing the
 observable PBR-family remainder identified by the declaration-level audit.
+Focused836 completes the37-declaration ShaderEffect disposition and runs all eight project scenes
+on OPENGL33: seven pass and clone_state retains its sole expected ISSUE-055 failure.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3364,6 +3366,32 @@ types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 PbrEffect/SkinnedPbrEffect public-surface disposition is now complete on the pinned baseline, with
 ISSUE-070 retained and unsupported renderer behavior explicitly scoped. Return to the highest-
 priority unresolved member/behavior family in ROADMAP/COVERAGE rather than adding PBR variants.
+
+### Focused836-ShaderEffect-public-surface-and-desktop-GLSL
+
+The complete public-header audit classifies all37 `ShaderEffect` declarations. All scalar setters
+and all four offered array families have actual pixel evidence: float/vec2 arrays in
+`sample_kernel`, vec3/mat4 arrays plus scalar mat4/vec4 in `uniform_palettes`, and scalar float/int/
+vec2/vec3 across the other scenes. The C uniform workflow separately validates empty arrays, null/
+negative requests and uniform-block declaration/clear argument ownership. Source/type accessors are
+diagnostic identity, while renderer pointers, `FillGpuDrawParams`, protected apply/dispose and the
+fallback constructor are integration points already consumed transitively or intentionally not
+exposed as synthetic demos.
+
+`DeclareUniformBlockEXT` is specifically the WGSL/WebGPU name-to-offset bridge and is a documented
+no-op on loose-uniform renderers. The current build has no WebGPU renderer, so only its public C
+argument/lifetime contract is claimed here; CNA's own WebGPU example is source evidence rather than
+a cna-demos runtime result. HLSL/MSL/WGSL/SPIR-V execution likewise remains platform/renderer-
+specific. ISSUE-055 remains the genuine clone defect.
+
+All eight `graphics.shader_effect` demos were then run on compiled OPENGL33 under Xvfb. Seven pass
+and `clone_state` fails only its three expected ISSUE-055 assertions; every status, known-issue value
+and check count matches the OPENGLES3 Complete744 baseline. The portable package selects
+`GlslDesktop`, compiler diagnostics retain the intentional desktop compiler error, and float/vec2/
+vec3/mat4 uniform paths all draw successfully. Metadata remains648/0. Evidence:
+`/tmp/checkpoint-836-shader-effect-OPENGL33.json`. No screenshot or manual visual inspection was
+performed. Select the next non-ShaderEffect member/behavior family; do not create inert uniform-
+setter variants.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
