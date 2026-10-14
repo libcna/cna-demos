@@ -6507,3 +6507,20 @@ the five validator and four checkpoint-comparison tests pass, and generated cove
 `/tmp/checkpoint-745-texture3d-*`. Pixel readback was programmatic; no screenshot or manual visual
 inspection was performed. No CNA issue was found. Audit representative typed transfer formats and
 invalid-box atomicity next, without duplicating the complete Texture2D format matrix.
+
+## Focused746-Texture3D-raw-transfer-and-active-binding
+
+`graphics.texture3d.volume_data` adds four controls for the generic raw and binding-specific
+Texture3D paths, growing from16 to20 checks. Four arbitrary trivially-copyable four-byte words
+round-trip through guarded windows in X-fastest, slice-major order. An eight-byte element that
+cannot divide the four-byte Color format is refused before upload or caller-output mutation. A
+bound volume refuses replacement data, and move construction transfers that active binding to the
+new wrapper: upload remains refused until unbinding, after which every original word is still exact.
+
+SOFTWARE and OPENGLES3/Xvfb pass20/20 with empty stderr, and the exact SOFTWARE CTest passes. The
+incremental build uses at most three jobs and is warning-free; metadata remains636/0, the validator
+and checkpoint self-tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326 non-field
+members,169/753 fields and2999/3205 C routes. Packed and half-float variants are dispositioned as
+the same packed-value conversion paths already exercised exhaustively by Texture2D; no format-per-
+dimension matrix is warranted. Evidence:`/tmp/checkpoint-746-texture3d-*`. No screenshot or manual
+visual inspection was performed. No CNA issue was found. Audit cross-device move assignment next.

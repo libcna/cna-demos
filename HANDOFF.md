@@ -170,6 +170,19 @@ warning-free, metadata remains636/0, both tool self-test suites pass and generat
 `/tmp/checkpoint-745-texture3d-*`. Pixel readback was programmatic; no screenshot or manual visual
 inspection was performed. No CNA issue was found.
 
+Focused **746-Texture3D-raw-transfer-and-active-binding** extends
+`graphics.texture3d.volume_data` from16 to20 controls on both renderers. A two-slice Color volume
+round-trips four arbitrary trivially-copyable four-byte words through guarded caller windows in
+X-fastest/slice-major order. Eight-byte elements are refused atomically for upload and readback. A
+bound volume refuses upload without mutation; after move construction the active binding follows
+the new wrapper, still refuses mutation, and the original payload remains exact after explicit
+unbinding. SOFTWARE and OPENGLES3/Xvfb pass20/20 with empty stderr; the exact SOFTWARE CTest passes.
+The incremental `-j3` build is warning-free, metadata remains636/0, both tool self-test suites pass
+and coverage remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Packed and
+half format conversion is intentionally not duplicated because the exhaustive Texture2D workflows
+exercise the same packed-value conversion routes. Evidence:`/tmp/checkpoint-746-texture3d-*`. No
+screenshot or manual visual inspection was performed. No CNA issue was found.
+
 Focused **720-GraphicsDevice-Present-region-contract** is staged after Complete719. The existing
 owned-device lifecycle now passes11 controls on both SOFTWARE and OPENGLES3/X11: null/null/zero is
 ordinary Present, a partly outside source region is clipped and accepted only by SOFTWARE among
@@ -1709,13 +1722,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline and focused745 closes
-Texture3D U/V/W coordinate and mip-filter behavior. Continue the remaining Texture3D audit in
-`graphics.texture3d.volume_data`: inspect representative packed/half/raw typed transfers and invalid
-box atomicity against the public source, add only behavior that is materially distinct from the
-already complete Texture2D format workflows, and explicitly disposition redundant format variants.
-Build with at most three compile jobs and keep focused evidence current before moving to the next
-public member/behavior family.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-746 close
+Texture3D coordinate/mip behavior plus raw-width and active-binding transfer semantics. Audit the
+remaining cross-device move-assignment path: extend the existing volume lifecycle workflow only if
+an occupied destination can prove device ownership and payload transfer without inventing a new
+concept. Then disposition repetitive box-coordinate guards, packed/half format variants and trivial
+reflection hooks, close the Texture3D table, and move to the next public member/behavior family.
+Build with at most three compile jobs and keep focused evidence current.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Texture3D transfers with raw slice-major caller windows, atomic element-width refusal,
+  bound-resource upload rejection and an active binding that follows move construction.
 - Extended the Texture3D sampler with exact U/V orientation and authored explicit-LOD checks that
   distinguish point mip selection from linear cross-level interpolation.
 - Completed the 636-demo full rebuild/runtime checkpoint against clean CNA `d23e139de`: all 649

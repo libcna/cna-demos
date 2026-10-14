@@ -2,9 +2,12 @@
 // Texture3D: a volume of texels (slices), written whole and by sub-box, and read back slice by slice.
 #include <algorithm>
 #include <array>
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <string>
+#include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
@@ -137,6 +140,7 @@ namespace
                             "the box touched slices 1 and 2 only");
 
             CheckVectorField(device);
+            CheckRawTransferContracts(device);
 
             // Show each slice as an ordinary 2D texture made from the read-back data.
             for (int z = 0; z < Depth; ++z)
@@ -163,6 +167,68 @@ namespace
         }
 
     private:
+        void CheckRawTransferContracts(GraphicsDevice& device)
+        {
+            struct RawWord
+            {
+                std::uint16_t low;
+                std::uint16_t high;
+                bool operator==(const RawWord&) const = default;
+            };
+            static_assert(sizeof(RawWord) == 4 && std::is_trivially_copyable_v<RawWord>);
+
+            // Texture3D's generic overload deliberately accepts arbitrary trivially-copyable
+            // elements whose width divides the voxel format. Use non-Color words so this check
+            // cannot accidentally pass through Color's packed-value specialization.
+            Texture3D rawVolume(device, 2, 1, 2, false, SurfaceFormat::Color);
+            const RawWord guard{0xBEEFu, 0xCAFEu};
+            const std::array<RawWord, 6> source{{
+                guard, {0x1122u, 0x3344u}, {0x5566u, 0x7788u},
+                {0x99AAu, 0xBBCCu}, {0xDDEEu, 0x0F10u}, guard}};
+            rawVolume.SetData(source.data(), 1, 4);
+            std::array<RawWord, 7> observed;
+            observed.fill(guard);
+            rawVolume.GetData(observed.data(), 2, 4);
+            Context().Check(observed[0] == guard && observed[1] == guard && observed[6] == guard &&
+                                std::equal(source.begin() + 1, source.end() - 1, observed.begin() + 2),
+                            "four-byte raw values round-trip in X-fastest, slice-major order inside guarded caller windows");
+
+            const std::uint64_t tooWide = UINT64_C(0x0123456789ABCDEF);
+            std::array<std::uint64_t, 2> wideOutput{tooWide, tooWide};
+            const auto originalWideOutput = wideOutput;
+            bool wideWriteRefused = false, wideReadRefused = false;
+            try { rawVolume.SetData(&tooWide, 1); }
+            catch (const System::ArgumentException&) { wideWriteRefused = true; }
+            try { rawVolume.GetData(wideOutput.data(), 1); }
+            catch (const System::ArgumentException&) { wideReadRefused = true; }
+            observed.fill(guard);
+            rawVolume.GetData(observed.data(), 2, 4);
+            Context().Check(wideWriteRefused && wideReadRefused && wideOutput == originalWideOutput &&
+                                std::equal(source.begin() + 1, source.end() - 1, observed.begin() + 2),
+                            "an element wider than the four-byte format is refused atomically in both transfer directions");
+
+            const std::array<RawWord, 4> replacement{{
+                {1u, 2u}, {3u, 4u}, {5u, 6u}, {7u, 8u}}};
+            device.getTexturesProperty()(2, &rawVolume);
+            bool boundWriteRefused = false;
+            try { rawVolume.SetData(replacement.data(), 4); }
+            catch (const System::InvalidOperationException&) { boundWriteRefused = true; }
+            Context().Check(boundWriteRefused,
+                            "a bound volume rejects upload before changing its existing payload");
+
+            Texture3D movedBound(std::move(rawVolume));
+            bool movedBoundWriteRefused = false;
+            try { movedBound.SetData(replacement.data(), 4); }
+            catch (const System::InvalidOperationException&) { movedBoundWriteRefused = true; }
+            device.getTexturesProperty()(2, nullptr); // the binding followed movedBound
+            observed.fill(guard);
+            movedBound.GetData(observed.data(), 2, 4);
+            Context().Check(movedBoundWriteRefused && movedBound.getWidthProperty() == 2 &&
+                                movedBound.getHeightProperty() == 1 && movedBound.getDepthProperty() == 2 &&
+                                std::equal(source.begin() + 1, source.end() - 1, observed.begin() + 2),
+                            "an active binding follows move construction and retains its payload after explicit unbinding");
+        }
+
         void CheckVectorField(GraphicsDevice& device)
         {
             // A 4x3x2 displacement field uses signed XYZ and a fourth scalar channel, not Color.
@@ -252,15 +318,18 @@ CNA_DEMOS_GAME(VolumeDataDemo, {
     .description = "Creates a 32x32x4 Texture3D, fills it slice by slice with SetData, overwrites a sub-box spanning "
                    "two slices, reads guarded boxes and shows the base slices as 2D textures. A non-cubic authored mip chain "
                    "checks per-level Z bounds. A signed Vector4 displacement field contrasts vector/scalar counts, compact "
-                   "two-slice boxes, guarded windows and refused-transfer preservation.",
+                   "two-slice boxes, guarded windows and refused-transfer preservation. Raw four-byte values additionally "
+                   "show generic caller windows, element-width rejection, atomic bound-resource refusal and an active-binding move.",
     .apis = {"Texture3D::Texture3D", "Texture3D::SetData", "Texture3D::GetData", "Texture3D::Width",
-             "Texture3D::Height", "Texture3D::Depth", "Texture::LevelCount", "Texture::Format", "SurfaceFormat::Vector4"},
+             "Texture3D::Height", "Texture3D::Depth", "Texture::LevelCount", "Texture::Format", "SurfaceFormat::Vector4",
+             "GraphicsDevice::Textures"},
     .tags = {"texture", "volume", "3d-texture", "lookup-table"},
     .needs = CnaDemos::Need::Texture3D,
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "Requires Color and Vector4 volume creation; only constructor capability refusal skips the typed fixture. "
-                    "Public transfer checks and the Color readback atlas do not establish direct GPU readback, float sampling, "
-                    "packed formats or half-float conversion.",
+                    "Public transfer checks and the Color readback atlas do not establish direct GPU readback or non-Color "
+                    "sampling. Packed and half-float format conversion is already covered by the Texture2D format workflows; "
+                    "cross-device move assignment and device loss remain outside this scene.",
 })
