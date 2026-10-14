@@ -839,7 +839,7 @@ In particular, a successful bounded Game run does not itself verify the rendered
 | Deferred, BackToFront and FrontToBack sorting; layerDepth | `layer_depth_sorting` now checks each mode's overlap color plus all three unobscured sprite colors (4 checks pass on SOFTWARE/OPENGLES3; screenshots inspected). Equal-depth stability and interaction with an enabled depth buffer are distinct pending behaviors; a sort mode is not a substitute for depth testing. |
 | Texture sorting | `sort_mode_texture` reads overlaps and checks that Deferred alternates while Texture groups them, deliberately leaving the inter-texture group order unspecified. It does not measure draw-call savings or prove a particular texture ordering. The grouped result check now requires an authored red/blue color as well as uniform overlaps, so a blank row cannot pass. Both checks pass on SOFTWARE/OPENGLES3; screenshots inspected. |
 | Immediate state changes | `immediate_mode.blend_state` verifies Opaque then Additive with pixels. The parallel sampler example fails visibly with ISSUE-004. A failed sampler path must not be credited as working renderer support. |
-| Draw positions, destination/source rectangles, tint and alpha | Existing `draw_texture`, `destination_rectangle`, `source_rectangle`, `tint_and_transparency`, `blend_states` and `loose_png_alpha` expose these inputs directly. The rectangle/tint pictures mostly lack pixel assertions; passing smoke proves execution, not exact edge or blend values. Degenerate/out-of-range rectangles and disposed textures remain diagnostic gaps. |
+| Draw positions, destination/source rectangles, tint and alpha | Existing `draw_texture`, `destination_rectangle`, `source_rectangle`, `tint_and_transparency`, `blend_states` and `loose_png_alpha` expose these inputs directly. `source_rectangle` now point-samples four enlarged atlas selections and checks each frame's exact solid color, transparent-background preservation and the unscaled whole-strip order from `std::nullopt` on both renderers. Destination-only stretching and tint/fade pictures still lack pixel assertions; passing smoke does not prove their exact edge or blend values. Degenerate/out-of-range rectangles and disposed textures remain diagnostic gaps. |
 | Rotation, origin, scalar/Vector2 scale, SpriteEffects | `rotation`, `scale` and `sprite_effects` are focused visual demonstrations. Cropped-source origins, negative scale combined with flips and transformed clipping deserve extensions only when they teach a distinct interaction, not an overload-per-demo expansion. New visual validation was not performed as part of this table. |
 | Wrapping and animated source rectangles | `tiling_with_wrap` demonstrates oversized source rectangles with wrapping; `sprite_sheet_animation` derives frames from game time. These are coherent uses of Draw rather than new API types. The latter is intentionally unsuitable as a fixed-frame pixel baseline because Update catch-up changes elapsed game time. |
 | Begin custom effect | `shader_effect.sprite_shader` checks grayscale luma via a GLSL ShaderEffect and skips other dialects. Compiled XNA Effect bytecode/multiple passes and effect changes during a queued batch remain renderer/toolchain-dependent gaps. |
@@ -1932,3 +1932,18 @@ remains634/0, all five validator self-tests pass and generated coverage remains3
 2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-726-from-stream-*`. Pixel validation used public GetData; no screenshot or manual
 visual inspection was performed.
+
+### Focused727 SpriteBatch source-rectangle pixels
+
+The existing `graphics.sprite_batch.source_rectangle` now uses PointClamp and reads the first
+framebuffer. One aggregate check proves that four 32x32 source rectangles select the four authored
+atlas colors when enlarged to 128x128. A second proves that a known transparent texel in every
+selection leaves DarkSlateGray visible. A third proves that `std::nullopt` draws all four frames in
+their original unscaled order.
+
+After correcting an initial compile failure before accepting any report, the rebuilt demo passes
+all3 controls on SOFTWARE and OPENGLES3/X11, and the exact SOFTWARE CTest passes. Metadata is634/0,
+all five validator self-tests pass and coverage remains302/329 types,2114/2326 non-field members,
+167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-727-source-rectangle-*`. Pixel
+validation used public back-buffer readback; no screenshot or manual visual inspection was
+performed.

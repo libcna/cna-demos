@@ -6192,3 +6192,18 @@ all five validator self-tests pass and coverage remains302/329 types,2114/2326 n
 used public GetData; no screenshot or manual visual inspection was performed. Continue the deeper
 behavior audit with the SpriteBatch rectangle/tint workflows whose existing smoke success does not
 yet prove their rendered pixel contracts.
+
+## Focused727-SpriteBatch-source-rectangle-pixels
+
+The existing `graphics.sprite_batch.source_rectangle` gains three programmatic framebuffer
+controls. Point sampling verifies the exact red, green, blue and yellow atlas frame selected by
+each enlarged source rectangle, verifies a transparent texel from every frame preserves the
+DarkSlateGray background, and verifies `std::nullopt` draws the four unscaled frames in their
+original order.
+
+An initial compile error on an invalid constexpr Color array was caught before accepting the stale
+binary's zero-check reports; the corrected rebuild completes and both SOFTWARE and OPENGLES3/X11
+pass3/3. The exact SOFTWARE CTest, metadata634/0 and all five validator self-tests pass. Coverage
+remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-727-source-rectangle-*`. No screenshot or manual visual inspection was performed.
+Continue with the distinct tint/fade pixel contract rather than duplicating this source selection.

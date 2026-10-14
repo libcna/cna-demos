@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added exact framebuffer checks to `graphics.sprite_batch.source_rectangle` for four atlas frame
+  selections, transparent texels and the whole-strip `std::nullopt` path.
 - Extended `graphics.texture2d.from_stream` with exact transparent palette-GIF decoding and
   deterministic truncated-image refusal, completing the classic PNG/JPEG/GIF container set.
 - Extended `graphics.texture2d.set_data_rectangle` with atomic invalid-rectangle, short logical
