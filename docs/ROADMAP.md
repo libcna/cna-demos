@@ -224,7 +224,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (23 demos)
+## Phase 7 -- models, animation, glTF 🟨 (24 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -269,7 +269,9 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.imported_topology`: all seven glTF primitive modes, line-loop closure,
   strip/fan normalization, exact public index ranges and topology-dependent counts, incomplete
   line/triangle-tail diagnostics, plus actual point/line/filled pixels (39 checks).
-- Remaining: specular slots, more skin weighting/material variants and other
+- ✅ `graphics.model.specular_sampler_state`: independent imported strength/color sampler slots,
+  explicit device selection and exact black/green/red PBR reflection pixels (7 checks on both GL paths).
+- Remaining: more skin weighting/material variants and other
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
@@ -8147,3 +8149,21 @@ metadata remains648/0, both validation self-test suites pass and temporary cover
 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-837-topology-*` and `/tmp/checkpoint-837-coverage.md`. No CNA defect appeared.
 The next explicit Phase7 remainder is imported specular-slot behavior.
+
+## Focused838-imported-specular-sampler-slots
+
+New `graphics.model.specular_sampler_state` closes the explicit imported specular-slot remainder.
+Its glTF gives the `KHR_materials_specular` strength map nearest-clamp and the colour map
+nearest-repeat. The loaded part exposes those two states independently and the imported PBR effect
+owns both maps. With black diffuse irradiance, white prefiltered specular and an exact BRDF lookup,
+three panels isolate the device slots: strength Wrap samples alpha zero and yields black, imported
+strength Clamp plus forced colour Clamp yields green41, and imported colour Repeat changes only the
+last result to red41.
+
+OPENGLES3 and OPENGL33 pass7/7 with identical values and byte-identical inspected captures
+(`eae8f...01e47`). SOFTWARE takes the documented capability skip and its exact CTest passes as
+skipped. The incremental build uses at most three jobs; metadata is649/0, both validation self-test
+suites pass, and temporary coverage remains302/329 types,2114/2326 members,169/753 fields and
+3078/3205 C routes. Evidence:`/tmp/checkpoint-838-specular-samplers-*` and
+`/tmp/checkpoint-838-coverage.md`. No CNA defect appeared. Audit the remaining skin-weight/material
+variants for distinct semantics before adding another scene.

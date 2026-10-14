@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 23), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 24), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -67,10 +67,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-648 project-built catalog demos in18 categories: math78, game33, graphics177, audio23, core3,
+649 project-built catalog demos in18 categories: math78, game33, graphics178, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,286 game and199 standalone;
-612 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,287 game and199 standalone;
+613 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -173,6 +173,8 @@ Focused836 completes the37-declaration ShaderEffect disposition and runs all eig
 on OPENGL33: seven pass and clone_state retains its sole expected ISSUE-055 failure.
 Focused837 extends imported_topology to all seven glTF modes plus exact diagnostics and rendered
 evidence for incomplete LINES/TRIANGLES tails; both renderers pass39/39 with identical captures.
+Focused838 imports both KHR_materials_specular sampler slots and proves their independent strength/
+colour addressing through exact OPENGLES3 and OPENGL33 pixels.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3413,6 +3415,27 @@ metadata remains648/0, both tool self-test suites pass and temporary coverage re
 `/tmp/checkpoint-837-topology-*` and `/tmp/checkpoint-837-coverage.md`. No CNA defect appeared.
 Audit imported specular-slot behavior next, then continue with skin-weight/material variants or the
 next concrete member gap if source review shows those variants are already semantically covered.
+
+### Focused838-imported-specular-sampler-slots
+
+New `graphics.model.specular_sampler_state` loads a one-part PBR glTF whose
+`KHR_materials_specular` strength map authors nearest-clamp and whose colour map independently
+authors nearest-repeat. The public `ModelMeshPart::SpecularSamplerStatesEXT` array retains both
+states and the imported `PbrEffect` owns both maps. A controlled black-irradiance/white-prefiltered
+environment then makes sampler selection observable at out-of-range U=1.125: application Wrap on
+slot5 samples alpha zero and yields exact black; selecting the imported Clamp yields exact green41
+with slot6 forced to Clamp; selecting the imported Repeat for slot6 independently changes that to
+exact red41.
+
+OPENGLES3 and OPENGL33 pass7/7 with identical printed values. Their inspected800x480 captures are
+byte-identical with SHA-256 `eae8f29d6672f7f30b14088d7f549d45508bfe347ca42c8e2306d79d1c101e47`.
+SOFTWARE takes the declared PBR-specular skip and its exact CTest passes as skipped. The `-j3`
+build emits only the established Draco CMP0148 warning; metadata is649/0, validation self-tests
+pass5/5 and checkpoint-comparison tests pass4/4. Temporary coverage remains302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes because this is deeper behavior evidence.
+Evidence:`/tmp/checkpoint-838-specular-samplers-*` and `/tmp/checkpoint-838-coverage.md`. No CNA
+defect appeared. Review the remaining skin-weight/material variants semantically and add only a
+case that exercises a distinct importer or renderer behavior.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

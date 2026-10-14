@@ -1,0 +1,196 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "cna-demos tools/gltf_models.py"
+ },
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -0.45,
+    -0.45,
+    0
+   ],
+   "max": [
+    0.45,
+    0.45,
+    0
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 48,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 48,
+   "byteLength": 48,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 96,
+   "byteLength": 64,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 160,
+   "byteLength": 32,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 192,
+   "byteLength": 12,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 204,
+   "byteLength": 74
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 280,
+   "byteLength": 74
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 354,
+   "uri": "data:application/octet-stream;base64,ZmbmvmZm5r4AAAAAZmbmPmZm5r4AAAAAZmbmPmZm5j4AAAAAZmbmvmZm5j4AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAAAAAACAPwAAgD8AAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAAAAAACAPwAAkD8AAAA/AACQPwAAAD8AAJA/AAAAPwAAkD8AAAA/AAABAAIAAAACAAMAiVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAYAAAD0In+KAAAAEUlEQVR4nGP8//8/AwMDw38AFfwD/r+i5HMAAAAASUVORK5CYIIAAIlQTkcNChoKAAAADUlIRFIAAAACAAAAAQgGAAAA9CJ/igAAABFJREFUeJxj+M/A8J/hP8N/ABD4A/1BcHnoAAAAAElFTkSuQmCC"
+  }
+ ],
+ "meshes": [
+  {
+   "name": "SpecularSamplerQuad",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TANGENT": 2,
+      "TEXCOORD_0": 3
+     },
+     "indices": 4,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "name": "SpecularSamplerQuad",
+   "mesh": 0
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/png",
+   "bufferView": 5
+  },
+  {
+   "mimeType": "image/png",
+   "bufferView": 6
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9728,
+   "minFilter": 9728,
+   "wrapS": 33071,
+   "wrapT": 33071
+  },
+  {
+   "magFilter": 9728,
+   "minFilter": 9728,
+   "wrapS": 10497,
+   "wrapT": 10497
+  }
+ ],
+ "textures": [
+  {
+   "source": 0,
+   "sampler": 0
+  },
+  {
+   "source": 1,
+   "sampler": 1
+  }
+ ],
+ "materials": [
+  {
+   "name": "IndependentSpecularSamplers",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0,
+     0,
+     0,
+     1
+    ],
+    "metallicFactor": 0,
+    "roughnessFactor": 0.5
+   },
+   "extensions": {
+    "KHR_materials_specular": {
+     "specularFactor": 1,
+     "specularColorFactor": [
+      1,
+      1,
+      1
+     ],
+     "specularTexture": {
+      "index": 0
+     },
+     "specularColorTexture": {
+      "index": 1
+     }
+    }
+   }
+  }
+ ],
+ "extensionsUsed": [
+  "KHR_materials_specular"
+ ],
+ "scenes": [
+  {
+   "name": "Specular samplers",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "scene": 0
+}

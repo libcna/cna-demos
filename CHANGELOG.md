@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added an imported PBR model that preserves independent `KHR_materials_specular` strength and
+  colour sampler slots and proves their explicit selection with exact reflection pixels.
 - Extended the imported-topology scene to all seven glTF primitive modes with exact point/open-line
   pixels and public diagnostics for discarded incomplete line and triangle tails.
 - Completed the ShaderEffect public-member disposition, confirmed sampled coverage for all four

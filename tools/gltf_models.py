@@ -386,6 +386,55 @@ def sampler_quad(path: Path) -> None:
     doc.save(path)
 
 
+def specular_sampler_quad(path: Path) -> None:
+    """A PBR quad whose KHR_materials_specular maps use different glTF sampler states."""
+    import io
+    from PIL import Image
+    doc = Document()
+    positions = [(-.45, -.45, 0), (.45, -.45, 0), (.45, .45, 0), (-.45, .45, 0)]
+    normals = [(0, 0, 1)] * 4
+    tangents = [(1, 0, 0, 1)] * 4
+    uvs = [(1.125, .5)] * 4
+    doc.gltf["meshes"] = [{"name": "SpecularSamplerQuad", "primitives": [{
+        "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True),
+                       "NORMAL": doc.accessor(normals, "VEC3"),
+                       "TANGENT": doc.accessor(tangents, "VEC4"),
+                       "TEXCOORD_0": doc.accessor(uvs, "VEC2")},
+        "indices": doc.accessor([0, 1, 2, 0, 2, 3], "SCALAR", UNSIGNED_SHORT,
+                                ELEMENT_ARRAY_BUFFER),
+        "material": 0}]}]
+
+    images = []
+    for texels in [[(255, 255, 255, 0), (255, 255, 255, 255)],
+                   [(255, 0, 0, 255), (0, 255, 0, 255)]]:
+        image = Image.new("RGBA", (2, 1))
+        image.putdata(texels)
+        encoded = io.BytesIO()
+        image.save(encoded, format="PNG", optimize=False)
+        images.append({"mimeType": "image/png", "bufferView": doc.view(encoded.getvalue())})
+    doc.gltf["images"] = images
+    # Strength clamps to its opaque second texel. Colour repeats to its red first texel.
+    doc.gltf["samplers"] = [
+        {"magFilter": 9728, "minFilter": 9728, "wrapS": 33071, "wrapT": 33071},
+        {"magFilter": 9728, "minFilter": 9728, "wrapS": 10497, "wrapT": 10497},
+    ]
+    doc.gltf["textures"] = [{"source": 0, "sampler": 0}, {"source": 1, "sampler": 1}]
+    doc.gltf["materials"] = [{
+        "name": "IndependentSpecularSamplers",
+        "pbrMetallicRoughness": {
+            "baseColorFactor": [0, 0, 0, 1], "metallicFactor": 0, "roughnessFactor": .5},
+        "extensions": {"KHR_materials_specular": {
+            "specularFactor": 1,
+            "specularColorFactor": [1, 1, 1],
+            "specularTexture": {"index": 0},
+            "specularColorTexture": {"index": 1}}}}]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_specular"]
+    doc.gltf["nodes"] = [{"name": "SpecularSamplerQuad", "mesh": 0}]
+    doc.gltf["scenes"] = [{"name": "Specular samplers", "nodes": [0]}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
 def slide_rig(path: Path) -> None:
     """Three boxes in rows sliding from x = -2 to 0 to 2 in two seconds, one clip "Slide" with one
     channel per box: the top box's sampler is STEP, the middle one's LINEAR, the bottom one's
@@ -651,5 +700,6 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     # model format cannot carry them).
     paint_toy(assets_root / "models" / "loose_paint_toy.gltf")
     sampler_quad(assets_root / "models" / "loose_sampler_clamp.gltf")
+    specular_sampler_quad(assets_root / "models" / "loose_specular_samplers.gltf")
     multiple_skins(assets_root / "models" / "loose_multi_skin.gltf")
     imported_topology(assets_root / "models" / "loose_topology.gltf")
