@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the 635-demo full rebuild/runtime checkpoint: all 648 enabled CTests and both full
+  renderer smokes pass, every Complete724 result remains exact, and the new cross-device workflow
+  passes on both renderers.
 - Added framebuffer checks to `graphics.sprite_batch.sprite_effects` for all four marker corners,
   horizontal arrow direction and invariant destination bounds under combined flips.
 - Added framebuffer checks to `graphics.sprite_batch.scale` that correlate authored marker spacing

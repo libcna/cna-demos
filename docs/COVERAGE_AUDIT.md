@@ -1947,3 +1947,17 @@ all five validator self-tests pass and coverage remains302/329 types,2114/2326 n
 167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-727-source-rectangle-*`. Pixel
 validation used public back-buffer readback; no screenshot or manual visual inspection was
 performed.
+
+### Complete735 runtime checkpoint
+
+The full documented configure/build and outer-Xvfb validation absorb focused725 through734 against
+clean sibling CNA `d23e139de`. Metadata is635/0, all648 enabled CTests pass in156.99s, and both
+complete renderer smokes execute every catalog ID with zero unexpected failures or unexpected
+passes. SOFTWARE/X11 is561 pass/36 expected fail/35 skip/3 manual; OPENGLES3/X11 is593/36/3/3.
+
+All634 Complete724 status/knownIssue pairs remain exact on both renderers. The sole added ID,
+`graphics.sprite_batch.cross_device_texture`, passes on both. Normalized stderr also remains exact.
+Generated runtime-backed coverage is635 demos,302/329 types,2114/2326 non-field members,167/753
+fields and2999/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-735-complete-*`. No
+screenshot, listening test, physical input, service session or manual visual-quality inspection
+was performed.

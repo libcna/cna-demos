@@ -70,7 +70,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api172. Kinds are163 console,278 game and194 standalone;
 599 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md is runtime-backed by complete724 at634 demos,302/329 XNA
+Coverage: generated docs/COVERAGE.md is runtime-backed by complete735 at635 demos,302/329 XNA
 types,2114/2326 XNA members,167/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -81,11 +81,12 @@ totals are `input_gamepad.h`61/63,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete724 exercises all2999 credited C routes and all634 catalog IDs in both full smoke suites.
+Complete735 exercises all2999 credited C routes and all635 catalog IDs in both full smoke suites.
 It absorbs every staged C batch through complete `models.h`, the focused SpriteFont route, the
-deeper XNA member audit through focused716 and the Texture2D behavior batches through focused723.
+deeper XNA member audit through focused716, the Texture2D behavior batches through focused726 and
+the SpriteBatch behavior batches through focused734.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
-Complete724 has36 known-issue demos after focused660 adds
+Complete735 has36 known-issue demos after focused660 adds
 `game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
 `graphics.sprite_batch.begin_end_rules` CNA-DEMOS-ISSUE-082,
 `c_api.gamer.achievement_collection` CNA-DEMOS-ISSUE-077,
@@ -125,33 +126,27 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **724-Texture2D-formats-full-checkpoint** is the current full-build and full-runtime
-baseline. The documented configure/build and outer-Xvfb `tools/validate.sh` invocation run against
-clean sibling CNA `a37bb07bad`. Metadata is634/0, all647 enabled CTests pass in184.31s and three
-declared manual tests remain disabled. SOFTWARE/X11 reports560 pass/36 expected fail/35 skip/3
-manual; OPENGLES3/X11 reports592/36/3/3. Both execute all634 IDs with zero unexpected failures or
-unexpected passes, and all five validator self-tests pass.
+Complete **735-SpriteBatch-behaviors-full-checkpoint** is the current full-build and full-runtime
+baseline. The documented configure/build and outer-Xvfb `tools/validate.sh` invocation ran against
+clean sibling CNA `d23e139de` (its branch is ahead one test-only commit). Metadata is635/0, all648
+enabled CTests pass in156.99s and three declared manual tests remain disabled. SOFTWARE/X11 reports
+561 pass/36 expected fail/35 skip/3 manual; OPENGLES3/X11 reports593/36/3/3. Both execute all635
+IDs with zero unexpected failures or unexpected passes; all five validator self-tests and all four
+checkpoint-comparison tests pass.
 
-Every one of the632 Complete719 IDs retains its exact status/knownIssue pair on both renderers.
-Only `graphics.texture2d.floating_formats` and `graphics.texture2d.normalized_formats` are added,
-and both pass on both renderers. Generated coverage is302/329 types,2114/2326 non-field members,
+Every Complete724 status/knownIssue pair remains exact on both renderers. The only added ID is
+`graphics.sprite_batch.cross_device_texture`, which passes on both. After normalizing generated
+temporary-path suffixes and X11 serial/resource numbers, stderr is also byte-for-byte equivalent
+to Complete724 for each renderer. Generated coverage is302/329 types,2114/2326 non-field members,
 167/753 fields and2999/3205 C routes.
 
-Focused718 credits the already substantive `GraphicsDeviceStatus` enum use in
-`graphics.device.owned_lifecycle`; the demo checks Normal status across construction, Present and
-Reset and passes on both renderers plus its exact SOFTWARE CTest. Generated coverage is now302/329
-XNA types,2114/2326 non-field members,157/753 fields and2999/3205 public C routes. The other27
-generated type gaps are dispositioned in `docs/COVERAGE_AUDIT.md` as exception/environment paths,
-nominal serializer wrappers, CLR collection enumerators or service-created payloads, rather than27
-missing coherent demos.
-
 Tested SHA-256: `cna-demos`
-`9f7426aa7f9fe5bbdf57cffbc352f9334c4133beb0cd69a8ce23929989179d9e`, `libcna.so`
+`f2500ac83e1f26b2889399525c417004cda7bdf003bb82a161d5e7f44672248c`, `libcna.so`
 `bc3fa4849858d3549b0c7c83f5ca41adf7aec92898bb7173e690eed1f726a6d4`, and `libcna_c_api.so`
 `198a7dc3e7d189fed3c338551c646833676127e23055063f25f23d593d08033b`. Report hashes are SOFTWARE
-`097fb9abfd811556b906452bf7d1fb5ff69d239894a141d95770f6d666494b2a` and OPENGLES3
-`e1b3a34f4a94acc5e0047bc7a6b1739926aedfe25dc424edb55e3b1ed15c95b1`. Evidence is archived as
-`build/linux-full/reports/checkpoint-724-complete-*`. No screenshot, listening test, physical
+`e1843f1bf22f6628dbb7fff247a45861c9b2d8e6abf7e5ee776602d194fd3296` and OPENGLES3
+`23bfba3345431fb4d2ce3a6a55b72476a14ad5eaabe3007ada218c55f4240b3e`. Evidence is archived as
+`build/linux-full/reports/checkpoint-735-complete-*`. No screenshot, listening test, physical
 input, service session or manual visual-quality inspection was performed.
 
 Focused **720-GraphicsDevice-Present-region-contract** is staged after Complete719. The existing
@@ -1571,14 +1566,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-734 are
-staged after it, including the new635th ID. Run the documented configure/build and complete
-outer-Xvfb `tools/validate.sh` checkpoint against clean sibling CNA `d23e139de`. Archive immutable
-reports and compare every Complete724 status/knownIssue pair; the only catalog addition should be
-`graphics.sprite_batch.cross_device_texture`, while all extended IDs should retain their prior
-status and only increase checks. Update generated coverage, status docs and hashes, commit and push.
-Then audit SpriteFont nonzero layer depth only if it adds observable sprite/text ordering beyond
-the existing SpriteBatch sorting workflow; otherwise record the disposition and move onward.
+HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline. Audit SpriteFont nonzero
+layer depth only if it adds observable sprite/text ordering beyond the existing SpriteBatch sorting
+workflow; otherwise record the disposition and move directly to the next meaningful graphics
+member/behavior gap. Keep representative framebuffer validation on both primary renderers and do
+not add overload-only variants.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

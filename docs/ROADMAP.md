@@ -6323,3 +6323,22 @@ all five validator self-tests and all four checkpoint-comparison tests pass, and
 `/tmp/checkpoint-734-sprite-effects-*`. Pixel readback was programmatic; no screenshot or manual
 visual inspection was performed. Run a complete635-demo checkpoint next so the new cross-device
 ID and all focused725-734 behavior changes enter both full renderer reports.
+
+## Complete735-SpriteBatch-behaviors-full-checkpoint
+
+The documented configure/build and complete outer-Xvfb validation ran against clean sibling CNA
+`d23e139de`. Metadata is635/0, all648 enabled CTests pass in156.99s and the three declared manual
+tests remain disabled. SOFTWARE/X11 reports561 pass/36 expected fail/35 skip/3 manual;
+OPENGLES3/X11 reports593/36/3/3. Both reports contain all635 catalog IDs with zero unexpected
+failures or unexpected passes. All five validator self-tests and all four checkpoint-comparison
+tests pass.
+
+Every Complete724 status/knownIssue pair remains exact on both renderers. The only added ID is
+`graphics.sprite_batch.cross_device_texture`, which passes on both. After generated temporary-path
+suffixes and X11 serial/resource numbers are normalized, each renderer's stderr is identical to
+Complete724. Generated runtime-backed coverage is302/329 types,2114/2326 non-field members,
+167/753 fields and2999/3205 C routes. Evidence is archived as
+`build/linux-full/reports/checkpoint-735-complete-*`. No screenshot, listening test, physical input,
+service session or manual visual-quality inspection was performed. Audit SpriteFont nonzero layer
+depth next only if it establishes observable sprite/text ordering beyond the existing SpriteBatch
+sorting workflow.

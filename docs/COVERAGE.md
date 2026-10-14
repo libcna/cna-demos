@@ -6,7 +6,7 @@ Generated 2026-10-14 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**634 demos** in 18 categories. Kinds: console 162, game 278, standalone 194. Automation: automated 598, manual 3, smoke-only 33.
+**635 demos** in 18 categories. Kinds: console 163, game 278, standalone 194. Automation: automated 599, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-14 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 23 / 7 / 2 / 1 / 0 | 30 / 0 / 2 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 16 / 0 / 2 / 1 / 0 | 16 / 0 / 2 / 1 / 0 |
-| graphics | 168 | 168 | 0 | 0 | 143 / 18 / 7 / 0 / 0 | 157 / 3 / 8 / 0 / 0 |
+| graphics | 169 | 169 | 0 | 0 | 144 / 18 / 7 / 0 / 0 | 158 / 3 / 8 / 0 / 0 |
 | input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 13 | 12 | 1 | 0 | 12 / 0 / 1 / 0 / 0 | 12 / 0 / 1 / 0 / 0 |
