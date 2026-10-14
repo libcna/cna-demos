@@ -84,6 +84,20 @@ namespace
         // IsShuffled makes the next song a random one from the queue.
         MediaPlayer::setIsShuffledProperty(true);
         ctx.Check(MediaPlayer::getIsShuffledProperty(), "IsShuffled reads back");
+        bool shuffledEntriesStayValid = true;
+        for (int step = 0; step < 16; ++step)
+        {
+            MediaPlayer::MoveNext();
+            const auto index = queue.getActiveSongIndexProperty();
+            const Song* active = queue.getActiveSongProperty();
+            shuffledEntriesStayValid = shuffledEntriesStayValid && index >= 0 && index < queue.getCountProperty() &&
+                                       active == queue[index] &&
+                                       (active->getNameProperty() == "Rising" ||
+                                        active->getNameProperty() == "Falling") &&
+                                       MediaPlayer::getStateProperty() == MediaState::Playing;
+        }
+        ctx.Check(shuffledEntriesStayValid,
+                  "shuffled traversal keeps every selected index and active song inside the queue");
 
         MediaPlayer::setIsShuffledProperty(false);
         MediaPlayer::setIsRepeatingProperty(false);

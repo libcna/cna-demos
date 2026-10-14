@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Exercised actual shuffled MediaPlayer traversal with a bounded sequence that verifies every
+  selected index, active Song, queue membership and Playing state without assuming random order.
 - Extended the MediaPlayer queue workflow across both collection overloads: the default overload
   starts at zero, while a replacement collection starts at a requested nonzero entry and remains
   queue-owned after its caller objects are destroyed.

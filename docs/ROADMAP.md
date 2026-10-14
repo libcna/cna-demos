@@ -7151,3 +7151,19 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-779-media-queue-*` and `/tmp/checkpoint-779-coverage.md`. No acoustic
 quality, screenshot or manual inspection is claimed. Exercise the shuffle branch with a bounded
 sequence that proves queue membership/index consistency without asserting a random order next.
+
+## Focused780-MediaPlayer-shuffled-traversal
+
+The same `media.media_player.queue_and_repeat` retains all twelve prior controls and replaces its
+shuffle flag-only claim with one behavior control. Sixteen actual shuffled `MoveNext` calls each
+retain an in-range index, make `ActiveSong` equal the indexed queue member, select one of the two
+known names and return to Playing. Repeating an index is accepted because the source's uniform
+selection permits it; the demo does not make an unstable ordering or distribution assertion.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass13/13 controls with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-780-media-shuffle-*` and `/tmp/checkpoint-780-coverage.md`. No acoustic
+quality, randomness quality, screenshot or manual inspection is claimed. Extend the existing
+transport workflow with bounded paused-position stability, Resume progress and Stop reset next.

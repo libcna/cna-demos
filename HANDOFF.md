@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-779 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-780 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1759,8 +1759,9 @@ active-writer/output plus no-op façade members are dispositioned. The custom wr
 closed: a default writer honors requested LZX and round-trips through ContentManager, while the
 empty ContentTypeWriterAttribute is dispositioned as a registration marker. Continue the
 MediaPlayer collection overloads now cover the default zero start, live queue replacement and a
-nonzero start whose queue-owned copies outlive caller objects. Exercise bounded shuffled traversal
-next, then assess transport timing without duplicating the completed C route coverage. Do not add
+nonzero start whose queue-owned copies outlive caller objects. Bounded shuffled traversal now proves
+queue index/identity/state consistency without assuming a random order. Audit paused PlayPosition,
+resume and Stop-reset behavior next without duplicating the completed C route coverage. Do not add
 isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
@@ -2333,6 +2334,22 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-779-media-queue-*` and `/tmp/checkpoint-779-coverage.md`. No acoustic
 quality, screenshot or manual inspection is claimed. Exercise the shuffle branch with a bounded
 sequence that proves queue membership/index consistency without asserting a random order next.
+
+### Focused780-MediaPlayer-shuffled-traversal
+
+The same `media.media_player.queue_and_repeat` retains all twelve prior controls and replaces its
+shuffle flag-only claim with one behavior control. Sixteen actual shuffled `MoveNext` calls each
+retain an in-range index, make `ActiveSong` equal the indexed queue member, select one of the two
+known names and return to Playing. Repeating an index is accepted because the source's uniform
+selection permits it; the demo does not make an unstable ordering or distribution assertion.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass13/13 controls with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-780-media-shuffle-*` and `/tmp/checkpoint-780-coverage.md`. No acoustic
+quality, randomness quality, screenshot or manual inspection is claimed. Extend the existing
+transport workflow with bounded paused-position stability, Resume progress and Stop reset next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
