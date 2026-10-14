@@ -4278,3 +4278,17 @@ compilation, diff checks and validation self-tests pass. Staged metadata reaches
 `cnb.h` reaches124/272. Evidence:`checkpoint-608-c-cnb-texture-data-focused-*-direct.*`. No
 document, graphics device, GPU texture, renderer, pixels or project-built execution is claimed.
 The eight standalone and embedded texture codec routes are next.
+
+## Focused609-C-CNB-texture-codecs
+
+`c_api.content.cnb_texture_codecs` adds the final eight texture routes in22 renderer-free controls.
+A three-mip2D texture, a six-face/two-mip cube and a depth-aware two-mip volume round-trip through
+complete encoded and parsed CNB documents with exact shape, ordering, formats and payload bytes.
+The 2D sizing/copy path is atomic, wrong asset decoders publish no handles, cube shape rules are
+enforced and schema version one refuses a valid BC7 value it cannot encode. A SpriteFont document
+then embeds the canonical 2D texture chunks and reads its atlas back exactly while the standalone
+decoder still refuses the non-texture asset identity. Both renderer-labelled direct runs pass
+byte-identically with empty stderr; strict C99, metadata compilation, diff checks and validation
+self-tests pass. Staged metadata reaches2643/3205 and `cnb.h` reaches132/272. Evidence:
+`checkpoint-609-c-cnb-texture-codecs-focused-*-direct.*`. No graphics device, GPU texture,
+renderer, filesystem, displayed pixels or project-built execution is claimed. Model data is next.
