@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed SoundEffectInstance lifetime edges: disposed Resume refusal with safe Pause/Stop, and
+  move assignment that correctly transfers live playback and parent-disposal registration.
 - Extended SoundEffectInstance transport behavior before first playback and after Stop, and used a
   long track to prove repeated Play while Playing preserves progress instead of restarting.
 - Added disabled MediaPlayer visualization behavior: nonzero caller buffers are actively cleared

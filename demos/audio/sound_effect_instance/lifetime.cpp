@@ -43,6 +43,36 @@ namespace
             ctx.Print("Disposed voice refused: {}", error.what());
         }
         ctx.Check(refused, "a disposed instance cannot be played again");
+        bool resumeRefused = false;
+        bool passiveCallsSafe = true;
+        try { moved.Resume(); }
+        catch (const System::ObjectDisposedException&) { resumeRefused = true; }
+        try
+        {
+            moved.Pause();
+            moved.Stop();
+        }
+        catch (...) { passiveCallsSafe = false; }
+        ctx.Check(resumeRefused && passiveCallsSafe && moved.getIsDisposedProperty() &&
+                      moved.getStateProperty() == SoundState::Stopped,
+                  "disposed Resume refuses resurrection while Pause and Stop remain safe cleanup calls");
+
+        SoundEffect oldAssignmentOwner(path);
+        SoundEffect newAssignmentOwner(path);
+        SoundEffectInstance assigned = oldAssignmentOwner.CreateInstance();
+        SoundEffectInstance assignmentSource = newAssignmentOwner.CreateInstance();
+        assignmentSource.setIsLoopedProperty(true);
+        assignmentSource.Play();
+        assigned = std::move(assignmentSource);
+        ctx.Check(assignmentSource.getIsDisposedProperty() && !assigned.getIsDisposedProperty() &&
+                      assigned.getStateProperty() == SoundState::Playing,
+                  "move assignment replaces the destination with the source's live voice");
+        oldAssignmentOwner.Dispose();
+        ctx.Check(!assigned.getIsDisposedProperty() && assigned.getStateProperty() == SoundState::Playing,
+                  "disposing the destination's former parent does not reach the assigned voice");
+        newAssignmentOwner.Dispose();
+        ctx.Check(assigned.getIsDisposedProperty() && assigned.getStateProperty() == SoundState::Stopped,
+                  "disposing the source parent follows move assignment and disposes the transferred voice");
 
         SoundEffect effect(path);
         SoundEffectInstance first = effect.CreateInstance();
@@ -67,10 +97,11 @@ namespace
 CNA_DEMOS_CONSOLE(InstanceLifetime, {
     .id = "audio.sound_effect_instance.lifetime",
     .title = "Sound data ownership and explicit disposal",
-    .description = "Keeps a voice after its temporary C++ sound wrapper is destroyed, moves a playing instance, "
-                   "and contrasts scope lifetime with idempotent Dispose and a SoundEffect's child-disposal cascade.",
+    .description = "Keeps a voice after its temporary C++ sound wrapper is destroyed, exercises move construction "
+                   "and assignment across parent cascades, and checks idempotent and post-dispose transport behavior.",
     .apis = {"SoundEffect::SoundEffect", "SoundEffect::CreateInstance", "SoundEffect::Dispose", "SoundEffect::IsDisposed",
              "SoundEffectInstance::SoundEffectInstance", "SoundEffectInstance::Play", "SoundEffectInstance::State",
+             "SoundEffectInstance::Pause", "SoundEffectInstance::Resume", "SoundEffectInstance::Stop",
              "SoundEffectInstance::Dispose", "SoundEffectInstance::IsDisposed", "SoundEffectInstance::IsLooped"},
     .tags = {"audio", "instance", "lifetime", "ownership", "cnaext"},
     .needs = CnaDemos::Need::Audio,

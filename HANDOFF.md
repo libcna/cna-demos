@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-788 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-789 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1770,7 +1770,8 @@ states now prove quiet no-op behavior. Disabled visualization now clears caller 
 enabled positive-spectrum path; paused-buffer freshness and acoustic/FFT quality are intentionally
 unclaimed. The MediaPlayer audit is closed. Continue with the SoundEffectInstance lifecycle gaps:
 Pause/Resume before first playback and after Stop plus repeated Play are now covered. Audit disposed
-Resume and safe post-dispose Pause/Stop behavior in the existing lifetime workflow next. Do not add
+Resume and safe post-dispose Pause/Stop behavior plus move-assignment parent registration are now
+covered. Audit SoundBank empty/unknown cue refusal through the existing XACT workflow next. Do not add
 isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
@@ -2496,6 +2497,23 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-788-audio-instance-transport-*` and `/tmp/checkpoint-788-coverage.md`. No
 audible latency/quality or exact scheduling claim is made. Audit disposed Resume plus safe
 post-dispose Pause/Stop behavior in the existing lifetime demo next.
+
+### Focused789-SoundEffectInstance-disposal-and-move-assignment
+
+`audio.sound_effect_instance.lifetime` grows from seven to eleven controls. Its already-disposed
+voice now proves Resume refuses resurrection with `ObjectDisposedException`, while Pause and Stop
+remain safe and retain disposed/Stopped state. A separate playing source is move-assigned over a
+destination belonging to another SoundEffect. The source becomes disposed and the destination keeps
+Playing; disposing the former destination parent does not reach it, while disposing the source
+parent does. This directly proves both unregister and re-register sides of parent cascade tracking.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass11/11 controls with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free build uses at most three jobs; metadata
+remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains
+302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-789-audio-instance-lifetime-*` and `/tmp/checkpoint-789-coverage.md`. No
+audible quality, screenshot or manual inspection is claimed. Exercise SoundBank empty and unknown
+cue-name refusals in an existing XACT workflow next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
