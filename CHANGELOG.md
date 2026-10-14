@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added XNA ContentCompiler inventory and post-compile freeze checks, and dispositioned its
+  implementation-facing worker/active-writer helpers plus ContentWriter's no-op façade members.
 - Added direct custom XNB compiler refusals for raw null references, unregistered dynamic types and
   explicit nested writers owned by another compiler.
 - Added custom XNB null-reference coverage for ordinary objects, shared resources and external

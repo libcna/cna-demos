@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Original XML authoring -> the real source pipeline -> custom XNB writer -> runtime reader.
+#include <algorithm>
 #include <atomic>
 #include <chrono>
 #include <cstdint>
@@ -42,6 +43,7 @@ namespace
     std::atomic<int> writerContexts{0};
     std::atomic<int> compressionChecks{0};
     std::atomic<int> compressionPlatforms{0};
+    std::atomic<int> compilerInventories{0};
     int reads = 0;
     struct Vital
     {
@@ -350,7 +352,8 @@ int main()
             // Resolve the game's serializer before XmlImporter encounters its Asset Type.
             (void)Intermediate::IntermediateSerializer::TypeSerializerFor<ProfileSource>();
             (void)Intermediate::IntermediateSerializer::TypeSerializerFor<RareBadgeSource>();
-            const Pipeline::ContentPipelineRegistryFactory factory = [](const Pipeline::ContentCompilerOptions& options) {
+            std::shared_ptr<Compiler::ContentCompiler> latestCompiler;
+            const Pipeline::ContentPipelineRegistryFactory factory = [&](const Pipeline::ContentCompilerOptions& options) {
                 auto compiler = std::make_shared<Compiler::ContentCompiler>();
                 (void)compiler->AddTypeWriter<VitalWriter>();
                 (void)compiler->AddTypeWriter<BadgeWriter>();
@@ -362,6 +365,15 @@ int main()
                     writer->GetRuntimeReader(Xna::TargetPlatform::WindowsPhone) == ReaderName &&
                     writer->GetRuntimeType(Xna::TargetPlatform::WindowsPhone) == "CnaDemos.XmlProfile")
                     ++registrationContracts;
+                const auto names = compiler->KnownTypeNames();
+                if (std::is_sorted(names.begin(), names.end()) &&
+                    std::binary_search(names.begin(), names.end(), "System.Int32") &&
+                    std::binary_search(names.begin(), names.end(), "CnaDemos.XmlVital") &&
+                    std::binary_search(names.begin(), names.end(), "CnaDemos.BadgeSource") &&
+                    std::binary_search(names.begin(), names.end(), "CnaDemos.RareBadgeSource") &&
+                    std::binary_search(names.begin(), names.end(), "CnaDemos.ProfileSource"))
+                    ++compilerInventories;
+                latestCompiler = compiler;
                 auto registry = std::make_shared<Pipeline::ContentPipelineRegistry>();
                 Pipeline::RegisterXnaXmlSourceContentPipeline(*registry, compiler, options.xnbContainer);
                 return registry;
@@ -374,6 +386,25 @@ int main()
                   "the XML source route invokes the game's writer and publishes a real XNB");
             check(initializations == 1 && registrationContracts == 1 && initializedWrites == 1,
                   "the registered writer exposes its exact identity and receives its compiler before Write");
+            check(compilerInventories == 1,
+                  "the compiler reports a sorted inventory containing built-in and all game-owned writer types");
+            bool lateWriterRefused = false;
+            try { (void)latestCompiler->AddTypeWriter<WriterProbeWriter>(); }
+            catch (const Xna::PipelineException& error)
+            {
+                lateWriterRefused = std::string(error.what()).find("cannot be added after the compiler has compiled") !=
+                                    std::string::npos;
+            }
+            bool unknownWriterRefused = false;
+            try { (void)latestCompiler->GetTypeWriter(System::Type::From<WriterProbeSource>()); }
+            catch (const Xna::PipelineException& error)
+            {
+                unknownWriterRefused = std::string(error.what()).find("no type writer is registered") != std::string::npos;
+            }
+            check(lateWriterRefused && unknownWriterRefused &&
+                  latestCompiler->GetTypeWriter(System::Type::From<Vital>())->getTargetTypeProperty() ==
+                      System::Type::From<Vital>(),
+                  "a completed compile freezes registration while known lookup stays usable and unknown lookup is refused");
             const auto firstXnb = ReadFile(output / "sentinel.xnb");
             check(compressionChecks == 1 && compressionPlatforms == 1 && writerContexts == 1 &&
                   firstXnb.size() > 6 && firstXnb.substr(0, 3) == "XNB" && firstXnb[3] == 'm' &&

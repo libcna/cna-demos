@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-776 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-777 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1754,9 +1754,11 @@ typed/raw nested writer dispatch, dynamic reference dispatch, shared-resource id
 path normalization. Audit the remaining custom writer null/refusal contracts and ContentCompiler
 inspection/freeze behavior against existing demos before adding controls. Ordinary, shared and
 external nulls now round-trip too; raw-null and missing/foreign writer refusals are covered. Audit
-ContentCompiler inventory/freeze behavior next, then disposition implementation-facing registry and
-active-writer helpers. Do not add isolated getter demos. Build with at most three compile jobs and
-keep focused evidence current.
+ContentCompiler inventory/freeze behavior is now covered, and implementation-facing worker,
+active-writer/output plus no-op façade members are dispositioned. Close the custom writer audit by
+checking any remaining meaningful ContentTypeWriter attributes or compression/default behavior,
+then move to the next public-member family. Do not add isolated getter demos. Build with at most
+three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2268,6 +2270,31 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-776-xnb-refusals-*` and
 `/tmp/checkpoint-776-coverage.md`. No rendering, screenshot or manual inspection was used. Audit
 ContentCompiler inventory/freeze behavior next, then disposition implementation-facing registry
 and active-writer helpers.
+
+### Focused777 XNA ContentCompiler inventory and freeze
+
+The compiler retained from the first real XML build reports a sorted KnownTypeNames inventory that
+contains a built-in integer plus the Vital, Badge, RareBadge and Profile source writers. Because it
+has produced the XNB, a later distinct AddTypeWriter is refused with the frozen diagnostic; its
+read-only GetTypeWriter still returns the exact Vital writer, while an unknown probe type is refused.
+This is the XNA-shaped ContentCompiler lifecycle and is separate from the native pipeline registry
+freeze already covered by `incremental_compiler`.
+
+The remaining public TypeWriterRegistry, FindWorker variants and ActiveWriter methods connect the
+façade to CNA's canonical XNB implementation; ContentWriter::Output exposes that same bridge.
+Flush/Close intentionally do nothing for the buffered writer, and repeating every primitive Write
+overload belongs to CNA's byte-level tests. COVERAGE_AUDIT now dispositions these rather than adding
+identity/no-op controls.
+
+SOFTWARE and OPENGLES3/Xvfb each pass21/22 controls and fail only established ISSUE-090; stdout and
+the intentional compiler/debug diagnostics match after normalizing the private temporary path. The
+exact expected-failure SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, known-issue demos remain42, validator/checkpoint self-tests pass5/5
+and4/4, and generated runtime coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-777-xnb-compiler-*` and
+`/tmp/checkpoint-777-coverage.md`. No rendering, screenshot or manual inspection was used. Close
+the custom writer audit by checking any remaining meaningful ContentTypeWriter attributes or
+compression/default behavior, then move to the next public-member family.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
