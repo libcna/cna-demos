@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
-// A real sampler3D: slice centers, interpolation between slices, and W addressing.
+// A real sampler3D: XYZ coordinates, slice interpolation, W addressing, and authored mip filtering.
+#include <algorithm>
 #include <array>
 #include <memory>
 #include <optional>
@@ -26,6 +27,7 @@
 #include "Microsoft/Xna/Framework/Graphics/SurfaceFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Texture3D.hpp"
 #include "Microsoft/Xna/Framework/Graphics/TextureAddressMode.hpp"
+#include "Microsoft/Xna/Framework/Graphics/TextureFilter.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexBuffer.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexDeclaration.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexElement.hpp"
@@ -48,9 +50,10 @@ void main() { gl_Position = vec4(aPosition, 1.0); }
 )";
     constexpr const char* FragmentSource = R"(
 uniform highp sampler3D volume;
-uniform float sliceZ;
+uniform vec3 coordinate;
+uniform float lod;
 out vec4 FragColor;
-void main() { FragColor = texture(volume, vec3(0.5, 0.5, sliceZ)); }
+void main() { FragColor = textureLod(volume, coordinate, lod); }
 )";
     class VolumeSamplingDemo final : public CnaDemos::DemoGame
     {
@@ -65,19 +68,29 @@ void main() { FragColor = texture(volume, vec3(0.5, 0.5, sliceZ)); }
             shader_ = std::make_unique<ShaderEffect>(device, header + VertexSource, header + FragmentSource);
             if (!Context().Check(shader_->IsEffectValid(), "the custom sampler3D shader compiles"))
                 throw std::runtime_error(shader_->GetCompileErrorEXT());
-            // Z varies slowest. All four texels in each slice share a color, isolating W behavior.
-            const std::array<Color, 8> texels{Color::Red, Color::Red, Color::Red, Color::Red,
-                                             Color::Blue, Color::Blue, Color::Blue, Color::Blue};
+            // X varies fastest and Z slowest. The four slice-zero corners establish U/V
+            // orientation while every central texel stays red, preserving the isolated W tests.
+            std::array<Color, 32> texels;
+            std::fill_n(texels.begin(), 16, Color::Red);
+            std::fill_n(texels.begin() + 16, 16, Color::Blue);
+            texels[0] = Color::White;
+            texels[3] = Color::Yellow;
+            texels[12] = Color::Cyan;
+            texels[15] = Color::Magenta;
+            const std::array<Color, 4> mipOne{Color::Lime, Color::Lime, Color::Lime, Color::Lime};
+            const Color mipTwo = Color::Blue;
             {
                 // Stage an upload, then transfer ownership into the scene. No sampler references
                 // either temporary; shader binding happens only after both have been destroyed.
-                Texture3D uploaded(device, 2, 2, 2, false, SurfaceFormat::Color);
-                uploaded.SetData(texels.data(), 8);
+                Texture3D uploaded(device, 4, 4, 2, true, SurfaceFormat::Color);
+                uploaded.SetData(texels.data(), 32);
+                uploaded.SetData(1, 0, 0, 2, 2, 0, 1, mipOne.data(), 0, 4);
+                uploaded.SetData(2, 0, 0, 1, 1, 0, 1, &mipTwo, 0, 1);
                 Texture3D staged(std::move(uploaded));
                 uploaded.Dispose();
-                std::array<Color, 8> observed;
+                std::array<Color, 32> observed;
                 observed.fill(Color::Black);
-                staged.GetData(observed.data(), 8);
+                staged.GetData(observed.data(), 32);
                 Context().Check(!staged.getIsDisposedProperty() && observed == texels,
                                 "move construction keeps the uploaded volume alive after the source wrapper is disposed");
 
@@ -88,9 +101,9 @@ void main() { FragColor = texture(volume, vec3(0.5, 0.5, sliceZ)); }
                 *volume_ = std::move(staged);
                 staged.Dispose();
                 observed.fill(Color::Black);
-                volume_->GetData(observed.data(), 8);
-                Context().Check(!volume_->getIsDisposedProperty() && volume_->getWidthProperty() == 2 &&
-                                volume_->getHeightProperty() == 2 && volume_->getDepthProperty() == 2 &&
+                volume_->GetData(observed.data(), 32);
+                Context().Check(!volume_->getIsDisposedProperty() && volume_->getWidthProperty() == 4 &&
+                                volume_->getHeightProperty() == 4 && volume_->getDepthProperty() == 2 &&
                                 observed == texels,
                                 "move assignment replaces an occupied destination and retains both slices after the staging wrapper is disposed");
             } // both moved-from wrappers are destroyed before any sampler3D draw
@@ -130,10 +143,48 @@ void main() { FragColor = texture(volume, vec3(0.5, 0.5, sliceZ)); }
                     shader_->Apply();
                     shader_->SetTexture(1, *volume_);
                     shader_->SetUniformInt("volume", 1);
-                    shader_->SetUniformFloat("sliceZ", Coordinates[column]);
+                    shader_->SetUniformVec3("coordinate", .5f, .5f, Coordinates[column]);
+                    shader_->SetUniformFloat("lod", 0.0f);
                     device.DrawPrimitives(PrimitiveType::TriangleList, 0, 2);
                 }
             }
+            const auto drawSample = [&](const Viewport& viewport, const SamplerState& sampler,
+                                        float x, float y, float z, float lod) {
+                device.setViewportProperty(viewport);
+                device.getSamplerStatesProperty()(1, sampler);
+                shader_->Apply();
+                shader_->SetTexture(1, *volume_);
+                shader_->SetUniformInt("volume", 1);
+                shader_->SetUniformVec3("coordinate", x, y, z);
+                shader_->SetUniformFloat("lod", lod);
+                device.DrawPrimitives(PrimitiveType::TriangleList, 0, 2);
+            };
+            // Four small cards occupy the corners of the red slice-centre cell without covering
+            // its centre sample. Exact texel-centre coordinates expose both U and V orientation.
+            constexpr int swatch = 20;
+            const int left = cellWidth + 20;
+            const int right = cellWidth * 2 - 40;
+            const int top = 103;
+            const int bottom = rowHeight + 17;
+            drawSample(Viewport(left, top, swatch, swatch), SamplerState::PointClamp,
+                       .125f, .125f, .25f, 0.0f);
+            drawSample(Viewport(right, top, swatch, swatch), SamplerState::PointClamp,
+                       .875f, .125f, .25f, 0.0f);
+            drawSample(Viewport(left, bottom, swatch, swatch), SamplerState::PointClamp,
+                       .125f, .875f, .25f, 0.0f);
+            drawSample(Viewport(right, bottom, swatch, swatch), SamplerState::PointClamp,
+                       .875f, .875f, .25f, 0.0f);
+            // Both cards request LOD1.25 from authored Lime mip1 and Blue mip2. Point mip
+            // selection keeps mip1; linear mip selection blends the levels with 3:1 weights.
+            SamplerState mipPoint = SamplerState::LinearClamp;
+            mipPoint.setFilterProperty(TextureFilter::LinearMipPoint);
+            SamplerState mipLinear = SamplerState::PointClamp;
+            mipLinear.setFilterProperty(TextureFilter::PointMipLinear);
+            const int mipTop = rowHeight + 103;
+            drawSample(Viewport(left, mipTop, swatch, swatch), mipPoint,
+                       .5f, .5f, .5f, 1.25f);
+            drawSample(Viewport(right, mipTop, swatch, swatch), mipLinear,
+                       .5f, .5f, .5f, 1.25f);
             device.setViewportProperty(full);
             batch_->Begin();
             batch_->DrawString(*font_, "Texture3D: red slice at Z=0.25, blue at Z=0.75", Vector2(12, 12), Color::White);
@@ -167,6 +218,25 @@ void main() { FragColor = texture(volume, vec3(0.5, 0.5, sliceZ)); }
                 Context().Check(CnaDemos::Near(sample(2, 0), Color::Blue, 0) &&
                                 CnaDemos::Near(sample(2, 4), Color::Red, 0),
                                 "Wrap on W repeats the opposite slice centers for the same out-of-range coordinates");
+                const std::array<Color, 4> expectedCorners{
+                    Color::White, Color::Yellow, Color::Cyan, Color::Magenta};
+                const std::array<std::pair<int, int>, 4> cornerPixels{{
+                    {left + swatch / 2, top + swatch / 2},
+                    {right + swatch / 2, top + swatch / 2},
+                    {left + swatch / 2, bottom + swatch / 2},
+                    {right + swatch / 2, bottom + swatch / 2}}};
+                bool orientedXY = true;
+                for (std::size_t corner = 0; corner < cornerPixels.size(); ++corner)
+                    orientedXY = orientedXY && CnaDemos::Near(
+                        screen.At(cornerPixels[corner].first, cornerPixels[corner].second),
+                        expectedCorners[corner], 1);
+                Context().Check(orientedXY,
+                                "slice-zero U/V coordinates preserve the uploaded top-left through bottom-right corner order");
+                Context().Check(CnaDemos::Near(screen.At(left + swatch / 2, mipTop + swatch / 2),
+                                              Color::Lime, 1) &&
+                                    CnaDemos::Near(screen.At(right + swatch / 2, mipTop + swatch / 2),
+                                                  Color(0, 191, 64), 2),
+                                "point versus linear mip filtering selects mip1 or blends mip1/mip2 at LOD1.25");
             }
             DemoGame::Draw(time);
         }
@@ -182,10 +252,11 @@ void main() { FragColor = texture(volume, vec3(0.5, 0.5, sliceZ)); }
 CNA_DEMOS_GAME(VolumeSamplingDemo, {
     .id = "graphics.texture3d.sampler_coordinates",
     .title = "Sampling volume slices and the W axis",
-    .description = "Binds a real two-slice Texture3D to an explicit custom sampler unit, compares point selection with "
-                   "linear interpolation, and checks Clamp versus Wrap beyond the W coordinate range after moving staged "
-                   "volume ownership and releasing both temporary wrappers.",
+    .description = "Binds a moved two-slice Texture3D to an explicit sampler unit, verifies U/V/W coordinates, compares "
+                   "point and linear filtering within and between authored mip levels, and checks W wrapping.",
     .apis = {"ShaderEffect::SetTexture", "ShaderEffect::SetUniformInt", "ShaderEffect::SetUniformFloat",
+             "ShaderEffect::SetUniformVec3", "SamplerState::Filter", "TextureFilter::LinearMipPoint",
+             "TextureFilter::PointMipLinear",
              "Texture3D::Texture3D", "Texture3D::SetData", "Texture3D::GetData", "GraphicsResource::Dispose",
              "GraphicsDevice::SamplerStates", "SamplerState::PointClamp",
              "SamplerState::LinearClamp", "SamplerState::AddressW", "TextureAddressMode::Wrap"},
@@ -194,7 +265,7 @@ CNA_DEMOS_GAME(VolumeSamplingDemo, {
     .frames = 1,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "GLSL only. Backbuffer pixels establish actual sampling of a single-level Color volume; "
-                    "public GetData checks retained payloads after moves. No direct GPU readback, active-binding move, external-reference "
-                    "rebinding, cross-device assignment, mip filtering, non-Color format or varying X/Y behavior is inferred.",
+    .restrictions = "GLSL only. Backbuffer pixels establish Color-volume coordinate, addressing and explicit-LOD filtering "
+                    "behavior; public GetData checks retained base payloads after moves. No direct GPU readback, active-binding "
+                    "move, external-reference rebinding, cross-device assignment or non-Color sampling is inferred.",
 })

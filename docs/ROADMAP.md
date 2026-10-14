@@ -6490,3 +6490,20 @@ Update callback, and the pointer, clipboard and two screen-saver mutation tests 
 issue was found. Pixel checks were programmatic; no screenshot, listening test, physical input,
 external service session or manual visual-quality inspection was performed. Continue with authored
 Texture3D X/Y coordinate and explicit mip-filtering behavior in the existing sampler demo.
+
+## Focused745-Texture3D-coordinate-and-mip-filtering
+
+`graphics.texture3d.sampler_coordinates` expands its moved volume from2x2x2 single-level storage
+to a4x4x2 complete Color chain. Four exact U/V texel-centre samples retain authored
+White/Yellow/Cyan/Magenta slice-zero row order without disturbing the original red centre. Uniform
+Lime mip1 and Blue mip2 then make explicit LOD1.25 produce exact Lime through `LinearMipPoint` and
+RGB(0,191,64) through `PointMipLinear`. The original compilation, two move-ownership checks, slice
+centres, point/linear Z filtering and Clamp/Wrap W controls remain.
+
+OPENGLES3/Xvfb passes10/10; SOFTWARE retains its declared CustomEffects skip and exact skipped
+CTest. The incremental build uses at most three jobs and is warning-free, metadata remains636/0,
+the five validator and four checkpoint-comparison tests pass, and generated coverage remains
+302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-745-texture3d-*`. Pixel readback was programmatic; no screenshot or manual visual
+inspection was performed. No CNA issue was found. Audit representative typed transfer formats and
+invalid-box atomicity next, without duplicating the complete Texture2D format matrix.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the Texture3D sampler with exact U/V orientation and authored explicit-LOD checks that
+  distinguish point mip selection from linear cross-level interpolation.
 - Completed the 636-demo full rebuild/runtime checkpoint against clean CNA `d23e139de`: all 649
   enabled CTests and both renderer smokes pass with every Complete735 status and failure unchanged.
 - Serialized four CTests that mutate shared pointer, clipboard or screen-saver state so parallel

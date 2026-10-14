@@ -158,6 +158,18 @@ Tested SHA-256: `cna-demos`
 listening test, physical input, external service session or manual visual-quality inspection was
 performed.
 
+Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
+`graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
+slice-zero U/V texel centres preserve White/Yellow/Cyan/Magenta row order, while authored uniform
+Lime mip1 and Blue mip2 at explicit LOD1.25 distinguish `LinearMipPoint` exact selection from
+`PointMipLinear` RGB(0,191,64) interpolation. The original shader compilation, move ownership,
+slice centres, Z filtering and W addressing remain intact. OPENGLES3/Xvfb passes10/10; SOFTWARE
+retains its declared CustomEffects skip and exact skipped CTest. The incremental `-j3` build is
+warning-free, metadata remains636/0, both tool self-test suites pass and generated coverage remains
+302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-745-texture3d-*`. Pixel readback was programmatic; no screenshot or manual visual
+inspection was performed. No CNA issue was found.
+
 Focused **720-GraphicsDevice-Present-region-contract** is staged after Complete719. The existing
 owned-device lifecycle now passes11 controls on both SOFTWARE and OPENGLES3/X11: null/null/zero is
 ordinary Present, a partly outside source region is clipped and accepted only by SOFTWARE among
@@ -1697,13 +1709,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline. Extend the existing
-`graphics.texture3d.sampler_coordinates` workflow with authored varying-X/Y texels and a complete
-Color mip chain. Preserve the existing ownership, slice interpolation and W-address controls; add
-explicit-LOD checks that distinguish `LinearMipPoint` from `PointMipLinear` without adding a new
-demo ID. Build with at most three compile jobs, run the exact demo on SOFTWARE and OPENGLES3, the
-exact CTest, metadata and tool self-tests, regenerate coverage, document the semantic closure, and
-then continue the remaining Texture3D member/behavior audit.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline and focused745 closes
+Texture3D U/V/W coordinate and mip-filter behavior. Continue the remaining Texture3D audit in
+`graphics.texture3d.volume_data`: inspect representative packed/half/raw typed transfers and invalid
+box atomicity against the public source, add only behavior that is materially distinct from the
+already complete Texture2D format workflows, and explicitly disposition redundant format variants.
+Build with at most three compile jobs and keep focused evidence current before moving to the next
+public member/behavior family.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

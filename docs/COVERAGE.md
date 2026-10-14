@@ -679,7 +679,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ShaderEffect::SetUniformMat4Array` -- graphics.shader_effect.uniform_palettes
 - `ShaderEffect::SetUniformVec2` -- graphics.shader_effect.sample_kernel
 - `ShaderEffect::SetUniformVec2Array` -- graphics.shader_effect.sample_kernel
-- `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading, graphics.texture_cube.sampler_ownership
+- `ShaderEffect::SetUniformVec3` -- graphics.shader_effect.toon_shading, graphics.texture3d.sampler_coordinates, graphics.texture_cube.sampler_ownership
 - `ShaderEffect::SetUniformVec3Array` -- graphics.shader_effect.uniform_palettes
 - `ShaderEffect::SetUniformVec4` -- graphics.shader_effect.uniform_palettes
 - `ShaderEffect::ShaderEffect` -- graphics.render_target.multiple_render_targets, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.vertex_displacement
