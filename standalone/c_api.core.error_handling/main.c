@@ -92,7 +92,10 @@ int main(int argc, char** argv)
     memset(&create_info, 0, sizeof(create_info));
     create_info.struct_size = (uint32_t)sizeof(create_info);
     create_info.struct_version = UINT32_C(1);
-    create_info.is_fixed_time_step = CNA_TRUE;
+    /* This demo needs one Update callback per explicit RunOneFrame call. A fixed-step game may
+       legitimately catch up with two updates when the diagnostic checks above take longer than
+       one target interval, making the planned second-callback failure occur in the first call. */
+    create_info.is_fixed_time_step = CNA_FALSE;
     create_info.target_elapsed_time_ticks = INT64_C(166667);
     create_info.callbacks = &callbacks;
     if (!cna_demo_check_result(&demo, cna_game_create(&create_info, &game), "cna_game_create")) {

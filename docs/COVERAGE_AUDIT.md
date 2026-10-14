@@ -2068,3 +2068,21 @@ remains636/0, the five validator and four checkpoint tests pass, and temporary c
 302/329 types,2114/2326 members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-743-cube-mips-*` and `/tmp/checkpoint-743-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
+### Complete744 SpriteBatch, SpriteFont and cube checkpoint
+
+The full636-demo rebuild and runtime checkpoint was made against an isolated clean CNA
+`d23e139de` worktree because the live sibling checkout had unrelated external changes. All649
+enabled CTests pass, with three manual tests disabled. Complete SOFTWARE and OPENGLES3/Xvfb smokes
+execute every ID: SOFTWARE is562 pass/36 expected fail/35 skip/3 manual and GL is594/36/3/3.
+Every Complete735 common status, knownIssue value and failed-assertion multiplicity remains exact;
+the only new ID is the passing stock-effect SpriteBatch scene. Normalized stderr is byte-identical
+on both renderers, and the validator/checkpoint self-tests pass5/5 and4/4.
+
+Generated runtime-backed coverage is636 demos,302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. The two new enum credits are the cube demo's intentional
+`LinearMipPoint` and `PointMipLinear` filters. Full validation exposed and corrected a demo timing
+assumption in C error handling and parallel races among four tests that mutate shared desktop
+state; neither was a CNA defect. Evidence:`build/linux-full/reports/checkpoint-744-complete-*`.
+Pixel checks were programmatic; no screenshot, listening test, physical input, external service
+session or manual visual-quality inspection was performed.

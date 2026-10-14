@@ -6,6 +6,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the 636-demo full rebuild/runtime checkpoint against clean CNA `d23e139de`: all 649
+  enabled CTests and both renderer smokes pass with every Complete735 status and failure unchanged.
+- Serialized four CTests that mutate shared pointer, clipboard or screen-saver state so parallel
+  runs cannot race between mutation, observation and restoration.
+- Made the C API error-handling callback probe variable-step so each explicit RunOneFrame call
+  deterministically reaches one planned Update callback after its diagnostic setup.
 - Extended the cube ShaderEffect scene with authored Lime/Blue mip levels and exact LOD 1.25
   checks distinguishing point mip selection from linear cross-level interpolation.
 - Added direct cube-face orientation checks: four authored +X corner texels are sampled at their

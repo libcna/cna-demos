@@ -70,8 +70,8 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api172. Kinds are163 console,279 game and194 standalone;
 600 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md is runtime-backed by complete735 at635 demos,302/329 XNA
-types,2114/2326 XNA members,167/753 fields and2999/3205 public C ABI routes. Selected semantic
+Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
+types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -81,12 +81,13 @@ totals are `input_gamepad.h`61/63,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete735 exercises all2999 credited C routes and all635 catalog IDs in both full smoke suites.
+Complete744 exercises all2999 credited C routes and all636 catalog IDs in both full smoke suites.
 It absorbs every staged C batch through complete `models.h`, the focused SpriteFont route, the
 deeper XNA member audit through focused716, the Texture2D behavior batches through focused726 and
-the SpriteBatch behavior batches through focused734.
+the SpriteBatch/SpriteFont behavior batches through focused740 plus the ShaderEffect cube batches
+through focused743.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
-Complete735 has36 known-issue demos after focused660 adds
+Complete744 has36 known-issue demos after focused660 adds
 `game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
 `graphics.sprite_batch.begin_end_rules` CNA-DEMOS-ISSUE-082,
 `c_api.gamer.achievement_collection` CNA-DEMOS-ISSUE-077,
@@ -126,28 +127,36 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **735-SpriteBatch-behaviors-full-checkpoint** is the current full-build and full-runtime
-baseline. The documented configure/build and outer-Xvfb `tools/validate.sh` invocation ran against
-clean sibling CNA `d23e139de` (its branch is ahead one test-only commit). Metadata is635/0, all648
-enabled CTests pass in156.99s and three declared manual tests remain disabled. SOFTWARE/X11 reports
-561 pass/36 expected fail/35 skip/3 manual; OPENGLES3/X11 reports593/36/3/3. Both execute all635
-IDs with zero unexpected failures or unexpected passes; all five validator self-tests and all four
-checkpoint-comparison tests pass.
+Complete **744-SpriteBatch-SpriteFont-cube-full-checkpoint** is the current full-build and
+full-runtime baseline. Because the live sibling CNA changed externally to a newer dirty checkout,
+the build was configured against an isolated worktree at `/tmp/cna-demos-cna-d23`, exactly commit
+`d23e139de9e5c15511b6be745de290896a69ee37`. Recreate that worktree or reconfigure only after the
+sibling is clean; the current build tree records the temporary path. The full rebuild used at most
+three compile jobs. Metadata is636/0, all649 enabled CTests pass in187.73s and three declared manual
+tests remain disabled. SOFTWARE/Xvfb reports562 pass/36 expected fail/35 skip/3 manual;
+OPENGLES3/Xvfb reports594/36/3/3. Both execute all636 IDs with zero unexpected failures or
+unexpected passes; all five validator self-tests and all four checkpoint-comparison tests pass.
 
-Every Complete724 status/knownIssue pair remains exact on both renderers. The only added ID is
-`graphics.sprite_batch.cross_device_texture`, which passes on both. After normalizing generated
-temporary-path suffixes and X11 serial/resource numbers, stderr is also byte-for-byte equivalent
-to Complete724 for each renderer. Generated coverage is302/329 types,2114/2326 non-field members,
-167/753 fields and2999/3205 C routes.
+Every Complete735 status/knownIssue pair and failed-assertion multiplicity remains exact on both
+renderers. The only added ID, `graphics.sprite_batch.stock_effect`, passes on both. Intended check
+growth is limited to SpriteBatch layer-depth sorting, SpriteFont draw/transformed text and the GL
+cube sampler; normalized stderr is byte-for-byte equivalent to Complete735 for each renderer.
+Generated coverage is302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C
+routes. During validation, the C error-handling demo was corrected to use variable time so each
+explicit RunOneFrame produces one planned callback, and four demos that mutate global pointer,
+clipboard or screen-saver state were made `RUN_SERIAL`. These were demo/test-harness races, not CNA
+defects. A sandboxed CTest attempt predictably failed storage, localhost-network and X11 mutations;
+the authoritative unrestricted rerun is the passing result above.
 
 Tested SHA-256: `cna-demos`
-`f2500ac83e1f26b2889399525c417004cda7bdf003bb82a161d5e7f44672248c`, `libcna.so`
-`bc3fa4849858d3549b0c7c83f5ca41adf7aec92898bb7173e690eed1f726a6d4`, and `libcna_c_api.so`
-`198a7dc3e7d189fed3c338551c646833676127e23055063f25f23d593d08033b`. Report hashes are SOFTWARE
-`e1843f1bf22f6628dbb7fff247a45861c9b2d8e6abf7e5ee776602d194fd3296` and OPENGLES3
-`23bfba3345431fb4d2ce3a6a55b72476a14ad5eaabe3007ada218c55f4240b3e`. Evidence is archived as
-`build/linux-full/reports/checkpoint-735-complete-*`. No screenshot, listening test, physical
-input, service session or manual visual-quality inspection was performed.
+`fa2475c6a782f3a0f0030edffbf27a7316a99a5cfb9b0b0328f9ced2aa124cf9`, `libcna.so`
+`3827917b8b1219fb659c031039f518680e76670dfb6c69bc891c942049f469ce`, and `libcna_c_api.so`
+`813bf0a2095524183bbaca66f6fbcc1fbdfcfcd5ddd8148c8ec6ce3138ebee24`. Report hashes are SOFTWARE
+`f3fb7bd967ddd8ca5d6794a3681fef199c1866a565206da7b555a13c79380852` and OPENGLES3
+`c246872d21ece0d8cc6af3ecd50dca88dcd9158ebe4de336fb11e6b498d06785`. Evidence is archived as
+`build/linux-full/reports/checkpoint-744-complete-*`. Pixel checks were programmatic; no screenshot,
+listening test, physical input, external service session or manual visual-quality inspection was
+performed.
 
 Focused **720-GraphicsDevice-Present-region-contract** is staged after Complete719. The existing
 owned-device lifecycle now passes11 controls on both SOFTWARE and OPENGLES3/X11: null/null/zero is
@@ -1688,11 +1697,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-743 are
-staged after it, including one new demo. Run a complete636-demo configure/build, all enabled CTests,
-both full smoke suites and generated coverage now. Compare every common status/knownIssue pair and
-normalized stderr with Complete735, archive the new evidence, update all checkpoint counts/hashes,
-and investigate any delta before resuming another behavior family.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline. Extend the existing
+`graphics.texture3d.sampler_coordinates` workflow with authored varying-X/Y texels and a complete
+Color mip chain. Preserve the existing ownership, slice interpolation and W-address controls; add
+explicit-LOD checks that distinguish `LinearMipPoint` from `PointMipLinear` without adding a new
+demo ID. Build with at most three compile jobs, run the exact demo on SOFTWARE and OPENGLES3, the
+exact CTest, metadata and tool self-tests, regenerate coverage, document the semantic closure, and
+then continue the remaining Texture3D member/behavior audit.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

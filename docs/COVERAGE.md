@@ -6,7 +6,7 @@ Generated 2026-10-14 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**635 demos** in 18 categories. Kinds: console 163, game 278, standalone 194. Automation: automated 599, manual 3, smoke-only 33.
+**636 demos** in 18 categories. Kinds: console 163, game 279, standalone 194. Automation: automated 600, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-14 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 23 / 7 / 2 / 1 / 0 | 30 / 0 / 2 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 16 / 0 / 2 / 1 / 0 | 16 / 0 / 2 / 1 / 0 |
-| graphics | 169 | 169 | 0 | 0 | 144 / 18 / 7 / 0 / 0 | 158 / 3 / 8 / 0 / 0 |
+| graphics | 170 | 170 | 0 | 0 | 145 / 18 / 7 / 0 / 0 | 159 / 3 / 8 / 0 / 0 |
 | input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 13 | 12 | 1 | 0 | 12 / 0 / 1 / 0 / 0 | 12 / 0 / 1 / 0 / 0 |
@@ -36,7 +36,7 @@ Generated 2026-10-14 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 - **Types with at least one demo: 302 of 329** (91.8 %).
 - **Methods, properties, constructors and events named by a demo: 2114 of 2326** (90.9 %).
-- Fields and enum values named by a demo: 167 of 753 (reported separately: a demo per enum value is not a goal).
+- Fields and enum values named by a demo: 169 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
@@ -45,7 +45,7 @@ Generated 2026-10-14 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Content` | 7 / 11 | 41 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 51 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 167 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 91 / 99 | 494 / 550 | 115 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 91 / 99 | 494 / 550 | 117 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 164 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 113 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 42 / 48 | 0 / 15 |
@@ -672,7 +672,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ShaderEffect::HasRenderer` -- graphics.shader_effect.clone_state
 - `ShaderEffect::IsEffectValid` -- graphics.shader_effect.clone_state, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.toon_shading
 - `ShaderEffect::SetTexture` -- graphics.shader_effect.sample_kernel, graphics.shader_effect.vertex_displacement, graphics.texture3d.sampler_coordinates, graphics.texture_cube.sampler_ownership
-- `ShaderEffect::SetUniformFloat` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.vertex_displacement, graphics.texture3d.sampler_coordinates
+- `ShaderEffect::SetUniformFloat` -- graphics.shader_effect.sprite_shader, graphics.shader_effect.vertex_displacement, graphics.texture3d.sampler_coordinates, graphics.texture_cube.sampler_ownership
 - `ShaderEffect::SetUniformFloatArray` -- graphics.shader_effect.sample_kernel
 - `ShaderEffect::SetUniformInt` -- graphics.shader_effect.vertex_displacement, graphics.texture3d.sampler_coordinates, graphics.texture_cube.sampler_ownership
 - `ShaderEffect::SetUniformMat4` -- graphics.shader_effect.uniform_palettes

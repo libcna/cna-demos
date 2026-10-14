@@ -6466,3 +6466,27 @@ four checkpoint-comparison tests pass. Temporary coverage remains302/329 types,2
 members,167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-743-cube-mips-*` and
 `/tmp/checkpoint-743-coverage.md`. Pixel readback was programmatic; no screenshot or manual visual
 inspection was performed. No CNA issue was found.
+
+## Complete744-SpriteBatch-SpriteFont-cube-full-checkpoint
+
+The complete636-demo checkpoint absorbs focused736 through743. The full rebuild used at most three
+compile jobs and an isolated worktree at exact clean CNA `d23e139de`, because the live sibling CNA
+had advanced externally and contained unrelated uncommitted work. Metadata is636/0; all649 enabled
+CTests pass in187.73s and the three manual tests remain disabled. SOFTWARE/Xvfb reports
+562 pass/36 expected fail/35 skip/3 manual, while OPENGLES3/Xvfb reports594/36/3/3. Both execute all
+636 IDs with zero unexpected failures or unexpected passes.
+
+Every Complete735 status, knownIssue value and failed-assertion message/multiplicity remains exact.
+The new `graphics.sprite_batch.stock_effect` ID passes on both renderers; only the intended
+SpriteBatch layer-depth, SpriteFont draw/transformed-text and GL cube-sampler check counts grow.
+Normalized stderr is byte-identical to Complete735 on both renderers. The five validator and four
+checkpoint-comparison self-tests pass. Runtime-backed coverage is302/329 types,2114/2326 non-field
+members,169/753 fields and2999/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-744-complete-*`.
+
+The validation also fixed two harness/demo races found by full parallel execution. The C error-
+handling workflow now uses variable time so each explicit RunOneFrame reaches exactly one planned
+Update callback, and the pointer, clipboard and two screen-saver mutation tests run serially. No CNA
+issue was found. Pixel checks were programmatic; no screenshot, listening test, physical input,
+external service session or manual visual-quality inspection was performed. Continue with authored
+Texture3D X/Y coordinate and explicit mip-filtering behavior in the existing sampler demo.
