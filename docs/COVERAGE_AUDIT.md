@@ -2379,3 +2379,19 @@ at3078/3205 rather than treating classification as demonstration.
 This closes the route-inventory decision pass, not CNA behavioral coverage. Hardware success,
 service delivery, platform transitions, external-tool observation and many overload/error/renderer
 combinations remain valid manual or future-environment work.
+
+### PbrEffect image-based-lighting sampling
+
+New `graphics.pbr_effect.image_based_lighting` supplies a complete `ImageBasedLightEXT` through the
+public effect API and observes the rendered result. An incomplete bundle leaves a yellow flat
+ambient term active. A complete bundle stores the exact three texture identities, mip count and
+intensity, then replaces a deliberately red ambient term with green diffuse irradiance. Reducing
+intensity from1 to0.25 changes the exact linear-output green centre from245 to61. With metallic1
+and a scale-one/bias-zero BRDF texel, roughness0 samples the red first mip of the prefiltered cube
+while roughness1 samples its blue last mip.
+
+OPENGLES3/Xvfb passes all8 controls in three runs with identical reported centre values. The
+captured800x480 image was inspected and shows five clean panels matching the programmatic checks.
+SOFTWARE remains a declared capability skip because CNA's documented fallback does not sample PBR
+lighting. This covers actual rigid PBR environment consumption, not environment preprocessing,
+physical-GPU output, HDR values or the parallel skinned shader path.

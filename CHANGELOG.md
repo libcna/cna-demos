@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a focused PbrEffect image-based-lighting scene with actual diffuse irradiance, intensity,
+  BRDF and roughness-mip pixel evidence plus invalid-bundle ambient fallback.
 - Classified all 127 remaining public C ABI routes by semantic disposition: fixed reflection,
   explicit test plumbing, manual/platform/service observation, or the unsupported content-resource
   placeholder; all 3205 routes now have a decision without inflating demonstrated coverage.

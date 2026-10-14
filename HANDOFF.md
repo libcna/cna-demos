@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
-* Mostly complete: 6 (effects and shaders, 41; the C `effects.h` route audit is complete).
+* Mostly complete: 6 (effects and shaders, 42; the C `effects.h` route audit is complete).
 * In progress: 7 (models/glTF, 23), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
@@ -66,10 +66,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-641 project-built catalog demos in18 categories: math78, game33, graphics170, audio23, core3,
+642 project-built catalog demos in18 categories: math78, game33, graphics171, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,279 game and199 standalone;
-605 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,280 game and199 standalone;
+606 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -143,6 +143,8 @@ Focused823 classifies every one of the remaining127 public C routes without infl
 84 fixed type-name helpers are generic reflection,21 explicit test hooks are implementation test
 plumbing,21 production routes require hardware/service/platform observation or have no public
 readback, and `cna_content_manager_create_resource` is the documented unsupported placeholder.
+Focused824 adds the actual `PbrEffect` image-based-lighting draw path: invalid fallback, diffuse
+irradiance, intensity scaling, BRDF lookup and roughness-selected prefiltered cube mips.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -1842,7 +1844,10 @@ classified, while the credited count truthfully remains3078. Do not turn fixed r
 test-only hooks, real-device/service paths or calls without public readback into synthetic coverage.
 Return to the deeper XNA behavior audit and select the next observable gap from ROADMAP/COVERAGE_AUDIT;
 the generated member/type inventories are dispositioned, but comprehensive behavioral coverage is
-not claimed. Build with at most three compile jobs and keep focused evidence current.
+not claimed. Focused824 closes the ROADMAP's rigid `PbrEffect` image-based-lighting gap with actual
+OPENGLES3 pixels. Extend the existing `graphics.model.skinned_pbr` workflow with the same public
+bundle and a distinct sampled-light control next, preserving its existing animation evidence.
+Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -3102,6 +3107,23 @@ coverage pass. Evidence:`/tmp/checkpoint-823-uncovered.txt` and
 `/tmp/checkpoint-823-coverage.md`. No runtime, hardware, service, screenshot or manual visual
 validation is claimed for this documentation-only checkpoint. Continue the deeper XNA public
 member/behavior audit with the next observable gap rather than increasing the route count.
+
+### Focused824-PbrEffect-image-based-lighting
+
+New `graphics.pbr_effect.image_based_lighting` supplies `PbrEffect` with real diffuse irradiance,
+prefiltered-specular cubes and a BRDF LUT. Eight controls prove an incomplete bundle leaves yellow
+flat ambient in charge; a complete bundle round-trips exact identities/count/intensity and replaces
+a deliberately red ambient with green irradiance; intensity0.25 changes the exact green centre from
+245 to61; and metallic roughness0/1 selects the authored red first versus blue final specular mip.
+
+Two OPENGLES3/Xvfb runs and a captured run pass8/8 with identical centre values and no stderr.
+The inspected800x480 capture shows five clean yellow, green, dark-green, red and blue panels.
+SOFTWARE takes the declared capability skip and its exact CTest passes as skipped. The warning-free
+incremental build uses at most three jobs; metadata is642/0, both tool self-test suites pass and
+temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence:`/tmp/checkpoint-824-ibl-*` and `/tmp/checkpoint-824-coverage.md`. No SOFTWARE IBL,
+physical-GPU, acoustic or manual interaction claim is made. Extend the existing skinned-PBR model
+with a sampled environment next so the parallel public effect surface has behavior evidence too.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

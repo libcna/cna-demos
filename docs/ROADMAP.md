@@ -145,7 +145,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (38 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (42 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
   diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
   specular_lights now has eight on both renderers with inspected labeled comparisons.
@@ -161,8 +161,9 @@ a check that all authored colors remain visible and that a blank texture row can
   and lighting together).
 - 🟨 CNA effects: ✅ `PbrEffect` metallic/roughness, ✅ `ColorMatrixEffect` (SOFTWARE), ✅
   `graphics.pbr_effect.texture_maps` (normal map with a Vector4 vertex tangent, emissive map,
-  occlusion map on ambient light), ✅ `SkinnedPbrEffect` (`graphics.model.skinned_pbr`). Remaining:
-  image-based lighting.
+  occlusion map on ambient light), ✅ `graphics.pbr_effect.image_based_lighting` (real irradiance,
+  BRDF lookup, intensity and roughness-selected specular mips on OPENGLES3), ✅ `SkinnedPbrEffect`
+  (`graphics.model.skinned_pbr`). Remaining: sampled image-based lighting on the skinned variant.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
@@ -7876,3 +7877,18 @@ demos are credited. Evidence:`/tmp/checkpoint-823-uncovered.txt` and
 `/tmp/checkpoint-823-coverage.md`. This documentation-only checkpoint claims no new runtime,
 hardware, service, screenshot or visual evidence. Continue the deeper XNA public member/behavior
 audit with the next observable gap.
+
+## Focused824-PbrEffect-image-based-lighting
+
+New `graphics.pbr_effect.image_based_lighting` turns the previously state-only IBL surface into
+actual renderer evidence. Eight controls distinguish incomplete-bundle flat ambient from complete
+environment replacement, exact bundle round-trip, diffuse irradiance, intensity scaling and
+roughness selection of authored first/final prefiltered specular mips through a one-texel BRDF LUT.
+
+OPENGLES3/Xvfb passes8/8 repeatedly with exact yellow, green, dark-green, red and blue panel centres;
+the800x480 capture was inspected and shows the same five clean panels. SOFTWARE takes its declared
+PBR capability skip and the exact CTest passes as skipped. The warning-free incremental build uses
+at most three jobs; metadata is642/0, self-tests pass5/5 and4/4, and temporary coverage remains
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-824-ibl-*` and `/tmp/checkpoint-824-coverage.md`. Extend the existing skinned-PBR
+workflow with sampled environment behavior next.
