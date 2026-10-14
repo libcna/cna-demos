@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // An axis-aligned bounding box around a set of points, and its corners.
+#include <any>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
@@ -27,6 +28,12 @@ namespace
 
         const BoundingBox manual(Vector3(-3.0f, -1.0f, -6.0f), Vector3(2.0f, 4.0f, 2.0f));
         ctx.Check(manual == box, "the (min, max) constructor builds the same box");
+        ctx.Check(box.Equals(manual) && box.Equals(std::any(manual)) && !box.Equals(std::any(17)) &&
+                      !box.Equals(std::any{}) && box.GetHashCode() == manual.GetHashCode(),
+                  "equal boxes agree through typed and boxed equality and hashing");
+        const BoundingBox taller(manual.Min, Vector3(2.0f, 5.0f, 2.0f));
+        ctx.Check(taller != box && !taller.Equals(box),
+                  "changing one maximum coordinate makes two boxes unequal");
     }
 }
 
@@ -36,6 +43,7 @@ CNA_DEMOS_CONSOLE(BoundingBoxFromPoints, {
     .description = "Builds an axis-aligned BoundingBox around vertices with BoundingBox::CreateFromPoints and "
                    "lists its eight corners with GetCorners.",
     .apis = {"BoundingBox::CreateFromPoints", "BoundingBox::GetCorners", "BoundingBox::CornerCount",
-             "BoundingBox::Min", "BoundingBox::Max", "BoundingBox::BoundingBox"},
+             "BoundingBox::Min", "BoundingBox::Max", "BoundingBox::BoundingBox", "BoundingBox::Equals",
+             "BoundingBox::GetHashCode", "BoundingBox::op_Equality", "BoundingBox::op_Inequality"},
     .tags = {"bounds", "aabb", "collision"},
 })

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Bounding spheres from points, from a box, and merged.
+#include <any>
 #include <cmath>
 #include <vector>
 
@@ -29,6 +30,15 @@ namespace
         ctx.Print("CreateFromBoundingBox  = {}", fromBox.ToString());
         ctx.Check(fromBox.Center == Vector3(1.0f, 1.0f, 1.0f), "the centre is the box centre");
         ctx.CheckNear(fromBox.Radius, std::sqrt(3.0f), 1e-5, "the radius is half the box diagonal");
+        const BoundingSphere fromBoxCopy(fromBox.Center, fromBox.Radius);
+        ctx.Check(fromBox.Equals(fromBoxCopy) && fromBox.Equals(std::any(fromBoxCopy)) &&
+                      fromBox == fromBoxCopy && !(fromBox != fromBoxCopy) &&
+                      fromBox.GetHashCode() == fromBoxCopy.GetHashCode() &&
+                      !fromBox.Equals(std::any(17)) && !fromBox.Equals(std::any{}),
+                  "equal spheres agree through typed and boxed equality, operators and hashing");
+        const BoundingSphere expanded(fromBox.Center, fromBox.Radius + 1.0f);
+        ctx.Check(expanded != fromBox && !expanded.Equals(fromBox),
+                  "changing the radius makes two bounding spheres unequal");
 
         // Merging two spheres encloses both.
         const BoundingSphere merged = BoundingSphere::CreateMerged(BoundingSphere(Vector3(-5.0f, 0.0f, 0.0f), 1.0f),
@@ -44,6 +54,8 @@ CNA_DEMOS_CONSOLE(BoundingSphereCreate, {
     .title = "Create bounding spheres",
     .description = "Builds BoundingSphere values with CreateFromPoints, CreateFromBoundingBox and CreateMerged.",
     .apis = {"BoundingSphere::CreateFromPoints", "BoundingSphere::CreateFromBoundingBox",
-             "BoundingSphere::CreateMerged", "BoundingSphere::Center", "BoundingSphere::Radius"},
+             "BoundingSphere::CreateMerged", "BoundingSphere::Center", "BoundingSphere::Radius",
+             "BoundingSphere::Equals", "BoundingSphere::GetHashCode", "BoundingSphere::op_Equality",
+             "BoundingSphere::op_Inequality"},
     .tags = {"bounds", "sphere"},
 })

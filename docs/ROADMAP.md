@@ -4926,3 +4926,17 @@ iteration, while TouchPanel.WindowHandle is platform-specific. Evidence:`/tmp/ch
 and `/tmp/checkpoint-650-coverage.md`. No touch hardware, screenshot or visual inspection was used.
 Audit BoundingBox, BoundingSphere and Ray value identity in their existing geometric workflows
 next, keeping distinct containment/construction behaviors separate.
+
+## Focused651-bounding-volume-and-ray-value-identity
+
+Three existing geometry IDs retain their construction/intersection workflows and add two focused
+controls each. `math.bounding_box.create_from_points` compares generated and manual bounds through
+typed/boxed equality, both operators and equal hashes, rejects wrong/empty boxes and distinguishes
+one changed maximum coordinate. `math.bounding_sphere.create` applies the same contract to its real
+CreateFromBoundingBox result and an expanded radius. `math.ray.intersects` applies it to the actual
++X casting ray and a changed +Y direction. SOFTWARE and OPENGLES3 pass box6/6, sphere9/9 and ray8/8
+with byte-identical per-ID stdout and empty stderr; all three SOFTWARE CTests pass. The build is
+diagnostic-free and temporary coverage moves1545->1557/2326 without changing the628-demo/type/C-
+route counts. Evidence:`/tmp/checkpoint-651-*` and `/tmp/checkpoint-651-coverage.md`. No rendering,
+screenshot or visual inspection was used. Audit BoundingSphere.Contains and CreateFromFrustum next
+with exact geometric outcomes rather than deriving behavior credit from value identity.

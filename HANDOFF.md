@@ -1359,12 +1359,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused650
-projects the628-demo staged catalog to1545/2326 XNA members and closes every meaningful Touch
-value/collection remainder; its seven uncredited members are dispositioned as CLR enumerator
-plumbing or platform-specific TouchPanel.WindowHandle. Audit BoundingBox, BoundingSphere and Ray
-typed/boxed equality, operators and hashes in their existing geometric workflows next. Evaluate
-BoundingSphere.Contains/CreateFromFrustum separately rather than claiming them from value identity.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused651
+projects the628-demo staged catalog to1557/2326 XNA members and closes BoundingBox, BoundingSphere
+and Ray value identity without changing their existing geometric workflows. Audit
+BoundingSphere.Contains and CreateFromFrustum next with exact containment and enclosure outcomes;
+do not infer those behaviors from equality or merely add metadata for an incidental call.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1373,7 +1372,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused649 last observed external `af798b73a4` with eleven uncommitted
+the sibling CNA checkout; focused651 last observed external `af798b73a4` with eleven uncommitted
 renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2640,6 +2639,19 @@ WindowHandle is platform-specific. Evidence:`/tmp/checkpoint-650-*` and
 Production library hashes remain the complete647 values; the runner is
 `8871f4e6840285aef8f543b8b1cb4df9906542ca3e168dbc185ddf64656bb783`. Sibling CNA stayed at
 external dirty `af798b73a4` with eleven observed paths; no CNA source was edited here.
+
+Focused651 extends three existing math IDs without adding a variant. The generated/manual
+BoundingBox, actual CreateFromBoundingBox sphere and real +X casting Ray each gain typed/boxed
+equality, wrong/empty-box rejection, both operators, equal hashes and one changed component that is
+unequal. Their construction, merge and hit-distance controls remain intact. SOFTWARE and
+OPENGLES3 pass box6/6, sphere9/9 and ray8/8 with byte-identical per-ID stdout and empty stderr; all
+three SOFTWARE CTests pass and the build is diagnostic-free. Temporary coverage projects1545->
+1557/2326 without a catalog/type/C-route change. BoundingSphere.Contains/CreateFromFrustum remain
+separate behavior work. Evidence:`/tmp/checkpoint-651-*` and `/tmp/checkpoint-651-coverage.md`. No
+rendering, screenshot or visual inspection was used. Production library hashes remain complete647;
+the runner is `030d05c1b3ff63aacee15d4fd4ff2acd534102a6dd4a89f91b7ff063faf8afdb`.
+Sibling CNA remained external dirty `af798b73a4` with eleven observed paths; no CNA source was
+edited here.
 
 ## 15. Assumptions the next session must know
 
