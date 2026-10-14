@@ -4780,3 +4780,18 @@ without changing the627-demo/type/C-route counts. Evidence:`/tmp/checkpoint-641-
 `/tmp/checkpoint-641-coverage.md`. No listening, screenshot or visual inspection was performed.
 Audit Song equality/hash/operators/text next using caller-created same-file/different-name and
 different-file/same-name records, while preserving the existing property/disposal workflow.
+
+## Focused642-Song-file-identity-and-display-text
+
+`media.song.properties` retains its original caller-created metadata and Dispose/IsDisposed
+workflow and adds two value-contract controls. Three owned Songs distinguish two names for the
+same file from one name shared by two files: typed/System::Object Equals, both operators and equal
+hashes establish file-handle identity, null object comparison is false, and ToString returns each
+record's display name independently. SOFTWARE and OPENGLES3 pass7/7 with byte-identical stdout and
+empty stderr; the focused SOFTWARE CTest passes. Temporary coverage moves the XNA-member projection
+1472->1477/2326 through Song.Equals/GetHashCode/operators/ToString without changing the627-demo/
+type/C-route counts. Neither file is played, so no decoded or audible identity is inferred.
+Evidence:`/tmp/checkpoint-642-song-values-*` and `/tmp/checkpoint-642-coverage.md`. No listening,
+screenshot or visual inspection was performed. Audit Album, Artist, Genre and Playlist value
+contracts next inside the existing real indexed-library workflow; leave borrowed lifetime and
+disposal behavior intact.

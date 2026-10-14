@@ -1342,14 +1342,14 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused641 projects XNA-member coverage to1472/2326 and closes the useful remaining
-AudioCategory and RendererDetail value contracts. Audit `media.song.properties` next for Song's
-uncredited Equals/GetHashCode/operators/ToString contract. Use caller-created songs to distinguish
-the same file under different display names from different files under the same display name,
-preserve the existing disposal/property workflow, and avoid inferring playback or decoded-audio
-identity from metadata equality. Run both requested renderer environments with dummy audio and the
-focused SOFTWARE CTest. Then continue into the related library value contracts where existing
-real indexed objects make them meaningful.
+baseline. Focused642 projects XNA-member coverage to1477/2326 and closes Song's file-handle value
+identity versus display-name diagnostics. Audit the real indexed values in
+`media.media_library.music_index` next: exercise Album, Artist, Genre and Playlist Equals/object
+Equals, operators, hash consistency and ToString using the existing two artists, same-title albums,
+one genre and one playlist. Preserve all relationship/duration controls and borrowed ownership.
+Do not assert different hashes for unequal values, dispose borrowed group objects merely for flag
+coverage, or add reflection-only checks. Run both standalone runner selections, inspect child
+stderr/log deltas, and run the focused SOFTWARE CTest before continuing.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2502,6 +2502,17 @@ pass. Temporary coverage projects1464->1472/2326 with no catalog/type/C-route ch
 `/tmp/checkpoint-641-*` and `/tmp/checkpoint-641-coverage.md`. No listening, screenshot or visual
 inspection was performed. Final build is diagnostic-free against clean CNA `09c3108e5`; no CNA
 source was edited.
+
+Focused642 extends `media.song.properties` from five to seven controls. Three caller-owned Songs
+show that records for the same file compare equal and hash equally despite different display names,
+while different files remain unequal despite sharing a display name. Typed/System::Object Equals,
+both operators, null comparison and each exact ToString value are exercised; the original metadata
+and Dispose/IsDisposed workflow remains. SOFTWARE and OPENGLES3 pass7/7 with byte-identical stdout
+and empty stderr; the focused SOFTWARE CTest passes. Temporary coverage projects1472->1477/2326
+with no catalog/type/C-route change. Neither file is played, so this is no decoded or audible-
+identity claim. Evidence:`/tmp/checkpoint-642-song-values-*` and
+`/tmp/checkpoint-642-coverage.md`. No listening, screenshot or visual inspection was performed.
+Final build is diagnostic-free against clean CNA `09c3108e5`; no CNA source was edited.
 
 ## 15. Assumptions the next session must know
 

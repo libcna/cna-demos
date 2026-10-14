@@ -621,6 +621,17 @@ ISSUE-041 failure; this is filesystem/stream evidence, not visual or GPU validat
 | MediaSource selection, tokens, same-name saves and disposal | Existing collections demo shows source discovery/counts; deeper contracts need source review and coherent fixtures. Convenience overload syntax or collection enumeration alone does not justify new demos. |
 | Platform folder integration | Verified only on Linux/XDG; the demo skips before access if private roots cannot be confirmed. Windows/macOS/device integration requires separate environment validation. |
 
+### Song caller-created value identity
+
+`media.song.properties` now creates three caller-owned records: two display names for the same
+file and the same display name for two different files. Typed and System::Object equality, both
+operators and equal hashes establish that Song identity uses the retained file handle rather than
+the display name; null object comparison is false; and ToString returns each independent display
+name. Its original metadata defaults and explicit Dispose/IsDisposed checks remain. SOFTWARE and
+OPENGLES3 pass7/7 with byte-identical stdout and empty stderr, and the focused SOFTWARE CTest
+passes. This is path/value metadata behavior; neither file is played and no decoded or audible
+identity is inferred. Evidence: `/tmp/checkpoint-642-song-values-*`.
+
 ### MediaLibrary tagged music and shared collection views
 
 | Public behavior | Evidence / decision |
