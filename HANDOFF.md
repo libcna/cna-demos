@@ -177,6 +177,9 @@ Focused838 imports both KHR_materials_specular sampler slots and proves their in
 colour addressing through exact OPENGLES3 and OPENGL33 pixels.
 Focused839 covers imported quantized, renormalized, truncated-extra and zero skin-weight forms with
 exact public vertex readback, structured diagnostics and matching SOFTWARE/OPENGLES3 pixels.
+Focused840 extends the existing material-variant scene from colour-only selection to complete
+effect/buffer/layout/sampler/morph-Tag replacement and exact default restoration, with visible
+texture addressing on both renderers.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3460,6 +3463,28 @@ coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C ro
 `/tmp/checkpoint-839-skin-weights-*` and `/tmp/checkpoint-839-coverage.md`. No CNA defect appeared.
 Audit material-variant state replacement next, especially layout/texture/sampler/tag changes that
 the existing same-layout colour variants do not establish.
+
+### Focused840-complete-material-variant-state
+
+The existing `graphics.model.material_variants` now exercises complete imported part state rather
+than colour-only effect changes. Default red and textured Gold use unlit24-byte colour layouts;
+Ocean uses the60-byte coloured PBR layout. Pointer, stride and type checks prove selection replaces
+the Effect, VertexBuffer and layout-specific `MorphTargetDataEXT` Tag while keeping exactly the
+selected Effect in `ModelMesh::Effects`. Gold's half-weight morph state survives selection away and
+back. Selecting `-1` restores the exact default identities and linear-wrap sampler.
+
+Gold owns a2x1 cyan/gold texture and imports nearest-clamp. At U=1.125 an explicit PointWrap control
+samples cyan while the selected part sampler samples gold; default red, lit-blue Ocean and the
+unmapped black wheels remain visible. SOFTWARE and OPENGLES3 pass22/22 with empty stderr. Both
+final800x480 captures were inspected; SHA-256 is SOFTWARE `5500dc...ea2bc` and OPENGLES3
+`159a4f...c9db`. The first GL run failed only because the previous unlit-blue intensity threshold
+was applied after Ocean deliberately became lit PBR; its blue-dominant pixel established a stale
+demo oracle, which was corrected without a CNA issue. The incremental build uses `-j3`; exact
+SOFTWARE CTest, metadata650/0, validator self-tests5/5 and checkpoint-comparison tests4/4 pass.
+Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence:`/tmp/checkpoint-840-material-variants-*` and `/tmp/checkpoint-840-coverage.md`. Audit the
+remaining model/glTF public behavior and explicit evidence limits next; do not add another
+material-colour variant.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

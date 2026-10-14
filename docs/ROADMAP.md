@@ -239,7 +239,10 @@ a check that all authored colors remain visible and that a blank texture row can
   only), ✅ `graphics.model.clip_interpolation` (STEP/LINEAR/CUBICSPLINE samplers; expected failure,
   CNA-DEMOS-ISSUE-031: all play as LINEAR).
 - ✅ `graphics.model.material_variants` (KHR_materials_variants, run-time import: CNA's content
-  pipeline refuses variants, which the compiled model format cannot carry).
+  pipeline refuses variants, which the compiled model format cannot carry). Its complete-state
+  extension selects an unlit24-byte default, a coloured PBR60-byte Ocean layout and a textured
+  point-clamp Gold state; exact effect/buffer/sampler/morph-Tag replacement and restoration plus
+  wrap/clamp pixels pass on both renderers.
 - ✅ `graphics.model.skinned_pbr` (skinned + metallic-roughness imports as SkinnedPbrEffect).
 - ✅ `graphics.model.mesh_parts`: procedural parts share buffers with distinct index/base-vertex
   ranges and material effects; effect collection deduplication/replacement and both selected
@@ -273,8 +276,7 @@ a check that all authored colors remain visible and that a blank texture row can
   explicit device selection and exact black/green/red PBR reflection pixels (7 checks on both GL paths).
 - ✅ `graphics.model.skin_weight_import`: normalized UBYTE weights, USHORT joints, malformed-sum
   repair, extra influence-set truncation and zero-sum reporting with readback and pixels (21 checks).
-- Remaining: deeper material variants and other
-  member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
+- Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
 ## Phase 8 -- content 🟨 (46 demos; remaining below)
@@ -8189,3 +8191,27 @@ pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields a
 routes. Evidence:`/tmp/checkpoint-839-skin-weights-*` and `/tmp/checkpoint-839-coverage.md`.
 Audit complete material-variant state replacement next; the existing colour-only scene does not by
 itself prove layout, texture, sampler or tag swaps.
+
+## Focused840-complete-material-variant-state
+
+The existing `graphics.model.material_variants` now makes each selected material exercise real
+part-state replacement. The default and textured Gold materials are unlit24-byte colour layouts;
+Ocean is a coloured metallic-roughness material using CNA's60-byte PBR layout. The shared authored
+morph target produces a distinct layout-matched `MorphTargetDataEXT` Tag for every state. Exact
+pointer, stride, effect type and one-entry `ModelMesh::Effects` checks prove Ocean and Gold replace
+the default effect, vertex buffer and Tag, while selecting `-1` restores their original identities
+and the default linear-wrap sampler. A half-weight Gold morph persists only with Gold's own carrier.
+
+Gold owns a two-texel texture and imports nearest-clamp on slot zero. At U=1.125 an explicit Wrap
+control samples cyan and the selected imported Clamp state samples gold; the red default, lit blue
+Ocean and unmapped black wheels remain visible. SOFTWARE and OPENGLES3 pass22/22 with empty stderr.
+Both final800x480 default-state captures were inspected; their SHA-256 values are SOFTWARE
+`5500dc6a21cba1842cffecbd2d2cf5909b4d585d495564db1585a8f0622ea2bc` and OPENGLES3
+`159a4f9882786a4b83db41a1f5334ac43e56baaa0ee89d2434a4df53a4a7c9db`. The first GL run used the
+old unlit-blue threshold for the now-lit Ocean result; its blue-dominant `{49,83,144}` pixel showed
+the demo oracle was stale, so the final check asserts hue rather than unlit intensity. The `-j3`
+build, exact SOFTWARE CTest, metadata650/0 and both validation self-test suites pass. Temporary
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-840-material-variants-*` and `/tmp/checkpoint-840-coverage.md`. No CNA defect
+appeared. Audit the remaining model/glTF public behavior and explicit evidence limits next; do not
+add another material-colour variant.

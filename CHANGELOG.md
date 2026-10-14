@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the glTF material-variant workflow to prove complete part-state replacement: PBR versus
+  unlit vertex layouts, effect collection membership, owned texture, imported sampler and
+  layout-specific morph tags, including exact wrap/clamp pixels and default restoration.
 - Added a glTF skin-weight import workflow covering normalized byte weights, 16-bit joint indices,
   malformed-sum repair, extra influence truncation, zero sums, structured diagnostics and pixels.
 - Added an imported PBR model that preserves independent `KHR_materials_specular` strength and

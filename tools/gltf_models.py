@@ -544,21 +544,32 @@ def slide_rig(path: Path) -> None:
 
 
 def paint_toy(path: Path) -> None:
-    """A toy car: a body and four wheels, unlit. The body's default material is red; the file
-    declares two KHR_materials_variants, "Ocean" (blue body) and "Gold" (gold body). The wheels
-    have no variant mapping, so they stay black whatever variant is chosen."""
+    """A toy car whose variants require complete mesh-part state replacement. The red default
+    and textured gold paint are unlit, while Ocean is metallic-roughness PBR and therefore uses a
+    different vertex layout. A shared morph target gives each layout its own Tag carrier. Gold's
+    out-of-range UV and nearest-clamp sampler make its imported sampler observable. The wheels have
+    no variant mapping, so they stay black whatever variant is chosen."""
+    import io
+    from PIL import Image
     doc = Document()
     body_positions, _c, body_indices = box((-1.2, 0.3, -0.6), (1.2, 0.9, 0.6), (1.0, 1.0, 1.0))
+    body_uvs = [(1.125, .5)] * len(body_positions)
+    body_colours = [(1, 1, 1, 1)] * len(body_positions)
+    lift_deltas = [(0, .15, 0)] * len(body_positions)
     wheel_parts = []
     for x in (-0.75, 0.75):
         for z in (-0.65, 0.65):
             wheel_parts.append(box((x - 0.25, 0.0, z - 0.1), (x + 0.25, 0.5, z + 0.1), (1.0, 1.0, 1.0)))
     doc.gltf["meshes"] = [{"name": "BodyMesh", "primitives": [{
-        "attributes": {"POSITION": doc.accessor(body_positions, "VEC3", minmax=True)},
+        "attributes": {"POSITION": doc.accessor(body_positions, "VEC3", minmax=True),
+                       "TEXCOORD_0": doc.accessor(body_uvs, "VEC2"),
+                       "COLOR_0": doc.accessor(body_colours, "VEC4")},
+        "targets": [{"POSITION": doc.accessor(lift_deltas, "VEC3", minmax=True)}],
         "indices": doc.accessor(body_indices, "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
         "material": 0,
         "extensions": {"KHR_materials_variants": {"mappings": [
-            {"material": 1, "variants": [0]}, {"material": 2, "variants": [1]}]}}}]}]
+            {"material": 1, "variants": [0]}, {"material": 2, "variants": [1]}]}}}],
+        "weights": [0.0], "extras": {"targetNames": ["Lift"]}}]
     positions, indices = [], []
     for wheel_positions, _colours, wheel_indices in wheel_parts:
         base = len(positions)
@@ -570,12 +581,31 @@ def paint_toy(path: Path) -> None:
         "material": 3}]})
     doc.gltf["nodes"] = [{"name": "Body", "mesh": 0}, {"name": "Wheels", "mesh": 1}]
 
-    def paint(name, rgb):
-        return {"name": name, "pbrMetallicRoughness": {"baseColorFactor": [*rgb, 1.0]},
+    gold_image = Image.new("RGBA", (2, 1))
+    gold_image.putdata([(0, 220, 240, 255), (242, 191, 38, 255)])
+    encoded = io.BytesIO()
+    gold_image.save(encoded, format="PNG", optimize=False)
+    doc.gltf["images"] = [{"name": "GoldOrCyan", "mimeType": "image/png",
+                            "bufferView": doc.view(encoded.getvalue())}]
+    doc.gltf["samplers"] = [{"magFilter": 9728, "minFilter": 9728,
+                              "wrapS": 33071, "wrapT": 33071}]
+    doc.gltf["textures"] = [{"source": 0, "sampler": 0}]
+
+    def unlit_paint(name, rgb, texture=None):
+        pbr = {"baseColorFactor": [*rgb, 1.0]}
+        if texture is not None:
+            pbr["baseColorTexture"] = {"index": texture}
+        return {"name": name, "pbrMetallicRoughness": pbr,
                 "extensions": {"KHR_materials_unlit": {}}}
 
-    doc.gltf["materials"] = [paint("Red", (0.85, 0.12, 0.1)), paint("Blue", (0.1, 0.3, 0.9)),
-                             paint("Gold", (0.95, 0.75, 0.15)), paint("Rubber", (0.05, 0.05, 0.05))]
+    doc.gltf["materials"] = [
+        unlit_paint("Red", (0.85, 0.12, 0.1)),
+        {"name": "OceanPbr", "pbrMetallicRoughness": {
+            "baseColorFactor": [0.1, 0.3, 0.9, 1.0], "metallicFactor": 0.0,
+            "roughnessFactor": 0.65}},
+        unlit_paint("GoldTexture", (1.0, 1.0, 1.0), 0),
+        unlit_paint("Rubber", (0.05, 0.05, 0.05)),
+    ]
     doc.gltf["extensions"] = {"KHR_materials_variants": {"variants": [{"name": "Ocean"}, {"name": "Gold"}]}}
     doc.gltf["extensionsUsed"] = ["KHR_materials_unlit", "KHR_materials_variants"]
     doc.gltf["scenes"] = [{"name": "PaintToy", "nodes": [0, 1]}]
