@@ -6147,3 +6147,18 @@ halfway rounding at129 versus128, within tolerance2. The exact SOFTWARE CTest pa
 `/tmp/checkpoint-723-normalized-formats-*`. Pixel readback was programmatic; no screenshot or
 manual visual inspection was performed. Run a complete full checkpoint next so both runtime
 reports absorb the two Texture2D IDs added after Complete719.
+
+## Complete724-Texture2D-formats-full-checkpoint
+
+The documented configure/build and complete outer-Xvfb `tools/validate.sh` run against clean sibling
+CNA `a37bb07bad`. Metadata is634/0, all647 enabled CTests pass in184.31s and three manual tests
+remain disabled. SOFTWARE/X11 is560 pass/36 expected fail/35 skip/3 manual; OPENGLES3/X11 is
+592/36/3/3. Both reports contain all634 IDs with zero unexpected failures or unexpected passes.
+
+Every status/knownIssue pair from the632-ID Complete719 reports remains exact. The only additions
+are `graphics.texture2d.floating_formats` and `graphics.texture2d.normalized_formats`, both passing
+on both renderers. Runtime-backed coverage is302/329 types,2114/2326 non-field members,167/753
+fields and2999/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-724-complete-*`; exact
+hashes are in `HANDOFF.md`. No screenshot, listening test, physical input, service session or
+manual visual-quality inspection was performed. Continue with Texture2D transfer rejection and
+atomicity behavior before moving to another public API family.

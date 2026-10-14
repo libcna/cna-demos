@@ -1889,3 +1889,16 @@ is634 demos,302/329 types,2114/2326 non-field members,167/753 fields and2999/320
 new field credits are SurfaceFormat values exercised by actual textures. Evidence:
 `/tmp/checkpoint-723-normalized-formats-*`. Pixel readback was programmatic; no screenshot or
 manual visual inspection was performed.
+
+### Complete724 runtime checkpoint
+
+The complete documented build and outer-Xvfb validation run against clean sibling CNA
+`a37bb07bad`. Metadata is634/0, all647 enabled CTests pass in184.31s and three manual tests remain
+disabled. SOFTWARE/X11 is560 pass/36 expected fail/35 skip/3 manual; OPENGLES3/X11 is592/36/3/3.
+Both renderer reports contain every catalog ID with zero unexpected failures or unexpected passes.
+
+All632 Complete719 status/knownIssue pairs remain exact on both renderers; the two added Texture2D
+IDs pass on both. Generated runtime-backed coverage is302/329 types,2114/2326 non-field members,
+167/753 fields and2999/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-724-complete-*`. No screenshot, listening test, physical
+input, service session or manual visual-quality inspection was performed.

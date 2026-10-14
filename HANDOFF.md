@@ -70,9 +70,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api172. Kinds are162 console,278 game and194 standalone;
 598 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md retains the complete719 runtime baseline at632 demos and
-302/329 XNA types,2114/2326 XNA members,157/753 fields and2999/3205 public C ABI routes. Focused723
-projects the staged634-demo catalog to the same type/member/C totals and167/753 fields. Selected semantic totals are `input_gamepad.h`61/63,
+Coverage: generated docs/COVERAGE.md is runtime-backed by complete724 at634 demos,302/329 XNA
+types,2114/2326 XNA members,167/753 fields and2999/3205 public C ABI routes. Selected semantic
+totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
@@ -81,11 +81,11 @@ projects the staged634-demo catalog to the same type/member/C totals and167/753 
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete719 exercises all2999 credited C routes and all632 baseline catalog IDs in both full smoke
-suites. It absorbs every staged C batch through complete `models.h`, the focused SpriteFont route,
-and the deeper XNA member audit through focused716.
+Complete724 exercises all2999 credited C routes and all634 catalog IDs in both full smoke suites.
+It absorbs every staged C batch through complete `models.h`, the focused SpriteFont route, the
+deeper XNA member audit through focused716 and the Texture2D behavior batches through focused723.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
-Complete719 has36 known-issue demos after focused660 adds
+Complete724 has36 known-issue demos after focused660 adds
 `game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
 `graphics.sprite_batch.begin_end_rules` CNA-DEMOS-ISSUE-082,
 `c_api.gamer.achievement_collection` CNA-DEMOS-ISSUE-077,
@@ -125,12 +125,17 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **719-type-disposition-full-rebuild** is the current full-build and full-runtime baseline.
-The documented outer-Xvfb `tools/validate.sh` invocation builds the whole project against clean CNA
-`0c83dcc9dc`, validates metadata632/0, passes all645 enabled CTests in296.77s and leaves three
-declared manual tests disabled. SOFTWARE/X11 reports558 pass/36 expected fail/35 skip/3 manual;
-OPENGLES3/X11 reports590/36/3/3. Both execute all632 IDs with zero unexpected failures or
-unexpected passes. All five validator self-tests also pass.
+Complete **724-Texture2D-formats-full-checkpoint** is the current full-build and full-runtime
+baseline. The documented configure/build and outer-Xvfb `tools/validate.sh` invocation run against
+clean sibling CNA `a37bb07bad`. Metadata is634/0, all647 enabled CTests pass in184.31s and three
+declared manual tests remain disabled. SOFTWARE/X11 reports560 pass/36 expected fail/35 skip/3
+manual; OPENGLES3/X11 reports592/36/3/3. Both execute all634 IDs with zero unexpected failures or
+unexpected passes, and all five validator self-tests pass.
+
+Every one of the632 Complete719 IDs retains its exact status/knownIssue pair on both renderers.
+Only `graphics.texture2d.floating_formats` and `graphics.texture2d.normalized_formats` are added,
+and both pass on both renderers. Generated coverage is302/329 types,2114/2326 non-field members,
+167/753 fields and2999/3205 C routes.
 
 Focused718 credits the already substantive `GraphicsDeviceStatus` enum use in
 `graphics.device.owned_lifecycle`; the demo checks Normal status across construction, Present and
@@ -141,12 +146,12 @@ nominal serializer wrappers, CLR collection enumerators or service-created paylo
 missing coherent demos.
 
 Tested SHA-256: `cna-demos`
-`b7d37dca508876e987e3889be05a143de04ce40559d7163583d4ed309637a139`, `libcna.so`
+`9f7426aa7f9fe5bbdf57cffbc352f9334c4133beb0cd69a8ce23929989179d9e`, `libcna.so`
 `bc3fa4849858d3549b0c7c83f5ca41adf7aec92898bb7173e690eed1f726a6d4`, and `libcna_c_api.so`
 `198a7dc3e7d189fed3c338551c646833676127e23055063f25f23d593d08033b`. Report hashes are SOFTWARE
-`7d0195394831aa904a17d55323695ab8d3f1fdf5a9d802cdcce8bfb2103d3e10` and OPENGLES3
-`adcbb352c417ae984966006001c066eed0ffd8901537faf8b2edbe0e19389726`. Evidence is archived as
-`build/linux-full/reports/checkpoint-719-complete-*`. No screenshot, listening test, physical
+`097fb9abfd811556b906452bf7d1fb5ff69d239894a141d95770f6d666494b2a` and OPENGLES3
+`e1b3a34f4a94acc5e0047bc7a6b1739926aedfe25dc424edb55e3b1ed15c95b1`. Evidence is archived as
+`build/linux-full/reports/checkpoint-724-complete-*`. No screenshot, listening test, physical
 input, service session or manual visual-quality inspection was performed.
 
 Focused **720-GraphicsDevice-Present-region-contract** is staged after Complete719. The existing
@@ -1452,13 +1457,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete719 is the current full-build/runtime baseline; focused720 through
-focused723 are staged after it. Run the complete documented build and `tools/validate.sh` checkpoint
-against the current clean sibling CNA source so both renderer reports absorb the new floating and
-normalized Texture2D IDs. Archive the complete results, regenerate `docs/COVERAGE.md`, compare all
-status/known-issue pairs with Complete719, record exact hashes and update the status documents.
-Investigate every unexpected result instead of accepting drift. Then continue the deeper public
-member/behavior audit from the highest-value feasible gap identified by the refreshed coverage.
+HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline. Continue the deeper
+Texture2D behavior audit in `graphics.texture2d.set_data_rectangle`: inspect public invalid-
+rectangle, insufficient logical buffer and disposed-resource contracts, then add only atomicity or
+diagnostic behavior that is not already established by the existing bound-texture rejection and
+guarded source/destination windows. Run both primary renderers and the exact CTest, update coverage
+status without creating a new ID, and push. If source inspection shows no distinct public contract,
+record the disposition and continue to the next highest-value behavior gap.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
