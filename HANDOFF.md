@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-800 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-801 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1786,10 +1786,11 @@ claiming dominant-listener output. AudioEmitter DopplerScale now covers positive
 negative refusal, preservation and restoration in the same workflow. Audit SoundEffect
 MasterVolume now covers exact endpoints, finite/NaN refusal, preservation and process-global
 restoration in `play_parameters`. The same demo now distinguishes Play's finite pitch clamp, pan
-refusal, disposed false return and disposed CreateInstance exception. Audit the remaining
-SoundEffect PCM constructor/helper boundaries next, then continue through the remaining audio
-behavior rows. Do not add isolated getter demos. Build with at most three compile jobs and keep
-focused evidence current.
+refusal, disposed false return and disposed CreateInstance exception. Raw PCM now covers nonzero
+windows, XNA-specific helper arithmetic, invalid-format zeros and range/format exception classes.
+Audit SoundEffect FromStream malformed-input and ownership behavior next, then continue through the
+remaining audio behavior rows. Do not add isolated getter demos. Build with at most three compile
+jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2688,6 +2689,21 @@ stderr. The warning-free incremental build uses at most three jobs; metadata and
 unchanged. Evidence:`/tmp/checkpoint-800-audio-play-boundaries-*`. These are return/refusal/disposal
 observations; no audible clamp, pan or listening result is claimed. Audit remaining SoundEffect PCM
 constructor/helper boundaries next.
+
+### Focused801-SoundEffect-PCM-window-and-helper-contracts
+
+`audio.sound_effect.from_pcm_buffer` grows from four to eight controls. Its generated quarter-second
+mono buffer still plays. A padded source yields the same duration through a nonzero aligned window.
+Static helpers establish nearest-millisecond duration rounding, whole-frame float sizing including
+the 44.1 kHz mono one-second quirk, and zero for nonpositive sizes, rates or channel counts. Invalid
+offsets/partial-frame counts throw ArgumentException; an out-of-range rate and undefined channel
+identity throw ArgumentOutOfRangeException.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass8/8 with byte-identical stdout and empty stderr.
+The warning-free incremental build uses at most three jobs; metadata and coverage remain unchanged.
+Evidence:`/tmp/checkpoint-801-audio-pcm-contracts-*`. No decoded sample equality, audible quality or
+listening result is claimed. Audit SoundEffect FromStream malformed-input and ownership behavior
+next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

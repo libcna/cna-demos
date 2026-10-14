@@ -7494,3 +7494,20 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-800-audio-play-boundaries-*` and `/tmp/checkpoint-800-coverage.md`. These
 are return/refusal/disposal observations; no audible clamp, pan or listening result is claimed.
 Audit remaining SoundEffect PCM constructor/helper boundaries next.
+
+## Focused801-SoundEffect-PCM-window-and-helper-contracts
+
+`audio.sound_effect.from_pcm_buffer` grows from four to eight controls. Its generated quarter-second
+mono buffer still plays. A padded source yields the same duration through a nonzero aligned window.
+Static helpers establish nearest-millisecond duration rounding, whole-frame float sizing including
+the 44.1 kHz mono one-second quirk, and zero for nonpositive sizes, rates or channel counts. Invalid
+offsets/partial-frame counts throw ArgumentException; an out-of-range rate and undefined channel
+identity throw ArgumentOutOfRangeException.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass8/8 with byte-identical stdout and empty stderr.
+The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-801-audio-pcm-contracts-*` and `/tmp/checkpoint-801-coverage.md`. No decoded
+sample equality, audible quality or listening result is claimed. Audit SoundEffect FromStream
+malformed-input and ownership behavior next.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Deepened raw SoundEffect PCM construction with a nonzero aligned window, XNA helper rounding and
+  whole-frame sizing, invalid-format zeros, and distinct range versus format exceptions.
 - Distinguished SoundEffect fire-and-forget behavior for clamped pitch, rejected pan and disposed
   false returns, including the disposed CreateInstance exception contrast.
 - Completed SoundEffect MasterVolume scalar contracts with exact endpoints, finite/NaN refusals,
