@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused691
-projects the632-demo staged catalog to2036/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused692
+projects the632-demo staged catalog to2037/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1373,10 +1373,11 @@ no member gap. GraphicsAdapter, the complete PackedVector namespace, PacketReade
 converter types and the ordinary Content surface now have no member gap. The seven remaining Content
 entries are four nominal .NET attribute-wrapper types and are dispositioned rather than inflated
 into inert wrapper demos. Input now has no member gap. Music-library object, collection and library
-lifetime is covered, including the picture side. Cover VisualizationData's zero-initializing
-constructor next in the existing visualization workflow and explicitly disposition the seven collections'
-CLR GetEnumerator inventory entries rather than adding metadata for C++ range syntax. Then continue
-with the next high-value behavior family,
+lifetime and VisualizationData construction are covered. Media's remaining14 entries are the seven
+collections' generic/non-generic CLR GetEnumerator pairs, dispositioned rather than credited from
+C++ range syntax. Continue with TouchPanel.WindowHandle in the existing real native-window workflow;
+the other six Input.Touch gaps are likewise CLR enumerator machinery. Then continue with the next
+high-value behavior family,
 rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1385,7 +1386,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused691 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused692 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3352,6 +3353,24 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No screenshot or visual
 result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA source was edited.
 Continue with VisualizationData construction and collection-enumerator disposition next.
+
+Focused692 extends `media.media_player.visualization` with the final ordinary Media member. Before
+enabling playback, the workflow requires a newly constructed VisualizationData to expose exactly
+two256-value arrays with every frequency and sample zero. It then retains the established positive
+spectrum check after MediaPlayer fills the same object. The remaining14 Media inventory entries are
+generic/non-generic CLR GetEnumerator pairs for seven collections; actual C++ range iteration is
+already used, so they are explicitly dispositioned without misleading API metadata.
+
+SOFTWARE and OPENGLES3/X11 pass2/2 with byte-identical stdout and empty stderr. The focused SOFTWARE
+CTest passes. Temporary coverage moves2036->2037/2326 at632 demos,301/329 types and156/753 fields;
+Media reaches178/192 ordinary credited members with only the14 dispositioned enumerator artifacts.
+Evidence:`/tmp/checkpoint-692-visualization-*` and `/tmp/checkpoint-692-coverage.md`. Runner SHA-256
+is `49c1c0a40b19a7d4ecaf63bfefe3f73a8488d1a32bc7de898f43fad0f25b1cb4`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Spectrum values were checked
+programmatically; no listening, screenshot or visual-quality result is claimed. Sibling CNA
+remained clean external `f698d0f548`; no CNA source was edited. Continue with
+TouchPanel.WindowHandle next.
 
 ## 15. Assumptions the next session must know
 
