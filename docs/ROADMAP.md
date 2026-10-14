@@ -7624,3 +7624,19 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-808-xact-streaming-parameters-*` and
 `/tmp/checkpoint-808-coverage.md`. This does not measure streaming memory residency or packetized
 I/O. Continue with deeper AudioCategory boundaries.
+
+## Focused809-XACT-category-pause-scope
+
+`audio.xact.categories` grows from twelve to thirteen controls. After disposing its original
+Music/SFX cues, it pauses SFX with no active cue, creates and starts a new SFX cue, and proves that
+the later cue is Playing and not Paused. This matches FACTAudioEngine_Pause's traversal of cues
+active at the call rather than inventing persistent pause state for future playback. Existing
+independent-category and parent/child controls remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass13/13 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-809-xact-category-pause-scope-*` and
+`/tmp/checkpoint-809-coverage.md`. Continue with remaining cue/global-variable name, scope and
+lifecycle boundaries.

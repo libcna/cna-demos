@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-808 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-809 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1798,9 +1798,10 @@ construction/refusal boundaries and CNA's arbitrary-renderer fallback are now co
 existing renderer workflow. AudioEngine disposal now covers its cleared-but-queryable renderer
 list, category/global-variable refusals and safe Update no-op. XACT bank construction now covers
 null/empty/missing inputs and the distinct corrupt-eager/missing-stream stub outcomes. The
-streaming workflow now demonstrates CNA/FNA's ignored offset/packet compatibility inputs. Continue
-with deeper AudioCategory boundaries, then remaining cue/variable behavior. Do not add isolated
-getter demos. Build with at most three compile jobs and keep focused evidence current.
+streaming workflow now demonstrates CNA/FNA's ignored offset/packet compatibility inputs.
+AudioCategory Pause is now proven punctual rather than persistent for later cues. Continue with
+remaining cue/global-variable name, scope and lifecycle boundaries. Do not add isolated getter
+demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2813,6 +2814,19 @@ SOFTWARE and OPENGLES3 dummy-audio direct runs pass6/6 with byte-identical stdou
 The warning-free incremental build uses at most three jobs; metadata and coverage remain unchanged.
 Evidence:`/tmp/checkpoint-808-xact-streaming-parameters-*`. This does not measure streaming memory
 residency or packetized I/O. Continue with deeper AudioCategory boundaries.
+
+### Focused809-XACT-category-pause-scope
+
+`audio.xact.categories` grows from twelve to thirteen controls. After disposing its original
+Music/SFX cues, it pauses SFX with no active cue, creates and starts a new SFX cue, and proves that
+the later cue is Playing and not Paused. This matches FACTAudioEngine_Pause's traversal of cues
+active at the call rather than inventing persistent pause state for future playback. Existing
+independent-category and parent/child controls remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass13/13 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
+unchanged. Evidence:`/tmp/checkpoint-809-xact-category-pause-scope-*`. Continue with remaining
+cue/global-variable name, scope and lifecycle boundaries.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

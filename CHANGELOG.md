@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added an XACT category timing control showing that Pause affects cues active at the call and does
+  not persist onto cues started later.
 - Demonstrated that WaveBank's streaming offset and packet-size inputs are compatibility arguments
   in CNA/FNA's standard file path, including unusual values on a valid bank.
 - Added XACT WaveBank/SoundBank null, empty and missing-input boundaries plus CNA's corrupt-bank

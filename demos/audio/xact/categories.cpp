@@ -69,6 +69,15 @@ namespace
         tune->Dispose();
         beep->Dispose();
 
+        effects.Pause();
+        std::unique_ptr<Cue> later(sounds.GetCue("HighTone"));
+        later->Play();
+        engine.Update();
+        ctx.Check(later->getIsPlayingProperty() && !later->getIsPausedProperty(),
+                  "category Pause affects cues active at that call, not cues started afterward");
+        later->Dispose();
+        effects.Resume();
+
         // A separate authored hierarchy makes Master the parent of SFX. The original
         // independent Music/SFX categories above keep their original fixture and checks.
         AudioEngine hierarchy("assets/xact/hierarchy.xgs");
@@ -109,8 +118,8 @@ namespace
 CNA_DEMOS_CONSOLE(Categories, {
     .id = "audio.xact.categories",
     .title = "XACT categories",
-    .description = "Plays a Music cue and an SFX cue, then turns Music down with AudioCategory::SetVolume, pauses and "
-                   "resumes SFX, and stops Music; contrasts independent groups with authored parent/child control.",
+    .description = "Controls active Music/SFX cues, shows that Pause is punctual rather than persistent for later "
+                   "cues, and contrasts independent groups with authored parent/child category control.",
     .apis = {"AudioEngine::GetCategory", "AudioCategory::Name", "AudioCategory::SetVolume", "AudioCategory::Pause",
              "AudioCategory::Resume", "AudioCategory::Stop", "AudioCategory::op_Equality",
              "AudioCategory::op_Inequality", "AudioCategory::Equals", "AudioCategory::GetHashCode",
