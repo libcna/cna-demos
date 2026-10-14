@@ -4334,3 +4334,18 @@ compilation, diff checks and validation self-tests pass. Staged metadata reaches
 `cnb.h` reaches194/272, completing all62 neutral model-data/model-codec routes. Evidence:
 `checkpoint-612-c-cnb-model-scene-focused-*-direct.*`. No CNJ file, ContentManager, graphics
 device, renderer, animation playback or draw call is claimed. The CNJ compiler result is next.
+
+## Focused613-C-CNB-CNJ-model-compiler-result
+
+`c_api.content.cnb_model_from_cnj` adds all nine filesystem compiler-result routes in18 renderer-
+free controls. A private CNJ Model and two binary sidecars establish exact authored absorbed-file
+order, sorted normalized external references, atomic text transfer and both Count boundaries. The
+compiled graph derives four vertices, six indices, two triangles, one synthetic mesh bone and both
+external material names. Model transfer succeeds once, keeps both dependency lists readable and
+outlives destruction of the result; repeated take, stale access and a missing document are exact
+refusals without partial handles. Both renderer-labelled direct runs are byte-identical with empty
+stderr; strict C99, metadata compilation, diff checks and validation self-tests pass. Staged
+metadata reaches2714/3205 and `cnb.h` reaches203/272. Evidence:
+`checkpoint-613-c-cnb-model-from-cnj-focused-*-direct.*`. No ContentManager, graphics device,
+renderer, draw call or project-built execution is claimed. Neutral SpriteFont data and its codec
+are next.
