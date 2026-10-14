@@ -5919,3 +5919,21 @@ Temporary coverage moves2095->2100/2326 at632 demos,301/329 types and157/753 fie
 GamerServices moves153->158/244. Evidence:`/tmp/checkpoint-710-avatar-renderer-final-*` and
 `/tmp/checkpoint-710-avatar-renderer-final-coverage.md`. No screenshot or manual visual-quality
 assessment is claimed. Continue with AvatarDescription Begin/End retrieval and Changed behavior.
+
+## Focused711-AvatarDescription-local-async-retrieval
+
+The automatic sign-in workflow now sends its real offline SignedInGamer through
+AvatarDescription::BeginGetFromGamer/EndGetFromGamer. The local token completes synchronously,
+calls back once with exact caller state and yields the profile's valid, measured 1021-byte stored
+avatar. This retains the existing sign-in event and roster evidence in one coherent workflow.
+
+Changed remains intentionally uncredited: public production raises it after a service revision or
+a manual Guide avatar-editor save. Directly raising the generic event or calling CNA's internal
+profile setter would test different machinery. The full documented build completed against CNA
+`192c2e629`. Both renderers pass8/8 with byte-identical stdout and empty stderr; the focused
+SOFTWARE CTest, metadata validation and validator self-tests pass. Temporary coverage moves
+2100->2102/2326 at632 demos,301/329 types and157/753 fields; GamerServices moves158->160/244.
+Evidence:`/tmp/checkpoint-711-avatar-description-*` and
+`/tmp/checkpoint-711-avatar-description-coverage.md`. No service avatar, editor interaction,
+Changed event, screenshot or manual visual result is claimed. Continue with Achievement::GetPicture
+using a real offline catalog picture.

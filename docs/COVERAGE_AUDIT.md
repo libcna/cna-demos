@@ -1405,6 +1405,22 @@ and IsDisposed. Protected Dispose(bool) is reached through the public cleanup pa
 separately named; CLR Finalize remains intentionally uncredited as native destruction. The pixel
 readback is programmatic; no screenshot or manual lighting-quality judgment is claimed.
 
+### AvatarDescription local-profile retrieval and Changed disposition
+
+`gamer_services.signed_in_gamer.automatic_sign_in` now passes the real first-Update local player to
+AvatarDescription::BeginGetFromGamer. Its offline token is completed synchronously, invokes one
+callback before Begin returns and preserves exact caller state. EndGetFromGamer returns the same
+profile's valid stored avatar with the fixed 1021-byte description and positive decoded height.
+Both renderers pass8/8 with byte-identical stdout and empty stderr. Evidence:
+`/tmp/checkpoint-711-avatar-description-*`.
+
+This credits the Begin/End pair without implying service-backed deferred execution. Changed remains
+uncredited by design: production raises it after a configured service observes a new avatar revision
+or after the player manually saves in CNA's Guide avatar editor. The ordinary event's public Raise
+and CNA's internal local-profile setter can force a callback, but neither is the public gamer-facing
+behavior under audit. This needs service or manual UI evidence rather than a synthetic automated
+control.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

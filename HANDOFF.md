@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused710
-projects the632-demo staged catalog to2100/2326 XNA members and157/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused711
+projects the632-demo staged catalog to2102/2326 XNA members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1400,8 +1400,9 @@ covered. AchievementCollection's populated indexing/lifetime and actual C++ coll
 now covered; its remaining inventory names are CLR aliases. The same real workflow now covers
 SignedInGamer Begin/End award and achievement-read pairs. Remaining friend, party/headset and
 online-identity paths require service/hardware evidence. AvatarAnimation and AvatarRenderer sampled
-values, lighting and lifetime are now covered. Audit AvatarDescription's Begin/End retrieval and
-Changed behavior next, then continue the next
+values, lighting and lifetime are now covered. AvatarDescription's local-profile Begin/End retrieval
+is covered; Changed requires a service revision or manual avatar-editor save through public APIs and
+remains dispositioned. Audit Achievement::GetPicture next, then continue the next
 high-value behavior family after each batch, rebuilding and running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1410,10 +1411,10 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout. During focused710 it advanced externally through committed `67585f9de`;
-the full documented build completed from those compiled artifacts. Another unrelated SDL-GPU/
-WebGPU worktree edit began after its affected objects had compiled. Recheck that moving checkout
-before every build and do not absorb or revert its uncommitted work.
+the sibling CNA checkout. During focused711 it advanced externally through committed `192c2e629`;
+the full documented build completed from those compiled artifacts. Another unrelated renderer/docs
+worktree edit began after the build. Recheck that moving checkout before every build and do not
+absorb or revert its uncommitted work.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
 `standalone/c_api.graphics.vertex_values` contains the planned seven-check
@@ -3742,6 +3743,28 @@ are `54ef50bab694f57a11a88e232495dec3be4fd03ecdf2b63b11e95da5011d4913` and
 visual-quality result is claimed. Unrelated external SDL-GPU/WebGPU edits appeared only after the
 affected objects had compiled; no CNA source was edited or reverted here. Continue with
 AvatarDescription BeginGetFromGamer/EndGetFromGamer and Changed behavior.
+
+Focused711 extends `gamer_services.signed_in_gamer.automatic_sign_in` without adding a variant ID.
+After the existing first-Update sign-in checks, the real local `SignedInGamer` is passed through
+AvatarDescription::BeginGetFromGamer/EndGetFromGamer. The offline token completes synchronously,
+invokes its callback exactly once, preserves string caller state and returns the profile's valid,
+measured 1021-byte stored avatar. `AvatarDescription::Changed` is intentionally not credited: its
+public production triggers are a service avatar revision or a player's manual save in the Guide
+avatar editor; calling the event's generic public Raise or an internal profile setter would not
+demonstrate that contract.
+
+The full documented build completed after CNA advanced externally to committed `192c2e629`.
+SOFTWARE and OPENGLES3/X11 pass8/8 with byte-identical stdout and empty stderr. The focused SOFTWARE
+CTest, metadata validation and five validator self-tests pass. Temporary coverage moves
+2100->2102/2326 at632 demos,301/329 types and157/753 fields; GamerServices moves158->160/244.
+Evidence:`/tmp/checkpoint-711-avatar-description-*` and
+`/tmp/checkpoint-711-avatar-description-coverage.md`. Runner SHA-256 is
+`7a83f130295cc8fd3161c74e9de397f6c4ab87584306dc67075c21d0c25e6318`; production library hashes
+are `e2c8c9dbd6ef8fb4e611a6f0818ebec6290c34d738930c3e9f1dbb4a55ba9aeb` and
+`471f0a12b6b167262d18ae8fb763f4c10b07e7bc478f72f0bbfd5a2879b193ef`. No service avatar,
+editor interaction, Changed event, screenshot or manual visual result is claimed. Unrelated external
+renderer/docs edits appeared after the build; no CNA source was edited or reverted here. Continue
+with Achievement::GetPicture using a real offline catalog picture.
 
 ## 15. Assumptions the next session must know
 

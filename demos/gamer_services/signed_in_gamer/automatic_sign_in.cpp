@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // GamerServicesComponent and Gamer::SignedInGamers: who is playing, announced by SignedIn.
+#include <any>
 #include <memory>
 #include <optional>
 #include <string>
@@ -8,6 +9,7 @@
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/GamerServicesDemo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
+#include "Microsoft/Xna/Framework/GamerServices/AvatarDescription.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/Gamer.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/GamerServicesDispatcher.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/SignedInEventArgs.hpp"
@@ -73,6 +75,27 @@ namespace
                           "a local offline profile: not signed in to a service, not a guest");
                 ctx.Check(announced_.size() == 1 && announced_.front() == player->getGamertagProperty(),
                           "SignedIn announced the gamer once, in the first Update");
+
+                // Offline profiles still use the public asynchronous pair. CNA completes this
+                // local read synchronously, invokes the callback before Begin returns and carries
+                // the caller's state through the token.
+                int avatarCallbacks = 0;
+                bool avatarStateMatched = false;
+                std::unique_ptr<System::IAsyncResult> avatarRequest(AvatarDescription::BeginGetFromGamer(
+                    player,
+                    [&avatarCallbacks, &avatarStateMatched](System::IAsyncResult& result) {
+                        ++avatarCallbacks;
+                        avatarStateMatched =
+                            std::any_cast<std::string>(result.getAsyncStateProperty()) == "Demo Player avatar";
+                    },
+                    std::string("Demo Player avatar")));
+                ctx.Check(avatarCallbacks == 1 && avatarStateMatched && avatarRequest->getIsCompletedProperty() &&
+                              avatarRequest->getCompletedSynchronouslyProperty(),
+                          "BeginGetFromGamer completes locally, calls back once, and preserves caller state");
+                const AvatarDescription avatar = AvatarDescription::EndGetFromGamer(avatarRequest.get());
+                ctx.Check(avatar.getIsValidProperty() && avatar.getDescriptionProperty().size() == 1021 &&
+                              avatar.getHeightProperty() > 0.0f,
+                          "EndGetFromGamer returns the signed-in local profile's stored avatar");
             }
         }
 
@@ -117,12 +140,13 @@ CNA_DEMOS_GAME(AutomaticSignInDemo, {
     .id = "gamer_services.signed_in_gamer.automatic_sign_in",
     .title = "Signed-in gamers",
     .description = "Adds a GamerServicesComponent; the local profile that signs in when the game starts appears in "
-                   "Gamer::SignedInGamers and raises SignedInGamer::SignedIn in the first Update, with its gamertag, "
-                   "PlayerIndex and offline status.",
+                   "Gamer::SignedInGamers and raises SignedInGamer::SignedIn in the first Update, then its stored "
+                   "avatar is read through AvatarDescription's Begin/End pair.",
     .apis = {"GamerServicesComponent", "GamerServicesDispatcher::IsInitialized", "Gamer::SignedInGamers",
              "SignedInGamer::SignedIn", "SignedInEventArgs::Gamer", "Gamer::Gamertag", "Gamer::DisplayName",
              "SignedInGamer::PlayerIndex", "SignedInGamer::IsSignedInToLive", "SignedInGamer::IsGuest",
-             "SignedInGamerCollection::Item"},
+             "SignedInGamerCollection::Item", "AvatarDescription::BeginGetFromGamer",
+             "AvatarDescription::EndGetFromGamer"},
     .tags = {"gamer-services", "profile", "sign-in", "gamertag", "player"},
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},
