@@ -4379,3 +4379,18 @@ metadata reaches2734/3205 and `cnb.h` reaches223/272. Evidence:
 `checkpoint-615-c-cnb-sound-effect-data-focused-*-direct.*`. No SoundEffect runtime object, audio
 device, playback, audible output or project-built execution is claimed. Song and Video metadata
 documents are next.
+
+## Focused616-C-CNB-Song-and-Video-metadata
+
+`c_api.content.cnb_media_metadata` adds all ten Song/Video routes in20 renderer-free controls. A
+named195-second Song and42-second1280x720 Video produce complete schema-one metadata documents,
+while their media payloads remain one external logical reference each. Specialized stream reads
+match the exact XREF table, text/document short outputs are atomic, repeated Song encoding is
+identical and an empty display name with unknown duration stays valid. Empty Song references,
+oversized video, zero frame rate and unknown soundtrack identity fail. Both schema decoders reject
+the other asset type and stale document access preserves output. Both renderer-labelled direct
+runs are byte-identical with empty stderr; strict C99, metadata compilation, diff checks and
+validation self-tests pass. Staged metadata reaches2744/3205 and `cnb.h` reaches233/272. Evidence:
+`checkpoint-616-c-cnb-media-metadata-focused-*-direct.*`. No media file, ContentManager, decoder,
+audio/video device, playback, rendering or project-built execution is claimed. Curve and
+AnimationClip shared-runtime codecs are next.
