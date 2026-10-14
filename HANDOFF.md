@@ -1738,14 +1738,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-761 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-762 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries, with new ISSUE-087 for omitted disposable shared-table values. Continue with
-the existing `content.custom.cnb_external_references` workflow: add an actual child artifact whose
-file type disagrees with the XREF's declared/expected profile type, verify parent failure before
-publication, then repair the same path and retry through the same manager. Keep cycle handling and
-automatic child compilation explicitly dispositioned unless the public custom-schema contract
-provides them. Build with at most three compile jobs and keep focused evidence current.
+the existing `content.custom.pipeline_components` workflow at the component-selection boundary:
+exercise meaningful ambiguous default selection and incompatible explicit processor/writer
+overrides with exact Selection context, if the public source contract confirms those routes. Keep
+ordinary registry inventory/accessor variants dispositioned and do not add a narrow error-only ID.
+Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1969,6 +1969,23 @@ pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 members,16
 `/tmp/checkpoint-761-coverage.md`. No rendering, screenshot or manual inspection was used, and no
 CNA issue was found. The remaining physical header/table corruption variants are intentionally
 left to CNA's exhaustive container unit tests rather than repeated as demo assertions.
+
+### Focused762 CNB external child-file type and retry
+
+`content.custom.cnb_external_references` grows from nine to eleven controls. Its parent XREF
+correctly declares the enemy-profile type, but the first artifact at that logical child path is a
+complete CNB for a separately registered DecoyProfile. The decoy loader runs, then ContentManager
+refuses the result as the requested SharedProfile; unchanged profile/encounter counters prove the
+parent was not published. Replacing the exact child path with the expected profile lets the same
+manager retry child and parent, returning count4 and health40 without another decoy read.
+
+SOFTWARE and OPENGLES3/Xvfb pass11/11, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses `-j3`; metadata remains636/0, known-issue demos remain40, tool self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 members,169/753 fields and
+2999/3205 C routes. Evidence:`/tmp/checkpoint-762-cnb-xref-*` and
+`/tmp/checkpoint-762-coverage.md`. No rendering, screenshot or manual inspection was used, and no
+CNA issue was found. Runtime XREF traversal is explicitly owned by the custom loader; automatic
+child builds and graph-cycle checks belong to the existing nested-build/dependency-graph workflows.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

@@ -321,7 +321,7 @@ a check that all authored colors remain visible and that a blank texture row can
   parameters retain entries dropped by XnaCompatible (ISSUE-048). Defaulted compiled bounds,
   two contextual warnings, retained valid overrides and refusal of missing inputs are verified. Explicit rebuild/input failure and cleanup are verified; no CLI cache claim.
   ✅ `content.custom.cnb_external_references`: actual XREF tables and owner-mediated child loads,
-  shared/local caches, bad references, missing child retry and unsafe-name rejection.
+  shared/local caches, bad references, missing/wrong-type child repair and unsafe-name rejection.
   ✅ `content.custom.cnb_read_limits`: container inspection, independent writer/reader byte
   budgets, opaque schema count/string limits, compressed expansion when supported, and checksum
   rejection despite valid magic.
@@ -6793,3 +6793,22 @@ or manual inspection was used. No CNA issue was found. The remaining physical he
 corruption variants are intentionally dispositioned to CNA's exhaustive container unit tests.
 Continue `content.custom.cnb_external_references` with an actual child-file type mismatch and
 same-manager repair/retry.
+
+## Focused762-CNB-external-child-file-type-and-retry
+
+`content.custom.cnb_external_references` adds two controls, reaching11. A parent XREF correctly
+declares an enemy-profile type while the referenced path initially holds a complete, valid CNB for
+a separately registered DecoyProfile. The decoy factory runs, but ContentManager refuses its
+result as the requested SharedProfile; profile and encounter counters prove the parent was not
+published. Replacing that exact child path with the expected profile lets the same manager retry
+both child and parent, producing count4 and health40 without another decoy read.
+
+SOFTWARE and OPENGLES3/Xvfb pass11/11, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, known-issue demos remain40,
+validator/checkpoint self-tests pass5/5 and4/4, and generated coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-762-cnb-xref-*` and `/tmp/checkpoint-762-coverage.md`. No rendering, screenshot or
+manual inspection was used. No CNA issue was found. XREF does not automatically traverse or build
+custom schemas, so runtime cycles remain a game-loader concern while nested-build and dependency-
+graph demos cover build-time child scheduling. Continue the native pipeline-components workflow
+with meaningful component-selection ambiguity and explicit incompatibility behavior.

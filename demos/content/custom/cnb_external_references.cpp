@@ -21,13 +21,16 @@ using namespace CNA::Content::Cnb;
 namespace
 {
     struct EnemyProfile { std::string name; std::uint32_t health; };
+    struct DecoyProfile { std::uint32_t marker; };
     using SharedProfile = std::shared_ptr<const EnemyProfile>;
     struct Encounter { std::uint32_t count; SharedProfile enemy; };
     constexpr const char* ProfileName = "CnaDemos.EncounterEnemyProfile";
+    constexpr const char* DecoyName = "CnaDemos.EncounterDecoyProfile";
     constexpr const char* EncounterName = "CnaDemos.Encounter";
     constexpr auto ProfileChunk = MakeChunkId('E', 'N', 'M', 'Y');
+    constexpr auto DecoyChunk = MakeChunkId('N', 'O', 'P', 'E');
     constexpr auto EncounterChunk = MakeChunkId('S', 'P', 'W', 'N');
-    int profileReads = 0, encounterReads = 0;
+    int profileReads = 0, decoyReads = 0, encounterReads = 0;
 
     struct TemporaryContent
     {
@@ -64,6 +67,16 @@ namespace
         writer.WriteToFile((path / (logicalName + ".cnb")).string());
     }
 
+    void WriteDecoy(const std::filesystem::path& path, const std::string& logicalName)
+    {
+        CnbByteWriter data;
+        data.WriteU32(0xDEC0u);
+        CnbWriter writer(CnbAssetTypeIdFromName(DecoyName), 1);
+        writer.SetMetadata(DecoyName, logicalName);
+        writer.AddChunk(DecoyChunk, data.Take(), CnbChunkFlags::Mandatory);
+        writer.WriteToFile((path / (logicalName + ".cnb")).string());
+    }
+
     void ExternalReferences(CnaDemos::DemoContext& ctx)
     {
         // Registrations persist beyond this invocation: neither factory captures stack state.
@@ -77,6 +90,15 @@ namespace
                 input.RequireExhausted();
                 ++profileReads;
                 return std::make_shared<const EnemyProfile>(std::move(profile));
+            });
+        ContentManager::RegisterCnbLoaderEXT<DecoyProfile>(CnbAssetTypeIdFromName(DecoyName), DecoyName,
+            [](const CnbDocument& document, ContentManager&) {
+                document.RequireAsset(CnbAssetTypeIdFromName(DecoyName), 1);
+                auto input = document.OpenChunk(document.RequireSingle(DecoyChunk));
+                const DecoyProfile result{input.ReadU32()};
+                input.RequireExhausted();
+                ++decoyReads;
+                return result;
             });
         ContentManager::RegisterCnbLoaderEXT<Encounter>(CnbAssetTypeIdFromName(EncounterName), EncounterName,
             [](const CnbDocument& document, ContentManager& owner) {
@@ -96,7 +118,7 @@ namespace
                 ++encounterReads;
                 return Encounter{count, std::move(enemy)};
             });
-        profileReads = encounterReads = 0;
+        profileReads = decoyReads = encounterReads = 0;
         const auto path = std::filesystem::temp_directory_path() /
             ("cna-demos-encounter-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
         if (!std::filesystem::create_directory(path)) throw std::runtime_error("Could not create content directory");
@@ -157,6 +179,31 @@ namespace
                   encounterReads == encountersBefore + 1,
                   "the same manager retries the parent after its missing external asset is supplied");
 
+        // The XREF declaration is a schema promise, not proof about the file later found at that
+        // logical name. Put a real, valid asset of another registered type there first. Its loader
+        // runs, but ContentManager refuses to cast that result to SharedProfile and the parent is
+        // never returned or cached. Repairing the exact child path must make both loads retry.
+        WriteDecoy(path, "profiles/impostor");
+        WriteEncounter(path, "rooms/impostor", "profiles/impostor", 4);
+        const int profilesBeforeMismatch = profileReads;
+        const int encountersBeforeMismatch = encounterReads;
+        bool actualTypeRejected = false;
+        try { (void)content.Load<Encounter>("rooms/impostor"); }
+        catch (const ContentLoadException& error)
+        {
+            actualTypeRejected = true;
+            ctx.Print("Actual child type mismatch rejected: {}", error.what());
+        }
+        ctx.Check(actualTypeRejected && decoyReads == 1 && profileReads == profilesBeforeMismatch &&
+                      encounterReads == encountersBeforeMismatch,
+                  "an actual child-file type mismatch prevents publication of the parent");
+        WriteProfile(path, "profiles/impostor");
+        const auto repairedType = content.Load<Encounter>("rooms/impostor");
+        ctx.Check(repairedType.count == 4 && repairedType.enemy->health == 40 && decoyReads == 1 &&
+                      profileReads == profilesBeforeMismatch + 1 &&
+                      encounterReads == encountersBeforeMismatch + 1,
+                  "the same manager retries parent and child after the mismatched file is replaced");
+
         bool unsafe = false;
         try { WriteEncounter(path, "rooms/unsafe", "../outside", 1); }
         catch (const ContentLoadException& error)
@@ -172,7 +219,7 @@ CNA_DEMOS_CONSOLE(ExternalReferences, {
     .id = "content.custom.cnb_external_references",
     .title = "Composite CNB assets and their owning manager (CNAEXT)",
     .description = "Two compiled encounters reference one enemy profile through XREF; their loaders use the owning "
-                   "manager's cache, reject invalid reference indices and schema type declarations, and retry after a missing child is supplied.",
+                   "manager's cache, reject invalid declarations and an actual child-file type mismatch, and retry after repair.",
     .apis = {"ContentManager::RegisterCnbLoaderEXT", "ContentManager::Load",
              "CNA::Content::Cnb::CnbWriter::SetExternalReferences", "CNA::Content::Cnb::CnbWriter::WriteToFile",
              "CNA::Content::Cnb::CnbDocument::ParseFile", "CNA::Content::Cnb::CnbDocument::ExternalReferences",
