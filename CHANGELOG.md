@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a glTF skin-weight import workflow covering normalized byte weights, 16-bit joint indices,
+  malformed-sum repair, extra influence truncation, zero sums, structured diagnostics and pixels.
 - Added an imported PBR model that preserves independent `KHR_materials_specular` strength and
   colour sampler slots and proves their explicit selection with exact reflection pixels.
 - Extended the imported-topology scene to all seven glTF primitive modes with exact point/open-line

@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 24), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 25), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -67,10 +67,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-649 project-built catalog demos in18 categories: math78, game33, graphics178, audio23, core3,
+650 project-built catalog demos in18 categories: math78, game33, graphics179, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,287 game and199 standalone;
-613 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,288 game and199 standalone;
+614 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -175,6 +175,8 @@ Focused837 extends imported_topology to all seven glTF modes plus exact diagnost
 evidence for incomplete LINES/TRIANGLES tails; both renderers pass39/39 with identical captures.
 Focused838 imports both KHR_materials_specular sampler slots and proves their independent strength/
 colour addressing through exact OPENGLES3 and OPENGL33 pixels.
+Focused839 covers imported quantized, renormalized, truncated-extra and zero skin-weight forms with
+exact public vertex readback, structured diagnostics and matching SOFTWARE/OPENGLES3 pixels.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3436,6 +3438,28 @@ pass5/5 and checkpoint-comparison tests pass4/4. Temporary coverage remains302/3
 Evidence:`/tmp/checkpoint-838-specular-samplers-*` and `/tmp/checkpoint-838-coverage.md`. No CNA
 defect appeared. Review the remaining skin-weight/material variants semantically and add only a
 case that exercises a distinct importer or renderer behavior.
+
+### Focused839-imported-skin-weight-policies
+
+New `graphics.model.skin_weight_import` puts four deliberately different glTF weight forms through
+the public loader. Typed `VertexBuffer::GetData` proves normalized UBYTE weights decode as exact
+fractions while USHORT joints preserve the permuted `{3,1,2,0}` order; a malformed0.6 sum and the
+retained set after dropping `JOINTS_1/WEIGHTS_1` both become `{.5,.5,0,0}`; an all-zero set remains
+zero instead of binding to a made-up joint. The public import report contains two four-vertex
+`weights-renormalised` entries with worst deviation0.4, one `influence-sets-dropped` entry with
+worst lost share0.4, and four named zero-weight vertices.
+
+A controlled five-joint translation palette then draws the quantized four-channel, repaired and
+truncated parts at their independently predicted positions, while all bind centres remain clear.
+SOFTWARE and OPENGLES3 pass21/21; their inspected800x480 captures are byte-identical with SHA-256
+`3e3b8d400a8e8c030052300aa562813d4786666e9cc6fac912cf5f914b38eb9a`. The first SOFTWARE run
+failed only because the demo oracle paired the permuted weights with sequential joints; using the
+already-verified `{3,1,2,0}` order fixed it without a CNA change. The incremental build uses `-j3`,
+the exact SOFTWARE CTest passes, metadata is650/0, both tool self-test suites pass and temporary
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-839-skin-weights-*` and `/tmp/checkpoint-839-coverage.md`. No CNA defect appeared.
+Audit material-variant state replacement next, especially layout/texture/sampler/tag changes that
+the existing same-layout colour variants do not establish.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

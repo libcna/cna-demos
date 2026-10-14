@@ -224,7 +224,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (24 demos)
+## Phase 7 -- models, animation, glTF 🟨 (25 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -271,7 +271,9 @@ a check that all authored colors remain visible and that a blank texture row can
   line/triangle-tail diagnostics, plus actual point/line/filled pixels (39 checks).
 - ✅ `graphics.model.specular_sampler_state`: independent imported strength/color sampler slots,
   explicit device selection and exact black/green/red PBR reflection pixels (7 checks on both GL paths).
-- Remaining: more skin weighting/material variants and other
+- ✅ `graphics.model.skin_weight_import`: normalized UBYTE weights, USHORT joints, malformed-sum
+  repair, extra influence-set truncation and zero-sum reporting with readback and pixels (21 checks).
+- Remaining: deeper material variants and other
   member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
@@ -8167,3 +8169,23 @@ suites pass, and temporary coverage remains302/329 types,2114/2326 members,169/7
 3078/3205 C routes. Evidence:`/tmp/checkpoint-838-specular-samplers-*` and
 `/tmp/checkpoint-838-coverage.md`. No CNA defect appeared. Audit the remaining skin-weight/material
 variants for distinct semantics before adding another scene.
+
+## Focused839-imported-skin-weight-policies
+
+New `graphics.model.skin_weight_import` closes the concrete skin-weight importer gaps instead of
+adding another ordinary two-joint animation. Its four-part loose glTF exercises normalized UBYTE
+weights, USHORT joint indices, a malformed0.6 weight sum, a second influence set carrying40% of the
+authored total, and an all-zero set. Public typed vertex-buffer readback verifies the exact decoded,
+renormalized, truncated and zero values. `GltfImportReportEXT` separately identifies eight repaired
+vertices, the one dropped set with worst share0.4 and four zero-weight vertices.
+
+The first three forms also draw through a controlled five-joint palette at exact predicted screen
+positions; their original bind centres remain clear. SOFTWARE and OPENGLES3 pass21/21 and their
+inspected800x480 captures are byte-identical (`3e3b...eb9a`). The first SOFTWARE attempt used the
+right weights with the wrong sequential joint order in the expected-position calculation; the
+rendered result matched the already-read-back permutation, so the oracle was corrected without a
+CNA issue. The `-j3` build, exact SOFTWARE CTest, metadata650/0 and both validation self-test suites
+pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C
+routes. Evidence:`/tmp/checkpoint-839-skin-weights-*` and `/tmp/checkpoint-839-coverage.md`.
+Audit complete material-variant state replacement next; the existing colour-only scene does not by
+itself prove layout, texture, sampler or tag swaps.

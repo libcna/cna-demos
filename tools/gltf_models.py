@@ -435,6 +435,77 @@ def specular_sampler_quad(path: Path) -> None:
     doc.save(path)
 
 
+def skin_weight_forms(path: Path) -> None:
+    """Four skinned quads isolating quantized, renormalized, truncated and zero weights."""
+    import io
+    from PIL import Image
+    doc = Document()
+    half = .04
+    rows = [
+        ("QuantizedFour", -.75, (3, 1, 2, 0), (128, 64, 42, 21), UNSIGNED_SHORT, UNSIGNED_BYTE, True, None),
+        ("Renormalized", -.10, (0, 1, 0, 0), (.3, .3, 0, 0), UNSIGNED_BYTE, FLOAT, False, None),
+        ("DroppedExtra", .55, (0, 1, 0, 0), (.3, .3, 0, 0), UNSIGNED_BYTE, FLOAT, False,
+         ((4, 0, 0, 0), (.4, 0, 0, 0))),
+        ("ZeroWeights", .85, (0, 1, 2, 3), (0, 0, 0, 0), UNSIGNED_BYTE, FLOAT, False, None),
+    ]
+    for index, (name, x, joints, weights, joint_type, weight_type, normalized, extra) in enumerate(rows):
+        positions = [(x - half, -half, .5), (x + half, -half, .5),
+                     (x + half, half, .5), (x - half, half, .5)]
+        joint_accessor = doc.accessor([joints] * 4, "VEC4", joint_type)
+        weight_accessor = doc.accessor([weights] * 4, "VEC4", weight_type)
+        if normalized:
+            doc.gltf["accessors"][weight_accessor]["normalized"] = True
+        attributes = {
+            "POSITION": doc.accessor(positions, "VEC3", minmax=True),
+            "NORMAL": doc.accessor([(0, 0, 1)] * 4, "VEC3"),
+            "TEXCOORD_0": doc.accessor([(.5, .5)] * 4, "VEC2"),
+            "JOINTS_0": joint_accessor,
+            "WEIGHTS_0": weight_accessor,
+        }
+        if extra is not None:
+            attributes["JOINTS_1"] = doc.accessor([extra[0]] * 4, "VEC4", UNSIGNED_BYTE)
+            attributes["WEIGHTS_1"] = doc.accessor([extra[1]] * 4, "VEC4")
+        doc.gltf["meshes"].append({"name": name, "primitives": [{
+            "attributes": attributes,
+            "indices": doc.accessor([0, 1, 2, 0, 2, 3], "SCALAR", UNSIGNED_SHORT,
+                                    ELEMENT_ARRAY_BUFFER),
+            "material": index}]})
+        doc.gltf["nodes"].append({"name": name, "mesh": index, "skin": 0})
+
+    white = Image.new("RGBA", (1, 1), (255, 255, 255, 255))
+    encoded = io.BytesIO()
+    white.save(encoded, format="PNG", optimize=False)
+    doc.gltf["images"] = [{"mimeType": "image/png", "bufferView": doc.view(encoded.getvalue())}]
+    doc.gltf["samplers"] = [{"magFilter": 9728, "minFilter": 9728}]
+    doc.gltf["textures"] = [{"source": 0, "sampler": 0}]
+    colours = [(1, 0, 0), (0, 1, 0), (0, 0, 1), (1, .8, 0)]
+    doc.gltf["materials"] = [{
+        "name": rows[i][0],
+        "pbrMetallicRoughness": {"baseColorFactor": [*colour, 1],
+                                  "baseColorTexture": {"index": 0}},
+        "extensions": {"KHR_materials_unlit": {}}}
+        for i, colour in enumerate(colours)]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+
+    first_joint = len(doc.gltf["nodes"])
+    for i in range(5):
+        node = {"name": f"Joint{i}"}
+        if i < 4:
+            node["children"] = [first_joint + i + 1]
+        doc.gltf["nodes"].append(node)
+    identity = [1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0]
+    doc.gltf["skins"] = [{
+        "name": "WeightFormsRig",
+        "joints": list(range(first_joint, first_joint + 5)),
+        "skeleton": first_joint,
+        "inverseBindMatrices": doc.accessor([identity] * 5, "MAT4", target=None),
+    }]
+    doc.gltf["scenes"] = [{"name": "Skin weight forms",
+                           "nodes": list(range(4)) + [first_joint]}]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
 def slide_rig(path: Path) -> None:
     """Three boxes in rows sliding from x = -2 to 0 to 2 in two seconds, one clip "Slide" with one
     channel per box: the top box's sampler is STEP, the middle one's LINEAR, the bottom one's
@@ -701,5 +772,6 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     paint_toy(assets_root / "models" / "loose_paint_toy.gltf")
     sampler_quad(assets_root / "models" / "loose_sampler_clamp.gltf")
     specular_sampler_quad(assets_root / "models" / "loose_specular_samplers.gltf")
+    skin_weight_forms(assets_root / "models" / "loose_skin_weight_forms.gltf")
     multiple_skins(assets_root / "models" / "loose_multi_skin.gltf")
     imported_topology(assets_root / "models" / "loose_topology.gltf")
