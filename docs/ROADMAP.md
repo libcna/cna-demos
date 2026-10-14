@@ -7135,3 +7135,19 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-778-xnb-compression-*` a
 `/tmp/checkpoint-778-coverage.md`. No rendering, screenshot or manual inspection was used. The
 custom writer audit is closed; extend the existing MediaPlayer queue workflow with a nonzero
 collection start and collection replacement next.
+
+## Focused779-MediaPlayer-collection-replacement
+
+`media.media_player.queue_and_repeat` retains its nine prior controls and adds three. Its first
+playlist now uses the plain `Play(SongCollection)` overload and proves the documented zero start.
+While that queue is live, a second collection with distinct names uses the indexed overload at
+entry one: the active queue is replaced rather than appended, playback starts on Alternate Rising,
+and both ordered queue copies remain valid after the caller's collection and Songs are destroyed.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass12/12 controls with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, validator/checkpoint self-tests pass5/5 and4/4, and generated runtime
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-779-media-queue-*` and `/tmp/checkpoint-779-coverage.md`. No acoustic
+quality, screenshot or manual inspection is claimed. Exercise the shuffle branch with a bounded
+sequence that proves queue membership/index consistency without asserting a random order next.

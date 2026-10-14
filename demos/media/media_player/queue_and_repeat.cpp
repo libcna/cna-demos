@@ -37,7 +37,7 @@ namespace
             const SongCollection playlist({rising.get(), falling.get()});
 
             // Playing a collection fills MediaPlayer's Queue with its own Song records.
-            MediaPlayer::Play(playlist, 0);
+            MediaPlayer::Play(playlist);
             const MediaQueue& startedQueue = MediaPlayer::getQueueProperty();
             queuedRising = startedQueue[0];
             queuedFalling = startedQueue[1];
@@ -85,18 +85,38 @@ namespace
         MediaPlayer::setIsShuffledProperty(true);
         ctx.Check(MediaPlayer::getIsShuffledProperty(), "IsShuffled reads back");
 
-        MediaPlayer::Stop();
-        FrameworkDispatcher::Update();
         MediaPlayer::setIsShuffledProperty(false);
         MediaPlayer::setIsRepeatingProperty(false);
+        {
+            const std::unique_ptr<Song> alternateFalling(
+                Song::FromUri("Alternate Falling", TitleLocation::Path() + "/assets/music/falling.wav"));
+            const std::unique_ptr<Song> alternateRising(
+                Song::FromUri("Alternate Rising", TitleLocation::Path() + "/assets/music/rising.wav"));
+            const SongCollection replacement({alternateFalling.get(), alternateRising.get()});
+
+            MediaPlayer::Play(replacement, 1);
+            ctx.Check(queue.getCountProperty() == 2 && queue[0]->getNameProperty() == "Alternate Falling" &&
+                          queue[1]->getNameProperty() == "Alternate Rising",
+                      "playing a new collection replaces rather than appends to the active queue");
+            ctx.Check(queue.getActiveSongIndexProperty() == 1 && Active() == "Alternate Rising" &&
+                          MediaPlayer::getStateProperty() == MediaState::Playing,
+                      "the indexed collection overload starts playback at the requested nonzero entry");
+        }
+        ctx.Check(queue.getCountProperty() == 2 && queue.getActiveSongIndexProperty() == 1 &&
+                      Active() == "Alternate Rising",
+                  "the replacement queue keeps its copied entries after the caller collection is destroyed");
+
+        MediaPlayer::Stop();
+        FrameworkDispatcher::Update();
     }
 }
 
 CNA_DEMOS_CONSOLE(QueueAndRepeat, {
     .id = "media.media_player.queue_and_repeat",
     .title = "Playlists and repeat",
-    .description = "Plays a SongCollection of two tunes, walks the MediaPlayer Queue with MoveNext and MovePrevious, "
-                   "and shows IsRepeating wrapping around the ends (IsShuffled for random order).",
+    .description = "Plays and replaces SongCollections from default and nonzero starting entries, walks the MediaPlayer "
+                   "Queue with MoveNext and MovePrevious, and shows IsRepeating wrapping around the ends "
+                   "(IsShuffled for random order).",
     .apis = {"MediaPlayer::Play", "MediaPlayer::Queue", "MediaPlayer::MoveNext", "MediaPlayer::MovePrevious",
              "MediaPlayer::IsRepeating", "MediaPlayer::IsShuffled", "MediaQueue::ActiveSong",
              "MediaQueue::ActiveSongIndex", "MediaQueue::Count", "MediaQueue::Item", "SongCollection"},

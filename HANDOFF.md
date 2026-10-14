@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-778 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-779 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1758,8 +1758,9 @@ ContentCompiler inventory/freeze behavior is now covered, and implementation-fac
 active-writer/output plus no-op façade members are dispositioned. The custom writer audit is now
 closed: a default writer honors requested LZX and round-trips through ContentManager, while the
 empty ContentTypeWriterAttribute is dispositioned as a registration marker. Continue the
-MediaPlayer behavior audit with a nonzero collection start and collection replacement, then assess
-queue traversal/transport timing without duplicating the completed C route coverage. Do not add
+MediaPlayer collection overloads now cover the default zero start, live queue replacement and a
+nonzero start whose queue-owned copies outlive caller objects. Exercise bounded shuffled traversal
+next, then assess transport timing without duplicating the completed C route coverage. Do not add
 isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
@@ -2316,6 +2317,22 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-778-xnb-compression-*` a
 `/tmp/checkpoint-778-coverage.md`. No rendering, screenshot or manual inspection was used. The
 custom writer audit is closed; extend the existing MediaPlayer queue workflow with a nonzero
 collection start and collection replacement next.
+
+### Focused779-MediaPlayer-collection-replacement
+
+`media.media_player.queue_and_repeat` retains its nine prior controls and adds three. Its first
+playlist now uses the plain `Play(SongCollection)` overload and proves the documented zero start.
+While that queue is live, a second collection with distinct names uses the indexed overload at
+entry one: the active queue is replaced rather than appended, playback starts on Alternate Rising,
+and both ordered queue copies remain valid after the caller's collection and Songs are destroyed.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass12/12 controls with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, validator/checkpoint self-tests pass5/5 and4/4, and generated runtime
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-779-media-queue-*` and `/tmp/checkpoint-779-coverage.md`. No acoustic
+quality, screenshot or manual inspection is claimed. Exercise the shuffle branch with a bounded
+sequence that proves queue membership/index consistency without asserting a random order next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

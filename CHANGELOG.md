@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the MediaPlayer queue workflow across both collection overloads: the default overload
+  starts at zero, while a replacement collection starts at a requested nonzero entry and remains
+  queue-owned after its caller objects are destroyed.
 - Closed the custom XNB writer policy audit by proving the default writer accepts requested LZX
   compression and that the runtime restores its compressed payload; the empty writer attribute is
   now explicitly dispositioned as a registration marker with no independent behavior.
