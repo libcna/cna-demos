@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-786 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-787 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1766,8 +1766,10 @@ ordering, pre-pump state coalescing, canonical payloads and listener removal. Au
 advancement and the nonrepeating final stop are covered. An isolated `MediaQueue` now covers empty
 construction, Add ownership, active-index selection and Clear reset. Volume now proves both clamp
 boundaries and makes only state-level mute claims. Repeated Pause/Resume/Stop calls in their matching
-states now prove quiet no-op behavior. Add the disabled-visualization zeroing contract next, then
-reassess and close the remaining MediaPlayer behavior decisions. Do not add
+states now prove quiet no-op behavior. Disabled visualization now clears caller buffers before the
+enabled positive-spectrum path; paused-buffer freshness and acoustic/FFT quality are intentionally
+unclaimed. The MediaPlayer audit is closed. Continue with the SoundEffectInstance lifecycle gaps:
+repeated Play plus Pause/Resume while stopped. Do not add
 isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
@@ -2456,6 +2458,25 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-786-media-transport-noops-*` and `/tmp/checkpoint-786-coverage.md`. No
 acoustic quality, callback-thread, screenshot or manual inspection is claimed. Add disabled
 GetVisualizationData zeroing to the existing visualization workflow next.
+
+### Focused787-MediaPlayer-disabled-visualization
+
+`media.media_player.visualization` retains its constructor-zero and positive-spectrum controls and
+adds one disabled-capture contract. Both public 256-value CNAEXT storage arrays are filled with
+nonzero sentinels; with IsVisualizationEnabled explicitly false, public GetVisualizationData
+clears every frequency and sample value. The same object is then used for enabled capture and its
+existing positive aggregate-energy check.
+
+The first implementation attempt tried to mutate the read-only property getters and the compiler
+correctly rejected it; switching setup to CNA's public `freq`/`samp` fields fixed the demo. This was
+not a CNA defect. SOFTWARE and OPENGLES3/Xvfb direct runs pass3/3 controls with empty stderr; their
+printed aggregate energy differs as expected (0.33 versus0.37), while check outcomes match. The
+focused SOFTWARE CTest passes. The warning-free corrected build uses at most three jobs; metadata
+remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains
+302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-787-media-visualization-disabled-*` and `/tmp/checkpoint-787-coverage.md`.
+No paused-buffer freshness, FFT accuracy, acoustic quality, screenshot or manual visual inspection
+is claimed. Continue with repeated and stopped-state SoundEffectInstance lifecycle behavior.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

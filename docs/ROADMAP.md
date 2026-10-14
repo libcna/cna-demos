@@ -7267,3 +7267,22 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-786-media-transport-noops-*` and `/tmp/checkpoint-786-coverage.md`. No
 acoustic quality, callback-thread, screenshot or manual inspection is claimed. Add disabled
 GetVisualizationData zeroing to the existing visualization workflow next.
+
+## Focused787-MediaPlayer-disabled-visualization
+
+`media.media_player.visualization` retains its constructor-zero and positive-spectrum controls and
+adds one disabled-capture contract. Both public 256-value CNAEXT storage arrays are filled with
+nonzero sentinels; with IsVisualizationEnabled explicitly false, public GetVisualizationData
+clears every frequency and sample value. The same object is then used for enabled capture and its
+existing positive aggregate-energy check.
+
+The first implementation attempt tried to mutate the read-only property getters and the compiler
+correctly rejected it; switching setup to CNA's public `freq`/`samp` fields fixed the demo. This was
+not a CNA defect. SOFTWARE and OPENGLES3/Xvfb direct runs pass3/3 controls with empty stderr; their
+printed aggregate energy differs as expected (0.33 versus0.37), while check outcomes match. The
+focused SOFTWARE CTest passes. The warning-free corrected build uses at most three jobs; metadata
+remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains
+302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-787-media-visualization-disabled-*` and `/tmp/checkpoint-787-coverage.md`.
+No paused-buffer freshness, FFT accuracy, acoustic quality, screenshot or manual visual inspection
+is claimed. Continue with repeated and stopped-state SoundEffectInstance lifecycle behavior.

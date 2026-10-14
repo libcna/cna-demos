@@ -41,6 +41,20 @@ namespace
                                 zeroFrequencies && zeroSamples,
                             "new visualization data contains two zero-initialized 256-value buffers");
 
+            data_.freq.fill(0.25f);
+            data_.samp.fill(-0.5f);
+            MediaPlayer::setIsVisualizationEnabledProperty(false);
+            MediaPlayer::GetVisualizationData(data_);
+            const bool disabledFrequenciesZero = std::all_of(data_.getFrequenciesProperty().begin(),
+                                                             data_.getFrequenciesProperty().end(),
+                                                             [](float value) { return value == 0.0f; });
+            const bool disabledSamplesZero = std::all_of(data_.getSamplesProperty().begin(),
+                                                         data_.getSamplesProperty().end(),
+                                                         [](float value) { return value == 0.0f; });
+            Context().Check(!MediaPlayer::getIsVisualizationEnabledProperty() &&
+                                disabledFrequenciesZero && disabledSamplesZero,
+                            "disabled visualization clears both caller buffers instead of exposing stale data");
+
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             pixel_ = std::make_unique<Texture2D>(getGraphicsDeviceProperty(), 1, 1);
@@ -120,8 +134,9 @@ namespace
 CNA_DEMOS_GAME(VisualizationDemo, {
     .id = "media.media_player.visualization",
     .title = "Music visualization",
-    .description = "Checks VisualizationData's two zero-initialized 256-value buffers, then enables "
-                   "MediaPlayer visualization while a tune repeats and draws its spectrum and waveform.",
+    .description = "Checks VisualizationData's two zero-initialized 256-value buffers, proves disabled capture clears "
+                   "caller data, then enables MediaPlayer visualization while a tune repeats and draws its spectrum "
+                   "and waveform.",
     .apis = {"MediaPlayer::IsVisualizationEnabled", "MediaPlayer::GetVisualizationData",
              "VisualizationData::VisualizationData", "VisualizationData::Frequencies",
              "VisualizationData::Samples", "MediaPlayer::IsRepeating"},
