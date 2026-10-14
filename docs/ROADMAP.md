@@ -4320,3 +4320,17 @@ and validation self-tests pass. Staged metadata reaches2685/3205 and `cnb.h` rea
 Evidence:`checkpoint-611-c-cnb-model-morph-focused-*-direct.*`. No document codec, mesh
 deformation, animation player, graphics device, renderer or draw call is claimed. Mesh, skeleton,
 animation, lights and the model codec are next.
+
+## Focused612-C-CNB-model-scene-and-codec
+
+`c_api.content.cnb_model_scene` adds the remaining20 neutral model and codec routes in28 renderer-
+free controls. Its graph owns a child-attached mesh and ordered part list, a two-joint skeleton with
+distinct bind/inverse/root-prefix matrices, a copied two-key scene-node animation and one exact
+directional light. Atomic names, hierarchy/keyframe transfers, derived shape and idempotent
+skeleton removal pass. A complete Model document sizing/build/parse/decode round-trip preserves
+every nested relationship and byte, while a short encoder destination remains untouched. Both
+renderer-labelled direct runs pass byte-identically with empty stderr; strict C99, metadata
+compilation, diff checks and validation self-tests pass. Staged metadata reaches2705/3205 and
+`cnb.h` reaches194/272, completing all62 neutral model-data/model-codec routes. Evidence:
+`checkpoint-612-c-cnb-model-scene-focused-*-direct.*`. No CNJ file, ContentManager, graphics
+device, renderer, animation playback or draw call is claimed. The CNJ compiler result is next.
