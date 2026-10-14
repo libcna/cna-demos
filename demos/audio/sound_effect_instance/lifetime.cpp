@@ -8,6 +8,7 @@
 #include "Microsoft/Xna/Framework/Audio/SoundEffectInstance.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundState.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
+#include "System/InvalidOperationException.hpp"
 #include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
@@ -56,6 +57,23 @@ namespace
         ctx.Check(resumeRefused && passiveCallsSafe && moved.getIsDisposedProperty() &&
                       moved.getStateProperty() == SoundState::Stopped,
                   "disposed Resume refuses resurrection while Pause and Stop remain safe cleanup calls");
+        bool volumeRefused = false;
+        bool pitchRefused = false;
+        bool panRefused = false;
+        try { moved.setVolumeProperty(0.8f); }
+        catch (const System::ObjectDisposedException&) { volumeRefused = true; }
+        try { moved.setPitchProperty(0.5f); }
+        catch (const System::ObjectDisposedException&) { pitchRefused = true; }
+        try { moved.setPanProperty(0.5f); }
+        catch (const System::ObjectDisposedException&) { panRefused = true; }
+        ctx.Check(volumeRefused && pitchRefused && panRefused && moved.getVolumeProperty() == 0.2f &&
+                      moved.getPitchProperty() == 0.0f && moved.getPanProperty() == 0.0f,
+                  "disposed Volume, Pitch and Pan setters refuse writes and preserve their values");
+        bool loopMutationRefused = false;
+        try { moved.setIsLoopedProperty(false); }
+        catch (const System::InvalidOperationException&) { loopMutationRefused = true; }
+        ctx.Check(loopMutationRefused && moved.getIsLoopedProperty(),
+                  "a played-and-disposed instance retains the one-way IsLooped mutation lock");
 
         SoundEffect oldAssignmentOwner(path);
         SoundEffect newAssignmentOwner(path);
@@ -97,12 +115,13 @@ namespace
 CNA_DEMOS_CONSOLE(InstanceLifetime, {
     .id = "audio.sound_effect_instance.lifetime",
     .title = "Sound data ownership and explicit disposal",
-    .description = "Keeps a voice after its temporary C++ sound wrapper is destroyed, exercises move construction "
-                   "and assignment across parent cascades, and checks idempotent and post-dispose transport behavior.",
+    .description = "Keeps a voice after its temporary C++ sound wrapper is destroyed, exercises moves across parent "
+                   "cascades, and checks idempotent post-dispose transport and property behavior.",
     .apis = {"SoundEffect::SoundEffect", "SoundEffect::CreateInstance", "SoundEffect::Dispose", "SoundEffect::IsDisposed",
              "SoundEffectInstance::SoundEffectInstance", "SoundEffectInstance::Play", "SoundEffectInstance::State",
              "SoundEffectInstance::Pause", "SoundEffectInstance::Resume", "SoundEffectInstance::Stop",
-             "SoundEffectInstance::Dispose", "SoundEffectInstance::IsDisposed", "SoundEffectInstance::IsLooped"},
+             "SoundEffectInstance::Dispose", "SoundEffectInstance::IsDisposed", "SoundEffectInstance::IsLooped",
+             "SoundEffectInstance::Volume", "SoundEffectInstance::Pitch", "SoundEffectInstance::Pan"},
     .tags = {"audio", "instance", "lifetime", "ownership", "cnaext"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"sounds/tone_660.wav"},

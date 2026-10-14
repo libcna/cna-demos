@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-794 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-795 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1777,10 +1777,11 @@ DynamicSoundEffectInstance now has an isolated empty-start recovery probe that e
 three canonical BufferNeeded requests, synchronous refill and retained Playing state before the
 continuous workflow. A one-shot subscriber safely removes itself during the first dispatch without
 suppressing the independent refill listener. SoundEffectInstance Volume/Pitch/Pan now cover exact
-inclusive endpoints, NaN refusal and atomic value preservation. Audit their disposed-setter
-behavior in the existing lifetime workflow next, then continue through the remaining audio
-behavior rows. Do not add isolated getter demos. Build with at most three compile jobs and keep
-focused evidence current.
+inclusive endpoints, NaN refusal and atomic value preservation. Their disposed setters now cover
+Volume/Pitch/Pan ObjectDisposed refusal and the played instance's distinct one-way IsLooped lock.
+Audit SoundEffect DistanceScale/DopplerScale/SpeedOfSound mutation, refusal and restoration in the
+existing 3D workflow next, then continue through the remaining audio behavior rows. Do not add
+isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2600,6 +2601,19 @@ stderr. The warning-free incremental build uses at most three jobs; metadata and
 unchanged. Evidence:`/tmp/checkpoint-794-audio-ranges-*`. This is property/range behavior; no mixer
 gain, audible pitch, stereo image or listening result is claimed. Audit disposed property setters
 in the existing lifetime workflow next.
+
+### Focused795-SoundEffectInstance-disposed-properties
+
+`audio.sound_effect_instance.lifetime` grows from eleven to thirteen controls. After a played,
+moved voice is explicitly disposed, Volume, Pitch and Pan each throw ObjectDisposedException and
+retain their prior values. IsLooped instead preserves the one-way lock established by the first
+Play: changing true to false throws InvalidOperationException and leaves true stored. Existing
+transport, move-assignment and parent-cascade behavior remains intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass13/13 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
+unchanged. Evidence:`/tmp/checkpoint-795-audio-disposed-properties-*`. No audible output or
+genuine-XNA runtime execution is claimed. Audit the SoundEffect spatial globals in `apply_3d` next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

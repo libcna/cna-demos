@@ -7402,3 +7402,19 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-794-audio-ranges-*` and `/tmp/checkpoint-794-coverage.md`. This is
 property/range behavior; no mixer gain, audible pitch, stereo image or listening result is claimed.
 Audit disposed property setters in the existing lifetime workflow next.
+
+## Focused795-SoundEffectInstance-disposed-properties
+
+`audio.sound_effect_instance.lifetime` grows from eleven to thirteen controls. After a played,
+moved voice is explicitly disposed, Volume, Pitch and Pan each throw ObjectDisposedException and
+retain their prior values. IsLooped instead preserves the one-way lock established by the first
+Play: changing true to false throws InvalidOperationException and leaves true stored. Existing
+transport, move-assignment and parent-cascade behavior remains intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass13/13 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-795-audio-disposed-properties-*` and `/tmp/checkpoint-795-coverage.md`. No
+audible output or genuine-XNA runtime execution is claimed. Audit the SoundEffect spatial globals in
+`apply_3d` next.
