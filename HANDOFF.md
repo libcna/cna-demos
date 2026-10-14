@@ -66,10 +66,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-634 project-built catalog demos in18 categories: math78, game33, graphics168, audio23, core3,
+635 project-built catalog demos in18 categories: math78, game33, graphics169, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api172. Kinds are162 console,278 game and194 standalone;
-598 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api172. Kinds are163 console,278 game and194 standalone;
+599 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete724 at634 demos,302/329 XNA
 types,2114/2326 XNA members,167/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input_gamepad.h`61/63,
@@ -260,6 +260,22 @@ self-tests and four checkpoint-comparison tests pass, and coverage remains302/32
 `/tmp/checkpoint-730-disposed-texture-*`. No screenshot or manual visual inspection was performed.
 Sibling CNA is clean at test-only `d23e139de`; production library hashes remain exact from
 Complete724.
+
+Focused **731-SpriteBatch-cross-device-texture** adds the635th catalog ID as a focused console
+workflow with two explicitly owned GraphicsDevices. Drawing the second device's Texture2D through
+the first device's SpriteBatch is rejected at Draw with InvalidOperationException; the still-open
+batch then accepts its own texture, End and another Begin/End, proving no foreign command was
+queued. SOFTWARE and OPENGLES3/X11 pass2/2, the exact SOFTWARE CTest passes, metadata is635/0,
+the five validator self-tests and four checkpoint-comparison tests pass, and temporary coverage is
+302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes.
+
+An initial attempt inside the existing Game demo passed the ownership checks but disturbed its
+later OPENGLES3 framebuffer control when the second context was disposed. That host-interference
+variant was removed completely. Both renderer regressions of `begin_end_rules` retain14 controls
+and only the exact ISSUE-082 failure. Evidence:`/tmp/checkpoint-731-cross-device-*` and
+`/tmp/checkpoint-731-begin-end-regression-*`. No screenshot or manual visual inspection was
+performed. Sibling CNA remains clean at test-only `d23e139de`; production library hashes remain
+exact from Complete724.
 
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
@@ -1524,14 +1540,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-730 are
-staged after it. Audit the distinct SpriteBatch cross-device texture refusal. Use the established
-owned-device construction pattern only if it runs stably on both primary renderers, prove refusal
-happens at Draw before queueing, and prove the original batch accepts a same-device texture and End
-afterward. Keep this in the existing `graphics.sprite_batch.begin_end_rules` diagnostic workflow
-if the second device does not obscure the rule. Then continue the SpriteBatch member/behavior audit
-with transformed/rotated pixel bounds or layer-depth text overlap, selecting whichever adds the
-stronger distinct contract without multiplying overload variants.
+HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-731 are
+staged after it. Add a few stable framebuffer controls to the existing
+`graphics.sprite_batch.rotation` workflow that prove the rotation origin/pivot and representative
+90/180/270-degree placement bounds on both primary renderers. Preserve the focused visual concept;
+do not assert every decorative pixel or add overload variants. Then audit the `scale` and
+`sprite_effects` pictures for the next strongest distinct contract, followed by SpriteFont layer
+depth only if it adds observable ordering beyond the existing sprite sorting workflow.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

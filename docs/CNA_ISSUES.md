@@ -121,7 +121,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   renderer payload of a temporary Texture2D whose C++ wrapper leaves scope before End and produces
   exact orange/black framebuffer samples on both renderers. This is programmatic readback; no
   screenshot or visual inspection was performed. Explicitly disposing a texture after it has been
-  queued, renderer End failures, cross-device resources and device teardown are not claimed.
+  queued, renderer End failures and device teardown are not claimed. Cross-device resource
+  rejection is demonstrated separately by `graphics.sprite_batch.cross_device_texture`.
 - **Status:** open and reconfirmed against clean test-only CNA `d23e139de`; runtime marker applies
   to both exercised renderers. No CNA source was modified and no upstream message was sent.
   Current evidence: `/tmp/checkpoint-730-disposed-texture-*`.

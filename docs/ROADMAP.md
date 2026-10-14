@@ -6256,3 +6256,25 @@ four checkpoint-comparison tests pass, and coverage remains302/329 types,2114/23
 members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-730-disposed-texture-*`. No screenshot or manual visual inspection was performed.
 Audit the distinct cross-device texture Draw refusal next.
+
+## Focused731-SpriteBatch-cross-device-texture
+
+New `graphics.sprite_batch.cross_device_texture` isolates a real two-device ownership boundary in
+a console workflow. Drawing the second device's Texture2D through the first device's SpriteBatch
+throws InvalidOperationException at Draw with the ownership diagnostic; the still-open deferred
+batch then accepts its own texture, End and another Begin/End, proving the rejected command never
+entered the queue. This distinct resource rule justifies one focused ID rather than another Draw
+overload variant.
+
+The first attempt embedded the second device in `begin_end_rules`. Its ownership checks passed,
+but disposing that OPENGLES3 context disturbed the Game host's later main-device framebuffer
+control. That host-interference variant was removed completely; the original demo was rerun on
+both renderers and retains14 controls with only its exact ISSUE-082 failure. The new console demo
+avoids a Game-owned third lifecycle and passes2/2 on SOFTWARE and OPENGLES3/X11.
+
+The exact SOFTWARE CTest passes, metadata is635/0, all five validator self-tests and all four
+checkpoint-comparison tests pass. Temporary coverage is635 demos,302/329 types,2114/2326
+non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-731-cross-device-*` and `/tmp/checkpoint-731-begin-end-regression-*`. No screenshot
+or manual visual inspection was performed. Continue with representative rotation/origin
+framebuffer bounds rather than adding overload-only demos.
