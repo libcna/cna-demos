@@ -179,6 +179,22 @@ no generated member gap, and EffectParameterCollection retains only CLR enumerat
 `/tmp/checkpoint-668-*` and `/tmp/checkpoint-668-coverage.md`. No drawing, screenshot or visual
 inspection was used.
 
+### EffectAnnotation typed metadata
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| GetValueBoolean, GetValueInt32, GetValueSingle; ParameterClass, ParameterType | The authored `Material` annotations retain exact true, 42 and 0.35 scalar values and report Scalar with their exact public parameter types. |
+| GetValueVector2, GetValueVector3, GetValueVector4 | Distinct exact component sequences establish each reflected width without relying on implicit truncation. |
+| GetValueMatrix; Semantic, RowCount, ColumnCount | A non-symmetric 4x4 annotation round trips the exact public Matrix value and reports `LOCAL_TO_WORLD`, four rows and four columns. Its column-major storage fixture prevents a transposed implementation from passing. |
+
+Focused669 extends the same ID from25 to28 controls and credits all12 remaining EffectAnnotation
+members, moving temporary coverage1760->1772/2326. Both renderers retain26 passing controls plus
+the two existing ISSUE-034/035 failures, with byte-identical stdout and empty stderr; the known-
+issue SOFTWARE CTest passes. EffectAnnotation has no generated gap; EffectAnnotationCollection
+retains only CLR enumerators. This establishes CNA-constructed annotation storage, not compiler-
+populated FX reflection. Evidence:`/tmp/checkpoint-669-*` and
+`/tmp/checkpoint-669-coverage.md`. No drawing, screenshot or visual inspection was used.
+
 ### ShaderEffect and shader dialect selection
 
 Source review of ShaderEffect.hpp/.cpp, Effect::Clone's public contract, the four GLSL shader/MRT

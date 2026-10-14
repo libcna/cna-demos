@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Read/write typed effect parameters; inspect array shape rather than assuming it.
+#include <bit>
 #include <vector>
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/MathChecks.hpp"
@@ -150,12 +151,60 @@ namespace
             material.getAnnotationsProperty().Add(
                 EffectAnnotation("UiName", "", 1, 1, EffectParameterClass::Object,
                                  EffectParameterType::String, {}, "Surface tint"));
+            material.getAnnotationsProperty().Add(
+                EffectAnnotation("Enabled", "FEATURE_ENABLED", 1, 1, EffectParameterClass::Scalar,
+                                 EffectParameterType::Bool, {std::bit_cast<float>(1)}));
+            material.getAnnotationsProperty().Add(
+                EffectAnnotation("Priority", "SORT_PRIORITY", 1, 1, EffectParameterClass::Scalar,
+                                 EffectParameterType::Int32, {std::bit_cast<float>(42)}));
+            material.getAnnotationsProperty().Add(
+                EffectAnnotation("Roughness", "ROUGHNESS", 1, 1, EffectParameterClass::Scalar,
+                                 EffectParameterType::Single, {0.35f}));
+            material.getAnnotationsProperty().Add(
+                EffectAnnotation("UvScale", "UV_SCALE", 1, 2, EffectParameterClass::Vector,
+                                 EffectParameterType::Single, {2.0f, 0.5f}));
+            material.getAnnotationsProperty().Add(
+                EffectAnnotation("Axis", "AXIS", 1, 3, EffectParameterClass::Vector,
+                                 EffectParameterType::Single, {1.0f, -2.0f, 3.0f}));
+            material.getAnnotationsProperty().Add(
+                EffectAnnotation("Color", "COLOR", 1, 4, EffectParameterClass::Vector,
+                                 EffectParameterType::Single, {0.1f, 0.2f, 0.3f, 0.4f}));
+            const Matrix annotationTransform(1.0f, 2.0f, 3.0f, 4.0f,
+                                             5.0f, 6.0f, 7.0f, 8.0f,
+                                             9.0f, 10.0f, 11.0f, 12.0f,
+                                             13.0f, 14.0f, 15.0f, 16.0f);
+            material.getAnnotationsProperty().Add(
+                EffectAnnotation("Transform", "LOCAL_TO_WORLD", 4, 4, EffectParameterClass::Matrix,
+                                 EffectParameterType::Single,
+                                 {1.0f, 5.0f, 9.0f, 13.0f, 2.0f, 6.0f, 10.0f, 14.0f,
+                                  3.0f, 7.0f, 11.0f, 15.0f, 4.0f, 8.0f, 12.0f, 16.0f}));
             const EffectParameter* tintMember = material.getStructureMembersProperty().GetParameterBySemantic("color0");
             const EffectAnnotation* uiName = material.getAnnotationsProperty()["UiName"];
             ctx.Check(material.getSemanticProperty() == "MATERIAL0" && tintMember != nullptr &&
                           tintMember->getNameProperty() == "Tint" && uiName != nullptr &&
                           uiName->GetValueString() == "Surface tint",
                       "structure members support case-insensitive semantic lookup and attached string annotations");
+            const EffectAnnotation* enabled = material.getAnnotationsProperty()["Enabled"];
+            const EffectAnnotation* priority = material.getAnnotationsProperty()["Priority"];
+            const EffectAnnotation* roughness = material.getAnnotationsProperty()["Roughness"];
+            ctx.Check(enabled->GetValueBoolean() && priority->GetValueInt32() == 42 &&
+                          roughness->GetValueSingle() == 0.35f &&
+                          priority->getParameterClassProperty() == EffectParameterClass::Scalar &&
+                          priority->getParameterTypeProperty() == EffectParameterType::Int32,
+                      "Boolean, Int32 and Single annotations retain scalar values and type metadata");
+            ctx.Check(material.getAnnotationsProperty()["UvScale"]->GetValueVector2() == Vector2(2.0f, 0.5f) &&
+                          material.getAnnotationsProperty()["Axis"]->GetValueVector3() == Vector3(1.0f, -2.0f, 3.0f) &&
+                          material.getAnnotationsProperty()["Color"]->GetValueVector4() ==
+                              Vector4(0.1f, 0.2f, 0.3f, 0.4f),
+                      "Vector2, Vector3 and Vector4 annotations retain exact component widths");
+            const EffectAnnotation* transformAnnotation = material.getAnnotationsProperty()["Transform"];
+            ctx.Check(transformAnnotation->getSemanticProperty() == "LOCAL_TO_WORLD" &&
+                          transformAnnotation->getRowCountProperty() == 4 &&
+                          transformAnnotation->getColumnCountProperty() == 4 &&
+                          transformAnnotation->getParameterClassProperty() == EffectParameterClass::Matrix &&
+                          transformAnnotation->getParameterTypeProperty() == EffectParameterType::Single &&
+                          CnaDemos::MaxDifference(transformAnnotation->GetValueMatrix(), annotationTransform) < 1e-6f,
+                      "matrix annotation reports exact shape/type/semantic metadata and column-major value");
 
             SkinnedEffect skinned(device);
             EffectParameter* bones = skinned.getParametersProperty()["Bones"];
@@ -209,7 +258,13 @@ CNA_DEMOS_GAME(ParameterValues, {
              "EffectParameter::GetValueTexture3D", "EffectParameter::GetValueTextureCube",
              "EffectParameter::Semantic", "EffectParameter::StructureMembers", "EffectParameter::Annotations",
              "EffectParameterCollection::GetParameterBySemantic", "EffectAnnotation::Name",
-             "EffectAnnotation::GetValueString", "EffectAnnotationCollection::Count",
+             "EffectAnnotation::GetValueString", "EffectAnnotation::GetValueBoolean",
+             "EffectAnnotation::GetValueInt32", "EffectAnnotation::GetValueSingle",
+             "EffectAnnotation::GetValueVector2", "EffectAnnotation::GetValueVector3",
+             "EffectAnnotation::GetValueVector4", "EffectAnnotation::GetValueMatrix",
+             "EffectAnnotation::Semantic", "EffectAnnotation::RowCount", "EffectAnnotation::ColumnCount",
+             "EffectAnnotation::ParameterClass", "EffectAnnotation::ParameterType",
+             "EffectAnnotationCollection::Count",
              "EffectAnnotationCollection::Item"},
     .tags = {"effect", "parameters", "reflection", "matrix"},
     .needs = CnaDemos::Need::ThreeD,

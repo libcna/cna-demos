@@ -5238,3 +5238,18 @@ fields. EffectParameter has no generated gap; EffectParameterCollection retains 
 enumerators. Evidence:`/tmp/checkpoint-668-*` and `/tmp/checkpoint-668-coverage.md`. No drawing,
 screenshot or visual inspection was used. Audit the remaining typed EffectAnnotation values and
 metadata next.
+
+## Focused669-typed-effect-annotation-metadata
+
+The existing parameter-values ID grows25->28 controls and closes all12 remaining EffectAnnotation
+members. Exact Boolean/Int32/Single, Vector2/Vector3/Vector4 and non-symmetric Matrix annotation
+values are paired with exact semantic, shape, class and type metadata. The workflow demonstrates
+CNA-constructed reflection storage without claiming compiler-populated FX annotations.
+
+SOFTWARE and OPENGLES3 retain26 passing controls plus the same two ISSUE-034/035 failures, with
+byte-identical stdout and empty stderr; the focused known-issue SOFTWARE CTest passes. Temporary
+coverage moves1760->1772/2326 at629 demos,301/329 types and155/753 fields. EffectAnnotation has no
+generated gap; EffectAnnotationCollection retains only CLR enumerators. Evidence:
+`/tmp/checkpoint-669-*` and `/tmp/checkpoint-669-coverage.md`. No drawing, screenshot or visual
+inspection was used. Audit EffectPass/EffectTechnique names, annotations and collection lookup
+next.
