@@ -4844,3 +4844,21 @@ device enumeration. Evidence:`/tmp/checkpoint-645-media-source-*` and
 `/tmp/checkpoint-645-coverage.md`. No playback, listening, screenshot or visual inspection was
 performed. Audit Picture token/date/value identity and PictureAlbum identity next in the existing
 isolated save_picture workflow while preserving visible ISSUE-041.
+
+## Focused646-picture-token-date-and-value-identity
+
+`media.media_library.save_picture` retains all14 prior controls and the visible ISSUE-041 failure
+and adds six. The immediate Picture Date is bounded by its SavePicture call. PictureCollection and
+PictureAlbumCollection Item expose the two reindexed files and their shared Saved Pictures album.
+The original path token resolves an independent reopened Picture through public
+GetPictureFromToken, while an unknown token returns null and the indexed Date is populated.
+Original/reopened Picture and PictureAlbum pairs exercise path-based typed/System::Object equality,
+operators, equal hashes, exact name text and wrong-type rejection; Preview remains an unequal
+Picture. SOFTWARE and OPENGLES3 each report19 passes plus the one expected ISSUE-041 failure with
+byte-identical stdout and identical two-line TitleContainer INFO stderr; the focused known-issue
+SOFTWARE CTest passes. Temporary coverage moves the XNA-member projection1505->1519/2326 without
+changing the627-demo/type/C-route counts. Borrowed Dispose flags, post-library pointer use and
+visual quality remain unclaimed. Evidence:`/tmp/checkpoint-646-picture-values-*` and
+`/tmp/checkpoint-646-coverage.md`. No screenshot or visual inspection was performed. Run the full
+627-demo integration checkpoint next to absorb focused635 through646, then resume deeper member
+auditing.

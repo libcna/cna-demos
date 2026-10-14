@@ -1342,15 +1342,15 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused645 projects XNA-member coverage to1505/2326 and closes MediaSource.ToString,
-MediaLibrary.MediaSource and the already-executed MediaLibrary.IsDisposed check while fixing demo
-ownership of returned raw source pointers. Audit `media.media_library.save_picture` next. Use the
-existing reopened independent library and Picture token extension to exercise public
-MediaLibrary.GetPictureFromToken, Picture.Date/value identity and PictureAlbum value identity;
-credit PictureCollection/PictureAlbumCollection Item only where directly indexed. Preserve the14
-existing checks and visible ISSUE-041 failure, do not dispose borrowed picture/album views merely
-for flags, and do not claim visual quality. Run both standalone runner selections, compare the
-expected child output/stderr, and run the focused known-issue SOFTWARE CTest before continuing.
+baseline. Focused646 projects XNA-member coverage to1519/2326 and closes Picture token/date/value,
+PictureAlbum value and two picture collection indexer contracts while retaining ISSUE-041. The
+next task is a complete integration checkpoint absorbing focused635 through646: run the documented
+`tools/validate.sh` against the current 627-demo catalog, investigate every delta from complete634,
+regenerate `docs/COVERAGE.md` only through that workflow, archive the complete reports, record
+current clean sibling CNA and final binary hashes, and update all status documents/HANDOFF. Expect
+the GamePad capability demo to move from skip to pass in both smokes, and preserve all35 known-
+issue results including the new SpriteBatch ISSUE-082. After committing/pushing that checkpoint,
+resume the next high-value XNA member/behavior audit without waiting.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2552,6 +2552,20 @@ user library was read. Temporary coverage projects1502->1505/2326 with no catalo
 change. This is CNA's one returned desktop source, not wider device enumeration. Evidence:
 `/tmp/checkpoint-645-media-source-*` and `/tmp/checkpoint-645-coverage.md`. No playback, listening,
 screenshot or visual inspection was performed. Final build is diagnostic-free against clean CNA
+`09c3108e5`; no CNA source was edited.
+
+Focused646 extends the standalone `media.media_library.save_picture` from14 to20 child controls
+while retaining exactly one expected ISSUE-041 failure. The immediate Picture Date falls within
+the SavePicture call; its CNAEXT path token resolves the independent reopened Picture through
+public GetPictureFromToken, while an unknown token returns null. Original/reopened Picture and
+Saved Pictures album objects exercise typed/System::Object equality, operators, equal hashes,
+exact text and wrong-type refusal; Picture/PictureAlbum collection Item exposes both files and
+their shared album. SOFTWARE and OPENGLES3 each produce19 passes plus ISSUE-041 with byte-identical
+stdout and the same two TitleContainer INFO stderr lines; the known-issue SOFTWARE CTest passes.
+Temporary coverage projects1505->1519/2326 with no catalog/type/C-route change. Borrowed Dispose
+flags and post-library pointer use remain intentionally unclaimed. Evidence:
+`/tmp/checkpoint-646-picture-values-*` and `/tmp/checkpoint-646-coverage.md`. No screenshot or visual
+inspection was performed. Both changed targets build diagnostic-free against clean CNA
 `09c3108e5`; no CNA source was edited.
 
 ## 15. Assumptions the next session must know

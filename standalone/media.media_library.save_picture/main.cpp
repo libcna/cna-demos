@@ -127,10 +127,14 @@ namespace
                   "the private library starts with no pictures");
         const auto input = TitleContainer::OpenStream("assets/media/library_panorama.png");
         const auto encoded = ReadImage(*input);
+        const auto saveStarted = std::chrono::system_clock::now();
         Picture* picture = library.SavePicture("Panorama.png", encoded); // borrowed: library owns it
+        const auto saveFinished = std::chrono::system_clock::now();
         if (!check(picture != nullptr, "SavePicture returns the new library-owned picture")) return 1;
         check(picture->getNameProperty() == "Panorama.png" && picture->getWidthProperty() == 640 &&
                   picture->getHeightProperty() == 320, "the saved picture retains its name and decoded dimensions");
+        check(picture->getDateProperty() >= saveStarted && picture->getDateProperty() <= saveFinished,
+              "the saved picture date records this save operation");
         auto* album = picture->getAlbumProperty();
         if (!check(album && album->getNameProperty() == "Saved Pictures" &&
                         album->getParentProperty() == library.getRootPictureAlbumProperty(),
@@ -160,6 +164,40 @@ namespace
         check(reopened.getPicturesProperty()->getCountProperty() == 2 &&
                   reopened.getSavedPicturesProperty()->getCountProperty() == 2,
                   "a new library indexes both files from the private saved-pictures folder");
+        Picture* firstIndexed = (*reopened.getPicturesProperty())[0];
+        Picture* secondIndexed = (*reopened.getPicturesProperty())[1];
+        auto* rootAlbums = reopened.getRootPictureAlbumProperty()->getAlbumsProperty();
+        if (!check(rootAlbums && rootAlbums->getCountProperty() == 1,
+                   "the reopened root exposes the one saved-pictures album")) return 1;
+        PictureAlbum* reopenedSavedAlbum = (*rootAlbums)[0];
+        check(firstIndexed && secondIndexed && firstIndexed != secondIndexed &&
+                  ((firstIndexed->getNameProperty() == "Panorama.png" &&
+                    secondIndexed->getNameProperty() == "Preview.png") ||
+                   (firstIndexed->getNameProperty() == "Preview.png" &&
+                    secondIndexed->getNameProperty() == "Panorama.png")) &&
+                  reopenedSavedAlbum == firstIndexed->getAlbumProperty() &&
+                  reopenedSavedAlbum == secondIndexed->getAlbumProperty(),
+              "picture and album collection indexers expose both saved files under one album");
+        Picture* indexedPicture = reopened.GetPictureFromToken(picture->getTokenEXT());
+        check(indexedPicture != nullptr &&
+                  reopened.GetPictureFromToken(picture->getTokenEXT() + ".missing") == nullptr &&
+                  indexedPicture->getDateProperty().time_since_epoch() !=
+                      std::chrono::system_clock::duration::zero(),
+              "the picture token resolves across libraries and the indexed date is populated");
+        check(picture->Equals(indexedPicture) &&
+                  picture->Equals(static_cast<const System::Object*>(indexedPicture)) &&
+                  *picture == *indexedPicture && *picture != *preview &&
+                  picture->GetHashCode() == indexedPicture->GetHashCode() &&
+                  picture->ToString() == "Panorama.png" &&
+                  !picture->Equals(static_cast<const System::Object*>(reopenedSavedAlbum)),
+              "picture identity uses its saved path while diagnostic text uses its name");
+        check(album->Equals(reopenedSavedAlbum) &&
+                  album->Equals(static_cast<const System::Object*>(reopenedSavedAlbum)) &&
+                  *album == *reopenedSavedAlbum && !(*album != *reopenedSavedAlbum) &&
+                  album->GetHashCode() == reopenedSavedAlbum->GetHashCode() &&
+                  album->ToString() == "Saved Pictures" &&
+                  !album->Equals(static_cast<const System::Object*>(indexedPicture)),
+              "picture-album identity uses its path and rejects another media type");
         ShortReadStream control(encoded.data(), static_cast<SharpRuntime::intcs>(encoded.size()));
         check(ReadImage(control) == encoded && control.calls > 1,
               "the short-read fixture delivers the complete valid PNG across multiple reads");
