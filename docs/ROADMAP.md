@@ -7370,3 +7370,20 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-792-dynamic-recovery-*` and `/tmp/checkpoint-792-coverage.md`. No audible
 continuity, concurrent-producer or real-time callback-cadence claim is made. Audit listener removal
 during BufferNeeded dispatch next.
+
+## Focused793-DynamicSoundEffectInstance-listener-mutation
+
+The focused792 recovery probe in `audio.dynamic_sound_effect_instance.streaming` now registers a
+one-shot observer before its refill listener. The observer removes its own token during the first
+BufferNeeded dispatch. It fires exactly once, the refill listener still receives all three requests,
+and that refill subscription is the only listener left after Update. The existing exact callback
+payload, three-buffer recovery and Playing-state check remains independent.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs each execute13 controls: eleven pass and the two established
+ISSUE-038 disposal-getter checks fail as expected. Their stderr files are empty; only the existing
+continuous-stream callback/submission totals differ. The warning-free incremental build uses at
+most three jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated
+runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C
+routes. Evidence:`/tmp/checkpoint-793-dynamic-listeners-*` and `/tmp/checkpoint-793-coverage.md`. No
+concurrent dispatch, callback-thread or audible continuity claim is made. Audit SoundEffectInstance
+Volume/Pitch/Pan NaN and exact boundary preservation next.

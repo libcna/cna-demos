@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-792 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-793 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1775,9 +1775,10 @@ covered. SoundBank GetCue/PlayCue now distinguish empty and unknown names with s
 Both routes also refuse valid names after Dispose while repeated cleanup stays idempotent.
 DynamicSoundEffectInstance now has an isolated empty-start recovery probe that establishes exactly
 three canonical BufferNeeded requests, synchronous refill and retained Playing state before the
-continuous workflow. Continue with meaningful BufferNeeded listener mutation behavior in that
-probe; then audit the remaining audio behavior rows. Do not add isolated getter demos. Build with
-at most three compile jobs and keep focused evidence current.
+continuous workflow. A one-shot subscriber safely removes itself during the first dispatch without
+suppressing the independent refill listener. Audit SoundEffectInstance Volume/Pitch/Pan NaN and
+boundary preservation next, then continue through the remaining audio behavior rows. Do not add
+isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2568,6 +2569,22 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-792-dynamic-recovery-*` and `/tmp/checkpoint-792-coverage.md`. No audible
 continuity, concurrent-producer or real-time callback-cadence claim is made. Audit listener removal
 during BufferNeeded dispatch next.
+
+### Focused793-DynamicSoundEffectInstance-listener-mutation
+
+The focused792 recovery probe in `audio.dynamic_sound_effect_instance.streaming` now registers a
+one-shot observer before its refill listener. The observer removes its own token during the first
+BufferNeeded dispatch. It fires exactly once, the refill listener still receives all three requests,
+and that refill subscription is the only listener left after Update. The existing exact callback
+payload, three-buffer recovery and Playing-state check remains independent.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs each execute13 controls: eleven pass and the two established
+ISSUE-038 disposal-getter checks fail as expected. Their stderr files are empty; only the existing
+continuous-stream callback/submission totals differ. The warning-free incremental build uses at
+most three jobs; metadata remains636/0 and coverage is unchanged. Evidence:
+`/tmp/checkpoint-793-dynamic-listeners-*`. No concurrent dispatch, callback-thread or audible
+continuity claim is made. Audit SoundEffectInstance Volume/Pitch/Pan NaN and exact boundary
+preservation next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

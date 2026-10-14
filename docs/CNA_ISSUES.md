@@ -1878,11 +1878,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   compatibility. The same unguarded implementations exist at the CI-pinned CNA revision
   (source checked only). No upstream source was changed.
 - **Environment/evidence:** CNA `d23e139de9e5c15511b6be745de290896a69ee37`, Linux GCC 14.2,
-  SOFTWARE and OPENGLES3/private Xvfb, SDL dummy audio. Both focused792 runs execute 12 checks:
-  ten pass and exactly these two fail. An independent empty-start control receives exactly three
-  canonical BufferNeeded callbacks, refills synchronously to three pending buffers and remains
-  Playing, so the disposal failures are isolated from basic starvation recovery. Direct logs:
-  `/tmp/checkpoint-792-dynamic-recovery-{SOFTWARE,OPENGLES3}.{log,stderr}`. Targeted CTest,
+  SOFTWARE and OPENGLES3/private Xvfb, SDL dummy audio. Both focused793 runs execute 13 checks:
+  eleven pass and exactly these two fail. An independent empty-start control receives exactly
+  three canonical BufferNeeded callbacks, safely removes a one-shot listener during dispatch,
+  refills synchronously to three pending buffers and remains Playing, so the disposal failures are
+  isolated from basic starvation recovery and event mutation. Direct logs:
+  `/tmp/checkpoint-793-dynamic-listeners-{SOFTWARE,OPENGLES3}.{log,stderr}`. Targeted CTest,
   catalog and metadata validation pass. No audible validation is claimed.
 - **Status:** runtime-confirmed missing disposal guards; not reported upstream.
 
