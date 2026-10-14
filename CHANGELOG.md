@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the imported skinned-PBR model with a complete image-based-light bundle and verified
+  sampled green irradiance on the unchanged animated pose.
 - Added a focused PbrEffect image-based-lighting scene with actual diffuse irradiance, intensity,
   BRDF and roughness-mip pixel evidence plus invalid-bundle ambient fallback.
 - Classified all 127 remaining public C ABI routes by semantic disposition: fixed reflection,

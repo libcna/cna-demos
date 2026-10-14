@@ -163,7 +163,9 @@ a check that all authored colors remain visible and that a blank texture row can
   `graphics.pbr_effect.texture_maps` (normal map with a Vector4 vertex tangent, emissive map,
   occlusion map on ambient light), ✅ `graphics.pbr_effect.image_based_lighting` (real irradiance,
   BRDF lookup, intensity and roughness-selected specular mips on OPENGLES3), ✅ `SkinnedPbrEffect`
-  (`graphics.model.skinned_pbr`). Remaining: sampled image-based lighting on the skinned variant.
+  (`graphics.model.skinned_pbr`, including the same sampled environment on its fixed animated pose).
+  Remaining: observable `KHR_materials_specular` factors/maps and the newer texture-transform/
+  colour-space controls.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
@@ -7892,3 +7894,18 @@ at most three jobs; metadata is642/0, self-tests pass5/5 and4/4, and temporary c
 302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-824-ibl-*` and `/tmp/checkpoint-824-coverage.md`. Extend the existing skinned-PBR
 workflow with sampled environment behavior next.
+
+## Focused825-SkinnedPbrEffect-image-based-lighting
+
+`graphics.model.skinned_pbr` grows from three to five controls. It first preserves its original
+imported-effect, two-joint skinning and orange default-light evidence at the exact authored50-degree
+pose. The pose then stays frozen while a complete green-irradiance/black-specular/BRDF bundle is
+installed and round-tripped through every imported `SkinnedPbrEffect`; the same bent-top pixel
+changes from `{133,96,54}` to `{0,107,0}` after direct lights are disabled.
+
+Two OPENGLES3/Xvfb runs pass5/5 with identical values. The inspected800x480 capture shows the green
+column retaining its articulated bend. SOFTWARE remains a declared PBR capability skip and the
+exact CTest passes as skipped. The warning-free incremental build uses at most three jobs; metadata
+remains642/0, self-tests pass5/5 and4/4, and temporary coverage remains302/329 types,2114/2326
+members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-825-skinned-ibl-*` and
+`/tmp/checkpoint-825-coverage.md`. Continue with observable PBR specular-extension behavior.

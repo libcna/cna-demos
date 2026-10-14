@@ -2395,3 +2395,17 @@ captured800x480 image was inspected and shows five clean panels matching the pro
 SOFTWARE remains a declared capability skip because CNA's documented fallback does not sample PBR
 lighting. This covers actual rigid PBR environment consumption, not environment preprocessing,
 physical-GPU output, HDR values or the parallel skinned shader path.
+
+### SkinnedPbrEffect image-based-lighting sampling
+
+The existing `graphics.model.skinned_pbr` now keeps its original imported-type and bent orange
+material controls, then freezes that exact50-degree two-joint pose while installing the same public
+environment bundle on every imported `SkinnedPbrEffect`. The bundle round-trips its green
+irradiance, black prefiltered-specular cube, BRDF LUT and intensity2. With all direct lights disabled
+and linear output selected, the same bent-top pixel changes from `{133,96,54}` to exact green
+`{0,107,0}`. This establishes that the skinned PBR shader consumes the environment without losing
+its animation pose.
+
+Two OPENGLES3/Xvfb runs pass5/5 with identical output. The captured final frame was inspected and
+shows the expected green articulated column. SOFTWARE is a declared fallback skip. This does not
+duplicate the rigid demo's mip/intensity matrix or claim physical-GPU behavior.

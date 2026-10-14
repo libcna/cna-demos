@@ -145,6 +145,8 @@ plumbing,21 production routes require hardware/service/platform observation or h
 readback, and `cna_content_manager_create_resource` is the documented unsupported placeholder.
 Focused824 adds the actual `PbrEffect` image-based-lighting draw path: invalid fallback, diffuse
 irradiance, intensity scaling, BRDF lookup and roughness-selected prefiltered cube mips.
+Focused825 extends the existing skinned-PBR model with the parallel complete environment bundle and
+proves the unchanged animated pose samples green irradiance after its original orange-light check.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -1845,9 +1847,11 @@ test-only hooks, real-device/service paths or calls without public readback into
 Return to the deeper XNA behavior audit and select the next observable gap from ROADMAP/COVERAGE_AUDIT;
 the generated member/type inventories are dispositioned, but comprehensive behavioral coverage is
 not claimed. Focused824 closes the ROADMAP's rigid `PbrEffect` image-based-lighting gap with actual
-OPENGLES3 pixels. Extend the existing `graphics.model.skinned_pbr` workflow with the same public
-bundle and a distinct sampled-light control next, preserving its existing animation evidence.
-Build with at most three compile jobs and keep focused evidence current.
+OPENGLES3 pixels. Focused825 closes the parallel `SkinnedPbrEffect` path in the existing model demo
+without adding an ID or weakening its original animation/material evidence. Continue the modern PBR
+behavior audit with the still-uncovered `KHR_materials_specular` factors and maps, keeping their
+pixel effects distinct from state-only checks. Build with at most three compile jobs and keep
+focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -3124,6 +3128,23 @@ temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078
 Evidence:`/tmp/checkpoint-824-ibl-*` and `/tmp/checkpoint-824-coverage.md`. No SOFTWARE IBL,
 physical-GPU, acoustic or manual interaction claim is made. Extend the existing skinned-PBR model
 with a sampled environment next so the parallel public effect surface has behavior evidence too.
+
+### Focused825-SkinnedPbrEffect-image-based-lighting
+
+The existing `graphics.model.skinned_pbr` grows from three to five controls without adding an ID.
+Its imported two-joint column retains the exact half-second50-degree bend and original orange
+default-light sample. While that pose remains frozen, the demo attaches a complete green-irradiance,
+black-specular and scale-one/bias-zero BRDF bundle through `SkinnedPbrEffect`, verifies every stored
+identity and intensity2, disables direct lights and observes the same bent-top point change from
+`{133,96,54}` to exact green `{0,107,0}`.
+
+Two OPENGLES3/Xvfb runs pass5/5 with identical values and no stderr. The inspected800x480 capture
+shows the green column with the expected articulated bend. SOFTWARE retains the declared PBR
+capability skip and its exact CTest passes as skipped. The warning-free incremental build uses at
+most three jobs; metadata remains642/0, both tool self-test suites pass and temporary coverage stays
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-825-skinned-ibl-*` and `/tmp/checkpoint-825-coverage.md`. No SOFTWARE IBL or
+physical-GPU claim is made. Continue with observable PBR specular-extension behavior.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

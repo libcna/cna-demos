@@ -2,6 +2,7 @@
 // A skinned glTF with a metallic-roughness material: CNA gives it a SkinnedPbrEffect (CNAEXT),
 // which takes the AnimationPlayer's skin transforms like XNA's SkinnedEffect.
 #include <cmath>
+#include <memory>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -10,12 +11,17 @@
 #include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/AnimationPlayer.hpp"
+#include "Microsoft/Xna/Framework/Graphics/CubeMapFace.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Microsoft/Xna/Framework/Graphics/ImageBasedLightEXT.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Model.hpp"
 #include "Microsoft/Xna/Framework/Graphics/ModelMesh.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RasterizerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SkinnedPbrEffect.hpp"
+#include "Microsoft/Xna/Framework/Graphics/SurfaceFormat.hpp"
+#include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
+#include "Microsoft/Xna/Framework/Graphics/TextureCube.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Viewport.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
@@ -62,11 +68,25 @@ namespace
             view_ = Matrix::CreateLookAt(Vector3(0.0f, 2.2f, 8.0f), Vector3(0.0f, 2.2f, 0.0f), Vector3::Up);
             projection_ = Matrix::CreatePerspectiveFieldOfView(MathHelper::PiOver4,
                 getGraphicsDeviceProperty().getViewportProperty().getAspectRatioProperty(), 0.1f, 100.0f);
+
+            irradiance_ = std::make_unique<TextureCube>(getGraphicsDeviceProperty(), 1, false, SurfaceFormat::Color);
+            blackSpecular_ =
+                std::make_unique<TextureCube>(getGraphicsDeviceProperty(), 1, false, SurfaceFormat::Color);
+            const Color green = Color::Lime;
+            const Color black = Color::Black;
+            for (int face = 0; face < 6; ++face)
+            {
+                irradiance_->SetData(static_cast<CubeMapFace>(face), &green, 1);
+                blackSpecular_->SetData(static_cast<CubeMapFace>(face), &black, 1);
+            }
+            brdfLut_ = std::make_unique<Texture2D>(getGraphicsDeviceProperty(), 1, 1, false, SurfaceFormat::Color);
+            const Color brdfScaleBias(255, 0, 0, 255);
+            brdfLut_->SetData(&brdfScaleBias, 1);
         }
 
         void Update(GameTime& gameTime) override
         {
-            if (checked_)
+            if (iblChecked_)
                 player_->Update(gameTime.getElapsedGameTimeProperty(), true, true);
             Game::Update(gameTime);
         }
@@ -104,7 +124,46 @@ namespace
                 Context().Print("near the bent top: {}", pixel.ToString());
                 Context().Check(pixel.getRProperty() > pixel.getBProperty() + 40,
                                 "the column is drawn bent, orange where the clip puts its top");
+
+                ImageBasedLightEXT light;
+                light.Irradiance = irradiance_.get();
+                light.PrefilteredSpecular = blackSpecular_.get();
+                light.BrdfLut = brdfLut_.get();
+                light.PrefilteredMipCount = 1;
+                light.Intensity = 2.0f;
+                for (ModelMesh* mesh : column_->getMeshesProperty())
+                    for (Effect* effect : mesh->getEffectsProperty())
+                    {
+                        auto* skinned = dynamic_cast<SkinnedPbrEffect*>(effect);
+                        skinned->getDirectionalLight0Property().setEnabledProperty(false);
+                        skinned->getDirectionalLight1Property().setEnabledProperty(false);
+                        skinned->getDirectionalLight2Property().setEnabledProperty(false);
+                        skinned->setAmbientLightColorProperty(Vector3(1.0f, 0.0f, 0.0f));
+                        skinned->setEncodeOutputToSrgbEXTProperty(false);
+                        skinned->setImageBasedLightEXT(light);
+                    }
+                auto* first = dynamic_cast<SkinnedPbrEffect*>(
+                    column_->getMeshesProperty()[0]->getEffectsProperty()[0]);
+                const ImageBasedLightEXT& stored = first->getImageBasedLightEXT();
+                Context().Check(stored.IsValidEXT() && stored.Irradiance == irradiance_.get() &&
+                                    stored.PrefilteredSpecular == blackSpecular_.get() &&
+                                    stored.BrdfLut == brdfLut_.get() && stored.Intensity == 2.0f,
+                                "SkinnedPbrEffect retains the complete environment bundle");
                 checked_ = true;
+            }
+            else if (!iblChecked_)
+            {
+                const float a = MathHelper::ToRadians(50.0f);
+                const Vector3 top(-1.8f * std::sin(a), 2.0f + 1.8f * std::cos(a), 0.25f);
+                const Vector3 onScreen = device.getViewportProperty().Project(top, projection_, view_,
+                                                                              Matrix::getIdentityProperty());
+                const Color pixel =
+                    CnaDemos::BackBufferPixels(device).At(static_cast<int>(onScreen.X), static_cast<int>(onScreen.Y));
+                Context().Print("near the IBL-lit bent top: {}", pixel.ToString());
+                Context().Check(pixel.getGProperty() > pixel.getRProperty() + 80 &&
+                                    pixel.getGProperty() > pixel.getBProperty() + 80,
+                                "the unchanged skinned pose samples green environment irradiance");
+                iblChecked_ = true;
             }
             Game::Draw(gameTime);
         }
@@ -114,7 +173,11 @@ namespace
         std::optional<AnimationPlayer> player_;
         Matrix view_;
         Matrix projection_;
+        std::unique_ptr<TextureCube> irradiance_;
+        std::unique_ptr<TextureCube> blackSpecular_;
+        std::unique_ptr<Texture2D> brdfLut_;
         bool checked_ = false;
+        bool iblChecked_ = false;
     };
 }
 
@@ -122,11 +185,12 @@ CNA_DEMOS_GAME(SkinnedPbrDemo, {
     .id = "graphics.model.skinned_pbr",
     .title = "Skinned PBR model",
     .description = "A skinned glTF column with an orange metallic-roughness material imports with CNA's "
-                   "SkinnedPbrEffect; AnimationPlayer's skin transforms go to SkinnedPbrEffect::SetBoneTransforms "
-                   "as they would to XNA's SkinnedEffect.",
+                   "SkinnedPbrEffect; AnimationPlayer supplies its skin transforms, then a complete image-based "
+                   "light replaces the default directional lighting without changing the bent pose.",
     .apis = {"SkinnedPbrEffect::SetBoneTransforms", "SkinnedPbrEffect", "AnimationPlayer::GetSkinTransforms",
+             "SkinnedPbrEffect::ImageBasedLightEXT", "ImageBasedLightEXT::IsValidEXT",
              "AnimationPlayer::StartClip", "SkinningData", "Model::Tag", "ModelMesh::Draw"},
-    .tags = {"model", "skinning", "pbr", "gltf", "animation", "cnaext", "3d"},
+    .tags = {"model", "skinning", "pbr", "ibl", "gltf", "animation", "cnaext", "3d"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
     .assets = {"models/painted_column.cnb"},
