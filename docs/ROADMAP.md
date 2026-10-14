@@ -4408,3 +4408,18 @@ runs are byte-identical with empty stderr; strict C99, metadata compilation, dif
 validation self-tests pass. Staged metadata reaches2755/3205 and `cnb.h` reaches244/272. Evidence:
 `checkpoint-617-c-cnb-curve-animation-focused-*-direct.*`. No model, animation player, graphics
 device, renderer, drawing or project-built execution is claimed. The loader registry is next.
+
+## Focused618-C-CNB-loader-registry
+
+`c_api.content.cnb_loader_registry` adds all11 process-wide registry and owned-loader routes in21
+controls. An actual31-bit FNV collision pair distinguishes idempotent duplicate registration from
+collision refusal. A custom document resolves and invokes its loader with exact asset text and
+live callback-scoped document/manager handles; both borrowed handles expire at return. Numeric and
+document lookup produce independent copies which remain callable after the registration is
+removed. Built-in registration is idempotent, and invoking its Curve loader returns
+`NOT_SUPPORTED` rather than leaking a C++ object through C. Both Xvfb direct runs pass byte-
+identically with empty stderr; strict C99, metadata compilation, diff checks and validation self-
+tests pass. Staged metadata reaches2766/3205 and `cnb.h` reaches255/272. Evidence:
+`checkpoint-618-c-cnb-loader-registry-focused-*-direct.*`. A caller-owned graphics device exists
+only to construct the ContentManager required by the loader signature; no pixels, drawing or
+project-built execution is claimed. Image, DDS and WAV import front ends are next.
