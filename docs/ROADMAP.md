@@ -5768,3 +5768,18 @@ GetEnumerator artifacts that CNA does not expose as separate C++ entry points. E
 `/tmp/checkpoint-701-session-properties-*` and `/tmp/checkpoint-701-coverage.md`. No network,
 screenshot or visual result is claimed. Continue with LocalWithLeaderboards in the existing
 session-type workflow next.
+
+## Focused702-LocalWithLeaderboards-session-type
+
+The existing session-type workflow now creates and disposes LocalWithLeaderboards as well as Local
+while gamer services are offline. It requires the returned session to retain the exact
+LocalWithLeaderboards type and one local gamer before the established PlayerMatch and Ranked service
+refusals. Existing leaderboard workflows continue to own the gameplay and score behavior, so this
+adds no variant demo ID.
+
+SOFTWARE and OPENGLES3/X11 pass5/5 with byte-identical stdout and empty stderr. The focused SOFTWARE
+CTest, metadata validation and validator self-tests pass. Temporary member coverage stays2058/2326
+at632 demos and301/329 types; fields move156->157/753 and Net fields7->8/22. Evidence:
+`/tmp/checkpoint-702-session-types-*` and `/tmp/checkpoint-702-coverage.md`. No service, network,
+leaderboard write, screenshot or visual result is claimed. The remaining ordinary Net gaps are
+semantically dispositioned. Continue the ordinary GamerServices member audit in existing workflows.

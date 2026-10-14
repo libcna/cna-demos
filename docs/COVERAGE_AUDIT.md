@@ -1245,7 +1245,7 @@ non-host call or online-service synchronization.
 | WriteArbitratedLeaderboard, WriteTrueSkill, WriteUnarbitratedLeaderboard and WriteLeaderboardsEventArgs properties | Ranked/leaderboard service callbacks. Existing offline sessions cannot raise them; service/manual. |
 | `NetworkGamer::IsGuest` | A meaningful positive state requires a service-backed guest sign-in and propagation into a NetworkSession. The current offline profiles only establish non-guest state; defer with the service/Guide guest workflow rather than crediting a constant false. |
 | NetworkSessionJoinException constructor/GetObjectData | `join_refused` catches a real exception and observes JoinError. Explicit construction and CLR serialization plumbing do not justify an independent demo. |
-| MaxPreviousGamers/MaxSupportedGamers and remaining enum fields | Constants and enum identities are reported separately from member coverage. Credit only fields used by real behavior; do not create getter-style demos for constants or switch-only labels. `LocalWithLeaderboards` still deserves a real create/dispose branch in the existing session-type workflow. |
+| MaxPreviousGamers/MaxSupportedGamers and remaining enum fields | Constants and enum identities are reported separately from member coverage. Credit only fields used by real behavior; do not create getter-style demos for constants or switch-only labels. Focused702 now creates and disposes `LocalWithLeaderboards`, retaining its exact session type and local roster; the other uncredited enum/constant identities do not justify switch-only controls. |
 
 ### NetworkSession disposal state
 
@@ -1276,6 +1276,19 @@ Both renderers pass8/8 with identical stdout and empty stderr. Evidence:
 surface without falsely naming the inventory's explicit CLR interface aliases or its two
 GetEnumerator forms. Enumerator invalid-position/reset/version behavior remains CLR machinery and
 does not warrant a separate demo.
+
+### LocalWithLeaderboards offline session type
+
+`net.network_session.online_session_types` now includes the second single-machine session type in
+its existing policy comparison. With the same offline local profile that creates a Local session,
+LocalWithLeaderboards creates successfully, reports its exact SessionType and contains that one
+LocalGamer before disposal. PlayerMatch and Ranked retain their established
+GamerServicesNotAvailableException results in the same run.
+
+Both renderers pass5/5 with identical stdout and empty stderr. Evidence:
+`/tmp/checkpoint-702-session-types-*`. The leaderboard write/read and paging demos already exercise
+the type's gameplay purpose; this control establishes its offline policy branch without claiming a
+configured service, transport, leaderboard write, rendered result or additional demo variant.
 
 ### C ABI selected diagnostics, ownership, dispatch and math
 

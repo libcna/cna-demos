@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MS-PL
-// Session types and the online service: Local works offline; PlayerMatch and Ranked need the service.
+// Session types and the online service: the two local types work offline; matchmaking needs the service.
 #include <exception>
 #include <memory>
 #include <optional>
@@ -66,6 +66,16 @@ namespace
             lines_.push_back("Local: created");
             local->Dispose();
 
+            // LocalWithLeaderboards is also a single-machine session. It enables leaderboard
+            // lifecycle behavior without turning the session into online matchmaking.
+            std::unique_ptr<NetworkSession> localWithLeaderboards(
+                NetworkSession::Create(NetworkSessionType::LocalWithLeaderboards, 1, 4));
+            ctx.Check(localWithLeaderboards->getSessionTypeProperty() == NetworkSessionType::LocalWithLeaderboards &&
+                          localWithLeaderboards->getLocalGamersProperty().getCountProperty() == 1,
+                      "a LocalWithLeaderboards session stays local and keeps its distinct type");
+            lines_.push_back("LocalWithLeaderboards: created");
+            localWithLeaderboards->Dispose();
+
             // PlayerMatch and Ranked go through the CNA online service. The demos run CNA's gamer
             // services offline (no service configured), so both are refused before any account is
             // looked at; with a service, a profile without AllowOnlineSessions would get a
@@ -122,13 +132,14 @@ namespace
 CNA_DEMOS_GAME(OnlineSessionTypesDemo, {
     .id = "net.network_session.online_session_types",
     .title = "Session types and the online service",
-    .description = "With CNA's gamer services offline and a local profile signed in, creates a Local session "
-                   "(no service needed) and tries PlayerMatch and Ranked, which need the online service and are "
-                   "refused with GamerServicesNotAvailableException; the profile's "
+    .description = "With CNA's gamer services offline and a local profile signed in, creates Local and "
+                   "LocalWithLeaderboards sessions on one machine, then tries PlayerMatch and Ranked, which need "
+                   "the online service and are refused with GamerServicesNotAvailableException; the profile's "
                    "GamerPrivileges::AllowOnlineSessions is false as well.",
-    .apis = {"NetworkSession::Create", "NetworkSessionType::Local", "NetworkSessionType::PlayerMatch",
-             "NetworkSessionType::Ranked", "GamerServicesNotAvailableException",
-             "GamerPrivileges::AllowOnlineSessions"},
+    .apis = {"NetworkSession::Create", "NetworkSession::SessionType", "NetworkSession::LocalGamers",
+             "NetworkSessionType::Local", "NetworkSessionType::LocalWithLeaderboards",
+             "NetworkSessionType::PlayerMatch", "NetworkSessionType::Ranked",
+             "GamerServicesNotAvailableException", "GamerPrivileges::AllowOnlineSessions"},
     .tags = {"net", "session", "online", "privileges", "gamer-services"},
     .frames = 40,
     .assets = {"fonts/pixel_font.cnb"},

@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused701
-projects the632-demo staged catalog to2058/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused702
+projects the632-demo staged catalog to2058/2326 XNA members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1386,12 +1386,14 @@ departure/history/session/round-trip behavior is also covered by the same real t
 The simulated-conditions packet workflow now samples positive sent/received session bandwidth, and
 game_flow covers successful lobby ResetReady plus Playing-state refusal. System Link discovery/join
 now executes both Begin/End pairs and discovery measures both QoS bandwidth directions.
-NetworkSession disposal state, post-dispose roster safety and the fixed-shape C++
-NetworkSessionProperties collection contract are now covered. Cover LocalWithLeaderboards in the
-existing session-type workflow next. The
+NetworkSession disposal state, post-dispose roster safety, the fixed-shape C++
+NetworkSessionProperties collection contract and the offline LocalWithLeaderboards creation path
+are now covered. The
 remaining event-payload constructors, voice, invites, leaderboard callbacks and CLR serialization
-members are dispositioned in COVERAGE_AUDIT. Continue the next high-value behavior family after
-these batches, rebuilding and running both renderers where
+members are dispositioned in COVERAGE_AUDIT. Audit the remaining ordinary GamerServices members
+next, beginning with the existing leaderboard workflows rather than adding variants for CLR
+collection machinery. Continue the next high-value behavior family after each batch, rebuilding and
+running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
@@ -1399,7 +1401,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused701 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused702 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3550,6 +3552,25 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No network, screenshot or
 visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA source was
 edited. Continue with LocalWithLeaderboards in the session-type workflow next.
+
+Focused702 extends `net.network_session.online_session_types` without adding a variant ID. Alongside
+the established offline Local success and PlayerMatch/Ranked service refusals, the local profile now
+creates and disposes a LocalWithLeaderboards session. The returned session must retain that exact
+type and its one local gamer, demonstrating the single-machine branch without implying online
+matchmaking. The existing leaderboard demos separately exercise gameplay and score behavior for
+this type.
+
+SOFTWARE and OPENGLES3/X11 pass5/5 with byte-identical stdout and empty stderr. The focused SOFTWARE
+CTest, metadata validation and five validator self-tests pass. Temporary coverage remains2058/2326
+at632 demos and301/329 types while field coverage moves156->157/753 and Net fields7->8/22 through
+the exact enum value. Evidence:`/tmp/checkpoint-702-session-types-*` and
+`/tmp/checkpoint-702-coverage.md`. Runner SHA-256 is
+`63d3a5ceafc6b93d30488ee85edf35f0a63c442b0aeab4e0a6c5d54e1a34175b`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No service, network,
+leaderboard write, screenshot or visual result is claimed. Sibling CNA remained clean external
+`f698d0f548`; no CNA source was edited. Continue with the ordinary GamerServices member audit,
+starting in the existing leaderboard workflows.
 
 ## 15. Assumptions the next session must know
 
