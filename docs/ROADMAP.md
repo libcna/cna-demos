@@ -5937,3 +5937,19 @@ Evidence:`/tmp/checkpoint-711-avatar-description-*` and
 `/tmp/checkpoint-711-avatar-description-coverage.md`. No service avatar, editor interaction,
 Changed event, screenshot or manual visual result is claimed. Continue with Achievement::GetPicture
 using a real offline catalog picture.
+
+## Focused712-Achievement-catalog-picture-streams
+
+The existing achievement workflow now assigns a real 70-byte PNG to `first_steps` and reads it
+through `Achievement::GetPicture`. The returned caller-owned stream starts at position zero, has
+the exact asset length and PNG signature, and a second call returns a distinct fresh stream. A
+copied catalog achievement without a picture throws `GamerServicesNotAvailableException`.
+
+SOFTWARE and OPENGLES3/X11 each execute14 controls, pass13 and fail only established ISSUE-017,
+with byte-identical stdout and empty stderr. The focused known-issue SOFTWARE CTest, metadata
+validation and validator self-tests pass. Temporary coverage moves2102->2103/2326 at632 demos,
+301/329 types and157/753 fields; GamerServices moves160->161/244. Evidence:
+`/tmp/checkpoint-712-achievement-picture-focused-*` and
+`/tmp/checkpoint-712-achievement-picture-coverage.md`. The PNG bytes were inspected but not drawn;
+no screenshot or manual visual result is claimed. Continue with the existing automatic-sign-in
+workflow's `GamerServicesComponent` lifecycle and dispatcher state.

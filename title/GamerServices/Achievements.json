@@ -5,6 +5,7 @@
     "description": "Signed in and earned a first achievement.",
     "howToEarn": "Run the achievement demo.",
     "score": 10,
+    "picture": "GamerServices/first-steps.png",
     "display": true
   },
   {

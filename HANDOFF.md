@@ -1402,8 +1402,9 @@ SignedInGamer Begin/End award and achievement-read pairs. Remaining friend, part
 online-identity paths require service/hardware evidence. AvatarAnimation and AvatarRenderer sampled
 values, lighting and lifetime are now covered. AvatarDescription's local-profile Begin/End retrieval
 is covered; Changed requires a service revision or manual avatar-editor save through public APIs and
-remains dispositioned. Audit Achievement::GetPicture next, then continue the next
-high-value behavior family after each batch, rebuilding and running both renderers where
+remains dispositioned. Achievement::GetPicture now covers real catalog bytes, fresh-stream ownership
+and the unavailable path. Audit GamerServicesComponent lifecycle and dispatcher state next, then
+continue the next high-value behavior family after each batch, rebuilding and running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
@@ -3765,6 +3766,27 @@ are `e2c8c9dbd6ef8fb4e611a6f0818ebec6290c34d738930c3e9f1dbb4a55ba9aeb` and
 editor interaction, Changed event, screenshot or manual visual result is claimed. Unrelated external
 renderer/docs edits appeared after the build; no CNA source was edited or reverted here. Continue
 with Achievement::GetPicture using a real offline catalog picture.
+
+Focused712 extends `gamer_services.achievement.award` without adding a variant ID. The real
+`first_steps` catalog entry now names a valid 70-byte PNG. GetPicture returns it as a caller-owned
+stream at position zero with the exact length and PNG signature; a second call produces a distinct
+fresh stream. A copied `hidden_door` achievement with no picture rejects GetPicture with
+GamerServicesNotAvailableException. The existing award, collection and async behavior remains.
+
+SOFTWARE and OPENGLES3/X11 each execute14 controls, pass13 and fail only established ISSUE-017,
+with byte-identical stdout and empty stderr. The focused known-issue SOFTWARE CTest, metadata
+validation and five validator self-tests pass. Temporary coverage moves2102->2103/2326 at632
+demos,301/329 types and157/753 fields; GamerServices moves160->161/244. Evidence:
+`/tmp/checkpoint-712-achievement-picture-focused-*` and
+`/tmp/checkpoint-712-achievement-picture-coverage.md`. Runner SHA-256 is
+`84aa135a95784b1c2a87d794ff38bdf8514cdba9b019eb13da4a0a57ad04a88f`; production library hashes
+remain `e2c8c9dbd6ef8fb4e611a6f0818ebec6290c34d738930c3e9f1dbb4a55ba9aeb` and
+`471f0a12b6b167262d18ae8fb763f4c10b07e7bc478f72f0bbfd5a2879b193ef`. The exact demo object was
+compiled and the runner relinked against the focused711 production libraries; a full project build
+was deliberately deferred while sibling CNA carried unrelated uncommitted renderer/docs work. The
+asset was inspected as bytes but not drawn; no screenshot or manual visual result is claimed. No
+CNA source was edited or reverted. Continue with GamerServicesComponent construction,
+Initialize/Update behavior and the related dispatcher state in the automatic-sign-in workflow.
 
 ## 15. Assumptions the next session must know
 

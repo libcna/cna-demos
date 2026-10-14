@@ -1421,6 +1421,21 @@ and CNA's internal local-profile setter can force a callback, but neither is the
 behavior under audit. This needs service or manual UI evidence rather than a synthetic automated
 control.
 
+### Achievement catalog-picture streams
+
+`gamer_services.achievement.award` now gives the real `first_steps` catalog entry a small valid
+PNG and reads it through `Achievement::GetPicture`. The first returned stream starts at position
+zero, has the exact 70-byte asset length and exposes the PNG signature. A second call returns a
+distinct caller-owned stream at position zero with the same length, rather than reusing consumed
+state. A copied achievement whose catalog entry has no picture throws
+`GamerServicesNotAvailableException`.
+
+Both renderers execute 14 controls, pass 13 and retain only ISSUE-017 for the unrelated
+`EarnedOnline` value. Their stdout is byte-identical and stderr is empty. Evidence:
+`/tmp/checkpoint-712-achievement-picture-focused-*`. This credits `Achievement::GetPicture` with a
+real offline asset and both its success and unavailable paths. The PNG is inspected as bytes; it is
+not drawn, and no screenshot or manual visual-quality judgment is claimed.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // SignedInGamer::AwardAchievement and GetAchievements, offline, from the title's catalog.
 #include <any>
+#include <array>
 #include <memory>
 #include <optional>
 #include <string>
@@ -124,6 +125,33 @@ namespace
             ctx.Check(!hidden->getIsEarnedProperty() && !hidden->getDisplayBeforeEarnedProperty(),
                       "hidden_door stays unearned, and its catalog entry hides it until earned");
 
+            Achievement pictureAchievement = *firstSteps;
+            std::unique_ptr<System::IO::Stream> picture(pictureAchievement.GetPicture());
+            const std::array<SharpRuntime::bytecs, 8> pngSignature{0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
+            std::array<SharpRuntime::bytecs, pngSignature.size()> header{};
+            const bool startsAtZero = picture->getPositionProperty() == 0;
+            const bool exactLength = picture->getLengthProperty() == 70;
+            const bool readHeader = picture->Read(header.data(), 0, static_cast<int>(header.size())) ==
+                static_cast<int>(header.size());
+            std::unique_ptr<System::IO::Stream> secondPicture(pictureAchievement.GetPicture());
+            ctx.Check(startsAtZero && exactLength && readHeader && header == pngSignature &&
+                          picture.get() != secondPicture.get() && secondPicture->getPositionProperty() == 0 &&
+                          secondPicture->getLengthProperty() == picture->getLengthProperty(),
+                      "GetPicture returns independent caller-owned PNG streams at position zero");
+
+            bool missingPictureRefused = false;
+            try
+            {
+                Achievement missingPictureAchievement = *hidden;
+                delete missingPictureAchievement.GetPicture();
+            }
+            catch (const GamerServicesNotAvailableException&)
+            {
+                missingPictureRefused = true;
+            }
+            ctx.Check(missingPictureRefused,
+                      "GetPicture throws GamerServicesNotAvailableException when the catalog has no picture");
+
             bool integerBoundsRefused = false;
             bool keyBoundsRefused = false;
             try
@@ -236,15 +264,16 @@ namespace
 CNA_DEMOS_GAME(AwardDemo, {
     .id = "gamer_services.achievement.award",
     .title = "Achievements",
-    .description = "Lists the title's offline achievement catalog with SignedInGamer::GetAchievements, awards two "
-                   "with AwardAchievement, and exercises populated item, copy, mutation and disposal behavior while "
-                   "earned achievements keep their first date and a hidden one stays secret until earned.",
+    .description = "Lists the title's offline achievement catalog with SignedInGamer::GetAchievements, reads one "
+                   "catalog picture, awards two with AwardAchievement, and exercises populated collection behavior "
+                   "while earned achievements keep their first date and a hidden one stays secret until earned.",
     .apis = {"SignedInGamer::AwardAchievement", "SignedInGamer::BeginAwardAchievement",
              "SignedInGamer::EndAwardAchievement", "SignedInGamer::GetAchievements",
              "SignedInGamer::BeginGetAchievements", "SignedInGamer::EndGetAchievements", "Achievement::Key",
              "Achievement::Name", "Achievement::Description", "Achievement::HowToEarn", "Achievement::GamerScore",
              "Achievement::IsEarned", "Achievement::EarnedDateTime", "Achievement::EarnedOnline",
-             "Achievement::DisplayBeforeEarned", "AchievementCollection::Count", "AchievementCollection::Item",
+             "Achievement::DisplayBeforeEarned", "Achievement::GetPicture", "AchievementCollection::Count",
+             "AchievementCollection::Item",
              "AchievementCollection::Dispose", "AchievementCollection::IsDisposed", "AchievementCollection::IndexOf",
              "AchievementCollection::Insert", "AchievementCollection::RemoveAt", "AchievementCollection::Add",
              "AchievementCollection::Remove", "AchievementCollection::Clear", "AchievementCollection::Contains",
