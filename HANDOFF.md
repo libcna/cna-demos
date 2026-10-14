@@ -148,6 +148,15 @@ Tested SHA-256: `cna-demos`
 `build/linux-full/reports/checkpoint-719-complete-*`. No screenshot, listening test, physical
 input, service session or manual visual-quality inspection was performed.
 
+Focused **720-GraphicsDevice-Present-region-contract** is staged after Complete719. The existing
+owned-device lifecycle now passes11 controls on both SOFTWARE and OPENGLES3/X11: null/null/zero is
+ordinary Present, a partly outside source region is clipped and accepted only by SOFTWARE among
+the two primary renderers, a wholly outside region is rejected as an argument error, and valid
+destination/window requests are explicitly refused rather than silently ignored. The exact
+SOFTWARE CTest, metadata632/0 and all five validator self-tests pass. Generated coverage is
+unchanged because `GraphicsDevice::Present` was already credited. Evidence:
+`/tmp/checkpoint-720-present-regions-*`. No presented window pixels or screenshots were inspected.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1411,18 +1420,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete719 is the current full-build/runtime baseline. The generated non-field
-and missing-type inventories are now fully dispositioned without claiming comprehensive behavior.
-Continue the behavior audit with `GraphicsDevice::Present(sourceRectangle, destinationRectangle,
-overrideWindowHandle)`, a meaningful Phase4 remainder. Inspect the current CNA public header and
-its renderer contract first: current source implements the XNA overload and distinguishes complete,
-source-only and destination/window-handle support by renderer. Extend the existing owned-device
-lifecycle workflow if that keeps Present/Reset behavior coherent; otherwise add one focused demo.
-Exercise successful supported behavior and truthful unsupported-renderer refusals without copying
-CNA's unit tests or claiming window pixels that were not measured. Build, run both primary
-renderers, update coverage/audit/ROADMAP/HANDOFF and push the batch. If current public constraints
-make a useful application-level demonstration impossible, record the disposition and move to the
-next feasible Phase4/5 behavior remainder.
+HIGHEST PRIORITY: Complete719 is the current full-build/runtime baseline and focused720 adds the
+validated GraphicsDevice Present-region contract. Continue the semantic behavior audit with the
+next feasible typed Texture2D data-format family. Start from `graphics.texture2d.surface_formats`
+and the coverage-audit "Packed and floating-point data overloads" row: Bgr565/Bgra4444/Bgra5551
+and HdrBlendable render-target readback already have evidence, while direct floating-point/vector
+texture storage and mismatched element-size refusal remain unexercised. Inspect current CNA format
+support by renderer, choose one coherent value family rather than one control per enum value, and
+prove exact SetData/GetData values plus any useful sampling behavior. Keep unsupported formats as
+truthful renderer-specific refusals. Build, run both primary renderers, update documentation and
+push the batch; if no additional family has a stable public contract on these renderers, document
+that disposition and continue the next Phase5 behavior remainder.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

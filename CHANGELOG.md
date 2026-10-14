@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the owned graphics-device lifecycle with the three-argument `Present` contract:
+  equivalence, source clipping, invalid-region refusal and renderer-specific destination/window
+  support are now checked on SOFTWARE and OPENGLES3.
 - Completed the632-demo full rebuild/runtime checkpoint against clean CNA `0c83dcc9dc`: all645
   enabled CTests and both full renderer smokes pass with only36 declared CNA failures.
 - Credited the existing `GraphicsDeviceStatus` behavior in the owned-device lifecycle demo and

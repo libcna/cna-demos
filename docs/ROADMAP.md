@@ -67,9 +67,9 @@ Console demos with checks; each shows one operation family.
   `graphics.graphics_resource.*` (13): `Clear`/`ClearOptions`, split-screen viewports, `Viewport`
   properties and `Project`/`Unproject`, `ScissorRectangle`, `PresentationParameters`,
   `GetBackBufferData`, `SupportsCapability` and the capability report (CNAEXT), adapters and
-  display modes, format queries, resource lifetime events. Remaining: `Present` with rectangles
-  (CNAEXT, SOFTWARE/HEADLESS only), `Reset` with new parameters, `DeviceLost` (never raised on
-  desktop).
+  display modes, format queries, resource lifetime events, ✅ `Present` with source/destination/
+  window arguments and renderer-specific support, and ✅ `Reset` with new parameters. Remaining:
+  `DeviceLost` (never raised on desktop).
 - ✅ (19 demos) `graphics.sprite_batch.*`: every `Draw` overload family (position, destination rectangle,
   source rectangle, rotation+origin, scale float/vector, `SpriteEffects` flips, layer depth),
   tinting, `Begin` overloads: `SpriteSortMode` (Deferred, Immediate, Texture, BackToFront,
@@ -6075,3 +6075,23 @@ Evidence:`build/linux-full/reports/checkpoint-719-complete-*`; exact hashes are 
 No screenshot, listening test, physical input, service session or manual visual-quality inspection
 was performed. Continue with the meaningful `GraphicsDevice::Present` region/window overload
 before another full checkpoint, while preserving renderer-specific success/refusal behavior.
+
+## Focused720-GraphicsDevice-Present-region-contract
+
+`graphics.device.owned_lifecycle` now calls the public three-argument `GraphicsDevice::Present`
+overload directly. It establishes null/null/zero equivalence with ordinary Present, supplies a
+partly out-of-bounds source rectangle that must be clipped before presentation, rejects a region
+entirely outside the back buffer and verifies that destination-plus-foreign-window requests are
+never silently ignored. SOFTWARE accepts the clipped source-only request; OPENGLES3 explicitly
+refuses it and names both its renderer and the unsupported request. Both displaying renderers
+refuse the destination/window combination, while the code preserves HEADLESS's documented
+accept-all contract.
+
+SOFTWARE and OPENGLES3/X11 each pass11/11 controls, the exact SOFTWARE CTest passes, metadata is
+632/0 and all five validator self-tests pass. Evidence:
+`/tmp/checkpoint-720-present-regions-{SOFTWARE,OPENGLES3}.json` and
+`/tmp/checkpoint-720-present-regions-build.log`. Generated coverage totals do not change because
+the existing lifecycle already credited `GraphicsDevice::Present`; this batch adds overload and
+renderer behavior evidence. No presented window pixels, screenshot or manual visual quality were
+inspected. Continue with the next feasible typed Texture2D data-format family rather than creating
+one demo per `SurfaceFormat` value.

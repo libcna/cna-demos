@@ -1826,3 +1826,19 @@ reports558 pass/36 expected fail/35 skip/3 manual; OPENGLES3/X11 reports590/36/3
 Evidence:`build/linux-full/reports/checkpoint-719-complete-*`. The exact binary and report hashes
 are recorded in `HANDOFF.md`. No screenshot, listening test, physical input, service session or
 manual visual-quality inspection was performed.
+
+### Focused720 GraphicsDevice Present-region behavior
+
+The existing owned-device lifecycle now exercises the three-argument Present overload as a real
+renderer contract. Null/null/zero takes the ordinary path. A source rectangle extending beyond the
+top-left is validated, clipped and accepted by SOFTWARE; OPENGLES3 refuses the same valid request
+with a `NotSupportedException` that names the renderer and source rectangle. A source rectangle
+entirely outside the back buffer is an `ArgumentException` under both. A valid destination
+rectangle plus foreign window handle is accepted only by the documented HEADLESS contract and is
+explicitly refused by both displaying renderers, so neither may silently present the whole frame.
+
+SOFTWARE and OPENGLES3/X11 each pass11 controls, and the exact SOFTWARE CTest passes. This adds
+meaningful overload, validation and renderer-refusal evidence while leaving generated member
+coverage at2114/2326 because `GraphicsDevice::Present` was already credited. No presented window
+pixels, screenshot or manual visual-quality inspection was performed. Evidence:
+`/tmp/checkpoint-720-present-regions-{SOFTWARE,OPENGLES3}.json`.
