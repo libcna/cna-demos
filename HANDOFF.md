@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-771 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-772 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1746,11 +1746,10 @@ ISSUE-089 records the missing custom-serializer Initialize callback.
 Root-as-shared-resource identity and self-cycle behavior now match the measured XNA contract in
 `content.custom.intermediate_shared_resources`, and a non-shared self-cycle now exercises the
 writer's public `MaxNestingDepth` refusal. The typed envelope now covers direct reader/writer type-
-name/context accessors plus the ScanChildren namespace prepass. Continue with
-ContentTypeSerializer identity properties (`TargetType`, `XmlTypeName`) in the existing registration
-control, then audit the custom ContentTypeWriter/ContentWriter XNB path for meaningful uncovered
-writer behavior. Do not add isolated getter demos. Build with at most three compile jobs and keep
-focused evidence current.
+name/context accessors plus the ScanChildren namespace prepass, and the registration control binds
+its exact `TargetType` and `XmlTypeName` to the looked-up instance and emitted XML. Audit the custom
+ContentTypeWriter/ContentWriter XNB path for meaningful uncovered writer behavior next. Do not add
+isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2165,6 +2164,23 @@ types,2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence
 `/tmp/checkpoint-771-*` and `/tmp/checkpoint-771-coverage.md`. No rendering, screenshot or manual
 inspection was used. Close the custom serializer identity-property audit, then inspect the custom
 ContentTypeWriter/ContentWriter XNB path.
+
+### Focused772 intermediate serializer identity
+
+The existing registration control in `content.custom.intermediate_type_serializer` now binds the
+same returned and looked-up serializer instance to its exact DiceRoll `TargetType` and `dice`
+`XmlTypeName`. The shortcut is already consumed by the emitted root `Type` attribute and successful
+round trip, so both identity properties are covered in their real registry context without a
+getter-only demo or another assertion label.
+
+SOFTWARE and OPENGLES3/Xvfb retain eighteen passes and the two established ISSUE-088/089 failures
+with byte-identical stdout and empty stderr; the expected-failure SOFTWARE CTest passes. The
+warning-free incremental build uses at most three jobs; metadata remains636/0, known-issue demos
+remain41, validator/checkpoint self-tests pass5/5 and4/4, and generated runtime coverage remains
+302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-772-intermediate-identity-*` and `/tmp/checkpoint-772-coverage.md`. No rendering,
+screenshot or manual inspection was used. No CNA issue was found. Audit the custom
+ContentTypeWriter/ContentWriter XNB path next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

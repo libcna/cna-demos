@@ -6994,3 +6994,20 @@ types,2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence
 `/tmp/checkpoint-771-*` and `/tmp/checkpoint-771-coverage.md`. No rendering, screenshot or manual
 inspection was used. Close the custom serializer identity-property audit, then inspect the custom
 ContentTypeWriter/ContentWriter XNB path.
+
+## Focused772-intermediate-serializer-identity
+
+The existing registration control in `content.custom.intermediate_type_serializer` now binds the
+same returned and looked-up serializer instance to its exact DiceRoll `TargetType` and `dice`
+`XmlTypeName`. The shortcut is already consumed by the emitted root `Type` attribute and successful
+round trip, so both identity properties are covered in their real registry context without a
+getter-only demo or another assertion label.
+
+SOFTWARE and OPENGLES3/Xvfb retain eighteen passes and the two established ISSUE-088/089 failures
+with byte-identical stdout and empty stderr; the expected-failure SOFTWARE CTest passes. The
+warning-free incremental build uses at most three jobs; metadata remains636/0, known-issue demos
+remain41, validator/checkpoint self-tests pass5/5 and4/4, and generated runtime coverage remains
+302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-772-intermediate-identity-*` and `/tmp/checkpoint-772-coverage.md`. No rendering,
+screenshot or manual inspection was used. No CNA issue was found. Audit the custom
+ContentTypeWriter/ContentWriter XNB path next.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed the custom intermediate serializer identity audit by tying its registered instance to the
+  exact `TargetType` and `XmlTypeName` used by lookup and emitted XML.
 - Added custom intermediate serializer contracts for `ObjectIsEmpty` optional omission and
   `CanDeserializeIntoExistingObject` identity preservation through a read-only property.
 - Exercised custom intermediate serializer child scanning with a nested custom type and exposed

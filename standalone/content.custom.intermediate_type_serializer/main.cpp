@@ -251,6 +251,7 @@ int main()
         // Registration replaces the reflection discovery that XNA performs for custom serializers.
         auto& serializer = IntermediateSerializer::AddTypeSerializer<DiceRollSerializer>();
         check(IntermediateSerializer::FindTypeSerializer(System::Type::From<DiceRoll>()) == &serializer &&
+              serializer.getTargetTypeProperty() == System::Type::From<DiceRoll>() &&
               serializer.getXmlTypeNameProperty() == "dice", "the registered value serializer has the dice XML shortcut");
 
         const DiceRoll roll{2, 6};
