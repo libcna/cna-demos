@@ -1738,17 +1738,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-769 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-770 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
-disposable shared-table values and ISSUE-088 records partial intermediate-serializer registration.
+disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
+ISSUE-089 records the missing custom-serializer Initialize callback.
 Root-as-shared-resource identity and self-cycle behavior now match the measured XNA contract in
 `content.custom.intermediate_shared_resources`, and a non-shared self-cycle now exercises the
 writer's public `MaxNestingDepth` refusal. The typed envelope now covers direct reader/writer type-
-name and serializer-context accessors. Continue with the custom ContentTypeSerializer
-Initialize/ScanChildren namespace prepass: use a nested custom type without an XML shortcut so the
-child scan has an observable namespace-declaration purpose. Build with at most three compile jobs
-and keep focused evidence current.
+name/context accessors plus the ScanChildren namespace prepass. Continue with
+ContentTypeSerializer ObjectIsEmpty and existing-instance contracts in the current workflows,
+adding behavior only where the serializer override changes emitted XML or object identity. Build
+with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2124,6 +2125,25 @@ are listed as CNA-specific/unmatched by that runtime inventory. Evidence:
 `/tmp/checkpoint-769-intermediate-context-*` and `/tmp/checkpoint-769-coverage.md`. No rendering,
 screenshot or manual inspection was used. No new CNA issue was found. Continue with the custom
 serializer Initialize/ScanChildren namespace prepass.
+
+### Focused770 intermediate Initialize and child scan
+
+The typed envelope in `content.custom.intermediate_type_serializer` now contains a described Attack
+without an XML shortcut. Its ScanChildren override reports that value through the object serializer,
+so the namespace prepass declares `xmlns:CnaDemos` before WriteTypeName emits the nested
+`CnaDemos:Attack`; both the dice and Attack payloads round-trip. The serializer's Initialize override
+records and would cache the Attack serializer, but CNA never invokes it. CNA-DEMOS-ISSUE-089 records
+the missing documented lifecycle callback; the demo uses a fallback lookup only to keep the child-
+scan and round-trip controls observable.
+
+SOFTWARE and OPENGLES3/Xvfb reproduce16 passes and two failures, ISSUE-089 plus established
+ISSUE-088, with byte-identical stdout and empty stderr; the primary ISSUE-088 expected-failure
+SOFTWARE CTest passes. The warning-free incremental build uses at most three jobs; metadata remains
+636/0, known-issue demos remain41, validator/checkpoint self-tests pass5/5 and4/4, and generated
+runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C
+routes. Evidence:`/tmp/checkpoint-770-intermediate-scan-*` and `/tmp/checkpoint-770-coverage.md`. No
+rendering, screenshot or manual inspection was used. Continue with ObjectIsEmpty and existing-
+instance serializer contracts before closing this intermediate serializer audit.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

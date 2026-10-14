@@ -6955,3 +6955,22 @@ are listed as CNA-specific/unmatched by that runtime inventory. Evidence:
 `/tmp/checkpoint-769-intermediate-context-*` and `/tmp/checkpoint-769-coverage.md`. No rendering,
 screenshot or manual inspection was used. No new CNA issue was found. Audit the custom serializer
 Initialize/ScanChildren namespace prepass next.
+
+## Focused770-intermediate-initialize-and-child-scan
+
+The typed envelope in `content.custom.intermediate_type_serializer` now contains a described Attack
+without an XML shortcut. Its ScanChildren override reports that value through the object serializer,
+so the namespace prepass declares `xmlns:CnaDemos` before WriteTypeName emits the nested
+`CnaDemos:Attack`; both the dice and Attack payloads round-trip. The serializer's Initialize override
+records and would cache the Attack serializer, but CNA never invokes it. CNA-DEMOS-ISSUE-089 records
+the missing documented lifecycle callback; the demo uses a fallback lookup only to keep the child-
+scan and round-trip controls observable.
+
+SOFTWARE and OPENGLES3/Xvfb reproduce16 passes and two failures, ISSUE-089 plus established
+ISSUE-088, with byte-identical stdout and empty stderr; the primary ISSUE-088 expected-failure
+SOFTWARE CTest passes. The warning-free incremental build uses at most three jobs; metadata remains
+636/0, known-issue demos remain41, validator/checkpoint self-tests pass5/5 and4/4, and generated
+runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C
+routes. Evidence:`/tmp/checkpoint-770-intermediate-scan-*` and `/tmp/checkpoint-770-coverage.md`. No
+rendering, screenshot or manual inspection was used. Continue with ObjectIsEmpty and existing-
+instance serializer contracts before closing this intermediate serializer audit.

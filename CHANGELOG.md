@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Exercised custom intermediate serializer child scanning with a nested custom type and exposed
+  CNA-DEMOS-ISSUE-089: registered serializers never receive their documented Initialize callback.
 - Extended the custom intermediate serializer with a typed nested envelope that writes and reads
   dynamic type metadata through the public reader/writer context, including missing, unknown and
   unrelated-type refusals.

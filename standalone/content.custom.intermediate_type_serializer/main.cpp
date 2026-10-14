@@ -10,6 +10,7 @@
 
 #include "Microsoft/Xna/Framework/Content/Pipeline/InvalidContentException.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/Serialization/Intermediate/IntermediateSerializer.hpp"
+#include "System/Object.hpp"
 #include "System/Xml/XmlReader.hpp"
 #include "System/Xml/XmlWriter.hpp"
 #include "System/Xml/XmlWriterSettings.hpp"
@@ -125,12 +126,14 @@ namespace
             type.Field("Name", &Attack::name);
             type.Field("Damage", &Attack::damage);
         }
+        bool operator==(const Attack&) const = default;
     };
 
     struct TypedEnvelope
     {
         static constexpr std::string_view XnaTypeName = "CnaDemos.TypedEnvelope";
         DiceRoll payload;
+        Attack encounter;
         bool operator==(const TypedEnvelope&) const = default;
     };
 
@@ -138,8 +141,28 @@ namespace
     {
     public:
         TypedEnvelopeSerializer() : ContentTypeSerializer<TypedEnvelope>("typedEnvelope") {}
+        [[nodiscard]] int InitializeCalls() const noexcept { return initializeCalls_; }
+        [[nodiscard]] int ScanCalls() const noexcept { return scanCalls_; }
+        [[nodiscard]] bool ScanSawInitialization() const noexcept { return scanSawInitialization_; }
 
     protected:
+        void Initialize(IntermediateSerializer& serializer) override
+        {
+            ++initializeCalls_;
+            attackSerializer_ = &serializer.GetTypeSerializer(System::Type::From<Attack>());
+        }
+
+        void ScanChildren(IntermediateSerializer& serializer, const ChildCallback& callback,
+                          const TypedEnvelope& value) override
+        {
+            ++scanCalls_;
+            scanSawInitialization_ = attackSerializer_ != nullptr;
+            // Object declares a dynamic child, causing the prepass to reserve the CnaDemos alias
+            // that WriteTypeName needs after the root namespace declarations have been emitted.
+            auto& objectSerializer = serializer.GetTypeSerializer(System::Type::From<System::Object>());
+            callback(objectSerializer, ToContentObject<Attack>(value.encounter));
+        }
+
         void Serialize(IntermediateWriter& output, const TypedEnvelope& value,
                        const ContentSerializerAttribute&) override
         {
@@ -152,6 +175,17 @@ namespace
             raw.setElementNameProperty("Payload");
             raw.setFlattenContentProperty(true);
             output.WriteRawObject<DiceRoll>(value.payload, raw, payloadSerializer);
+            xml.WriteEndElement();
+
+            auto& encounterSerializer = attackSerializer_ != nullptr
+                ? *attackSerializer_
+                : output.getSerializerProperty().GetTypeSerializer(System::Type::From<Attack>());
+            xml.WriteStartElement("Encounter");
+            output.WriteTypeName(System::Type::From<Attack>());
+            ContentSerializerAttribute encounterRaw;
+            encounterRaw.setElementNameProperty("Encounter");
+            encounterRaw.setFlattenContentProperty(true);
+            output.WriteRawObject<Attack>(value.encounter, encounterRaw, encounterSerializer);
             xml.WriteEndElement();
         }
 
@@ -167,8 +201,26 @@ namespace
             auto& payloadSerializer = input.getSerializerProperty().GetTypeSerializer(payloadType);
             ContentSerializerAttribute payload;
             payload.setElementNameProperty("Payload");
-            return {input.ReadObject<DiceRoll>(payload, payloadSerializer)};
+            TypedEnvelope result;
+            result.payload = input.ReadObject<DiceRoll>(payload, payloadSerializer);
+
+            if (!input.MoveToElement("Encounter"))
+                throw InvalidContentException("Typed envelope requires an Encounter element.");
+            const System::Type encounterType = input.ReadTypeName();
+            if (encounterType != System::Type::From<Attack>())
+                throw InvalidContentException("Typed envelope requires an Attack encounter.");
+            auto& encounterSerializer = input.getSerializerProperty().GetTypeSerializer(encounterType);
+            ContentSerializerAttribute encounter;
+            encounter.setElementNameProperty("Encounter");
+            result.encounter = input.ReadObject<Attack>(encounter, encounterSerializer);
+            return result;
         }
+
+    private:
+        ContentTypeSerializerBase* attackSerializer_ = nullptr;
+        int initializeCalls_ = 0;
+        int scanCalls_ = 0;
+        bool scanSawInitialization_ = false;
     };
 }
 
@@ -210,8 +262,9 @@ int main()
               attackXml.find("<Damage>2d6</Damage>") != std::string::npos,
               "described parent fields dispatch to the same registered custom serializer");
 
-        (void)IntermediateSerializer::AddTypeSerializer<TypedEnvelopeSerializer>();
-        const TypedEnvelope envelope{{3, 8}};
+        auto& envelopeSerializer = dynamic_cast<TypedEnvelopeSerializer&>(
+            IntermediateSerializer::AddTypeSerializer<TypedEnvelopeSerializer>());
+        const TypedEnvelope envelope{{3, 8}, {"Ambush", {2, 10}}};
         std::unique_ptr<System::Xml::XmlWriter> envelopeWriter(
             System::Xml::XmlWriter::CreateToString(settings));
         IntermediateSerializer::Serialize<TypedEnvelope>(*envelopeWriter, envelope, "");
@@ -219,6 +272,12 @@ int main()
         std::cout << envelopeXml << '\n';
         check(envelopeXml.find("<Payload Type=\"dice\">3d8</Payload>") != std::string::npos,
               "the envelope writes a nested dynamic type name and compact payload");
+        check(envelopeSerializer.ScanCalls() == 1 &&
+              envelopeXml.find("xmlns:CnaDemos=\"CnaDemos\"") != std::string::npos &&
+              envelopeXml.find("<Encounter Type=\"CnaDemos:Attack\">") != std::string::npos,
+              "ScanChildren reserves the namespace used by the nested custom Attack type");
+        check(envelopeSerializer.InitializeCalls() == 1 && envelopeSerializer.ScanSawInitialization(),
+              "Initialize runs before child scanning so nested serializers can be cached (CNA-DEMOS-ISSUE-089)");
         const auto readEnvelope = [](const std::string& document) {
             std::unique_ptr<System::Xml::XmlReader> typedReader(
                 System::Xml::XmlReader::CreateFromString(document));

@@ -15,6 +15,33 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-089 -- Intermediate serializers never receive their Initialize callback
+
+- **Area/API:** `ContentTypeSerializer::Initialize`, `IntermediateSerializer`, custom serializer
+  registration and the namespace-scanning pass.
+- **Reproduction:** register the custom `TypedEnvelopeSerializer`. Its `Initialize` override records
+  the call and caches the described Attack serializer from the supplied IntermediateSerializer.
+  Serialize an envelope whose `ScanChildren` override reports that Attack as a dynamic child, then
+  deserialize the emitted document.
+- **Observed:** `ScanChildren`, Serialize and Deserialize all run, the scan reserves the
+  `CnaDemos` namespace, and the nested `<Encounter Type="CnaDemos:Attack">` round-trips exactly.
+  `Initialize` is never called, so the serializer must perform a fallback lookup during Serialize.
+  SOFTWARE and OPENGLES3/Xvfb each pass16 of18 child controls and fail this invariant plus the
+  independent established ISSUE-088 invariant; stdout is byte-identical and stderr is empty.
+- **Cause observed in source:** `ContentTypeSerializerBase::InvokeInitialize` exists and the public
+  `Initialize` documentation says it retrieves and caches nested serializers. A source-wide search
+  finds no production caller. `RegisterTypeSerializer` installs the object without initializing it,
+  and `SerializeObject`/`DeserializeObject` construct a pass but never invoke initialization.
+- **Expected:** each registered custom serializer must receive `Initialize` with the active
+  IntermediateSerializer before child scanning or serialization/deserialization, with lifecycle
+  semantics that permit its documented nested-serializer cache. The demo's scan fallback is only
+  diagnostic; it does not make the failed callback pass.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The issue is deterministic, build-time-only and
+  independent of graphics. Evidence: `/tmp/checkpoint-770-intermediate-scan-*`. No CNA source was
+  modified and no upstream message was sent. ISSUE-088 remains the demo's primary knownIssue
+  marker.
+
 ### CNA-DEMOS-ISSUE-088 -- Conflicting intermediate XML shortcuts create a non-round-trippable serializer registration
 
 - **Area/API:** `IntermediateSerializer::AddTypeSerializer`, `RegisterTypeSerializer`,
