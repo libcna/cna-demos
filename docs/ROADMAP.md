@@ -4292,3 +4292,17 @@ byte-identically with empty stderr; strict C99, metadata compilation, diff check
 self-tests pass. Staged metadata reaches2643/3205 and `cnb.h` reaches132/272. Evidence:
 `checkpoint-609-c-cnb-texture-codecs-focused-*-direct.*`. No graphics device, GPU texture,
 renderer, filesystem, displayed pixels or project-built execution is claimed. Model data is next.
+
+## Focused610-C-CNB-model-core
+
+`c_api.content.cnb_model_core` adds30 model-data routes in26 renderer-free controls. A single
+neutral model owns two parented bones, a triangle part with copied vertex/index bytes, an external
+effect name and complete versioned part/material values. Exact atomic strings and byte transfers,
+numeric replacement, live aggregate counts, canonical booleans, nested bounds and stale ownership
+all pass. Eight independently named material texture slots are explicitly kept separate from the
+seven importer-state slots, where every coordinate set, UV transform and sampler round-trips.
+Both renderer-labelled direct runs pass byte-identically with empty stderr; strict C99, metadata
+compilation, diff checks and validation self-tests pass. Staged metadata reaches2673/3205 and
+`cnb.h` reaches162/272. Evidence:`checkpoint-610-c-cnb-model-core-focused-*-direct.*`. No document
+codec, ContentManager, graphics device, renderer or draw call is claimed. Morph targets and their
+weight timeline are next.
