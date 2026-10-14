@@ -64,6 +64,32 @@ int main()
             std::cout << (condition ? "  check: " : "  CHECK FAILED: ") << message << '\n';
             passed = condition && passed;
         };
+
+        ContentSerializerAttribute format;
+        check(format.getAllowNullProperty() && format.getCollectionItemNameProperty() == "Item" &&
+                  format.getElementNameProperty().empty() && !format.getFlattenContentProperty() &&
+                  !format.getHasCollectionItemNameProperty() && !format.getOptionalProperty() &&
+                  !format.getSharedResourceProperty(),
+              "a new format object exposes all XNA defaults");
+        format.setAllowNullProperty(false);
+        format.setCollectionItemNameProperty("Drop");
+        format.setElementNameProperty("Inventory");
+        format.setFlattenContentProperty(true);
+        format.setOptionalProperty(true);
+        format.setSharedResourceProperty(true);
+        const ContentSerializerAttribute clonedFormat = format.Clone();
+        check(!clonedFormat.getAllowNullProperty() && clonedFormat.getCollectionItemNameProperty() == "Drop" &&
+                  clonedFormat.getElementNameProperty() == "Inventory" && clonedFormat.getFlattenContentProperty() &&
+                  clonedFormat.getHasCollectionItemNameProperty() && clonedFormat.getOptionalProperty() &&
+                  clonedFormat.getSharedResourceProperty(),
+              "Clone retains every configured serializer option");
+        format.setCollectionItemNameProperty("");
+        format.setOptionalProperty(false);
+        check(format.getCollectionItemNameProperty() == "Item" && !format.getHasCollectionItemNameProperty() &&
+                  !format.getOptionalProperty() && clonedFormat.getCollectionItemNameProperty() == "Drop" &&
+                  clonedFormat.getHasCollectionItemNameProperty() && clonedFormat.getOptionalProperty(),
+              "resetting the original restores defaults without changing its clone");
+
         auto authored = std::make_shared<Encounter>();
         authored->name = "Gatekeeper";
         authored->health = 90;

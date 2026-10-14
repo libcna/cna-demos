@@ -1361,18 +1361,20 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused686
-projects the632-demo staged catalog to1998/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused687
+projects the632-demo staged catalog to2005/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
 machinery. The stock-effect families now retain only dispositioned protected OnApply hooks and one
 SkinnedEffect explicit-interface inventory artifact; real pass application reaches the hooks and
 focused671 proved the override dispatch contract. RenderTargetCube and VertexBufferBinding now have
-no member gap. GraphicsAdapter, the complete PackedVector namespace, PacketReader and all Design
-converter types now have no member gap. Continue with ContentSerializerAttribute's seven remaining
-state and clone members in `content.custom.intermediate_serializer`, retaining its real public
-serializer consumption as the behavioral context. Then continue with the next high-value behavior family,
+no member gap. GraphicsAdapter, the complete PackedVector namespace, PacketReader, all Design
+converter types and ContentSerializerAttribute now have no member gap. Audit the three remaining
+ordinary Content members next: ContentLoadException construction, ContentManager.ServiceProvider
+identity and ResourceContentManager.OpenStream dispatch in their existing workflows. Then record a
+semantic disposition for the four nominal attribute-wrapper types rather than adding inert wrapper
+demos. Continue with the next high-value behavior family,
 rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1381,7 +1383,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused686 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused687 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3252,6 +3254,24 @@ production library hashes remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2
 and `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No rendering, screenshot
 or visual inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was
 edited. Continue with ContentSerializerAttribute state and clone behavior next.
+
+Focused687 extends the existing separate-process intermediate serializer and closes all seven
+remaining ContentSerializerAttribute members. It first proves every XNA default, sets AllowNull,
+CollectionItemName, ElementName, FlattenContent, Optional and SharedResource together, clones the
+format and then resets the original's item name/optional state without changing the clone. Its real
+format consumption still renames Health and the established descriptor workflow still validates
+optional, required, ignored, null and collection serialization behavior.
+
+The child process passes14/14 controls on both SOFTWARE and OPENGLES3 selections with byte-identical
+stdout and empty stderr; the focused SOFTWARE CTest passes. Temporary coverage moves1998->2005/2326
+at632 demos,301/329 types and156/753 fields; Content reaches38/48 members. Evidence:
+`/tmp/checkpoint-687-*` and `/tmp/checkpoint-687-coverage.md`. Runner SHA-256 is
+`c5e12075b16be16cdb36ad124949f72758956e955e1d6b26d7c7b076edd414a4`; child SHA-256 is
+`921bc3cc247620203732459ca7042500454872304f96b9408fa0ec52f6a5bf64`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No rendering, screenshot or
+visual inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was
+edited. Continue the remaining ordinary Content member audit next.
 
 ## 15. Assumptions the next session must know
 

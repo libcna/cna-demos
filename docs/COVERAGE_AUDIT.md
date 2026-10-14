@@ -504,6 +504,20 @@ Design reaches51/51 non-field members. Evidence:`/tmp/checkpoint-686-*` and
 intentionally uncredited: the workflows prove their externally visible parsing and ordered-property
 effects, while direct protected-storage exposure would add no independent user behavior.
 
+### ContentSerializerAttribute state and cloning
+
+The existing separate-process intermediate serializer now checks every XNA default on a public
+ContentSerializerAttribute, configures AllowNull, CollectionItemName, ElementName, FlattenContent,
+Optional and SharedResource together, clones the complete state and resets the original without
+changing its clone. The following real XML workflow still consumes a second format object to rename
+Health, alongside descriptor-level collection, optional, null and ignored behavior.
+
+Focused687 credits all seven remaining members. The child process passes14/14 controls on SOFTWARE
+and OPENGLES3 selections with byte-identical stdout and empty stderr; the focused SOFTWARE CTest
+passes. Temporary coverage moves1998->2005/2326. Evidence:`/tmp/checkpoint-687-*` and
+`/tmp/checkpoint-687-coverage.md`. This is build-time XML and value-state coverage; no rendering or
+runtime content-manager behavior is claimed.
+
 ### Graphics-state lifetime and complete sampler presets
 
 | Members / behavior | Decision and evidence |

@@ -5536,3 +5536,17 @@ Temporary coverage moves1966->1998/2326 at632 demos,301/329 types and156/753 fie
 MathTypeConverter's two protected configuration fields remain intentionally uncredited because the
 public workflows already prove their externally visible effects. No rendering, screenshot or visual
 inspection was used. Continue ContentSerializerAttribute state and clone behavior next.
+
+## Focused687-content-serializer-attribute-state
+
+The existing intermediate serializer child closes all seven remaining ContentSerializerAttribute
+members. It proves every XNA default, configures AllowNull, CollectionItemName, ElementName,
+FlattenContent, Optional and SharedResource together, clones that complete state and resets the
+original without changing the clone. The retained XML workflow then consumes a real format object
+and preserves its descriptor-level null, optional, collection and ignored-field coverage.
+
+The child process passes14/14 controls on SOFTWARE and OPENGLES3 selections with byte-identical
+stdout and empty stderr; the focused SOFTWARE CTest passes. Temporary coverage moves1998->2005/2326
+at632 demos,301/329 types and156/753 fields; Content reaches38/48 members. Evidence:
+`/tmp/checkpoint-687-*` and `/tmp/checkpoint-687-coverage.md`. No rendering, screenshot or visual
+inspection was used. Continue the remaining ordinary Content member audit next.
