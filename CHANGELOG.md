@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added compiled SpriteFont framebuffer checks for exact CRLF/LF LineSpacing placement and visible
+  glyph ink under all four basic text tints.
 - Reworked transformed SpriteFont examples into framebuffer checks for per-axis layout scale,
   centre-origin rotation, and exact whole-string horizontal/vertical/combined mirroring.
 - Extended SpriteBatch layer-depth sorting with mixed DrawString/Draw framebuffer checks proving

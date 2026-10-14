@@ -6374,3 +6374,17 @@ all five validator self-tests and all four checkpoint-comparison tests pass. Tem
 remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-737-transformed-text-*` and `/tmp/checkpoint-737-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
+## Focused738-SpriteFont-basic-multiline-pixels
+
+The basic compiled-font demo now mixes CRLF and LF in its three-line input. One framebuffer check
+compares the repeated `Line ` prefix and proves the exact glyph mask recurs at each18-pixel
+LineSpacing interval. A second proves that opaque compiled glyph ink reaches every displayed
+White, Gold, LightGreen and LightSkyBlue tint. The tint assertion validates the scene but does not
+claim a separate color-multiplication behavior beyond SpriteBatch's existing tint coverage.
+
+SOFTWARE and OPENGLES3/X11 pass3/3, and the exact SOFTWARE CTest passes. Metadata remains635/0,
+all five validator self-tests and all four checkpoint-comparison tests pass. Temporary coverage
+remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-738-draw-string-*` and `/tmp/checkpoint-738-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.

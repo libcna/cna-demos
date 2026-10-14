@@ -333,6 +333,19 @@ remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C r
 `/tmp/checkpoint-737-transformed-text-*` and `/tmp/checkpoint-737-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
 
+Focused **738-SpriteFont-basic-multiline-pixels** extends
+`graphics.sprite_font.draw_string` from one metadata check to three controls. Its multiline input
+now mixes CRLF and LF; the repeated `Line ` prefix produces an exact pixel-identical mask at each
+18-pixel `LineSpacing` interval. A second aggregate framebuffer control confirms that opaque glyph
+ink reaches all four displayed White/Gold/LightGreen/LightSkyBlue tint paths. This validates the
+compiled-font scene without treating ordinary SpriteBatch tint multiplication as a new API gap.
+
+SOFTWARE and OPENGLES3/X11 pass3/3, and the exact SOFTWARE CTest passes. Metadata remains635/0,
+all five validator self-tests and all four checkpoint-comparison tests pass, and temporary coverage
+remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-738-draw-string-*` and `/tmp/checkpoint-738-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1596,12 +1609,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-737 are
-staged after it. Audit the basic `graphics.sprite_font.draw_string` multiline/tint picture only for
-text-specific behavior not already established by MeasureString, glyph-constructor and generic
-sprite tint controls. If it adds no meaningful contract, record that disposition and move to the
-SpriteBatch sorting table's remaining equal-depth/depth-buffer interaction. Keep both primary
-renderers green and do not add overload-only variants.
+HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-738 are
+staged after it. Audit the SpriteBatch sorting table's remaining equal-depth stability and enabled
+depth-buffer interaction. Add a focused in-place control only when CNA/XNA define an observable,
+portable contract; disposition unstable or renderer-specific ordering instead of encoding a false
+guarantee. Keep both primary renderers green and continue to the next behavior gap afterward.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

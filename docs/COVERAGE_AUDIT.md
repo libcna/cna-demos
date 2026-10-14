@@ -848,7 +848,7 @@ In particular, a successful bounded Game run does not itself verify the rendered
 | Characters, DefaultCharacter | `default_character` now passes six controls. It retains the missing-BMP-glyph refusal and substitution, rejects a fallback absent from Characters without replacing the valid `?`, clears the optional fallback and proves refusal returns, then restores `?` for drawing. The accented UTF-8 input demonstrates BMP decoding, not broad localization. CNA's public UTF-8 bridge deliberately maps invalid/out-of-BMP input to `?`; supplementary-code-point policy does not justify pretending SpriteFont's UTF-16-code-unit map accepts a new glyph kind. |
 | MeasureString(string), MeasureString(StringBuilder) | `measure_string` now passes seven controls: fixed-width advances, multiple/widest lines, trailing newline, exact zero for empty text and ignored carriage returns both alone within a line and as CRLF. `string_builder` retains equivalence with ToString. `glyph_constructor` supplies the unusual signed-bearing/tall-crop metrics and matches actual drawn placement. These representative rules cover the coherent layout contract; arbitrary glyph metric permutations add no concept. |
 | Spacing, LineSpacing, copy independence | `spacing` now passes four controls. Positive inter-character and doubled line spacing remain exact; changing the copy leaves the source getters unchanged. A second copy with Spacing=-2 reduces exactly two gaps in `ABC` while the one-glyph extent is unchanged. Texture storage remains shared by value handles, which is a resource-lifecycle decision rather than spacing behavior. |
-| DrawString overloads and transforms | `draw_string`, `string_builder` and `transformed_text` show ordinary/mutable text. `layer_depth_sorting` now proves depth0.25/0.75 glyphs share BackToFront ordering with a depth0.5 ordinary sprite independent of submission order. `transformed_text` point-samples compiled-font output: scalar versus Vector2 scale changes complete-layout bounds, a90-degree turn rotates both bounds and ink-centre offset around the `MeasureString` origin, and H/V/combined flags produce exact whole-layout occupancy reflections of asymmetric `LJ`. These three controls pass on both renderers. Redundant overload syntax needs no separate demo. |
+| DrawString overloads and transforms | `draw_string` now proves a repeated compiled-glyph prefix lands at exact LineSpacing intervals under mixed CRLF/LF input, with real ink under all four displayed tints; `string_builder` covers mutable text. `layer_depth_sorting` proves depth0.25/0.75 glyphs share BackToFront ordering with a depth0.5 ordinary sprite independent of submission order. `transformed_text` point-samples compiled-font output: scalar versus Vector2 scale changes complete-layout bounds, a90-degree turn rotates both bounds and ink-centre offset around the `MeasureString` origin, and H/V/combined flags produce exact whole-layout occupancy reflections of asymmetric `LJ`. Redundant overload syntax needs no separate demo. |
 | getTextureEXT, getGlyphBoundsEXT, getCroppingEXT, getKerningEXT | `glyph_constructor` now directly reads all four extensions and correlates the atlas, bounds, cropping and kerning entries by the Characters order. Caller-vector mutations prove the tables are retained values. This is the intended custom-layout/binding inspection workflow; no getter-per-demo expansion. Returned references must not outlive the font. |
 
 ### GamePad value identity and disconnected capabilities
@@ -1987,3 +1987,16 @@ temporary generated coverage remains302/329 types,2114/2326 non-field members,16
 2999/3205 C routes because the involved members were already credited. Evidence:
 `/tmp/checkpoint-737-transformed-text-*` and `/tmp/checkpoint-737-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
+### Focused738 SpriteFont basic multiline pixels
+
+`graphics.sprite_font.draw_string` now has runtime evidence for the basic compiled-font picture.
+The exact `Line ` occupancy mask repeats at each LineSpacing interval across CRLF and LF, while a
+second aggregate check finds real opaque glyph ink under all four displayed tints. The latter is
+scene validation rather than a new tint-semantics credit.
+
+Both primary renderers pass3/3 and the exact SOFTWARE CTest passes. Metadata remains635/0 and
+temporary generated coverage remains302/329 types,2114/2326 non-field members,167/753 fields and
+2999/3205 C routes. Evidence:`/tmp/checkpoint-738-draw-string-*` and
+`/tmp/checkpoint-738-coverage.md`. Pixel readback was programmatic; no screenshot or manual visual
+inspection was performed. No CNA issue was found.

@@ -4,6 +4,7 @@
 #include <optional>
 
 #include "CnaDemos/Demo.hpp"
+#include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SamplerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
@@ -41,13 +42,53 @@ namespace
             spriteBatch_->DrawString(*font_, "The colour argument tints the glyphs.", Vector2(40.0f, 90.0f),
                                      Color::Gold);
             // "\n" starts a new line, LineSpacing pixels lower.
-            spriteBatch_->DrawString(*font_, "Line one\nLine two\nLine three", Vector2(40.0f, 140.0f),
+            spriteBatch_->DrawString(*font_, "Line one\r\nLine two\nLine three", Vector2(40.0f, 140.0f),
                                      Color::LightGreen);
             spriteBatch_->DrawString(*font_, "0123456789 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~",
                                      Vector2(40.0f, 260.0f), Color::LightSkyBlue);
             spriteBatch_->DrawString(*font_, "The quick brown fox jumps over the lazy dog.", Vector2(40.0f, 300.0f),
                                      Color::White);
             spriteBatch_->End();
+
+            if (FramesDrawn() == 0)
+            {
+                const CnaDemos::BackBufferPixels pixels(getGraphicsDeviceProperty());
+                const int lineSpacing = font_->getLineSpacingProperty();
+                const int prefixWidth = static_cast<int>(font_->MeasureString("Line ").X);
+                int prefixInk = 0;
+                bool repeatedPrefixMatches = true;
+                for (int y = 0; y < lineSpacing; ++y)
+                {
+                    for (int x = 0; x < prefixWidth; ++x)
+                    {
+                        const bool first = pixels.At(40 + x, 140 + y) == Color::LightGreen;
+                        prefixInk += first ? 1 : 0;
+                        repeatedPrefixMatches = repeatedPrefixMatches &&
+                            (pixels.At(40 + x, 140 + lineSpacing + y) == Color::LightGreen) == first &&
+                            (pixels.At(40 + x, 140 + lineSpacing * 2 + y) == Color::LightGreen) == first;
+                    }
+                }
+                Context().Check(prefixInk > 0 && repeatedPrefixMatches,
+                                "CRLF and LF place the repeated glyph prefix at exact LineSpacing intervals");
+
+                int whiteInk = 0;
+                int goldInk = 0;
+                int greenInk = 0;
+                int blueInk = 0;
+                for (int y = 35; y < 330; ++y)
+                {
+                    for (int x = 35; x < 780; ++x)
+                    {
+                        const Color sample = pixels.At(x, y);
+                        whiteInk += sample == Color::White ? 1 : 0;
+                        goldInk += sample == Color::Gold ? 1 : 0;
+                        greenInk += sample == Color::LightGreen ? 1 : 0;
+                        blueInk += sample == Color::LightSkyBlue ? 1 : 0;
+                    }
+                }
+                Context().Check(whiteInk > 0 && goldInk > 0 && greenInk > 0 && blueInk > 0,
+                                "compiled glyph ink reaches the framebuffer under every displayed text tint");
+            }
 
             Game::Draw(gameTime);
         }
