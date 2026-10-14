@@ -1361,13 +1361,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused662
-projects the628-demo staged catalog to1714/2326 XNA members and153/753 fields at299/329 types.
-VertexBuffer, IndexBuffer, DynamicIndexBuffer, RenderTarget2D and IGraphicsDeviceService have no
-remaining generated gap; GraphicsResource retains only CLR Finalize by disposition. Audit the
-adjacent presentation value family next: PresentationParameters construction/window handle,
-RenderTargetBinding target/face identity, DisplayMode safe area/text and Viewport Y, using their
-existing presentation/render-target/viewport workflows.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused663
+projects the628-demo staged catalog to1721/2326 XNA members and153/753 fields at299/329 types.
+PresentationParameters, RenderTargetBinding, DisplayMode and Viewport have no remaining generated
+gap. Audit the graphics-state family next: remaining BlendState colour/mask members,
+DepthStencilState fail/mask members, RasterizerState multisample/bias, and disposal across the
+state classes, extending existing state/pixel workflows rather than adding property-list variants.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1376,7 +1375,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused662 last observed external `0562550c3` with six uncommitted
+the sibling CNA checkout; focused663 last observed external `0562550c3` with six uncommitted
 renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2830,6 +2829,23 @@ Evidence:`/tmp/checkpoint-662-*` and `/tmp/checkpoint-662-coverage.md`. No scree
 inspection was used. Sibling CNA remained external dirty `0562550c3` with six observed paths; no
 CNA source was edited. Production library hashes remain focused661; the runner is
 `fa6ea3e8a14c65cbf35383db39e93e2a81fb3230648729869b868c2c7b91d4a6`.
+
+Focused663 extends five existing presentation/value IDs and closes7 members.
+`presentation_parameters` grows5->7 controls with exact direct-construction defaults and live
+GameWindow handle identity. MRT's five controls now prove caller and device bindings retain both
+exact 2D targets; the cube workflow grows2->3 with a NegativeZ binding's target/face identity before
+real six-face rendering. Display modes grows5->7 with an authored Bgr565 safe rectangle and exact
+XNA-order text; viewport properties remains7 controls while its Bounds mutation now exercises a
+nonzero Y and all four components. SOFTWARE and OPENGLES3 pass presentation7/7, display7/7,
+cube3/3 and viewport7/7; MRT passes5/5 on OPENGLES3 and is a declared SOFTWARE custom-effects
+skip. Presentation, display modes and viewport have byte-identical stdout and empty stderr. Cube's
+pre-existing informational rasterized-pixel counts remain renderer-specific (431/0 versus447/10),
+while all controlled outcomes pass. All five SOFTWARE CTests pass (one skipped). Temporary coverage
+projects1714->1721/2326, leaving no gap in PresentationParameters, RenderTargetBinding,
+DisplayMode or Viewport. Evidence:`/tmp/checkpoint-663-*` and `/tmp/checkpoint-663-coverage.md`. No
+screenshot or visual inspection was used. Sibling CNA remained external dirty `0562550c3` with six
+observed paths; no CNA source was edited. Production library hashes remain focused661; the runner
+is `ff1e1186080c6d57b161eddc9c9c471ff6e56ba8390353f6d715b601544c62c7`.
 
 ## 15. Assumptions the next session must know
 

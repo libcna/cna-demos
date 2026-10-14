@@ -112,10 +112,17 @@ void main()
             GraphicsDevice& device = getGraphicsDeviceProperty();
 
             // Bind both targets; Clear clears every bound target.
-            device.SetRenderTargets({RenderTargetBinding(albedo_.get()), RenderTargetBinding(normals_.get())});
+            const RenderTargetBinding albedoBinding(albedo_.get());
+            const RenderTargetBinding normalBinding(normals_.get());
+            device.SetRenderTargets({albedoBinding, normalBinding});
             if (FramesDrawn() == 0)
             {
-                Context().Check(device.GetRenderTargets().size() == 2, "GetRenderTargets reports both bindings");
+                const auto bindings = device.GetRenderTargets();
+                Context().Check(bindings.size() == 2 &&
+                                    albedoBinding.getRenderTargetProperty() == albedo_.get() &&
+                                    bindings[0].getRenderTargetProperty() == albedo_.get() &&
+                                    bindings[1].getRenderTargetProperty() == normals_.get(),
+                                "bindings and GetRenderTargets preserve both exact target identities");
             }
             device.Clear(Color::Black);
             device.setDepthStencilStateProperty(DepthStencilState::None);
@@ -172,7 +179,8 @@ CNA_DEMOS_GAME(MultipleRenderTargetsDemo, {
                    "a two-output GLSL ShaderEffect writes the sphere's colour to the first and its normals to the "
                    "second, as a deferred renderer fills its G-buffer.",
     .apis = {"GraphicsDevice::SetRenderTargets", "GraphicsDevice::GetRenderTargets", "RenderTargetBinding",
-             "RenderTargetBinding::RenderTargetBinding", "RenderTarget2D::RenderTarget2D", "GraphicsDevice::SetRenderTarget",
+             "RenderTargetBinding::RenderTargetBinding", "RenderTargetBinding::RenderTarget",
+             "RenderTarget2D::RenderTarget2D", "GraphicsDevice::SetRenderTarget",
              "ShaderEffect::ShaderEffect"},
     .tags = {"3d", "render-target", "mrt", "deferred", "g-buffer", "shader"},
     .needs = CnaDemos::Need::ThreeD | CnaDemos::Need::CustomEffects | CnaDemos::Need::MultipleRenderTargets,

@@ -248,6 +248,21 @@ All six IDs pass on SOFTWARE and OPENGLES3 with byte-identical output and empty 
 focused CTests pass. GraphicsResource retains only CLR Finalize by disposition, and the other five
 target types have no generated member gap.
 
+### Presentation and render-target value objects
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| PresentationParameters constructor and DeviceWindowHandle | `graphics.device.presentation_parameters` directly checks the 800x480 Color/no-handle defaults, then proves the live device parameters carry the presenting GameWindow's handle alongside the established size/format/bounds/clone workflow. Both renderers pass7 controls. |
+| RenderTargetBinding.RenderTarget | The MRT workflow constructs named 2D bindings, submits them, and proves both the caller values and `GetRenderTargets` preserve the exact two target identities. OPENGLES3 passes5 controls; SOFTWARE is the established custom-effects capability skip. |
+| RenderTargetBinding.CubeMapFace | The cube-target workflow constructs a NegativeZ binding and proves it retains both the exact RenderTargetCube and face before the established six-face rendering/reflection path. Both renderers pass3 controls. The pre-existing diagnostic pixel counts differ by rasterizer (SOFTWARE 431/0, OPENGLES3 447/10), while all controlled outcomes pass. |
+| DisplayMode.TitleSafeArea and ToString | `graphics.graphics_adapter.display_modes` adds an authored 1920x1080 Bgr565 value. Its safe area is the full rectangle and its exact text includes dimensions, named format and derived aspect ratio in XNA order. Both renderers pass7 controls with identical output. |
+| Viewport.Y | The properties workflow now assigns a nonzero Y together with X/width/height through Bounds and checks all four components before the existing safe-area/default behavior. Both renderers pass7 controls with identical output. |
+
+Focused663 adds7 member credits without a new ID, moving temporary coverage1714->1721/2326.
+PresentationParameters, RenderTargetBinding, DisplayMode and Viewport have no generated member gap.
+All five focused SOFTWARE CTests pass (MRT skipped by declared capability). No screenshot or manual
+visual inspection was used.
+
 ### ContentManager (including CNA extensions)
 
 | Members / behavior | Decision and evidence |

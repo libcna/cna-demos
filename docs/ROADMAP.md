@@ -5129,3 +5129,23 @@ disposition; VertexBuffer, IndexBuffer, DynamicIndexBuffer, RenderTarget2D and
 IGraphicsDeviceService have no generated member gap. Evidence:`/tmp/checkpoint-662-*` and
 `/tmp/checkpoint-662-coverage.md`. No screenshot or visual inspection was used. Audit the adjacent
 presentation value family next.
+
+## Focused663-presentation-and-render-target-value-objects
+
+Five existing IDs close7 members. `graphics.device.presentation_parameters` grows5->7 controls
+with exact 800x480 Color/no-handle direct defaults and the live GameWindow handle identity.
+Multiple render targets retain both exact 2D target identities in caller bindings and
+GetRenderTargets. The cube workflow grows2->3 with an exact NegativeZ target/face binding before
+its real six-face rendering. Display modes grows5->7 with an authored 1920x1080 Bgr565 full safe
+area and exact XNA-order text. Viewport properties retains seven controls while its Bounds mutation
+now uses a nonzero Y and checks all four components.
+
+SOFTWARE and OPENGLES3 pass presentation7/7, display7/7, cube3/3 and viewport7/7. MRT passes5/5 on
+OPENGLES3 and is a declared SOFTWARE custom-effects skip. Comparable output is byte-identical for
+presentation, display and viewport; the cube's pre-existing informational rasterization counts
+differ (SOFTWARE431/0, OPENGLES3447/10) while every controlled outcome passes. All five focused
+SOFTWARE CTests pass (one skipped), and the build is diagnostic-free. Temporary coverage moves
+1714->1721/2326 at299/329 types and153/753 fields, leaving no gap in PresentationParameters,
+RenderTargetBinding, DisplayMode or Viewport. Evidence:`/tmp/checkpoint-663-*` and
+`/tmp/checkpoint-663-coverage.md`. No screenshot or visual inspection was used. Audit the remaining
+graphics-state members and disposal next.

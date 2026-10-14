@@ -19,6 +19,7 @@
 #include "Microsoft/Xna/Framework/Graphics/PrimitiveType.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RasterizerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RenderTarget2D.hpp"
+#include "Microsoft/Xna/Framework/Graphics/RenderTargetBinding.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RenderTargetCube.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SurfaceFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
@@ -65,6 +66,10 @@ namespace
             // Six 128x128 colour faces sharing one depth buffer format; rendered again every frame.
             environment_ = std::make_unique<RenderTargetCube>(device, 128, false, SurfaceFormat::Color,
                                                               DepthFormat::Depth24);
+            const RenderTargetBinding negativeZ(environment_.get(), CubeMapFace::NegativeZ);
+            Context().Check(negativeZ.getRenderTargetProperty() == environment_.get() &&
+                                negativeZ.getCubeMapFaceProperty() == CubeMapFace::NegativeZ,
+                            "a cube binding retains its exact target and selected face");
 
             cubeEffect_ = std::make_unique<BasicEffect>(device);
             cubeEffect_->EnableDefaultLighting();
@@ -196,7 +201,8 @@ CNA_DEMOS_GAME(RenderTargetCubeDemo, {
     .description = "Renders the scene six times a frame into a RenderTargetCube, once per CubeMapFace with a "
                    "90-degree view from the sphere's centre, then draws a mirror sphere whose EnvironmentMapEffect "
                    "samples those faces: a dynamic environment map that follows the orbiting cubes.",
-    .apis = {"RenderTargetCube::RenderTargetCube", "GraphicsDevice::SetRenderTarget", "CubeMapFace",
+    .apis = {"RenderTargetCube::RenderTargetCube", "RenderTargetBinding::RenderTargetBinding",
+             "RenderTargetBinding::CubeMapFace", "GraphicsDevice::SetRenderTarget", "CubeMapFace",
              "EnvironmentMapEffect::EnvironmentMap", "Matrix::CreatePerspectiveFieldOfView"},
     .tags = {"3d", "render-target", "cubemap", "reflection"},
     .needs = CnaDemos::Need::ThreeD,

@@ -35,6 +35,12 @@ namespace
                       static_cast<double>(current.getWidthProperty()) / current.getHeightProperty(), 1e-5,
                       "AspectRatio is Width / Height");
 
+        const DisplayMode authored(1920, 1080, SurfaceFormat::Bgr565);
+        ctx.Check(authored.getTitleSafeAreaProperty() == Microsoft::Xna::Framework::Rectangle(0, 0, 1920, 1080),
+                  "TitleSafeArea covers the complete authored display mode");
+        ctx.Check(authored.ToString() == "{Width:1920 Height:1080 Format:Bgr565 AspectRatio:1.777778}",
+                  "ToString reports dimensions, named format and derived aspect ratio in XNA order");
+
         // Every mode the display offers; indexing by SurfaceFormat keeps one format only.
         const DisplayModeCollection& modes = adapter.getSupportedDisplayModesProperty();
         ctx.Print("SupportedDisplayModes: {} mode(s)", modes.getCountProperty());
@@ -65,6 +71,7 @@ CNA_DEMOS_CONSOLE(DisplayModes, {
              "GraphicsAdapter::DeviceName", "GraphicsAdapter::IsDefaultAdapter", "GraphicsAdapter::IsWideScreen",
              "GraphicsAdapter::CurrentDisplayMode", "GraphicsAdapter::SupportedDisplayModes", "DisplayMode::Width",
              "DisplayMode::Height", "DisplayMode::Format", "DisplayMode::AspectRatio",
+             "DisplayMode::TitleSafeArea", "DisplayMode::ToString",
              "DisplayModeCollection::Item"},
     .tags = {"adapter", "display", "resolution", "monitor"},
     .restrictions = "Without a display (CI, SSH) CNA reports one fallback 800x480 mode.",

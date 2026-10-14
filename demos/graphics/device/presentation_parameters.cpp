@@ -29,6 +29,13 @@ namespace
             const PresentationParameters& pp = getGraphicsDeviceProperty().getPresentationParametersProperty();
             const Rectangle bounds = pp.getBoundsProperty();
 
+            PresentationParameters defaults;
+            Context().Check(defaults.getBackBufferWidthProperty() == 800 &&
+                                defaults.getBackBufferHeightProperty() == 480 &&
+                                defaults.getBackBufferFormatProperty() == SurfaceFormat::Color &&
+                                defaults.getDeviceWindowHandleProperty() == 0,
+                            "direct construction uses the 800x480 Color defaults with no window handle");
+
             Context().Print("BackBufferWidth      {}", pp.getBackBufferWidthProperty());
             Context().Print("BackBufferHeight     {}", pp.getBackBufferHeightProperty());
             Context().Print("BackBufferFormat     {}", Name(pp.getBackBufferFormatProperty()));
@@ -46,6 +53,8 @@ namespace
             Context().Check(pp.getDepthStencilFormatProperty() == DepthFormat::Depth24Stencil8,
                             "the preferred depth-stencil format was used");
             Context().Check(bounds == Rectangle(0, 0, 640, 360), "Bounds is the back buffer at the origin");
+            Context().Check(pp.getDeviceWindowHandleProperty() == getWindowProperty().getHandleProperty(),
+                            "DeviceWindowHandle identifies the GameWindow used for presentation");
 
             // Clone gives an independent copy -- the starting point for GraphicsDevice::Reset with
             // changed settings. Editing it does not touch the device's own parameters.
@@ -62,7 +71,8 @@ CNA_DEMOS_GAME(PresentationParametersDemo, {
     .title = "Presentation parameters",
     .description = "Reads the device's PresentationParameters (back-buffer size and formats, multisampling, "
                    "present interval, orientation, usage) and clones them.",
-    .apis = {"GraphicsDevice::PresentationParameters", "PresentationParameters::BackBufferWidth",
+    .apis = {"GraphicsDevice::PresentationParameters", "PresentationParameters::PresentationParameters",
+             "PresentationParameters::DeviceWindowHandle", "PresentationParameters::BackBufferWidth",
              "PresentationParameters::BackBufferHeight", "PresentationParameters::BackBufferFormat",
              "PresentationParameters::DepthStencilFormat", "PresentationParameters::MultiSampleCount",
              "PresentationParameters::PresentationInterval", "PresentationParameters::IsFullScreen",

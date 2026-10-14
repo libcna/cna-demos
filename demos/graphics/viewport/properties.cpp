@@ -23,9 +23,10 @@ namespace
 
         // Bounds is the same rectangle as a Rectangle, and can also be assigned.
         ctx.Check(viewport.getBoundsProperty() == Rectangle(0, 0, 800, 480), "Bounds is (X, Y, Width, Height)");
-        viewport.setBoundsProperty(Rectangle(400, 0, 400, 480));
-        ctx.Print("after Bounds = (400, 0, 400, 480)  {}", viewport.ToString());
-        ctx.Check(viewport.getXProperty() == 400 && viewport.getWidthProperty() == 400,
+        viewport.setBoundsProperty(Rectangle(400, 20, 400, 440));
+        ctx.Print("after Bounds = (400, 20, 400, 440)  {}", viewport.ToString());
+        ctx.Check(viewport.getXProperty() == 400 && viewport.getYProperty() == 20 &&
+                      viewport.getWidthProperty() == 400 && viewport.getHeightProperty() == 440,
                   "setting Bounds moves and resizes the viewport");
 
         // TitleSafeArea is the part guaranteed to be visible on a television. On a PC monitor
@@ -50,6 +51,7 @@ CNA_DEMOS_CONSOLE(ViewportProperties, {
     .description = "Builds a Viewport and reads its Bounds, AspectRatio, TitleSafeArea and depth range, including "
                    "what a default-constructed Viewport holds.",
     .apis = {"Viewport::Viewport", "Viewport::Bounds", "Viewport::AspectRatio", "Viewport::TitleSafeArea",
-             "Viewport::MinDepth", "Viewport::MaxDepth", "Viewport::ToString", "Viewport::X", "Viewport::Width"},
+             "Viewport::MinDepth", "Viewport::MaxDepth", "Viewport::ToString", "Viewport::X", "Viewport::Y",
+             "Viewport::Width"},
     .tags = {"viewport", "aspect-ratio", "safe-area"},
 })
