@@ -1361,14 +1361,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused670
-projects the629-demo staged catalog to1776/2326 XNA members and155/753 fields at301/329 types.
-EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining generated
-gaps. Their four collection types retain only CLR/C# enumerators already represented by C++
-iteration; do not add duplicate demos for them. Audit Effect's remaining constructor, Dispose and
-protected OnApply behavior next as one coherent derived-effect apply/lifecycle workflow, then move
-to GraphicsDevice's14 generated gaps. Keep the distinction between authored public reflection and
-compiler-populated FX reflection.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused671
+projects the630-demo staged catalog to1779/2326 XNA members and155/753 fields at301/329 types.
+Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
+generated gaps; their collection enumerators are dispositioned CLR/C# machinery. Audit
+GraphicsDevice's14 generated gaps next. Start with live status/display and the actual standalone
+MultiSampleMask/ReferenceStencil plus vertex texture/sampler collections; then cover reset/present
+and a separately owned device's construction/disposal lifecycle. `Finalize` is CLR machinery and
+`DeviceLost` is documented never to fire on desktop, so disposition rather than simulate them
+unless a supported real device-loss path is executed.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1377,7 +1378,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused670 built against external `1ad225ae28`. That checkout currently
+the sibling CNA checkout; focused671 built against external `1ad225ae28`. That checkout currently
 has six externally owned documentation/FNA3D paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2967,6 +2968,20 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 visual inspection was used. Sibling CNA advanced externally to `1ad225ae28` with six dirty
 documentation/FNA3D paths; no CNA source was edited here. Audit Effect construction, OnApply and
 disposal next.
+
+Focused671 adds `graphics.effect.custom_apply_lifecycle`, a six-control derived-effect workflow.
+Direct construction yields the exact empty-parameter `Default`/`P0` graph. Direct Effect::Apply
+and current-pass Apply each enter the overridden OnApply once. Dispose marks the object, raises one
+Disposing event, makes both apply routes throw before the hook and remains idempotent. SOFTWARE and
+OPENGLES3 pass6/6 with byte-identical stdout and empty stderr; the focused SOFTWARE CTest passes.
+Temporary coverage moves1776->1779/2326 at630 demos,301/329 types and155/753 fields, leaving no
+generated Effect member gap. Evidence:`/tmp/checkpoint-671-*` and
+`/tmp/checkpoint-671-coverage.md`. Runner SHA-256 is
+`ababcc3e7ad594ab57e984760ef38fd530a9e972142149f101aecf63a718206c`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. The demo does not draw,
+take a screenshot or claim visual behavior. Sibling CNA remained external `1ad225ae28` with six
+dirty documentation/FNA3D paths; no CNA source was edited. Audit GraphicsDevice next.
 
 ## 15. Assumptions the next session must know
 

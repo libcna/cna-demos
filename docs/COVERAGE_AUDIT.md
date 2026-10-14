@@ -210,6 +210,20 @@ EffectTechnique have no generated gap, and both collections retain only the disp
 enumerators. Evidence:`/tmp/checkpoint-670-*` and `/tmp/checkpoint-670-coverage.md`. No drawing,
 screenshot or visual inspection was used.
 
+### Base Effect apply and lifecycle
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Constructor | `custom_apply_lifecycle` directly constructs a derived base Effect and verifies its empty parameter collection plus exact `Default`/`P0` reflection graph. |
+| OnApply | The derived override counts one call from CNA's direct Apply extension and one from the current pass. This exercises the protected hook through both real application paths. |
+| Dispose | Disposal marks the Effect before raising one Disposing event; both direct and pass application then throw ObjectDisposedException without entering OnApply, and repeated disposal is idempotent. |
+
+Focused671 adds one coherent six-control ID and credits Effect's last three inventory members,
+moving temporary coverage1776->1779/2326 at630 demos. SOFTWARE and OPENGLES3 pass with byte-
+identical stdout and empty stderr; the focused SOFTWARE CTest passes. Effect has no generated
+member gap. Evidence:`/tmp/checkpoint-671-*` and `/tmp/checkpoint-671-coverage.md`. The workflow
+does not draw, take a screenshot or claim visual behavior.
+
 ### ShaderEffect and shader dialect selection
 
 Source review of ShaderEffect.hpp/.cpp, Effect::Clone's public contract, the four GLSL shader/MRT

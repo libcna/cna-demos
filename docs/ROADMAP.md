@@ -5269,3 +5269,18 @@ EffectParameterCollection, EffectPassCollection and EffectTechniqueCollection re
 enumerator entries already represented by C++ iteration, so they do not warrant duplicate demos.
 Evidence:`/tmp/checkpoint-670-*` and `/tmp/checkpoint-670-coverage.md`. No drawing, screenshot or
 visual inspection was used. Audit the base Effect constructor, OnApply hook and disposal next.
+
+## Focused671-base-Effect-apply-and-lifecycle
+
+New `graphics.effect.custom_apply_lifecycle` closes Effect's last three inventory members in six
+controls. A derived base Effect begins with an empty parameter set and exact `Default`/`P0`
+reflection graph. Direct Effect::Apply and current-pass Apply each enter the protected OnApply hook
+once. Dispose marks the object and raises one event; both apply routes then throw before entering
+the hook, and repeated disposal is idempotent.
+
+SOFTWARE and OPENGLES3 pass6/6 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. Temporary coverage moves1776->1779/2326 at630 demos,301/329 types and155/753 fields,
+leaving no generated Effect member gap. Evidence:`/tmp/checkpoint-671-*` and
+`/tmp/checkpoint-671-coverage.md`. The workflow does not draw, take a screenshot or claim visual
+behavior. Audit GraphicsDevice's remaining state, reset/present and lifecycle members next;
+disposition its CLR Finalize and platform-specific DeviceLost behavior explicitly.
