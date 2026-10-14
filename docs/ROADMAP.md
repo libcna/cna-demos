@@ -145,7 +145,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (42 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (43 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
   diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
   specular_lights now has eight on both renderers with inspected labeled comparisons.
@@ -164,7 +164,8 @@ a check that all authored colors remain visible and that a blank texture row can
   occlusion map on ambient light), ✅ `graphics.pbr_effect.image_based_lighting` (real irradiance,
   BRDF lookup, intensity and roughness-selected specular mips on OPENGLES3), ✅ `SkinnedPbrEffect`
   (`graphics.model.skinned_pbr`, including the same sampled environment on its fixed animated pose).
-  Remaining: observable `KHR_materials_specular` factors/maps and the newer texture-transform/
+  ✅ `graphics.pbr_effect.specular_material` isolates observable `KHR_materials_ior` and
+  `KHR_materials_specular` factors plus both maps. Remaining: the newer texture-transform/
   colour-space controls.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
@@ -7909,3 +7910,18 @@ exact CTest passes as skipped. The warning-free incremental build uses at most t
 remains642/0, self-tests pass5/5 and4/4, and temporary coverage remains302/329 types,2114/2326
 members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-825-skinned-ibl-*` and
 `/tmp/checkpoint-825-coverage.md`. Continue with observable PBR specular-extension behavior.
+
+## Focused826-PbrEffect-dielectric-specular-material
+
+New `graphics.pbr_effect.specular_material` isolates the `KHR_materials_ior` and
+`KHR_materials_specular` paths with a black diffuse environment, white prefiltered specular and a
+scale-one/bias-zero BRDF lookup. Eight controls verify neutral defaults and combined state, then
+render exact centres for default/IOR2/zero/red/half-strength/blue-map cases: `{41,41,41}`,
+`{113,113,113}`, black, `{41,0,0}`, `{20,20,20}` and `{0,0,41}`.
+
+Two OPENGLES3/Xvfb runs pass8/8 identically; the inspected800x480 capture shows all six expected
+panels. SOFTWARE takes the declared PBR capability skip and the exact CTest passes as skipped. The
+warning-free incremental build uses at most three jobs; metadata is643/0, self-tests pass5/5 and
+4/4, and temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C
+routes. Evidence:`/tmp/checkpoint-826-pbr-specular-*` and `/tmp/checkpoint-826-coverage.md`.
+Continue with PBR UV-selection/transform and colour-space behavior.

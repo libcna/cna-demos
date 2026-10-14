@@ -2409,3 +2409,18 @@ its animation pose.
 Two OPENGLES3/Xvfb runs pass5/5 with identical output. The captured final frame was inspected and
 shows the expected green articulated column. SOFTWARE is a declared fallback skip. This does not
 duplicate the rigid demo's mip/intensity matrix or claim physical-GPU behavior.
+
+### PbrEffect dielectric specular factors and maps
+
+New `graphics.pbr_effect.specular_material` uses controlled image-based light to remove diffuse and
+directional-light ambiguity. Black irradiance, a white prefiltered cube, a scale-one/bias-zero BRDF
+texel and linear output make the quad centre equal to the dielectric Fresnel result times intensity
+four. The default IOR1.5 produces neutral `{41,41,41}`; IOR2 produces `{113,113,113}`; factor0
+removes the result; a red colour factor produces `{41,0,0}`; alpha128 in the scalar strength map
+produces `{20,20,20}`; and a linear blue colour map produces `{0,0,41}`. The demo also verifies all
+five factor/map properties round-trip together before rendering.
+
+Two OPENGLES3/Xvfb runs pass8/8 with identical values. The inspected capture visibly separates all
+six cases. SOFTWARE remains a declared PBR fallback skip. This proves the public
+`KHR_materials_ior`/`KHR_materials_specular` effect path, not glTF import, HDR output, alternate UV
+sets/transforms or sRGB decoding; those remain separate behavior decisions.

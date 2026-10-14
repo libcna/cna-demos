@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
-* Mostly complete: 6 (effects and shaders, 42; the C `effects.h` route audit is complete).
+* Mostly complete: 6 (effects and shaders, 43; the C `effects.h` route audit is complete).
 * In progress: 7 (models/glTF, 23), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
@@ -66,10 +66,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-642 project-built catalog demos in18 categories: math78, game33, graphics171, audio23, core3,
+643 project-built catalog demos in18 categories: math78, game33, graphics172, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,280 game and199 standalone;
-606 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,281 game and199 standalone;
+607 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -147,6 +147,8 @@ Focused824 adds the actual `PbrEffect` image-based-lighting draw path: invalid f
 irradiance, intensity scaling, BRDF lookup and roughness-selected prefiltered cube mips.
 Focused825 extends the existing skinned-PBR model with the parallel complete environment bundle and
 proves the unchanged animated pose samples green irradiance after its original orange-light check.
+Focused826 adds controlled pixel evidence for `KHR_materials_ior`/`KHR_materials_specular` factors
+and both optional maps, including exact dielectric F0 and texture-channel effects.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -1848,10 +1850,11 @@ Return to the deeper XNA behavior audit and select the next observable gap from 
 the generated member/type inventories are dispositioned, but comprehensive behavioral coverage is
 not claimed. Focused824 closes the ROADMAP's rigid `PbrEffect` image-based-lighting gap with actual
 OPENGLES3 pixels. Focused825 closes the parallel `SkinnedPbrEffect` path in the existing model demo
-without adding an ID or weakening its original animation/material evidence. Continue the modern PBR
-behavior audit with the still-uncovered `KHR_materials_specular` factors and maps, keeping their
-pixel effects distinct from state-only checks. Build with at most three compile jobs and keep
-focused evidence current.
+without adding an ID or weakening its original animation/material evidence. Focused826 covers
+`KHR_materials_specular` factors and both maps with exact pixels. Continue the modern PBR behavior
+audit with per-slot UV selection/transforms and base/emissive/specular colour-space controls; keep
+each claim tied to a sampled result. Build with at most three compile jobs and keep focused evidence
+current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -3145,6 +3148,22 @@ most three jobs; metadata remains642/0, both tool self-test suites pass and temp
 302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-825-skinned-ibl-*` and `/tmp/checkpoint-825-coverage.md`. No SOFTWARE IBL or
 physical-GPU claim is made. Continue with observable PBR specular-extension behavior.
+
+### Focused826-PbrEffect-dielectric-specular-material
+
+New `graphics.pbr_effect.specular_material` uses black irradiance, a white prefiltered cube and a
+scale-one/bias-zero BRDF texel to isolate dielectric Fresnel reflection on six quads. Eight controls
+prove neutral defaults and joint factor/map state, then exact linear-output centres: IOR1.5 gives
+`{41,41,41}`, IOR2 gives `{113,113,113}`, factor0 gives black, a red factor gives `{41,0,0}`, a
+strength-map alpha128 gives `{20,20,20}`, and a linear blue colour map gives `{0,0,41}`.
+
+Two OPENGLES3/Xvfb runs pass8/8 with identical output and no stderr. The inspected800x480 capture
+shows the expected six neutral/brighter/black/red/half/blue panels. SOFTWARE takes the declared PBR
+capability skip and its exact CTest passes as skipped. The warning-free incremental build uses at
+most three jobs; metadata is643/0, both tool self-test suites pass and temporary coverage remains
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-826-pbr-specular-*` and `/tmp/checkpoint-826-coverage.md`. No physical-GPU or HDR
+claim is made. Continue with the PBR texture-coordinate/transform and colour-space controls.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
