@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Planes: construction, signed distance and which side things are on.
+#include <any>
 #include <string_view>
 
 #include "CnaDemos/Demo.hpp"
@@ -8,6 +9,7 @@
 #include "Microsoft/Xna/Framework/Plane.hpp"
 #include "Microsoft/Xna/Framework/PlaneIntersectionType.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
+#include "Microsoft/Xna/Framework/Vector4.hpp"
 
 using namespace Microsoft::Xna::Framework;
 
@@ -40,6 +42,18 @@ namespace
         ctx.Check(floor.DotCoordinate(Vector3(0.0f, 0.0f, 0.0f)) == -2.0f, "the origin is 2 below it");
         // DotNormal ignores D: the projection of a direction onto the normal.
         ctx.Check(floor.DotNormal(Vector3(3.0f, -1.0f, 0.0f)) == -1.0f, "DotNormal measures a direction against the normal");
+        // Dot uses W to include (or scale) the plane's distance term.
+        ctx.Check(floor.Dot(Vector4(0.0f, 3.0f, 0.0f, 2.0f)) == -1.0f,
+                  "Dot evaluates a homogeneous Vector4 including D times W");
+
+        const Plane sameFloor(Vector3::Up, -2.0f);
+        const Plane changedFloor(Vector3::Up, -3.0f);
+        ctx.Check(floor.Equals(sameFloor) && floor.Equals(std::any{sameFloor}) &&
+                      !floor.Equals(std::any{42}) && !floor.Equals(std::any{}),
+                  "typed and boxed equality accept only the same normal and distance");
+        ctx.Check(floor == sameFloor && floor != changedFloor &&
+                      floor.GetHashCode() == sameFloor.GetHashCode(),
+                  "plane operators and hashes follow all four coefficients");
 
         // Side tests for volumes.
         const auto box = floor.Intersects(BoundingBox(Vector3(0.0f, 3.0f, 0.0f), Vector3(1.0f, 4.0f, 1.0f)));
@@ -55,7 +69,9 @@ CNA_DEMOS_CONSOLE(PlaneClassify, {
     .title = "Planes and signed distance",
     .description = "Builds a Plane from a normal and distance and from three points, measures signed distances "
                    "with DotCoordinate and DotNormal, and classifies volumes as Front, Back or Intersecting.",
-    .apis = {"Plane::Plane", "Plane::Normal", "Plane::D", "Plane::DotCoordinate", "Plane::DotNormal",
-             "Plane::Intersects", "PlaneIntersectionType::Front", "PlaneIntersectionType::Intersecting"},
+    .apis = {"Plane::Plane", "Plane::Normal", "Plane::D", "Plane::Dot", "Plane::DotCoordinate",
+             "Plane::DotNormal", "Plane::Equals", "Plane::GetHashCode", "Plane::op_Equality",
+             "Plane::op_Inequality", "Plane::Intersects", "PlaneIntersectionType::Front",
+             "PlaneIntersectionType::Intersecting"},
     .tags = {"plane", "distance", "classification"},
 })

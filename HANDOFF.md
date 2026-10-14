@@ -1359,11 +1359,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused652
-projects the628-demo staged catalog to1559/2326 XNA members and closes BoundingSphere containment
-plus frustum enclosure with exact/tolerant geometric outcomes. Audit BoundingFrustum's Left/Right/
-Top/Bottom planes, typed/boxed equality, operators, hash and text plus adjacent Plane identity/Dot
-behavior next in the existing culling/classification workflows.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused653
+projects the628-demo staged catalog to1573/2326 XNA members and closes BoundingFrustum's six-plane
+value presentation plus Plane's remaining Dot/identity members. Audit Color and Rectangle value
+identity next in their existing construction/edge workflows, including typed/boxed equality,
+operators and hashes; keep IPackedVector behavior in the existing packed-value workflow rather than
+crediting it from identity alone.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1372,7 +1373,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused652 last observed external `af798b73a4` with eleven uncommitted
+the sibling CNA checkout; focused653 last observed external `af798b73a4` with twelve uncommitted
 renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2666,6 +2667,19 @@ C-route change. Evidence:`/tmp/checkpoint-652-*` and `/tmp/checkpoint-652-covera
 screenshot or visual inspection was used. Production library hashes remain complete647; the runner
 is `fb21e5d9c8a24dd312aedeb7e301caa606777b3267d7f741f6aac53fb3128298`. Sibling CNA remained
 external dirty `af798b73a4` with eleven observed paths; no CNA source was edited here.
+
+Focused653 extends `math.bounding_frustum.culling` from six to11 controls and
+`math.plane.classify_points` from seven to10. An identity frustum gives exact left/right/top/bottom
+planes and canonical six-plane text; an independent copy, changed matrix and boxed/wrong/empty
+values exercise typed/boxed equality, both operators and equal hashes. The authored floor plane
+adds homogeneous Vector4 Dot plus the same complete identity contract. SOFTWARE and OPENGLES3 pass
+11/11 and10/10 respectively with byte-identical per-ID stdout and empty stderr; both focused
+SOFTWARE CTests pass and the build is diagnostic-free. Temporary coverage projects1559->
+1573/2326 without a catalog/type/C-route change. Evidence:`/tmp/checkpoint-653-*` and
+`/tmp/checkpoint-653-coverage.md`. No rendering, screenshot or visual inspection was used.
+Production library hashes remain complete647; the runner is
+`91f4946b17f20fdfbddb4a1cfa54b4a0de216e9cbf7bf329caa6a5eee1865bf3`. Sibling CNA remained
+external dirty `af798b73a4` with twelve observed paths; no CNA source was edited here.
 
 ## 15. Assumptions the next session must know
 

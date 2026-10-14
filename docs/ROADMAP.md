@@ -4955,3 +4955,17 @@ free. Temporary coverage moves1557->1559/2326 without changing the628-demo/type/
 Evidence:`/tmp/checkpoint-652-*` and `/tmp/checkpoint-652-coverage.md`. No rendering, screenshot or
 visual inspection was used. Audit BoundingFrustum's four side planes, equality/hash/operators/text
 and adjacent Plane identity/Dot behavior next in the existing geometry workflows.
+
+## Focused653-BoundingFrustum-and-Plane-value-behavior
+
+`math.bounding_frustum.culling` grows from six to11 controls. Its camera-culling workflow remains
+intact, while an identity matrix makes the left/right/top/bottom planes exact and inspectable. An
+independent identity frustum, a translated matrix and boxed/wrong/empty values establish typed and
+boxed equality, both operators, matrix-derived hashing and canonical six-plane text.
+`math.plane.classify_points` grows from seven to10 controls with homogeneous Vector4 Dot plus its
+normal-and-distance equality/operator/hash contract. SOFTWARE and OPENGLES3 pass11/11 and10/10
+with byte-identical per-ID stdout and empty stderr; both focused SOFTWARE CTests pass and the build
+is diagnostic-free. Temporary coverage moves1559->1573/2326 without changing the628-demo/type/C-
+route counts. Evidence:`/tmp/checkpoint-653-*` and `/tmp/checkpoint-653-coverage.md`. No rendering,
+screenshot or visual inspection was used. Audit Color and Rectangle value identity next in their
+existing construction/edge workflows, keeping IPackedVector packing as a separate behavior check.
