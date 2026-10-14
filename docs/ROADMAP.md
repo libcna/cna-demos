@@ -6702,3 +6702,20 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-756-cnj-loader-*` and
 `/tmp/checkpoint-756-coverage.md`. No rendering, screenshot or manual inspection was used. No CNA
 issue was found. Continue in the same workflow with the public registration guards for empty name,
 empty factory and a C++ type already owned by another content reader.
+
+## Focused757-CNJ-registration-guards
+
+`content.custom.cnj_loader` adds three controls, reaching18. Empty type names and empty factories
+are rejected with `std::invalid_argument` before claiming the game-owned C++ type. A custom CNJ
+registration for the built-in Texture2D type is rejected with `std::logic_error` before its
+unreachable callback runs. The subsequent valid Enemy registration and repaired-path loads still
+succeed, proving the refused calls leave manager state usable.
+
+SOFTWARE and OPENGLES3/Xvfb pass18/18, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, validator/checkpoint self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-757-cnj-loader-*` and
+`/tmp/checkpoint-757-coverage.md`. No rendering, screenshot or manual inspection was used. No CNA
+issue was found. The CNJ custom-loader table is semantically closed; continue with the existing
+ReadAsset ownership workflow's callback deduplication, callback-exception and partial-load cleanup
+gaps.

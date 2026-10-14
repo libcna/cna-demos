@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the custom CNJ registration audit with empty-name/factory refusals and fail-fast
+  rejection when a built-in content reader already owns the requested C++ asset type.
 - Extended the custom CNJ loader with unknown-type and future-version envelope refusals that occur
   before factory invocation, plus same-manager repair/retry proof that failed loads are not cached.
 - Extended custom CNB loader registration checks with empty-factory, built-in/reserved identifier

@@ -11,8 +11,10 @@
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
+#include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 
 using namespace Microsoft::Xna::Framework::Content;
+using Microsoft::Xna::Framework::Graphics::Texture2D;
 
 namespace
 {
@@ -133,6 +135,39 @@ namespace
         TemporaryContent temporary{path};
         int retryReads = 0;
         ContentManager guarded(nullptr, path.string());
+
+        bool emptyNameRefused = false;
+        try
+        {
+            guarded.RegisterCnjLoader<Enemy>("",
+                [](const std::string&, ContentManager&) { return Enemy{}; });
+        }
+        catch (const std::invalid_argument&) { emptyNameRefused = true; }
+        ctx.Check(emptyNameRefused, "an empty CNJ type name is rejected as an invalid argument");
+
+        bool emptyFactoryRefused = false;
+        try
+        {
+            guarded.RegisterCnjLoader<Enemy>(
+                "CnaDemos.Empty", ContentManager::CnjLoaderFn<Enemy>{});
+        }
+        catch (const std::invalid_argument&) { emptyFactoryRefused = true; }
+        ctx.Check(emptyFactoryRefused, "an empty CNJ factory is rejected as an invalid argument");
+
+        bool occupiedTypeRefused = false;
+        bool unreachableFactoryInvoked = false;
+        try
+        {
+            guarded.RegisterCnjLoader<Texture2D>("CnaDemos.Texture",
+                [&unreachableFactoryInvoked](const std::string&, ContentManager&) -> Texture2D {
+                    unreachableFactoryInvoked = true;
+                    throw std::logic_error("An unreachable Texture2D factory was invoked");
+                });
+        }
+        catch (const std::logic_error&) { occupiedTypeRefused = true; }
+        ctx.Check(occupiedTypeRefused && !unreachableFactoryInvoked,
+                  "a built-in C++ asset type refuses a shadow CNJ loader before invoking it");
+
         guarded.RegisterCnjLoader<Enemy>("CnaDemos.Enemy",
             [&retryReads](const std::string& text, ContentManager&) {
                 const auto data = nlohmann::json::parse(text).at("data");

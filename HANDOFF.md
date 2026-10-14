@@ -1738,12 +1738,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-756 close the
-texture/render-target lifetimes, ContentManager disposal, CNB registration and CNJ envelope
-dispatch/retry. Continue in the existing `content.custom.cnj_loader` workflow with the remaining
-public registration guards: empty type name, empty factory and a C++ type already owned by another
-content reader. Prove refused calls do not poison later valid registration/use; do not add a
-guard-only ID. Build with at most three compile jobs and keep focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-757 close the
+texture/render-target lifetimes, ContentManager disposal and the CNB/CNJ registration tables.
+Continue with the existing `content.content_manager.read_asset_ownership` workflow: audit and
+execute callback deduplication, callback-exception behavior and cleanup of resources recorded
+before a partial read failure. Keep the actual ReadAsset/ContentReader APIs visible and distinguish
+the known default-recorder defect (ISSUE-011) from any new behavior. Do not add a narrow lifecycle
+ID. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1885,6 +1886,20 @@ SOFTWARE and OPENGLES3/Xvfb pass15/15, and the exact SOFTWARE CTest passes. The 
 incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
 remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-756-cnj-loader-*` and `/tmp/checkpoint-756-coverage.md`. No rendering, screenshot
+or manual inspection was used, and no CNA issue was found.
+
+### Focused757 CNJ registration guards
+
+`content.custom.cnj_loader` grows from fifteen to eighteen controls. Empty type names and empty
+factories are rejected with `std::invalid_argument` before claiming the game-owned C++ type. A
+custom CNJ registration for the built-in Texture2D type is rejected with `std::logic_error` before
+its unreachable callback runs. The subsequent valid Enemy registration and repaired-path loads
+still succeed, proving refused calls leave manager state usable.
+
+SOFTWARE and OPENGLES3/Xvfb pass18/18, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
+remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-757-cnj-loader-*` and `/tmp/checkpoint-757-coverage.md`. No rendering, screenshot
 or manual inspection was used, and no CNA issue was found.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
