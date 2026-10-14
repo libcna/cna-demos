@@ -72,8 +72,8 @@ diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,279 game and
 605 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
-totals are `input_gamepad.h`61/63,
-`input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
+totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
+`input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
@@ -137,6 +137,8 @@ Focused820 adds all11 renderer metadata/classification routes, brings `core_ext.
 staged C coverage to3052/3205.
 Focused821 adds all18 production renderer selection/fallback routes, brings `core_ext.h` to56/57
 and staged C coverage to3070/3205. Its only gap is the explicitly test-only reset route.
+Focused822 adds eight state/property routes to existing input demos, closes `input_gamepad.h`,
+`input_keyboard.h` and `input_touch.h`, and brings staged C coverage to3078/3205.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -1825,10 +1827,13 @@ ASCII routes; focused819 closes `graphics_ext.h` with the remaining DebugDraw fr
 surface. Focused820 covers all renderer category/maturity and compiled-in identity/name metadata;
 focused821 covers all18 production selection/fallback routes with a real absent-renderer
 substitution. The remaining `core_ext.h` reset route is explicitly test-only and intentionally
-uncredited. Audit the remaining135 public C routes next, classifying test scaffolding and trivial
-fixed type-name helpers instead of inflating demo count. Prioritize the remaining production input
-and device descriptor behavior. Build with at most three compile jobs and keep focused evidence
-current.
+uncredited. Focused822 adds fixed state text and touch process-property contracts to existing demos;
+`input_gamepad.h`, `input_keyboard.h` and `input_touch.h` are complete. The sole `input.h` gap,
+explicit live gamepad dead-zone capture, stays manual because a disconnected neutral state cannot
+distinguish its three modes. Audit the remaining127 public C routes next. Classify the host sensor,
+touch-device, joystick and haptic descriptor branches as hardware/manual unless a public
+deterministic fixture exists, then continue with production device behavior. Build with at most
+three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -3046,6 +3051,28 @@ coverage is302/329 types,2114/2326 members,169/753 fields and3070/3205 C routes.
 intentionally uncredited. Evidence:`/tmp/checkpoint-821-renderer-selection-*` and
 `/tmp/checkpoint-821-coverage.md`. No screenshot or visual-quality claim is made. Continue the
 remaining C-route audit with production input/device descriptor behavior.
+
+### Focused822-C-input-state-text-and-touch-process-properties
+
+Three existing input workflows add eight public routes without adding demo IDs. The gamepad and
+keyboard value audits now size/copy their exact fixed canonical type names, prove the text is
+independent of state fields and preserve destinations on short/invalid requests. The touch-state
+workflow toggles and restores mouse-to-touch emulation, rejects a noncanonical boolean without
+mutation, round-trips an authored opaque window token and restores the runtime binding. The live
+explicit gamepad dead-zone overload remains manual: a disconnected neutral controller cannot
+distinguish None, IndependentAxes and Circular, while the existing pure analog route already proves
+all three algorithms.
+
+SOFTWARE and OPENGLES3/Xvfb gamepad runs pass57/57 byte-identically; touch runs pass75/75
+byte-identically. OPENGLES3 keyboard/mouse passes42/42; SOFTWARE executes the new text controls and
+then retains its documented no-desktop-pointer skip. All stderr files are empty. The three exact
+SOFTWARE CTests pass twice and skip the same keyboard/mouse case once. The incremental build uses at
+most three jobs, metadata remains641/0, both tool self-test suites pass, and temporary coverage is
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. `input_gamepad.h` is63/63,
+`input_keyboard.h`17/17 and `input_touch.h`47/47; `input.h` remains14/15 for the manual dead-zone
+capture. Evidence:`/tmp/checkpoint-822-input-*` and `/tmp/checkpoint-822-coverage.md`. No physical
+input, screenshot or manual visual inspection is claimed. Audit the hardware-dependent host
+descriptor branches next, then move to remaining production device routes.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

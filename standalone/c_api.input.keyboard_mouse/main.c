@@ -44,6 +44,7 @@ static int key_down(const CNA_KeyboardState* keyboard, CNA_Key key)
 
 static void demonstrate_keyboard_values(CnaDemo* demo, const CNA_KeyboardState* snapshot)
 {
+    static const char ExpectedText[] = "Microsoft.Xna.Framework.Input.KeyboardState";
     static const CNA_Key reordered_keys[2] = {CNA_KEY_SPACE, CNA_KEY_LEFT};
     static const CNA_Key a_key[1] = {CNA_KEY_A};
     static const CNA_Key num_pad1_key[1] = {CNA_KEY_NUM_PAD1};
@@ -57,6 +58,9 @@ static void demonstrate_keyboard_values(CnaDemo* demo, const CNA_KeyboardState* 
     CNA_Bool different = CNA_FALSE;
     int32_t a_hash = 0;
     int32_t num_pad1_hash = 1;
+    uint64_t text_bytes = UINT64_MAX;
+    char text[64];
+    char before[64];
 
     memset(&empty, 0x5a, sizeof(empty));
     cna_demo_check(
@@ -96,6 +100,26 @@ static void demonstrate_keyboard_values(CnaDemo* demo, const CNA_KeyboardState* 
             cna_keyboard_state_get_hash_code(&num_pad1_state, &num_pad1_hash) == CNA_RESULT_SUCCESS &&
             a_hash == num_pad1_hash,
         "the canonical eight-word XOR hash permits the documented 32-slot A/NumPad1 collision");
+
+    memset(text, 0xA5, sizeof(text));
+    cna_demo_check(
+        demo,
+        cna_keyboard_state_get_string_size(snapshot, &text_bytes) == CNA_RESULT_SUCCESS &&
+            text_bytes == sizeof(ExpectedText) - 1U &&
+            cna_keyboard_state_copy_string(snapshot, text, text_bytes, &text_bytes) ==
+                CNA_RESULT_SUCCESS &&
+            memcmp(text, ExpectedText, sizeof(ExpectedText) - 1U) == 0 &&
+            (unsigned char)text[sizeof(ExpectedText) - 1U] == 0xA5U,
+        "keyboard state text is the exact fixed canonical type name without a terminator");
+    memset(text, 0xA5, sizeof(text));
+    memcpy(before, text, sizeof(text));
+    cna_demo_check(
+        demo,
+        cna_keyboard_state_copy_string(&empty, text, UINT64_C(2), &text_bytes) ==
+                CNA_RESULT_BUFFER_TOO_SMALL &&
+            text_bytes == sizeof(ExpectedText) - 1U && memcmp(text, before, sizeof(text)) == 0 &&
+            cna_keyboard_state_get_string_size(0, &text_bytes) == CNA_RESULT_INVALID_ARGUMENT,
+        "the fixed keyboard text is value-independent and short or invalid requests are atomic");
 }
 
 static void demonstrate_keyboard_platform(CnaDemo* demo, CNA_Handle game)

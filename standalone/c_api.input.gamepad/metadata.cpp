@@ -24,6 +24,7 @@ CNA_DEMOS_STANDALONE({
              "cna_gamepad_state_get_dpad", "cna_gamepad_state_get_thumb_sticks",
              "cna_gamepad_state_get_triggers", "cna_gamepad_state_set_packet_number_ext",
              "cna_gamepad_state_equals", "cna_gamepad_state_not_equals", "cna_gamepad_state_get_hash_code",
+             "cna_gamepad_state_get_string_size", "cna_gamepad_state_copy_string",
              "cna_gamepad_exclude_axis_dead_zone", "cna_gamepad_state_is_button_down",
              "cna_gamepad_state_is_button_up", "cna_gamepad_apply_dead_zone", "cna_gamepad_set_vibration",
              "cna_gamepad_set_light_bar_ext", "cna_gamepad_set_trigger_vibration_ext", "cna_gamepad_get_gyro_ext",

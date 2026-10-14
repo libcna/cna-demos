@@ -231,6 +231,7 @@ static void analog_values(CnaDemo* demo)
 
 static void state_values(CnaDemo* demo)
 {
+    static const char ExpectedText[] = "Microsoft.Xna.Framework.Input.GamePadState";
     static const CNA_GamePadButtonFlags held[2] = {CNA_GAMEPAD_BUTTON_A, CNA_GAMEPAD_BUTTON_DPAD_UP};
     const CNA_Vector2 left = {1.0f, 0.0f};
     const CNA_Vector2 right = {0.0f, -1.0f};
@@ -246,6 +247,9 @@ static void state_values(CnaDemo* demo)
     CNA_Bool is_up = CNA_FALSE;
     int32_t hash = 0;
     int32_t component_hash = 1;
+    uint64_t text_bytes = UINT64_MAX;
+    char text[64];
+    char before[64];
     const CNA_GamePadButtonFlags derived = CNA_GAMEPAD_BUTTON_LEFT_THUMBSTICK_RIGHT |
                                            CNA_GAMEPAD_BUTTON_RIGHT_THUMBSTICK_DOWN | CNA_GAMEPAD_BUTTON_LEFT_TRIGGER;
 
@@ -322,6 +326,26 @@ static void state_values(CnaDemo* demo)
             cna_gamepad_state_get_hash_code(&component_state, &component_hash) == CNA_RESULT_SUCCESS &&
             hash == component_hash,
         "the canonical state hash ignores an analog difference that state equality observes");
+
+    memset(text, 0xA5, sizeof(text));
+    cna_demo_check(
+        demo,
+        cna_gamepad_state_get_string_size(&state, &text_bytes) == CNA_RESULT_SUCCESS &&
+            text_bytes == sizeof(ExpectedText) - 1U &&
+            cna_gamepad_state_copy_string(&state, text, text_bytes, &text_bytes) ==
+                CNA_RESULT_SUCCESS &&
+            memcmp(text, ExpectedText, sizeof(ExpectedText) - 1U) == 0 &&
+            (unsigned char)text[sizeof(ExpectedText) - 1U] == 0xA5U,
+        "gamepad state text is the exact fixed canonical type name without a terminator");
+    memset(text, 0xA5, sizeof(text));
+    memcpy(before, text, sizeof(text));
+    cna_demo_check(
+        demo,
+        cna_gamepad_state_copy_string(&rest, text, UINT64_C(2), &text_bytes) ==
+                CNA_RESULT_BUFFER_TOO_SMALL &&
+            text_bytes == sizeof(ExpectedText) - 1U && memcmp(text, before, sizeof(text)) == 0 &&
+            cna_gamepad_state_get_string_size(0, &text_bytes) == CNA_RESULT_INVALID_ARGUMENT,
+        "the fixed state text is value-independent and short or invalid requests are atomic");
 }
 
 static void dead_zones(CnaDemo* demo)

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the C gamepad, keyboard and touch value/property route audits by adding fixed state
+  text, mouse-to-touch emulation and opaque touch-window binding to existing input workflows.
 - Added a standalone C renderer-selection workflow that performs a real absent-backend fallback,
   inspects selected versus active identity, latch state and exact diagnostic history.
 - Added a renderer-independent C metadata workflow covering all public renderer categories,

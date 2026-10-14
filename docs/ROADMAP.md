@@ -7837,3 +7837,25 @@ coverage is302/329 types,2114/2326 members,169/753 fields and3070/3205 C routes.
 intentionally uncredited. Evidence:`/tmp/checkpoint-821-renderer-selection-*` and
 `/tmp/checkpoint-821-coverage.md`. No screenshot or visual-quality claim is made. Continue the
 remaining C-route audit with production input/device descriptor behavior.
+
+## Focused822-C-input-state-text-and-touch-process-properties
+
+Three existing input workflows add eight public routes without adding demo IDs. The gamepad and
+keyboard value audits now size/copy their exact fixed canonical type names, prove the text is
+independent of state fields and preserve destinations on short/invalid requests. The touch-state
+workflow toggles and restores mouse-to-touch emulation, rejects a noncanonical boolean without
+mutation, round-trips an authored opaque window token and restores the runtime binding. The live
+explicit gamepad dead-zone overload remains manual: a disconnected neutral controller cannot
+distinguish None, IndependentAxes and Circular, while the existing pure analog route already proves
+all three algorithms.
+
+SOFTWARE and OPENGLES3/Xvfb gamepad runs pass57/57 byte-identically; touch runs pass75/75
+byte-identically. OPENGLES3 keyboard/mouse passes42/42; SOFTWARE executes the new text controls and
+then retains its documented no-desktop-pointer skip. All stderr files are empty. The three exact
+SOFTWARE CTests pass twice and skip the same keyboard/mouse case once. The incremental build uses at
+most three jobs, metadata remains641/0, both tool self-test suites pass, and temporary coverage is
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. `input_gamepad.h` is63/63,
+`input_keyboard.h`17/17 and `input_touch.h`47/47; `input.h` remains14/15 for the manual dead-zone
+capture. Evidence:`/tmp/checkpoint-822-input-*` and `/tmp/checkpoint-822-coverage.md`. No physical
+input, screenshot or manual visual inspection is claimed. Audit the hardware-dependent host
+descriptor branches next, then move to remaining production device routes.

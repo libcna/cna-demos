@@ -64,11 +64,15 @@ int main(int argc, char** argv)
     CNA_Bool removed = CNA_FALSE;
     CNA_Bool empty = CNA_FALSE;
     CNA_Bool device_exists = CNA_TRUE;
+    CNA_Bool mouse_emulation = CNA_FALSE;
+    CNA_Bool changed_emulation = CNA_FALSE;
     int32_t low_hash = 0;
     int32_t high_hash = 0;
     int32_t index = -1;
     uint64_t copied_count = 0U;
     uint64_t text_bytes = 0U;
+    uint64_t original_window = UINT64_MAX;
+    uint64_t window = UINT64_MAX;
     char text[64];
     char untouched_text[64];
 
@@ -180,6 +184,40 @@ int main(int argc, char** argv)
     if (!cna_demo_check_result(&demo, cna_game_create(&create_info, &game), "cna_game_create")) {
         return cna_demo_finish(&demo);
     }
+
+    cna_demo_check(
+        &demo,
+        cna_touch_panel_get_mouse_touch_emulation_enabled_ext(game, &mouse_emulation) ==
+                CNA_RESULT_SUCCESS &&
+            cna_touch_panel_set_mouse_touch_emulation_enabled_ext(
+                game, mouse_emulation == CNA_TRUE ? CNA_FALSE : CNA_TRUE) == CNA_RESULT_SUCCESS &&
+            cna_touch_panel_get_mouse_touch_emulation_enabled_ext(game, &changed_emulation) ==
+                CNA_RESULT_SUCCESS &&
+            changed_emulation != mouse_emulation &&
+            cna_touch_panel_set_mouse_touch_emulation_enabled_ext(game, UINT8_C(2)) ==
+                CNA_RESULT_INVALID_ARGUMENT &&
+            cna_touch_panel_get_mouse_touch_emulation_enabled_ext(game, &changed_emulation) ==
+                CNA_RESULT_SUCCESS &&
+            changed_emulation != mouse_emulation &&
+            cna_touch_panel_set_mouse_touch_emulation_enabled_ext(game, mouse_emulation) ==
+                CNA_RESULT_SUCCESS,
+        "mouse-to-touch emulation toggles, rejects noncanonical booleans and restores its prior state");
+    cna_demo_check(
+        &demo,
+        cna_touch_panel_get_window_handle(game, &original_window) == CNA_RESULT_SUCCESS &&
+            cna_touch_panel_set_window_handle(game, UINT64_C(0x12345678)) == CNA_RESULT_SUCCESS &&
+            cna_touch_panel_get_window_handle(game, &window) == CNA_RESULT_SUCCESS &&
+            window == UINT64_C(0x12345678) &&
+            cna_touch_panel_set_window_handle(game, original_window) == CNA_RESULT_SUCCESS &&
+            cna_touch_panel_get_window_handle(game, &window) == CNA_RESULT_SUCCESS &&
+            window == original_window,
+        "the opaque touch window token round-trips exactly and restores the runtime binding");
+    cna_demo_check(
+        &demo,
+        cna_touch_panel_get_mouse_touch_emulation_enabled_ext(game, 0) ==
+                CNA_RESULT_INVALID_ARGUMENT &&
+            cna_touch_panel_get_window_handle(game, 0) == CNA_RESULT_INVALID_ARGUMENT,
+        "touch-panel process properties refuse null outputs");
 
     cna_demo_check_result(&demo, cna_touch_panel_reset_for_tests_ext(game),
                           "reset the process-wide touch fixture");
