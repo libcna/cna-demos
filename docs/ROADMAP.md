@@ -6278,3 +6278,19 @@ non-field members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-731-cross-device-*` and `/tmp/checkpoint-731-begin-end-regression-*`. No screenshot
 or manual visual inspection was performed. Continue with representative rotation/origin
 framebuffer bounds rather than adding overload-only demos.
+
+## Focused732-SpriteBatch-rotation-origin-pixels
+
+The existing `graphics.sprite_batch.rotation` replaces its frame-time-dependent pair with six
+deterministic point-sampled examples. Four centre-origin arrows at0/90/180/270 degrees keep their
+yellow centre on each requested position while the authored red corner marker moves clockwise
+through the four predicted quadrants. A second pair at90 degrees distinguishes centre and top-left
+origins by their exact marker regions and by the transparent top-left pivot retaining the
+CornflowerBlue background.
+
+SOFTWARE and OPENGLES3/X11 pass3/3, and the exact SOFTWARE CTest passes. Metadata remains635/0,
+all five validator self-tests and all four checkpoint-comparison tests pass, and coverage remains
+302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-732-rotation-*`. Pixel readback was programmatic; no screenshot or manual visual
+inspection was performed. Audit the existing scalar/Vector2 scale scene next and keep its two
+overload families in one coherent framebuffer contract.

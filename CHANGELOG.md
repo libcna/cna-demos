@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Reworked `graphics.sprite_batch.rotation` into deterministic cardinal-angle/origin examples with
+  framebuffer checks for fixed pivots, clockwise orientation and top-left versus centre rotation.
 - Added `graphics.sprite_batch.cross_device_texture`, a two-device ownership workflow proving that
   foreign textures are rejected at Draw without poisoning the receiving SpriteBatch.
 - Extended `graphics.sprite_batch.begin_end_rules` with disposed-texture Draw rejection and
