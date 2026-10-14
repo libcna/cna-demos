@@ -5067,3 +5067,22 @@ coverage moves1660->1687/2326 at299/329 types, leaving only GraphicsDeviceManage
 constants and PreferMultiSampling/PreferredBackBufferFormat properties in this family. Evidence:
 `/tmp/checkpoint-659-*` and `/tmp/checkpoint-659-coverage.md`. No screenshot or visual inspection
 was used. Exercise those four members through actual applied presentation parameters next.
+
+## Focused660-graphics-manager-preferences-and-query-discrepancy
+
+`game.graphics_device_manager.back_buffer_size` grows from two to eight controls. Before changing
+the manager it proves its preferred dimensions equal the public 800x480 constants. Device creation
+then retains requested Bgr565/true preferences, applies the adapter-selected Color/Depth24 pair and
+uses a real multisample count; ApplyChanges subsequently reaches 800x600, Color and zero samples.
+This closes GraphicsDeviceManager's last two members and names its last two fields: temporary
+coverage moves1687->1689/2326 members and151->153/753 fields at299/329 types, leaving no gap in the
+manager, information, preparing-event-args or manager-interface family.
+
+The adapter comparison found CNA-DEMOS-ISSUE-083. QueryBackBufferFormat selects zero samples for
+the same request whose device creation applies four on SOFTWARE and eight on OPENGLES3; its format
+and depth selections agree, and disabling multisampling later works. Both marked runs execute eight
+controls and fail only that exact agreement check, with byte-identical stdout and empty stderr; the
+known-issue SOFTWARE CTest passes and the build is diagnostic-free. Evidence:
+`/tmp/checkpoint-660-*` and `/tmp/checkpoint-660-coverage.md`. No screenshot or visual inspection
+was used. Audit callable Game and GameWindow members next, dispositioning CLR Finalize and
+platform-specific behavior explicitly.

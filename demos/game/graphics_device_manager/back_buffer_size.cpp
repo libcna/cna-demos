@@ -2,7 +2,11 @@
 // Choosing the back-buffer size: PreferredBackBufferWidth/Height and ApplyChanges.
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
+#include "Microsoft/Xna/Framework/Graphics/DepthFormat.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsAdapter.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsProfile.hpp"
+#include "Microsoft/Xna/Framework/Graphics/SurfaceFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Viewport.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -15,9 +19,15 @@ namespace
     public:
         BackBufferSizeDemo()
         {
+            defaultSizeMatchesConstants_ =
+                Graphics().getPreferredBackBufferWidthProperty() == GraphicsDeviceManager::DefaultBackBufferWidth &&
+                Graphics().getPreferredBackBufferHeightProperty() == GraphicsDeviceManager::DefaultBackBufferHeight;
+
             // Set before the device exists (in the constructor), these choose the initial size.
             Graphics().setPreferredBackBufferWidthProperty(640);
             Graphics().setPreferredBackBufferHeightProperty(360);
+            Graphics().setPreferredBackBufferFormatProperty(SurfaceFormat::Bgr565);
+            Graphics().setPreferMultiSamplingProperty(true);
         }
 
     protected:
@@ -27,6 +37,29 @@ namespace
             Context().Print("initial back buffer: {}x{}", viewport.getWidthProperty(), viewport.getHeightProperty());
             Context().Check(viewport.getWidthProperty() == 640 && viewport.getHeightProperty() == 360,
                             "the device was created at the preferred size");
+
+            Context().Check(defaultSizeMatchesConstants_ && GraphicsDeviceManager::DefaultBackBufferWidth == 800 &&
+                                GraphicsDeviceManager::DefaultBackBufferHeight == 480,
+                            "the initial preferred size comes from the public 800x480 constants");
+            Context().Check(Graphics().getPreferredBackBufferFormatProperty() == SurfaceFormat::Bgr565 &&
+                                Graphics().getPreferMultiSamplingProperty(),
+                            "the manager retains the requested packed format and multisampling preference");
+
+            SurfaceFormat selectedFormat = SurfaceFormat::Color;
+            DepthFormat selectedDepth = DepthFormat::None;
+            int selectedSamples = 0;
+            static_cast<void>(getGraphicsDeviceProperty().getAdapterProperty().QueryBackBufferFormat(
+                Graphics().getGraphicsProfileProperty(), SurfaceFormat::Bgr565,
+                Graphics().getPreferredDepthStencilFormatProperty(), 8,
+                selectedFormat, selectedDepth, selectedSamples));
+            const auto& parameters = getGraphicsDeviceProperty().getPresentationParametersProperty();
+            Context().Check(parameters.getBackBufferFormatProperty() == selectedFormat &&
+                                parameters.getDepthStencilFormatProperty() == selectedDepth,
+                            "device creation applies the adapter-selected back-buffer and depth formats");
+            Context().Check(parameters.getMultiSampleCountProperty() > 1,
+                            "the multisampling preference creates a multisampled back buffer");
+            Context().Check(parameters.getMultiSampleCountProperty() == selectedSamples,
+                            "the adapter query predicts the multisample count that device creation applies");
         }
 
         void Update(GameTime& gameTime) override
@@ -36,6 +69,8 @@ namespace
             {
                 Graphics().setPreferredBackBufferWidthProperty(800);
                 Graphics().setPreferredBackBufferHeightProperty(600);
+                Graphics().setPreferredBackBufferFormatProperty(SurfaceFormat::Color);
+                Graphics().setPreferMultiSamplingProperty(false);
                 Graphics().ApplyChanges();
 
                 const auto& parameters = getGraphicsDeviceProperty().getPresentationParametersProperty();
@@ -44,6 +79,11 @@ namespace
                 Context().Check(parameters.getBackBufferWidthProperty() == 800
                                     && parameters.getBackBufferHeightProperty() == 600,
                                 "ApplyChanges resized the back buffer");
+                Context().Check(Graphics().getPreferredBackBufferFormatProperty() == SurfaceFormat::Color &&
+                                    !Graphics().getPreferMultiSamplingProperty() &&
+                                    parameters.getBackBufferFormatProperty() == SurfaceFormat::Color &&
+                                    parameters.getMultiSampleCountProperty() == 0,
+                                "ApplyChanges applies the revised format and disables multisampling");
             }
             Game::Update(gameTime);
         }
@@ -55,6 +95,7 @@ namespace
         }
 
     private:
+        bool defaultSizeMatchesConstants_ = false;
         int updates_ = 0;
     };
 }
@@ -62,12 +103,20 @@ namespace
 CNA_DEMOS_GAME(BackBufferSizeDemo, {
     .id = "game.graphics_device_manager.back_buffer_size",
     .title = "Back-buffer size",
-    .description = "Creates the device at 640x360 with PreferredBackBufferWidth/Height, then resizes it to 800x600 "
-                   "at run time with GraphicsDeviceManager::ApplyChanges.",
-    .apis = {"GraphicsDeviceManager::PreferredBackBufferWidth", "GraphicsDeviceManager::PreferredBackBufferHeight",
+    .description = "Starts from GraphicsDeviceManager's default-size constants, creates a 640x360 multisampled "
+                   "device with a requested packed format, then applies an 800x600 Color back buffer without "
+                   "multisampling at run time.",
+    .apis = {"GraphicsDeviceManager::DefaultBackBufferWidth", "GraphicsDeviceManager::DefaultBackBufferHeight",
+             "GraphicsDeviceManager::PreferredBackBufferWidth", "GraphicsDeviceManager::PreferredBackBufferHeight",
+             "GraphicsDeviceManager::PreferredBackBufferFormat", "GraphicsDeviceManager::PreferMultiSampling",
              "GraphicsDeviceManager::ApplyChanges", "PresentationParameters::BackBufferWidth",
-             "PresentationParameters::BackBufferHeight", "GraphicsDevice::Viewport",
+             "PresentationParameters::BackBufferHeight", "PresentationParameters::BackBufferFormat",
+             "PresentationParameters::MultiSampleCount", "GraphicsAdapter::QueryBackBufferFormat",
+             "GraphicsDevice::Viewport",
              "GraphicsDevice::PresentationParameters"},
-    .tags = {"resolution", "window", "device"},
+    .tags = {"resolution", "window", "device", "multisampling", "format"},
     .frames = 6,
+    .restrictions = "CNA-DEMOS-ISSUE-083: QueryBackBufferFormat reports zero samples before the device applies "
+                    "a supported multisample count.",
+    .knownIssue = "CNA-DEMOS-ISSUE-083",
 })

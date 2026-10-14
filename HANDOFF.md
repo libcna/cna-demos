@@ -84,7 +84,9 @@ Complete647 exercises all2999 credited C routes and all current catalog IDs in b
 suites. It absorbs every staged C batch through complete `models.h`, the focused SpriteFont route,
 and the deeper XNA member batches through Picture/PictureAlbum identity.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
-Known-issue demos: 35 (`graphics.sprite_batch.begin_end_rules` CNA-DEMOS-ISSUE-082,
+Complete647 has 35 known-issue demos. The staged catalog has36 after focused660 adds
+`game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
+`graphics.sprite_batch.begin_end_rules` CNA-DEMOS-ISSUE-082,
 `c_api.gamer.achievement_collection` CNA-DEMOS-ISSUE-077,
 `c_api.net.local_gamer_packets` CNA-DEMOS-ISSUE-075,
 `c_api.audio.spatial_state` CNA-DEMOS-ISSUE-073,
@@ -114,7 +116,7 @@ CNA-DEMOS-ISSUE-012,
 CNA-DEMOS-ISSUE-022, `graphics.model.gltf_cameras` CNA-DEMOS-ISSUE-023, `math.formatting.to_string`
 CNA-DEMOS-ISSUE-024, `net.network_session.simulated_conditions` CNA-DEMOS-ISSUE-030,
 `graphics.model.clip_interpolation` CNA-DEMOS-ISSUE-031, `net.network_session.join_refused`
-CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE-034 and -035).
+CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE-034 and -035.
 Passing documentation/result issues ISSUE-068, ISSUE-069, ISSUE-071, ISSUE-072, ISSUE-074,
 ISSUE-076, ISSUE-078 and ISSUE-081 do not add
 runtime knownIssue markers.
@@ -1359,12 +1361,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused659
-projects the628-demo staged catalog to1687/2326 XNA members at299/329 types. Every
-GraphicsDeviceInformation, PreparingDeviceSettingsEventArgs and IGraphicsDeviceManager member is
-covered; GraphicsDeviceManager now lacks only its two public default-size constants and the
-PreferMultiSampling/PreferredBackBufferFormat preference pair. Audit those four members through
-actual applied presentation parameters in the existing graphics-manager workflows next.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused660
+projects the628-demo staged catalog to1689/2326 XNA members and153/753 fields at299/329 types.
+GraphicsDeviceManager, GraphicsDeviceInformation, PreparingDeviceSettingsEventArgs and
+IGraphicsDeviceManager now have no inventory gaps. Audit callable Game and GameWindow members next
+in the existing lifecycle/window workflows, dispositioning CLR Finalize and platform-only behavior
+explicitly instead of manufacturing variants.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -2769,6 +2771,22 @@ remaining gap, while GraphicsDeviceManager retains only its two default-size con
 preference properties. Evidence:`/tmp/checkpoint-659-*` and `/tmp/checkpoint-659-coverage.md`. No
 screenshot or visual inspection was used. Production library hashes remain complete647; the runner
 is `e80a8122118ad5f5a99251aa8c6cacf3f5e4a098e1ecc88a174829fd609cdede`. Sibling CNA remained
+external dirty `73991b01f7` with six observed paths; no CNA source was edited.
+
+Focused660 extends `game.graphics_device_manager.back_buffer_size` from two to eight controls. It
+proves the initial preferred size equals the public 800x480 constants, retains Bgr565/true
+preferences, applies the adapter-selected Color/Depth24 format pair with real multisampling, then
+uses ApplyChanges to reach an 800x600 Color/zero-sample device. This closes the last two manager
+properties and names its last two fields: temporary coverage projects1687->1689/2326 members and
+151->153/753 fields, leaving no GraphicsDeviceManager family gap. The comparison also exposed
+CNA-DEMOS-ISSUE-083: QueryBackBufferFormat returns zero samples while the same device creation
+applies4 on SOFTWARE and8 on OPENGLES3. Both marked runs execute8 controls, fail only that exact
+query-agreement check, have byte-identical stdout and empty stderr; the known-issue SOFTWARE CTest
+passes. The build is diagnostic-free. Evidence:`/tmp/checkpoint-660-*` and
+`/tmp/checkpoint-660-coverage.md`; the initial exact-value probes are
+`/tmp/checkpoint-660-diagnostic*`. No screenshot or visual inspection was used. Production library
+hashes remain complete647; the runner is
+`6ecdbb68ca0ffcbca50510de599b738675632800f28d7c56f44f088e79c8daf8`. Sibling CNA remained
 external dirty `73991b01f7` with six observed paths; no CNA source was edited.
 
 ## 15. Assumptions the next session must know

@@ -15,6 +15,38 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-083 -- Adapter back-buffer query reports zero samples before a multisampled device is created
+
+- **Area/API:** `GraphicsAdapter::QueryBackBufferFormat`,
+  `GraphicsDeviceManager::PreferMultiSampling` and the applied
+  `PresentationParameters::MultiSampleCount`.
+- **Reproduction:** in `game.graphics_device_manager.back_buffer_size`, request Bgr565, the
+  default Depth24 and multisampling through GraphicsDeviceManager. Before inspecting the created
+  device, query its adapter for the same profile, formats and eight samples; compare all selected
+  values with the device's stored presentation parameters.
+- **Observed:** on SOFTWARE the query selects `Color`, `Depth24`, 0 samples while device creation
+  applies `Color`, `Depth24`, 4 samples. On OPENGLES3 the same query returns 0 while creation
+  applies 8 samples. The format and depth answers agree, and disabling multisampling through
+  `ApplyChanges` writes the expected zero to the device.
+- **Cause observed in source:** `GraphicsAdapter::QueryBackBufferFormat` can clamp samples only
+  through the selected renderer descriptor's `adapterQueries.clampMultiSampleCount` callback.
+  The SOFTWARE descriptor has no adapter queries, and OPENGLES3 supplies only a render-target
+  format predicate. Their live renderer instances nevertheless implement and apply supported
+  multisample counts. CNA's own current handoff independently records the same query-versus-reset
+  discrepancy for the surviving renderers.
+- **Expected:** the public format query's selected multisample count should predict the count the
+  same adapter/profile/settings combination will apply, or the API must expose a documented
+  inability to answer before device creation rather than returning a contradictory valid value.
+- **Positive controls/scope:** manager preference getters retain Bgr565/true; the adapter-selected
+  Color and Depth24 match the device; applied multisampling is greater than one; the later
+  Color/false transition reaches Color/zero. No edge-quality, screenshot or visual result is
+  claimed.
+- **Status:** open against the runtime built from external CNA `73991b01f7`; the sibling checkout
+  also has six unrelated renderer/build documentation paths, none edited here. Both renderer runs
+  fail only the query-agreement control with empty stderr. Initial diagnostics are
+  `/tmp/checkpoint-660-diagnostic*`; final marked evidence is `/tmp/checkpoint-660-*`. No CNA source
+  was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-082 -- Disposing an open SpriteBatch leaves its device batch active
 
 - **Area/API:** `SpriteBatch::Dispose(bool)`, `SpriteBatch::Begin/End` and the per-device
