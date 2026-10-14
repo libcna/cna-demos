@@ -7352,3 +7352,21 @@ remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runti
 Evidence:`/tmp/checkpoint-791-xact-bank-disposed-*` and `/tmp/checkpoint-791-coverage.md`. No global
 callback ordering, concurrent teardown or audible result is claimed. Continue with meaningful
 DynamicSoundEffectInstance refill/underrun behavior rather than scalar settings getters.
+
+## Focused792-DynamicSoundEffectInstance-empty-stream-recovery
+
+`audio.dynamic_sound_effect_instance.streaming` retains its eleven duration, transport, format and
+disposal controls and adds an isolated starvation-recovery check. A new mono PCM16 instance starts
+Playing with no queued data, receives exactly three BufferNeeded callbacks with the instance and
+canonical empty arguments, submits one 50 ms buffer synchronously per request and ends the explicit
+Update with three pending buffers while still Playing.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs each execute12 controls: ten pass and the two established
+ISSUE-038 disposal-getter checks fail as expected. Stderr is empty; after normalizing the existing
+continuous-stream callback/submission totals, stdout is byte-identical. The focused expected-failure
+SOFTWARE CTest passes. The warning-free build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-792-dynamic-recovery-*` and `/tmp/checkpoint-792-coverage.md`. No audible
+continuity, concurrent-producer or real-time callback-cadence claim is made. Audit listener removal
+during BufferNeeded dispatch next.

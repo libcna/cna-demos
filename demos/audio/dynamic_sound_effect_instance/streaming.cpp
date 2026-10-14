@@ -37,6 +37,26 @@ namespace
             Context().Check(bufferBytes_ == 2400, "50 ms contains 1200 mono 16-bit samples");
             Context().CheckNear(voice_->GetSampleDuration(bufferBytes_).getTotalMillisecondsProperty(), 50.0, 1e-6,
                                 "the dynamic instance converts the byte count back to its duration");
+
+            DynamicSoundEffectInstance recoveryProbe(SampleRate, AudioChannels::Mono);
+            const std::vector<SharpRuntime::bytecs> recoveryBuffer(static_cast<std::size_t>(bufferBytes_), 0);
+            int recoveryRequests = 0;
+            bool recoveryPayloads = true;
+            const auto recoveryToken = recoveryProbe.BufferNeeded.Add(
+                [&](System::Object* sender, const System::EventArgs& args) {
+                    ++recoveryRequests;
+                    recoveryPayloads = recoveryPayloads && sender == &recoveryProbe &&
+                                       &args == &System::EventArgs::Empty;
+                    recoveryProbe.SubmitBuffer(recoveryBuffer);
+                });
+            recoveryProbe.Play();
+            recoveryProbe.Update();
+            Context().Check(recoveryRequests == 3 && recoveryProbe.getPendingBufferCountProperty() == 3 &&
+                                recoveryProbe.getStateProperty() == SoundState::Playing && recoveryPayloads,
+                            "an empty playing stream requests exactly three buffers and recovers synchronously");
+            recoveryProbe.BufferNeeded.Remove(recoveryToken);
+            recoveryProbe.Stop();
+
             // Streams repeat by supplying more samples, not by looping an authored sound.
             voice_->setIsLoopedProperty(false);
             bool loopRejected = false;
@@ -133,8 +153,8 @@ namespace
 CNA_DEMOS_GAME(StreamingDemo, {
     .id = "audio.dynamic_sound_effect_instance.streaming",
     .title = "Streaming generated audio",
-    .description = "Plays a continuous tone through a DynamicSoundEffectInstance, submitting 50 ms PCM buffers "
-                   "from its BufferNeeded event; checks PCM duration, stream restrictions and disposal guards.",
+    .description = "Recovers an empty DynamicSoundEffectInstance with the exact three BufferNeeded requests, then "
+                   "plays a continuously refilled tone and checks PCM duration, stream restrictions and disposal guards.",
     .apis = {"DynamicSoundEffectInstance::DynamicSoundEffectInstance", "DynamicSoundEffectInstance::BufferNeeded",
              "DynamicSoundEffectInstance::SubmitBuffer", "DynamicSoundEffectInstance::PendingBufferCount",
              "DynamicSoundEffectInstance::GetSampleSizeInBytes", "DynamicSoundEffectInstance::GetSampleDuration",

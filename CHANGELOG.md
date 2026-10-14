@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added an isolated DynamicSoundEffectInstance starvation-recovery control: an empty playing
+  stream emits exactly three canonical BufferNeeded requests and synchronously reaches three
+  pending buffers while remaining Playing.
 - Extended XACT bank disposal with valid-name GetCue and PlayCue refusals after Dispose while
   retaining exactly-once disposal events and idempotent repeated cleanup.
 - Added XACT SoundBank input boundaries for empty and unknown names through both GetCue and PlayCue,

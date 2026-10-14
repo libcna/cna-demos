@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-791 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-792 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1772,9 +1772,12 @@ unclaimed. The MediaPlayer audit is closed. Continue with the SoundEffectInstanc
 Pause/Resume before first playback and after Stop plus repeated Play are now covered. Audit disposed
 Resume and safe post-dispose Pause/Stop behavior plus move-assignment parent registration are now
 covered. SoundBank GetCue/PlayCue now distinguish empty and unknown names with successful retry.
-Both routes also refuse valid names after Dispose while repeated cleanup stays idempotent. Continue
-with DynamicSoundEffectInstance refill/underrun behavior in the existing streaming workflow. Do not add
-isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
+Both routes also refuse valid names after Dispose while repeated cleanup stays idempotent.
+DynamicSoundEffectInstance now has an isolated empty-start recovery probe that establishes exactly
+three canonical BufferNeeded requests, synchronous refill and retained Playing state before the
+continuous workflow. Continue with meaningful BufferNeeded listener mutation behavior in that
+probe; then audit the remaining audio behavior rows. Do not add isolated getter demos. Build with
+at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2547,6 +2550,24 @@ remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runti
 Evidence:`/tmp/checkpoint-791-xact-bank-disposed-*` and `/tmp/checkpoint-791-coverage.md`. No global
 callback ordering, concurrent teardown or audible result is claimed. Continue with meaningful
 DynamicSoundEffectInstance refill/underrun behavior rather than scalar settings getters.
+
+### Focused792-DynamicSoundEffectInstance-empty-stream-recovery
+
+`audio.dynamic_sound_effect_instance.streaming` retains its eleven duration, transport, format and
+disposal controls and adds an isolated starvation-recovery check. A new mono PCM16 instance starts
+Playing with no queued data, receives exactly three BufferNeeded callbacks with the instance and
+canonical empty arguments, submits one 50 ms buffer synchronously per request and ends the explicit
+Update with three pending buffers while still Playing.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs each execute12 controls: ten pass and the two established
+ISSUE-038 disposal-getter checks fail as expected. Stderr is empty; after normalizing the existing
+continuous-stream callback/submission totals, stdout is byte-identical. The focused expected-failure
+SOFTWARE CTest passes. The warning-free build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-792-dynamic-recovery-*` and `/tmp/checkpoint-792-coverage.md`. No audible
+continuity, concurrent-producer or real-time callback-cadence claim is made. Audit listener removal
+during BufferNeeded dispatch next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
