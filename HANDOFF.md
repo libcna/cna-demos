@@ -1403,9 +1403,11 @@ online-identity paths require service/hardware evidence. AvatarAnimation and Ava
 values, lighting and lifetime are now covered. AvatarDescription's local-profile Begin/End retrieval
 is covered; Changed requires a service revision or manual avatar-editor save through public APIs and
 remains dispositioned. Achievement::GetPicture now covers real catalog bytes, fresh-stream ownership
-and the unavailable path. Audit GamerServicesComponent lifecycle and dispatcher state next, then
-continue the next high-value behavior family after each batch, rebuilding and running both renderers where
-applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
+and the unavailable path. GamerServicesComponent construction, Initialize/Update and dispatcher
+Initialize/WindowHandle are now behaviorally covered; InstallingTitleUpdate is never raised by
+CNA's production path. Audit the feasible local Guide state gaps next, then continue the next
+high-value behavior family after each batch, rebuilding and running both renderers where applicable,
+updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -3787,6 +3789,29 @@ was deliberately deferred while sibling CNA carried unrelated uncommitted render
 asset was inspected as bytes but not drawn; no screenshot or manual visual result is claimed. No
 CNA source was edited or reverted. Continue with GamerServicesComponent construction,
 Initialize/Update behavior and the related dispatcher state in the automatic-sign-in workflow.
+
+Focused713 extends `gamer_services.signed_in_gamer.automatic_sign_in` without adding a variant ID.
+Before initialization it finds exactly one game-owned GamerServicesComponent with the correct owner
+while the dispatcher remains inactive. Initialization activates the dispatcher and copies the
+game's exact legacy window handle. The demo disables the component for the first Update, proving
+the pending local sign-in and SignedIn event remain queued, then enables it so the next Update
+publishes the existing identity and avatar results. InstallingTitleUpdate remains intentionally
+uncredited because CNA never raises it in production; generic EventHandler::Raise would be
+synthetic.
+
+SOFTWARE and OPENGLES3/X11 pass10/10 with byte-identical stdout and empty stderr. The focused
+SOFTWARE CTest, metadata validation and five validator self-tests pass. Temporary coverage moves
+2103->2108/2326 at632 demos,301/329 types and157/753 fields; GamerServices moves161->166/244.
+Evidence:`/tmp/checkpoint-713-component-focused-*` and
+`/tmp/checkpoint-713-component-coverage.md`. Runner SHA-256 is
+`d1a96602d510a1503401ef6752405261bde9500824f899e012ff5f1b7d281fe7`; production library hashes
+remain `e2c8c9dbd6ef8fb4e611a6f0818ebec6290c34d738930c3e9f1dbb4a55ba9aeb` and
+`471f0a12b6b167262d18ae8fb763f4c10b07e7bc478f72f0bbfd5a2879b193ef`. The exact object was
+compiled and the runner relinked against those libraries. A full build remains deferred because
+sibling CNA carries more than100 unrelated uncommitted renderer/build/docs paths; none were edited
+or reverted here. No service, screenshot or manual visual result is claimed. Continue with Guide's
+feasible local DelayNotifications and IsScreenSaverEnabled behavior, then disposition service-only
+social overlays.
 
 ## 15. Assumptions the next session must know
 

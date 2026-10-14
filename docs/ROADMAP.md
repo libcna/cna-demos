@@ -5953,3 +5953,20 @@ validation and validator self-tests pass. Temporary coverage moves2102->2103/232
 `/tmp/checkpoint-712-achievement-picture-coverage.md`. The PNG bytes were inspected but not drawn;
 no screenshot or manual visual result is claimed. Continue with the existing automatic-sign-in
 workflow's `GamerServicesComponent` lifecycle and dispatcher state.
+
+## Focused713-GamerServicesComponent-lifecycle
+
+The automatic-sign-in workflow now identifies its one game-owned `GamerServicesComponent` before
+initialization and verifies its owner while the dispatcher is still inactive. Initialization sets
+the dispatcher active with the game's exact legacy window handle. The component is disabled for
+the first update, proving the pending sign-in and event remain queued; enabling it lets the next
+update publish the existing player, event and avatar results.
+
+SOFTWARE and OPENGLES3/X11 pass10/10 with byte-identical stdout and empty stderr. The focused
+SOFTWARE CTest, metadata validation and validator self-tests pass. Temporary coverage moves
+2103->2108/2326 at632 demos,301/329 types and157/753 fields; GamerServices moves161->166/244.
+Evidence:`/tmp/checkpoint-713-component-focused-*` and
+`/tmp/checkpoint-713-component-coverage.md`. `InstallingTitleUpdate` remains uncredited because CNA
+never raises it in production. No service, screenshot or manual visual result is claimed. Continue
+with the feasible local Guide notification and screen-saver state gaps before service-only social
+overlays.

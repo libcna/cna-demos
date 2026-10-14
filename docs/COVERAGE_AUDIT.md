@@ -1436,6 +1436,22 @@ Both renderers execute 14 controls, pass 13 and retain only ISSUE-017 for the un
 real offline asset and both its success and unavailable paths. The PNG is inspected as bytes; it is
 not drawn, and no screenshot or manual visual-quality judgment is claimed.
 
+### GamerServicesComponent lifecycle and dispatcher state
+
+`gamer_services.signed_in_gamer.automatic_sign_in` now inspects the actual component installed by
+its game base. Before initialization, the collection contains one `GamerServicesComponent`, it
+points back to the owning game and the dispatcher is uninitialized. Game initialization then sets
+`IsInitialized` and copies the game's exact legacy window handle to the dispatcher.
+
+The demo disables that component for the first game update: the pending local sign-in stays queued
+and no event fires. After enabling it, the next update publishes the player and the existing
+identity, event and avatar checks pass. Both renderers pass10/10 with byte-identical stdout and
+empty stderr. Evidence:`/tmp/checkpoint-713-component-focused-*`. This credits the component
+constructor, Initialize and Update plus dispatcher Initialize and WindowHandle. Dispatcher Update
+already has direct trial-mode behavior evidence. `InstallingTitleUpdate` remains intentionally
+uncredited because CNA installs no title updates and never raises it in production; calling the
+generic event's public Raise would not demonstrate that contract.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

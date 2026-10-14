@@ -39,12 +39,23 @@ namespace
             signedIn_ = SignedInGamer::SignedIn.Add([this](System::Object*, const SignedInEventArgs& args) {
                 announced_.push_back(args.getGamerProperty()->getGamertagProperty());
             });
+
+            auto& components = getComponentsProperty();
+            component_ = components.getCountProperty() == 1
+                ? dynamic_cast<GamerServicesComponent*>(components[0])
+                : nullptr;
+            Context().Check(component_ != nullptr && &component_->getGameProperty() == this &&
+                                !GamerServicesDispatcher::getIsInitializedProperty(),
+                            "the game owns one uninitialized GamerServicesComponent");
             DemoGame::Initialize(); // initializes the components: GamerServicesComponent starts the dispatcher
 
-            Context().Check(GamerServicesDispatcher::getIsInitializedProperty(),
-                            "GamerServicesComponent initialized GamerServicesDispatcher");
+            Context().Check(GamerServicesDispatcher::getIsInitializedProperty() &&
+                                GamerServicesDispatcher::getWindowHandleProperty() ==
+                                    getWindowProperty().getHandleProperty(),
+                            "GamerServicesComponent initialized the dispatcher for this game window");
             Context().Check(Gamer::getSignedInGamersProperty()->getCountProperty() == 0,
                             "before the first Update nobody is signed in yet");
+            component_->setEnabledProperty(false);
         }
 
         void LoadContent() override
@@ -60,6 +71,14 @@ namespace
             DemoGame::Update(gameTime); // updates GamerServicesComponent, which runs the dispatcher
 
             const SignedInGamerCollection& gamers = *Gamer::getSignedInGamersProperty();
+            if (!componentUpdateChecked_)
+            {
+                componentUpdateChecked_ = true;
+                Context().Check(gamers.getCountProperty() == 0 && announced_.empty(),
+                                "a disabled GamerServicesComponent does not dispatch the pending sign-in");
+                component_->setEnabledProperty(true);
+                return;
+            }
             if (!checked_ && gamers.getCountProperty() > 0)
             {
                 checked_ = true;
@@ -130,6 +149,8 @@ namespace
     private:
         System::EventHandler<SignedInEventArgs>::Token signedIn_{};
         std::vector<std::string> announced_;
+        GamerServicesComponent* component_ = nullptr;
+        bool componentUpdateChecked_ = false;
         bool checked_ = false;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
@@ -139,10 +160,13 @@ namespace
 CNA_DEMOS_GAME(AutomaticSignInDemo, {
     .id = "gamer_services.signed_in_gamer.automatic_sign_in",
     .title = "Signed-in gamers",
-    .description = "Adds a GamerServicesComponent; the local profile that signs in when the game starts appears in "
-                   "Gamer::SignedInGamers and raises SignedInGamer::SignedIn in the first Update, then its stored "
-                   "avatar is read through AvatarDescription's Begin/End pair.",
-    .apis = {"GamerServicesComponent", "GamerServicesDispatcher::IsInitialized", "Gamer::SignedInGamers",
+    .description = "Adds and initializes a GamerServicesComponent for the game window, proves that its Update "
+                   "dispatches the pending local sign-in, then reads that profile's stored avatar through "
+                   "AvatarDescription's Begin/End pair.",
+    .apis = {"GamerServicesComponent::GamerServicesComponent", "GamerServicesComponent::Initialize",
+             "GamerServicesComponent::Update", "GamerServicesDispatcher::Initialize",
+             "GamerServicesDispatcher::IsInitialized", "GamerServicesDispatcher::WindowHandle",
+             "Gamer::SignedInGamers",
              "SignedInGamer::SignedIn", "SignedInEventArgs::Gamer", "Gamer::Gamertag", "Gamer::DisplayName",
              "SignedInGamer::PlayerIndex", "SignedInGamer::IsSignedInToLive", "SignedInGamer::IsGuest",
              "SignedInGamerCollection::Item", "AvatarDescription::BeginGetFromGamer",
