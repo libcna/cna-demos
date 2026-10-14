@@ -195,6 +195,21 @@ retains only CLR enumerators. This establishes CNA-constructed annotation storag
 populated FX reflection. Evidence:`/tmp/checkpoint-669-*` and
 `/tmp/checkpoint-669-coverage.md`. No drawing, screenshot or visual inspection was used.
 
+### Effect technique and pass reflection
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| EffectPass.Name; EffectPassCollection.Item | The real BasicEffect graph reports pass `P0`; integer and exact-name lookup return the same object, while a case mismatch and negative index return null. |
+| EffectTechnique.Annotations; EffectPass.Annotations | Separate authored string annotations remain scoped to their technique and pass. This demonstrates CNA's public reflection storage without implying compiled FX annotations on the stock effect. |
+| Collection GetEnumerator members | EffectAnnotationCollection, EffectParameterCollection, EffectPassCollection and EffectTechniqueCollection expose C++ iteration. Their three CLR/C# enumerator inventory entries per type do not justify duplicate demos. |
+
+Focused670 extends `parameters_and_techniques` from4 to8 controls and credits the four remaining
+non-enumerator members, moving temporary coverage1772->1776/2326. SOFTWARE and OPENGLES3 pass with
+byte-identical stdout and empty stderr; the focused SOFTWARE CTest passes. EffectPass and
+EffectTechnique have no generated gap, and both collections retain only the dispositioned CLR
+enumerators. Evidence:`/tmp/checkpoint-670-*` and `/tmp/checkpoint-670-coverage.md`. No drawing,
+screenshot or visual inspection was used.
+
 ### ShaderEffect and shader dialect selection
 
 Source review of ShaderEffect.hpp/.cpp, Effect::Clone's public contract, the four GLSL shader/MRT

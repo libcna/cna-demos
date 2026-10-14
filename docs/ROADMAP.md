@@ -5253,3 +5253,19 @@ generated gap; EffectAnnotationCollection retains only CLR enumerators. Evidence
 `/tmp/checkpoint-669-*` and `/tmp/checkpoint-669-coverage.md`. No drawing, screenshot or visual
 inspection was used. Audit EffectPass/EffectTechnique names, annotations and collection lookup
 next.
+
+## Focused670-effect-technique-and-pass-reflection
+
+The existing parameters-and-techniques ID grows4->8 controls. The live BasicEffect reflection
+graph reports exact `BasicEffect` and `P0` names; index/name lookup returns the same objects, while
+case-mismatched names and a negative pass index return null. Separate authored string annotations
+stay scoped to the technique and pass. This demonstrates public reflection storage without
+claiming compiler-populated annotations on the stock effect.
+
+SOFTWARE and OPENGLES3 pass8/8 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. Temporary coverage moves1772->1776/2326 at629 demos,301/329 types and155/753 fields.
+EffectPass and EffectTechnique have no generated gap. EffectAnnotationCollection,
+EffectParameterCollection, EffectPassCollection and EffectTechniqueCollection retain only CLR/C#
+enumerator entries already represented by C++ iteration, so they do not warrant duplicate demos.
+Evidence:`/tmp/checkpoint-670-*` and `/tmp/checkpoint-670-coverage.md`. No drawing, screenshot or
+visual inspection was used. Audit the base Effect constructor, OnApply hook and disposal next.

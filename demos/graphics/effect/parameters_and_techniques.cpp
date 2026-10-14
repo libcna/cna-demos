@@ -6,6 +6,7 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BasicEffect.hpp"
+#include "Microsoft/Xna/Framework/Graphics/EffectAnnotation.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectParameter.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectParameterClass.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectParameterCollection.hpp"
@@ -58,7 +59,34 @@ namespace
             for (int i = 0; i < techniques.getCountProperty(); ++i)
                 Context().Print("  {} ({} pass(es))", techniques[i]->getNameProperty(),
                                 techniques[i]->getPassesProperty().getCountProperty());
-            Context().Check(effect.getCurrentTechniqueProperty() != nullptr, "an effect always has a current technique");
+            EffectTechnique* currentTechnique = effect.getCurrentTechniqueProperty();
+            Context().Check(currentTechnique != nullptr && currentTechnique->getNameProperty() == "BasicEffect" &&
+                                techniques["BasicEffect"] == currentTechnique && techniques["basiceffect"] == nullptr,
+                            "the current technique has its authored name and exact name lookup identity");
+
+            EffectPassCollection& passes = currentTechnique->getPassesProperty();
+            EffectPass* firstPass = passes[0];
+            Context().Check(firstPass != nullptr && firstPass->getNameProperty() == "P0" &&
+                                passes["P0"] == firstPass && passes["p0"] == nullptr && passes[-1] == nullptr,
+                            "pass index and exact name lookup return the same authored P0 pass");
+
+            // Stock effects have no authored FX annotations. Add public reflection values to show
+            // that technique and pass metadata remain scoped to their respective owner.
+            currentTechnique->getAnnotationsProperty().Add(
+                EffectAnnotation("Purpose", "", 1, 1, EffectParameterClass::Object,
+                                 EffectParameterType::String, {}, "stock lighting"));
+            firstPass->getAnnotationsProperty().Add(
+                EffectAnnotation("Stage", "", 1, 1, EffectParameterClass::Object,
+                                 EffectParameterType::String, {}, "forward"));
+            Context().Check(currentTechnique->getAnnotationsProperty().getCountProperty() == 1 &&
+                                currentTechnique->getAnnotationsProperty()["Purpose"]->GetValueString() ==
+                                    "stock lighting" &&
+                                currentTechnique->getAnnotationsProperty()["Stage"] == nullptr,
+                            "technique annotations retain their own authored reflection values");
+            Context().Check(firstPass->getAnnotationsProperty().getCountProperty() == 1 &&
+                                firstPass->getAnnotationsProperty()["Stage"]->GetValueString() == "forward" &&
+                                firstPass->getAnnotationsProperty()["Purpose"] == nullptr,
+                            "pass annotations retain separate authored reflection values");
 
             // The properties are pushed into the parameters when a pass is applied, not when set --
             // and the stock effects store the diffuse colour premultiplied by Alpha.
@@ -66,7 +94,7 @@ namespace
             effect.setDiffuseColorProperty(Vector3(1.0f, 0.0f, 0.0f));
             effect.setAlphaProperty(0.5f);
             const Vector4 beforeApply = diffuse->GetValueVector4();
-            effect.getCurrentTechniqueProperty()->getPassesProperty()[0]->Apply();
+            firstPass->Apply();
             const Vector4 afterApply = diffuse->GetValueVector4();
             Context().Print("DiffuseColor parameter: before Apply {}, after Apply {}", beforeApply.ToString(),
                             afterApply.ToString());
@@ -81,11 +109,13 @@ namespace
 CNA_DEMOS_GAME(ParametersDemo, {
     .id = "graphics.effect.parameters_and_techniques",
     .title = "Effect parameters and techniques",
-    .description = "Lists a BasicEffect's parameters (name and class) and techniques with their passes, and shows "
-                   "that properties reach the DiffuseColor parameter only when a pass is applied.",
+    .description = "Inspects a BasicEffect's named parameters, technique, pass and scoped annotations, and shows "
+                   "that properties reach the DiffuseColor parameter only when its pass is applied.",
     .apis = {"Effect::Parameters", "Effect::Techniques", "Effect::CurrentTechnique", "EffectParameterCollection::Item",
              "EffectParameter::Name", "EffectParameter::ParameterClass", "EffectParameter::GetValueVector4", "EffectPass::Apply",
              "EffectTechniqueCollection::Item", "EffectTechnique::Name", "EffectTechnique::Passes",
+             "EffectTechnique::Annotations", "EffectPass::Name", "EffectPass::Annotations",
+             "EffectPassCollection::Item",
              "EffectParameterClass", "EffectParameterType",
              "EffectPassCollection::Count", "EffectParameterCollection::Count", "EffectTechniqueCollection::Count"},
     .tags = {"effect", "shader", "parameters", "reflection"},

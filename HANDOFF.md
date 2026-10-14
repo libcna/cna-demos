@@ -1361,13 +1361,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused669
-projects the629-demo staged catalog to1772/2326 XNA members and155/753 fields at301/329 types.
-EffectParameter and EffectAnnotation have no remaining generated gaps; their collections retain
-only CLR enumerators. Audit `EffectPass::Name`/`Annotations`, `EffectTechnique::Annotations` and
-`EffectPassCollection::Item` next in the existing real BasicEffect technique/pass workflow. Treat
-collection `GetEnumerator` members as CLR/C# machinery already represented by C++ iteration unless
-a distinct behavior emerges. Keep the distinction between CNA-constructed public annotations and
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused670
+projects the629-demo staged catalog to1776/2326 XNA members and155/753 fields at301/329 types.
+EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining generated
+gaps. Their four collection types retain only CLR/C# enumerators already represented by C++
+iteration; do not add duplicate demos for them. Audit Effect's remaining constructor, Dispose and
+protected OnApply behavior next as one coherent derived-effect apply/lifecycle workflow, then move
+to GraphicsDevice's14 generated gaps. Keep the distinction between authored public reflection and
 compiler-populated FX reflection.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
@@ -1377,8 +1377,8 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused669 built against external `f00150424`. That checkout currently
-has seven externally owned documentation/FNA3D paths. Recheck it before every build.
+the sibling CNA checkout; focused670 built against external `1ad225ae28`. That checkout currently
+has six externally owned documentation/FNA3D paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
 `standalone/c_api.graphics.vertex_values` contains the planned seven-check
@@ -2951,6 +2951,22 @@ visual inspection was used. Audit adjacent EffectPass/EffectTechnique reflection
 After the focused run, sibling CNA remained at `f00150424` while its externally owned dirty set
 grew from three to seven paths (four documentation/plan and three FNA3D implementation/test paths).
 No CNA source was edited or reverted here; recheck that moving external state before the next build.
+
+Focused670 extends `graphics.effect.parameters_and_techniques` from4 to8 controls. The real
+BasicEffect graph reports exact `BasicEffect` and `P0` names; index and exact-name lookup return the
+same objects, while case-mismatched names and a negative pass index return null. Separate authored
+string annotations remain scoped to the technique and pass. SOFTWARE and OPENGLES3 pass8/8 with
+byte-identical stdout and empty stderr, and the focused SOFTWARE CTest passes. Temporary coverage
+moves1772->1776/2326 at629 demos,301/329 types and155/753 fields. EffectPass and EffectTechnique
+have no generated gap; their collections and the annotation/parameter collections retain only
+dispositioned CLR enumerators. Evidence:`/tmp/checkpoint-670-*` and
+`/tmp/checkpoint-670-coverage.md`. Runner SHA-256 is
+`08cb15659e56a90aeec2e53d0b7f67919aa9e53aaa4a62883d6f3e9669629fa0`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No drawing, screenshot or
+visual inspection was used. Sibling CNA advanced externally to `1ad225ae28` with six dirty
+documentation/FNA3D paths; no CNA source was edited here. Audit Effect construction, OnApply and
+disposal next.
 
 ## 15. Assumptions the next session must know
 
