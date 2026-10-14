@@ -9,8 +9,10 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/PixelChecks.hpp"
+#include "System/ObjectDisposedException.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BasicEffect.hpp"
+#include "Microsoft/Xna/Framework/Graphics/BufferUsage.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectPass.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectTechnique.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PrimitiveType.hpp"
@@ -19,6 +21,7 @@
 #include "Microsoft/Xna/Framework/Graphics/VertexElement.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexElementFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexElementUsage.hpp"
+#include "Microsoft/Xna/Framework/Graphics/VertexBuffer.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
@@ -61,7 +64,8 @@ namespace
     protected:
         void LoadContent() override
         {
-            effect_ = std::make_unique<BasicEffect>(getGraphicsDeviceProperty());
+            GraphicsDevice& device = getGraphicsDeviceProperty();
+            effect_ = std::make_unique<BasicEffect>(device);
             effect_->setVertexColorEnabledProperty(true);
             effect_->setProjectionProperty(Matrix::CreateOrthographicOffCenter(0.0f, 800.0f, 480.0f, 0.0f, 0.0f, 1.0f));
 
@@ -121,6 +125,21 @@ namespace
                                 edited.ToString() ==
                                     "{Offset:12 Format:Single Usage:TextureCoordinate UsageIndex:1}",
                             "a mutable element value round-trips all four fields and describes itself");
+
+            VertexDeclaration disposed(authored);
+            disposed.Dispose();
+            disposed.Dispose();
+            bool refused = false;
+            try
+            {
+                VertexBuffer unused(device, disposed, 1, BufferUsage::None);
+            }
+            catch (const System::ObjectDisposedException&)
+            {
+                refused = true;
+            }
+            Context().Check(disposed.getIsDisposedProperty() && refused,
+                            "disposed declarations are idempotently marked and cannot bind a vertex buffer");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -164,7 +183,8 @@ CNA_DEMOS_GAME(CustomVertexDemo, {
              "VertexElement::Equals", "VertexElement::op_Equality", "VertexElement::op_Inequality",
              "VertexElement::GetHashCode", "VertexElement::ToString", "VertexElementFormat::Vector3",
              "VertexElementFormat::Single", "VertexElementFormat::Color", "VertexElementUsage::Position",
-             "VertexElementUsage::Color", "VertexElementUsage::TextureCoordinate", "GraphicsDevice::DrawUserPrimitives"},
+             "VertexElementUsage::Color", "VertexElementUsage::TextureCoordinate", "VertexDeclaration::Dispose",
+             "GraphicsDevice::DrawUserPrimitives"},
     .tags = {"3d", "vertex", "layout", "declaration"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

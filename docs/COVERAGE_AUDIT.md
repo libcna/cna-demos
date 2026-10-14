@@ -114,6 +114,8 @@ Decisions:
 | Type | Decision |
 |---|---|
 | StorageDeviceNotConnectedException | environment: a removed storage device |
+| StorageDevice.DeviceChanged | CNA exposes subscription state but has no production path that raises the event. Invoking the public event from a demo would manufacture behavior rather than observe a device change; leave it uncredited until a platform removal path exists. |
+| StorageContainer.Finalize | CLR finalizer inventory entry. Existing workflows explicitly dispose owned containers; no C++ finalizer demo. |
 
 ## Public member and behavior audit (started 2026-10-11)
 
@@ -906,15 +908,15 @@ whole-image identity or fixed GPU completion-latency claim is made.
 | Constructor, Begin and End | visible_pixels creates three queries and brackets actual draws of hidden, open and moving lights. Its fixed controls establish depth rejection and visibility. Constructor refusal under Reach or absent renderer capability is a separate documented path: declared needs/profile selection do not execute every constructor error. A shared profile/capability example could add it if useful; no separate constructor-only scene. |
 | IsComplete, PixelCount and result reuse | The fixed queries are read only after both complete, and the moving query is reused after observing completion. EndRun requires the fixed results to arrive during the automated run. This establishes a bounded polling workflow, not fixed GPU completion latency. A scratch-query preflight now checks fresh IsComplete=false, refused PixelCount without a result, End before Begin, repeated Begin and reuse after End without an IsComplete observation. The successful End after a refused repeated Begin confirms the active pair survives that refusal. All eight added lifecycle controls and the three original visibility checks pass on both selections; the original hidden/open counts remain 0/4422 on SOFTWARE (precise) and 0/1 on OPENGLES3 (boolean). The source records an IsComplete observation even when it returns false; the reuse guard is observation, not a promise that earlier GPU work completed. Do not infer that premature reuse is safe on every renderer or require an initially false GPU poll. Nested distinct active queries remain a separate backend constraint. |
 | isPixelCountPreciseEXT | The existing example selects either a real tally greater than 100 or the documented boolean value 1 for the open light; the hidden light must always yield zero. The extension prevents interpreting an ES3 boolean result as a coverage ratio. This does not establish exact cross-renderer raster counts, sample-versus-pixel behavior with MSAA, or all renderer implementations. |
-| Dispose, IsDisposed, HasRenderer and disposed operations | Normal query ownership is demonstrated by unique_ptr cleanup. The scratch-query preflight now ends the native pair, calls public Dispose, verifies IsDisposed and HasRenderer=false, and requires ObjectDisposedException from subsequent Begin and PixelCount. Both renderers pass these controls. Other disposed-operation permutations, repeated Dispose and disposal of an actively open pair are not independently established. HasRenderer is a small lifetime diagnostic, not an independent scene. A general GraphicsResource demo does not establish every query-specific disposed operation. Query destruction after earlier device/context teardown is a separate lifecycle scenario; no device-loss or all-backend teardown proof is claimed. |
+| Dispose, IsDisposed, HasRenderer and disposed operations | Normal query ownership is demonstrated by unique_ptr cleanup. The scratch-query preflight ends the native pair, calls public Dispose, verifies IsDisposed and HasRenderer=false, and requires ObjectDisposedException from subsequent Begin and PixelCount. Focused694 corrects metadata to name `OcclusionQuery::Dispose` as well as the inherited resource path. Both renderers pass11/11. Other disposed-operation permutations, repeated Dispose and disposal of an actively open pair are not independently established. HasRenderer is a small lifetime diagnostic, not an independent scene. Query destruction after earlier device/context teardown is a separate lifecycle scenario; no device-loss or all-backend teardown proof is claimed. |
 | GetTypeName, inherited Name/Tag and protected Dispose(bool) | Reflection identity and inherited resource bookkeeping do not justify duplicate demos per subclass. The protected hook is framework lifecycle plumbing; applications use public Dispose. The public preflight avoids internal query handles and renderer bridges. |
 
 ### VertexElement and custom vertex declarations
 
 Source review at CNA `cc547f5224`: public VertexElement/VertexDeclaration headers and the existing
-`graphics.vertex_declaration.custom_vertex` example. The example now has seven focused controls
-and passes all of them under SOFTWARE and OPENGLES3 through an isolated cumulative relink against
-the last complete libraries. Both runs have byte-identical stdout and empty stderr.
+`graphics.vertex_declaration.custom_vertex` example. The example now has eight focused controls
+and passes all of them under SOFTWARE and OPENGLES3. Both runs have byte-identical stdout and empty
+stderr.
 
 | Members / behavior | Decision and evidence |
 |---|---|
@@ -922,7 +924,15 @@ the last complete libraries. Both runs have byte-identical stdout and empty stde
 | VertexElement Offset, VertexElementFormat, VertexElementUsage and UsageIndex | The controls read all four public fields for all three descriptors. A separate mutable value is authored through all four setters and compared with the declaration's middle element, proving the property round trip without changing the declaration used for drawing. |
 | Equals, equality/inequality, GetHashCode and ToString | The declaration's complete element vector equals an independently authored value vector; the matching middle elements satisfy typed Equals and share a hash, while a distinct element compares unequal. The edited descriptor produces the exact readable text `{Offset:12 Format:Single Usage:TextureCoordinate UsageIndex:1}`. These operations belong together as value identity and diagnostics; they do not justify separate demos. |
 | Actual layout consumption | A first-frame readback finds a white center and black exterior on both renderers. This proves that Position and packed Color at the audited offsets drive the visible fan while the extra TextureCoordinate1 field remains legal and unused by BasicEffect. Pixels were read programmatically; no screenshot or visual inspection was performed. |
-| VertexDeclaration Dispose and inherited resource plumbing | The declaration is owned for the demo lifetime and bound by the draw. Explicit flag-only disposal, type names and protected hooks do not teach a separate vertex-layout concept; disposal while bound or after device teardown belongs to broader GraphicsResource lifetime testing. |
+| VertexDeclaration Dispose and inherited resource plumbing | A separate complete20-byte declaration is disposed twice, reports disposed and is refused with ObjectDisposedException when a VertexBuffer tries to bind it. The rendered declaration remains live and draws the established white-center fan. Protected hooks, type names, disposal while actively bound and teardown after device loss remain separate lifecycle decisions. |
+
+### DirectionalLight construction defaults
+
+`graphics.basic_effect.default_lighting` now constructs an unbound public DirectionalLight and
+requires XNA's exact defaults: disabled, Down direction, One diffuse and Zero specular. The same
+scene then retains its real three-light rig and programmatic sphere readback. Both renderers pass5/5
+with byte-identical stdout and empty stderr. This credits construction without claiming that an
+unbound light affects an Effect. Evidence:`/tmp/checkpoint-694-default-light-*`.
 
 ### Stock vertex declarations and value semantics
 

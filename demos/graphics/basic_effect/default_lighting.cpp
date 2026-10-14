@@ -9,6 +9,7 @@
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BasicEffect.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthStencilState.hpp"
+#include "Microsoft/Xna/Framework/Graphics/DirectionalLight.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectPass.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectTechnique.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PrimitiveType.hpp"
@@ -33,6 +34,12 @@ namespace
         void LoadContent() override
         {
             GraphicsDevice& device = getGraphicsDeviceProperty();
+            const DirectionalLight standaloneLight;
+            Context().Check(!standaloneLight.getEnabledProperty() &&
+                                standaloneLight.getDirectionProperty() == Vector3::Down &&
+                                standaloneLight.getDiffuseColorProperty() == Vector3::One &&
+                                standaloneLight.getSpecularColorProperty() == Vector3::Zero,
+                            "a standalone directional light starts disabled, white, downward and nonspecular");
             spriteBatch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             sphere_ = CnaDemos::MakeSphere(1.0f);
@@ -111,7 +118,8 @@ CNA_DEMOS_GAME(DefaultLightingDemo, {
     .title = "Default lighting",
     .description = "Draws the same sphere unlit (a flat disc of DiffuseColor) and with BasicEffect::"
                    "EnableDefaultLighting, which turns on XNA's standard three-light rig.",
-    .apis = {"BasicEffect::EnableDefaultLighting", "BasicEffect::LightingEnabled", "BasicEffect::DiffuseColor",
+    .apis = {"DirectionalLight::DirectionalLight", "BasicEffect::EnableDefaultLighting",
+             "BasicEffect::LightingEnabled", "BasicEffect::DiffuseColor",
              "BasicEffect::DirectionalLight0", "DirectionalLight::Enabled", "BasicEffect::DirectionalLight1",
              "BasicEffect::DirectionalLight2", "BasicEffect::World", "BasicEffect::View", "BasicEffect::Projection"},
     .tags = {"3d", "lighting", "effect", "sphere"},

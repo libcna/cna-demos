@@ -5643,3 +5643,21 @@ empty stderr. The focused SOFTWARE CTest passes its skip contract. Temporary cov
 only six dispositioned CLR enumerator artifacts. Evidence:`/tmp/checkpoint-693-touch-window-*` and
 `/tmp/checkpoint-693-coverage.md`. No physical touch, screenshot or visual result is claimed. Audit
 the remaining meaningful ordinary Graphics members next.
+
+## Focused694-remaining-ordinary-graphics-members
+
+Three existing workflows close Graphics' last ordinary gaps. A standalone DirectionalLight has the
+exact disabled/Down/One/Zero defaults. A separate complete custom VertexDeclaration is disposed
+twice and then refused when a VertexBuffer tries to bind it. OcclusionQuery already disposed an
+ended real renderer query, released its renderer and refused subsequent operations; corrected
+metadata now credits the concrete member.
+
+Default lighting passes5/5, occlusion query11/11 and custom vertex8/8 on both renderers, with empty
+stderr. Default-lighting and custom-vertex stdout is byte-identical; query output retains the
+expected precise SOFTWARE count versus OPENGLES3 boolean. All three focused SOFTWARE CTests pass.
+Temporary coverage moves2038->2041/2326 at632 demos,301/329 types and156/753 fields; Graphics moves
+491->494/550. The remaining56 Graphics entries are dispositioned CLR, protected-override,
+explicit-interface, platform or unavailable-toolchain artifacts. Evidence:`/tmp/checkpoint-694-*`
+and `/tmp/checkpoint-694-coverage.md`. Pixel checks used programmatic readback; no screenshot or
+visual inspection was performed. Continue with AvailableNetworkSession properties and collection
+lifetime next.

@@ -213,7 +213,7 @@ CNA_DEMOS_GAME(OcclusionDemo, {
                    "tally from the 0/1 flag OpenGL ES 3.0 can only give. A scratch query demonstrates ordering and disposal refusals.",
     .apis = {"OcclusionQuery::OcclusionQuery", "OcclusionQuery::Begin", "OcclusionQuery::End",
              "OcclusionQuery::IsComplete", "OcclusionQuery::PixelCount", "OcclusionQuery::isPixelCountPreciseEXT",
-             "GraphicsResource::Dispose", "GraphicsResource::IsDisposed",
+             "OcclusionQuery::Dispose", "GraphicsResource::Dispose", "GraphicsResource::IsDisposed",
              "Microsoft::Xna::Framework::Graphics::OcclusionQuery::HasRenderer"},
     .tags = {"3d", "occlusion", "query", "visibility", "lens-flare"},
     .needs = CnaDemos::Need::ThreeD | CnaDemos::Need::OcclusionQuery,

@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused693
-projects the632-demo staged catalog to2038/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused694
+projects the632-demo staged catalog to2041/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1375,11 +1375,13 @@ entries are four nominal .NET attribute-wrapper types and are dispositioned rath
 into inert wrapper demos. Input now has no member gap. Music-library object, collection and library
 lifetime and VisualizationData construction are covered. Media's remaining14 entries are the seven
 collections' generic/non-generic CLR GetEnumerator pairs, dispositioned rather than credited from
-C++ range syntax. Input.Touch now likewise retains only six CLR enumerator artifacts. Audit the
-remaining meaningful ordinary Graphics entries next, starting with DirectionalLight construction,
-OcclusionQuery.Dispose and VertexDeclaration.Dispose in their existing real workflows; keep the
-already dispositioned finalizers, protected OnApply hooks, explicit-interface aliases and collection
-enumerators separate. Then continue with the next high-value behavior family,
+C++ range syntax. Input.Touch now likewise retains only six CLR enumerator artifacts. The ordinary
+Graphics audit is complete; its remaining56 entries are already dispositioned finalizers, protected
+OnApply hooks, explicit-interface aliases, collection enumerators, environment-only exception paths,
+EffectMaterial construction, DeviceLost and ModelMesh.Tag. Storage's three gaps are also dispositioned
+as CLR Finalize, an event with no CNA production raiser and the removed-device exception path. Continue
+the Net audit with AvailableNetworkSession.OpenPrivateGamerSlots, SessionProperties and collection
+lifetime in the existing two-process find/join workflow. Then continue with the next high-value behavior family,
 rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1388,7 +1390,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused693 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused694 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3390,6 +3392,27 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No physical touch,
 screenshot or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
 source was edited. Audit the remaining meaningful ordinary Graphics members next.
+
+Focused694 closes Graphics' last three ordinary gaps across existing real workflows. A standalone
+DirectionalLight must start disabled with Down direction, One diffuse and Zero specular values.
+The custom20-byte vertex layout now also disposes a separate declaration twice and requires
+ObjectDisposedException when a VertexBuffer tries to bind it. OcclusionQuery already ended and
+disposed a real renderer query, verified IsDisposed/HasRenderer and refused later Begin/PixelCount;
+its metadata now names the concrete Dispose member instead of crediting only GraphicsResource.
+
+Default lighting passes5/5, occlusion query11/11 and custom vertex8/8 on both renderers; all six
+stderr logs are empty. Default-lighting and custom-vertex stdout is byte-identical; occlusion output
+retains the expected precise SOFTWARE count versus OPENGLES3 boolean result. All three focused
+SOFTWARE CTests pass. Temporary coverage moves2038->2041/2326 at632 demos,301/329 types and156/753
+fields; Graphics moves491->494/550. The remaining56 Graphics entries are explicitly dispositioned
+CLR/override/interface/platform/toolchain artifacts. Evidence:`/tmp/checkpoint-694-*` and
+`/tmp/checkpoint-694-coverage.md`. Runner SHA-256 is
+`b404136297e90c458cfd35a8082d72a41dfe0bb2e6db389db38aa28b6c44c117`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Pixel checks used
+programmatic readback; no screenshot or visual inspection was performed. Sibling CNA remained clean
+external `f698d0f548`; no CNA source was edited. Storage's three generated gaps are dispositioned by
+source audit; continue AvailableNetworkSession and collection lifetime next.
 
 ## 15. Assumptions the next session must know
 
