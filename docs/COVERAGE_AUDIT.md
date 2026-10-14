@@ -1348,6 +1348,20 @@ Both renderers pass8/8 with identical stdout and empty stderr. Evidence:
 cleanup/guard behavior. A true disposed Gamer remains tied to signed-out/service lifetime and is
 not inferred from profile disposal; no picture asset or remote account is claimed.
 
+### AchievementCollection populated values and lifetime
+
+`gamer_services.achievement.award` now uses its actual three-item catalog for both Item overloads,
+their distinct boundary exceptions, atomic insufficient-capacity CopyTo and exact offset copying.
+Contains and IndexOf identify copied values. A separate collection copy exercises ordered
+Insert/RemoveAt/Add/Remove/Clear while retaining the documented IsReadOnly=true result. Repeated
+Dispose clears and marks only the selected result; an earlier snapshot remains live and populated.
+
+Both renderers execute10 controls, pass9 and retain only existing ISSUE-017 with identical stdout
+and empty stderr. Evidence:`/tmp/checkpoint-707-achievement-collection-*`. This credits the three
+ordinary inventory members Item, Dispose and IsDisposed. The nine explicit ICollection/IList
+spellings and two GetEnumerator forms have no distinct CNA C++ entry points; their behavior is
+demonstrated but the CLR aliases remain intentionally uncredited.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

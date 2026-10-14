@@ -20,6 +20,9 @@
 #include "Microsoft/Xna/Framework/Graphics/SpriteSortMode.hpp"
 #include "Microsoft/Xna/Framework/PlayerIndex.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/ArgumentException.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
+#include "System/IndexOutOfRangeException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::GamerServices;
@@ -96,6 +99,70 @@ namespace
             ctx.Check(!hidden->getIsEarnedProperty() && !hidden->getDisplayBeforeEarnedProperty(),
                       "hidden_door stays unearned, and its catalog entry hides it until earned");
 
+            bool integerBoundsRefused = false;
+            bool keyBoundsRefused = false;
+            try
+            {
+                (void)after[after.getCountProperty()];
+            }
+            catch (const System::ArgumentOutOfRangeException&)
+            {
+                integerBoundsRefused = true;
+            }
+            try
+            {
+                (void)after["missing"];
+            }
+            catch (const System::IndexOutOfRangeException&)
+            {
+                keyBoundsRefused = true;
+            }
+            ctx.Check(after[0].getKeyProperty() == "first_steps" &&
+                          after["explorer"].getKeyProperty() == "explorer" &&
+                          integerBoundsRefused && keyBoundsRefused,
+                      "integer and key Item lookups preserve catalog order and exact boundary exceptions");
+
+            const Achievement first = after[0];
+            const Achievement explorer = after[1];
+            const Achievement hiddenCopy = after[2];
+            std::vector<Achievement> shortCopy(4, explorer);
+            bool shortCopyRefused = false;
+            try
+            {
+                after.CopyTo(shortCopy, 2);
+            }
+            catch (const System::ArgumentException&)
+            {
+                shortCopyRefused = true;
+            }
+            bool shortCopyUntouched = true;
+            for (const Achievement& achievement : shortCopy)
+            {
+                shortCopyUntouched = shortCopyUntouched && achievement.getKeyProperty() == "explorer";
+            }
+            std::vector<Achievement> copied(5, explorer);
+            after.CopyTo(copied, 1);
+            ctx.Check(shortCopyRefused && shortCopyUntouched && copied.front().getKeyProperty() == "explorer" &&
+                          copied.back().getKeyProperty() == "explorer" &&
+                          copied[1].getKeyProperty() == "first_steps" &&
+                          copied[3].getKeyProperty() == "hidden_door" && after.Contains(explorer) &&
+                          after.IndexOf(hiddenCopy) == 2,
+                      "CopyTo is atomic when short and exact at an offset; Contains and IndexOf use values");
+
+            AchievementCollection scratch = after;
+            scratch.Insert(1, hiddenCopy);
+            const bool inserted = scratch.getCountProperty() == 4 &&
+                scratch[1].getKeyProperty() == "hidden_door" && scratch[2].getKeyProperty() == "explorer";
+            scratch.RemoveAt(1);
+            scratch.Add(first);
+            const bool appended = scratch.getCountProperty() == 4 && scratch[3].getKeyProperty() == "first_steps";
+            const bool removed = scratch.Remove(first) && scratch.getCountProperty() == 3 &&
+                scratch[2].getKeyProperty() == "first_steps";
+            scratch.Clear();
+            ctx.Check(scratch.getIsReadOnlyProperty() && inserted && appended && removed &&
+                          scratch.getCountProperty() == 0 && !scratch.getIsDisposedProperty(),
+                      "the read-only flag coexists with exact Insert, RemoveAt, Add, Remove and Clear behavior");
+
             for (const Achievement& achievement : after)
             {
                 const bool shown = achievement.getIsEarnedProperty() || achievement.getDisplayBeforeEarnedProperty();
@@ -107,6 +174,12 @@ namespace
                 lines_.push_back(line);
                 lines_.push_back("    " + detail);
             }
+
+            after.Dispose();
+            after.Dispose();
+            ctx.Check(after.getIsDisposedProperty() && after.getCountProperty() == 0 &&
+                          !before.getIsDisposedProperty() && before.getCountProperty() == 3,
+                      "collection disposal is idempotent, clears its copy, and leaves another snapshot live");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -139,12 +212,17 @@ CNA_DEMOS_GAME(AwardDemo, {
     .id = "gamer_services.achievement.award",
     .title = "Achievements",
     .description = "Lists the title's offline achievement catalog with SignedInGamer::GetAchievements, awards two "
-                   "with AwardAchievement (the Guide shows a toast), and shows that earned achievements keep their "
-                   "first date, unknown keys are refused and a hidden one stays secret until earned.",
+                   "with AwardAchievement, and exercises populated item, copy, mutation and disposal behavior while "
+                   "earned achievements keep their first date and a hidden one stays secret until earned.",
     .apis = {"SignedInGamer::AwardAchievement", "SignedInGamer::GetAchievements", "Achievement::Key",
              "Achievement::Name", "Achievement::Description", "Achievement::HowToEarn", "Achievement::GamerScore",
              "Achievement::IsEarned", "Achievement::EarnedDateTime", "Achievement::EarnedOnline",
-             "Achievement::DisplayBeforeEarned", "AchievementCollection::Count", "GamerServicesNotAvailableException"},
+             "Achievement::DisplayBeforeEarned", "AchievementCollection::Count", "AchievementCollection::Item",
+             "AchievementCollection::Dispose", "AchievementCollection::IsDisposed", "AchievementCollection::IndexOf",
+             "AchievementCollection::Insert", "AchievementCollection::RemoveAt", "AchievementCollection::Add",
+             "AchievementCollection::Remove", "AchievementCollection::Clear", "AchievementCollection::Contains",
+             "AchievementCollection::CopyTo", "AchievementCollection::IsReadOnly",
+             "GamerServicesNotAvailableException"},
     .tags = {"gamer-services", "achievements", "profile", "offline", "catalog"},
     .frames = 60,
     .assets = {"fonts/pixel_font.cnb"},

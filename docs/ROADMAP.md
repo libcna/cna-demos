@@ -5851,3 +5851,20 @@ at632 demos,301/329 types and157/753 fields; GamerServices moves138->142/244. Ev
 `/tmp/checkpoint-706-gamer-profile-*` and `/tmp/checkpoint-706-coverage.md`. No service, network,
 profile-picture bytes, screenshot or visual result is claimed. Continue with AchievementCollection
 populated indexing, copy and lifetime behavior.
+
+## Focused707-AchievementCollection-values-and-lifetime
+
+The existing real three-item achievement catalog now covers integer/key Item lookup and exact
+boundary exceptions, atomic short CopyTo refusal and offset copying, Contains and IndexOf. A copy
+then proves ordered Insert/RemoveAt/Add/Remove/Clear behavior while IsReadOnly stays true. Repeated
+Dispose marks and clears only the selected live result, leaving the earlier independent collection
+snapshot intact.
+
+SOFTWARE and OPENGLES3/X11 each execute10 controls, pass9 and fail only established ISSUE-017 with
+byte-identical stdout and empty stderr. The focused known-issue SOFTWARE CTest, metadata validation
+and validator self-tests pass. Temporary coverage moves2084->2087/2326 at632 demos,301/329 types
+and157/753 fields; GamerServices moves142->145/244. Nine CLR explicit-interface operations and two
+GetEnumerator forms remain uncredited even though their actual C++ behavior is demonstrated.
+Evidence:`/tmp/checkpoint-707-achievement-collection-*` and `/tmp/checkpoint-707-coverage.md`. No
+service, network, screenshot or visual result is claimed. Continue with SignedInGamer's Begin/End
+achievement award/read pairs in the same workflow.
