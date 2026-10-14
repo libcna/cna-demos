@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-797 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-798 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1782,9 +1782,11 @@ Volume/Pitch/Pan ObjectDisposed refusal and the played instance's distinct one-w
 SoundEffect DistanceScale/DopplerScale/SpeedOfSound now cover mutation, refusal, zero-distance
 normalization and complete process-global restoration in the existing 3D workflow. Apply3D now
 covers accepted two-listener vector/pointer forms and empty/null/nonpositive input refusals without
-claiming dominant-listener output. Audit AudioEmitter DopplerScale range and preservation in that
-workflow next, then continue through the remaining audio behavior rows. Do not add isolated getter
-demos. Build with at most three compile jobs and keep focused evidence current.
+claiming dominant-listener output. AudioEmitter DopplerScale now covers positive/zero acceptance,
+negative refusal, preservation and restoration in the same workflow. Audit SoundEffect
+MasterVolume endpoints, invalid-value preservation and restoration in `play_parameters` next, then
+continue through the remaining audio behavior rows. Do not add isolated getter demos. Build with at
+most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2644,6 +2646,18 @@ stderr. The warning-free incremental build uses at most three jobs; metadata and
 unchanged. Evidence:`/tmp/checkpoint-797-audio-apply3d-overloads-*`. The accepted calls do not
 establish CNA's nearest-listener approximation or acoustic output; those need a supported
 observation route or listening. Audit AudioEmitter DopplerScale range behavior next.
+
+### Focused798-AudioEmitter-DopplerScale-boundaries
+
+`audio.sound_effect_instance.apply_3d` grows from sixteen to eighteen controls. Its emitter retains
+DopplerScale2.5, accepts zero, rejects a negative write while preserving zero, then restores one
+before the existing overload, mode, global-scale and audible-sweep paths.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass18/18 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
+unchanged. Evidence:`/tmp/checkpoint-798-audio-emitter-doppler-*`. These are property/range
+observations; no audible Doppler effect or listening result is claimed. Audit SoundEffect
+MasterVolume endpoint and refusal behavior next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

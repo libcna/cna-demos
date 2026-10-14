@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed AudioEmitter DopplerScale state boundaries with positive and zero acceptance, negative
+  refusal with preservation, and restoration before the existing spatial sweep.
 - Exercised Apply3D collection and pointer/count overloads with two listeners plus distinct empty,
   null, zero and negative input refusals that preserve public instance state.
 - Added SoundEffect spatial-global range and restoration behavior for DistanceScale, DopplerScale

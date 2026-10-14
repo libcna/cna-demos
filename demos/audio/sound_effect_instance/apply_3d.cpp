@@ -46,6 +46,16 @@ namespace
                       emitter.getVelocityProperty() == Vector3::Zero &&
                       emitter.getDopplerScaleProperty() == 1.0f,
                   "listener and emitter expose the exact default spatial state");
+        emitter.setDopplerScaleProperty(2.5f);
+        ctx.Check(emitter.getDopplerScaleProperty() == 2.5f,
+                  "the emitter retains a positive authored DopplerScale");
+        emitter.setDopplerScaleProperty(0.0f);
+        bool emitterDopplerRejected = false;
+        try { emitter.setDopplerScaleProperty(-0.1f); }
+        catch (const System::ArgumentOutOfRangeException&) { emitterDopplerRejected = true; }
+        ctx.Check(emitterDopplerRejected && emitter.getDopplerScaleProperty() == 0.0f,
+                  "zero emitter DopplerScale is accepted and a negative write preserves it");
+        emitter.setDopplerScaleProperty(1.0f);
 
         SoundEffectInstance overloadProbe = tone.CreateInstance();
         AudioListener farListener;

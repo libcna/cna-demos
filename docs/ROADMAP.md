@@ -7449,3 +7449,17 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-797-audio-apply3d-overloads-*` and `/tmp/checkpoint-797-coverage.md`. The
 accepted calls do not establish CNA's nearest-listener approximation or acoustic output; those need
 a supported observation route or listening. Audit AudioEmitter DopplerScale range behavior next.
+
+## Focused798-AudioEmitter-DopplerScale-boundaries
+
+`audio.sound_effect_instance.apply_3d` grows from sixteen to eighteen controls. Its emitter retains
+DopplerScale2.5, accepts zero, rejects a negative write while preserving zero, then restores one
+before the existing overload, mode, global-scale and audible-sweep paths.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass18/18 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-798-audio-emitter-doppler-*` and `/tmp/checkpoint-798-coverage.md`. These
+are property/range observations; no audible Doppler effect or listening result is claimed. Audit
+SoundEffect MasterVolume endpoint and refusal behavior next.
