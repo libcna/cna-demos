@@ -1406,10 +1406,11 @@ remains dispositioned. Achievement::GetPicture now covers real catalog bytes, fr
 and the unavailable path. GamerServicesComponent construction, Initialize/Update and dispatcher
 Initialize/WindowHandle are now behaviorally covered; InstallingTitleUpdate is never raised by
 CNA's production path. Guide screen-saver state is now covered through the platform; notification
-delay and social overlays remain service/manual work. Audit Cue's synchronous creation/preparation
-states next, then continue the next high-value behavior family after each batch, rebuilding and
-running both renderers where applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each
-completed batch.
+delay and social overlays remain service/manual work. Cue's synchronous creation/preparation-state
+audit is now complete. Audit the remaining Microphone collection/duration/headset members in the
+existing hardware-manual workflow next, then continue the next high-value behavior family after
+each batch, rebuilding and running both renderers where applicable, updating
+coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -3835,6 +3836,26 @@ compiled and the runner relinked against those libraries. A full build remains d
 sibling CNA checkout carries more than100 unrelated external changes; none were edited or reverted
 here. Pixel readback was programmatic; no screenshot or manual visual result is claimed. Continue
 with Cue::IsCreated and Cue::IsPreparing in the existing XACT state workflow.
+
+Focused715 extends `audio.xact.cue_states` without adding a variant ID. Its new-cue assertion now
+proves that synchronous SoundBank::GetCue skips the public Created and Preparing transients and
+returns a Prepared, idle object. The existing state machine still reaches playing, simultaneous
+playing/paused, stopped, authored Stopping and disposal behavior.
+
+SOFTWARE and OPENGLES3-labelled dummy-audio runs pass15/15 with empty stderr. Their stdout differs
+only in the measured authored-release wait,506 versus508 ms, already labelled as control timing
+rather than output-sample timing. The focused SOFTWARE CTest, metadata validation and five
+validator self-tests pass. Temporary coverage moves2109->2111/2326 at632 demos,301/329 types and
+157/753 fields; Audio moves109->111/121. Evidence:
+`/tmp/checkpoint-715-cue-state-focused-*` and
+`/tmp/checkpoint-715-cue-state-coverage.md`. Runner SHA-256 is
+`fe663e76478439345a428b80cd5e4e8384ebd2f3be823fde0041a5dee56064c3`; production library hashes
+remain `e2c8c9dbd6ef8fb4e611a6f0818ebec6290c34d738930c3e9f1dbb4a55ba9aeb` and
+`471f0a12b6b167262d18ae8fb763f4c10b07e7bc478f72f0bbfd5a2879b193ef`. The exact object was
+compiled and the runner relinked against those libraries. A full build remains deferred while the
+sibling CNA checkout carries more than100 unrelated external changes; none were edited or reverted.
+No listening test or audible-quality result is claimed. Continue with Microphone::All,
+GetSampleDuration and IsHeadset in the existing manual input-level workflow.
 
 ## 15. Assumptions the next session must know
 

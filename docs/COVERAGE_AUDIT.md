@@ -1467,6 +1467,20 @@ service, so an offline call with no arriving invitation has no public effect to 
 remaining social Guide calls likewise require service identities or manual overlay interaction.
 Pixel readback was programmatic; no screenshot or manual visual-quality judgment is claimed.
 
+### XACT Cue synchronous preparation states
+
+`audio.xact.cue_states` now checks `IsCreated` and `IsPreparing` alongside its established
+prepared/playing/paused/stopping/stopped lifecycle. A Cue returned by synchronous
+`SoundBank::GetCue` has already skipped both transient states and is immediately prepared and idle;
+the rest of the workflow still covers ordinary playback, repeated disposal, immediate stop and a
+real authored release.
+
+Both renderer-labelled dummy-audio runs pass15/15 with empty stderr. Their stdout differs only in
+the measured authored-release wait (506 versus508 ms), which the demo already labels as elapsed
+control timing rather than output-sample timing. Evidence:`/tmp/checkpoint-715-cue-state-focused-*`.
+This credits both remaining Cue state properties without implying that CNA exposes an asynchronous
+XSB preparation interval. No listening test or audible-quality result is claimed.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

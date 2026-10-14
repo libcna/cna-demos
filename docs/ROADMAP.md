@@ -5987,3 +5987,18 @@ validator self-tests pass. Temporary coverage moves2108->2109/2326 at632 demos,3
 uncredited because its only observable behavior requires an online game-invitation prompt. Pixel
 readback was programmatic; no screenshot or manual visual result is claimed. Continue with the
 two synchronous XACT Cue creation/preparation-state properties in the existing cue-state workflow.
+
+## Focused715-XACT-Cue-synchronous-preparation-states
+
+The existing Cue lifecycle now requires a synchronous `SoundBank::GetCue` result to have already
+left both Created and Preparing, while remaining Prepared and idle. Its playback, pause, immediate
+stop, repeated disposal and real authored-release controls remain intact.
+
+SOFTWARE and OPENGLES3-labelled dummy-audio runs pass15/15 with empty stderr. Their stdout differs
+only in the explicitly diagnostic authored-release wait,506 versus508 ms. The focused SOFTWARE
+CTest, metadata validation and validator self-tests pass. Temporary coverage moves2109->2111/2326
+at632 demos,301/329 types and157/753 fields; Audio moves109->111/121. Evidence:
+`/tmp/checkpoint-715-cue-state-focused-*` and
+`/tmp/checkpoint-715-cue-state-coverage.md`. No listening test or audible-quality result is claimed.
+Continue with Microphone All, GetSampleDuration and IsHeadset in the existing hardware-manual
+workflow, preserving a truthful skip when no recording device exists.

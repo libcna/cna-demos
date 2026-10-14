@@ -41,7 +41,9 @@ namespace
             disposedSender = sender;
         });
         ctx.Print("{}: {}", cue->getNameProperty(), State(*cue));
-        ctx.Check(cue->getIsPreparedProperty() && !cue->getIsPlayingProperty(), "a new cue is prepared, not playing");
+        ctx.Check(!cue->getIsCreatedProperty() && !cue->getIsPreparingProperty() &&
+                      cue->getIsPreparedProperty() && !cue->getIsPlayingProperty(),
+                  "synchronous GetCue skips Created/Preparing and returns a prepared, idle cue");
 
         cue->Play();
         engine.Update();
@@ -118,12 +120,12 @@ namespace
 CNA_DEMOS_CONSOLE(CueStates, {
     .id = "audio.xact.cue_states",
     .title = "XACT cue states",
-    .description = "Gets a Cue with SoundBank::GetCue and walks it through Play, Pause, Resume and Stop, printing "
-                   "IsPrepared/IsPlaying/IsPaused/IsStopped, checks Disposing and repeated disposal, then gets a "
-                   "fresh Cue, then contrasts no release, an authored fade and Immediate interruption.",
+    .description = "Shows that synchronous SoundBank::GetCue skips Created/Preparing, then walks the Cue through "
+                   "Play, Pause, Resume, Stop and disposal before contrasting immediate and authored releases.",
     .apis = {"SoundBank::GetCue", "Cue::Play", "Cue::Pause", "Cue::Resume", "Cue::Stop", "Cue::Name",
-             "Cue::IsPrepared", "Cue::IsPlaying", "Cue::IsPaused", "Cue::IsStopping", "Cue::IsStopped",
-             "Cue::IsDisposed", "Cue::Dispose", "Cue::Disposing", "AudioStopOptions"},
+             "Cue::IsCreated", "Cue::IsPreparing", "Cue::IsPrepared", "Cue::IsPlaying", "Cue::IsPaused",
+             "Cue::IsStopping", "Cue::IsStopped", "Cue::IsDisposed", "Cue::Dispose", "Cue::Disposing",
+             "AudioStopOptions"},
     .tags = {"audio", "xact", "cue", "state"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb", "xact/release.xwb", "xact/release.xsb"},
