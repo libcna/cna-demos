@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused688
-projects the632-demo staged catalog to2008/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused689
+projects the632-demo staged catalog to2009/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1372,8 +1372,10 @@ focused671 proved the override dispatch contract. RenderTargetCube and VertexBuf
 no member gap. GraphicsAdapter, the complete PackedVector namespace, PacketReader, all Design
 converter types and the ordinary Content surface now have no member gap. The seven remaining Content
 entries are four nominal .NET attribute-wrapper types and are dispositioned rather than inflated
-into inert wrapper demos. Continue with the final Input method/property gap, Mouse.WindowHandle, in
-an existing real Game window workflow. Then continue with the next high-value behavior family,
+into inert wrapper demos. Input now has no member gap. Audit Media object and collection lifetime
+next through existing synthetic MediaLibrary workflows: Dispose/IsDisposed deserve coherent state
+coverage, while CLR collection enumerator plumbing should be dispositioned separately. Then continue
+with the next high-value behavior family,
 rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1382,7 +1384,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused688 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused689 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3296,6 +3298,23 @@ version semantics through CNA's actual C++ registration API. Constructing wrappe
 consumer reads would add count without behavior, so their seven members remain intentionally
 uncredited. Sibling CNA remained clean external `f698d0f548`; no CNA source was edited. Continue
 with Mouse.WindowHandle next.
+
+Focused689 extends `platform.window.native_handle` and closes Input's final member gap. With a real
+X11 window, Mouse.WindowHandle must equal GameWindow.Handle. The workflow clears the static target,
+observes zero, restores the real token and observes the exact original again before continuing the
+typed native-window checks. Restoring the real target preserves the process-wide input state for
+the remainder of the game.
+
+SOFTWARE is correctly skipped before checks because that renderer has no window; its expected skip
+diagnostic is the only stderr. OPENGLES3/X11 passes6/6 with empty stderr. The focused SOFTWARE CTest
+passes its skip contract. Temporary coverage moves2008->2009/2326 at632 demos,301/329 types and
+156/753 fields; Input reaches113/113 members. Evidence:`/tmp/checkpoint-689-*` and
+`/tmp/checkpoint-689-coverage.md`. Runner SHA-256 is
+`0bbde05b264739003f9f0c1f06c6458244c318291ecb174507caf5a29ff3584b`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No screenshot or visual
+inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was edited.
+Continue with Media object/collection lifetime behavior next.
 
 ## 15. Assumptions the next session must know
 

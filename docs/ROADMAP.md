@@ -5568,3 +5568,17 @@ demos,301/329 types and156/753 fields; Content reaches41/48. Evidence:`/tmp/chec
 attribute wrappers whose semantics are already covered through CNA's actual C++ descriptor API;
 inert wrapper construction is intentionally uncredited. No screenshot or visual inspection was
 used. Continue with Mouse.WindowHandle next.
+
+## Focused689-mouse-window-targeting
+
+The existing native-window workflow closes Input's final member. Mouse.WindowHandle must equal the
+live GameWindow.Handle; the workflow clears the static target, observes zero and restores the exact
+real token before continuing the typed native-window checks. Restoration leaves input targeting
+usable for subsequent frames.
+
+SOFTWARE is correctly skipped because it exposes no window; OPENGLES3/X11 passes6/6 with empty
+stderr. The focused SOFTWARE CTest passes its skip contract. Temporary coverage moves2008->2009/2326
+at632 demos,301/329 types and156/753 fields; Input reaches113/113 members. Evidence:
+`/tmp/checkpoint-689-*` and `/tmp/checkpoint-689-coverage.md`. No cursor motion, synthetic mouse
+event, screenshot or visual result is claimed. Continue Media object/collection lifetime behavior
+next.

@@ -9,8 +9,10 @@
 #include "CNA/Platform/NativeWindowSystem.hpp"
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/GameWindow.hpp"
+#include "Microsoft/Xna/Framework/Input/Mouse.hpp"
 
 using namespace Microsoft::Xna::Framework;
+using Microsoft::Xna::Framework::Input::Mouse;
 namespace Platform = CNA::Platform;
 
 namespace
@@ -29,6 +31,13 @@ namespace
             const auto legacy = window.getHandleProperty();
             ctx.Print("Handle = {:#x}", static_cast<std::uint64_t>(legacy));
             ctx.Check(legacy != 0, "GameWindow::Handle is set once the window exists");
+            ctx.Check(Mouse::getWindowHandleProperty() == legacy,
+                      "Mouse.WindowHandle targets the GameWindow created for this game");
+            Mouse::setWindowHandleProperty(0);
+            const bool cleared = Mouse::getWindowHandleProperty() == 0;
+            Mouse::setWindowHandleProperty(legacy);
+            ctx.Check(cleared && Mouse::getWindowHandleProperty() == legacy,
+                      "Mouse.WindowHandle accepts a cleared target and restores the real window token");
 
             // CNA's handle says which window system the values belong to. Never assume: on Linux
             // the same game runs on X11 or Wayland.
@@ -89,10 +98,12 @@ namespace
 CNA_DEMOS_GAME(NativeHandleDemo, {
     .id = "platform.window.native_handle",
     .title = "The native window handle",
-    .description = "Reads XNA's GameWindow::Handle and CNA's GetNativeWindowHandleEXT, whose NativeWindowSystem says "
+    .description = "Matches Mouse.WindowHandle to XNA's GameWindow::Handle, then reads CNA's "
+                   "GetNativeWindowHandleEXT, whose NativeWindowSystem says "
                    "how to read it (X11 display and XID, Wayland display and surface, HWND, NSWindow), through the "
                    "typed TryGet accessors that refuse a handle of another system.",
-    .apis = {"GameWindow::Handle", "GameWindow::GetNativeWindowHandleEXT", "CNA::Platform::NativeWindowHandle",
+    .apis = {"GameWindow::Handle", "Mouse::WindowHandle", "GameWindow::GetNativeWindowHandleEXT",
+             "CNA::Platform::NativeWindowHandle",
              "CNA::Platform::NativeWindowSystem", "CNA::Platform::TryGetX11", "CNA::Platform::TryGetWayland",
              "CNA::Platform::TryGetWin32", "CNA::Platform::TryGetCocoa"},
     .tags = {"window", "native", "interop", "handle", "x11", "wayland", "cnaext"},

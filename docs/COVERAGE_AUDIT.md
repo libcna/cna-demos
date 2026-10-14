@@ -534,6 +534,18 @@ contract. Temporary coverage moves2005->2008/2326 and Content reaches41/48. Evid
 `/tmp/checkpoint-688-*` and `/tmp/checkpoint-688-coverage.md`. The remaining seven Content entries
 are the four nominal attribute wrappers dispositioned above.
 
+### Mouse window targeting
+
+The existing native-window workflow now requires Mouse.WindowHandle to equal the live
+GameWindow.Handle, clears it to zero and restores the exact real token before continuing. This
+tests both property directions and leaves the static input target usable for later game frames.
+
+Focused689 credits Input's final member. SOFTWARE is correctly skipped because it exposes no
+window; OPENGLES3/X11 passes6/6 with empty stderr. The focused SOFTWARE CTest passes its skip
+contract. Temporary coverage moves2008->2009/2326 and Input reaches113/113 members. Evidence:
+`/tmp/checkpoint-689-*` and `/tmp/checkpoint-689-coverage.md`. No cursor motion, synthetic mouse
+event, screenshot or visual result is inferred from the handle identity checks.
+
 ### Graphics-state lifetime and complete sampler presets
 
 | Members / behavior | Decision and evidence |
