@@ -1359,11 +1359,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused648
-projects XNA-member coverage to1527/2326 and closes the useful fixed ContentReader scalar/math
-family in the existing custom Level workflow. Audit the still-uncredited MouseState constructor,
-typed/boxed equality, operators, hash and text together with adjacent KeyboardState hash behavior
-in the existing input state workflows. Keep disconnected/hardware-dependent behavior distinct.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused649
+raises the staged catalog to628 and projects XNA-member coverage to1534/2326. The basic Input
+namespace is112/113 after closing KeyboardState hash and the complete authored MouseState value
+contract; Mouse.WindowHandle is platform-specific and dispositioned in COVERAGE_AUDIT. Audit
+TouchLocation typed/boxed equality, operators, hash and text plus the read-only TouchCollection
+CopyTo/mutation refusal contract in the existing `input.touch.touch_values` workflow next.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1372,8 +1373,8 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused648 last observed external `af798b73a4` plus seven uncommitted
-FNA3D/MojoShader/content-pipeline build/test paths. Recheck it before every build.
+the sibling CNA checkout; focused649 last observed external `af798b73a4` with eleven uncommitted
+renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
 `standalone/c_api.graphics.vertex_values` contains the planned seven-check
@@ -2607,6 +2608,22 @@ visual inspection was performed. The exercised production libraries retain the c
 the runner hash is `f162068386348d2b43e93b6a512b589fe47b85759fc5180a6c3dd53ba2b33220`.
 Sibling CNA remained at `af798b73a4` while its externally owned dirty paths grew to seven; no CNA
 source was edited or reverted here.
+
+Focused649 adds the coherent console ID `input.mouse.state_values` with eight controls. Default and
+fully authored MouseState records expose every XNA field; typed/boxed equality, wrong/empty boxes,
+both operators, equal hashes, a changed coordinate and exact stable text close its value contract.
+The nine-argument CNA extension additionally proves horizontal-wheel state is stored but excluded
+from XNA equality/hash/text. Existing `input.keyboard.state_values` grows from eight to nine checks
+for equal hashes across reordered key insertion and the empty-set zero hash. Both IDs pass on
+SOFTWARE and OPENGLES3 with byte-identical per-ID stdout and empty stderr; both SOFTWARE CTests
+pass. After the automatic new-source CMake regeneration emitted one external Draco policy warning,
+the final incremental build is diagnostic-free. The staged catalog is628 demos and temporary
+coverage projects1527->1534/2326; basic Input is112/113 with only platform-specific Mouse.WindowHandle
+intentionally uncredited. Evidence:`/tmp/checkpoint-649-*` and `/tmp/checkpoint-649-coverage.md`.
+No physical input, screenshot or visual inspection was performed. Production library hashes remain
+the complete647 values; the runner is
+`df5c168ad6fa00ca142e3744559d7b118bf6ace04d4f868f7e8e8e1c8f9cdab4`. Sibling CNA stayed at
+`af798b73a4` while its external dirty set reached eleven paths; no CNA source was edited here.
 
 ## 15. Assumptions the next session must know
 

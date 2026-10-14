@@ -4893,3 +4893,19 @@ type or C-route counts. Evidence:`/tmp/checkpoint-648-content-reader-*` and
 `/tmp/checkpoint-648-coverage.md`. No screenshot or visual inspection was performed. Audit the
 MouseState constructor/value contract and adjacent KeyboardState hash behavior next in the existing
 input state workflows.
+
+## Focused649-keyboard-and-mouse-value-contracts
+
+New console demo `input.mouse.state_values` uses eight controls to cover default and fully authored
+MouseState records, all XNA fields, typed/boxed equality, wrong and empty boxes, both operators,
+equal hashes and exact stable text. Its CNA horizontal-wheel constructor also demonstrates that the
+extension value remains deliberately outside XNA equality/hash/text. The existing
+`input.keyboard.state_values` grows from eight to nine controls and proves equal key sets hash
+equally regardless of insertion order while the empty set hashes to zero. Both IDs pass under
+SOFTWARE and OPENGLES3 with byte-identical per-ID stdout and empty stderr; both SOFTWARE CTests
+pass. The final incremental build is diagnostic-free after the new source's automatic CMake
+regeneration. The catalog reaches628 demos and temporary coverage moves1527->1534/2326;
+`Microsoft.Xna.Framework.Input` is112/113, with only platform-specific Mouse.WindowHandle
+uncredited by disposition. Evidence:`/tmp/checkpoint-649-*` and `/tmp/checkpoint-649-coverage.md`.
+No physical input, screenshot or visual inspection was performed. Audit TouchLocation value
+identity plus the read-only TouchCollection copy/mutation contract next in `input.touch.touch_values`.

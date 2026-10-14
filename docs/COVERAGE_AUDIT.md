@@ -409,6 +409,18 @@ Temporary generated coverage moves1438->1460/2326 XNA members without changing t
 297-type or C-route totals. `capabilities` will change one no-gamepad smoke result from skip to pass
 per renderer at the next complete checkpoint. No screenshot or visual inspection was performed.
 
+### KeyboardState and MouseState value identity
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| KeyboardState.GetHashCode | The existing `input.keyboard.state_values` workflow now compares the same A/LeftShift set constructed in opposite orders and checks equal hashes; the empty set hashes to zero. This complements its constructor, query, equality and recorded-transition controls without adding a second keyboard demo. |
+| MouseState constructor, fields and value identity | New console demo `input.mouse.state_values` passes eight controls under both renderer selections. The default and public eight-argument constructor expose exact coordinates, vertical wheel and five buttons. Typed/boxed equality, both operators, equal hashes, wrong/empty boxes, a changed coordinate and exact stable text establish the complete XNA value contract. CNA's nine-argument constructor also proves the horizontal wheel is preserved but deliberately excluded from XNA equality, hashing and text. This is authored state, not live mouse hardware. |
+| Mouse.WindowHandle | This is a process-global compatibility token tied to platform window adoption. Existing `platform.window.native_handle` covers the live GameWindow handle and typed CNA native descriptor. Mutating Mouse's static association inside the catalog would interfere with live input; treat the member as platform-specific until a process-isolated integration needs to redirect mouse queries. |
+
+Focused649 raises the staged catalog to628 demos and temporary coverage from1527 to1534/2326.
+`Microsoft.Xna.Framework.Input` reaches112/113 members; only the dispositioned WindowHandle remains.
+Evidence:`/tmp/checkpoint-649-*`. No physical input, screenshot or visual inspection was performed.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

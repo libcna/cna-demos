@@ -36,7 +36,10 @@ namespace
         ctx.Check(pressed.size() == 2, "GetPressedKeys lists the two keys");
         ctx.Check(noKeys.GetPressedKeys().empty(), "a default KeyboardState has no keys down");
 
-        ctx.Check(KeyboardState{Keys::A, Keys::LeftShift} == state, "states with the same keys are equal, in any order");
+        const KeyboardState reordered{Keys::A, Keys::LeftShift};
+        ctx.Check(reordered == state, "states with the same keys are equal, in any order");
+        ctx.Check(reordered.GetHashCode() == state.GetHashCode() && noKeys.GetHashCode() == 0,
+                  "equal key sets have equal hashes independent of insertion order, and the empty set hashes to zero");
         ctx.Check(state != noKeys && !state.Equals(noKeys), "different keys make different states");
 
         // Replay: Space held during frames 1-3, released, then held again at frame 5.
@@ -62,7 +65,7 @@ CNA_DEMOS_CONSOLE(StateValues, {
                    "GetPressedKeys, compares them, and counts key presses in a recorded sequence of states.",
     .apis = {"KeyboardState::KeyboardState", "KeyboardState::IsKeyDown", "KeyboardState::IsKeyUp",
              "KeyboardState::Item", "KeyboardState::GetPressedKeys", "KeyboardState::Equals",
-             "KeyboardState::op_Equality", "KeyboardState::op_Inequality",
+             "KeyboardState::GetHashCode", "KeyboardState::op_Equality", "KeyboardState::op_Inequality",
              "KeyState", "Keys"},
     .tags = {"keys", "replay", "testing", "value"},
 })
