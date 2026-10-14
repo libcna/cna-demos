@@ -1361,17 +1361,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused679
-projects the632-demo staged catalog to1831/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused680
+projects the632-demo staged catalog to1834/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
 machinery. The stock-effect families now retain only dispositioned protected OnApply hooks and one
 SkinnedEffect explicit-interface inventory artifact; real pass application reaches the hooks and
-focused671 proved the override dispatch contract. RenderTargetCube now has no member gap. Audit
-VertexBufferBinding's three caller-visible value members next in the existing several-streams
-workflow, including a nonzero vertex offset and instance frequency with exact binding identity.
-Then continue with the next high-value behavior family, rebuilding, running both renderers where
+focused671 proved the override dispatch contract. RenderTargetCube and VertexBufferBinding now have
+no member gap. Audit GraphicsAdapter's seven remaining platform/value members next in the existing
+adapter-information workflow, distinguishing stable relationships from renderer/hardware-specific
+observations. Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
@@ -1379,7 +1379,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused679 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused680 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3122,6 +3122,24 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Pixel validation was
 programmatic; no screenshot or visual inspection was used. Sibling CNA remained clean external
 `f698d0f548`; no CNA source was edited. Audit VertexBufferBinding's three value members next.
+
+Focused680 extends two existing IDs and closes all three VertexBufferBinding members. Several
+streams retains its three controls but prefixes both position and color buffers with decoys, binds
+each at VertexOffset1, reads back both exact buffer identities/offsets/frequency0 and still produces
+the exact white centre and clear exterior. Instancing grows1->2 controls: device readback preserves
+the exact mesh frequency0 and matrix-stream frequency1 before one call draws100 cubes across both
+screen halves.
+
+SOFTWARE and OPENGLES3 pass both IDs with empty stderr; both focused SOFTWARE CTests pass.
+Several-streams stdout is byte-identical. The animated instancing diagnostic differs by one covered
+pixel (39638/34709 versus39639/34709), while both controlled outcomes pass. Temporary coverage
+moves1831->1834/2326 at632 demos,301/329 types and156/753 fields. Evidence:
+`/tmp/checkpoint-680-*` and `/tmp/checkpoint-680-coverage.md`. Runner SHA-256 is
+`47d7c8ab84c26c333edc3826f115de0fe35fef09dc714c128ccac5bf97c5938a`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Pixel validation was
+programmatic; no screenshot or visual inspection was used. Sibling CNA remained clean external
+`f698d0f548`; no CNA source was edited. Audit GraphicsAdapter's seven value/platform members next.
 
 ## 15. Assumptions the next session must know
 

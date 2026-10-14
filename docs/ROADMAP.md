@@ -5425,3 +5425,19 @@ multisampling demos retain behavior coverage. Temporary coverage moves1826->1831
 `/tmp/checkpoint-679-coverage.md`. Pixel readback was programmatic; no screenshot or visual
 inspection was used. Audit VertexBufferBinding's VertexBuffer, VertexOffset and InstanceFrequency
 next.
+
+## Focused680-VertexBufferBinding-values-and-consumption
+
+Two existing IDs close all three VertexBufferBinding members. `several_streams` keeps three
+controls while adding one decoy element to each buffer and binding both at VertexOffset1. Device
+readback preserves both exact buffer identities, offsets1 and frequency0; the real draw still
+produces the exact white centre and clear exterior. `draw_instanced_primitives` grows1->2 controls
+and reads back the exact mesh frequency0 and matrix-stream frequency1 before its one-call100-cube
+draw.
+
+SOFTWARE and OPENGLES3 pass both IDs with empty stderr; both focused SOFTWARE CTests pass. The
+streams output is byte-identical. The animated instancing diagnostic differs by one covered pixel
+(39638/34709 versus39639/34709), with both controls passing. Temporary coverage moves1831->
+1834/2326 at632 demos,301/329 types and156/753 fields. Evidence:`/tmp/checkpoint-680-*` and
+`/tmp/checkpoint-680-coverage.md`. Pixel readback was programmatic; no screenshot or visual
+inspection was used. Audit GraphicsAdapter's seven remaining value/platform members next.

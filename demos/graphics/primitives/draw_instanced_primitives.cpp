@@ -124,6 +124,15 @@ namespace
 
             if (FramesDrawn() == 0)
             {
+                const auto bindings = device.GetVertexBuffers();
+                Context().Check(bindings.size() == 2 &&
+                                    bindings[0].getVertexBufferProperty() == vertices_.get() &&
+                                    bindings[0].getVertexOffsetProperty() == 0 &&
+                                    bindings[0].getInstanceFrequencyProperty() == 0 &&
+                                    bindings[1].getVertexBufferProperty() == instances_.get() &&
+                                    bindings[1].getVertexOffsetProperty() == 0 &&
+                                    bindings[1].getInstanceFrequencyProperty() == 1,
+                                "bindings retain exact per-vertex and per-instance stepping state");
                 // Cubes at both sides of the screen prove that each instance had its own matrix.
                 const CnaDemos::BackBufferPixels pixels(device);
                 int left = 0;
@@ -162,7 +171,8 @@ CNA_DEMOS_GAME(InstancingDemo, {
                    "vertex stream and a world matrix per instance in a second stream bound with instance "
                    "frequency 1 (SetVertexBuffers), which CNA's stock BasicEffect applies before World.",
     .apis = {"GraphicsDevice::DrawInstancedPrimitives", "GraphicsDevice::SetVertexBuffers",
-             "VertexBufferBinding::VertexBufferBinding", "DynamicVertexBuffer::SetData", "SetDataOptions::Discard",
+             "VertexBufferBinding::VertexBufferBinding", "VertexBufferBinding::InstanceFrequency",
+             "DynamicVertexBuffer::SetData", "SetDataOptions::Discard",
              "VertexDeclaration::VertexDeclaration", "VertexElement::VertexElement", "GraphicsDevice::Indices"},
     .tags = {"3d", "instancing", "performance", "vertex-streams"},
     .needs = CnaDemos::Need::ThreeD | CnaDemos::Need::Instancing,

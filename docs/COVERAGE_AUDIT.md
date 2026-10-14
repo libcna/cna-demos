@@ -367,6 +367,20 @@ All six IDs pass on SOFTWARE and OPENGLES3 with byte-identical output and empty 
 focused CTests pass. GraphicsResource retains only CLR Finalize by disposition, and the other five
 target types have no generated member gap.
 
+### VertexBufferBinding values and draw consumption
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| VertexBuffer / VertexOffset | `several_streams` prefixes both position and color buffers with a decoy element, binds each at offset1 and reads back both exact identities/offsets. The unchanged exact white centre and clear exterior prove the draw consumes the shifted streams together. |
+| InstanceFrequency | `draw_instanced_primitives` reads back frequency0 for the mesh and frequency1 for the matrix stream before one call spreads100 individually transformed cubes across both screen halves. This ties the value to actual instanced stepping. |
+
+Focused680 keeps `several_streams` at3 controls and grows instancing1->2, crediting all three members
+and moving temporary coverage1831->1834/2326. Both IDs pass on SOFTWARE and OPENGLES3 with empty
+stderr; both focused SOFTWARE CTests pass. Streams output is byte-identical; the time-varying
+instancing diagnostic differs by one covered pixel while both controlled outcomes pass. Evidence:
+`/tmp/checkpoint-680-*` and `/tmp/checkpoint-680-coverage.md`. Pixel validation used programmatic
+readback; no screenshot or visual inspection was used.
+
 ### Presentation and render-target value objects
 
 | Members / behavior | Decision and evidence |

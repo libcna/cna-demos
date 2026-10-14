@@ -62,6 +62,7 @@ namespace
 
             // The shape never changes: its positions are uploaded once, to a static buffer.
             std::vector<Vector3> positions;
+            positions.emplace_back(9000.0f, 9000.0f, 0.0f); // skipped by VertexOffset 1
             for (int i = 0; i < Slices; ++i)
             {
                 const float a0 = MathHelper::TwoPi * static_cast<float>(i) / Slices;
@@ -70,29 +71,32 @@ namespace
                 positions.emplace_back(200.0f * std::cos(a0), 200.0f * std::sin(a0), 0.0f);
                 positions.emplace_back(200.0f * std::cos(a1), 200.0f * std::sin(a1), 0.0f);
             }
-            positionBuffer_ = std::make_unique<VertexBuffer>(device, PositionStream(), VertexCount, BufferUsage::WriteOnly);
-            positionBuffer_->SetData(positions.data(), VertexCount);
+            positionBuffer_ = std::make_unique<VertexBuffer>(device, PositionStream(), VertexCount + 1,
+                                                             BufferUsage::WriteOnly);
+            positionBuffer_->SetData(positions.data(), VertexCount + 1);
 
             // The colours change every frame: a dynamic buffer of their own.
-            colorBuffer_ = std::make_unique<DynamicVertexBuffer>(device, ColorStream(), VertexCount, BufferUsage::WriteOnly);
-            colors_.resize(VertexCount);
+            colorBuffer_ = std::make_unique<DynamicVertexBuffer>(device, ColorStream(), VertexCount + 1,
+                                                                 BufferUsage::WriteOnly);
+            colors_.resize(VertexCount + 1);
         }
 
         void Update(GameTime& gameTime) override
         {
             DemoGame::Update(gameTime);
             const float t = static_cast<float>(gameTime.getTotalGameTimeProperty().getTotalSecondsProperty());
+            colors_[0] = Color::Black.getPackedValueProperty(); // skipped by VertexOffset 1
             for (int i = 0; i < Slices; ++i)
             {
                 const float hue = static_cast<float>(i) / Slices * MathHelper::TwoPi + t;
                 const Color rim(0.5f + 0.5f * std::cos(hue), 0.5f + 0.5f * std::cos(hue - 2.094f),
                                 0.5f + 0.5f * std::cos(hue + 2.094f));
-                colors_[static_cast<std::size_t>(i * 3)] = Color::White.getPackedValueProperty();
-                colors_[static_cast<std::size_t>(i * 3 + 1)] = rim.getPackedValueProperty();
+                colors_[static_cast<std::size_t>(i * 3 + 1)] = Color::White.getPackedValueProperty();
                 colors_[static_cast<std::size_t>(i * 3 + 2)] = rim.getPackedValueProperty();
+                colors_[static_cast<std::size_t>(i * 3 + 3)] = rim.getPackedValueProperty();
             }
             // Only the colour stream is rewritten; the positions stay where they are on the GPU.
-            colorBuffer_->SetData(colors_.data(), 0, VertexCount, SetDataOptions::Discard);
+            colorBuffer_->SetData(colors_.data(), 0, VertexCount + 1, SetDataOptions::Discard);
         }
 
         void Draw(const GameTime& gameTime) override
@@ -102,7 +106,8 @@ namespace
             device.setRasterizerStateProperty(RasterizerState::CullNone);
 
             // Both buffers feed the same vertices: element N of each stream forms vertex N.
-            device.SetVertexBuffers({VertexBufferBinding(positionBuffer_.get()), VertexBufferBinding(colorBuffer_.get())});
+            device.SetVertexBuffers({VertexBufferBinding(positionBuffer_.get(), 1),
+                                     VertexBufferBinding(colorBuffer_.get(), 1)});
             for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
             {
                 pass.Apply();
@@ -111,7 +116,15 @@ namespace
 
             if (FramesDrawn() == 0)
             {
-                Context().Check(device.GetVertexBuffers().size() == 2, "two vertex buffer bindings are active");
+                const auto bindings = device.GetVertexBuffers();
+                Context().Check(bindings.size() == 2 &&
+                                    bindings[0].getVertexBufferProperty() == positionBuffer_.get() &&
+                                    bindings[1].getVertexBufferProperty() == colorBuffer_.get() &&
+                                    bindings[0].getVertexOffsetProperty() == 1 &&
+                                    bindings[1].getVertexOffsetProperty() == 1 &&
+                                    bindings[0].getInstanceFrequencyProperty() == 0 &&
+                                    bindings[1].getInstanceFrequencyProperty() == 0,
+                                "two exact per-vertex bindings retain their buffers and skip one prefix element");
                 // The centre comes from stream 1's white, the rim from its hues, the shape from stream 0.
                 const CnaDemos::BackBufferPixels pixels(device);
                 const Color centre = pixels.At(400, 240);
@@ -139,7 +152,8 @@ CNA_DEMOS_GAME(SeveralStreamsDemo, {
                    "buffer uploaded once, colours in a dynamic buffer rewritten every frame -- so the animated "
                    "attribute is updated without touching the other.",
     .apis = {"GraphicsDevice::SetVertexBuffers", "GraphicsDevice::GetVertexBuffers",
-             "VertexBufferBinding::VertexBufferBinding", "DynamicVertexBuffer::SetData", "VertexElementFormat::Color",
+             "VertexBufferBinding::VertexBufferBinding", "VertexBufferBinding::VertexBuffer",
+             "VertexBufferBinding::VertexOffset", "DynamicVertexBuffer::SetData", "VertexElementFormat::Color",
              "Color::PackedValue", "GraphicsDevice::DrawPrimitives"},
     .tags = {"3d", "vertex-streams", "buffer", "animation"},
     .needs = CnaDemos::Need::ThreeD,
