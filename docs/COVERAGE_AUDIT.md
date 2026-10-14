@@ -263,6 +263,22 @@ PresentationParameters, RenderTargetBinding, DisplayMode and Viewport have no ge
 All five focused SOFTWARE CTests pass (MRT skipped by declared capability). No screenshot or manual
 visual inspection was used.
 
+### Graphics-state lifetime and complete sampler presets
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| BlendState, DepthStencilState, RasterizerState and SamplerState.Dispose | `graphics.blend_state.bound_state_is_immutable` now covers all four state-resource types. Each live binding becomes immutable; four independent states then report disposed immediately and every attempted device/collection binding throws `ObjectDisposedException` before replacing live state. Both renderers pass10 controls. |
+| BlendState.AlphaBlendFunction | The five custom blend states now configure the color and alpha equations separately. Their actual pixels include reverse-subtract alpha clamping to zero, while Min/Max use the XNA-required One/One alpha factors. Both renderers pass all six exact controls. |
+| SamplerState.AnisotropicClamp | The anisotropic-floor workflow checks that this stock state combines anisotropic filtering, MaxAnisotropy4 and Clamp on U/V/W before retaining its real LinearWrap/AnisotropicWrap draw. Both renderers pass. |
+
+Focused664 adds5 XNA-member credits plus one named stock-state field without a new ID, moving
+temporary coverage1721->1726/2326 and fields153->154/753. SamplerState now has no generated member
+gap; disposal is closed for all four state classes. All three focused SOFTWARE CTests pass, and
+SOFTWARE/OPENGLES3 output is byte-identical with empty stderr. The initial Min/Max factor rejection
+and reverse-subtract alpha mismatch were demo expectation errors corrected from the public profile
+contract and actual matching renderer output; no CNA issue was filed. No screenshot or visual
+inspection was used.
+
 ### ContentManager (including CNA extensions)
 
 | Members / behavior | Decision and evidence |

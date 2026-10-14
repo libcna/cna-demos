@@ -5149,3 +5149,23 @@ SOFTWARE CTests pass (one skipped), and the build is diagnostic-free. Temporary 
 RenderTargetBinding, DisplayMode or Viewport. Evidence:`/tmp/checkpoint-663-*` and
 `/tmp/checkpoint-663-coverage.md`. No screenshot or visual inspection was used. Audit the remaining
 graphics-state members and disposal next.
+
+## Focused664-graphics-state-lifetime-and-sampler-presets
+
+Three existing IDs close five members and one stock-state field. The bound-state workflow grows
+4->10 controls: SamplerState joins the actual device-binding immutability proof, all four state
+resource types report disposed immediately, and every later device or collection bind is rejected
+with ObjectDisposedException before replacing live state. Blend functions grows5->6 controls and
+uses separate color/alpha equations; exact pixels include reverse-subtract alpha zero, while Min
+and Max use the XNA-required One/One alpha factors. The anisotropic-floor workflow adds an exact
+AnisotropicClamp filter/MaxAnisotropy/U/V/W preset check before its established real draw.
+
+SOFTWARE and OPENGLES3 pass10/10,6/6 and1/1 with byte-identical stdout and empty stderr. All three
+focused SOFTWARE CTests pass and the build is diagnostic-free. Temporary coverage moves1721->
+1726/2326 and fields153->154/753 at299/329 types. SamplerState has no generated member gap, and
+Dispose is closed on BlendState, DepthStencilState, RasterizerState and SamplerState. The first
+Min/Max factor rejection and subtract-alpha mismatch were demo expectation errors corrected from
+the public profile contract and matching renderer output; no CNA issue was filed. Evidence:
+`/tmp/checkpoint-664-*` and `/tmp/checkpoint-664-coverage.md`. No screenshot or visual inspection
+was used. Finish the remaining MRT write masks/sample coverage, stencil outcome/mask behavior and
+rasterizer multisample/slope-bias members next.

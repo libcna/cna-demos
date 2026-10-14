@@ -67,6 +67,12 @@ namespace
                       VertexPositionTexture(Vector3(-4.0f, 0.0f, -76.0f), Vector2(0.0f, 40.0f))};
 
             anisotropic_ = SamplerState::AnisotropicWrap;
+            Context().Check(SamplerState::AnisotropicClamp.getFilterProperty() == TextureFilter::Anisotropic &&
+                                SamplerState::AnisotropicClamp.getAddressUProperty() == TextureAddressMode::Clamp &&
+                                SamplerState::AnisotropicClamp.getAddressVProperty() == TextureAddressMode::Clamp &&
+                                SamplerState::AnisotropicClamp.getAddressWProperty() == TextureAddressMode::Clamp &&
+                                SamplerState::AnisotropicClamp.getMaxAnisotropyProperty() == 4,
+                            "AnisotropicClamp combines anisotropic filtering with clamping on every axis");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -143,7 +149,8 @@ CNA_DEMOS_GAME(AnisotropicDemo, {
     .title = "Anisotropic filtering",
     .description = "Draws a textured floor receding into the distance with SamplerState::LinearWrap and "
                    "SamplerState::AnisotropicWrap side by side; anisotropic filtering keeps the far checkers sharper.",
-    .apis = {"SamplerState::AnisotropicWrap", "SamplerState::LinearWrap", "SamplerState::MaxAnisotropy",
+    .apis = {"SamplerState::AnisotropicWrap", "SamplerState::AnisotropicClamp", "SamplerState::LinearWrap",
+             "SamplerState::MaxAnisotropy",
              "GraphicsDevice::SamplerStates", "BasicEffect::TextureEnabled", "BasicEffect::Texture",
              "VertexPositionTexture::VertexPositionTexture"},
     .tags = {"3d", "sampler", "filtering", "texture", "state"},

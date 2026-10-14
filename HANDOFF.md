@@ -1361,12 +1361,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused663
-projects the628-demo staged catalog to1721/2326 XNA members and153/753 fields at299/329 types.
-PresentationParameters, RenderTargetBinding, DisplayMode and Viewport have no remaining generated
-gap. Audit the graphics-state family next: remaining BlendState colour/mask members,
-DepthStencilState fail/mask members, RasterizerState multisample/bias, and disposal across the
-state classes, extending existing state/pixel workflows rather than adding property-list variants.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused664
+projects the628-demo staged catalog to1726/2326 XNA members and154/753 fields at299/329 types.
+SamplerState has no remaining generated gap, and disposal is covered across all four state classes.
+Finish the graphics-state family next: BlendState ColorWriteChannels1/2/3 and MultiSampleMask;
+DepthStencilState clockwise/counter-clockwise fail, depth-fail and read/write mask behavior; and
+RasterizerState MultiSampleAntiAlias/SlopeScaleDepthBias. Prefer actual pixel behavior in existing
+MRT, stencil, multisampling and depth-bias workflows over property-list assertions.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1375,8 +1376,9 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused663 last observed external `0562550c3` with six uncommitted
-renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
+the sibling CNA checkout; after focused664 runtime validation it advanced externally to
+`f00150424` with two uncommitted handoff/renderer-retirement plan paths. Recheck it before every
+build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
 `standalone/c_api.graphics.vertex_values` contains the planned seven-check
@@ -2846,6 +2848,24 @@ DisplayMode or Viewport. Evidence:`/tmp/checkpoint-663-*` and `/tmp/checkpoint-6
 screenshot or visual inspection was used. Sibling CNA remained external dirty `0562550c3` with six
 observed paths; no CNA source was edited. Production library hashes remain focused661; the runner
 is `ff1e1186080c6d57b161eddc9c9c471ff6e56ba8390353f6d715b601544c62c7`.
+
+Focused664 extends three existing graphics-state IDs. `bound_state_is_immutable` grows4->10
+controls: SamplerState joins the live immutability proof, four independent states report disposed,
+and each later device/collection bind is rejected with ObjectDisposedException. Blend functions
+grows5->6 controls and applies separate alpha equations; exact pixels now also prove reverse-
+subtract alpha reaches zero, while Min/Max use the XNA-required One/One factors. The anisotropic
+workflow adds one exact AnisotropicClamp preset check before its established real floor draw.
+SOFTWARE and OPENGLES3 pass10/10,6/6 and1/1 respectively with byte-identical stdout and empty
+stderr; all three focused SOFTWARE CTests pass. Temporary coverage moves1721->1726/2326 and
+fields153->154/753, leaving no SamplerState gap and closing Dispose on all four state types. The
+initial Min/Max rejection and subtract-alpha mismatch were demo errors corrected from the profile
+contract and matching renderer output, not CNA defects. Evidence:`/tmp/checkpoint-664-*` and
+`/tmp/checkpoint-664-coverage.md`. No screenshot or visual inspection was used. The build retained
+production library hashes `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da`
+and `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`; runner
+`7cfb850fb681be30594d3f1ce7634e4e6b3c3c9aadf203d8df7b3d9d4025c69e`. Sibling CNA advanced
+externally after runtime validation to `f00150424` with two observed dirty documentation paths; no
+CNA source was edited. Finish the12 remaining graphics-state members next.
 
 ## 15. Assumptions the next session must know
 

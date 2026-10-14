@@ -32,7 +32,9 @@ namespace
         state.setColorDestinationBlendProperty(destination);
         state.setColorBlendFunctionProperty(function);
         state.setAlphaSourceBlendProperty(Blend::One);
-        state.setAlphaDestinationBlendProperty(Blend::Zero);
+        state.setAlphaDestinationBlendProperty(
+            function == BlendFunction::Min || function == BlendFunction::Max ? Blend::One : Blend::Zero);
+        state.setAlphaBlendFunctionProperty(function);
         return state;
     }
 
@@ -63,11 +65,16 @@ namespace
                 // source + destination * (1 - source): lightens.
                 {"Screen", MakeBlend(Blend::One, Blend::InverseSourceColor, BlendFunction::Add), Color(222, 191, 211)},
                 // destination - source.
-                {"Subtract", MakeBlend(Blend::One, Blend::One, BlendFunction::ReverseSubtract), Color(100, 0, 0)},
+                {"Subtract", MakeBlend(Blend::One, Blend::One, BlendFunction::ReverseSubtract), Color(100, 0, 0, 0)},
                 // per channel minimum / maximum (the blend factors do not take part).
                 {"Min", MakeBlend(Blend::One, Blend::One, BlendFunction::Min), Color(100, 100, 50)},
                 {"Max", MakeBlend(Blend::One, Blend::One, BlendFunction::Max), Color(200, 150, 200)},
             }};
+            Context().Check(modes_[0].state.getAlphaBlendFunctionProperty() == BlendFunction::Add &&
+                                modes_[2].state.getAlphaBlendFunctionProperty() == BlendFunction::ReverseSubtract &&
+                                modes_[3].state.getAlphaBlendFunctionProperty() == BlendFunction::Min &&
+                                modes_[4].state.getAlphaBlendFunctionProperty() == BlendFunction::Max,
+                            "each custom state retains its separate alpha blend function");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -123,6 +130,7 @@ CNA_DEMOS_GAME(BlendFunctionsDemo, {
                    "BlendFunction, and checks each result against the formula.",
     .apis = {"BlendState::BlendState", "BlendState::ColorSourceBlend", "BlendState::ColorDestinationBlend",
              "BlendState::ColorBlendFunction", "BlendState::AlphaSourceBlend", "BlendState::AlphaDestinationBlend",
+             "BlendState::AlphaBlendFunction",
              "Blend::DestinationColor", "Blend::InverseSourceColor", "BlendFunction::ReverseSubtract",
              "BlendFunction::Min", "BlendFunction::Max"},
     .tags = {"blend", "multiply", "screen", "state"},
