@@ -4589,3 +4589,19 @@ reaches2991/3205 and `models.h` reaches208/216. Evidence:
 `checkpoint-629-c-model-scene-metadata-focused-*-direct.*`. No material, buffer, texture, draw call,
 screenshot, visual result or project-built execution is claimed. A real content-loaded material-
 variant model and its Tag boundary are next.
+
+## Focused630-C-content-loaded-Model-variants-and-tags
+
+`c_api.content.model_loading` adds the final eight `models.h` routes in30 controls. A real glTF
+load exposes exact ordered Ocean/Gold names, atomic short copies and valid/invalid selection state.
+Programmatic back-buffer probes distinguish the red default, blue Ocean and gold body while the
+unmapped wheels remain black. Two private hand-written XNB Models cover both processor-tag shapes:
+an independently owned dictionary retains its exact BoundingSphere after Model destruction, and a
+shared reflective reader returns the caller's exact foreign object without transferring ownership.
+SOFTWARE and OPENGLES3 Xvfb direct runs pass30/30 with byte-identical stdout and empty stderr;
+strict C99 and metadata compilation, diff checks and validation self-tests pass. Staged metadata
+reaches2999/3205 and `models.h` reaches216/216, completing its semantic route audit. Evidence:
+`checkpoint-630-c-model-loading-focused-*-direct.*`. No screenshot or visual inspection was
+performed, and project-built execution still awaits a coherent sibling CNA checkout. Continue with
+the deeper generated XNA public member/behavior gaps rather than adding demos for the intentionally
+uncredited fixed-name, hardware, service, manual or renderer-specific C routes.
