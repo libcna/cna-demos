@@ -5883,3 +5883,22 @@ and157/753 fields; GamerServices moves145->149/244. Evidence:
 `/tmp/checkpoint-708-achievement-async-*` and `/tmp/checkpoint-708-coverage.md`. No service, network,
 screenshot or visual result is claimed. Friend/party/headset paths remain service or hardware
 work. Continue with AvatarAnimation/AvatarRenderer values and lifetime.
+
+## Focused709-AvatarAnimation-values-and-lifetime
+
+The existing six-preset gallery now samples a separate Celebrate clip at one second and reads the
+same values consumed by AvatarRenderer. BoneTransforms contains all71 local matrices and actual
+motion; Expression returns the clip's exact laughing mouth and eyes plus raised eyebrows. Repeated
+Dispose is harmless, IsDisposed changes from false to true and Update then throws
+ObjectDisposedException. The rendered gallery remains independent of this lifetime probe. CLR
+Finalize is native destructor machinery and remains intentionally uncredited.
+
+SOFTWARE and OPENGLES3/X11 pass9/9 with byte-identical stdout and empty stderr. The focused SOFTWARE
+CTest, metadata validation and validator self-tests pass. Temporary coverage moves2091->2095/2326
+at632 demos,301/329 types and157/753 fields; GamerServices moves149->153/244. Evidence:
+`/tmp/checkpoint-709-avatar-animation-current-*` and
+`/tmp/checkpoint-709-avatar-animation-current-coverage.md`. CNA advanced externally to committed
+`6549c623e` and the full documented build completed against its compiled artifacts. Unrelated
+graphics/sampler edits appeared after their CNA objects had compiled; no CNA source was changed
+here. No service, screenshot or manual visual result is claimed. Continue with AvatarRenderer
+lighting values and lifetime behavior.

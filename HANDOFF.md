@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused708
-projects the632-demo staged catalog to2091/2326 XNA members and157/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused709
+projects the632-demo staged catalog to2095/2326 XNA members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1399,8 +1399,8 @@ and enumerators and stay intentionally uncredited. Gamer/GamerProfile identity a
 covered. AchievementCollection's populated indexing/lifetime and actual C++ collection surface are
 now covered; its remaining inventory names are CLR aliases. The same real workflow now covers
 SignedInGamer Begin/End award and achievement-read pairs. Remaining friend, party/headset and
-online-identity paths require service/hardware evidence. Audit AvatarAnimation/AvatarRenderer value
-and lifetime behavior next, then continue the next
+online-identity paths require service/hardware evidence. AvatarAnimation's sampled value and
+lifetime behavior is now covered; audit AvatarRenderer lighting values and lifetime next, then continue the next
 high-value behavior family after each batch, rebuilding and running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1409,8 +1409,10 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused708 built while external CNA was at clean `f698d0f548`. Recheck
-that moving checkout before every build.
+the sibling CNA checkout. During focused709 it advanced externally from `f698d0f548` to committed
+`6549c623e`; a full documented build completed after that commit. Another unrelated graphics/sampler
+worktree edit began while the build was finishing, after its affected CNA objects had compiled.
+Recheck that moving checkout before every build and do not absorb or revert its uncommitted work.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
 `standalone/c_api.graphics.vertex_values` contains the planned seven-check
@@ -3696,6 +3698,26 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No service, network,
 screenshot or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
 source was edited. Continue with AvatarAnimation/AvatarRenderer value and lifetime members.
+
+Focused709 extends `gamer_services.avatar.animation_presets` without adding a variant ID. An
+independent Celebrate clip sampled at one second exposes all71 local BoneTransforms, contains real
+motion and returns the exact keyed laughing mouth/eyes plus raised eyebrows. The same object starts
+live, tolerates repeated Dispose, publishes IsDisposed and rejects Update afterwards. The six
+rendered preset instances remain independent and unchanged. CLR Finalize is intentionally
+dispositioned as native C++ destruction rather than credited through synthetic metadata.
+
+SOFTWARE and OPENGLES3/X11 pass9/9 with byte-identical stdout and empty stderr. The focused SOFTWARE
+CTest, metadata validation and five validator self-tests pass. Temporary coverage moves
+2091->2095/2326 at632 demos,301/329 types and157/753 fields; GamerServices moves149->153/244.
+Evidence:`/tmp/checkpoint-709-avatar-animation-current-*` and
+`/tmp/checkpoint-709-avatar-animation-current-coverage.md`. Runner SHA-256 is
+`17da596e0c9e18dc93cb909f3b91638087b9de39b0ff0f5b3d079c98a5f89dd5`; production library hashes
+are `3b45f580763e35ef708dfa18db757ef38144bd9715b05143f2c6cdb98734bd67` and
+`aef70555a7a5b2f3b1b531d04d27e8f6847870a697fbb0c552719d44c666726c`. No service, network,
+screenshot or manual visual result is claimed. CNA advanced externally to committed `6549c623e`
+before the full documented build. Unrelated graphics/sampler edits then appeared after their CNA
+objects had compiled; no CNA source was edited or reverted here. Continue with AvatarRenderer
+lighting values and lifetime behavior.
 
 ## 15. Assumptions the next session must know
 

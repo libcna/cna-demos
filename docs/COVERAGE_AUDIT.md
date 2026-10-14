@@ -1372,6 +1372,22 @@ This closes the four ordinary SignedInGamer async achievement members. GetFriend
 positive PartySize require service identities; IsHeadset requires actual microphone association.
 Default false/zero getters would not demonstrate those behaviors and remain uncredited.
 
+### AvatarAnimation sampled values and lifetime
+
+`gamer_services.avatar.animation_presets` retains its six concurrently rendered stock clips and
+adds an independent Celebrate instance for value and lifetime inspection. At one second its
+BoneTransforms collection has exactly AvatarRenderer::BoneCount (71) local matrices with actual
+motion. Its Expression contains the clip's keyed laughing mouth and eyes plus both raised eyebrows,
+showing that the property carries authored facial state rather than a default placeholder.
+
+The independent instance starts undisposed, accepts Dispose twice, reports IsDisposed and rejects
+Update with ObjectDisposedException. Both renderers pass9/9 with byte-identical stdout and empty
+stderr. Evidence:`/tmp/checkpoint-709-avatar-animation-current-*`. This credits BoneTransforms, Expression,
+Dispose and IsDisposed on the concrete AvatarAnimation. Its protected Dispose(bool) is exercised
+through the public disposal path but is not separately nameable; CLR Finalize is represented by
+native destruction and remains intentionally uncredited. The run inspects values and automated
+rendering, not a screenshot or manual animation quality.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

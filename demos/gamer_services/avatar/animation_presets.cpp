@@ -12,6 +12,9 @@
 #include "Microsoft/Xna/Framework/GamerServices/AvatarAnimationPreset.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/AvatarBodyType.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/AvatarDescription.hpp"
+#include "Microsoft/Xna/Framework/GamerServices/AvatarEye.hpp"
+#include "Microsoft/Xna/Framework/GamerServices/AvatarEyebrow.hpp"
+#include "Microsoft/Xna/Framework/GamerServices/AvatarMouth.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/AvatarRenderer.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SamplerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
@@ -21,6 +24,7 @@
 #include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
+#include "System/ObjectDisposedException.hpp"
 #include "System/TimeSpan.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -72,6 +76,43 @@ namespace
                 // avatars is slow on the SOFTWARE renderer, so an automated run is only a few frames.
                 animations_[i]->setCurrentPositionProperty(System::TimeSpan::FromSeconds(seconds * 0.4));
             }
+
+            // Inspect one independent stock clip at a documented keyed frame. BoneTransforms and
+            // Expression are the values AvatarRenderer consumes; this instance is kept separate so
+            // its lifetime checks cannot disturb the six animations still being drawn.
+            AvatarAnimation sampled(AvatarAnimationPreset::Celebrate);
+            sampled.setCurrentPositionProperty(System::TimeSpan::FromSeconds(1.0));
+            const auto bones = sampled.getBoneTransformsProperty();
+            bool hasAnimatedBone = false;
+            for (int bone = 0; bone < bones.getCountProperty(); ++bone)
+            {
+                hasAnimatedBone = hasAnimatedBone || bones[bone] != Matrix::getIdentityProperty();
+            }
+            Context().Check(bones.getCountProperty() == AvatarRenderer::BoneCount && hasAnimatedBone,
+                            "BoneTransforms exposes all 71 sampled local transforms");
+
+            const auto expression = sampled.getExpressionProperty();
+            Context().Check(expression.getMouthProperty() == AvatarMouth::Laughing &&
+                                expression.getLeftEyeProperty() == AvatarEye::Laughing &&
+                                expression.getRightEyeProperty() == AvatarEye::Laughing &&
+                                expression.getLeftEyebrowProperty() == AvatarEyebrow::Raised &&
+                                expression.getRightEyebrowProperty() == AvatarEyebrow::Raised,
+                            "Expression follows Celebrate's keyed laughing frame");
+
+            const bool startedLive = !sampled.getIsDisposedProperty();
+            sampled.Dispose();
+            sampled.Dispose();
+            bool disposedUpdateRefused = false;
+            try
+            {
+                sampled.Update(System::TimeSpan::Zero, false);
+            }
+            catch (const System::ObjectDisposedException&)
+            {
+                disposedUpdateRefused = true;
+            }
+            Context().Check(startedLive && sampled.getIsDisposedProperty() && disposedUpdateRefused,
+                            "Dispose is idempotent, sets IsDisposed, and guards Update");
         }
 
         void UnloadContent() override
@@ -128,7 +169,9 @@ CNA_DEMOS_GAME(AnimationPresetsDemo, {
     .description = "Six random avatars play six of the 31 standard AvatarAnimationPreset clips side by side -- clap, "
                    "celebrate, laugh, confused, an idle and a yawn -- each with its own facial expression.",
     .apis = {"AvatarAnimationPreset", "AvatarAnimation::AvatarAnimation", "AvatarAnimation::Update",
-             "AvatarAnimation::Length", "AvatarAnimation::CurrentPosition", "AvatarRenderer::Draw",
+             "AvatarAnimation::Length", "AvatarAnimation::CurrentPosition", "AvatarAnimation::BoneTransforms",
+             "AvatarAnimation::Expression", "AvatarAnimation::Dispose", "AvatarAnimation::IsDisposed",
+             "AvatarRenderer::Draw",
              "AvatarDescription::CreateRandom",
              "AvatarBodyType", "AvatarRenderer::World", "AvatarRenderer::View", "AvatarRenderer::Projection"},
     .tags = {"gamer-services", "avatar", "3d", "animation", "gallery"},
