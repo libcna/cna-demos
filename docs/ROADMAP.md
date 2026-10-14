@@ -6047,3 +6047,31 @@ cna-demos objects and executables were rebuilt. Evidence is archived under
 After capture CNA became clean at external `0c83dcc9dc`; perform a full documented build against
 that source before making a newer runtime claim. No screenshot, listening test, physical input,
 service session or manual visual-quality inspection was performed.
+
+## Focused718-GraphicsDeviceStatus-existing-behavior-credit
+
+`graphics.device.owned_lifecycle` already includes `GraphicsDeviceStatus`, compares the separately
+owned device with `Normal` after construction, after Present and after Reset, and names the owning
+property. Its metadata now also credits the demonstrated enum type itself. This corrects one
+coverage omission without adding a demo or claiming another behavior.
+
+The focused SOFTWARE and OPENGLES3/X11 runs pass with the same resetting/reset/disposing event
+sequence, and the exact SOFTWARE CTest passes. Metadata validation is632/0 and all five validator
+self-tests pass. The accompanying type audit classifies all27 remaining uncredited types as
+environment/service exceptions, nominal serializer wrappers, CLR collection enumerators,
+service-created event payloads or compiled-effect work. Generated type coverage moves301->302/329;
+member, field and C-route totals remain2114/2326,157/753 and2999/3205.
+
+## Complete719-type-disposition-full-rebuild
+
+The full documented build now completes against clean sibling CNA `0c83dcc9dc`, closing the
+incremental-build caveat in Complete717. The outer-Xvfb `tools/validate.sh` run passes metadata
+632/0 and all645 enabled CTests in296.77s; three manual tests remain disabled. SOFTWARE/X11 is
+558 pass/36 expected fail/35 skip/3 manual and OPENGLES3/X11 is590/36/3/3. Both execute all632 IDs
+with zero unexpected failures or unexpected passes, and the script regenerates runtime-backed
+coverage at302/329 XNA types,2114/2326 non-field members,157/753 fields and2999/3205 C routes.
+
+Evidence:`build/linux-full/reports/checkpoint-719-complete-*`; exact hashes are in `HANDOFF.md`.
+No screenshot, listening test, physical input, service session or manual visual-quality inspection
+was performed. Continue with the meaningful `GraphicsDevice::Present` region/window overload
+before another full checkpoint, while preserving renderer-specific success/refusal behavior.

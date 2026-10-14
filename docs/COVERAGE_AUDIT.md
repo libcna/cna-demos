@@ -1792,3 +1792,37 @@ Evidence:`build/linux-full/reports/checkpoint-717-complete-*`. This checkpoint u
 rebuilt cna-demos executables against the existing production libraries; `HANDOFF.md` records the
 exact hashes and the required next full build. No screenshot, listening test, physical input,
 service session or manual visual-quality inspection was performed.
+
+### Remaining XNA type dispositions after focused718
+
+The generated type inventory had28 entries without a bare-type metadata credit after Complete717.
+`GraphicsDeviceStatus` was the one genuine metadata omission: `graphics.device.owned_lifecycle`
+already compares it with `Normal` after construction and both before and after Reset. Focused718
+credits that demonstrated enum type without adding another control or demo. The remaining27 types
+are reviewed below; they are not a queue of27 synthetic constructors or enumerator demos.
+
+| Namespace | Types | Semantic disposition |
+|---|---:|---|
+| `Microsoft.Xna.Framework.Audio` | 3 | `NoAudioHardwareException` and `NoMicrophoneConnectedException` require missing host facilities; the runner already handles the former and the manual microphone workflow truthfully skips without a device. CNA declares `InstancePlayLimitException`, but the production XACT capacity path does not throw it. Direct exception construction would demonstrate no audio behavior. |
+| `.Content` | 4 | The collection-item-name, ignore, runtime-type and type-version attributes are nominal serializer wrappers. Focused687 already demonstrates the configurable base attribute plus real XML descriptor collection names, ignored members, runtime types and versions. Wrapper-only construction would add no serialization behavior. |
+| `.GamerServices` | 9 | `FriendCollection`/`FriendGamer`, privilege/title-update errors and invite payloads require service identities or framework-created events. `GamerCollection` and its nested enumerator are CLR collection machinery already represented by real local/session gamer ranges. `NetworkException` is a base payload, while `NetworkNotAvailableException` remains an environment refusal caught by existing code but not triggered in the successful local workflows. Synthetic construction would not exercise the service paths. |
+| `.Graphics` | 8 | Four nested Model collection enumerators are CLR aliases for ranges already traversed in loaded-model workflows. `DeviceLostException`, `DeviceNotResetException` and `NoSuitableGraphicsDeviceException` require real device/platform failure. `EffectMaterial` requires a compiled-FX material environment unavailable in this build; the C adapter's separate concrete-type demo does not establish the C++ content path. |
+| `.Input.Touch` | 1 | `TouchCollection.Enumerator` is the nested CLR spelling for the real range iteration already used by the touch workflow. |
+| `.Net` | 1 | `WriteLeaderboardsEventArgs` is service-created callback data and needs a persisted online leaderboard write. |
+| `.Storage` | 1 | `StorageDeviceNotConnectedException` requires removable-device loss; directly constructing it would not demonstrate storage behavior. |
+
+Generated coverage is therefore302/329 types, with all27 uncredited types explicitly classified.
+This completes the current type-name audit while retaining the truthful environment, service and
+compiled-effect gaps. It does not establish comprehensive public behavior coverage.
+
+### Complete719 generated full-build checkpoint
+
+The complete documented build and validation now run against clean CNA `0c83dcc9dc`. Metadata is
+632/0, all645 enabled CTests pass in296.77s and three manual tests remain disabled. SOFTWARE/X11
+reports558 pass/36 expected fail/35 skip/3 manual; OPENGLES3/X11 reports590/36/3/3. Both cover all
+632 IDs with zero unexpected failures or unexpected passes. Generated coverage is302/329 types,
+2114/2326 non-field members,157/753 fields and2999/3205 C routes.
+
+Evidence:`build/linux-full/reports/checkpoint-719-complete-*`. The exact binary and report hashes
+are recorded in `HANDOFF.md`. No screenshot, listening test, physical input, service session or
+manual visual-quality inspection was performed.

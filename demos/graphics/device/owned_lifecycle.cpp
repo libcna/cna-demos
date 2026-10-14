@@ -124,7 +124,7 @@ CNA_DEMOS_GAME(OwnedDeviceLifecycleDemo, {
     .apis = {"GraphicsDevice::GraphicsDevice", "GraphicsDevice::Present", "GraphicsDevice::Reset",
              "GraphicsDevice::Dispose", "GraphicsDevice::Disposing", "GraphicsDevice::IsDisposed",
              "GraphicsDevice::DeviceResetting", "GraphicsDevice::DeviceReset",
-             "GraphicsDevice::GraphicsDeviceStatus"},
+             "GraphicsDevice::GraphicsDeviceStatus", "GraphicsDeviceStatus"},
     .tags = {"device", "lifecycle", "reset", "present", "dispose"},
     .frames = 1,
     .restrictions = "Desktop reset/present lifecycle; DeviceLost is observed as absent and not claimed as exercised.",

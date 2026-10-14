@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the632-demo full rebuild/runtime checkpoint against clean CNA `0c83dcc9dc`: all645
+  enabled CTests and both full renderer smokes pass with only36 declared CNA failures.
+- Credited the existing `GraphicsDeviceStatus` behavior in the owned-device lifecycle demo and
+  dispositioned all27 remaining generated type gaps without synthetic demo inflation.
 - Added `c_api.graphics.sprite_font_state`, a26-check caller-built SpriteFont workflow covering
   copied glyph/character tables, atomic short reads, asymmetric layout measurement, mutable
   fallback/spacing state and atlas retention; this completes all nine `sprite_font.h` routes.
