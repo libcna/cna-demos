@@ -4306,3 +4306,17 @@ compilation, diff checks and validation self-tests pass. Staged metadata reaches
 `cnb.h` reaches162/272. Evidence:`checkpoint-610-c-cnb-model-core-focused-*-direct.*`. No document
 codec, ContentManager, graphics device, renderer or draw call is claimed. Morph targets and their
 weight timeline are next.
+
+## Focused611-C-CNB-model-morph-data
+
+`c_api.content.cnb_model_morph` adds all12 morph routes in20 renderer-free controls. One two-vertex
+part owns two indexed targets with distinct copied position/normal delta streams, two default
+weights and a cubic timeline key with separate weight, in-tangent and out-tangent streams. Atomic
+short transfers, empty streams, selector bounds, live derived counts and caller-buffer ownership
+pass. Replacing the morph flags preserves every independently built stream, while idempotent clear
+removes the entire nested graph and makes subsequent stream access fail. Both renderer-labelled
+direct runs pass byte-identically with empty stderr; strict C99, metadata compilation, diff checks
+and validation self-tests pass. Staged metadata reaches2685/3205 and `cnb.h` reaches174/272.
+Evidence:`checkpoint-611-c-cnb-model-morph-focused-*-direct.*`. No document codec, mesh
+deformation, animation player, graphics device, renderer or draw call is claimed. Mesh, skeleton,
+animation, lights and the model codec are next.
