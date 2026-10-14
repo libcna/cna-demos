@@ -7479,3 +7479,18 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-799-audio-master-volume-*` and `/tmp/checkpoint-799-coverage.md`. These are
 return/property/range observations; no audible gain or listening result is claimed. Audit the Play
 overload's pitch clamp, pan refusal and disposed return next.
+
+## Focused800-SoundEffect-Play-boundaries
+
+`audio.sound_effect.play_parameters` grows from nine to twelve controls. Its original three
+successful parameter combinations remain. Pitch values5 and-5 clamp and still return true, while
+Pan1.5 and-1.5 independently throw ArgumentOutOfRangeException. A separate disposed effect makes
+both default and parameterized Play return false while CreateInstance throws ObjectDisposedException.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass12/12 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-800-audio-play-boundaries-*` and `/tmp/checkpoint-800-coverage.md`. These
+are return/refusal/disposal observations; no audible clamp, pan or listening result is claimed.
+Audit remaining SoundEffect PCM constructor/helper boundaries next.

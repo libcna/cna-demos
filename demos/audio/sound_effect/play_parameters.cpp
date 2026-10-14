@@ -6,11 +6,14 @@
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundEffect.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
+#include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Audio;
 using Microsoft::Xna::Framework::Content::ContentManager;
+using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
@@ -23,6 +26,16 @@ namespace
         ctx.Check(tone.Play(1.0f, 0.0f, -1.0f), "full volume, original pitch, left");
         ctx.Check(tone.Play(0.5f, 1.0f, 0.0f), "half volume, an octave up, centre");
         ctx.Check(tone.Play(0.25f, -1.0f, 1.0f), "quarter volume, an octave down, right");
+        ctx.Check(tone.Play(1.0f, 5.0f, 0.0f) && tone.Play(1.0f, -5.0f, 0.0f),
+                  "finite pitch outliers clamp to the supported range and still play");
+        bool highPanRejected = false;
+        bool lowPanRejected = false;
+        try { (void)tone.Play(1.0f, 0.0f, 1.5f); }
+        catch (const System::ArgumentOutOfRangeException&) { highPanRejected = true; }
+        try { (void)tone.Play(1.0f, 0.0f, -1.5f); }
+        catch (const System::ArgumentOutOfRangeException&) { lowPanRejected = true; }
+        ctx.Check(highPanRejected && lowPanRejected,
+                  "pan outside either boundary is rejected instead of clamped");
 
         // MasterVolume scales every SoundEffect in the program (1 by default).
         const float previous = SoundEffect::getMasterVolumeProperty();
@@ -50,15 +63,25 @@ namespace
         SoundEffect::setMasterVolumeProperty(previous);
         ctx.Check(SoundEffect::getMasterVolumeProperty() == previous,
                   "the demo restores the original process-global MasterVolume");
+
+        SoundEffect disposedProbe(TitleLocation::Path() + "/assets/sounds/tone_440.wav");
+        disposedProbe.Dispose();
+        bool createRejected = false;
+        try { (void)disposedProbe.CreateInstance(); }
+        catch (const System::ObjectDisposedException&) { createRejected = true; }
+        ctx.Check(disposedProbe.getIsDisposedProperty() && !disposedProbe.Play() &&
+                      !disposedProbe.Play(1.0f, 0.0f, 0.0f) && createRejected,
+                  "a disposed effect makes Play return false while CreateInstance throws");
     }
 }
 
 CNA_DEMOS_CONSOLE(PlayParameters, {
     .id = "audio.sound_effect.play_parameters",
     .title = "Play with volume, pitch and pan",
-    .description = "Plays one sound with three volume/pitch/pan combinations, then checks exact MasterVolume "
-                   "boundaries, atomic range failures and process-global restoration.",
-    .apis = {"SoundEffect::Play", "SoundEffect::MasterVolume", "ContentManager::ContentManager"},
+    .description = "Exercises fire-and-forget Play parameter clamps, refusals and disposal, then checks exact "
+                   "MasterVolume boundaries, atomic failures and process-global restoration.",
+    .apis = {"SoundEffect::Play", "SoundEffect::CreateInstance", "SoundEffect::Dispose", "SoundEffect::IsDisposed",
+             "SoundEffect::MasterVolume", "ContentManager::ContentManager"},
     .tags = {"audio", "volume", "pitch", "pan"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"sounds/tone_440.wav"},

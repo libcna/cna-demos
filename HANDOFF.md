@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-799 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-800 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1785,9 +1785,11 @@ covers accepted two-listener vector/pointer forms and empty/null/nonpositive inp
 claiming dominant-listener output. AudioEmitter DopplerScale now covers positive/zero acceptance,
 negative refusal, preservation and restoration in the same workflow. Audit SoundEffect
 MasterVolume now covers exact endpoints, finite/NaN refusal, preservation and process-global
-restoration in `play_parameters`. Audit the same overload's out-of-range pitch clamp, pan refusal
-and disposed false return next, then continue through the remaining audio behavior rows. Do not add
-isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
+restoration in `play_parameters`. The same demo now distinguishes Play's finite pitch clamp, pan
+refusal, disposed false return and disposed CreateInstance exception. Audit the remaining
+SoundEffect PCM constructor/helper boundaries next, then continue through the remaining audio
+behavior rows. Do not add isolated getter demos. Build with at most three compile jobs and keep
+focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2673,6 +2675,19 @@ The warning-free incremental build uses at most three jobs; metadata and coverag
 Evidence:`/tmp/checkpoint-799-audio-master-volume-*`. These are return/property/range observations;
 no audible gain or listening result is claimed. Audit the Play overload's pitch clamp, pan refusal
 and disposed return next.
+
+### Focused800-SoundEffect-Play-boundaries
+
+`audio.sound_effect.play_parameters` grows from nine to twelve controls. Its original three
+successful parameter combinations remain. Pitch values5 and-5 clamp and still return true, while
+Pan1.5 and-1.5 independently throw ArgumentOutOfRangeException. A separate disposed effect makes
+both default and parameterized Play return false while CreateInstance throws ObjectDisposedException.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass12/12 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
+unchanged. Evidence:`/tmp/checkpoint-800-audio-play-boundaries-*`. These are return/refusal/disposal
+observations; no audible clamp, pan or listening result is claimed. Audit remaining SoundEffect PCM
+constructor/helper boundaries next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Distinguished SoundEffect fire-and-forget behavior for clamped pitch, rejected pan and disposed
+  false returns, including the disposed CreateInstance exception contrast.
 - Completed SoundEffect MasterVolume scalar contracts with exact endpoints, finite/NaN refusals,
   atomic preservation and explicit restoration of the process-global value.
 - Completed AudioEmitter DopplerScale state boundaries with positive and zero acceptance, negative
