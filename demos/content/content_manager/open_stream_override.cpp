@@ -66,6 +66,8 @@ namespace
         void LoadContent() override
         {
             PackContentManager pack(&getServicesProperty());
+            Context().Check(pack.getServiceProviderProperty() == &getServicesProperty(),
+                            "the manager retains the exact service provider supplied to its constructor");
 
             // ReadAsset reaches OpenStream: the texture comes out of memory.
             const Texture2D direct = pack.ReadFromPack<Texture2D>("wheel");
@@ -86,6 +88,19 @@ namespace
             }
             Context().Print("OpenStream called {} time(s) in total", pack.opened);
             Context().Check(loaded && pack.opened == 2, "Load<T> reads through the OpenStream override");
+
+            const int openedBeforeMissing = pack.opened;
+            bool missing = false;
+            try
+            {
+                (void)pack.ReadFromPack<Texture2D>("missing");
+            }
+            catch (const ContentLoadException& error)
+            {
+                missing = std::string(error.what()) == "not in the pack: missing";
+            }
+            Context().Check(missing && pack.opened == openedBeforeMissing + 1,
+                            "the override reports a missing packed asset with ContentLoadException");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -102,7 +117,7 @@ CNA_DEMOS_GAME(OpenStreamDemo, {
     .description = "Derives a ContentManager whose OpenStream serves XNB assets from memory, reads one with "
                    "ReadAsset, and checks XNA's rule that Load<T> goes through the override too.",
     .apis = {"ContentManager::OpenStream", "ContentManager::ReadAsset", "ContentManager::Load",
-             "ContentLoadException"},
+             "ContentManager::ServiceProvider", "ContentLoadException::ContentLoadException"},
     .tags = {"content", "pack-file", "stream", "custom-manager", "xnb"},
     .frames = 1,
     .assets = {"xnb/textures/colour_wheel.xnb"},

@@ -43,7 +43,7 @@ Decisions:
 | ContentReader, ContentTypeReader, ContentTypeReaderManager | demo: `content.xnb.custom_type_reader` (the members it uses come from BinaryReader or are CNA's, so its `.apis` names the types) |
 | ResourceContentManager | demo: `content.content_manager.resource_content_manager` (expected failure, CNA-DEMOS-ISSUE-012) |
 | ContentSerializerAttribute | `content.custom.intermediate_serializer` now consumes the public format object to rename Health as HitPoints and checks the emitted XML and loaded value. The separate shared-resource tool now checks aliases versus inline copies; deeper format behavior remains a gap. The earlier claim that CNA has no consumer was wrong for the inspected source. |
-| ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute | No independent wrapper-object demos. The intermediate_serializer tool now demonstrates collection item naming and ignored-field semantics through explicit ContentTypeDescriptor/ContentMemberDescriptor APIs in C++. The nominal .NET attribute wrappers are not automatically credited, and their absence from `.apis` must not erase this real behavior gap. |
+| ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute | Intentionally no independent wrapper-object demos. The intermediate serializer workflows demonstrate collection item naming, ignored fields, polymorphic runtime types and versioned type serializers through the actual public C++ ContentTypeDescriptor/ContentMemberDescriptor registration API. CNA's C++ consumers read those descriptors, not instances of the nominal .NET attribute wrappers. Constructing and reading wrapper values would add seven inventory credits without exercising serialization behavior. |
 
 ## Microsoft.Xna.Framework.Design
 
@@ -517,6 +517,22 @@ and OPENGLES3 selections with byte-identical stdout and empty stderr; the focuse
 passes. Temporary coverage moves1998->2005/2326. Evidence:`/tmp/checkpoint-687-*` and
 `/tmp/checkpoint-687-coverage.md`. This is build-time XML and value-state coverage; no rendering or
 runtime content-manager behavior is claimed.
+
+### Remaining ordinary Content members
+
+The custom ContentManager now requires exact IServiceProvider identity and exercises its explicit
+ContentLoadException constructor on a missing packed asset. The ResourceContentManager workflow
+names its protected OpenStream because both the embedded Bounce attempt and missing-resource path
+actually dispatch through that override. These extend existing load behavior without adding wrapper
+or exception-only demos.
+
+Focused688 credits the final three ordinary members. Custom OpenStream runs four controls with three
+passing and only CNA-DEMOS-ISSUE-012's established Load bypass failing; resource content runs two
+controls with only the same issue's reader-registration failure. SOFTWARE and OPENGLES3 stdout is
+byte-identical with empty stderr; both known-issue SOFTWARE CTests pass their expected-failure
+contract. Temporary coverage moves2005->2008/2326 and Content reaches41/48. Evidence:
+`/tmp/checkpoint-688-*` and `/tmp/checkpoint-688-coverage.md`. The remaining seven Content entries
+are the four nominal attribute wrappers dispositioned above.
 
 ### Graphics-state lifetime and complete sampler presets
 

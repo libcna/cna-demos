@@ -98,7 +98,8 @@ CNA_DEMOS_CONSOLE(ResourceContent, {
     .description = "Loads a Curve from an .xnb held as a binary resource of the program through a "
                    "ResourceContentManager over a System::Resources::ResourceManager -- no content directory -- "
                    "and shows that an unknown resource name is a ContentLoadException.",
-    .apis = {"ResourceContentManager::ResourceContentManager", "ContentManager::Load", "ContentLoadException",
+    .apis = {"ResourceContentManager::ResourceContentManager", "ResourceContentManager::OpenStream",
+             "ContentManager::Load", "ContentLoadException",
              "ResourceManager::ResourceManager", "Curve::Evaluate", "Curve::PostLoop"},
     .tags = {"content", "resources", "embedded", "xnb"},
     .knownIssue = "CNA-DEMOS-ISSUE-012",

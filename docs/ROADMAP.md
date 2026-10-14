@@ -5550,3 +5550,21 @@ stdout and empty stderr; the focused SOFTWARE CTest passes. Temporary coverage m
 at632 demos,301/329 types and156/753 fields; Content reaches38/48 members. Evidence:
 `/tmp/checkpoint-687-*` and `/tmp/checkpoint-687-coverage.md`. No rendering, screenshot or visual
 inspection was used. Continue the remaining ordinary Content member audit next.
+
+## Focused688-remaining-ordinary-content-members
+
+Two existing OpenStream workflows close the last three ordinary Content members. The custom manager
+retains exact IServiceProvider identity and constructs ContentLoadException with an exact missing
+packed-asset message. ResourceContentManager's embedded and missing-resource loads dispatch through
+its protected OpenStream. The corrected missing-asset control measures one added call relative to
+its own starting count, so it does not depend on fixing CNA-DEMOS-ISSUE-012 first.
+
+Custom OpenStream executes four controls with three passing and only the established Load bypass
+failing; resource content executes two controls with only the established reader-registration
+failure. SOFTWARE and OPENGLES3 output is byte-identical with empty stderr; both known-issue
+SOFTWARE CTests pass their expected-failure contract. Temporary coverage moves2005->2008/2326 at632
+demos,301/329 types and156/753 fields; Content reaches41/48. Evidence:`/tmp/checkpoint-688-*` and
+`/tmp/checkpoint-688-coverage.md`. The remaining seven Content entries are four nominal .NET
+attribute wrappers whose semantics are already covered through CNA's actual C++ descriptor API;
+inert wrapper construction is intentionally uncredited. No screenshot or visual inspection was
+used. Continue with Mouse.WindowHandle next.

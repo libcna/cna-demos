@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused687
-projects the632-demo staged catalog to2005/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused688
+projects the632-demo staged catalog to2008/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1370,11 +1370,10 @@ machinery. The stock-effect families now retain only dispositioned protected OnA
 SkinnedEffect explicit-interface inventory artifact; real pass application reaches the hooks and
 focused671 proved the override dispatch contract. RenderTargetCube and VertexBufferBinding now have
 no member gap. GraphicsAdapter, the complete PackedVector namespace, PacketReader, all Design
-converter types and ContentSerializerAttribute now have no member gap. Audit the three remaining
-ordinary Content members next: ContentLoadException construction, ContentManager.ServiceProvider
-identity and ResourceContentManager.OpenStream dispatch in their existing workflows. Then record a
-semantic disposition for the four nominal attribute-wrapper types rather than adding inert wrapper
-demos. Continue with the next high-value behavior family,
+converter types and the ordinary Content surface now have no member gap. The seven remaining Content
+entries are four nominal .NET attribute-wrapper types and are dispositioned rather than inflated
+into inert wrapper demos. Continue with the final Input method/property gap, Mouse.WindowHandle, in
+an existing real Game window workflow. Then continue with the next high-value behavior family,
 rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1383,7 +1382,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused687 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused688 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3272,6 +3271,31 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No rendering, screenshot or
 visual inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was
 edited. Continue the remaining ordinary Content member audit next.
+
+Focused688 extends the two existing OpenStream workflows and closes the last three ordinary Content
+members. The custom manager retains the exact IServiceProvider identity, its override constructs a
+ContentLoadException with the exact missing packed-asset message, and ResourceContentManager's real
+Load/missing-resource paths both dispatch through its protected OpenStream. The first draft tied the
+missing-asset control to three total opens, which made it depend on fixing CNA-DEMOS-ISSUE-012; the
+corrected control requires one additional call relative to its own starting count.
+
+Both workflows remain marked with CNA-DEMOS-ISSUE-012. Custom OpenStream executes four controls with
+three passing and only the established Load bypass failing; resource content executes two controls
+with the missing-resource path passing and only the established reader-registration failure. Both
+renderer outputs are byte-identical with empty stderr, and the two known-issue SOFTWARE CTests pass
+their expected-failure contract. Temporary coverage moves2005->2008/2326 at632 demos,301/329 types
+and156/753 fields; Content reaches41/48. Evidence:`/tmp/checkpoint-688-*` and
+`/tmp/checkpoint-688-coverage.md`. Runner SHA-256 is
+`96594066b1de36e1ee994df00fcc33ac9589aa71abd9ecdba00811c819423135`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No screenshot or visual
+inspection was used. ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute,
+ContentSerializerRuntimeTypeAttribute and ContentSerializerTypeVersionAttribute are nominal .NET
+attribute wrappers: existing descriptor workflows prove collection naming, ignore, runtime type and
+version semantics through CNA's actual C++ registration API. Constructing wrappers that no C++
+consumer reads would add count without behavior, so their seven members remain intentionally
+uncredited. Sibling CNA remained clean external `f698d0f548`; no CNA source was edited. Continue
+with Mouse.WindowHandle next.
 
 ## 15. Assumptions the next session must know
 
