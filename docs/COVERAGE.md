@@ -197,7 +197,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::IsCnbCompressionSupported` -- content.custom.cnb_read_limits
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Find` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Parse` -- content.custom.incremental_compiler
+- `CNA::Content::Pipeline::ContentBuildEnvironment::buildConfiguration` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentBuildEnvironment::intermediateDirectory` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildEnvironment::strictness` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentBuildEnvironment::targetPlatform` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildEnvironment::targetProfile` -- content.texture_processor.resize_to_power_of_two
 - `CNA::Content::Pipeline::ContentBuildLogger::Log` -- content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ContentBuildManifest::Find` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication
@@ -507,12 +510,16 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentImporter::Import` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentImporterAttribute::DefaultProcessor` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentImporterContext::AddDependency` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::ContentImporterContext::IntermediateDirectory` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessor::Process` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::AddDependency` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::AddOutputFile` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::BuildAndLoadAsset` -- content.custom.nested_builds
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::BuildAsset` -- content.custom.nested_builds
+- `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::BuildConfiguration` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::Convert` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::IntermediateDirectory` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::TargetPlatform` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::ExternalReference` -- content.custom.intermediate_external_references, content.custom.nested_builds
 - `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::Filename` -- content.custom.intermediate_external_references
 - `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue` -- content.custom.xna_pipeline_components

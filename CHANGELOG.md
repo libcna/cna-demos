@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the XNA component-adapter workflow with target-platform and build-configuration
+  propagation plus real intermediate-directory scratch use across importer, processor and writer.
 - Extended the native pipeline example with deterministic importer, processor and writer
   ambiguity diagnostics, explicit incompatible-route refusals, and name-only component selection.
 - Extended CNB external-reference coverage with a valid child file of the wrong registered type,

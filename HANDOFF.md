@@ -1738,14 +1738,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-763 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-764 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
-recorder boundaries and native component selection, with new ISSUE-087 for omitted disposable
-shared-table values. Audit `ContentBuildEnvironment` next: determine whether targetPlatform,
-buildConfiguration and intermediateDirectory have observable behavior or propagation in the
-existing native/XNA pipeline workflows. Add focused evidence only where the public implementation
-has a meaningful contract; otherwise record the disposition and continue into deeper intermediate
-serializer behavior. Build with at most three compile jobs and keep focused evidence current.
+recorder boundaries plus component selection/environment propagation, with new ISSUE-087 for
+omitted disposable shared-table values. Continue the intermediate XML member/behavior audit in
+`content.custom.intermediate_serializer`: test the implicit member-name fallback when a reusable
+format omits ElementName and the meaningful optional-empty-collection/default distinction. Then
+audit collection-level defaults/inheritance in `intermediate_properties` if the public source
+contract supports a concise coherent addition. Build with at most three compile jobs and keep
+focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2005,6 +2006,26 @@ pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 members,16
 CNA issue was found. Registry inventory views and direct resolution queries remain ordinary
 inspection. Audit meaningful `ContentBuildEnvironment` platform/configuration/intermediate-
 directory propagation next before deeper serializer behavior.
+
+### Focused764 XNA build-environment propagation
+
+`content.custom.xna_pipeline_components` adds three passing controls, reaching20 passes and the two
+established ISSUE-047/048 failures. One real Build requests WindowsPhone, configuration Profile and
+a private intermediate directory. The emitted CNB proves the XNA processor and environment-aware
+native writer receive the same platform and configuration. It also proves the XNA importer,
+processor and native writer receive the same scratch path, while the processor creates and the
+demo reads an exact environment file there. The writer's schema and component versions advance to
+two because its emitted representation now carries those fields.
+
+SOFTWARE and OPENGLES3/Xvfb each retain exactly20/22 child passes with empty child stderr; the
+three new labels pass and the two old labels fail. The expected-failure SOFTWARE CTest passes. The
+warning-free incremental build uses `-j3`; metadata remains636/0, known-issue demos remain40, tool
+self-tests pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-764-xna-environment-*` and
+`/tmp/checkpoint-764-coverage.md`. No rendering, screenshot or manual inspection was used, and no
+new CNA issue was found. Direct in-memory environment propagation is covered; the compiler host's
+own scratch-directory policy is not inferred. Continue `content.custom.intermediate_serializer`
+with implicit format naming and optional empty-collection semantics.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

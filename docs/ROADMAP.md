@@ -318,7 +318,9 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.custom.xna_pipeline_components`: actual XNA importer/processor adapters, default
   processor selection, typed parameter conversion/isolation, source sidecar dependency and
   nested Convert producing compiled route bounds. The extension reads a processor label dependency
-  and writes a bounds summary. With the strictness extension, 17 of 19 checks pass:
+  and writes a bounds summary. With the strictness/environment extensions, 20 of 22 checks pass;
+  target platform and build configuration reach the processor and writer, while one explicit
+  intermediate directory reaches all three stages and holds a real processor scratch file.
   AddOutputFile refuses the configured separate output root (ISSUE-047), and returned effective
   parameters retain entries dropped by XnaCompatible (ISSUE-048). Defaulted compiled bounds,
   two contextual warnings, retained valid overrides and refusal of missing inputs are verified. Explicit rebuild/input failure and cleanup are verified; no CLI cache claim.
@@ -6833,3 +6835,23 @@ validator/checkpoint self-tests pass5/5 and4/4, and generated coverage remains30
 screenshot or manual inspection was used. No CNA issue was found. Registry inventory views and
 direct resolution queries remain ordinary inspection. Audit meaningful `ContentBuildEnvironment`
 platform/configuration/intermediate-directory propagation next before deeper serializer behavior.
+
+## Focused764-XNA-build-environment-propagation
+
+`content.custom.xna_pipeline_components` adds three passing controls, reaching20 passes and the two
+established ISSUE-047/048 failures. One real Build requests WindowsPhone, configuration Profile and
+a private intermediate directory. The emitted CNB proves the XNA processor and environment-aware
+native writer receive the same platform and configuration. It also proves the XNA importer,
+processor and native writer receive the same scratch path, while the processor creates and the
+demo reads an exact environment file there. The writer's schema and component versions advance to
+two because its emitted representation now carries those fields.
+
+SOFTWARE and OPENGLES3/Xvfb each retain exactly20/22 child passes with empty child stderr; the
+three new labels pass and the two old labels fail. The expected-failure SOFTWARE CTest passes. The
+warning-free incremental build uses at most three jobs; metadata remains636/0, known-issue demos
+remain40, validator/checkpoint self-tests pass5/5 and4/4, and generated coverage remains302/329
+types,2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-764-xna-environment-*` and `/tmp/checkpoint-764-coverage.md`. No rendering,
+screenshot or manual inspection was used. No new CNA issue was found. Direct in-memory environment
+propagation is covered; the compiler host's own scratch-directory policy is not inferred. Continue
+the intermediate serializer with implicit format naming and optional empty-collection semantics.

@@ -44,11 +44,16 @@ namespace
         std::vector<Vector2> points;
         float unitScale = 1.0f;
         std::filesystem::path sourceDirectory;
+        std::string importerIntermediateDirectory;
     };
     struct RouteBounds
     {
         static constexpr std::string_view XnaTypeName = BoundsType;
         float minX, minY, maxX, maxY;
+        Xna::TargetPlatform targetPlatform = Xna::TargetPlatform::Windows;
+        std::string buildConfiguration;
+        std::string importerIntermediateDirectory;
+        std::string processorIntermediateDirectory;
     };
 
     class UnitRouteImporter final : public Xna::ContentImporter<RoutePoints>
@@ -62,6 +67,7 @@ namespace
             if (!source) throw Xna::InvalidContentException("Could not read the route source.");
             RoutePoints route;
             route.sourceDirectory = sourcePath.parent_path();
+            route.importerIntermediateDirectory = context.getIntermediateDirectoryProperty();
             float x, y;
             while (source >> x)
             {
@@ -128,8 +134,11 @@ namespace
             Xna::OpaqueDataDictionary parameters;
             parameters.SetValue<float>("Scale", input.unitScale);
             const auto converted = context.Convert<RoutePoints, RoutePoints>(input, ScaleName, parameters);
-            RouteBounds bounds{converted.points.front().X, converted.points.front().Y,
-                               converted.points.front().X, converted.points.front().Y};
+            RouteBounds bounds{};
+            bounds.minX = converted.points.front().X;
+            bounds.minY = converted.points.front().Y;
+            bounds.maxX = converted.points.front().X;
+            bounds.maxY = converted.points.front().Y;
             for (const auto& point : converted.points)
             {
                 bounds.minX = std::min(bounds.minX, point.X); bounds.minY = std::min(bounds.minY, point.Y);
@@ -137,6 +146,21 @@ namespace
             }
             bounds.minX -= padding_; bounds.minY -= padding_;
             bounds.maxX += padding_; bounds.maxY += padding_;
+            bounds.targetPlatform = context.getTargetPlatformProperty();
+            bounds.buildConfiguration = context.getBuildConfigurationProperty();
+            bounds.importerIntermediateDirectory = input.importerIntermediateDirectory;
+            bounds.processorIntermediateDirectory = context.getIntermediateDirectoryProperty();
+            if (!bounds.processorIntermediateDirectory.empty())
+            {
+                const std::filesystem::path scratch(std::u8string(
+                    bounds.processorIntermediateDirectory.begin(), bounds.processorIntermediateDirectory.end()));
+                std::filesystem::create_directories(scratch);
+                std::ofstream file(scratch / "route-bounds.environment.txt");
+                file << bounds.buildConfiguration << '\n'
+                     << static_cast<int>(bounds.targetPlatform) << '\n';
+                file.close();
+                if (!file) throw Xna::InvalidContentException("Could not write the route environment scratch file.");
+            }
             if (exportSummary_)
             {
                 context.AddDependency("patrol.label"); // a processor input, separate from the importer's unit scale
@@ -168,26 +192,38 @@ namespace
     class BoundsWriter final : public Pipeline::ContentTypeWriter
     {
     public:
-        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.BoundsWriter", "1"}; }
+        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.BoundsWriter", "2"}; }
         std::string InputType() const override { return BoundsType; }
         std::vector<Pipeline::ContentWriterSchemaIdentity> OutputSchemaIdentities() const override
         {
-            return {{Cnb::CnbAssetTypeIdFromName(BoundsType), 1u, BoundsType, {"CnaDemos.BoundsCodec", "1"}}};
+            return {{Cnb::CnbAssetTypeIdFromName(BoundsType), 2u, BoundsType, {"CnaDemos.BoundsCodec", "2"}}};
         }
         Pipeline::ContentWriteResult Write(const Pipeline::ContentValue& input, const std::string& logicalName) const override
+        {
+            return Write(input, logicalName, {});
+        }
+        Pipeline::ContentWriteResult Write(const Pipeline::ContentValue& input, const std::string& logicalName,
+                                           const Pipeline::ContentBuildEnvironment& environment) const override
         {
             const auto& bounds = input.Get<RouteBounds>();
             Cnb::CnbByteWriter payload;
             payload.WriteF32(bounds.minX); payload.WriteF32(bounds.minY);
             payload.WriteF32(bounds.maxX); payload.WriteF32(bounds.maxY);
-            Cnb::CnbWriter writer(Cnb::CnbAssetTypeIdFromName(BoundsType), 1);
+            payload.WriteU32(static_cast<std::uint32_t>(bounds.targetPlatform));
+            payload.WriteString(bounds.buildConfiguration);
+            payload.WriteString(bounds.importerIntermediateDirectory);
+            payload.WriteString(bounds.processorIntermediateDirectory);
+            payload.WriteU32(static_cast<std::uint32_t>(environment.targetPlatform));
+            payload.WriteString(environment.buildConfiguration);
+            payload.WriteString(environment.intermediateDirectory.generic_string());
+            Cnb::CnbWriter writer(Cnb::CnbAssetTypeIdFromName(BoundsType), 2);
             writer.SetMetadata(BoundsType, logicalName);
             writer.AddChunk(BoundsChunk, payload.Take(), Cnb::CnbChunkFlags::Mandatory);
             Pipeline::ContentWriteResult result;
             result.bytes = writer.Build();
             result.assetTypeId = Cnb::CnbAssetTypeIdFromName(BoundsType);
             result.assetTypeName = BoundsType;
-            result.assetSchemaVersion = 1;
+            result.assetSchemaVersion = 2;
             return result;
         }
     };
@@ -208,16 +244,32 @@ namespace
         if (!file || file.bad()) throw std::runtime_error("Could not read the generated summary.");
         return text.str();
     }
-    RouteBounds ReadBounds(const Pipeline::ContentBuildResult& built)
+    struct CompiledRouteBounds
+    {
+        RouteBounds bounds;
+        Pipeline::ContentTargetPlatform writerTargetPlatform = Pipeline::ContentTargetPlatform::Windows;
+        std::string writerBuildConfiguration;
+        std::string writerIntermediateDirectory;
+    };
+    CompiledRouteBounds ReadCompiledBounds(const Pipeline::ContentBuildResult& built)
     {
         const auto document = Cnb::CnbDocument::Parse(built.output.bytes, "XNA bridge bounds");
         auto payload = document.OpenChunk(document.RequireSingle(BoundsChunk));
-        RouteBounds bounds;
+        CompiledRouteBounds compiled;
+        auto& bounds = compiled.bounds;
         bounds.minX = payload.ReadF32(); bounds.minY = payload.ReadF32();
         bounds.maxX = payload.ReadF32(); bounds.maxY = payload.ReadF32();
+        bounds.targetPlatform = static_cast<Xna::TargetPlatform>(payload.ReadU32());
+        bounds.buildConfiguration = payload.ReadString();
+        bounds.importerIntermediateDirectory = payload.ReadString();
+        bounds.processorIntermediateDirectory = payload.ReadString();
+        compiled.writerTargetPlatform = static_cast<Pipeline::ContentTargetPlatform>(payload.ReadU32());
+        compiled.writerBuildConfiguration = payload.ReadString();
+        compiled.writerIntermediateDirectory = payload.ReadString();
         payload.RequireExhausted();
-        return bounds;
+        return compiled;
     }
+    RouteBounds ReadBounds(const Pipeline::ContentBuildResult& built) { return ReadCompiledBounds(built).bounds; }
 }
 
 int main()
@@ -332,6 +384,25 @@ int main()
                 std::filesystem::copy_file(request.sourceRoot / "custom" / name, sources / "custom" / name);
             const auto label = sources / "custom/patrol.label";
             WriteLabel(label, "Courtyard patrol");
+            auto environmentRequest = request;
+            environmentRequest.sourceRoot = sources;
+            environmentRequest.environment.targetPlatform = Pipeline::ContentTargetPlatform::WindowsPhone;
+            environmentRequest.environment.buildConfiguration = "Profile";
+            environmentRequest.environment.intermediateDirectory = directory / "intermediate";
+            const auto environmentBounds = ReadCompiledBounds(pipeline.Build(environmentRequest));
+            check(environmentBounds.bounds.targetPlatform == Xna::TargetPlatform::WindowsPhone &&
+                      environmentBounds.writerTargetPlatform == Pipeline::ContentTargetPlatform::WindowsPhone,
+                  "the target platform reaches the XNA processor and environment-aware native writer");
+            check(environmentBounds.bounds.buildConfiguration == "Profile" &&
+                      environmentBounds.writerBuildConfiguration == "Profile",
+                  "the build configuration reaches the XNA processor and environment-aware native writer");
+            const auto intermediate = environmentRequest.environment.intermediateDirectory.generic_string();
+            check(environmentBounds.bounds.importerIntermediateDirectory == intermediate &&
+                      environmentBounds.bounds.processorIntermediateDirectory == intermediate &&
+                      environmentBounds.writerIntermediateDirectory == intermediate &&
+                      ReadText(environmentRequest.environment.intermediateDirectory /
+                               "route-bounds.environment.txt") == "Profile\n2\n",
+                  "one intermediate directory reaches all three stages and holds the processor's scratch file");
             auto summary = request; summary.sourceRoot = sources;
             summary.parameters.Set("ExportSummary", true);
             summary.environment.outputDirectory = directory / "output";
