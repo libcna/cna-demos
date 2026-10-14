@@ -84,7 +84,8 @@ Complete634 exercises all2999 credited C routes and all current catalog IDs in b
 suites. It absorbs every staged C batch through complete `models.h`, the focused SpriteFont route,
 and the deeper XNA member batches through VertexElement.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
-Known-issue demos: 34 (`c_api.gamer.achievement_collection` CNA-DEMOS-ISSUE-077,
+Known-issue demos: 35 (`graphics.sprite_batch.begin_end_rules` CNA-DEMOS-ISSUE-082,
+`c_api.gamer.achievement_collection` CNA-DEMOS-ISSUE-077,
 `c_api.net.local_gamer_packets` CNA-DEMOS-ISSUE-075,
 `c_api.audio.spatial_state` CNA-DEMOS-ISSUE-073,
 `c_api.graphics.pbr_effect_material_state` CNA-DEMOS-ISSUE-070,
@@ -1341,13 +1342,13 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused635 projects XNA-member coverage to1437/2326, and focused636 closes the pending
-SpriteFont layout/fallback/measurement/copy rows without adding IDs. Audit SpriteBatch lifecycle
-and queued-resource behavior next. Extend an existing coherent SpriteBatch workflow if practical:
-explicit Dispose and event ordering, disposal while a batch is open, calls after disposal, and the
-lifetime of a texture queued before End are the meaningful unresolved cases. Inspect the CNA source
-first, distinguish a retained handle from unsafe caller lifetime, and avoid an overload-per-demo
-series. Build and run SOFTWARE and OPENGLES3, then continue to the next high-value behavior.
+baseline. Focused637 projects XNA-member coverage to1438/2326 and records SpriteBatch open-dispose
+counter leak ISSUE-082. Audit `input.gamepad.state_values` next: its operators already establish
+ordinary equality, so add typed/boxed Equals, hash and exact diagnostic text only as one coherent
+value contract. Then decide the two uncredited GamePadCapabilities stick-button properties in the
+existing `input.gamepad.capabilities` workflow without inventing hardware. Run the renderer-free
+value demo directly and exercise capabilities only where its declared GamePad need permits; do not
+claim a physical controller that was not present. Continue immediately to the next useful family.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2444,6 +2445,16 @@ results pass; the isolated final glyph run passes too. No screenshot or visual i
 performed. XNA inventory remains1437/2326 because its five SpriteFont members were already credited;
 the four now-direct CNAEXT inspection methods are outside that inventory. Evidence:
 `/tmp/checkpoint-636-sprite-font-*`. Final build is diagnostic-free against clean CNA `09c3108e5`.
+
+Focused637 extends `graphics.sprite_batch.begin_end_rules` from five to twelve controls. Explicit
+Dispose/event/idempotence and three post-dispose refusals pass; a queued temporary Texture2D wrapper
+leaves scope before End yet still yields exact orange/black pixels. The final control reproduces new
+CNA-DEMOS-ISSUE-082: disposing an open deferred batch never releases GraphicsDevice's active-batch
+counter, so another Immediate batch is refused. SOFTWARE and OPENGLES3 each report eleven passes
+plus the same expected failure with byte-identical stdout and empty stderr; the known-issue CTest
+passes. Temporary coverage projects1437->1438/2326 through SpriteBatch.Dispose. Evidence:
+`/tmp/checkpoint-637-sprite-batch-*` and `/tmp/checkpoint-637-coverage.md`. No screenshot or visual
+inspection was performed. Clean sibling CNA remains `09c3108e5`; no CNA source was edited.
 
 ## 15. Assumptions the next session must know
 

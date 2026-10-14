@@ -15,6 +15,36 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-082 -- Disposing an open SpriteBatch leaves its device batch active
+
+- **Area/API:** `SpriteBatch::Dispose(bool)`, `SpriteBatch::Begin/End` and the per-device
+  `spriteBeginCount_` / `spriteImmediateBeginCount_` coordination in
+  `modules/graphics/src/Xna/SpriteBatch.cpp`.
+- **Reproduction:** create two SpriteBatch values on one device, begin a deferred batch on the
+  first, dispose it without End, then begin an Immediate batch on the second. The extended
+  `graphics.sprite_batch.begin_end_rules` performs the same sequence after its established
+  Begin/End refusal controls.
+- **Observed:** Dispose raises Disposing once, clears the queue, publishes IsDisposed and correctly
+  makes subsequent Begin, End and Draw calls throw ObjectDisposedException. The unrelated
+  Immediate Begin nevertheless throws InvalidOperationException claiming another batch remains
+  active. SOFTWARE and OPENGLES3 execute the same twelve checks with byte-identical stdout and
+  empty stderr: eleven positive controls pass and only the active-accounting assertion fails.
+- **Cause observed in source:** successful Begin increments the GraphicsDevice counters.
+  `SpriteBatch::End` has a `releaseDeviceAccounting` path, but `Dispose(bool)` only clears the
+  renderer, queue and `begun` flag before delegating to GraphicsResource. Once disposed, End cannot
+  be called to release the leaked count.
+- **Expected:** disposing an open batch should retire the accounting established by its successful
+  Begin so it cannot poison other SpriteBatch values on the device. Public Dispose may abandon the
+  disposed batch's queued work, but unrelated batching must remain usable.
+- **Positive controls/scope:** all older sequencing refusals pass. A deferred command retains the
+  renderer payload of a temporary Texture2D whose C++ wrapper leaves scope before End and produces
+  exact orange/black framebuffer samples on both renderers. This is programmatic readback; no
+  screenshot or visual inspection was performed. Explicitly disposing a queued Texture2D, renderer
+  End failures, cross-device resources and device teardown are not claimed.
+- **Status:** open against clean CNA `09c3108e5`; runtime marker applies to both exercised renderers.
+  No CNA source was modified and no upstream message was sent. Unmarked evidence:
+  `/tmp/checkpoint-637-sprite-batch-unmarked-*`.
+
 ### CNA-DEMOS-ISSUE-081 -- ModelMesh construction omits pre-attached part effects
 
 - **Area/API:** `ModelMesh` constructors and `ModelMeshPart::setEffectProperty` in

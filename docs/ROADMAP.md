@@ -4699,3 +4699,19 @@ was performed. Generated inventory remains1437/2326 because all five XNA SpriteF
 already credited and the four newly direct CNAEXT inspection methods are outside that inventory.
 Evidence:`/tmp/checkpoint-636-sprite-font-*`. Audit SpriteBatch lifecycle and queued-resource
 ownership next.
+
+## Focused637-SpriteBatch-disposal-and-queued-resource-lifetime
+
+`graphics.sprite_batch.begin_end_rules` retains its five sequencing controls and adds seven
+lifecycle/ownership controls. Explicit Dispose raises Disposing once before IsDisposed, is
+idempotent, and makes Begin/End/Draw throw ObjectDisposedException. A deferred command retains a
+temporary Texture2D renderer after its C++ wrapper leaves scope and draws exact orange/black
+framebuffer samples on SOFTWARE and OPENGLES3. The final control exposes new CNA-DEMOS-ISSUE-082:
+disposing an open deferred batch clears its local state but leaves the GraphicsDevice active-batch
+counter set, permanently refusing an unrelated Immediate batch. Both renderers produce eleven
+passes plus that one expected failure with byte-identical stdout and empty stderr; the known-issue
+CTest passes. Temporary coverage moves XNA members1437->1438/2326 through public SpriteBatch.Dispose
+without changing the627-demo/type/C-route counts. Evidence:`/tmp/checkpoint-637-sprite-batch-*` and
+`/tmp/checkpoint-637-coverage.md`. Pixel readback was programmatic; no screenshot or visual
+inspection was performed. Audit GamePadState value identity/diagnostics and the two omitted stick-
+button capability members next.
