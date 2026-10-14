@@ -32,6 +32,16 @@ namespace
 
         // The emitter (the sound source) sweeps from the far left to the far right.
         AudioEmitter emitter;
+        ctx.Check(listener.getPositionProperty() == Vector3::Zero &&
+                      listener.getForwardProperty() == Vector3::Forward &&
+                      listener.getUpProperty() == Vector3::Up &&
+                      listener.getVelocityProperty() == Vector3::Zero &&
+                      emitter.getPositionProperty() == Vector3::Zero &&
+                      emitter.getForwardProperty() == Vector3::Forward &&
+                      emitter.getUpProperty() == Vector3::Up &&
+                      emitter.getVelocityProperty() == Vector3::Zero &&
+                      emitter.getDopplerScaleProperty() == 1.0f,
+                  "listener and emitter expose the exact default spatial state");
         SoundEffectInstance voice = tone.CreateInstance();
         voice.setIsLoopedProperty(true);
 
@@ -47,6 +57,16 @@ namespace
                   "a paused pan voice refuses Apply3D while retaining its state and stored pan");
 
         voice.Stop();
+        listener.setVelocityProperty(Vector3(3.0f, -2.0f, 1.0f));
+        emitter.setUpProperty(Vector3::Backward);
+        ctx.Check(listener.getVelocityProperty() == Vector3(3.0f, -2.0f, 1.0f) &&
+                      emitter.getUpProperty() == Vector3::Backward,
+                  "listener velocity and emitter up retain independently authored vectors");
+        voice.Apply3D(listener, emitter);
+        ctx.Check(voice.getStateProperty() == SoundState::Stopped,
+                  "Apply3D accepts the authored spatial state before playback");
+        listener.setVelocityProperty(Vector3::Zero);
+        emitter.setUpProperty(Vector3::Up);
         voice.Apply3D(listener, emitter); // Stop lets the next submission choose 3D instead.
         voice.Play();
         voice.Pause();
@@ -103,8 +123,9 @@ CNA_DEMOS_CONSOLE(Apply3DDemo, {
     .description = "Moves an AudioEmitter from the listener's left to its right, calling SoundEffectInstance::Apply3D "
                    "each step; listen for the tone panning across. Public state checks first demonstrate paused Pan/3D refusals and switching modes after Stop.",
     .apis = {"SoundEffectInstance::Apply3D", "AudioListener::AudioListener", "AudioListener::Position",
-             "AudioListener::Forward", "AudioListener::Up", "AudioEmitter::AudioEmitter", "AudioEmitter::Position",
-             "SoundEffect::DistanceScale", "SoundEffect::DopplerScale", "SoundEffect::SpeedOfSound",
+             "AudioListener::Forward", "AudioListener::Up", "AudioListener::Velocity", "AudioEmitter::AudioEmitter",
+             "AudioEmitter::Position", "AudioEmitter::Up", "SoundEffect::DistanceScale",
+             "SoundEffect::DopplerScale", "SoundEffect::SpeedOfSound",
              "SoundEffect::CreateInstance", "SoundEffectInstance::Play", "SoundEffectInstance::Pan",
              "SoundEffectInstance::Pause", "SoundEffectInstance::Stop", "SoundEffectInstance::State"},
     .tags = {"audio", "3d", "positional", "pan"},

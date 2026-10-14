@@ -4748,3 +4748,18 @@ and `/tmp/checkpoint-639-coverage.md`. No screenshot, frame-pixel inspection, vi
 audible-quality claim was made. Audit the existing spatial-audio workflow next for
 AudioListener.Velocity and AudioEmitter.Up, with dummy-audio evidence limited to public state and
 accepted Apply3D calls.
+
+## Focused640-spatial-audio-state-and-accepted-input
+
+`audio.sound_effect_instance.apply_3d` retains its original moving-emitter sweep, public Pan/3D
+mode transitions and SpeedOfSound control and adds three coherent state checks. The listener and
+emitter expose their exact zero/default-basis records; a nonzero AudioListener.Velocity and
+nondefault AudioEmitter.Up round-trip exactly; and Apply3D accepts that authored input while the
+voice remains stopped. Neutral values are restored before the existing playback sequence.
+SOFTWARE and OPENGLES3 pass10/10 with byte-identical stdout and empty stderr, and the focused
+SOFTWARE CTest passes. Temporary coverage moves the focused XNA-member projection1462->1464/2326
+without changing the627-demo/type/C-route counts. This establishes public state and accepted input
+under dummy audio, not mixed Doppler, panning, orientation or listening output. Evidence:
+`/tmp/checkpoint-640-audio-spatial-*` and `/tmp/checkpoint-640-coverage.md`. No screenshot or visual
+inspection was performed. Audit AudioCategory and RendererDetail value identity/diagnostic
+contracts next while preserving their real XACT workflows.

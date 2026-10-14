@@ -1342,13 +1342,14 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused639 projects XNA-member coverage to1462/2326 and closes VideoPlayer.Dispose and
-IsDisposed with active-playback teardown and post-dispose refusal. Audit the existing
-`audio.sound_effect_instance.apply_3d` workflow next. Add coherent state/round-trip evidence for
-the uncredited AudioListener.Velocity and AudioEmitter.Up members, while retaining the current
-paused Apply3D state transitions. Dummy audio can establish public spatial state and accepted
-application only; do not claim audible Doppler, panning or orientation effects. Run both requested
-renderer environments and the focused CTest, then continue to the next useful family.
+baseline. Focused640 projects XNA-member coverage to1464/2326 and closes AudioListener.Velocity and
+AudioEmitter.Up with exact default/authored state plus accepted stopped Apply3D input. Audit the
+remaining useful Audio value contracts next: extend `audio.xact.categories` for
+AudioCategory.Equals/GetHashCode/ToString and `audio.xact.renderer_details` for RendererDetail
+typed/boxed equality, inequality, hash and text. Preserve their real category-control and selected-
+renderer playback workflows. Use only renderer records actually returned by CNA; do not invent a
+second device or claim output-device selection beyond the existing documented limitation. Run both
+dummy-audio renderer environments and the focused SOFTWARE CTests, then continue.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2477,6 +2478,17 @@ identical-output claim. The focused SOFTWARE CTest passes. Temporary coverage pr
 Evidence:`/tmp/checkpoint-639-video-lifecycle-*` and `/tmp/checkpoint-639-coverage.md`. No screenshot,
 frame-pixel inspection, visual-quality or audible-quality claim was made. Final build is diagnostic-
 free against clean CNA `09c3108e5`; no CNA source was edited.
+
+Focused640 extends `audio.sound_effect_instance.apply_3d` from seven to10 controls. It checks the
+exact listener/emitter default records, round-trips a nonzero AudioListener.Velocity and nondefault
+AudioEmitter.Up, and passes that authored state to Apply3D while the voice remains stopped before
+restoring neutral values for the existing mode transitions and sweep. SOFTWARE and OPENGLES3 pass
+10/10 with byte-identical stdout and empty stderr; the focused SOFTWARE CTest passes. Temporary
+coverage projects1462->1464/2326 with no catalog/type/C-route change. This is public state and
+accepted-input evidence under dummy audio, not mixed Doppler, panning, orientation or listening
+evidence. Evidence:`/tmp/checkpoint-640-audio-spatial-*` and `/tmp/checkpoint-640-coverage.md`. No
+screenshot or visual inspection was performed. Final build is diagnostic-free against clean CNA
+`09c3108e5`; no CNA source was edited.
 
 ## 15. Assumptions the next session must know
 
