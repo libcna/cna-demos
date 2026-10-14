@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Exercised Apply3D collection and pointer/count overloads with two listeners plus distinct empty,
+  null, zero and negative input refusals that preserve public instance state.
 - Added SoundEffect spatial-global range and restoration behavior for DistanceScale, DopplerScale
   and SpeedOfSound without claiming an acoustic result from dummy audio.
 - Extended SoundEffectInstance disposal coverage across Volume, Pitch, Pan and the one-way

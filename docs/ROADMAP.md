@@ -7434,3 +7434,18 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-796-audio-spatial-globals-*` and `/tmp/checkpoint-796-coverage.md`. These
 are property and refusal checks; no acoustic attenuation, Doppler, pitch or listening result is
 claimed. Audit Apply3D vector and pointer/count input boundaries next.
+
+## Focused797-Apply3D-overload-input-contracts
+
+`audio.sound_effect_instance.apply_3d` grows from fourteen to sixteen controls. A stopped probe
+passes two independently positioned listeners through both vector and pointer/count overloads.
+Empty-vector and zero/negative-count inputs throw ArgumentOutOfRangeException; a null pointer with a
+positive count throws ArgumentNullException. Every refusal leaves Stopped and public Pan unchanged.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass16/16 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-797-audio-apply3d-overloads-*` and `/tmp/checkpoint-797-coverage.md`. The
+accepted calls do not establish CNA's nearest-listener approximation or acoustic output; those need
+a supported observation route or listening. Audit AudioEmitter DopplerScale range behavior next.

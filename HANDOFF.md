@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-796 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-797 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1780,10 +1780,11 @@ suppressing the independent refill listener. SoundEffectInstance Volume/Pitch/Pa
 inclusive endpoints, NaN refusal and atomic value preservation. Their disposed setters now cover
 Volume/Pitch/Pan ObjectDisposed refusal and the played instance's distinct one-way IsLooped lock.
 SoundEffect DistanceScale/DopplerScale/SpeedOfSound now cover mutation, refusal, zero-distance
-normalization and complete process-global restoration in the existing 3D workflow. Audit the
-Apply3D vector and pointer/count input boundaries in that workflow next, then continue through the
-remaining audio behavior rows. Do not add isolated getter demos. Build with at most three compile
-jobs and keep focused evidence current.
+normalization and complete process-global restoration in the existing 3D workflow. Apply3D now
+covers accepted two-listener vector/pointer forms and empty/null/nonpositive input refusals without
+claiming dominant-listener output. Audit AudioEmitter DopplerScale range and preservation in that
+workflow next, then continue through the remaining audio behavior rows. Do not add isolated getter
+demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2630,6 +2631,19 @@ stderr. The warning-free incremental build uses at most three jobs; metadata and
 unchanged. Evidence:`/tmp/checkpoint-796-audio-spatial-globals-*`. These are property and refusal
 checks; no acoustic attenuation, Doppler, pitch or listening result is claimed. Audit Apply3D vector
 and pointer/count input boundaries next.
+
+### Focused797-Apply3D-overload-input-contracts
+
+`audio.sound_effect_instance.apply_3d` grows from fourteen to sixteen controls. A stopped probe
+passes two independently positioned listeners through both vector and pointer/count overloads.
+Empty-vector and zero/negative-count inputs throw ArgumentOutOfRangeException; a null pointer with a
+positive count throws ArgumentNullException. Every refusal leaves Stopped and public Pan unchanged.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass16/16 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
+unchanged. Evidence:`/tmp/checkpoint-797-audio-apply3d-overloads-*`. The accepted calls do not
+establish CNA's nearest-listener approximation or acoustic output; those need a supported
+observation route or listening. Audit AudioEmitter DopplerScale range behavior next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

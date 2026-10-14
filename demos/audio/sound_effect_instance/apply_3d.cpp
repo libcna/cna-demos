@@ -3,6 +3,7 @@
 #include <chrono>
 #include <limits>
 #include <thread>
+#include <vector>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Audio/AudioEmitter.hpp"
@@ -12,6 +13,7 @@
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundState.hpp"
+#include "System/ArgumentNullException.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
 #include "System/InvalidOperationException.hpp"
 
@@ -44,6 +46,39 @@ namespace
                       emitter.getVelocityProperty() == Vector3::Zero &&
                       emitter.getDopplerScaleProperty() == 1.0f,
                   "listener and emitter expose the exact default spatial state");
+
+        SoundEffectInstance overloadProbe = tone.CreateInstance();
+        AudioListener farListener;
+        farListener.setPositionProperty(Vector3(-100.0f, 0.0f, 0.0f));
+        AudioListener nearListener;
+        nearListener.setPositionProperty(Vector3(10.0f, 0.0f, 0.0f));
+        const std::vector<AudioListener> listeners = {farListener, nearListener};
+        bool collectionAccepted = true;
+        bool pointerAccepted = true;
+        try { overloadProbe.Apply3D(listeners, emitter); }
+        catch (...) { collectionAccepted = false; }
+        try { overloadProbe.Apply3D(listeners.data(), static_cast<int>(listeners.size()), emitter); }
+        catch (...) { pointerAccepted = false; }
+        ctx.Check(collectionAccepted && pointerAccepted && overloadProbe.getStateProperty() == SoundState::Stopped,
+                  "collection and pointer/count Apply3D overloads accept multiple listeners while stopped");
+
+        bool emptyRejected = false;
+        bool nullRejected = false;
+        bool zeroRejected = false;
+        bool negativeRejected = false;
+        try { overloadProbe.Apply3D(std::vector<AudioListener>{}, emitter); }
+        catch (const System::ArgumentOutOfRangeException&) { emptyRejected = true; }
+        try { overloadProbe.Apply3D(nullptr, 1, emitter); }
+        catch (const System::ArgumentNullException&) { nullRejected = true; }
+        try { overloadProbe.Apply3D(listeners.data(), 0, emitter); }
+        catch (const System::ArgumentOutOfRangeException&) { zeroRejected = true; }
+        try { overloadProbe.Apply3D(listeners.data(), -1, emitter); }
+        catch (const System::ArgumentOutOfRangeException&) { negativeRejected = true; }
+        ctx.Check(emptyRejected && nullRejected && zeroRejected && negativeRejected &&
+                      overloadProbe.getStateProperty() == SoundState::Stopped &&
+                      overloadProbe.getPanProperty() == 0.0f,
+                  "invalid Apply3D listener inputs are refused without changing public state");
+
         SoundEffectInstance voice = tone.CreateInstance();
         voice.setIsLoopedProperty(true);
 
@@ -167,8 +202,8 @@ namespace
 CNA_DEMOS_CONSOLE(Apply3DDemo, {
     .id = "audio.sound_effect_instance.apply_3d",
     .title = "Positional (3D) sound",
-    .description = "Moves an AudioEmitter across a listener, checks paused Pan/3D mode changes, and exercises the "
-                   "SoundEffect spatial-scale ranges while restoring every process-global value.",
+    .description = "Moves an AudioEmitter across listeners, checks Apply3D overload/refusal and paused Pan/3D mode "
+                   "behavior, then exercises spatial-scale ranges while restoring every process-global value.",
     .apis = {"SoundEffectInstance::Apply3D", "AudioListener::AudioListener", "AudioListener::Position",
              "AudioListener::Forward", "AudioListener::Up", "AudioListener::Velocity", "AudioEmitter::AudioEmitter",
              "AudioEmitter::Position", "AudioEmitter::Up", "SoundEffect::DistanceScale",
