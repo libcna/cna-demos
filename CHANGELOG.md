@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added framebuffer checks to `graphics.sprite_batch.scale` that correlate authored marker spacing
+  with scalar half/native/triple sizes and independent horizontal/vertical Vector2 stretches.
 - Reworked `graphics.sprite_batch.rotation` into deterministic cardinal-angle/origin examples with
   framebuffer checks for fixed pivots, clockwise orientation and top-left versus centre rotation.
 - Added `graphics.sprite_batch.cross_device_texture`, a two-device ownership workflow proving that

@@ -288,6 +288,16 @@ remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C r
 inspection was performed. Sibling CNA remains clean at test-only `d23e139de`; production library
 hashes remain exact from Complete724.
 
+Focused **733-SpriteBatch-scalar-and-vector-scale-pixels** adds two framebuffer controls to the
+existing five-draw scale workflow. The authored red/yellow marker spacing grows proportionally
+under scalar0.5/1/3, while Vector2(5,1) and(1,5) stretch the same pair independently on X and Y.
+SOFTWARE and OPENGLES3/X11 pass2/2, the exact SOFTWARE CTest passes, metadata remains635/0, the
+five validator self-tests and four checkpoint-comparison tests pass, and coverage remains302/329
+types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-733-scale-*`. Pixel readback was programmatic; no screenshot or manual visual
+inspection was performed. Sibling CNA remains clean at test-only `d23e139de`; production library
+hashes remain exact from Complete724.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1551,13 +1561,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-732 are
+HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-733 are
 staged after it. Add a few stable framebuffer controls to the existing
-`graphics.sprite_batch.scale` workflow that jointly prove scalar half/native/triple size and the
-distinct Vector2 horizontal/vertical stretch paths. Keep both overload families in this one scene
-and avoid asserting every decorative pixel. Then audit `sprite_effects` for exact in-place marker
-mirroring, followed by SpriteFont layer depth only if it adds observable ordering beyond the
-existing sprite sorting workflow.
+`graphics.sprite_batch.sprite_effects` workflow that prove None, horizontal, vertical and combined
+flags mirror the asymmetric red marker in place while retaining the destination bounds. Keep all
+four flag cases in this one scene. Then audit SpriteFont nonzero layer depth only if it adds
+observable sprite/text ordering beyond the existing SpriteBatch sorting workflow; otherwise record
+the disposition and move to the next deeper graphics behavior gap.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

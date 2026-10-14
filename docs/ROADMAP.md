@@ -6294,3 +6294,17 @@ all five validator self-tests and all four checkpoint-comparison tests pass, and
 `/tmp/checkpoint-732-rotation-*`. Pixel readback was programmatic; no screenshot or manual visual
 inspection was performed. Audit the existing scalar/Vector2 scale scene next and keep its two
 overload families in one coherent framebuffer contract.
+
+## Focused733-SpriteBatch-scalar-and-vector-scale-pixels
+
+The existing `graphics.sprite_batch.scale` keeps its five original calls and point-samples the
+authored red marker and yellow arrow texels after each transformation. One aggregate control proves
+their offsets grow proportionally under scalar0.5,1 and3; the other proves Vector2(5,1) stretches
+only their horizontal separation while Vector2(1,5) stretches only the vertical separation. This
+keeps the scalar and per-axis overload families together as one coherent scaling concept.
+
+SOFTWARE and OPENGLES3/X11 pass2/2, and the exact SOFTWARE CTest passes. Metadata remains635/0,
+all five validator self-tests and all four checkpoint-comparison tests pass, and coverage remains
+302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-733-scale-*`. Pixel readback was programmatic; no screenshot or manual visual
+inspection was performed. Audit exact in-place SpriteEffects marker mirroring next.
