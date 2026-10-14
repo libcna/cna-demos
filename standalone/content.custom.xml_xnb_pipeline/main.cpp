@@ -330,6 +330,13 @@ namespace
         if (!file) throw std::runtime_error("Could not read published compiler data.");
         return {std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>()};
     }
+    void WriteFile(const std::filesystem::path& path, const std::vector<std::uint8_t>& bytes)
+    {
+        std::ofstream file(path, std::ios::binary);
+        file.write(reinterpret_cast<const char*>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
+        file.close();
+        if (!file) throw std::runtime_error("Could not write compiled probe data.");
+    }
 }
 int main()
 {
@@ -459,6 +466,21 @@ int main()
             check(reloaded && !reloaded->inlineBadge && !reloaded->sharedBadgeA &&
                   !reloaded->sharedBadgeB && reloaded->portrait.empty(),
                   "null ordinary/shared references and an empty external reference round trip without fixups");
+
+            Compiler::ContentCompiler compressedCompiler;
+            (void)compressedCompiler.AddTypeWriter<VitalWriter>(Compiler::ContentTypeWriterAttribute{});
+            Compiler::CompileOptions compressedOptions;
+            compressedOptions.assetName = "default-compressed";
+            compressedOptions.outputDirectory = output;
+            compressedOptions.compressContent = true;
+            const auto compressed = compressedCompiler.Compile<Vital>(Vital{91}, compressedOptions);
+            WriteFile(output / "default-compressed.xnb", compressed.bytes);
+            Runtime::ContentManager compressedContent(nullptr, output.string());
+            const auto compressedVital = compressedContent.Load<Vital>("default-compressed");
+            check(compressed.bytes.size() > 6 &&
+                  (static_cast<unsigned char>(compressed.bytes[5]) & 0x80u) != 0 &&
+                  compressedVital.health == 91,
+                  "the default writer compression policy honors requested LZX and the runtime restores its payload");
             const auto incompatible = directory / "cnb-output";
             const int refused = Pipeline::RunContentCompiler(
                 {"build", source, "-o", incompatible, "--format", "cnb", "--workers", "1"}, factory);

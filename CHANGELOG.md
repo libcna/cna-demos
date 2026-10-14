@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed the custom XNB writer policy audit by proving the default writer accepts requested LZX
+  compression and that the runtime restores its compressed payload; the empty writer attribute is
+  now explicitly dispositioned as a registration marker with no independent behavior.
 - Added XNA ContentCompiler inventory and post-compile freeze checks, and dispositioned its
   implementation-facing worker/active-writer helpers plus ContentWriter's no-op façade members.
 - Added direct custom XNB compiler refusals for raw null references, unregistered dynamic types and

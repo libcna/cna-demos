@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-777 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-778 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1755,10 +1755,12 @@ path normalization. Audit the remaining custom writer null/refusal contracts and
 inspection/freeze behavior against existing demos before adding controls. Ordinary, shared and
 external nulls now round-trip too; raw-null and missing/foreign writer refusals are covered. Audit
 ContentCompiler inventory/freeze behavior is now covered, and implementation-facing worker,
-active-writer/output plus no-op façade members are dispositioned. Close the custom writer audit by
-checking any remaining meaningful ContentTypeWriter attributes or compression/default behavior,
-then move to the next public-member family. Do not add isolated getter demos. Build with at most
-three compile jobs and keep focused evidence current.
+active-writer/output plus no-op façade members are dispositioned. The custom writer audit is now
+closed: a default writer honors requested LZX and round-trips through ContentManager, while the
+empty ContentTypeWriterAttribute is dispositioned as a registration marker. Continue the
+MediaPlayer behavior audit with a nonzero collection start and collection replacement, then assess
+queue traversal/transport timing without duplicating the completed C route coverage. Do not add
+isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2295,6 +2297,25 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-777-xnb-compiler-*` and
 `/tmp/checkpoint-777-coverage.md`. No rendering, screenshot or manual inspection was used. Close
 the custom writer audit by checking any remaining meaningful ContentTypeWriter attributes or
 compression/default behavior, then move to the next public-member family.
+
+### Focused778-custom-XNB-compression-default
+
+`content.custom.xml_xnb_pipeline` now contrasts ProfileWriter's established compression refusal
+with a fresh VitalWriter that inherits the default `ShouldCompressContent` policy. Direct public
+`ContentCompiler::Compile` receives `compressContent=true`; the emitted XNB carries the compression
+flag and `ContentManager` restores the exact health91 payload. `ContentTypeWriterAttribute` is also
+named explicitly in metadata and dispositioned as CNA's empty C++ registration marker rather than
+inflated into a vacuous property check.
+
+SOFTWARE and OPENGLES3/Xvfb each pass22/23 controls and fail only established ISSUE-090; stdout and
+the intentional compiler/debug diagnostics match after normalizing the private temporary path. The
+exact expected-failure SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, known-issue demos remain42, validator/checkpoint self-tests pass5/5
+and4/4, and generated runtime coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-778-xnb-compression-*` and
+`/tmp/checkpoint-778-coverage.md`. No rendering, screenshot or manual inspection was used. The
+custom writer audit is closed; extend the existing MediaPlayer queue workflow with a nonzero
+collection start and collection replacement next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

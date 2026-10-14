@@ -7116,3 +7116,22 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-777-xnb-compiler-*` and
 `/tmp/checkpoint-777-coverage.md`. No rendering, screenshot or manual inspection was used. Close
 the custom writer audit by checking any remaining meaningful ContentTypeWriter attributes or
 compression/default behavior, then move to the next public-member family.
+
+## Focused778-custom-XNB-compression-default
+
+`content.custom.xml_xnb_pipeline` now contrasts ProfileWriter's established compression refusal
+with a fresh VitalWriter that inherits the default `ShouldCompressContent` policy. Direct public
+`ContentCompiler::Compile` receives `compressContent=true`; the emitted XNB carries the compression
+flag and `ContentManager` restores the exact health91 payload. `ContentTypeWriterAttribute` is also
+named explicitly in metadata and dispositioned as CNA's empty C++ registration marker rather than
+inflated into a vacuous property check.
+
+SOFTWARE and OPENGLES3/Xvfb each pass22/23 controls and fail only established ISSUE-090; stdout and
+the intentional compiler/debug diagnostics match after normalizing the private temporary path. The
+exact expected-failure SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, known-issue demos remain42, validator/checkpoint self-tests pass5/5
+and4/4, and generated runtime coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-778-xnb-compression-*` and
+`/tmp/checkpoint-778-coverage.md`. No rendering, screenshot or manual inspection was used. The
+custom writer audit is closed; extend the existing MediaPlayer queue workflow with a nonzero
+collection start and collection replacement next.
