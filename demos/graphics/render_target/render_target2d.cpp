@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // Rendering into a RenderTarget2D, then drawing that render target as a texture.
 #include <memory>
+#include <utility>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
@@ -8,6 +9,7 @@
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
+#include "System/InvalidOperationException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -22,6 +24,8 @@ namespace
             auto& device = getGraphicsDeviceProperty();
             spriteBatch_ = std::make_unique<SpriteBatch>(device);
             arrow_ = getContentProperty().Load<Texture2D>("textures/arrow");
+
+            CheckMoveIdentity(device);
 
             // A 128x128 off-screen colour buffer. RenderTarget2D derives from Texture2D, so once
             // rendered it can be drawn like any texture.
@@ -70,6 +74,74 @@ namespace
         }
 
     private:
+        void CheckMoveIdentity(GraphicsDevice& device)
+        {
+            RenderTarget2D destination(device, 32, 16, false, SurfaceFormat::Color,
+                                       DepthFormat::Depth24Stencil8, 0,
+                                       RenderTargetUsage::DiscardContents);
+            RenderTarget2D source(device, 128, 128, false, SurfaceFormat::Color,
+                                  DepthFormat::None, 0, RenderTargetUsage::PreserveContents);
+
+            device.SetRenderTarget(&destination);
+            device.Clear(Color::Gold);
+            bool disposeRefused = false;
+            try { destination.Dispose(); }
+            catch (const System::InvalidOperationException&) { disposeRefused = true; }
+            const auto disposeBindings = device.GetRenderTargets();
+            Context().Check(disposeRefused && !destination.getIsDisposedProperty() &&
+                                disposeBindings.size() == 1 &&
+                                disposeBindings[0].getRenderTargetProperty() == &destination,
+                            "disposing a bound target is refused without detaching or invalidating it");
+
+            bool refused = false;
+            try { destination = std::move(source); }
+            catch (const System::InvalidOperationException&) { refused = true; }
+            const auto refusedBindings = device.GetRenderTargets();
+            Context().Check(refused && refusedBindings.size() == 1 &&
+                                refusedBindings[0].getRenderTargetProperty() == &destination &&
+                                destination.getWidthProperty() == 32 &&
+                                destination.getHeightProperty() == 16 &&
+                                destination.getDepthStencilFormatProperty() == DepthFormat::Depth24Stencil8 &&
+                                destination.getRenderTargetUsageProperty() == RenderTargetUsage::DiscardContents &&
+                                source.getWidthProperty() == 128 && source.getHeightProperty() == 128 &&
+                                !source.getIsDisposedProperty(),
+                            "move assignment refuses to overwrite a bound target without changing either wrapper");
+
+            device.SetRenderTarget(nullptr);
+            const Rectangle origin(0, 0, 1, 1);
+            Color pixel = Color::Black;
+            destination.GetData(0, &origin, &pixel, 0, 1);
+            Context().Check(pixel == Color::Gold,
+                            "refused move assignment preserves the bound target's rendered content");
+
+            device.SetRenderTarget(&source);
+            device.Clear(Color::LimeGreen);
+            RenderTarget2D moved(std::move(source));
+            const auto constructedBindings = device.GetRenderTargets();
+            Context().Check(source.getIsDisposedProperty() && constructedBindings.size() == 1 &&
+                                constructedBindings[0].getRenderTargetProperty() == &moved &&
+                                moved.getWidthProperty() == 128 && moved.getHeightProperty() == 128 &&
+                                moved.getRenderTargetUsageProperty() == RenderTargetUsage::PreserveContents,
+                            "move construction transfers the active render-target binding and properties");
+
+            destination = std::move(moved);
+            const auto assignedBindings = device.GetRenderTargets();
+            Context().Check(moved.getIsDisposedProperty() && assignedBindings.size() == 1 &&
+                                assignedBindings[0].getRenderTargetProperty() == &destination &&
+                                destination.getWidthProperty() == 128 &&
+                                destination.getHeightProperty() == 128 &&
+                                destination.getDepthStencilFormatProperty() == DepthFormat::None &&
+                                destination.getRenderTargetUsageProperty() == RenderTargetUsage::PreserveContents,
+                            "move assignment from a bound source transfers its binding and complete target shape");
+
+            device.Clear(Color::Orange);
+            device.SetRenderTarget(nullptr);
+            pixel = Color::Black;
+            destination.GetData(0, &origin, &pixel, 0, 1);
+            Context().Check(pixel == Color::Orange,
+                            "the moved target remains writable through the transferred active binding");
+        }
+
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::unique_ptr<RenderTarget2D> target_;
         Texture2D arrow_;
@@ -81,10 +153,10 @@ namespace
 CNA_DEMOS_GAME(RenderTarget2DDemo, {
     .id = "graphics.render_target.render_target2d",
     .title = "Render to a texture",
-    .description = "Draws a sprite into a RenderTarget2D, switches back to the back buffer with "
-                   "SetRenderTarget(nullptr) and draws the render target as an ordinary texture at several sizes and with a tint.",
+    .description = "Checks bound-target move identity, draws a sprite into a RenderTarget2D, switches back to the "
+                   "back buffer and draws the target as an ordinary texture at several sizes and with a tint.",
     .apis = {"RenderTarget2D::RenderTarget2D", "RenderTarget2D::ContentLost", "RenderTarget2D::IsContentLost",
-             "GraphicsDevice::SetRenderTarget", "GraphicsResource::Dispose",
+             "GraphicsDevice::SetRenderTarget", "GraphicsDevice::GetRenderTargets", "GraphicsResource::Dispose",
              "GraphicsResource::IsDisposed"},
     .tags = {"offscreen", "render-to-texture"},
     .frames = 10,

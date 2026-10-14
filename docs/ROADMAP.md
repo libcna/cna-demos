@@ -6581,3 +6581,21 @@ were checked programmatically; cross-device data was read back but not drawn, an
 manual visual inspection was performed. No CNA issue was found. Audit active RenderTarget2D move
 assignment/refusal next; it is a unique render-target identity rule rather than another texture
 wrapper copy.
+
+## Focused750-RenderTarget2D-bound-move-identity
+
+`graphics.render_target.render_target2d` adds six controls, reaching9 on both renderers. A bound
+32x16 target refuses public Dispose and move assignment atomically: it stays live and bound, the
+source and destination retain their complete shape/properties, and an authored Gold pixel remains
+exact. Move construction from a bound 128x128 source then transfers the active target binding to
+the constructed wrapper. Moving that wrapper into the now-unbound destination transfers the
+binding and target shape again; an Orange clear through the updated binding reads back exactly.
+
+SOFTWARE and OPENGLES3/Xvfb pass9/9, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, validator/checkpoint self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-750-render-target-*` and
+`/tmp/checkpoint-750-coverage.md`. Pixel checks used programmatic read-back; no screenshot or
+manual visual inspection was performed. No CNA issue was found. Audit the separate
+RenderTargetCube bound-disposal override next, then return to the highest-value open behavior
+table rather than repeating unavailable cube moves.

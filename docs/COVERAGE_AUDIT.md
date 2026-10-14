@@ -363,6 +363,7 @@ No screenshot or manual interaction was used.
 | IndexBuffer.BufferUsage and Dispose | The indexed-cube workflow checks its 36-entry 16-bit WriteOnly shape, performs the actual indexed draw and explicitly disposes during UnloadContent. Both renderers pass2 controls. |
 | DynamicIndexBuffer.ContentLost | The dynamic board attaches the public event, uses the CNA test seam to deliver one content-loss notification, checks event plus lost state, then proves its next SetData clears the flag before actual indexed drawing. This validates recovery semantics without claiming either exercised renderer really lost a device. Both renderers pass3 controls. |
 | RenderTarget2D.ContentLost and IsContentLost | The render-to-texture workflow similarly observes one explicit notification and lost flag, then proves binding for replacement rendering clears the flag before the target is drawn and sampled. Both renderers pass3 controls. No physical/context device loss is claimed. |
+| RenderTarget2D bound identity, Dispose and C++ moves | The same workflow now passes nine controls on both renderers. A 32x16 target bound with a depth buffer refuses public Dispose and move assignment atomically: the wrapper stays live and bound, both move operands retain their shape/properties, and an authored Gold pixel survives. Moving the active 128x128 source first constructs and then assigns new wrappers while `GetRenderTargets` follows each new identity; a subsequent Orange clear through the transferred binding reads back exactly after unbinding. This is the target-specific identity rule missing from ordinary texture moves. Copying is unavailable by public type design; cross-device target moves and destructor-only cleanup are not claimed. |
 | IGraphicsDeviceService lifecycle events | `game.graphics_device_manager.device_events` now subscribes through the interface itself before device creation. It observes created, resetting, reset and disposing around actual manager creation, ApplyChanges and Dispose, retaining its six passing lifecycle controls on both renderers. |
 
 Focused662 adds12 member credits without a new ID, moving temporary coverage1702->1714/2326.
@@ -2173,3 +2174,20 @@ scavenger emitted a transient warning; immediate serial repetition was clean. Ev
 `/tmp/checkpoint-749-texture2d-*` and `/tmp/checkpoint-749-coverage.md`. Primary framebuffer checks
 were programmatic; cross-device data was read back only. No screenshot or manual visual inspection
 was performed, and no CNA issue was found.
+
+### Focused750 RenderTarget2D bound move identity
+
+`graphics.render_target.render_target2d` grows from three to nine controls. A bound 32x16 target
+refuses both Dispose and move assignment without changing its live binding, either move operand's
+shape/properties or an authored Gold pixel. Move construction from an active 128x128 source then
+retargets the device binding to the new wrapper, and move assignment retargets it again to the
+unbound destination while transferring the complete target shape. Clearing Orange through that
+transferred binding and reading the exact pixel after unbinding proves the renderer follows the
+updated public identity.
+
+SOFTWARE and OPENGLES3/Xvfb pass9/9 with empty focused stderr, and the exact SOFTWARE CTest passes.
+The final incremental build is warning-free at `-j3`; metadata remains636/0, self-tests pass5/5
+and4/4, and generated coverage remains302/329 types,2114/2326 members,169/753 fields and2999/3205
+C routes. Evidence:`/tmp/checkpoint-750-render-target-*` and
+`/tmp/checkpoint-750-coverage.md`. Pixel validation used programmatic read-back; no screenshot or
+manual visual inspection was performed. No CNA issue was found.

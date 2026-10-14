@@ -1738,13 +1738,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-749 close the
-Texture3D, TextureCube and Texture2D wrapper-behavior tables. Continue the adjacent render-target
-identity audit: inspect `RenderTarget2D` move construction/assignment and bound-target refusal in
-public source, then add only observable atomicity/binding behavior missing from the existing render
-target workflows. Do not repeat ordinary texture moves or device teardown: cube/volume already
-prove binding transfer and focused748 owns OPENGLES3 CNA-DEMOS-ISSUE-086. Build with at most three
-compile jobs and keep focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-750 close the
+Texture3D, TextureCube, Texture2D and RenderTarget2D wrapper-identity work. Audit the separate
+`RenderTargetCube::Dispose(bool)` bound-target override next: add only its observable refusal,
+selected-face identity and post-refusal content integrity to the existing cube render-target
+workflow. `RenderTargetCube` exposes no target-level copy/move operations, so do not invent a
+parallel move batch or repeat device teardown. Then return to the highest-value open public
+behavior table. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1783,6 +1783,21 @@ but one concurrent content step emitted a transient staging-scavenger race warni
 `/tmp/checkpoint-749-texture2d-*` and `/tmp/checkpoint-749-coverage.md`. Primary framebuffer checks
 were programmatic; cross-device data was read back but not drawn. No screenshot or manual visual
 inspection was performed, and no CNA issue was found.
+
+### Focused750 RenderTarget2D bound move identity
+
+`graphics.render_target.render_target2d` grows from three to nine controls. A bound 32x16 target
+refuses Dispose and move assignment without changing its live binding, either move operand's
+shape/properties or an authored Gold pixel. Move construction from an active 128x128 source then
+updates `GetRenderTargets` to the constructed wrapper; move assignment into the unbound destination
+updates that binding again and transfers the complete target shape. An Orange clear through the
+transferred binding reads back exactly after unbinding.
+
+SOFTWARE and OPENGLES3/Xvfb pass9/9, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
+remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-750-render-target-*` and `/tmp/checkpoint-750-coverage.md`. Pixel checks were
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

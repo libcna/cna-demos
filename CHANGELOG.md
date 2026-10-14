@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the RenderTarget2D workflow with atomic bound-target Dispose/move-assignment refusal,
+  active-binding transfer through move construction and assignment, and post-move pixel read-back.
 - Extended Texture2D ownership checks with cross-device copy assignment, shared partial edits,
   full-upload copy-on-write detachment and copy assignment that revives a disposed target wrapper.
 - Closed the TextureCube wrapper-lifecycle audit with cross-device copy assignment, shared edits,
