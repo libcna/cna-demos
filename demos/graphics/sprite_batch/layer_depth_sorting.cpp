@@ -7,6 +7,7 @@
 #include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BlendState.hpp"
+#include "Microsoft/Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SamplerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteEffects.hpp"
@@ -50,6 +51,32 @@ namespace
         {
             getGraphicsDeviceProperty().Clear(Color::Gray);
 
+            // XNA 4.0's Array.Sort is intentionally unstable: for this three-item equal-depth
+            // input it reverses submission order, so the first red sprite ends up on top.
+            spriteBatch_->Begin(SpriteSortMode::BackToFront, &BlendState::Opaque,
+                                &SamplerState::PointClamp, &DepthStencilState::None, nullptr);
+            for (const Color& color : {Color::Red, Color::Lime, Color::Blue})
+                spriteBatch_->Draw(*pixel_, Rectangle(40, 20, 200, 80), std::nullopt, color,
+                                   0.0f, Vector2::Zero, SpriteEffects::None, 0.5f);
+            spriteBatch_->End();
+
+            // FrontToBack sorts near red first and far blue last. With no depth test painter order
+            // leaves blue visible; Default retains the nearer red depth and rejects the far blue.
+            spriteBatch_->Begin(SpriteSortMode::FrontToBack, &BlendState::Opaque,
+                                &SamplerState::PointClamp, &DepthStencilState::None, nullptr);
+            spriteBatch_->Draw(*pixel_, Rectangle(300, 20, 200, 80), std::nullopt, Color::Blue,
+                               0.0f, Vector2::Zero, SpriteEffects::None, 0.9f);
+            spriteBatch_->Draw(*pixel_, Rectangle(300, 20, 200, 80), std::nullopt, Color::Red,
+                               0.0f, Vector2::Zero, SpriteEffects::None, 0.1f);
+            spriteBatch_->End();
+            spriteBatch_->Begin(SpriteSortMode::FrontToBack, &BlendState::Opaque,
+                                &SamplerState::PointClamp, &DepthStencilState::Default, nullptr);
+            spriteBatch_->Draw(*pixel_, Rectangle(560, 20, 200, 80), std::nullopt, Color::Blue,
+                               0.0f, Vector2::Zero, SpriteEffects::None, 0.9f);
+            spriteBatch_->Draw(*pixel_, Rectangle(560, 20, 200, 80), std::nullopt, Color::Red,
+                               0.0f, Vector2::Zero, SpriteEffects::None, 0.1f);
+            spriteBatch_->End();
+
             // Deferred: drawn in call order, layerDepth ignored -- blue (drawn last) is on top.
             spriteBatch_->Begin(SpriteSortMode::Deferred, BlendState::AlphaBlend);
             DrawSquares(Vector2(40.0f, 120.0f));
@@ -89,6 +116,10 @@ namespace
                                 "BackToFront draws depth zero last: red covers the overlap");
                 Context().Check(pixels.At(660, 220) == Color::Blue,
                                 "FrontToBack draws depth one last: blue covers the overlap");
+                Context().Check(pixels.At(140, 60) == Color::Red,
+                                "equal-depth XNA Array.Sort ordering is unstable rather than submission-stable");
+                Context().Check(pixels.At(400, 60) == Color::Blue && pixels.At(660, 60) == Color::Red,
+                                "enabled depth testing makes nearer layerDepth win over painter order");
                 bool allColorsDrawn = true;
                 for (const int x : {40, 300, 560})
                     allColorsDrawn = allColorsDrawn && pixels.At(x + 20, 140) == Color::Red &&
@@ -121,10 +152,11 @@ namespace
 CNA_DEMOS_GAME(LayerDepthDemo, {
     .id = "graphics.sprite_batch.layer_depth_sorting",
     .title = "Layer depth and sort modes",
-    .description = "Draws overlapping sprites with SpriteSortMode Deferred, BackToFront and FrontToBack, then "
-                   "mixes text and a sprite to prove DrawString layer depth enters the same sorted queue.",
+    .description = "Draws overlapping sprites with Deferred and depth sorting, including XNA's unstable equal-key "
+                   "order and depth-buffer interaction, then mixes text and a sprite in the same sorted queue.",
     .apis = {"SpriteBatch::Begin", "SpriteBatch::Draw", "SpriteBatch::DrawString", "SpriteSortMode::Deferred",
-             "SpriteSortMode::BackToFront", "SpriteSortMode::FrontToBack"},
+             "SpriteSortMode::BackToFront", "SpriteSortMode::FrontToBack", "DepthStencilState::None",
+             "DepthStencilState::Default"},
     .tags = {"sprite", "text", "sorting", "depth", "2d"},
     .frames = 5,
     .deterministic = true,

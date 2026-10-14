@@ -346,6 +346,22 @@ remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C r
 `/tmp/checkpoint-738-draw-string-*` and `/tmp/checkpoint-738-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
 
+Focused **739-SpriteBatch-equal-depth-and-depth-buffer** extends
+`graphics.sprite_batch.layer_depth_sorting` from five to seven controls. Three equal-depth sprites
+prove XNA 4.0's intentionally unstable three-item Array.Sort result: the first red submission ends
+on top after reversal rather than preserving call order. Two otherwise identical FrontToBack
+panels then draw near red before far blue; painter order leaves blue visible with
+DepthStencilState::None, while Default writes the nearer0.1 depth and rejects the farther0.9 quad.
+This proves layerDepth remains real vertex Z as well as a CPU sort key.
+
+SOFTWARE and OPENGLES3/X11 pass7/7, and the exact SOFTWARE CTest passes. Metadata remains635/0,
+all five validator self-tests and all four checkpoint-comparison tests pass, and temporary coverage
+remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-739-layer-depth-*` and `/tmp/checkpoint-739-coverage.md`. The first build exposed a
+range-loop copy warning; changing the loop variable to a reference produced a warning-free rebuild
+before runtime validation. Pixel readback was programmatic; no screenshot or manual visual
+inspection was performed. No CNA issue was found.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1609,11 +1625,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-738 are
-staged after it. Audit the SpriteBatch sorting table's remaining equal-depth stability and enabled
-depth-buffer interaction. Add a focused in-place control only when CNA/XNA define an observable,
-portable contract; disposition unstable or renderer-specific ordering instead of encoding a false
-guarantee. Keep both primary renderers green and continue to the next behavior gap afterward.
+HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-739 are
+staged after it. Audit SpriteBatch custom-effect coverage against `shader_effect.sprite_shader`,
+`portable_package` and the compiled `CnaConformanceEffect.fxb`. Decide whether a focused compiled
+effect/multiple-pass Begin workflow adds portable behavior on both primary renderers; otherwise
+record the renderer/toolchain disposition and move to the next graphics behavior gap. Do not add a
+second GLSL-only variant of behavior already proven by the existing shader demos.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended SpriteBatch sorting with XNA's observable unstable equal-depth ordering and paired
+  depth-disabled/enabled checks proving layer depth reaches the depth buffer as vertex Z.
 - Added compiled SpriteFont framebuffer checks for exact CRLF/LF LineSpacing placement and visible
   glyph ink under all four basic text tints.
 - Reworked transformed SpriteFont examples into framebuffer checks for per-axis layout scale,

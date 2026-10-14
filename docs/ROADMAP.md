@@ -6388,3 +6388,18 @@ all five validator self-tests and all four checkpoint-comparison tests pass. Tem
 remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-738-draw-string-*` and `/tmp/checkpoint-738-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
+## Focused739-SpriteBatch-equal-depth-and-depth-buffer
+
+`graphics.sprite_batch.layer_depth_sorting` adds two sorting contracts. Three overlapping sprites
+at equal depth0.5 expose XNA 4.0's unstable three-item Array.Sort ordering: the queue reverses and
+the first red submission finishes on top. Two FrontToBack panels submit far blue then near red;
+sorting draws red0.1 before blue0.9 in both, but DepthStencilState::None leaves the last blue quad
+visible while Default preserves the nearer red quad. LayerDepth is therefore demonstrated as real
+vertex Z in addition to its sorting role.
+
+SOFTWARE and OPENGLES3/X11 pass7/7, and the exact SOFTWARE CTest passes. Metadata remains635/0,
+all five validator self-tests and all four checkpoint-comparison tests pass. Temporary coverage
+remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-739-layer-depth-*` and `/tmp/checkpoint-739-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
