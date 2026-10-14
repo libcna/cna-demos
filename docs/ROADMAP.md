@@ -4909,3 +4909,20 @@ regeneration. The catalog reaches628 demos and temporary coverage moves1527->153
 uncredited by disposition. Evidence:`/tmp/checkpoint-649-*` and `/tmp/checkpoint-649-coverage.md`.
 No physical input, screenshot or visual inspection was performed. Audit TouchLocation value
 identity plus the read-only TouchCollection copy/mutation contract next in `input.touch.touch_values`.
+
+## Focused650-TouchLocation-and-collection-value-behavior
+
+`input.touch.touch_values` grows from eight to17 controls. Its actual moved record and a
+pressure-bearing copy establish typed/boxed equality, wrong/empty-box refusal, both operators,
+equal hashes, pressure exclusion and exact position-only text; a changed previous position is
+unequal. The two false out-parameter paths now require their documented invalid sentinels.
+TouchCollection.CopyTo inserts the two-item snapshot at a nonzero vector index, and a copied
+collection demonstrates that IsReadOnly is advisory while Add, Insert, Remove, RemoveAt and Clear
+preserve their exact results and order. SOFTWARE and OPENGLES3 pass17/17 with byte-identical stdout
+and empty stderr; the focused SOFTWARE CTest passes and the build is diagnostic-free. Temporary
+coverage moves1534->1545/2326 and the Touch namespace reaches41/48. The remaining nested
+Enumerator/interface aliases are CLR iteration plumbing already represented by C++ collection
+iteration, while TouchPanel.WindowHandle is platform-specific. Evidence:`/tmp/checkpoint-650-*`
+and `/tmp/checkpoint-650-coverage.md`. No touch hardware, screenshot or visual inspection was used.
+Audit BoundingBox, BoundingSphere and Ray value identity in their existing geometric workflows
+next, keeping distinct containment/construction behaviors separate.

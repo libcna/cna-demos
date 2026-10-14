@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // TouchLocation and TouchCollection as values: previous locations and finding a finger by Id.
+#include <any>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
@@ -18,7 +19,10 @@ namespace
         // A finger that just touched down has no previous location...
         const TouchLocation down(7, TouchLocationState::Pressed, Vector2(100.0f, 50.0f));
         TouchLocation previous;
-        ctx.Check(!down.TryGetPreviousLocation(previous), "a new touch has no previous location");
+        ctx.Check(!down.TryGetPreviousLocation(previous) && previous.getIdProperty() == 7 &&
+                      previous.getStateProperty() == TouchLocationState::Invalid &&
+                      previous.getPositionProperty() == Vector2::Zero,
+                  "a new touch reports no previous location but still writes its invalid sentinel");
 
         // ...one that is held carries where it was in the previous frame.
         const TouchLocation held(7, TouchLocationState::Moved, Vector2(130.0f, 90.0f), TouchLocationState::Pressed,
@@ -30,6 +34,22 @@ namespace
         ctx.Print("finger {} moved by ({}, {}) = {} pixels", held.getIdProperty(), motion.X, motion.Y, motion.Length());
         ctx.CheckNear(motion.Length(), 50.0, 1e-4, "it moved 50 pixels since the previous frame");
 
+        const TouchLocation pressured(7, TouchLocationState::Moved, Vector2(130.0f, 90.0f),
+                                      TouchLocationState::Pressed, Vector2(100.0f, 50.0f), 0.75f);
+        ctx.Check(pressured.getPressureEXT() == 0.75f && held.Equals(pressured) && held == pressured &&
+                      !(held != pressured),
+                  "CNA pressure is preserved but excluded from the XNA TouchLocation equality contract");
+        ctx.Check(held.Equals(std::any(pressured)) && !held.Equals(std::any(down)) &&
+                      !held.Equals(std::any(17)) && !held.Equals(std::any{}),
+                  "boxed equality accepts the same XNA location and rejects different, wrong and empty boxes");
+        ctx.Check(held.GetHashCode() == pressured.GetHashCode(),
+                  "TouchLocation values equal under the XNA contract have equal hashes");
+        const TouchLocation differentPrevious(7, TouchLocationState::Moved, Vector2(130.0f, 90.0f),
+                                              TouchLocationState::Pressed, Vector2(99.0f, 50.0f));
+        ctx.Check(differentPrevious != held && !differentPrevious.Equals(held) &&
+                      held.ToString() == "{Position:{X:130 Y:90}}",
+                  "equality includes the previous location while text reports the current position only");
+
         // A frame's touches: the Id, not the index, identifies a finger from frame to frame.
         const TouchCollection frame(std::vector<TouchLocation>{
             held, TouchLocation(9, TouchLocationState::Pressed, Vector2(600.0f, 300.0f))});
@@ -38,20 +58,51 @@ namespace
         TouchLocation found;
         ctx.Check(frame.FindById(9, found) && found.getPositionProperty() == Vector2(600.0f, 300.0f),
                   "FindById finds the second finger");
-        ctx.Check(!frame.FindById(3, found), "FindById reports a finger that is not there");
+        ctx.Check(!frame.FindById(3, found) && found.getIdProperty() == -1 &&
+                      found.getStateProperty() == TouchLocationState::Invalid &&
+                      found.getPositionProperty() == Vector2::Zero,
+                  "FindById reports a missing finger and writes the documented invalid sentinel");
         ctx.Check(frame.Contains(held) && frame.IndexOf(held) == 0 && frame[1].getIdProperty() == 9,
                   "Contains, IndexOf and the indexer work like any list");
+
+        std::vector<TouchLocation> copied{down};
+        frame.CopyTo(copied, 1);
+        ctx.Check(copied.size() == 3 && copied[0] == down && copied[1] == held &&
+                      copied[2].getIdProperty() == 9,
+                  "CopyTo inserts the complete touch snapshot at the requested vector index");
+
+        TouchCollection edited = frame;
+        const TouchLocation inserted(5, TouchLocationState::Pressed, Vector2(20.0f, 30.0f));
+        const TouchLocation appended(11, TouchLocationState::Released, Vector2(700.0f, 400.0f));
+        edited.Add(appended);
+        edited.Insert(1, inserted);
+        ctx.Check(edited.getIsReadOnlyProperty() && edited.getCountProperty() == 4 &&
+                      edited[0] == held && edited[1] == inserted && edited[2].getIdProperty() == 9 &&
+                      edited[3] == appended,
+                  "IsReadOnly is advisory: Add and Insert mutate an initialized collection like FNA");
+        ctx.Check(edited.Remove(inserted) && !edited.Remove(down) && edited.getCountProperty() == 3,
+                  "Remove reports whether an equal touch was present");
+        edited.RemoveAt(1);
+        ctx.Check(edited.getCountProperty() == 2 && edited[0] == held && edited[1] == appended,
+                  "RemoveAt closes the indexed gap while preserving order");
+        edited.Clear();
+        ctx.Check(edited.getCountProperty() == 0,
+                  "Clear empties the collection despite its advisory read-only flag");
     }
 }
 
 CNA_DEMOS_CONSOLE(TouchValues, {
     .id = "input.touch.touch_values",
     .title = "TouchLocation and TouchCollection values",
-    .description = "Builds TouchLocation values with and without a previous location (TryGetPreviousLocation) and a "
-                   "TouchCollection of two fingers, then finds them with FindById, Contains, IndexOf and the indexer.",
+    .description = "Builds TouchLocation values with previous locations and pressure, checks their XNA equality, hash "
+                   "and text contracts, then searches, copies and edits a TouchCollection whose IsReadOnly flag is advisory.",
     .apis = {"TouchLocation::TouchLocation", "TouchLocation::TryGetPreviousLocation", "TouchLocation::Id",
-             "TouchLocation::State", "TouchLocation::Position", "TouchCollection::TouchCollection",
+             "TouchLocation::State", "TouchLocation::Position", "TouchLocation::PressureEXT", "TouchLocation::Equals",
+             "TouchLocation::GetHashCode", "TouchLocation::op_Equality", "TouchLocation::op_Inequality",
+             "TouchLocation::ToString", "TouchCollection::TouchCollection",
              "TouchCollection::Count", "TouchCollection::IsReadOnly", "TouchCollection::FindById",
-             "TouchCollection::Contains", "TouchCollection::IndexOf", "TouchCollection::Item"},
-    .tags = {"touch", "multitouch", "finger", "testing", "value"},
+             "TouchCollection::Contains", "TouchCollection::CopyTo", "TouchCollection::IndexOf",
+             "TouchCollection::Item", "TouchCollection::Add", "TouchCollection::Insert",
+             "TouchCollection::Remove", "TouchCollection::RemoveAt", "TouchCollection::Clear"},
+    .tags = {"touch", "multitouch", "finger", "testing", "value", "collection"},
 })

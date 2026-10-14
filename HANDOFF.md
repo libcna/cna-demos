@@ -1359,12 +1359,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused649
-raises the staged catalog to628 and projects XNA-member coverage to1534/2326. The basic Input
-namespace is112/113 after closing KeyboardState hash and the complete authored MouseState value
-contract; Mouse.WindowHandle is platform-specific and dispositioned in COVERAGE_AUDIT. Audit
-TouchLocation typed/boxed equality, operators, hash and text plus the read-only TouchCollection
-CopyTo/mutation refusal contract in the existing `input.touch.touch_values` workflow next.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused650
+projects the628-demo staged catalog to1545/2326 XNA members and closes every meaningful Touch
+value/collection remainder; its seven uncredited members are dispositioned as CLR enumerator
+plumbing or platform-specific TouchPanel.WindowHandle. Audit BoundingBox, BoundingSphere and Ray
+typed/boxed equality, operators and hashes in their existing geometric workflows next. Evaluate
+BoundingSphere.Contains/CreateFromFrustum separately rather than claiming them from value identity.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -2624,6 +2624,22 @@ No physical input, screenshot or visual inspection was performed. Production lib
 the complete647 values; the runner is
 `df5c168ad6fa00ca142e3744559d7b118bf6ace04d4f868f7e8e8e1c8f9cdab4`. Sibling CNA stayed at
 `af798b73a4` while its external dirty set reached eleven paths; no CNA source was edited here.
+
+Focused650 extends `input.touch.touch_values` from eight to17 controls. Its moved record and a
+pressure-bearing copy exercise typed/boxed equality, wrong/empty boxes, both operators, equal
+hashes, pressure exclusion and exact position-only text; a changed previous position is unequal.
+False TryGetPreviousLocation/FindById paths now require their assigned invalid sentinels.
+TouchCollection.CopyTo inserts the ordered snapshot at a nonzero vector index, while a copied
+collection demonstrates the documented FNA behavior that IsReadOnly is advisory: Add, Insert,
+Remove, RemoveAt and Clear all mutate with exact checked order/results. SOFTWARE and OPENGLES3
+pass17/17 with byte-identical stdout and empty stderr; the focused SOFTWARE CTest passes and the
+build is diagnostic-free. Temporary coverage projects1534->1545/2326 and Touch reaches41/48.
+Remaining CLR Enumerator/interface aliases are dispositioned as iteration plumbing; TouchPanel's
+WindowHandle is platform-specific. Evidence:`/tmp/checkpoint-650-*` and
+`/tmp/checkpoint-650-coverage.md`. No touch hardware, screenshot or visual inspection was used.
+Production library hashes remain the complete647 values; the runner is
+`8871f4e6840285aef8f543b8b1cb4df9906542ca3e168dbc185ddf64656bb783`. Sibling CNA stayed at
+external dirty `af798b73a4` with eleven observed paths; no CNA source was edited here.
 
 ## 15. Assumptions the next session must know
 

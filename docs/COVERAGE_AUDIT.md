@@ -421,6 +421,19 @@ Focused649 raises the staged catalog to628 demos and temporary coverage from1527
 `Microsoft.Xna.Framework.Input` reaches112/113 members; only the dispositioned WindowHandle remains.
 Evidence:`/tmp/checkpoint-649-*`. No physical input, screenshot or visual inspection was performed.
 
+### TouchLocation and TouchCollection value behavior
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| TouchLocation equality, hash, operators and text | `input.touch.touch_values` now compares its actual moved location with a pressure-bearing copy. Typed/boxed equality, wrong/empty boxes, both operators and equal hashes prove that CNA pressure is retained but excluded from the XNA identity. A changed previous position is unequal, so equality includes history, while exact text reports only `{Position:{X:130 Y:90}}`. False TryGetPreviousLocation and FindById calls also verify their assigned invalid sentinels. |
+| TouchCollection CopyTo and mutation methods | The same workflow copies its two-touch snapshot into the middle of a preseeded vector and checks insertion order. A copied collection still reports IsReadOnly=true while Add/Insert/Remove/RemoveAt/Clear all mutate it, matching the documented FNA advisory flag rather than inventing a refusal contract. Removal distinguishes present from absent equal values and every ordering transition is checked. |
+| Enumerator/interface aliases and TouchPanel.WindowHandle | C++ range iteration already traverses real TouchCollections in `input.touch.get_state`. The remaining explicit nested Enumerator and non-generic IEnumerable members are CLR interop mechanics and do not justify parallel controls, especially because short `Enumerator` metadata would ambiguously credit unrelated nested types. TouchPanel.WindowHandle is the same platform association boundary dispositioned for Mouse.WindowHandle. |
+
+Focused650 extends the existing ID from eight to17 controls and moves temporary coverage from1534
+to1545/2326; the Touch namespace is41/48 with every remaining member dispositioned. Evidence:
+`/tmp/checkpoint-650-touch-*` and `/tmp/checkpoint-650-coverage.md`. No touch hardware, screenshot or
+visual inspection was used.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and
