@@ -12,6 +12,7 @@
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
 #include "System/EventArgs.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
 
@@ -49,10 +50,16 @@ namespace
         engine.Update();
         ctx.Print("after Play: {}", State(*cue));
         ctx.Check(cue->getIsPlayingProperty(), "Play starts it");
+        cue->Play();
+        ctx.Check(cue->getIsPlayingProperty() && !cue->getIsPausedProperty(),
+                  "Play while already playing is a state-preserving no-op");
         cue->Pause();
         engine.Update();
         ctx.Print("after Pause: {}", State(*cue));
         ctx.Check(cue->getIsPausedProperty(), "Pause holds it");
+        cue->Play();
+        ctx.Check(cue->getIsPlayingProperty() && cue->getIsPausedProperty(),
+                  "Play while paused does not resume or duplicate the cue");
         cue->Resume();
         engine.Update();
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -60,10 +67,28 @@ namespace
         engine.Update();
         ctx.Print("after Stop(Immediate): {}", State(*cue));
         ctx.Check(cue->getIsStoppedProperty(), "Stop(Immediate) stops it at once");
+        cue->Play();
+        ctx.Check(cue->getIsStoppedProperty() && !cue->getIsPlayingProperty(),
+                  "a stopped Cue is single-use and Play cannot restart it");
 
         // XACT's pattern: a Cue is one playback. To play the sound again, get a new Cue.
         cue->Dispose();
         ctx.Check(cue->getIsDisposedProperty(), "Dispose releases it");
+        bool disposedPlayRefused = false;
+        try { cue->Play(); }
+        catch (const System::ObjectDisposedException&) { disposedPlayRefused = true; }
+        ctx.Check(disposedPlayRefused, "Play refuses a disposed cue with ObjectDisposedException");
+        bool disposedCleanupSafe = false;
+        try
+        {
+            cue->Pause();
+            cue->Resume();
+            cue->Stop(AudioStopOptions::Immediate);
+            disposedCleanupSafe = true;
+        }
+        catch (...) {}
+        ctx.Check(disposedCleanupSafe && cue->getIsDisposedProperty() && cue->getIsStoppedProperty(),
+                  "Pause, Resume and Stop remain safe cleanup no-ops after disposal");
         ctx.Check(disposals == 1 && disposedSender == cue.get(), "Disposing identifies the cue being released");
         cue->Dispose();
         ctx.Check(disposals == 1, "repeated Dispose does not raise Disposing again");
@@ -120,8 +145,8 @@ namespace
 CNA_DEMOS_CONSOLE(CueStates, {
     .id = "audio.xact.cue_states",
     .title = "XACT cue states",
-    .description = "Shows that synchronous SoundBank::GetCue skips Created/Preparing, then walks the Cue through "
-                   "Play, Pause, Resume, Stop and disposal before contrasting immediate and authored releases.",
+    .description = "Walks a one-shot Cue through Play/Pause/Resume/Stop and disposal, checks repeated transport "
+                   "calls in each state, then contrasts immediate and authored releases.",
     .apis = {"SoundBank::GetCue", "Cue::Play", "Cue::Pause", "Cue::Resume", "Cue::Stop", "Cue::Name",
              "Cue::IsCreated", "Cue::IsPreparing", "Cue::IsPrepared", "Cue::IsPlaying", "Cue::IsPaused",
              "Cue::IsStopping", "Cue::IsStopped", "Cue::IsDisposed", "Cue::Dispose", "Cue::Disposing",

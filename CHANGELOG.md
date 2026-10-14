@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended XACT Cue lifecycle coverage with repeated Play behavior in playing, paused and stopped
+  states plus asymmetric transport behavior after disposal.
 - Extended XACT global variables with lower-bound clamping and symmetric empty/unknown-name
   contracts for GetGlobalVariable and SetGlobalVariable.
 - Extended XACT cue variables with lower-bound clamping, bidirectional namespace/name refusals and

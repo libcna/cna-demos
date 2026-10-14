@@ -7672,3 +7672,19 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 2114/2326 non-field members,169/753 fields and2999/3205 C routes.
 Evidence:`/tmp/checkpoint-811-xact-global-variable-boundaries-*` and
 `/tmp/checkpoint-811-coverage.md`. Continue with remaining Cue lifecycle/transport boundaries.
+
+## Focused812-XACT-Cue-transport-boundaries
+
+`audio.xact.cue_states` grows from fifteen to twenty controls. Repeated Play preserves Playing,
+does not resume or duplicate a Paused cue, and cannot restart a Stopped one. After Dispose, Play
+throws ObjectDisposedException while Pause, Resume and Stop are safe no-ops that retain
+disposed/stopped state. Existing exactly-once disposal events, fresh-cue replay and immediate versus
+authored release behavior remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass20/20 with byte-identical stdout and empty
+stderr, including the same observed505ms authored-release wait. The warning-free incremental build
+uses at most three jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and
+generated runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields and
+2999/3205 C routes. Evidence:`/tmp/checkpoint-812-xact-cue-transport-*` and
+`/tmp/checkpoint-812-coverage.md`. Continue with the read-only/RPC/variation decisions,
+prioritizing publicly observable behavior.

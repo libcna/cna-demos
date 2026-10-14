@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-811 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-812 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1801,10 +1801,11 @@ null/empty/missing inputs and the distinct corrupt-eager/missing-stream stub out
 streaming workflow now demonstrates CNA/FNA's ignored offset/packet compatibility inputs.
 AudioCategory Pause is now proven punctual rather than persistent for later cues. Cue variables now
 cover both clamps, both namespace directions, name refusals and post-dispose access. AudioEngine
-global variables now also cover both clamps and symmetric empty/unknown-name refusals. Continue
-with remaining Cue lifecycle/transport boundaries, then the read-only/RPC/variation decisions. Do
-not add isolated getter demos. Build with at most three compile jobs and keep focused evidence
-current.
+global variables now also cover both clamps and symmetric empty/unknown-name refusals. Cue
+transport now covers repeated Play across Playing/Paused/Stopped and post-dispose transport
+asymmetry. Continue with the read-only/RPC/variation decisions, prioritizing publicly observable
+behavior over private mixer state. Do not add isolated getter demos. Build with at most three
+compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2857,6 +2858,20 @@ SOFTWARE and OPENGLES3 dummy-audio direct runs pass6/6 with byte-identical stdou
 The warning-free incremental build uses at most three jobs; metadata and coverage remain unchanged.
 Evidence:`/tmp/checkpoint-811-xact-global-variable-boundaries-*`. Continue with remaining Cue
 lifecycle/transport boundaries.
+
+### Focused812-XACT-Cue-transport-boundaries
+
+`audio.xact.cue_states` grows from fifteen to twenty controls. Repeated Play preserves Playing,
+does not resume or duplicate a Paused cue, and cannot restart a Stopped one. After Dispose, Play
+throws ObjectDisposedException while Pause, Resume and Stop are safe no-ops that retain
+disposed/stopped state. Existing exactly-once disposal events, fresh-cue replay and immediate versus
+authored release behavior remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass20/20 with byte-identical stdout and empty
+stderr, including the same observed505ms authored-release wait. The warning-free incremental build
+uses at most three jobs; metadata and coverage remain unchanged.
+Evidence:`/tmp/checkpoint-812-xact-cue-transport-*`. Continue with the read-only/RPC/variation
+decisions, prioritizing publicly observable behavior.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
