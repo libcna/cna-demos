@@ -44,14 +44,21 @@ namespace
                   "both global-variable access directions reject an empty name");
         ctx.Check(unknownGetRefused && unknownSetRefused,
                   "both global-variable access directions reject an unknown name");
+
+        const float readOnlyInitial = engine.GetGlobalVariable("ReadOnlyLevel");
+        engine.SetGlobalVariable("ReadOnlyLevel", 75.0f);
+        ctx.CheckNear(readOnlyInitial, 25.0, 1e-3,
+                      "the read-only global starts at its authored value");
+        ctx.CheckNear(engine.GetGlobalVariable("ReadOnlyLevel"), readOnlyInitial, 1e-3,
+                      "writing a read-only global is a silent no-op");
     }
 }
 
 CNA_DEMOS_CONSOLE(GlobalVariables, {
     .id = "audio.xact.global_variables",
     .title = "XACT global variables",
-    .description = "Reads and writes XACT SpeedOfSound with both clamp bounds, then checks empty and unknown names "
-                   "through AudioEngine::GetGlobalVariable and SetGlobalVariable.",
+    .description = "Reads and writes XACT globals with clamp, name and read-only contracts through "
+                   "AudioEngine::GetGlobalVariable and SetGlobalVariable.",
     .apis = {"AudioEngine::GetGlobalVariable", "AudioEngine::SetGlobalVariable"},
     .tags = {"audio", "xact", "variables", "doppler"},
     .needs = CnaDemos::Need::Audio,

@@ -5,8 +5,8 @@ sound bank (.xsb), all original data.
 XNA games got these files from the XACT authoring tool, which no longer exists for current
 platforms. The byte layout written here is the one CNA's own XACT example generates
 (cna/modules/audio/examples/demo_xact/src/XactFileGen.hpp, Ms-PL) and CNA's XACT parser reads:
-non-compact wave banks, simple cues (one sound, one wave each), two categories, one global and one
-cue variable. music.xwb is a streaming wave bank (flag set, wave data aligned to 2048-byte sectors), the
+non-compact wave banks, simple cues (one sound, one wave each), two categories, writable/read-only
+global variables and one cue variable. music.xwb is a streaming wave bank (flag set, wave data aligned to 2048-byte sectors), the
 kind a game streams from disc instead of loading. limits.xgs reuses the tone banks with
 authored category limits: Music rejects a second voice and SFX replaces the oldest.
 release.xsb authors a 500 ms fade-out on a complex single-sound cue backed by a three-second tone.
@@ -53,19 +53,19 @@ def name64(text: str) -> bytes:
 
 def xgs(category_limits=((255, 0), (255, 0)),
         category_parents=(0xFFFF, 0xFFFF), category_names=("Music", "SFX")) -> bytes:
-    """Settings: two named categories (independent Music/SFX by default, full volume); the global variable SpeedOfSound
-    and the cue variable Intensity (each cue has its own value). Category limits are
+    """Settings: two named categories (independent Music/SFX by default, full volume); writable
+    SpeedOfSound and read-only ReadOnlyLevel globals plus cue-local Intensity. Category limits are
     (count, policy): 0 = Fail, 2 = ReplaceOldest; policies occupy bits 3..7 in XGS."""
     assert len(category_limits) == len(category_parents) == len(category_names) == 2
     assert all(parent in (0, 1, 0xFFFF) for parent in category_parents)
     assert all(name and "\0" not in name for name in category_names)
     names = b"".join(name.encode("ascii") + b"\0" for name in category_names)
     cat_off, var_off = 80, 100
-    catname_off = var_off + 2 * 13
+    catname_off = var_off + 3 * 13
     varname_off = catname_off + len(names)
     out = bytearray()
     out += struct.pack("<IHHH", 0x46534758, 46, 0, 0) + bytes(8) + b"\0"            # "XGSF", versions, time, platform
-    out += struct.pack("<7H", 2, 2, 0, 0, 0, 0, 0)                                 # 2 categories, 2 variables
+    out += struct.pack("<7H", 2, 3, 0, 0, 0, 0, 0)                                 # 2 categories, 3 variables
     out += struct.pack("<8I", cat_off, var_off, 0, 0, 0, 0, catname_off, varname_off)
     out = out.ljust(80, b"\0")
     for (count, policy), parent in zip(category_limits, category_parents):
@@ -73,8 +73,9 @@ def xgs(category_limits=((255, 0), (255, 0)),
         out += struct.pack("<BHHBHBB", count, 0, 0, policy << 3, parent, 180, 1)
     out += struct.pack("<Bfff", 0x01, 343.0, 0.0, 1000.0)                          # PUBLIC: initial, min, max
     out += struct.pack("<Bfff", 0x01 | 0x04, 50.0, 0.0, 100.0)                     # PUBLIC | CUE
-    out += names + b"SpeedOfSound\0Intensity\0"
-    assert len(out) == 149 + len(names)
+    out += struct.pack("<Bfff", 0x01 | 0x02, 25.0, 0.0, 100.0)                     # PUBLIC | READONLY
+    out += names + b"SpeedOfSound\0Intensity\0ReadOnlyLevel\0"
+    assert len(out) == 176 + len(names)
     return bytes(out)
 
 

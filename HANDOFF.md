@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-812 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-813 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1803,9 +1803,10 @@ AudioCategory Pause is now proven punctual rather than persistent for later cues
 cover both clamps, both namespace directions, name refusals and post-dispose access. AudioEngine
 global variables now also cover both clamps and symmetric empty/unknown-name refusals. Cue
 transport now covers repeated Play across Playing/Paused/Stopped and post-dispose transport
-asymmetry. Continue with the read-only/RPC/variation decisions, prioritizing publicly observable
-behavior over private mixer state. Do not add isolated getter demos. Build with at most three
-compile jobs and keep focused evidence current.
+asymmetry. A newly authored PUBLIC|READONLY global now proves silent write refusal. Continue with
+the remaining instance-limit/RPC/variation decisions, prioritizing publicly observable state over
+private mixer data. Do not add isolated getter demos. Build with at most three compile jobs and
+keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2872,6 +2873,20 @@ stderr, including the same observed505ms authored-release wait. The warning-free
 uses at most three jobs; metadata and coverage remain unchanged.
 Evidence:`/tmp/checkpoint-812-xact-cue-transport-*`. Continue with the read-only/RPC/variation
 decisions, prioritizing publicly observable behavior.
+
+### Focused813-XACT-read-only-global-variable
+
+The deterministic XACT generator adds PUBLIC|READONLY `ReadOnlyLevel` (initial25, range0..100) to
+the shared settings schema and regenerates `demo.xgs`, `limits.xgs` and `hierarchy.xgs`; the seven
+bank files remain byte-identical. `audio.xact.global_variables` grows from six to eight controls,
+reads the authored initial value, attempts to write75, and proves the value remains25 without an
+exception. Existing mutable, clamp and name-boundary controls remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass8/8 with byte-identical stdout and empty stderr.
+All ten SOFTWARE XACT CTests pass after the shared settings change. The warning-free incremental
+build uses at most three jobs; metadata and coverage remain unchanged.
+Evidence:`/tmp/checkpoint-813-xact-readonly-global-*`. Continue with remaining instance-limit,
+RPC and variation decisions.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

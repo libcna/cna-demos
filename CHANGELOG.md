@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added an authored read-only XACT global and demonstrated that SetGlobalVariable silently preserves
+  its initial value, with all generated XGS variants and XACT regressions updated together.
 - Extended XACT Cue lifecycle coverage with repeated Play behavior in playing, paused and stopped
   states plus asymmetric transport behavior after disposal.
 - Extended XACT global variables with lower-bound clamping and symmetric empty/unknown-name

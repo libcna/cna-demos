@@ -7688,3 +7688,19 @@ generated runtime coverage remains302/329 types,2114/2326 non-field members,169/
 2999/3205 C routes. Evidence:`/tmp/checkpoint-812-xact-cue-transport-*` and
 `/tmp/checkpoint-812-coverage.md`. Continue with the read-only/RPC/variation decisions,
 prioritizing publicly observable behavior.
+
+## Focused813-XACT-read-only-global-variable
+
+The deterministic XACT generator adds PUBLIC|READONLY `ReadOnlyLevel` (initial25, range0..100) to
+the shared settings schema and regenerates `demo.xgs`, `limits.xgs` and `hierarchy.xgs`; the seven
+bank files remain byte-identical. `audio.xact.global_variables` grows from six to eight controls,
+reads the authored initial value, attempts to write75, and proves the value remains25 without an
+exception. Existing mutable, clamp and name-boundary controls remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass8/8 with byte-identical stdout and empty stderr.
+All ten SOFTWARE XACT CTests pass after the shared settings change. The warning-free incremental
+build uses at most three jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4,
+and generated runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields and
+2999/3205 C routes. Evidence:`/tmp/checkpoint-813-xact-readonly-global-*` and
+`/tmp/checkpoint-813-coverage.md`. Continue with remaining instance-limit, RPC and variation
+decisions.
