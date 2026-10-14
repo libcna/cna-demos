@@ -4530,3 +4530,18 @@ pass. Staged metadata reaches2906/3205 and `models.h` reaches123/216. Evidence:
 `checkpoint-625-c-morph-targets-focused-*-direct.*`. No mesh, Model, ContentManager, animation
 player, draw call, screenshot, visual result or project-built execution is claimed. The
 SkinnedModelEXT skeleton, clips, transforms, part ownership and move routes are next.
+
+## Focused626-C-SkinnedModel-skeleton-clips-moves-and-parts
+
+`c_api.graphics.skinned_models` adds26 `models.h` routes in28 controls. A copied two-bone skeleton,
+bind/inverse-bind arrays and named clip survive source mutation; sorted discovery and atomic track
+copies preserve exact data. Half-time, looped and clamped transform evaluation distinguish their
+results, while malformed hierarchy replacement is atomic. Move construction/assignment empties
+sources, and part transfer requires a matching skeleton. One same-device part then retains real
+vertex/index buffers and an optional Texture2D; exact-name donor replacement releases the first
+set, owns the new set and permits complete removal. Both SOFTWARE and OPENGLES3 Xvfb direct runs
+pass28/28 with byte-identical stdout and empty stderr; strict C99 and metadata compilation, diff
+checks and validation self-tests pass. Staged metadata reaches2932/3205 and `models.h` reaches
+149/216. Evidence:`checkpoint-626-c-skinned-models-focused-*-direct.*`. No skinning shader,
+texture sampling, draw call, screenshot, visual result or project-built execution is claimed.
+SkinningData values plus AnimationPlayer local/world/skin transform playback are next.
