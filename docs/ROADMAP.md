@@ -7034,3 +7034,23 @@ runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields
 routes. Evidence:`/tmp/checkpoint-773-xnb-writer-*` and `/tmp/checkpoint-773-coverage.md`. No
 rendering, screenshot or manual inspection was used. Continue the same real XNB graph with shared
 resources, external references and dynamic reference dispatch.
+
+## Focused774-custom-XNB-reference-graph
+
+The same original XML profile now authors a RareBadge through a base Badge field and an absolute
+portrait XNB path. ProfileWriter sends the badge once through base-typed WriteObject and twice
+through WriteSharedResource, then writes the portrait through WriteExternalReference. The runtime
+readers prove dynamic derived dispatch for both materializations, full Founder/level7/glow11 data,
+an inline identity independent from the shared table, exact alias identity for the two deferred
+fixups and the normalized extensionless `portraits/sentinel` path. The rebuilt profile retains the
+shared alias while exposing its edited health through a fresh root object.
+
+SOFTWARE and OPENGLES3/Xvfb each pass15/16 controls and fail only established ISSUE-090; stdout and
+the intentional compiler/debug diagnostics match after normalizing the private temporary path. The
+exact expected-failure SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, known-issue demos remain42, validator/checkpoint self-tests pass5/5
+and4/4, and generated runtime coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-774-xnb-graph-*` and
+`/tmp/checkpoint-774-coverage.md`. No rendering, screenshot or manual inspection was used. Audit
+the remaining custom writer null/refusal contracts and ContentCompiler inspection/freeze behavior
+against existing demos before adding more controls.

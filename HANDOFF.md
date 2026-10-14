@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-773 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-774 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1749,10 +1749,11 @@ Root-as-shared-resource identity and self-cycle behavior now match the measured 
 writer's public `MaxNestingDepth` refusal. The typed envelope now covers direct reader/writer type-
 name/context accessors plus the ScanChildren namespace prepass, and the registration control binds
 its exact `TargetType` and `XmlTypeName` to the looked-up instance and emitted XML. The custom XNB
-writer now covers identity/lifecycle, Windows Phone/HiDef context, compression refusal and explicit
-typed/raw nested writer dispatch. Continue the same real XNB graph with shared resources, external
-references and dynamic reference dispatch. Do not add isolated getter demos. Build with at most
-three compile jobs and keep focused evidence current.
+writer now covers identity/lifecycle, Windows Phone/HiDef context, compression refusal, explicit
+typed/raw nested writer dispatch, dynamic reference dispatch, shared-resource identity and external
+path normalization. Audit the remaining custom writer null/refusal contracts and ContentCompiler
+inspection/freeze behavior against existing demos before adding controls. Do not add isolated
+getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2207,6 +2208,26 @@ runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields
 routes. Evidence:`/tmp/checkpoint-773-xnb-writer-*` and `/tmp/checkpoint-773-coverage.md`. No
 rendering, screenshot or manual inspection was used. Continue the same real XNB graph with shared
 resources, external references and dynamic reference dispatch.
+
+### Focused774 custom XNB reference graph
+
+The same original XML profile now authors a RareBadge through a base Badge field and an absolute
+portrait XNB path. ProfileWriter sends the badge once through base-typed WriteObject and twice
+through WriteSharedResource, then writes the portrait through WriteExternalReference. The runtime
+readers prove dynamic derived dispatch for both materializations, full Founder/level7/glow11 data,
+an inline identity independent from the shared table, exact alias identity for the two deferred
+fixups and the normalized extensionless `portraits/sentinel` path. The rebuilt profile retains the
+shared alias while exposing its edited health through a fresh root object.
+
+SOFTWARE and OPENGLES3/Xvfb each pass15/16 controls and fail only established ISSUE-090; stdout and
+the intentional compiler/debug diagnostics match after normalizing the private temporary path. The
+exact expected-failure SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, known-issue demos remain42, validator/checkpoint self-tests pass5/5
+and4/4, and generated runtime coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-774-xnb-graph-*` and
+`/tmp/checkpoint-774-coverage.md`. No rendering, screenshot or manual inspection was used. Audit
+the remaining custom writer null/refusal contracts and ContentCompiler inspection/freeze behavior
+against existing demos before adding more controls.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
