@@ -5015,3 +5015,19 @@ coverage moves1595->1628/2326 and leaves no Vector2/3/4 member gap, without chan
 type/C-route counts. Evidence:`/tmp/checkpoint-656-*` and `/tmp/checkpoint-656-coverage.md`. No
 rendering, screenshot or visual inspection was used. Audit CurveKey and CurveKeyCollection value,
 ordering, copy, clone and mutability behavior next, dispositioning CLR-only enumerator aliases.
+
+## Focused657-CurveKey-and-collection-contracts
+
+`math.curve.key_collection` grows from10 to16 controls. A directly constructed collection proves
+the empty mutable default; complete-key Contains is distinguished from position-only CompareTo;
+CopyTo preserves sentinels outside its ordered destination window; and independent key-collection
+and Curve clones survive source removal. A cloned real middle key adds typed/boxed equality,
+wrong/empty-box refusal, both operators, equal hashes and tangent-sensitive inequality. SOFTWARE
+and OPENGLES3 pass16/16 with byte-identical stdout and empty stderr; the focused SOFTWARE CTest
+passes and the build is diagnostic-free. Temporary coverage moves1628->1639/2326 without changing
+the628-demo/type/C-route counts. Only CurveKeyCollection's CLR `GetEnumerator` and explicit
+`IEnumerable.GetEnumerator` aliases remain uncredited by disposition because CNA's C++ API exposes
+iteration as begin/end. Evidence:`/tmp/checkpoint-657-*` and `/tmp/checkpoint-657-coverage.md`. No
+rendering, screenshot or visual inspection was used. Audit core GameComponent and
+DrawableGameComponent interface, callback, disposal-event and unload lifecycle behavior next in
+the existing component workflows.

@@ -1359,12 +1359,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused656
-projects the628-demo staged catalog to1628/2326 XNA members and closes every inventoried Vector2,
-Vector3 and Vector4 member through distinct magnitude, transform, identity, constant and arithmetic
-checks. Audit CurveKey and CurveKeyCollection value/ordering/copy/clone/mutability behavior next in
-the existing curve workflows, while dispositioning CLR-only enumerator aliases rather than adding
-meaningless controls.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused657
+projects the628-demo staged catalog to1639/2326 XNA members and closes every callable CurveKey and
+CurveKeyCollection member; the two CLR GetEnumerator aliases are dispositioned because C++ exposes
+begin/end instead. Audit the core GameComponent/DrawableGameComponent interfaces, order/visibility
+callbacks, disposal events and unload lifecycle next in the existing component workflows.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1373,7 +1372,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused656 last observed external `73991b01f7` with six uncommitted
+the sibling CNA checkout; focused657 last observed external `73991b01f7` with six uncommitted
 renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2721,6 +2720,20 @@ Temporary coverage projects1595->1628/2326 and leaves no Vector2/3/4 member gap,
 type/C-route change. Evidence:`/tmp/checkpoint-656-*` and `/tmp/checkpoint-656-coverage.md`. No
 rendering, screenshot or visual inspection was used. Production library hashes remain complete647;
 the runner is `41b6b9bf58d86dc538e5502e0a8037c7e79a1661c5d19c4f480a27c550ba9378`.
+Sibling CNA remained external dirty `73991b01f7` with six observed paths; no CNA source was edited.
+
+Focused657 extends `math.curve.key_collection` from10 to16 controls. A directly constructed
+collection establishes its empty mutable contract; complete-key Contains differs from position-only
+CompareTo; CopyTo preserves sentinels around the ordered insertion window; and independent
+collection/Curve clones survive source removals. A cloned real middle key exercises typed/boxed
+equality, wrong/empty boxes, both operators, equal hashes and tangent-sensitive inequality.
+SOFTWARE and OPENGLES3 pass16/16 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes and the build is diagnostic-free. Temporary coverage projects1628->1639/2326 and
+leaves only CurveKeyCollection's CLR `GetEnumerator` and explicit `IEnumerable.GetEnumerator`
+aliases uncredited by disposition; C++ iteration is exposed through begin/end. No catalog/type/C-
+route count changes. Evidence:`/tmp/checkpoint-657-*` and `/tmp/checkpoint-657-coverage.md`. No
+rendering, screenshot or visual inspection was used. Production library hashes remain complete647;
+the runner is `464337875c4f14424ca1cb4b1a0e53a7f8665b9c59fa406d3b45529f281283d7`.
 Sibling CNA remained external dirty `73991b01f7` with six observed paths; no CNA source was edited.
 
 ## 15. Assumptions the next session must know
