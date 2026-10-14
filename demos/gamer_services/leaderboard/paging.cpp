@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MS-PL
 // LeaderboardReader paging: a board read a page at a time, each row with the columns the game wrote.
 #include <any>
+#include <array>
 #include <memory>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -26,6 +28,8 @@
 #include "Microsoft/Xna/Framework/Net/NetworkSession.hpp"
 #include "Microsoft/Xna/Framework/Net/NetworkSessionType.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/DateTime.hpp"
+#include "System/IO/Stream.hpp"
 #include "System/TimeSpan.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -125,6 +129,8 @@ namespace
             session->StartGame();
             session->Update();
             int i = 0;
+            bool writerColumnsExact = true;
+            bool writerStreamsExact = true;
             for (LocalNetworkGamer* local : session->getLocalGamersProperty())
             {
                 // Besides the rating, a row carries typed columns: the round's outcome and time.
@@ -132,12 +138,46 @@ namespace
                 // drops columns written after that, CNA-DEMOS-ISSUE-025.)
                 LeaderboardEntry* entry =
                     local->getSignedInGamerProperty()->getLeaderboardWriterProperty().GetLeaderboard(board);
-                entry->getColumnsProperty().SetValue("Result", Rounds[i].result);
-                entry->getColumnsProperty().SetValue("Time", System::TimeSpan::FromSeconds(Rounds[i].seconds));
+                PropertyDictionary& columns = entry->getColumnsProperty();
+                columns.SetValue("Result", Rounds[i].result);
+                columns.SetValue("Time", System::TimeSpan::FromSeconds(Rounds[i].seconds));
+                columns.SetValue("Round", i + 1);
+                columns.SetValue("ScoreCopy", Rounds[i].score);
+                columns.SetValue("Accuracy", 0.75f - static_cast<float>(i) * 0.05f);
+                columns.SetValue("Multiplier", 1.5 + static_cast<double>(i));
+                columns.SetValue("Recorded", System::DateTime(2026, 10, 14));
+                columns.SetValue("Note", std::string("round ") + std::to_string(i + 1));
+
+                std::any round;
+                writerColumnsExact = writerColumnsExact && columns.getCountProperty() == 8 &&
+                    columns.ContainsKey("Recorded") && !columns.ContainsKey("Missing") &&
+                    columns.TryGetValue("Round", round) && std::any_cast<int>(round) == i + 1;
+
+                try
+                {
+                    System::IO::Stream* replay = columns.GetValueStream("Replay");
+                    std::array<SharpRuntime::bytecs, 3> replayBytes{
+                        static_cast<SharpRuntime::bytecs>(i + 1), 0x43, 0x4e};
+                    replay->Write(replayBytes.data(), 0, static_cast<int>(replayBytes.size()));
+                    replay->setPositionProperty(0);
+                    std::array<SharpRuntime::bytecs, 3> replayRead{};
+                    writerStreamsExact = writerStreamsExact &&
+                        replay->Read(replayRead.data(), 0, static_cast<int>(replayRead.size())) ==
+                            static_cast<int>(replayRead.size()) &&
+                        replayRead == replayBytes;
+                    replay->setPositionProperty(0);
+                }
+                catch (const std::out_of_range&)
+                {
+                    writerStreamsExact = false;
+                }
                 entry->setRatingProperty(Rounds[i].score);
                 ++i;
             }
             ctx.Check(i == 4, "four local gamers play the round");
+            ctx.Check(writerColumnsExact,
+                      "writer dictionaries expose exact Count, ContainsKey, TryGetValue and Item values");
+            writerStreamsExact_ = writerStreamsExact;
             session->EndGame();
             session->Update();
             session->Dispose();
@@ -199,6 +239,42 @@ namespace
             const auto first = reader.getEntriesProperty();
             ctx.Check(first[0].getColumnsProperty().GetValueOutcome("Result") == LeaderboardOutcome::Win,
                       "the leader's row reads back Result = Win");
+            const PropertyDictionary& firstColumns = first[0].getColumnsProperty();
+            ctx.Check(firstColumns.GetValueInt32("Round") == 1 &&
+                          firstColumns.GetValueInt64("ScoreCopy") == 4200 &&
+                          firstColumns.GetValueSingle("Accuracy") == 0.75f &&
+                          firstColumns.GetValueDouble("Multiplier") == 1.5 &&
+                          firstColumns.GetValueDateTime("Recorded") == System::DateTime(2026, 10, 14) &&
+                          firstColumns.GetValueString("Note") == "round 1",
+                      "all six additional typed columns survive the offline store");
+
+            std::any foundRound;
+            std::any missingSentinel = std::string("unchanged");
+            int rangedColumns = 0;
+            for (const auto& [key, value] : firstColumns)
+            {
+                (void)key;
+                (void)value;
+                ++rangedColumns;
+            }
+            ctx.Check(firstColumns.ContainsKey("Round") && !firstColumns.ContainsKey("Missing") &&
+                          firstColumns.TryGetValue("Round", foundRound) && std::any_cast<int>(foundRound) == 1 &&
+                          !firstColumns.TryGetValue("Missing", missingSentinel) &&
+                          std::any_cast<std::string>(missingSentinel) == "unchanged" &&
+                          std::any_cast<int>(firstColumns["Round"]) == 1 &&
+                          rangedColumns == 8 + (firstColumns.ContainsKey("Replay") ? 1 : 0),
+                      "read dictionaries preserve lookup outputs, Item access and C++ range shape");
+
+            bool replayPersisted = false;
+            if (firstColumns.ContainsKey("Replay"))
+            {
+                System::IO::Stream* replay = firstColumns.GetValueStream("Replay");
+                std::array<SharpRuntime::bytecs, 3> bytes{};
+                replayPersisted = replay != nullptr && replay->Read(bytes.data(), 0, static_cast<int>(bytes.size())) == 3 &&
+                    bytes == std::array<SharpRuntime::bytecs, 3>{1, 0x43, 0x4e};
+            }
+            ctx.Check(writerStreamsExact_ && replayPersisted,
+                      "an offline writer creates, reads and persists a stream column (CNA-DEMOS-ISSUE-085)");
 
             // BeginPageDown/EndPageDown move the same reader to the next rows.
             int downCallbacks = 0;
@@ -253,6 +329,7 @@ namespace
         }
 
         bool done_ = false;
+        bool writerStreamsExact_ = false;
         int waited_ = 0;
         std::vector<std::string> lines_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
@@ -263,20 +340,27 @@ namespace
 CNA_DEMOS_GAME(PagingDemo, {
     .id = "gamer_services.leaderboard.paging",
     .title = "Leaderboard pages and columns",
-    .description = "Four local players write a round to a board -- rating plus a LeaderboardOutcome and a TimeSpan "
-                   "column -- and LeaderboardReader reads it two rows at a time through the offline Begin/End read "
-                   "and paging contracts, preserving callback state, board identity and explicit disposal.",
+    .description = "Four local players write typed and stream columns to a board, exercise dictionary lookup and "
+                   "range behavior, and read it two rows at a time through the offline Begin/End contracts; the "
+                   "stream round trip exposes CNA-DEMOS-ISSUE-085.",
     .apis = {"LeaderboardReader::PageDown", "LeaderboardReader::PageUp", "LeaderboardReader::BeginPageDown",
              "LeaderboardReader::EndPageDown", "LeaderboardReader::BeginPageUp", "LeaderboardReader::EndPageUp",
              "LeaderboardReader::BeginRead", "LeaderboardReader::EndRead", "LeaderboardReader::CanPageDown",
              "LeaderboardReader::CanPageUp", "LeaderboardReader::PageStart", "LeaderboardReader::TotalLeaderboardSize",
              "LeaderboardReader::LeaderboardIdentity", "LeaderboardReader::Dispose",
              "LeaderboardReader::IsDisposed", "LeaderboardIdentity::Key", "LeaderboardIdentity::GameMode",
-             "LeaderboardOutcome", "PropertyDictionary::GetValueOutcome", "PropertyDictionary::GetValueTimeSpan",
-             "PropertyDictionary::SetValue", "LeaderboardEntry::Columns", "LeaderboardEntry::RankingEXT",
-             "LeaderboardReader::Entries"},
+             "LeaderboardOutcome", "PropertyDictionary::Count", "PropertyDictionary::Item",
+             "PropertyDictionary::ContainsKey", "PropertyDictionary::TryGetValue",
+             "PropertyDictionary::GetValueDateTime", "PropertyDictionary::GetValueDouble",
+             "PropertyDictionary::GetValueInt32", "PropertyDictionary::GetValueInt64",
+             "PropertyDictionary::GetValueOutcome", "PropertyDictionary::GetValueSingle",
+             "PropertyDictionary::GetValueStream", "PropertyDictionary::GetValueString",
+             "PropertyDictionary::GetValueTimeSpan", "PropertyDictionary::SetValue",
+             "LeaderboardEntry::Columns", "LeaderboardEntry::RankingEXT", "LeaderboardReader::Entries"},
     .tags = {"gamer-services", "leaderboard", "high-score", "paging", "offline"},
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},
+    .restrictions = "CNA-DEMOS-ISSUE-085: an offline leaderboard writer cannot create a stream column.",
+    .knownIssue = "CNA-DEMOS-ISSUE-085",
     .ownProcess = true,
 })

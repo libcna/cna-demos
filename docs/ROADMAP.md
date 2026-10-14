@@ -5800,3 +5800,22 @@ self-tests pass. Temporary coverage moves2058->2069/2326 at632 demos,301/329 typ
 fields; GamerServices moves116->127/244. Evidence:`/tmp/checkpoint-703-leaderboard-reader-*` and
 `/tmp/checkpoint-703-coverage.md`. No service, network, screenshot or visual result is claimed.
 Continue with PropertyDictionary's meaningful typed and C++ collection behavior.
+
+## Focused704-PropertyDictionary-typed-values-and-stream-defect
+
+The four-player paging workflow now writes and reads eight real column kinds: Outcome, TimeSpan,
+int32, int64, float, double, DateTime and string. It checks exact Count, ContainsKey, TryGetValue,
+Item and C++ range behavior on the writer/read dictionaries, including preserved output on an
+absent lookup. All ordinary typed values survive the isolated offline store.
+
+The initial run escaped `map::at`; source and runtime investigation refined the failure. Offline
+LeaderboardWriter entries do not enable create-on-first-use streams, so GetValueStream on a new key
+throws `std::out_of_range`; the offline serializer would also skip a Stream pointer. The final demo
+catches the refusal, retains all positive controls and marks one CNA-DEMOS-ISSUE-085 failure.
+SOFTWARE and OPENGLES3/X11 each execute17 controls, pass16 and fail only that issue with
+byte-identical stdout and empty stderr. The focused known-issue SOFTWARE CTest, metadata validation
+and validator self-tests pass. Temporary coverage moves2069->2080/2326 at632 demos,301/329 types
+and157/753 fields; GamerServices moves127->138/244. Evidence:
+`/tmp/checkpoint-704-property-dictionary-*` and `/tmp/checkpoint-704-coverage.md`. No service,
+network, screenshot or visual result is claimed. Continue the actual C++ collection/mutation
+contract while leaving CLR aliases dispositioned.

@@ -1305,6 +1305,23 @@ XDG_CONFIG_HOME while StorageDevice uses XDG_DATA_HOME; isolated writable data r
 This demonstrates local-store behavior and the public async contract. It does not establish a
 service-backed deferred callback, remote paging, concurrent requests or post-dispose service guards.
 
+### PropertyDictionary typed values and offline stream columns
+
+`gamer_services.leaderboard.paging` writes Outcome, TimeSpan, int32, int64, float, double, DateTime
+and string columns before each real rating commit. The first read row recovers all eight values
+through typed getters. Writer and reader dictionaries also establish exact Count, present/absent
+ContainsKey, successful/unsuccessful TryGetValue with preserved absent output, Item and C++ range
+shape. This credits eleven ordinary inventory members without naming the CLR explicit-interface
+aliases that CNA does not expose under those names.
+
+The stream column is a confirmed CNA defect. On an offline writer, GetValueStream for a new key
+throws `std::out_of_range` because only service-backed entries enable create-on-first-use streams;
+source review also shows the offline JSON serializer skips Stream pointers. CNA-DEMOS-ISSUE-085
+records the mismatch with the public header. Both renderers execute17 controls, pass16 and fail only
+the stream round trip with identical stdout and empty stderr. Evidence:
+`/tmp/checkpoint-704-property-dictionary-*`. This is isolated local-store evidence; no configured
+service or remote stream-column transport is claimed.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

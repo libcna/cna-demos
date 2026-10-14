@@ -15,6 +15,32 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-085 -- Offline leaderboard writers cannot create or persist stream columns
+
+- **Area/API:** `PropertyDictionary::GetValueStream`, `LeaderboardWriter::GetLeaderboard` and the
+  offline leaderboard store in `modules/gamer-services`.
+- **Reproduction:** run `gamer_services.leaderboard.paging` with its four isolated local profiles.
+  For each writer entry, request a new `Replay` stream column, write three bytes and then read the
+  board back after `Rating` commits the row.
+- **Observed:** `GetValueStream("Replay")` throws `std::out_of_range` from the missing map key for
+  every offline writer. The demo catches that refusal so its other typed columns continue through
+  the real store; the reader consequently has no `Replay` value. Both SOFTWARE and OPENGLES3/X11
+  execute17 controls, pass the16 typed, lookup, paging and lifecycle controls, and fail only the
+  stream round-trip assertion with byte-identical stdout and empty stderr.
+- **Cause observed in source:** `LeaderboardWriter::BindServiceEntry` sets the private
+  `PropertyDictionary::createsStreams_` flag only for service-backed entries. The offline
+  `GetLeaderboard` path installs its rating persistence hook but leaves the flag false, so
+  `GetValueStream` treats a missing stream key as a read and calls `map::at`. Additionally,
+  offline `ColumnsToJson` explicitly skips `Stream*`, so enabling creation alone would still not
+  fulfill the documented persistence contract.
+- **Expected:** a leaderboard writer's columns should create a writable stream on first access and
+  persist its contents with the entry, as the public PropertyDictionary header states; reader
+  entries should expose the stored read-only bytes.
+- **Scope/status:** open against clean external CNA `f698d0f548`. The same workflow proves exact
+  offline persistence for int32, int64, float, double, DateTime, string, TimeSpan and
+  LeaderboardOutcome columns. Evidence:`/tmp/checkpoint-704-property-dictionary-*`. No CNA source
+  was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-084 -- PacketReader documentation and example still describe the fixed Color mismatch
 
 - **Area/API:** `PacketReader::ReadColor`, `PacketWriter::Write(Color)`, the public

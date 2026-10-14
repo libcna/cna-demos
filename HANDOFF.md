@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused703
-projects the632-demo staged catalog to2069/2326 XNA members and157/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused704
+projects the632-demo staged catalog to2080/2326 XNA members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1392,8 +1392,9 @@ are now covered. The
 remaining event-payload constructors, voice, invites, leaderboard callbacks and CLR serialization
 members are dispositioned in COVERAGE_AUDIT. The existing leaderboard paging workflow now covers
 offline Begin/End read and navigation, identity and reader disposal. Continue ordinary
-GamerServices members with PropertyDictionary's typed value and actual C++ collection behavior;
-do not name its CLR explicit-interface aliases merely to raise coverage. Continue the next
+GamerServices members with PropertyDictionary's actual C++ collection behavior; its typed values,
+lookup and Item surface are now covered, and ISSUE-085 records the broken offline stream column.
+Do not name its CLR explicit-interface aliases merely to raise coverage. Continue the next
 high-value behavior family after each batch, rebuilding and running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1402,7 +1403,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused703 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused704 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3592,6 +3593,29 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No service, network,
 screenshot or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
 source was edited. Continue with PropertyDictionary's meaningful typed and collection surface.
+
+Focused704 extends the same paging workflow with eight real column types plus dictionary lookup.
+Every writer row stores Outcome, TimeSpan, int32, int64, float, double, DateTime and string values;
+the reader proves all values through their typed getters. Count, ContainsKey, TryGetValue, Item and
+C++ range traversal are checked on the live writer/read dictionaries, including an absent lookup
+that preserves its output.
+
+The first run escaped `map::at`; investigation showed this was not the predicted persistence-only
+failure. Offline LeaderboardWriter entries never enable PropertyDictionary's create-on-first-use
+stream mode, so GetValueStream on a new `Replay` key throws `std::out_of_range`. The demo now catches
+that exact refusal, continues every positive control and exposes one expected
+CNA-DEMOS-ISSUE-085 assertion; source review also finds that the offline JSON serializer skips
+Stream pointers even if creation were enabled. SOFTWARE and OPENGLES3/X11 each execute17 controls,
+pass16 and fail only ISSUE-085 with byte-identical stdout and empty stderr. The focused known-issue
+SOFTWARE CTest, metadata validation and five validator self-tests pass. Temporary coverage moves
+2069->2080/2326 at632 demos,301/329 types and157/753 fields; GamerServices moves127->138/244.
+Evidence:`/tmp/checkpoint-704-property-dictionary-*` and `/tmp/checkpoint-704-coverage.md`. Runner
+SHA-256 is `96eed51f1a99650fae18c0c746b15165aec0a130f2a548a8aa103dec1b5e2285`; production library
+hashes remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No service, network,
+screenshot or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
+source was edited. Continue with the dictionary's C++ collection/mutation contract, leaving CLR
+aliases uncredited.
 
 ## 15. Assumptions the next session must know
 
