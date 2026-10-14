@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended custom CNB loader registration checks with empty-factory, built-in/reserved identifier
+  and canonical-name/hash mismatch refusals that preserve the installed loader.
 - Extended the custom CNB loader with executed first-registration-wins precedence, ignored-factory
   capture release and retained-factory lifetime across ContentManager replacement.
 - Extended ContentManager lifetime coverage with protected Dispose-hook dispatch, IDisposable and

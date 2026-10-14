@@ -1738,13 +1738,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-754 close the
-texture/render-target lifetimes, ContentManager disposal and CNB registration precedence. Continue
-the same `content.custom.cnb_loader` public-registration audit: execute empty-factory refusal,
-built-in/reserved identifier refusal and custom ID/canonical-name mismatch while proving the valid
-first registration remains installed and usable. Keep the checks isolated in the existing
-`ownProcess` workflow; do not add a guard-only ID. Build with at most three compile jobs and keep
-focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-755 close the
+texture/render-target lifetimes, ContentManager disposal and the CNB registration table. Continue
+with the existing `content.custom.cnj_loader` workflow: author isolated unknown-type and future
+`cnjVersion` documents, verify both are refused before factory invocation or cache publication,
+then repair the same logical paths and retry through the same manager. Do not add a guard-only ID.
+Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1858,6 +1857,20 @@ SOFTWARE and OPENGLES3/Xvfb pass14/14, and the exact SOFTWARE CTest passes. The 
 incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
 remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-754-cnb-loader-*` and `/tmp/checkpoint-754-coverage.md`. No rendering, screenshot
+or manual inspection was used, and no CNA issue was found.
+
+### Focused755 CNB loader registration guards
+
+`content.custom.cnb_loader` grows from fourteen to seventeen controls. An empty factory, CNA's
+built-in Curve identifier, the first reserved identifier and a valid custom identifier paired with
+a different canonical name are all refused with `std::invalid_argument`. Every refusal preserves
+the installed first factory capture; the later Moon load still reaches that factory and proves the
+valid process-global registration remains usable.
+
+SOFTWARE and OPENGLES3/Xvfb pass17/17, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
+remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-755-cnb-loader-*` and `/tmp/checkpoint-755-coverage.md`. No rendering, screenshot
 or manual inspection was used, and no CNA issue was found.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA

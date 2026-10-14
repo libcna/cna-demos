@@ -6669,3 +6669,20 @@ pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 non-field 
 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-754-cnb-loader-*` and
 `/tmp/checkpoint-754-coverage.md`. No rendering, screenshot or manual inspection was used. Audit
 the same public registration API's empty-factory, custom-range and canonical-name/hash guards next.
+
+## Focused755-CNB-loader-registration-guards
+
+`content.custom.cnb_loader` adds three controls, reaching17. The public registration API refuses
+an empty factory, both a built-in and the first reserved asset identifier, and a valid custom
+identifier paired with a different canonical name. Each refusal preserves the installed first
+factory capture; the subsequent Moon load still reaches that factory and confirms the registration
+remains usable.
+
+SOFTWARE and OPENGLES3/Xvfb pass17/17, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, validator/checkpoint self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-755-cnb-loader-*` and
+`/tmp/checkpoint-755-coverage.md`. No rendering, screenshot or manual inspection was used. No CNA
+issue was found. Continue with the adjacent CNJ loader: execute unknown envelope type and future
+version refusal before factory invocation/cache publication, then repair and retry through the
+same manager.

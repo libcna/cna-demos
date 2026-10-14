@@ -50,6 +50,45 @@ namespace
                 ++firstState->reads;
                 return result;
             });
+
+        bool emptyFactoryRefused = false;
+        try
+        {
+            ContentManager::RegisterCnbLoaderEXT<Rules>(
+                typeId, RulesName, ContentManager::CnbLoaderFn<Rules>{});
+        }
+        catch (const std::invalid_argument&) { emptyFactoryRefused = true; }
+        ctx.Check(emptyFactoryRefused && !retainedFirst.expired(),
+                  "an empty factory is refused without releasing the installed registration");
+
+        bool builtInIdRefused = false;
+        bool reservedIdRefused = false;
+        const auto placeholder = [](const CnbDocument&, ContentManager&) { return Rules{}; };
+        try
+        {
+            ContentManager::RegisterCnbLoaderEXT<Rules>(
+                CnbAssetTypeId::Curve, RulesName, placeholder);
+        }
+        catch (const std::invalid_argument&) { builtInIdRefused = true; }
+        try
+        {
+            ContentManager::RegisterCnbLoaderEXT<Rules>(
+                CnbAssetTypeId::ReservedRangeFirst, RulesName, placeholder);
+        }
+        catch (const std::invalid_argument&) { reservedIdRefused = true; }
+        ctx.Check(builtInIdRefused && reservedIdRefused && !retainedFirst.expired(),
+                  "game loaders cannot claim CNA built-in or reserved asset identifiers");
+
+        bool mismatchedNameRefused = false;
+        try
+        {
+            ContentManager::RegisterCnbLoaderEXT<Rules>(
+                typeId, "CnaDemos.OtherRules", placeholder);
+        }
+        catch (const std::invalid_argument&) { mismatchedNameRefused = true; }
+        ctx.Check(mismatchedNameRefused && !retainedFirst.expired(),
+                  "a custom identifier refuses a canonical name that hashes to another value");
+
         auto replacementState = std::make_shared<LoaderState>();
         const std::weak_ptr<LoaderState> ignoredReplacement = replacementState;
         ContentManager::RegisterCnbLoaderEXT<Rules>(typeId, RulesName,
