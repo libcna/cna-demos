@@ -183,6 +183,19 @@ half format conversion is intentionally not duplicated because the exhaustive Te
 exercise the same packed-value conversion routes. Evidence:`/tmp/checkpoint-746-texture3d-*`. No
 screenshot or manual visual inspection was performed. No CNA issue was found.
 
+Focused **747-Texture3D-device-boundaries-and-cross-device-assignment** extends the same
+`graphics.texture3d.volume_data` workflow from20 to25 checks. An occupied target bound on the
+primary device receives a bound2x1x2 source from a secondary device; it reports the secondary
+owner, retains exact four-color payload and refuses upload until that transferred binding is
+cleared. Constructor controls separately reject DXT1 volume storage, width257 above the HiDef
+ceiling and1x1x1 Color on Reach. SOFTWARE and OPENGLES3/Xvfb pass25/25 with empty focused stderr;
+the exact SOFTWARE CTest passes. The incremental `-j3` build is warning-free, metadata is636/0,
+tool self-tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326 members,169/753 fields
+and2999/3205 C routes. Evidence:`/tmp/checkpoint-747-texture3d-*`. Repetitive box-coordinate guards,
+packed/half variants and reflection/renderer hooks are dispositioned, closing the Texture3D
+behavior table without duplicate demos. No screenshot or manual visual inspection was performed;
+no CNA issue was found.
+
 Focused **720-GraphicsDevice-Present-region-contract** is staged after Complete719. The existing
 owned-device lifecycle now passes11 controls on both SOFTWARE and OPENGLES3/X11: null/null/zero is
 ordinary Present, a partly outside source region is clipped and accepted only by SOFTWARE among
@@ -1722,13 +1735,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-746 close
-Texture3D coordinate/mip behavior plus raw-width and active-binding transfer semantics. Audit the
-remaining cross-device move-assignment path: extend the existing volume lifecycle workflow only if
-an occupied destination can prove device ownership and payload transfer without inventing a new
-concept. Then disposition repetitive box-coordinate guards, packed/half format variants and trivial
-reflection hooks, close the Texture3D table, and move to the next public member/behavior family.
-Build with at most three compile jobs and keep focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-747 close the
+Texture3D behavior table. Continue the adjacent TextureCube lifecycle audit in
+`graphics.texture_cube.sampler_ownership`: inspect copy assignment across devices, an active-binding
+move and device teardown against public source. Add only observable ownership/binding behavior that
+is not already established by Texture3D or the cube's shared-copy sampler, disposition duplicates,
+and then move to the next public member/behavior family. Build with at most three compile jobs and
+keep focused evidence current.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

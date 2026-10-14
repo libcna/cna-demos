@@ -6524,3 +6524,20 @@ members,169/753 fields and2999/3205 C routes. Packed and half-float variants are
 the same packed-value conversion paths already exercised exhaustively by Texture2D; no format-per-
 dimension matrix is warranted. Evidence:`/tmp/checkpoint-746-texture3d-*`. No screenshot or manual
 visual inspection was performed. No CNA issue was found. Audit cross-device move assignment next.
+
+## Focused747-Texture3D-device-boundaries-and-cross-device-assignment
+
+`graphics.texture3d.volume_data` adds five device-boundary controls, reaching25 on each renderer.
+An occupied1x1x1 target bound to the primary device receives a bound2x1x2 source from a secondary
+HiDef device. It reports the secondary owner, returns exact Red/Green/Blue/Yellow payload and still
+refuses upload until the transferred secondary binding is cleared. Three constructor checks reject
+DXT1 volume storage, width257 above the HiDef profile ceiling and even1x1x1 Color under Reach.
+
+SOFTWARE and OPENGLES3/Xvfb pass25/25 with empty focused stderr, and the exact SOFTWARE CTest
+passes. The incremental build uses at most three jobs and is warning-free; metadata remains636/0,
+the validator/checkpoint tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326
+non-field members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-747-texture3d-*`. Repetitive box-coordinate guards, packed/half variants and
+reflection/renderer hooks are dispositioned, so the Texture3D behavior table is semantically closed.
+No screenshot or manual visual inspection was performed. No CNA issue was found. Continue with the
+adjacent TextureCube lifecycle audit.

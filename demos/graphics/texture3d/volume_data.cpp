@@ -12,6 +12,12 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
+#include "Microsoft/Xna/Framework/Graphics/DepthFormat.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsAdapter.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsProfile.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PresentationParameters.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PresentInterval.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SamplerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteFont.hpp"
@@ -141,6 +147,8 @@ namespace
 
             CheckVectorField(device);
             CheckRawTransferContracts(device);
+            CheckProfileBoundaries(device);
+            CheckCrossDeviceMove(device);
 
             // Show each slice as an ordinary 2D texture made from the read-back data.
             for (int z = 0; z < Depth; ++z)
@@ -167,6 +175,76 @@ namespace
         }
 
     private:
+        void CheckProfileBoundaries(GraphicsDevice& hiDef)
+        {
+            bool compressedRefused = false, extentRefused = false;
+            try { Texture3D compressed(hiDef, 4, 4, 4, false, SurfaceFormat::Dxt1); }
+            catch (const System::NotSupportedException&) { compressedRefused = true; }
+            try { Texture3D oversized(hiDef, 257, 1, 1, false, SurfaceFormat::Color); }
+            catch (const System::NotSupportedException&) { extentRefused = true; }
+            Context().Check(compressedRefused,
+                            "HiDef refuses a block-compressed format that is not valid for volume storage");
+            Context().Check(extentRefused,
+                            "HiDef refuses a volume whose width exceeds the 256-texel profile ceiling");
+
+            PresentationParameters parameters;
+            parameters.setBackBufferWidthProperty(32);
+            parameters.setBackBufferHeightProperty(32);
+            parameters.setDepthStencilFormatProperty(DepthFormat::None);
+            parameters.setPresentationIntervalProperty(PresentInterval::Immediate);
+            GraphicsDevice reach(GraphicsAdapter::getDefaultAdapterProperty(),
+                                 GraphicsProfile::Reach, parameters);
+            bool reachRefused = false;
+            try { Texture3D unavailable(reach, 1, 1, 1, false, SurfaceFormat::Color); }
+            catch (const System::NotSupportedException&) { reachRefused = true; }
+            Context().Check(reachRefused,
+                            "the Reach profile refuses volume textures even for a one-texel Color resource");
+            reach.Dispose();
+        }
+
+        void CheckCrossDeviceMove(GraphicsDevice& primary)
+        {
+            PresentationParameters parameters;
+            parameters.setBackBufferWidthProperty(32);
+            parameters.setBackBufferHeightProperty(32);
+            parameters.setDepthStencilFormatProperty(DepthFormat::None);
+            parameters.setPresentationIntervalProperty(PresentInterval::Immediate);
+            GraphicsDevice secondary(GraphicsAdapter::getDefaultAdapterProperty(),
+                                     GraphicsProfile::HiDef, parameters);
+
+            Texture3D destination(primary, 1, 1, 1, false, SurfaceFormat::Color);
+            const Color placeholder = Color::Green;
+            destination.SetData(&placeholder, 1);
+            primary.getTexturesProperty()(3, &destination);
+
+            Texture3D source(secondary, 2, 1, 2, false, SurfaceFormat::Color);
+            const std::array<Color, 4> payload{
+                Color::Red, Color::Green, Color::Blue, Color::Yellow};
+            source.SetData(payload.data(), 4);
+            secondary.getTexturesProperty()(3, &source);
+
+            destination = std::move(source);
+            std::array<Color, 4> observed;
+            observed.fill(Color::Black);
+            bool transferredBindingRefused = false;
+            try { destination.SetData(payload.data(), 4); }
+            catch (const System::InvalidOperationException&) { transferredBindingRefused = true; }
+            secondary.getTexturesProperty()(3, nullptr);
+            destination.GetData(observed.data(), 4);
+            Context().Check(destination.getGraphicsDeviceProperty() == &secondary &&
+                                destination.getWidthProperty() == 2 && destination.getHeightProperty() == 1 &&
+                                destination.getDepthProperty() == 2 && observed == payload,
+                            "cross-device move assignment replaces an occupied volume and transfers ownership and payload");
+            Context().Check(transferredBindingRefused,
+                            "cross-device move assignment transfers the source device's active texture binding");
+
+            // Assignment detached destination from the primary slot; clearing it is harmless and
+            // keeps this workflow explicit before both resources and the secondary device leave scope.
+            primary.getTexturesProperty()(3, nullptr);
+            destination.Dispose();
+            secondary.Dispose();
+        }
+
         void CheckRawTransferContracts(GraphicsDevice& device)
         {
             struct RawWord
@@ -319,10 +397,12 @@ CNA_DEMOS_GAME(VolumeDataDemo, {
                    "two slices, reads guarded boxes and shows the base slices as 2D textures. A non-cubic authored mip chain "
                    "checks per-level Z bounds. A signed Vector4 displacement field contrasts vector/scalar counts, compact "
                    "two-slice boxes, guarded windows and refused-transfer preservation. Raw four-byte values additionally "
-                   "show generic caller windows, element-width rejection, atomic bound-resource refusal and an active-binding move.",
+                   "show generic caller windows, element-width rejection and active-binding moves within and across devices. "
+                   "Constructor checks establish volume format, extent and Reach-profile boundaries.",
     .apis = {"Texture3D::Texture3D", "Texture3D::SetData", "Texture3D::GetData", "Texture3D::Width",
              "Texture3D::Height", "Texture3D::Depth", "Texture::LevelCount", "Texture::Format", "SurfaceFormat::Vector4",
-             "GraphicsDevice::Textures"},
+             "GraphicsDevice::GraphicsDevice", "GraphicsDevice::Textures", "GraphicsResource::GraphicsDevice",
+             "GraphicsResource::Dispose"},
     .tags = {"texture", "volume", "3d-texture", "lookup-table"},
     .needs = CnaDemos::Need::Texture3D,
     .frames = 3,
@@ -331,5 +411,5 @@ CNA_DEMOS_GAME(VolumeDataDemo, {
     .restrictions = "Requires Color and Vector4 volume creation; only constructor capability refusal skips the typed fixture. "
                     "Public transfer checks and the Color readback atlas do not establish direct GPU readback or non-Color "
                     "sampling. Packed and half-float format conversion is already covered by the Texture2D format workflows; "
-                    "cross-device move assignment and device loss remain outside this scene.",
+                    "device loss and renderer-specific volume limits remain outside this scene.",
 })

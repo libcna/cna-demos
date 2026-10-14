@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed the Texture3D behavior audit with cross-device move assignment, transferred active
+  bindings, DXT volume refusal, the HiDef extent ceiling and the Reach-profile prohibition.
 - Extended Texture3D transfers with raw slice-major caller windows, atomic element-width refusal,
   bound-resource upload rejection and an active binding that follows move construction.
 - Extended the Texture3D sampler with exact U/V orientation and authored explicit-LOD checks that
