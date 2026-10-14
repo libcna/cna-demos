@@ -400,6 +400,23 @@ the focused SOFTWARE CTest passes. The workflow validates binding/format/lifetim
 not claim compiled vertex-shader sampling. Evidence:`/tmp/checkpoint-673-*` and
 `/tmp/checkpoint-673-coverage.md`. No drawing, screenshot or visual inspection was used.
 
+### GraphicsDevice construction, reset, present and disposal
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Constructor, Present | `owned_lifecycle` constructs a separate HiDef device with requested 256x144 presentation state, clears and presents it, and observes Normal status afterward. It presents again after reset. |
+| Reset | A 320x180 reset raises DeviceResetting then DeviceReset, updates presentation parameters and viewport, and retains a live owned texture. |
+| Dispose, Disposing, IsDisposed | Explicit disposal marks the device before raising one event, disposes its texture once, rejects later Present/Reset and is idempotent. |
+| DeviceLost | CNA documents this event as never raised on desktop. Reset and disposal keep its count zero on SOFTWARE and OPENGLES3; that absence is recorded without claiming an actual loss event. A supported real loss path remains platform/renderer-specific. |
+| Finalize | CLR finalizer machinery represented by the C++ destructor; no independent demo or member credit. Explicit disposal is the deterministic public workflow. |
+
+Focused674 adds one seven-control lifecycle ID and credits six members, moving temporary coverage
+1785->1791/2326 at632 demos. SOFTWARE and OPENGLES3 pass with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. Every ordinary GraphicsDevice member now has evidence;
+only the dispositioned DeviceLost and Finalize inventory entries remain. Evidence:
+`/tmp/checkpoint-674-*` and `/tmp/checkpoint-674-coverage.md`. Clear/present executed, but no pixel,
+screenshot or visual inspection was performed.
+
 ### ContentManager (including CNA extensions)
 
 | Members / behavior | Decision and evidence |

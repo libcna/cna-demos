@@ -5317,3 +5317,21 @@ vertex-shader sampling. Evidence:`/tmp/checkpoint-673-*` and
 `/tmp/checkpoint-673-coverage.md`. No drawing, screenshot or visual inspection was used. Finish
 GraphicsDevice construction, reset, present and disposal lifecycle next; disposition DeviceLost
 and CLR Finalize explicitly.
+
+## Focused674-owned-GraphicsDevice-lifecycle
+
+New `graphics.device.owned_lifecycle` closes six ordinary GraphicsDevice members in seven controls.
+A separate HiDef device starts live at256x144, clears and presents, resets to320x180 with exact
+DeviceResetting -> DeviceReset order and retains its owned texture, then clears/presents again.
+Dispose marks the device before its one Disposing event, disposes the texture once, rejects later
+Present/Reset and remains idempotent.
+
+SOFTWARE and OPENGLES3 pass7/7 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. Temporary coverage moves1785->1791/2326 at632 demos,301/329 types and155/753 fields.
+GraphicsDevice retains only DeviceLost, documented never to fire on desktop and observed zero
+through reset/disposal, plus CLR Finalize represented by C++ destruction. Neither gets artificial
+member credit. Evidence:`/tmp/checkpoint-674-*` and `/tmp/checkpoint-674-coverage.md`. Clear and
+Present executed, but no pixel, screenshot or visual inspection was performed. Audit the stock
+AlphaTestEffect, DualTextureEffect and EnvironmentMapEffect property/clone behaviors next; treat
+their protected OnApply entries as hooks reached by real pass application rather than standalone
+getter-style coverage.

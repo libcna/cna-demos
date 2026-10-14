@@ -1361,14 +1361,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused673
-projects the631-demo staged catalog to1785/2326 XNA members and155/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused674
+projects the632-demo staged catalog to1791/2326 XNA members and155/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
-generated gaps; their collection enumerators are dispositioned CLR/C# machinery. Audit
-GraphicsDevice's8 remaining generated gaps next. Add a focused separately owned device covering
-public construction, reset events/state, present, disposal event/state and post-disposal refusal.
-`Finalize` is CLR machinery and `DeviceLost` is documented never to fire on desktop, so explicitly
-disposition them rather than simulate them unless a supported real device-loss path is executed.
+generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
+ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
+machinery. Audit the stock effect family next without creating property-list demos: extend the
+existing AlphaTestEffect, DualTextureEffect and EnvironmentMapEffect rendering workflows with
+meaningful fog/color/light/clone behavior. Their protected OnApply hooks are already reached by
+real pass application and should be dispositioned as such unless a distinct subclass contract is
+needed.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1377,7 +1379,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused673 built against external `1ad225ae28`. That checkout currently
+the sibling CNA checkout; focused674 built against external `1ad225ae28`. That checkout currently
 has six externally owned documentation/FNA3D paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3011,6 +3013,21 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No drawing, screenshot or
 visual inspection was used. Sibling CNA remained external `1ad225ae28` with six dirty
 documentation/FNA3D paths; no CNA source was edited. Finish GraphicsDevice lifecycle next.
+
+Focused674 adds `graphics.device.owned_lifecycle`, a seven-control real second-device workflow. A
+HiDef device starts live at256x144, clears/presents, resets to320x180 with exact Resetting -> Reset
+event order while retaining an owned texture, then clears/presents again. Dispose marks the device
+before its one event, disposes the texture once, rejects later Present/Reset and is idempotent.
+SOFTWARE and OPENGLES3 pass7/7 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. Temporary coverage moves1785->1791/2326 at632 demos,301/329 types and155/753 fields.
+GraphicsDevice retains only dispositioned DeviceLost (documented absent on desktop and observed
+zero through reset/disposal) and CLR Finalize. Evidence:`/tmp/checkpoint-674-*` and
+`/tmp/checkpoint-674-coverage.md`. Runner SHA-256 is
+`1f711d0a146cc50cc975e7c84b97a2835217dcc2c607ee2c58004f929a53c8e3`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Clear/Present executed, but
+no pixel, screenshot or visual inspection was used. Sibling CNA remained external `1ad225ae28`
+with six dirty documentation/FNA3D paths; no CNA source was edited. Audit stock effects next.
 
 ## 15. Assumptions the next session must know
 
