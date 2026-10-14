@@ -6918,3 +6918,21 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-767-intermediate-shared-*` and `/tmp/checkpoint-767-coverage.md`. No
 rendering, screenshot or manual inspection was used. No CNA issue was found. Continue with the
 public MaxNestingDepth boundary for malformed non-shared object graphs.
+
+## Focused768-intermediate-writer-depth-guard
+
+`content.custom.intermediate_shared_resources` adds one passing control, reaching20/20. A separate
+InlineNode deliberately points to itself through an ordinary non-shared field. Namespace scanning
+terminates by identity, then serialization reaches the public writer `MaxNestingDepth` of1024 and
+throws `InvalidContentException` whose diagnostic identifies the non-shared cycle. The authored
+edge is explicitly broken after the attempt.
+
+SOFTWARE and OPENGLES3/Xvfb pass20/20 with byte-identical stdout and empty stderr; the exact
+SOFTWARE CTest passes. The warning-free incremental build uses at most three jobs; metadata remains
+636/0, known-issue demos remain41, validator/checkpoint self-tests pass5/5 and4/4, and generated
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+`MaxNestingDepth` is a CNA extension outside the XNA member inventory. Reader depth is deliberately
+not duplicated: tinyxml2's roughly500-level XML ceiling is reached before the reader's1024-level
+guard, and CNA's own hardening suite already checks malformed550-level refusal and400-level input.
+Evidence:`/tmp/checkpoint-768-intermediate-depth-*` and `/tmp/checkpoint-768-coverage.md`. No
+rendering, screenshot or manual inspection was used. No CNA issue was found.

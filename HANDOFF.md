@@ -1738,15 +1738,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-767 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-768 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values and ISSUE-088 records partial intermediate-serializer registration.
 Root-as-shared-resource identity and self-cycle behavior now match the measured XNA contract in
-`content.custom.intermediate_shared_resources`. Continue with the public `MaxNestingDepth`
-malformed-graph boundary: demonstrate a non-shared member cycle being refused at the documented
-writer guard and decide whether a focused readable-depth control adds value beyond CNA's own
-hardening test. Build with at most three compile jobs and keep focused evidence current.
+`content.custom.intermediate_shared_resources`, and a non-shared self-cycle now exercises the
+writer's public `MaxNestingDepth` refusal. Continue the IntermediateReader/Writer audit with their
+type-name and serializer-context accessors. Add controls only through a coherent custom serializer
+schema; disposition forwarding getters that add no separately observable behavior. Build with at
+most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2084,6 +2085,25 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-767-intermediate-shared-*` and `/tmp/checkpoint-767-coverage.md`. No
 rendering, screenshot or manual inspection was used. No CNA issue was found. Continue with the
 public MaxNestingDepth boundary for malformed non-shared object graphs.
+
+### Focused768 intermediate writer depth guard
+
+`content.custom.intermediate_shared_resources` adds one passing control, reaching20/20. A separate
+InlineNode deliberately points to itself through an ordinary non-shared field. Namespace scanning
+terminates by identity, then serialization reaches the public writer `MaxNestingDepth` of1024 and
+throws `InvalidContentException` whose diagnostic identifies the non-shared cycle. The authored
+edge is explicitly broken after the attempt.
+
+SOFTWARE and OPENGLES3/Xvfb pass20/20 with byte-identical stdout and empty stderr; the exact
+SOFTWARE CTest passes. The warning-free incremental build uses at most three jobs; metadata remains
+636/0, known-issue demos remain41, validator/checkpoint self-tests pass5/5 and4/4, and generated
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+`MaxNestingDepth` is a CNA extension outside the XNA member inventory. Reader depth is deliberately
+not duplicated: tinyxml2's roughly500-level XML ceiling is reached before the reader's1024-level
+guard, and CNA's own hardening suite already checks malformed550-level refusal and400-level input.
+Evidence:`/tmp/checkpoint-768-intermediate-depth-*` and `/tmp/checkpoint-768-coverage.md`. No
+rendering, screenshot or manual inspection was used. No CNA issue was found. Continue with direct
+type-name/context behavior in the custom intermediate serializer workflows.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

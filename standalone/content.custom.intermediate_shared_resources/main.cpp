@@ -10,6 +10,7 @@
 
 #include "Microsoft/Xna/Framework/Content/Pipeline/InvalidContentException.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/Serialization/Intermediate/IntermediateSerializer.hpp"
+#include "Microsoft/Xna/Framework/Content/Pipeline/Serialization/Intermediate/IntermediateWriter.hpp"
 #include "System/Object.hpp"
 #include "System/Xml/XmlReader.hpp"
 #include "System/Xml/XmlWriter.hpp"
@@ -70,6 +71,21 @@ namespace
             // The same C++ reference without SharedResource is serialized inline, twice.
             type.Field("InlineFirst", &LevelLoot::inlineFirst);
             type.Field("InlineSecond", &LevelLoot::inlineSecond);
+        }
+    };
+
+    struct InlineNode : System::Object
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.InlineNode";
+        const std::string& GetTypeName() const override
+        {
+            static const std::string name(XnaTypeName);
+            return name;
+        }
+        std::shared_ptr<InlineNode> next;
+        static void DescribeContent(ContentTypeDescriptor<InlineNode>& type)
+        {
+            type.Field("Next", &InlineNode::next);
         }
     };
 }
@@ -261,6 +277,27 @@ int main()
         }
         check(rootCycleObserved && authoredRoot.expired() && loadedRoot.expired() && loadedResource.expired(),
               "scoped unlinking releases the authored root and both loaded identities");
+
+        auto inlineCycle = std::make_shared<InlineNode>();
+        inlineCycle->next = inlineCycle;
+        bool inlineCycleRejected = false;
+        try
+        {
+            std::unique_ptr<System::Xml::XmlWriter> cycleWriter(
+                System::Xml::XmlWriter::CreateToString(settings));
+            IntermediateSerializer::Serialize<InlineNode>(*cycleWriter, inlineCycle, "");
+        }
+        catch (const InvalidContentException& error)
+        {
+            const std::string message = error.what();
+            inlineCycleRejected =
+                message.find(std::to_string(IntermediateWriter::MaxNestingDepth)) != std::string::npos &&
+                message.find("not a shared resource") != std::string::npos;
+            std::cout << "Rejected inline cycle: " << message << '\n';
+        }
+        inlineCycle->next.reset();
+        check(inlineCycleRejected,
+              "a non-shared self-cycle stops at MaxNestingDepth with an actionable refusal");
         return passed ? 0 : 1;
     }
     catch (const std::exception& error)
