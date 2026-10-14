@@ -21,6 +21,7 @@ typedef struct InputState {
     CNA_MouseState mouse;
     int frames;
     int polls_failed;
+    int global_pointer_unavailable;
 } InputState;
 
 typedef struct ClickRecord {
@@ -222,10 +223,12 @@ static void demonstrate_mouse_values(CnaDemo* demo)
         "mouse text reports position, named buttons and the vertical wheel");
 }
 
-static void demonstrate_mouse_platform(CnaDemo* demo, CNA_Handle game)
+static void demonstrate_mouse_platform(InputState* state, CNA_Handle game)
 {
+    CnaDemo* demo = state->demo;
     CNA_MouseState original;
     CNA_MouseState moved;
+    CNA_NativeWindowHandle native;
     CNA_MouseEventRegistrationHandle registration = CNA_INVALID_HANDLE;
     ClickRecord clicks = {0, -1};
     uint64_t window = 0U;
@@ -249,6 +252,7 @@ static void demonstrate_mouse_platform(CnaDemo* demo, CNA_Handle game)
     CNA_Result warp_result;
     CNA_Result warped_result;
     CNA_Result warp_restore_result = CNA_RESULT_INVALID_STATE;
+    CNA_Result native_result;
     int32_t global_x = 0;
     int32_t global_y = 0;
     int32_t warped_x = 0;
@@ -260,6 +264,8 @@ static void demonstrate_mouse_platform(CnaDemo* demo, CNA_Handle game)
     memset(&moved, 0, sizeof(moved));
     moved.struct_size = (uint32_t)sizeof(moved);
     moved.struct_version = UINT32_C(1);
+    (void)cna_native_window_handle_init(&native);
+    native_result = cna_game_window_get_native_window_ext(game, &native);
 
     cna_demo_check(
         demo,
@@ -323,13 +329,24 @@ static void demonstrate_mouse_platform(CnaDemo* demo, CNA_Handle game)
     if (global_result == CNA_RESULT_SUCCESS && warp_applied == CNA_TRUE) {
         warp_restore_result = cna_mouse_warp_global_ext(game, global_x, global_y, &restore_applied);
     }
-    cna_demo_check(
-        demo,
+    if (native_result == CNA_RESULT_SUCCESS &&
+        (native.system == CNA_NATIVE_WINDOW_SYSTEM_UNKNOWN ||
+         native.system == CNA_NATIVE_WINDOW_SYSTEM_HEADLESS ||
+         native.system == CNA_NATIVE_WINDOW_SYSTEM_TERMINAL) &&
         global_result == CNA_RESULT_SUCCESS && warp_result == CNA_RESULT_SUCCESS &&
-            warped_result == CNA_RESULT_SUCCESS && warp_applied == CNA_TRUE &&
-            warped_x == 17 && warped_y == 19 && warp_restore_result == CNA_RESULT_SUCCESS &&
-            restore_applied == CNA_TRUE,
-        "a global warp is observable and the original desktop position is restored");
+        warped_result == CNA_RESULT_SUCCESS &&
+        (warp_applied == CNA_FALSE || warped_x != 17 || warped_y != 19)) {
+        state->global_pointer_unavailable = 1;
+        printf("  global pointer warp unavailable: this environment has no desktop pointer\n");
+    } else {
+        cna_demo_check(
+            demo,
+            global_result == CNA_RESULT_SUCCESS && warp_result == CNA_RESULT_SUCCESS &&
+                warped_result == CNA_RESULT_SUCCESS && warp_applied == CNA_TRUE &&
+                warped_x == 17 && warped_y == 19 && warp_restore_result == CNA_RESULT_SUCCESS &&
+                restore_applied == CNA_TRUE,
+            "a global warp is observable and the original desktop position is restored");
+    }
 
     cna_demo_check(
         demo,
@@ -450,7 +467,7 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     }
     if (result == CNA_RESULT_SUCCESS) {
         demonstrate_keyboard_platform(state->demo, game);
-        demonstrate_mouse_platform(state->demo, game);
+        demonstrate_mouse_platform(state, game);
         demonstrate_mouse_cursors(state, game);
     }
     if (result == CNA_RESULT_SUCCESS) {
@@ -630,5 +647,8 @@ int main(int argc, char** argv)
     }
     cna_demo_check_result(&demo, cna_graphics_device_manager_destroy(manager), "cna_graphics_device_manager_destroy");
     cna_demo_check_result(&demo, cna_game_destroy(game), "cna_game_destroy");
+    if (state.global_pointer_unavailable && demo.failures == 0) {
+        return cna_demo_skip("no desktop pointer is available for the global-warp control");
+    }
     return cna_demo_finish(&demo);
 }

@@ -3881,6 +3881,17 @@ No physical microphone, live sample, BufferReady delivery, listening test or rec
 result is claimed. Consolidate the remaining Audio, Media, Net and platform-dependent member
 dispositions before the next full checkpoint.
 
+The first SOFTWARE complete-checkpoint attempt found one demo/environment defect rather than a CNA
+defect: `c_api.input.keyboard_mouse` treated an unavailable desktop-global pointer warp as a failed
+control even though the metadata declares that requirement. The C demo now recognizes an
+unobservable global warp only on a windowless native system and returns the standard skip code
+after completing safe cleanup. A no-display SOFTWARE run skips; the same binary passes all40
+controls under X11/Xvfb, including the observable warp and restoration. Metadata validation, the
+five validator self-tests and the focused X11/Xvfb CTest pass. The original632-demo SOFTWARE run
+otherwise contained exactly36 expected failures and no unexpected pass. Repeat the complete
+SOFTWARE report with this fix, then run the complete OPENGLES3 checkpoint and publish the
+consolidated remaining-member dispositions.
+
 ## 15. Assumptions the next session must know
 
 * Current workspace: `/rv/data/development/github.com/libcna/cna-demos`; CNA and the other

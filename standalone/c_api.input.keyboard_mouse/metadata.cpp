@@ -32,5 +32,5 @@ CNA_DEMOS_STANDALONE({
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::Keyboard | CnaDemos::Need::Mouse | CnaDemos::Need::Window,
     .frames = 30,
     .restrictions = "Standalone C program (one C game per process); built only when CNA has its C API "
-                    "(CNA_BUILD_C_API=ON).",
+                    "(CNA_BUILD_C_API=ON). The global-pointer control skips when no desktop pointer is available.",
 })
