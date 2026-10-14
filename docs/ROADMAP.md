@@ -6177,3 +6177,18 @@ all five validator self-tests pass and coverage remains302/329 types,2114/2326 n
 167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-725-texture2d-rejections-*`. No
 screenshot or manual visual inspection was performed. Audit the remaining FromStream container and
 malformed-input behavior next before leaving the Texture2D family.
+
+## Focused726-Texture2D-classic-stream-boundaries
+
+The existing `graphics.texture2d.from_stream` grows from4 to6 controls. An in-memory 2x2 palette
+GIF now proves exact transparent and opaque RGBA decoding for the third public classic container,
+while a recognized but truncated GIF is rejected with InvalidOperationException. The existing PNG
+original/fit/center-crop paths remain unchanged; `save_as_image` retains the PNG/JPEG round trips
+and `dds_stream` retains the explicit DDS extension boundary.
+
+SOFTWARE and OPENGLES3/X11 pass6/6, and the exact SOFTWARE CTest passes. Metadata remains634/0,
+all five validator self-tests pass and coverage remains302/329 types,2114/2326 non-field members,
+167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-726-from-stream-*`. Pixel validation
+used public GetData; no screenshot or manual visual inspection was performed. Continue the deeper
+behavior audit with the SpriteBatch rectangle/tint workflows whose existing smoke success does not
+yet prove their rendered pixel contracts.

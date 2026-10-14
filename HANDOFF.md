@@ -203,6 +203,16 @@ self-tests pass. Coverage remains302/329 types,2114/2326 non-field members,167/7
 2999/3205 C routes. Evidence:`/tmp/checkpoint-725-texture2d-rejections-*`. No screenshot or manual
 visual inspection was performed.
 
+Focused **726-Texture2D-classic-stream-boundaries** extends
+`graphics.texture2d.from_stream` from4 to6 controls. A 2x2 palette GIF decodes to its exact
+transparent and opaque RGBA texels, and a recognized but truncated GIF is refused with
+InvalidOperationException. Together with the retained PNG behavior and `save_as_image` JPEG round
+trip, all three classic FromStream containers now have executed evidence. SOFTWARE and
+OPENGLES3/X11 pass6/6, the exact SOFTWARE CTest passes, metadata remains634/0 and all five validator
+self-tests pass. Coverage remains302/329 types,2114/2326 non-field members,167/753 fields and
+2999/3205 C routes. Evidence:`/tmp/checkpoint-726-from-stream-*`. Pixel validation used public
+GetData; no screenshot or manual visual inspection was performed.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1466,14 +1476,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725 is staged
-after it. Audit `Texture2D::FromStream` container and malformed-input behavior against the current
-`graphics.texture2d.from_stream`, `save_as_image` and DDS demos. Extend an existing ID only for a
-distinct public contract such as deterministic malformed/truncated refusal or a genuinely supported
-classic container; do not duplicate resize/crop or image round-trip evidence. Run both primary
-renderers and the exact CTest, update coverage/status docs, and push. If the audit yields only
-decoder permutations without a useful user-facing distinction, record that disposition and move to
-the next behavior family.
+HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-726 are
+staged after it. Audit the existing SpriteBatch rectangle/tint workflows identified in
+`docs/COVERAGE_AUDIT.md`: select the smallest coherent source/destination/tint behavior whose smoke
+success currently lacks pixel evidence, add framebuffer checks without turning every overload into
+a separate test, run both primary renderers plus the exact CTest, update status docs and push. Keep
+animated/time-dependent cases out of fixed-frame assertions. If the selected demo exposes a real
+renderer difference, distinguish the demo expectation from a CNA defect before documenting it.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
