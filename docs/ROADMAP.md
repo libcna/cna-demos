@@ -307,7 +307,9 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ Existing cache/Unload demo now shows root switching after Unload and exposes CNA's missing
   loaded-root guard (ISSUE-039). ✅ `content.custom.intermediate_serializer`: a separate build-time
   tool with named/optional/ignored fields, collection item names, absent/present/null distinctions,
-  XML round trip and rejection of missing required or injected ignored fields.
+  XML round trip and rejection of missing required or injected ignored fields. Sixteen child
+  checks also prove reusable Format preserves implicit member names and an omitted empty Optional
+  collection leaves the reader object's nonempty constructor default intact.
   ✅ `content.custom.intermediate_shared_resources`: shared aliases, equal-but-distinct objects,
   inline copies and mutation after forward reference fixups; null tables and rejected missing,
   duplicate or incompatible resource references.
@@ -341,8 +343,8 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `content.xnb.external_references`: sibling loose image/compiled label, null and unsafe/missing
   paths, typed/erased owner caches and actual shared-image rendering (11 checks per renderer).
 - ✅ Existing intermediate XML tools now cover a two-resource cycle, explicit shared_ptr unlinking
-  and verified release (16 child checks), plus AllowNull(false) on both read and write with an
-  authored value distinct from its constructor default (11 child checks). Both tools run without
+  and verified release (16 child checks), plus AllowNull(false) on both read and write, implicit
+  format naming and optional empty-collection defaults (16 child checks). Both tools run without
   a display under both renderer selections.
 - ✅ `content.custom.intermediate_polymorphism`: explicit concrete serializer registration, an
   abstract-base list, inherited/derived values, emitted Type attributes and nulls, plus refusal
@@ -6855,3 +6857,22 @@ types,2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence
 screenshot or manual inspection was used. No new CNA issue was found. Direct in-memory environment
 propagation is covered; the compiler host's own scratch-directory policy is not inferred. Continue
 the intermediate serializer with implicit format naming and optional empty-collection semantics.
+
+## Focused765-intermediate-format-name-and-empty-optional-collection
+
+`content.custom.intermediate_serializer` adds two controls, reaching16/16. One reusable
+ContentSerializerAttribute deliberately sets Optional without ElementName and is applied to two
+integer collections. The populated Patrol emits under its own described member name and round
+trips, proving Format preserves each binding's implicit name. Empty Reinforcements is omitted;
+deserialization leaves its nonempty constructor default `{9}` intact rather than replacing it with
+an empty vector. The established scalar optional/null, required, ignored, renamed and custom item-
+name controls remain passing.
+
+SOFTWARE and OPENGLES3/Xvfb both pass all16 child labels; a direct child run has empty stderr, and
+the exact SOFTWARE CTest passes. The warning-free incremental build uses at most three jobs; metadata
+remains636/0, known-issue demos remain40, validator/checkpoint self-tests pass5/5 and4/4, and
+generated coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C
+routes. Evidence:`/tmp/checkpoint-765-intermediate-serializer-*` and
+`/tmp/checkpoint-765-coverage.md`. No rendering, screenshot or manual inspection was used. No CNA
+issue was found. Audit collection-level CollectionItemName inheritance/override behavior in the
+existing intermediate-properties workflow next.

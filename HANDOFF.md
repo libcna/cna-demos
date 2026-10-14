@@ -1738,15 +1738,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-764 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-765 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation, with new ISSUE-087 for
 omitted disposable shared-table values. Continue the intermediate XML member/behavior audit in
-`content.custom.intermediate_serializer`: test the implicit member-name fallback when a reusable
-format omits ElementName and the meaningful optional-empty-collection/default distinction. Then
-audit collection-level defaults/inheritance in `intermediate_properties` if the public source
-contract supports a concise coherent addition. Build with at most three compile jobs and keep
-focused evidence current.
+`content.custom.intermediate_properties`: audit collection-level CollectionItemName inheritance
+and override behavior. Add it only if the public descriptor/serializer path produces an observable
+round trip beyond the existing member-level Drop naming; otherwise disposition it and move to the
+next meaningful serializer gap. Build with at most three compile jobs and keep focused evidence
+current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2026,6 +2026,24 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-764-xna-environment-*` a
 new CNA issue was found. Direct in-memory environment propagation is covered; the compiler host's
 own scratch-directory policy is not inferred. Continue `content.custom.intermediate_serializer`
 with implicit format naming and optional empty-collection semantics.
+
+### Focused765 intermediate format-name and empty Optional collection
+
+`content.custom.intermediate_serializer` adds two controls, reaching16/16. One reusable
+ContentSerializerAttribute deliberately sets Optional without ElementName and is applied to two
+integer collections. The populated Patrol emits under its own described member name and round
+trips, proving Format preserves each binding's implicit name. Empty Reinforcements is omitted;
+deserialization leaves its nonempty constructor default `{9}` intact rather than replacing it with
+an empty vector. The established scalar optional/null, required, ignored, renamed and custom item-
+name controls remain passing.
+
+SOFTWARE and OPENGLES3/Xvfb both pass all16 child labels; a direct child run has empty stderr, and
+the exact SOFTWARE CTest passes. The warning-free incremental build uses `-j3`; metadata remains636/0,
+known-issue demos remain40, tool self-tests pass5/5 and4/4, and generated coverage remains302/329
+types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-765-intermediate-serializer-*` and `/tmp/checkpoint-765-coverage.md`. No rendering,
+screenshot or manual inspection was used, and no CNA issue was found. Audit collection-level
+CollectionItemName inheritance/override behavior in `content.custom.intermediate_properties` next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

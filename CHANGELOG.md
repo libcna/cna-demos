@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended intermediate XML serialization with reusable format-name fallback and optional empty
+  collection omission while preserving the reader object's nonempty constructor default.
 - Extended the XNA component-adapter workflow with target-platform and build-configuration
   propagation plus real intermediate-directory scratch use across importer, processor and writer.
 - Extended the native pipeline example with deterministic importer, processor and writer

@@ -6,7 +6,8 @@ CNA_DEMOS_STANDALONE({
     .title = "Describe an intermediate XML asset",
     .description = "Uses public content descriptors and ContentSerializerAttribute to serialize a game-owned "
                    "encounter with renamed, optional, collection and ignored fields. Distinguishes absent, "
-                   "present and explicit-null hints, refuses a null required objective on read/write, and rejects missing or ignored fields.",
+                   "present and explicit-null hints, preserves implicit member names and optional collection "
+                   "defaults, refuses a null required objective on read/write, and rejects missing or ignored fields.",
     .apis = {"ContentSerializerAttribute::ContentSerializerAttribute", "ContentSerializerAttribute::AllowNull",
              "ContentSerializerAttribute::Clone", "ContentSerializerAttribute::CollectionItemName",
              "ContentSerializerAttribute::ElementName", "ContentSerializerAttribute::FlattenContent",

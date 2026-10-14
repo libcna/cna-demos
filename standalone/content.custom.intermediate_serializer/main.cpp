@@ -37,6 +37,8 @@ namespace
         std::optional<std::string> objective = "Open the gate";
         std::optional<std::string> hint = "Look for the key";
         std::vector<std::string> loot;
+        std::vector<std::int32_t> patrol = {1};
+        std::vector<std::int32_t> reinforcements = {9};
         std::int32_t runtimeScore = 0;
 
         static void DescribeContent(ContentTypeDescriptor<Encounter>& type)
@@ -50,6 +52,11 @@ namespace
             type.Field("Objective", &Encounter::objective).AllowNull(false);
             type.Field("Hint", &Encounter::hint).Optional();
             type.Field("Loot", &Encounter::loot).CollectionItemName("Drop");
+            // Reuse one format with no ElementName: each binding must retain its own field name.
+            ContentSerializerAttribute optionalCollection;
+            optionalCollection.setOptionalProperty(true);
+            type.Field("Patrol", &Encounter::patrol).Format(optionalCollection);
+            type.Field("Reinforcements", &Encounter::reinforcements).Format(optionalCollection);
             type.Field("RuntimeScore", &Encounter::runtimeScore).Ignore();
         }
     };
@@ -96,6 +103,8 @@ int main()
         authored->objective = "Recover the key";
         authored->hint.reset(); // omitted Optional restores the reader constructor default
         authored->loot = {"Coin", "Key"};
+        authored->patrol = {3, 5};
+        authored->reinforcements.clear();
         authored->runtimeScore = 1234; // runtime-only state must never enter the source asset
 
         System::Xml::XmlWriterSettings settings;
@@ -109,16 +118,21 @@ int main()
               xml.find("<Health>") == std::string::npos, "the format attribute renames Health to HitPoints");
         check(xml.find("<Drop>Coin</Drop>") != std::string::npos,
               "the collection uses the authored item name Drop");
+        check(xml.find("<Patrol>3 5</Patrol>") != std::string::npos,
+              "a reusable format without ElementName retains the described member name");
+        check(xml.find("<Reinforcements") == std::string::npos,
+              "an empty Optional collection is omitted from the XML");
         check(xml.find("<Hint") == std::string::npos && xml.find("RuntimeScore") == std::string::npos,
               "absent optional and ignored fields are omitted from the XML");
 
         std::unique_ptr<System::Xml::XmlReader> reader(System::Xml::XmlReader::CreateFromString(xml));
         const auto loaded = IntermediateSerializer::Deserialize<Encounter>(*reader, "");
         check(loaded && loaded->name == "Gatekeeper" && loaded->health == 90 && loaded->loot == authored->loot &&
-              loaded->objective == "Recover the key",
+              loaded->patrol == authored->patrol && loaded->objective == "Recover the key",
               "the authored encounter values round trip through intermediate XML");
-        check(loaded && loaded->hint == "Look for the key" && loaded->runtimeScore == 0,
-              "absent Optional keeps its constructor default and ignored runtime state is not copied");
+        check(loaded && loaded->hint == "Look for the key" && loaded->reinforcements == std::vector<std::int32_t>{9} &&
+                  loaded->runtimeScore == 0,
+              "absent Optional values keep scalar and collection constructor defaults while ignored state is not copied");
 
         // Absence means keep the default; an explicit Null means clear it. A present value wins.
         const auto lootStart = xml.find("<Loot>");
