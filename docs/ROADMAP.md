@@ -7183,3 +7183,20 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-781-media-transport-*` and `/tmp/checkpoint-781-coverage.md`. No acoustic
 quality, exact callback-latency, screenshot or manual inspection is claimed. Audit the exact
 deferred ActiveSongChanged/MediaStateChanged order, coalescing and listener removal next.
+
+## Focused782-MediaPlayer-deferred-event-contract
+
+The same `media.media_player.dispatcher_events` retains its seven prior controls and adds two while
+strengthening two aggregate assertions. Play's first pump delivers ActiveSongChanged before
+MediaStateChanged; Pause followed by Resume before a pump stays deferred and coalesces into one
+Playing notification. Separately pumped transport, replay and natural end produce the exact ten-row
+sequence. Every callback receives null sender plus the canonical `EventArgs::Empty`, and after both
+tokens are removed a later Play/Stop pair adds no event.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass9/9 controls with byte-identical stdout and empty stderr;
+the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three jobs;
+metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage
+remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-782-media-events-*` and `/tmp/checkpoint-782-coverage.md`. No acoustic
+quality, callback-thread or callback-mutation claim is made. Exercise automatic two-song queue
+advancement and the nonrepeating final-entry stop next.

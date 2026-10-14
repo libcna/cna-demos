@@ -24,14 +24,19 @@ namespace
     void DispatcherEvents(CnaDemos::DemoContext& ctx)
     {
         std::vector<std::string> events;
-        const auto stateToken = MediaPlayer::MediaStateChanged.Add([&events](System::Object*, const System::EventArgs&) {
+        bool canonicalEventPayloads = true;
+        const auto stateToken = MediaPlayer::MediaStateChanged.Add([&](System::Object* sender, const System::EventArgs& args) {
+            canonicalEventPayloads = canonicalEventPayloads && sender == nullptr && &args == &System::EventArgs::Empty;
             events.push_back(std::string("MediaStateChanged: ") +
                              (MediaPlayer::getStateProperty() == MediaState::Playing ? "Playing"
                               : MediaPlayer::getStateProperty() == MediaState::Paused ? "Paused"
                                                                                        : "Stopped"));
         });
         const auto songToken = MediaPlayer::ActiveSongChanged.Add(
-            [&events](System::Object*, const System::EventArgs&) { events.push_back("ActiveSongChanged"); });
+            [&](System::Object* sender, const System::EventArgs& args) {
+                canonicalEventPayloads = canonicalEventPayloads && sender == nullptr && &args == &System::EventArgs::Empty;
+                events.push_back("ActiveSongChanged");
+            });
 
         const std::unique_ptr<Song> song(Song::FromUri("Falling", TitleLocation::Path() + "/assets/music/falling.wav"));
         MediaPlayer::Play(song.get());
@@ -41,7 +46,17 @@ namespace
         ctx.Check(events.empty(), "no event has been raised yet: they wait for FrameworkDispatcher::Update");
         FrameworkDispatcher::Update();
         const std::size_t afterPlay = events.size();
-        ctx.Check(afterPlay >= 1, "FrameworkDispatcher::Update raises the events of Play");
+        ctx.Check(events == std::vector<std::string>{"ActiveSongChanged", "MediaStateChanged: Playing"} &&
+                      canonicalEventPayloads,
+                  "Play dispatches ActiveSongChanged before MediaStateChanged with canonical event payloads");
+
+        MediaPlayer::Pause();
+        MediaPlayer::Resume();
+        const bool coalescedChangesStayedDeferred = events.size() == afterPlay;
+        FrameworkDispatcher::Update();
+        ctx.Check(coalescedChangesStayedDeferred && events.size() == afterPlay + 1 &&
+                      events.back() == "MediaStateChanged: Playing",
+                  "state changes before one dispatcher update coalesce into one current-state notification");
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         MediaPlayer::Pause();
@@ -77,19 +92,39 @@ namespace
         for (const std::string& event : events)
             ctx.Print("{}", event);
         ctx.Check(MediaPlayer::getStateProperty() == MediaState::Stopped, "the song played to its end");
-        ctx.Check(events.size() >= afterPlay + 3, "Pause, Resume and the end each raised MediaStateChanged");
+        const std::vector<std::string> expectedEvents{
+            "ActiveSongChanged",
+            "MediaStateChanged: Playing",
+            "MediaStateChanged: Playing",
+            "MediaStateChanged: Paused",
+            "MediaStateChanged: Playing",
+            "MediaStateChanged: Stopped",
+            "ActiveSongChanged",
+            "MediaStateChanged: Playing",
+            "ActiveSongChanged",
+            "MediaStateChanged: Stopped",
+        };
+        ctx.Check(events == expectedEvents && canonicalEventPayloads,
+                  "deferred transport events preserve their exact active-song-before-state order");
 
         MediaPlayer::MediaStateChanged.Remove(stateToken);
         MediaPlayer::ActiveSongChanged.Remove(songToken);
+        const std::size_t afterRemoval = events.size();
+        MediaPlayer::Play(song.get());
+        FrameworkDispatcher::Update();
+        MediaPlayer::Stop();
+        FrameworkDispatcher::Update();
+        ctx.Check(events.size() == afterRemoval,
+                  "removed event listeners receive neither later Play nor Stop notifications");
     }
 }
 
 CNA_DEMOS_CONSOLE(DispatcherEvents, {
     .id = "media.media_player.dispatcher_events",
     .title = "MediaPlayer events without a Game",
-    .description = "Plays, pauses and resumes a song from a console program and shows that MediaStateChanged and "
-                   "ActiveSongChanged are raised only by FrameworkDispatcher::Update, while PlayPosition freezes, "
-                   "resumes and resets with the transport.",
+    .description = "Plays, pauses and resumes a song from a console program and shows deferred MediaStateChanged and "
+                   "ActiveSongChanged ordering, coalescing and removal, while PlayPosition freezes, resumes and resets "
+                   "with the transport.",
     .apis = {"FrameworkDispatcher::Update", "MediaPlayer::MediaStateChanged", "MediaPlayer::ActiveSongChanged",
              "MediaPlayer::Pause", "MediaPlayer::Resume", "MediaPlayer::Stop", "MediaPlayer::Play",
              "MediaPlayer::PlayPosition", "MediaPlayer::State", "Song::FromUri"},

@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-781 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-782 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1761,8 +1761,9 @@ empty ContentTypeWriterAttribute is dispositioned as a registration marker. Cont
 MediaPlayer collection overloads now cover the default zero start, live queue replacement and a
 nonzero start whose queue-owned copies outlive caller objects. Bounded shuffled traversal now proves
 queue index/identity/state consistency without assuming a random order; Pause freezes PlayPosition,
-Resume advances it and Stop resets it. Audit exact deferred event ordering/coalescing and listener
-removal next without duplicating the completed C route coverage. Do not add
+Resume advances it and Stop resets it. Deferred media events now cover exact active-before-state
+ordering, pre-pump state coalescing, canonical payloads and listener removal. Exercise automatic
+two-song advancement and nonrepeating final stop next. Do not add
 isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
@@ -2367,6 +2368,23 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-781-media-transport-*` and `/tmp/checkpoint-781-coverage.md`. No acoustic
 quality, exact callback-latency, screenshot or manual inspection is claimed. Audit the exact
 deferred ActiveSongChanged/MediaStateChanged order, coalescing and listener removal next.
+
+### Focused782-MediaPlayer-deferred-event-contract
+
+The same `media.media_player.dispatcher_events` retains its seven prior controls and adds two while
+strengthening two aggregate assertions. Play's first pump delivers ActiveSongChanged before
+MediaStateChanged; Pause followed by Resume before a pump stays deferred and coalesces into one
+Playing notification. Separately pumped transport, replay and natural end produce the exact ten-row
+sequence. Every callback receives null sender plus the canonical `EventArgs::Empty`, and after both
+tokens are removed a later Play/Stop pair adds no event.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass9/9 controls with byte-identical stdout and empty stderr;
+the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three jobs;
+metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage
+remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-782-media-events-*` and `/tmp/checkpoint-782-coverage.md`. No acoustic
+quality, callback-thread or callback-mutation claim is made. Exercise automatic two-song queue
+advancement and the nonrepeating final-entry stop next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

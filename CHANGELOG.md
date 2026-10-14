@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Deepened MediaPlayer event coverage with exact deferred active-song/state ordering, pre-pump
+  state coalescing, canonical sender/arguments and verified listener removal.
 - Extended the deferred MediaPlayer transport workflow with measured paused-position stability,
   resumed progress and exact Stop reset before replaying through the existing natural-end path.
 - Exercised actual shuffled MediaPlayer traversal with a bounded sequence that verifies every
