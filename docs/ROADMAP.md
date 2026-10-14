@@ -7559,3 +7559,20 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-804-audio-parent-moves-*` and `/tmp/checkpoint-804-coverage.md`. These are
 C++ ownership/state observations; no audible output or genuine-XNA runtime execution is claimed.
 Continue with XACT AudioEngine construction/refusal boundaries.
+
+## Focused805-XACT-AudioEngine-construction-boundaries
+
+`audio.xact.renderer_details` grows from six to ten controls. It distinguishes empty, missing and
+existing invalid settings inputs through ArgumentNullException, FileNotFoundException and
+InvalidOperationException respectively. A separate engine accepts a nonzero look-ahead and an
+unknown renderer ID through CNA's documented single-backend fallback, while the existing renderer
+record/equality/copy and selected-renderer playback checks remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass10/10 with byte-identical stdout. Both stderr
+files contain the same one-line parse diagnostic from the deliberately invalid settings probe. The
+warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-805-xact-engine-construction-*` and `/tmp/checkpoint-805-coverage.md`.
+This establishes construction contracts and CNA's fallback, not hardware renderer selection or
+audible output. Continue with AudioEngine post-dispose method/property behavior.

@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-804 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-805 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1793,9 +1793,11 @@ destruction and empty/non-audio/truncated NotSupported refusals. The authored-lo
 covers its exact-end acceptance plus past-end, negative-start and negative-length refusals. Audit
 SoundEffect parent move construction/assignment now cover active-child registry transfer, target
 cascade and the replaced wrapper's non-disposing lifetime. The core SoundEffect behavior audit is
-closed aside from explicitly unclaimed acoustic and broader-codec behavior. Continue with XACT
-AudioEngine construction/refusal boundaries, then the remaining XACT behavior rows. Do not add
-isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
+closed aside from explicitly unclaimed acoustic and broader-codec behavior. XACT AudioEngine
+construction/refusal boundaries and CNA's arbitrary-renderer fallback are now covered in the
+existing renderer workflow. Continue with AudioEngine post-dispose method/property behavior, then
+the remaining XACT behavior rows. Do not add isolated getter demos. Build with at most three
+compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2751,6 +2753,21 @@ stderr. The warning-free incremental build uses at most three jobs; metadata and
 unchanged. Evidence:`/tmp/checkpoint-804-audio-parent-moves-*`. These are C++ ownership/state
 observations; no audible output or genuine-XNA runtime execution is claimed. Continue with XACT
 AudioEngine construction/refusal boundaries.
+
+### Focused805-XACT-AudioEngine-construction-boundaries
+
+`audio.xact.renderer_details` grows from six to ten controls. It distinguishes empty, missing and
+existing invalid settings inputs through ArgumentNullException, FileNotFoundException and
+InvalidOperationException respectively. A separate engine accepts a nonzero look-ahead and an
+unknown renderer ID through CNA's documented single-backend fallback, while the existing renderer
+record/equality/copy and selected-renderer playback checks remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass10/10 with byte-identical stdout. Both stderr
+files contain the same one-line parse diagnostic from the deliberately invalid settings probe. The
+warning-free incremental build uses at most three jobs; metadata and coverage remain unchanged.
+Evidence:`/tmp/checkpoint-805-xact-engine-construction-*`. This establishes construction contracts
+and CNA's fallback, not hardware renderer selection or audible output. Continue with AudioEngine
+post-dispose method/property behavior.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

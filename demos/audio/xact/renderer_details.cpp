@@ -6,10 +6,14 @@
 #include <thread>
 
 #include "CnaDemos/Demo.hpp"
+#include "Microsoft/Xna/Framework/Audio/AudioCategory.hpp"
 #include "Microsoft/Xna/Framework/Audio/AudioEngine.hpp"
 #include "Microsoft/Xna/Framework/Audio/RendererDetail.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
+#include "System/ArgumentNullException.hpp"
+#include "System/InvalidOperationException.hpp"
+#include "System/IO/FileNotFoundException.hpp"
 #include "System/TimeSpan.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
@@ -18,6 +22,19 @@ namespace
 {
     void RendererDetails(CnaDemos::DemoContext& ctx)
     {
+        bool emptySettingsRefused = false;
+        bool missingSettingsRefused = false;
+        bool corruptSettingsRefused = false;
+        try { AudioEngine unexpected(""); }
+        catch (const System::ArgumentNullException&) { emptySettingsRefused = true; }
+        try { AudioEngine unexpected("assets/xact/missing.xgs"); }
+        catch (const System::IO::FileNotFoundException&) { missingSettingsRefused = true; }
+        try { AudioEngine unexpected("assets/xact/tones.xwb"); }
+        catch (const System::InvalidOperationException&) { corruptSettingsRefused = true; }
+        ctx.Check(emptySettingsRefused, "an empty settings path is an ArgumentNullException");
+        ctx.Check(missingSettingsRefused, "a missing settings file is a FileNotFoundException");
+        ctx.Check(corruptSettingsRefused, "an existing non-XGS file is an InvalidOperationException");
+
         // An engine lists the outputs; a game shows the friendly names and remembers the id.
         AudioEngine probe("assets/xact/demo.xgs");
         const auto& details = probe.getRendererDetailsProperty();
@@ -45,6 +62,11 @@ namespace
         ctx.Check(selected.getFriendlyNameProperty() == friendly && selected.getRendererIdProperty() == chosen,
                   "the copied renderer record remains valid after its discovery engine is disposed");
 
+        AudioEngine fallback("assets/xact/demo.xgs", System::TimeSpan::FromMilliseconds(500),
+                             "renderer-that-does-not-exist");
+        ctx.Check(!fallback.getIsDisposedProperty() && fallback.GetCategory("SFX").getNameProperty() == "SFX",
+                  "CNA accepts an arbitrary renderer id and look-ahead through its single-backend fallback");
+
         // The engine for the game, created for the chosen renderer (look-ahead 250 ms).
         AudioEngine engine("assets/xact/demo.xgs", System::TimeSpan::FromMilliseconds(250), chosen);
         WaveBank waves(&engine, "assets/xact/tones.xwb");
@@ -63,9 +85,8 @@ namespace
 CNA_DEMOS_CONSOLE(RendererDetails, {
     .id = "audio.xact.renderer_details",
     .title = "Audio renderers",
-    .description = "Lists AudioEngine::RendererDetails (friendly name and id of each audio output) and creates the "
-                   "game's AudioEngine for the chosen renderer with the look-ahead/renderer constructor, then plays "
-                   "a cue on it.",
+    .description = "Checks AudioEngine settings-file failures, lists RendererDetails (friendly name and id of each "
+                   "output), exercises CNA's arbitrary-renderer fallback, and plays through the selected renderer.",
     .apis = {"AudioEngine::RendererDetails", "RendererDetail::FriendlyName", "RendererDetail::RendererId",
              "RendererDetail::Equals", "RendererDetail::GetHashCode", "RendererDetail::op_Equality",
              "RendererDetail::op_Inequality", "RendererDetail::ToString", "RendererDetail",
