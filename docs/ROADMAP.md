@@ -6131,3 +6131,19 @@ move158->161/753 through `SurfaceFormat::HalfSingle`, `HalfVector2` and `HalfVec
 `/tmp/checkpoint-722-half-formats-*`. Pixel readback was programmatic; no screenshot or manual
 visual inspection was performed. Audit the normalized integer Texture2D formats next and add only
 a coherent storage/sampling concept that differs meaningfully from this floating-point behavior.
+
+## Focused723-Texture2D-normalized-integer-formats
+
+New `graphics.texture2d.normalized_formats` covers the six remaining classic normalized integer
+layouts as one storage-and-sampling concept. Exact packed values round-trip through
+NormalizedByte2/4, Rgba1010102, Rg32, Rgba64 and Alpha8 textures. Real point sampling then proves
+negative signed channels clamp only at Color output, missing channels expand according to the
+declared layout, Rgba1010102's alpha has only four levels and Alpha8 supplies zero RGB.
+
+SOFTWARE and OPENGLES3/X11 each pass10/10; the only byte difference is expected signed-alpha
+halfway rounding at129 versus128, within tolerance2. The exact SOFTWARE CTest passes, metadata is
+634/0 and all five validator self-tests pass. Temporary coverage is634 demos,302/329 types,
+2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-723-normalized-formats-*`. Pixel readback was programmatic; no screenshot or
+manual visual inspection was performed. Run a complete full checkpoint next so both runtime
+reports absorb the two Texture2D IDs added after Complete719.

@@ -66,13 +66,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-633 project-built catalog demos in18 categories: math78, game33, graphics167, audio23, core3,
+634 project-built catalog demos in18 categories: math78, game33, graphics168, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api172. Kinds are162 console,277 game and194 standalone;
-597 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api172. Kinds are162 console,278 game and194 standalone;
+598 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md retains the complete719 runtime baseline at632 demos and
-302/329 XNA types,2114/2326 XNA members,157/753 fields and2999/3205 public C ABI routes. Focused722
-projects the staged633-demo catalog to the same type/member/C totals and161/753 fields. Selected semantic totals are `input_gamepad.h`61/63,
+302/329 XNA types,2114/2326 XNA members,157/753 fields and2999/3205 public C ABI routes. Focused723
+projects the staged634-demo catalog to the same type/member/C totals and167/753 fields. Selected semantic totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
@@ -178,6 +178,16 @@ coverage remains302/329 types,2114/2326 non-field members and2999/3205 C routes;
 158->161/753 through the three half-float SurfaceFormat values. Evidence:
 `/tmp/checkpoint-722-half-formats-*`. Pixel readback was programmatic; no screenshot or manual
 visual inspection was performed.
+
+Focused **723-Texture2D-normalized-integer-formats** adds the634th catalog ID,
+`graphics.texture2d.normalized_formats`. All six remaining classic normalized layouts round-trip
+exact packed values and actual sampling distinguishes signed clamping, missing-channel expansion,
+Rgba1010102's two-bit alpha, wide UNorm channels and Alpha8's zero RGB. SOFTWARE and OPENGLES3/X11
+pass10/10; their only byte difference is expected signed-alpha halfway rounding at129 versus128,
+within tolerance2. The exact SOFTWARE CTest, metadata634/0 and all five validator self-tests pass.
+Temporary coverage is302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C
+routes. Evidence:`/tmp/checkpoint-723-normalized-formats-*`. Pixel readback was programmatic; no
+screenshot or manual visual inspection was performed.
 
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
@@ -1443,14 +1453,12 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete719 is the current full-build/runtime baseline; focused720 through
-focused722 are staged after it. Audit the normalized integer Texture2D formats
-(`NormalizedByte2`, `NormalizedByte4`, `Rgba1010102`, `Rg32`, `Rgba64` and `Alpha8`) against the
-existing packed-vector and surface-format demos. Add a focused storage/sampling workflow only where
-the channel interpretation or precision behavior is materially distinct; otherwise record the
-semantic disposition rather than multiplying format-gallery demos. Build and run both primary
-renderers plus the exact CTest for any change, update the temporary coverage projection and status
-docs, and push. A complete full smoke checkpoint is required after the next group of staged
-behavior batches, because Complete719 reports do not contain the new633rd ID.
+focused723 are staged after it. Run the complete documented build and `tools/validate.sh` checkpoint
+against the current clean sibling CNA source so both renderer reports absorb the new floating and
+normalized Texture2D IDs. Archive the complete results, regenerate `docs/COVERAGE.md`, compare all
+status/known-issue pairs with Complete719, record exact hashes and update the status documents.
+Investigate every unexpected result instead of accepting drift. Then continue the deeper public
+member/behavior audit from the highest-value feasible gap identified by the refreshed coverage.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

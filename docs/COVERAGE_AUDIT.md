@@ -772,7 +772,7 @@ ContentTypeDescription headers. Source inspection is not runtime coverage of the
 | Constructors, Width, Height, Bounds, inherited Format / LevelCount | `texture2d.set_data`, `surface_formats`, `mipmaps` and `from_stream` show allocated images, packed formats, mip levels and decoded bounds. Empty C++ handles are normal members in many demos; no separate constructor-per-overload demos. |
 | SetData / GetData, whole image | `set_data` round trips procedurally generated pixels; `get_data_collision` puts readback to use for collision. These show the Color path, not arbitrary element layouts. |
 | Rectangle, mip level, CPU startIndex / elementCount | `set_data_rectangle` checks a stroke and an untouched adjacent pixel; `mipmaps` writes every level and reads level 3. `set_data_rectangle` now uploads from CPU offset 1 and reads into offset 2 with untouched prefix/suffix checks; all four checks pass on SOFTWARE and OPENGLES3. |
-| Packed and floating-point data overloads | `surface_formats` uploads Bgr565/Bgra4444/Bgra5551 and reads Bgr565 back. `floating_formats` now round-trips exact Single/Vector2/Vector4 and HalfSingle/HalfVector2/HalfVector4 data, preserves raw HDR/negative four-channel values, rejects an over-wide element without mutation and proves actual sampled channel expansion plus final Color-buffer clamping. `render_target.hdr_blendable` separately reads HalfVector4 render-target values past one. Normalized integer layouts remain unexercised as textures; do not infer them from the collapsed SetData/GetData member count. Extend by useful format family, not one demo per overload. |
+| Packed and floating-point data overloads | `surface_formats` uploads Bgr565/Bgra4444/Bgra5551 and reads Bgr565 back. `floating_formats` round-trips exact Single/Vector2/Vector4 and HalfSingle/HalfVector2/HalfVector4 data, preserves raw HDR/negative four-channel values, rejects an over-wide element without mutation and proves sampled channel expansion plus final Color-buffer clamping. `normalized_formats` round-trips NormalizedByte2/4, Rgba1010102, Rg32, Rgba64 and Alpha8, then distinguishes signed output clamping, wide UNorm precision, two-bit alpha and alpha-only expansion through real sampling. `render_target.hdr_blendable` separately reads HalfVector4 render-target values past one. These coherent format families cover every classic uncompressed packed layout; do not infer arbitrary element compatibility from the collapsed SetData/GetData member count. |
 | Bound-texture update restriction | `set_data_rectangle` explicitly binds the texture and checks InvalidOperationException before unbinding for updates. Invalid rectangles, short buffers and disposed handles remain error-path gaps; add only coherent diagnostics to the relevant example. |
 | FromStream, resize/crop overload | `from_stream` compares original dimensions, aspect-preserving fit and zoom/crop. `save_as_image` also decodes PNG and JPEG round trips. GIF decoding and malformed input are not thereby demonstrated. |
 | SaveAsPng / SaveAsJpeg | `save_as_image` compares lossless and lossy in-memory round trips. Filename convenience overloads need no independent example. save_as_image now decodes both PNG and JPEG requested at 64x32 from a 128x128 source and checks that the source pixels/dimensions remain unchanged. Eight checks pass on both renderers, with labeled thumbnails reviewed; the rendered source and lossless PNG panels are pixel-identical. The JPEG comparison first verifies the decoded shape before indexing its pixels. Exact resampling rules, alpha normalization, other formats and encoder failure paths remain unclaimed. |
@@ -1872,4 +1872,20 @@ Temporary coverage remains633 demos,302/329 types,2114/2326 non-field members an
 routes; fields move158->161/753 through the three newly named half-float SurfaceFormat values.
 Evidence:`/tmp/checkpoint-722-half-formats-{SOFTWARE,OPENGLES3}.json` and
 `/tmp/checkpoint-722-half-formats-build.log`. Pixel readback was programmatic; no screenshot or
+manual visual inspection was performed.
+
+### Focused723 Texture2D normalized integer storage and sampling
+
+New `graphics.texture2d.normalized_formats` keeps all six remaining classic normalized integer
+layouts in one coherent texture workflow. NormalizedByte2/4, Rgba1010102, Rg32, Rgba64 and Alpha8
+all retain their exact packed SetData/GetData values. Point-sampled output separately establishes
+signed negative-channel clamping at the Color target, two- and four-channel expansion, coarse
+two-bit alpha, wide unsigned-normalized channels and Alpha8's zero-RGB expansion.
+
+SOFTWARE and OPENGLES3/X11 each pass all10 controls. Their only sampled difference is the expected
+halfway signed-alpha rounding of129 versus128, within the declared two-byte tolerance. The exact
+SOFTWARE CTest passes, metadata is634/0 and all five validator self-tests pass. Temporary coverage
+is634 demos,302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes; all six
+new field credits are SurfaceFormat values exercised by actual textures. Evidence:
+`/tmp/checkpoint-723-normalized-formats-*`. Pixel readback was programmatic; no screenshot or
 manual visual inspection was performed.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added `graphics.texture2d.normalized_formats`, a ten-check packed texture workflow covering exact
+  signed/unsigned normalized storage, channel expansion, two-bit alpha and alpha-only sampling.
 - Added `graphics.texture2d.floating_formats`, a 15-check binary32/binary16 texture workflow
   covering exact one-, two- and four-channel storage, element-width refusal and sampled channel
   expansion/clamping.
