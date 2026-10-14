@@ -6359,3 +6359,18 @@ remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C r
 programmatic; no screenshot or manual visual inspection was performed. Continue with
 text-specific transformed-string behavior only where it adds semantics beyond the generic
 SpriteBatch rotation, scale and SpriteEffects controls.
+
+## Focused737-SpriteFont-transformed-layout-pixels
+
+`graphics.sprite_font.transformed_text` now uses three representative aggregate framebuffer
+checks. Matching text at scalar(2,2) and Vector2(4,2) proves per-axis scale doubles the complete
+layout width while preserving its height. A0-degree and90-degree pair proves the ink bounds swap
+and their centre offset rotates around the `MeasureString` origin. Normal, horizontal, vertical
+and combined SpriteEffects on the asymmetric string `LJ` then compare exact occupancy masks, so a
+per-glyph-only flip cannot satisfy the whole-layout reflection contract.
+
+SOFTWARE and OPENGLES3/X11 pass3/3, and the exact SOFTWARE CTest passes. Metadata remains635/0,
+all five validator self-tests and all four checkpoint-comparison tests pass. Temporary coverage
+remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-737-transformed-text-*` and `/tmp/checkpoint-737-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.

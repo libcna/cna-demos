@@ -320,6 +320,19 @@ the final GL run used an approved out-of-sandbox Xvfb because the sandbox's shar
 directory could not accept another listener. Pixel readback was programmatic; no screenshot or
 manual visual inspection was performed. No CNA issue was found.
 
+Focused **737-SpriteFont-transformed-layout-pixels** replaces the presentation-only variants in
+`graphics.sprite_font.transformed_text` with three aggregate framebuffer contracts. The same text
+at scalar(2,2) and Vector2(4,2) proves the entire glyph layout doubles only in width. A0-degree and
+90-degree pair proves both ink bounds and their offset around the `MeasureString` centre rotate
+together. Finally, normal, horizontal, vertical and combined flags on the asymmetric multi-glyph
+string `LJ` prove exact whole-layout reflections rather than independent in-place glyph flips.
+
+SOFTWARE and OPENGLES3/X11 pass3/3, and the exact SOFTWARE CTest passes. Metadata remains635/0,
+all five validator self-tests and all four checkpoint-comparison tests pass, and temporary coverage
+remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-737-transformed-text-*` and `/tmp/checkpoint-737-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1583,12 +1596,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736 is staged
-after it. Audit `graphics.sprite_font.transformed_text` for representative text-specific whole-
-string mirroring and transformed glyph placement that is not already established by generic
-SpriteBatch sprite controls. Add focused framebuffer checks in place when they expose meaningful
-DrawString behavior; otherwise record the disposition and move to the next graphics behavior gap.
-Keep both primary renderers green and do not add overload-only variants.
+HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-737 are
+staged after it. Audit the basic `graphics.sprite_font.draw_string` multiline/tint picture only for
+text-specific behavior not already established by MeasureString, glyph-constructor and generic
+sprite tint controls. If it adds no meaningful contract, record that disposition and move to the
+SpriteBatch sorting table's remaining equal-depth/depth-buffer interaction. Keep both primary
+renderers green and do not add overload-only variants.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
