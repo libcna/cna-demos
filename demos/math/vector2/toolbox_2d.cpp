@@ -2,6 +2,7 @@
 // Vector2's static helpers on everyday 2D game tasks: bounce, keep on screen, range checks, paths,
 // easing and a hit test. (The Vector3 demos show each helper on its own; these are the same calls
 // in two dimensions.)
+#include <any>
 #include <cmath>
 
 #include "CnaDemos/Demo.hpp"
@@ -72,8 +73,18 @@ namespace
 
         // The static arithmetic forms, for code that prefers named calls to operators.
         ctx.Check(Near(Vector2::Add(a, b), a + b) && Near(Vector2::Multiply(b, 0.5f), b * 0.5f) &&
-                      Near(Vector2::Divide(b, 4.0f), b / 4.0f),
-                  "Add, Multiply and Divide equal the operators");
+                      Near(Vector2::Divide(b, 4.0f), b / 4.0f) && Near(Vector2::Subtract(b, a), b - a) &&
+                      Near(Vector2::Negate(b), -b),
+                  "arithmetic helpers equal their binary and unary operators");
+
+        const Vector2 samePlayer(100.0f, 100.0f);
+        const Vector2 movedPlayer(101.0f, 100.0f);
+        ctx.Check(player.Equals(samePlayer) && player.Equals(std::any{samePlayer}) &&
+                      !player.Equals(std::any{42}) && !player.Equals(std::any{}),
+                  "typed and boxed equality accept only the same two components");
+        ctx.Check(player == samePlayer && player != movedPlayer &&
+                      player.GetHashCode() == samePlayer.GetHashCode(),
+                  "Vector2 equality operators and hashes follow both components");
     }
 }
 
@@ -86,6 +97,8 @@ CNA_DEMOS_CONSOLE(Toolbox2D, {
     .apis = {"Vector2::Reflect", "Vector2::Clamp", "Vector2::Distance", "Vector2::DistanceSquared", "Vector2::Dot",
              "Vector2::Normalize", "Vector2::Negate", "Vector2::Subtract", "Vector2::Lerp", "Vector2::SmoothStep",
              "Vector2::CatmullRom", "Vector2::Hermite", "Vector2::Barycentric", "Vector2::Min", "Vector2::Max",
-             "Vector2::Add", "Vector2::Multiply", "Vector2::Divide"},
+             "Vector2::Add", "Vector2::Multiply", "Vector2::Divide", "Vector2::Equals", "Vector2::GetHashCode",
+             "Vector2::op_Addition", "Vector2::op_Division", "Vector2::op_Equality", "Vector2::op_Inequality",
+             "Vector2::op_Multiply", "Vector2::op_Subtraction", "Vector2::op_UnaryNegation"},
     .tags = {"vector", "2d", "math", "gameplay"},
 })

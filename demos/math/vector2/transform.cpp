@@ -26,6 +26,10 @@ namespace
         // on screen).
         ctx.CheckNear(Vector2::Distance(rotated, Vector2(100.0f, 150.0f)), 0.0, 1e-4,
                       "the point 50 px right of the pivot ends 50 px below it");
+
+        const Vector2 direction = Vector2::TransformNormal(Vector2::UnitX, rotateAboutPivot);
+        ctx.CheckNear(Vector2::Distance(direction, Vector2::UnitY), 0.0, 1e-6,
+                      "TransformNormal rotates a direction without applying the pivot translations");
     }
 }
 
@@ -34,6 +38,7 @@ CNA_DEMOS_CONSOLE(Vector2TransformDemo, {
     .title = "Rotate a 2D point about a pivot",
     .description = "Builds translate-rotate-translate matrices and applies them to a screen-space point with "
                    "Vector2::Transform.",
-    .apis = {"Vector2::Transform", "Matrix::CreateRotationZ", "Matrix::CreateTranslation", "Vector2::Distance"},
+    .apis = {"Vector2::Transform", "Vector2::TransformNormal", "Matrix::CreateRotationZ",
+             "Matrix::CreateTranslation", "Vector2::Distance"},
     .tags = {"2d", "rotation", "pivot"},
 })

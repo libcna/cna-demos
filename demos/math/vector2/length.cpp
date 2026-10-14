@@ -20,6 +20,9 @@ namespace
         ctx.Check(length == 5.0f, "Length of (3, 4) is 5");
         ctx.Check(lengthSquared == 25.0f, "LengthSquared of (3, 4) is 25");
         ctx.Check(Vector2::Zero.Length() == 0.0f, "Length of Vector2::Zero is 0");
+        ctx.Check(Vector2::One == Vector2::UnitX + Vector2::UnitY &&
+                      Vector2::UnitX.LengthSquared() == 1.0f && Vector2::UnitY.LengthSquared() == 1.0f,
+                  "One is the sum of the two unit axes");
     }
 }
 
@@ -28,6 +31,7 @@ CNA_DEMOS_CONSOLE(Vector2Length, {
     .title = "Vector2 length",
     .description = "Computes the length and squared length of a Vector2; LengthSquared avoids the square root "
                    "when only comparing distances.",
-    .apis = {"Vector2::Length", "Vector2::LengthSquared", "Vector2::Zero"},
+    .apis = {"Vector2::Vector2", "Vector2::Length", "Vector2::LengthSquared", "Vector2::Zero",
+             "Vector2::One", "Vector2::UnitX", "Vector2::UnitY"},
     .tags = {"vector", "magnitude"},
 })

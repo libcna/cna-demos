@@ -14,6 +14,7 @@ namespace
         // The static form returns a new vector and leaves its argument alone.
         const Vector3 direction = Vector3::Normalize(velocity);
         ctx.Print("Normalize({}) = {}  (length {})", velocity.ToString(), direction.ToString(), direction.Length());
+        ctx.Check(velocity.LengthSquared() == 25.0f, "LengthSquared gives 3 squared plus 4 squared without a square root");
         ctx.CheckNear(direction.Length(), 1.0, 1e-6, "a normalized vector has length 1");
         ctx.Check(direction == Vector3(0.6f, 0.0f, 0.8f), "the direction of (3, 0, 4) is (0.6, 0, 0.8)");
 
@@ -32,6 +33,6 @@ CNA_DEMOS_CONSOLE(Vector3Normalize, {
     .title = "Normalize a Vector3",
     .description = "Turns a vector into a unit-length direction with the static Vector3::Normalize and the "
                    "in-place member Normalize().",
-    .apis = {"Vector3::Normalize", "Vector3::Length"},
+    .apis = {"Vector3::Normalize", "Vector3::Length", "Vector3::LengthSquared"},
     .tags = {"vector", "direction", "unit-vector"},
 })

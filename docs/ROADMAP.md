@@ -5000,3 +5000,18 @@ all three focused SOFTWARE CTests pass and the build is diagnostic-free. Tempora
 `/tmp/checkpoint-655-*` and `/tmp/checkpoint-655-coverage.md`. No rendering, screenshot or visual
 inspection was used. Audit the remaining Vector2/3/4 constructors, constants, value identity,
 operators and distinct length/normal-transform behavior next across their existing workflows.
+
+## Focused656-Vector-value-and-transform-completion
+
+Six existing IDs close all33 remaining inventoried Vector2/3/4 members. Vector2 magnitude fixes
+construction and canonical axes; its toolbox adds complete operator parity and typed/boxed
+identity, while the 2D transform workflow proves TransformNormal rotates without pivot
+translations. Vector3 construction is credited from authored arithmetic inputs and normalization
+adds exact squared magnitude. Vector4 color math adds zero/one/four unit axes, five-unit
+normalization, typed/boxed identity and all component-wise operators against their named helpers.
+SOFTWARE and OPENGLES3 pass4/4,12/12,2/2,7/7,5/5 and17/17 with byte-identical per-ID stdout and
+empty stderr; all six focused SOFTWARE CTests pass and the build is diagnostic-free. Temporary
+coverage moves1595->1628/2326 and leaves no Vector2/3/4 member gap, without changing the628-demo/
+type/C-route counts. Evidence:`/tmp/checkpoint-656-*` and `/tmp/checkpoint-656-coverage.md`. No
+rendering, screenshot or visual inspection was used. Audit CurveKey and CurveKeyCollection value,
+ordering, copy, clone and mutability behavior next, dispositioning CLR-only enumerator aliases.

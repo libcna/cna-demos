@@ -35,7 +35,7 @@ CNA_DEMOS_CONSOLE(Vector3Arithmetic, {
     .title = "Vector3 arithmetic",
     .description = "Adds, subtracts, multiplies, divides and negates Vector3 values with operators and with "
                    "the equivalent static methods.",
-    .apis = {"Vector3::Add", "Vector3::Subtract", "Vector3::Multiply", "Vector3::Divide", "Vector3::Negate",
+    .apis = {"Vector3::Vector3", "Vector3::Add", "Vector3::Subtract", "Vector3::Multiply", "Vector3::Divide", "Vector3::Negate",
              "Vector3::op_Addition", "Vector3::op_Subtraction", "Vector3::op_Multiply", "Vector3::op_Division",
              "Vector3::op_UnaryNegation"},
     .tags = {"vector", "operators"},

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MS-PL
 // Vector4's static helpers as colour maths, the way a shader treats a colour: RGBA in 0..1.
 // (The Vector3 demos show each helper on its own; these are the same calls with four components.)
+#include <any>
+
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Vector4.hpp"
@@ -69,6 +71,29 @@ namespace
                   "Distance: zero for the same colour, over 1 for orange vs teal");
         ctx.Check(Near(Vector4::Divide(Vector4(2.0f, 1.0f, 0.5f, 1.0f), 2.0f), Vector4(1.0f, 0.5f, 0.25f, 0.5f)),
                   "Divide by a scalar scales every channel, alpha too");
+
+        ctx.Check(Vector4::Zero == Vector4(0.0f, 0.0f, 0.0f, 0.0f) &&
+                      Vector4::One == Vector4::UnitX + Vector4::UnitY + Vector4::UnitZ + Vector4::UnitW,
+                  "Zero, One and the four unit axes expose the canonical basis");
+        const Vector4 magnitude(1.0f, 2.0f, 2.0f, 4.0f);
+        ctx.Check(magnitude.LengthSquared() == 25.0f &&
+                      Near(Vector4::Normalize(magnitude), magnitude / 5.0f),
+                  "LengthSquared and Normalize share the exact five-unit magnitude");
+
+        const Vector4 sameTexel(0.8f, 0.6f, 0.4f, 1.0f);
+        const Vector4 changedTexel(0.8f, 0.6f, 0.4f, 0.5f);
+        ctx.Check(texel.Equals(sameTexel) && texel.Equals(std::any{sameTexel}) &&
+                      !texel.Equals(std::any{42}) && !texel.Equals(std::any{}) &&
+                      texel == sameTexel && texel != changedTexel &&
+                      texel.GetHashCode() == sameTexel.GetHashCode(),
+                  "typed/boxed equality, operators and hashes follow all four components");
+
+        const Vector4 left(2.0f, 4.0f, 6.0f, 8.0f);
+        const Vector4 right(1.0f, 2.0f, 3.0f, 4.0f);
+        ctx.Check(left + right == Vector4::Add(left, right) && left - right == Vector4::Subtract(left, right) &&
+                      left * right == Vector4::Multiply(left, right) && left / right == Vector4::Divide(left, right) &&
+                      -right == Vector4::Negate(right),
+                  "all component-wise arithmetic operators match their named helpers");
     }
 }
 
@@ -81,6 +106,10 @@ CNA_DEMOS_CONSOLE(ColorMath, {
     .apis = {"Vector4::Lerp", "Vector4::SmoothStep", "Vector4::Multiply", "Vector4::Add", "Vector4::Clamp",
              "Vector4::Dot", "Vector4::Subtract", "Vector4::Negate", "Vector4::Barycentric", "Vector4::CatmullRom",
              "Vector4::Hermite", "Vector4::Max", "Vector4::Min", "Vector4::Distance", "Vector4::DistanceSquared",
-             "Vector4::Length", "Vector4::Divide", "Color::ToVector4"},
+             "Vector4::Length", "Vector4::LengthSquared", "Vector4::Normalize", "Vector4::Divide",
+             "Vector4::Equals", "Vector4::GetHashCode", "Vector4::Zero", "Vector4::One", "Vector4::UnitX",
+             "Vector4::UnitY", "Vector4::UnitZ", "Vector4::UnitW", "Vector4::op_Addition",
+             "Vector4::op_Division", "Vector4::op_Equality", "Vector4::op_Inequality", "Vector4::op_Multiply",
+             "Vector4::op_Subtraction", "Vector4::op_UnaryNegation", "Color::ToVector4"},
     .tags = {"vector", "color", "math", "shader"},
 })
