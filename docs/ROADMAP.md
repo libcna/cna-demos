@@ -4423,3 +4423,17 @@ tests pass. Staged metadata reaches2766/3205 and `cnb.h` reaches255/272. Evidenc
 `checkpoint-618-c-cnb-loader-registry-focused-*-direct.*`. A caller-owned graphics device exists
 only to construct the ContentManager required by the loader signature; no pixels, drawing or
 project-built execution is claimed. Image, DDS and WAV import front ends are next.
+
+## Focused619-C-CNB-image-DDS-and-WAV-importers
+
+`c_api.content.cnb_importers` adds all five source import/decode routes in23 renderer-free
+controls. A private one-pixel BMP proves exact RGBA8 decoding and both sides of explicit color-key
+matching. Memory and file front ends produce identical six-face RGBA8 data from a complete DXT1
+cube and identical copied PCM8 samples, shape and inclusive `smpl` loop from a controlled WAV.
+Caller-buffer mutation proves ownership; unknown image options and missing, malformed, non-cube,
+compressed or truncated sources fail without partial handles. Both renderer-labelled direct runs
+are byte-identical with empty stderr; strict C99, metadata compilation, diff checks and validation
+self-tests pass. Staged metadata reaches2771/3205 and `cnb.h` reaches260/272. Evidence:
+`checkpoint-619-c-cnb-importers-focused-*-direct.*`. No ContentManager, graphics/audio device,
+rendering, playback, audible/visual quality or project-built execution is claimed. The generic
+CNJ-to-CNB result family is next.
