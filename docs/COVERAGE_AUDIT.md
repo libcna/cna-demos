@@ -1961,3 +1961,16 @@ Generated runtime-backed coverage is635 demos,302/329 types,2114/2326 non-field 
 fields and2999/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-735-complete-*`. No
 screenshot, listening test, physical input, service session or manual visual-quality inspection
 was performed.
+
+### Focused736 SpriteFont layer depth in the shared queue
+
+`graphics.sprite_batch.layer_depth_sorting` now proves a behavior that sprite-only sorting could
+not establish: nonzero DrawString depth places every generated glyph in the same queue as ordinary
+sprites. Reversed submission order on two opaque panels makes depth0.25 text visible over a
+depth0.5 sprite and makes depth0.75 text disappear behind a depth0.5 sprite under BackToFront.
+
+Both primary renderers pass5/5 and the exact SOFTWARE CTest passes. Metadata remains635/0 and
+temporary generated coverage remains302/329 types,2114/2326 non-field members,167/753 fields and
+2999/3205 C routes because DrawString was already credited. Evidence:
+`/tmp/checkpoint-736-layer-depth-*` and `/tmp/checkpoint-736-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended SpriteBatch layer-depth sorting with mixed DrawString/Draw framebuffer checks proving
+  that nonzero text depth enters the same sorted queue independent of submission order.
 - Completed the 635-demo full rebuild/runtime checkpoint: all 648 enabled CTests and both full
   renderer smokes pass, every Complete724 result remains exact, and the new cross-device workflow
   passes on both renderers.

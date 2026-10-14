@@ -6342,3 +6342,20 @@ Complete724. Generated runtime-backed coverage is302/329 types,2114/2326 non-fie
 service session or manual visual-quality inspection was performed. Audit SpriteFont nonzero layer
 depth next only if it establishes observable sprite/text ordering beyond the existing SpriteBatch
 sorting workflow.
+
+## Focused736-SpriteFont-layer-depth-in-shared-queue
+
+The existing `graphics.sprite_batch.layer_depth_sorting` adds one text-specific aggregate
+framebuffer control. In a single BackToFront batch, DrawString text submitted first at depth0.25
+appears over an opaque sprite submitted later at depth0.5, while text submitted last at depth0.75
+is completely covered by an earlier depth0.5 sprite. The nonzero values and reversed call orders
+prove that every glyph enters the same depth-sorted queue as ordinary Draw calls. This belongs in
+the existing sorting concept rather than a new overload-only demo.
+
+SOFTWARE and OPENGLES3/X11 pass5/5, and the exact SOFTWARE CTest passes. Metadata remains635/0,
+all five validator self-tests and all four checkpoint-comparison tests pass. Temporary coverage
+remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-736-layer-depth-*` and `/tmp/checkpoint-736-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed. Continue with
+text-specific transformed-string behavior only where it adds semantics beyond the generic
+SpriteBatch rotation, scale and SpriteEffects controls.

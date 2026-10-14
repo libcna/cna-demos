@@ -303,6 +303,23 @@ members,167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-734-spri
 Pixel readback was programmatic; no screenshot or manual visual inspection was performed. Sibling
 CNA remains clean at test-only `d23e139de`; production library hashes remain exact from Complete724.
 
+Focused **736-SpriteFont-layer-depth-in-shared-queue** extends the existing
+`graphics.sprite_batch.layer_depth_sorting`. It now loads the compiled pixel font and mixes
+DrawString glyphs with ordinary opaque sprites in one BackToFront batch. Text submitted first at
+depth0.25 remains visible over a later depth0.5 sprite, while text submitted last at depth0.75 is
+fully hidden behind an earlier depth0.5 sprite. This proves the full DrawString overload forwards
+nonzero depth for every glyph into the shared sorted queue, a text-specific behavior absent from
+the previous sprite-only controls.
+
+SOFTWARE and OPENGLES3/X11 pass5/5, and the exact SOFTWARE CTest passes. Metadata remains635/0,
+all five validator self-tests and all four checkpoint-comparison tests pass, and temporary coverage
+remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-736-layer-depth-*` and `/tmp/checkpoint-736-coverage.md`. The first cached build was
+blocked by the sandbox's read-only external ccache and was rerun successfully with cache disabled;
+the final GL run used an approved out-of-sandbox Xvfb because the sandbox's shared X11 socket
+directory could not accept another listener. Pixel readback was programmatic; no screenshot or
+manual visual inspection was performed. No CNA issue was found.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1566,11 +1583,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline. Audit SpriteFont nonzero
-layer depth only if it adds observable sprite/text ordering beyond the existing SpriteBatch sorting
-workflow; otherwise record the disposition and move directly to the next meaningful graphics
-member/behavior gap. Keep representative framebuffer validation on both primary renderers and do
-not add overload-only variants.
+HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736 is staged
+after it. Audit `graphics.sprite_font.transformed_text` for representative text-specific whole-
+string mirroring and transformed glyph placement that is not already established by generic
+SpriteBatch sprite controls. Add focused framebuffer checks in place when they expose meaningful
+DrawString behavior; otherwise record the disposition and move to the next graphics behavior gap.
+Keep both primary renderers green and do not add overload-only variants.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
