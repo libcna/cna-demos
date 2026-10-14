@@ -66,12 +66,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-632 project-built catalog demos in18 categories: math78, game33, graphics166, audio23, core3,
+633 project-built catalog demos in18 categories: math78, game33, graphics167, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api172. Kinds are162 console,276 game and194 standalone;
-596 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: see generated docs/COVERAGE.md from complete checkpoint719. It records302/329 XNA types,
-2114/2326 XNA members and2999/3205 public C ABI routes. Selected semantic totals are `input_gamepad.h`61/63,
+diagnostics2, cnaext4, platform2 and c_api172. Kinds are162 console,277 game and194 standalone;
+597 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md retains the complete719 runtime baseline at632 demos and
+302/329 XNA types,2114/2326 XNA members,157/753 fields and2999/3205 public C ABI routes. Focused721
+projects the staged633-demo catalog to the same type/member/C totals and158/753 fields. Selected semantic totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
@@ -80,7 +81,7 @@ Coverage: see generated docs/COVERAGE.md from complete checkpoint719. It records
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete719 exercises all2999 credited C routes and all current catalog IDs in both full smoke
+Complete719 exercises all2999 credited C routes and all632 baseline catalog IDs in both full smoke
 suites. It absorbs every staged C batch through complete `models.h`, the focused SpriteFont route,
 and the deeper XNA member audit through focused716.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
@@ -156,6 +157,17 @@ destination/window requests are explicitly refused rather than silently ignored.
 SOFTWARE CTest, metadata632/0 and all five validator self-tests pass. Generated coverage is
 unchanged because `GraphicsDevice::Present` was already credited. Evidence:
 `/tmp/checkpoint-720-present-regions-*`. No presented window pixels or screenshots were inspected.
+
+Focused **721-Texture2D-binary32-formats** adds the633rd catalog ID,
+`graphics.texture2d.floating_formats`. SOFTWARE and OPENGLES3/X11 pass8/8 with byte-identical
+sampled colors; exact Single/Vector2/Vector4 values survive SetData/GetData, an incompatible
+element width is refused without mutation, and actual sampling proves missing-channel expansion
+plus final Color-buffer clamping. The exact SOFTWARE CTest, metadata633/0 and all five validator
+self-tests pass. Temporary coverage is302/329 types,2114/2326 non-field members,158/753 fields and
+2999/3205 C routes. Evidence:`/tmp/checkpoint-721-floating-formats-*`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed.
+During focused721 the clean sibling CNA checkout advanced externally to docs-only `a37bb07ba`;
+`libcna.so` and `libcna_c_api.so` retain the exact Complete719 hashes.
 
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
@@ -1420,17 +1432,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete719 is the current full-build/runtime baseline and focused720 adds the
-validated GraphicsDevice Present-region contract. Continue the semantic behavior audit with the
-next feasible typed Texture2D data-format family. Start from `graphics.texture2d.surface_formats`
-and the coverage-audit "Packed and floating-point data overloads" row: Bgr565/Bgra4444/Bgra5551
-and HdrBlendable render-target readback already have evidence, while direct floating-point/vector
-texture storage and mismatched element-size refusal remain unexercised. Inspect current CNA format
-support by renderer, choose one coherent value family rather than one control per enum value, and
-prove exact SetData/GetData values plus any useful sampling behavior. Keep unsupported formats as
-truthful renderer-specific refusals. Build, run both primary renderers, update documentation and
-push the batch; if no additional family has a stable public contract on these renderers, document
-that disposition and continue the next Phase5 behavior remainder.
+HIGHEST PRIORITY: Complete719 is the current full-build/runtime baseline; focused720 and focused721
+are staged after it. Extend `graphics.texture2d.floating_formats` with the coherent binary16
+HalfSingle/HalfVector2/HalfVector4 family. Preserve exact packed half values through SetData/GetData,
+show the same missing-channel sampling rules and retain an out-of-range channel to distinguish raw
+storage from final Color-buffer clamping. Do not duplicate HdrBlendable render-target behavior
+already covered elsewhere. Build and run both primary renderers plus the exact CTest, update the
+temporary coverage projection and status docs, and push. Then select the next useful normalized
+integer Texture2D family or disposition it if it would only repeat the same transfer/sampling
+concept. A complete full smoke checkpoint is required after the next group of staged behavior
+batches, because Complete719 reports do not contain the new633rd ID.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

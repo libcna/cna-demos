@@ -83,7 +83,7 @@ Console demos with checks; each shows one operation family.
   `DrawString`, `MeasureString`, `LineSpacing`, `Spacing`, `DefaultCharacter`, `Characters`,
   scaled/rotated/mirrored text, `StringBuilder`, the CNAEXT glyph constructor. Remaining: loading
   an XNB font (Phase 8, content), TrueType `.spritefont` (needs FreeType and a licensed font).
-- ✅ (9 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
+- ✅ (10 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg` (including requested output
   dimensions and unchanged source), `LevelCount`. Remaining:
   float/HDR formats and broader direct compressed-block updates.
@@ -6095,3 +6095,23 @@ the existing lifecycle already credited `GraphicsDevice::Present`; this batch ad
 renderer behavior evidence. No presented window pixels, screenshot or manual visual quality were
 inspected. Continue with the next feasible typed Texture2D data-format family rather than creating
 one demo per `SurfaceFormat` value.
+
+## Focused721-Texture2D-binary32-formats
+
+New `graphics.texture2d.floating_formats` keeps one coherent binary32 texture concept in a single
+demo. `Single`, `Vector2` and `Vector4` each retain their exact CPU values; the Vector4 path proves
+that HDR and negative channels are not clamped in texture storage. Passing a Vector2 element to a
+Single texture is rejected for its incompatible width and leaves the original float intact. Real
+point-sampled draws then establish missing-channel expansion and final Color-buffer clamping:
+Single produces(64,255,255,255), Vector2 produces(64,128,255,255), and the raw
+Vector4(2.0,0.5,-1.0,1.0) produces(255,128,0,255).
+
+SOFTWARE and OPENGLES3/X11 pass8/8 with byte-identical sampled values, the exact SOFTWARE CTest
+passes, metadata is633/0 and all five validator self-tests pass. Temporary coverage is633 demos,
+302/329 types,2114/2326 non-field members,158/753 fields and2999/3205 C routes. Only
+`SurfaceFormat::Vector2` is a new field credit because existing Texture2D/Texture3D workflows
+already named Single and Vector4. Evidence:`/tmp/checkpoint-721-floating-formats-*`. Pixel readback
+was programmatic; no screenshot or manual visual inspection was performed. CNA advanced externally
+to docs-only `a37bb07ba`; both production library hashes remain exact from Complete719. Extend this
+same demo with the coherent binary16 half-float family next, rather than adding a second
+format-gallery ID.

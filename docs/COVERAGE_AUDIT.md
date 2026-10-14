@@ -772,7 +772,7 @@ ContentTypeDescription headers. Source inspection is not runtime coverage of the
 | Constructors, Width, Height, Bounds, inherited Format / LevelCount | `texture2d.set_data`, `surface_formats`, `mipmaps` and `from_stream` show allocated images, packed formats, mip levels and decoded bounds. Empty C++ handles are normal members in many demos; no separate constructor-per-overload demos. |
 | SetData / GetData, whole image | `set_data` round trips procedurally generated pixels; `get_data_collision` puts readback to use for collision. These show the Color path, not arbitrary element layouts. |
 | Rectangle, mip level, CPU startIndex / elementCount | `set_data_rectangle` checks a stroke and an untouched adjacent pixel; `mipmaps` writes every level and reads level 3. `set_data_rectangle` now uploads from CPU offset 1 and reads into offset 2 with untouched prefix/suffix checks; all four checks pass on SOFTWARE and OPENGLES3. |
-| Packed and floating-point data overloads | `surface_formats` uploads Bgr565/Bgra4444/Bgra5551 and reads Bgr565 back. `render_target.hdr_blendable` reads HalfVector4 values past one. Other integer/normalized/float/vector layouts and mismatched element sizes remain unexercised; do not infer them from the collapsed SetData/GetData member count. Extend by useful format family, not one demo per overload. |
+| Packed and floating-point data overloads | `surface_formats` uploads Bgr565/Bgra4444/Bgra5551 and reads Bgr565 back. `floating_formats` now round-trips exact Single/Vector2/Vector4 data, preserves raw HDR/negative Vector4 channels, rejects an over-wide element without mutation and proves actual sampled channel expansion plus final Color-buffer clamping. `render_target.hdr_blendable` reads HalfVector4 values past one. Other integer/normalized and direct half-float layouts remain unexercised; do not infer them from the collapsed SetData/GetData member count. Extend by useful format family, not one demo per overload. |
 | Bound-texture update restriction | `set_data_rectangle` explicitly binds the texture and checks InvalidOperationException before unbinding for updates. Invalid rectangles, short buffers and disposed handles remain error-path gaps; add only coherent diagnostics to the relevant example. |
 | FromStream, resize/crop overload | `from_stream` compares original dimensions, aspect-preserving fit and zoom/crop. `save_as_image` also decodes PNG and JPEG round trips. GIF decoding and malformed input are not thereby demonstrated. |
 | SaveAsPng / SaveAsJpeg | `save_as_image` compares lossless and lossy in-memory round trips. Filename convenience overloads need no independent example. save_as_image now decodes both PNG and JPEG requested at 64x32 from a 128x128 source and checks that the source pixels/dimensions remain unchanged. Eight checks pass on both renderers, with labeled thumbnails reviewed; the rendered source and lossless PNG panels are pixel-identical. The JPEG comparison first verifies the decoded shape before indexing its pixels. Exact resampling rules, alpha normalization, other formats and encoder failure paths remain unclaimed. |
@@ -1842,3 +1842,18 @@ meaningful overload, validation and renderer-refusal evidence while leaving gene
 coverage at2114/2326 because `GraphicsDevice::Present` was already credited. No presented window
 pixels, screenshot or manual visual-quality inspection was performed. Evidence:
 `/tmp/checkpoint-720-present-regions-{SOFTWARE,OPENGLES3}.json`.
+
+### Focused721 Texture2D binary32 storage and sampling
+
+New `graphics.texture2d.floating_formats` uses the dedicated float, Vector2 and Vector4 SetData/
+GetData overloads rather than treating every format as Color bytes. All three values round-trip
+exactly, including Vector4 channels above one and below zero. A Vector2 element cannot be written to
+the narrower Single format, and the rejected write preserves the prior value. Point-sampled draws
+show Single expanding absent G/B/A channels to one, Vector2 expanding absent B/A, and a Color
+back buffer clamping Vector4(2.0,0.5,-1.0,1.0) only at final output.
+
+Both primary renderers pass8/8 controls with byte-identical sampled colors; the focused SOFTWARE
+CTest passes. Temporary generated coverage stays302/329 types and2114/2326 non-field members while
+fields move157->158/753 through the newly named `SurfaceFormat::Vector2`. Evidence:
+`/tmp/checkpoint-721-floating-formats-*`. Pixel readback was programmatic; no screenshot or manual
+visual inspection was performed.
