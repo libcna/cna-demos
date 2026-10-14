@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MS-PL
 // A game's JSON assets: named CNJ factories produce the same C++ enemy type.
+#include <chrono>
+#include <filesystem>
+#include <fstream>
 #include <stdexcept>
 #include <string>
+#include <system_error>
 #include <nlohmann/json.hpp>
 
 #include "CnaDemos/Demo.hpp"
@@ -14,6 +18,24 @@ namespace
 {
     struct Enemy { std::string name; int health; };
     struct Nameplate { std::string text; };
+
+    struct TemporaryContent
+    {
+        std::filesystem::path path;
+        ~TemporaryContent()
+        {
+            std::error_code ignored;
+            std::filesystem::remove_all(path, ignored);
+        }
+    };
+
+    void WriteCnj(const std::filesystem::path& path, const std::string& text)
+    {
+        std::ofstream file(path, std::ios::binary | std::ios::trunc);
+        file << text;
+        file.close();
+        if (!file) throw std::runtime_error("Could not write a private CNJ fixture");
+    }
 
     void CnjLoader(CnaDemos::DemoContext& ctx)
     {
@@ -100,6 +122,58 @@ namespace
                   "Unload clears cached assets but retains this manager's factory registrations");
         ctx.Check(content.Load<Nameplate>("guard").text == plate.text && nameplateReads == 2,
                   "Unload also clears the second type's entry while preserving its independent factory");
+
+        // Failed envelope dispatch must not invoke the factory or publish a cache entry. Repair
+        // each exact path and retry it through the same manager to prove both properties.
+        const auto path = std::filesystem::temp_directory_path() /
+            ("cna-demos-cnj-" +
+             std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+        if (!std::filesystem::create_directory(path))
+            throw std::runtime_error("Could not create a private CNJ content directory");
+        TemporaryContent temporary{path};
+        int retryReads = 0;
+        ContentManager guarded(nullptr, path.string());
+        guarded.RegisterCnjLoader<Enemy>("CnaDemos.Enemy",
+            [&retryReads](const std::string& text, ContentManager&) {
+                const auto data = nlohmann::json::parse(text).at("data");
+                ++retryReads;
+                return Enemy{data.at("name").get<std::string>(), data.at("health").get<int>()};
+            });
+
+        WriteCnj(path / "unknown.cnj",
+                 R"({"cnjVersion":1,"type":"CnaDemos.UnknownEnemy","data":{"name":"Bogus","health":1}})");
+        bool unknownTypeRefused = false;
+        try { (void)guarded.Load<Enemy>("unknown"); }
+        catch (const ContentLoadException& error)
+        {
+            unknownTypeRefused = std::string(error.what()).find("CnaDemos.UnknownEnemy") != std::string::npos;
+        }
+        ctx.Check(unknownTypeRefused && retryReads == 0,
+                  "an unknown envelope type is named and refused before any factory invocation");
+        WriteCnj(path / "unknown.cnj",
+                 R"({"cnjVersion":1,"type":"CnaDemos.Enemy","data":{"name":"Repaired","health":21}})");
+        const Enemy repairedType = guarded.Load<Enemy>("unknown");
+        ctx.Check(repairedType.name == "Repaired" && repairedType.health == 21 && retryReads == 1,
+                  "repairing the same unknown-type path retries it instead of finding a failed cache entry");
+
+        WriteCnj(path / "future.cnj",
+                 R"({"cnjVersion":2,"type":"CnaDemos.Enemy","data":{"name":"Future","health":99}})");
+        bool futureVersionRefused = false;
+        try { (void)guarded.Load<Enemy>("future"); }
+        catch (const ContentLoadException& error)
+        {
+            const std::string message = error.what();
+            futureVersionRefused = message.find("cnjVersion") != std::string::npos &&
+                                   message.find("2.000000") != std::string::npos;
+        }
+        ctx.Check(futureVersionRefused && retryReads == 1,
+                  "a future envelope version is named and refused before any factory invocation");
+        WriteCnj(path / "future.cnj",
+                 R"({"cnjVersion":1,"type":"CnaDemos.Enemy","data":{"name":"Current","health":34}})");
+        const Enemy repairedVersion = guarded.Load<Enemy>("future");
+        ctx.Check(repairedVersion.name == "Current" && repairedVersion.health == 34 && retryReads == 2,
+                  "repairing the same future-version path retries it without unloading the manager");
+
         ContentManager unregistered(nullptr, "assets/custom");
         bool isolated = false;
         try { (void)unregistered.Load<Enemy>("guard"); }
@@ -112,7 +186,7 @@ CNA_DEMOS_CONSOLE(CnjLoader, {
     .id = "content.custom.cnj_loader",
     .title = "Custom CNJ enemy definitions (CNAEXT)",
     .description = "Registers two named CNJ factories for one game-owned Enemy type, parses their JSON payloads, "
-                   "checks caches keyed by requested C++ type, manager-local registration, and missing-field refusal.",
+                   "checks typed caches and manager-local registration, and repairs rejected type/version envelopes.",
     .apis = {"ContentManager::RegisterCnjLoader", "ContentManager::Load", "ContentManager::Unload",
              "ContentLoadException"},
     .tags = {"content", "custom", "cnj", "json", "cnaext"},

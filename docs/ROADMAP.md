@@ -6686,3 +6686,19 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-755-cnb-loader-*` and
 issue was found. Continue with the adjacent CNJ loader: execute unknown envelope type and future
 version refusal before factory invocation/cache publication, then repair and retry through the
 same manager.
+
+## Focused756-CNJ-envelope-dispatch-and-retry
+
+`content.custom.cnj_loader` adds four controls, reaching15. Private documents carrying an unknown
+type name or future `cnjVersion` are refused with contextual `ContentLoadException` messages before
+the registered factory runs. Rewriting each exact file with a supported envelope and retrying it
+through the same manager produces the authored Enemy and increments the factory once, proving the
+failed loads did not publish cache entries.
+
+SOFTWARE and OPENGLES3/Xvfb pass15/15, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, validator/checkpoint self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-756-cnj-loader-*` and
+`/tmp/checkpoint-756-coverage.md`. No rendering, screenshot or manual inspection was used. No CNA
+issue was found. Continue in the same workflow with the public registration guards for empty name,
+empty factory and a C++ type already owned by another content reader.

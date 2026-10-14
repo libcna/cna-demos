@@ -1738,12 +1738,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-755 close the
-texture/render-target lifetimes, ContentManager disposal and the CNB registration table. Continue
-with the existing `content.custom.cnj_loader` workflow: author isolated unknown-type and future
-`cnjVersion` documents, verify both are refused before factory invocation or cache publication,
-then repair the same logical paths and retry through the same manager. Do not add a guard-only ID.
-Build with at most three compile jobs and keep focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-756 close the
+texture/render-target lifetimes, ContentManager disposal, CNB registration and CNJ envelope
+dispatch/retry. Continue in the existing `content.custom.cnj_loader` workflow with the remaining
+public registration guards: empty type name, empty factory and a C++ type already owned by another
+content reader. Prove refused calls do not poison later valid registration/use; do not add a
+guard-only ID. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1871,6 +1871,20 @@ SOFTWARE and OPENGLES3/Xvfb pass17/17, and the exact SOFTWARE CTest passes. The 
 incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
 remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-755-cnb-loader-*` and `/tmp/checkpoint-755-coverage.md`. No rendering, screenshot
+or manual inspection was used, and no CNA issue was found.
+
+### Focused756 CNJ envelope dispatch and retry
+
+`content.custom.cnj_loader` grows from eleven to fifteen controls. Private documents carrying an
+unknown type name or future `cnjVersion` are refused with contextual `ContentLoadException`
+messages before the registered factory runs. Rewriting each exact file with a supported envelope
+and retrying it through the same manager produces the authored Enemy and increments the factory
+once, proving failed loads do not publish cache entries.
+
+SOFTWARE and OPENGLES3/Xvfb pass15/15, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
+remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-756-cnj-loader-*` and `/tmp/checkpoint-756-coverage.md`. No rendering, screenshot
 or manual inspection was used, and no CNA issue was found.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
