@@ -21,7 +21,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 165 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 166 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -67,25 +67,25 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 ## 6. Demo counts
 
 525 project-built catalog demos (latest complete checkpoint524-C-textures plus focused525-C-sprite-font); the
-current source tree adds95 staged standalone C IDs and should reach620 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
+current source tree adds96 staged standalone C IDs and should reach621 after the external build blocker clears: math 78, game 37, graphics 162 (19 SpriteBatch, 8 device, 9 texture2d, 5 texture_cube, 2 texture3d, 7 sprite font,
 4 blend state, 4 sampler state, 3 rasterizer state, 6 depth-stencil state, 4 primitives,
 4 vertex buffer, 3 index buffer, 2 vertex declaration, 9 render target, 1 occlusion query, 8 BasicEffect, 30 other
 effects and shaders, 2 viewport, 2 adapter, 1 resource, 6 packed vector, 23 model), audio 26 (10 C++ XACT plus three C workflows), core 3 (2 logger),
 content 52 (incl. an XNA .contentproj), input 39 (5 keyboard, 6 mouse, 2 text input, 2 clipboard, 12 gamepad, 5 touch, 7 CNAEXT devices:
 joystick, hot-plug, device lists, haptics, sensors, power), storage 8, media 15 (compiled video and song, tagged library import and album art), gamer services 33
 (own process each; 5 avatar, 2 leaderboard), net 24 (own process each; 15 standalone: two processes), devices 5, phone 1, design 4,
-diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and165 in the
+diagnostics 2, cnaext 4, platform 2 (1 standalone), c_api 70 in the complete baseline and166 in the
 current source tree (standalone C programs). Every declared category has demos.
 Coverage: see docs/COVERAGE.md (current catalog, complete524 reports plus the focused525 result).
 Latest generated project-built C ABI coverage is1116/3205. The current staged source metadata names
-2853/3205 routes, machine-counted directly from all public C headers and standalone metadata; that
+2880/3205 routes, machine-counted directly from all public C headers and standalone metadata; that
 staged figure is not yet a generated/project-built coverage checkpoint. Selected semantic totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
 `media_player.h`41/41, `net.h`51/51, `net_gamers.h`33/33, `net_sessions.h`104/104,
-`gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`70/216,
+`gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`97/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete524 exercises all1109 credited routes in both full smoke suites and includes the focused
@@ -1357,9 +1357,9 @@ reflection type-name pairs and remain intentionally trivial/uncredited. Begin th
 uncovered renderer-independent `cnb.h` audit. Its format/chunk identifiers, validation, checked
 arithmetic, CRC/compression, byte I/O, documents, textures, complete neutral model data/codecs and
 filesystem CNJ model compiler result, all neutral schemas/codecs and the loader registry establish
-272/272 routes, completing its semantic audit. `models.h` now establishes70/216 routes. Continue
-with top-level Model construction, bone/mesh collections, transforms, owned-resource lifetime,
-glTF diagnostics and actual drawing using a real graphics device. Avoid
+272/272 routes, completing its semantic audit. `models.h` now establishes97/216 routes. Continue
+with the renderer-independent MorphTargetDataEXT descriptor, weight-track evaluation, CPU blend and
+ModelMeshPart attachment routes. Avoid
 other renderer-
 dependent `graphics_ext.h` while
 the sibling renderer retirement is incoherent. The two
@@ -2376,9 +2376,23 @@ Staged metadata reaches2853/3205 and `models.h` reaches70/216. No ContentManager
 top-level Model, screenshot, visual-quality assessment or project-built execution is claimed.
 Evidence:`checkpoint-623-c-model-meshes-focused-*-direct.*`.
 
-During focused620 the sibling CNA was observed at committed `c1006b03e5` with126 externally
-modified paths, so it is still not a coherent
-source snapshot for reconfigure/build.
+`standalone/c_api.graphics.models` adds27 more `models.h` routes in39 controls. All three
+Model constructors, collections/root, tags, owned-resource callbacks and atomic local/absolute
+transform transfers pass. An authored glTF report and warning retain all scalar and text channels
+and derive the exact loss totals. Actual drawing composes the child bone's absolute transform with
+the supplied world matrix: the green triangle center reaches(700,120), while(400,240) stays black.
+The first probe expected world alone; source review confirmed the parent composition, so that was a
+demo error rather than a CNA defect. Both SOFTWARE and OPENGLES3 Xvfb direct runs pass39/39 with
+byte-identical stdout and empty stderr; strict C99 and metadata compilation, diff checks and
+validation self-tests pass. Staged metadata reaches2880/3205 and `models.h` reaches97/216. No
+ContentManager, imported glTF, animation player, screenshot, visual-quality assessment or project-
+built execution is claimed. Evidence:`checkpoint-624-c-models-focused-*-direct.*`.
+
+During focused624 the sibling CNA was observed at committed `33ccbda367` with six externally
+modified paths, including renderer source/tool edits, so it is still not a clean coherent source
+snapshot for reconfigure/build. The exercised `libcna_c_api.so` remains the stable SHA-256
+`730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`. Earlier focused620 had
+observed committed `c1006b03e5` with126 modified paths.
 It briefly reached committed `fe5e25994a` (`refactor(Task RRC-031): retire VULKAN`).
 After `cna-demos` removed VULKAN from `linux-full`, configure succeeded, but concurrent external
 retirement edits changed CNA during the build: `GraphicsRendererType::DirectX11` disappeared while
@@ -2394,8 +2408,8 @@ checkpoint. The instance-state evidence is
 `checkpoint-529-c-sound-instance-state-focused-*-direct.*`. Do not chase the changing external
 dirty count; record its final clean revision before rebuilding.
 
-The next coherent reconfigure should expose620 catalog IDs (complete524 plus SpriteFont and95
-additional new standalone IDs) and636 declared/633 enabled CTests if no external catalog policy
+The next coherent reconfigure should expose621 catalog IDs (complete524 plus SpriteFont and96
+additional new standalone IDs) and637 declared/634 enabled CTests if no external catalog policy
 changed. These are expectations for comparison, not validated counts; use the actual generated
 catalog and CTest inventory as authority.
 
@@ -2444,3 +2458,17 @@ validation self-tests pass. Staged metadata reaches2853/3205 and `models.h` reac
 Evidence:`checkpoint-623-c-model-meshes-focused-*-direct.*`. No ContentManager, imported asset,
 top-level Model, screenshot, visual-quality assessment or project-built execution is claimed.
 Top-level Model construction, transforms, resource ownership, glTF diagnostics and drawing are next.
+
+## Focused624-C-Model-ownership-transforms-diagnostics-and-drawing
+
+`c_api.graphics.models` adds27 `models.h` routes in39 controls. Default, simple and explicit-parent
+Models establish retained collections/root, tag, resource-release callbacks and atomic local plus
+absolute transform transfers. A copied glTF report and warning preserve every scalar/text channel
+and derive exact loss totals. An actual triangle proves `Model.Draw` composes the child absolute
+transform with world, moving green to(700,120) while(400,240) remains black. The first world-only
+probe was a demo error corrected after source review. SOFTWARE and OPENGLES3 Xvfb direct runs pass
+39/39 with byte-identical stdout and empty stderr; strict C99 and metadata compilation, diff checks
+and validation self-tests pass. Staged metadata reaches2880/3205 and `models.h` reaches97/216.
+Evidence:`checkpoint-624-c-models-focused-*-direct.*`. No ContentManager, imported glTF, animation
+player, screenshot, visual-quality assessment or project-built execution is claimed. Morph-target
+data, weight tracks, CPU blending and ModelMeshPart attachment are next.

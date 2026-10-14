@@ -4497,3 +4497,20 @@ and validation self-tests pass. Staged metadata reaches2853/3205 and `models.h` 
 Evidence:`checkpoint-623-c-model-meshes-focused-*-direct.*`. No ContentManager, imported asset,
 top-level Model, screenshot, visual-quality assessment or project-built execution is claimed.
 Top-level Model construction, transforms, owned resources, diagnostics and drawing are next.
+
+## Focused624-C-Model-ownership-transforms-diagnostics-and-drawing
+
+`c_api.graphics.models` adds27 more `models.h` routes in39 controls. Default, simple and explicit-
+parent constructors expose empty or retained bone/mesh collections, explicit root and mesh-parent
+identity, full-width tags and one-shot owned-resource replacement/destruction callbacks. Two local
+bone transforms copy atomically and compose exactly; a caller-built glTF report plus warning owns
+all scalars, code, subject, message and indexed details and derives its loss totals. A procedural
+triangle then proves `Model.Draw` composes the child's absolute transform with world: its exact
+green center moves to(700,120) and the old(400,240) center stays black. The first probe expected
+world alone; CNA's documented/source-confirmed parent composition made that a demo error. Both
+SOFTWARE and OPENGLES3 Xvfb direct runs pass39/39 with byte-identical stdout and empty stderr;
+strict C99 and metadata compilation, diff checks and validation self-tests pass. Staged metadata
+reaches2880/3205 and `models.h` reaches97/216. Evidence:
+`checkpoint-624-c-models-focused-*-direct.*`. No ContentManager, imported glTF, animation player,
+screenshot, visual-quality assessment or project-built execution is claimed. Morph-target data,
+weight tracks, CPU blending and ModelMeshPart attachment are next.
