@@ -7803,3 +7803,19 @@ demonstrated route. Evidence:`/tmp/checkpoint-819-debug-draw-*` and
 `/tmp/checkpoint-819-coverage.md`. No screenshot or manual visual-quality inspection is claimed;
 the existing C++ DebugDraw scene retains detailed pixel evidence. Audit and disposition the
 remaining C-route gaps next, beginning with production `core_ext.h` behavior.
+
+## Focused820-C-renderer-metadata-and-classification
+
+New renderer-independent `c_api.platform.renderer_metadata` covers all11 metadata routes in
+`core_ext.h`. Eight controls establish the fixed category/maturity ordinals and exact stable names,
+classify all ten live renderer identities rather than only compiled backends, reject unknown and
+retired identities atomically, and correlate the compile-time renderer's identity, exact
+unterminated build-option name, category and maturity. A short name destination remains untouched.
+
+SOFTWARE- and OPENGLES3-labelled direct runs pass8/8 with byte-identical stdout and empty stderr;
+the exact SOFTWARE CTest passes. The incremental build uses at most three jobs, metadata is640/0
+and temporary coverage is302/329 types,2114/2326 members,169/753 fields and3052/3205 C routes,
+with `core_ext.h` at38/57. Evidence:`/tmp/checkpoint-820-renderer-metadata-*` and
+`/tmp/checkpoint-820-coverage.md`. The demo creates no device and does not claim availability or
+capability. Continue with the18 production selection/fallback routes; classify the remaining reset
+route as test-only rather than presenting it as application behavior.

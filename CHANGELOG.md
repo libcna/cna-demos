@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a renderer-independent C metadata workflow covering all public renderer categories,
+  maturities and their stable names plus the compiled-in renderer identity/name contract.
 - Added a C DebugDraw workflow covering all 15 remaining `graphics_ext.h` routes, including depth
   list routing, exact copied geometry, shape segment clamps and real end-of-frame drawing.
 - Made the coverage report state `none` when every public C header has a demonstrated route.
