@@ -43,11 +43,17 @@ namespace
     class PatrolImporter final : public Pipeline::ContentImporter
     {
         ReturnedValue returned_;
+        std::string name_;
+        bool selectedByNameOnly_;
     public:
-        explicit PatrolImporter(ReturnedValue returned = ReturnedValue::Valid) : returned_(returned) {}
-        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.PatrolImporter", "1"}; }
+        explicit PatrolImporter(ReturnedValue returned = ReturnedValue::Valid,
+                                std::string name = "CnaDemos.PatrolImporter",
+                                bool selectedByNameOnly = false)
+            : returned_(returned), name_(std::move(name)), selectedByNameOnly_(selectedByNameOnly) {}
+        Pipeline::ContentComponentIdentity Identity() const override { return {name_, "1"}; }
         std::vector<std::string> SourceExtensions() const override { return {".route"}; }
         std::vector<std::string> OutputTypes() const override { return {ImportedType}; }
+        bool SelectedByNameOnly() const override { return selectedByNameOnly_; }
         Pipeline::ContentValue Import(Pipeline::ContentImporterContext& context) const override
         {
             if (returned_ == ReturnedValue::Empty) return {};
@@ -75,11 +81,20 @@ namespace
     class PatrolProcessor final : public Pipeline::ContentProcessor
     {
         ReturnedValue returned_;
+        std::string name_;
+        std::string inputType_;
+        bool selectedByNameOnly_;
     public:
-        explicit PatrolProcessor(ReturnedValue returned = ReturnedValue::Valid) : returned_(returned) {}
-        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.PatrolProcessor", "1"}; }
-        std::string InputType() const override { return ImportedType; }
+        explicit PatrolProcessor(ReturnedValue returned = ReturnedValue::Valid,
+                                 std::string name = "CnaDemos.PatrolProcessor",
+                                 std::string inputType = ImportedType,
+                                 bool selectedByNameOnly = false)
+            : returned_(returned), name_(std::move(name)), inputType_(std::move(inputType)),
+              selectedByNameOnly_(selectedByNameOnly) {}
+        Pipeline::ContentComponentIdentity Identity() const override { return {name_, "1"}; }
+        std::string InputType() const override { return inputType_; }
         std::string OutputType() const override { return RuntimeType; }
+        bool SelectedByNameOnly() const override { return selectedByNameOnly_; }
         void ValidateParameters(const Pipeline::ContentProcessorParameters& parameters) const override
         {
             for (const auto& [name, value] : parameters.Values())
@@ -107,9 +122,14 @@ namespace
 
     class PatrolWriter final : public Pipeline::ContentTypeWriter
     {
+        std::string name_;
+        std::string inputType_;
     public:
-        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.PatrolWriter", "1"}; }
-        std::string InputType() const override { return RuntimeType; }
+        explicit PatrolWriter(std::string name = "CnaDemos.PatrolWriter",
+                              std::string inputType = RuntimeType)
+            : name_(std::move(name)), inputType_(std::move(inputType)) {}
+        Pipeline::ContentComponentIdentity Identity() const override { return {name_, "1"}; }
+        std::string InputType() const override { return inputType_; }
         std::vector<Pipeline::ContentWriterSchemaIdentity> OutputSchemaIdentities() const override
         {
             return {{Cnb::CnbAssetTypeIdFromName(RuntimeType), 1u, RuntimeType, {"CnaDemos.PatrolCodec", "1"}}};
@@ -172,6 +192,133 @@ namespace
         auto payload = document.OpenChunk(document.RequireSingle(PathChunk));
         ctx.CheckNear(payload.ReadF32(), 7.0, 1e-6,
                       "disabling the closed parameter omits the return segment at build time");
+
+        // Put two ordinary candidates on every default route. The coordinator must stop at the
+        // first unresolved stage, preserve source/asset context, and never use registration order.
+        // Supplying one stable name at a time advances selection to the next ambiguity; naming all
+        // three produces the same valid build. Registered but route-incompatible overrides remain
+        // refusals rather than silently falling back to a compatible default.
+        auto selectionRegistry = std::make_shared<Pipeline::ContentPipelineRegistry>();
+        selectionRegistry->RegisterImporter(std::make_shared<PatrolImporter>());
+        selectionRegistry->RegisterImporter(std::make_shared<PatrolImporter>(
+            ReturnedValue::Valid, "CnaDemos.AlternatePatrolImporter"));
+        selectionRegistry->RegisterProcessor(std::make_shared<PatrolProcessor>());
+        selectionRegistry->RegisterProcessor(std::make_shared<PatrolProcessor>(
+            ReturnedValue::Valid, "CnaDemos.AlternatePatrolProcessor"));
+        selectionRegistry->RegisterProcessor(std::make_shared<PatrolProcessor>(
+            ReturnedValue::Valid, "CnaDemos.IncompatiblePatrolProcessor", "CnaDemos.OtherSource"));
+        selectionRegistry->RegisterWriter(std::make_shared<PatrolWriter>());
+        selectionRegistry->RegisterWriter(
+            std::make_shared<PatrolWriter>("CnaDemos.AlternatePatrolWriter"));
+        selectionRegistry->RegisterWriter(std::make_shared<PatrolWriter>(
+            "CnaDemos.IncompatiblePatrolWriter", "CnaDemos.OtherRuntime"));
+        const Pipeline::ContentPipeline selectionPipeline(selectionRegistry);
+        auto selectionRequest = request;
+        selectionRequest.parameters.Set("closed", true);
+        const auto contextualSelection = [&selectionRequest](const Pipeline::ContentPipelineError& error,
+                                                            const std::string& text) {
+            return error.Stage() == Pipeline::ContentPipelineStage::Selection &&
+                   error.Component().empty() && error.LogicalName() == selectionRequest.logicalName &&
+                   error.Source() == std::filesystem::canonical(
+                       selectionRequest.sourceRoot / selectionRequest.source) &&
+                   std::string(error.what()).find(text) != std::string::npos;
+        };
+
+        bool importerAmbiguous = false;
+        try { (void)selectionPipeline.Build(selectionRequest); }
+        catch (const Pipeline::ContentPipelineError& error)
+        {
+            importerAmbiguous = contextualSelection(error, "ambiguous importer") &&
+                std::string(error.what()).find("CnaDemos.AlternatePatrolImporter") != std::string::npos &&
+                std::string(error.what()).find("CnaDemos.PatrolImporter") != std::string::npos;
+            ctx.Print("Importer ambiguity: {}", error.what());
+        }
+        ctx.Check(importerAmbiguous,
+                  "two default importers are refused deterministically with Selection context");
+
+        selectionRequest.importer = "CnaDemos.PatrolImporter";
+        bool processorAmbiguous = false;
+        try { (void)selectionPipeline.Build(selectionRequest); }
+        catch (const Pipeline::ContentPipelineError& error)
+        {
+            processorAmbiguous = contextualSelection(error, "ambiguous processor") &&
+                std::string(error.what()).find("CnaDemos.AlternatePatrolProcessor") != std::string::npos &&
+                std::string(error.what()).find("CnaDemos.PatrolProcessor") != std::string::npos;
+            ctx.Print("Processor ambiguity: {}", error.what());
+        }
+        ctx.Check(processorAmbiguous,
+                  "an explicit importer advances the same build to deterministic processor ambiguity");
+
+        selectionRequest.processor = "CnaDemos.PatrolProcessor";
+        bool writerAmbiguous = false;
+        try { (void)selectionPipeline.Build(selectionRequest); }
+        catch (const Pipeline::ContentPipelineError& error)
+        {
+            writerAmbiguous = contextualSelection(error, "ambiguous writer") &&
+                std::string(error.what()).find("CnaDemos.AlternatePatrolWriter") != std::string::npos &&
+                std::string(error.what()).find("CnaDemos.PatrolWriter") != std::string::npos;
+            ctx.Print("Writer ambiguity: {}", error.what());
+        }
+        ctx.Check(writerAmbiguous,
+                  "explicit importer and processor advance the build to deterministic writer ambiguity");
+
+        selectionRequest.writer = "CnaDemos.PatrolWriter";
+        const auto explicitlySelected = selectionPipeline.Build(selectionRequest);
+        ctx.Check(explicitlySelected.importer.name == selectionRequest.importer &&
+                      explicitlySelected.processor.name == selectionRequest.processor &&
+                      explicitlySelected.writer.name == selectionRequest.writer &&
+                      explicitlySelected.output.bytes == built.output.bytes,
+                  "stable explicit names resolve all three ambiguities to the original deterministic output");
+
+        selectionRequest.processor = "CnaDemos.IncompatiblePatrolProcessor";
+        bool incompatibleProcessor = false;
+        try { (void)selectionPipeline.Build(selectionRequest); }
+        catch (const Pipeline::ContentPipelineError& error)
+        {
+            incompatibleProcessor = contextualSelection(error, "does not accept") &&
+                std::string(error.what()).find(selectionRequest.processor) != std::string::npos &&
+                std::string(error.what()).find(ImportedType) != std::string::npos;
+            ctx.Print("Incompatible processor override: {}", error.what());
+        }
+        ctx.Check(incompatibleProcessor,
+                  "an explicit processor that rejects the imported type fails at Selection without fallback");
+
+        selectionRequest.processor = "CnaDemos.PatrolProcessor";
+        selectionRequest.writer = "CnaDemos.IncompatiblePatrolWriter";
+        bool incompatibleWriter = false;
+        try { (void)selectionPipeline.Build(selectionRequest); }
+        catch (const Pipeline::ContentPipelineError& error)
+        {
+            incompatibleWriter = contextualSelection(error, "does not accept") &&
+                std::string(error.what()).find(selectionRequest.writer) != std::string::npos &&
+                std::string(error.what()).find(RuntimeType) != std::string::npos;
+            ctx.Print("Incompatible writer override: {}", error.what());
+        }
+        ctx.Check(incompatibleWriter,
+                  "an explicit writer that rejects the processed type fails at Selection without fallback");
+
+        auto namedRegistry = std::make_shared<Pipeline::ContentPipelineRegistry>();
+        namedRegistry->RegisterImporter(std::make_shared<PatrolImporter>());
+        namedRegistry->RegisterImporter(std::make_shared<PatrolImporter>(
+            ReturnedValue::Valid, "CnaDemos.NamedPatrolImporter", true));
+        namedRegistry->RegisterProcessor(std::make_shared<PatrolProcessor>());
+        namedRegistry->RegisterProcessor(std::make_shared<PatrolProcessor>(
+            ReturnedValue::Valid, "CnaDemos.NamedPatrolProcessor", ImportedType, true));
+        namedRegistry->RegisterWriter(std::make_shared<PatrolWriter>());
+        const Pipeline::ContentPipeline namedPipeline(namedRegistry);
+        auto namedRequest = request;
+        namedRequest.parameters.Set("closed", true);
+        const auto conventional = namedPipeline.Build(namedRequest);
+        ctx.Check(conventional.importer.name == "CnaDemos.PatrolImporter" &&
+                      conventional.processor.name == "CnaDemos.PatrolProcessor",
+                  "name-only components do not make the conventional importer or processor route ambiguous");
+        namedRequest.importer = "CnaDemos.NamedPatrolImporter";
+        namedRequest.processor = "CnaDemos.NamedPatrolProcessor";
+        const auto named = namedPipeline.Build(namedRequest);
+        ctx.Check(named.importer.name == namedRequest.importer &&
+                      named.processor.name == namedRequest.processor &&
+                      named.output.bytes == conventional.output.bytes,
+                  "explicit stable names select name-only importer and processor components");
 
         // The runtime half knows only its schema, not the build-tool classes above.
         ContentManager::RegisterCnbLoaderEXT<Patrol>(Cnb::CnbAssetTypeIdFromName(RuntimeType), RuntimeType,
@@ -305,13 +452,15 @@ namespace
 CNA_DEMOS_CONSOLE(PipelineComponents, {
     .id = "content.custom.pipeline_components",
     .title = "Build a custom patrol asset (CNAEXT)",
-    .description = "Builds and loads a CNB patrol through registered importer, processor and writer; checks typed parameters, "
-                   "stable and C++ result contracts, retained values and an intentionally absent XNB route.",
+    .description = "Builds and loads a CNB patrol through registered importer, processor and writer; checks deterministic "
+                   "selection/overrides, typed result contracts, retained values and an intentionally absent XNB route.",
     .apis = {"CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter",
              "CNA::Content::Pipeline::ContentPipelineRegistry::RegisterProcessor",
              "CNA::Content::Pipeline::ContentPipelineRegistry::RegisterWriter",
              "CNA::Content::Pipeline::ContentPipelineRegistry::DocumentAbsentWriter",
              "CNA::Content::Pipeline::ContentPipelineRegistry::AbsentWriterReason",
+             "CNA::Content::Pipeline::ContentImporter::SelectedByNameOnly",
+             "CNA::Content::Pipeline::ContentProcessor::SelectedByNameOnly",
              "CNA::Content::Pipeline::ContentPipeline::Build", "CNA::Content::Pipeline::ContentValue::Create",
              "CNA::Content::Pipeline::ContentValue::Get", "CNA::Content::Pipeline::ContentValue::StableType",
              "CNA::Content::Pipeline::ContentValue::CppType", "CNA::Content::Pipeline::ContentValue::RawData",

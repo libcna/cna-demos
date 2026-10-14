@@ -1738,14 +1738,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-762 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-763 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
-recorder boundaries, with new ISSUE-087 for omitted disposable shared-table values. Continue with
-the existing `content.custom.pipeline_components` workflow at the component-selection boundary:
-exercise meaningful ambiguous default selection and incompatible explicit processor/writer
-overrides with exact Selection context, if the public source contract confirms those routes. Keep
-ordinary registry inventory/accessor variants dispositioned and do not add a narrow error-only ID.
-Build with at most three compile jobs and keep focused evidence current.
+recorder boundaries and native component selection, with new ISSUE-087 for omitted disposable
+shared-table values. Audit `ContentBuildEnvironment` next: determine whether targetPlatform,
+buildConfiguration and intermediateDirectory have observable behavior or propagation in the
+existing native/XNA pipeline workflows. Add focused evidence only where the public implementation
+has a meaningful contract; otherwise record the disposition and continue into deeper intermediate
+serializer behavior. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1986,6 +1986,25 @@ pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 members,16
 `/tmp/checkpoint-762-coverage.md`. No rendering, screenshot or manual inspection was used, and no
 CNA issue was found. Runtime XREF traversal is explicitly owned by the custom loader; automatic
 child builds and graph-cycle checks belong to the existing nested-build/dependency-graph workflows.
+
+### Focused763 native pipeline component selection
+
+`content.custom.pipeline_components` adds eight controls, reaching23. Two ordinary candidates at
+each stage make one real Build request fail successively with importer, processor and writer
+ambiguity as stable-name overrides resolve the preceding stage. Naming all three original
+components produces the established bytes. Explicit processor and writer names whose declared
+input types reject the preceding value fail at Selection without fallback. Separately registered
+name-only importer and processor candidates do not disturb conventional routing, but explicit
+names select both and preserve the output.
+
+SOFTWARE and OPENGLES3/Xvfb pass23/23, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses `-j3`; metadata remains636/0, known-issue demos remain40, tool self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 members,169/753 fields and
+2999/3205 C routes. Evidence:`/tmp/checkpoint-763-pipeline-components-*` and
+`/tmp/checkpoint-763-coverage.md`. No rendering, screenshot or manual inspection was used, and no
+CNA issue was found. Registry inventory views and direct resolution queries remain ordinary
+inspection. Audit meaningful `ContentBuildEnvironment` platform/configuration/intermediate-
+directory propagation next before deeper serializer behavior.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

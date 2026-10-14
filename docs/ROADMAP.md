@@ -280,9 +280,11 @@ a check that all authored colors remain visible and that a blank texture row can
   containers whose game schema has missing/duplicate blocks, truncated fields or trailing bytes.
   ✅ `content.custom.pipeline_components`: registered importer/processor/writer, real patrol
   precomputation, deterministic CNB output, runtime loading and typed parameter diagnostics.
-  Existing example now has 15 passing checks: copied carrier lifetime and separate stable-identity
-  versus C++ payload guards at Import, Process and Write, with exact error context. An explicitly
-  documented absent XNB route gives the game's reason at Selection while CNB remains supported.
+  Existing example now has 23 passing checks: copied carrier lifetime and separate stable-identity
+  versus C++ payload guards at Import, Process and Write, with exact error context. Stepwise
+  importer/processor/writer ambiguity, stable-name overrides, incompatible-route refusal and
+  explicit name-only selection are covered. An explicitly documented absent XNB route gives the
+  game's reason at Selection while CNB remains supported.
   ✅ `content.custom.source_root_capabilities`: built-in CNJ texture compilation reads original
   shared art through a request-local alias. Ten focused checks cover exact pixels, recorded roots,
   identical output after relocation, ordinary local references, contextual refusals and repair.
@@ -6812,3 +6814,22 @@ manual inspection was used. No CNA issue was found. XREF does not automatically 
 custom schemas, so runtime cycles remain a game-loader concern while nested-build and dependency-
 graph demos cover build-time child scheduling. Continue the native pipeline-components workflow
 with meaningful component-selection ambiguity and explicit incompatibility behavior.
+
+## Focused763-native-pipeline-component-selection
+
+`content.custom.pipeline_components` adds eight controls, reaching23. Two ordinary candidates at
+each stage make one real Build request fail successively with importer, processor and writer
+ambiguity as stable-name overrides resolve the preceding stage. Naming all three original
+components produces the established bytes. Explicit processor and writer names whose declared
+input types reject the preceding value fail at Selection without fallback. Separately registered
+name-only importer and processor candidates do not disturb conventional routing, but explicit
+names select both and preserve the output.
+
+SOFTWARE and OPENGLES3/Xvfb pass23/23, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, known-issue demos remain40,
+validator/checkpoint self-tests pass5/5 and4/4, and generated coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-763-pipeline-components-*` and `/tmp/checkpoint-763-coverage.md`. No rendering,
+screenshot or manual inspection was used. No CNA issue was found. Registry inventory views and
+direct resolution queries remain ordinary inspection. Audit meaningful `ContentBuildEnvironment`
+platform/configuration/intermediate-directory propagation next before deeper serializer behavior.
