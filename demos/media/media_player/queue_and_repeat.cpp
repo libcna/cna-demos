@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MS-PL
 // A playlist: MediaPlayer::Play(SongCollection), the Queue, MoveNext/MovePrevious and IsRepeating.
+#include <chrono>
 #include <memory>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
@@ -115,6 +117,25 @@ namespace
             ctx.Check(queue.getActiveSongIndexProperty() == 1 && Active() == "Alternate Rising" &&
                           MediaPlayer::getStateProperty() == MediaState::Playing,
                       "the indexed collection overload starts playback at the requested nonzero entry");
+
+            MediaPlayer::Play(replacement, 0);
+            for (int step = 0; step < 300 && queue.getActiveSongIndexProperty() == 0; ++step)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                FrameworkDispatcher::Update();
+            }
+            ctx.Check(queue.getActiveSongIndexProperty() == 1 && Active() == "Alternate Rising" &&
+                          MediaPlayer::getStateProperty() == MediaState::Playing,
+                      "a completed first song automatically advances and plays the next queue entry");
+
+            for (int step = 0; step < 300 && MediaPlayer::getStateProperty() != MediaState::Stopped; ++step)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                FrameworkDispatcher::Update();
+            }
+            ctx.Check(MediaPlayer::getStateProperty() == MediaState::Stopped &&
+                          queue.getActiveSongIndexProperty() == 1 && Active() == "Alternate Rising",
+                      "the final nonrepeating song stops without wrapping or changing the active entry");
         }
         ctx.Check(queue.getCountProperty() == 2 && queue.getActiveSongIndexProperty() == 1 &&
                       Active() == "Alternate Rising",

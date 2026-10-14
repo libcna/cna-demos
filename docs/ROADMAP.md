@@ -7200,3 +7200,20 @@ remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C r
 Evidence:`/tmp/checkpoint-782-media-events-*` and `/tmp/checkpoint-782-coverage.md`. No acoustic
 quality, callback-thread or callback-mutation claim is made. Exercise automatic two-song queue
 advancement and the nonrepeating final-entry stop next.
+
+## Focused783-MediaPlayer-automatic-queue-end
+
+`media.media_player.queue_and_repeat` retains its thirteen prior controls and adds two real end-of-
+track behaviors. The replacement collection is replayed from index zero with repeat and shuffle
+disabled. A bounded dispatcher pump observes Falling complete, index one become the active Rising
+entry and state remain Playing. A second bounded pump observes the last track reach Stopped while
+the queue remains at index one, proving the nonrepeating path neither wraps nor clears its active
+record.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass15/15 controls with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-783-media-queue-end-*` and `/tmp/checkpoint-783-coverage.md`. No acoustic
+quality, exact callback-latency, screenshot or manual inspection is claimed. Exercise Add/Clear and
+the active-index setter on a separate scratch MediaQueue next.

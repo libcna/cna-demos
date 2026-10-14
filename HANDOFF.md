@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-782 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-783 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1762,8 +1762,9 @@ MediaPlayer collection overloads now cover the default zero start, live queue re
 nonzero start whose queue-owned copies outlive caller objects. Bounded shuffled traversal now proves
 queue index/identity/state consistency without assuming a random order; Pause freezes PlayPosition,
 Resume advances it and Stop resets it. Deferred media events now cover exact active-before-state
-ordering, pre-pump state coalescing, canonical payloads and listener removal. Exercise automatic
-two-song advancement and nonrepeating final stop next. Do not add
+ordering, pre-pump state coalescing, canonical payloads and listener removal. Automatic two-song
+advancement and the nonrepeating final stop are covered. Exercise `MediaQueue` Add/Clear and its
+active-index setter on an isolated queue next, then close the remaining volume-state gap. Do not add
 isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
@@ -2385,6 +2386,23 @@ remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C r
 Evidence:`/tmp/checkpoint-782-media-events-*` and `/tmp/checkpoint-782-coverage.md`. No acoustic
 quality, callback-thread or callback-mutation claim is made. Exercise automatic two-song queue
 advancement and the nonrepeating final-entry stop next.
+
+### Focused783-MediaPlayer-automatic-queue-end
+
+`media.media_player.queue_and_repeat` retains its thirteen prior controls and adds two real end-of-
+track behaviors. The replacement collection is replayed from index zero with repeat and shuffle
+disabled. A bounded dispatcher pump observes Falling complete, index one become the active Rising
+entry and state remain Playing. A second bounded pump observes the last track reach Stopped while
+the queue remains at index one, proving the nonrepeating path neither wraps nor clears its active
+record.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass15/15 controls with byte-identical stdout and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-783-media-queue-end-*` and `/tmp/checkpoint-783-coverage.md`. No acoustic
+quality, exact callback-latency, screenshot or manual inspection is claimed. Exercise Add/Clear and
+the active-index setter on a separate scratch MediaQueue next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
