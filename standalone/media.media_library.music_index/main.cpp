@@ -195,6 +195,49 @@ namespace
 #else
         std::cout << "Duration aggregation not exercised: CNA was built without FFmpeg metadata probing\n";
 #endif
+
+        // A separately indexed library supplies distinct objects for real value comparisons.
+        MediaLibrary mirror;
+        auto* mirrorAlbums = mirror.getAlbumsProperty();
+        auto* mirrorArtists = mirror.getArtistsProperty();
+        auto* mirrorGenres = mirror.getGenresProperty();
+        auto* mirrorPlaylists = mirror.getPlaylistsProperty();
+        if (!check(mirrorAlbums && mirrorArtists && mirrorGenres && mirrorPlaylists &&
+                       mirrorAlbums->getCountProperty() == 2 && mirrorArtists->getCountProperty() == 2 &&
+                       mirrorGenres->getCountProperty() == 1 && mirrorPlaylists->getCountProperty() == 1,
+                   "a second library independently indexes the same value records")) return 1;
+        Album* mirrorFirstAlbum = (*mirrorAlbums)[0];
+        Album* mirrorSecondAlbum = (*mirrorAlbums)[1];
+        Artist* mirrorEnsemble = (*mirrorArtists)[0];
+        Artist* mirrorSecondEnsemble = (*mirrorArtists)[1];
+        Genre* mirrorInstrumental = (*mirrorGenres)[0];
+        Playlist* mirrorSelected = (*mirrorPlaylists)[0];
+        check(firstAlbum->Equals(mirrorFirstAlbum) &&
+                  firstAlbum->Equals(static_cast<const System::Object*>(mirrorFirstAlbum)) &&
+                  *firstAlbum == *mirrorFirstAlbum && *firstAlbum != *mirrorSecondAlbum &&
+                  firstAlbum->GetHashCode() == mirrorFirstAlbum->GetHashCode() &&
+                  firstAlbum->ToString() == "Field Notes",
+              "album identity combines the title and artist across independent libraries");
+        check(ensemble->Equals(mirrorEnsemble) &&
+                  ensemble->Equals(static_cast<const System::Object*>(mirrorEnsemble)) &&
+                  *ensemble == *mirrorEnsemble && *ensemble != *mirrorSecondEnsemble &&
+                  ensemble->GetHashCode() == mirrorEnsemble->GetHashCode() &&
+                  ensemble->ToString() == "Demo Ensemble",
+              "artist identity, hash and text use the authored name across libraries");
+        check(instrumental->Equals(mirrorInstrumental) &&
+                  instrumental->Equals(static_cast<const System::Object*>(mirrorInstrumental)) &&
+                  *instrumental == *mirrorInstrumental && !(*instrumental != *mirrorInstrumental) &&
+                  instrumental->GetHashCode() == mirrorInstrumental->GetHashCode() &&
+                  instrumental->ToString() == "Instrumental" &&
+                  !instrumental->Equals(static_cast<const System::Object*>(mirrorSelected)),
+              "genre identity, hash and text use its name and reject another media type");
+        check(selected->Equals(mirrorSelected) &&
+                  selected->Equals(static_cast<const System::Object*>(mirrorSelected)) &&
+                  *selected == *mirrorSelected && !(*selected != *mirrorSelected) &&
+                  selected->GetHashCode() == mirrorSelected->GetHashCode() &&
+                  selected->ToString() == "Selected" &&
+                  !selected->Equals(static_cast<const System::Object*>(mirrorInstrumental)),
+              "playlist identity, hash and text use its name and reject another media type");
         std::cout << (passed ? "PASSED" : "FAILED") << " (" << checks << " checks)\n";
         // Library destruction releases all borrowed objects before cleanup removes the private files.
         return passed ? 0 : 1;

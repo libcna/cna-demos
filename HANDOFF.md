@@ -1342,14 +1342,15 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused642 projects XNA-member coverage to1477/2326 and closes Song's file-handle value
-identity versus display-name diagnostics. Audit the real indexed values in
-`media.media_library.music_index` next: exercise Album, Artist, Genre and Playlist Equals/object
-Equals, operators, hash consistency and ToString using the existing two artists, same-title albums,
-one genre and one playlist. Preserve all relationship/duration controls and borrowed ownership.
-Do not assert different hashes for unequal values, dispose borrowed group objects merely for flag
-coverage, or add reflection-only checks. Run both standalone runner selections, inspect child
-stderr/log deltas, and run the focused SOFTWARE CTest before continuing.
+baseline. Focused643 projects XNA-member coverage to1501/2326 and closes the Album/Artist/Genre/
+Playlist value contracts plus five already-executed library collection indexers. Audit
+`media.media_player.queue_and_repeat` next for MediaQueue.Item and queue ownership. Scope the two
+caller-owned Songs so they are destroyed immediately after MediaPlayer.Play copies the collection;
+then prove both queue-owned entries remain readable, differ from the caller pointers, track the
+active item through movement, and reject negative/count indices with ArgumentOutOfRangeException.
+Preserve the current repeat/previous/shuffle workflow and do not replay Queue.ActiveSong because
+ISSUE-058 documents that unsafe CNA path. Run both dummy-audio renderer environments and the
+focused SOFTWARE CTest, then continue.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2513,6 +2514,20 @@ with no catalog/type/C-route change. Neither file is played, so this is no decod
 identity claim. Evidence:`/tmp/checkpoint-642-song-values-*` and
 `/tmp/checkpoint-642-coverage.md`. No listening, screenshot or visual inspection was performed.
 Final build is diagnostic-free against clean CNA `09c3108e5`; no CNA source was edited.
+
+Focused643 extends the standalone `media.media_library.music_index` from18 to23 child controls.
+A second independent MediaLibrary indexes the same isolated files and yields distinct but equal
+Album/Artist/Genre/Playlist objects. Album identity combines title and artist; Artist, Genre and
+Playlist identity uses the name. Typed/System::Object Equals, both operators, equal hashes, exact
+text and wrong-type rejection now run against those real records. The five collection Item members
+were also credited because the original and mirror workflows directly index them to establish
+order and shared identity. Both runner selections pass with byte-identical stdout and the same six
+expected TitleContainer INFO stderr lines; the focused SOFTWARE CTest passes. Temporary coverage
+projects1477->1501/2326 with no catalog/type/C-route change. Different hashes for unequal values,
+reflection helpers, borrowed disposal and post-library pointer use are not claimed. Evidence:
+`/tmp/checkpoint-643-media-values-*` and `/tmp/checkpoint-643-coverage.md`. No playback, listening,
+screenshot or visual inspection was performed. Both changed targets build diagnostic-free against
+clean CNA `09c3108e5`; no CNA source was edited.
 
 ## 15. Assumptions the next session must know
 

@@ -4795,3 +4795,20 @@ Evidence:`/tmp/checkpoint-642-song-values-*` and `/tmp/checkpoint-642-coverage.m
 screenshot or visual inspection was performed. Audit Album, Artist, Genre and Playlist value
 contracts next inside the existing real indexed-library workflow; leave borrowed lifetime and
 disposal behavior intact.
+
+## Focused643-indexed-media-value-contracts
+
+`media.media_library.music_index` retains all18 relationship, ordering and duration controls and
+adds five. A second independent MediaLibrary indexes the same isolated fixture and supplies
+distinct but equal objects: Album identity combines title and artist, while Artist, Genre and
+Playlist use their names. Typed/System::Object Equals, operators, equal hashes, exact text and
+cross-type refusal run on these real values. The five collection Item members are also credited
+because both the original and mirror workflows directly index Song/Album/Artist/Genre/Playlist
+collections to establish order and shared identity. Both runner selections pass23 child checks
+with byte-identical stdout and the same six expected TitleContainer INFO stderr lines; parent JSON
+remains zero checks and the focused SOFTWARE CTest passes. Temporary coverage moves the XNA-member
+projection1477->1501/2326 without changing the627-demo/type/C-route counts. Different hashes for
+unequal values, reflection names, borrowed disposal and post-library pointer use are not claimed.
+Evidence:`/tmp/checkpoint-643-media-values-*` and `/tmp/checkpoint-643-coverage.md`. No playback,
+listening, screenshot or visual inspection was performed. Audit MediaQueue.Item and queue-owned
+copies next without invoking the known unsafe Queue.ActiveSong replay path from ISSUE-058.
