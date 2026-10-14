@@ -279,9 +279,9 @@ def morph_flag(path: Path) -> None:
 
 
 def camera_rig(path: Path) -> None:
-    """Three boxes on a floor and two glTF cameras: "Front", a perspective camera (yfov 0.7 rad,
-    aspect ratio 400:480, znear 0.1, zfar 50) placed in front and tilted down 12 degrees, and
-    "Top", an orthographic camera (xmag 3, ymag 3.6) looking straight down."""
+    """Three boxes on a floor and three glTF cameras. "Front" is a finite perspective camera
+    with an authored 400:480 aspect and a Dolly translation clip; "Top" is orthographic; and
+    "Infinite" omits both aspectRatio and zfar so the importer records both special cases."""
     doc = Document()
     parts = [
         ("Floor", (-2.5, -0.1, -2.5), (2.5, 0.0, 2.5), (0.4, 0.42, 0.45)),
@@ -305,13 +305,28 @@ def camera_rig(path: Path) -> None:
          "rotation": [math.sin(tilt / 2), 0.0, 0.0, math.cos(tilt / 2)]},
         {"name": "TopCameraNode", "camera": 1, "translation": [0.0, 8.0, 0.0],
          "rotation": [math.sin(down / 2), 0.0, 0.0, math.cos(down / 2)]},
+        {"name": "InfiniteCameraNode", "camera": 2, "translation": [0.0, 2.0, 6.0],
+         "rotation": [math.sin(tilt / 2), 0.0, 0.0, math.cos(tilt / 2)]},
     ]
     doc.gltf["cameras"] = [
         {"name": "Front", "type": "perspective",
          "perspective": {"yfov": 0.7, "aspectRatio": 400.0 / 480.0, "znear": 0.1, "zfar": 50.0}},
         {"name": "Top", "type": "orthographic",
          "orthographic": {"xmag": 3.0, "ymag": 3.6, "znear": 0.1, "zfar": 20.0}},
+        {"name": "Infinite", "type": "perspective",
+         "perspective": {"yfov": 0.6, "znear": 0.2}},
     ]
+    times = [0.0, 1.0]
+    time_accessor = doc.accessor(times, "SCALAR", target=None)
+    doc.gltf["accessors"][time_accessor].update({"min": [0.0], "max": [1.0]})
+    doc.gltf["animations"] = [{
+        "name": "Dolly",
+        "samplers": [{"input": time_accessor,
+                      "output": doc.accessor([(0.0, 1.8, 6.0), (0.8, 1.8, 6.0)],
+                                             "VEC3", target=None),
+                      "interpolation": "LINEAR"}],
+        "channels": [{"sampler": 0, "target": {"node": 4, "path": "translation"}}],
+    }]
     doc.gltf["materials"] = [{"name": "BakedColours", "extensions": {"KHR_materials_unlit": {}}}]
     doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
     doc.gltf["scenes"] = [{"name": "CameraRig", "nodes": list(range(len(doc.gltf["nodes"])))}]

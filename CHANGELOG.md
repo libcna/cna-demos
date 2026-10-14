@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the glTF camera workflow with an animated camera node and an infinite perspective
+  camera, proving live bone placement versus the import snapshot, absent-aspect metadata and exact
+  public projection reconstruction while retaining the compiled-camera ISSUE-023 witness.
 - Extended the glTF material-variant workflow to prove complete part-state replacement: PBR versus
   unlit vertex layouts, effect collection membership, owned texture, imported sampler and
   layout-specific morph tags, including exact wrap/clamp pixels and default restoration.

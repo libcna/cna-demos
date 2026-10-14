@@ -1557,13 +1557,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ### CNA-DEMOS-ISSUE-023 -- A compiled glTF model loses its cameras
 
 - **Area:** content pipeline -- CNB model encoding. `Model::getCamerasEXTProperty()` is filled by
-  the run-time glTF import (two cameras for the demo's scene) but is empty for the same scene
+  the run-time glTF import (three cameras for the demo's scene) but is empty for the same scene
   compiled by `cna_add_content`; `CnbModelData` has no camera data.
 - **Demos:** `graphics.model.gltf_cameras` (expected failure; it uses the run-time import).
-- **Reproduction:** compile `content/models/camera_rig.gltf` (a perspective and an orthographic
-  camera) and compare `Load<Model>("models/camera_rig")` with the loose copy
+- **Reproduction:** compile `content/models/camera_rig.gltf` (finite perspective, orthographic and
+  infinite perspective cameras) and compare `Load<Model>("models/camera_rig")` with the loose copy
   `Load<Model>("models/loose_camera_rig")`.
-- **Observed:** 0 cameras from the compiled model, 2 from the loose file.
+- **Observed:** 0 cameras from the compiled model, 3 from the loose file. The loose path also
+  preserves the camera node's Dolly animation independently through `ModelAnimationsEXT`.
 - **Expected:** the same cameras either way (CNA documents `ModelCameraEXT` as imported from the
   glTF scene, `GLTF-317`), or a build warning that the pipeline drops them.
 - **Environment:** CNA 0.1.0, Linux.

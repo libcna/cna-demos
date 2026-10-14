@@ -233,7 +233,9 @@ a check that all authored colors remain visible and that a blank texture row can
   `ApplyClipToBonesEXT`) on a turntable. Assets: original glTF written by `tools/gltf_models.py`
   (decision: generate, do not copy CNA's corpus), compiled by `cna_add_content`.
 - ✅ `graphics.model.morph_targets` (MorphTargetDataEXT, weights track, SetMorphWeightsEXT),
-  ✅ `graphics.model.gltf_cameras` (ModelCameraEXT; compiled models lose them, ISSUE-023),
+  ✅ `graphics.model.gltf_cameras` (finite/orthographic/infinite projections, authored versus
+  absent aspect, animated live bone placement versus import snapshot; compiled models lose all
+  cameras, ISSUE-023),
   ✅ `graphics.model.textured_gltf` (embedded PNG; compiled models lose it, ISSUE-022).
 - ✅ `graphics.model.gltf_lights` (KHR_lights_punctual -> the PbrEffect's directional lights; GL
   only), ✅ `graphics.model.clip_interpolation` (STEP/LINEAR/CUBICSPLINE samplers; expected failure,
@@ -8215,3 +8217,26 @@ coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C ro
 `/tmp/checkpoint-840-material-variants-*` and `/tmp/checkpoint-840-coverage.md`. No CNA defect
 appeared. Audit the remaining model/glTF public behavior and explicit evidence limits next; do not
 add another material-colour variant.
+
+## Focused841-animated-and-infinite-glTF-cameras
+
+The existing `graphics.model.gltf_cameras` fixture now carries three camera forms and one camera-
+node animation. Front retains its finite perspective and authored400:480 aspect. Top proves its
+exact orthographic matrix while all perspective-only scalar fields remain at defaults. Infinite
+omits both `aspectRatio` and `zfar`: the imported record distinguishes both omissions, carries
+aspect1/far0 plus its authored field of view and near plane, and its projection exactly equals
+`CreateInfinitePerspectiveFieldOfViewEXT` rebuilt from those public values.
+
+The imported `Dolly` scene-node clip targets Front's exact camera-bearing Model bone. Sampling its
+end moves the live absolute placement from `(0,1.8,6)` to `(0.8,1.8,6)`, while the camera's stored
+`WorldTransform` remains byte-for-byte the import snapshot. The left viewport draws through that
+live matrix and the right still draws through Top. SOFTWARE and OPENGLES3 each execute13 controls
+with only the established compiled-camera ISSUE-023 failure. Their inspected800x480 captures are
+byte-identical with SHA-256 `0af9063c7865438afbf43d4478d8a11bffbf92319bd1efb44764d4b58b674e8b`.
+The first SOFTWARE attempt incorrectly expected orthographic near/far in perspective-only scalar
+fields; the exact orthographic projection and zero scalar values matched CNA's tested contract, so
+the demo oracle was corrected without a new issue. The `-j3` build, known-issue SOFTWARE CTest,
+metadata650/0 and both validation self-test suites pass. Temporary coverage remains302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-841-camera-*`
+and `/tmp/checkpoint-841-coverage.md`. Audit the structured glTF import-report fields and diagnostic
+families against the existing fixtures next.

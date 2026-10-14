@@ -8,10 +8,13 @@
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
+#include "Microsoft/Xna/Framework/Graphics/AnimationPlayer.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Model.hpp"
+#include "Microsoft/Xna/Framework/Graphics/SkinnedModelEXT.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Viewport.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
+#include "System/TimeSpan.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -26,13 +29,13 @@ namespace
             auto& ctx = Context();
             // Through the content pipeline the cameras do not survive (CNA-DEMOS-ISSUE-023)...
             const Model compiled = getContentProperty().Load<Model>("models/camera_rig");
-            ctx.Check(compiled.getCamerasEXTProperty().size() == 2,
-                      "the compiled model keeps the scene's two cameras (CNA-DEMOS-ISSUE-023)");
+            ctx.Check(compiled.getCamerasEXTProperty().size() == 3,
+                      "the compiled model keeps the scene's three cameras (CNA-DEMOS-ISSUE-023)");
             // ...so the rest of the demo uses the same scene imported at run time from the .gltf.
             rig_.emplace(getContentProperty().Load<Model>("models/loose_camera_rig"));
             const std::vector<ModelCameraEXT>& cameras = rig_->getCamerasEXTProperty();
-            ctx.Check(cameras.size() == 2, "the run-time import has the scene's two glTF cameras");
-            if (cameras.size() != 2)
+            ctx.Check(cameras.size() == 3, "the run-time import has the scene's three glTF cameras");
+            if (cameras.size() != 3)
             {
                 return;
             }
@@ -45,26 +48,63 @@ namespace
             }
             const ModelCameraEXT& front = cameras[0];
             const ModelCameraEXT& top = cameras[1];
+            const ModelCameraEXT& infinite = cameras[2];
             ctx.Check(front.Name == "Front" && front.IsPerspective && std::abs(front.FieldOfView - 0.7f) < 1e-5f &&
                           front.HasAuthoredAspectRatio && !front.HasInfiniteFarPlane,
                       "Front: perspective, yfov 0.7, authored aspect ratio, finite far plane");
-            ctx.Check(top.Name == "Top" && !top.IsPerspective, "Top: orthographic");
+            ctx.Check(top.Name == "Top" && !top.IsPerspective && !top.HasAuthoredAspectRatio &&
+                          top.FieldOfView == 0.0f && top.NearPlaneDistance == 0.0f &&
+                          top.FarPlaneDistance == 0.0f &&
+                          top.Projection == Matrix::CreateOrthographic(6.0f, 7.2f, 0.1f, 20.0f),
+                      "Top: exact orthographic projection with perspective-only fields at defaults");
+            ctx.Check(infinite.Name == "Infinite" && infinite.IsPerspective &&
+                          infinite.HasInfiniteFarPlane && !infinite.HasAuthoredAspectRatio &&
+                          infinite.AspectRatio == 1.0f && std::abs(infinite.FieldOfView - 0.6f) < 1e-5f &&
+                          std::abs(infinite.NearPlaneDistance - 0.2f) < 1e-5f &&
+                          infinite.FarPlaneDistance == 0.0f,
+                      "Infinite records its absent aspect ratio and far plane without inventing values");
+            const Matrix rebuiltInfinite = CreateInfinitePerspectiveFieldOfViewEXT(
+                infinite.FieldOfView, infinite.AspectRatio, infinite.NearPlaneDistance);
+            ctx.Check(infinite.Projection == rebuiltInfinite,
+                      "the public infinite projection builder exactly reconstructs the imported matrix");
 
             // A camera's live placement is its node's absolute transform (the node could be
             // animated); the view matrix is its inverse. At rest that equals the import snapshot.
             std::vector<Matrix> absolute(static_cast<std::size_t>(rig_->getBonesProperty().getCountProperty()));
             rig_->CopyAbsoluteBoneTransformsTo(absolute);
-            for (std::size_t i = 0; i < cameras.size(); ++i)
-            {
-                const Matrix placement = absolute[static_cast<std::size_t>(cameras[i].SceneNodeIndex)];
-                views_[i] = Matrix::Invert(placement);
-                projections_[i] = cameras[i].Projection;
-            }
             const Vector3 frontPosition = absolute[static_cast<std::size_t>(front.SceneNodeIndex)].getTranslationProperty();
             ctx.Check(std::abs(frontPosition.Y - 1.8f) < 1e-4f && std::abs(frontPosition.Z - 6.0f) < 1e-4f,
                       "the Front camera's node stands at (0, 1.8, 6)");
             ctx.Check(absolute[static_cast<std::size_t>(front.SceneNodeIndex)] == front.WorldTransform,
                       "at rest the bone's absolute transform is the imported WorldTransform");
+
+            const auto* animations = dynamic_cast<const ModelAnimationsEXT*>(rig_->getTagProperty());
+            if (!ctx.Check(animations && animations->Clips.contains("Dolly"),
+                           "the camera-node animation is exposed as the Dolly scene-node clip"))
+                return;
+            const AnimationClip& dolly = animations->Clips.at("Dolly");
+            if (!ctx.Check(dolly.TargetSpace == ClipTargetSpaceEXT::SceneNode &&
+                               dolly.Tracks.size() == 1 &&
+                               dolly.Tracks[0].BoneIndex == front.SceneNodeIndex,
+                           "Dolly targets the exact Model bone that carries Front"))
+                return;
+            const Matrix importedFront = front.WorldTransform;
+            ApplyClipToBonesEXT(*rig_, dolly, System::TimeSpan::FromSeconds(1.0));
+            rig_->CopyAbsoluteBoneTransformsTo(absolute);
+            const Matrix liveFront = absolute[static_cast<std::size_t>(front.SceneNodeIndex)];
+            const Vector3 livePosition = liveFront.getTranslationProperty();
+            ctx.Check(std::abs(livePosition.X - 0.8f) < 1e-4f &&
+                          std::abs(livePosition.Y - 1.8f) < 1e-4f &&
+                          std::abs(livePosition.Z - 6.0f) < 1e-4f,
+                      "sampling Dolly moves Front's live bone to (0.8, 1.8, 6)");
+            ctx.Check(front.WorldTransform == importedFront && liveFront != front.WorldTransform,
+                      "WorldTransform remains an import snapshot while the live camera bone moves");
+
+            views_[0] = Matrix::Invert(liveFront);
+            views_[1] = Matrix::Invert(absolute[static_cast<std::size_t>(top.SceneNodeIndex)]);
+            projections_[0] = front.Projection;
+            projections_[1] = top.Projection;
+            ready_ = true;
         }
 
         void Draw(const GameTime& gameTime) override
@@ -73,7 +113,7 @@ namespace
             const Viewport full = device.getViewportProperty();
             device.Clear(Color(24, 24, 32));
             device.setDepthStencilStateProperty(DepthStencilState::Default);
-            if (rig_->getCamerasEXTProperty().size() == 2)
+            if (ready_)
             {
                 // Each half of the screen (400x480, the aspect ratio the file's cameras were made for)
                 // shows the scene through one of its cameras.
@@ -108,19 +148,21 @@ namespace
         std::optional<Model> rig_;
         std::array<Matrix, 2> views_;
         std::array<Matrix, 2> projections_;
+        bool ready_ = false;
     };
 }
 
 CNA_DEMOS_GAME(GltfCamerasDemo, {
     .id = "graphics.model.gltf_cameras",
     .title = "Cameras from a glTF scene (CNAEXT)",
-    .description = "Loads a glTF scene with a perspective and an orthographic camera, reads them from "
-                   "Model::CamerasEXT (projection, field of view, planes, authored aspect ratio) and shows the "
-                   "scene through each in one half of the screen, the view taken from the camera node's bone "
-                   "(from the run-time import: the compiled model loses its cameras, CNA-DEMOS-ISSUE-023).",
+    .description = "Loads finite, orthographic and infinite glTF cameras, reconstructs the infinite projection, "
+                   "then samples a camera-node animation and shows that live placement comes from its Model bone "
+                   "while WorldTransform remains the import snapshot; the finite and top views share the screen "
+                   "(run-time import: compiled models lose cameras, CNA-DEMOS-ISSUE-023).",
     .apis = {"ModelCameraEXT", "Model::getCamerasEXTProperty", "Model::CopyAbsoluteBoneTransformsTo",
+             "CreateInfinitePerspectiveFieldOfViewEXT", "ModelAnimationsEXT", "ApplyClipToBonesEXT",
              "Matrix::Invert", "GraphicsDevice::Viewport", "Model::Draw"},
-    .tags = {"3d", "model", "gltf", "camera", "split-screen", "cnaext"},
+    .tags = {"3d", "model", "gltf", "camera", "animation", "split-screen", "cnaext"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
     .deterministic = true,

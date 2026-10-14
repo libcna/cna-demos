@@ -180,6 +180,8 @@ exact public vertex readback, structured diagnostics and matching SOFTWARE/OPENG
 Focused840 extends the existing material-variant scene from colour-only selection to complete
 effect/buffer/layout/sampler/morph-Tag replacement and exact default restoration, with visible
 texture addressing on both renderers.
+Focused841 extends the camera scene with infinite/absent-aspect projection metadata and a Dolly
+clip proving live camera placement comes from its Model bone while WorldTransform stays a snapshot.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3485,6 +3487,27 @@ Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078
 Evidence:`/tmp/checkpoint-840-material-variants-*` and `/tmp/checkpoint-840-coverage.md`. Audit the
 remaining model/glTF public behavior and explicit evidence limits next; do not add another
 material-colour variant.
+
+### Focused841-animated-and-infinite-glTF-cameras
+
+The existing `graphics.model.gltf_cameras` now covers three camera forms. Front retains its finite
+perspective and authored400:480 aspect; Top has the exact orthographic projection while its
+perspective-only scalar fields stay zero; Infinite omits aspect and zfar, records aspect1/far0 and
+exactly reconstructs through `CreateInfinitePerspectiveFieldOfViewEXT` from its public values.
+
+Its imported Dolly scene-node clip targets Front's exact camera-bearing Model bone. Sampling at1s
+moves the live absolute placement from `(0,1.8,6)` to `(0.8,1.8,6)` while the stored
+`WorldTransform` remains the import snapshot. That live matrix supplies the left viewport and the
+unchanged Top camera supplies the right. SOFTWARE and OPENGLES3 each execute13 controls with only
+the established compiled-camera ISSUE-023 failure. Their inspected800x480 captures are byte-
+identical (`0af9063c7865438afbf43d4478d8a11bffbf92319bd1efb44764d4b58b674e8b`). The first
+SOFTWARE attempt incorrectly expected orthographic near/far in perspective-only scalar fields;
+the exact projection and zero fields matched CNA's tested contract, so the oracle was corrected
+without a new issue. The `-j3` build, known-issue SOFTWARE CTest, metadata650/0 and both validation
+self-test suites pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields
+and3078/3205 C routes. Evidence:`/tmp/checkpoint-841-camera-*` and
+`/tmp/checkpoint-841-coverage.md`. Audit structured glTF import-report fields and diagnostic
+families against the existing fixtures next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
