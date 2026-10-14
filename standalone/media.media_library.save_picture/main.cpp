@@ -211,6 +211,30 @@ namespace
                   << 'x' << chunked->getHeightProperty() << '\n';
         check(savedBytes == encoded && chunks.getPositionProperty() == chunks.getLengthProperty(),
               "SavePicture consumes every chunk and preserves the complete encoded image (CNA-DEMOS-ISSUE-041)");
+
+        check(!picture->getIsDisposedProperty() && !album->getIsDisposedProperty(),
+              "library-owned picture and picture-album views start live");
+        picture->Dispose();
+        album->Dispose();
+        picture->Dispose();
+        album->Dispose();
+        check(picture->getIsDisposedProperty() && album->getIsDisposedProperty() &&
+                  !preview->getIsDisposedProperty() && !chunked->getIsDisposedProperty() &&
+                  picture->getAlbumProperty() == album && album->getPicturesProperty()->getCountProperty() == 3,
+              "object disposal is idempotent, marks only that borrowed view and preserves its relationships");
+
+        auto* reopenedPictures = reopened.getPicturesProperty();
+        check(!reopenedPictures->getIsDisposedProperty() && !rootAlbums->getIsDisposedProperty(),
+              "reopened picture and album collection views start live");
+        reopenedPictures->Dispose();
+        rootAlbums->Dispose();
+        reopenedPictures->Dispose();
+        rootAlbums->Dispose();
+        check(reopenedPictures->getIsDisposedProperty() && rootAlbums->getIsDisposedProperty() &&
+                  reopenedPictures->getCountProperty() == 0 && rootAlbums->getCountProperty() == 0 &&
+                  indexedPicture->getNameProperty() == "Panorama.png" &&
+                  reopenedSavedAlbum->getNameProperty() == "Saved Pictures",
+              "collection disposal is idempotent and clears each non-owning view without destroying its objects");
         std::cout << (passed ? "PASSED" : "FAILED") << " (" << checks << " checks)\n";
         return passed ? 0 : 1;
 #endif

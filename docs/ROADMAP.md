@@ -5598,3 +5598,19 @@ coverage moves2009->2028/2326 at632 demos,301/329 types and156/753 fields; Media
 Evidence:`/tmp/checkpoint-690-music-*` and `/tmp/checkpoint-690-coverage.md`. No playback, listening,
 screenshot or visual result is claimed. Continue picture-object and picture-collection lifetime in
 the existing save-picture workflow next.
+
+## Focused691-picture-library-lifetime
+
+The existing private-XDG save-picture workflow now covers the remaining Media object and collection
+lifetime members. Picture and PictureAlbum repeated disposal marks only the selected borrowed views,
+preserves their relationship and leaves sibling pictures live. Repeated disposal of the reopened
+top-level PictureCollection and root PictureAlbumCollection marks and empties those non-owning views
+while their saved objects remain readable.
+
+SOFTWARE and OPENGLES3 selections are byte-identical:23/24 controls pass and only established
+CNA-DEMOS-ISSUE-041 fails after SavePicture consumes13/1666 short-read bytes. Both stderr logs have
+the same two reviewed TitleContainer INFO lines. The focused SOFTWARE CTest passes its expected-
+failure contract. Temporary coverage moves2028->2036/2326 at632 demos,301/329 types and156/753
+fields; Media moves169->177/192. Evidence:`/tmp/checkpoint-691-picture-*` and
+`/tmp/checkpoint-691-coverage.md`. No screenshot or visual result is claimed. Continue with
+VisualizationData construction and collection-enumerator disposition next.

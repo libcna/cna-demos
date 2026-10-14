@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused690
-projects the632-demo staged catalog to2028/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused691
+projects the632-demo staged catalog to2036/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1373,9 +1373,8 @@ no member gap. GraphicsAdapter, the complete PackedVector namespace, PacketReade
 converter types and the ordinary Content surface now have no member gap. The seven remaining Content
 entries are four nominal .NET attribute-wrapper types and are dispositioned rather than inflated
 into inert wrapper demos. Input now has no member gap. Music-library object, collection and library
-lifetime is covered. Continue Media lifetime with Picture, PictureAlbum, PictureCollection and
-PictureAlbumCollection in the existing isolated save-picture workflow. Then cover
-VisualizationData's zero-initializing constructor and explicitly disposition the seven collections'
+lifetime is covered, including the picture side. Cover VisualizationData's zero-initializing
+constructor next in the existing visualization workflow and explicitly disposition the seven collections'
 CLR GetEnumerator inventory entries rather than adding metadata for C++ range syntax. Then continue
 with the next high-value behavior family,
 rebuilding, running both renderers where
@@ -1386,7 +1385,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused690 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused691 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3335,6 +3334,24 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No playback, screenshot,
 listening or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
 source was edited. Continue picture-object and picture-collection lifetime in `save_picture` next.
+
+Focused691 extends the existing private-XDG `media.media_library.save_picture` workflow. Picture and
+PictureAlbum begin live; repeated Dispose marks only the selected borrowed views, preserves their
+relationship and leaves sibling pictures live. The reopened top-level PictureCollection and root
+PictureAlbumCollection begin live; repeated Dispose marks and empties those non-owning views while
+their saved Picture and PictureAlbum objects remain readable.
+
+SOFTWARE and OPENGLES3 selections are byte-identical:23/24 controls pass and only the established
+CNA-DEMOS-ISSUE-041 short-read control fails after SavePicture consumes13/1666 bytes. Both stderr
+logs contain the same two reviewed TitleContainer INFO lines. The focused SOFTWARE CTest passes its
+expected-failure contract. Temporary coverage moves2028->2036/2326 at632 demos,301/329 types and
+156/753 fields; Media moves169->177/192. Evidence:`/tmp/checkpoint-691-picture-*` and
+`/tmp/checkpoint-691-coverage.md`. Runner SHA-256 is
+`56a5b9f50ef63c9878f96695db21999c7df8a397aedbf49917b17c1a86424ea7`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No screenshot or visual
+result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA source was edited.
+Continue with VisualizationData construction and collection-enumerator disposition next.
 
 ## 15. Assumptions the next session must know
 
