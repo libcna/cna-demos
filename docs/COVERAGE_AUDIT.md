@@ -387,6 +387,19 @@ diagnostic remains2 on SOFTWARE and5 on OPENGLES3. All stderr is empty and all t
 SOFTWARE CTests pass. Evidence:`/tmp/checkpoint-672-*` and `/tmp/checkpoint-672-coverage.md`.
 Pixels were inspected through programmatic readback; no screenshot or visual inspection was used.
 
+### GraphicsDevice vertex-stage collections
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| VertexTextures | A real Single-format Texture2D binds by exact identity in vertex slot1 while the same pixel slot remains null. Replacing it with Color throws NotSupportedException and preserves the prior binding; disposing the bound texture clears the slot. |
+| VertexSamplerStates | PointClamp in vertex slot1 reports exact filter/address state while the corresponding pixel sampler remains LinearWrap, establishing independent collections. |
+
+Focused673 adds one four-control state ID and credits both members, moving temporary coverage1783->
+1785/2326 at631 demos. SOFTWARE and OPENGLES3 pass with byte-identical stdout and empty stderr;
+the focused SOFTWARE CTest passes. The workflow validates binding/format/lifetime state and does
+not claim compiled vertex-shader sampling. Evidence:`/tmp/checkpoint-673-*` and
+`/tmp/checkpoint-673-coverage.md`. No drawing, screenshot or visual inspection was used.
+
 ### ContentManager (including CNA extensions)
 
 | Members / behavior | Decision and evidence |

@@ -1361,15 +1361,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused672
-projects the630-demo staged catalog to1783/2326 XNA members and155/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused673
+projects the631-demo staged catalog to1785/2326 XNA members and155/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. Audit
-GraphicsDevice's10 remaining generated gaps next. Add a focused vertex-stage texture/sampler
-collection workflow with exact identity plus supported-format/refusal behavior; then cover
-reset/present and a separately owned device's construction/disposal lifecycle. `Finalize` is CLR
-machinery and `DeviceLost` is documented never to fire on desktop, so disposition rather than
-simulate them unless a supported real device-loss path is executed.
+GraphicsDevice's8 remaining generated gaps next. Add a focused separately owned device covering
+public construction, reset events/state, present, disposal event/state and post-disposal refusal.
+`Finalize` is CLR machinery and `DeviceLost` is documented never to fire on desktop, so explicitly
+disposition them rather than simulate them unless a supported real device-loss path is executed.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1378,7 +1377,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused672 built against external `1ad225ae28`. That checkout currently
+the sibling CNA checkout; focused673 built against external `1ad225ae28`. That checkout currently
 has six externally owned documentation/FNA3D paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2998,6 +2997,20 @@ hashes remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da`
 programmatic readback; no screenshot or visual inspection was used. Sibling CNA remained external
 `1ad225ae28` with six dirty documentation/FNA3D paths; no CNA source was edited. Audit vertex-stage
 device collections next.
+
+Focused673 adds `graphics.device.vertex_stage_bindings`, a four-control public-state workflow. A
+Single Texture2D binds by exact identity in vertex slot1 while pixel slot1 remains null; PointClamp
+changes only the vertex sampler while the pixel sampler remains LinearWrap. Color-format
+replacement throws atomically, and disposing the floating texture clears its vertex slot.
+SOFTWARE and OPENGLES3 pass4/4 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. Temporary coverage moves1783->1785/2326 at631 demos,301/329 types and155/753 fields.
+The demo does not claim compiled vertex-shader sampling. Evidence:`/tmp/checkpoint-673-*` and
+`/tmp/checkpoint-673-coverage.md`. Runner SHA-256 is
+`0ce5a5581704a1cfd493701be25d63aaf366f5fffc6b929dcc91cb0ec596d8ee`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No drawing, screenshot or
+visual inspection was used. Sibling CNA remained external `1ad225ae28` with six dirty
+documentation/FNA3D paths; no CNA source was edited. Finish GraphicsDevice lifecycle next.
 
 ## 15. Assumptions the next session must know
 

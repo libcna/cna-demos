@@ -5301,3 +5301,19 @@ coverage moves1779->1783/2326 at630 demos,301/329 types and155/753 fields. Evide
 `/tmp/checkpoint-672-*` and `/tmp/checkpoint-672-coverage.md`. Pixels were inspected through
 programmatic readback; no screenshot or visual inspection was used. Audit vertex-stage device
 collections next, then reset/present and separately owned construction/disposal lifecycle.
+
+## Focused673-GraphicsDevice-vertex-stage-bindings
+
+New `graphics.device.vertex_stage_bindings` closes both vertex-stage collection members in four
+controls. A real Single Texture2D binds by exact identity in vertex slot1 while the corresponding
+pixel slot remains null. PointClamp reports exact vertex filter/address state while the pixel
+sampler remains LinearWrap. Replacing the floating texture with Color throws without changing the
+binding, and disposing the bound texture clears the slot.
+
+SOFTWARE and OPENGLES3 pass4/4 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. Temporary coverage moves1783->1785/2326 at631 demos,301/329 types and155/753 fields.
+The workflow validates public binding, format and lifetime state; it does not claim compiled
+vertex-shader sampling. Evidence:`/tmp/checkpoint-673-*` and
+`/tmp/checkpoint-673-coverage.md`. No drawing, screenshot or visual inspection was used. Finish
+GraphicsDevice construction, reset, present and disposal lifecycle next; disposition DeviceLost
+and CLR Finalize explicitly.
