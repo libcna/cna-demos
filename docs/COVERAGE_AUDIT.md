@@ -2499,3 +2499,25 @@ viewport convention; correcting the demo oracle resolved both without a CNA issu
 a declared fallback skip. The demo proves rigid PBR behavior; the equivalent skinned fields share
 the same shader terms and already have actual animated/IBL coverage, so duplicate panels require a
 separate reason rather than automatic demo-count growth.
+
+### PbrEffect and SkinnedPbrEffect public-surface disposition
+
+The pinned d23e139 headers expose113 public declarations on `PbrEffect` and118 on
+`SkinnedPbrEffect`, including duplicate field/accessor forms and the public renderer bridge. Every
+declaration now has a semantic disposition:
+
+| Public area | Disposition |
+|---|---|
+| Construction, type identity, `Clone`, matrices and `Apply`/draw lifecycle | Covered by the two C state workflows and the actual rigid/skinned draws. The rigid clone's four lost surface fields remain CNA-DEMOS-ISSUE-070; the skinned clone preserves material, palette and texture ownership. |
+| Diffuse/alpha, ambient/directional lights, required lighting, fog and default lighting | State/default/error behavior is covered in C; directionals and ambient are sampled in several PBR scenes. Material `Alpha` and fog still need pixel evidence. The three public `DirectionalLight` fields duplicate the property accessors and do not merit separate panels. |
+| Seven maps, all material factors, map strengths, UV selectors/transforms and colour spaces | Every property and invalid selector boundary has state coverage; all seven slots and every factor family now have rigid sampled evidence. |
+| `SetOwned*` for all seven maps | The C texture-slot workflow exercises the same C++ owned setters: every slot retains an exact resource across source destruction/clone and releases it after the final reference clears. Repeating the convenience spelling in C++ would not add behavior. |
+| Alpha mode/cutoff, double-sided and vertex colour | Rigid sampled coverage is complete. Shared shader terms are credited to the skinned sibling; broad identity-bone duplication is intentionally omitted. |
+| Skinned weights, `MaxBones`, bone set/get and palette ownership | Covered at all1/2/4 modes and the complete72-entry boundary in C, with actual two-joint animated deformation in C++. |
+| Image-based light | Rigid and skinned programs both have actual irradiance/BRDF observations; invalid fallback and stored bundle state are covered. |
+| Directional shadows and punctual light | Detailed receiver semantics exist on `SkinnedEffect`, but neither separate PBR renderer program is executed by those scenes. Add compact rigid-plus-skinned branch evidence rather than duplicate the entire receiver matrix. |
+| `GetTypeName`, protected `OnApply`, `FillGpuDrawParams` | Type names are generic reflection. Apply and the public-but-internal renderer bridge are transitively exercised by every draw and do not justify direct internal-structure demos. |
+
+This closes the disposition pass, not the PBR family. The next meaningful batch is rigid-plus-skinned
+directional-shadow and punctual-light reception, followed by material-alpha and fog pixels folded
+into existing scenes where that remains clear.

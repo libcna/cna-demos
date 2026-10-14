@@ -159,6 +159,9 @@ Focused830 extends the existing specular-material workflow with sampled dual-UV 
 independent transforms for both `KHR_materials_specular` maps.
 Focused831 adds actual PBR vertex-colour RGB/alpha multiplication, all alpha coverage modes/cutoff
 and double-sided back-face basis reversal.
+Focused832 completes the PbrEffect/SkinnedPbrEffect public-surface disposition. Shared material,
+ownership and skinning state is already covered; actual PBR fog/material-alpha pixels and both PBR
+classes' shadow/punctual renderer branches remain the meaningful gaps.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3271,6 +3274,34 @@ metadata is646/0, both tool self-test suites pass and temporary coverage remains
 `/tmp/checkpoint-831-pbr-surface-*` and `/tmp/checkpoint-831-coverage.md`. Complete a public
 PbrEffect/SkinnedPbrEffect member-and-behavior disposition pass next, credit shared behavior without
 duplicating it and select the next real gap.
+
+### Focused832-PBR-family-public-surface-disposition
+
+The declaration-by-declaration audit covers all113 public `PbrEffect` declarations and all118
+public `SkinnedPbrEffect` declarations at CNA commit d23e139. Existing C state demos establish
+construction/type-preserving clones, matrices, complete fog/light/material state, required-lighting
+refusal, every seven-slot selector/transform/colour-space value, invalid boundaries and retained
+texture lifetime. The rigid pixel scenes cover every PBR material texture/factor family, IBL,
+vertex colour, alpha modes/cutoff and double-sided basis reversal. The imported skinned scene plus
+the C skinned state demo cover real deformation, the1/2/4-weight and72-bone contracts, copied
+palette/clone ownership and actual skinned IBL. Shared material semantics are credited to those
+rigid observations rather than repeated mechanically on the sibling class.
+
+The audit intentionally gives no independent demo obligation to duplicate public directional-light
+fields, trivial type-name access, protected `OnApply`, or the public-but-internal renderer bridge
+`FillGpuDrawParams`; their behavior is consumed by existing draws. All seven C++ `SetOwned*`
+conveniences share the lifetime contract already observed through the C texture-slot workflow,
+which retains every slot across source destruction and releases only after the clone clears its last
+reference. ISSUE-070 remains the genuine rigid-clone defect for vertex colour, alpha mode/cutoff and
+double-sided state; the skinned clone succeeds.
+
+Three observable gaps remain. No PBR scene samples `Alpha` as a material opacity multiplier; fog is
+only round-tripped as state; and the separate rigid/skinned PBR renderer programs have no runtime
+evidence for their directional-shadow or punctual-light receiver branches. Those branches cannot be
+closed solely by the comprehensive `SkinnedEffect` receiver demos. Add compact rigid-plus-skinned
+PBR receiver controls first, then extend a current PBR scene with material alpha/fog rather than
+creating member-count variants. Metadata remains646/0 and both validation-tool self-test suites
+pass. Evidence:`/tmp/checkpoint-832-pbr-public-surface-audit-*`.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

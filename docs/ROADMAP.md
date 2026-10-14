@@ -171,8 +171,9 @@ a check that all authored colors remain visible and that a blank texture row can
   switches and final output encoding. `graphics.pbr_effect.texture_maps` now also proves normal-map
   scale and occlusion strength at one and zero; the expanded specular scene samples both remaining
   maps' independent UV selectors/transforms. ✅ `graphics.pbr_effect.material_surface` covers alpha
-  modes/cutoff, double-sided shading and vertex-colour RGB/alpha multiplication. Complete the
-  detailed PBR-family public-surface disposition before marking this family complete.
+  modes/cutoff, double-sided shading and vertex-colour RGB/alpha multiplication. ✅ The detailed
+  public-surface disposition credits shared state/behavior without duplicating panels and leaves
+  actual material-alpha/fog pixels plus rigid/skinned PBR shadow/punctual branches as real gaps.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
@@ -8017,3 +8018,30 @@ jobs and emits only the known Draco CMP0148 configure warning; metadata is646/0,
 and4/4, and temporary coverage stays302/329 types,2114/2326 members,169/753 fields and3078/3205 C
 routes. Evidence:`/tmp/checkpoint-831-pbr-surface-*` and `/tmp/checkpoint-831-coverage.md`. Complete
 the PbrEffect/SkinnedPbrEffect public-surface disposition next and then select the next real gap.
+
+## Focused832-PBR-family-public-surface-disposition
+
+The member/behavior audit now classifies every public declaration in `PbrEffect` (113) and
+`SkinnedPbrEffect` (118) at the pinned CNA d23e139 baseline. The C material, texture-slot and
+skinned-state workflows cover construction, clone/type identity, matrices, fog/light state,
+required-lighting refusal, all seven maps and their ownership, every selector/transform/colour-space
+switch, the complete material state and the1/2/4-weight plus72-bone contracts. Current rigid draw
+scenes cover every map/factor family, IBL, colour transfer, vertex colour, alpha coverage and
+double-sided lighting; the skinned model supplies actual deformation and IBL. These are coherent
+shared contracts, so repeating all rigid panels with an identity bone would add count without new
+semantic evidence.
+
+Direct directional-light fields duplicate their accessors; type-name retrieval is generic
+reflection; protected `OnApply` and public `FillGpuDrawParams` are lifecycle/internal renderer
+bridges consumed by existing draws. They do not warrant standalone demos. The seven C++
+`SetOwned*` conveniences have the same semantics as the fully observed C slot-retention/clone
+workflow. ISSUE-070 continues to document the four lost rigid-clone fields; the parallel skinned
+clone is already successful.
+
+The remaining observable work is narrow and concrete: sampled material `Alpha`, sampled PBR fog,
+and branch evidence that both the rigid and skinned PBR programs consume directional shadows and
+punctual lights. Existing `SkinnedEffect` scenes prove the receiver model in depth but do not execute
+those PBR renderer variants. Metadata remains646/0; catalog validation and the5/5 validator plus4/4
+checkpoint-comparison self-tests pass. Evidence:`/tmp/checkpoint-832-pbr-public-surface-audit-*`.
+Add a compact rigid-plus-skinned PBR receiver scene next, then fold alpha/fog into an existing PBR
+workflow where practical.
