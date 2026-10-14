@@ -7011,3 +7011,26 @@ remain41, validator/checkpoint self-tests pass5/5 and4/4, and generated runtime 
 `/tmp/checkpoint-772-intermediate-identity-*` and `/tmp/checkpoint-772-coverage.md`. No rendering,
 screenshot or manual inspection was used. No CNA issue was found. Audit the custom
 ContentTypeWriter/ContentWriter XNB path next.
+
+## Focused773-custom-XNB-writer-lifecycle-and-context
+
+`content.custom.xml_xnb_pipeline` grows from ten passing controls to twelve passes plus one focused
+failure. Its factory retains the registered ProfileWriter contract: exact authoring TargetType,
+runtime type and reader, version two and the default false existing-object policy. A Windows Phone,
+HiDef, LZX-requested build reaches `ShouldCompressContent` and both ContentWriter target properties;
+the writer declines compression and the actual XNB header carries the requested platform/profile
+without the compression flag. Initialize supplies its compiler before Write, which resolves a
+registered Vital writer and emits health through explicit typed and raw writer overloads; matching
+game readers restore distinct75/76 values and later120/121 values after an authored rebuild.
+
+A separate bounded writer follows the documented Initialize contract and retrieves a nested writer
+there. Its AddTypeWriter call deadlocks because CNA invokes Initialize while holding the same
+non-recursive mutex GetTypeWriter acquires. CNA-DEMOS-ISSUE-090 records the defect; the one-second
+worker watchdog leaves the failure visible without hanging CTest. Both renderer selections pass
+12/13 with matching normalized output and diagnostics, and the expected-failure SOFTWARE CTest
+passes. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+known-issue demos increase41->42, validator/checkpoint self-tests pass5/5 and4/4, and generated
+runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C
+routes. Evidence:`/tmp/checkpoint-773-xnb-writer-*` and `/tmp/checkpoint-773-coverage.md`. No
+rendering, screenshot or manual inspection was used. Continue the same real XNB graph with shared
+resources, external references and dynamic reference dispatch.

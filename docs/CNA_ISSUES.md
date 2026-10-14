@@ -15,6 +15,37 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-090 -- ContentTypeWriter Initialize deadlocks when retrieving a nested writer
+
+- **Area/API:** `ContentCompiler::AddTypeWriter`, `ContentTypeWriter::Initialize` and
+  `ContentCompiler::GetTypeWriter` in the build-time XNB compiler façade.
+- **Reproduction:** `content.custom.xml_xnb_pipeline` registers a focused writer whose
+  `Initialize(ContentCompiler&)` follows the documented contract by calling `GetTypeWriter` for
+  the built-in string writer it intends to cache. The attempt runs on a worker thread with a
+  one-second watchdog so the demo reports the failure instead of hanging its test process.
+- **Observed:** `AddTypeWriter` never returns and the watchdog records the one failed invariant.
+  The demo first completes twelve positive controls through the same public pipeline: its main
+  writer is initialized, resolves a nested custom writer later from `Write`, receives Windows
+  Phone/HiDef target context, declines requested LZX compression, emits ordinary plus typed/raw
+  values, loads them through game readers, skips an unchanged source and rebuilds an edited one.
+  SOFTWARE and OPENGLES3/Xvfb each pass12/13 controls; their outputs and intended diagnostics are
+  identical after normalizing the private temporary path.
+- **Cause observed in source:** `ContentCompiler::AddWriter` acquires its non-recursive `mutex_`
+  before invoking `facade->Initialize(*this)`. `GetTypeWriter` immediately tries to acquire the
+  same mutex, so the same thread waits on a lock it already owns. CNA's public documentation says
+  `Initialize` is called to retrieve and cache nested type writers, making this a direct contract
+  failure rather than unsupported re-entrancy invented by the demo.
+- **Expected:** a writer's `Initialize` callback can query already registered writers from the
+  supplied compiler and complete registration. Registration should preserve its duplicate/frozen
+  checks without holding a non-recursive lock across a callback documented to re-enter the
+  compiler.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction is deterministic,
+  build-time-only and independent of graphics. The demo manually removes its private files before
+  starting the deadlock probe and flushes its result before terminating the focused process, since
+  the blocked thread cannot be joined. Evidence: `/tmp/checkpoint-773-xnb-writer-*`. No CNA source
+  was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-089 -- Intermediate serializers never receive their Initialize callback
 
 - **Area/API:** `ContentTypeSerializer::Initialize`, `IntermediateSerializer`, custom serializer

@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the custom XML-to-XNB writer with identity/lifecycle, requested target context,
+  compression refusal and explicit typed/raw nested writer paths, exposing CNA-DEMOS-ISSUE-090:
+  `ContentTypeWriter::Initialize` deadlocks when it retrieves a nested writer as documented.
 - Closed the custom intermediate serializer identity audit by tying its registered instance to the
   exact `TargetType` and `XmlTypeName` used by lookup and emitted XML.
 - Added custom intermediate serializer contracts for `ObjectIsEmpty` optional omission and
