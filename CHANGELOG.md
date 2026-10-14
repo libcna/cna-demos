@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a focused dual-UV PBR scene with independent base-color/emissive coordinate selection and
+  full scale-rotate-translate texture transforms, verified through exact sampled pixels.
 - Added a focused PBR dielectric-specular scene covering IOR, scalar/color factors and the
   `KHR_materials_specular` strength/color maps with exact controlled-environment pixels.
 - Extended the imported skinned-PBR model with a complete image-based-light bundle and verified

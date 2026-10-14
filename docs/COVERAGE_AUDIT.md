@@ -2424,3 +2424,19 @@ Two OPENGLES3/Xvfb runs pass8/8 with identical values. The inspected capture vis
 six cases. SOFTWARE remains a declared PBR fallback skip. This proves the public
 `KHR_materials_ior`/`KHR_materials_specular` effect path, not glTF import, HDR output, alternate UV
 sets/transforms or sRGB decoding; those remain separate behavior decisions.
+
+### PbrEffect dual-UV selection and texture transforms
+
+New `graphics.pbr_effect.texture_coordinates` supplies the renderer's canonical60-byte rigid PBR
+record: position, normal, tangent, UV0, UV1 and packed opaque-white colour. Its first state controls
+prove that all five texture slots default to UV0 with identity transforms and that changing the
+base-color selector and full scale/rotation/offset transform leaves the emissive slot unchanged.
+
+Two point-sampled2x1 maps make the rendered behavior exact. Base colour samples red through UV0
+and green through UV1; emissive samples black through UV0 and blue through UV1. For each slot an
+authored scale0.5, counter-clockwise90-degree rotation and offset(0.875,0.125) maps UV0(.25,.25)
+to UV(.75,.25), reproducing the second texel without changing the other slot. Two OPENGLES3/Xvfb
+runs pass8/8 identically. The inspected capture shows red/green/green above black/blue/blue.
+SOFTWARE remains a declared fallback skip. This establishes renderer consumption of independent
+UV selectors and `KHR_texture_transform` state; sRGB transfer behavior remains the next separate
+audit batch.

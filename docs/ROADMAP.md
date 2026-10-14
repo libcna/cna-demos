@@ -145,7 +145,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (43 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (44 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
   diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
   specular_lights now has eight on both renderers with inspected labeled comparisons.
@@ -165,8 +165,9 @@ a check that all authored colors remain visible and that a blank texture row can
   BRDF lookup, intensity and roughness-selected specular mips on OPENGLES3), ✅ `SkinnedPbrEffect`
   (`graphics.model.skinned_pbr`, including the same sampled environment on its fixed animated pose).
   ✅ `graphics.pbr_effect.specular_material` isolates observable `KHR_materials_ior` and
-  `KHR_materials_specular` factors plus both maps. Remaining: the newer texture-transform/
-  colour-space controls.
+  `KHR_materials_specular` factors plus both maps. ✅ `graphics.pbr_effect.texture_coordinates`
+  draws CNA's dual-UV vertex and independently selects/transforms base-color and emissive samples.
+  Remaining: the newer colour-space controls.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
@@ -7925,3 +7926,20 @@ warning-free incremental build uses at most three jobs; metadata is643/0, self-t
 4/4, and temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C
 routes. Evidence:`/tmp/checkpoint-826-pbr-specular-*` and `/tmp/checkpoint-826-coverage.md`.
 Continue with PBR UV-selection/transform and colour-space behavior.
+
+## Focused827-PbrEffect-dual-UV-and-texture-transforms
+
+New `graphics.pbr_effect.texture_coordinates` uses CNA's canonical60-byte rigid PBR record with
+UV0, UV1 and an opaque-white packed colour. Eight controls verify the five selector/transform
+defaults and slot independence, then render base-color and emissive rows. Exact centres are red for
+UV0 versus green for UV1 in the base row, and black versus blue in the emissive row. The authored
+scale0.5, rotate90-degree, offset(0.875,0.125) transform maps UV0 to the second texel independently
+for both slots and reproduces green/blue.
+
+Two OPENGLES3/Xvfb runs pass8/8 identically; the inspected800x480 capture shows all six expected
+panels. SOFTWARE takes its declared PBR capability skip and the exact CTest passes as skipped. The
+incremental build uses at most three jobs and emits only the known Draco CMP0148 configure warning;
+metadata is644/0, self-tests pass5/5 and4/4, and temporary coverage remains302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-827-pbr-uv-*` and `/tmp/checkpoint-827-coverage.md`. Continue with actual
+base-color/emissive/specular-colour sRGB decode and output-encode behavior.
