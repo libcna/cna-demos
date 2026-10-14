@@ -1237,7 +1237,7 @@ non-host call or online-service synchronization.
 
 | Inventory family | Decision |
 |---|---|
-| `NetworkSession::IsDisposed` | Ordinary lifetime state and the next focused extension. It should be checked across a real idempotent Dispose while the session object remains alive, including cleared public roster views. |
+| `NetworkSession::IsDisposed` | Covered by focused700 in the existing Local-session ownership workflow: a live session is disposed twice, reports disposed, clears Host and all four roster views, and refuses Update. |
 | `NetworkSessionProperties` explicit `ICollection`/`IList` members and two GetEnumerator entries | CNA exposes useful fixed-shape C++ list behavior beneath CLR-mangled inventory aliases. Extend the existing session-properties workflow with value lookup/copy, range iteration and structural-mutation refusal. Do not add the CLR spellings to metadata merely to raise the count; the generated aliases remain dispositioned even when the underlying C++ behavior is demonstrated. |
 | GameStarted/GameEnded/GamerJoined/GamerLeft/HostChanged/NetworkSessionEnded event-argument constructors | Framework-created payloads. Existing real events demonstrate their meaningful properties; manually constructing payload objects would add no event behavior. |
 | `LocalNetworkGamer::EnableSendVoice`; NetworkGamer HasVoice/IsTalking/IsMutedByLocalUser; `SendDataOptions::Chat` | Voice requires a capture device, a second participant and audible/manual observation. Keep as hardware/manual work; a default-false getter batch would be misleading. |
@@ -1246,6 +1246,20 @@ non-host call or online-service synchronization.
 | `NetworkGamer::IsGuest` | A meaningful positive state requires a service-backed guest sign-in and propagation into a NetworkSession. The current offline profiles only establish non-guest state; defer with the service/Guide guest workflow rather than crediting a constant false. |
 | NetworkSessionJoinException constructor/GetObjectData | `join_refused` catches a real exception and observes JoinError. Explicit construction and CLR serialization plumbing do not justify an independent demo. |
 | MaxPreviousGamers/MaxSupportedGamers and remaining enum fields | Constants and enum identities are reported separately from member coverage. Credit only fields used by real behavior; do not create getter-style demos for constants or switch-only labels. `LocalWithLeaderboards` still deserves a real create/dispose branch in the existing session-type workflow. |
+
+### NetworkSession disposal state
+
+`net.network_session.local_session` now observes IsDisposed=false on the real two-local-player
+session before its existing roster checks. It then calls Dispose twice while retaining ownership of
+the NetworkSession object. IsDisposed becomes true, Host becomes null and AllGamers, LocalGamers,
+RemoteGamers and PreviousGamers are all empty, so callers cannot observe pointers to gamers released
+by disposal. A subsequent Update throws ObjectDisposedException; Unload repeats Dispose safely and
+then deletes the object. Both renderers pass10/10 with identical stdout and empty stderr. Evidence:
+`/tmp/checkpoint-700-session-dispose-*`.
+
+This credits the ordinary IsDisposed member through state transition and post-dispose safety. It
+does not claim transport teardown for System Link, online-service departure or behavior of every
+other member after disposal.
 
 ### C ABI selected diagnostics, ownership, dispatch and math
 

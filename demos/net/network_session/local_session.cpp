@@ -22,6 +22,7 @@
 #include "Microsoft/Xna/Framework/Net/NetworkSessionState.hpp"
 #include "Microsoft/Xna/Framework/Net/NetworkSessionType.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/ObjectDisposedException.hpp"
 #include "System/Object.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -74,9 +75,10 @@ namespace
                     const NetworkGamer* gamer = args.getGamerProperty();
                     joined_.push_back(gamer->getGamertagProperty() + (gamer->getIsLocalProperty() ? " (local)" : " (remote)"));
                 });
-                ctx.Check(session_->getSessionTypeProperty() == NetworkSessionType::Local &&
+                ctx.Check(!session_->getIsDisposedProperty() &&
+                              session_->getSessionTypeProperty() == NetworkSessionType::Local &&
                               session_->getSessionStateProperty() == NetworkSessionState::Lobby,
-                          "a new session is a Local session in the Lobby");
+                          "a new session is live and is a Local session in the Lobby");
                 ctx.Check(session_->getIsHostProperty() && session_->getMaxGamersProperty() == 4,
                           "this machine hosts it, for at most four gamers");
                 ctx.Check(session_->getLocalGamersProperty().getCountProperty() == 2 &&
@@ -87,8 +89,13 @@ namespace
                 ctx.Check(joined_.size() == 2, "subscribing raised GamerJoined for both gamers already there");
             }
 
+            if (disposed_)
+            {
+                return;
+            }
             // A game calls Update on its session every frame: later events are raised there.
             session_->Update();
+            ++liveUpdates_;
             if (!checked_)
             {
                 checked_ = true;
@@ -107,6 +114,28 @@ namespace
                 {
                     ctx.Print("GamerJoined: {}", line);
                 }
+            }
+            if (liveUpdates_ == 10)
+            {
+                session_->Dispose();
+                session_->Dispose();
+                ctx.Check(session_->getIsDisposedProperty() && session_->getHostProperty() == nullptr &&
+                              session_->getAllGamersProperty().getCountProperty() == 0 &&
+                              session_->getLocalGamersProperty().getCountProperty() == 0 &&
+                              session_->getRemoteGamersProperty().getCountProperty() == 0 &&
+                              session_->getPreviousGamersProperty().getCountProperty() == 0,
+                          "Dispose is idempotent, marks the session and clears every gamer view");
+                bool updateRefused = false;
+                try
+                {
+                    session_->Update();
+                }
+                catch (const System::ObjectDisposedException&)
+                {
+                    updateRefused = true;
+                }
+                ctx.Check(updateRefused, "a disposed session refuses Update with ObjectDisposedException");
+                disposed_ = true;
             }
         }
 
@@ -135,7 +164,9 @@ namespace
         std::vector<std::string> joined_;
         std::string host_;
         int waited_ = 0;
+        int liveUpdates_ = 0;
         bool checked_ = false;
+        bool disposed_ = false;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
     };
@@ -145,14 +176,16 @@ CNA_DEMOS_GAME(LocalSessionDemo, {
     .id = "net.network_session.local_session",
     .title = "Local network session",
     .description = "Creates a NetworkSession of type Local for two signed-in players: both join as local gamers of "
-                   "the host machine, subscribing to GamerJoined reports both at once, and each gamer has an Id "
-                   "that FindGamerById resolves. No network is used.",
+                   "the host machine, subscribing to GamerJoined reports both at once, each gamer has an Id that "
+                   "FindGamerById resolves, and idempotent disposal marks the session and clears its gamer views. "
+                   "No network is used.",
     .apis = {"NetworkSession::Create", "NetworkSession::Update", "NetworkSession::GamerJoined",
              "NetworkSession::SessionType", "NetworkSession::SessionState", "NetworkSession::IsHost",
              "NetworkSession::MaxGamers", "NetworkSession::LocalGamers", "NetworkSession::RemoteGamers",
              "NetworkSession::AllGamers", "NetworkSession::Host", "NetworkSession::FindGamerById",
              "NetworkGamer::Id", "NetworkGamer::IsHost", "NetworkGamer::IsLocal", "NetworkGamer::Machine",
              "NetworkMachine::Gamers", "GamerJoinedEventArgs::Gamer", "NetworkSession::Dispose",
+             "NetworkSession::IsDisposed",
              "GamerCollection::Count", "GamerCollection::Item"},
     .tags = {"net", "session", "split-screen", "multiplayer", "local"},
     .frames = 30,

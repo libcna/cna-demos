@@ -5737,3 +5737,17 @@ focused SOFTWARE CTest, metadata validation and validator self-tests pass. Tempo
 `/tmp/checkpoint-699-async-find-join-*` and `/tmp/checkpoint-699-coverage.md`. This is Linux local UDP
 evidence; no service-directory, WAN, screenshot or visual result is claimed. Continue
 NetworkSession disposal and the fixed NetworkSessionProperties collection contract next.
+
+## Focused700-NetworkSession-disposal-state
+
+The existing two-player Local-session workflow now requires a newly created session to be live,
+then disposes it twice after its gamer/event/machine checks. The still-owned object must report
+IsDisposed, expose a null Host and four empty gamer views, and reject Update with
+ObjectDisposedException. Unload repeats the safe disposal before deletion.
+
+SOFTWARE and OPENGLES3/X11 pass10/10 with byte-identical stdout and empty stderr. The focused
+SOFTWARE CTest, metadata validation and validator self-tests pass. Temporary coverage moves
+2057->2058/2326 at632 demos,301/329 types and156/753 fields; Net moves92->93/127. Evidence:
+`/tmp/checkpoint-700-session-dispose-*` and `/tmp/checkpoint-700-coverage.md`. No network,
+screenshot or visual result is claimed. Continue the NetworkSessionProperties fixed-shape
+collection contract next.
