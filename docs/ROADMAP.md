@@ -7754,3 +7754,19 @@ demos. No catalog or generated coverage count changes. The documentation-only ch
 the incremental `-j3` build, metadata validation, both tool self-test suites and coverage
 regeneration. Evidence:`/tmp/checkpoint-816-*`. Continue with the untouched public C
 `graphics_ext.h` surface, beginning with availability and ImageBasedLight values.
+
+## Focused817-C-graphics-extension-availability-and-image-based-light-values
+
+New `c_api.graphics.image_based_light_values` opens the previously untouched `graphics_ext.h`
+surface with its three renderer-independent routes. Twenty-five controls cover availability,
+complete initialization overwrite, versioned/null boundaries, mip/intensity rules, partial and
+complete real TextureCube/Texture2D bundles, and stale-handle invalidation. One deliberate
+wrong-kind check exposes CNA-DEMOS-ISSUE-091: live Game handles incorrectly satisfy the C validity
+predicate because the adapter checks liveness without checking resource kind.
+
+SOFTWARE and OPENGLES3/Xvfb each pass24/25 with the same sole known failure and empty stderr. The
+exact SOFTWARE CTest passes, metadata is637/0 and temporary coverage is302/329 types,2114/2326
+members,169/753 fields and3002/3205 C routes. The incremental build used at most three jobs. No PBR
+effect, draw, screenshot or visual inspection is claimed. Evidence:`/tmp/checkpoint-817-ibl-*` and
+`/tmp/checkpoint-817-coverage.md`. Continue with the device-backed CRT/Depth/ASCII routes, followed
+by DebugDraw.

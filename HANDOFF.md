@@ -66,10 +66,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-636 project-built catalog demos in18 categories: math78, game33, graphics170, audio23, core3,
+637 project-built catalog demos in18 categories: math78, game33, graphics170, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api172. Kinds are163 console,279 game and194 standalone;
-600 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api173. Kinds are163 console,279 game and195 standalone;
+601 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input_gamepad.h`61/63,
@@ -126,6 +126,9 @@ runtime knownIssue markers.
 Focused748 stages a37th runtime marker: `graphics.texture_cube.face_transfers` names
 CNA-DEMOS-ISSUE-086 only for OPENGLES3. Its next primary frame is wholly black after a secondary
 EasyGL device is destroyed; SOFTWARE remains a12/12 pass.
+Focused817 stages a38th runtime marker: `c_api.graphics.image_based_light_values` names
+CNA-DEMOS-ISSUE-091 on both renderers because live non-texture handles pass the C image-based-light
+validity predicate. It adds the first3 `graphics_ext.h` routes, for3002/3205 staged C routes.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -1808,10 +1811,10 @@ the remaining instance-limit/RPC/variation decisions, prioritizing publicly obse
 private mixer data. Cue-level ReplaceOldest captures its definition-local count and FACT's bank-wide
 victim search; category ReplaceLowestPriority now distinguishes priority from play order. The
 remaining RPC/variation surface and all seven uncredited Audio members are now dispositioned in
-focused816. Continue with the previously untouched public C `graphics_ext.h` surface, beginning
-with renderer-independent availability/image-based-light values and then coherent retro-effect and
-DebugDraw workflows. Do not add isolated getter demos. Build with at most three compile jobs and
-keep focused evidence current.
+focused816. Focused817 begins the previously untouched public C `graphics_ext.h` surface with
+availability/image-based-light values and exposes ISSUE-091. Continue with coherent retro-effect
+state/draw and DebugDraw workflows. Do not add isolated getter demos. Build with at most three
+compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2940,6 +2943,25 @@ build, metadata validation, tool self-tests and regenerated coverage all pass; n
 changed and no listening/manual result is claimed. Evidence:`/tmp/checkpoint-816-*`. Continue with
 the untouched C `graphics_ext.h` surface (currently0/42), starting with availability and
 ImageBasedLight values before the device-backed effect and DebugDraw groups.
+
+### Focused817-C-graphics-extension-availability-and-image-based-light-values
+
+New `c_api.graphics.image_based_light_values` adds the first three `graphics_ext.h` routes in25
+controls. It checks canonical extension availability, full default initialization, versioned/null
+boundaries, mip-count and negative/NaN-intensity validity, partial resource bundles, a complete pair
+of TextureCube resources plus a Texture2D BRDF lookup, and invalidation after destroying that lookup.
+The final wrong-kind check exposes CNA-DEMOS-ISSUE-091: three live Game handles incorrectly form a
+valid light because the C adapter checks only handle liveness, despite its documented and native
+typed-resource contract.
+
+SOFTWARE and OPENGLES3/Xvfb each pass24/25 controls and fail only the exact ISSUE-091 assertion;
+stderr is empty. The focused SOFTWARE CTest passes its expected-failure contract. The warning-free
+compilation used at most three jobs after sandbox escalation was needed only for the shared SDL
+cache lock during CMake regeneration; regeneration emitted the existing Draco CMP0148 developer
+warning. Metadata is637/0 and temporary coverage is302/329 types,
+2114/2326 members,169/753 fields and3002/3205 C routes. Evidence:`/tmp/checkpoint-817-ibl-*` and
+`/tmp/checkpoint-817-coverage.md`. No PBR effect, draw, screenshot or visual inspection is claimed.
+Continue with the device-backed CRT/Depth/ASCII routes, followed by DebugDraw.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

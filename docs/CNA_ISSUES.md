@@ -15,6 +15,31 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-091 -- C ImageBasedLight validity accepts live non-texture handles
+
+- **Area/API:** `CNA_ImageBasedLightEXT` and `cna_image_based_light_ext_is_valid` in
+  `graphics_ext.h`.
+- **Reproduction:** `c_api.graphics.image_based_light_values` initializes the versioned value,
+  proves its empty/default, mip-count, negative/NaN-intensity and incomplete-resource states, then
+  creates two real TextureCube handles and one Texture2D handle. The complete typed bundle becomes
+  valid and destroying one texture makes it invalid again. A separate bundle places the live Game
+  handle in all three texture fields and asks the same public validity route to reject it.
+- **Observed:** the wrong-kind bundle is reported valid. Both SOFTWARE and OPENGLES3/Xvfb pass the
+  other 24 of 25 controls and fail only the exact non-texture-handle assertion; their child stdout
+  is otherwise identical and stderr is empty.
+- **Cause observed in source:** `ImageBasedLightExtIsValid` calls the runtime handle table's
+  `GetKind` for each field but accepts every successfully resolved kind. Its own comment says a
+  handle must be a live texture, while the corresponding C++ value has two `TextureCube*` fields
+  and one `Texture2D*` field. The C adapter never compares the returned kinds with those required
+  resource types.
+- **Expected:** irradiance and prefiltered-specular fields accept only live TextureCube handles,
+  and the BRDF lookup field accepts only a live Texture2D handle. Other live handle kinds must
+  produce `out_valid = CNA_FALSE` without becoming an argument error.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction uses actual public C handles and is
+  deterministic on both exercised renderers. Evidence:`/tmp/checkpoint-817-ibl-*`. No CNA source
+  was modified, no upstream message was sent, and no PBR draw or visual result is claimed.
+
 ### CNA-DEMOS-ISSUE-090 -- ContentTypeWriter Initialize deadlocks when retrieving a nested writer
 
 - **Area/API:** `ContentCompiler::AddTypeWriter`, `ContentTypeWriter::Initialize` and
