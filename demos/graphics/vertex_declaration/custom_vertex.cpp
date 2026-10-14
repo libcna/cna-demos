@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
+#include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BasicEffect.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectPass.hpp"
@@ -79,10 +80,47 @@ namespace
             }
 
             const VertexDeclaration& declaration = GlowVertexDeclaration();
+            const auto& elements = declaration.GetVertexElements();
             Context().Print("VertexStride {} bytes, {} elements", declaration.getVertexStrideProperty(),
-                            declaration.GetVertexElements().size());
+                            elements.size());
             Context().Check(declaration.getVertexStrideProperty() == static_cast<int>(sizeof(GlowVertex)),
                             "the declaration's stride is the struct's size");
+
+            Context().Check(elements.size() == 3 &&
+                                elements[0].getOffsetProperty() == static_cast<int>(offsetof(GlowVertex, Position)) &&
+                                elements[1].getOffsetProperty() == static_cast<int>(offsetof(GlowVertex, Glow)) &&
+                                elements[2].getOffsetProperty() == static_cast<int>(offsetof(GlowVertex, PackedTint)),
+                            "element offsets match the three struct fields");
+            Context().Check(elements[0].getVertexElementFormatProperty() == VertexElementFormat::Vector3 &&
+                                elements[1].getVertexElementFormatProperty() == VertexElementFormat::Single &&
+                                elements[2].getVertexElementFormatProperty() == VertexElementFormat::Color,
+                            "element formats match the bytes stored in each field");
+            Context().Check(elements[0].getVertexElementUsageProperty() == VertexElementUsage::Position &&
+                                elements[1].getVertexElementUsageProperty() == VertexElementUsage::TextureCoordinate &&
+                                elements[2].getVertexElementUsageProperty() == VertexElementUsage::Color &&
+                                elements[0].getUsageIndexProperty() == 0 &&
+                                elements[1].getUsageIndexProperty() == 1 &&
+                                elements[2].getUsageIndexProperty() == 0,
+                            "usage and usage index identify Position0, TextureCoordinate1 and Color0");
+
+            const std::vector<VertexElement> authored{
+                VertexElement(0, VertexElementFormat::Vector3, VertexElementUsage::Position, 0),
+                VertexElement(12, VertexElementFormat::Single, VertexElementUsage::TextureCoordinate, 1),
+                VertexElement(16, VertexElementFormat::Color, VertexElementUsage::Color, 0),
+            };
+            Context().Check(elements == authored && elements[1].Equals(authored[1]) &&
+                                elements[1].GetHashCode() == authored[1].GetHashCode(),
+                            "equal element values compare equal and have the same hash");
+
+            VertexElement edited;
+            edited.setOffsetProperty(12);
+            edited.setVertexElementFormatProperty(VertexElementFormat::Single);
+            edited.setVertexElementUsageProperty(VertexElementUsage::TextureCoordinate);
+            edited.setUsageIndexProperty(1);
+            Context().Check(edited == elements[1] && edited != elements[0] &&
+                                edited.ToString() ==
+                                    "{Offset:12 Format:Single Usage:TextureCoordinate UsageIndex:1}",
+                            "a mutable element value round-trips all four fields and describes itself");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -97,6 +135,14 @@ namespace
                 // Position and Color and ignores the extra element.
                 device.DrawUserPrimitives(PrimitiveType::TriangleList, vertices_, 0,
                                           static_cast<int>(vertices_.size()) / 3, GlowVertexDeclaration());
+            }
+            if (FramesDrawn() == 0)
+            {
+                const CnaDemos::BackBufferPixels pixels(device);
+                const Color centre = pixels.At(400, 240);
+                Context().Check(centre.getRProperty() > 240 && centre.getGProperty() > 240 &&
+                                    centre.getBProperty() > 240 && pixels.At(10, 10) == Color::Black,
+                                "the declared Position and Color fields draw the white centre on a black exterior");
             }
             Game::Draw(gameTime);
         }
@@ -113,7 +159,10 @@ CNA_DEMOS_GAME(CustomVertexDemo, {
     .description = "Defines a plain vertex struct with an extra field, describes it with VertexElements in a "
                    "VertexDeclaration and draws it with DrawUserPrimitives.",
     .apis = {"VertexDeclaration::VertexDeclaration", "VertexDeclaration::VertexStride",
-             "VertexDeclaration::GetVertexElements", "VertexElement::VertexElement", "VertexElementFormat::Vector3",
+             "VertexDeclaration::GetVertexElements", "VertexElement::VertexElement", "VertexElement::Offset",
+             "VertexElement::VertexElementFormat", "VertexElement::VertexElementUsage", "VertexElement::UsageIndex",
+             "VertexElement::Equals", "VertexElement::op_Equality", "VertexElement::op_Inequality",
+             "VertexElement::GetHashCode", "VertexElement::ToString", "VertexElementFormat::Vector3",
              "VertexElementFormat::Single", "VertexElementFormat::Color", "VertexElementUsage::Position",
              "VertexElementUsage::Color", "VertexElementUsage::TextureCoordinate", "GraphicsDevice::DrawUserPrimitives"},
     .tags = {"3d", "vertex", "layout", "declaration"},

@@ -1363,11 +1363,14 @@ two private XNB fixtures prove the Model content-load plus dictionary/foreign-ob
 This completes the header's semantic route audit. The remaining206 uncredited public C routes are
 already dispositioned largely as fixed reflection names, hardware/service/manual observations or
 renderer-specific work. The deeper XNA member/behavior audit has now extended
-`graphics.model.bones` for pose-array/collection contracts and `graphics.model.mesh_parts` for
-null-effect versus zero-primitive omission. Audit the remaining top-level Model/ModelMesh behaviors
-and add only a coherent observable gap to an existing ID. Avoid other renderer-
-dependent `graphics_ext.h` while
-the sibling renderer retirement is incoherent. The two
+`graphics.model.bones` for pose-array/collection contracts, `graphics.model.mesh_parts` for
+null-effect versus zero-primitive omission and `graphics.vertex_declaration.custom_vertex` for
+complete VertexElement layout/value behavior plus actual layout-driven drawing. The remaining
+core Model inventory is dispositioned: CLR enumerators and the arbitrary `ModelMesh::Tag` carrier
+do not justify new demos. Continue through the highest-value XNA member/behavior gaps, extending
+existing IDs where one coherent workflow already exists. The sibling CNA checkout is now clean at
+`cc547f5224`; assess its renderer-retirement result and attempt the deferred full reconfigure/build
+before relying on more isolated relinks. The two
 remaining KeyboardState routes are fixed reflection
 text already classified as trivial/uncredited, so do not add controls merely to raise the count.
 Once CNA becomes coherent, reconfigure
@@ -2645,3 +2648,22 @@ cleanly and a cumulative isolated relink passes12/12 on SOFTWARE and OPENGLES3 w
 stdout and empty stderr. Evidence:`checkpoint-632-model-mesh-parts-skip-focused-*`. Pixel readback
 was programmatic; no screenshot or visual inspection was performed. No ID or coverage count
 changes. Continue the top-level Model/ModelMesh behavior audit before leaving the model family.
+
+## Focused633-VertexElement-layout-values-and-drawing
+
+The generated Model-family remainder is now closed by disposition: its collection GetEnumerator
+members are CLR/C# machinery already represented by C++ range iteration, and `ModelMesh::Tag` is
+the same arbitrary carrier concept demonstrated on Model/ModelMeshPart. No extra model demo was
+added. The existing `graphics.vertex_declaration.custom_vertex` instead retains its original
+stride assertion and adds six coherent controls for the three elements' exact struct offsets,
+formats, semantics and usage indices; complete value equality/inequality, typed Equals and hash;
+four mutable properties and exact ToString; and actual layout consumption. First-frame pixels
+confirm a white fan center and black exterior under both renderers. The exact object compiles
+cleanly and a cumulative isolated relink passes7/7 on SOFTWARE and OPENGLES3 with byte-identical
+stdout and empty stderr. Temporary coverage moves the post-checkpoint631 XNA projection
+1408->1417/2326 without changing demo or C-route counts. Evidence:
+`checkpoint-633-custom-vertex-focused-*` and `/tmp/checkpoint-633-coverage.md`. Pixels were read
+programmatically; no screenshot or visual inspection was performed. The exercised C API library
+remains SHA256 `730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`.
+Sibling CNA is now clean at `cc547f5224`; inspect that revision, then attempt the deferred complete
+reconfigure/build and validation before the next member batch if it is coherent.

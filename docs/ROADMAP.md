@@ -4632,3 +4632,22 @@ relink passes12/12 under SOFTWARE and OPENGLES3 with byte-identical stdout and e
 Evidence:`checkpoint-632-model-mesh-parts-skip-focused-*`. Pixels were read programmatically; no
 screenshot or visual inspection was performed. No demo ID, metadata member or C-route count
 changes. Continue the top-level Model/ModelMesh behavior audit before leaving the model family.
+
+## Focused633-VertexElement-layout-values-and-drawing
+
+The remaining core Model-family inventory was dispositioned without another demo: only CLR-style
+collection enumerators and the arbitrary `ModelMesh::Tag` carrier remain uncredited, while actual
+C++ range iteration and equivalent tag workflows already exist. The deeper member audit therefore
+extends `graphics.vertex_declaration.custom_vertex` in place. It retains its original stride
+control and adds exact checks for all three elements' `offsetof` values, formats, usages and usage
+indices; independently authored equality, inequality, typed Equals and hash behavior; a four-
+property mutable value and exact diagnostic string; and a framebuffer check proving the audited
+Position/Color layout draws a white fan center on a black exterior. Its updated object compiles
+cleanly. A cumulative isolated relink against the last complete libraries passes7/7 under SOFTWARE
+and OPENGLES3 with byte-identical stdout and empty stderr. Temporary generated coverage moves the
+post-checkpoint631 XNA-member projection1408->1417/2326 with no new demo ID or C route. Evidence:
+`checkpoint-633-custom-vertex-focused-*` and `/tmp/checkpoint-633-coverage.md`. Pixels were read
+programmatically; no screenshot or visual inspection was performed. The current sibling CNA is
+clean at `cc547f5224`, while this checkpoint deliberately retains the stable library hash
+`730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`; assess the clean checkout
+before the next complete rebuild.

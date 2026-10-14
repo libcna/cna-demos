@@ -410,6 +410,21 @@ whole-image identity or fixed GPU completion-latency claim is made.
 | Dispose, IsDisposed, HasRenderer and disposed operations | Normal query ownership is demonstrated by unique_ptr cleanup. The scratch-query preflight now ends the native pair, calls public Dispose, verifies IsDisposed and HasRenderer=false, and requires ObjectDisposedException from subsequent Begin and PixelCount. Both renderers pass these controls. Other disposed-operation permutations, repeated Dispose and disposal of an actively open pair are not independently established. HasRenderer is a small lifetime diagnostic, not an independent scene. A general GraphicsResource demo does not establish every query-specific disposed operation. Query destruction after earlier device/context teardown is a separate lifecycle scenario; no device-loss or all-backend teardown proof is claimed. |
 | GetTypeName, inherited Name/Tag and protected Dispose(bool) | Reflection identity and inherited resource bookkeeping do not justify duplicate demos per subclass. The protected hook is framework lifecycle plumbing; applications use public Dispose. The public preflight avoids internal query handles and renderer bridges. |
 
+### VertexElement and custom vertex declarations
+
+Source review at CNA `cc547f5224`: public VertexElement/VertexDeclaration headers and the existing
+`graphics.vertex_declaration.custom_vertex` example. The example now has seven focused controls
+and passes all of them under SOFTWARE and OPENGLES3 through an isolated cumulative relink against
+the last complete libraries. Both runs have byte-identical stdout and empty stderr.
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| VertexDeclaration construction, VertexStride and GetVertexElements | custom_vertex keeps its plain20-byte Position/Glow/PackedTint structure and its original stride check. Three added controls compare every returned element against the actual `offsetof` values, storage formats and Position0/TextureCoordinate1/Color0 semantics. The layout is then passed directly to DrawUserPrimitives. |
+| VertexElement Offset, VertexElementFormat, VertexElementUsage and UsageIndex | The controls read all four public fields for all three descriptors. A separate mutable value is authored through all four setters and compared with the declaration's middle element, proving the property round trip without changing the declaration used for drawing. |
+| Equals, equality/inequality, GetHashCode and ToString | The declaration's complete element vector equals an independently authored value vector; the matching middle elements satisfy typed Equals and share a hash, while a distinct element compares unequal. The edited descriptor produces the exact readable text `{Offset:12 Format:Single Usage:TextureCoordinate UsageIndex:1}`. These operations belong together as value identity and diagnostics; they do not justify separate demos. |
+| Actual layout consumption | A first-frame readback finds a white center and black exterior on both renderers. This proves that Position and packed Color at the audited offsets drive the visible fan while the extra TextureCoordinate1 field remains legal and unused by BasicEffect. Pixels were read programmatically; no screenshot or visual inspection was performed. |
+| VertexDeclaration Dispose and inherited resource plumbing | The declaration is owned for the demo lifetime and bound by the draw. Explicit flag-only disposal, type names and protected hooks do not teach a separate vertex-layout concept; disposal while bound or after device teardown belongs to broader GraphicsResource lifetime testing. |
+
 ### Model, ModelBone and collection pose workflow
 
 Source review at CNA `49b1d3a998`: public Model/ModelBone collection headers and implementations,
@@ -444,6 +459,12 @@ for the shared-buffer/material rows; other proposals remain unexecuted.
 | SkinnedModelEXT, PartEXT and attachment APIs | skinned_parts now passes 11 checks on both renderers: AddPartEXT transfers procedural buffer/part/texture ownership; AttachPartEXT moves donor parts, replaces by name and retains the receiver's clip; donor destruction precedes actual rendering. A mismatched bone count is refused before either part list moves. RemovePartEXT removes a temporary center part; surviving colored pixels and the clear center are checked. Both screenshots were inspected and are RGBA-identical. This does not measure GPU deallocation/leaks, nor validate same-count skeleton/index-order compatibility; callers must supply the same canonical skeleton. The separate skinned_manifest now demonstrates imported manifest sidecars and rendering. |
 | SkinnedModelEXT::ComputeBoneTransformsEXT | skinned_parts samples a one-bone linear translation at 0.5 s and verifies the nonidentity inverse-bind correction both numerically and through actual shifted geometry/vacated pixels. The separate palette_sampling retains its fourteen SkinnedModelEXT CPU checks (plus five new AnimationPlayer checks described below): three-bone parent composition, untracked bind pose, interpolated scale/quaternion rotation/translation, inverse binds, positive/negative loop and clamp, missing clip, self-parent and truncated arrays with preserved output. Empty/duplicate/unsorted tracks and target-space misuse remain separate gaps. Existing node_animation uses AnimationClipEXT data with Model rather than this evaluator; do not transfer its coverage here. |
 | SkinnedModelEXT testing counters, move-only boilerplate | GetOwned*CountForTesting explicitly exposes test instrumentation: intentionally leave direct counter assertions to CNA tests. Useful public ownership evidence should come from the moved/replaced/removed parts and rendered results. Deleted copy operations and empty construction need no standalone demo. |
+
+The generated inventory leaves only the collection `GetEnumerator` members and `ModelMesh::Tag`
+uncredited in the core Model family. The former are CLR/C# interop machinery already represented
+by real C++ range iteration. The latter is an arbitrary application-data carrier equivalent to the
+demonstrated model and mesh-part tags. These have explicit dispositions and do not justify more
+model demos, so the audit proceeds to other public-member families.
 
 ### AnimationPlayer, SkinningData and clip target spaces
 
