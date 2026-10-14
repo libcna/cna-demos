@@ -468,7 +468,9 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     if (result == CNA_RESULT_SUCCESS) {
         demonstrate_keyboard_platform(state->demo, game);
         demonstrate_mouse_platform(state, game);
-        demonstrate_mouse_cursors(state, game);
+        if (!state->global_pointer_unavailable) {
+            demonstrate_mouse_cursors(state, game);
+        }
     }
     if (result == CNA_RESULT_SUCCESS) {
         result = cna_sprite_batch_create(graphics_device, &state->sprite_batch);
