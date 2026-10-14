@@ -5406,3 +5406,22 @@ and the base dispatch workflow. Evidence:`/tmp/checkpoint-678-*` and
 `/tmp/checkpoint-678-coverage.md`. Pixel readback was programmatic; no screenshot or visual
 inspection was used. Audit RenderTargetCube's ContentLost/IsContentLost and constructor-selected
 depth, multisample and usage values next.
+
+## Focused679-RenderTargetCube-state-loss-and-preservation
+
+`graphics.render_target.render_target_cube` grows3->7 controls and closes all five remaining
+members. The live128x128 target reports Depth24, zero applied multisampling and PreserveContents.
+The explicit CNA loss-notification seam raises one public ContentLost event and sets IsContentLost;
+the first face bind clears it before the established six-face rendering. On frame2 the +Z face is
+rebound without clear or draw, and the sphere still samples its exact green centre
+RGBA(30,110,40,255), proving PreserveContents through actual output.
+
+SOFTWARE and OPENGLES3 pass7/7 with empty stderr; the focused SOFTWARE CTest passes. The retained
+orbit diagnostic remains renderer-specific at431/0 versus445/12, while all controlled results
+pass. A first 4x-MSAA/30-frame draft was stopped after more than40 seconds on SOFTWARE; automation
+now runs the three frames its checks require and keeps this six-face scene single-sample. Dedicated
+multisampling demos retain behavior coverage. Temporary coverage moves1826->1831/2326 at632 demos,
+301/329 types and156/753 fields. Evidence:`/tmp/checkpoint-679-*` and
+`/tmp/checkpoint-679-coverage.md`. Pixel readback was programmatic; no screenshot or visual
+inspection was used. Audit VertexBufferBinding's VertexBuffer, VertexOffset and InstanceFrequency
+next.

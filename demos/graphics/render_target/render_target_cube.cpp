@@ -21,6 +21,7 @@
 #include "Microsoft/Xna/Framework/Graphics/RenderTarget2D.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RenderTargetBinding.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RenderTargetCube.hpp"
+#include "Microsoft/Xna/Framework/Graphics/RenderTargetUsage.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SurfaceFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Viewport.hpp"
@@ -65,7 +66,18 @@ namespace
 
             // Six 128x128 colour faces sharing one depth buffer format; rendered again every frame.
             environment_ = std::make_unique<RenderTargetCube>(device, 128, false, SurfaceFormat::Color,
-                                                              DepthFormat::Depth24);
+                                                              DepthFormat::Depth24, 0,
+                                                              RenderTargetUsage::PreserveContents);
+            Context().Check(environment_->getDepthStencilFormatProperty() == DepthFormat::Depth24 &&
+                                environment_->getMultiSampleCountProperty() == 0 &&
+                                environment_->getRenderTargetUsageProperty() == RenderTargetUsage::PreserveContents,
+                            "the cube target reports its applied depth, multisample and preservation state");
+            environment_->ContentLost += [this](System::Object*, const System::EventArgs&) {
+                ++contentLostEvents_;
+            };
+            environment_->NotifyContentLostEXT();
+            Context().Check(environment_->getIsContentLostProperty() && contentLostEvents_ == 1,
+                            "a content-loss notification raises ContentLost and marks the cube target lost");
             const RenderTargetBinding negativeZ(environment_.get(), CubeMapFace::NegativeZ);
             Context().Check(negativeZ.getRenderTargetProperty() == environment_.get() &&
                                 negativeZ.getCubeMapFaceProperty() == CubeMapFace::NegativeZ,
@@ -98,6 +110,16 @@ namespace
             for (const FaceView& view : Faces)
             {
                 device.SetRenderTarget(environment_.get(), view.face);
+                if (!checkedContentRestore_)
+                {
+                    checkedContentRestore_ = true;
+                    Context().Check(!environment_->getIsContentLostProperty(),
+                                    "binding a cube face for rendering clears its lost-content state");
+                }
+                // After the first frame, rebind +Z without touching it. PreserveContents must keep
+                // its green wall available to the reflective sphere below.
+                if (FramesDrawn() > 0 && view.face == CubeMapFace::PositiveZ)
+                    continue;
                 device.Clear(view.wall);
                 DrawOrbitingCubes(Matrix::CreateLookAt(Vector3::Zero, view.forward, view.up), faceProjection, t);
             }
@@ -159,6 +181,18 @@ namespace
                 Context().Check(above > 30 && above > 3 * below,
                                 "the cubes above the sphere are reflected in its upper half (faces sampled upright)");
             }
+            else if (FramesDrawn() == 1)
+            {
+                const CnaDemos::BackBufferPixels pixels(device);
+                const Viewport viewport = device.getViewportProperty();
+                const Vector3 centre = viewport.Project(Vector3::Zero, cameraProjection, cameraView,
+                                                        Matrix::getIdentityProperty());
+                const Color middle = pixels.At(static_cast<int>(centre.X), static_cast<int>(centre.Y));
+                Context().Print("preserved +Z sphere centre {}", middle.ToString());
+                Context().Check(middle.getGProperty() > middle.getRProperty() + 30 &&
+                                    middle.getGProperty() > middle.getBProperty() + 30,
+                                "PreserveContents keeps the +Z face through an empty rebind");
+            }
             DemoGame::Draw(gameTime);
         }
 
@@ -192,6 +226,8 @@ namespace
         std::unique_ptr<BasicEffect> cubeEffect_;
         std::unique_ptr<Texture2D> white_;
         std::unique_ptr<EnvironmentMapEffect> chrome_;
+        int contentLostEvents_ = 0;
+        bool checkedContentRestore_ = false;
     };
 }
 
@@ -203,8 +239,11 @@ CNA_DEMOS_GAME(RenderTargetCubeDemo, {
                    "samples those faces: a dynamic environment map that follows the orbiting cubes.",
     .apis = {"RenderTargetCube::RenderTargetCube", "RenderTargetBinding::RenderTargetBinding",
              "RenderTargetBinding::CubeMapFace", "GraphicsDevice::SetRenderTarget", "CubeMapFace",
+             "RenderTargetCube::ContentLost", "RenderTargetCube::IsContentLost",
+             "RenderTargetCube::DepthStencilFormat", "RenderTargetCube::MultiSampleCount",
+             "RenderTargetCube::RenderTargetUsage",
              "EnvironmentMapEffect::EnvironmentMap", "Matrix::CreatePerspectiveFieldOfView"},
     .tags = {"3d", "render-target", "cubemap", "reflection"},
     .needs = CnaDemos::Need::ThreeD,
-    .frames = 30,
+    .frames = 3,
 })

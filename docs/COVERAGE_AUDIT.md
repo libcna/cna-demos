@@ -373,7 +373,10 @@ target types have no generated member gap.
 |---|---|
 | PresentationParameters constructor and DeviceWindowHandle | `graphics.device.presentation_parameters` directly checks the 800x480 Color/no-handle defaults, then proves the live device parameters carry the presenting GameWindow's handle alongside the established size/format/bounds/clone workflow. Both renderers pass7 controls. |
 | RenderTargetBinding.RenderTarget | The MRT workflow constructs named 2D bindings, submits them, and proves both the caller values and `GetRenderTargets` preserve the exact two target identities. OPENGLES3 passes5 controls; SOFTWARE is the established custom-effects capability skip. |
-| RenderTargetBinding.CubeMapFace | The cube-target workflow constructs a NegativeZ binding and proves it retains both the exact RenderTargetCube and face before the established six-face rendering/reflection path. Both renderers pass3 controls. The pre-existing diagnostic pixel counts differ by rasterizer (SOFTWARE 431/0, OPENGLES3 447/10), while all controlled outcomes pass. |
+| RenderTargetBinding.CubeMapFace | The cube-target workflow constructs a NegativeZ binding and proves it retains both the exact RenderTargetCube and face before the established six-face rendering/reflection path. |
+| RenderTargetCube depth/MSAA/usage values | The live128x128 cube reports its applied Depth24, single-sample count0 and PreserveContents mode before it renders all six faces. Existing dedicated targets demonstrate nonzero multisampling; this workflow relates the cube-specific getters to the target actually sampled. |
+| RenderTargetCube ContentLost / IsContentLost | One explicit CNA notification raises the public event and lost flag; binding the first face clears it before drawing. This is a deterministic recovery-boundary test, not a claim that either desktop renderer physically lost its device. |
+| RenderTargetCube PreserveContents behavior | On frame2 the +Z face is rebound without clear or draw. The reflective sphere still reads exact green centre RGBA(30,110,40,255), so preservation affects real cube sampling rather than getter state alone. |
 | DisplayMode.TitleSafeArea and ToString | `graphics.graphics_adapter.display_modes` adds an authored 1920x1080 Bgr565 value. Its safe area is the full rectangle and its exact text includes dimensions, named format and derived aspect ratio in XNA order. Both renderers pass7 controls with identical output. |
 | Viewport.Y | The properties workflow now assigns a nonzero Y together with X/width/height through Bounds and checks all four components before the existing safe-area/default behavior. Both renderers pass7 controls with identical output. |
 
@@ -381,6 +384,15 @@ Focused663 adds7 member credits without a new ID, moving temporary coverage1714-
 PresentationParameters, RenderTargetBinding, DisplayMode and Viewport have no generated member gap.
 All five focused SOFTWARE CTests pass (MRT skipped by declared capability). No screenshot or manual
 visual inspection was used.
+
+Focused679 grows the cube ID from3 to7 controls and credits its five remaining members, moving
+temporary coverage1826->1831/2326. SOFTWARE and OPENGLES3 pass7/7 with empty stderr; their two
+new controlled pixel lines match. The retained orbit diagnostic differs at431/0 versus445/12.
+The focused SOFTWARE CTest passes. A first 4x-MSAA/30-frame draft was stopped after more than40
+seconds on SOFTWARE; the final coherent cube remains single-sample and automation runs the three
+frames required by its preservation check. Evidence:`/tmp/checkpoint-679-*` and
+`/tmp/checkpoint-679-coverage.md`. Pixel readback was programmatic; no screenshot or visual
+inspection was used.
 
 ### Graphics-state lifetime and complete sampler presets
 

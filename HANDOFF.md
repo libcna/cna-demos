@@ -1361,17 +1361,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused678
-projects the632-demo staged catalog to1826/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused679
+projects the632-demo staged catalog to1831/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
 machinery. The stock-effect families now retain only dispositioned protected OnApply hooks and one
 SkinnedEffect explicit-interface inventory artifact; real pass application reaches the hooks and
-focused671 proved the override dispatch contract. Audit RenderTargetCube's five caller-visible
-lifecycle/value gaps next in its existing cube-face workflow: ContentLost registration,
-IsContentLost, DepthStencilFormat, MultiSampleCount and RenderTargetUsage. Then continue with the
-next high-value behavior family, rebuilding, running both renderers where
+focused671 proved the override dispatch contract. RenderTargetCube now has no member gap. Audit
+VertexBufferBinding's three caller-visible value members next in the existing several-streams
+workflow, including a nonzero vertex offset and instance frequency with exact binding identity.
+Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
@@ -1379,7 +1379,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused678 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused679 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3101,6 +3101,27 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 programmatic; no screenshot or visual inspection was used. Sibling CNA remained clean external
 `f698d0f548`; no CNA source was edited. Audit RenderTargetCube's five remaining public behaviors
 next.
+
+Focused679 extends `graphics.render_target.render_target_cube` from3 to7 controls and closes all
+five remaining RenderTargetCube members. Its live128x128 cube reports Depth24, zero applied MSAA
+and PreserveContents. The explicit CNA notification seam raises one public ContentLost event and
+sets IsContentLost; binding the first face clears the flag before rendering, without claiming a
+physical device loss. After the first frame, the +Z face is rebound without clear/draw; exact
+green centre RGBA(30,110,40,255) survives and is sampled through the sphere on frame2, proving
+preservation rather than getter state alone.
+
+SOFTWARE and OPENGLES3 pass7/7 with empty stderr and the focused SOFTWARE CTest passes. The two
+new controlled pixel lines match; the retained orbiting-cube diagnostic remains renderer-specific
+at431/0 versus445/12. An initial 4x-MSAA draft was stopped after the 30-frame SOFTWARE path exceeded
+40 seconds; automation was reduced to the three frames the checks require and the coherent dynamic
+cube remains single-sample. Existing dedicated multisampling workflows retain the behavioral MSAA
+coverage. Temporary coverage moves1826->1831/2326 at632 demos,301/329 types and156/753 fields.
+Evidence:`/tmp/checkpoint-679-*` and `/tmp/checkpoint-679-coverage.md`. Runner SHA-256 is
+`4ba9059fab6c3103607581c6db5e7fff1610711cbfaad14e3b7f078b5b1d5a3e`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Pixel validation was
+programmatic; no screenshot or visual inspection was used. Sibling CNA remained clean external
+`f698d0f548`; no CNA source was edited. Audit VertexBufferBinding's three value members next.
 
 ## 15. Assumptions the next session must know
 
