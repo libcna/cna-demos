@@ -1342,14 +1342,14 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused640 projects XNA-member coverage to1464/2326 and closes AudioListener.Velocity and
-AudioEmitter.Up with exact default/authored state plus accepted stopped Apply3D input. Audit the
-remaining useful Audio value contracts next: extend `audio.xact.categories` for
-AudioCategory.Equals/GetHashCode/ToString and `audio.xact.renderer_details` for RendererDetail
-typed/boxed equality, inequality, hash and text. Preserve their real category-control and selected-
-renderer playback workflows. Use only renderer records actually returned by CNA; do not invent a
-second device or claim output-device selection beyond the existing documented limitation. Run both
-dummy-audio renderer environments and the focused SOFTWARE CTests, then continue.
+baseline. Focused641 projects XNA-member coverage to1472/2326 and closes the useful remaining
+AudioCategory and RendererDetail value contracts. Audit `media.song.properties` next for Song's
+uncredited Equals/GetHashCode/operators/ToString contract. Use caller-created songs to distinguish
+the same file under different display names from different files under the same display name,
+preserve the existing disposal/property workflow, and avoid inferring playback or decoded-audio
+identity from metadata equality. Run both requested renderer environments with dummy audio and the
+focused SOFTWARE CTest. Then continue into the related library value contracts where existing
+real indexed objects make them meaningful.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2489,6 +2489,19 @@ accepted-input evidence under dummy audio, not mixed Doppler, panning, orientati
 evidence. Evidence:`/tmp/checkpoint-640-audio-spatial-*` and `/tmp/checkpoint-640-coverage.md`. No
 screenshot or visual inspection was performed. Final build is diagnostic-free against clean CNA
 `09c3108e5`; no CNA source was edited.
+
+Focused641 extends `audio.xact.categories` from10 to12 controls and
+`audio.xact.renderer_details` from three to six. AudioCategory now exercises typed/boxed equality,
+wrong-type rejection, equal hashes and exact text, including equal SFX names from two different
+engines whose controls remain engine-specific. RendererDetail copies CNA's actual SDL3_mixer
+record, checks typed/boxed equality, both equal operators, hash and friendly text, rejects empty/
+wrong boxes, and retains both strings after its discovery engine is disposed. No second device was
+invented and no unequal-record or output-device-selection claim is made. Both IDs pass under
+SOFTWARE and OPENGLES3 with byte-identical per-ID stdout and empty stderr; both SOFTWARE CTests
+pass. Temporary coverage projects1464->1472/2326 with no catalog/type/C-route change. Evidence:
+`/tmp/checkpoint-641-*` and `/tmp/checkpoint-641-coverage.md`. No listening, screenshot or visual
+inspection was performed. Final build is diagnostic-free against clean CNA `09c3108e5`; no CNA
+source was edited.
 
 ## 15. Assumptions the next session must know
 

@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MS-PL
 // XACT categories: one volume slider, pause and stop for a whole group of sounds.
+#include <any>
 #include <chrono>
 #include <memory>
+#include <string>
 #include <thread>
 
 #include "CnaDemos/Demo.hpp"
@@ -28,6 +30,11 @@ namespace
         AudioCategory effects = engine.GetCategory("SFX");
         ctx.Print("categories: {}, {}", music.getNameProperty(), effects.getNameProperty());
         ctx.Check(music != effects && music == engine.GetCategory("Music"), "categories compare by name");
+        const AudioCategory musicCopy = engine.GetCategory("Music");
+        ctx.Check(music.Equals(musicCopy) && music.Equals(std::any(musicCopy)) &&
+                      !music.Equals(std::any(effects)) && !music.Equals(std::any(std::string("Music"))) &&
+                      music.GetHashCode() == musicCopy.GetHashCode() && music.ToString() == "Music",
+                  "category typed and boxed identity, hash and text use its authored name");
 
         std::unique_ptr<Cue> tune(sounds.GetCue("LowTone"));   // in Music
         std::unique_ptr<Cue> beep(sounds.GetCue("HighTone"));  // in SFX
@@ -69,6 +76,9 @@ namespace
         SoundBank hierarchySounds(&hierarchy, "assets/xact/tones.xsb");
         AudioCategory master = hierarchy.GetCategory("Master");
         AudioCategory child = hierarchy.GetCategory("SFX");
+        ctx.Check(effects.Equals(child) && effects == child &&
+                      effects.GetHashCode() == child.GetHashCode() && child.ToString() == "SFX",
+                  "the same category name compares equal across different engines");
         std::unique_ptr<Cue> direct(hierarchySounds.GetCue("LowTone"));
         std::unique_ptr<Cue> descendant(hierarchySounds.GetCue("HighTone"));
         direct->Play();
@@ -103,7 +113,8 @@ CNA_DEMOS_CONSOLE(Categories, {
                    "resumes SFX, and stops Music; contrasts independent groups with authored parent/child control.",
     .apis = {"AudioEngine::GetCategory", "AudioCategory::Name", "AudioCategory::SetVolume", "AudioCategory::Pause",
              "AudioCategory::Resume", "AudioCategory::Stop", "AudioCategory::op_Equality",
-             "AudioCategory::op_Inequality"},
+             "AudioCategory::op_Inequality", "AudioCategory::Equals", "AudioCategory::GetHashCode",
+             "AudioCategory::ToString"},
     .tags = {"audio", "xact", "category", "volume", "options"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb", "xact/hierarchy.xgs"},

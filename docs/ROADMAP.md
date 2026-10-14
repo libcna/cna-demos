@@ -4763,3 +4763,20 @@ under dummy audio, not mixed Doppler, panning, orientation or listening output. 
 `/tmp/checkpoint-640-audio-spatial-*` and `/tmp/checkpoint-640-coverage.md`. No screenshot or visual
 inspection was performed. Audit AudioCategory and RendererDetail value identity/diagnostic
 contracts next while preserving their real XACT workflows.
+
+## Focused641-XACT-value-identity-and-record-lifetime
+
+Two existing XACT workflows close the remaining useful Audio value-contract gaps.
+`audio.xact.categories` now passes12 controls: typed/boxed equality, wrong-type rejection, equal
+hashes and exact name text complement its real Music/SFX and hierarchy controls, including equal
+SFX names from two different engines whose operations remain attached to their respective engines.
+`audio.xact.renderer_details` now passes six controls: a copy of CNA's actual SDL3_mixer record has
+typed/boxed equality, equal operators/hash and FriendlyName text, rejects empty/wrong boxes, and
+retains both strings after the discovery engine is disposed before its id selects the playing
+engine. No second record was invented and no unequal-device or actual output-selection claim is
+made. SOFTWARE and OPENGLES3 pass both IDs with byte-identical per-ID stdout and empty stderr; both
+focused SOFTWARE CTests pass. Temporary coverage moves the XNA-member projection1464->1472/2326
+without changing the627-demo/type/C-route counts. Evidence:`/tmp/checkpoint-641-*` and
+`/tmp/checkpoint-641-coverage.md`. No listening, screenshot or visual inspection was performed.
+Audit Song equality/hash/operators/text next using caller-created same-file/different-name and
+different-file/same-name records, while preserving the existing property/disposal workflow.
