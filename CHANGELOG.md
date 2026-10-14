@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added exact-bound and normalized-pattern framebuffer checks to
+  `graphics.sprite_batch.destination_rectangle` for uniform and nonuniform scaling.
 - Added representative framebuffer checks to `graphics.sprite_batch.tint_and_transparency` for
   opaque RGB multiplication and premultiplied opacity over a known background.
 - Added exact framebuffer checks to `graphics.sprite_batch.source_rectangle` for four atlas frame

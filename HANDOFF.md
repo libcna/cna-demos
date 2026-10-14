@@ -234,8 +234,20 @@ self-tests and four checkpoint-comparison tests pass, and coverage remains302/32
 2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-728-tint-*`. An initial combined Python test invocation used an invalid root-level
 import path; the supported invocations both pass. No screenshot or manual visual inspection was
-performed. The sibling CNA checkout still has only the unrelated external SDL GPU test change;
-the production library hashes remain exact from Complete724.
+performed. During this validation the sibling CNA checkout still carried only the unrelated
+external SDL GPU test change; the production library hashes remained exact from Complete724.
+
+Focused **729-SpriteBatch-destination-rectangle-pixels** adds two framebuffer controls to
+`graphics.sprite_batch.destination_rectangle`. All four native/enlarged/nonuniform rectangles fill
+their bounds without touching the immediately adjacent pixels, and representative samples from
+the256x128 horizontal and48x400 vertical stretches preserve the full checker's normalized pattern.
+SOFTWARE and OPENGLES3/X11 pass2/2, the exact SOFTWARE CTest passes, metadata remains634/0, the
+five validator self-tests and four checkpoint-comparison tests pass, and coverage remains302/329
+types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-729-destination-*`. No screenshot or manual visual inspection was performed. The
+external SDL GPU test change was subsequently committed in the sibling checkout as test-only CNA
+`d23e139de`; that checkout is clean and one commit ahead of its origin, while both production
+library hashes remain exact from Complete724.
 
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
@@ -1500,13 +1512,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-728 are
-staged after it. Audit the existing `graphics.sprite_batch.destination_rectangle` scene and add a
-small focused framebuffer contract only if it proves behavior not established by focused727:
-destination bounds and nonuniform whole-texture scaling are the candidate distinction. Run both
-primary renderers and the exact CTest, update status docs and push. Then audit the remaining
-SpriteBatch diagnostic gaps (degenerate/out-of-range rectangles and disposed textures) for a
-coherent existing-demo extension rather than adding overload variants.
+HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-729 are
+staged after it. Extend the existing `graphics.sprite_batch.begin_end_rules` diagnostic workflow
+with a disposed-texture Draw refusal and prove the still-open batch remains usable afterward.
+Then audit the distinct cross-device texture refusal; add it only if a stable owned second device
+can be exercised on both primary renderers without conflating device construction with the Draw
+rule. Degenerate rectangles and non-finite numeric arguments are deliberately unchecked XNA input,
+while oversized source rectangles feed sampler addressing and are already demonstrated by
+`tiling_with_wrap`; do not misclassify these as missing argument validation.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

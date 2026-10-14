@@ -6224,3 +6224,19 @@ all five validator self-tests and all four checkpoint-comparison tests pass, and
 path and failed after the five validator tests; both modules then passed with their supported
 invocations. Pixel readback was programmatic; no screenshot or manual visual inspection was
 performed. Decide the distinct destination-rectangle scaling/bounds contract next.
+
+## Focused729-SpriteBatch-destination-rectangle-pixels
+
+The existing `graphics.sprite_batch.destination_rectangle` gains two representative framebuffer
+controls for behavior not supplied by the source-rectangle workflow. Every native, enlarged and
+nonuniform rectangle contains the expected white texel while all four immediately adjacent edge
+samples remain CornflowerBlue. Interior samples then prove that both a256x128 horizontal stretch
+and a48x400 vertical stretch retain the complete64x64 checker's normalized white/purple pattern.
+
+SOFTWARE and OPENGLES3/X11 pass2/2, and the exact SOFTWARE CTest passes. Metadata remains634/0,
+all five validator self-tests and all four checkpoint-comparison tests pass, and coverage remains
+302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-729-destination-*`. Pixel readback was programmatic; no screenshot or manual
+visual inspection was performed. Audit the remaining meaningful SpriteBatch Draw rejection and
+lifetime paths next; unchecked degenerate numeric input and sampler-governed oversized sources are
+already intentional contracts rather than argument-refusal gaps.
