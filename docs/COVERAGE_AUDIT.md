@@ -293,6 +293,21 @@ gap. Both IDs have byte-identical SOFTWARE/OPENGLES3 output and empty stderr, an
 SOFTWARE CTests pass. Pixel validation used programmatic readback; no screenshot or visual
 inspection was used.
 
+### Sample coverage and slope-scaled depth bias
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| BlendState.MultiSampleMask | `graphics.render_target.multisampling` now renders the same triangle into a fourth 4x target with mask0. Both renderers resolve that target to one clear level while the all-samples target resolves to five levels, proving the mask rejects every covered sample. |
+| RasterizerState.MultiSampleAntiAlias | The same demo renders another 4x target with this property false. SOFTWARE changes from five resolved levels to the two all-or-nothing levels of the single-sample control. OpenGL ES retains five because its profile cannot disable multisampling through rasterizer state; the demo records that renderer-specific limitation rather than claiming a toggle. |
+| RasterizerState.SlopeScaleDepthBias | The decal workflow grows2->3 pixel controls. Its third panel places a white sloped decal slightly behind a green sloped floor; a negative slope-scaled state makes the exact center white while the unbiased flat control remains hidden and the fixed-bias control remains visible. Both renderers pass. |
+
+Focused666 adds3 member credits without a new ID, moving temporary coverage1732->1735/2326.
+RasterizerState now has no generated member gap and BlendState retains only the three per-MRT color
+write masks. Both focused SOFTWARE CTests pass. Stderr is empty; the depth-bias output is identical,
+while the multisampling diagnostic intentionally reports SOFTWARE2 versus OPENGLES35 grey levels
+for the disabled-rasterizer case. Pixel validation used programmatic readback; no screenshot or
+visual inspection was used.
+
 ### ContentManager (including CNA extensions)
 
 | Members / behavior | Decision and evidence |

@@ -8,6 +8,8 @@
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BasicEffect.hpp"
+#include "Microsoft/Xna/Framework/Graphics/BlendState.hpp"
+#include "Microsoft/Xna/Framework/Graphics/CullMode.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectPass.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectTechnique.hpp"
@@ -46,8 +48,18 @@ namespace
             // The count is a request: the device may round it to what it supports.
             smooth_ = std::make_unique<RenderTarget2D>(device, Size, Size, false, SurfaceFormat::Color, DepthFormat::None,
                                                        4, RenderTargetUsage::DiscardContents);
+            rasterOff_ = std::make_unique<RenderTarget2D>(device, Size, Size, false, SurfaceFormat::Color,
+                                                          DepthFormat::None, 4, RenderTargetUsage::DiscardContents);
+            masked_ = std::make_unique<RenderTarget2D>(device, Size, Size, false, SurfaceFormat::Color,
+                                                       DepthFormat::None, 4, RenderTargetUsage::DiscardContents);
             Context().Print("requested 4 samples, got {}", smooth_->getMultiSampleCountProperty());
             Context().Check(smooth_->getMultiSampleCountProperty() > 1, "the target is multisampled");
+
+            smoothRasterizer_.setCullModeProperty(CullMode::None);
+            smoothRasterizer_.setMultiSampleAntiAliasProperty(true);
+            rasterOffState_.setCullModeProperty(CullMode::None);
+            rasterOffState_.setMultiSampleAntiAliasProperty(false);
+            noCoverage_.setMultiSampleMaskProperty(0);
 
             effect_ = std::make_unique<BasicEffect>(device);
             effect_->setVertexColorEnabledProperty(true);
@@ -61,25 +73,30 @@ namespace
                 VertexPositionColor(Vector3(10.0f, 90.0f, 0.0f), Color::White),
                 VertexPositionColor(Vector3(50.0f, 8.0f, 0.0f), Color::White),
                 VertexPositionColor(Vector3(92.0f, 70.0f, 0.0f), Color::White)};
-            for (RenderTarget2D* target : {aliased_.get(), smooth_.get()})
-            {
-                device.SetRenderTarget(target);
-                device.Clear(Color::Black);
-                device.setRasterizerStateProperty(RasterizerState::CullNone);
-                for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
-                {
-                    pass.Apply();
-                    device.DrawUserPrimitives(PrimitiveType::TriangleList, sliver.data(), 0, 1);
-                }
-            }
+            Render(device, *aliased_, smoothRasterizer_, fullCoverage_, sliver);
+            Render(device, *smooth_, smoothRasterizer_, fullCoverage_, sliver);
+            Render(device, *rasterOff_, rasterOffState_, fullCoverage_, sliver);
+            Render(device, *masked_, smoothRasterizer_, noCoverage_, sliver);
             // Unbinding resolves the samples into one colour per pixel.
             device.SetRenderTarget(nullptr);
 
             if (FramesDrawn() == 0)
             {
-                Context().Print("distinct grey levels: without MSAA {}, with MSAA {}", Greys(*aliased_), Greys(*smooth_));
-                Context().Check(Greys(*aliased_) == 2, "without multisampling an edge pixel is all or nothing");
-                Context().Check(Greys(*smooth_) > 2, "with multisampling edge pixels are partly covered");
+                const std::size_t aliasedGreys = Greys(*aliased_);
+                const std::size_t smoothGreys = Greys(*smooth_);
+                const std::size_t rasterOffGreys = Greys(*rasterOff_);
+                const std::size_t maskedGreys = Greys(*masked_);
+                Context().Print("distinct grey levels: no target MSAA {}, enabled {}, rasterizer off {}, mask 0 {}",
+                                aliasedGreys, smoothGreys, rasterOffGreys, maskedGreys);
+                Context().Check(aliasedGreys == 2, "without multisampling an edge pixel is all or nothing");
+                Context().Check(smoothGreys > 2, "with multisampling edge pixels are partly covered");
+                if (device.GetGraphicsRendererName() == "SOFTWARE")
+                    Context().Check(rasterOffGreys == 2,
+                                    "MultiSampleAntiAlias false disables partial sample coverage on SOFTWARE");
+                else
+                    Context().Check(rasterOffGreys > 2,
+                                    "OpenGL ES cannot disable multisampling per rasterizer state");
+                Context().Check(maskedGreys == 1, "MultiSampleMask 0 rejects every covered sample");
             }
 
             // Magnified 3x with point sampling, so the edge pixels are visible.
@@ -95,6 +112,20 @@ namespace
         }
 
     private:
+        void Render(GraphicsDevice& device, RenderTarget2D& target, const RasterizerState& rasterizer,
+                    const BlendState& blend, const std::array<VertexPositionColor, 3>& vertices)
+        {
+            device.SetRenderTarget(&target);
+            device.Clear(Color::Black);
+            device.setRasterizerStateProperty(rasterizer);
+            device.setBlendStateProperty(blend);
+            for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
+            {
+                pass.Apply();
+                device.DrawUserPrimitives(PrimitiveType::TriangleList, vertices.data(), 0, 1);
+            }
+        }
+
         static std::size_t Greys(const RenderTarget2D& target)
         {
             std::array<Color, Size * Size> pixels{};
@@ -109,16 +140,23 @@ namespace
         std::optional<SpriteFont> font_;
         std::unique_ptr<RenderTarget2D> aliased_;
         std::unique_ptr<RenderTarget2D> smooth_;
+        std::unique_ptr<RenderTarget2D> rasterOff_;
+        std::unique_ptr<RenderTarget2D> masked_;
         std::unique_ptr<BasicEffect> effect_;
+        RasterizerState smoothRasterizer_;
+        RasterizerState rasterOffState_;
+        BlendState fullCoverage_;
+        BlendState noCoverage_;
     };
 }
 
 CNA_DEMOS_GAME(MultisamplingDemo, {
     .id = "graphics.render_target.multisampling",
     .title = "Multisampled render target",
-    .description = "Draws the same triangle into a plain RenderTarget2D and one created with a MultiSampleCount of 4; "
-                   "the multisampled one has anti-aliased edges after resolving.",
-    .apis = {"RenderTarget2D::RenderTarget2D", "RenderTarget2D::MultiSampleCount"},
+    .description = "Draws the same triangle into plain and multisampled targets, then contrasts rasterizer-level "
+                   "anti-alias control and a zero sample-coverage mask before resolving.",
+    .apis = {"RenderTarget2D::RenderTarget2D", "RenderTarget2D::MultiSampleCount",
+             "RasterizerState::MultiSampleAntiAlias", "BlendState::MultiSampleMask"},
     .tags = {"render-target", "msaa", "anti-aliasing", "3d"},
     .needs = CnaDemos::Need::ThreeD | CnaDemos::Need::MultiSampling,
     .frames = 3,

@@ -5187,3 +5187,20 @@ literal constexpr demo table; changing it to const fixed that demo bug. Evidence
 `/tmp/checkpoint-665-*` and `/tmp/checkpoint-665-coverage.md`. Pixel validation used programmatic
 readback; no screenshot or visual inspection was used. Finish the three per-MRT write masks,
 sample-coverage mask, multisample toggle and slope-scale depth bias next.
+
+## Focused666-sample-coverage-and-slope-bias
+
+Two existing IDs close three members. Multisampling grows3->5 controls: the all-samples 4x target
+resolves to five grey levels and mask0 resolves to one clear level on both renderers. Setting
+RasterizerState.MultiSampleAntiAlias false changes SOFTWARE to the two all-or-nothing levels of the
+single-sample control; OpenGL ES cannot represent that per-state toggle and retains five levels.
+Depth bias grows2->3 exact pixel controls: a negative SlopeScaleDepthBias brings a sloped white
+decal in front of its sloped green floor beside the established unbiased and fixed-bias panels.
+
+Both IDs pass under SOFTWARE and OPENGLES3 with empty stderr, and both focused SOFTWARE CTests
+pass. Depth-bias stdout is identical; multisampling intentionally reports rasterizer-off levels2
+versus5. Temporary coverage moves1732->1735/2326 at629 demos,299/329 types and155/753 fields.
+RasterizerState has no generated member gap; BlendState retains only ColorWriteChannels1/2/3.
+Evidence:`/tmp/checkpoint-666-*` and `/tmp/checkpoint-666-coverage.md`. Pixel validation used
+programmatic readback; no screenshot or visual inspection was used. Finish the three active MRT
+write masks next.

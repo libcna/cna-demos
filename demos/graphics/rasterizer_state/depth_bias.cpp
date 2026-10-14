@@ -38,6 +38,15 @@ namespace
         return {a, b, c, b, d, c};
     }
 
+    std::array<VertexPositionColor, 6> SlopedQuad(Rectangle r, float leftZ, float rightZ, Color color)
+    {
+        const auto x0 = static_cast<float>(r.X), y0 = static_cast<float>(r.Y);
+        const auto x1 = static_cast<float>(r.X + r.Width), y1 = static_cast<float>(r.Y + r.Height);
+        const VertexPositionColor a(Vector3(x0, y0, leftZ), color), b(Vector3(x1, y0, rightZ), color),
+            c(Vector3(x0, y1, leftZ), color), d(Vector3(x1, y1, rightZ), color);
+        return {a, b, c, b, d, c};
+    }
+
     class DepthBiasDemo final : public CnaDemos::DemoGame
     {
     protected:
@@ -54,6 +63,9 @@ namespace
             biased_ = std::make_unique<RasterizerState>();
             biased_->setCullModeProperty(CullMode::None);
             biased_->setDepthBiasProperty(-0.01f);
+            slopeBiased_ = std::make_unique<RasterizerState>();
+            slopeBiased_->setCullModeProperty(CullMode::None);
+            slopeBiased_->setSlopeScaleDepthBiasProperty(-4.0f);
         }
 
         void Draw(const GameTime& gameTime) override
@@ -65,20 +77,30 @@ namespace
             // The floor, then two decals placed (as rounding or modelling error would) just behind it.
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             Draw(Quad(Rectangle(40, 60, 720, 320), -5.0f, Color::ForestGreen));
-            Draw(Quad(Rectangle(120, 140, 200, 160), -5.02f, Color::White));
+            Draw(Quad(Rectangle(80, 140, 160, 140), -5.02f, Color::White));
             device.setRasterizerStateProperty(*biased_);
-            Draw(Quad(Rectangle(480, 140, 200, 160), -5.02f, Color::White));
+            Draw(Quad(Rectangle(320, 140, 160, 140), -5.02f, Color::White));
+
+            // This floor and decal have a depth gradient. A constant zero bias cannot separate
+            // them, while the negative slope-scaled term pulls the whole decal forward.
+            device.setRasterizerStateProperty(RasterizerState::CullNone);
+            Draw(SlopedQuad(Rectangle(560, 140, 160, 140), -4.0f, -6.0f, Color::ForestGreen));
+            device.setRasterizerStateProperty(*slopeBiased_);
+            Draw(SlopedQuad(Rectangle(560, 140, 160, 140), -4.02f, -6.02f, Color::White));
 
             if (FramesDrawn() == 0)
             {
                 const CnaDemos::BackBufferPixels p(device);
-                Context().Check(p.At(220, 220) == Color::ForestGreen, "without bias the decal is hidden by the floor");
-                Context().Check(p.At(580, 220) == Color::White, "with DepthBias -0.01 the decal is drawn on top");
+                Context().Check(p.At(160, 210) == Color::ForestGreen, "without bias the decal is hidden by the floor");
+                Context().Check(p.At(400, 210) == Color::White, "with DepthBias -0.01 the decal is drawn on top");
+                Context().Check(p.At(640, 210) == Color::White,
+                                "SlopeScaleDepthBias pulls a sloped decal in front of its sloped floor");
             }
 
             spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
-            spriteBatch_->DrawString(*font_, "DepthBias 0", Vector2(160.0f, 400.0f), Color::White);
-            spriteBatch_->DrawString(*font_, "DepthBias -0.01", Vector2(510.0f, 400.0f), Color::White);
+            spriteBatch_->DrawString(*font_, "no bias", Vector2(100.0f, 400.0f), Color::White);
+            spriteBatch_->DrawString(*font_, "DepthBias", Vector2(340.0f, 400.0f), Color::White);
+            spriteBatch_->DrawString(*font_, "slope bias", Vector2(580.0f, 400.0f), Color::White);
             spriteBatch_->End();
 
             Game::Draw(gameTime);
@@ -98,6 +120,7 @@ namespace
         std::optional<SpriteFont> font_;
         std::unique_ptr<BasicEffect> effect_;
         std::unique_ptr<RasterizerState> biased_;
+        std::unique_ptr<RasterizerState> slopeBiased_;
     };
 }
 
@@ -105,8 +128,9 @@ CNA_DEMOS_GAME(DepthBiasDemo, {
     .id = "graphics.rasterizer_state.depth_bias",
     .title = "Depth bias for decals",
     .description = "Draws two decals a hair behind a floor: the plain one loses the depth test, the one drawn with "
-                   "RasterizerState::DepthBias -0.01 is pulled in front.",
-    .apis = {"RasterizerState::DepthBias", "RasterizerState::RasterizerState"},
+                   "RasterizerState::DepthBias is pulled in front; a third sloped pair uses SlopeScaleDepthBias.",
+    .apis = {"RasterizerState::DepthBias", "RasterizerState::SlopeScaleDepthBias",
+             "RasterizerState::RasterizerState"},
     .tags = {"3d", "depth", "decal", "z-fighting", "rasterizer", "state"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

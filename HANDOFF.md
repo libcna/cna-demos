@@ -1361,13 +1361,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused665
-projects the629-demo staged catalog to1732/2326 XNA members and155/753 fields at299/329 types.
-DepthStencilState and SamplerState have no remaining generated gap, and disposal is covered across
-all four state classes. Finish the final six graphics-state members next: BlendState
-ColorWriteChannels1/2/3 and MultiSampleMask, plus RasterizerState MultiSampleAntiAlias and
-SlopeScaleDepthBias. Prefer actual MRT, multisample and sloped-depth pixel behavior over property-
-list assertions.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused666
+projects the629-demo staged catalog to1735/2326 XNA members and155/753 fields at299/329 types.
+DepthStencilState, RasterizerState and SamplerState have no remaining generated gap, and disposal is
+covered across all four state classes. Finish the graphics-state family with BlendState
+ColorWriteChannels1/2/3, using actual distinct write masks on active MRT slots in the existing MRT
+workflow rather than property-list assertions.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1376,7 +1375,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused665 built against external `f00150424` with two uncommitted
+the sibling CNA checkout; focused666 built against external `f00150424` with two uncommitted
 handoff/renderer-retirement plan paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2882,6 +2881,23 @@ library hashes remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510
 `98d1abb28db323c133a2ee348c63050719c872560d375d4ac89eee3d0b0faa69`. The first compile rejected
 a non-literal constexpr demo table; changing it to const fixed the demo bug. No CNA source was
 edited. Finish the six BlendState/RasterizerState members next.
+
+Focused666 extends multisampling and depth bias without a new ID. The multisample workflow grows
+3->5 controls: all-sample rendering resolves to five grey levels, mask0 resolves to one clear
+level on both renderers, and disabling RasterizerState multisampling gives SOFTWARE's two all-or-
+nothing levels. OPENGLES3 remains at five because OpenGL ES cannot represent that per-state toggle;
+the demo records the platform-specific behavior. The depth-bias workflow grows2->3 and proves a
+negative SlopeScaleDepthBias brings a sloped white decal in front of its sloped green floor, beside
+the established unbiased/fixed-bias controls. Both IDs pass both renderers with empty stderr; both
+focused SOFTWARE CTests pass. Depth-bias stdout is identical; multisampling intentionally reports
+rasterizer-off levels2 versus5. Temporary coverage moves1732->1735/2326, leaving RasterizerState
+complete and only BlendState ColorWriteChannels1/2/3 in the graphics-state family. Evidence:
+`/tmp/checkpoint-666-*` and `/tmp/checkpoint-666-coverage.md`. Pixel validation used programmatic
+readback; no screenshot or visual inspection was used. Production library hashes remain
+`c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`; runner
+`e92e45644daa3b499a1b7b7428930f7d543bfd21ac97a5ce51cf30be545cedcb`. Sibling CNA stayed external
+dirty `f00150424`; no CNA source was edited. Finish the three active MRT masks next.
 
 ## 15. Assumptions the next session must know
 
