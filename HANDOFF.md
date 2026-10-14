@@ -70,8 +70,8 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input39, storage7, media13, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api172. Kinds are161 console,272 game and194 standalone;
 591 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: see generated docs/COVERAGE.md from complete checkpoint634. It records297/329 XNA types,
-1417/2326 XNA members and2999/3205 public C ABI routes. Selected semantic totals are `input_gamepad.h`61/63,
+Coverage: see generated docs/COVERAGE.md from complete checkpoint647. It records297/329 XNA types,
+1519/2326 XNA members and2999/3205 public C ABI routes. Selected semantic totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
@@ -80,9 +80,9 @@ Coverage: see generated docs/COVERAGE.md from complete checkpoint634. It records
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete634 exercises all2999 credited C routes and all current catalog IDs in both full smoke
+Complete647 exercises all2999 credited C routes and all current catalog IDs in both full smoke
 suites. It absorbs every staged C batch through complete `models.h`, the focused SpriteFont route,
-and the deeper XNA member batches through VertexElement.
+and the deeper XNA member batches through Picture/PictureAlbum identity.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Known-issue demos: 35 (`graphics.sprite_batch.begin_end_rules` CNA-DEMOS-ISSUE-082,
 `c_api.gamer.achievement_collection` CNA-DEMOS-ISSUE-077,
@@ -122,13 +122,31 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **634-retired-renderers-and-full-staged-baseline** is the current full-runtime baseline.
-The `linux-full` configure now follows CNA's renderer retirement: OPENGLES3, OPENGL33, SDL_GPU,
+Complete **647-member-audit-integration** is the current full-runtime baseline. The documented
+outer-Xvfb `tools/validate.sh` invocation passes metadata627/0 and all640 enabled CTests; three
+declared tests remain disabled. SOFTWARE is555 pass/34 known-fail/35 skip/3 not-run and OPENGLES3
+is587/34/3/3, with zero unexpected passes. Fresh generated coverage is297/329 XNA types,
+1519/2326 XNA members and2999/3205 C routes. Against complete634, the only status/knownIssue delta
+on either renderer is `graphics.sprite_batch.begin_end_rules`: its new disposal control exposes
+CNA-DEMOS-ISSUE-082, so it changes from pass to expected failure. All13 other extended IDs retain
+their prior statuses and only increase their control counts. The preflight GamePad capability
+focused runs passed without hardware, but the complete smoke totals remain unchanged because that
+ID was already a normal pass in the archived complete634 reports; the earlier projected skip delta
+was incorrect.
+
+The incremental build log is diagnostic-free. The run began after observing clean sibling CNA
+`09c3108e58`; by final capture that external checkout had independently advanced to `af798b73a4`
+and contained four uncommitted FNA3D CMake/patch paths. No CNA source was edited or reverted here.
+The tested binaries are immutable evidence: SHA-256 `cna-demos`
+`d0d15b3d4f7a61dd3ee85795ad557f5581fb9a3911426fa5cf914404476e49e6`, `libcna.so`
+`1f54d1a7f969d9ca1258ec75f76a9a75549d1bf20313a63c6734606c10abc8f9`, and
+`libcna_c_api.so` `fedaef026b8c52d619905f6f2aee1553e6def843ce407f8290c45c16857b6f19`.
+Evidence is archived as `build/linux-full/reports/checkpoint-647-complete-*`; no screenshot,
+listening test or manual visual-quality inspection was performed.
+
+Complete **634-retired-renderers-and-full-staged-baseline** remains the prior comparison baseline.
+Its `linux-full` configure follows CNA's renderer retirement: OPENGLES3, OPENGL33, SDL_GPU,
 SOFTWARE, HEADLESS and STUB are compiled, with no stale SDL_RENDERER request or dead PBR branch.
-`tools/validate.sh` passes metadata627/0 and all640 enabled CTests; three declared tests remain
-disabled. SOFTWARE is556 pass/33 known-fail/35 skip/3 not-run and OPENGLES3 is588/33/3/3, with
-zero unexpected passes. Fresh generated coverage is297/329 XNA types,1417/2326 XNA members and
-2999/3205 C routes.
 
 The first CTest attempt found two demo defects, not CNA defects: Guide social sampled one fixed
 pixel while its card was still translated by the entrance animation, and Guide dispatcher assumed
@@ -1341,23 +1359,22 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused646 projects XNA-member coverage to1519/2326 and closes Picture token/date/value,
-PictureAlbum value and two picture collection indexer contracts while retaining ISSUE-041. The
-next task is a complete integration checkpoint absorbing focused635 through646: run the documented
-`tools/validate.sh` against the current 627-demo catalog, investigate every delta from complete634,
-regenerate `docs/COVERAGE.md` only through that workflow, archive the complete reports, record
-current clean sibling CNA and final binary hashes, and update all status documents/HANDOFF. Expect
-the GamePad capability demo to move from skip to pass in both smokes, and preserve all35 known-
-issue results including the new SpriteBatch ISSUE-082. After committing/pushing that checkpoint,
-resume the next high-value XNA member/behavior audit without waiting.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. The
+complete checkpoint absorbs focused635 through646 and establishes1519/2326 runtime-backed XNA
+members. Audit the still-uncredited ContentReader scalar/math reads in the existing custom reader
+workflow next: verify which public ReadColor/ReadDouble/ReadMatrix/ReadQuaternion/ReadSingle and
+ReadVector2/3/4 paths already execute, add coherent authored-value controls where useful, and
+disposition any implementation or reader-access constraints rather than creating artificial IDs.
+Then continue with the next high-value behavior family, rebuilding, running both renderers where
+applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; complete634 used its clean `53aba6ef15` state.
+the sibling CNA checkout; complete647 began against clean `09c3108e58`, but final observation found
+external `af798b73a4` plus four uncommitted FNA3D build/patch paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
 `standalone/c_api.graphics.vertex_values` contains the planned seven-check
@@ -2568,6 +2585,17 @@ flags and post-library pointer use remain intentionally unclaimed. Evidence:
 inspection was performed. Both changed targets build diagnostic-free against clean CNA
 `09c3108e5`; no CNA source was edited.
 
+Complete647 absorbs focused635 through646 in the actual 627-demo runner. The documented outer-Xvfb
+validation passes metadata627/0, all640 enabled CTests, and both full smokes with zero unexpected
+passes: SOFTWARE555 pass/34 expected fail/35 skip/3 manual and OPENGLES3587/34/3/3. Every status
+and knownIssue pair matches complete634 except the intended new
+`graphics.sprite_batch.begin_end_rules` ISSUE-082 expected failure. Generated coverage is297/329
+types,1519/2326 members and2999/3205 C routes. The build is diagnostic-free and the binary/library
+hashes are recorded in section7. Evidence:`build/linux-full/reports/checkpoint-647-complete-*`.
+No screenshot, listening test or manual visual inspection was performed. The run began with clean
+CNA `09c3108e58`; final capture found the externally changed dirty CNA state documented above, so
+this is immutable binary/runtime evidence rather than a claim about that later source tree.
+
 ## 15. Assumptions the next session must know
 
 * Current workspace: `/rv/data/development/github.com/libcna/cna-demos`; CNA and the other
@@ -2578,10 +2606,10 @@ inspection was performed. Both changed targets build diagnostic-free against cle
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is634-retired-renderers-and-full-staged-baseline; exact results, hashes
-and evidence are in section7. It absorbs every earlier focused batch through checkpoint633,
-including all102 previously staged standalone C IDs, SpriteFont and the Model/VertexElement member
-extensions. Use its627-demo coverage and runtime reports as the comparison baseline.
+Current complete baseline is647-member-audit-integration; exact results, hashes and evidence are
+in section7. It absorbs every earlier focused batch through checkpoint646, including all102
+previously staged standalone C IDs and the deeper member work through Picture/PictureAlbum
+identity. Use its627-demo coverage and runtime reports as the comparison baseline.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
@@ -2593,7 +2621,7 @@ complete500. Device clears, owned-device lifecycle and device profile/policy sta
 complete502. The complete504 checkpoint binary was built with clean CNA `f37f8d184`; CNA advanced
 externally during smoke to clean `fbd8e64a3` through CI/CMake-test/docs/tooling-only changes, while
 both production library hashes stayed unchanged. Complete504 and complete524 remain immutable
-historical comparison evidence; complete634 is the current full-runtime baseline.
+historical comparison evidence; complete647 is the current full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.
 

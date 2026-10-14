@@ -923,3 +923,20 @@ member audit continued in focused635 and focused636. The stock vertex workflow p
 coverage to1437/2326; the SpriteFont behavior audit adds no generated XNA-member credit because its
 five inventory members were already represented, while directly exercising all four CNA inspection
 extensions. Continue with the SpriteBatch lifecycle/queued-resource behaviors classified above.
+
+### Complete647 generated checkpoint
+
+Focused635 through646 are now included in a complete project build and both full smoke suites.
+Generated coverage is627 demos,297/329 types,1519/2326 XNA members and2999/3205 C routes.
+SOFTWARE reports555 pass/34 expected fail/35 skip/3 manual and OPENGLES3 reports587/34/3/3, both
+with zero unexpected passes. All640 enabled CTests pass and three declared tests remain disabled.
+Compared with complete634, only `graphics.sprite_batch.begin_end_rules` changes state: its new
+Dispose accounting check exposes the documented ISSUE-082 and therefore becomes an expected
+failure on both renderers. The other extended workflows retain their prior states.
+
+The complete evidence replaces the temporary member projections through focused646. The next
+selected coherent gap is the public ContentReader scalar/math read family in an existing custom
+reader workflow. Collection enumerators and routine Dispose/IsDisposed repetition remain subject
+to semantic disposition rather than automatic demo expansion. Evidence:
+`build/linux-full/reports/checkpoint-647-complete-*`. No screenshot, listening test or manual
+visual inspection was performed.

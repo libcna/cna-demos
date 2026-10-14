@@ -20,7 +20,7 @@ Generated 2026-10-14 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 24 / 7 / 1 / 1 / 0 | 31 / 0 / 1 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 17 / 0 / 1 / 1 / 0 | 17 / 0 / 1 / 1 / 0 |
-| graphics | 162 | 162 | 0 | 0 | 138 / 18 / 6 / 0 / 0 | 152 / 3 / 7 / 0 / 0 |
+| graphics | 162 | 162 | 0 | 0 | 137 / 18 / 7 / 0 / 0 | 151 / 3 / 8 / 0 / 0 |
 | input | 39 | 14 | 25 | 0 | 33 / 6 / 0 / 0 / 0 | 39 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 13 | 12 | 1 | 0 | 12 / 0 / 1 / 0 / 0 | 12 / 0 / 1 / 0 / 0 |
@@ -35,21 +35,21 @@ Generated 2026-10-14 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 ## XNA 4.0 API surface demonstrated
 
 - **Types with at least one demo: 297 of 329** (90.3 %).
-- **Methods, properties, constructors and events named by a demo: 1417 of 2326** (60.9 %).
-- Fields and enum values named by a demo: 137 of 753 (reported separately: a demo per enum value is not a goal).
+- **Methods, properties, constructors and events named by a demo: 1519 of 2326** (65.3 %).
+- Fields and enum values named by a demo: 151 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 40 / 42 | 478 / 643 | 34 / 78 |
-| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 99 / 121 | 6 / 11 |
+| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 109 / 121 | 6 / 11 |
 | `Microsoft.Xna.Framework.Content` | 7 / 11 | 23 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 19 / 51 | 0 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 116 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 331 / 550 | 88 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 88 / 99 | 352 / 550 | 102 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 44 / 164 | 0 / 0 |
-| `Microsoft.Xna.Framework.Input` | 17 / 17 | 83 / 113 | 0 / 202 |
+| `Microsoft.Xna.Framework.Input` | 17 / 17 | 105 / 113 | 0 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 30 / 48 | 0 / 15 |
-| `Microsoft.Xna.Framework.Media` | 24 / 24 | 101 / 192 | 1 / 8 |
+| `Microsoft.Xna.Framework.Media` | 24 / 24 | 150 / 192 | 1 / 8 |
 | `Microsoft.Xna.Framework.Net` | 22 / 23 | 71 / 127 | 7 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
 
@@ -625,6 +625,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `PhoneApplicationService::DetachEXT` -- phone.phone_application_service.lifecycle
 - `PhoneApplicationService::Launching` -- phone.phone_application_service.lifecycle
 - `PhoneApplicationService::State` -- phone.phone_application_service.lifecycle
+- `Picture::TokenEXT` -- media.media_library.save_picture
 - `PreparingDeviceSettingsEventArgs::getGraphicsDeviceInformationEXT` -- game.graphics_device_manager.preparing_device_settings
 - `RectangleConverter::ConvertFrom` -- design.type_converter.string_round_trip
 - `ResourceManager::ResourceManager` -- content.content_manager.resource_content_manager
@@ -659,6 +660,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `SkinningData` -- graphics.model.skinned_animation, graphics.model.skinned_pbr
 - `SoundEffectInstance::SoundEffectInstance` -- audio.sound_effect_instance.lifetime
 - `SpriteFont::SpriteFont` -- graphics.sprite_font.glyph_constructor
+- `SpriteFont::getCroppingEXT` -- graphics.sprite_font.glyph_constructor
+- `SpriteFont::getGlyphBoundsEXT` -- graphics.sprite_font.glyph_constructor
+- `SpriteFont::getKerningEXT` -- graphics.sprite_font.glyph_constructor
+- `SpriteFont::getTextureEXT` -- graphics.sprite_font.glyph_constructor
 - `StorageDevice::GetStorageRootEXT` -- storage.storage_device.storage_root
 - `StorageDevice::SetAppNameEXT` -- storage.storage_device.show_selector, storage.storage_device.storage_root
 - `TextDropEventArgsEXT::Text` -- game.window.file_drop

@@ -4862,3 +4862,20 @@ visual quality remain unclaimed. Evidence:`/tmp/checkpoint-646-picture-values-*`
 `/tmp/checkpoint-646-coverage.md`. No screenshot or visual inspection was performed. Run the full
 627-demo integration checkpoint next to absorb focused635 through646, then resume deeper member
 auditing.
+
+## Complete647-member-audit-integration
+
+The full outer-Xvfb validation absorbs focused635 through646 into the actual project runner.
+Metadata is627/0, all640 enabled CTests pass, and three declared tests remain disabled. SOFTWARE is
+555 pass/34 expected fail/35 skip/3 manual; OPENGLES3 is587/34/3/3. Both report zero unexpected
+passes. Against complete634, the sole status/knownIssue change on either renderer is the intended
+`graphics.sprite_batch.begin_end_rules` pass-to-expected-failure transition for ISSUE-082. Every
+other extended ID preserves its status and only increases its control count. Generated coverage is
+297/329 XNA types,1519/2326 XNA members and2999/3205 C routes.
+
+The build is diagnostic-free. The run began after observing clean sibling CNA `09c3108e58`; final
+capture found that external checkout independently at dirty `af798b73a4`, while both production
+library hashes remained identical to complete634. Exact binary hashes and source-state details are
+in HANDOFF.md; runtime evidence is archived as `checkpoint-647-complete-*`. No screenshot,
+listening test or manual visual inspection was performed. Continue the public-member audit with
+the ContentReader scalar/math read family in the existing custom reader workflow.
