@@ -145,12 +145,17 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | BoundingBox equality, operators and hash | `math.bounding_box.create_from_points` already compares the generated bounds with its exact manual min/max constructor. It now also uses typed/boxed equality, rejects wrong and empty boxes, checks equal hashes and makes a one-coordinate maximum change observably unequal. The workflow passes6 controls on both renderer selections. |
 | BoundingSphere equality, operators and hash | `math.bounding_sphere.create` compares the actual CreateFromBoundingBox result with an independently constructed copy through typed/boxed equality, both operators and equal hashes, rejects wrong/empty boxes and distinguishes an expanded radius. Its existing point/box/merge construction remains intact; totals are9 controls on both selections. |
 | Ray equality, operators and hash | `math.ray.intersects` compares the real +X casting ray with an independent copy through typed/boxed equality, both operators and equal hashes, rejects wrong/empty boxes and distinguishes a +Y direction. Its box/sphere/plane hit distances remain intact; totals are8 controls on both selections. |
-| Containment and construction beyond identity | BoundingSphere.Contains and CreateFromFrustum remain separate geometric behaviors. Existing point containment is not metadata credit until the demo distinguishes containment outcomes; frustum construction needs exact enclosure evidence. Do not infer either from equality. |
+| BoundingSphere.Contains and CreateFromFrustum | `math.bounding_sphere.create` now distinguishes Contains/Intersects/Disjoint for points and spheres, and verifies unambiguous box/frustum containment. CreateFromFrustum builds from an identity frustum and numerically encloses all eight actual corners within 1e-5 without asserting an unspecified minimum sphere. The first focused check incorrectly required strict `Contains` for each boundary corner; Ritter construction plus float rounding can put a corner just outside strict classification, so that was a demo assumption and was replaced by the geometric tolerance check already used by the C audit. |
 
 Focused651 adds twelve member credits without new IDs, moving temporary coverage1545->1557/2326.
 All three IDs have byte-identical renderer outputs and empty stderr; all focused CTests pass.
 Evidence:`/tmp/checkpoint-651-*` and `/tmp/checkpoint-651-coverage.md`. No rendering, screenshot or
 visual inspection was used.
+
+Focused652 extends the sphere workflow from9 to12 controls and adds the two remaining member
+credits, moving temporary coverage1557->1559/2326. SOFTWARE and OPENGLES3 are byte-identical passes
+with empty stderr and the focused CTest passes. Evidence:`/tmp/checkpoint-652-*` and
+`/tmp/checkpoint-652-coverage.md`. No rendering or visual inspection was used.
 
 ### EffectParameter
 

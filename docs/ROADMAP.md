@@ -4940,3 +4940,18 @@ diagnostic-free and temporary coverage moves1545->1557/2326 without changing the
 route counts. Evidence:`/tmp/checkpoint-651-*` and `/tmp/checkpoint-651-coverage.md`. No rendering,
 screenshot or visual inspection was used. Audit BoundingSphere.Contains and CreateFromFrustum next
 with exact geometric outcomes rather than deriving behavior credit from value identity.
+
+## Focused652-BoundingSphere-containment-and-frustum-enclosure
+
+`math.bounding_sphere.create` grows from nine to12 controls. Exact point probes distinguish
+Contains, boundary Intersects and Disjoint; nested/overlapping/separated spheres do the same, while
+a small box and identity frustum are unambiguously contained. CreateFromFrustum then proves its
+positive-radius result encloses all eight actual source corners within1e-5 without claiming a
+minimum sphere. The first focused draft required strict per-corner `Contains`; Ritter construction
+and float rounding can classify a boundary corner as Disjoint, so that was corrected as a demo
+assumption rather than recorded as a CNA defect. SOFTWARE and OPENGLES3 pass12/12 with byte-
+identical stdout and empty stderr; the focused SOFTWARE CTest passes and the build is diagnostic-
+free. Temporary coverage moves1557->1559/2326 without changing the628-demo/type/C-route counts.
+Evidence:`/tmp/checkpoint-652-*` and `/tmp/checkpoint-652-coverage.md`. No rendering, screenshot or
+visual inspection was used. Audit BoundingFrustum's four side planes, equality/hash/operators/text
+and adjacent Plane identity/Dot behavior next in the existing geometry workflows.

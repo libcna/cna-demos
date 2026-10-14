@@ -1359,11 +1359,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused651
-projects the628-demo staged catalog to1557/2326 XNA members and closes BoundingBox, BoundingSphere
-and Ray value identity without changing their existing geometric workflows. Audit
-BoundingSphere.Contains and CreateFromFrustum next with exact containment and enclosure outcomes;
-do not infer those behaviors from equality or merely add metadata for an incidental call.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused652
+projects the628-demo staged catalog to1559/2326 XNA members and closes BoundingSphere containment
+plus frustum enclosure with exact/tolerant geometric outcomes. Audit BoundingFrustum's Left/Right/
+Top/Bottom planes, typed/boxed equality, operators, hash and text plus adjacent Plane identity/Dot
+behavior next in the existing culling/classification workflows.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1372,7 +1372,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused651 last observed external `af798b73a4` with eleven uncommitted
+the sibling CNA checkout; focused652 last observed external `af798b73a4` with eleven uncommitted
 renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2652,6 +2652,20 @@ rendering, screenshot or visual inspection was used. Production library hashes r
 the runner is `030d05c1b3ff63aacee15d4fd4ff2acd534102a6dd4a89f91b7ff063faf8afdb`.
 Sibling CNA remained external dirty `af798b73a4` with eleven observed paths; no CNA source was
 edited here.
+
+Focused652 extends `math.bounding_sphere.create` from nine to12 controls. Point containment now
+distinguishes interior/boundary/exterior; sphere containment distinguishes nested/overlap/disjoint;
+and a box plus identity frustum are unambiguously contained. CreateFromFrustum produces a positive
+sphere enclosing all eight actual corners within1e-5 without claiming a minimum sphere. The first
+focused run failed because the demo demanded strict per-corner Contains; Ritter construction plus
+float rounding can put a boundary corner just outside strict classification. The corrected
+geometric-tolerance check matches the prior C audit, so no CNA issue was recorded. SOFTWARE and
+OPENGLES3 pass12/12 with byte-identical stdout and empty stderr; the focused SOFTWARE CTest passes
+and the build is diagnostic-free. Temporary coverage projects1557->1559/2326 with no catalog/type/
+C-route change. Evidence:`/tmp/checkpoint-652-*` and `/tmp/checkpoint-652-coverage.md`. No rendering,
+screenshot or visual inspection was used. Production library hashes remain complete647; the runner
+is `fb21e5d9c8a24dd312aedeb7e301caa606777b3267d7f741f6aac53fb3128298`. Sibling CNA remained
+external dirty `af798b73a4` with eleven observed paths; no CNA source was edited here.
 
 ## 15. Assumptions the next session must know
 
