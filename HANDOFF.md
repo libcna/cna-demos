@@ -1361,17 +1361,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused680
-projects the632-demo staged catalog to1834/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused681
+projects the632-demo staged catalog to1841/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
 machinery. The stock-effect families now retain only dispositioned protected OnApply hooks and one
 SkinnedEffect explicit-interface inventory artifact; real pass application reaches the hooks and
 focused671 proved the override dispatch contract. RenderTargetCube and VertexBufferBinding now have
-no member gap. Audit GraphicsAdapter's seven remaining platform/value members next in the existing
-adapter-information workflow, distinguishing stable relationships from renderer/hardware-specific
-observations. Then continue with the next high-value behavior family, rebuilding, running both renderers where
+no member gap. GraphicsAdapter now has no member gap. Begin the packed-vector value-member audit,
+starting with the five eight-gap two-component types and extending existing coherent conversion
+workflows with equality, typed Equals, hashing, string and IPackedVector round trips without one
+demo per method. Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
@@ -1379,7 +1380,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused680 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused681 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3140,6 +3141,26 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Pixel validation was
 programmatic; no screenshot or visual inspection was used. Sibling CNA remained clean external
 `f698d0f548`; no CNA source was edited. Audit GraphicsAdapter's seven value/platform members next.
+
+Focused681 extends `graphics.graphics_adapter.display_modes` from7 to14 controls and closes all
+seven GraphicsAdapter gaps. Vendor/Device IDs form either a bounded16-bit pair or the documented
+zero/unavailable pair; Revision/SubSystemId are exact zero. The default adapter's opaque monitor
+identity agrees with Adapters[0] and nonzero identities are unique. A restored process-wide flag
+sequence proves hardware/default, Reference->SOFTWARE, and Null->HEADLESS precedence while both
+flags remain independently readable.
+
+SOFTWARE and OPENGLES3 pass14/14 with empty stderr; the focused SOFTWARE CTest passes. Environment-
+specific stdout is intentional: SOFTWARE observes fallback Default Display800x480/handle0, while
+Xvfb OPENGLES3 observes screen1280x1024/handle1. Both report PCI1002:15BF in this environment. No
+device was constructed under the alternate selection flags; their CNA renderer mapping is verified
+through the public extension and the original flags are restored. Temporary coverage moves1834->
+1841/2326 at632 demos,301/329 types and156/753 fields. Evidence:`/tmp/checkpoint-681-*` and
+`/tmp/checkpoint-681-coverage.md`. Runner SHA-256 is
+`0268447030705bb2bf88da7f52df0f738d82615bea0544562076e5f98c43a63a`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No drawing, screenshot or
+visual inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was
+edited. Begin the packed-vector value-member audit next.
 
 ## 15. Assumptions the next session must know
 

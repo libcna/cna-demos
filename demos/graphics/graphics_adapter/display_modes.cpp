@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // GraphicsAdapter: the display adapters, the current display mode and the supported modes.
 #include <algorithm>
+#include <vector>
 
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/GraphicsNames.hpp"
@@ -25,6 +26,56 @@ namespace
                   adapter.getDeviceNameProperty(), adapter.getIsWideScreenProperty());
         ctx.Check(adapter.getIsDefaultAdapterProperty(), "DefaultAdapter reports IsDefaultAdapter");
         ctx.Check(!adapters.empty() && adapters.front().get() == &adapter, "DefaultAdapter is Adapters[0]");
+
+        const int vendorId = adapter.getVendorIdProperty();
+        const int deviceId = adapter.getDeviceIdProperty();
+        ctx.Print("PCI ids: vendor 0x{:04X}, device 0x{:04X}; revision {}, subsystem {}",
+                  vendorId, deviceId, adapter.getRevisionProperty(), adapter.getSubSystemIdProperty());
+        ctx.Check(vendorId >= 0 && vendorId <= 0xFFFF && deviceId >= 0 && deviceId <= 0xFFFF &&
+                      ((vendorId == 0) == (deviceId == 0)),
+                  "PCI vendor/device ids are a bounded pair or the documented unavailable zero pair");
+        ctx.Check(adapter.getRevisionProperty() == 0 && adapter.getSubSystemIdProperty() == 0,
+                  "unavailable revision and subsystem ids use their documented zero values");
+
+        std::vector<GraphicsAdapter::IntPtr> monitorHandles;
+        bool monitorIdentitiesAreCoherent = adapter.getMonitorHandleProperty() ==
+            adapters.front()->getMonitorHandleProperty();
+        for (const auto& candidate : adapters)
+        {
+            const auto handle = candidate->getMonitorHandleProperty();
+            if (handle != 0 && std::ranges::find(monitorHandles, handle) != monitorHandles.end())
+                monitorIdentitiesAreCoherent = false;
+            monitorHandles.push_back(handle);
+        }
+        ctx.Print("default opaque monitor handle {}", adapter.getMonitorHandleProperty());
+        ctx.Check(monitorIdentitiesAreCoherent,
+                  "DefaultAdapter has Adapters[0]'s monitor identity and nonzero identities are unique");
+
+        const bool originalNull = GraphicsAdapter::getUseNullDeviceProperty();
+        const bool originalReference = GraphicsAdapter::getUseReferenceDeviceProperty();
+        GraphicsAdapter::setUseNullDeviceProperty(false);
+        GraphicsAdapter::setUseReferenceDeviceProperty(false);
+        ctx.Check(!GraphicsAdapter::getUseNullDeviceProperty() &&
+                      !GraphicsAdapter::getUseReferenceDeviceProperty() &&
+                      GraphicsAdapter::GetCurrentDeviceTypeEXT() == GraphicsDeviceTypeEXT::Hardware &&
+                      !GraphicsAdapter::GetRequiredRendererEXT().has_value(),
+                  "cleared device-selection flags retain the active renderer");
+        GraphicsAdapter::setUseReferenceDeviceProperty(true);
+        ctx.Check(GraphicsAdapter::getUseReferenceDeviceProperty() &&
+                      GraphicsAdapter::GetCurrentDeviceTypeEXT() == GraphicsDeviceTypeEXT::Reference &&
+                      GraphicsAdapter::GetRequiredRendererEXT() == CNA::GraphicsRendererType::Software,
+                  "UseReferenceDevice selects CNA's software renderer intent");
+        GraphicsAdapter::setUseNullDeviceProperty(true);
+        ctx.Check(GraphicsAdapter::getUseNullDeviceProperty() &&
+                      GraphicsAdapter::getUseReferenceDeviceProperty() &&
+                      GraphicsAdapter::GetCurrentDeviceTypeEXT() == GraphicsDeviceTypeEXT::Null &&
+                      GraphicsAdapter::GetRequiredRendererEXT() == CNA::GraphicsRendererType::Headless,
+                  "UseNullDevice wins over the simultaneously retained reference flag");
+        GraphicsAdapter::setUseNullDeviceProperty(originalNull);
+        GraphicsAdapter::setUseReferenceDeviceProperty(originalReference);
+        ctx.Check(GraphicsAdapter::getUseNullDeviceProperty() == originalNull &&
+                      GraphicsAdapter::getUseReferenceDeviceProperty() == originalReference,
+                  "the process-wide device-selection flags are restored");
 
         // What the desktop runs at right now: a windowed game usually picks a smaller size,
         // a full-screen game often matches this.
@@ -69,6 +120,10 @@ CNA_DEMOS_CONSOLE(DisplayModes, {
                    "SupportedDisplayModes, filtered by surface format.",
     .apis = {"GraphicsAdapter::Adapters", "GraphicsAdapter::DefaultAdapter", "GraphicsAdapter::Description",
              "GraphicsAdapter::DeviceName", "GraphicsAdapter::IsDefaultAdapter", "GraphicsAdapter::IsWideScreen",
+             "GraphicsAdapter::DeviceId", "GraphicsAdapter::VendorId", "GraphicsAdapter::Revision",
+             "GraphicsAdapter::SubSystemId", "GraphicsAdapter::MonitorHandle",
+             "GraphicsAdapter::UseNullDevice", "GraphicsAdapter::UseReferenceDevice",
+             "GraphicsAdapter::GetCurrentDeviceTypeEXT", "GraphicsAdapter::GetRequiredRendererEXT",
              "GraphicsAdapter::CurrentDisplayMode", "GraphicsAdapter::SupportedDisplayModes", "DisplayMode::Width",
              "DisplayMode::Height", "DisplayMode::Format", "DisplayMode::AspectRatio",
              "DisplayMode::TitleSafeArea", "DisplayMode::ToString",

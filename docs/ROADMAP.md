@@ -5441,3 +5441,20 @@ streams output is byte-identical. The animated instancing diagnostic differs by 
 1834/2326 at632 demos,301/329 types and156/753 fields. Evidence:`/tmp/checkpoint-680-*` and
 `/tmp/checkpoint-680-coverage.md`. Pixel readback was programmatic; no screenshot or visual
 inspection was used. Audit GraphicsAdapter's seven remaining value/platform members next.
+
+## Focused681-GraphicsAdapter-identities-and-device-selection
+
+`graphics.graphics_adapter.display_modes` grows7->14 controls and closes all seven gaps. Vendor and
+device IDs are validated as a bounded16-bit pair or the documented zero/unavailable pair;
+Revision/SubSystemId are exact zero. DefaultAdapter's opaque monitor identity matches Adapters[0]
+and nonzero identities remain unique. A process-wide sequence proves both flags clear retain the
+active renderer, Reference maps to SOFTWARE, and Null wins over a still-set reference flag and maps
+to HEADLESS; the original state is restored.
+
+SOFTWARE and OPENGLES3 pass14/14 with empty stderr; the focused SOFTWARE CTest passes. Host-specific
+stdout is expected: fallback SOFTWARE reports800x480/monitor0, while Xvfb OPENGLES3 reports
+1280x1024/monitor1. Both observe PCI1002:15BF here. No alternate device is constructed; the public
+CNA selection mapping is the asserted consequence. Temporary coverage moves1834->1841/2326 at632
+demos,301/329 types and156/753 fields. Evidence:`/tmp/checkpoint-681-*` and
+`/tmp/checkpoint-681-coverage.md`. No drawing, screenshot or visual inspection was used. Begin the
+packed-vector value-member audit next.

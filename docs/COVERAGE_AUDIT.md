@@ -408,6 +408,21 @@ frames required by its preservation check. Evidence:`/tmp/checkpoint-679-*` and
 `/tmp/checkpoint-679-coverage.md`. Pixel readback was programmatic; no screenshot or visual
 inspection was used.
 
+### GraphicsAdapter native identities and device-selection flags
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| VendorId / DeviceId | The pair must either contain bounded16-bit PCI values or both use the documented unavailable zero. This environment reports1002:15BF under both selections; no particular vendor is required. |
+| Revision / SubSystemId | CNA documents these unavailable platform values as zero; both are checked exactly. |
+| MonitorHandle | Treated as opaque. DefaultAdapter matches Adapters[0], nonzero identities are unique, and zero remains valid for a displayless fallback. SOFTWARE observes0 while Xvfb OPENGLES3 observes1. |
+| UseNullDevice / UseReferenceDevice | A bracketed sequence reads/writes both process-wide flags, proves cleared flags mean Hardware/current renderer, Reference maps to SOFTWARE, and Null wins over a simultaneously retained reference flag and maps to HEADLESS. Original state is restored. No alternate device construction is claimed. |
+
+Focused681 grows `display_modes` from7 to14 controls, credits all seven members and moves temporary
+coverage1834->1841/2326. SOFTWARE and OPENGLES3 pass14/14 with empty stderr; the focused SOFTWARE
+CTest passes. Display/mode output differs by the real fallback versus Xvfb environments as expected.
+Evidence:`/tmp/checkpoint-681-*` and `/tmp/checkpoint-681-coverage.md`. No drawing, screenshot or
+visual inspection was used.
+
 ### Graphics-state lifetime and complete sampler presets
 
 | Members / behavior | Decision and evidence |
