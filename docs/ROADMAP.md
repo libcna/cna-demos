@@ -7657,3 +7657,18 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-810-xact-cue-variable-boundaries-*` and
 `/tmp/checkpoint-810-coverage.md`. Continue with the corresponding AudioEngine global-variable
 name/lower-clamp boundaries.
+
+## Focused811-XACT-global-variable-boundaries
+
+`audio.xact.global_variables` grows from three to six controls. SpeedOfSound now demonstrates the
+declared zero lower clamp as well as the retained1000 upper clamp. GetGlobalVariable and
+SetGlobalVariable both reject an empty name with ArgumentNullException and an unknown name with
+InvalidOperationException. Engine-disposal behavior remains in `bank_lifetime` rather than being
+duplicated here.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass6/6 with byte-identical stdout and empty stderr.
+The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-811-xact-global-variable-boundaries-*` and
+`/tmp/checkpoint-811-coverage.md`. Continue with remaining Cue lifecycle/transport boundaries.
