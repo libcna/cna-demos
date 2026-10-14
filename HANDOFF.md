@@ -384,6 +384,19 @@ validator self-tests and all four checkpoint-comparison tests pass, and temporar
 `/tmp/checkpoint-740-stock-effect-*` and `/tmp/checkpoint-740-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
 
+Focused **741-ShaderEffect-cube-binding-replacement** extends
+`graphics.texture_cube.sampler_ownership` from five to six controls. After the existing copied cube
+draws all six solid faces, a distinct all-white cube is rebound to the already occupied shader unit
+1 and overwrites only the right part of the +X card. Exact samples retain red on the untouched left
+and require white on the replacement region, so residual state from the first cube cannot pass.
+
+OPENGLES3/X11 passes6/6; SOFTWARE retains its explicit CustomEffects capability skip and its exact
+CTest is reported skipped. The incremental build is warning-free, metadata remains636/0, all five
+validator self-tests and all four checkpoint-comparison tests pass, and temporary coverage remains
+302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-741-cube-rebinding-*` and `/tmp/checkpoint-741-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1647,12 +1660,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-740 are
-staged after it. Audit the remaining ShaderEffect texture-binding behaviors in
-`graphics.texture_cube.sampler_ownership` and `graphics.texture3d.sampler_coordinates`. Prefer an
-in-place control proving replacement of an already-bound texture if it adds observable semantics;
-classify cube in-face orientation and mip filtering separately rather than expanding one demo into
-an unfocused sampler matrix. Keep the declared OPENGLES3-only execution boundary explicit.
+HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-741 are
+staged after it. Audit cube in-face orientation in `graphics.texture_cube.sampler_ownership` against
+the public CubeMapFace upload order and actual GLSL samplerCube coordinates. Add a small authored
+corner pattern only if its expected orientation is portable and independently checkable; otherwise
+record the renderer-specific disposition. Keep mip filtering as a separate decision afterward.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

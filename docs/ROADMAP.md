@@ -6424,3 +6424,17 @@ validator self-tests and all four checkpoint-comparison tests pass. Temporary co
 302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-740-stock-effect-*` and `/tmp/checkpoint-740-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
+## Focused741-ShaderEffect-cube-binding-replacement
+
+The existing cube ownership demo adds one same-unit rebinding contract. After the surviving copied
+cube draws all six authored faces, a distinct all-white cube replaces it on shader unit1 and draws
+only the right part of the +X card. Exact red/white samples on the two halves distinguish a real
+object replacement from a stale first binding.
+
+OPENGLES3/X11 passes6/6; SOFTWARE retains its CustomEffects capability skip and the exact SOFTWARE
+CTest is reported skipped. The incremental build is warning-free, metadata remains636/0, all five
+validator self-tests and all four checkpoint-comparison tests pass. Temporary coverage remains
+302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-741-cube-rebinding-*` and `/tmp/checkpoint-741-coverage.md`. Pixel readback was
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.

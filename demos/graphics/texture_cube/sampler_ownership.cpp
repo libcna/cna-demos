@@ -79,6 +79,10 @@ void main() { FragColor = texture(retainedCube, direction); }
             Context().Check(original.getIsDisposedProperty() && !survivor_->getIsDisposedProperty() &&
                             observed == facePixels,
                             "disposing the source wrapper leaves the copied cube alive with the shared edit");
+            replacement_.emplace(device, 2, false, SurfaceFormat::Color);
+            facePixels.fill(Color::White);
+            for (int face = 0; face < 6; ++face)
+                replacement_->SetData(static_cast<CubeMapFace>(face), facePixels.data(), 4);
             batch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             white_.emplace(device, 1, 1);
@@ -105,6 +109,16 @@ void main() { FragColor = texture(retainedCube, direction); }
                 batch_->Draw(*white_, Rectangle(80 + (face % 3) * 240, 90 + (face / 3) * 190, 160, 120), Color::White);
                 batch_->End();
             }
+            // Unit one is already occupied by survivor_. Rebinding a different cube must replace
+            // that object: overwrite only the right side of the +X card with the white cube.
+            shader_->Apply();
+            shader_->SetTexture(1, *replacement_);
+            shader_->SetUniformInt("retainedCube", 1);
+            shader_->SetUniformVec3("direction", 1.0f, 0.0f, 0.0f);
+            batch_->Begin(SpriteSortMode::Deferred, &BlendState::Opaque, &SamplerState::PointClamp,
+                          nullptr, nullptr, shader_.get());
+            batch_->Draw(*white_, Rectangle(170, 90, 70, 120), Color::White);
+            batch_->End();
             batch_->Begin();
             batch_->DrawString(*font_, "Copied cube after original disposal", Vector2(80, 20), Color::White);
             for (int face = 0; face < 6; ++face)
@@ -119,12 +133,15 @@ void main() { FragColor = texture(retainedCube, direction); }
                     allFaces = allFaces && CnaDemos::Near(screen.At(160 + (face % 3) * 240,
                                                                  150 + (face / 3) * 190), colors_[face], 1);
                 Context().Check(allFaces, "the custom sampler reads all six surviving faces including the shared +Z edit");
+                Context().Check(screen.At(120, 150) == Color::Red && screen.At(205, 150) == Color::White,
+                                "rebinding unit one replaces the red survivor cube with the white cube");
             }
             DemoGame::Draw(time);
         }
         std::array<Color, 6> colors_{Color::Red, Color::Lime, Color::Blue, Color::Gold, Color::Cyan, Color::Magenta};
         std::unique_ptr<ShaderEffect> shader_;
         std::optional<TextureCube> survivor_;
+        std::optional<TextureCube> replacement_;
         std::unique_ptr<SpriteBatch> batch_;
         std::optional<SpriteFont> font_;
         std::optional<Texture2D> white_;
@@ -134,7 +151,7 @@ void main() { FragColor = texture(retainedCube, direction); }
 CNA_DEMOS_GAME(CubeSamplerOwnershipDemo, {
     .id = "graphics.texture_cube.sampler_ownership",
     .title = "Copied cube lifetime and custom sampling",
-    .description = "Edits a shared cube face, disposes the source wrapper and samples all six surviving faces through ShaderEffect's cube texture binding.",
+    .description = "Edits a shared cube face, disposes the source wrapper, samples all six surviving faces and replaces the cube already bound to the same ShaderEffect unit.",
     .apis = {"TextureCube::TextureCube", "TextureCube::SetData", "TextureCube::GetData", "GraphicsResource::Dispose", "GraphicsResource::Name",
              "ShaderEffect::SetTexture", "ShaderEffect::SetUniformInt", "ShaderEffect::SetUniformVec3"},
     .tags = {"texture", "cube", "shader", "ownership", "cnaext"},
@@ -142,5 +159,5 @@ CNA_DEMOS_GAME(CubeSamplerOwnershipDemo, {
     .frames = 1,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "GLSL source compilation and cube sampling required. Solid base-level faces establish ownership and face selection, not orientation within a face, filtering or physical GPU readback.",
+    .restrictions = "GLSL source compilation and cube sampling required. Solid base-level faces establish ownership, face selection and binding replacement, not orientation within a face, filtering or physical GPU readback.",
 })

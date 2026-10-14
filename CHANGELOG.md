@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the ShaderEffect cube-sampler workflow with an observable same-unit texture replacement:
+  retained red and rebound white regions prove the second TextureCube replaces the first binding.
 - Added a stock-effect SpriteBatch example whose pixel checks prove AlphaTestEffect Projection and
   BasicEffect World matrices replace ordinary sprite pixel-space placement on both renderers.
 - Classified compiled/multi-pass SpriteBatch effects as build- and renderer-specific: the current
