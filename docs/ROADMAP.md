@@ -7737,3 +7737,20 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-815-xact-category-priority-*` and
 `/tmp/checkpoint-815-coverage.md`. Audit and classify the remaining RPC/variation behavior, then
 move to the next uncovered public subsystem.
+
+## Focused816-XACT-output-observation-and-Audio-gap-audit
+
+The remaining XACT paths are now classified by what the public API can actually observe. Weighted,
+interactive, track and effect variations expose no selected-wave identity through Cue. Volume,
+pitch and filter RPC curves expose no mixed value; they need listening or CNA's private test access.
+AttackTime and ReleaseTime are internal RPC substitutions rather than live GetVariable values. A
+ReleaseTime RPC can still drive a publicly visible Stopping-to-Stopped interval and remains a
+meaningful dedicated-fixture candidate, while category fades remain acoustic/manual work.
+
+The seven uncredited Audio members are four CLR finalizers plus constructors for the three
+environmental/non-production exception types. Existing native lifetime workflows, real hardware
+skips and the production XACT capacity audit disposition them without synthetic getter or exception
+demos. No catalog or generated coverage count changes. The documentation-only checkpoint passes
+the incremental `-j3` build, metadata validation, both tool self-test suites and coverage
+regeneration. Evidence:`/tmp/checkpoint-816-*`. Continue with the untouched public C
+`graphics_ext.h` surface, beginning with availability and ImageBasedLight values.

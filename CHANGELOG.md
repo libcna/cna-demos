@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Classified the remaining XACT RPC/variation observation limits and all seven generated Audio
+  member gaps, preserving a dedicated RPC-release timing fixture as the meaningful follow-up.
 - Added a deterministic category ReplaceLowestPriority fixture and proved priority-based eviction
   independently of playback order through public Cue states.
 - Added a deterministic XACT cue-level ReplaceOldest fixture demonstrating FACT's definition-local

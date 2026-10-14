@@ -1806,10 +1806,12 @@ transport now covers repeated Play across Playing/Paused/Stopped and post-dispos
 asymmetry. A newly authored PUBLIC|READONLY global now proves silent write refusal. Continue with
 the remaining instance-limit/RPC/variation decisions, prioritizing publicly observable state over
 private mixer data. Cue-level ReplaceOldest captures its definition-local count and FACT's bank-wide
-victim search; category ReplaceLowestPriority now distinguishes priority from play order. Audit the
-remaining RPC/variation surface and record which behavior needs acoustic/manual or private-state
-evidence, then move to the next uncovered public subsystem. Do not add isolated getter demos. Build
-with at most three compile jobs and keep focused evidence current.
+victim search; category ReplaceLowestPriority now distinguishes priority from play order. The
+remaining RPC/variation surface and all seven uncredited Audio members are now dispositioned in
+focused816. Continue with the previously untouched public C `graphics_ext.h` surface, beginning
+with renderer-independent availability/image-based-light values and then coherent retro-effect and
+DebugDraw workflows. Do not add isolated getter demos. Build with at most three compile jobs and
+keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2917,6 +2919,27 @@ SOFTWARE and OPENGLES3 dummy-audio direct runs pass18/18 with byte-identical std
 stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
 unchanged. Evidence:`/tmp/checkpoint-815-xact-category-priority-*`. Audit and classify the remaining
 RPC/variation behavior, then move to the next uncovered public subsystem.
+
+### Focused816-XACT-output-observation-and-Audio-gap-audit
+
+Source and public-surface review closes the remaining XACT classification without manufacturing
+private-state demos. Weighted, interactive, track and effect variations do not expose their
+selected wave through public Cue state. Volume, pitch and filter RPC curves likewise need listening
+or CNA's private mixer test access for their output result. AttackTime and ReleaseTime are internal
+RPC substitutions rather than live values returned by Cue::GetVariable. A ReleaseTime-bound RPC
+can still alter the public Stopping-to-Stopped interval, so one deterministic timing fixture remains
+a legitimate later candidate; category-authored fades remain acoustic/manual work.
+
+The generated Audio difference is exactly seven non-field members: four CLR finalizers and the
+constructors of InstancePlayLimitException, NoAudioHardwareException and
+NoMicrophoneConnectedException. Existing lifetime demos cover the native ownership behavior, the
+hardware exceptions require environmental paths, and CNA's production XACT capacity path does not
+throw InstancePlayLimitException. Synthetic construction would add metadata without demonstrating
+audio behavior. No source, assets, catalog IDs or coverage counts change. The incremental `-j3`
+build, metadata validation, tool self-tests and regenerated coverage all pass; no runtime behavior
+changed and no listening/manual result is claimed. Evidence:`/tmp/checkpoint-816-*`. Continue with
+the untouched C `graphics_ext.h` surface (currently0/42), starting with availability and
+ImageBasedLight values before the device-backed effect and DebugDraw groups.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
