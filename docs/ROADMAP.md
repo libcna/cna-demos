@@ -4984,3 +4984,19 @@ moves1573->1582/2326 without changing the628-demo/type/C-route counts. Evidence:
 `/tmp/checkpoint-654-*` and `/tmp/checkpoint-654-coverage.md`. No rendering, screenshot or visual
 inspection was used. Audit Matrix and Quaternion construction, identity and still-uncredited
 arithmetic operators next in their existing workflows.
+
+## Focused655-Matrix-and-Quaternion-value-arithmetic
+
+`math.matrix.element_operations` grows from eight to11 controls. Subtraction and division operators
+now agree with their named element-wise methods, while an actual scale matrix exercises typed and
+boxed equality, wrong/empty-box refusal, both identity operators and equal hashes. The zero-matrix
+check already present in `math.matrix.identity` receives constructor credit.
+`math.quaternion.double_cover` grows from12 to15 controls: a copied real rotation fixes component
+construction/equality/hash behavior, addition agrees with Add, and named/operator subtraction
+produces the exact component delta while remaining explicitly distinct from relative rotation.
+SOFTWARE and OPENGLES3 pass11/11,4/4 and15/15 with byte-identical per-ID stdout and empty stderr;
+all three focused SOFTWARE CTests pass and the build is diagnostic-free. Temporary coverage moves
+1582->1595/2326 without changing the628-demo/type/C-route counts. Evidence:
+`/tmp/checkpoint-655-*` and `/tmp/checkpoint-655-coverage.md`. No rendering, screenshot or visual
+inspection was used. Audit the remaining Vector2/3/4 constructors, constants, value identity,
+operators and distinct length/normal-transform behavior next across their existing workflows.

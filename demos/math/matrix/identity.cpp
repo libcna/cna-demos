@@ -32,6 +32,6 @@ CNA_DEMOS_CONSOLE(MatrixIdentity, {
     .title = "The identity matrix",
     .description = "Gets the identity matrix and shows that multiplying or transforming by it changes nothing, "
                    "while a default-constructed Matrix is all zeros.",
-    .apis = {"Matrix::Identity", "Matrix::op_Multiply", "Matrix::ToString"},
+    .apis = {"Matrix::Matrix", "Matrix::Identity", "Matrix::op_Multiply", "Matrix::ToString"},
     .tags = {"matrix", "identity"},
 })

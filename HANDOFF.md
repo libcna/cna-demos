@@ -1359,11 +1359,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused654
-projects the628-demo staged catalog to1582/2326 XNA members and closes Color/Rectangle identity plus
-Color's explicit IPackedVector packing behavior. Audit Matrix and Quaternion construction, value
-identity and their still-uncredited arithmetic operators next in the existing element-operation and
-quaternion workflows.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused655
+projects the628-demo staged catalog to1595/2326 XNA members and closes Matrix/Quaternion
+construction, value identity and their remaining arithmetic operators. Audit the adjacent
+Vector2/3/4 constructor, constant, identity, length/normal-transform and operator gaps next across
+their existing focused workflows; do not collapse distinct vector behaviors into metadata-only
+credit.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1372,7 +1373,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused654 last observed external `73991b01f7` with six uncommitted
+the sibling CNA checkout; focused655 last observed external `73991b01f7` with six uncommitted
 renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2692,6 +2693,21 @@ SOFTWARE CTests pass and the build is diagnostic-free. Temporary coverage projec
 Production library hashes remain complete647; the runner is
 `76646cd7957e0a3581b3920a3423acffd1303797fc44653f2c337573aab90a50`. Sibling CNA advanced
 externally to dirty `73991b01f7` with six observed paths; no CNA source was edited here.
+
+Focused655 extends `math.matrix.element_operations` from eight to11 controls and
+`math.quaternion.double_cover` from12 to15 while crediting the already-checked zero Matrix
+constructor in `math.matrix.identity`. Matrix subtraction/division operators now agree with their
+named element-wise methods; a real scale matrix exercises typed/boxed equality, wrong/empty boxes,
+both identity operators and equal hashes. Quaternion component construction and the same identity
+contract operate on an actual rotation, while component-wise Add/Subtract operators are explicitly
+distinguished from orientation composition and relative rotation. SOFTWARE and OPENGLES3 pass
+11/11,4/4 and15/15 with byte-identical per-ID stdout and empty stderr; all three focused SOFTWARE
+CTests pass and the build is diagnostic-free. Temporary coverage projects1582->1595/2326 without
+a catalog/type/C-route change. Evidence:`/tmp/checkpoint-655-*` and
+`/tmp/checkpoint-655-coverage.md`. No rendering, screenshot or visual inspection was used.
+Production library hashes remain complete647; the runner is
+`f95758d2d3a2aceaf44ed5cb22dff39236331407818fc2fd20aed1f1d58ec9b3`. Sibling CNA remained
+external dirty `73991b01f7` with six observed paths; no CNA source was edited here.
 
 ## 15. Assumptions the next session must know
 

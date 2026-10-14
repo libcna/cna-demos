@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Equal orientations can have opposite quaternion components.
+#include <any>
 #include <cmath>
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
@@ -16,12 +17,18 @@ namespace
         const Quaternion positiveB = Quaternion::CreateFromAxisAngle(Vector3::Up, MathHelper::ToRadians(30.0f));
         const Quaternion b = Quaternion::Negate(positiveB);
         ctx.Check(b != positiveB && b == -positiveB, "opposite components are unequal values");
+        const Quaternion samePositiveB(positiveB.X, positiveB.Y, positiveB.Z, positiveB.W);
+        ctx.Check(positiveB.Equals(samePositiveB) && positiveB.Equals(std::any{samePositiveB}) &&
+                      !positiveB.Equals(std::any{42}) && !positiveB.Equals(std::any{}) &&
+                      positiveB.GetHashCode() == samePositiveB.GetHashCode(),
+                  "component construction, typed/boxed equality and hashing agree");
         ctx.CheckNear(Quaternion::Dot(b, positiveB), -1.0, 1e-6, "antipodal unit quaternions have dot -1");
         ctx.CheckNear(Vector3::Distance(Vector3::Transform(Vector3::Forward, b),
                                        Vector3::Transform(Vector3::Forward, positiveB)),
                       0.0, 1e-6, "q and -q rotate a vector identically");
         const Quaternion zero = Quaternion::Add(b, positiveB);
         ctx.CheckNear(zero.LengthSquared(), 0.0, 1e-6, "adding antipodes gives zero: do not normalize it");
+        ctx.Check(b + positiveB == zero, "the addition operator matches component-wise Add");
 
         // For UNIT quaternions, use abs(dot) to ignore the representation's sign.
         const float dot = Quaternion::Dot(a, b);
@@ -47,6 +54,11 @@ namespace
         // Use different axes here: same-axis turns would hide a multiplication-order mistake.
         const Quaternion start = Quaternion::CreateFromYawPitchRoll(0.2f, -0.5f, 0.1f);
         const Quaternion target = Quaternion::CreateFromYawPitchRoll(-0.4f, 0.3f, 0.6f);
+        const Quaternion componentDelta = Quaternion::Subtract(target, start);
+        ctx.Check(componentDelta == target - start &&
+                      componentDelta == Quaternion(target.X - start.X, target.Y - start.Y,
+                                                   target.Z - start.Z, target.W - start.W),
+                  "Subtract and operator - compute a component delta, not a relative turn");
         const Quaternion turn = Quaternion::Divide(target, start);
         ctx.Check(turn == target / start, "Divide and operator / agree");
         for (const Vector3 axis : {Vector3::UnitX, Vector3::UnitY, Vector3::UnitZ})
@@ -61,8 +73,10 @@ CNA_DEMOS_CONSOLE(DoubleCover, {
     .title = "Two quaternion values, one orientation",
     .description = "Shows q and -q as the same rotation, uses the absolute dot for angular distance, aligns signs "
                    "before blending, and computes a relative turn with Quaternion::Divide.",
-    .apis = {"Quaternion::Negate", "Quaternion::op_UnaryNegation", "Quaternion::Dot", "Quaternion::Add",
-             "Quaternion::Normalize", "Quaternion::LengthSquared", "Quaternion::op_Equality",
-             "Quaternion::op_Inequality", "Quaternion::Slerp", "Quaternion::Divide", "Quaternion::op_Division"},
+    .apis = {"Quaternion::Quaternion", "Quaternion::Negate", "Quaternion::op_UnaryNegation", "Quaternion::Dot",
+             "Quaternion::Add", "Quaternion::Subtract", "Quaternion::Normalize", "Quaternion::LengthSquared",
+             "Quaternion::Equals", "Quaternion::GetHashCode", "Quaternion::op_Addition",
+             "Quaternion::op_Equality", "Quaternion::op_Inequality", "Quaternion::op_Subtraction",
+             "Quaternion::Slerp", "Quaternion::Divide", "Quaternion::op_Division"},
     .tags = {"quaternion", "rotation", "interpolation", "precision"},
 })

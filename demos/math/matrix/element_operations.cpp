@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // Element-wise matrix arithmetic and Matrix::Lerp.
+#include <any>
+
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
 
@@ -22,7 +24,18 @@ namespace
         ctx.Check(Matrix::Divide(twice, 2.0f) == Matrix::getIdentityProperty(), "Divide(Matrix, float) divides every element");
         ctx.Check(Matrix::Multiply(a, 0.5f).M44 == 0.5f, "CreateScale(2) has M44 = 1, so halving it gives M44 = 0.5");
         ctx.Check(Matrix::Negate(a).M11 == -2.0f, "Negate flips every sign");
-        ctx.Check(a + b == sum && -a == Matrix::Negate(a), "operators match the named methods");
+        ctx.Check(a + b == sum && sum - b == a && -a == Matrix::Negate(a),
+                  "addition, subtraction and negation operators match the named methods");
+        ctx.Check(twice / 2.0f == Matrix::getIdentityProperty(),
+                  "the division operator performs the same element-wise scalar division");
+
+        const Matrix sameA = Matrix::CreateScale(2.0f);
+        const Matrix changedA = Matrix::CreateScale(3.0f);
+        ctx.Check(a.Equals(sameA) && a.Equals(std::any{sameA}) &&
+                      !a.Equals(std::any{42}) && !a.Equals(std::any{}),
+                  "typed and boxed equality accept only the same 16 elements");
+        ctx.Check(a == sameA && a != changedA && a.GetHashCode() == sameA.GetHashCode(),
+                  "matrix operators and hashes follow all 16 elements");
 
         // Lerp is element-wise too: fine for blending translations, but it does not keep a
         // rotation a rotation (use Quaternion::Slerp for that).
@@ -38,6 +51,8 @@ CNA_DEMOS_CONSOLE(MatrixElementOperations, {
     .description = "Adds, subtracts, scales, divides, negates and interpolates matrices element by element, and "
                    "explains how this differs from composing transforms.",
     .apis = {"Matrix::Add", "Matrix::Subtract", "Matrix::Multiply", "Matrix::Divide", "Matrix::Negate",
-             "Matrix::Lerp", "Matrix::op_Addition", "Matrix::op_UnaryNegation"},
+             "Matrix::Lerp", "Matrix::Equals", "Matrix::GetHashCode", "Matrix::op_Addition",
+             "Matrix::op_Division", "Matrix::op_Equality", "Matrix::op_Inequality",
+             "Matrix::op_Subtraction", "Matrix::op_UnaryNegation"},
     .tags = {"matrix", "arithmetic", "interpolation"},
 })
