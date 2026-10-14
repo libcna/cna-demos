@@ -4264,3 +4264,17 @@ compilation, diff checks and validation self-tests pass. Staged metadata reaches
 `cnb.h` reaches104/272. Evidence:`checkpoint-607-c-cnb-document-focused-*-direct.*`. No game,
 renderer, decoded asset or project-built execution is claimed. Texture format, representation and
 codec families are next.
+
+## Focused608-C-CNB-texture-data
+
+`c_api.content.cnb_texture_data` adds20 pure texture-format and neutral texture-data routes in26
+controls. Frozen wire identities, known and block-compressed ranges, exact diagnostic names, unit
+sizes, volume and block-rounded level sizes and all27 two-way runtime SurfaceFormat mappings pass.
+A copied2x2 Rgba8 value plus a general8x4x2 three-mip volume exercise versioned shape, clamped mip
+dimensions, ordered Rgba8/BC7 representations, copied level payloads, atomic short copies, nested
+bounds, synchronous preference callbacks, ordinary no-match results and stale ownership. Both
+renderer-labelled direct runs pass byte-identically with empty stderr; strict C99, metadata
+compilation, diff checks and validation self-tests pass. Staged metadata reaches2635/3205 and
+`cnb.h` reaches124/272. Evidence:`checkpoint-608-c-cnb-texture-data-focused-*-direct.*`. No
+document, graphics device, GPU texture, renderer, pixels or project-built execution is claimed.
+The eight standalone and embedded texture codec routes are next.
