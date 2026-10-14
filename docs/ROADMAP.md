@@ -4733,3 +4733,18 @@ one GamePad skip with one pass under each renderer. Evidence:`/tmp/checkpoint-63
 `/tmp/checkpoint-638-coverage.md`. No screenshot or visual inspection was performed. Audit the
 existing VideoPlayer lifecycle next, including the already-called but uncredited Dispose/IsDisposed
 contract and post-dispose behavior.
+
+## Focused639-VideoPlayer-active-disposal-and-refusal
+
+`media.video_player.pause_and_loop` retains its real decode, pause, resume, frame acquisition and
+end-to-start loop behavior and adds six lifecycle controls. The automated run disposes the player
+while its loop is active, observes IsDisposed together with Stopped/null-Video/zero-position state,
+repeats Dispose safely, and verifies ObjectDisposedException from Play, Stop and GetTexture.
+SOFTWARE and OPENGLES3 each pass12/12 with empty stderr; playback timings differ naturally, so the
+outputs are not claimed byte-identical. The focused SOFTWARE CTest passes. Temporary coverage moves
+the post-focused638 XNA-member projection1460->1462/2326 through VideoPlayer.Dispose and IsDisposed,
+without changing the627-demo/type/C-route counts. Evidence:`/tmp/checkpoint-639-video-lifecycle-*`
+and `/tmp/checkpoint-639-coverage.md`. No screenshot, frame-pixel inspection, visual-quality or
+audible-quality claim was made. Audit the existing spatial-audio workflow next for
+AudioListener.Velocity and AudioEmitter.Up, with dummy-audio evidence limited to public state and
+accepted Apply3D calls.

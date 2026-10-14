@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MS-PL
 // VideoPlayer controls: Pause/Resume, IsLooped, Volume and IsMuted.
+#include <functional>
 #include <memory>
 #include <optional>
 #include <string>
+#include <string_view>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
@@ -17,6 +19,7 @@
 #include "Microsoft/Xna/Framework/Media/Video/VideoPlayer.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -59,7 +62,8 @@ namespace
 
         void UnloadContent() override
         {
-            player_->Stop();
+            if (!player_->getIsDisposedProperty())
+                player_->Stop();
             player_->Dispose();
         }
 
@@ -139,11 +143,39 @@ namespace
             if (Context().Automated())
             {
                 Context().Check(step_ == Step::Done, "paused, resumed and looped during the run");
+                Context().Check(!player_->getIsDisposedProperty() &&
+                                    player_->getStateProperty() == MediaState::Playing,
+                                "the looped player is still live before explicit disposal");
+                player_->Dispose();
+                Context().Check(player_->getIsDisposedProperty() &&
+                                    player_->getStateProperty() == MediaState::Stopped &&
+                                    player_->getVideoProperty() == nullptr &&
+                                    player_->getPlayPositionProperty() == System::TimeSpan::Zero,
+                                "Dispose closes active playback and publishes stopped empty state");
+                player_->Dispose();
+                Context().Check(player_->getIsDisposedProperty(), "a second Dispose is safely idempotent");
+                ExpectDisposed("Play after Dispose", [&] { player_->Play(&*video_); });
+                ExpectDisposed("Stop after Dispose", [&] { player_->Stop(); });
+                ExpectDisposed("GetTexture after Dispose", [&] { static_cast<void>(player_->GetTexture()); });
             }
             DemoGame::EndRun();
         }
 
     private:
+        void ExpectDisposed(std::string_view what, const std::function<void()>& action)
+        {
+            try
+            {
+                action();
+                Context().Check(false, std::string(what) + " throws ObjectDisposedException");
+            }
+            catch (const System::ObjectDisposedException& e)
+            {
+                Context().Print("{} -> ObjectDisposedException: {}", what, e.what());
+                Context().Check(true, std::string(what) + " throws ObjectDisposedException");
+            }
+        }
+
         std::unique_ptr<Microsoft::Xna::Framework::Content::ContentManager> media_;
         std::optional<Video> video_;
         std::unique_ptr<VideoPlayer> player_;
@@ -164,7 +196,8 @@ CNA_DEMOS_GAME(PauseAndLoopDemo, {
                    "from the beginning at the end of the clip instead of stopping.",
     .apis = {"VideoPlayer::IsLooped", "VideoPlayer::Pause", "VideoPlayer::Resume", "VideoPlayer::Volume",
              "VideoPlayer::IsMuted", "VideoPlayer::PlayPosition", "VideoPlayer::State", "MediaState::Paused",
-             "VideoPlayer::Play", "VideoPlayer::GetTexture"},
+             "VideoPlayer::Play", "VideoPlayer::GetTexture", "VideoPlayer::Video", "VideoPlayer::Dispose",
+             "VideoPlayer::IsDisposed"},
     .tags = {"media", "video", "pause", "loop"},
     .needs = CnaDemos::Need::Video | CnaDemos::Need::Audio,
     .frames = 900,

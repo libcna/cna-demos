@@ -1342,13 +1342,13 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused638 projects XNA-member coverage to1460/2326 and closes the GamePadState/component
-value contracts plus disconnected stick-button capabilities. Audit the existing VideoPlayer
-workflows next. Both video demos already call Dispose in UnloadContent but do not credit or assert
-Dispose/IsDisposed. Inspect the implementation, add lifecycle checks and only the useful
-post-dispose behavior to one coherent existing ID, and keep playback/frame validation intact. Run
-SOFTWARE and OPENGLES3 with dummy audio/Xvfb; distinguish decoder availability from API defects and
-do not claim visual quality without inspecting output. Then continue to the next useful family.
+baseline. Focused639 projects XNA-member coverage to1462/2326 and closes VideoPlayer.Dispose and
+IsDisposed with active-playback teardown and post-dispose refusal. Audit the existing
+`audio.sound_effect_instance.apply_3d` workflow next. Add coherent state/round-trip evidence for
+the uncredited AudioListener.Velocity and AudioEmitter.Up members, while retaining the current
+paused Apply3D state transitions. Dummy audio can establish public spatial state and accepted
+application only; do not claim audible Doppler, panning or orientation effects. Run both requested
+renderer environments and the focused CTest, then continue to the next useful family.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2466,6 +2466,17 @@ no connected-hardware claim. Both focused CTests pass. Temporary coverage projec
 the next full smoke should convert one skip to pass per renderer. Evidence:
 `/tmp/checkpoint-638-gamepad-*` and `/tmp/checkpoint-638-coverage.md`. No screenshot or visual
 inspection was performed. Final build is diagnostic-free against clean CNA `09c3108e5`.
+
+Focused639 extends `media.video_player.pause_and_loop` from six to12 controls without changing its
+real decode, pause, resume or loop workflow. It disposes the player while the loop is active and
+checks IsDisposed, Stopped state, null Video and zero PlayPosition; repeated Dispose is harmless;
+and Play, Stop and GetTexture each refuse use with ObjectDisposedException. SOFTWARE and OPENGLES3
+both pass12/12 with empty stderr, while their naturally different playback timings prevent a byte-
+identical-output claim. The focused SOFTWARE CTest passes. Temporary coverage projects1460->
+1462/2326 through VideoPlayer.Dispose and IsDisposed, with no catalog/type/C-route change.
+Evidence:`/tmp/checkpoint-639-video-lifecycle-*` and `/tmp/checkpoint-639-coverage.md`. No screenshot,
+frame-pixel inspection, visual-quality or audible-quality claim was made. Final build is diagnostic-
+free against clean CNA `09c3108e5`; no CNA source was edited.
 
 ## 15. Assumptions the next session must know
 
