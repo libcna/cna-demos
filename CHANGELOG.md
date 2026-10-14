@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a deterministic XACT cue-level ReplaceOldest fixture demonstrating FACT's definition-local
+  count and bank-wide oldest-victim selection through public Cue states.
 - Added an authored read-only XACT global and demonstrated that SetGlobalVariable silently preserves
   its initial value, with all generated XGS variants and XACT regressions updated together.
 - Extended XACT Cue lifecycle coverage with repeated Play behavior in playing, paused and stopped

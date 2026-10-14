@@ -89,17 +89,41 @@ namespace
         otherName->Dispose();
         otherCopy->Dispose();
         replacement->Dispose();
+
+        // FACT counts a cue-level limit by definition, but ReplaceOldest searches the whole
+        // SoundBank for its victim. cue_replace.xsb gives MidTone a one/ReplaceOldest limit.
+        AudioEngine replaceEngine("assets/xact/demo.xgs");
+        WaveBank replaceWaves(&replaceEngine, "assets/xact/tones.xwb");
+        SoundBank replaceSounds(&replaceEngine, "assets/xact/cue_replace.xsb");
+        std::unique_ptr<Cue> bankOldest(replaceSounds.GetCue("LowTone"));
+        std::unique_ptr<Cue> triggerA(replaceSounds.GetCue("MidTone"));
+        bankOldest->Play();
+        bankOldest->Pause();
+        triggerA->Play();
+        triggerA->Pause();
+        ctx.Check(bankOldest->getIsPausedProperty() && triggerA->getIsPausedProperty(),
+                  "an unrelated bank cue does not consume MidTone's definition-local slot");
+        std::unique_ptr<Cue> triggerB(replaceSounds.GetCue("MidTone"));
+        triggerB->Play();
+        ctx.Check(bankOldest->getIsStoppedProperty(),
+                  "cue-level ReplaceOldest evicts the oldest playing cue bank-wide");
+        ctx.Check(triggerA->getIsPausedProperty() && triggerB->getIsPlayingProperty(),
+                  "the older same-definition cue survives while the replacement starts");
+        bankOldest->Dispose();
+        triggerA->Dispose();
+        triggerB->Dispose();
     }
 }
 
 CNA_DEMOS_CONSOLE(InstanceLimits, {
     .id = "audio.xact.instance_limits",
     .title = "Authored XACT category and cue instance limits",
-    .description = "Uses two categories limited to one cue: Music refuses the second voice, while SFX replaces "
-                   "the oldest. Contrasts per-category capacity with a per-cue limit scoped to a sound-bank instance.",
+    .description = "Contrasts category and cue-definition limits, including Fail, category ReplaceOldest and FACT's "
+                   "bank-wide victim search for cue-level ReplaceOldest.",
     .apis = {"AudioEngine::AudioEngine", "SoundBank::GetCue", "Cue::Play", "Cue::Stop",
              "Cue::IsPlaying", "Cue::IsPaused", "Cue::Pause", "Cue::IsStopped", "Cue::Dispose", "AudioStopOptions::Immediate"},
     .tags = {"audio", "xact", "category", "instance-limit", "voice"},
     .needs = CnaDemos::Need::Audio,
-    .assets = {"xact/limits.xgs", "xact/tones.xwb", "xact/tones.xsb", "xact/demo.xgs", "xact/cue_limits.xsb"},
+    .assets = {"xact/limits.xgs", "xact/tones.xwb", "xact/tones.xsb", "xact/demo.xgs", "xact/cue_limits.xsb",
+               "xact/cue_replace.xsb"},
 })

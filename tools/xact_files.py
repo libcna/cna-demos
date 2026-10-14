@@ -160,6 +160,8 @@ def write_all(assets_root: Path) -> None:
         "tones.xsb": xsb("ToneSounds", "Tones", CUES),
         "cue_limits.xsb": xsb("LimitedToneSounds", "Tones", CUES,
                               cue_limits=((1, 0), (255, 0), (255, 0), (255, 0))),
+        "cue_replace.xsb": xsb("ReplacingToneSounds", "Tones", CUES,
+                               cue_limits=((255, 0), (1, 2), (255, 0), (255, 0))),
         "music.xwb": xwb("Music", [melody(MUSIC_NOTES, MUSIC_NOTE_SECONDS)], streaming=True),
         "music.xsb": xsb("MusicSounds", "Music", [("Theme", 0.0, 0.0, 0)]),
     }
