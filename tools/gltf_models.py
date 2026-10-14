@@ -687,7 +687,7 @@ def painted_column(path: Path) -> None:
     doc.save(path)
 
 
-def lit_sphere(path: Path) -> None:
+def lit_sphere(path: Path, report_diagnostics: bool = False) -> None:
     """A white sphere with a metallic-roughness material (so CNA gives it a PbrEffect) and two
     KHR_lights_punctual directional lights: "Warm" (1, 0.35, 0.2) shining from the left (towards
     +X) and "Cool" (0.2, 0.45, 1) from the right (towards -X). A directional light shines down its
@@ -707,8 +707,13 @@ def lit_sphere(path: Path) -> None:
             a = ring * (segments + 1) + segment
             b = a + segments + 1
             indices += [a, a + 1, b, a + 1, b + 1, b]
+    position_accessor = doc.accessor(positions, "VEC3", minmax=True)
+    if report_diagnostics:
+        # The runtime import-report fixture deliberately has stale metadata around otherwise-valid
+        # vertex data. The importer keeps the actual geometry and reports InvalidSourceData.
+        doc.gltf["accessors"][position_accessor]["max"][0] = 0.75
     doc.gltf["meshes"] = [{"name": "SphereMesh", "primitives": [{
-        "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True),
+        "attributes": {"POSITION": position_accessor,
                        "NORMAL": doc.accessor(normals, "VEC3")},
         "indices": doc.accessor(indices, "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
         "material": 0}]}]
@@ -724,9 +729,15 @@ def lit_sphere(path: Path) -> None:
         {"name": "Warm", "type": "directional", "color": [1.0, 0.35, 0.2], "intensity": 1.0},
         {"name": "Cool", "type": "directional", "color": [0.2, 0.45, 1.0], "intensity": 1.0},
     ]}}
+    if report_diagnostics:
+        # Optional, unknown extensions are legal to ignore, but the public report must make that
+        # loss visible and must not retain an absolute source path in its serialized message.
+        doc.gltf["extensions"]["EXT_cna_demos_report"] = {"purpose": "diagnostic fixture"}
     doc.gltf["materials"] = [{"name": "White", "pbrMetallicRoughness": {
         "baseColorFactor": [1.0, 1.0, 1.0, 1.0], "metallicFactor": 0.0, "roughnessFactor": 0.7}}]
     doc.gltf["extensionsUsed"] = ["KHR_lights_punctual"]
+    if report_diagnostics:
+        doc.gltf["extensionsUsed"].append("EXT_cna_demos_report")
     doc.gltf["scenes"] = [{"name": "LitSphere", "nodes": [0, 1, 2]}]
     doc.gltf["scene"] = 0
     doc.save(path)
@@ -812,6 +823,7 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     # (CNA-DEMOS-ISSUE-023) and the embedded texture (CNA-DEMOS-ISSUE-022), the run-time import keeps both.
     camera_rig(assets_root / "models" / "loose_camera_rig.gltf")
     textured_crate(assets_root / "models" / "loose_textured_crate.gltf")
+    lit_sphere(assets_root / "models" / "loose_lit_sphere.gltf", report_diagnostics=True)
     # Material variants only as a loose file: CNA's content pipeline refuses them (the compiled
     # model format cannot carry them).
     paint_toy(assets_root / "models" / "loose_paint_toy.gltf")

@@ -182,6 +182,8 @@ effect/buffer/layout/sampler/morph-Tag replacement and exact default restoration
 texture addressing on both renderers.
 Focused841 extends the camera scene with infinite/absent-aspect projection metadata and a Dolly
 clip proving live camera placement comes from its Model bone while WorldTransform stays a snapshot.
+Focused842 completes the structured glTF import-report public contract: every structural/payload
+field, both severities, all six diagnostic kinds, exact aggregates and the empty compiled default.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3508,6 +3510,28 @@ self-test suites pass. Temporary coverage remains302/329 types,2114/2326 members
 and3078/3205 C routes. Evidence:`/tmp/checkpoint-841-camera-*` and
 `/tmp/checkpoint-841-coverage.md`. Audit structured glTF import-report fields and diagnostic
 families against the existing fixtures next.
+
+### Focused842-structured-glTF-import-report
+
+The existing `graphics.model.import_report` now checks all twelve structural source-scene counts
+across camera, shared-skin and punctual-light fixtures. It distinguishes mesh instances,
+distinct/shared meshes, authored light nodes versus retained slots, and inspected animations versus
+retained clips. Existing robot, material-variant, topology and skin-weight assets supply real
+Information, GeneratedData, DroppedData and Approximation entries. A loose copy of the existing lit
+sphere deliberately adds stale accessor bounds and one optional unknown extension, supplying the
+remaining InvalidSourceData and UnsupportedFeature kinds while its geometry and both lights still
+import.
+
+All eight diagnostic payload fields, both severities and all six kinds are observed. Exact
+aggregates prove WarningCount counts entries while DroppedFeatureCount and ApproximationCount sum
+occurrences; the ordinary compiled robot supplies the complete all-zero empty default. SOFTWARE and
+OPENGLES3 pass14/14 with the expected fixture-authored importer warnings. Both inspected800x480
+captures are byte-identical (`77ecda4e...1a63b`). The `-j3` build, exact SOFTWARE CTest,
+metadata650/0, self-tests5/5 and checkpoint-comparison tests4/4 pass. Temporary coverage remains
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-842-import-report-*` and `/tmp/checkpoint-842-coverage.md`. No CNA defect appeared.
+Audit glTF node-instance placement, transform and diagnostic semantics next; keep extending focused
+existing demos unless a distinct public concept warrants a new ID.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

@@ -8240,3 +8240,25 @@ metadata650/0 and both validation self-test suites pass. Temporary coverage rema
 2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-841-camera-*`
 and `/tmp/checkpoint-841-coverage.md`. Audit the structured glTF import-report fields and diagnostic
 families against the existing fixtures next.
+
+## Focused842-structured-glTF-import-report
+
+The existing `graphics.model.import_report` now verifies the complete public report contract rather
+than printing three source counts. Camera, shared-skin and punctual-light fixtures cover all twelve
+structural fields and distinguish instances from distinct/shared meshes, authored light nodes from
+retained effect slots, and inspected animations from retained clips. Robot, material-variant,
+topology and skin-weight fixtures provide real Information, GeneratedData, DroppedData and
+Approximation outcomes. A loose copy of the existing lit sphere deliberately carries one stale
+accessor bound and one optional unknown extension, adding InvalidSourceData and UnsupportedFeature
+without preventing its geometry or both lights from importing.
+
+All eight diagnostic payload fields, both severities and all six kinds are checked. Aggregate
+controls prove that WarningCount counts entries while DroppedFeatureCount and ApproximationCount
+sum affected occurrences; the ordinary compiled robot proves the complete all-zero empty default.
+SOFTWARE and OPENGLES3 pass14/14. Their inspected800x480 captures are byte-identical with SHA-256
+`77ecda4e928aebf1d0909542f24f4f5a82c4389928d260a07cbc37ea4ef1a63b`. The expected importer
+warnings are the fixture behavior under test. The `-j3` build, exact SOFTWARE CTest, metadata650/0
+and both validation self-test suites pass. Temporary coverage remains302/329 types,2114/2326
+members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-842-import-report-*` and
+`/tmp/checkpoint-842-coverage.md`. No CNA defect appeared. Continue the glTF importer behavior audit
+with node-instance placement, transform and diagnostic semantics before leaving the model family.

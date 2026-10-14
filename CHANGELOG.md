@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the glTF import-report workflow to verify every structural count, complete diagnostic
+  payloads, all six diagnostic kinds, exact warning/drop/approximation aggregates and the compiled
+  model's all-zero default against focused camera, skin, light, topology, weight and variant assets.
 - Extended the glTF camera workflow with an animated camera node and an infinite perspective
   camera, proving live bone placement versus the import snapshot, absent-aspect metadata and exact
   public projection reconstruction while retaining the compiled-camera ISSUE-023 witness.
