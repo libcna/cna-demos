@@ -1362,6 +1362,16 @@ ordinary inventory members Item, Dispose and IsDisposed. The nine explicit IColl
 spellings and two GetEnumerator forms have no distinct CNA C++ entry points; their behavior is
 demonstrated but the CLR aliases remain intentionally uncredited.
 
+The same workflow now uses BeginAwardAchievement/EndAwardAchievement for the second real award and
+BeginGetAchievements/EndGetAchievements for the populated collection under test. Both local-store
+tokens complete synchronously, invoke exactly one callback and preserve caller state; the original
+synchronous paths remain in the same run. Both renderers execute12 controls, pass11 and retain only
+ISSUE-017. Evidence:`/tmp/checkpoint-708-achievement-async-*`.
+
+This closes the four ordinary SignedInGamer async achievement members. GetFriends/IsFriend and a
+positive PartySize require service identities; IsHeadset requires actual microphone association.
+Default false/zero getters would not demonstrate those behaviors and remain uncredited.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

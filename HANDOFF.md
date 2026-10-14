@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused707
-projects the632-demo staged catalog to2087/2326 XNA members and157/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused708
+projects the632-demo staged catalog to2091/2326 XNA members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1397,8 +1397,10 @@ typed values, lookup, Item, snapshot, copy and mutation surfaces are now covered
 records the broken offline stream column. Its remaining eight inventory entries are CLR aliases
 and enumerators and stay intentionally uncredited. Gamer/GamerProfile identity and lifetime are now
 covered. AchievementCollection's populated indexing/lifetime and actual C++ collection surface are
-now covered; its remaining inventory names are CLR aliases. Extend the same real workflow through
-SignedInGamer Begin/End award and achievement-read pairs next, then continue the next
+now covered; its remaining inventory names are CLR aliases. The same real workflow now covers
+SignedInGamer Begin/End award and achievement-read pairs. Remaining friend, party/headset and
+online-identity paths require service/hardware evidence. Audit AvatarAnimation/AvatarRenderer value
+and lifetime behavior next, then continue the next
 high-value behavior family after each batch, rebuilding and running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1407,7 +1409,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused707 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused708 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3677,6 +3679,23 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No service, network,
 screenshot or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
 source was edited. Continue the same workflow with SignedInGamer's Begin/End achievement pairs.
+
+Focused708 retains the synchronous first achievement award and later GetAchievements calls while
+moving the second real award and the collection used for paging checks through
+BeginAwardAchievement/EndAwardAchievement and BeginGetAchievements/EndGetAchievements. Both
+offline tokens complete synchronously, call back exactly once and preserve their string/integer
+caller state before End consumes the result.
+
+SOFTWARE and OPENGLES3/X11 each execute12 controls, pass11 and fail only the established ISSUE-017
+EarnedOnline control with byte-identical stdout and empty stderr. The focused known-issue SOFTWARE
+CTest, metadata validation and five validator self-tests pass. Temporary coverage moves
+2087->2091/2326 at632 demos,301/329 types and157/753 fields; GamerServices moves145->149/244.
+Evidence:`/tmp/checkpoint-708-achievement-async-*` and `/tmp/checkpoint-708-coverage.md`. Runner
+SHA-256 is `7b066659b012377c140a63555339a2da79daaaaf8eeee1bc247a820946d467c5`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No service, network,
+screenshot or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
+source was edited. Continue with AvatarAnimation/AvatarRenderer value and lifetime members.
 
 ## 15. Assumptions the next session must know
 

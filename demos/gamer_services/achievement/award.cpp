@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // SignedInGamer::AwardAchievement and GetAchievements, offline, from the title's catalog.
+#include <any>
 #include <memory>
 #include <optional>
 #include <string>
@@ -22,6 +23,7 @@
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "System/ArgumentException.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
+#include "System/IAsyncResult.hpp"
 #include "System/IndexOutOfRangeException.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -71,7 +73,19 @@ namespace
             ctx.Print("first_steps earned before this run: {}", hadFirstSteps);
 
             player->AwardAchievement("first_steps");
-            player->AwardAchievement("explorer");
+            int awardCallbacks = 0;
+            bool awardStateMatched = false;
+            std::unique_ptr<System::IAsyncResult> awardRequest(player->BeginAwardAchievement(
+                "explorer",
+                [&awardCallbacks, &awardStateMatched](System::IAsyncResult& result) {
+                    ++awardCallbacks;
+                    awardStateMatched = std::any_cast<std::string>(result.getAsyncStateProperty()) == "explorer";
+                },
+                std::string("explorer")));
+            ctx.Check(awardCallbacks == 1 && awardStateMatched && awardRequest->getIsCompletedProperty() &&
+                          awardRequest->getCompletedSynchronouslyProperty(),
+                      "BeginAwardAchievement completes offline with one callback and exact caller state");
+            player->EndAwardAchievement(awardRequest.get());
 
             // A key the catalog does not define is refused, as a CNA service would.
             bool refused = false;
@@ -85,7 +99,18 @@ namespace
             }
             ctx.Check(refused, "an unknown key throws GamerServicesNotAvailableException");
 
-            AchievementCollection after = player->GetAchievements();
+            int readCallbacks = 0;
+            bool readStateMatched = false;
+            std::unique_ptr<System::IAsyncResult> readRequest(player->BeginGetAchievements(
+                [&readCallbacks, &readStateMatched](System::IAsyncResult& result) {
+                    ++readCallbacks;
+                    readStateMatched = std::any_cast<int>(result.getAsyncStateProperty()) == 3;
+                },
+                3));
+            ctx.Check(readCallbacks == 1 && readStateMatched && readRequest->getIsCompletedProperty() &&
+                          readRequest->getCompletedSynchronouslyProperty(),
+                      "BeginGetAchievements completes offline with one callback and exact caller state");
+            AchievementCollection after = player->EndGetAchievements(readRequest.get());
             const Achievement* firstSteps = Find(after, "first_steps");
             const Achievement* hidden = Find(after, "hidden_door");
             ctx.Check(firstSteps->getIsEarnedProperty() && Find(after, "explorer")->getIsEarnedProperty(),
@@ -214,7 +239,9 @@ CNA_DEMOS_GAME(AwardDemo, {
     .description = "Lists the title's offline achievement catalog with SignedInGamer::GetAchievements, awards two "
                    "with AwardAchievement, and exercises populated item, copy, mutation and disposal behavior while "
                    "earned achievements keep their first date and a hidden one stays secret until earned.",
-    .apis = {"SignedInGamer::AwardAchievement", "SignedInGamer::GetAchievements", "Achievement::Key",
+    .apis = {"SignedInGamer::AwardAchievement", "SignedInGamer::BeginAwardAchievement",
+             "SignedInGamer::EndAwardAchievement", "SignedInGamer::GetAchievements",
+             "SignedInGamer::BeginGetAchievements", "SignedInGamer::EndGetAchievements", "Achievement::Key",
              "Achievement::Name", "Achievement::Description", "Achievement::HowToEarn", "Achievement::GamerScore",
              "Achievement::IsEarned", "Achievement::EarnedDateTime", "Achievement::EarnedOnline",
              "Achievement::DisplayBeforeEarned", "AchievementCollection::Count", "AchievementCollection::Item",

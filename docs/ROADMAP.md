@@ -5868,3 +5868,18 @@ GetEnumerator forms remain uncredited even though their actual C++ behavior is d
 Evidence:`/tmp/checkpoint-707-achievement-collection-*` and `/tmp/checkpoint-707-coverage.md`. No
 service, network, screenshot or visual result is claimed. Continue with SignedInGamer's Begin/End
 achievement award/read pairs in the same workflow.
+
+## Focused708-SignedInGamer-achievement-async-pairs
+
+The achievement workflow retains synchronous AwardAchievement and GetAchievements paths while its
+second real award and primary collection read now execute through the public Begin/End pairs. Both
+offline results complete synchronously, invoke one callback and preserve exact caller state before
+End consumes them. The catalog, collection and idempotent-award checks remain intact.
+
+SOFTWARE and OPENGLES3/X11 each execute12 controls, pass11 and fail only established ISSUE-017 with
+byte-identical stdout and empty stderr. The focused known-issue SOFTWARE CTest, metadata validation
+and validator self-tests pass. Temporary coverage moves2087->2091/2326 at632 demos,301/329 types
+and157/753 fields; GamerServices moves145->149/244. Evidence:
+`/tmp/checkpoint-708-achievement-async-*` and `/tmp/checkpoint-708-coverage.md`. No service, network,
+screenshot or visual result is claimed. Friend/party/headset paths remain service or hardware
+work. Continue with AvatarAnimation/AvatarRenderer values and lifetime.
