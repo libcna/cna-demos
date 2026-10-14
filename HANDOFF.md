@@ -1405,9 +1405,11 @@ is covered; Changed requires a service revision or manual avatar-editor save thr
 remains dispositioned. Achievement::GetPicture now covers real catalog bytes, fresh-stream ownership
 and the unavailable path. GamerServicesComponent construction, Initialize/Update and dispatcher
 Initialize/WindowHandle are now behaviorally covered; InstallingTitleUpdate is never raised by
-CNA's production path. Audit the feasible local Guide state gaps next, then continue the next
-high-value behavior family after each batch, rebuilding and running both renderers where applicable,
-updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
+CNA's production path. Guide screen-saver state is now covered through the platform; notification
+delay and social overlays remain service/manual work. Audit Cue's synchronous creation/preparation
+states next, then continue the next high-value behavior family after each batch, rebuilding and
+running both renderers where applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each
+completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -3812,6 +3814,27 @@ sibling CNA carries more than100 unrelated uncommitted renderer/build/docs paths
 or reverted here. No service, screenshot or manual visual result is claimed. Continue with Guide's
 feasible local DelayNotifications and IsScreenSaverEnabled behavior, then disposition service-only
 social overlays.
+
+Focused714 extends `gamer_services.guide.notification_position` without adding a variant ID. It
+reads the SDL platform screen-saver state, sets and observes the opposite value, then restores and
+verifies the original value. The existing whole-region framebuffer probe still finds the sign-in
+toast at TopRight and no misplaced content at BottomCenter. DelayNotifications remains
+intentionally uncredited: only an online game-invitation prompt makes its delay observable, so an
+offline call alone would be synthetic coverage.
+
+SOFTWARE and OPENGLES3/X11 pass5/5 with empty stderr. Their stdout differs only by the expected
+renderer pixel counts,9882 versus9879. The focused SOFTWARE CTest, metadata validation and five
+validator self-tests pass. Temporary coverage moves2108->2109/2326 at632 demos,301/329 types and
+157/753 fields; GamerServices moves166->167/244. Evidence:
+`/tmp/checkpoint-714-guide-state-focused-*` and
+`/tmp/checkpoint-714-guide-state-coverage.md`. Runner SHA-256 is
+`b8896b5162de8298e307a3463a9f99d0eccbd3d4e6020ca59495cf131a665698`; production library hashes
+remain `e2c8c9dbd6ef8fb4e611a6f0818ebec6290c34d738930c3e9f1dbb4a55ba9aeb` and
+`471f0a12b6b167262d18ae8fb763f4c10b07e7bc478f72f0bbfd5a2879b193ef`. The exact object was
+compiled and the runner relinked against those libraries. A full build remains deferred while the
+sibling CNA checkout carries more than100 unrelated external changes; none were edited or reverted
+here. Pixel readback was programmatic; no screenshot or manual visual result is claimed. Continue
+with Cue::IsCreated and Cue::IsPreparing in the existing XACT state workflow.
 
 ## 15. Assumptions the next session must know
 

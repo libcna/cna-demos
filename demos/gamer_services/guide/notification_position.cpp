@@ -56,6 +56,13 @@ namespace
             ctx.Check(defaultPosition_ == NotificationPosition::BottomCenter, "notifications start at BottomCenter");
             ctx.Check(Guide::getNotificationPositionProperty() == NotificationPosition::TopRight,
                       "NotificationPosition is now TopRight");
+
+            const bool screenSaverBefore = Guide::getIsScreenSaverEnabledProperty();
+            Guide::setIsScreenSaverEnabledProperty(!screenSaverBefore);
+            const bool screenSaverChanged = Guide::getIsScreenSaverEnabledProperty() != screenSaverBefore;
+            Guide::setIsScreenSaverEnabledProperty(screenSaverBefore);
+            ctx.Check(screenSaverChanged && Guide::getIsScreenSaverEnabledProperty() == screenSaverBefore,
+                      "IsScreenSaverEnabled changes through the platform and restores its original state");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -125,10 +132,10 @@ namespace
 CNA_DEMOS_GAME(NotificationPositionDemo, {
     .id = "gamer_services.guide.notification_position",
     .title = "Where notifications appear",
-    .description = "Moves the Guide's notifications from the default BottomCenter to TopRight with "
-                   "Guide::NotificationPosition before the profile signs in, and finds the sign-in notification "
-                   "the GamerServicesComponent draws in the top-right corner of the screen.",
-    .apis = {"Guide::NotificationPosition", "NotificationPosition", "GamerServicesComponent"},
+    .description = "Moves the Guide's notifications from BottomCenter to TopRight, verifies the rendered sign-in "
+                   "notification there, and toggles then restores the platform screen-saver state.",
+    .apis = {"Guide::NotificationPosition", "Guide::IsScreenSaverEnabled", "NotificationPosition",
+             "GamerServicesComponent"},
     .tags = {"gamer-services", "guide", "notification", "overlay"},
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},

@@ -1452,6 +1452,21 @@ already has direct trial-mode behavior evidence. `InstallingTitleUpdate` remains
 uncredited because CNA installs no title updates and never raises it in production; calling the
 generic event's public Raise would not demonstrate that contract.
 
+### Guide platform screen-saver state
+
+`gamer_services.guide.notification_position` now reads the real platform screen-saver state,
+sets its opposite value, observes the change, restores the original value and verifies the
+restoration. Its existing programmatic framebuffer inspection still proves the sign-in toast is
+drawn at TopRight rather than BottomCenter. Both renderers pass5/5 with empty stderr; their stdout
+differs only by three rasterized notification pixels. Evidence:
+`/tmp/checkpoint-714-guide-state-focused-*`.
+
+This credits `Guide::IsScreenSaverEnabled` through its platform behavior. `DelayNotifications`
+remains intentionally uncredited: it only delays game-invitation prompts delivered by an online
+service, so an offline call with no arriving invitation has no public effect to observe. The other
+remaining social Guide calls likewise require service identities or manual overlay interaction.
+Pixel readback was programmatic; no screenshot or manual visual-quality judgment is claimed.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

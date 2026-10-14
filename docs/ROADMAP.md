@@ -5970,3 +5970,20 @@ Evidence:`/tmp/checkpoint-713-component-focused-*` and
 never raises it in production. No service, screenshot or manual visual result is claimed. Continue
 with the feasible local Guide notification and screen-saver state gaps before service-only social
 overlays.
+
+## Focused714-Guide-platform-screen-saver-state
+
+The existing notification-position workflow now reads the SDL platform screen-saver state,
+changes it to the opposite value, observes that change and immediately restores and verifies the
+original value. Its established framebuffer check still finds the real sign-in notification at
+TopRight with none at BottomCenter.
+
+SOFTWARE and OPENGLES3/X11 pass5/5 with empty stderr; their stdout differs only in the exact
+notification pixel count (9882 versus9879). The focused SOFTWARE CTest, metadata validation and
+validator self-tests pass. Temporary coverage moves2108->2109/2326 at632 demos,301/329 types and
+157/753 fields; GamerServices moves166->167/244. Evidence:
+`/tmp/checkpoint-714-guide-state-focused-*` and
+`/tmp/checkpoint-714-guide-state-coverage.md`. `Guide::DelayNotifications` remains intentionally
+uncredited because its only observable behavior requires an online game-invitation prompt. Pixel
+readback was programmatic; no screenshot or manual visual result is claimed. Continue with the
+two synchronous XACT Cue creation/preparation-state properties in the existing cue-state workflow.
