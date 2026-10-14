@@ -71,8 +71,8 @@ content46, input40, storage7, media13, gamer services19, net14, devices5, phone1
 diagnostics2, cnaext4, platform2 and c_api172. Kinds are162 console,277 game and194 standalone;
 597 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md retains the complete719 runtime baseline at632 demos and
-302/329 XNA types,2114/2326 XNA members,157/753 fields and2999/3205 public C ABI routes. Focused721
-projects the staged633-demo catalog to the same type/member/C totals and158/753 fields. Selected semantic totals are `input_gamepad.h`61/63,
+302/329 XNA types,2114/2326 XNA members,157/753 fields and2999/3205 public C ABI routes. Focused722
+projects the staged633-demo catalog to the same type/member/C totals and161/753 fields. Selected semantic totals are `input_gamepad.h`61/63,
 `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
@@ -168,6 +168,16 @@ self-tests pass. Temporary coverage is302/329 types,2114/2326 non-field members,
 programmatic; no screenshot or manual visual inspection was performed.
 During focused721 the clean sibling CNA checkout advanced externally to docs-only `a37bb07ba`;
 `libcna.so` and `libcna_c_api.so` retain the exact Complete719 hashes.
+
+Focused **722-Texture2D-binary16-formats** extends the same catalog ID with HalfSingle,
+HalfVector2 and HalfVector4 storage and sampling. Exact packed values survive SetData/GetData,
+including channels above one and below zero, while point sampling proves missing-channel expansion
+and final Color-buffer clamping. SOFTWARE and OPENGLES3/X11 pass15/15 with byte-identical sampled
+colors; the exact SOFTWARE CTest, metadata633/0 and all five validator self-tests pass. Temporary
+coverage remains302/329 types,2114/2326 non-field members and2999/3205 C routes; fields move
+158->161/753 through the three half-float SurfaceFormat values. Evidence:
+`/tmp/checkpoint-722-half-formats-*`. Pixel readback was programmatic; no screenshot or manual
+visual inspection was performed.
 
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
@@ -1432,16 +1442,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete719 is the current full-build/runtime baseline; focused720 and focused721
-are staged after it. Extend `graphics.texture2d.floating_formats` with the coherent binary16
-HalfSingle/HalfVector2/HalfVector4 family. Preserve exact packed half values through SetData/GetData,
-show the same missing-channel sampling rules and retain an out-of-range channel to distinguish raw
-storage from final Color-buffer clamping. Do not duplicate HdrBlendable render-target behavior
-already covered elsewhere. Build and run both primary renderers plus the exact CTest, update the
-temporary coverage projection and status docs, and push. Then select the next useful normalized
-integer Texture2D family or disposition it if it would only repeat the same transfer/sampling
-concept. A complete full smoke checkpoint is required after the next group of staged behavior
-batches, because Complete719 reports do not contain the new633rd ID.
+HIGHEST PRIORITY: Complete719 is the current full-build/runtime baseline; focused720 through
+focused722 are staged after it. Audit the normalized integer Texture2D formats
+(`NormalizedByte2`, `NormalizedByte4`, `Rgba1010102`, `Rg32`, `Rgba64` and `Alpha8`) against the
+existing packed-vector and surface-format demos. Add a focused storage/sampling workflow only where
+the channel interpretation or precision behavior is materially distinct; otherwise record the
+semantic disposition rather than multiplying format-gallery demos. Build and run both primary
+renderers plus the exact CTest for any change, update the temporary coverage projection and status
+docs, and push. A complete full smoke checkpoint is required after the next group of staged
+behavior batches, because Complete719 reports do not contain the new633rd ID.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

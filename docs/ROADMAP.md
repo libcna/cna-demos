@@ -6115,3 +6115,19 @@ was programmatic; no screenshot or manual visual inspection was performed. CNA a
 to docs-only `a37bb07ba`; both production library hashes remain exact from Complete719. Extend this
 same demo with the coherent binary16 half-float family next, rather than adding a second
 format-gallery ID.
+
+## Focused722-Texture2D-binary16-formats
+
+The existing `graphics.texture2d.floating_formats` now adds HalfSingle, HalfVector2 and HalfVector4
+beside their binary32 counterparts. Exact packed values survive SetData/GetData, including
+HalfVector4 channels above one and below zero. Real point sampling produces(64,255,255,255),
+(64,128,255,255) and(255,128,0,255), proving the same missing-channel expansion and final
+Color-buffer clamping as the binary32 row without duplicating the HdrBlendable render-target case.
+
+SOFTWARE and OPENGLES3/X11 each pass15/15 with byte-identical sampled colors, and the exact
+SOFTWARE CTest passes. Metadata remains633/0 and all five validator self-tests pass. Temporary
+coverage remains633 demos,302/329 types,2114/2326 non-field members and2999/3205 C routes; fields
+move158->161/753 through `SurfaceFormat::HalfSingle`, `HalfVector2` and `HalfVector4`. Evidence:
+`/tmp/checkpoint-722-half-formats-*`. Pixel readback was programmatic; no screenshot or manual
+visual inspection was performed. Audit the normalized integer Texture2D formats next and add only
+a coherent storage/sampling concept that differs meaningfully from this floating-point behavior.
