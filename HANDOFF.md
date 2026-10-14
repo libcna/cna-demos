@@ -1361,13 +1361,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused667
-projects the629-demo staged catalog to1738/2326 XNA members and155/753 fields at299/329 types.
-BlendState, DepthStencilState, RasterizerState and SamplerState have no remaining generated gap.
-Audit EffectParameter next:17 generated gaps remain across annotations/semantic/structure members
-and typed scalar, array, vector, quaternion, string, Texture3D and TextureCube getters. Extend the
-existing parameter/reflection and shader workflows by coherent value families; classify absent
-shader-reflection features or unsupported getter shapes instead of creating property-list demos.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused668
+projects the629-demo staged catalog to1760/2326 XNA members and155/753 fields at301/329 types.
+EffectParameter has no remaining generated gap, and EffectParameterCollection retains only CLR
+enumerators. Audit the remaining12 non-enumerator EffectAnnotation members next: scalar/vector/
+matrix getters plus semantic/shape/type metadata can extend the same authored annotation workflow.
+Keep the distinction between CNA-constructed public storage and compiler-populated FX reflection;
+do not claim compiled annotations that were not loaded from an effect binary.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1376,8 +1376,8 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused667 built against external `f00150424` with two uncommitted
-handoff/renderer-retirement plan paths. Recheck it before every build.
+the sibling CNA checkout; focused668 built against external `f00150424` with three uncommitted
+handoff, FNA3D state-test and renderer-retirement plan paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
 `standalone/c_api.graphics.vertex_values` contains the planned seven-check
@@ -2915,6 +2915,23 @@ no screenshot or visual inspection was used. Production library hashes remain
 `acfd685dad3e65cba99c464ae08fcc52f4dea72114e984ec14f32cff4c12e4bc`. Sibling CNA stayed external
 dirty `f00150424`; no CNA source was edited. Audit EffectParameter's17 remaining value/reflection
 members next.
+
+Focused668 extends `graphics.effect.parameter_values` from16 to25 controls. One grouped storage
+workflow now round-trips Boolean scalar/array, signed Int32 and Single arrays, Vector2/Vector3 and
+Quaternion scalar/arrays, a Vector4 array, string text and exact Texture3D/TextureCube identities.
+An authored Material struct carries semantic MATERIAL0, exposes Tint by case-insensitive COLOR0
+lookup and owns a string annotation `UiName=Surface tint`. This covers public CNA-constructed
+storage/reflection without claiming compiler-populated FX metadata. Both renderers retain23 passing
+controls and the same two documented ISSUE-034/035 failures, with byte-identical stdout and empty
+stderr; the focused known-issue SOFTWARE CTest passes. Temporary coverage moves1738->1760/2326 and
+299->301/329 types, closing EffectParameter and leaving only CLR enumerators on its collection.
+Evidence:`/tmp/checkpoint-668-*` and `/tmp/checkpoint-668-coverage.md`. No drawing, screenshot or
+visual inspection was used. Production library hashes remain
+`c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`; runner
+`cb61dd5ac090d3f139a78bb2bc7dfb2b97c93526699df6dec1ec68ac0be377ab`. Sibling CNA remained
+external `f00150424` and gained a third dirty state-test path; no CNA source was edited. Audit the12
+remaining non-enumerator EffectAnnotation members next.
 
 ## 15. Assumptions the next session must know
 

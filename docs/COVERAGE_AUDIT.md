@@ -165,11 +165,19 @@ with empty stderr and the focused CTest passes. Evidence:`/tmp/checkpoint-652-*`
 | SetValue; GetValueSingle, GetValueInt32, GetValueVector4, GetValueTexture2D | Demonstrated in `parameter_values`: typed round trips through named stock parameters; do not imply that setting a parameter updates the stock effect's cached public properties. |
 | GetValueMatrix, GetValueMatrixTranspose, SetValueTranspose | Demonstrated in `parameter_values`: use a non-symmetric translation/rotation matrix to make transpose semantics observable. Identity alone would not test it. |
 | Elements, GetValueMatrixArray, GetValueMatrixTransposeArray | Demonstrated in `parameter_values`: two distinct bone transforms, round trips and reflected array shape. Source currently constructs Bones as a 72-by-4 matrix with no Elements; confirmed on SOFTWARE and OPENGLES3 (ISSUE-035). |
-| GetValueBoolean, GetValueBooleanArray, GetValueInt32Array, GetValueSingleArray | Add to a compiled-effect demo when that workstream is available: stock parameters do not supply meaningful examples of every array type. No synthetic standalone parameter for each getter merely to raise counts. |
-| GetValueVector2, GetValueVector3, GetValueQuaternion and their Array forms; GetValueVector4Array | Same typed data concept, but reflected vector widths, array bounds and quaternion-as-float4 deserve compiled-effect checks. Defer to that coherent demo rather than claiming the Vector4 round trip covers all behavior. |
-| GetValueTexture3D, GetValueTextureCube | Renderer/effect-specific shader inputs: incorporate round trips into effects using these samplers; existing environment mapping demonstrates cube sampling, not these parameter getters. |
-| GetValueString, Semantic, Annotations, StructureMembers | Compiled effect reflection workstream (current build lacks compiled-effect support). Stock effects' empty metadata does not demonstrate annotated strings or nested structs. |
+| GetValueBoolean and Boolean/Int32/Single arrays | `parameter_values` now groups independent CNA-constructed parameter storage by value family. A scalar true and ordered true/false/true values round trip; signed integers and three exact floats retain order. These checks cover public CPU storage and do not claim compiled FX packing. |
+| GetValueVector2, GetValueVector3, GetValueQuaternion and their array forms; GetValueVector4Array | Distinct scalar and two-entry arrays round trip exact signed components; quaternion values are observed as float4 values. One coherent workflow covers widths/order without adding getter-list IDs. Compiled register layout remains a separate boundary. |
+| GetValueTexture3D, GetValueTextureCube | Real 2x2x2 and 2x2 resource objects round trip by exact identity through correctly typed parameters. Their shader sampling behavior remains covered by the separate ShaderEffect volume/cube demos, not claimed here. |
+| GetValueString, Semantic, Annotations, StructureMembers | An authored `Material` struct parameter carries semantic `MATERIAL0`, a `Tint` member found case-insensitively by `COLOR0`, and an attached `UiName` string annotation read back as `Surface tint`. This demonstrates the public CNA-constructed reflection graph and brings EffectAnnotation/EffectAnnotationCollection into coverage; it does not claim compiler-populated annotations or structs. |
 | Invalid accessor / parameter-shape combinations | Demonstrated in `parameter_values`: Vector4 read as Single should be checked explicitly. CNA validates compiled storage shapes but the stock storage getter returns its first component; confirmed on SOFTWARE and OPENGLES3 (ISSUE-034). |
+
+Focused668 extends the existing ID from16 to25 controls. Twenty-three pass on both renderers; the
+same two documented stock-effect assertions expose ISSUE-034/035, yielding the expected known-
+issue failure with byte-identical stdout and empty stderr. The known-issue SOFTWARE CTest passes.
+Temporary coverage moves1738->1760/2326 and299->301/329 types without a new ID; EffectParameter has
+no generated member gap, and EffectParameterCollection retains only CLR enumerators. Evidence:
+`/tmp/checkpoint-668-*` and `/tmp/checkpoint-668-coverage.md`. No drawing, screenshot or visual
+inspection was used.
 
 ### ShaderEffect and shader dialect selection
 

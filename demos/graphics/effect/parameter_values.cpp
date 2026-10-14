@@ -4,10 +4,17 @@
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/MathChecks.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BasicEffect.hpp"
+#include "Microsoft/Xna/Framework/Graphics/EffectAnnotation.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectParameter.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectParameterCollection.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SkinnedEffect.hpp"
+#include "Microsoft/Xna/Framework/Graphics/SurfaceFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
+#include "Microsoft/Xna/Framework/Graphics/Texture3D.hpp"
+#include "Microsoft/Xna/Framework/Graphics/TextureCube.hpp"
+#include "Microsoft/Xna/Framework/Quaternion.hpp"
+#include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "Microsoft/Xna/Framework/Vector3.hpp"
 #include "Microsoft/Xna/Framework/Vector4.hpp"
 #include "System/InvalidCastException.hpp"
 
@@ -59,6 +66,97 @@ namespace
             // These are parameter-storage checks. Applying a stock effect may overwrite values
             // from its cached properties, as parameters_and_techniques demonstrates.
 
+            // CNA also exposes the XNA parameter value surface as an independent storage object.
+            // Group the scalar/array families here instead of creating one property-list demo per
+            // getter; distinct values make ordering, width and conversion observable.
+            EffectParameter flags("Flags", "FLAGS", 1, 1, EffectParameterClass::Scalar,
+                                  EffectParameterType::Bool);
+            flags.SetValue(true);
+            const bool booleanScalar = flags.GetValueBoolean();
+            flags.SetValue(std::vector<bool>{true, false, true});
+            const auto booleans = flags.GetValueBooleanArray(3);
+            ctx.Check(booleanScalar && booleans == std::vector<bool>({true, false, true}),
+                      "Boolean scalar and ordered array round trip");
+
+            EffectParameter integers("Indices", "INDICES", 1, 1, EffectParameterClass::Scalar,
+                                     EffectParameterType::Int32);
+            integers.SetValue(std::vector<int>{7, -3, 11});
+            EffectParameter singles("Weights", "WEIGHTS", 1, 1, EffectParameterClass::Scalar,
+                                    EffectParameterType::Single);
+            singles.SetValue(std::vector<float>{0.25f, 0.5f, 1.0f});
+            ctx.Check(integers.GetValueInt32Array(3) == std::vector<int>({7, -3, 11}) &&
+                          singles.GetValueSingleArray(3) == std::vector<float>({0.25f, 0.5f, 1.0f}),
+                      "Int32 and Single arrays retain exact order and values");
+
+            EffectParameter vector2("Offsets", "OFFSETS", 1, 2, EffectParameterClass::Vector,
+                                    EffectParameterType::Single);
+            const Vector2 offset(2.0f, -4.0f);
+            const std::vector<Vector2> offsets{Vector2(1.0f, 2.0f), Vector2(-3.0f, 4.0f)};
+            vector2.SetValue(offset);
+            const Vector2 offsetScalar = vector2.GetValueVector2();
+            vector2.SetValue(offsets);
+            ctx.Check(offsetScalar == offset && vector2.GetValueVector2Array(2) == offsets,
+                      "Vector2 scalar and ordered array round trip");
+
+            EffectParameter vector3("Directions", "DIRECTIONS", 1, 3, EffectParameterClass::Vector,
+                                    EffectParameterType::Single);
+            const Vector3 direction(1.0f, -2.0f, 3.0f);
+            const std::vector<Vector3> directions{Vector3(1.0f, 2.0f, 3.0f), Vector3(-4.0f, 5.0f, -6.0f)};
+            vector3.SetValue(direction);
+            const Vector3 directionScalar = vector3.GetValueVector3();
+            vector3.SetValue(directions);
+            ctx.Check(directionScalar == direction && vector3.GetValueVector3Array(2) == directions,
+                      "Vector3 scalar and ordered array round trip");
+
+            EffectParameter vector4("Planes", "PLANES", 1, 4, EffectParameterClass::Vector,
+                                    EffectParameterType::Single);
+            const std::vector<Vector4> planes{Vector4(1.0f, 0.0f, 0.0f, -2.0f),
+                                              Vector4(0.0f, 1.0f, 0.0f, 3.0f)};
+            vector4.SetValue(planes);
+            ctx.Check(vector4.GetValueVector4Array(2) == planes, "Vector4 array retains both planes");
+
+            EffectParameter rotationParameter("Rotations", "ROTATIONS", 1, 4, EffectParameterClass::Vector,
+                                              EffectParameterType::Single);
+            const Quaternion rotation(0.1f, 0.2f, 0.3f, 0.9f);
+            const std::vector<Quaternion> rotationValues{Quaternion(0.0f, 0.0f, 0.0f, 1.0f),
+                                                         Quaternion(0.5f, -0.5f, 0.5f, 0.5f)};
+            rotationParameter.SetValue(rotation);
+            const Quaternion rotationScalar = rotationParameter.GetValueQuaternion();
+            rotationParameter.SetValue(rotationValues);
+            ctx.Check(rotationScalar == rotation && rotationParameter.GetValueQuaternionArray(2) == rotationValues,
+                      "Quaternion scalar and ordered array round trip as float4 values");
+
+            EffectParameter label("Label", "DISPLAYNAME", 1, 1, EffectParameterClass::Object,
+                                  EffectParameterType::String);
+            label.SetValue(std::string("polished copper"));
+            ctx.Check(label.GetValueString() == "polished copper", "String storage retains authored text");
+
+            Texture3D volume(device, 2, 2, 2, false, SurfaceFormat::Color);
+            TextureCube cube(device, 2, false, SurfaceFormat::Color);
+            EffectParameter volumeInput("Volume", "VOLUME0", 1, 1, EffectParameterClass::Object,
+                                        EffectParameterType::Texture3D);
+            EffectParameter cubeInput("Environment", "ENVIRONMENT0", 1, 1, EffectParameterClass::Object,
+                                      EffectParameterType::TextureCube);
+            volumeInput.SetValue(&volume);
+            cubeInput.SetValue(&cube);
+            ctx.Check(volumeInput.GetValueTexture3D() == &volume && cubeInput.GetValueTextureCube() == &cube,
+                      "Texture3D and TextureCube parameters retain exact resource identities");
+
+            EffectParameter material("Material", "MATERIAL0", 1, 1, EffectParameterClass::Struct,
+                                     EffectParameterType::Void);
+            material.getStructureMembersProperty().Add(
+                EffectParameter("Tint", "COLOR0", 1, 4, EffectParameterClass::Vector,
+                                EffectParameterType::Single));
+            material.getAnnotationsProperty().Add(
+                EffectAnnotation("UiName", "", 1, 1, EffectParameterClass::Object,
+                                 EffectParameterType::String, {}, "Surface tint"));
+            const EffectParameter* tintMember = material.getStructureMembersProperty().GetParameterBySemantic("color0");
+            const EffectAnnotation* uiName = material.getAnnotationsProperty()["UiName"];
+            ctx.Check(material.getSemanticProperty() == "MATERIAL0" && tintMember != nullptr &&
+                          tintMember->getNameProperty() == "Tint" && uiName != nullptr &&
+                          uiName->GetValueString() == "Surface tint",
+                      "structure members support case-insensitive semantic lookup and attached string annotations");
+
             SkinnedEffect skinned(device);
             EffectParameter* bones = skinned.getParametersProperty()["Bones"];
             const std::vector<Matrix> transforms{Matrix::getIdentityProperty(), transform};
@@ -94,14 +192,25 @@ namespace
 CNA_DEMOS_GAME(ParameterValues, {
     .id = "graphics.effect.parameter_values",
     .title = "Typed effect parameter values",
-    .description = "Writes and reads scalar, vector, matrix, texture and bone-array effect parameters, including "
-                   "transpose access and reflected shape, and exposes stock-effect compatibility gaps.",
+    .description = "Writes and reads scalar/array, vector, quaternion, string, texture and matrix parameter families, "
+                   "including a structured reflection graph, transpose access and stock-effect compatibility gaps.",
     .apis = {"Effect::Parameters", "EffectParameter::ParameterType", "EffectParameter::ParameterClass",
              "EffectParameter::RowCount", "EffectParameter::ColumnCount", "EffectParameter::Elements",
              "EffectParameter::SetValue", "EffectParameter::SetValueTranspose", "EffectParameter::GetValueSingle",
              "EffectParameter::GetValueInt32", "EffectParameter::GetValueVector4", "EffectParameter::GetValueMatrix",
              "EffectParameter::GetValueMatrixTranspose", "EffectParameter::GetValueTexture2D",
-             "EffectParameter::GetValueMatrixArray", "EffectParameter::GetValueMatrixTransposeArray"},
+             "EffectParameter::GetValueMatrixArray", "EffectParameter::GetValueMatrixTransposeArray",
+             "EffectParameter::GetValueBoolean", "EffectParameter::GetValueBooleanArray",
+             "EffectParameter::GetValueInt32Array", "EffectParameter::GetValueSingleArray",
+             "EffectParameter::GetValueVector2", "EffectParameter::GetValueVector2Array",
+             "EffectParameter::GetValueVector3", "EffectParameter::GetValueVector3Array",
+             "EffectParameter::GetValueVector4Array", "EffectParameter::GetValueQuaternion",
+             "EffectParameter::GetValueQuaternionArray", "EffectParameter::GetValueString",
+             "EffectParameter::GetValueTexture3D", "EffectParameter::GetValueTextureCube",
+             "EffectParameter::Semantic", "EffectParameter::StructureMembers", "EffectParameter::Annotations",
+             "EffectParameterCollection::GetParameterBySemantic", "EffectAnnotation::Name",
+             "EffectAnnotation::GetValueString", "EffectAnnotationCollection::Count",
+             "EffectAnnotationCollection::Item"},
     .tags = {"effect", "parameters", "reflection", "matrix"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 1,

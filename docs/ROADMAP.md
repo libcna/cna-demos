@@ -5220,3 +5220,21 @@ have no generated member gap. Evidence:`/tmp/checkpoint-667-*` and
 `/tmp/checkpoint-667-coverage.md`. Pixel validation used programmatic texture/backbuffer readback;
 no screenshot or visual inspection was used. Audit EffectParameter's remaining typed getters and
 reflection values next.
+
+## Focused668-typed-effect-parameter-storage-and-reflection
+
+The existing parameter-values ID grows16->25 controls and closes all17 remaining EffectParameter
+members. Boolean scalar/array, signed Int32 and Single arrays, Vector2/Vector3 and Quaternion
+scalar/arrays, a Vector4 array, string text and exact Texture3D/TextureCube identities round trip in
+one grouped public-storage workflow. An authored Material struct carries semantic MATERIAL0,
+exposes Tint through case-insensitive COLOR0 lookup and owns `UiName=Surface tint` as a string
+annotation. This establishes CNA-constructed storage/reflection; it does not claim compiler-
+populated FX annotations, nested structs or register packing.
+
+SOFTWARE and OPENGLES3 retain23 passing controls plus the same two documented ISSUE-034/035
+failures, with byte-identical stdout and empty stderr. The focused known-issue SOFTWARE CTest
+passes. Temporary coverage moves1738->1760/2326 and299->301/329 types at629 demos and155/753
+fields. EffectParameter has no generated gap; EffectParameterCollection retains only CLR
+enumerators. Evidence:`/tmp/checkpoint-668-*` and `/tmp/checkpoint-668-coverage.md`. No drawing,
+screenshot or visual inspection was used. Audit the remaining typed EffectAnnotation values and
+metadata next.
