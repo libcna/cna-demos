@@ -5520,3 +5520,19 @@ at632 demos,301/329 types and156/753 fields. Evidence:`/tmp/checkpoint-685-*` an
 `/tmp/checkpoint-685-coverage.md`. The passing four-byte Color round trip exposes stale CNA public
 header and example claims, recorded as CNA-DEMOS-ISSUE-084. No screenshot or visual inspection was
 used. Continue the Design type-converter member audit next.
+
+## Focused686-complete-design-converter-behavior
+
+Three existing Design IDs close all32 remaining constructor, ConvertFrom, ConvertTo and
+CreateInstance members across the13 converter types. Invariant text round-trips every parser and
+asserts structural output for non-parsing types. Constructor descriptors rebuild BoundingSphere and
+allow non-parsing BoundingBox/Ray conversion. Named property maps recreate every scalar, vector,
+geometry and16-element Matrix shape through the concrete converter's CreateInstance.
+
+String round trips pass9/9, properties pass10/10 and instance descriptors pass5/5. SOFTWARE and
+OPENGLES3 output is byte-identical with empty stderr; all three focused SOFTWARE CTests pass.
+Temporary coverage moves1966->1998/2326 at632 demos,301/329 types and156/753 fields; Design reaches
+51/51 non-field members. Evidence:`/tmp/checkpoint-686-*` and `/tmp/checkpoint-686-coverage.md`.
+MathTypeConverter's two protected configuration fields remain intentionally uncredited because the
+public workflows already prove their externally visible effects. No rendering, screenshot or visual
+inspection was used. Continue ContentSerializerAttribute state and clone behavior next.

@@ -63,9 +63,26 @@ namespace
         }
         ctx.Check(rejected, "text with the wrong number of components throws ArgumentException");
 
+        const Point point(12, -7);
+        const PointConverter points;
+        const Vector2 vector2(1.5f, -2.25f);
+        const Vector2Converter vectors2;
+        const Vector4 vector4(1.0f, 0.5f, 0.25f, 1.0f);
+        const Vector4Converter vectors4;
+        const Quaternion quaternion = Quaternion::Identity;
+        const QuaternionConverter quaternions;
+        ctx.Check(std::any_cast<Point>(points.ConvertFromInvariantString(points.ConvertToInvariantString(point))) == point &&
+                      std::any_cast<Vector2>(vectors2.ConvertFromInvariantString(vectors2.ConvertToInvariantString(vector2))) == vector2 &&
+                      std::any_cast<Vector4>(vectors4.ConvertFromInvariantString(vectors4.ConvertToInvariantString(vector4))) == vector4 &&
+                      std::any_cast<Quaternion>(quaternions.ConvertFromInvariantString(
+                          quaternions.ConvertToInvariantString(quaternion))) == quaternion,
+                  "Point, Vector2, Vector4 and Quaternion invariant text round-trips exactly");
+
         const ColorConverter colors;
         ctx.Check(std::any_cast<Color>(colors.ConvertFromInvariantString("255, 128, 0, 255")) == Color(255, 128, 0, 255),
                   "a Color reads from \"R, G, B, A\"");
+        ctx.Check(colors.ConvertToInvariantString(Color::CornflowerBlue) == "100, 149, 237, 255",
+                  "Color writes its four byte channels in RGBA order");
 
         // Types with several parts (Rectangle, Matrix, bounding volumes) print but do not parse,
         // as in XNA; a property grid edits their parts instead.
@@ -81,6 +98,21 @@ namespace
         }
         ctx.Check(!rectangles.CanConvertFrom(System::Type::From<std::string>()) && notSupported,
                   "RectangleConverter does not parse text (NotSupportedException)");
+
+        const BoundingBoxConverter boxes;
+        const MatrixConverter matrices;
+        const PlaneConverter planes;
+        const RayConverter rays;
+        ctx.Check(rectangles.ConvertToInvariantString(Rectangle(1, 2, 30, 40)) ==
+                          "{X:1 Y:2 Width:30 Height:40}" &&
+                      boxes.ConvertToInvariantString(BoundingBox(Vector3(-1.0f), Vector3::One)) ==
+                          "{{Min:{X:-1 Y:-1 Z:-1} Max:{X:1 Y:1 Z:1}}}" &&
+                      planes.ConvertToInvariantString(Plane(Vector3::Up, -2.0f)) ==
+                          "{Normal:{X:0 Y:1 Z:0} D:-2}" &&
+                      rays.ConvertToInvariantString(Ray(Vector3::Zero, Vector3::Forward)) ==
+                          "{{Position:{X:0 Y:0 Z:0} Direction:{X:0 Y:0 Z:-1}}}" &&
+                      matrices.ConvertToInvariantString(Matrix::getIdentityProperty()).find("M44:1") != std::string::npos,
+                  "non-parsing converters still emit each value's exact structural text");
 
         Show(ctx, "Point", Point(12, -7));
         Show(ctx, "Vector2", Vector2(1.5f, -2.25f));
@@ -103,9 +135,16 @@ CNA_DEMOS_CONSOLE(StringRoundTrip, {
                    "it back, rejects malformed text, and lists which XNA math types parse text (Point, vectors, "
                    "Quaternion, Color) and which only print (Rectangle, Matrix, Plane, Ray, bounding volumes).",
     .apis = {"Vector3Converter::ConvertTo", "Vector3Converter::ConvertFrom", "Vector3Converter::Vector3Converter",
-             "MathTypeConverter::CanConvertFrom", "ColorConverter::ConvertFrom", "RectangleConverter::ConvertFrom",
-             "PointConverter::ConvertTo", "Vector2Converter::ConvertTo", "QuaternionConverter::ConvertTo",
-             "BoundingBoxConverter::ConvertTo", "MatrixConverter::ConvertTo",
-             "RectangleConverter", "Vector4Converter", "PlaneConverter", "RayConverter"},
+             "MathTypeConverter::CanConvertFrom", "ColorConverter::ColorConverter", "ColorConverter::ConvertFrom",
+             "ColorConverter::ConvertTo", "PointConverter::PointConverter", "PointConverter::ConvertFrom",
+             "PointConverter::ConvertTo", "Vector2Converter::Vector2Converter", "Vector2Converter::ConvertFrom",
+             "Vector2Converter::ConvertTo", "Vector4Converter::Vector4Converter", "Vector4Converter::ConvertFrom",
+             "Vector4Converter::ConvertTo", "QuaternionConverter::QuaternionConverter",
+             "QuaternionConverter::ConvertFrom", "QuaternionConverter::ConvertTo",
+             "RectangleConverter::RectangleConverter", "RectangleConverter::ConvertFrom",
+             "RectangleConverter::ConvertTo", "BoundingBoxConverter::BoundingBoxConverter",
+             "BoundingBoxConverter::ConvertTo", "MatrixConverter::MatrixConverter", "MatrixConverter::ConvertTo",
+             "PlaneConverter::PlaneConverter", "PlaneConverter::ConvertTo", "RayConverter::RayConverter",
+             "RayConverter::ConvertTo"},
     .tags = {"design", "type-converter", "text", "serialization", "tools"},
 })

@@ -1361,19 +1361,18 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused685
-projects the632-demo staged catalog to1966/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused686
+projects the632-demo staged catalog to1998/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
 machinery. The stock-effect families now retain only dispositioned protected OnApply hooks and one
 SkinnedEffect explicit-interface inventory artifact; real pass application reaches the hooks and
 focused671 proved the override dispatch contract. RenderTargetCube and VertexBufferBinding now have
-no member gap. GraphicsAdapter, the complete PackedVector namespace and PacketReader now have no
-member gap. Continue with the Design type-converter member audit in the four existing converter
-workflows, starting with the concrete converter constructors and missing ConvertFrom/ConvertTo
-directions, and add CreateInstance only where the public property-editing contract is meaningful.
-Then continue with the next high-value behavior family,
+no member gap. GraphicsAdapter, the complete PackedVector namespace, PacketReader and all Design
+converter types now have no member gap. Continue with ContentSerializerAttribute's seven remaining
+state and clone members in `content.custom.intermediate_serializer`, retaining its real public
+serializer consumption as the behavioral context. Then continue with the next high-value behavior family,
 rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1382,7 +1381,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused685 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused686 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3234,6 +3233,25 @@ inspection was used. The passing transport also exposes stale CNA public documen
 bundled example for the already fixed Color round trip; this is recorded as CNA-DEMOS-ISSUE-084.
 Sibling CNA remained clean external `f698d0f548`; no CNA source was edited. Continue with the Design
 type-converter member audit next.
+
+Focused686 extends three existing Design type-converter IDs and closes all32 remaining constructor,
+ConvertFrom, ConvertTo and CreateInstance members across the13 concrete/base converter types.
+Invariant text now round-trips every parser and asserts structural output for non-parsing types;
+constructor descriptors rebuild BoundingSphere and allow non-parsing BoundingBox/Ray conversion;
+property-grid maps recreate all scalar, vector, geometry and16-element Matrix values. The two
+documented protected MathTypeConverter fields are intentionally not credited as direct data API:
+parsing/non-parsing converter behavior and ordered properties exercise their results, and a demo
+that subclasses only to expose protected storage would add no user-facing behavior.
+
+String round trips pass9/9, properties pass10/10 and instance descriptors pass5/5. SOFTWARE and
+OPENGLES3 outputs are byte-identical with empty stderr; all three focused SOFTWARE CTests pass.
+Temporary coverage moves1966->1998/2326 at632 demos,301/329 types and156/753 fields; Design reaches
+51/51 non-field members. Evidence:`/tmp/checkpoint-686-*` and `/tmp/checkpoint-686-coverage.md`.
+Runner SHA-256 is `ffa1221d945b8c4d2236dd9fccb3cc7392bf18735dc98f6341a3039196bafffe`;
+production library hashes remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da`
+and `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No rendering, screenshot
+or visual inspection was used. Sibling CNA remained clean external `f698d0f548`; no CNA source was
+edited. Continue with ContentSerializerAttribute state and clone behavior next.
 
 ## 15. Assumptions the next session must know
 

@@ -4,8 +4,10 @@
 #include <string>
 
 #include "CnaDemos/Demo.hpp"
+#include "Microsoft/Xna/Framework/BoundingBox.hpp"
 #include "Microsoft/Xna/Framework/BoundingSphere.hpp"
 #include "Microsoft/Xna/Framework/Design.hpp"
+#include "Microsoft/Xna/Framework/Ray.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
 #include "System/ComponentModel/Design/Serialization/InstanceDescriptor.hpp"
 
@@ -34,6 +36,18 @@ namespace
         ctx.Check(std::any_cast<BoundingSphere>(descriptor.Invoke()) == sphere, "Invoke rebuilds the sphere");
         ctx.Check(std::any_cast<BoundingSphere>(converter.ConvertFrom(described)) == sphere,
                   "ConvertFrom accepts the descriptor too");
+
+        const BoundingBox box(Vector3(-1.0f, -2.0f, -3.0f), Vector3(4.0f, 5.0f, 6.0f));
+        const BoundingBoxConverter boxes;
+        const std::any describedBox =
+            boxes.ConvertTo(std::any(box), System::Type::From<InstanceDescriptor>());
+        const Ray ray(Vector3(1.0f, 2.0f, 3.0f), Vector3::Forward);
+        const RayConverter rays;
+        const std::any describedRay =
+            rays.ConvertTo(std::any(ray), System::Type::From<InstanceDescriptor>());
+        ctx.Check(std::any_cast<BoundingBox>(boxes.ConvertFrom(describedBox)) == box &&
+                      std::any_cast<Ray>(rays.ConvertFrom(describedRay)) == ray,
+                  "non-parsing BoundingBox and Ray converters accept their constructor descriptors");
     }
 }
 
@@ -43,7 +57,8 @@ CNA_DEMOS_CONSOLE(Instance, {
     .description = "Converts a BoundingSphere to an InstanceDescriptor -- its constructor and the arguments Center and "
                    "Radius, as a code-generating designer needs -- and rebuilds the value with Invoke and with "
                    "ConvertFrom.",
-    .apis = {"BoundingSphereConverter::ConvertTo", "BoundingSphereConverter::ConvertFrom",
-             "MathTypeConverter::CanConvertTo"},
+    .apis = {"BoundingSphereConverter::BoundingSphereConverter", "BoundingSphereConverter::ConvertTo",
+             "BoundingSphereConverter::ConvertFrom", "BoundingBoxConverter::ConvertFrom",
+             "RayConverter::ConvertFrom", "MathTypeConverter::CanConvertTo"},
     .tags = {"design", "type-converter", "code-generation", "serialization", "tools"},
 })

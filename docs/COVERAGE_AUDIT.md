@@ -487,6 +487,23 @@ Evidence:`/tmp/checkpoint-685-*` and `/tmp/checkpoint-685-coverage.md`. The curr
 round trip also contradicts stale CNA header/example text; CNA-DEMOS-ISSUE-084 records that
 documentation defect. No screenshot or visual inspection was used.
 
+### Complete Design converter behavior
+
+The three existing text, property-grid and constructor-descriptor workflows now cover every Design
+converter constructor and direction. Point, Vector2, Vector3, Vector4, Quaternion and Color parse
+and emit invariant text; non-parsing Rectangle, BoundingBox, Plane, Ray and Matrix emit exact
+structural text. InstanceDescriptor reconstructs BoundingSphere directly and lets BoundingBox/Ray
+ConvertFrom consume their own constructor descriptions. Named property maps call CreateInstance for
+every supported scalar, vector, geometry and16-element Matrix shape.
+
+Focused686 credits all32 remaining non-field members. String round trips pass9/9, properties
+pass10/10 and instance descriptors pass5/5. SOFTWARE and OPENGLES3 output is byte-identical with
+empty stderr; all three focused SOFTWARE CTests pass. Temporary coverage moves1966->1998/2326 and
+Design reaches51/51 non-field members. Evidence:`/tmp/checkpoint-686-*` and
+`/tmp/checkpoint-686-coverage.md`. MathTypeConverter's two documented protected fields remain
+intentionally uncredited: the workflows prove their externally visible parsing and ordered-property
+effects, while direct protected-storage exposure would add no independent user behavior.
+
 ### Graphics-state lifetime and complete sampler presets
 
 | Members / behavior | Decision and evidence |
