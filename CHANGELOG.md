@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Texture2D ownership checks with cross-device copy assignment, shared partial edits,
+  full-upload copy-on-write detachment and copy assignment that revives a disposed target wrapper.
 - Closed the TextureCube wrapper-lifecycle audit with cross-device copy assignment, shared edits,
   active-binding move transfer and device-owned disposal; the new framebuffer check exposed
   CNA-DEMOS-ISSUE-086, where destroying a secondary EasyGL device blacks out the primary device.

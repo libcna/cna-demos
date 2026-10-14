@@ -1738,14 +1738,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-748 close the
-Texture3D and TextureCube behavior tables. Continue with Texture2D's remaining wrapper lifecycle
-gap in `graphics.texture2d.copy_ownership`: inspect cross-device copy assignment and its distinct
-full-upload copy-on-write behavior against public source. Do not repeat device teardown merely by
-texture dimension: focused748 already exposes common OPENGLES3 CNA-DEMOS-ISSUE-086, and the
-Texture3D diagnostic confirms it independently. Add only observable semantics not already proved by
-the cube/volume workflows, then move to the next public member/behavior family. Build with at most
-three compile jobs and keep focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-749 close the
+Texture3D, TextureCube and Texture2D wrapper-behavior tables. Continue the adjacent render-target
+identity audit: inspect `RenderTarget2D` move construction/assignment and bound-target refusal in
+public source, then add only observable atomicity/binding behavior missing from the existing render
+target workflows. Do not repeat ordinary texture moves or device teardown: cube/volume already
+prove binding transfer and focused748 owns OPENGLES3 CNA-DEMOS-ISSUE-086. Build with at most three
+compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1767,6 +1766,23 @@ members,169/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-748-texture-cube-final-*`, `/tmp/checkpoint-748-failed-gl.png` and
 `/tmp/checkpoint-748-texture3d-gl.png`. The two black diagnostic captures were inspected; no
 physical-GPU or non-OPENGLES3 runtime claim is made. No CNA source was modified.
+
+### Focused749 Texture2D cross-device copy assignment
+
+`graphics.texture2d.copy_ownership` grows from six to ten controls. An occupied primary target is
+copy-assigned from a2x2 secondary-device source, takes its owner/bounds/payload and detaches the old
+primary slot. A partial source edit remains shared. The assigned target's simple full Color upload
+then detaches only that writing wrapper, leaving the source exact. After explicit target disposal,
+copy assignment revives it as a live registered secondary wrapper with the shared source payload.
+
+SOFTWARE and OPENGLES3/Xvfb pass10/10 with empty stderr, and the exact SOFTWARE CTest passes.
+Metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage remains302/329 types,
+2114/2326 members,169/753 fields and2999/3205 C routes. The first `-j3` incremental build succeeded
+but one concurrent content step emitted a transient staging-scavenger race warning; the immediate
+`-j1` retry was clean, and both obeyed the three-job ceiling. Evidence:
+`/tmp/checkpoint-749-texture2d-*` and `/tmp/checkpoint-749-coverage.md`. Primary framebuffer checks
+were programmatic; cross-device data was read back but not drawn. No screenshot or manual visual
+inspection was performed, and no CNA issue was found.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

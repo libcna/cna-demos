@@ -8,6 +8,12 @@
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "Microsoft/Xna/Framework/Graphics/DepthFormat.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsAdapter.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsProfile.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PresentationParameters.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PresentInterval.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SamplerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteFont.hpp"
@@ -71,6 +77,7 @@ namespace
             survivor_->GetData(sourcePixels.data(), static_cast<int>(sourcePixels.size()));
             Context().Check(original.getIsDisposedProperty() && !survivor_->getIsDisposedProperty() && sourcePixels == checker,
                             "disposing one shared wrapper leaves its sibling alive with the same pixels");
+            CheckCrossDeviceAssignment(device);
             Context().Print("Left: shared checker survives source disposal. Right: full upload detached the edited copy.");
         }
 
@@ -99,22 +106,82 @@ namespace
         }
 
     private:
+        void CheckCrossDeviceAssignment(GraphicsDevice& primary)
+        {
+            PresentationParameters parameters;
+            parameters.setBackBufferWidthProperty(32);
+            parameters.setBackBufferHeightProperty(32);
+            parameters.setDepthStencilFormatProperty(DepthFormat::None);
+            parameters.setPresentationIntervalProperty(PresentInterval::Immediate);
+            secondary_ = std::make_unique<GraphicsDevice>(
+                GraphicsAdapter::getDefaultAdapterProperty(), GraphicsProfile::HiDef, parameters);
+
+            Texture2D destination(primary, 1, 1);
+            const Color placeholder = Color::Gold;
+            destination.SetData(&placeholder, 1);
+            primary.getTexturesProperty()(3, &destination);
+
+            Texture2D source(*secondary_, 2, 2);
+            const std::array<Color, 4> initial{
+                Color::Red, Color::Green, Color::Blue, Color::Yellow};
+            source.SetData(initial.data(), 4);
+            destination = source;
+            std::array<Color, 4> observed;
+            observed.fill(Color::Black);
+            destination.GetData(observed.data(), 4);
+            Context().Check(destination.getGraphicsDeviceProperty() == secondary_.get() &&
+                                destination.getBoundsProperty() == Rectangle(0, 0, 2, 2) &&
+                                observed == initial && primary.getTexturesProperty()[3] == nullptr,
+                            "cross-device copy assignment changes ownership and detaches the target's old binding");
+
+            const Rectangle corner(0, 0, 1, 1);
+            const Color orange = Color::Orange;
+            source.SetData(0, &corner, &orange, 0, 1);
+            auto shared = initial;
+            shared[0] = orange;
+            destination.GetData(observed.data(), 4);
+            Context().Check(observed == shared,
+                            "a partial source edit remains shared after cross-device copy assignment");
+
+            const std::array<Color, 4> replacement{
+                Color::White, Color::Cyan, Color::Magenta, Color::Black};
+            destination.SetData(replacement.data(), 4);
+            std::array<Color, 4> sourceObserved;
+            sourceObserved.fill(Color::Black);
+            source.GetData(sourceObserved.data(), 4);
+            destination.GetData(observed.data(), 4);
+            Context().Check(sourceObserved == shared && observed == replacement,
+                            "a full Color upload detaches only the cross-device-assigned writing wrapper");
+
+            destination.Dispose();
+            destination = source;
+            destination.GetData(observed.data(), 4);
+            Context().Check(!destination.getIsDisposedProperty() &&
+                                destination.getGraphicsDeviceProperty() == secondary_.get() &&
+                                observed == shared,
+                            "copy assignment revives a disposed target as a registered shared wrapper");
+        }
+
         std::unique_ptr<SpriteBatch> batch_;
         std::optional<SpriteFont> font_;
         std::unique_ptr<Texture2D> edited_, survivor_;
+        // Keep the second device alive until after all primary-device frames; destroying it here
+        // would deliberately enter CNA-DEMOS-ISSUE-086, which the cube lifecycle demo owns.
+        std::unique_ptr<GraphicsDevice> secondary_;
     };
 }
 
 CNA_DEMOS_GAME(CopyOwnershipDemo, {
     .id = "graphics.texture2d.copy_ownership",
     .title = "Texture copies: shared edits and independent lifetimes",
-    .description = "Copies a texture, edits its shared rectangle, detaches one copy with a full Color upload, "
-                   "and renders both surviving textures after disposing the original wrapper; also checks Name/Tag isolation.",
+    .description = "Copies and copy-assigns textures, contrasts shared rectangle edits with full-upload detachment, "
+                   "and renders both same-device survivors after disposing the original wrapper.",
     .apis = {"Texture2D::Texture2D", "Texture2D::SetData", "Texture2D::GetData", "GraphicsResource::Name",
-             "GraphicsResource::Tag", "GraphicsResource::Dispose", "GraphicsResource::IsDisposed"},
-    .tags = {"texture", "copy", "ownership", "lifetime", "cnaext"},
+             "GraphicsResource::Tag", "GraphicsResource::GraphicsDevice", "GraphicsResource::Dispose",
+             "GraphicsResource::IsDisposed", "GraphicsDevice::Textures"},
+    .tags = {"texture", "copy", "ownership", "lifetime", "device", "cnaext"},
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "CNA C++ value-copy behavior for Color uploads; not every mip/raw-data overload or RenderTarget2D alias.",
+    .restrictions = "CNA C++ value-copy behavior for Color uploads; cross-device data is read back but not drawn. Device teardown is covered by CNA-DEMOS-ISSUE-086.",
 })

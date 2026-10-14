@@ -6561,3 +6561,23 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-748-texture-cube-final-*
 `/tmp/checkpoint-748-failed-gl.png` and `/tmp/checkpoint-748-texture3d-gl.png`. The black diagnostic
 captures were inspected; no physical-GPU or other-renderer claim is made. Next audit Texture2D's
 distinct cross-device copy-assignment/copy-on-write behavior without duplicating device teardown.
+
+## Focused749-Texture2D-cross-device-copy-assignment
+
+`graphics.texture2d.copy_ownership` adds four controls, reaching10 on both renderers. An occupied
+primary target is copy-assigned from a2x2 secondary-device source, takes its owner/bounds/payload
+and detaches the old primary slot. A partial source edit stays shared. The target's simple full
+Color upload then creates an independent replacement without altering the source, preserving
+Texture2D's documented copy-on-write exception to ordinary shared wrapper behavior. Finally, copy
+assignment revives the explicitly disposed target as a live secondary-owned shared wrapper.
+
+SOFTWARE and OPENGLES3/Xvfb pass10/10 with empty stderr, and the exact SOFTWARE CTest passes.
+Metadata remains636/0, validator/checkpoint self-tests pass5/5 and4/4, and generated coverage is
+unchanged at302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes. The
+first `-j3` build succeeded but one concurrent content step emitted a staging-scavenger race
+warning; an immediate serial retry was clean. Both respect the three-job ceiling. Evidence:
+`/tmp/checkpoint-749-texture2d-*` and `/tmp/checkpoint-749-coverage.md`. Existing same-device pixels
+were checked programmatically; cross-device data was read back but not drawn, and no screenshot or
+manual visual inspection was performed. No CNA issue was found. Audit active RenderTarget2D move
+assignment/refusal next; it is a unique render-target identity rule rather than another texture
+wrapper copy.
