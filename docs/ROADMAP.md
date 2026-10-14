@@ -6162,3 +6162,18 @@ fields and2999/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-724-
 hashes are in `HANDOFF.md`. No screenshot, listening test, physical input, service session or
 manual visual-quality inspection was performed. Continue with Texture2D transfer rejection and
 atomicity behavior before moving to another public API family.
+
+## Focused725-Texture2D-transfer-rejection-atomicity
+
+The existing `graphics.texture2d.set_data_rectangle` grows from4 to7 controls without adding a
+catalog ID. It now rejects a partly outside rectangle before changing either an intersecting edge
+texel or any read destination, rejects a 15-element logical window for a valid 4x4 region despite
+physically sufficient caller storage, and rejects both transfer directions after disposal while
+preserving the read sentinel. The existing bound-resource refusal, guarded successful transfer and
+painted-neighbor checks remain intact.
+
+SOFTWARE and OPENGLES3/X11 pass7/7, and the exact SOFTWARE CTest passes. Metadata remains634/0,
+all five validator self-tests pass and coverage remains302/329 types,2114/2326 non-field members,
+167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-725-texture2d-rejections-*`. No
+screenshot or manual visual inspection was performed. Audit the remaining FromStream container and
+malformed-input behavior next before leaving the Texture2D family.

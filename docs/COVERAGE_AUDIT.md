@@ -771,9 +771,9 @@ ContentTypeDescription headers. Source inspection is not runtime coverage of the
 |---|---|
 | Constructors, Width, Height, Bounds, inherited Format / LevelCount | `texture2d.set_data`, `surface_formats`, `mipmaps` and `from_stream` show allocated images, packed formats, mip levels and decoded bounds. Empty C++ handles are normal members in many demos; no separate constructor-per-overload demos. |
 | SetData / GetData, whole image | `set_data` round trips procedurally generated pixels; `get_data_collision` puts readback to use for collision. These show the Color path, not arbitrary element layouts. |
-| Rectangle, mip level, CPU startIndex / elementCount | `set_data_rectangle` checks a stroke and an untouched adjacent pixel; `mipmaps` writes every level and reads level 3. `set_data_rectangle` now uploads from CPU offset 1 and reads into offset 2 with untouched prefix/suffix checks; all four checks pass on SOFTWARE and OPENGLES3. |
+| Rectangle, mip level, CPU startIndex / elementCount | `set_data_rectangle` checks a stroke and an untouched adjacent pixel; `mipmaps` writes every level and reads level 3. `set_data_rectangle` uploads from CPU offset 1 and reads into offset 2 with untouched prefix/suffix checks. Its seven controls now also prove atomic rectangle/count refusal and disposed-resource guards on both transfer directions under SOFTWARE and OPENGLES3. |
 | Packed and floating-point data overloads | `surface_formats` uploads Bgr565/Bgra4444/Bgra5551 and reads Bgr565 back. `floating_formats` round-trips exact Single/Vector2/Vector4 and HalfSingle/HalfVector2/HalfVector4 data, preserves raw HDR/negative four-channel values, rejects an over-wide element without mutation and proves sampled channel expansion plus final Color-buffer clamping. `normalized_formats` round-trips NormalizedByte2/4, Rgba1010102, Rg32, Rgba64 and Alpha8, then distinguishes signed output clamping, wide UNorm precision, two-bit alpha and alpha-only expansion through real sampling. `render_target.hdr_blendable` separately reads HalfVector4 render-target values past one. These coherent format families cover every classic uncompressed packed layout; do not infer arbitrary element compatibility from the collapsed SetData/GetData member count. |
-| Bound-texture update restriction | `set_data_rectangle` explicitly binds the texture and checks InvalidOperationException before unbinding for updates. Invalid rectangles, short buffers and disposed handles remain error-path gaps; add only coherent diagnostics to the relevant example. |
+| Bound-texture update and transfer rejection | `set_data_rectangle` explicitly binds the texture and checks InvalidOperationException before unbinding for updates. One partly outside rectangle refuses SetData without changing its intersecting edge texel and refuses GetData without touching any destination element. A valid 4x4 rectangle with a logical count of15 in physically sufficient storage is likewise atomic in both directions. A separate disposed texture rejects both routes with ObjectDisposedException and preserves the read destination. Null pointers, negative indices and every rectangle permutation are routine variants already pinned by CNA tests; no exception-per-demo series is justified. |
 | FromStream, resize/crop overload | `from_stream` compares original dimensions, aspect-preserving fit and zoom/crop. `save_as_image` also decodes PNG and JPEG round trips. GIF decoding and malformed input are not thereby demonstrated. |
 | SaveAsPng / SaveAsJpeg | `save_as_image` compares lossless and lossy in-memory round trips. Filename convenience overloads need no independent example. save_as_image now decodes both PNG and JPEG requested at 64x32 from a 128x128 source and checks that the source pixels/dimensions remain unchanged. Eight checks pass on both renderers, with labeled thumbnails reviewed; the rendered source and lossless PNG panels are pixel-identical. The JPEG comparison first verifies the decoded shape before indexing its pixels. Exact resampling rules, alpha normalization, other formats and encoder failure paths remain unclaimed. |
 | DDSFromStreamEXT | dds_stream now passes 14 checks per renderer with an original 16x8 DXT1 file and complete five-level chain. A packed offset and seven-byte short reads load the full asset; both tested renderers retain public Dxt1 format and all four lower mips return exact authored blocks. Fit preserves four base stripes at 32x16; centered crop retains middle stripes at 32x32; both are single-level Color and render correctly. Truncated final mip and incomplete declared chain are refused. Inspected screenshot pairs are RGBA-identical. This does not prove physical GPU compressed storage, untested renderer behavior, DXT3/DXT5 alpha paths or the fallback Color-loading branch (both selected Dxt1 here). |
@@ -1902,3 +1902,18 @@ IDs pass on both. Generated runtime-backed coverage is302/329 types,2114/2326 no
 167/753 fields and2999/3205 C routes. Evidence:
 `build/linux-full/reports/checkpoint-724-complete-*`. No screenshot, listening test, physical
 input, service session or manual visual-quality inspection was performed.
+
+### Focused725 Texture2D transfer rejection atomicity
+
+The existing `graphics.texture2d.set_data_rectangle` now covers three coherent failure families in
+addition to its real painting workflow. A partly out-of-bounds rectangle is rejected in both
+directions before either the intersecting edge texel or a sentinel destination changes. A valid
+4x4 region with a logical count of15 is rejected atomically despite physically sufficient caller
+storage. A separate disposed texture rejects SetData and GetData with ObjectDisposedException and
+leaves the read destination intact.
+
+SOFTWARE and OPENGLES3/X11 each pass all7 controls, and the exact SOFTWARE CTest passes. Metadata
+remains634/0, all five validator self-tests pass and generated coverage remains302/329 types,
+2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-725-texture2d-rejections-*`. No screenshot or manual visual inspection was
+performed.

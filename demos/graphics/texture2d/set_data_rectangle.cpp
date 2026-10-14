@@ -16,7 +16,9 @@
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Graphics/TextureCollection.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
+#include "System/ArgumentException.hpp"
 #include "System/InvalidOperationException.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -53,11 +55,99 @@ namespace
                 Context().Print("SetData while set on the device: {}", e.what());
             }
             Context().Check(refused, "SetData on a texture set in GraphicsDevice::Textures throws");
+
+            device.getTexturesProperty()(0, nullptr);
+            const Rectangle validArea(0, 0, Brush, Brush);
+            const Rectangle outside(CanvasSize - 2, CanvasSize - 2, Brush, Brush);
+            const Rectangle edgeProbe(CanvasSize - 1, CanvasSize - 1, 1, 1);
+            const Rectangle originProbe(0, 0, 1, 1);
+            const int pixelCount = Brush * Brush;
+            const std::vector<Color> replacement(pixelCount, Color::Black);
+
+            bool invalidWriteRefused = false;
+            bool invalidReadRefused = false;
+            std::vector<Color> invalidRead(pixelCount + 2, Color::Magenta);
+            try
+            {
+                canvas_->SetData(0, &outside, replacement.data(), 0, pixelCount);
+            }
+            catch (const System::ArgumentException&)
+            {
+                invalidWriteRefused = true;
+            }
+            try
+            {
+                canvas_->GetData(0, &outside, invalidRead.data(), 1, pixelCount);
+            }
+            catch (const System::ArgumentException&)
+            {
+                invalidReadRefused = true;
+            }
+            Color preservedPixel;
+            canvas_->GetData(0, &edgeProbe, &preservedPixel, 0, 1);
+            Context().Check(invalidWriteRefused && invalidReadRefused &&
+                                std::all_of(invalidRead.begin(), invalidRead.end(),
+                                            [](const Color& value) { return value == Color::Magenta; }) &&
+                                preservedPixel == Color::White,
+                            "an out-of-bounds rectangle is refused before changing texture or caller data");
+
+            bool shortWriteRefused = false;
+            bool shortReadRefused = false;
+            std::vector<Color> shortRead(pixelCount + 2, Color::Transparent);
+            try
+            {
+                canvas_->SetData(0, &validArea, replacement.data(), 0, pixelCount - 1);
+            }
+            catch (const System::ArgumentException&)
+            {
+                shortWriteRefused = true;
+            }
+            try
+            {
+                canvas_->GetData(0, &validArea, shortRead.data(), 1, pixelCount - 1);
+            }
+            catch (const System::ArgumentException&)
+            {
+                shortReadRefused = true;
+            }
+            canvas_->GetData(0, &originProbe, &preservedPixel, 0, 1);
+            Context().Check(shortWriteRefused && shortReadRefused &&
+                                std::all_of(shortRead.begin(), shortRead.end(),
+                                            [](const Color& value) { return value == Color::Transparent; }) &&
+                                preservedPixel == Color::White,
+                            "a short logical count is refused before changing texture or caller data");
+
+            Texture2D disposed(device, 1, 1);
+            Color disposedValue = Color::Gold;
+            disposed.SetData(&disposedValue, 1);
+            disposed.Dispose();
+            bool disposedWriteRefused = false;
+            bool disposedReadRefused = false;
+            Color disposedOutput = Color::Magenta;
+            try
+            {
+                disposed.SetData(&disposedValue, 1);
+            }
+            catch (const System::ObjectDisposedException&)
+            {
+                disposedWriteRefused = true;
+            }
+            try
+            {
+                disposed.GetData(&disposedOutput, 1);
+            }
+            catch (const System::ObjectDisposedException&)
+            {
+                disposedReadRefused = true;
+            }
+            Context().Check(disposedWriteRefused && disposedReadRefused &&
+                                disposedOutput == Color::Magenta,
+                            "a disposed texture refuses uploads and readback without changing caller data");
         }
 
         void Update(GameTime& gameTime) override
         {
-            // Textures[0] = null in XNA (see LoadContent).
+            // Keep the texture unbound before every partial update.
             getGraphicsDeviceProperty().getTexturesProperty()(0, nullptr);
 
             // One brush stroke per update at a random (seeded) spot. Only those 16 pixels are sent
@@ -110,8 +200,8 @@ namespace
 CNA_DEMOS_GAME(SetDataRectangleDemo, {
     .id = "graphics.texture2d.set_data_rectangle",
     .title = "Update part of a texture",
-    .description = "Paints 4x4 blocks onto a canvas texture with the rectangle overload of Texture2D::SetData, one "
-                   "block per update, using nonzero CPU array offsets and preserving surrounding elements. "
+    .description = "Paints 4x4 blocks onto a canvas texture with nonzero CPU array offsets, preserves surrounding "
+                   "elements, and atomically rejects invalid rectangles, short logical buffers and disposed resources. "
                    "Unsets the texture from GraphicsDevice::Textures before each update as XNA requires.",
     .apis = {"Texture2D::SetData", "Texture2D::GetData", "GraphicsDevice::Textures", "TextureCollection::Item"},
     .tags = {"texture", "canvas", "paint", "pixels"},

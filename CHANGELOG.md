@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended `graphics.texture2d.set_data_rectangle` with atomic invalid-rectangle, short logical
+  transfer and disposed-resource rejection for both upload and readback.
 - Completed the 634-demo full rebuild/runtime checkpoint: all 647 enabled CTests and both full
   renderer smokes pass with only 36 declared CNA failures and no prior status drift.
 - Added `graphics.texture2d.normalized_formats`, a ten-check packed texture workflow covering exact

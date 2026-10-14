@@ -194,6 +194,15 @@ Temporary coverage is302/329 types,2114/2326 non-field members,167/753 fields an
 routes. Evidence:`/tmp/checkpoint-723-normalized-formats-*`. Pixel readback was programmatic; no
 screenshot or manual visual inspection was performed.
 
+Focused **725-Texture2D-transfer-rejection-atomicity** extends the existing
+`graphics.texture2d.set_data_rectangle` from4 to7 controls. A partly outside rectangle and a short
+logical count are rejected in both transfer directions before texture or caller data changes; a
+separate disposed texture rejects SetData/GetData and preserves its read sentinel. SOFTWARE and
+OPENGLES3/X11 pass7/7, the exact SOFTWARE CTest passes, metadata remains634/0 and all five validator
+self-tests pass. Coverage remains302/329 types,2114/2326 non-field members,167/753 fields and
+2999/3205 C routes. Evidence:`/tmp/checkpoint-725-texture2d-rejections-*`. No screenshot or manual
+visual inspection was performed.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1457,13 +1466,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline. Continue the deeper
-Texture2D behavior audit in `graphics.texture2d.set_data_rectangle`: inspect public invalid-
-rectangle, insufficient logical buffer and disposed-resource contracts, then add only atomicity or
-diagnostic behavior that is not already established by the existing bound-texture rejection and
-guarded source/destination windows. Run both primary renderers and the exact CTest, update coverage
-status without creating a new ID, and push. If source inspection shows no distinct public contract,
-record the disposition and continue to the next highest-value behavior gap.
+HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725 is staged
+after it. Audit `Texture2D::FromStream` container and malformed-input behavior against the current
+`graphics.texture2d.from_stream`, `save_as_image` and DDS demos. Extend an existing ID only for a
+distinct public contract such as deterministic malformed/truncated refusal or a genuinely supported
+classic container; do not duplicate resize/crop or image round-trip evidence. Run both primary
+renderers and the exact CTest, update coverage/status docs, and push. If the audit yields only
+decoder permutations without a useful user-facing distinction, record that disposition and move to
+the next behavior family.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
