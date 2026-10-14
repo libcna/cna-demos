@@ -1361,15 +1361,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused671
-projects the630-demo staged catalog to1779/2326 XNA members and155/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused672
+projects the630-demo staged catalog to1783/2326 XNA members and155/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. Audit
-GraphicsDevice's14 generated gaps next. Start with live status/display and the actual standalone
-MultiSampleMask/ReferenceStencil plus vertex texture/sampler collections; then cover reset/present
-and a separately owned device's construction/disposal lifecycle. `Finalize` is CLR machinery and
-`DeviceLost` is documented never to fire on desktop, so disposition rather than simulate them
-unless a supported real device-loss path is executed.
+GraphicsDevice's10 remaining generated gaps next. Add a focused vertex-stage texture/sampler
+collection workflow with exact identity plus supported-format/refusal behavior; then cover
+reset/present and a separately owned device's construction/disposal lifecycle. `Finalize` is CLR
+machinery and `DeviceLost` is documented never to fire on desktop, so disposition rather than
+simulate them unless a supported real device-loss path is executed.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1378,7 +1378,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused671 built against external `1ad225ae28`. That checkout currently
+the sibling CNA checkout; focused672 built against external `1ad225ae28`. That checkout currently
 has six externally owned documentation/FNA3D paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2982,6 +2982,22 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. The demo does not draw,
 take a screenshot or claim visual behavior. Sibling CNA remained external `1ad225ae28` with six
 dirty documentation/FNA3D paths; no CNA source was edited. Audit GraphicsDevice next.
+
+Focused672 extends three existing IDs and closes four GraphicsDevice members. Presentation grows
+7->9 controls with exact windowed DisplayMode/adapter agreement and Normal device status.
+Multisampling grows5->6: the standalone device mask0 produces one clear level on both renderers and
+restoring -1 is observed, alongside the retained BlendState mask path. Stencil remains4 controls
+but now binds reference1, overrides it to3 through GraphicsDevice in immediate mode and reveals
+stored value3 with exact pixels. Presentation and stencil output are byte-identical; MSAA retains
+only its documented rasterizer-off 2-versus-5-level difference. All stderr is empty and the three
+focused SOFTWARE CTests pass. Temporary coverage moves1779->1783/2326 at630 demos,301/329 types
+and155/753 fields. Evidence:`/tmp/checkpoint-672-*` and `/tmp/checkpoint-672-coverage.md`. Runner
+SHA-256 is `49a765e90afc56b21fab5b63dbf9dd420baec9b8e535e812409058b1a4bb300f`; production library
+hashes remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Pixel validation used
+programmatic readback; no screenshot or visual inspection was used. Sibling CNA remained external
+`1ad225ae28` with six dirty documentation/FNA3D paths; no CNA source was edited. Audit vertex-stage
+device collections next.
 
 ## 15. Assumptions the next session must know
 

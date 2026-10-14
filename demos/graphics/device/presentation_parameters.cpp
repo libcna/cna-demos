@@ -2,7 +2,9 @@
 // GraphicsDevice::PresentationParameters: the settings the back buffer was created with.
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/GraphicsNames.hpp"
+#include "Microsoft/Xna/Framework/Graphics/DisplayMode.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsDeviceStatus.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PresentationParameters.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 
@@ -26,7 +28,8 @@ namespace
     protected:
         void LoadContent() override
         {
-            const PresentationParameters& pp = getGraphicsDeviceProperty().getPresentationParametersProperty();
+            GraphicsDevice& device = getGraphicsDeviceProperty();
+            const PresentationParameters& pp = device.getPresentationParametersProperty();
             const Rectangle bounds = pp.getBoundsProperty();
 
             PresentationParameters defaults;
@@ -55,6 +58,14 @@ namespace
             Context().Check(bounds == Rectangle(0, 0, 640, 360), "Bounds is the back buffer at the origin");
             Context().Check(pp.getDeviceWindowHandleProperty() == getWindowProperty().getHandleProperty(),
                             "DeviceWindowHandle identifies the GameWindow used for presentation");
+            const DisplayMode display = device.getDisplayModeProperty();
+            const DisplayMode& adapterDisplay = device.getAdapterProperty().getCurrentDisplayModeProperty();
+            Context().Check(display.getWidthProperty() == adapterDisplay.getWidthProperty() &&
+                                display.getHeightProperty() == adapterDisplay.getHeightProperty() &&
+                                display.getFormatProperty() == adapterDisplay.getFormatProperty(),
+                            "a windowed device reports its adapter's current display mode");
+            Context().Check(device.getGraphicsDeviceStatusProperty() == GraphicsDeviceStatus::Normal,
+                            "the active desktop device reports Normal status");
 
             // Clone gives an independent copy -- the starting point for GraphicsDevice::Reset with
             // changed settings. Editing it does not touch the device's own parameters.
@@ -71,7 +82,8 @@ CNA_DEMOS_GAME(PresentationParametersDemo, {
     .title = "Presentation parameters",
     .description = "Reads the device's PresentationParameters (back-buffer size and formats, multisampling, "
                    "present interval, orientation, usage) and clones them.",
-    .apis = {"GraphicsDevice::PresentationParameters", "PresentationParameters::PresentationParameters",
+    .apis = {"GraphicsDevice::PresentationParameters", "GraphicsDevice::DisplayMode",
+             "GraphicsDevice::GraphicsDeviceStatus", "PresentationParameters::PresentationParameters",
              "PresentationParameters::DeviceWindowHandle", "PresentationParameters::BackBufferWidth",
              "PresentationParameters::BackBufferHeight", "PresentationParameters::BackBufferFormat",
              "PresentationParameters::DepthStencilFormat", "PresentationParameters::MultiSampleCount",

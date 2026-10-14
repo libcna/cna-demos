@@ -372,6 +372,21 @@ BlendState, DepthStencilState, RasterizerState and SamplerState now have no gene
 The focused SOFTWARE CTest passes as a declared skip; OPENGLES3 stderr is empty. Pixel validation
 used programmatic texture/backbuffer readback; no screenshot or visual inspection was used.
 
+### GraphicsDevice live display and standalone state
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| DisplayMode, GraphicsDeviceStatus | The presentation workflow relates the windowed device's exact mode to its adapter's current mode and requires Normal status on both active desktop renderer paths. |
+| MultiSampleMask | The MSAA workflow keeps its BlendState mask case and adds a separate device-property path. Mask zero produces one clear level on both renderers, then restoring -1 is observed through the public getter. |
+| ReferenceStencil | The stencil workflow deliberately binds reference 1, overrides it to 3 through GraphicsDevice after immediate-mode state binding, then reveals only the stored stencil value 3 with exact pixels. |
+
+Focused672 credits four GraphicsDevice members without a new ID, moving temporary coverage1779->
+1783/2326. Presentation passes9/9 and stencil4/4 with byte-identical renderer output. MSAA passes
+6/6 on both; its device-mask result is one level on both while its established rasterizer-off
+diagnostic remains2 on SOFTWARE and5 on OPENGLES3. All stderr is empty and all three focused
+SOFTWARE CTests pass. Evidence:`/tmp/checkpoint-672-*` and `/tmp/checkpoint-672-coverage.md`.
+Pixels were inspected through programmatic readback; no screenshot or visual inspection was used.
+
 ### ContentManager (including CNA extensions)
 
 | Members / behavior | Decision and evidence |

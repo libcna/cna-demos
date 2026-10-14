@@ -63,7 +63,7 @@ namespace
             // An exact comparison first proves the unwritable high bit survived.
             exactMask_.setStencilEnableProperty(true);
             exactMask_.setStencilFunctionProperty(CompareFunction::Equal);
-            exactMask_.setReferenceStencilProperty(3);
+            exactMask_.setReferenceStencilProperty(1);
             exactMask_.setDepthBufferEnableProperty(false);
 
             // The visible pass compares only bit 0: stored 3 matches reference 1 through mask 1.
@@ -92,14 +92,17 @@ namespace
 
             // Stored 3 is observable with a full-mask comparison. Clear only colour/depth after
             // this probe, retaining the stencil values for the masked comparison below.
-            spriteBatch_->Begin(SpriteSortMode::Deferred, &BlendState::Opaque, nullptr, &exactMask_, nullptr);
+            spriteBatch_->Begin(SpriteSortMode::Immediate, &BlendState::Opaque, nullptr, &exactMask_, nullptr);
+            device.setReferenceStencilProperty(3);
             spriteBatch_->Draw(*pixel_, Rectangle(0, 0, 800, 480), Color::White);
             spriteBatch_->End();
             if (FramesDrawn() == 0)
             {
                 const CnaDemos::BackBufferPixels exact(device);
-                Context().Check(exact.At(400, 240) == Color::White && exact.At(100, 100) == Color::DarkSlateGray,
-                                "StencilWriteMask changes bit 0 while preserving the initial high bit");
+                Context().Check(device.getReferenceStencilProperty() == 3 &&
+                                    exact.At(400, 240) == Color::White &&
+                                    exact.At(100, 100) == Color::DarkSlateGray,
+                                "the device reference overrides bound state and reveals preserved stencil value 3");
             }
             device.Clear(ClearOptions::Target | ClearOptions::DepthBuffer, Color::DarkSlateGray, 1.0f, 0);
 
@@ -141,7 +144,7 @@ CNA_DEMOS_GAME(StencilMaskDemo, {
              "DepthStencilState::StencilFail", "DepthStencilState::StencilDepthBufferFail",
              "DepthStencilState::StencilMask", "DepthStencilState::StencilWriteMask",
              "DepthStencilState::ReferenceStencil", "StencilOperation::Replace", "CompareFunction::Equal",
-             "ClearOptions::Stencil", "DepthFormat::Depth24Stencil8"},
+             "GraphicsDevice::ReferenceStencil", "ClearOptions::Stencil", "DepthFormat::Depth24Stencil8"},
     .tags = {"stencil", "mask", "state", "2d"},
     .needs = CnaDemos::Need::StencilBuffer,
     .frames = 3,

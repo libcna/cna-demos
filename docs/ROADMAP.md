@@ -5284,3 +5284,20 @@ leaving no generated Effect member gap. Evidence:`/tmp/checkpoint-671-*` and
 `/tmp/checkpoint-671-coverage.md`. The workflow does not draw, take a screenshot or claim visual
 behavior. Audit GraphicsDevice's remaining state, reset/present and lifecycle members next;
 disposition its CLR Finalize and platform-specific DeviceLost behavior explicitly.
+
+## Focused672-GraphicsDevice-live-display-and-standalone-state
+
+Three existing IDs close four GraphicsDevice members. Presentation parameters grows7->9 controls:
+the windowed device's mode exactly matches its adapter current mode and active desktop devices
+report Normal status. Multisampling grows5->6 controls while retaining both established mask paths:
+standalone device mask zero resolves to one clear level on both renderers and restoring -1 is
+observed. Stencil masking retains4 controls but now binds reference1 and overrides it to3 through
+GraphicsDevice after immediate state binding; exact pixels reveal only stored value3.
+
+Presentation and stencil outputs are byte-identical. MSAA passes6/6 on both, with the established
+rasterizer-off difference (two SOFTWARE levels, five OPENGLES3 levels) and identical new device-
+mask result (one level). All stderr is empty and all three focused SOFTWARE CTests pass. Temporary
+coverage moves1779->1783/2326 at630 demos,301/329 types and155/753 fields. Evidence:
+`/tmp/checkpoint-672-*` and `/tmp/checkpoint-672-coverage.md`. Pixels were inspected through
+programmatic readback; no screenshot or visual inspection was used. Audit vertex-stage device
+collections next, then reset/present and separately owned construction/disposal lifecycle.
