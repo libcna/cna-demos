@@ -2350,3 +2350,32 @@ validator/checkpoint self-tests pass5/5 and4/4, and generated coverage remains30
 `/tmp/checkpoint-759-shared-resources-*` and `/tmp/checkpoint-759-coverage.md`. This is content
 parsing and lifetime validation without rendering or screenshots; no manual inspection was
 performed.
+
+### Complete disposition of the remaining public C ABI routes
+
+Focused823 compares the641-demo catalog after focused822 with the exact3205 declarations in the
+clean `d23e139de` CNA headers. The difference is127 routes. Every route below now has an explicit
+semantic decision; only executed, meaningful behavior remains credited, so generated coverage stays
+at3078/3205 rather than treating classification as demonstration.
+
+| Class | Count | Exact disposition |
+|---|---:|---|
+| Fixed type-name reflection | 84 | Fourteen headers contain size/copy pairs returning constant canonical names: `audio.h`8, `graphics.h`2, `graphics_device.h`2, `index_resources.h`2, `media.h`8, `media_library.h`26, `runtime_components.h`4, `runtime_graphics_manager.h`4, `sensors.h`8, `storage.h`2, `texture.h`2, `texture_volume.h`4, `vertex_resources.h`4 and `xact.h`8. Representative value and handle workflows already prove exact sizing, zero-capacity queries, atomic short-buffer refusal and unterminated exact copies. Add one to an existing workflow only when its text is material to that concept; independent controls for all pairs would be count inflation. |
+| Explicit test-only hooks | 21 | `core_ext.h` contributes `cna_graphics_renderer_reset_selection_for_tests_ext`. `sensors.h` contributes ten Accelerometer and ten Gyroscope hooks for subsystem-held/connected probes, started-instance registration, forced dispatch, event-watch failure injection, swallowed-exception inspection and disposal cleanup. They support CNA's own unit tests and are not application behavior. |
+| Unsupported placeholder | 1 | `cna_content_manager_create_resource` has no backing embedded-resource store. The current implementation explicitly reports the unsupported operation; `c_api.content.additional_loaders` already documents why a loose-file fallback from an older binary was rejected as evidence. |
+| Manual/platform/service or externally observable production behavior | 21 | These remain real API, but the current automated environment cannot establish their positive behavior honestly. Exact decisions follow below. |
+
+| Header and routes | Decision |
+|---|---|
+| `devices.h`: `cna_url_launcher_open_ext`, `cna_system_tray_create`, `cna_camera_create` | Success crosses into an external application, native tray UI or physical camera/permission flow. Existing demos cover availability plus in-memory/synthetic tray and camera behavior. Keep real creation/opening manual. |
+| `gamer_services.h`: `cna_signed_in_gamer_is_headset`, `cna_guide_delay_notifications` | Headset classification needs a service gamer plus hardware state. Notification delay affects invitations delivered by the online service. Offline calls cannot distinguish the behaviors. |
+| `graphics_device.h`: `cna_graphics_device_set_context_recovery_enabled`, `cna_graphics_device_set_string_marker_ext` | Recovery needs an actual renderer-context loss. A string marker is consumed by an external graphics debugger and has no public readback. Calling either without the observer would prove only that the call returned. |
+| `input.h`: `cna_gamepad_get_state_with_dead_zone` | A disconnected neutral controller produces the same state for None, IndependentAxes and Circular. The pure analog route already proves all three algorithms; the live overload remains a physical-controller check. |
+| `input_devices.h`: the `get_info_at`/name-size/name-copy triples for Sensors and TouchDevices | Bounds and empty-host behavior are already exercised. Positive descriptor evidence requires a host exposing those device classes; no deterministic public fixture exists. |
+| `input_joystick.h`: `cna_joysticks_get_info_at` and its name-size/name-copy pair | Positive enumeration and identity need attached joystick hardware. The existing workflow covers descriptor values, disconnected raw state and deterministic connection events without pretending to enumerate a host device. |
+| `input_haptics.h`: `cna_haptics_get_id_at` and its name-size/name-copy pair | Positive enumeration and identity need an attached haptic device. The existing workflow covers value types and safe closed-device behavior. |
+| `runtime_graphics_manager.h`: `cna_graphics_device_manager_toggle_full_screen` | A real asynchronous fullscreen transition under the available Xvfb desktop timed out and reverted during the earlier audit. Preserve it as platform/manual instead of crediting a setter call without a completed transition. |
+
+This closes the route-inventory decision pass, not CNA behavioral coverage. Hardware success,
+service delivery, platform transitions, external-tool observation and many overload/error/renderer
+combinations remain valid manual or future-environment work.

@@ -1,7 +1,7 @@
 # HANDOFF
 
 **Read this first in every new session.** It is the single place that says what state the
-project is in and what to do next. Update it after every batch. Last updated: 2026-10-14.
+project is in and what to do next. Update it after every batch. Last updated: 2026-10-15.
 
 ## 1. Purpose (one paragraph)
 
@@ -139,6 +139,10 @@ Focused821 adds all18 production renderer selection/fallback routes, brings `cor
 and staged C coverage to3070/3205. Its only gap is the explicitly test-only reset route.
 Focused822 adds eight state/property routes to existing input demos, closes `input_gamepad.h`,
 `input_keyboard.h` and `input_touch.h`, and brings staged C coverage to3078/3205.
+Focused823 classifies every one of the remaining127 public C routes without inflating metadata:
+84 fixed type-name helpers are generic reflection,21 explicit test hooks are implementation test
+plumbing,21 production routes require hardware/service/platform observation or have no public
+readback, and `cna_content_manager_create_resource` is the documented unsupported placeholder.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -1832,8 +1836,13 @@ uncredited. Focused822 adds fixed state text and touch process-property contract
 explicit live gamepad dead-zone capture, stays manual because a disconnected neutral state cannot
 distinguish its three modes. Audit the remaining127 public C routes next. Classify the host sensor,
 touch-device, joystick and haptic descriptor branches as hardware/manual unless a public
-deterministic fixture exists, then continue with production device behavior. Build with at most
-three compile jobs and keep focused evidence current.
+deterministic fixture exists, then continue with production device behavior. Focused823 completed
+that route-by-route disposition: all3205 public routes are now either demonstrated or explicitly
+classified, while the credited count truthfully remains3078. Do not turn fixed reflection,
+test-only hooks, real-device/service paths or calls without public readback into synthetic coverage.
+Return to the deeper XNA behavior audit and select the next observable gap from ROADMAP/COVERAGE_AUDIT;
+the generated member/type inventories are dispositioned, but comprehensive behavioral coverage is
+not claimed. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -3073,6 +3082,26 @@ most three jobs, metadata remains641/0, both tool self-test suites pass, and tem
 capture. Evidence:`/tmp/checkpoint-822-input-*` and `/tmp/checkpoint-822-coverage.md`. No physical
 input, screenshot or manual visual inspection is claimed. Audit the hardware-dependent host
 descriptor branches next, then move to remaining production device routes.
+
+### Focused823-remaining-C-route-dispositions
+
+The exact current catalog/header difference contains127 routes and is now classified without adding
+synthetic API credits. Eighty-four are fixed type-name size/copy helpers whose shared buffer contract
+is already demonstrated on representative value and handle types. Twenty-one are explicit
+`*_for_tests_ext` hooks: the renderer-selection reset plus ten Accelerometer and ten Gyroscope
+dispatcher/backend probes. One route, `cna_content_manager_create_resource`, remains the documented
+unsupported resource-store placeholder. The final21 are real production entry points whose honest
+evidence requires physical devices, host UI, service traffic, an actual context loss/fullscreen
+transition or an external debugger; the graphics string marker also has no public readback.
+
+The per-header inventory and exact route-family decisions are recorded in
+`docs/COVERAGE_AUDIT.md`. This means every one of3205 public C routes has a semantic disposition;
+it does not change the demonstrated total of3078 or claim execution of the remaining127. The
+incremental `-j3` build, metadata validation, both tool self-test suites and regenerated temporary
+coverage pass. Evidence:`/tmp/checkpoint-823-uncovered.txt` and
+`/tmp/checkpoint-823-coverage.md`. No runtime, hardware, service, screenshot or manual visual
+validation is claimed for this documentation-only checkpoint. Continue the deeper XNA public
+member/behavior audit with the next observable gap rather than increasing the route count.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

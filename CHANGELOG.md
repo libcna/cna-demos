@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Classified all 127 remaining public C ABI routes by semantic disposition: fixed reflection,
+  explicit test plumbing, manual/platform/service observation, or the unsupported content-resource
+  placeholder; all 3205 routes now have a decision without inflating demonstrated coverage.
 - Completed the C gamepad, keyboard and touch value/property route audits by adding fixed state
   text, mouse-to-touch emulation and opaque touch-window binding to existing input workflows.
 - Added a standalone C renderer-selection workflow that performs a real absent-backend fallback,

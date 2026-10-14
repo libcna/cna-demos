@@ -7859,3 +7859,20 @@ most three jobs, metadata remains641/0, both tool self-test suites pass, and tem
 capture. Evidence:`/tmp/checkpoint-822-input-*` and `/tmp/checkpoint-822-coverage.md`. No physical
 input, screenshot or manual visual inspection is claimed. Audit the hardware-dependent host
 descriptor branches next, then move to remaining production device routes.
+
+## Focused823-remaining-C-route-dispositions
+
+The exact127-route difference after focused822 is fully dispositioned without manufacturing
+metadata credit. Eighty-four fixed type-name size/copy routes are generic reflection contracts;
+twenty-one `*_for_tests_ext` routes are implementation test plumbing; twenty-one production routes
+need real hardware, service traffic, host UI, context-loss/fullscreen observation or an external
+debugger; and `cna_content_manager_create_resource` is the documented unsupported placeholder.
+The detailed per-header and route-family table is in `docs/COVERAGE_AUDIT.md`.
+
+The incremental build uses at most three jobs; metadata remains641/0, both tool self-test suites
+pass and temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C
+routes. All3205 public routes now have a semantic disposition, while only the3078 actually named by
+demos are credited. Evidence:`/tmp/checkpoint-823-uncovered.txt` and
+`/tmp/checkpoint-823-coverage.md`. This documentation-only checkpoint claims no new runtime,
+hardware, service, screenshot or visual evidence. Continue the deeper XNA public member/behavior
+audit with the next observable gap.
