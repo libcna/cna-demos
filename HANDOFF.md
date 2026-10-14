@@ -1361,12 +1361,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused666
-projects the629-demo staged catalog to1735/2326 XNA members and155/753 fields at299/329 types.
-DepthStencilState, RasterizerState and SamplerState have no remaining generated gap, and disposal is
-covered across all four state classes. Finish the graphics-state family with BlendState
-ColorWriteChannels1/2/3, using actual distinct write masks on active MRT slots in the existing MRT
-workflow rather than property-list assertions.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused667
+projects the629-demo staged catalog to1738/2326 XNA members and155/753 fields at299/329 types.
+BlendState, DepthStencilState, RasterizerState and SamplerState have no remaining generated gap.
+Audit EffectParameter next:17 generated gaps remain across annotations/semantic/structure members
+and typed scalar, array, vector, quaternion, string, Texture3D and TextureCube getters. Extend the
+existing parameter/reflection and shader workflows by coherent value families; classify absent
+shader-reflection features or unsupported getter shapes instead of creating property-list demos.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1375,7 +1376,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused666 built against external `f00150424` with two uncommitted
+the sibling CNA checkout; focused667 built against external `f00150424` with two uncommitted
 handoff/renderer-retirement plan paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2898,6 +2899,22 @@ readback; no screenshot or visual inspection was used. Production library hashes
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`; runner
 `e92e45644daa3b499a1b7b7428930f7d543bfd21ac97a5ce51cf30be545cedcb`. Sibling CNA stayed external
 dirty `f00150424`; no CNA source was edited. Finish the three active MRT masks next.
+
+Focused667 completes the graphics-state family in the existing MRT ID. Before its established
+two-target albedo/normal pass, a four-output probe clears every target to RGBA(10,20,30,40), then
+uses distinct masks on active slots1/2/3. Exact one-pixel target readback shows slot1
+(128,20,30,40), slot2(10,102,30,40) and slot3(10,20,76,40): respectively only red, green and blue
+changed, while every disabled channel retained the clear value. OPENGLES3 passes8/8 with empty
+stderr; SOFTWARE retains the declared custom-effects skip and its focused CTest passes as skipped.
+Temporary coverage moves1735->1738/2326, leaving BlendState, DepthStencilState, RasterizerState and
+SamplerState without generated gaps. Evidence:`/tmp/checkpoint-667-*` and
+`/tmp/checkpoint-667-coverage.md`. Pixel validation used programmatic texture/backbuffer readback;
+no screenshot or visual inspection was used. Production library hashes remain
+`c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`; runner
+`acfd685dad3e65cba99c464ae08fcc52f4dea72114e984ec14f32cff4c12e4bc`. Sibling CNA stayed external
+dirty `f00150424`; no CNA source was edited. Audit EffectParameter's17 remaining value/reflection
+members next.
 
 ## 15. Assumptions the next session must know
 

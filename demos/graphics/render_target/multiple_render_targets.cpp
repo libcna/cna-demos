@@ -11,6 +11,8 @@
 #include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BufferUsage.hpp"
+#include "Microsoft/Xna/Framework/Graphics/BlendState.hpp"
+#include "Microsoft/Xna/Framework/Graphics/ColorWriteChannels.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/IndexBuffer.hpp"
 #include "Microsoft/Xna/Framework/Graphics/IndexElementSize.hpp"
@@ -59,11 +61,15 @@ void main()
 in vec3 vNormal;
 layout(location = 0) out vec4 Albedo;
 layout(location = 1) out vec4 Normal;
+layout(location = 2) out vec4 Material;
+layout(location = 3) out vec4 Emissive;
 uniform vec3 uColor;
 void main()
 {
     Albedo = vec4(uColor, 1.0);
     Normal = vec4(normalize(vNormal) * 0.5 + 0.5, 1.0);
+    Material = vec4(0.2, 0.4, 0.6, 0.8);
+    Emissive = vec4(0.7, 0.5, 0.3, 0.1);
 }
 )";
 
@@ -95,6 +101,11 @@ void main()
             // The targets of one SetRenderTargets call share their size.
             albedo_ = std::make_unique<RenderTarget2D>(device, TargetSize, TargetSize);
             normals_ = std::make_unique<RenderTarget2D>(device, TargetSize, TargetSize);
+            material_ = std::make_unique<RenderTarget2D>(device, TargetSize, TargetSize);
+            emissive_ = std::make_unique<RenderTarget2D>(device, TargetSize, TargetSize);
+            maskedWrites_.setColorWriteChannels1Property(ColorWriteChannels::Red);
+            maskedWrites_.setColorWriteChannels2Property(ColorWriteChannels::Green);
+            maskedWrites_.setColorWriteChannels3Property(ColorWriteChannels::Blue);
             spriteBatch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
 
@@ -111,6 +122,32 @@ void main()
         {
             GraphicsDevice& device = getGraphicsDeviceProperty();
 
+            if (FramesDrawn() == 0)
+            {
+                // Four active outputs isolate the three indexed write masks. The clear colour is
+                // deliberately different in every channel, so a disabled channel is observable.
+                device.SetRenderTargets({RenderTargetBinding(albedo_.get()), RenderTargetBinding(normals_.get()),
+                                         RenderTargetBinding(material_.get()), RenderTargetBinding(emissive_.get())});
+                device.Clear(Color(10, 20, 30, 40));
+                device.setBlendStateProperty(maskedWrites_);
+                device.setDepthStencilStateProperty(DepthStencilState::None);
+                device.setRasterizerStateProperty(RasterizerState::CullCounterClockwise);
+                DrawSphere(device);
+                device.SetRenderTarget(nullptr);
+
+                const Color slot1 = Center(*normals_);
+                const Color slot2 = Center(*material_);
+                const Color slot3 = Center(*emissive_);
+                Context().Print("indexed masks: slot1 {}, slot2 {}, slot3 {}", slot1.ToString(), slot2.ToString(),
+                                slot3.ToString());
+                Context().Check(CnaDemos::Near(slot1, Color(128, 20, 30, 40), 3),
+                                "ColorWriteChannels1 writes red and preserves slot 1 green, blue and alpha");
+                Context().Check(CnaDemos::Near(slot2, Color(10, 102, 30, 40), 3),
+                                "ColorWriteChannels2 writes green and preserves slot 2 red, blue and alpha");
+                Context().Check(CnaDemos::Near(slot3, Color(10, 20, 77, 40), 3),
+                                "ColorWriteChannels3 writes blue and preserves slot 3 red, green and alpha");
+            }
+
             // Bind both targets; Clear clears every bound target.
             const RenderTargetBinding albedoBinding(albedo_.get());
             const RenderTargetBinding normalBinding(normals_.get());
@@ -125,14 +162,10 @@ void main()
                                 "bindings and GetRenderTargets preserve both exact target identities");
             }
             device.Clear(Color::Black);
+            device.setBlendStateProperty(BlendState::Opaque);
             device.setDepthStencilStateProperty(DepthStencilState::None);
             device.setRasterizerStateProperty(RasterizerState::CullCounterClockwise);
-            effect_->Apply();
-            effect_->SetUniformVec3("uColor", 0.9f, 0.55f, 0.1f);
-            device.SetVertexBuffer(vertices_.get());
-            device.setIndicesProperty(indices_.get());
-            device.DrawIndexedPrimitives(PrimitiveType::TriangleList, 0, 0, vertices_->getVertexCountProperty(), 0,
-                                         indices_->getIndexCountProperty() / 3);
+            DrawSphere(device);
 
             // Back to the back buffer: show the two textures the one draw produced.
             device.SetRenderTarget(nullptr);
@@ -162,26 +195,47 @@ void main()
         }
 
     private:
+        void DrawSphere(GraphicsDevice& device)
+        {
+            effect_->Apply();
+            effect_->SetUniformVec3("uColor", 0.9f, 0.55f, 0.1f);
+            device.SetVertexBuffer(vertices_.get());
+            device.setIndicesProperty(indices_.get());
+            device.DrawIndexedPrimitives(PrimitiveType::TriangleList, 0, 0, vertices_->getVertexCountProperty(), 0,
+                                         indices_->getIndexCountProperty() / 3);
+        }
+
+        static Color Center(const RenderTarget2D& target)
+        {
+            const Rectangle centre(TargetSize / 2, TargetSize / 2, 1, 1);
+            Color pixel;
+            target.GetData(0, &centre, &pixel, 0, 1);
+            return pixel;
+        }
+
         std::unique_ptr<ShaderEffect> effect_;
         std::unique_ptr<RenderTarget2D> albedo_;
         std::unique_ptr<RenderTarget2D> normals_;
+        std::unique_ptr<RenderTarget2D> material_;
+        std::unique_ptr<RenderTarget2D> emissive_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
         std::unique_ptr<VertexBuffer> vertices_;
         std::unique_ptr<IndexBuffer> indices_;
+        BlendState maskedWrites_;
     };
 }
 
 CNA_DEMOS_GAME(MultipleRenderTargetsDemo, {
     .id = "graphics.render_target.multiple_render_targets",
     .title = "Multiple render targets",
-    .description = "Binds two RenderTarget2Ds at once with SetRenderTargets and RenderTargetBinding; one draw with "
-                   "a two-output GLSL ShaderEffect writes the sphere's colour to the first and its normals to the "
-                   "second, as a deferred renderer fills its G-buffer.",
+    .description = "Binds four RenderTarget2Ds to prove per-slot write masks, then uses two of them as a G-buffer: "
+                   "one ShaderEffect draw writes the sphere's colour to the first and its normals to the second.",
     .apis = {"GraphicsDevice::SetRenderTargets", "GraphicsDevice::GetRenderTargets", "RenderTargetBinding",
              "RenderTargetBinding::RenderTargetBinding", "RenderTargetBinding::RenderTarget",
              "RenderTarget2D::RenderTarget2D", "GraphicsDevice::SetRenderTarget",
-             "ShaderEffect::ShaderEffect"},
+             "ShaderEffect::ShaderEffect", "BlendState::ColorWriteChannels1",
+             "BlendState::ColorWriteChannels2", "BlendState::ColorWriteChannels3"},
     .tags = {"3d", "render-target", "mrt", "deferred", "g-buffer", "shader"},
     .needs = CnaDemos::Need::ThreeD | CnaDemos::Need::CustomEffects | CnaDemos::Need::MultipleRenderTargets,
     .frames = 3,

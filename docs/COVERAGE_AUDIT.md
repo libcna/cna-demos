@@ -308,6 +308,17 @@ while the multisampling diagnostic intentionally reports SOFTWARE2 versus OPENGL
 for the disabled-rasterizer case. Pixel validation used programmatic readback; no screenshot or
 visual inspection was used.
 
+### Indexed MRT color-write masks
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| BlendState.ColorWriteChannels1/2/3 | `graphics.render_target.multiple_render_targets` now performs a four-output probe before its established two-target G-buffer draw. All targets start at RGBA(10,20,30,40). Slot1 writes only the normal output's red channel, slot2 only the constant material output's green channel and slot3 only the constant emissive output's blue channel; one-pixel texture readback proves every enabled channel changes and every disabled channel preserves the clear value. OPENGLES3 passes8 controls, including the original albedo/normal pixels and binding identities. SOFTWARE retains its declared custom-effects skip. |
+
+Focused667 adds3 member credits without a new ID, moving temporary coverage1735->1738/2326.
+BlendState, DepthStencilState, RasterizerState and SamplerState now have no generated member gap.
+The focused SOFTWARE CTest passes as a declared skip; OPENGLES3 stderr is empty. Pixel validation
+used programmatic texture/backbuffer readback; no screenshot or visual inspection was used.
+
 ### ContentManager (including CNA extensions)
 
 | Members / behavior | Decision and evidence |

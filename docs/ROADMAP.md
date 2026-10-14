@@ -5204,3 +5204,19 @@ RasterizerState has no generated member gap; BlendState retains only ColorWriteC
 Evidence:`/tmp/checkpoint-666-*` and `/tmp/checkpoint-666-coverage.md`. Pixel validation used
 programmatic readback; no screenshot or visual inspection was used. Finish the three active MRT
 write masks next.
+
+## Focused667-indexed-MRT-color-write-masks
+
+The existing MRT ID closes the final three graphics-state members. Before its established two-
+target G-buffer pass, a four-output ShaderEffect probe clears every target to RGBA(10,20,30,40)
+and applies distinct write masks to active slots1/2/3. Exact one-pixel target readback produces
+slot1(128,20,30,40), slot2(10,102,30,40) and slot3(10,20,76,40): only red, green and blue changed
+respectively, while every disabled channel retained the clear value.
+
+OPENGLES3 passes8/8 with empty stderr; SOFTWARE retains its declared custom-effects skip and the
+focused SOFTWARE CTest passes as skipped. Temporary coverage moves1735->1738/2326 at629 demos,
+299/329 types and155/753 fields. BlendState, DepthStencilState, RasterizerState and SamplerState now
+have no generated member gap. Evidence:`/tmp/checkpoint-667-*` and
+`/tmp/checkpoint-667-coverage.md`. Pixel validation used programmatic texture/backbuffer readback;
+no screenshot or visual inspection was used. Audit EffectParameter's remaining typed getters and
+reflection values next.
