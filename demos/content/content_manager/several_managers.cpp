@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Several ContentManagers: shared assets in Game::Content, each level's assets in its own manager.
+#include <exception>
 #include <memory>
 #include <optional>
 #include <string>
@@ -16,6 +17,7 @@
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -45,6 +47,18 @@ namespace
             const Texture2D shared = getContentProperty().Load<Texture2D>("xnb/textures/colour_wheel");
             Context().Check(textures_ - before == 1, "the same file loaded by another manager is a second texture");
             (void)shared;
+
+            ContentManager disposed(&getServicesProperty(), "assets");
+            disposed.Dispose();
+            bool exactDisposedError = false;
+            try { (void)disposed.Load<Texture2D>("textures/checker"); }
+            catch (const System::ObjectDisposedException&) { exactDisposedError = true; }
+            catch (const std::exception& error)
+            {
+                Context().Print("disposed Load<T> threw the wrong exception: {}", error.what());
+            }
+            Context().Check(exactDisposedError,
+                            "Load<T> after Dispose throws ObjectDisposedException (CNA-DEMOS-ISSUE-010)");
         }
 
         void UnloadContent() override { getGraphicsDeviceProperty().ResourceCreated.Remove(created_); }
@@ -88,11 +102,13 @@ namespace
 CNA_DEMOS_GAME(SeveralManagersDemo, {
     .id = "content.content_manager.several_managers",
     .title = "One ContentManager per level",
-    .description = "Keeps shared assets in Game::Content and a level's assets in a second ContentManager with its own "
-                   "RootDirectory, shows that managers cache separately, and unloads the level after a second.",
+    .description = "Keeps shared assets in Game::Content and level assets in a second ContentManager, checks the "
+                   "post-disposal Load contract, and unloads the level after a second.",
     .apis = {"ContentManager::ContentManager", "ContentManager::RootDirectory", "ContentManager::Unload",
              "ContentManager::Dispose", "Game::Content", "Game::Services"},
     .tags = {"content", "level", "unload", "memory", "loading"},
     .automation = CnaDemos::Automation::Automated,
     .assets = {"fonts/pixel_font.cnb", "xnb/textures/colour_wheel.xnb"},
+    .restrictions = "CNA-DEMOS-ISSUE-010: Load<T> after Dispose throws std::runtime_error instead of ObjectDisposedException.",
+    .knownIssue = "CNA-DEMOS-ISSUE-010",
 })

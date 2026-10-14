@@ -87,7 +87,7 @@ deeper XNA member audit through focused716, the Texture2D behavior batches throu
 the SpriteBatch/SpriteFont behavior batches through focused740 plus the ShaderEffect cube batches
 through focused743.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
-Complete744 has36 known-issue demos after focused660 adds
+Complete744 has37 known-issue demos after focused660 adds
 `game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
 `graphics.sprite_batch.begin_end_rules` CNA-DEMOS-ISSUE-082,
 `c_api.gamer.achievement_collection` CNA-DEMOS-ISSUE-077,
@@ -1738,14 +1738,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-752 close the
-texture and render-target wrapper/lifetime table for the two primary renderers. Continue the
-explicit ContentManager lifetime gap recorded in `docs/COVERAGE_AUDIT.md`: inspect the protected
-`Dispose(bool)` dispatch, public/IDisposable idempotence and post-disposal `ReadAsset`/`Load`
-contracts against clean CNA source. Extend an existing coherent custom-manager workflow where
-possible; distinguish the already recorded CNA-DEMOS-ISSUE-010 exception mismatch from new defects
-and do not create a wrapper-only demo merely for metadata. Build with at most three compile jobs
-and keep focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-753 close the
+texture/render-target lifetime work and ContentManager disposal dispatch/refusal audit. Continue
+the next explicit ContentManager gap in the existing `content.custom.cnb_loader`: exercise repeat
+`RegisterCnbLoaderEXT` registration and prove its actual first-registration-wins behavior plus
+factory capture lifetime across manager destruction/recreation. Keep registration names isolated
+because the registry is process-global; make the existing workflow `ownProcess` before retaining a
+local capture, rather than adding a wrapper-only ID. Build with at most three compile jobs and keep
+focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1828,6 +1828,23 @@ incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and
 remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-752-render-target-*` and `/tmp/checkpoint-752-coverage.md`. Pixel checks were
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
+### Focused753 ContentManager disposal dispatch and refusal parity
+
+`content.content_manager.read_asset_ownership` grows from sixteen to eighteen controls. Disposal
+through `IDisposable` reaches a derived protected `Dispose(true)` override, and repeated public
+disposal reaches that hook again while base cleanup stays idempotent. Its exact disposed ReadAsset
+refusal remains passing; seventeen controls pass and only the unchanged default-recorder control
+fails as CNA-DEMOS-ISSUE-011.
+
+`content.content_manager.several_managers` grows from two to three controls and becomes an exact
+CNA-DEMOS-ISSUE-010 reproduction: disposed `Load<T>` throws std::runtime_error instead of
+ObjectDisposedException before any asset read. Both renderers reproduce the two known issues with
+identical assertion texts, and both exact SOFTWARE CTests pass as expected failures. The
+warning-free incremental build uses `-j3`; metadata remains636/0, known-issue demos increase38->39,
+self-tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326 members,169/753 fields and
+2999/3205 C routes. Evidence:`/tmp/checkpoint-753-*` and `/tmp/checkpoint-753-coverage.md`. No
+screenshot or manual inspection was performed, and no new CNA issue was found.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

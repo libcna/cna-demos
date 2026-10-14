@@ -6634,3 +6634,22 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-752-render-target-*` and
 manual visual inspection was performed. No CNA issue was found. The render-target wrapper/lifetime
 table is now semantically closed for the two primary renderers; continue with ContentManager's
 explicitly documented protected Dispose hook and post-disposal behavior.
+
+## Focused753-ContentManager-disposal-dispatch-and-refusal-parity
+
+Two existing workflows close the explicit ContentManager lifetime gap. `read_asset_ownership`
+adds two passing controls, reaching18: `IDisposable::Dispose` dispatches through a derived
+protected `Dispose(true)` hook, and repeated public Dispose reaches that override again while base
+cleanup remains idempotent. Its exact disposed ReadAsset/no-side-effect result remains passing;
+only the unchanged default-recorder control fails as CNA-DEMOS-ISSUE-011.
+
+`several_managers` adds one exact post-disposal Load check, reaching3 and becoming an expected
+CNA-DEMOS-ISSUE-010 failure: CNA throws std::runtime_error instead of ObjectDisposedException
+before loading an asset. SOFTWARE and OPENGLES3/Xvfb reproduce both known issues identically, and
+both exact SOFTWARE CTests pass as expected failures. The warning-free incremental build uses at
+most three jobs; metadata remains636/0, known-issue demos increase38->39, validator/checkpoint
+self-tests pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 non-field
+members,169/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-753-*` and
+`/tmp/checkpoint-753-coverage.md`. No screenshot or manual inspection was performed. Audit the
+existing CNB custom-manager registration workflow next: repeated loader registration currently has
+only source-level first-wins evidence and deserves an executed lifetime/precedence disposition.

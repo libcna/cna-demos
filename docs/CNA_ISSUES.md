@@ -1113,7 +1113,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   hardening (documented in the source); their exception type could still be `ArgumentException`.
 - **Same pattern in `ContentManager`:** `Load<T>` on a disposed manager throws
   `std::runtime_error("ContentManager has been disposed.")`, while XNA (and CNA's own
-  `ReadAsset<T>`) throws `ObjectDisposedException`.
+  `ReadAsset<T>`) throws `ObjectDisposedException`. The focused
+  `content.content_manager.several_managers` control now reproduces this as an exact expected
+  failure before any asset read or resource creation.
 - **Environment:** CNA 0.1.0, GCC 14.2, Linux.
 - **Status:** open (low impact); not reported upstream yet.
 

@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended ContentManager lifetime coverage with protected Dispose-hook dispatch, IDisposable and
+  repeated-disposal semantics, disposed ReadAsset refusal, and runtime evidence for ISSUE-010's
+  wrong disposed-Load exception type.
 - Extended the RenderTarget2D lifetime checks with bound C++ destruction, stale-binding removal,
   explicit back-buffer restoration and same-address replacement rendering.
 - Extended the RenderTargetCube workflow with bound-face disposal refusal, exact binding identity

@@ -92,8 +92,12 @@ namespace
     class PackManager final : public ContentManager
     {
     public:
+        using ContentManager::Dispose;
+
         explicit PackManager(std::vector<std::uint8_t> bytes) : bytes_(std::move(bytes)) {}
         StreamObservations streams;
+        int disposeHookCalls = 0;
+        bool lastDisposing = false;
         Level ReadOwned(const std::string& name, std::function<void(std::shared_ptr<System::IDisposable>)> record)
         {
             return ReadAsset<Level>(name, std::move(record));
@@ -104,6 +108,12 @@ namespace
             if (name != "level") throw ContentLoadException("Unknown packed level");
             ++streams.opened;
             return std::make_unique<PackStream>(bytes_, streams);
+        }
+        void Dispose(bool disposing) override
+        {
+            ++disposeHookCalls;
+            lastDisposing = disposing;
+            ContentManager::Dispose(disposing);
         }
     private:
         std::vector<std::uint8_t> bytes_;
@@ -153,8 +163,14 @@ namespace
         catch (const System::ArgumentNullException&) { emptyRefused = true; }
         ctx.Check(emptyRefused && pack.streams.opened == 2 && owned.size() == 2,
                   "an empty asset name is refused before opening a stream or recording resources");
-        pack.Dispose();
+        System::IDisposable& disposableManager = pack;
+        disposableManager.Dispose();
+        ctx.Check(pack.disposeHookCalls == 1 && pack.lastDisposing,
+                  "IDisposable::Dispose dispatches through the derived protected Dispose(true) hook");
         ctx.Check(!first.tiles->disposed && !second.tiles->disposed, "manager disposal also preserves explicitly delegated resources");
+        pack.Dispose();
+        ctx.Check(pack.disposeHookCalls == 2 && pack.lastDisposing,
+                  "repeated public disposal reaches the override while base cleanup remains idempotent");
         bool disposedRefused = false;
         try { (void)pack.ReadOwned("level", record); }
         catch (const System::ObjectDisposedException&) { disposedRefused = true; }
