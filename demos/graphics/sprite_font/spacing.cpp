@@ -27,15 +27,27 @@ namespace
             spaced_.emplace(*normal_);
 
             // Spacing is added between characters; LineSpacing is the distance between baselines.
+            const float originalSpacing = normal_->getSpacingProperty();
+            const int originalLineSpacing = normal_->getLineSpacingProperty();
             spaced_->setSpacingProperty(6.0f);
-            spaced_->setLineSpacingProperty(normal_->getLineSpacingProperty() * 2);
+            spaced_->setLineSpacingProperty(originalLineSpacing * 2);
 
             const Vector2 a = normal_->MeasureString("ABC");
             const Vector2 b = spaced_->MeasureString("ABC");
             Context().Print("\"ABC\": {} with Spacing 0, {} with Spacing 6", a.ToString(), b.ToString());
-            Context().Check(b.X == a.X + 2.0f * 6.0f, "Spacing is added between characters (2 gaps in \"ABC\")");
+            Context().Check(b.X == a.X + 2.0f * (6.0f - originalSpacing),
+                            "Spacing is added between characters (2 gaps in \"ABC\")");
             Context().Check(spaced_->MeasureString("A\nB").Y == 2.0f * spaced_->getLineSpacingProperty(),
                             "MeasureString uses the new LineSpacing");
+            Context().Check(normal_->getSpacingProperty() == originalSpacing &&
+                                normal_->getLineSpacingProperty() == originalLineSpacing,
+                            "changing a copied font leaves the source spacing independent");
+
+            SpriteFont tight(*normal_);
+            tight.setSpacingProperty(-2.0f);
+            Context().Check(tight.MeasureString("ABC").X == a.X + 2.0f * (-2.0f - originalSpacing) &&
+                                tight.MeasureString("A") == normal_->MeasureString("A"),
+                            "negative spacing tightens only the gaps between glyphs");
         }
 
         void Draw(const GameTime& gameTime) override

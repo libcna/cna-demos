@@ -1341,13 +1341,13 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused635 completes the coherent stock-vertex declaration/value audit and projects
-XNA-member coverage to1437/2326. Audit the existing SpriteFont workflows next. Prefer extensions to
-`graphics.sprite_font.glyph_constructor`, `default_character`, `measure_string` and `spacing` for
-the meaningful pending behaviors already classified in docs/COVERAGE_AUDIT.md: asymmetric/negative
-cropping and table validation, fallback reset/refusal, carriage-return and empty measurement,
-copy-independent negative spacing, and the four public glyph-layout inspection extensions. Keep
-each control with the workflow it teaches and do not create getter- or overload-per-demo variants.
+baseline. Focused635 projects XNA-member coverage to1437/2326, and focused636 closes the pending
+SpriteFont layout/fallback/measurement/copy rows without adding IDs. Audit SpriteBatch lifecycle
+and queued-resource behavior next. Extend an existing coherent SpriteBatch workflow if practical:
+explicit Dispose and event ordering, disposal while a batch is open, calls after disposal, and the
+lifetime of a texture queued before End are the meaningful unresolved cases. Inspect the CNA source
+first, distinguish a retained handle from unsafe caller lifetime, and avoid an overload-per-demo
+series. Build and run SOFTWARE and OPENGLES3, then continue to the next high-value behavior.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2432,6 +2432,18 @@ without changing demo/type/C-route counts. Evidence:`/tmp/checkpoint-635-stock-*
 `/tmp/checkpoint-635-coverage.md`. Pixel readback was programmatic; no screenshot or visual
 inspection was performed. The four explicit CLR interface aliases remain intentionally uncredited
 because the exact C++ property path is executed. Focused635 used clean sibling CNA `09c3108e5`.
+
+Focused636 extends four existing SpriteFont IDs. `glyph_constructor` passes eight controls for exact
+retained atlas/table inspection, asymmetric cropping, signed bearing measurement and programmatic
+pixel placement. `default_character` passes six controls including atomic invalid-fallback refusal
+and optional reset; `measure_string` passes seven including empty and CR/CRLF rules; `spacing`
+passes four including copy independence and negative gap spacing. The whole seven-ID category
+passes under SOFTWARE and OPENGLES3; all four changed SOFTWARE CTests pass. SOFTWARE batch stderr
+is empty. The OPENGLES3 category batch emits six GTK initialization-order warnings while all seven
+results pass; the isolated final glyph run passes too. No screenshot or visual inspection was
+performed. XNA inventory remains1437/2326 because its five SpriteFont members were already credited;
+the four now-direct CNAEXT inspection methods are outside that inventory. Evidence:
+`/tmp/checkpoint-636-sprite-font-*`. Final build is diagnostic-free against clean CNA `09c3108e5`.
 
 ## 15. Assumptions the next session must know
 

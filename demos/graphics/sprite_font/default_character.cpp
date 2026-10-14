@@ -55,6 +55,32 @@ namespace
             fallback_->setDefaultCharacterProperty(u'?');
             Context().Check(fallback_->MeasureString(Text).X == fallback_->MeasureString("Caf? ?ber ? 2026").X,
                             "with DefaultCharacter '?' each missing character takes a '?'");
+
+            bool rejectedMissingFallback = false;
+            try
+            {
+                fallback_->setDefaultCharacterProperty(u'é');
+            }
+            catch (const System::ArgumentException&)
+            {
+                rejectedMissingFallback = true;
+            }
+            Context().Check(rejectedMissingFallback && fallback_->getDefaultCharacterProperty() == u'?',
+                            "a fallback absent from Characters is rejected without changing '?'");
+
+            fallback_->setDefaultCharacterProperty(std::nullopt);
+            bool resetThrows = false;
+            try
+            {
+                static_cast<void>(fallback_->MeasureString(Text));
+            }
+            catch (const System::ArgumentException&)
+            {
+                resetThrows = true;
+            }
+            Context().Check(!fallback_->getDefaultCharacterProperty().has_value() && resetThrows,
+                            "resetting DefaultCharacter restores missing-glyph refusal");
+            fallback_->setDefaultCharacterProperty(u'?');
         }
 
         void Draw(const GameTime& gameTime) override

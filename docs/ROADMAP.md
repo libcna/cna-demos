@@ -4683,3 +4683,19 @@ demo, type or C-route count change. Evidence:`checkpoint-635-stock-*-direct.*` a
 `/tmp/checkpoint-635-coverage.md`. Pixel readback was programmatic; no screenshot or visual
 inspection was performed. The four explicit CLR interface aliases remain intentionally uncredited
 because the same C++ IVertexType property is executed. Audit the existing SpriteFont workflows next.
+
+## Focused636-SpriteFont-layout-fallback-measurement-and-copying
+
+Four existing SpriteFont IDs close the pending coherent behavior rows without adding demos.
+`glyph_constructor` now has eight controls for exact retained atlas/tables, all four public layout
+inspection extensions, asymmetric cropping, signed bearings, unusual measurement and actual
+framebuffer placement. `default_character` has six controls including atomic rejection of an absent
+fallback and reset-to-refusal. `measure_string` has seven controls including empty and CR/CRLF
+rules. `spacing` has four controls for copy independence and negative gap spacing. The complete
+seven-ID SpriteFont category passes under SOFTWARE and OPENGLES3; the four changed SOFTWARE CTests
+pass. SOFTWARE batch stderr is empty; OPENGLES3 emits six existing GTK initialization-order warnings
+while all results pass. Focused pixel checks were programmatic; no screenshot or visual inspection
+was performed. Generated inventory remains1437/2326 because all five XNA SpriteFont members were
+already credited and the four newly direct CNAEXT inspection methods are outside that inventory.
+Evidence:`/tmp/checkpoint-636-sprite-font-*`. Audit SpriteBatch lifecycle and queued-resource
+ownership next.

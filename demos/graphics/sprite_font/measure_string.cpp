@@ -46,6 +46,12 @@ namespace
             Context().Check(lines.Y == one.Y + 2.0f * lineSpacing, "each \\n adds LineSpacing");
             Context().Check(lines.X == font_->MeasureString("AB").X, "the width is the widest line's");
 
+            Context().Check(font_->MeasureString("") == Vector2::Zero,
+                            "an empty string has zero width and height");
+            Context().Check(font_->MeasureString("AB\rCD") == font_->MeasureString("ABCD") &&
+                                font_->MeasureString("\rAB\r\nCD\r") == font_->MeasureString("AB\nCD"),
+                            "carriage returns are ignored, including in a CRLF line break");
+
             // A trailing newline still counts a whole (empty) line.
             const Vector2 trailing = font_->MeasureString("AB\n");
             Context().Print("MeasureString(\"AB\\n\") = {}", trailing.ToString());
