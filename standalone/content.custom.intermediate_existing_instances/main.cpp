@@ -31,6 +31,62 @@ namespace
         int ownerToken = 0; // runtime-only association, deliberately absent from the XML descriptor
         static void DescribeContent(ContentTypeDescriptor<StatSlot>& type) { type.Field("Health", &StatSlot::health); }
     };
+
+    struct MeterSlot : System::Object
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.MeterSlot";
+        const std::string& GetTypeName() const override
+        {
+            static const std::string name(XnaTypeName); return name;
+        }
+        int health = -1;
+        int ownerToken = 505; // constructor/runtime identity, deliberately absent from XML
+    };
+
+    class MeterSlotSerializer final : public ContentTypeSerializer<MeterSlot>
+    {
+    public:
+        MeterSlotSerializer() : ContentTypeSerializer<MeterSlot>("meterSlot") {}
+        bool getCanDeserializeIntoExistingObjectProperty() const override { return true; }
+        [[nodiscard]] int ExistingReads() const noexcept { return existingReads_; }
+
+    protected:
+        void Serialize(IntermediateWriter& output, const TargetCarrier& value,
+                       const ContentSerializerAttribute&) override
+        {
+            output.getXmlProperty().WriteString(std::to_string(value->health));
+        }
+        TargetCarrier Deserialize(IntermediateReader& input, const ContentSerializerAttribute& format,
+                                  TargetCarrier existing) override
+        {
+            const auto text = input.ReadText(format);
+            int health = 0;
+            const auto parsed = std::from_chars(text.data(), text.data() + text.size(), health);
+            if (parsed.ec != std::errc{} || parsed.ptr != text.data() + text.size())
+                throw InvalidContentException("A meter slot requires one complete integer.");
+            if (existing)
+                ++existingReads_;
+            else
+                existing = std::make_shared<MeterSlot>();
+            existing->health = health;
+            return existing;
+        }
+
+    private:
+        int existingReads_ = 0;
+    };
+
+    struct ReadOnlyMeter
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.ReadOnlyMeter";
+        std::shared_ptr<MeterSlot> meter = std::make_shared<MeterSlot>();
+        std::shared_ptr<MeterSlot> constructed = meter;
+        std::shared_ptr<MeterSlot>& getMeterProperty() noexcept { return meter; }
+        static void DescribeContent(ContentTypeDescriptor<ReadOnlyMeter>& type)
+        {
+            type.ReadOnlyProperty("Meter", &ReadOnlyMeter::getMeterProperty);
+        }
+    };
     // A field-specific hint writes the same type as compact text without replacing its global descriptor.
     class CompactStatSerializer final : public ContentTypeSerializer<StatSlot>
     {
@@ -114,6 +170,29 @@ int main()
             std::cout << (condition ? "  check: " : "  CHECK FAILED: ") << message << '\n';
             passed = passed && condition;
         };
+        auto& meterSerializer = dynamic_cast<MeterSlotSerializer&>(
+            IntermediateSerializer::AddTypeSerializer<MeterSlotSerializer>());
+        ReadOnlyMeter authoredMeter;
+        authoredMeter.meter->health = 77;
+        authoredMeter.meter->ownerToken = 999;
+        System::Xml::XmlWriterSettings meterSettings;
+        meterSettings.Indent = true;
+        meterSettings.NewLineChars = "\n";
+        std::unique_ptr<System::Xml::XmlWriter> meterWriter(
+            System::Xml::XmlWriter::CreateToString(meterSettings));
+        IntermediateSerializer::Serialize<ReadOnlyMeter>(*meterWriter, authoredMeter, "");
+        const auto meterXml = meterWriter->ToString();
+        check(meterSerializer.getCanDeserializeIntoExistingObjectProperty() &&
+              meterXml.find("<Meter>77</Meter>") != std::string::npos && meterXml.find("999") == std::string::npos,
+              "the custom meter serializer advertises in-place loading and writes only persisted state");
+        std::unique_ptr<System::Xml::XmlReader> meterReader(
+            System::Xml::XmlReader::CreateFromString(meterXml));
+        const auto loadedMeter = IntermediateSerializer::Deserialize<ReadOnlyMeter>(*meterReader, "");
+        check(loadedMeter.meter && loadedMeter.meter == loadedMeter.constructed &&
+              loadedMeter.meter->health == 77 && loadedMeter.meter->ownerToken == 505 &&
+              meterSerializer.ExistingReads() == 1 && loadedMeter.meter != authoredMeter.meter,
+              "a read-only property passes its constructor instance to the custom serializer and preserves identity");
+
         (void)IntermediateSerializer::AddTypeSerializer<SlotsSerializer>();
         (void)IntermediateSerializer::TypeSerializerFor<StatSlot>();
         (void)IntermediateSerializer::TypeSerializerFor<std::string>(); // known but unrelated Type control

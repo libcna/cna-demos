@@ -7,6 +7,7 @@
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <utility>
 
 #include "Microsoft/Xna/Framework/Content/Pipeline/InvalidContentException.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/Serialization/Intermediate/IntermediateSerializer.hpp"
@@ -33,6 +34,7 @@ namespace
     {
     public:
         DiceRollSerializer() : ContentTypeSerializer<DiceRoll>("dice") {}
+        [[nodiscard]] bool ObjectIsEmpty(const DiceRoll& value) const override { return value.count == 0; }
 
     protected:
         void Serialize(IntermediateWriter& output, const DiceRoll& value,
@@ -127,6 +129,19 @@ namespace
             type.Field("Damage", &Attack::damage);
         }
         bool operator==(const Attack&) const = default;
+    };
+
+    struct OptionalDice
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.OptionalDice";
+        DiceRoll bonus{0, 6};
+        DiceRoll attack{1, 4};
+        static void DescribeContent(ContentTypeDescriptor<OptionalDice>& type)
+        {
+            type.Field("Bonus", &OptionalDice::bonus).Optional();
+            type.Field("Attack", &OptionalDice::attack);
+        }
+        bool operator==(const OptionalDice&) const = default;
     };
 
     struct TypedEnvelope
@@ -251,6 +266,25 @@ int main()
         std::unique_ptr<System::Xml::XmlReader> reader(System::Xml::XmlReader::CreateFromString(xml));
         check(IntermediateSerializer::Deserialize<DiceRoll>(*reader, "") == roll,
               "the custom parser restores both roll count and side count");
+
+        const auto roundTripOptional = [&](const OptionalDice& value) {
+            std::unique_ptr<System::Xml::XmlWriter> optionalWriter(
+                System::Xml::XmlWriter::CreateToString(settings));
+            IntermediateSerializer::Serialize<OptionalDice>(*optionalWriter, value, "");
+            const std::string document = optionalWriter->ToString();
+            std::unique_ptr<System::Xml::XmlReader> optionalReader(
+                System::Xml::XmlReader::CreateFromString(document));
+            return std::pair(document, IntermediateSerializer::Deserialize<OptionalDice>(*optionalReader, ""));
+        };
+        const auto [emptyOptionalXml, emptyOptional] = roundTripOptional(OptionalDice{});
+        check(emptyOptionalXml.find("<Bonus>") == std::string::npos &&
+              emptyOptionalXml.find("<Attack>1d4</Attack>") != std::string::npos && emptyOptional == OptionalDice{},
+              "ObjectIsEmpty omits an empty optional custom value without suppressing required peers");
+        OptionalDice boosted;
+        boosted.bonus = {2, 12};
+        const auto [presentOptionalXml, presentOptional] = roundTripOptional(boosted);
+        check(presentOptionalXml.find("<Bonus>2d12</Bonus>") != std::string::npos && presentOptional == boosted,
+              "a nonempty optional custom value still serializes and round trips");
 
         std::unique_ptr<System::Xml::XmlWriter> attackWriter(System::Xml::XmlWriter::CreateToString(settings));
         IntermediateSerializer::Serialize<Attack>(*attackWriter, Attack{"Spark", roll}, "");

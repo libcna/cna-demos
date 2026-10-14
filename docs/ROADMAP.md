@@ -6974,3 +6974,23 @@ runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields
 routes. Evidence:`/tmp/checkpoint-770-intermediate-scan-*` and `/tmp/checkpoint-770-coverage.md`. No
 rendering, screenshot or manual inspection was used. Continue with ObjectIsEmpty and existing-
 instance serializer contracts before closing this intermediate serializer audit.
+
+## Focused771-intermediate-empty-and-existing-contracts
+
+Two existing tools close the remaining observable ContentTypeSerializer value contracts.
+`intermediate_type_serializer` overrides typed ObjectIsEmpty for zero-count DiceRoll values. An
+optional zero-count bonus is omitted before its rejecting Serialize path, while its required peer
+still emits; a valid2d12 bonus emits and both documents round-trip. The tool reaches18 passes plus
+the two established ISSUE-088/089 failures. `intermediate_existing_instances` adds a custom
+MeterSlot serializer whose CanDeserializeIntoExistingObject is true. Through a described read-only
+property it receives the constructor-created object, preserves its pointer and runtime-only token,
+updates only health and stays independent of the authored instance, reaching12/12 passes.
+
+Both tools have byte-identical SOFTWARE/OPENGLES3 Xvfb output and empty stderr. Their two exact
+SOFTWARE CTests pass, including the expected-failure contract. The warning-free incremental build
+uses at most three jobs; metadata remains636/0, known-issue demos remain41,
+validator/checkpoint self-tests pass5/5 and4/4, and generated runtime coverage remains302/329
+types,2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-771-*` and `/tmp/checkpoint-771-coverage.md`. No rendering, screenshot or manual
+inspection was used. Close the custom serializer identity-property audit, then inspect the custom
+ContentTypeWriter/ContentWriter XNB path.
