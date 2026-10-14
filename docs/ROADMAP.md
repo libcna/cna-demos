@@ -6452,3 +6452,17 @@ four checkpoint-comparison tests pass. Temporary coverage remains302/329 types,2
 members,167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-742-cube-orientation-*` and
 `/tmp/checkpoint-742-coverage.md`. Pixel readback was programmatic; no screenshot or manual visual
 inspection was performed. No CNA issue was found.
+
+## Focused743-ShaderEffect-cube-mip-filtering
+
+The copied cube now has a complete authored chain with Lime mip1 and Blue mip2. Its GLSL sampler
+uses explicit LOD1.25 so unit1 `LinearMipPoint` must choose exact Lime and `PointMipLinear` must
+interpolate the levels to RGB(0,191,64). The resulting eighth aggregate GL control is independent
+of geometry derivatives and preserves all earlier face, orientation and replacement evidence.
+
+OPENGLES3/X11 passes8/8; SOFTWARE retains its explicit CustomEffects skip and exact skipped CTest.
+The incremental build is warning-free, metadata remains636/0, all five validator self-tests and all
+four checkpoint-comparison tests pass. Temporary coverage remains302/329 types,2114/2326 non-field
+members,167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-743-cube-mips-*` and
+`/tmp/checkpoint-743-coverage.md`. Pixel readback was programmatic; no screenshot or manual visual
+inspection was performed. No CNA issue was found.

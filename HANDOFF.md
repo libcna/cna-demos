@@ -411,6 +411,20 @@ non-field members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-742-cube-orientation-*` and `/tmp/checkpoint-742-coverage.md`. Pixel readback was
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
 
+Focused **743-ShaderEffect-cube-mip-filtering** extends the same demo from seven to eight controls.
+The copied4x4 cube now owns a complete authored chain: the base faces retain all earlier selection
+and orientation evidence, mip1 is Lime and mip2 Blue. The shader uses explicit LOD1.25. A unit1
+`LinearMipPoint` sampler returns exact Lime, while `PointMipLinear` returns the predicted3:1
+cross-level blend RGB(0,191,64). This isolates mip selection/interpolation from geometry-derived
+LOD and from the already demonstrated base-level texel filtering.
+
+OPENGLES3/X11 passes8/8; SOFTWARE retains its CustomEffects skip and exact skipped CTest. The
+incremental build is warning-free, metadata remains636/0, all five validator self-tests and all four
+checkpoint-comparison tests pass, and temporary coverage remains302/329 types,2114/2326 non-field
+members,167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-743-cube-mips-*` and
+`/tmp/checkpoint-743-coverage.md`. Pixel readback was programmatic; no screenshot or manual visual
+inspection was performed. No CNA issue was found.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1674,11 +1688,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-742 are
-staged after it. Audit texture mip filtering as the last explicit ShaderEffect texture-sampling gap.
-Use an authored mip chain and a derivative/LOD-controlled observation only if the result is stable
-and meaningful on the available OPENGLES3 path; otherwise record the API/renderer boundary instead
-of adding a fragile picture. Keep this separate from the already complete base-level filter checks.
+HIGHEST PRIORITY: Complete735 is the current full-build/runtime baseline and focused736-743 are
+staged after it, including one new demo. Run a complete636-demo configure/build, all enabled CTests,
+both full smoke suites and generated coverage now. Compare every common status/knownIssue pair and
+normalized stderr with Complete735, archive the new evidence, update all checkpoint counts/hashes,
+and investigate any delta before resuming another behavior family.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

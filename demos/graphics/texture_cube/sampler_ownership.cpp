@@ -6,6 +6,7 @@
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 #include "CNA/ShaderDialectEXT.hpp"
 #include "CnaDemos/Demo.hpp"
@@ -24,6 +25,7 @@
 #include "Microsoft/Xna/Framework/Graphics/SurfaceFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Graphics/TextureCube.hpp"
+#include "Microsoft/Xna/Framework/Graphics/TextureFilter.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -38,8 +40,9 @@ void main() { gl_Position = projection * vec4(aPos, 0.0, 1.0); }
     constexpr const char* Fragment = R"(
 uniform samplerCube retainedCube;
 uniform vec3 direction;
+uniform float lod;
 out vec4 FragColor;
-void main() { FragColor = texture(retainedCube, direction); }
+void main() { FragColor = textureLod(retainedCube, direction, lod); }
 )";
     class CubeSamplerOwnershipDemo final : public CnaDemos::DemoGame
     {
@@ -54,7 +57,7 @@ void main() { FragColor = texture(retainedCube, direction); }
             shader_ = std::make_unique<ShaderEffect>(device, header + Vertex, header + Fragment);
             if (!Context().Check(shader_->IsEffectValid(), "the custom samplerCube program compiles"))
                 throw std::runtime_error(shader_->GetCompileErrorEXT());
-            TextureCube original(device, 4, false, SurfaceFormat::Color);
+            TextureCube original(device, 4, true, SurfaceFormat::Color);
             std::array<Color, 16> facePixels;
             for (std::size_t face = 0; face < colors_.size(); ++face)
             {
@@ -69,6 +72,14 @@ void main() { FragColor = texture(retainedCube, direction); }
             facePixels[12] = Color::Cyan;
             facePixels[15] = Color::Magenta;
             original.SetData(CubeMapFace::PositiveX, facePixels.data(), 16);
+            const std::array<Color, 4> mipOne{Color::Lime, Color::Lime, Color::Lime, Color::Lime};
+            const Color mipTwo = Color::Blue;
+            for (int face = 0; face < 6; ++face)
+            {
+                original.SetData(static_cast<CubeMapFace>(face), 1, nullptr,
+                                 mipOne.data(), 0, 4);
+                original.SetData(static_cast<CubeMapFace>(face), 2, nullptr, &mipTwo, 0, 1);
+            }
             survivor_.emplace(original); // actual CNA shared-resource value copy
             original.setNameProperty("source wrapper");
             survivor_->setNameProperty("surviving wrapper");
@@ -87,10 +98,18 @@ void main() { FragColor = texture(retainedCube, direction); }
             Context().Check(original.getIsDisposedProperty() && !survivor_->getIsDisposedProperty() &&
                             observed == facePixels,
                             "disposing the source wrapper leaves the copied cube alive with the shared edit");
-            replacement_.emplace(device, 4, false, SurfaceFormat::Color);
+            replacement_.emplace(device, 4, true, SurfaceFormat::Color);
             facePixels.fill(Color::White);
+            const std::array<Color, 4> whiteMip{Color::White, Color::White,
+                                                Color::White, Color::White};
             for (int face = 0; face < 6; ++face)
+            {
                 replacement_->SetData(static_cast<CubeMapFace>(face), facePixels.data(), 16);
+                replacement_->SetData(static_cast<CubeMapFace>(face), 1, nullptr,
+                                      whiteMip.data(), 0, 4);
+                replacement_->SetData(static_cast<CubeMapFace>(face), 2, nullptr,
+                                      whiteMip.data(), 0, 1);
+            }
             batch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             white_.emplace(device, 1, 1);
@@ -112,6 +131,7 @@ void main() { FragColor = texture(retainedCube, direction); }
                 shader_->SetUniformInt("retainedCube", 1);
                 const auto& direction = directions[face];
                 shader_->SetUniformVec3("direction", direction.X, direction.Y, direction.Z);
+                shader_->SetUniformFloat("lod", 0.0f);
                 batch_->Begin(SpriteSortMode::Deferred, &BlendState::Opaque, &SamplerState::PointClamp,
                               nullptr, nullptr, shader_.get());
                 batch_->Draw(*white_, Rectangle(80 + (face % 3) * 240, 90 + (face / 3) * 190, 160, 120), Color::White);
@@ -129,9 +149,32 @@ void main() { FragColor = texture(retainedCube, direction); }
                 shader_->SetUniformInt("retainedCube", 1);
                 const Vector3& direction = cornerDirections[corner];
                 shader_->SetUniformVec3("direction", direction.X, direction.Y, direction.Z);
+                shader_->SetUniformFloat("lod", 0.0f);
                 batch_->Begin(SpriteSortMode::Deferred, &BlendState::Opaque, &SamplerState::PointClamp,
                               nullptr, nullptr, shader_.get());
                 batch_->Draw(*white_, Rectangle(80 + corner * 40, 90, 40, 40), Color::White);
+                batch_->End();
+            }
+            // Both draws request LOD1.25 from authored Lime mip1 and Blue mip2. Point mip
+            // selection keeps mip1; linear mip selection blends them with 3:1 weights.
+            SamplerState mipPoint = SamplerState::LinearClamp;
+            mipPoint.setFilterProperty(TextureFilter::LinearMipPoint);
+            SamplerState mipLinear = SamplerState::PointClamp;
+            mipLinear.setFilterProperty(TextureFilter::PointMipLinear);
+            const std::array<std::pair<SamplerState*, Rectangle>, 2> mipSamples{{
+                {&mipPoint, Rectangle(320, 160, 50, 50)},
+                {&mipLinear, Rectangle(380, 160, 50, 50)}}};
+            for (const auto& [sampler, destination] : mipSamples)
+            {
+                device.getSamplerStatesProperty()(1, *sampler);
+                shader_->Apply();
+                shader_->SetTexture(1, *survivor_);
+                shader_->SetUniformInt("retainedCube", 1);
+                shader_->SetUniformVec3("direction", 1.0f, 0.0f, 0.0f);
+                shader_->SetUniformFloat("lod", 1.25f);
+                batch_->Begin(SpriteSortMode::Deferred, &BlendState::Opaque, &SamplerState::PointClamp,
+                              nullptr, nullptr, shader_.get());
+                batch_->Draw(*white_, destination, Color::White);
                 batch_->End();
             }
             // Unit one is already occupied by survivor_. Rebinding a different cube must replace
@@ -140,6 +183,7 @@ void main() { FragColor = texture(retainedCube, direction); }
             shader_->SetTexture(1, *replacement_);
             shader_->SetUniformInt("retainedCube", 1);
             shader_->SetUniformVec3("direction", 1.0f, 0.0f, 0.0f);
+            shader_->SetUniformFloat("lod", 0.0f);
             batch_->Begin(SpriteSortMode::Deferred, &BlendState::Opaque, &SamplerState::PointClamp,
                           nullptr, nullptr, shader_.get());
             batch_->Draw(*white_, Rectangle(190, 160, 50, 50), Color::White);
@@ -166,6 +210,9 @@ void main() { FragColor = texture(retainedCube, direction); }
                         CnaDemos::Near(screen.At(100 + corner * 40, 110), expectedCorners[corner], 1);
                 Context().Check(orientedCorners,
                                 "+X cube directions preserve the uploaded top-left through bottom-right corner order");
+                Context().Check(CnaDemos::Near(screen.At(345, 185), Color::Lime, 1) &&
+                                    CnaDemos::Near(screen.At(405, 185), Color(0, 191, 64), 2),
+                                "point versus linear mip filtering selects mip1 or blends mip1/mip2 at LOD1.25");
                 Context().Check(screen.At(120, 185) == Color::Red && screen.At(215, 185) == Color::White,
                                 "rebinding unit one replaces the red survivor cube with the white cube");
             }
@@ -184,13 +231,15 @@ void main() { FragColor = texture(retainedCube, direction); }
 CNA_DEMOS_GAME(CubeSamplerOwnershipDemo, {
     .id = "graphics.texture_cube.sampler_ownership",
     .title = "Copied cube lifetime and custom sampling",
-    .description = "Edits a shared cube face, disposes the source wrapper, samples all six surviving faces plus the four oriented +X corners, and replaces the cube already bound to the same ShaderEffect unit.",
+    .description = "Samples a copied cube's faces and oriented +X corners, compares point and linear mip selection, then replaces the cube already bound to the same ShaderEffect unit.",
     .apis = {"TextureCube::TextureCube", "TextureCube::SetData", "TextureCube::GetData", "GraphicsResource::Dispose", "GraphicsResource::Name",
-             "ShaderEffect::SetTexture", "ShaderEffect::SetUniformInt", "ShaderEffect::SetUniformVec3"},
+             "ShaderEffect::SetTexture", "ShaderEffect::SetUniformInt", "ShaderEffect::SetUniformVec3",
+             "ShaderEffect::SetUniformFloat", "SamplerState::Filter", "TextureFilter::LinearMipPoint",
+             "TextureFilter::PointMipLinear"},
     .tags = {"texture", "cube", "shader", "ownership", "cnaext"},
     .needs = CnaDemos::Need::ThreeD | CnaDemos::Need::CustomEffects,
     .frames = 1,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "GLSL source compilation and cube sampling required. Base-level faces establish ownership, face selection, +X orientation and binding replacement, not seams, mip filtering or physical GPU readback.",
+    .restrictions = "GLSL source compilation and cube sampling required. Authored Color levels establish face selection, +X orientation, binding replacement and explicit-LOD mip filtering, not cube seams or physical GPU readback.",
 })
