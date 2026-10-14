@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-805 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-806 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1795,9 +1795,10 @@ SoundEffect parent move construction/assignment now cover active-child registry 
 cascade and the replaced wrapper's non-disposing lifetime. The core SoundEffect behavior audit is
 closed aside from explicitly unclaimed acoustic and broader-codec behavior. XACT AudioEngine
 construction/refusal boundaries and CNA's arbitrary-renderer fallback are now covered in the
-existing renderer workflow. Continue with AudioEngine post-dispose method/property behavior, then
-the remaining XACT behavior rows. Do not add isolated getter demos. Build with at most three
-compile jobs and keep focused evidence current.
+existing renderer workflow. AudioEngine disposal now covers its cleared-but-queryable renderer
+list, category/global-variable refusals and safe Update no-op. Continue with the remaining XACT
+bank construction/refusal boundaries, then deeper cue/category behavior. Do not add isolated getter
+demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2768,6 +2769,21 @@ warning-free incremental build uses at most three jobs; metadata and coverage re
 Evidence:`/tmp/checkpoint-805-xact-engine-construction-*`. This establishes construction contracts
 and CNA's fallback, not hardware renderer selection or audible output. Continue with AudioEngine
 post-dispose method/property behavior.
+
+### Focused806-XACT-AudioEngine-post-dispose-contracts
+
+`audio.xact.bank_lifetime` grows from thirteen to seventeen controls. After its existing full
+engine-to-bank/cue disposal cascade, the cleared RendererDetails list remains safely queryable,
+valid GetCategory/GetGlobalVariable/SetGlobalVariable calls throw ObjectDisposedException, and
+Update completes as a safe no-op. The first focused run exposed and corrected a demo assumption
+that renderer records survived disposal; source shows CNA deliberately clears them, so this was a
+demo bug rather than a CNA issue.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass17/17 with byte-identical stdout and empty
+stderr. The `-j3` build succeeded with the already-recorded ISSUE-057 staging-scavenger warning;
+immediate `-j1` repetition was clean. Metadata and coverage remain unchanged.
+Evidence:`/tmp/checkpoint-806-xact-engine-post-dispose-*`. Continue with XACT bank
+construction/refusal boundaries.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

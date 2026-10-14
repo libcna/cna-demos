@@ -2,6 +2,7 @@
 // Bank disposal releases dependent cues; caller-owned C++ wrappers remain separately owned.
 #include <memory>
 #include "CnaDemos/Demo.hpp"
+#include "Microsoft/Xna/Framework/Audio/AudioCategory.hpp"
 #include "Microsoft/Xna/Framework/Audio/AudioEngine.hpp"
 #include "Microsoft/Xna/Framework/Audio/Cue.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
@@ -128,6 +129,28 @@ namespace
         ctx.Check(engineEvents == 1 && dependentWaveEvents == 1 && dependentSoundEvents == 1 &&
                   dependentPreparedEvents == 1 && dependentActiveEvents == 1,
                   "repeated explicit disposal across the released graph is idempotent");
+        bool categoryRefused = false;
+        bool getVariableRefused = false;
+        bool setVariableRefused = false;
+        bool updateCompleted = false;
+        try { static_cast<void>(engine.GetCategory("SFX")); }
+        catch (const System::ObjectDisposedException&) { categoryRefused = true; }
+        try { static_cast<void>(engine.GetGlobalVariable("SpeedOfSound")); }
+        catch (const System::ObjectDisposedException&) { getVariableRefused = true; }
+        try { engine.SetGlobalVariable("SpeedOfSound", 500.0f); }
+        catch (const System::ObjectDisposedException&) { setVariableRefused = true; }
+        try
+        {
+            engine.Update();
+            updateCompleted = true;
+        }
+        catch (...) {}
+        ctx.Check(engine.getRendererDetailsProperty().empty(),
+                  "renderer records are released but remain safely queryable after engine disposal");
+        ctx.Check(categoryRefused, "a disposed engine refuses category lookup");
+        ctx.Check(getVariableRefused && setVariableRefused,
+                  "a disposed engine refuses both global-variable access directions");
+        ctx.Check(updateCompleted, "Update is a safe no-op after engine disposal");
         ctx.Print("Wave-bank and sound-bank ownership differ for a prepared cue; engine disposal releases both. "
                   "Event counts are checked without requiring a global callback order.");
     }
@@ -135,9 +158,11 @@ namespace
 CNA_DEMOS_CONSOLE(BankLifetime, {
     .id = "audio.xact.bank_lifetime",
     .title = "XACT bank and engine disposal",
-    .description = "Contrasts prepared and paused consuming cues during wave-bank, sound-bank and engine disposal, "
-                   "checking post-dispose cue refusal, public ownership state and one Disposing notification per object.",
-    .apis = {"AudioEngine::Dispose", "AudioEngine::IsDisposed", "AudioEngine::Disposing",
+    .description = "Contrasts prepared and paused consuming cues during bank/engine disposal, checking dependent "
+                   "ownership, notifications and AudioEngine method behavior after disposal.",
+    .apis = {"AudioEngine::Dispose", "AudioEngine::IsDisposed", "AudioEngine::Disposing", "AudioEngine::Update",
+             "AudioEngine::RendererDetails", "AudioEngine::GetCategory", "AudioEngine::GetGlobalVariable",
+             "AudioEngine::SetGlobalVariable",
              "WaveBank::Dispose", "WaveBank::IsDisposed", "WaveBank::IsInUse", "WaveBank::Disposing",
              "SoundBank::Dispose", "SoundBank::IsDisposed", "SoundBank::IsInUse", "SoundBank::Disposing",
              "SoundBank::GetCue", "SoundBank::PlayCue", "Cue::IsPrepared", "Cue::IsDisposed", "Cue::IsStopped",

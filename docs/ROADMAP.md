@@ -7576,3 +7576,19 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-805-xact-engine-construction-*` and `/tmp/checkpoint-805-coverage.md`.
 This establishes construction contracts and CNA's fallback, not hardware renderer selection or
 audible output. Continue with AudioEngine post-dispose method/property behavior.
+
+## Focused806-XACT-AudioEngine-post-dispose-contracts
+
+`audio.xact.bank_lifetime` grows from thirteen to seventeen controls. After its existing full
+engine-to-bank/cue disposal cascade, the cleared RendererDetails list remains safely queryable,
+valid GetCategory/GetGlobalVariable/SetGlobalVariable calls throw ObjectDisposedException, and
+Update completes as a safe no-op. The first focused run exposed and corrected a demo assumption
+that renderer records survived disposal; source shows CNA deliberately clears them, so this was a
+demo bug rather than a CNA issue.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass17/17 with byte-identical stdout and empty
+stderr. The `-j3` build succeeded with the already-recorded ISSUE-057 staging-scavenger warning;
+immediate `-j1` repetition was clean. Metadata remains636/0, validator/checkpoint selftests pass5/5
+and4/4, and generated runtime coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-806-xact-engine-post-dispose-*` and
+`/tmp/checkpoint-806-coverage.md`. Continue with XACT bank construction/refusal boundaries.

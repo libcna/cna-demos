@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the XACT bank/engine lifetime workflow with AudioEngine post-dispose renderer state,
+  category/global-variable refusals and the safe Update no-op.
 - Extended the XACT renderer workflow with AudioEngine construction boundaries for empty, missing
   and existing invalid settings files plus CNA's arbitrary-renderer single-backend fallback.
 - Added SoundEffect parent move construction/assignment semantics, including active-child registry
