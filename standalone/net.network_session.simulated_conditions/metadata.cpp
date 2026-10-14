@@ -6,10 +6,12 @@ CNA_DEMOS_STANDALONE({
     .title = "Simulated latency and packet loss",
     .description = "A second process sends finite unreliable and reliable bursts through a baseline, "
                    "200 ms of SimulatedLatency, and a complete SimulatedPacketLoss outage followed by recovery: "
-                   "exact delivery counts distinguish dropped packets from delayed ones.",
+                   "exact delivery counts distinguish dropped packets from delayed ones while the host samples its "
+                   "measured sent and received bandwidth.",
     .apis = {"NetworkSession::SimulatedLatency", "NetworkSession::SimulatedPacketLoss", "SendDataOptions::None",
              "SendDataOptions::Reliable", "LocalNetworkGamer::SendData", "LocalNetworkGamer::ReceiveData",
-             "LocalNetworkGamer::IsDataAvailable", "PacketWriter::PacketWriter", "PacketReader::PacketReader"},
+             "LocalNetworkGamer::IsDataAvailable", "PacketWriter::PacketWriter", "PacketReader::PacketReader",
+             "NetworkSession::BytesPerSecondSent", "NetworkSession::BytesPerSecondReceived"},
     .tags = {"net", "multiplayer", "system-link", "latency", "packet-loss", "testing"},
     .needs = CnaDemos::Need::Network,
     .assets = {"fonts/pixel_font.cnb"},

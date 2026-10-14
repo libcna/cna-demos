@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused696
-projects the632-demo staged catalog to2048/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused697
+projects the632-demo staged catalog to2050/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1383,8 +1383,9 @@ as CLR Finalize, an event with no CNA production raiser and the removed-device e
 AvailableNetworkSession public/private capacity and sparse advertised properties are now covered,
 as is shared search-collection disposal and copied-listing refusal. Remote NetworkGamer
 departure/history/session/round-trip behavior is also covered by the same real two-process leave.
-Continue the Net audit with session bandwidth counters in an existing packet workflow, then
-ready-state reset in the existing game-flow workflow. Continue with the next high-value behavior family, rebuilding and running both renderers where
+The simulated-conditions packet workflow now samples positive sent/received session bandwidth.
+Continue the Net audit with ready-state reset in the existing game-flow workflow, then disposition
+the remaining ordinary versus service/voice/CLR Net inventory. Continue with the next high-value behavior family, rebuilding and running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
@@ -1392,7 +1393,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused696 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused697 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3452,6 +3453,23 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 evidence; no second physical machine, screenshot or visual result is claimed. Sibling CNA remained
 clean external `f698d0f548`; no CNA source was edited. Continue with session bandwidth counters in
 an existing packet workflow next.
+
+Focused697 extends the existing two-process simulated-conditions workflow with the two session
+traffic-rate properties. After every host Update it retains the maximum published sent and received
+rates across the baseline, delayed and outage/recovery phases; both must become positive while real
+packet bursts cross the ENet connection. No exact byte count or scheduler-dependent rate is assumed.
+
+SOFTWARE and OPENGLES3/X11 both pass the new bandwidth control and the four existing transport
+controls; only the established reliable-outage check fails for CNA-DEMOS-ISSUE-030. Both stderr
+logs are empty and the focused SOFTWARE CTest passes its expected-failure contract. Metadata is
+632/0, the validator self-tests pass and temporary coverage moves2048->2050/2326 at632 demos,
+301/329 types and156/753 fields; Net moves83->85/127. Evidence:`/tmp/checkpoint-697-bandwidth-*`
+and `/tmp/checkpoint-697-coverage.md`. Runner SHA-256 is
+`714eb2bfa1766b84f8416fc8f21fe1d860b407529b72fadb22eea33259db8d2d`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. This is Linux loopback
+traffic; no WAN throughput, screenshot or visual result is claimed. Sibling CNA remained clean
+external `f698d0f548`; no CNA source was edited. Continue with ready-state reset next.
 
 ## 15. Assumptions the next session must know
 

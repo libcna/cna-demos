@@ -5691,3 +5691,18 @@ coverage moves2044->2048/2326 at632 demos,301/329 types and156/753 fields; Net m
 Evidence:`/tmp/checkpoint-696-find-*` and `/tmp/checkpoint-696-coverage.md`. This is Linux local UDP
 evidence; no second physical machine, screenshot or visual result is claimed. Continue with session
 bandwidth counters in an existing packet workflow next.
+
+## Focused697-session-traffic-rates
+
+The two-process simulated-conditions workflow now samples NetworkSession's sent and received rate
+after every host Update and retains each maximum across real baseline, delayed and outage/recovery
+packet phases. Both published rates must become positive; no exact byte count or timing-dependent
+throughput is assumed.
+
+SOFTWARE and OPENGLES3/X11 pass the new rate control and all four existing positive transport
+controls; only the established reliable-outage ISSUE-030 check fails. Both stderr logs are empty and
+the focused SOFTWARE CTest passes its expected-failure contract. Metadata validation and validator
+self-tests pass. Temporary coverage moves2048->2050/2326 at632 demos,301/329 types and156/753
+fields; Net moves83->85/127. Evidence:`/tmp/checkpoint-697-bandwidth-*` and
+`/tmp/checkpoint-697-coverage.md`. This is Linux loopback traffic; no WAN throughput, screenshot or
+visual result is claimed. Continue with ready-state reset next.

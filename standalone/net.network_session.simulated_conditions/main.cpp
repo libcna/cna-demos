@@ -235,6 +235,8 @@ namespace
                 return;
             }
             session_->Update();
+            maxSentRate_ = std::max(maxSentRate_, session_->getBytesPerSecondSentProperty());
+            maxReceivedRate_ = std::max(maxReceivedRate_, session_->getBytesPerSecondReceivedProperty());
             Receive();
             if (phase_ < 0 && session_->getRemoteGamersProperty().getCountProperty() > 0)
                 BeginPhase(0);
@@ -326,6 +328,8 @@ namespace
                                       [](double ms) { return ms >= Latency - 1.0; }),
                           "every delayed packet waits at least the configured 200 ms");
             report_.Check(phases_[2].received[0].empty(), "the complete outage drops all unreliable packets");
+            report_.Check(maxSentRate_ > 0 && maxReceivedRate_ > 0,
+                          "the host measures positive sent and received bandwidth during the exchange");
             report_.Check(phases_[2].received[1].size() == BurstPackets,
                           "reliable packets are never lost (CNA-DEMOS-ISSUE-030: CNA drops them too)");
         }
@@ -414,6 +418,8 @@ namespace
         std::optional<Clock::time_point> settling_;
         std::optional<Clock::time_point> recovering_;
         std::array<Phase, 3> phases_;
+        int maxSentRate_ = 0;
+        int maxReceivedRate_ = 0;
         // The sender's side.
         PacketWriter writer_;
         int sequence_ = 0;
