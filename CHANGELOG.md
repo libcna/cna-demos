@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the CNB read-limit audit with aligned-chunk publication and symmetric writer/reader
+  checks for chunk-count, chunk-alignment, CMET string and XREF row-count budgets.
 - Extended the XNB shared-resource graph with supplied ReadAsset recorder coverage, exposing
   CNA-DEMOS-ISSUE-087: disposable shared-table values bypass disposal recording.
 - Extended ReadAsset ownership coverage with repeated-identity callback delivery and caller

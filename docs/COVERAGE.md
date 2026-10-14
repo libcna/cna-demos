@@ -185,12 +185,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbDocument::RequireAsset` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::RequireSingle` -- content.custom.cnb_loader
-- `CNA::Content::Cnb::CnbWriter::AddChunk` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbWriter::AddChunk` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::Build` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetCompression` -- content.custom.cnb_read_limits
-- `CNA::Content::Cnb::CnbWriter::SetExternalReferences` -- content.custom.cnb_external_references, content.custom.multi_artifact_publication, content.custom.nested_builds
+- `CNA::Content::Cnb::CnbWriter::SetExternalReferences` -- content.custom.cnb_external_references, content.custom.cnb_read_limits, content.custom.multi_artifact_publication, content.custom.nested_builds
 - `CNA::Content::Cnb::CnbWriter::SetLimits` -- content.custom.cnb_read_limits
-- `CNA::Content::Cnb::CnbWriter::SetMetadata` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbWriter::SetMetadata` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::DecodeTexture2DFromCnb` -- content.custom.source_root_capabilities
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits

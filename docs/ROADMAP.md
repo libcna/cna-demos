@@ -6755,3 +6755,22 @@ increase39->40, validator/checkpoint self-tests pass5/5 and4/4, and generated co
 screenshot or manual inspection was used. Audit the existing `content.custom.cnb_read_limits`
 workflow next for meaningful malformed container-table boundaries: chunk-count/alignment and
 CMET/XREF-specific limits before lower-value accessor repetition.
+
+## Focused760-CNB-public-read-limit-coverage
+
+`content.custom.cnb_read_limits` adds five controls, reaching16. The valid document now publishes
+a NOTE chunk at an observed64-byte-aligned offset. Writer and reader symmetrically refuse chunk
+count and alignment limits below that document, a CMET canonical type name above the string limit
+and a two-row XREF table above the array-element limit. Together with the established file,
+per-chunk, aggregate, schema and compressed-expansion checks, every public `CnbReadLimits` field is
+now exercised through meaningful data rather than accessor repetition.
+
+SOFTWARE and OPENGLES3/Xvfb pass16/16, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, known-issue demos remain40,
+validator/checkpoint self-tests pass5/5 and4/4, and generated coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-760-cnb-limits-*` and `/tmp/checkpoint-760-coverage.md`. No rendering, screenshot
+or manual inspection was used. No CNA issue was found. Continue the existing custom CNB loader at
+the file-identity boundary: missing/colliding canonical metadata and exact RequireAsset type
+mismatch before deciding whether any physical table/header case adds demo-level value beyond CNA's
+unit hardening suite.

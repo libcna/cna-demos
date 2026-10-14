@@ -33,7 +33,7 @@ namespace
         CnbWriter writer(CnbAssetTypeIdFromName(TileType), 1);
         writer.SetMetadata(TileType, "tile_layer");
         writer.AddChunk(GridChunk, grid.Take(), CnbChunkFlags::Mandatory);
-        writer.AddChunk(NoteChunk, note.Take(), CnbChunkFlags::None);
+        writer.AddChunk(NoteChunk, note.Take(), CnbChunkFlags::None, 64u);
         const auto image = writer.Build();
         const auto document = CnbDocument::Parse(image, "8x8 tile layer");
         auto input = document.OpenChunk(document.RequireSingle(GridChunk));
@@ -43,6 +43,9 @@ namespace
         input.RequireExhausted();
         ctx.Check(width == 8 && height == 8 && count == 64 && std::equal(decoded.begin(), decoded.end(), tiles.begin(), tiles.end()),
                   "the bounded grid reader recovers the 8x8 checker tile layer");
+        const auto& alignedNote = document.ChunkAt(document.RequireSingle(NoteChunk));
+        ctx.Check(alignedNote.alignment == 64u && alignedNote.offset % alignedNote.alignment == 0u,
+                  "the writer publishes and satisfies the note chunk's 64-byte alignment");
         std::uint64_t total = 0, largest = 0;
         for (std::size_t i = 0; i < document.ChunkCount(); ++i)
         {
@@ -55,13 +58,15 @@ namespace
 
         // Each run changes one bound, keeping allocations tiny. The same complete file is
         // accepted above, so refusal below cannot be attributed to a malformed fixture.
-        for (int budget = 0; budget < 3; ++budget)
+        for (int budget = 0; budget < 5; ++budget)
         {
             auto limits = DefaultCnbReadLimits();
             const char* label;
             if (budget == 0) { limits.maxFileSize = image.size() - 1; label = "file byte budget"; }
             else if (budget == 1) { limits.maxChunkSize = largest - 1; label = "single-chunk byte budget"; }
-            else { limits.maxTotalUncompressedSize = total - 1; label = "aggregate logical-byte budget"; }
+            else if (budget == 2) { limits.maxTotalUncompressedSize = total - 1; label = "aggregate logical-byte budget"; }
+            else if (budget == 3) { limits.maxChunkCount = document.ChunkCount() - 1; label = "table entry budget"; }
+            else { limits.maxChunkAlignment = 32; label = "chunk alignment budget"; }
             bool readerRejected = false, writerRejected = false;
             try { (void)CnbDocument::Parse(image, label, limits); }
             catch (const ContentLoadException& error) { readerRejected = true; ctx.Print("Reader: {}", error.what()); }
@@ -72,6 +77,38 @@ namespace
         }
         writer.SetLimits(DefaultCnbReadLimits());
         ctx.Check(writer.Build() == image, "restoring the writer's limits preserves the accepted image");
+
+        // CMET strings and the XREF row count are container data, so these two schema-looking
+        // limits must be symmetric writer/reader guards here as well as inside game chunks.
+        auto metadataLimits = DefaultCnbReadLimits();
+        metadataLimits.maxStringBytes = std::string(TileType).size() - 1;
+        bool metadataReader = false, metadataWriter = false;
+        try { (void)CnbDocument::Parse(image, "metadata string budget", metadataLimits); }
+        catch (const ContentLoadException& error) { metadataReader = true; ctx.Print("Reader: {}", error.what()); }
+        writer.SetLimits(metadataLimits);
+        try { (void)writer.Build(); }
+        catch (const ContentLoadException& error) { metadataWriter = true; ctx.Print("Writer: {}", error.what()); }
+        ctx.Check(metadataReader && metadataWriter,
+                  "the CMET type name is bounded symmetrically by the container string limit");
+        writer.SetLimits(DefaultCnbReadLimits());
+
+        CnbWriter referenced(CnbAssetTypeIdFromName(TileType), 1);
+        referenced.SetMetadata(TileType, "referenced_layer");
+        CnbExternalReference atlas; atlas.logicalName = "tiles/atlas";
+        CnbExternalReference palette; palette.logicalName = "tiles/palette";
+        referenced.SetExternalReferences({atlas, palette});
+        referenced.AddChunk(GridChunk, std::vector<std::uint8_t>{1}, CnbChunkFlags::Mandatory);
+        const auto referencedImage = referenced.Build();
+        auto referenceLimits = DefaultCnbReadLimits();
+        referenceLimits.maxArrayElementCount = 1;
+        bool referencesReader = false, referencesWriter = false;
+        try { (void)CnbDocument::Parse(referencedImage, "external-reference count budget", referenceLimits); }
+        catch (const ContentLoadException& error) { referencesReader = true; ctx.Print("Reader: {}", error.what()); }
+        referenced.SetLimits(referenceLimits);
+        try { (void)referenced.Build(); }
+        catch (const ContentLoadException& error) { referencesWriter = true; ctx.Print("Writer: {}", error.what()); }
+        ctx.Check(referencesReader && referencesWriter,
+                  "the XREF row count is bounded symmetrically by the container array limit");
 
         // A custom payload is opaque to the container. Parse accepts it; the bounded cursor
         // enforces schema lengths before a game reserves an array or copies a string.
@@ -155,9 +192,11 @@ namespace
 CNA_DEMOS_CONSOLE(ReadLimits, {
     .id = "content.custom.cnb_read_limits",
     .title = "CNB container budgets and schema limits (CNAEXT)",
-    .description = "Inspects a tiny tile-layer container and checks file, per-chunk and aggregate byte budgets on "
-                   "both writer and reader, enforces schema array/string limits, and checks compressed expansion when Zstandard is available.",
+    .description = "Inspects an aligned tile-layer container and checks every public file/table/metadata budget on "
+                   "both writer and reader, plus schema limits and compressed expansion when Zstandard is available.",
     .apis = {"CNA::Content::Cnb::CnbWriter::SetLimits", "CNA::Content::Cnb::CnbWriter::Build",
+             "CNA::Content::Cnb::CnbWriter::SetMetadata", "CNA::Content::Cnb::CnbWriter::SetExternalReferences",
+             "CNA::Content::Cnb::CnbWriter::AddChunk",
              "CNA::Content::Cnb::CnbWriter::SetCompression", "CNA::Content::Cnb::IsCnbCompressionSupported",
              "CNA::Content::Cnb::CnbDocument::ChunkData",
              "CNA::Content::Cnb::CnbDocument::Parse", "CNA::Content::Cnb::CnbDocument::ChunkCount",
@@ -165,5 +204,5 @@ CNA_DEMOS_CONSOLE(ReadLimits, {
              "CNA::Content::Cnb::CnbDocument::HasMagic", "CNA::Content::Cnb::CnbByteReader::ReadCount",
              "CNA::Content::Cnb::CnbByteReader::ReadString", "CNA::Content::Cnb::DefaultCnbReadLimits"},
     .tags = {"content", "custom", "cnb", "limits", "compression", "validation", "cnaext"},
-    .restrictions = "Small in-memory fixtures; compressed checks require runtime Zstandard support. No timing, allocation profiling or every-limit claim.",
+    .restrictions = "Small in-memory fixtures; compressed checks require runtime Zstandard support. Structural byte mutation is limited to checksum corruption; no timing or allocation profiling.",
 })

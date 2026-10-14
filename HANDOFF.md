@@ -1738,14 +1738,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-759 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-760 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries, with new ISSUE-087 for omitted disposable shared-table values. Continue with
-the existing `content.custom.cnb_read_limits` workflow: audit meaningful malformed container-table
-boundaries, prioritizing chunk-count/alignment and CMET/XREF-specific limits over accessor-only
-variants. Use public CnbWriter/CnbDocument APIs where they can author the case; mutate private
-bytes only for malformed structures no writer can emit. Do not add a narrow guard-only ID. Build
-with at most three compile jobs and keep focused evidence current.
+the existing `content.custom.cnb_loader` workflow at the custom-file identity boundary: exercise
+the writer's missing/colliding canonical-metadata refusals and `CnbDocument::RequireAsset` type
+mismatch without adding a guard-only ID. Then disposition the remaining physical CNB table/header
+hardening cases against CNA's unit coverage, adding only a compact diagnostic behavior that teaches
+something distinct. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1933,6 +1933,23 @@ warning-free incremental build uses `-j3`; metadata remains636/0, known-issue de
 tool self-tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326 members,169/753 fields
 and2999/3205 C routes. Evidence:`/tmp/checkpoint-759-shared-resources-*` and
 `/tmp/checkpoint-759-coverage.md`. No rendering, screenshot or manual inspection was used.
+
+### Focused760 CNB public read-limit coverage
+
+`content.custom.cnb_read_limits` grows from eleven to sixteen controls. Its NOTE chunk now requests
+64-byte alignment and the parsed entry proves both the declared alignment and physical offset.
+Alongside the existing file, per-chunk and aggregate byte limits, writer and reader now
+symmetrically refuse a two-entry table under a one-entry chunk limit, the aligned NOTE under a
+32-byte alignment limit, the CMET canonical type name under a shorter string limit and a two-row
+XREF table under a one-element array limit. These cases exercise all seven public `CnbReadLimits`
+fields with real container data while retaining separate schema-level ReadString/ReadCount checks.
+
+SOFTWARE and OPENGLES3/Xvfb pass16/16, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses `-j3`; metadata remains636/0, known-issue demos remain40, tool self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 members,169/753 fields and
+2999/3205 C routes. Evidence:`/tmp/checkpoint-760-cnb-limits-*` and
+`/tmp/checkpoint-760-coverage.md`. No rendering, screenshot or manual inspection was used, and no
+CNA issue was found.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
