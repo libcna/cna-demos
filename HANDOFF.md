@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-774 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-775 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1752,8 +1752,9 @@ its exact `TargetType` and `XmlTypeName` to the looked-up instance and emitted X
 writer now covers identity/lifecycle, Windows Phone/HiDef context, compression refusal, explicit
 typed/raw nested writer dispatch, dynamic reference dispatch, shared-resource identity and external
 path normalization. Audit the remaining custom writer null/refusal contracts and ContentCompiler
-inspection/freeze behavior against existing demos before adding controls. Do not add isolated
-getter demos. Build with at most three compile jobs and keep focused evidence current.
+inspection/freeze behavior against existing demos before adding controls. Ordinary, shared and
+external nulls now round-trip too; raw-null and missing/foreign writer refusals are next. Do not add
+isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2228,6 +2229,24 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-774-xnb-graph-*` and
 `/tmp/checkpoint-774-coverage.md`. No rendering, screenshot or manual inspection was used. Audit
 the remaining custom writer null/refusal contracts and ContentCompiler inspection/freeze behavior
 against existing demos before adding more controls.
+
+### Focused775 custom XNB null references
+
+The edited original profile now replaces its derived badge with an explicit XML null and its
+portrait with an empty string. The same ProfileWriter sends that state through WriteObject, two
+WriteSharedResource calls and WriteExternalReference. After cache-preserving publication and an
+explicit Unload, the fresh runtime profile has no inline badge, neither shared fixup ran, and its
+external path is empty, while the edited health plus typed/raw values remain exact.
+
+SOFTWARE and OPENGLES3/Xvfb each pass16/17 controls and fail only established ISSUE-090; stdout and
+the intentional compiler/debug diagnostics match after normalizing the private temporary path. The
+exact expected-failure SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, known-issue demos remain42, validator/checkpoint self-tests pass5/5
+and4/4, and generated runtime coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-775-xnb-null-*` and
+`/tmp/checkpoint-775-coverage.md`. No rendering, screenshot or manual inspection was used. Audit
+raw-null and missing/foreign writer refusals next, then disposition ContentCompiler inspection and
+freeze members against the existing registry/compiler workflows.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

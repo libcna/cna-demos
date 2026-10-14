@@ -270,14 +270,22 @@ namespace
         std::filesystem::path path;
         ~TemporaryDirectory() { std::error_code ignored; std::filesystem::remove_all(path, ignored); }
     };
-    void AuthorProfile(const std::filesystem::path& path, int health, const std::filesystem::path& portrait)
+    void AuthorProfile(const std::filesystem::path& path, int health, const std::filesystem::path& portrait,
+                       const bool includeBadge)
     {
         std::ofstream file(path);
         file << "<XnaContent xmlns:CnaDemos=\"CnaDemos\"><Asset Type=\"CnaDemos:ProfileSource\">"
-             << "<Name>Sentinel</Name><Health>" << health << "</Health>"
-             << "<Badge Type=\"CnaDemos:RareBadgeSource\"><Label>Founder</Label><Level>7</Level>"
-             << "<Glow>11</Glow></Badge><Portrait>" << portrait.generic_string()
-             << "</Portrait></Asset></XnaContent>\n";
+             << "<Name>Sentinel</Name><Health>" << health << "</Health>";
+        if (includeBadge)
+        {
+            file << "<Badge Type=\"CnaDemos:RareBadgeSource\"><Label>Founder</Label><Level>7</Level>"
+                 << "<Glow>11</Glow></Badge><Portrait>" << portrait.generic_string() << "</Portrait>";
+        }
+        else
+        {
+            file << "<Badge Null=\"true\" /><Portrait></Portrait>";
+        }
+        file << "</Asset></XnaContent>\n";
         file.close();
         if (!file) throw std::runtime_error("Could not write original profile XML.");
     }
@@ -305,7 +313,7 @@ int main()
             std::cout << "Private XML compiler data: " << directory << '\n';
             const auto source = directory / "source", output = directory / "output";
             std::filesystem::create_directory(source);
-            AuthorProfile(source / "sentinel.xml", 75, output / "portraits" / "sentinel.xnb");
+            AuthorProfile(source / "sentinel.xml", 75, output / "portraits" / "sentinel.xnb", true);
             // Resolve the game's serializer before XmlImporter encounters its Asset Type.
             (void)Intermediate::IntermediateSerializer::TypeSerializerFor<ProfileSource>();
             (void)Intermediate::IntermediateSerializer::TypeSerializerFor<RareBadgeSource>();
@@ -372,7 +380,7 @@ int main()
             check(unchanged == 0 && initializations == 2 && writes == 1 && compressionChecks == 1 &&
                   ReadFile(manifestPath) == firstManifest,
                   "a fresh XML pipeline registry skips unchanged authored content without calling the writer");
-            AuthorProfile(source / "sentinel.xml", 120, output / "portraits" / "sentinel.xnb");
+            AuthorProfile(source / "sentinel.xml", 120, output / "portraits" / "sentinel.xnb", false);
             const int edited = Pipeline::RunContentCompiler(arguments, factory);
             check(edited == 0 && initializations == 3 && writes == 2 && compressionChecks == 2 &&
                   initializedWrites == 2 && writerContexts == 2 && ReadFile(manifestPath) != firstManifest,
@@ -382,8 +390,11 @@ int main()
             content.Unload();
             const auto reloaded = content.Load<std::shared_ptr<Profile>>("sentinel");
             check(reloaded && reloaded != loaded && reloaded->name == "Sentinel" && reloaded->health == 120 &&
-                  reloaded->rawHealth == 121 && reloaded->sharedBadgeA == reloaded->sharedBadgeB && reads == 2,
+                  reloaded->rawHealth == 121 && reads == 2,
                   "Unload followed by Load reads the rebuilt XNB and exposes the edited value");
+            check(reloaded && !reloaded->inlineBadge && !reloaded->sharedBadgeA &&
+                  !reloaded->sharedBadgeB && reloaded->portrait.empty(),
+                  "null ordinary/shared references and an empty external reference round trip without fixups");
             const auto incompatible = directory / "cnb-output";
             const int refused = Pipeline::RunContentCompiler(
                 {"build", source, "-o", incompatible, "--format", "cnb", "--workers", "1"}, factory);

@@ -24,13 +24,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   the built-in string writer it intends to cache. The attempt runs on a worker thread with a
   one-second watchdog so the demo reports the failure instead of hanging its test process.
 - **Observed:** `AddTypeWriter` never returns and the watchdog records the one failed invariant.
-  The demo first completes fifteen positive controls through the same public pipeline: its main
+  The demo first completes sixteen positive controls through the same public pipeline: its main
   writer is initialized, resolves a nested custom writer later from `Write`, receives Windows
   Phone/HiDef target context, declines requested LZX compression, emits ordinary, typed/raw,
   dynamically dispatched, shared-resource and external-reference values, loads them through game
-  readers, skips an unchanged source and rebuilds an edited one. SOFTWARE and OPENGLES3/Xvfb each
-  pass15/16 controls; their outputs and intended diagnostics are identical after normalizing the
-  private temporary path.
+  readers, including ordinary/shared/external nulls, skips an unchanged source and rebuilds an
+  edited one. SOFTWARE and OPENGLES3/Xvfb each pass16/17 controls; their outputs and intended
+  diagnostics are identical after normalizing the private temporary path.
 - **Cause observed in source:** `ContentCompiler::AddWriter` acquires its non-recursive `mutex_`
   before invoking `facade->Initialize(*this)`. `GetTypeWriter` immediately tries to acquire the
   same mutex, so the same thread waits on a lock it already owns. CNA's public documentation says
