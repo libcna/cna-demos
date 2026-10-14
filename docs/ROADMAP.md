@@ -6599,3 +6599,20 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-750-render-target-*` and
 manual visual inspection was performed. No CNA issue was found. Audit the separate
 RenderTargetCube bound-disposal override next, then return to the highest-value open behavior
 table rather than repeating unavailable cube moves.
+
+## Focused751-RenderTargetCube-bound-disposal
+
+`graphics.render_target.render_target_cube` adds two controls, reaching9 on both renderers. The
+existing NegativeZ binding is activated and cleared Gold before public Dispose is attempted. The
+call is refused while the resource stays live and `GetRenderTargets` preserves the exact target
+and selected face. Unbinding and reading one exact Gold texel proves that refusal also preserves
+the face storage. The original dynamic environment rendering and PreserveContents checks remain
+unchanged.
+
+SOFTWARE and OPENGLES3/Xvfb pass9/9, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, validator/checkpoint self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-751-render-target-cube-*` and
+`/tmp/checkpoint-751-coverage.md`. Pixel checks used programmatic read-back; no screenshot or
+manual visual inspection was performed. No CNA issue was found. Continue with the distinct C++
+bound-target destruction path, including stale binding removal and same-address replacement.

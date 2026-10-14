@@ -1738,13 +1738,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-750 close the
-Texture3D, TextureCube, Texture2D and RenderTarget2D wrapper-identity work. Audit the separate
-`RenderTargetCube::Dispose(bool)` bound-target override next: add only its observable refusal,
-selected-face identity and post-refusal content integrity to the existing cube render-target
-workflow. `RenderTargetCube` exposes no target-level copy/move operations, so do not invent a
-parallel move batch or repeat device teardown. Then return to the highest-value open public
-behavior table. Build with at most three compile jobs and keep focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-751 close the
+texture wrapper, RenderTarget2D move and explicit render-target disposal work. Continue the
+distinct C++ bound-target destruction path from CNA's public lifetime contract: verify that
+destroying a bound RenderTarget2D removes the dangling public binding, the next explicit unbind
+restores back-buffer state, and a replacement at the same address is genuinely rebound and
+writable. Add this to the existing 2D render-target workflow without duplicating ordinary Dispose
+or move controls. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1797,6 +1797,20 @@ SOFTWARE and OPENGLES3/Xvfb pass9/9, and the exact SOFTWARE CTest passes. The wa
 incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
 remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-750-render-target-*` and `/tmp/checkpoint-750-coverage.md`. Pixel checks were
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
+### Focused751 RenderTargetCube bound disposal
+
+`graphics.render_target.render_target_cube` grows from seven to nine controls. Its NegativeZ face
+is bound and cleared Gold before public Dispose is attempted. The call is refused while the target
+stays live and `GetRenderTargets` retains the exact cube/face pair. After unbinding, one exact Gold
+texel proves that the face storage remains intact. The original dynamic environment rendering,
+preservation and sampling controls continue unchanged.
+
+SOFTWARE and OPENGLES3/Xvfb pass9/9, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
+remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-751-render-target-cube-*` and `/tmp/checkpoint-751-coverage.md`. Pixel checks were
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA

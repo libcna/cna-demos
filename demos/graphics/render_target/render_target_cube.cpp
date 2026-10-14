@@ -27,7 +27,9 @@
 #include "Microsoft/Xna/Framework/Graphics/Viewport.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
+#include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
+#include "System/InvalidOperationException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -82,6 +84,24 @@ namespace
             Context().Check(negativeZ.getRenderTargetProperty() == environment_.get() &&
                                 negativeZ.getCubeMapFaceProperty() == CubeMapFace::NegativeZ,
                             "a cube binding retains its exact target and selected face");
+
+            device.SetRenderTarget(environment_.get(), CubeMapFace::NegativeZ);
+            device.Clear(Color::Gold);
+            bool disposeRefused = false;
+            try { environment_->Dispose(); }
+            catch (const System::InvalidOperationException&) { disposeRefused = true; }
+            const auto bindings = device.GetRenderTargets();
+            Context().Check(disposeRefused && !environment_->getIsDisposedProperty() &&
+                                bindings.size() == 1 &&
+                                bindings[0].getRenderTargetProperty() == environment_.get() &&
+                                bindings[0].getCubeMapFaceProperty() == CubeMapFace::NegativeZ,
+                            "disposing a bound cube target is refused without changing its selected face");
+            device.SetRenderTarget(static_cast<RenderTarget2D*>(nullptr));
+            const Rectangle origin(0, 0, 1, 1);
+            Color pixel = Color::Black;
+            environment_->GetData(CubeMapFace::NegativeZ, 0, &origin, &pixel, 0, 1);
+            Context().Check(pixel == Color::Gold,
+                            "the cube face remains readable and exact after bound disposal is refused");
 
             cubeEffect_ = std::make_unique<BasicEffect>(device);
             cubeEffect_->EnableDefaultLighting();
@@ -234,11 +254,12 @@ namespace
 CNA_DEMOS_GAME(RenderTargetCubeDemo, {
     .id = "graphics.render_target.render_target_cube",
     .title = "Rendering into a cube map",
-    .description = "Renders the scene six times a frame into a RenderTargetCube, once per CubeMapFace with a "
-                   "90-degree view from the sphere's centre, then draws a mirror sphere whose EnvironmentMapEffect "
-                   "samples those faces: a dynamic environment map that follows the orbiting cubes.",
+    .description = "Checks bound-face disposal, renders the scene six times a frame into a RenderTargetCube, then "
+                   "draws a mirror sphere whose EnvironmentMapEffect samples the dynamic environment map.",
     .apis = {"RenderTargetCube::RenderTargetCube", "RenderTargetBinding::RenderTargetBinding",
-             "RenderTargetBinding::CubeMapFace", "GraphicsDevice::SetRenderTarget", "CubeMapFace",
+             "RenderTargetBinding::CubeMapFace", "GraphicsDevice::SetRenderTarget",
+             "GraphicsDevice::GetRenderTargets", "GraphicsResource::Dispose",
+             "GraphicsResource::IsDisposed", "CubeMapFace",
              "RenderTargetCube::ContentLost", "RenderTargetCube::IsContentLost",
              "RenderTargetCube::DepthStencilFormat", "RenderTargetCube::MultiSampleCount",
              "RenderTargetCube::RenderTargetUsage",

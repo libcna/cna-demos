@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the RenderTargetCube workflow with bound-face disposal refusal, exact binding identity
+  retention and post-refusal face read-back.
 - Extended the RenderTarget2D workflow with atomic bound-target Dispose/move-assignment refusal,
   active-binding transfer through move construction and assignment, and post-move pixel read-back.
 - Extended Texture2D ownership checks with cross-device copy assignment, shared partial edits,
