@@ -47,6 +47,19 @@ namespace
         packedUv.PackFromVector4(Vector4(0.25f, 0.75f, 9.0f, -3.0f));
         ctx.Check(packedUv.ToVector4() == Vector4(0.25f, 0.75f, 0.0f, 1.0f),
                   "HalfVector2's IPackedVector path consumes XY and supplies canonical ZW");
+
+        HalfVector4 hdrCopy;
+        hdrCopy.setPackedValueProperty(hdr.getPackedValueProperty());
+        ctx.Check(hdr.getPackedValueProperty() == 0x3C00380040004400ull && hdrCopy == hdr &&
+                      !(hdrCopy != hdr) && hdr.Equals(hdrCopy) && hdr.Equals(std::any(hdrCopy)) &&
+                      !hdr.Equals(std::any(uv)) && hdrCopy.GetHashCode() == hdr.GetHashCode() &&
+                      hdr.ToString() == "{X:4 Y:2 Z:0.5 W:1}",
+                  "HalfVector4 packed copies preserve equality, boxed equality, hash and expanded text");
+        HalfVector4 interfaceHdr;
+        IPackedVector& packedHdr = interfaceHdr;
+        packedHdr.PackFromVector4(Vector4(4.0f, 2.0f, 0.5f, 1.0f));
+        ctx.Check(packedHdr.ToVector4() == Vector4(4.0f, 2.0f, 0.5f, 1.0f),
+                  "HalfVector4's IPackedVector path preserves all four components");
     }
 }
 
@@ -61,6 +74,9 @@ CNA_DEMOS_CONSOLE(HalfPrecision, {
              "HalfVector2::ToString",
              "HalfVector2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
              "HalfVector2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#ToVector4",
-             "HalfVector4::HalfVector4", "HalfVector4::ToVector4"},
+             "HalfVector4::HalfVector4", "HalfVector4::ToVector4", "HalfVector4::PackedValue",
+             "HalfVector4::Equals", "HalfVector4::GetHashCode", "HalfVector4::op_Equality",
+             "HalfVector4::op_Inequality", "HalfVector4::ToString",
+             "HalfVector4::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4"},
     .tags = {"packed", "half", "hdr", "float16"},
 })

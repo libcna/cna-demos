@@ -65,6 +65,22 @@ namespace
         packedShort.PackFromVector4(Vector4(-1.0f, 1.0f, 8.0f, -4.0f));
         ctx.Check(packedShort.ToVector4() == Vector4(-1.0f, 1.0f, 0.0f, 1.0f),
                   "NormalizedShort2's IPackedVector path consumes XY and supplies canonical ZW");
+
+        const NormalizedShort4 shortEndpoints(Vector4(-1.0f, 1.0f, 0.0f, 0.0f));
+        NormalizedShort4 shortEndpointsCopy;
+        shortEndpointsCopy.setPackedValueProperty(shortEndpoints.getPackedValueProperty());
+        ctx.Check(shortEndpoints.getPackedValueProperty() == 0x000000007FFF8001ull &&
+                      shortEndpointsCopy == shortEndpoints && !(shortEndpointsCopy != shortEndpoints) &&
+                      shortEndpoints.Equals(shortEndpointsCopy) && shortEndpoints.Equals(std::any(shortEndpointsCopy)) &&
+                      !shortEndpoints.Equals(std::any(shortPair)) &&
+                      shortEndpointsCopy.GetHashCode() == shortEndpoints.GetHashCode() &&
+                      shortEndpoints.ToString() == "000000007FFF8001",
+                  "NormalizedShort4 preserves its packed value, equality, hash and sixteen-digit text");
+        NormalizedShort4 short4Interface;
+        IPackedVector& packedShort4 = short4Interface;
+        packedShort4.PackFromVector4(Vector4(-1.0f, 1.0f, 0.0f, 0.0f));
+        ctx.Check(packedShort4.ToVector4() == Vector4(-1.0f, 1.0f, 0.0f, 0.0f),
+                  "NormalizedShort4's IPackedVector path preserves all four components");
     }
 }
 
@@ -74,7 +90,11 @@ CNA_DEMOS_CONSOLE(SignedNormalized, {
     .description = "Stores a unit normal in NormalizedByte4 and NormalizedShort4, compares their precision, and "
                    "shows NormalizedByte2/NormalizedShort2 clamping to -1..1.",
     .apis = {"NormalizedByte4::NormalizedByte4", "NormalizedByte4::ToVector4", "NormalizedShort4::NormalizedShort4",
-             "NormalizedShort4::ToVector4", "NormalizedByte2::NormalizedByte2", "NormalizedByte2::ToVector2",
+             "NormalizedShort4::ToVector4", "NormalizedShort4::PackedValue", "NormalizedShort4::Equals",
+             "NormalizedShort4::GetHashCode", "NormalizedShort4::op_Equality", "NormalizedShort4::op_Inequality",
+             "NormalizedShort4::ToString",
+             "NormalizedShort4::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
+             "NormalizedByte2::NormalizedByte2", "NormalizedByte2::ToVector2",
              "NormalizedByte2::PackedValue", "NormalizedByte2::Equals", "NormalizedByte2::GetHashCode",
              "NormalizedByte2::op_Equality", "NormalizedByte2::op_Inequality", "NormalizedByte2::ToString",
              "NormalizedByte2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",

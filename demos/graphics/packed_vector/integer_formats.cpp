@@ -40,8 +40,21 @@ namespace
         packedOffset.PackFromVector4(Vector4(-1200.0f, 40000.0f, 8.0f, -4.0f));
         ctx.Check(packedOffset.ToVector4() == Vector4(-1200.0f, 32767.0f, 0.0f, 1.0f),
                   "Short2's IPackedVector path consumes XY and supplies canonical ZW");
-        ctx.Check(Short4(1.0f, -2.0f, 3.0f, -4.0f).ToVector4() == Vector4(1.0f, -2.0f, 3.0f, -4.0f),
+        const Short4 values(1.0f, -2.0f, 3.0f, -4.0f);
+        ctx.Check(values.ToVector4() == Vector4(1.0f, -2.0f, 3.0f, -4.0f),
                   "Short4 keeps small integers exactly");
+        Short4 valuesCopy;
+        valuesCopy.setPackedValueProperty(values.getPackedValueProperty());
+        ctx.Check(values.getPackedValueProperty() == 0xFFFC0003FFFE0001ull && valuesCopy == values &&
+                      !(valuesCopy != values) && values.Equals(valuesCopy) && values.Equals(std::any(valuesCopy)) &&
+                      !values.Equals(std::any(offset)) && valuesCopy.GetHashCode() == values.GetHashCode() &&
+                      values.ToString() == "FFFC0003FFFE0001",
+                  "Short4 preserves its packed value, equality, hash and sixteen-digit text");
+        Short4 short4Interface;
+        IPackedVector& packedShort4 = short4Interface;
+        packedShort4.PackFromVector4(Vector4(1.0f, -2.0f, 3.0f, -4.0f));
+        ctx.Check(packedShort4.ToVector4() == Vector4(1.0f, -2.0f, 3.0f, -4.0f),
+                  "Short4's IPackedVector path preserves all four integer components");
     }
 }
 
@@ -55,6 +68,8 @@ CNA_DEMOS_CONSOLE(IntegerFormats, {
              "Short2::op_Inequality", "Short2::ToString",
              "Short2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
              "Short2::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#ToVector4",
-             "Short4::Short4", "Short4::ToVector4"},
+             "Short4::Short4", "Short4::ToVector4", "Short4::PackedValue", "Short4::Equals",
+             "Short4::GetHashCode", "Short4::op_Equality", "Short4::op_Inequality", "Short4::ToString",
+             "Short4::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4"},
     .tags = {"packed", "integer", "skinning", "vertex-format"},
 })

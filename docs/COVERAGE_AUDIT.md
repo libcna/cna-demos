@@ -438,6 +438,21 @@ with empty stderr; all four focused SOFTWARE CTests pass. Temporary coverage mov
 Evidence:`/tmp/checkpoint-682-*` and `/tmp/checkpoint-682-coverage.md`. These are CPU value tests;
 no renderer, vertex fetch, screenshot or visual result is claimed.
 
+### Four-component packed-vector value contracts
+
+HalfVector4, NormalizedShort4, Rgba1010102 and Short4 remain in the same precision-family demos.
+Each now copies exact PackedValue state, checks == and != together with typed and boxed Equals,
+rejects a boxed different type, requires equal hashes and validates the expanded or packed-hex XNA
+text form. A second value is addressed through IPackedVector and preserves all four components.
+This completes each type as a coherent value contract while retaining its precision and clamping
+context.
+
+Focused683 credits all28 remaining members across four IDs. Half precision and signed normalized
+pass10/10; wide UNorm and integer formats pass8/8. SOFTWARE and OPENGLES3 output is byte-identical
+with empty stderr; all four focused SOFTWARE CTests pass. Temporary coverage moves1881->1909/2326.
+Evidence:`/tmp/checkpoint-683-*` and `/tmp/checkpoint-683-coverage.md`. These are CPU value tests; no
+renderer, vertex fetch, screenshot or visual result is claimed.
+
 ### Graphics-state lifetime and complete sampler presets
 
 | Members / behavior | Decision and evidence |

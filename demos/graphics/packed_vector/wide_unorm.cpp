@@ -25,6 +25,20 @@ namespace
         ctx.CheckNear(rgb10.ToVector4().X, 0.1, 1.0 / 1023.0, "10-bit channels are accurate to 1/1023");
         ctx.CheckNear(rgb10.ToVector4().W, 1.0 / 3.0, 1e-6, "the 2-bit alpha has only 4 levels (0.4 -> 1/3)");
 
+        const Rgba1010102 green(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+        Rgba1010102 greenCopy;
+        greenCopy.setPackedValueProperty(green.getPackedValueProperty());
+        ctx.Check(green.getPackedValueProperty() == 0xC00FFC00u && greenCopy == green && !(greenCopy != green) &&
+                      green.Equals(greenCopy) && green.Equals(std::any(greenCopy)) &&
+                      !green.Equals(std::any(rgb10.ToVector4())) && greenCopy.GetHashCode() == green.GetHashCode() &&
+                      green.ToString() == "C00FFC00",
+                  "Rgba1010102 preserves its packed value, equality, hash and eight-digit text");
+        Rgba1010102 rgb10Interface;
+        IPackedVector& packedRgb10 = rgb10Interface;
+        packedRgb10.PackFromVector4(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+        ctx.Check(packedRgb10.ToVector4() == Vector4(0.0f, 1.0f, 0.0f, 1.0f),
+                  "Rgba1010102's IPackedVector path preserves all four channel endpoints");
+
         // Two 16-bit channels (e.g. a high-precision 2D lookup or motion vector).
         const Rg32 rg(Vector2(0.25f, 0.123456f));
         ctx.Print("Rg32        -> {}", rg.ToVector2().ToString());
@@ -56,7 +70,11 @@ CNA_DEMOS_CONSOLE(WideUnorm, {
     .id = "graphics.packed_vector.wide_unorm",
     .title = "High-precision normalized formats",
     .description = "Packs values into Rgba1010102, Rg32 and Rgba64 and compares their per-channel precision.",
-    .apis = {"Rgba1010102::Rgba1010102", "Rgba1010102::ToVector4", "Rg32::Rg32", "Rg32::ToVector2", "Rgba64::Rgba64",
+    .apis = {"Rgba1010102::Rgba1010102", "Rgba1010102::ToVector4", "Rgba1010102::PackedValue",
+             "Rgba1010102::Equals", "Rgba1010102::GetHashCode", "Rgba1010102::op_Equality",
+             "Rgba1010102::op_Inequality", "Rgba1010102::ToString",
+             "Rgba1010102::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",
+             "Rg32::Rg32", "Rg32::ToVector2", "Rgba64::Rgba64",
              "Rg32::PackedValue", "Rg32::Equals", "Rg32::GetHashCode", "Rg32::op_Equality",
              "Rg32::op_Inequality", "Rg32::ToString",
              "Rg32::Microsoft#Xna#Framework#Graphics#PackedVector#IPackedVector#PackFromVector4",

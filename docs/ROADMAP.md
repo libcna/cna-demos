@@ -5472,3 +5472,18 @@ OPENGLES3 output is byte-identical with empty stderr; all four focused SOFTWARE 
 Temporary coverage moves1841->1881/2326 at632 demos,301/329 types and156/753 fields. Evidence:
 `/tmp/checkpoint-682-*` and `/tmp/checkpoint-682-coverage.md`. No rendering, screenshot or visual
 inspection was used. Continue the four-component packed-vector value contracts next.
+
+## Focused683-four-component-packed-vector-value-contracts
+
+The same four conversion IDs close all28 remaining members on HalfVector4, NormalizedShort4,
+Rgba1010102 and Short4. Each exact PackedValue copy agrees across equality/inequality, typed and
+boxed Equals, rejects a boxed different type, keeps an equal hash and validates the expanded or
+packed-hex XNA string form. Each also packs all four components through IPackedVector. Existing
+precision, layout and clamping checks remain intact.
+
+Half precision and signed normalized pass10/10; wide UNorm and integer formats pass8/8. SOFTWARE
+and OPENGLES3 output is byte-identical with empty stderr; all four focused SOFTWARE CTests pass.
+Temporary coverage moves1881->1909/2326 at632 demos,301/329 types and156/753 fields. Evidence:
+`/tmp/checkpoint-683-*` and `/tmp/checkpoint-683-coverage.md`. No rendering, screenshot or visual
+inspection was used. Continue the remaining compact color and scalar packed-vector value contracts
+next.
