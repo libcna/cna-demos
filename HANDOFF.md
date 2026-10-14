@@ -16,7 +16,8 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
-* Mostly complete: 6 (effects and shaders, 47; the C `effects.h` route audit is complete).
+* Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
+  public-surface disposition are complete).
 * In progress: 7 (models/glTF, 23), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
@@ -66,10 +67,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-647 project-built catalog demos in18 categories: math78, game33, graphics176, audio23, core3,
+648 project-built catalog demos in18 categories: math78, game33, graphics177, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,285 game and199 standalone;
-611 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,286 game and199 standalone;
+612 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -166,6 +167,8 @@ Focused833 closes both PBR classes' directional-shadow and punctual-point render
 matching rigid/one-bone pixels, leaving material alpha and fog as the family remainder.
 Focused834 extends the PBR surface scene with sampled material alpha and its multiplication by
 vertex alpha; fog is now the only remaining PBR-family sampled gap from Focused832.
+Focused835 adds exact rigid-World and skinned-bone fog at start/midpoint/end, completing the
+observable PBR-family remainder identified by the declaration-level audit.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3343,6 +3346,24 @@ suites pass and temporary coverage remains302/329 types,2114/2326 members,169/75
 3078/3205 C routes. Evidence:`/tmp/checkpoint-834-pbr-alpha-*` and
 `/tmp/checkpoint-834-coverage.md`. No CNA defect appeared. Add actual fog pixels through both rigid
 and skinned PBR programs next; that is the last sampled gap from the completed family disposition.
+
+### Focused835-rigid-and-skinned-PBR-fog-depth
+
+New `graphics.pbr_effect.fog_depth` runs the same red PBR quad through both renderer programs at
+view depths2,4 and6. World supplies rigid depth and a full-weight bone supplies skinned depth. With
+fog disabled all six centres are exact red. Enabling blue linear fog over interval2..6 produces
+exact red at `FogStart`, `{128,0,128}` at the midpoint and blue at `FogEnd` in both rows. Two state
+aggregates plus two disabled controls and six fogged pixels make ten checks.
+
+Two OPENGLES3/Xvfb runs pass10/10 with byte-identical values. The inspected800x480 capture visibly
+matches the red/purple/blue sequence in both rows. SOFTWARE takes the declared EasyGL skip and its
+exact CTest passes as skipped. The `-j3` build emits only the known Draco CMP0148 reconfigure
+warning; metadata is648/0, both tool self-test suites pass and temporary coverage remains302/329
+types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-835-pbr-fog-*` and `/tmp/checkpoint-835-coverage.md`. No CNA defect appeared. The
+PbrEffect/SkinnedPbrEffect public-surface disposition is now complete on the pinned baseline, with
+ISSUE-070 retained and unsupported renderer behavior explicitly scoped. Return to the highest-
+priority unresolved member/behavior family in ROADMAP/COVERAGE rather than adding PBR variants.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

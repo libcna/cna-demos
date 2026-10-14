@@ -2550,3 +2550,18 @@ Two OPENGLES3/Xvfb runs pass all twelve controls with identical values and the e
 inspected. SOFTWARE retains its declared PBR capability skip. No new ID was needed because material
 alpha belongs to the surface-mode workflow. Sampled fog through both PBR programs is now the sole
 remaining behavioral gap from the public-surface disposition.
+
+### Rigid and skinned PBR fog depth
+
+New `graphics.pbr_effect.fog_depth` closes the last sampled gap from the PBR public-surface audit.
+One rigid World transform and one full-weight bone independently place the same red quad at view
+depths2,4 and6. Disabled fog leaves all six pixels exact red. Enabling a blue fog colour over the
+2..6 interval yields exact red, `{128,0,128}` and exact blue in each row, proving both PBR programs
+consume post-transform view depth and linearly interpolate the complete authored interval.
+
+Two OPENGLES3/Xvfb runs pass all ten controls identically and the capture was inspected. SOFTWARE
+retains its declared EasyGL capability skip. Together with the state/ownership workflows, rigid
+material scenes, animated skinned/IBL model and receiver branch scene, every public PBR declaration
+now has either meaningful behavior evidence or an explicit intentional disposition on d23e139.
+ISSUE-070 and the documented renderer limitations remain visible; no comprehensive CNA-wide claim
+is implied.

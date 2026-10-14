@@ -145,7 +145,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (47 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (48 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
   diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
   specular_lights now has eight on both renderers with inspected labeled comparisons.
@@ -173,9 +173,10 @@ a check that all authored colors remain visible and that a blank texture row can
   maps' independent UV selectors/transforms. ✅ `graphics.pbr_effect.material_surface` covers alpha
   modes/cutoff, double-sided shading and vertex-colour RGB/alpha multiplication. ✅ The detailed
   public-surface disposition credits shared state/behavior without duplicating panels. ✅ The
-  surface scene now samples material alpha and its multiplication by vertex alpha; fog remains.
-  ✅ `graphics.pbr_effect.shadow_receivers`
-  executes directional-shadow and punctual-point reception through both PBR renderer programs.
+  surface scene now samples material alpha and its multiplication by vertex alpha. ✅
+  `graphics.pbr_effect.fog_depth` samples exact start/midpoint/end fog through rigid World and a
+  skinned bone. ✅ `graphics.pbr_effect.shadow_receivers` executes directional-shadow and
+  punctual-point reception through both PBR renderer programs, completing the PBR family audit.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
@@ -8081,3 +8082,22 @@ self-test suites pass and temporary coverage remains302/329 types,2114/2326 memb
 and3078/3205 C routes. Evidence:`/tmp/checkpoint-834-pbr-alpha-*` and
 `/tmp/checkpoint-834-coverage.md`. No CNA defect appeared. Actual fog pixels through the rigid and
 skinned PBR programs are the last sampled gap from the family disposition.
+
+## Focused835-rigid-and-skinned-PBR-fog-depth
+
+New `graphics.pbr_effect.fog_depth` closes the final sampled gap from the declaration-level audit.
+It renders the same red quad at view depths2,4 and6 through `PbrEffect` World transforms and
+`SkinnedPbrEffect` one-bone transforms. With fog disabled both rows stay exact red. Blue linear fog
+over2..6 then yields exact red at the start, `{128,0,128}` at depth4 and exact blue at the end in
+both renderer programs. Complete fog state round-trips, two disabled-row controls and six fogged
+pixel controls total ten checks.
+
+Two OPENGLES3/Xvfb runs pass10/10 identically and the inspected800x480 image visibly matches the
+two red/purple/blue rows. SOFTWARE takes its declared EasyGL skip and the exact CTest passes as
+skipped. The build uses at most three jobs and emits only the established Draco CMP0148 warning;
+metadata is648/0, validator self-tests pass5/5, checkpoint-comparison tests pass4/4, and temporary
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-835-pbr-fog-*` and `/tmp/checkpoint-835-coverage.md`. No CNA defect appeared. The
+PBR-family public surface is now dispositioned and observably covered on the pinned baseline except
+for the recorded ISSUE-070 and declared renderer limitations. Resume the highest-priority unresolved
+member/behavior family rather than adding redundant PBR variants.

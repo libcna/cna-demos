@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added exact start/midpoint/end fog controls through rigid World and skinned bone depth, completing
+  the PBR-family public-surface behavior disposition.
 - Extended the PBR surface scene with exact material-alpha and material-times-vertex-alpha
   compositing controls.
 - Added matching rigid and one-bone skinned PBR controls for directional-depth and point-distance
