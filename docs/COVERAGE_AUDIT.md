@@ -2537,3 +2537,16 @@ retains the declared EasyGL capability skip. The existing `SkinnedEffect` receiv
 detailed evidence for PCF radii, bias, detachment, cascades, spot cones and range boundaries; this
 scene establishes that the distinct rigid/skinned PBR programs consume the already-audited receiver
 model. Material `Alpha` and fog are now the PBR family's remaining sampled gaps.
+
+### PbrEffect material alpha
+
+The existing `graphics.pbr_effect.material_surface` now makes the material-level `Alpha` multiplier
+observable alongside its vertex-alpha coverage. With straight-alpha compositing over black,
+`Alpha=0.5` changes an opaque blue vertex to exact blue128. Keeping the material factor and changing
+the vertex to alpha0.5 produces exact blue64, proving the two factors multiply before compositing.
+Default-one and an authored0.25 value also round-trip in the existing aggregate state controls.
+
+Two OPENGLES3/Xvfb runs pass all twelve controls with identical values and the expanded capture was
+inspected. SOFTWARE retains its declared PBR capability skip. No new ID was needed because material
+alpha belongs to the surface-mode workflow. Sampled fog through both PBR programs is now the sole
+remaining behavioral gap from the public-surface disposition.

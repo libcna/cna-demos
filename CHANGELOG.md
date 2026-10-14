@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the PBR surface scene with exact material-alpha and material-times-vertex-alpha
+  compositing controls.
 - Added matching rigid and one-bone skinned PBR controls for directional-depth and point-distance
   shadow reception through both renderer programs.
 - Completed a declaration-level PbrEffect/SkinnedPbrEffect behavior audit, identifying sampled

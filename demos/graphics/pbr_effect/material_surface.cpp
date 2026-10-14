@@ -90,9 +90,11 @@ namespace
         return {vertex(a), vertex(b), vertex(c), vertex(b), vertex(d), vertex(c)};
     }
 
-    constexpr std::array<Vector2, 8> PanelPositions = {
-        Vector2(-2.7f, 0.75f), Vector2(-0.9f, 0.75f), Vector2(0.9f, 0.75f), Vector2(2.7f, 0.75f),
-        Vector2(-2.7f, -0.75f), Vector2(-0.9f, -0.75f), Vector2(0.9f, -0.75f), Vector2(2.7f, -0.75f),
+    constexpr std::array<Vector2, 10> PanelPositions = {
+        Vector2(-3.6f, 0.75f), Vector2(-1.8f, 0.75f), Vector2(0.0f, 0.75f),
+        Vector2(1.8f, 0.75f), Vector2(3.6f, 0.75f),
+        Vector2(-3.6f, -0.75f), Vector2(-1.8f, -0.75f), Vector2(0.0f, -0.75f),
+        Vector2(1.8f, -0.75f), Vector2(3.6f, -0.75f),
     };
 
     class MaterialSurfaceDemo final : public CnaDemos::DemoGame
@@ -129,15 +131,18 @@ namespace
             effect_->getDirectionalLight1Property().setEnabledProperty(false);
             effect_->getDirectionalLight2Property().setEnabledProperty(false);
 
-            Context().Check(effect_->getAlphaModeEXTProperty() == AlphaModeEXT::Opaque &&
+            Context().Check(effect_->getAlphaProperty() == 1.0f &&
+                                effect_->getAlphaModeEXTProperty() == AlphaModeEXT::Opaque &&
                                 effect_->getAlphaCutoffEXTProperty() == 0.5f &&
                                 !effect_->getDoubleSidedEXTProperty() && !effect_->VertexColorEnabledEXT,
                             "glTF surface controls have their canonical defaults");
+            effect_->setAlphaProperty(0.25f);
             effect_->setAlphaModeEXTProperty(AlphaModeEXT::Blend);
             effect_->setAlphaCutoffEXTProperty(0.25f);
             effect_->setDoubleSidedEXTProperty(true);
             effect_->VertexColorEnabledEXT = true;
-            Context().Check(effect_->getAlphaModeEXTProperty() == AlphaModeEXT::Blend &&
+            Context().Check(effect_->getAlphaProperty() == 0.25f &&
+                                effect_->getAlphaModeEXTProperty() == AlphaModeEXT::Blend &&
                                 effect_->getAlphaCutoffEXTProperty() == 0.25f &&
                                 effect_->getDoubleSidedEXTProperty() && effect_->VertexColorEnabledEXT,
                             "alpha mode, cutoff, double-sided and vertex-color state round-trip together");
@@ -155,6 +160,7 @@ namespace
                 device.setBlendStateProperty(BlendState::Opaque);
                 effect_->setTextureProperty(nullptr);
                 effect_->setDiffuseColorProperty(Vector3::One);
+                effect_->setAlphaProperty(1.0f);
                 effect_->setSpecularFactorEXTProperty(1.0f);
                 effect_->setAmbientLightColorProperty(Vector3::One);
                 effect_->setAlphaModeEXTProperty(AlphaModeEXT::Opaque);
@@ -182,7 +188,7 @@ namespace
                     effect_->setAlphaModeEXTProperty(AlphaModeEXT::Mask);
                     effect_->setAlphaCutoffEXTProperty(panel == 5 ? 0.2f : 0.5f);
                 }
-                else
+                else if (panel <= 7)
                 {
                     vertices = &backFace_;
                     effect_->setDiffuseColorProperty(Vector3(0.0f, 1.0f, 0.0f));
@@ -197,6 +203,14 @@ namespace
                     light.setDirectionProperty(Vector3::Normalize(Vector3(0.4f, 0.0f, 1.0f)));
                     light.setDiffuseColorProperty(Vector3(3.3f, 3.3f, 3.3f));
                     light.setSpecularColorProperty(Vector3::Zero);
+                }
+                else
+                {
+                    vertices = panel == 8 ? &blue_ : &halfBlue_;
+                    effect_->VertexColorEnabledEXT = true;
+                    effect_->setAlphaProperty(0.5f);
+                    effect_->setAlphaModeEXTProperty(AlphaModeEXT::Blend);
+                    device.setBlendStateProperty(BlendState::NonPremultiplied);
                 }
 
                 effect_->setWorldProperty(Matrix::CreateTranslation(
@@ -227,17 +241,18 @@ namespace
         void Check(GraphicsDevice& device)
         {
             const CnaDemos::BackBufferPixels pixels(device);
-            std::array<Color, 8> colors;
+            std::array<Color, 10> colors;
             for (std::size_t i = 0; i < colors.size(); ++i)
             {
                 const Point p = PanelCenter(i);
                 colors[i] = pixels.At(p.X, p.Y);
             }
             Context().Print("centres: color off {}, on {}, blend {}, mask below {}, above {}, lower cutoff {}, "
-                            "one-sided back {}, double-sided back {}",
+                            "one-sided back {}, double-sided back {}, material alpha {}, combined alpha {}",
                             colors[0].ToString(), colors[1].ToString(), colors[2].ToString(),
                             colors[3].ToString(), colors[4].ToString(), colors[5].ToString(),
-                            colors[6].ToString(), colors[7].ToString());
+                            colors[6].ToString(), colors[7].ToString(), colors[8].ToString(),
+                            colors[9].ToString());
 
             const auto near = [](const Color& actual, int r, int g, int b) {
                 return std::abs(static_cast<int>(actual.getRProperty()) - r) <= 2 &&
@@ -259,6 +274,10 @@ namespace
             Context().Check(colors[7].getGProperty() >= 200 && colors[7].getRProperty() <= 2 &&
                                 colors[7].getBProperty() <= 2,
                             "double-sided shading reverses the back-face basis toward the light");
+            Context().Check(near(colors[8], 0, 0, 128),
+                            "material Alpha one half reaches straight-alpha compositing");
+            Context().Check(near(colors[9], 0, 0, 64),
+                            "material Alpha multiplies vertex alpha before compositing");
         }
 
         std::unique_ptr<PbrEffect> effect_;
@@ -274,9 +293,9 @@ namespace
 CNA_DEMOS_GAME(MaterialSurfaceDemo, {
     .id = "graphics.pbr_effect.material_surface",
     .title = "PBR material surface modes",
-    .description = "Shows glTF COLOR_0 RGB/alpha multiplication, opaque/blend/mask coverage with cutoff, "
-                   "and the lighting-basis reversal used for double-sided back faces.",
-    .apis = {"PbrEffect::VertexColorEnabledEXT", "PbrEffect::AlphaModeEXT", "PbrEffect::AlphaCutoffEXT",
+    .description = "Shows glTF COLOR_0 RGB/alpha and material-alpha multiplication, opaque/blend/mask coverage "
+                   "with cutoff, and the lighting-basis reversal used for double-sided back faces.",
+    .apis = {"PbrEffect::Alpha", "PbrEffect::VertexColorEnabledEXT", "PbrEffect::AlphaModeEXT", "PbrEffect::AlphaCutoffEXT",
              "PbrEffect::DoubleSidedEXT", "AlphaModeEXT", "BlendState::NonPremultiplied",
              "VertexElementUsage::Color"},
     .tags = {"3d", "pbr", "vertex-color", "alpha", "mask", "double-sided", "gltf", "cnaext"},

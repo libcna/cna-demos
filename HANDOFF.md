@@ -164,6 +164,8 @@ ownership and skinning state is already covered; actual PBR fog/material-alpha p
 classes' shadow/punctual renderer branches remain the meaningful gaps.
 Focused833 closes both PBR classes' directional-shadow and punctual-point renderer branches with
 matching rigid/one-bone pixels, leaving material alpha and fog as the family remainder.
+Focused834 extends the PBR surface scene with sampled material alpha and its multiplication by
+vertex alpha; fog is now the only remaining PBR-family sampled gap from Focused832.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3323,6 +3325,24 @@ warning; metadata is647/0, both validation-tool self-test suites pass and tempor
 `/tmp/checkpoint-833-pbr-receivers-*` and `/tmp/checkpoint-833-coverage.md`. No CNA defect appeared.
 Add sampled material `Alpha` and fog behavior to an existing PBR scene next, covering rigid and
 skinned renderer variants only where their separate programs make that distinction meaningful.
+
+### Focused834-PbrEffect-material-alpha
+
+`graphics.pbr_effect.material_surface` grows from ten to twelve controls without adding an ID. Its
+default/mutation aggregates now include `PbrEffect::Alpha`. Two new straight-alpha panels isolate
+the observable result: material alpha0.5 on an opaque blue vertex produces blue128 over black, and
+the same factor multiplied by vertex alpha0.5 produces blue64. The earlier vertex-colour,
+opaque/blend/mask/cutoff and double-sided controls remain exact after the layout expands to five
+columns by two rows.
+
+Two OPENGLES3/Xvfb runs pass12/12 with byte-identical values. The inspected800x480 capture shows the
+new half-blue and quarter-blue panels together with the prior white/blue/red/green controls and
+intended black positions. SOFTWARE keeps its declared capability skip and its exact CTest passes as
+skipped. The incremental build uses `-j3`; metadata remains647/0, both validation-tool self-test
+suites pass and temporary coverage remains302/329 types,2114/2326 members,169/753 fields and
+3078/3205 C routes. Evidence:`/tmp/checkpoint-834-pbr-alpha-*` and
+`/tmp/checkpoint-834-coverage.md`. No CNA defect appeared. Add actual fog pixels through both rigid
+and skinned PBR programs next; that is the last sampled gap from the completed family disposition.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

@@ -172,8 +172,9 @@ a check that all authored colors remain visible and that a blank texture row can
   scale and occlusion strength at one and zero; the expanded specular scene samples both remaining
   maps' independent UV selectors/transforms. ✅ `graphics.pbr_effect.material_surface` covers alpha
   modes/cutoff, double-sided shading and vertex-colour RGB/alpha multiplication. ✅ The detailed
-  public-surface disposition credits shared state/behavior without duplicating panels and leaves
-  actual material-alpha/fog pixels as the remaining gaps. ✅ `graphics.pbr_effect.shadow_receivers`
+  public-surface disposition credits shared state/behavior without duplicating panels. ✅ The
+  surface scene now samples material alpha and its multiplication by vertex alpha; fog remains.
+  ✅ `graphics.pbr_effect.shadow_receivers`
   executes directional-shadow and punctual-point reception through both PBR renderer programs.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
@@ -8064,3 +8065,19 @@ metadata is647/0, validator self-tests pass5/5, checkpoint-comparison tests pass
 coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-833-pbr-receivers-*` and `/tmp/checkpoint-833-coverage.md`. No CNA defect appeared.
 Add sampled material-alpha and fog behavior next, extending a current PBR workflow where practical.
+
+## Focused834-PbrEffect-material-alpha
+
+The existing `graphics.pbr_effect.material_surface` grows from ten to twelve checks and keeps its
+single coherent surface/coverage purpose. `Alpha` now participates in the default and mutation
+aggregates. New panels run `BlendState::NonPremultiplied`: material alpha0.5 makes an opaque blue
+vertex produce blue128 over black, while multiplying that factor by vertex alpha0.5 produces
+blue64. The original eight sampled controls remain exact in the new five-by-two layout.
+
+Two OPENGLES3/Xvfb runs pass12/12 identically. The inspected800x480 capture includes the expected
+half-blue and quarter-blue additions. SOFTWARE retains its declared PBR skip and the exact CTest
+passes as skipped. The incremental build uses at most three jobs; metadata remains647/0, both
+self-test suites pass and temporary coverage remains302/329 types,2114/2326 members,169/753 fields
+and3078/3205 C routes. Evidence:`/tmp/checkpoint-834-pbr-alpha-*` and
+`/tmp/checkpoint-834-coverage.md`. No CNA defect appeared. Actual fog pixels through the rigid and
+skinned PBR programs are the last sampled gap from the family disposition.
