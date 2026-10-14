@@ -71,9 +71,14 @@ namespace
                 MathHelper::PiOver4, device.getViewportProperty().getAspectRatioProperty(), 0.1f, 100.0f));
             effects_[0]->EnableDefaultLighting();
             effects_[0]->setTextureProperty(white_.get());               // the surface's own texture
-            effects_[0]->setDiffuseColorProperty(Vector3(0.2f, 0.2f, 0.2f));
+            const Vector3 emissive(0.25f, 0.0f, 0.0f);
+            const Vector3 environmentSpecular(0.0f, 0.0f, 0.2f);
+            effects_[0]->setDiffuseColorProperty(Vector3::Zero);
+            effects_[0]->setEmissiveColorProperty(emissive);
+            effects_[0]->setAlphaProperty(0.75f);
             effects_[0]->setEnvironmentMapProperty(environment_.get());   // what it reflects
             effects_[0]->setEnvironmentMapAmountProperty(1.0f);
+            effects_[0]->setEnvironmentMapSpecularProperty(environmentSpecular);
 
             std::unique_ptr<Effect> cloneOwner(effects_[0]->Clone());
             auto* clone = dynamic_cast<EnvironmentMapEffect*>(cloneOwner.get());
@@ -81,13 +86,27 @@ namespace
                 throw std::runtime_error("EnvironmentMapEffect::Clone returned the wrong runtime type");
             Context().Check(clone->getTextureProperty() == white_.get() &&
                                 clone->getEnvironmentMapProperty() == environment_.get() &&
-                                clone->getDiffuseColorProperty() == Vector3(0.2f, 0.2f, 0.2f) &&
+                                clone->getDiffuseColorProperty() == Vector3::Zero &&
+                                clone->getEmissiveColorProperty() == emissive &&
+                                clone->getAlphaProperty() == 0.75f &&
+                                clone->getEnvironmentMapSpecularProperty() == environmentSpecular &&
                                 clone->getAmbientLightColorProperty() == effects_[0]->getAmbientLightColorProperty() &&
                                 clone->getDirectionalLight0Property().getEnabledProperty() &&
                                 clone->getDirectionalLight1Property().getEnabledProperty() &&
                                 clone->getDirectionalLight2Property().getEnabledProperty(),
-                            "Clone retains texture identities, material and all default lights");
+                            "Clone retains texture identities, complete material and all default lights");
             effects_[1].reset(static_cast<EnvironmentMapEffect*>(cloneOwner.release()));
+
+            effects_[0]->setAlphaProperty(0.25f);
+            effects_[0]->setEmissiveColorProperty(Vector3::One);
+            effects_[0]->setEnvironmentMapSpecularProperty(Vector3::Zero);
+            Context().Check(effects_[1]->getAlphaProperty() == 0.75f &&
+                                effects_[1]->getEmissiveColorProperty() == emissive &&
+                                effects_[1]->getEnvironmentMapSpecularProperty() == environmentSpecular,
+                            "clone alpha, emissive and environment specular state are independent");
+            effects_[0]->setAlphaProperty(0.75f);
+            effects_[0]->setEmissiveColorProperty(emissive);
+            effects_[0]->setEnvironmentMapSpecularProperty(environmentSpecular);
 
             // FresnelFactor 0: the same reflection everywhere. The default (1) reflects little where
             // the surface faces the viewer and more and more towards the silhouette, like real glossy paint.
@@ -124,10 +143,16 @@ namespace
                 const Color fresnelCentre = p.At(537, 240);
                 Context().Print("sphere centre: FresnelFactor 0 {}, FresnelFactor 1 {}", fullCentre.ToString(),
                                 fresnelCentre.ToString());
-                Context().Check(fullCentre.getGProperty() > 200 && fullCentre.getRProperty() < 60,
-                                "without Fresnel the centre mirrors the lime +Z face");
-                Context().Check(fresnelCentre.getGProperty() < fullCentre.getGProperty() - 60,
-                                "with Fresnel the centre, facing the viewer, reflects much less");
+                Context().Check(fullCentre.getRProperty() <= 2 &&
+                                    fullCentre.getGProperty() >= 188 && fullCentre.getGProperty() <= 194 &&
+                                    fullCentre.getBProperty() >= 35 && fullCentre.getBProperty() <= 41 &&
+                                    fullCentre.getAProperty() >= 188 && fullCentre.getAProperty() <= 194,
+                                "full lime reflection is alpha-scaled and receives the blue environment specular term");
+                Context().Check(fresnelCentre.getRProperty() > 40 &&
+                                    fresnelCentre.getGProperty() < fullCentre.getGProperty() - 120 &&
+                                    fresnelCentre.getBProperty() >= 35 && fresnelCentre.getBProperty() <= 41 &&
+                                    fresnelCentre.getAProperty() >= 188 && fresnelCentre.getAProperty() <= 194,
+                                "Fresnel reveals the red emissive surface while preserving specular and alpha");
             }
 
             spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
@@ -156,7 +181,8 @@ CNA_DEMOS_GAME(ReflectionDemo, {
     .apis = {"EnvironmentMapEffect::EnvironmentMapEffect", "EnvironmentMapEffect::EnvironmentMap",
              "EnvironmentMapEffect::EnvironmentMapAmount", "EnvironmentMapEffect::Clone",
              "EnvironmentMapEffect::FresnelFactor",
-             "EnvironmentMapEffect::Texture", "EnvironmentMapEffect::DiffuseColor",
+             "EnvironmentMapEffect::Texture", "EnvironmentMapEffect::DiffuseColor", "EnvironmentMapEffect::Alpha",
+             "EnvironmentMapEffect::EmissiveColor", "EnvironmentMapEffect::EnvironmentMapSpecular",
              "EnvironmentMapEffect::AmbientLightColor", "EnvironmentMapEffect::DirectionalLight0",
              "EnvironmentMapEffect::DirectionalLight1", "EnvironmentMapEffect::DirectionalLight2",
              "EnvironmentMapEffect::EnableDefaultLighting",

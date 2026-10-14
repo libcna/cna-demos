@@ -5389,3 +5389,20 @@ OnApply, dispositioned through its actual pass draw and the base dispatch workfl
 `/tmp/checkpoint-677-*` and `/tmp/checkpoint-677-coverage.md`. Pixel readback was programmatic; no
 screenshot or visual inspection was used. Finish EnvironmentMapEffect's Alpha, EmissiveColor and
 EnvironmentMapSpecular next.
+
+## Focused678-EnvironmentMapEffect-material-terms
+
+`graphics.environment_map_effect.reflection` grows4->5 controls and closes Alpha, EmissiveColor
+and EnvironmentMapSpecular. A clone retains Alpha=.75, red emissive=.25 and blue environment
+specular=.2, then temporary mutations of all three on the source leave the clone unchanged. Zero
+diffuse makes their rendered roles unambiguous: the Fresnel0 centre is exact RGBA(0,191,38,191),
+combining the alpha-scaled lime environment with blue specular, while the facing Fresnel1 centre is
+exact RGBA(48,1,38,191), exposing red emissive while preserving specular and alpha.
+
+SOFTWARE and OPENGLES3 pass5/5 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. Temporary coverage moves1823->1826/2326 at632 demos,301/329 types and156/753 fields.
+EnvironmentMapEffect retains only protected OnApply, dispositioned through its actual pass draws
+and the base dispatch workflow. Evidence:`/tmp/checkpoint-678-*` and
+`/tmp/checkpoint-678-coverage.md`. Pixel readback was programmatic; no screenshot or visual
+inspection was used. Audit RenderTargetCube's ContentLost/IsContentLost and constructor-selected
+depth, multisample and usage values next.

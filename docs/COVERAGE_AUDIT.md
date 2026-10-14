@@ -273,6 +273,23 @@ pixel estimate were demo errors corrected before validation; neither exposed a C
 Evidence:`/tmp/checkpoint-677-*` and `/tmp/checkpoint-677-coverage.md`. No screenshot or visual
 inspection was used.
 
+### EnvironmentMapEffect alpha, emissive and environment specular
+
+The existing reflection workflow sets Alpha=.75, zero diffuse, red EmissiveColor=.25 and blue
+EnvironmentMapSpecular=.2 before cloning. Exact readback proves the clone retains every value;
+temporary source mutations of all three prove independence before the source is restored. Zero
+diffuse isolates the new terms from directional and ambient diffuse lighting.
+
+The Fresnel0 centre is exact RGBA(0,191,38,191): lime reflection and alpha produce green191/alpha191,
+and blue38 is the independent environment-specular add. At the facing Fresnel1 centre reflection
+falls nearly to zero and exact RGBA(48,1,38,191) exposes the alpha-scaled red emissive surface while
+blue specular and alpha remain. Focused678 grows the ID from4 to5 controls, credits all three gaps
+and moves temporary coverage1823->1826/2326. SOFTWARE and OPENGLES3 output is byte-identical with
+empty stderr; the focused SOFTWARE CTest passes. EnvironmentMapEffect's only remaining inventory
+entry is protected OnApply, dispositioned through real pass dispatch. Evidence:
+`/tmp/checkpoint-678-*` and `/tmp/checkpoint-678-coverage.md`. Pixel validation used programmatic
+readback; no screenshot or visual inspection was used.
+
 ### ShaderEffect and shader dialect selection
 
 Source review of ShaderEffect.hpp/.cpp, Effect::Clone's public contract, the four GLSL shader/MRT

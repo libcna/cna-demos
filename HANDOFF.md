@@ -1361,16 +1361,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused677
-projects the632-demo staged catalog to1823/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused678
+projects the632-demo staged catalog to1826/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
-machinery. AlphaTestEffect and DualTextureEffect retain only their dispositioned OnApply overrides.
-Finish EnvironmentMapEffect's remaining Alpha/EmissiveColor/EnvironmentMapSpecular behavior in its
-existing reflected-sphere clone workflow. Per-effect protected OnApply entries are dispositioned:
-real pass application reaches them and focused671 proved the override dispatch contract.
-Then continue with the next high-value behavior family, rebuilding, running both renderers where
+machinery. The stock-effect families now retain only dispositioned protected OnApply hooks and one
+SkinnedEffect explicit-interface inventory artifact; real pass application reaches the hooks and
+focused671 proved the override dispatch contract. Audit RenderTargetCube's five caller-visible
+lifecycle/value gaps next in its existing cube-face workflow: ContentLost registration,
+IsContentLost, DepthStencilFormat, MultiSampleCount and RenderTargetUsage. Then continue with the
+next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
@@ -1378,7 +1379,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused677 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused678 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3081,6 +3082,25 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 programmatic; no screenshot or visual inspection was used. Sibling CNA advanced externally to
 clean `f698d0f548`; no CNA source was edited. Finish EnvironmentMapEffect's Alpha, EmissiveColor and
 EnvironmentMapSpecular behavior next.
+
+Focused678 extends `graphics.environment_map_effect.reflection` from4 to5 controls and closes its
+last three caller-visible members. The cloned material retains Alpha=.75, red EmissiveColor=.25 and
+blue EnvironmentMapSpecular=.2, and remains independent through temporary source mutations. Zero
+diffuse isolates the terms in real pixels: the Fresnel0 centre is exact RGBA(0,191,38,191), showing
+the alpha-scaled lime reflection plus blue specular, while the facing Fresnel1 centre is exact
+RGBA(48,1,38,191), exposing the red emissive surface while retaining specular and alpha.
+
+SOFTWARE and OPENGLES3 pass5/5 with byte-identical stdout and empty stderr; the focused SOFTWARE
+CTest passes. Temporary coverage moves1823->1826/2326 at632 demos,301/329 types and156/753 fields.
+EnvironmentMapEffect retains only protected OnApply, dispositioned through these real pass draws
+and focused671's base dispatch workflow. Evidence:`/tmp/checkpoint-678-*` and
+`/tmp/checkpoint-678-coverage.md`. Runner SHA-256 is
+`09ca54ad6860d8f666e88b09f7cb9f901cf08429b30666f55174b4d5754c2a71`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Pixel validation was
+programmatic; no screenshot or visual inspection was used. Sibling CNA remained clean external
+`f698d0f548`; no CNA source was edited. Audit RenderTargetCube's five remaining public behaviors
+next.
 
 ## 15. Assumptions the next session must know
 
