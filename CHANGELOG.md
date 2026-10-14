@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a PBR surface-mode scene covering vertex-colour RGB/alpha multiplication, alpha
+  opaque/blend/mask cutoff behavior and double-sided back-face basis reversal.
 - Extended the PBR specular-material scene with dual-UV selection and independent texture
   transforms for both specular strength and colour maps.
 - Extended the PBR texture-map scene with exact normal-scale and occlusion-strength behavior at

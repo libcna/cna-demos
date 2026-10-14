@@ -145,7 +145,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (45 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (46 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
   diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
   specular_lights now has eight on both renderers with inspected labeled comparisons.
@@ -170,8 +170,9 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `graphics.pbr_effect.color_spaces` gives exact rendered evidence for all three texture decode
   switches and final output encoding. `graphics.pbr_effect.texture_maps` now also proves normal-map
   scale and occlusion strength at one and zero; the expanded specular scene samples both remaining
-  maps' independent UV selectors/transforms. Remaining observable material controls are alpha
-  modes/cutoff, double-sided shading and vertex-colour multiplication.
+  maps' independent UV selectors/transforms. ✅ `graphics.pbr_effect.material_surface` covers alpha
+  modes/cutoff, double-sided shading and vertex-colour RGB/alpha multiplication. Complete the
+  detailed PBR-family public-surface disposition before marking this family complete.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
@@ -7998,3 +7999,21 @@ uses at most three jobs; metadata remains645/0, self-tests pass5/5 and4/4, and t
 stays302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-830-pbr-specular-uv-*` and `/tmp/checkpoint-830-coverage.md`. Continue with PBR
 alpha modes/cutoff, vertex-colour multiplication and double-sided shading.
+
+## Focused831-PbrEffect-surface-modes
+
+New `graphics.pbr_effect.material_surface` gives ten controls to glTF's remaining material-surface
+state. A canonical60-byte coloured vertex renders white with the gate off, blue with it on and
+half-blue under Blend plus straight-alpha compositing. Mask discards alpha64 below cutoff0.5, keeps
+alpha192, and keeps alpha64 after lowering cutoff to0.2. With specular removed, an actual back face
+under oblique rear light changes from black to exact green249 when double-sided state reverses its
+shading basis. Defaults and combined state mutation also round-trip.
+
+Two final OPENGLES3/Xvfb runs pass10/10 identically; the inspected800x480 capture shows all visible
+panels and the intended black discard/unlit positions. Early probes had a zero half-vector and the
+wrong XNA winding assumption; those demo-oracle errors were corrected without a CNA issue. SOFTWARE
+takes its declared fallback skip and the exact CTest passes as skipped. The build uses at most three
+jobs and emits only the known Draco CMP0148 configure warning; metadata is646/0, self-tests pass5/5
+and4/4, and temporary coverage stays302/329 types,2114/2326 members,169/753 fields and3078/3205 C
+routes. Evidence:`/tmp/checkpoint-831-pbr-surface-*` and `/tmp/checkpoint-831-coverage.md`. Complete
+the PbrEffect/SkinnedPbrEffect public-surface disposition next and then select the next real gap.

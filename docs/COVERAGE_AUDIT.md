@@ -2482,3 +2482,20 @@ The first draft's named `Color::Green` was XNA's128-channel web colour, so its o
 changing the fixture to explicit255 restored the intended full-green41 oracle. This was a demo-data
 error, not a CNA defect. SOFTWARE remains a declared fallback skip. Together with the base/emissive
 coordinate demo, all seven public PBR texture slots now have sampled selector/transform evidence.
+
+### PbrEffect vertex colour, alpha coverage and double-sided shading
+
+New `graphics.pbr_effect.material_surface` uses the canonical60-byte record to exercise the final
+glTF material-surface controls. With white ambient and base colour, a blue `COLOR_0` yields white
+when disabled and exact blue when enabled. Its alpha128 reaches `BlendState::NonPremultiplied` and
+produces blue128 over black. Mask mode discards red alpha64 below cutoff0.5, retains red alpha192,
+and retains alpha64 after the cutoff moves to0.2. A real back face under oblique rear lighting stays
+black with one-sided shading and becomes exact green249 when double-sided state reverses the whole
+basis. Defaults and combined property mutations also round-trip.
+
+Two final OPENGLES3/Xvfb runs pass10/10 identically, and the capture was inspected. Early test
+iterations used a zero view/light half-vector and then the wrong winding assumption for XNA's
+viewport convention; correcting the demo oracle resolved both without a CNA issue. SOFTWARE remains
+a declared fallback skip. The demo proves rigid PBR behavior; the equivalent skinned fields share
+the same shader terms and already have actual animated/IBL coverage, so duplicate panels require a
+separate reason rather than automatic demo-count growth.

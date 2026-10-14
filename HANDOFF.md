@@ -16,7 +16,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
-* Mostly complete: 6 (effects and shaders, 45; the C `effects.h` route audit is complete).
+* Mostly complete: 6 (effects and shaders, 46; the C `effects.h` route audit is complete).
 * In progress: 7 (models/glTF, 23), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
@@ -66,10 +66,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-645 project-built catalog demos in18 categories: math78, game33, graphics174, audio23, core3,
+646 project-built catalog demos in18 categories: math78, game33, graphics175, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,283 game and199 standalone;
-609 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,284 game and199 standalone;
+610 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -157,6 +157,8 @@ Focused829 extends the existing PBR texture-map workflow with sampled normal-sca
 occlusion-strength behavior at one and zero.
 Focused830 extends the existing specular-material workflow with sampled dual-UV selection and
 independent transforms for both `KHR_materials_specular` maps.
+Focused831 adds actual PBR vertex-colour RGB/alpha multiplication, all alpha coverage modes/cutoff
+and double-sided back-face basis reversal.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3247,6 +3249,28 @@ members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-830-pbr-
 `/tmp/checkpoint-830-coverage.md`. Audit PBR alpha modes/cutoff, vertex-colour multiplication and
 double-sided shading next; CNA's own conformance scene provides a source oracle, but cna-demos has
 no current runtime demonstration of those controls.
+
+### Focused831-PbrEffect-surface-modes
+
+New `graphics.pbr_effect.material_surface` uses CNA's canonical60-byte coloured PBR vertex for ten
+controls. Defaults and combined mutations round-trip first. Exact pixels then prove disabled versus
+enabled `COLOR_0` (white versus blue), half-alpha vertex colour under Blend plus
+`NonPremultiplied` (blue128 over black), Mask discard below cutoff, preservation above cutoff and
+the same quarter-alpha fragment retained after lowering cutoff. A back-facing quad under an oblique
+rear light is black with one-sided shading and exact green249 when double-sided state reverses its
+normal/tangent basis; specular is zeroed to isolate the diffuse result.
+
+Two final OPENGLES3/Xvfb runs pass10/10 identically. The inspected800x480 capture shows the visible
+white/blue/half-blue, two red and green panels at their expected positions; the two deliberately
+discarded/unlit centres remain black. Initial probes used an exactly opposing view/light pair and
+then the wrong winding assumption for XNA's viewport convention; both were demo-oracle errors fixed
+before validation, not CNA defects. SOFTWARE takes the declared PBR capability skip and its exact
+CTest passes as skipped. The `-j3` build emits only the established Draco CMP0148 configure warning;
+metadata is646/0, both tool self-test suites pass and temporary coverage remains302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-831-pbr-surface-*` and `/tmp/checkpoint-831-coverage.md`. Complete a public
+PbrEffect/SkinnedPbrEffect member-and-behavior disposition pass next, credit shared behavior without
+duplicating it and select the next real gap.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
