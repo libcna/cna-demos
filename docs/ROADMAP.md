@@ -5819,3 +5819,20 @@ and157/753 fields; GamerServices moves127->138/244. Evidence:
 `/tmp/checkpoint-704-property-dictionary-*` and `/tmp/checkpoint-704-coverage.md`. No service,
 network, screenshot or visual result is claimed. Continue the actual C++ collection/mutation
 contract while leaving CLR aliases dispositioned.
+
+## Focused705-PropertyDictionary-collection-contract
+
+A copy of the eight real persisted columns now exercises the remaining public C++ collection
+contract. Keys and Values are matching sorted snapshots. CopyTo atomically rejects a short shifted
+destination, then fills an offset destination while preserving its outer sentinels. Pair
+Add/Contains/Remove distinguish exact values, duplicate Add refuses without replacement, key Remove
+reports present/absent exactly and Clear empties the copy. IsReadOnly remains true alongside those
+working mutators, matching CNA's documented FNA behavior.
+
+SOFTWARE and OPENGLES3/X11 each execute20 controls, pass19 and fail only established ISSUE-085 with
+byte-identical stdout and empty stderr. The focused known-issue SOFTWARE CTest, metadata validation
+and validator self-tests pass. Temporary coverage stays2080/2326 at632 demos,301/329 types and
+157/753 fields because the eight remaining inventory names are explicit CLR ICollection/enumerator
+forms with no distinct CNA C++ entry points. Evidence:`/tmp/checkpoint-705-property-collection-*`
+and `/tmp/checkpoint-705-coverage.md`. No service, network, screenshot or visual result is claimed.
+Continue with Gamer/GamerProfile identity and lifetime.

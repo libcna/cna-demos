@@ -29,6 +29,8 @@
 #include "Microsoft/Xna/Framework/Net/NetworkSessionType.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "System/DateTime.hpp"
+#include "System/ArgumentException.hpp"
+#include "System/Collections/Generic/KeyValuePair.hpp"
 #include "System/IO/Stream.hpp"
 #include "System/TimeSpan.hpp"
 
@@ -276,6 +278,63 @@ namespace
             ctx.Check(writerStreamsExact_ && replayPersisted,
                       "an offline writer creates, reads and persists a stream column (CNA-DEMOS-ISSUE-085)");
 
+            PropertyDictionary scratch = firstColumns;
+            const std::vector<std::string> keys = scratch.Keys();
+            const std::vector<std::any> values = scratch.Values();
+            ctx.Check(keys.size() == 8 && values.size() == 8 && keys.front() == "Accuracy" && keys.back() == "Time" &&
+                          std::any_cast<float>(values.front()) == 0.75f &&
+                          std::any_cast<System::TimeSpan>(values.back()) == System::TimeSpan::FromSeconds(112),
+                      "Keys and Values are matching sorted snapshots of the eight persisted columns");
+
+            const std::pair<std::string, std::any> sentinel{"sentinel", std::any(-1)};
+            std::vector<std::pair<std::string, std::any>> shortCopy(8, sentinel);
+            bool shortCopyRefused = false;
+            try
+            {
+                scratch.CopyTo(shortCopy, 1);
+            }
+            catch (const System::ArgumentException&)
+            {
+                shortCopyRefused = true;
+            }
+            bool shortCopyUntouched = true;
+            for (const auto& pair : shortCopy)
+            {
+                shortCopyUntouched = shortCopyUntouched && pair.first == "sentinel" &&
+                    std::any_cast<int>(pair.second) == -1;
+            }
+            std::vector<std::pair<std::string, std::any>> copied(10, sentinel);
+            scratch.CopyTo(copied, 1);
+            ctx.Check(shortCopyRefused && shortCopyUntouched && copied.front().first == "sentinel" &&
+                          copied.back().first == "sentinel" && copied[1].first == "Accuracy" &&
+                          copied[8].first == "Time",
+                      "CopyTo refuses a short offset atomically and preserves outer sentinels on success");
+
+            using PropertyPair = System::Collections::Generic::KeyValuePair<std::string, std::any>;
+            const PropertyPair temporary("Temporary", std::any(99));
+            scratch.Add(temporary);
+            bool duplicateRefused = false;
+            try
+            {
+                scratch.Add("Temporary", std::any(100));
+            }
+            catch (const System::ArgumentException&)
+            {
+                duplicateRefused = true;
+            }
+            const bool pairMatched = scratch.Contains(temporary) &&
+                !scratch.Contains(PropertyPair("Temporary", std::any(98)));
+            const bool wrongPairPreserved = !scratch.Remove(PropertyPair("Temporary", std::any(98))) &&
+                scratch.ContainsKey("Temporary");
+            const bool matchingPairRemoved = scratch.Remove(temporary) && !scratch.ContainsKey("Temporary");
+            scratch.Add("ByKey", std::any(7));
+            const bool keyRemoved = scratch.Remove("ByKey") && !scratch.Remove("ByKey");
+            scratch.Add("ClearMe", std::any(1));
+            scratch.Clear();
+            ctx.Check(scratch.getIsReadOnlyProperty() && duplicateRefused && pairMatched && wrongPairPreserved &&
+                          matchingPairRemoved && keyRemoved && scratch.getCountProperty() == 0,
+                      "the read-only flag coexists with exact Add, Contains, Remove and Clear collection behavior");
+
             // BeginPageDown/EndPageDown move the same reader to the next rows.
             int downCallbacks = 0;
             bool downStateMatched = false;
@@ -356,6 +415,9 @@ CNA_DEMOS_GAME(PagingDemo, {
              "PropertyDictionary::GetValueOutcome", "PropertyDictionary::GetValueSingle",
              "PropertyDictionary::GetValueStream", "PropertyDictionary::GetValueString",
              "PropertyDictionary::GetValueTimeSpan", "PropertyDictionary::SetValue",
+             "PropertyDictionary::Add", "PropertyDictionary::Clear", "PropertyDictionary::Contains",
+             "PropertyDictionary::CopyTo", "PropertyDictionary::IsReadOnly", "PropertyDictionary::Remove",
+             "PropertyDictionary::Keys", "PropertyDictionary::Values",
              "LeaderboardEntry::Columns", "LeaderboardEntry::RankingEXT", "LeaderboardReader::Entries"},
     .tags = {"gamer-services", "leaderboard", "high-score", "paging", "offline"},
     .frames = 30,

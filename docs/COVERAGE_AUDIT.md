@@ -1322,6 +1322,19 @@ the stream round trip with identical stdout and empty stderr. Evidence:
 `/tmp/checkpoint-704-property-dictionary-*`. This is isolated local-store evidence; no configured
 service or remote stream-column transport is claimed.
 
+The follow-up collection pass copies those eight loaded columns so mutation cannot affect the live
+reader. Keys/Values snapshots agree in sorted order; CopyTo proves atomic insufficient-capacity
+refusal and successful offset placement with untouched sentinels. Add, Contains and Remove use full
+key/value equality, duplicate Add preserves the original, key Remove distinguishes first/repeated
+calls and Clear empties the copy. IsReadOnly remains true despite working explicit mutators, as CNA
+documents from FNA. Both renderers retain only ISSUE-085 while all three new controls pass.
+Evidence:`/tmp/checkpoint-705-property-collection-*`.
+
+The XNA inventory records five ICollection operations, IsReadOnly and two GetEnumerator forms under
+CLR-mangled names. CNA exposes the useful operations as ordinary C++ methods and range iterators,
+not as separate CLR entry points. Their behavior is now demonstrated, but those eight generated
+names remain intentionally uncredited rather than being placed in metadata synthetically.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

@@ -1361,7 +1361,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused704
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused705
 projects the632-demo staged catalog to2080/2326 XNA members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
@@ -1392,9 +1392,11 @@ are now covered. The
 remaining event-payload constructors, voice, invites, leaderboard callbacks and CLR serialization
 members are dispositioned in COVERAGE_AUDIT. The existing leaderboard paging workflow now covers
 offline Begin/End read and navigation, identity and reader disposal. Continue ordinary
-GamerServices members with PropertyDictionary's actual C++ collection behavior; its typed values,
-lookup and Item surface are now covered, and ISSUE-085 records the broken offline stream column.
-Do not name its CLR explicit-interface aliases merely to raise coverage. Continue the next
+GamerServices members after completing PropertyDictionary's actual C++ collection behavior; its
+typed values, lookup, Item, snapshot, copy and mutation surfaces are now covered, and ISSUE-085
+records the broken offline stream column. Its remaining eight inventory entries are CLR aliases
+and enumerators and stay intentionally uncredited. Audit Gamer/GamerProfile identity and lifetime
+next, then continue the next
 high-value behavior family after each batch, rebuilding and running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1403,7 +1405,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused704 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused705 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3616,6 +3618,27 @@ hashes remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da`
 screenshot or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
 source was edited. Continue with the dictionary's C++ collection/mutation contract, leaving CLR
 aliases uncredited.
+
+Focused705 completes that dictionary audit on a copy of the eight actually persisted columns.
+Keys and Values return matching sorted snapshots. CopyTo rejects an undersized shifted destination
+without changing its sentinels, then copies all pairs at offset one while preserving both outer
+sentinels. Pair Add/Contains/Remove distinguish value mismatches, duplicate Add refuses without
+replacement, key Remove reports present/absent exactly and Clear empties the copy. IsReadOnly stays
+true as CNA/FNA document even though those explicit mutators work.
+
+SOFTWARE and OPENGLES3/X11 each execute20 controls, pass19 and fail only the established ISSUE-085
+stream check with byte-identical stdout and empty stderr. The focused known-issue SOFTWARE CTest,
+metadata validation and five validator self-tests pass. Temporary coverage intentionally stays
+2080/2326 at632 demos,301/329 types and157/753 fields: the inventory's five ICollection operations,
+IsReadOnly and two GetEnumerator spellings have no distinct CNA C++ entry points, so the demo names
+actual public C++ members without fabricating CLR metadata. Evidence:
+`/tmp/checkpoint-705-property-collection-*` and `/tmp/checkpoint-705-coverage.md`. Runner SHA-256 is
+`3604ed12093f204414012e8a44aa98551a85be82b7419ed7c722e16a30363bf0`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No service, network,
+screenshot or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
+source was edited. Continue the ordinary GamerServices audit with Gamer/GamerProfile identity and
+lifetime.
 
 ## 15. Assumptions the next session must know
 
