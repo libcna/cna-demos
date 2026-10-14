@@ -3,6 +3,7 @@
 #include <array>
 #include <chrono>
 #include <filesystem>
+#include <memory>
 #include <string>
 #include <stdexcept>
 #include <system_error>
@@ -18,9 +19,9 @@ using namespace CNA::Content::Cnb;
 namespace
 {
     struct Rules { std::string name; float gravity; std::uint32_t lives; };
+    struct LoaderState { int reads = 0; };
     constexpr auto RulesChunk = MakeChunkId('R', 'U', 'L', 'E');
     constexpr const char* RulesName = "CnaDemos.GameRules";
-    int reads = 0;
 
     struct TemporaryContent
     {
@@ -35,19 +36,35 @@ namespace
     void CnbLoader(CnaDemos::DemoContext& ctx)
     {
         const auto typeId = CnbAssetTypeIdFromName(RulesName);
-        // Registration outlives every manager: the factory must not capture local references.
+        // Registration outlives every manager, so capture owned state rather than local references.
+        auto firstState = std::make_shared<LoaderState>();
+        const std::weak_ptr<LoaderState> retainedFirst = firstState;
         ContentManager::RegisterCnbLoaderEXT<Rules>(typeId, RulesName,
-            [](const CnbDocument& document, ContentManager&) {
+            [firstState](const CnbDocument& document, ContentManager&) {
                 document.RequireAsset(CnbAssetTypeIdFromName(RulesName), 1);
                 const std::array known{RulesChunk};
                 document.RequireMandatoryChunksUnderstood(known);
                 auto input = document.OpenChunk(document.RequireSingle(RulesChunk));
                 Rules result{input.ReadString(), input.ReadF32(), input.ReadU32()};
                 input.RequireExhausted();
-                ++reads;
+                ++firstState->reads;
                 return result;
             });
-        reads = 0;
+        auto replacementState = std::make_shared<LoaderState>();
+        const std::weak_ptr<LoaderState> ignoredReplacement = replacementState;
+        ContentManager::RegisterCnbLoaderEXT<Rules>(typeId, RulesName,
+            [replacementState](const CnbDocument&, ContentManager&) {
+                ++replacementState->reads;
+                return Rules{"Replacement", -1.0f, 99};
+            });
+        firstState.reset();
+        replacementState.reset();
+        ctx.Check(!retainedFirst.expired() && ignoredReplacement.expired(),
+                  "repeat registration retains the first factory capture and releases the ignored replacement");
+        const auto ReadCount = [&retainedFirst] {
+            const auto state = retainedFirst.lock();
+            return state ? state->reads : -1;
+        };
 
         // A real game writes this at build time. Generate a private temporary asset here so the
         // schema, writer and matching runtime reader are visible together in one focused demo.
@@ -69,13 +86,20 @@ namespace
         ContentManager content(nullptr, path.string());
         const Rules rules = content.Load<Rules>("rules");
         ctx.Print("{}: gravity {}, lives {}", rules.name, rules.gravity, rules.lives);
-        ctx.Check(rules.name == "Moon" && rules.lives == 3, "custom string and integer fields round trip");
+        ctx.Check(rules.name == "Moon" && rules.lives == 3 && ReadCount() == 1,
+                  "the first registered factory wins and its string and integer fields round trip");
         ctx.CheckNear(rules.gravity, 1.62, 1e-6, "custom float field round trips");
         (void)content.Load<Rules>("rules");
-        ctx.Check(reads == 1, "a second Load uses the manager's cache");
-        ContentManager another(nullptr, path.string());
-        (void)another.Load<Rules>("rules");
-        ctx.Check(reads == 2, "registration is shared but caches belong to each manager");
+        ctx.Check(ReadCount() == 1, "a second Load uses the manager's cache");
+        {
+            ContentManager another(nullptr, path.string());
+            (void)another.Load<Rules>("rules");
+            ctx.Check(ReadCount() == 2, "registration is shared but caches belong to each manager");
+        }
+        ContentManager replacementManager(nullptr, path.string());
+        const Rules afterManagerDestruction = replacementManager.Load<Rules>("rules");
+        ctx.Check(afterManagerDestruction.name == "Moon" && ReadCount() == 3,
+                  "the retained first factory remains live after a manager is destroyed and replaced");
 
         // A newer writer can add optional information without changing the known RULE schema.
         // The same extension marked mandatory must be refused: silently ignoring it would
@@ -95,7 +119,7 @@ namespace
         required.AddChunk(RulesChunk, bytes, CnbChunkFlags::Mandatory);
         required.AddChunk(ExtensionChunk, {42}, CnbChunkFlags::Mandatory);
         required.WriteToFile((path / "required.cnb").string());
-        const int readsBeforeFailure = reads;
+        const int readsBeforeFailure = ReadCount();
         bool mandatoryRejected = false;
         try { (void)content.Load<Rules>("required"); }
         catch (const ContentLoadException& error)
@@ -103,14 +127,14 @@ namespace
             mandatoryRejected = true;
             ctx.Print("Required extension refused: {}", error.what());
         }
-        ctx.Check(mandatoryRejected && reads == readsBeforeFailure,
+        ctx.Check(mandatoryRejected && ReadCount() == readsBeforeFailure,
                   "an unknown mandatory chunk is rejected before decoding the rules");
 
         // Repair the same asset on disk and retry using the same manager, without Unload.
         // Failed loads must not leave a cached, partially initialized game object behind.
         writer.WriteToFile((path / "required.cnb").string());
         const Rules repaired = content.Load<Rules>("required");
-        ctx.Check(repaired.name == rules.name && repaired.lives == rules.lives && reads == readsBeforeFailure + 1,
+        ctx.Check(repaired.name == rules.name && repaired.lives == rules.lives && ReadCount() == readsBeforeFailure + 1,
                   "the same manager retries a failed asset after its file is repaired");
 
         // The writer validates the CNB container, not our game-owned RULE schema. These
@@ -133,7 +157,7 @@ namespace
             const auto document = CnbDocument::ParseFile(filename);
             const auto count = document.FindAll(RulesChunk).size();
             const std::size_t expectedCount = defect == "missing" ? 0 : defect == "duplicate" ? 2 : 1;
-            const int completedBefore = reads;
+            const int completedBefore = ReadCount();
             bool refused = false;
             try { (void)content.Load<Rules>(defect); }
             catch (const ContentLoadException& error)
@@ -143,7 +167,7 @@ namespace
                           diagnostic.find("RULE") != std::string::npos;
                 ctx.Print("{} schema refused: {}", defect, diagnostic);
             }
-            ctx.Check(count == expectedCount && refused && reads == completedBefore,
+            ctx.Check(count == expectedCount && refused && ReadCount() == completedBefore,
                       defect + " RULE data is rejected with file/chunk context before returning a value");
         }
 
@@ -165,8 +189,8 @@ namespace
 CNA_DEMOS_CONSOLE(CnbLoader, {
     .id = "content.custom.cnb_loader",
     .title = "A custom CNB asset schema (CNAEXT)",
-    .description = "Writes a small game-rules CNB asset, registers its typed loader, checks per-manager caching "
-                   "and process-wide registration, optional versus required extensions, retry after repair and invalid schema layouts.",
+    .description = "Writes a game-rules CNB asset, checks first-wins typed-loader registration and capture lifetime, "
+                   "per-manager caching, extensions, retry after repair and invalid schema layouts.",
     .apis = {"ContentManager::RegisterCnbLoaderEXT", "ContentManager::Load",
              "CNA::Content::Cnb::CnbAssetTypeIdFromName", "CNA::Content::Cnb::CnbWriter::SetMetadata",
              "CNA::Content::Cnb::CnbWriter::AddChunk", "CNA::Content::Cnb::CnbWriter::WriteToFile",
@@ -175,4 +199,6 @@ CNA_DEMOS_CONSOLE(CnbLoader, {
              "CNA::Content::Cnb::CnbDocument::RequireSingle", "CNA::Content::Cnb::CnbByteReader::RequireExhausted",
              "CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood"},
     .tags = {"content", "custom", "cnb", "cnaext"},
+    .restrictions = "Process-global custom registration is isolated in a child process; concurrent registration is not exercised.",
+    .ownProcess = true,
 })

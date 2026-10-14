@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the custom CNB loader with executed first-registration-wins precedence, ignored-factory
+  capture release and retained-factory lifetime across ContentManager replacement.
 - Extended ContentManager lifetime coverage with protected Dispose-hook dispatch, IDisposable and
   repeated-disposal semantics, disposed ReadAsset refusal, and runtime evidence for ISSUE-010's
   wrong disposed-Load exception type.

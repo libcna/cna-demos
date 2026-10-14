@@ -1738,13 +1738,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-753 close the
-texture/render-target lifetime work and ContentManager disposal dispatch/refusal audit. Continue
-the next explicit ContentManager gap in the existing `content.custom.cnb_loader`: exercise repeat
-`RegisterCnbLoaderEXT` registration and prove its actual first-registration-wins behavior plus
-factory capture lifetime across manager destruction/recreation. Keep registration names isolated
-because the registry is process-global; make the existing workflow `ownProcess` before retaining a
-local capture, rather than adding a wrapper-only ID. Build with at most three compile jobs and keep
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-754 close the
+texture/render-target lifetimes, ContentManager disposal and CNB registration precedence. Continue
+the same `content.custom.cnb_loader` public-registration audit: execute empty-factory refusal,
+built-in/reserved identifier refusal and custom ID/canonical-name mismatch while proving the valid
+first registration remains installed and usable. Keep the checks isolated in the existing
+`ownProcess` workflow; do not add a guard-only ID. Build with at most three compile jobs and keep
 focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
@@ -1845,6 +1844,21 @@ warning-free incremental build uses `-j3`; metadata remains636/0, known-issue de
 self-tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326 members,169/753 fields and
 2999/3205 C routes. Evidence:`/tmp/checkpoint-753-*` and `/tmp/checkpoint-753-coverage.md`. No
 screenshot or manual inspection was performed, and no new CNA issue was found.
+
+### Focused754 CNB loader registration precedence and lifetime
+
+`content.custom.cnb_loader` grows from twelve to fourteen controls and becomes `ownProcess` to
+isolate its process-global registration. Two observably different factories register one custom
+ID/name: the registry retains the first factory capture, releases the ignored replacement capture
+and decodes Moon rather than the replacement marker. That first factory remains live after one
+manager is destroyed and another is created, while their caches remain independent. All previous
+schema, repair and refusal checks stay intact.
+
+SOFTWARE and OPENGLES3/Xvfb pass14/14, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
+remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-754-cnb-loader-*` and `/tmp/checkpoint-754-coverage.md`. No rendering, screenshot
+or manual inspection was used, and no CNA issue was found.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

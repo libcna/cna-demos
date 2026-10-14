@@ -6653,3 +6653,19 @@ members,169/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-753-*` a
 `/tmp/checkpoint-753-coverage.md`. No screenshot or manual inspection was performed. Audit the
 existing CNB custom-manager registration workflow next: repeated loader registration currently has
 only source-level first-wins evidence and deserves an executed lifetime/precedence disposition.
+
+## Focused754-CNB-loader-registration-precedence-and-lifetime
+
+`content.custom.cnb_loader` adds two controls, reaching14, and is now `ownProcess` to isolate the
+process-global registry. Two observably different factories register the same custom ID/name. The
+first factory's owned capture remains retained while the ignored replacement capture is released;
+loads continue to decode Moon rather than the replacement marker. Destroying one manager and
+creating another keeps the first factory live while preserving independent manager caches. All
+existing schema, repair and refusal behavior remains intact.
+
+SOFTWARE and OPENGLES3/Xvfb pass14/14, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, validator/checkpoint self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-754-cnb-loader-*` and
+`/tmp/checkpoint-754-coverage.md`. No rendering, screenshot or manual inspection was used. Audit
+the same public registration API's empty-factory, custom-range and canonical-name/hash guards next.
