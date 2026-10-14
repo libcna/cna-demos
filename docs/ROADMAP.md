@@ -7387,3 +7387,18 @@ runtime coverage remains302/329 types,2114/2326 non-field members,169/753 fields
 routes. Evidence:`/tmp/checkpoint-793-dynamic-listeners-*` and `/tmp/checkpoint-793-coverage.md`. No
 concurrent dispatch, callback-thread or audible continuity claim is made. Audit SoundEffectInstance
 Volume/Pitch/Pan NaN and exact boundary preservation next.
+
+## Focused794-SoundEffectInstance-scalar-boundaries
+
+`audio.sound_effect_instance.volume_pitch_pan` grows from five to eleven controls. It retains its
+default and live-property checks, accepts the exact lower and upper endpoints for Volume, Pitch and
+Pan, rejects NaN independently for all three in addition to the original finite outliers, and
+proves every refused write leaves all three last-valid values intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass11/11 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-794-audio-ranges-*` and `/tmp/checkpoint-794-coverage.md`. This is
+property/range behavior; no mixer gain, audible pitch, stereo image or listening result is claimed.
+Audit disposed property setters in the existing lifetime workflow next.

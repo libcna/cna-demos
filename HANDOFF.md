@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-793 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-794 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1776,9 +1776,11 @@ Both routes also refuse valid names after Dispose while repeated cleanup stays i
 DynamicSoundEffectInstance now has an isolated empty-start recovery probe that establishes exactly
 three canonical BufferNeeded requests, synchronous refill and retained Playing state before the
 continuous workflow. A one-shot subscriber safely removes itself during the first dispatch without
-suppressing the independent refill listener. Audit SoundEffectInstance Volume/Pitch/Pan NaN and
-boundary preservation next, then continue through the remaining audio behavior rows. Do not add
-isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
+suppressing the independent refill listener. SoundEffectInstance Volume/Pitch/Pan now cover exact
+inclusive endpoints, NaN refusal and atomic value preservation. Audit their disposed-setter
+behavior in the existing lifetime workflow next, then continue through the remaining audio
+behavior rows. Do not add isolated getter demos. Build with at most three compile jobs and keep
+focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2585,6 +2587,19 @@ most three jobs; metadata remains636/0 and coverage is unchanged. Evidence:
 `/tmp/checkpoint-793-dynamic-listeners-*`. No concurrent dispatch, callback-thread or audible
 continuity claim is made. Audit SoundEffectInstance Volume/Pitch/Pan NaN and exact boundary
 preservation next.
+
+### Focused794-SoundEffectInstance-scalar-boundaries
+
+`audio.sound_effect_instance.volume_pitch_pan` grows from five to eleven controls. It retains its
+default and live-property checks, accepts the exact lower and upper endpoints for Volume, Pitch and
+Pan, rejects NaN independently for all three in addition to the original finite outliers, and
+proves every refused write leaves all three last-valid values intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass11/11 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
+unchanged. Evidence:`/tmp/checkpoint-794-audio-ranges-*`. This is property/range behavior; no mixer
+gain, audible pitch, stereo image or listening result is claimed. Audit disposed property setters
+in the existing lifetime workflow next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

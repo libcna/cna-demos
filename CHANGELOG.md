@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed SoundEffectInstance Volume/Pitch/Pan scalar boundaries with exact inclusive endpoints,
+  NaN refusals and preservation of all three values after finite and nonfinite failures.
 - Verified DynamicSoundEffectInstance BufferNeeded subscriber independence: a one-shot listener
   removes itself during dispatch without suppressing three callbacks to the refill listener.
 - Added an isolated DynamicSoundEffectInstance starvation-recovery control: an empty playing

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // SoundEffectInstance Volume, Pitch and Pan: change a playing voice, within XNA's ranges.
+#include <limits>
 #include <string>
 
 #include "CnaDemos/Demo.hpp"
@@ -32,6 +33,19 @@ namespace
                       voice.getPanProperty() == -0.75f,
                   "the new values are kept");
 
+        voice.setVolumeProperty(0.0f);
+        voice.setPitchProperty(-1.0f);
+        voice.setPanProperty(-1.0f);
+        ctx.Check(voice.getVolumeProperty() == 0.0f && voice.getPitchProperty() == -1.0f &&
+                      voice.getPanProperty() == -1.0f,
+                  "the lower Volume, Pitch and Pan boundaries are accepted exactly");
+        voice.setVolumeProperty(1.0f);
+        voice.setPitchProperty(1.0f);
+        voice.setPanProperty(1.0f);
+        ctx.Check(voice.getVolumeProperty() == 1.0f && voice.getPitchProperty() == 1.0f &&
+                      voice.getPanProperty() == 1.0f,
+                  "the upper Volume, Pitch and Pan boundaries are accepted exactly");
+
         // XNA documents the ranges (Volume 0..1, Pitch and Pan -1..1); CNA rejects values outside them.
         const auto rejects = [&](const char* what, auto set) {
             try
@@ -47,6 +61,13 @@ namespace
         rejects("Volume 1.5", [&] { voice.setVolumeProperty(1.5f); });
         rejects("Pitch -2", [&] { voice.setPitchProperty(-2.0f); });
         rejects("Pan 1.1", [&] { voice.setPanProperty(1.1f); });
+        const float nan = std::numeric_limits<float>::quiet_NaN();
+        rejects("Volume NaN", [&] { voice.setVolumeProperty(nan); });
+        rejects("Pitch NaN", [&] { voice.setPitchProperty(nan); });
+        rejects("Pan NaN", [&] { voice.setPanProperty(nan); });
+        ctx.Check(voice.getVolumeProperty() == 1.0f && voice.getPitchProperty() == 1.0f &&
+                      voice.getPanProperty() == 1.0f,
+                  "rejected finite and NaN writes preserve all three prior values");
         voice.Stop();
     }
 }
@@ -54,8 +75,8 @@ namespace
 CNA_DEMOS_CONSOLE(VolumePitchPan, {
     .id = "audio.sound_effect_instance.volume_pitch_pan",
     .title = "Volume, pitch and pan of a voice",
-    .description = "Changes SoundEffectInstance::Volume, Pitch and Pan while the voice plays and shows the "
-                   "ArgumentOutOfRangeException for values outside 0..1 and -1..1.",
+    .description = "Changes SoundEffectInstance::Volume, Pitch and Pan while playing, accepts their exact range "
+                   "boundaries and proves that finite or NaN range failures preserve the prior values.",
     .apis = {"SoundEffectInstance::Volume", "SoundEffectInstance::Pitch", "SoundEffectInstance::Pan",
              "SoundEffectInstance::Play"},
     .tags = {"audio", "volume", "pitch", "pan", "instance"},
