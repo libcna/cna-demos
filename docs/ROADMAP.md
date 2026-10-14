@@ -4812,3 +4812,18 @@ unequal values, reflection names, borrowed disposal and post-library pointer use
 Evidence:`/tmp/checkpoint-643-media-values-*` and `/tmp/checkpoint-643-coverage.md`. No playback,
 listening, screenshot or visual inspection was performed. Audit MediaQueue.Item and queue-owned
 copies next without invoking the known unsafe Queue.ActiveSong replay path from ISSUE-058.
+
+## Focused644-MediaQueue-owned-items-and-range-refusal
+
+`media.media_player.queue_and_repeat` retains its six transport/repeat/shuffle controls and adds
+three ownership/indexer controls. MediaPlayer.Play copies the two ordered caller Songs into distinct
+queue-owned records; those same entries and ActiveSong remain readable after the caller objects are
+destroyed. MediaQueue.Item rejects negative and count indices with ArgumentOutOfRangeException and
+leaves both entries unchanged. The known unsafe ISSUE-058 Queue.ActiveSong replay path is never
+called. SOFTWARE and OPENGLES3 pass9/9 with byte-identical stdout and empty stderr; the focused
+SOFTWARE CTest passes. Temporary coverage moves the XNA-member projection1501->1502/2326 without
+changing the627-demo/type/C-route counts. This is transport state and C++ ownership evidence, not
+playback quality or listening evidence. Evidence:`/tmp/checkpoint-644-media-queue-*` and
+`/tmp/checkpoint-644-coverage.md`. No screenshot or visual inspection was performed. Audit the
+MediaSource records next: own every pointer returned by GetAvailableMediaSources and verify
+ToString against the actual names without reading a real user library during validation.

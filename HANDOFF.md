@@ -1342,15 +1342,14 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused643 projects XNA-member coverage to1501/2326 and closes the Album/Artist/Genre/
-Playlist value contracts plus five already-executed library collection indexers. Audit
-`media.media_player.queue_and_repeat` next for MediaQueue.Item and queue ownership. Scope the two
-caller-owned Songs so they are destroyed immediately after MediaPlayer.Play copies the collection;
-then prove both queue-owned entries remain readable, differ from the caller pointers, track the
-active item through movement, and reject negative/count indices with ArgumentOutOfRangeException.
-Preserve the current repeat/previous/shuffle workflow and do not replay Queue.ActiveSong because
-ISSUE-058 documents that unsafe CNA path. Run both dummy-audio renderer environments and the
-focused SOFTWARE CTest, then continue.
+baseline. Focused644 projects XNA-member coverage to1502/2326 and closes MediaQueue.Item with
+queue-copy ownership and range behavior. Audit `media.media_library.collections` next for
+MediaSource.ToString and returned-record ownership. The current range-for discards raw pointers
+allocated by GetAvailableMediaSources; adopt every returned record with unique_ptr, verify exact
+name/text/type for the actual records, and preserve the machine-dependent collection reporting.
+Run in a process whose XDG music/picture roots point to fresh empty `/tmp` directories so no real
+user library is indexed; run both requested renderer environments and the focused SOFTWARE CTest.
+Do not claim device enumeration beyond CNA's returned desktop source. Then continue.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2528,6 +2527,18 @@ reflection helpers, borrowed disposal and post-library pointer use are not claim
 `/tmp/checkpoint-643-media-values-*` and `/tmp/checkpoint-643-coverage.md`. No playback, listening,
 screenshot or visual inspection was performed. Both changed targets build diagnostic-free against
 clean CNA `09c3108e5`; no CNA source was edited.
+
+Focused644 extends `media.media_player.queue_and_repeat` from six to nine controls. MediaPlayer.Play
+creates two ordered queue-owned Song records distinct from the caller objects; both items and the
+active pointer remain readable after the caller Songs are destroyed. MediaQueue.Item also rejects
+negative and count indices with ArgumentOutOfRangeException while preserving both entries. The
+existing MoveNext/MovePrevious/repeat/shuffle workflow remains intact, and the unsafe ISSUE-058
+Queue.ActiveSong replay path is not invoked. SOFTWARE and OPENGLES3 pass9/9 with byte-identical
+stdout and empty stderr; the focused SOFTWARE CTest passes. Temporary coverage projects1501->
+1502/2326 with no catalog/type/C-route change. No playback quality or listening claim is made.
+Evidence:`/tmp/checkpoint-644-media-queue-*` and `/tmp/checkpoint-644-coverage.md`. No screenshot or
+visual inspection was performed. Final build is diagnostic-free against clean CNA `09c3108e5`;
+no CNA source was edited.
 
 ## 15. Assumptions the next session must know
 

@@ -12,6 +12,7 @@
 #include "Microsoft/Xna/Framework/Media/Song.hpp"
 #include "Microsoft/Xna/Framework/Media/SongCollection.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Media;
@@ -26,15 +27,40 @@ namespace
 
     void QueueAndRepeat(CnaDemos::DemoContext& ctx)
     {
-        const std::unique_ptr<Song> rising(Song::FromUri("Rising", TitleLocation::Path() + "/assets/music/rising.wav"));
-        const std::unique_ptr<Song> falling(Song::FromUri("Falling", TitleLocation::Path() + "/assets/music/falling.wav"));
-        const SongCollection playlist({rising.get(), falling.get()});
+        Song* queuedRising = nullptr;
+        Song* queuedFalling = nullptr;
+        {
+            const std::unique_ptr<Song> rising(
+                Song::FromUri("Rising", TitleLocation::Path() + "/assets/music/rising.wav"));
+            const std::unique_ptr<Song> falling(
+                Song::FromUri("Falling", TitleLocation::Path() + "/assets/music/falling.wav"));
+            const SongCollection playlist({rising.get(), falling.get()});
 
-        // Playing a collection fills MediaPlayer's Queue; the index picks the first song.
-        MediaPlayer::Play(playlist, 0);
+            // Playing a collection fills MediaPlayer's Queue with its own Song records.
+            MediaPlayer::Play(playlist, 0);
+            const MediaQueue& startedQueue = MediaPlayer::getQueueProperty();
+            queuedRising = startedQueue[0];
+            queuedFalling = startedQueue[1];
+            ctx.Check(queuedRising != rising.get() && queuedFalling != falling.get() &&
+                          queuedRising->getNameProperty() == "Rising" &&
+                          queuedFalling->getNameProperty() == "Falling",
+                      "Play copies the ordered caller songs into queue-owned records");
+        }
+
         const MediaQueue& queue = MediaPlayer::getQueueProperty();
         ctx.Print("queue: {} songs, active #{} {}", queue.getCountProperty(), queue.getActiveSongIndexProperty(), Active());
         ctx.Check(queue.getCountProperty() == 2 && Active() == "Rising", "the queue holds the playlist, starting at Rising");
+        ctx.Check(queue[0] == queuedRising && queue[1] == queuedFalling &&
+                      queue.getActiveSongProperty() == queue[0],
+                  "queue-owned items survive caller-song destruction and identify the active entry");
+        bool negativeRefused = false;
+        bool pastEndRefused = false;
+        try { static_cast<void>(queue[-1]); }
+        catch (const System::ArgumentOutOfRangeException&) { negativeRefused = true; }
+        try { static_cast<void>(queue[queue.getCountProperty()]); }
+        catch (const System::ArgumentOutOfRangeException&) { pastEndRefused = true; }
+        ctx.Check(negativeRefused && pastEndRefused && queue[0] == queuedRising && queue[1] == queuedFalling,
+                  "the queue indexer rejects negative and count indices without changing its items");
 
         MediaPlayer::MoveNext();
         ctx.Print("MoveNext: #{} {}", queue.getActiveSongIndexProperty(), Active());
@@ -73,7 +99,7 @@ CNA_DEMOS_CONSOLE(QueueAndRepeat, {
                    "and shows IsRepeating wrapping around the ends (IsShuffled for random order).",
     .apis = {"MediaPlayer::Play", "MediaPlayer::Queue", "MediaPlayer::MoveNext", "MediaPlayer::MovePrevious",
              "MediaPlayer::IsRepeating", "MediaPlayer::IsShuffled", "MediaQueue::ActiveSong",
-             "MediaQueue::ActiveSongIndex", "MediaQueue::Count", "SongCollection"},
+             "MediaQueue::ActiveSongIndex", "MediaQueue::Count", "MediaQueue::Item", "SongCollection"},
     .tags = {"media", "music", "playlist", "queue", "repeat", "shuffle"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"music/rising.wav", "music/falling.wav"},
