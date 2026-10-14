@@ -5720,3 +5720,20 @@ at632 demos,301/329 types and156/753 fields; Net moves85->86/127. Evidence:
 `/tmp/checkpoint-698-reset-ready-*` and `/tmp/checkpoint-698-coverage.md`. State was checked
 programmatically; no screenshot or visual result is claimed. Classify the remaining Net inventory
 next.
+
+## Focused699-System-Link-Begin-End-and-QoS-bandwidth
+
+The two-process find/join workflow now uses BeginFind/EndFind for the actual LAN discovery and
+BeginJoin/EndJoin for the actual connection handshake. Both Begin results are synchronously complete
+on this CNA System Link path, invoke callbacks with exact caller state and are consumed once by End.
+The existing disposed-listing refusal still uses synchronous Join. The discovered listing also
+requires positive upstream and downstream QoS estimates from CNA's two discovery probe trains.
+
+An initial run repeated the BeginFind assertion on every discovery retry; that was a demo defect and
+the final source records the token contract exactly once while retaining retries. SOFTWARE and
+OPENGLES3/X11 pass all19 host/joiner controls with byte-identical stdout and empty stderr. The
+focused SOFTWARE CTest, metadata validation and validator self-tests pass. Temporary coverage moves
+2051->2057/2326 at632 demos,301/329 types and156/753 fields; Net moves86->92/127. Evidence:
+`/tmp/checkpoint-699-async-find-join-*` and `/tmp/checkpoint-699-coverage.md`. This is Linux local UDP
+evidence; no service-directory, WAN, screenshot or visual result is claimed. Continue
+NetworkSession disposal and the fixed NetworkSessionProperties collection contract next.

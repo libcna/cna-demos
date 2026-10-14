@@ -8,6 +8,7 @@
 // Arguments: [--automated] [--screenshot PATH] [--log-level LEVEL] [--joiner] (--frames is accepted
 // and ignored: the run lasts as long as the exchange takes).
 // Exit code 0 = every check passed, 1 = a check failed.
+#include <any>
 #include <atomic>
 #include <chrono>
 #include <iostream>
@@ -45,6 +46,7 @@
 #include "Microsoft/Xna/Framework/Net/NetworkSessionType.hpp"
 #include "Microsoft/Xna/Framework/Net/QualityOfService.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/IAsyncResult.hpp"
 #include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -254,8 +256,21 @@ namespace
                 // Find lists the System Link sessions on the network with room for one more
                 // local gamer. Any other System Link game on this network shows up too: pick the
                 // one Demo Player hosts.
-                AvailableNetworkSessionCollection found =
-                    NetworkSession::Find(NetworkSessionType::SystemLink, 1, NetworkSessionProperties());
+                std::string findCallbackState;
+                std::unique_ptr<System::IAsyncResult> finding(NetworkSession::BeginFind(
+                    NetworkSessionType::SystemLink, 1, NetworkSessionProperties(),
+                    [&findCallbackState](System::IAsyncResult& result) {
+                        findCallbackState = std::any_cast<std::string>(result.getAsyncStateProperty());
+                    },
+                    std::string("find-lobby")));
+                if (!findAsyncChecked_)
+                {
+                    findAsyncChecked_ = true;
+                    report_.Check(finding->getIsCompletedProperty() && finding->getCompletedSynchronouslyProperty() &&
+                                      findCallbackState == "find-lobby",
+                                  "BeginFind returns a completed System Link search token with its callback state");
+                }
+                AvailableNetworkSessionCollection found = NetworkSession::EndFind(finding.get());
                 const auto& sessions = std::as_const(found);
                 for (int i = 0; i < sessions.getCountProperty(); ++i)
                 {
@@ -272,6 +287,9 @@ namespace
                     report_.Log("  round trip " + MilliSeconds(quality.getAverageRoundtripTimeProperty()) + " (min " +
                         MilliSeconds(quality.getMinimumRoundtripTimeProperty()) + "), measured: " +
                         (quality.getIsAvailableProperty() ? "yes" : "no"));
+                    report_.Check(quality.getBytesPerSecondDownstreamProperty() > 0 &&
+                                      quality.getBytesPerSecondUpstreamProperty() > 0,
+                                  "discovery measured positive downstream and upstream bandwidth");
                     report_.Check(available.getCurrentGamerCountProperty() == 1 &&
                                       available.getOpenPublicGamerSlotsProperty() == 1,
                           "the session holds its host and has one open slot");
@@ -285,7 +303,17 @@ namespace
                     report_.Check(!found.getIsDisposedProperty(),
                                   "the search-result collection is live while its listing is joined");
                     const AvailableNetworkSession stale = available;
-                    session_.reset(NetworkSession::Join(&available));
+                    std::string joinCallbackState;
+                    std::unique_ptr<System::IAsyncResult> joining(NetworkSession::BeginJoin(
+                        &available,
+                        [&joinCallbackState](System::IAsyncResult& result) {
+                            joinCallbackState = std::any_cast<std::string>(result.getAsyncStateProperty());
+                        },
+                        std::string("join-lobby")));
+                    report_.Check(joining->getIsCompletedProperty() && joining->getCompletedSynchronouslyProperty() &&
+                                      joinCallbackState == "join-lobby",
+                                  "BeginJoin returns its completed token and callback state before EndJoin connects");
+                    session_.reset(NetworkSession::EndJoin(joining.get()));
                     found.Dispose();
                     found.Dispose();
                     bool staleRefused = false;
@@ -368,6 +396,7 @@ namespace
         Clock::time_point joinedAt_{};
         bool finished_ = false;
         bool captured_ = false;
+        bool findAsyncChecked_ = false;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
     };

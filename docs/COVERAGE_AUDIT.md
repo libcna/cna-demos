@@ -1188,11 +1188,21 @@ then disposes the result collection twice. CNA intentionally leaves the read-onl
 visible after disposal, but the shared disposal token also reaches a previously copied listing;
 joining that copy throws ObjectDisposedException while the already established session continues.
 
-This credits `AvailableNetworkSession::OpenPrivateGamerSlots`, `SessionProperties` and
-`AvailableNetworkSessionCollection::IsDisposed` as one coherent lobby/lifetime behavior. Direct
-SOFTWARE and OPENGLES3/X11 executions pass all12 host/joiner controls with empty stderr; the focused
-SOFTWARE CTest passes. Evidence:`/tmp/checkpoint-695-find-*`. Discovery uses Linux local UDP on one
-machine; no service directory, remote host, screenshot or visual result is claimed.
+The same workflow now performs discovery through BeginFind/EndFind and connection through
+BeginJoin/EndJoin. CNA's System Link Begin tokens complete synchronously and invoke callbacks with
+the supplied state; EndFind performs the network search and EndJoin performs the blocking handshake.
+The first run checked BeginFind once per retry, a demo-only nondeterministic count corrected to one
+token-contract assertion while retries continue. The listing's QualityOfService also reports
+positive downstream and upstream estimates from the real discovery probe trains in both requested
+renderer environments.
+
+Together this credits `AvailableNetworkSession::OpenPrivateGamerSlots`, `SessionProperties`,
+`AvailableNetworkSessionCollection::IsDisposed`, the four Begin/End members and both QoS bandwidth
+properties as coherent lobby, measurement and lifetime behavior. Final SOFTWARE and OPENGLES3/X11
+executions pass all19 host/joiner controls with byte-identical stdout and empty stderr; the focused
+SOFTWARE CTest passes. Evidence:`/tmp/checkpoint-695-find-*`, `/tmp/checkpoint-699-async-find-join-*`.
+Discovery uses Linux local UDP on one machine; no service directory, remote host, screenshot or
+visual result is claimed.
 
 ### Remote gamer departure and history
 
@@ -1222,6 +1232,20 @@ stdout and empty stderr. Evidence:`/tmp/checkpoint-698-reset-ready-*`.
 This credits `NetworkSession::ResetReady` through successful state mutation and its key state guard,
 rather than a setter-only assertion. It does not establish cross-machine ready propagation, a
 non-host call or online-service synchronization.
+
+### Remaining Net member dispositions after focused699
+
+| Inventory family | Decision |
+|---|---|
+| `NetworkSession::IsDisposed` | Ordinary lifetime state and the next focused extension. It should be checked across a real idempotent Dispose while the session object remains alive, including cleared public roster views. |
+| `NetworkSessionProperties` explicit `ICollection`/`IList` members and two GetEnumerator entries | CNA exposes useful fixed-shape C++ list behavior beneath CLR-mangled inventory aliases. Extend the existing session-properties workflow with value lookup/copy, range iteration and structural-mutation refusal. Do not add the CLR spellings to metadata merely to raise the count; the generated aliases remain dispositioned even when the underlying C++ behavior is demonstrated. |
+| GameStarted/GameEnded/GamerJoined/GamerLeft/HostChanged/NetworkSessionEnded event-argument constructors | Framework-created payloads. Existing real events demonstrate their meaningful properties; manually constructing payload objects would add no event behavior. |
+| `LocalNetworkGamer::EnableSendVoice`; NetworkGamer HasVoice/IsTalking/IsMutedByLocalUser; `SendDataOptions::Chat` | Voice requires a capture device, a second participant and audible/manual observation. Keep as hardware/manual work; a default-false getter batch would be misleading. |
+| `SendPartyInvites`, InviteAccepted and Join/BeginJoin/EndJoinInvited | Require an online service identity plus another user accepting an invitation. Service/manual; ordinary System Link Join does not imply invitation coverage. |
+| WriteArbitratedLeaderboard, WriteTrueSkill, WriteUnarbitratedLeaderboard and WriteLeaderboardsEventArgs properties | Ranked/leaderboard service callbacks. Existing offline sessions cannot raise them; service/manual. |
+| `NetworkGamer::IsGuest` | A meaningful positive state requires a service-backed guest sign-in and propagation into a NetworkSession. The current offline profiles only establish non-guest state; defer with the service/Guide guest workflow rather than crediting a constant false. |
+| NetworkSessionJoinException constructor/GetObjectData | `join_refused` catches a real exception and observes JoinError. Explicit construction and CLR serialization plumbing do not justify an independent demo. |
+| MaxPreviousGamers/MaxSupportedGamers and remaining enum fields | Constants and enum identities are reported separately from member coverage. Credit only fields used by real behavior; do not create getter-style demos for constants or switch-only labels. `LocalWithLeaderboards` still deserves a real create/dispose branch in the existing session-type workflow. |
 
 ### C ABI selected diagnostics, ownership, dispatch and math
 
