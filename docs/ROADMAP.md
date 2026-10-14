@@ -315,6 +315,8 @@ a check that all authored colors remain visible and that a blank texture row can
   duplicate or incompatible resource references.
   ✅ `content.custom.intermediate_type_serializer`: registered compact dice syntax at the root
   and within described fields, with round trip and lexical/domain rejection on read and write.
+  Same-target registration preserves the first serializer, while a distinct type's duplicate XML
+  shortcut exposes the partial-registration failure recorded as ISSUE-088 (9/10 child checks).
   ✅ `content.custom.intermediate_properties`: inherited-member ordering, validated setter
   dispatch, get-only collections appending constructor defaults and flattened spawn coordinates.
   ✅ `content.custom.xna_pipeline_components`: actual XNA importer/processor adapters, default
@@ -6876,3 +6878,26 @@ routes. Evidence:`/tmp/checkpoint-765-intermediate-serializer-*` and
 `/tmp/checkpoint-765-coverage.md`. No rendering, screenshot or manual inspection was used. No CNA
 issue was found. Audit collection-level CollectionItemName inheritance/override behavior in the
 existing intermediate-properties workflow next.
+
+## Focused766-intermediate-serializer-registration-collision
+
+The collection-level CollectionItemName audit found no executable serializer behavior: the public
+descriptor stores, returns and conditionally inherits the string, but no CNA content or content-
+pipeline consumer reads `ContentTypeSerializerBase::CollectionItemName`. It is dispositioned as
+metadata awaiting a real consumer rather than credited through getter assertions.
+
+`content.custom.intermediate_type_serializer` adds three controls, reaching9/10 passes. Registering
+an alternate serializer for the already-owned DiceRoll target returns the first instance and does
+not install the later shortcut. A distinct CoinFlip serializer with the already-owned `dice`
+shortcut is silently installed under its type/full name but not the shortcut. It emits `<Asset
+Type="dice">3c</Asset>`, which resolves to DiceRoll and cannot deserialize as CoinFlip.
+CNA-DEMOS-ISSUE-088 records this partial, non-round-trippable registration.
+
+SOFTWARE and OPENGLES3/Xvfb reproduce the same single failed invariant, and the expected-failure
+SOFTWARE CTest passes. A direct child run confirms nine passing labels, one failure and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+known-issue demos increase40->41, validator/checkpoint self-tests pass5/5 and4/4, and generated
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-766-intermediate-registration-*` and `/tmp/checkpoint-766-coverage.md`.
+No rendering, screenshot or manual inspection was used. Continue with root-as-shared-resource
+identity and self-cycle behavior in the existing intermediate shared-resource workflow.

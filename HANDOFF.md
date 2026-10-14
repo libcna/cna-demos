@@ -1738,15 +1738,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-765 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-766 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
-recorder boundaries plus component selection/environment propagation, with new ISSUE-087 for
-omitted disposable shared-table values. Continue the intermediate XML member/behavior audit in
-`content.custom.intermediate_properties`: audit collection-level CollectionItemName inheritance
-and override behavior. Add it only if the public descriptor/serializer path produces an observable
-round trip beyond the existing member-level Drop naming; otherwise disposition it and move to the
-next meaningful serializer gap. Build with at most three compile jobs and keep focused evidence
-current.
+recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
+disposable shared-table values and ISSUE-088 records partial intermediate-serializer registration.
+Continue in `content.custom.intermediate_shared_resources`: audit root-as-shared-resource identity
+and self-cycle behavior against the public fixup contract. Add a focused control only if the source
+contract can preserve or explicitly refuse it; otherwise disposition it and move to the public
+MaxNestingDepth malformed-graph boundary. Build with at most three compile jobs and keep focused
+evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2044,6 +2044,29 @@ types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-765-intermediate-serializer-*` and `/tmp/checkpoint-765-coverage.md`. No rendering,
 screenshot or manual inspection was used, and no CNA issue was found. Audit collection-level
 CollectionItemName inheritance/override behavior in `content.custom.intermediate_properties` next.
+
+### Focused766 intermediate serializer registration collision
+
+The collection-level CollectionItemName audit found no executable serializer behavior: the public
+descriptor stores, returns and conditionally inherits the string, but no CNA content or content-
+pipeline consumer reads `ContentTypeSerializerBase::CollectionItemName`. It is dispositioned as
+metadata awaiting a real consumer rather than credited through getter assertions.
+
+`content.custom.intermediate_type_serializer` adds three controls, reaching9/10 passes. Registering
+an alternate serializer for the already-owned DiceRoll target returns the first instance and does
+not install the later shortcut. A distinct CoinFlip serializer with the already-owned `dice`
+shortcut is silently installed under its type/full name but not the shortcut. It emits `<Asset
+Type="dice">3c</Asset>`, which resolves to DiceRoll and cannot deserialize as CoinFlip.
+CNA-DEMOS-ISSUE-088 records this partial, non-round-trippable registration.
+
+SOFTWARE and OPENGLES3/Xvfb reproduce the same single failed invariant, and the expected-failure
+SOFTWARE CTest passes. A direct child run confirms nine passing labels, one failure and empty
+stderr. The warning-free incremental build uses `-j3`; metadata remains636/0, known-issue demos
+increase40->41, tool self-tests pass5/5 and4/4, and generated coverage remains302/329 types,
+2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-766-intermediate-registration-*` and `/tmp/checkpoint-766-coverage.md`. No
+rendering, screenshot or manual inspection was used. Continue with root-as-shared-resource identity
+and self-cycle behavior in `content.custom.intermediate_shared_resources`.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

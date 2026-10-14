@@ -67,6 +67,54 @@ namespace
         }
     };
 
+    class AlternateDiceRollSerializer final : public ContentTypeSerializer<DiceRoll>
+    {
+    public:
+        AlternateDiceRollSerializer() : ContentTypeSerializer<DiceRoll>("alternate-dice") {}
+    protected:
+        void Serialize(IntermediateWriter& output, const DiceRoll& value,
+                       const ContentSerializerAttribute&) override
+        {
+            output.getXmlProperty().WriteString(std::to_string(value.count) + "x" + std::to_string(value.sides));
+        }
+        DiceRoll Deserialize(IntermediateReader&, const ContentSerializerAttribute&, DiceRoll) override
+        {
+            return {9, 9};
+        }
+    };
+
+    struct CoinFlip
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.CoinFlip";
+        int count = 1;
+        bool operator==(const CoinFlip&) const = default;
+    };
+
+    // Deliberately collides with DiceRollSerializer's XML shortcut while owning another type.
+    class CoinFlipSerializer final : public ContentTypeSerializer<CoinFlip>
+    {
+    public:
+        CoinFlipSerializer() : ContentTypeSerializer<CoinFlip>("dice") {}
+    protected:
+        void Serialize(IntermediateWriter& output, const CoinFlip& value,
+                       const ContentSerializerAttribute&) override
+        {
+            output.getXmlProperty().WriteString(std::to_string(value.count) + "c");
+        }
+        CoinFlip Deserialize(IntermediateReader& input, const ContentSerializerAttribute& format,
+                             CoinFlip) override
+        {
+            const std::string text = input.ReadText(format);
+            if (text.size() < 2 || text.back() != 'c')
+                throw InvalidContentException("Coin flips must use the compact Nc syntax.");
+            CoinFlip value;
+            const auto parsed = std::from_chars(text.data(), text.data() + text.size() - 1, value.count);
+            if (parsed.ec != std::errc{} || parsed.ptr != text.data() + text.size() - 1 || value.count < 1)
+                throw InvalidContentException("Coin flips require one positive integer before c.");
+            return value;
+        }
+    };
+
     struct Attack
     {
         static constexpr std::string_view XnaTypeName = "CnaDemos.Attack";
@@ -149,6 +197,48 @@ int main()
             invalidObjectRejected = true;
         }
         check(invalidObjectRejected, "serialization also rejects invalid game objects before emitting their payload");
+
+        auto& repeated = IntermediateSerializer::AddTypeSerializer<AlternateDiceRollSerializer>();
+        check(&repeated == &serializer && IntermediateSerializer::FindTypeSerializer("alternate-dice") == nullptr,
+              "re-registering the same target type keeps the first serializer and ignores the later shortcut");
+
+        bool collisionRejected = false;
+        ContentTypeSerializerBase* coinSerializer = nullptr;
+        try
+        {
+            coinSerializer = &IntermediateSerializer::AddTypeSerializer<CoinFlipSerializer>();
+        }
+        catch (const std::exception& error)
+        {
+            collisionRejected = true;
+            std::cout << "Rejected colliding shortcut: " << error.what() << '\n';
+        }
+        bool coinRoundTrip = false;
+        if (coinSerializer != nullptr)
+        {
+            try
+            {
+                std::unique_ptr<System::Xml::XmlWriter> coinWriter(System::Xml::XmlWriter::CreateToString(settings));
+                IntermediateSerializer::Serialize<CoinFlip>(*coinWriter, CoinFlip{3}, "");
+                const std::string coinXml = coinWriter->ToString();
+                std::cout << coinXml << '\n';
+                std::unique_ptr<System::Xml::XmlReader> coinReader(System::Xml::XmlReader::CreateFromString(coinXml));
+                coinRoundTrip = IntermediateSerializer::Deserialize<CoinFlip>(*coinReader, "") == CoinFlip{3};
+            }
+            catch (const std::exception& error)
+            {
+                std::cout << "Accepted shortcut collision cannot round trip: " << error.what() << '\n';
+            }
+        }
+        const bool completeCoinRegistration = coinSerializer != nullptr &&
+            IntermediateSerializer::FindTypeSerializer(System::Type::From<CoinFlip>()) == coinSerializer &&
+            IntermediateSerializer::FindTypeSerializer(std::string(CoinFlip::XnaTypeName)) == coinSerializer &&
+            IntermediateSerializer::FindTypeSerializer("dice") == coinSerializer && coinRoundTrip;
+        check(collisionRejected || completeCoinRegistration,
+              "a conflicting XML shortcut is rejected or installed as one complete round-trippable mapping (CNA-DEMOS-ISSUE-088)");
+        check(IntermediateSerializer::FindTypeSerializer(System::Type::From<DiceRoll>()) == &serializer &&
+                  IntermediateSerializer::FindTypeSerializer("dice") == &serializer,
+              "the original dice type and shortcut remain paired after both registration attempts");
         return passed ? 0 : 1;
     }
     catch (const std::exception& error)

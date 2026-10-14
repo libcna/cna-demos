@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended custom intermediate serializer registration coverage with same-target first-wins
+  behavior and CNA-DEMOS-ISSUE-088: a conflicting XML shortcut is accepted into a partial,
+  non-round-trippable registry mapping.
 - Extended intermediate XML serialization with reusable format-name fallback and optional empty
   collection omission while preserving the reader object's nonempty constructor default.
 - Extended the XNA component-adapter workflow with target-platform and build-configuration

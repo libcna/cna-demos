@@ -15,6 +15,31 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-088 -- Conflicting intermediate XML shortcuts create a non-round-trippable serializer registration
+
+- **Area/API:** `IntermediateSerializer::AddTypeSerializer`, `RegisterTypeSerializer`,
+  `FindTypeSerializer` and intermediate XML `Type` shortcut resolution.
+- **Reproduction:** register `DiceRollSerializer` for `CnaDemos.DiceRoll` with XML shortcut `dice`,
+  then register `CoinFlipSerializer` for the distinct `CnaDemos.CoinFlip` type with the same
+  shortcut. Serialize a CoinFlip root and immediately deserialize it as CoinFlip.
+- **Observed:** the second registration returns successfully and installs CoinFlip under its C++
+  type and full name, but the `dice` name remains mapped to DiceRoll. CoinFlip serialization emits
+  `<Asset Type="dice">3c</Asset>`; deserialization resolves that type as DiceRoll and refuses it as
+  unrelated to CoinFlip. Both renderer selections reproduce exactly one failed invariant among ten
+  controls; the nine other controls pass and child stderr is empty.
+- **Cause observed in source:** `RegisterTypeSerializer` checks only an existing target type. It
+  moves a new distinct-type serializer into registry ownership and installs its type/carrier before
+  using unchecked `std::map::emplace` calls for the full name and XML shortcut. A pre-existing name
+  silently keeps its old owner, leaving the returned serializer only partly registered.
+- **Expected:** a name collision must be rejected before registry mutation, or registration must
+  otherwise preserve a complete mapping whose own emitted XML resolves back to that serializer.
+  Re-registering the same target type may continue returning the first serializer, as the focused
+  control demonstrates.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The issue is deterministic, build-time-only and
+  independent of graphics. Evidence: `/tmp/checkpoint-766-intermediate-registration-*`. No CNA
+  source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-087 -- Disposable XNB shared resources bypass the ReadAsset recorder
 
 - **Area/API:** `ContentManager::ReadAsset`, `ContentReader::ReadSharedResources`,
