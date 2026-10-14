@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused705
-projects the632-demo staged catalog to2080/2326 XNA members and157/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused706
+projects the632-demo staged catalog to2084/2326 XNA members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1395,8 +1395,9 @@ offline Begin/End read and navigation, identity and reader disposal. Continue or
 GamerServices members after completing PropertyDictionary's actual C++ collection behavior; its
 typed values, lookup, Item, snapshot, copy and mutation surfaces are now covered, and ISSUE-085
 records the broken offline stream column. Its remaining eight inventory entries are CLR aliases
-and enumerators and stay intentionally uncredited. Audit Gamer/GamerProfile identity and lifetime
-next, then continue the next
+and enumerators and stay intentionally uncredited. Gamer/GamerProfile identity and lifetime are now
+covered. Audit AchievementCollection's populated indexing/lifetime and actual C++ collection
+surface next, then continue the next
 high-value behavior family after each batch, rebuilding and running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1405,7 +1406,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused705 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused706 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3639,6 +3640,23 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 screenshot or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
 source was edited. Continue the ordinary GamerServices audit with Gamer/GamerProfile identity and
 lifetime.
+
+Focused706 extends `gamer_services.gamer_profile.get_profile` without adding a variant ID. The live
+signed-in Gamer starts undisposed and ToString equals both its display name and local gamertag. Two
+independent profiles then support the existing sync/async value comparison; disposing the first
+twice sets IsDisposed and makes GetGamerPicture throw ObjectDisposedException while the second
+profile stays live and still returns its valid null-picture result.
+
+SOFTWARE and OPENGLES3/X11 pass8/8 with byte-identical stdout and empty stderr. The focused SOFTWARE
+CTest, metadata validation and five validator self-tests pass. Temporary coverage moves
+2080->2084/2326 at632 demos,301/329 types and157/753 fields; GamerServices moves138->142/244.
+Evidence:`/tmp/checkpoint-706-gamer-profile-*` and `/tmp/checkpoint-706-coverage.md`. Runner SHA-256
+is `46592f1d95e2f6698ce0c885a51ae9144dc0f448396841f698927c8ec5ef3dd8`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No service, network,
+screenshot, profile picture or visual result is claimed. Sibling CNA remained clean external
+`f698d0f548`; no CNA source was edited. Continue with AchievementCollection populated indexing,
+copy and lifetime behavior.
 
 ## 15. Assumptions the next session must know
 

@@ -25,6 +25,7 @@
 #include "System/IAsyncResult.hpp"
 #include "System/IO/Stream.hpp"
 #include "System/NotSupportedException.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::GamerServices;
@@ -51,6 +52,9 @@ namespace
             }
             done_ = true;
             auto& ctx = Context();
+            ctx.Check(!player->getIsDisposedProperty() && player->ToString() == player->getDisplayNameProperty() &&
+                          player->ToString() == player->getGamertagProperty(),
+                      "the active local Gamer is live and formats as its display identity");
 
             // The asynchronous form, as a game uses it for gamers other than its own players: the
             // callback receives the result; the caller owns the IAsyncResult and the profile.
@@ -108,6 +112,21 @@ namespace
             {
                 ctx.Print("{}", line);
             }
+
+            profile->Dispose();
+            profile->Dispose();
+            bool disposedPictureRefused = false;
+            try
+            {
+                delete profile->GetGamerPicture();
+            }
+            catch (const System::ObjectDisposedException&)
+            {
+                disposedPictureRefused = true;
+            }
+            ctx.Check(profile->getIsDisposedProperty() && disposedPictureRefused &&
+                          !again->getIsDisposedProperty() && again->GetGamerPicture() == nullptr,
+                      "profile disposal is idempotent, guards picture access, and leaves an independent profile live");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -136,10 +155,12 @@ namespace
 CNA_DEMOS_GAME(GetProfileDemo, {
     .id = "gamer_services.gamer_profile.get_profile",
     .title = "Gamer profile",
-    .description = "Reads the signed-in gamer's GamerProfile with BeginGetProfile/EndGetProfile and GetProfile: "
+    .description = "Reads the live signed-in Gamer's identity and independent GamerProfile values through "
+                   "BeginGetProfile/EndGetProfile and GetProfile, then demonstrates profile disposal: "
                    "offline, GamerScore and TotalAchievements add up the achievements earned in this title; "
                    "Gamer::GetFromGamertag is not supported without a service.",
-    .apis = {"Gamer::GetProfile", "Gamer::BeginGetProfile", "Gamer::EndGetProfile", "GamerProfile::GamerScore",
+    .apis = {"Gamer::GetProfile", "Gamer::BeginGetProfile", "Gamer::EndGetProfile", "Gamer::IsDisposed",
+             "Gamer::ToString", "GamerProfile::Dispose", "GamerProfile::IsDisposed", "GamerProfile::GamerScore",
              "GamerProfile::TotalAchievements", "GamerProfile::TitlesPlayed", "GamerProfile::GamerZone",
              "GamerProfile::Reputation", "GamerProfile::Motto", "GamerProfile::Region",
              "GamerProfile::GetGamerPicture", "Gamer::GetFromGamertag",

@@ -1335,6 +1335,19 @@ CLR-mangled names. CNA exposes the useful operations as ordinary C++ methods and
 not as separate CLR entry points. Their behavior is now demonstrated, but those eight generated
 names remain intentionally uncredited rather than being placed in metadata synthetically.
 
+### Gamer and GamerProfile identity and disposal
+
+`gamer_services.gamer_profile.get_profile` now establishes that the active offline Gamer is live
+and ToString returns the same local identity as DisplayName and Gamertag. Its existing synchronous
+and asynchronous reads yield independent GamerProfile objects. Repeated Dispose marks only the
+selected profile and makes its GetGamerPicture throw ObjectDisposedException; the other profile
+remains live and returns the established null picture for this local account.
+
+Both renderers pass8/8 with identical stdout and empty stderr. Evidence:
+`/tmp/checkpoint-706-gamer-profile-*`. This credits Gamer's live IsDisposed state and profile
+cleanup/guard behavior. A true disposed Gamer remains tied to signed-out/service lifetime and is
+not inferred from profile disposal; no picture asset or remote account is claimed.
+
 ### C ABI selected diagnostics, ownership, dispatch and math
 
 The 21 standalone C programs cover coherent entry points in each Phase 14 area. The generated

@@ -5836,3 +5836,18 @@ and validator self-tests pass. Temporary coverage stays2080/2326 at632 demos,301
 forms with no distinct CNA C++ entry points. Evidence:`/tmp/checkpoint-705-property-collection-*`
 and `/tmp/checkpoint-705-coverage.md`. No service, network, screenshot or visual result is claimed.
 Continue with Gamer/GamerProfile identity and lifetime.
+
+## Focused706-Gamer-and-GamerProfile-lifecycle
+
+The existing offline profile workflow now requires the active local Gamer to be undisposed and
+format through ToString as its display name/gamertag. Its synchronous and asynchronous profile
+reads remain independent: disposing one profile twice publishes IsDisposed and guards
+GetGamerPicture with ObjectDisposedException while the other stays live and retains the valid
+null-picture result.
+
+SOFTWARE and OPENGLES3/X11 pass8/8 with byte-identical stdout and empty stderr. The focused SOFTWARE
+CTest, metadata validation and validator self-tests pass. Temporary coverage moves2080->2084/2326
+at632 demos,301/329 types and157/753 fields; GamerServices moves138->142/244. Evidence:
+`/tmp/checkpoint-706-gamer-profile-*` and `/tmp/checkpoint-706-coverage.md`. No service, network,
+profile-picture bytes, screenshot or visual result is claimed. Continue with AchievementCollection
+populated indexing, copy and lifetime behavior.
