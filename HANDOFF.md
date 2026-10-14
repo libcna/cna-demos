@@ -298,6 +298,16 @@ types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence
 inspection was performed. Sibling CNA remains clean at test-only `d23e139de`; production library
 hashes remain exact from Complete724.
 
+Focused **734-SpriteBatch-effects-mirroring-pixels** adds three framebuffer controls to the
+existing four-flag SpriteEffects scene. The asymmetric red marker reaches all four expected
+corners, the yellow arrow tip proves that only the horizontal flag reverses direction, and adjacent
+samples keep every variant inside the same128x128 destination bounds. SOFTWARE and OPENGLES3/X11
+pass3/3, the exact SOFTWARE CTest passes, metadata remains635/0, the five validator self-tests and
+four checkpoint-comparison tests pass, and coverage remains302/329 types,2114/2326 non-field
+members,167/753 fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-734-sprite-effects-*`.
+Pixel readback was programmatic; no screenshot or manual visual inspection was performed. Sibling
+CNA remains clean at test-only `d23e139de`; production library hashes remain exact from Complete724.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1561,13 +1571,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-733 are
-staged after it. Add a few stable framebuffer controls to the existing
-`graphics.sprite_batch.sprite_effects` workflow that prove None, horizontal, vertical and combined
-flags mirror the asymmetric red marker in place while retaining the destination bounds. Keep all
-four flag cases in this one scene. Then audit SpriteFont nonzero layer depth only if it adds
-observable sprite/text ordering beyond the existing SpriteBatch sorting workflow; otherwise record
-the disposition and move to the next deeper graphics behavior gap.
+HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-734 are
+staged after it, including the new635th ID. Run the documented configure/build and complete
+outer-Xvfb `tools/validate.sh` checkpoint against clean sibling CNA `d23e139de`. Archive immutable
+reports and compare every Complete724 status/knownIssue pair; the only catalog addition should be
+`graphics.sprite_batch.cross_device_texture`, while all extended IDs should retain their prior
+status and only increase checks. Update generated coverage, status docs and hashes, commit and push.
+Then audit SpriteFont nonzero layer depth only if it adds observable sprite/text ordering beyond
+the existing SpriteBatch sorting workflow; otherwise record the disposition and move onward.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

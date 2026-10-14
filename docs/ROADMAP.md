@@ -6308,3 +6308,18 @@ all five validator self-tests and all four checkpoint-comparison tests pass, and
 302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-733-scale-*`. Pixel readback was programmatic; no screenshot or manual visual
 inspection was performed. Audit exact in-place SpriteEffects marker mirroring next.
+
+## Focused734-SpriteBatch-effects-mirroring-pixels
+
+The existing `graphics.sprite_batch.sprite_effects` retains one row containing None, horizontal,
+vertical and combined flags and now point-samples its asymmetric asset. The red corner marker lands
+in all four expected destination corners; the yellow tip proves only the horizontal component
+reverses arrow direction; adjacent samples prove every variant remains inside the same128x128
+destination bounds. The combined flag now uses CNA's public bitwise operator directly.
+
+SOFTWARE and OPENGLES3/X11 pass3/3, and the exact SOFTWARE CTest passes. Metadata remains635/0,
+all five validator self-tests and all four checkpoint-comparison tests pass, and coverage remains
+302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-734-sprite-effects-*`. Pixel readback was programmatic; no screenshot or manual
+visual inspection was performed. Run a complete635-demo checkpoint next so the new cross-device
+ID and all focused725-734 behavior changes enter both full renderer reports.

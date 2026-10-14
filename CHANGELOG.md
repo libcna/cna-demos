@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added framebuffer checks to `graphics.sprite_batch.sprite_effects` for all four marker corners,
+  horizontal arrow direction and invariant destination bounds under combined flips.
 - Added framebuffer checks to `graphics.sprite_batch.scale` that correlate authored marker spacing
   with scalar half/native/triple sizes and independent horizontal/vertical Vector2 stretches.
 - Reworked `graphics.sprite_batch.rotation` into deterministic cardinal-angle/origin examples with
