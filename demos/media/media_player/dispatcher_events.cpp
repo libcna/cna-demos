@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // MediaPlayer events outside a Game: FrameworkDispatcher::Update raises them.
 #include <chrono>
+#include <cmath>
 #include <memory>
 #include <string>
 #include <thread>
@@ -42,9 +43,30 @@ namespace
         const std::size_t afterPlay = events.size();
         ctx.Check(afterPlay >= 1, "FrameworkDispatcher::Update raises the events of Play");
 
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         MediaPlayer::Pause();
         FrameworkDispatcher::Update();
+        const double pausedPosition = MediaPlayer::getPlayPositionProperty().getTotalSecondsProperty();
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        const double pausedLater = MediaPlayer::getPlayPositionProperty().getTotalSecondsProperty();
+        ctx.Check(MediaPlayer::getStateProperty() == MediaState::Paused && pausedPosition > 0.05 &&
+                      std::abs(pausedLater - pausedPosition) < 0.01,
+                  "Pause freezes PlayPosition while wall-clock time continues");
+
         MediaPlayer::Resume();
+        FrameworkDispatcher::Update();
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        ctx.Check(MediaPlayer::getStateProperty() == MediaState::Playing &&
+                      MediaPlayer::getPlayPositionProperty().getTotalSecondsProperty() > pausedPosition + 0.05,
+                  "Resume continues PlayPosition from the paused value");
+
+        MediaPlayer::Stop();
+        FrameworkDispatcher::Update();
+        ctx.Check(MediaPlayer::getStateProperty() == MediaState::Stopped &&
+                      MediaPlayer::getPlayPositionProperty().getTotalSecondsProperty() == 0.0,
+                  "Stop resets the state and PlayPosition");
+
+        MediaPlayer::Play(song.get());
         FrameworkDispatcher::Update();
         // The song ends after 2 s; keep pumping, as a game loop would.
         for (int i = 0; i < 300 && MediaPlayer::getStateProperty() != MediaState::Stopped; ++i)
@@ -66,9 +88,11 @@ CNA_DEMOS_CONSOLE(DispatcherEvents, {
     .id = "media.media_player.dispatcher_events",
     .title = "MediaPlayer events without a Game",
     .description = "Plays, pauses and resumes a song from a console program and shows that MediaStateChanged and "
-                   "ActiveSongChanged are raised only by FrameworkDispatcher::Update, which a Game calls every frame.",
+                   "ActiveSongChanged are raised only by FrameworkDispatcher::Update, while PlayPosition freezes, "
+                   "resumes and resets with the transport.",
     .apis = {"FrameworkDispatcher::Update", "MediaPlayer::MediaStateChanged", "MediaPlayer::ActiveSongChanged",
-             "MediaPlayer::Pause", "MediaPlayer::Resume", "MediaPlayer::Play", "Song::FromUri"},
+             "MediaPlayer::Pause", "MediaPlayer::Resume", "MediaPlayer::Stop", "MediaPlayer::Play",
+             "MediaPlayer::PlayPosition", "MediaPlayer::State", "Song::FromUri"},
     .tags = {"media", "music", "events", "dispatcher", "tools"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"music/falling.wav"},

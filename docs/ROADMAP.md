@@ -7167,3 +7167,19 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-780-media-shuffle-*` and `/tmp/checkpoint-780-coverage.md`. No acoustic
 quality, randomness quality, screenshot or manual inspection is claimed. Extend the existing
 transport workflow with bounded paused-position stability, Resume progress and Stop reset next.
+
+## Focused781-MediaPlayer-transport-position
+
+`media.media_player.dispatcher_events` retains its four prior controls and adds three transport
+invariants around its real two-second track. After 100 ms of playback, Pause holds PlayPosition
+within 10 ms across another 100 ms of wall time; Resume then advances it by more than 50 ms. Stop
+publishes Stopped and exact zero position. The same caller-owned Song is replayed afterward, so the
+original bounded natural-end and deferred-event checks remain intact.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass7/7 controls with byte-identical event output and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-781-media-transport-*` and `/tmp/checkpoint-781-coverage.md`. No acoustic
+quality, exact callback-latency, screenshot or manual inspection is claimed. Audit the exact
+deferred ActiveSongChanged/MediaStateChanged order, coalescing and listener removal next.

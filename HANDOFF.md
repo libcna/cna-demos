@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-780 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-781 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1760,8 +1760,9 @@ closed: a default writer honors requested LZX and round-trips through ContentMan
 empty ContentTypeWriterAttribute is dispositioned as a registration marker. Continue the
 MediaPlayer collection overloads now cover the default zero start, live queue replacement and a
 nonzero start whose queue-owned copies outlive caller objects. Bounded shuffled traversal now proves
-queue index/identity/state consistency without assuming a random order. Audit paused PlayPosition,
-resume and Stop-reset behavior next without duplicating the completed C route coverage. Do not add
+queue index/identity/state consistency without assuming a random order; Pause freezes PlayPosition,
+Resume advances it and Stop resets it. Audit exact deferred event ordering/coalescing and listener
+removal next without duplicating the completed C route coverage. Do not add
 isolated getter demos. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
@@ -2350,6 +2351,22 @@ coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999
 Evidence:`/tmp/checkpoint-780-media-shuffle-*` and `/tmp/checkpoint-780-coverage.md`. No acoustic
 quality, randomness quality, screenshot or manual inspection is claimed. Extend the existing
 transport workflow with bounded paused-position stability, Resume progress and Stop reset next.
+
+### Focused781-MediaPlayer-transport-position
+
+`media.media_player.dispatcher_events` retains its four prior controls and adds three transport
+invariants around its real two-second track. After 100 ms of playback, Pause holds PlayPosition
+within 10 ms across another 100 ms of wall time; Resume then advances it by more than 50 ms. Stop
+publishes Stopped and exact zero position. The same caller-owned Song is replayed afterward, so the
+original bounded natural-end and deferred-event checks remain intact.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass7/7 controls with byte-identical event output and empty
+stderr; the focused SOFTWARE CTest passes. The warning-free incremental build uses at most three
+jobs; metadata remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runtime
+coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-781-media-transport-*` and `/tmp/checkpoint-781-coverage.md`. No acoustic
+quality, exact callback-latency, screenshot or manual inspection is claimed. Audit the exact
+deferred ActiveSongChanged/MediaStateChanged order, coalescing and listener removal next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

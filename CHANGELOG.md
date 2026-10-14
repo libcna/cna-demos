@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the deferred MediaPlayer transport workflow with measured paused-position stability,
+  resumed progress and exact Stop reset before replaying through the existing natural-end path.
 - Exercised actual shuffled MediaPlayer traversal with a bounded sequence that verifies every
   selected index, active Song, queue membership and Playing state without assuming random order.
 - Extended the MediaPlayer queue workflow across both collection overloads: the default overload
