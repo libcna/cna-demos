@@ -127,6 +127,23 @@ namespace
             ctx.Check(basicEffect->getViewProperty() == view && basicEffect->getLightingEnabledProperty() &&
                           basicEffect->getFogEnabledProperty(),
                       "the concrete BasicEffect sees what was set through its interfaces");
+            auto* alphaEffect = dynamic_cast<AlphaTestEffect*>(effects_[1].get());
+            ctx.Check(alphaEffect->getWorldProperty() == Matrix::CreateTranslation(0.0f, 0.0f, -3.0f) &&
+                          alphaEffect->getViewProperty() == view && alphaEffect->getFogEnabledProperty() &&
+                          alphaEffect->getFogColorProperty() == Background.ToVector3() &&
+                          alphaEffect->getFogStartProperty() == 6.0f &&
+                          alphaEffect->getFogEndProperty() == 16.0f,
+                      "AlphaTestEffect exposes the exact matrix and fog state set through interfaces");
+            auto* environmentEffect = dynamic_cast<EnvironmentMapEffect*>(effects_[2].get());
+            ctx.Check(environmentEffect->getWorldProperty() == Matrix::CreateTranslation(2.2f, 0.0f, -6.0f) &&
+                          environmentEffect->getViewProperty() == view &&
+                          environmentEffect->getFogEnabledProperty() &&
+                          environmentEffect->getFogColorProperty() == Background.ToVector3() &&
+                          environmentEffect->getFogStartProperty() == 6.0f &&
+                          environmentEffect->getFogEndProperty() == 16.0f &&
+                          environmentEffect->getLightingEnabledProperty() &&
+                          environmentEffect->getAmbientLightColorProperty() != Vector3::Zero,
+                      "EnvironmentMapEffect exposes exact interface state and enabled default lighting");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -186,7 +203,14 @@ CNA_DEMOS_GAME(EffectInterfacesDemo, {
                    "alone -- as model-drawing code does -- and draws one sphere with each, fading with distance.",
     .apis = {"IEffectMatrices", "IEffectLights", "IEffectFog", "IEffectMatrices::World", "IEffectMatrices::View",
              "IEffectMatrices::Projection", "IEffectLights::EnableDefaultLighting", "IEffectFog::FogEnabled",
-             "IEffectFog::FogColor", "IEffectFog::FogStart", "IEffectFog::FogEnd"},
+             "IEffectFog::FogColor", "IEffectFog::FogStart", "IEffectFog::FogEnd",
+             "IEffectLights::AmbientLightColor", "IEffectLights::LightingEnabled",
+             "AlphaTestEffect::World", "AlphaTestEffect::View", "AlphaTestEffect::FogEnabled",
+             "AlphaTestEffect::FogColor", "AlphaTestEffect::FogStart", "AlphaTestEffect::FogEnd",
+             "EnvironmentMapEffect::World", "EnvironmentMapEffect::View",
+             "EnvironmentMapEffect::FogEnabled", "EnvironmentMapEffect::FogColor",
+             "EnvironmentMapEffect::FogStart", "EnvironmentMapEffect::FogEnd",
+             "EnvironmentMapEffect::Microsoft#Xna#Framework#Graphics#IEffectLights#LightingEnabled"},
     .tags = {"3d", "effect", "interfaces", "fog", "lighting"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

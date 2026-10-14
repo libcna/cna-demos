@@ -1361,16 +1361,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused674
-projects the632-demo staged catalog to1791/2326 XNA members and155/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused675
+projects the632-demo staged catalog to1810/2326 XNA members and155/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
-machinery. Audit the stock effect family next without creating property-list demos: extend the
-existing AlphaTestEffect, DualTextureEffect and EnvironmentMapEffect rendering workflows with
-meaningful fog/color/light/clone behavior. Their protected OnApply hooks are already reached by
-real pass application and should be dispositioned as such unless a distinct subclass contract is
-needed.
+machinery. Finish AlphaTestEffect's Alpha, VertexColorEnabled and Clone behavior in its rendered
+cutout workflow next. Then audit DualTextureEffect's11 gaps and EnvironmentMapEffect's remaining
+Alpha/EmissiveColor/EnvironmentMapSpecular. Per-effect protected OnApply entries are dispositioned:
+real pass application reaches them and focused671 already proved the override dispatch contract.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1379,7 +1378,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused674 built against external `1ad225ae28`. That checkout currently
+the sibling CNA checkout; focused675 built against external `1ad225ae28`. That checkout currently
 has six externally owned documentation/FNA3D paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3028,6 +3027,23 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Clear/Present executed, but
 no pixel, screenshot or visual inspection was used. Sibling CNA remained external `1ad225ae28`
 with six dirty documentation/FNA3D paths; no CNA source was edited. Audit stock effects next.
+
+Focused675 extends two existing stock-effect workflows. `effect_interfaces` grows3->5 controls and
+reads exact concrete AlphaTestEffect/EnvironmentMapEffect matrix/fog/light state after setting it
+through public interfaces and before real fogged draws. Environment reflection grows2->4 and now
+clones its fully configured first effect: exact diffuse/ambient, two texture identities and all
+three enabled lights survive, while transform/Fresnel mutations remain independent and preserve
+the established exact center pixels. SOFTWARE and OPENGLES3 outputs are byte-identical with empty
+stderr; both focused SOFTWARE CTests pass. Temporary coverage moves1791->1810/2326 at632 demos,
+301/329 types and155/753 fields. IEffectLights has no gap; protected per-effect OnApply entries are
+dispositioned as real pass-dispatch hooks already proven by focused671. Evidence:
+`/tmp/checkpoint-675-*` and `/tmp/checkpoint-675-coverage.md`. Runner SHA-256 is
+`ab2bc040bee473cf2a8518bdb2def27925ede9ba5e410de978bfa25576859acc`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. Pixel validation was
+programmatic; no screenshot or visual inspection was used. Sibling CNA remained external
+`1ad225ae28` with six dirty documentation/FNA3D paths; no CNA source was edited. Finish
+AlphaTestEffect next.
 
 ## 15. Assumptions the next session must know
 

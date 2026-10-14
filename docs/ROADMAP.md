@@ -5335,3 +5335,22 @@ Present executed, but no pixel, screenshot or visual inspection was performed. A
 AlphaTestEffect, DualTextureEffect and EnvironmentMapEffect property/clone behaviors next; treat
 their protected OnApply entries as hooks reached by real pass application rather than standalone
 getter-style coverage.
+
+## Focused675-stock-effect-interface-state-and-environment-clone
+
+Two existing IDs close19 stock-effect/interface members. `effect_interfaces` grows3->5 controls:
+nonidentity matrix and enabled 6..16 fog values set through interfaces read back exactly from
+AlphaTestEffect and EnvironmentMapEffect before both are drawn, while the environment effect also
+reports enabled lighting and nonzero default ambient. IEffectLights now has no gap.
+
+Environment reflection grows2->4 controls and creates its second sphere by cloning the fully
+configured first. Both exact texture identities, diffuse material, ambient value and all three
+enabled default lights survive; transform/Fresnel changes remain independent and the two established
+center pixels stay exact. SOFTWARE and OPENGLES3 outputs are byte-identical, stderr is empty and
+both focused SOFTWARE CTests pass. Temporary coverage moves1791->1810/2326 at632 demos,301/329
+types and155/753 fields. Protected per-effect OnApply entries are actual pass-dispatch hooks already
+reached by these draws and dispositioned after focused671 proved the override contract. Evidence:
+`/tmp/checkpoint-675-*` and `/tmp/checkpoint-675-coverage.md`. Pixel validation used programmatic
+readback; no screenshot or visual inspection was used. Finish AlphaTestEffect's Alpha,
+VertexColorEnabled and Clone behavior next, then DualTextureEffect and the remaining environment
+material terms.

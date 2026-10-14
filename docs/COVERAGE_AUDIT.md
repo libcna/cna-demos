@@ -224,6 +224,21 @@ identical stdout and empty stderr; the focused SOFTWARE CTest passes. Effect has
 member gap. Evidence:`/tmp/checkpoint-671-*` and `/tmp/checkpoint-671-coverage.md`. The workflow
 does not draw, take a screenshot or claim visual behavior.
 
+### Stock-effect interface state and EnvironmentMapEffect cloning
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| AlphaTestEffect World/View and fog family | The interface workflow applies nonidentity world/view plus enabled 6..16 fog through IEffectMatrices/IEffectFog, reads the exact values from AlphaTestEffect and draws the fogged sphere. |
+| EnvironmentMapEffect fog and IEffectLights state | The same real draw reads exact matrix/fog state, enabled lighting and nonzero default ambient from the concrete effect. IEffectLights AmbientLightColor/LightingEnabled are therefore covered through the interface and concrete implementation. |
+| EnvironmentMapEffect Clone, DiffuseColor, AmbientLightColor, DirectionalLight0/1/2 | `reflection` now creates the right sphere by cloning the fully configured left effect. The clone retains both exact texture identities, material, ambient and all three enabled lights; independent transform/Fresnel changes then produce the established distinct exact center pixels. |
+| OnApply entries | Every stock-effect scene applies a real pass and renders through the protected hook. The hook is an override point rather than a caller-invoked public behavior; do not add a synthetic per-effect metadata check after the base Effect hook workflow already established the dispatch contract. |
+
+Focused675 grows `effect_interfaces` from3 to5 controls and environment reflection from2 to4,
+crediting19 members without a new ID and moving temporary coverage1791->1810/2326. Both IDs pass
+on SOFTWARE and OPENGLES3 with byte-identical stdout and empty stderr; both focused SOFTWARE CTests
+pass. Evidence:`/tmp/checkpoint-675-*` and `/tmp/checkpoint-675-coverage.md`. Pixel validation used
+programmatic readback; no screenshot or visual inspection was used.
+
 ### ShaderEffect and shader dialect selection
 
 Source review of ShaderEffect.hpp/.cpp, Effect::Clone's public contract, the four GLSL shader/MRT

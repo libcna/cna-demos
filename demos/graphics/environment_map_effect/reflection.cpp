@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <memory>
 #include <optional>
+#include <stdexcept>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
@@ -62,23 +63,40 @@ namespace
             const Color white = Color::White;
             white_->SetData(&white, 1);
 
-            for (int i = 0; i < 2; ++i)
-            {
-                auto& effect = effects_[static_cast<std::size_t>(i)];
-                effect = std::make_unique<EnvironmentMapEffect>(device);
-                effect->setWorldProperty(Matrix::CreateTranslation(i == 0 ? -1.5f : 1.5f, 0.0f, 0.0f));
-                effect->setViewProperty(Matrix::CreateLookAt(Vector3(0.0f, 0.0f, 6.0f), Vector3::Zero, Vector3::Up));
-                effect->setProjectionProperty(Matrix::CreatePerspectiveFieldOfView(
-                    MathHelper::PiOver4, device.getViewportProperty().getAspectRatioProperty(), 0.1f, 100.0f));
-                effect->EnableDefaultLighting();
-                effect->setTextureProperty(white_.get());               // the surface's own texture
-                effect->setDiffuseColorProperty(Vector3(0.2f, 0.2f, 0.2f));
-                effect->setEnvironmentMapProperty(environment_.get());   // what it reflects
-                effect->setEnvironmentMapAmountProperty(1.0f);
-            }
+            effects_[0] = std::make_unique<EnvironmentMapEffect>(device);
+            effects_[0]->setWorldProperty(Matrix::CreateTranslation(-1.5f, 0.0f, 0.0f));
+            effects_[0]->setViewProperty(Matrix::CreateLookAt(
+                Vector3(0.0f, 0.0f, 6.0f), Vector3::Zero, Vector3::Up));
+            effects_[0]->setProjectionProperty(Matrix::CreatePerspectiveFieldOfView(
+                MathHelper::PiOver4, device.getViewportProperty().getAspectRatioProperty(), 0.1f, 100.0f));
+            effects_[0]->EnableDefaultLighting();
+            effects_[0]->setTextureProperty(white_.get());               // the surface's own texture
+            effects_[0]->setDiffuseColorProperty(Vector3(0.2f, 0.2f, 0.2f));
+            effects_[0]->setEnvironmentMapProperty(environment_.get());   // what it reflects
+            effects_[0]->setEnvironmentMapAmountProperty(1.0f);
+
+            std::unique_ptr<Effect> cloneOwner(effects_[0]->Clone());
+            auto* clone = dynamic_cast<EnvironmentMapEffect*>(cloneOwner.get());
+            if (clone == nullptr)
+                throw std::runtime_error("EnvironmentMapEffect::Clone returned the wrong runtime type");
+            Context().Check(clone->getTextureProperty() == white_.get() &&
+                                clone->getEnvironmentMapProperty() == environment_.get() &&
+                                clone->getDiffuseColorProperty() == Vector3(0.2f, 0.2f, 0.2f) &&
+                                clone->getAmbientLightColorProperty() == effects_[0]->getAmbientLightColorProperty() &&
+                                clone->getDirectionalLight0Property().getEnabledProperty() &&
+                                clone->getDirectionalLight1Property().getEnabledProperty() &&
+                                clone->getDirectionalLight2Property().getEnabledProperty(),
+                            "Clone retains texture identities, material and all default lights");
+            effects_[1].reset(static_cast<EnvironmentMapEffect*>(cloneOwner.release()));
+
             // FresnelFactor 0: the same reflection everywhere. The default (1) reflects little where
             // the surface faces the viewer and more and more towards the silhouette, like real glossy paint.
             effects_[0]->setFresnelFactorProperty(0.0f);
+            effects_[1]->setWorldProperty(Matrix::CreateTranslation(1.5f, 0.0f, 0.0f));
+            Context().Check(effects_[0]->getWorldProperty() != effects_[1]->getWorldProperty() &&
+                                effects_[0]->getFresnelFactorProperty() == 0.0f &&
+                                effects_[1]->getFresnelFactorProperty() == 1.0f,
+                            "clone transform and Fresnel changes are independent");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -136,8 +154,12 @@ CNA_DEMOS_GAME(ReflectionDemo, {
     .description = "Builds a TextureCube from six coloured faces and reflects it on two spheres with "
                    "EnvironmentMapEffect, with FresnelFactor 0 (uniform mirror) and 1 (stronger at grazing angles).",
     .apis = {"EnvironmentMapEffect::EnvironmentMapEffect", "EnvironmentMapEffect::EnvironmentMap",
-             "EnvironmentMapEffect::EnvironmentMapAmount", "EnvironmentMapEffect::FresnelFactor",
-             "EnvironmentMapEffect::Texture", "EnvironmentMapEffect::EnableDefaultLighting",
+             "EnvironmentMapEffect::EnvironmentMapAmount", "EnvironmentMapEffect::Clone",
+             "EnvironmentMapEffect::FresnelFactor",
+             "EnvironmentMapEffect::Texture", "EnvironmentMapEffect::DiffuseColor",
+             "EnvironmentMapEffect::AmbientLightColor", "EnvironmentMapEffect::DirectionalLight0",
+             "EnvironmentMapEffect::DirectionalLight1", "EnvironmentMapEffect::DirectionalLight2",
+             "EnvironmentMapEffect::EnableDefaultLighting",
              "TextureCube::TextureCube", "TextureCube::SetData", "CubeMapFace::PositiveZ",
              "EnvironmentMapEffect::World", "EnvironmentMapEffect::View", "EnvironmentMapEffect::Projection"},
     .tags = {"3d", "reflection", "cubemap", "effect", "chrome"},
