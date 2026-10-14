@@ -7,7 +7,9 @@
 #include "Microsoft/Xna/Framework/Audio/Cue.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
+#include "System/ArgumentNullException.hpp"
 #include "System/InvalidOperationException.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
 
@@ -50,12 +52,30 @@ namespace
 
         second->SetVariable("Intensity", 250.0f);
         ctx.Check(second->GetVariable("Intensity") == 100.0f, "values are clamped to the declared range (0..100)");
+        second->SetVariable("Intensity", -25.0f);
+        ctx.Check(second->GetVariable("Intensity") == 0.0f, "cue variables also clamp at the declared lower bound");
 
         // Cue variables and global variables are separate: each API sees only its own kind.
         ctx.Check(Refused([&] { (void)first->GetVariable("SpeedOfSound"); }),
                   "a cue does not see the global variable SpeedOfSound");
         ctx.Check(Refused([&] { (void)engine.GetGlobalVariable("Intensity"); }),
                   "the engine does not see the cue variable Intensity");
+        ctx.Check(Refused([&] { first->SetVariable("SpeedOfSound", 500.0f); }),
+                  "a cue cannot write the engine-global namespace");
+        ctx.Check(Refused([&] { engine.SetGlobalVariable("Intensity", 25.0f); }),
+                  "the engine cannot write the cue-local namespace");
+
+        bool emptyGetRefused = false;
+        bool emptySetRefused = false;
+        try { static_cast<void>(first->GetVariable("")); }
+        catch (const System::ArgumentNullException&) { emptyGetRefused = true; }
+        try { first->SetVariable("", 1.0f); }
+        catch (const System::ArgumentNullException&) { emptySetRefused = true; }
+        ctx.Check(emptyGetRefused && emptySetRefused,
+                  "both cue-variable access directions reject an empty name");
+        ctx.Check(Refused([&] { static_cast<void>(first->GetVariable("MissingVariable")); }) &&
+                      Refused([&] { first->SetVariable("MissingVariable", 1.0f); }),
+                  "both cue-variable access directions reject an unknown name");
 
         // Variables can change while a cue plays.
         first->Play();
@@ -68,15 +88,22 @@ namespace
         engine.Update();
         first->Dispose();
         second->Dispose();
+        bool disposedGetRefused = false;
+        bool disposedSetRefused = false;
+        try { static_cast<void>(first->GetVariable("Intensity")); }
+        catch (const System::ObjectDisposedException&) { disposedGetRefused = true; }
+        try { first->SetVariable("Intensity", 50.0f); }
+        catch (const System::ObjectDisposedException&) { disposedSetRefused = true; }
+        ctx.Check(disposedGetRefused && disposedSetRefused,
+                  "a disposed cue refuses both variable access directions");
     }
 }
 
 CNA_DEMOS_CONSOLE(CueVariables, {
     .id = "audio.xact.cue_variables",
     .title = "XACT cue variables",
-    .description = "Sets and reads the cue variable Intensity with Cue::SetVariable and Cue::GetVariable: each Cue "
-                   "keeps its own value, clamped to the declared range, and cue and global variables are separate "
-                   "namespaces.",
+    .description = "Reads and writes per-cue Intensity values with clamping, validates cue/global namespace and name "
+                   "boundaries, changes a live cue, and checks both access directions after disposal.",
     .apis = {"Cue::SetVariable", "Cue::GetVariable", "AudioEngine::GetGlobalVariable", "SoundBank::GetCue",
              "Cue::Play"},
     .tags = {"audio", "xact", "variables", "cue"},

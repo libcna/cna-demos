@@ -7640,3 +7640,20 @@ validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage re
 Evidence:`/tmp/checkpoint-809-xact-category-pause-scope-*` and
 `/tmp/checkpoint-809-coverage.md`. Continue with remaining cue/global-variable name, scope and
 lifecycle boundaries.
+
+## Focused810-XACT-cue-variable-boundaries
+
+`audio.xact.cue_variables` grows from six to twelve controls. Intensity now demonstrates the lower
+clamp as well as the retained upper clamp. Cue SetVariable refuses the engine-global name and
+AudioEngine SetGlobalVariable refuses the cue-local name, complementing the existing Get checks.
+Both cue access directions reject empty names with ArgumentNullException and unknown names with
+InvalidOperationException; after disposal both valid-name calls throw ObjectDisposedException.
+Independent values and mutation during playback remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass12/12 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-810-xact-cue-variable-boundaries-*` and
+`/tmp/checkpoint-810-coverage.md`. Continue with the corresponding AudioEngine global-variable
+name/lower-clamp boundaries.

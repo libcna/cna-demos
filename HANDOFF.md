@@ -1738,7 +1738,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-809 close the
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-810 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -1799,9 +1799,11 @@ existing renderer workflow. AudioEngine disposal now covers its cleared-but-quer
 list, category/global-variable refusals and safe Update no-op. XACT bank construction now covers
 null/empty/missing inputs and the distinct corrupt-eager/missing-stream stub outcomes. The
 streaming workflow now demonstrates CNA/FNA's ignored offset/packet compatibility inputs.
-AudioCategory Pause is now proven punctual rather than persistent for later cues. Continue with
-remaining cue/global-variable name, scope and lifecycle boundaries. Do not add isolated getter
-demos. Build with at most three compile jobs and keep focused evidence current.
+AudioCategory Pause is now proven punctual rather than persistent for later cues. Cue variables now
+cover both clamps, both namespace directions, name refusals and post-dispose access. Continue with
+the corresponding AudioEngine global-variable name/lower-clamp boundaries, then remaining cue
+lifecycle behavior. Do not add isolated getter demos. Build with at most three compile jobs and
+keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2827,6 +2829,20 @@ SOFTWARE and OPENGLES3 dummy-audio direct runs pass13/13 with byte-identical std
 stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
 unchanged. Evidence:`/tmp/checkpoint-809-xact-category-pause-scope-*`. Continue with remaining
 cue/global-variable name, scope and lifecycle boundaries.
+
+### Focused810-XACT-cue-variable-boundaries
+
+`audio.xact.cue_variables` grows from six to twelve controls. Intensity now demonstrates the lower
+clamp as well as the retained upper clamp. Cue SetVariable refuses the engine-global name and
+AudioEngine SetGlobalVariable refuses the cue-local name, complementing the existing Get checks.
+Both cue access directions reject empty names with ArgumentNullException and unknown names with
+InvalidOperationException; after disposal both valid-name calls throw ObjectDisposedException.
+Independent values and mutation during playback remain intact.
+
+SOFTWARE and OPENGLES3 dummy-audio direct runs pass12/12 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses at most three jobs; metadata and coverage remain
+unchanged. Evidence:`/tmp/checkpoint-810-xact-cue-variable-boundaries-*`. Continue with the
+corresponding AudioEngine global-variable name/lower-clamp boundaries.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
