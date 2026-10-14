@@ -1361,7 +1361,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused700
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused701
 projects the632-demo staged catalog to2058/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
@@ -1386,9 +1386,9 @@ departure/history/session/round-trip behavior is also covered by the same real t
 The simulated-conditions packet workflow now samples positive sent/received session bandwidth, and
 game_flow covers successful lobby ResetReady plus Playing-state refusal. System Link discovery/join
 now executes both Begin/End pairs and discovery measures both QoS bandwidth directions.
-NetworkSession disposal state and post-dispose roster safety are now covered. Finish the ordinary
-Net surface with the fixed-shape NetworkSessionProperties collection contract, then cover
-LocalWithLeaderboards in the existing session-type workflow. The
+NetworkSession disposal state, post-dispose roster safety and the fixed-shape C++
+NetworkSessionProperties collection contract are now covered. Cover LocalWithLeaderboards in the
+existing session-type workflow next. The
 remaining event-payload constructors, voice, invites, leaderboard callbacks and CLR serialization
 members are dispositioned in COVERAGE_AUDIT. Continue the next high-value behavior family after
 these batches, rebuilding and running both renderers where
@@ -1399,7 +1399,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused700 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused701 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3529,6 +3529,27 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 `2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No network, screenshot or
 visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA source was
 edited. Continue the NetworkSessionProperties fixed-shape collection contract next.
+
+Focused701 extends `net.network_session.session_properties` without adding a variant ID. Its
+authored two values and six empty slots now drive value/null Contains and IndexOf, exact eight-item
+C++ range iteration, atomic short CopyTo refusal and successful offset CopyTo with preserved
+sentinels. Add, Insert, Remove, RemoveAt and Clear must all throw NotSupportedException and leave the
+fixed collection unchanged; IsReadOnly remains false because indexed values are writable even
+though its shape is fixed. The original create/live-map/out-of-range behavior remains intact.
+
+The first build found a demo-only local name collision between the structural-refusal helper and
+the existing index-refusal boolean; renaming them fixed compilation without changing CNA. SOFTWARE
+and OPENGLES3/X11 pass8/8 with byte-identical stdout and empty stderr. The focused SOFTWARE CTest,
+metadata validation and five validator self-tests pass. Temporary coverage intentionally remains
+2058/2326 at632 demos,301/329 types and156/753 fields; the XNA inventory's ten explicit-interface
+and two GetEnumerator spellings have no distinct CNA C++ entry points, so they stay dispositioned
+instead of receiving synthetic metadata. Evidence:`/tmp/checkpoint-701-session-properties-*` and
+`/tmp/checkpoint-701-coverage.md`. Runner SHA-256 is
+`acc273453f8c6ac1c5e290cefcf5e11b12793ebb32ff0927606728195a6b2364`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No network, screenshot or
+visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA source was
+edited. Continue with LocalWithLeaderboards in the session-type workflow next.
 
 ## 15. Assumptions the next session must know
 

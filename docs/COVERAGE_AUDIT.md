@@ -1238,7 +1238,7 @@ non-host call or online-service synchronization.
 | Inventory family | Decision |
 |---|---|
 | `NetworkSession::IsDisposed` | Covered by focused700 in the existing Local-session ownership workflow: a live session is disposed twice, reports disposed, clears Host and all four roster views, and refuses Update. |
-| `NetworkSessionProperties` explicit `ICollection`/`IList` members and two GetEnumerator entries | CNA exposes useful fixed-shape C++ list behavior beneath CLR-mangled inventory aliases. Extend the existing session-properties workflow with value lookup/copy, range iteration and structural-mutation refusal. Do not add the CLR spellings to metadata merely to raise the count; the generated aliases remain dispositioned even when the underlying C++ behavior is demonstrated. |
+| `NetworkSessionProperties` explicit `ICollection`/`IList` members and two GetEnumerator entries | Focused701 now demonstrates the useful underlying fixed-shape C++ list behavior: lookup, range iteration, atomic copy and structural refusal. CNA does not expose the CLR-mangled aliases as separate entry points, so their generated inventory names remain intentionally uncredited. |
 | GameStarted/GameEnded/GamerJoined/GamerLeft/HostChanged/NetworkSessionEnded event-argument constructors | Framework-created payloads. Existing real events demonstrate their meaningful properties; manually constructing payload objects would add no event behavior. |
 | `LocalNetworkGamer::EnableSendVoice`; NetworkGamer HasVoice/IsTalking/IsMutedByLocalUser; `SendDataOptions::Chat` | Voice requires a capture device, a second participant and audible/manual observation. Keep as hardware/manual work; a default-false getter batch would be misleading. |
 | `SendPartyInvites`, InviteAccepted and Join/BeginJoin/EndJoinInvited | Require an online service identity plus another user accepting an invitation. Service/manual; ordinary System Link Join does not imply invitation coverage. |
@@ -1260,6 +1260,22 @@ then deletes the object. Both renderers pass10/10 with identical stdout and empt
 This credits the ordinary IsDisposed member through state transition and post-dispose safety. It
 does not claim transport teardown for System Link, online-service departure or behavior of every
 other member after disposal.
+
+### NetworkSessionProperties fixed collection behavior
+
+`net.network_session.session_properties` retains its two authored values and six empty slots while
+adding three coherent controls. Contains and IndexOf distinguish values, null and absence, and a
+C++ range visits all eight values in order. CopyTo rejects an undersized shifted destination before
+changing any sentinel and then writes all eight entries at offset one while preserving the two
+outer sentinels. Add, Insert, Remove, RemoveAt and Clear each throw NotSupportedException; Count and
+every authored value remain exact. IsReadOnly is false because indexed replacement remains allowed,
+even though the collection's shape cannot change.
+
+Both renderers pass8/8 with identical stdout and empty stderr. Evidence:
+`/tmp/checkpoint-701-session-properties-*`. This demonstrates CNA's actual public C++ collection
+surface without falsely naming the inventory's explicit CLR interface aliases or its two
+GetEnumerator forms. Enumerator invalid-position/reset/version behavior remains CLR machinery and
+does not warrant a separate demo.
 
 ### C ABI selected diagnostics, ownership, dispatch and math
 

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // NetworkSessionProperties: eight optional integers that describe a session (mode, map, ...).
+#include <algorithm>
 #include <memory>
 #include <optional>
 #include <string>
@@ -18,7 +19,9 @@
 #include "Microsoft/Xna/Framework/Net/NetworkSessionProperties.hpp"
 #include "Microsoft/Xna/Framework/Net/NetworkSessionType.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/ArgumentException.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
+#include "System/NotSupportedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::GamerServices;
@@ -70,6 +73,57 @@ namespace
             ctx.Check(properties.getCountProperty() == 8, "there are eight slots");
             ctx.Check(!properties.getItem(Difficulty).has_value(), "a slot left alone is empty (no value)");
 
+            std::vector<std::optional<int>> ranged;
+            for (const std::optional<int>& value : properties)
+            {
+                ranged.push_back(value);
+            }
+            ctx.Check(!properties.getIsReadOnlyProperty() && properties.Contains(2) &&
+                          properties.Contains(std::nullopt) && properties.IndexOf(7) == Map &&
+                          properties.IndexOf(99) == -1 && ranged.size() == 8 && ranged[GameMode] == 2 &&
+                          ranged[Map] == 7 && !ranged[Difficulty].has_value(),
+                      "lookup and C++ range iteration preserve the fixed eight-slot value shape");
+
+            std::vector<std::optional<int>> shortOutput(9, -99);
+            bool shortCopyRefused = false;
+            try
+            {
+                properties.CopyTo(shortOutput, 2);
+            }
+            catch (const System::ArgumentException&)
+            {
+                shortCopyRefused = true;
+            }
+            std::vector<std::optional<int>> copied(10, -99);
+            properties.CopyTo(copied, 1);
+            ctx.Check(shortCopyRefused &&
+                          std::all_of(shortOutput.begin(), shortOutput.end(),
+                                      [](const std::optional<int>& value) { return value == -99; }) &&
+                          copied.front() == -99 && copied.back() == -99 && copied[1] == 2 && copied[2] == 7 &&
+                          !copied[3].has_value(),
+                      "CopyTo is atomic when short and copies all eight slots at an offset");
+
+            int structuralRefusals = 0;
+            const auto expectStructuralRefusal = [&structuralRefusals](auto&& mutation) {
+                try
+                {
+                    mutation();
+                }
+                catch (const System::NotSupportedException&)
+                {
+                    ++structuralRefusals;
+                }
+            };
+            expectStructuralRefusal([&properties] { properties.Add(9); });
+            expectStructuralRefusal([&properties] { properties.Insert(0, 9); });
+            expectStructuralRefusal([&properties] { (void)properties.Remove(2); });
+            expectStructuralRefusal([&properties] { properties.RemoveAt(0); });
+            expectStructuralRefusal([&properties] { properties.Clear(); });
+            ctx.Check(structuralRefusals == 5 && properties.getCountProperty() == 8 &&
+                          properties.getItem(GameMode) == 2 && properties.getItem(Map) == 7 &&
+                          !properties.getItem(Difficulty).has_value(),
+                      "all structural mutations are refused without changing the fixed collection");
+
             session_.reset(NetworkSession::Create(NetworkSessionType::Local, 1, 4, 0, properties));
             NetworkSessionProperties& live = session_->getSessionPropertiesProperty();
             ctx.Check(live.getItem(GameMode) == 2 && live.getItem(Map) == 7, "the session carries the properties");
@@ -78,16 +132,16 @@ namespace
             live.setItem(Map, 3);
             ctx.Check(session_->getSessionPropertiesProperty().getItem(Map) == 3, "the host changed the map");
 
-            bool refused = false;
+            bool indexRefused = false;
             try
             {
                 (void)live.getItem(8);
             }
             catch (const System::ArgumentOutOfRangeException&)
             {
-                refused = true;
+                indexRefused = true;
             }
-            ctx.Check(refused, "slot 8 does not exist: ArgumentOutOfRangeException");
+            ctx.Check(indexRefused, "slot 8 does not exist: ArgumentOutOfRangeException");
 
             for (int i = 0; i < live.getCountProperty(); ++i)
             {
@@ -124,9 +178,15 @@ CNA_DEMOS_GAME(SessionPropertiesDemo, {
     .id = "net.network_session.session_properties",
     .title = "Session properties",
     .description = "Describes a session with NetworkSessionProperties -- eight optional integers a game gives "
-                   "meanings (here game mode and map) -- creates it with them, and changes the map as the host.",
-    .apis = {"NetworkSessionProperties::NetworkSessionProperties", "NetworkSessionProperties::Item", "NetworkSessionProperties::Count",
-             "NetworkSessionProperties::Count", "NetworkSession::SessionProperties", "NetworkSession::Create"},
+                   "meanings (here game mode and map) -- demonstrates fixed-shape lookup, range and copy behavior, "
+                   "refuses structural mutations, creates a session with the values, and changes the live map.",
+    .apis = {"NetworkSessionProperties::NetworkSessionProperties", "NetworkSessionProperties::Item",
+             "NetworkSessionProperties::Count", "NetworkSessionProperties::IsReadOnly",
+             "NetworkSessionProperties::Contains", "NetworkSessionProperties::IndexOf",
+             "NetworkSessionProperties::CopyTo", "NetworkSessionProperties::Add",
+             "NetworkSessionProperties::Insert", "NetworkSessionProperties::Remove",
+             "NetworkSessionProperties::RemoveAt", "NetworkSessionProperties::Clear",
+             "NetworkSession::SessionProperties", "NetworkSession::Create"},
     .tags = {"net", "session", "properties", "matchmaking"},
     .frames = 20,
     .assets = {"fonts/pixel_font.cnb"},

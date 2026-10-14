@@ -5751,3 +5751,20 @@ SOFTWARE CTest, metadata validation and validator self-tests pass. Temporary cov
 `/tmp/checkpoint-700-session-dispose-*` and `/tmp/checkpoint-700-coverage.md`. No network,
 screenshot or visual result is claimed. Continue the NetworkSessionProperties fixed-shape
 collection contract next.
+
+## Focused701-NetworkSessionProperties-fixed-collection
+
+The existing session-properties workflow now treats the public C++ type as its documented fixed
+eight-slot collection. It covers value/null Contains and IndexOf, exact C++ range iteration, atomic
+short CopyTo, successful offset CopyTo with sentinels, writable indexed values despite
+IsReadOnly=false, and five structural operations that throw NotSupportedException without mutation.
+The original session creation, live map change and index-boundary controls remain.
+
+An initial build found a demo-only helper/boolean name collision; the corrected source builds
+cleanly. SOFTWARE and OPENGLES3/X11 pass8/8 with byte-identical stdout and empty stderr. The focused
+SOFTWARE CTest, metadata validation and validator self-tests pass. Temporary coverage stays
+2058/2326 because the XNA inventory records ten explicit CLR interface spellings and two
+GetEnumerator artifacts that CNA does not expose as separate C++ entry points. Evidence:
+`/tmp/checkpoint-701-session-properties-*` and `/tmp/checkpoint-701-coverage.md`. No network,
+screenshot or visual result is claimed. Continue with LocalWithLeaderboards in the existing
+session-type workflow next.
