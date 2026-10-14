@@ -169,8 +169,9 @@ a check that all authored colors remain visible and that a blank texture row can
   draws CNA's dual-UV vertex and independently selects/transforms base-color and emissive samples.
   ✅ `graphics.pbr_effect.color_spaces` gives exact rendered evidence for all three texture decode
   switches and final output encoding. `graphics.pbr_effect.texture_maps` now also proves normal-map
-  scale and occlusion strength at one and zero. Remaining observable material controls include the
-  two specular maps' UV selectors/transforms and alpha/double-sided/vertex-colour behavior.
+  scale and occlusion strength at one and zero; the expanded specular scene samples both remaining
+  maps' independent UV selectors/transforms. Remaining observable material controls are alpha
+  modes/cutoff, double-sided shading and vertex-colour multiplication.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
@@ -7979,3 +7980,21 @@ metadata remains645/0, self-tests pass5/5 and4/4, and temporary coverage remains
 2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-829-pbr-map-scales-*` and `/tmp/checkpoint-829-coverage.md`. Continue with sampled
 dual-UV selector/transform behavior for both specular maps.
+
+## Focused830-PbrEffect-specular-map-UV-and-transforms
+
+The existing `graphics.pbr_effect.specular_material` adopts CNA's canonical60-byte dual-UV PBR
+record and grows from eight to twelve controls. The original six controlled-environment values
+remain exact. For the strength map, UV1 and a full scale/rotate/offset transform independently
+select alpha64 and produce neutral10 instead of UV0 alpha128's20. For the colour map, UV1 and its
+independent transform select full green and produce `{0,41,0}` instead of UV0 blue's `{0,0,41}`.
+Both maps' default and mutated selector/transform state is included in the aggregate checks.
+
+Two corrected OPENGLES3/Xvfb runs pass12/12 identically; the inspected800x480 capture shows all ten
+panels. An initial demo fixture used XNA's half-intensity named `Color::Green` while expecting255;
+the observed20 was correct, and the fixture was corrected without a CNA issue. SOFTWARE takes its
+declared fallback skip and the exact CTest passes as skipped. The warning-free incremental compile
+uses at most three jobs; metadata remains645/0, self-tests pass5/5 and4/4, and temporary coverage
+stays302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-830-pbr-specular-uv-*` and `/tmp/checkpoint-830-coverage.md`. Continue with PBR
+alpha modes/cutoff, vertex-colour multiplication and double-sided shading.

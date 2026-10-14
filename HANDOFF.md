@@ -155,6 +155,8 @@ Focused828 adds exact base-color, emissive and specular-color sRGB decoding plus
 encoding, including proof that the final RGB transfer preserves alpha.
 Focused829 extends the existing PBR texture-map workflow with sampled normal-scale and
 occlusion-strength behavior at one and zero.
+Focused830 extends the existing specular-material workflow with sampled dual-UV selection and
+independent transforms for both `KHR_materials_specular` maps.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3224,6 +3226,27 @@ both tool self-test suites pass and temporary coverage stays302/329 types,2114/2
 169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-829-pbr-map-scales-*` and
 `/tmp/checkpoint-829-coverage.md`. No physical-GPU claim is made. Next add sampled dual-UV selector
 and transform behavior for the specular strength and colour maps to the existing specular workflow.
+
+### Focused830-PbrEffect-specular-map-UV-and-transforms
+
+`graphics.pbr_effect.specular_material` now uses the canonical60-byte dual-UV PBR vertex and grows
+from eight to twelve controls without adding an ID. Its six original factor/map centres remain
+exact. The strength map now contains alpha128 at UV0 and alpha64 at UV1: selector1 and a full
+scale/rotate/offset transform each produce exact neutral10 instead of UV0's20. The colour map
+contains blue at UV0 and bright green at UV1: its independent selector and transform each produce
+exact `{0,41,0}` instead of `{0,0,41}`. Default and mutated selector/transform state round-trips in
+the existing two aggregate controls.
+
+Two corrected OPENGLES3/Xvfb runs pass12/12 identically. The inspected800x480 capture shows all ten
+expected panels. The first draft used XNA's named `Color::Green` while expecting full-intensity
+green; its actual128 channel correctly yielded20, so the demo fixture was changed to explicit255.
+This was a demo-data error, not a CNA defect. SOFTWARE retains its declared PBR fallback skip and
+the exact CTest passes as skipped. The warning-free incremental compile uses `-j3`; metadata stays
+645/0, both tool self-test suites pass and temporary coverage remains302/329 types,2114/2326
+members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-830-pbr-specular-uv-*` and
+`/tmp/checkpoint-830-coverage.md`. Audit PBR alpha modes/cutoff, vertex-colour multiplication and
+double-sided shading next; CNA's own conformance scene provides a source oracle, but cna-demos has
+no current runtime demonstration of those controls.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

@@ -2467,3 +2467,18 @@ exact194. Default-one and independent fractional state round-trips precede the d
 Two OPENGLES3/Xvfb runs pass8/8 identically. The inspected capture shows the expected relief and
 grooves beside their uniform zero-factor counterparts. SOFTWARE remains a declared fallback skip.
 No new ID was needed because the controls refine the exact maps already demonstrated here.
+
+### PbrEffect specular-map UV selection and transforms
+
+The existing `graphics.pbr_effect.specular_material` now supplies CNA's canonical dual-UV rigid
+vertex and samples both `KHR_materials_specular` maps through their independent selectors and
+transforms. The scalar map's UV0 alpha128 gives neutral20; UV1 alpha64 gives exact10, and the full
+scale/rotate/offset transform maps UV0 to the same10 texel. The colour map's UV0 blue gives
+`{0,0,41}`; UV1 bright green gives `{0,41,0}`, and its separate transform reaches that same green.
+The two aggregate state controls also cover selector/transform defaults and exact mutations.
+
+Two corrected OPENGLES3/Xvfb runs pass12/12 identically, and the ten-panel capture was inspected.
+The first draft's named `Color::Green` was XNA's128-channel web colour, so its observed20 was right;
+changing the fixture to explicit255 restored the intended full-green41 oracle. This was a demo-data
+error, not a CNA defect. SOFTWARE remains a declared fallback skip. Together with the base/emissive
+coordinate demo, all seven public PBR texture slots now have sampled selector/transform evidence.
