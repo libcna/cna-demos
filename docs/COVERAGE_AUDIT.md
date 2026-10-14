@@ -2521,3 +2521,19 @@ declaration now has a semantic disposition:
 This closes the disposition pass, not the PBR family. The next meaningful batch is rigid-plus-skinned
 directional-shadow and punctual-light reception, followed by material-alpha and fog pixels folded
 into existing scenes where that remains clear.
+
+### Rigid and skinned PBR shadow-receiver branches
+
+New `graphics.pbr_effect.shadow_receivers` supplies branch evidence for both PBR renderer programs.
+Its rigid row translates through World and its skinned row through one full-weight bone, putting the
+same quad at Z=-3. Each row compares unshadowed and authored-map reception for a directional light
+and a point light. The1x1 depth map and every face of the1x1 distance cube store64/255, below the
+receiver's normalized depth/distance0.5, so direct light is removed while ambient and emission
+remain. Rigid and skinned values match exactly: directional lit `{167,125,74}`, point lit
+`{255,207,115}`, and shadowed floor `{20,28,26}`.
+
+Two OPENGLES3/Xvfb runs pass all six controls identically and the capture was inspected. SOFTWARE
+retains the declared EasyGL capability skip. The existing `SkinnedEffect` receiver scenes remain the
+detailed evidence for PCF radii, bias, detachment, cascades, spot cones and range boundaries; this
+scene establishes that the distinct rigid/skinned PBR programs consume the already-audited receiver
+model. Material `Alpha` and fog are now the PBR family's remaining sampled gaps.

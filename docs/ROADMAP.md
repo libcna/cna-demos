@@ -145,7 +145,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (46 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders 🟨 (47 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
   diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
   specular_lights now has eight on both renderers with inspected labeled comparisons.
@@ -173,7 +173,8 @@ a check that all authored colors remain visible and that a blank texture row can
   maps' independent UV selectors/transforms. ✅ `graphics.pbr_effect.material_surface` covers alpha
   modes/cutoff, double-sided shading and vertex-colour RGB/alpha multiplication. ✅ The detailed
   public-surface disposition credits shared state/behavior without duplicating panels and leaves
-  actual material-alpha/fog pixels plus rigid/skinned PBR shadow/punctual branches as real gaps.
+  actual material-alpha/fog pixels as the remaining gaps. ✅ `graphics.pbr_effect.shadow_receivers`
+  executes directional-shadow and punctual-point reception through both PBR renderer programs.
 - 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
@@ -8045,3 +8046,21 @@ those PBR renderer variants. Metadata remains646/0; catalog validation and the5/
 checkpoint-comparison self-tests pass. Evidence:`/tmp/checkpoint-832-pbr-public-surface-audit-*`.
 Add a compact rigid-plus-skinned PBR receiver scene next, then fold alpha/fog into an existing PBR
 workflow where practical.
+
+## Focused833-rigid-and-skinned-PBR-shadow-receivers
+
+New `graphics.pbr_effect.shadow_receivers` closes the separate rigid and skinned PBR receiver
+branches without repeating the existing filter/bias/cascade matrix. Four columns compare
+directional light with and without a1x1 authored depth shadow, then point light with and without a
+six-face authored distance cube. The rigid row reaches receiver Z=-3 through World; the skinned row
+uses one full-weight bone for the same transform. Both programs produce exact matching pixels:
+directional `{167,125,74}` and point `{255,207,115}` when lit, with the common ambient/emissive
+floor `{20,28,26}` when shadowed. Default and final state getters bring the scene to six controls.
+
+Two OPENGLES3/Xvfb runs pass6/6 with identical values. The inspected800x480 capture shows the same
+lit/dark column pattern in both rows. SOFTWARE takes its declared EasyGL skip and the exact CTest
+passes as skipped. The build uses at most three jobs and emits only the known Draco CMP0148 warning;
+metadata is647/0, validator self-tests pass5/5, checkpoint-comparison tests pass4/4, and temporary
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-833-pbr-receivers-*` and `/tmp/checkpoint-833-coverage.md`. No CNA defect appeared.
+Add sampled material-alpha and fog behavior next, extending a current PBR workflow where practical.
