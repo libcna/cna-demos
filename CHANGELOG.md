@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the RenderTarget2D lifetime checks with bound C++ destruction, stale-binding removal,
+  explicit back-buffer restoration and same-address replacement rendering.
 - Extended the RenderTargetCube workflow with bound-face disposal refusal, exact binding identity
   retention and post-refusal face read-back.
 - Extended the RenderTarget2D workflow with atomic bound-target Dispose/move-assignment refusal,

@@ -6616,3 +6616,21 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-751-render-target-cube-*
 `/tmp/checkpoint-751-coverage.md`. Pixel checks used programmatic read-back; no screenshot or
 manual visual inspection was performed. No CNA issue was found. Continue with the distinct C++
 bound-target destruction path, including stale binding removal and same-address replacement.
+
+## Focused752-RenderTarget2D-bound-destruction-and-address-reuse
+
+`graphics.render_target.render_target2d` adds four controls, reaching13 on both renderers. An
+optional-backed target is destroyed while bound: `GetRenderTargets` drops the dangling pointer,
+while `Present` stays refused until an explicit null-target transition restores the saved
+back-buffer viewport. Reconstructing the target in the same optional storage cannot be mistaken
+for the old binding; the new24x12 viewport is active and an exact CornflowerBlue clear reads back
+after unbinding.
+
+SOFTWARE and OPENGLES3/Xvfb pass13/13, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, validator/checkpoint self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-752-render-target-*` and
+`/tmp/checkpoint-752-coverage.md`. Pixel checks used programmatic read-back; no screenshot or
+manual visual inspection was performed. No CNA issue was found. The render-target wrapper/lifetime
+table is now semantically closed for the two primary renderers; continue with ContentManager's
+explicitly documented protected Dispose hook and post-disposal behavior.

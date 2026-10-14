@@ -1738,13 +1738,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-751 close the
-texture wrapper, RenderTarget2D move and explicit render-target disposal work. Continue the
-distinct C++ bound-target destruction path from CNA's public lifetime contract: verify that
-destroying a bound RenderTarget2D removes the dangling public binding, the next explicit unbind
-restores back-buffer state, and a replacement at the same address is genuinely rebound and
-writable. Add this to the existing 2D render-target workflow without duplicating ordinary Dispose
-or move controls. Build with at most three compile jobs and keep focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-752 close the
+texture and render-target wrapper/lifetime table for the two primary renderers. Continue the
+explicit ContentManager lifetime gap recorded in `docs/COVERAGE_AUDIT.md`: inspect the protected
+`Dispose(bool)` dispatch, public/IDisposable idempotence and post-disposal `ReadAsset`/`Load`
+contracts against clean CNA source. Extend an existing coherent custom-manager workflow where
+possible; distinguish the already recorded CNA-DEMOS-ISSUE-010 exception mismatch from new defects
+and do not create a wrapper-only demo merely for metadata. Build with at most three compile jobs
+and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1811,6 +1812,21 @@ SOFTWARE and OPENGLES3/Xvfb pass9/9, and the exact SOFTWARE CTest passes. The wa
 incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
 remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-751-render-target-cube-*` and `/tmp/checkpoint-751-coverage.md`. Pixel checks were
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+
+### Focused752 RenderTarget2D bound destruction and address reuse
+
+`graphics.render_target.render_target2d` grows from nine to thirteen controls. Destroying an
+optional-backed active target removes its dangling public binding, but `Present` remains refused
+until an explicit null-target transition restores the saved back-buffer viewport. Reconstructing
+the target in the same optional storage yields a genuine new binding and24x12 viewport; a
+CornflowerBlue clear through it reads back exactly after unbinding. The explicit Dispose and move
+identity controls from focused750 remain intact.
+
+SOFTWARE and OPENGLES3/Xvfb pass13/13, and the exact SOFTWARE CTest passes. The warning-free
+incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and4/4, and coverage
+remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-752-render-target-*` and `/tmp/checkpoint-752-coverage.md`. Pixel checks were
 programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA

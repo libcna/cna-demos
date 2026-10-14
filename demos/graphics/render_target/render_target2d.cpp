@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // Rendering into a RenderTarget2D, then drawing that render target as a texture.
 #include <memory>
+#include <optional>
 #include <utility>
 
 #include "CnaDemos/Demo.hpp"
@@ -26,6 +27,7 @@ namespace
             arrow_ = getContentProperty().Load<Texture2D>("textures/arrow");
 
             CheckMoveIdentity(device);
+            CheckBoundDestruction(device);
 
             // A 128x128 off-screen colour buffer. RenderTarget2D derives from Texture2D, so once
             // rendered it can be drawn like any texture.
@@ -142,6 +144,46 @@ namespace
                             "the moved target remains writable through the transferred active binding");
         }
 
+        void CheckBoundDestruction(GraphicsDevice& device)
+        {
+            const Rectangle backBufferBounds = device.getViewportProperty().getBoundsProperty();
+            std::optional<RenderTarget2D> slot;
+            slot.emplace(device, 24, 12, false, SurfaceFormat::Color, DepthFormat::None, 0,
+                         RenderTargetUsage::PreserveContents);
+            const RenderTarget2D* const firstAddress = &*slot;
+            device.SetRenderTarget(&*slot);
+            slot.reset();
+
+            bool presentRefused = false;
+            try { device.Present(); }
+            catch (const System::InvalidOperationException&) { presentRefused = true; }
+            Context().Check(device.GetRenderTargets().empty() && presentRefused,
+                            "destroying a bound target removes its dangling public binding while Present stays refused");
+
+            device.SetRenderTarget(static_cast<RenderTarget2D*>(nullptr));
+            Context().Check(device.GetRenderTargets().empty() &&
+                                device.getViewportProperty().getBoundsProperty() == backBufferBounds,
+                            "an explicit unbind after bound destruction restores the complete back-buffer viewport");
+
+            slot.emplace(device, 24, 12, false, SurfaceFormat::Color, DepthFormat::None, 0,
+                         RenderTargetUsage::PreserveContents);
+            const bool addressReused = &*slot == firstAddress;
+            device.SetRenderTarget(&*slot);
+            const auto replacementBindings = device.GetRenderTargets();
+            Context().Check(addressReused && replacementBindings.size() == 1 &&
+                                replacementBindings[0].getRenderTargetProperty() == &*slot &&
+                                device.getViewportProperty().getBoundsProperty() == Rectangle(0, 0, 24, 12),
+                            "a replacement at the destroyed target's address is genuinely rebound");
+
+            device.Clear(Color::CornflowerBlue);
+            device.SetRenderTarget(static_cast<RenderTarget2D*>(nullptr));
+            const Rectangle origin(0, 0, 1, 1);
+            Color pixel = Color::Black;
+            slot->GetData(0, &origin, &pixel, 0, 1);
+            Context().Check(pixel == Color::CornflowerBlue,
+                            "the same-address replacement receives rendering through its new binding");
+        }
+
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::unique_ptr<RenderTarget2D> target_;
         Texture2D arrow_;
@@ -153,10 +195,11 @@ namespace
 CNA_DEMOS_GAME(RenderTarget2DDemo, {
     .id = "graphics.render_target.render_target2d",
     .title = "Render to a texture",
-    .description = "Checks bound-target move identity, draws a sprite into a RenderTarget2D, switches back to the "
-                   "back buffer and draws the target as an ordinary texture at several sizes and with a tint.",
+    .description = "Checks bound-target move and destruction identity, draws a sprite into a RenderTarget2D, "
+                   "then draws the target as an ordinary texture at several sizes and with a tint.",
     .apis = {"RenderTarget2D::RenderTarget2D", "RenderTarget2D::ContentLost", "RenderTarget2D::IsContentLost",
-             "GraphicsDevice::SetRenderTarget", "GraphicsDevice::GetRenderTargets", "GraphicsResource::Dispose",
+             "GraphicsDevice::SetRenderTarget", "GraphicsDevice::GetRenderTargets", "GraphicsDevice::Present",
+             "GraphicsResource::Dispose",
              "GraphicsResource::IsDisposed"},
     .tags = {"offscreen", "render-to-texture"},
     .frames = 10,
