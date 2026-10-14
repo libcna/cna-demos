@@ -5086,3 +5086,26 @@ known-issue SOFTWARE CTest passes and the build is diagnostic-free. Evidence:
 `/tmp/checkpoint-660-*` and `/tmp/checkpoint-660-coverage.md`. No screenshot or visual inspection
 was used. Audit callable Game and GameWindow members next, dispositioning CLR Finalize and
 platform-specific behavior explicitly.
+
+## Focused661-Game-loop-service-and-window-callbacks
+
+Seven existing IDs close13 callable members. `game.lifecycle.method_order` records two complete
+Update -> BeginDraw -> Draw -> EndDraw cycles, proves Game and its manager expose the same device,
+and observes one Disposed event after EndRun and disposal-time UnloadContent.
+`game.lifecycle.run_one_frame` invokes Tick directly after three RunOneFrame calls and requires one
+Update/Draw per variable-time step plus one Disposed event. The service workflow directly
+constructs an empty GameServiceContainer. Back-buffer resize, orientation and title exercise their
+actual GameWindow implementation paths; the screen-device workflow uses both device-change End
+overloads and observes one changed-name event with no duplicate for the unchanged name.
+
+Five portable IDs have byte-identical SOFTWARE/OPENGLES3 stdout and empty stderr; back-buffer has
+nine controls with only ISSUE-083's expected failure. Orientation passes6/6 and screen-device3/3
+on OPENGLES3, while SOFTWARE reports their declared `Need::Window` skips. All seven focused
+SOFTWARE CTests pass (two skipped), and the coherent final build is diagnostic-free. Temporary
+coverage moves1689->1702/2326 at299/329 types and153/753 fields. Game now retains only CLR Finalize
+and the currently unused platform missing-requirement hook. GameWindow retains only OnActivated,
+OnDeactivated and OnPaint: all three are empty protected methods with no internal caller, so the
+member audit intentionally does not create a probe whose sole behavior is a no-op. Evidence:
+`/tmp/checkpoint-661-*` and `/tmp/checkpoint-661-coverage.md`. No screenshot, manual interaction or
+visual inspection was used. Audit GraphicsResource and buffer/render-target/service lifetime gaps
+next.

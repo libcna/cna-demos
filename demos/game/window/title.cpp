@@ -30,7 +30,7 @@ CNA_DEMOS_GAME(WindowTitleDemo, {
     .id = "game.window.title",
     .title = "Window title",
     .description = "Updates the window caption every frame through Game.Window.Title.",
-    .apis = {"Game::Window", "GameWindow::Title"},
+    .apis = {"Game::Window", "GameWindow::Title", "GameWindow::SetTitle"},
     .tags = {"window", "caption"},
     .frames = 10,
 })

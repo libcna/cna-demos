@@ -128,7 +128,8 @@ CNA_DEMOS_GAME(OrientationDemo, {
                    "buffer's sides and raises GameWindow::OrientationChanged. On a desktop, CNA's keyboard "
                    "emulation lets the arrow keys request an orientation.",
     .apis = {"GraphicsDeviceManager::SupportedOrientations", "GameWindow::CurrentOrientation",
-             "GameWindow::OrientationChanged", "PresentationParameters::DisplayOrientation", "DisplayOrientation",
+             "GameWindow::OrientationChanged", "GameWindow::OnOrientationChanged",
+             "GameWindow::SetSupportedOrientations", "PresentationParameters::DisplayOrientation", "DisplayOrientation",
              "GameWindow::KeyboardOrientationEmulationEnabledEXT", "GraphicsDeviceManager::ApplyChanges",
              "GraphicsDeviceManager::PreferredBackBufferWidth", "GraphicsDeviceManager::PreferredBackBufferHeight",
              "PresentationParameters::BackBufferWidth", "PresentationParameters::BackBufferHeight"},

@@ -38,6 +38,18 @@ namespace
                 adapter.getDescriptionProperty() + ")");
             Context().Check(!screen.empty(), "a window on a display reports the display's name");
 
+            GameWindow detached;
+            int detachedChanges = 0;
+            detached.ScreenDeviceNameChanged +=
+                [&detachedChanges](System::Object*, const System::EventArgs&) { ++detachedChanges; };
+            detached.BeginScreenDeviceChange(false);
+            detached.EndScreenDeviceChange("Synthetic display", 320, 240);
+            Context().Check(detached.getScreenDeviceNameProperty() == "Synthetic display" && detachedChanges == 1,
+                            "ending a detached device change stores its display name and raises one event");
+            detached.EndScreenDeviceChange("Synthetic display");
+            Context().Check(detachedChanges == 1,
+                            "the current-size overload does not repeat an unchanged display event");
+
             // Raised when the window is dragged to another monitor (a full-screen game picks the
             // adapter of that monitor again).
             changedToken_ = window.ScreenDeviceNameChanged.Add([this](System::Object*, const System::EventArgs&) {
@@ -85,7 +97,9 @@ CNA_DEMOS_GAME(ScreenDeviceNameDemo, {
     .description = "Shows GameWindow::ScreenDeviceName, the display the window is on, beside the graphics "
                    "adapter's DeviceName, and logs ScreenDeviceNameChanged when the window is dragged to another "
                    "monitor.",
-    .apis = {"GameWindow::ScreenDeviceName", "GameWindow::ScreenDeviceNameChanged", "GraphicsDevice::Adapter",
+    .apis = {"GameWindow::ScreenDeviceName", "GameWindow::ScreenDeviceNameChanged",
+             "GameWindow::BeginScreenDeviceChange", "GameWindow::EndScreenDeviceChange",
+             "GameWindow::OnScreenDeviceNameChanged", "GraphicsDevice::Adapter",
              "GraphicsAdapter::DeviceName", "GraphicsAdapter::Description"},
     .tags = {"window", "display", "monitor", "adapter"},
     .needs = CnaDemos::Need::Window,

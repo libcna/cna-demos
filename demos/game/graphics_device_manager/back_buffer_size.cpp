@@ -60,6 +60,9 @@ namespace
                             "the multisampling preference creates a multisampled back buffer");
             Context().Check(parameters.getMultiSampleCountProperty() == selectedSamples,
                             "the adapter query predicts the multisample count that device creation applies");
+
+            getWindowProperty().ClientSizeChanged +=
+                [this](System::Object*, const System::EventArgs&) { ++clientSizeChanges_; };
         }
 
         void Update(GameTime& gameTime) override
@@ -84,6 +87,8 @@ namespace
                                     parameters.getBackBufferFormatProperty() == SurfaceFormat::Color &&
                                     parameters.getMultiSampleCountProperty() == 0,
                                 "ApplyChanges applies the revised format and disables multisampling");
+                Context().Check(getWindowProperty().getHandleProperty() == 0 || clientSizeChanges_ > 0,
+                                "an attached window raises ClientSizeChanged for the applied size change");
             }
             Game::Update(gameTime);
         }
@@ -96,6 +101,7 @@ namespace
 
     private:
         bool defaultSizeMatchesConstants_ = false;
+        int clientSizeChanges_ = 0;
         int updates_ = 0;
     };
 }
@@ -112,7 +118,8 @@ CNA_DEMOS_GAME(BackBufferSizeDemo, {
              "GraphicsDeviceManager::ApplyChanges", "PresentationParameters::BackBufferWidth",
              "PresentationParameters::BackBufferHeight", "PresentationParameters::BackBufferFormat",
              "PresentationParameters::MultiSampleCount", "GraphicsAdapter::QueryBackBufferFormat",
-             "GraphicsDevice::Viewport",
+             "GameWindow::BeginScreenDeviceChange", "GameWindow::EndScreenDeviceChange",
+             "GameWindow::ClientSizeChanged", "GameWindow::OnClientSizeChanged", "GraphicsDevice::Viewport",
              "GraphicsDevice::PresentationParameters"},
     .tags = {"resolution", "window", "device", "multisampling", "format"},
     .frames = 6,

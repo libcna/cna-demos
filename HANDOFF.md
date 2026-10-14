@@ -1361,12 +1361,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused660
-projects the628-demo staged catalog to1689/2326 XNA members and153/753 fields at299/329 types.
-GraphicsDeviceManager, GraphicsDeviceInformation, PreparingDeviceSettingsEventArgs and
-IGraphicsDeviceManager now have no inventory gaps. Audit callable Game and GameWindow members next
-in the existing lifecycle/window workflows, dispositioning CLR Finalize and platform-only behavior
-explicitly instead of manufacturing variants.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused661
+projects the628-demo staged catalog to1702/2326 XNA members and153/753 fields at299/329 types.
+GameServiceContainer has no remaining gap; Game retains only CLR Finalize and the currently unused
+platform ShowMissingRequirementMessage hook, while GameWindow retains only three empty, uncalled
+protected hooks by explicit disposition. Audit the core GraphicsResource, VertexBuffer,
+IndexBuffer, DynamicIndexBuffer, RenderTarget2D and IGraphicsDeviceService lifetime/property gaps
+next in their existing resource/service workflows.
 Then continue with the next high-value behavior family, rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1375,7 +1376,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused659 last observed external `73991b01f7` with six uncommitted
+the sibling CNA checkout; focused661 last observed external `0562550c3` with six uncommitted
 renderer/content-pipeline documentation, build and test paths. Recheck it before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -2788,6 +2789,31 @@ passes. The build is diagnostic-free. Evidence:`/tmp/checkpoint-660-*` and
 hashes remain complete647; the runner is
 `6ecdbb68ca0ffcbca50510de599b738675632800f28d7c56f44f088e79c8daf8`. Sibling CNA remained
 external dirty `73991b01f7` with six observed paths; no CNA source was edited.
+
+Focused661 extends seven existing Game/service/window IDs and adds13 member credits. Method order
+now records two exact Update/BeginDraw/Draw/EndDraw cycles, proves the manager's device identity,
+and observes one Game.Disposed event after EndRun/UnloadContent. Run-one-frame invokes Tick
+directly after three RunOneFrame calls and observes Dispose; the service workflow directly
+constructs an empty GameServiceContainer. Actual back-buffer resize, orientation and title paths
+credit the corresponding GameWindow protected implementation callbacks. A detached window uses
+both EndScreenDeviceChange overloads and observes one screen-name event with no repeat. Five
+portable IDs have byte-identical SOFTWARE/OPENGLES3 stdout and empty stderr; back-buffer executes9
+controls with only ISSUE-083's expected failure. Orientation6/6 and screen-device3/3 pass on
+OPENGLES3; their SOFTWARE runs are declared `Need::Window` skips and emit only the runner's95-byte
+skip diagnostic. All seven focused SOFTWARE CTests pass (two skipped). Temporary coverage projects
+1689->1702/2326; only Game.Finalize, its unused platform missing-requirement hook, and GameWindow's
+three empty/uncalled activation/paint hooks remain by explicit disposition. Evidence:
+`/tmp/checkpoint-661-*` and `/tmp/checkpoint-661-coverage.md`. No screenshot, manual interaction or
+visual inspection was used.
+
+Sibling CNA advanced externally during the build from dirty `73991b01f7` to committed
+`0562550c3` (Video/VideoPlayer lifetime fix), then a coherent rebuild scheduled only the normal
+asset copies. Six unrelated FNA3D/renderer plan and patch paths remain dirty; no CNA source was
+edited here. The focused runs use runner
+`9beab2a88ee159291dade1ec40ca86fb21f92a35350e179f3db2c7dfd859b57c`, libcna.so
+`c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and libcna_c_api.so
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`; these production-library
+hashes supersede complete647 only for focused661 and are not yet a complete-smoke baseline.
 
 ## 15. Assumptions the next session must know
 

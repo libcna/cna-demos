@@ -47,6 +47,9 @@ namespace
     protected:
         void EndRun() override
         {
+            GameServiceContainer empty;
+            Context().Check(empty.GetService<ScoreService>() == nullptr,
+                            "a directly constructed service container starts empty");
             Context().Print("score after the run: {}", scores_.score);
             Context().Check(scores_.score > 0, "the component found the service and updated it");
 
@@ -66,7 +69,8 @@ CNA_DEMOS_GAME(ServicesDemo, {
     .title = "Game services",
     .description = "Registers an object with Game.Services, finds it from a component with GetService and removes "
                    "it with RemoveService.",
-    .apis = {"Game::Services", "GameServiceContainer::AddService", "GameServiceContainer::GetService",
+    .apis = {"Game::Services", "GameServiceContainer::GameServiceContainer",
+             "GameServiceContainer::AddService", "GameServiceContainer::GetService",
              "GameServiceContainer::RemoveService"},
     .tags = {"services", "dependency-injection", "architecture"},
     .frames = 5,

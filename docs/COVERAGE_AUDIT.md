@@ -211,6 +211,26 @@ keeps 37. Stable selected runtime hashes and exact skip/compiler stderr deltas a
 | GetEnumerator, explicit IEnumerable.GetEnumerator | C# iteration machinery; C++ uses range iteration/indexing. No independent demo. |
 | Step continuity | Existing `step_continuity` is a failing compatibility example (ISSUE-002), not a successful implementation of Step. |
 
+### Game loop, services and window callbacks
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Game.BeginDraw / EndDraw | `game.lifecycle.method_order` records two complete Update -> BeginDraw -> Draw -> EndDraw cycles through the real GraphicsDeviceManager before checking EndRun and disposal-time UnloadContent. Both renderers pass the same four controls and emit byte-identical output. |
+| Game.GraphicsDevice, Tick and Disposed | `method_order` proves the Game and its manager expose the same device. `run_one_frame` initializes through RunOneFrame three times, then invokes Tick directly; each variable-time call produces one Update and Draw. A subsequent Dispose raises Disposed exactly once. |
+| Game.Finalize | CLR finalizer inventory entry. C++ destruction and explicit Dispose are already demonstrated; no artificial finalizer demo. |
+| Game.ShowMissingRequirementMessage | Platform/host presentation hook. The current base implementation ignores the exception and returns false, and no runtime path calls it. A derived wrapper asserting that no-op would add no meaningful behavior; leave uncredited until a host implements or invokes it. |
+| GameServiceContainer constructor | `game.services.service_container` directly constructs an independent container and proves it starts empty before retaining the established add/find/remove workflow on Game.Services. |
+| GameWindow BeginScreenDeviceChange / EndScreenDeviceChange | GraphicsDeviceManager's real creation/reset path brackets changes. The back-buffer workflow now observes ClientSizeChanged after its attached OPENGLES3 window is resized; SOFTWARE has no attached window and retains the offscreen behavior. The screen-device workflow also uses both End overloads on a detached window and proves a changed name raises once while an unchanged name does not repeat. |
+| GameWindow OnClientSizeChanged / OnScreenDeviceNameChanged | Demonstrated by the event observations above. The screen-device ID passes three controls on OPENGLES3 and is a declared `Need::Window` skip on SOFTWARE. |
+| GameWindow OnOrientationChanged / SetSupportedOrientations | `game.window.orientation` already switches from portrait-only to LandscapeLeft through GraphicsDeviceManager, observes exactly one OrientationChanged event and matching presentation orientation, and now names the protected implementation path. OPENGLES3 passes six controls; SOFTWARE is a declared window skip. |
+| GameWindow SetTitle | `game.window.title` writes and reads a changing live caption every frame; the public property routes through the protected virtual SetTitle. Both renderers pass ten controls. |
+| GameWindow OnActivated / OnDeactivated / OnPaint | These three protected CNA methods are empty and have no internal caller. Game activation is separately handled and demonstrated by `game.lifecycle.activation`. Calling empty hooks from a probe would only inflate metadata, so they remain intentionally uncredited. |
+
+Focused661 adds13 member credits without a new ID, moving temporary coverage1689->1702/2326.
+Five portable IDs have byte-identical renderer output; the two window-only IDs pass on OPENGLES3
+and declare SOFTWARE skips. The back-buffer ID retains only ISSUE-083's expected query mismatch.
+No screenshot or manual interaction was used.
+
 ### ContentManager (including CNA extensions)
 
 | Members / behavior | Decision and evidence |

@@ -59,18 +59,26 @@ namespace
             ctx.Print("after RunOneFrame #{}: {} update(s), {} draw(s)", frame, game.updates, game.draws);
         }
 
+        // Tick is the public single-step primitive used by RunOneFrame after initialization.
+        game.Tick();
+        ctx.Print("after direct Tick: {} update(s), {} draw(s)", game.updates, game.draws);
+
         ctx.Check(game.initializeCalls == 1, "the game is initialized once, by the first call");
-        ctx.Check(game.updates == 3, "each call runs one Update (variable time step)");
-        ctx.Check(game.draws == 3, "and one Draw");
+        ctx.Check(game.updates == 4, "each RunOneFrame and direct Tick runs one Update (variable time step)");
+        ctx.Check(game.draws == 4, "and one Draw");
+        int disposed = 0;
+        game.Disposed += [&disposed](System::Object*, const System::EventArgs&) { ++disposed; };
         game.Dispose();
+        ctx.Check(disposed == 1, "Dispose raises Game.Disposed once");
     }
 }
 
 CNA_DEMOS_CONSOLE(RunOneFrameDemo, {
     .id = "game.lifecycle.run_one_frame",
     .title = "Step a game frame by frame",
-    .description = "Creates a Game and advances it one tick at a time with Game::RunOneFrame instead of Run; with "
-                   "a variable time step each tick is one Update and one Draw.",
-    .apis = {"Game::RunOneFrame", "Game::IsFixedTimeStep", "Game::Dispose"},
+    .description = "Creates a Game and advances it with RunOneFrame and direct Tick; with a variable time step each "
+                   "call performs one Update and Draw, and Dispose raises Disposed.",
+    .apis = {"Game::RunOneFrame", "Game::Tick", "Game::IsFixedTimeStep", "Game::GraphicsDevice",
+             "Game::Dispose", "Game::Disposed"},
     .tags = {"lifecycle", "debugging", "game-loop"},
 })
