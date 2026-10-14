@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MS-PL
 // XNB shared resources: deferred callbacks rebuild aliases, a forward edge and a weak back edge.
+#include <algorithm>
 #include <filesystem>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <string>
@@ -13,17 +15,20 @@
 #include "Microsoft/Xna/Framework/Content/ContentReader.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentTypeReader.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentTypeReaderManager.hpp"
+#include "System/IDisposable.hpp"
 
 using namespace Microsoft::Xna::Framework::Content;
 
 namespace
 {
-    struct Item
+    struct Item final : System::IDisposable
     {
         std::string name;
         int quantity = 0;
         std::shared_ptr<Item> next;
         std::weak_ptr<Item> previous; // the graph has a back edge without a strong ownership cycle
+        bool disposed = false;
+        void Dispose() override { disposed = true; }
     };
     struct Party
     {
@@ -101,6 +106,18 @@ namespace
         }
     };
 
+    class RecordingManager final : public ContentManager
+    {
+    public:
+        using ContentManager::ContentManager;
+        std::shared_ptr<Party> ReadOwned(
+            const std::string& name,
+            std::function<void(std::shared_ptr<System::IDisposable>)> record)
+        {
+            return ReadAsset<std::shared_ptr<Party>>(name, std::move(record));
+        }
+    };
+
     void SharedResources(CnaDemos::DemoContext& ctx)
     {
         ContentTypeReaderManager::AddTypeCreator("CnaDemos.RuntimeGraphReader", [] { return std::make_unique<PartyReader>(); });
@@ -163,6 +180,33 @@ namespace
             ctx.Print("Sword aliases share quantity {}; Sword -> Gem -> weak Sword", party->alias->quantity);
         }
         ctx.Check(lifetime.expired(), "the weak back edge lets the graph die after its managers and owners are gone");
+
+        // ReadAsset's supplied recorder must see IDisposable values regardless of whether they
+        // arrived through typed ReadObject dispatch or the type-erased shared-resource table.
+        RecordingManager recording(nullptr, root.string());
+        observed = {};
+        std::vector<std::shared_ptr<System::IDisposable>> recorded;
+        auto recordedParty = recording.ReadOwned(
+            "graphs/shared_party",
+            [&recorded](std::shared_ptr<System::IDisposable> value) {
+                recorded.push_back(std::move(value));
+            });
+        const auto wasRecorded = [&recorded](const std::shared_ptr<Item>& item) {
+            return std::find(recorded.begin(), recorded.end(), item) != recorded.end();
+        };
+        ctx.Check(recordedParty && recordedParty->inlineCopy && wasRecorded(recordedParty->inlineCopy),
+                  "the supplied ReadAsset recorder receives the typed inline disposable");
+        ctx.Check(recordedParty && recordedParty->primary && recordedParty->primary->next &&
+                  recorded.size() == 3 && wasRecorded(recordedParty->primary) &&
+                  wasRecorded(recordedParty->primary->next),
+                  "the recorder also receives both IDisposable shared-table resources (CNA-DEMOS-ISSUE-087)");
+        for (const auto& value : recorded) value->Dispose();
+        if (recordedParty && recordedParty->primary)
+        {
+            if (!recordedParty->primary->disposed) recordedParty->primary->Dispose();
+            if (recordedParty->primary->next && !recordedParty->primary->next->disposed)
+                recordedParty->primary->next->Dispose();
+        }
     }
 }
 
@@ -170,9 +214,10 @@ CNA_DEMOS_CONSOLE(SharedResources, {
     .id = "content.xnb.shared_resources",
     .title = "Resolve an XNB shared object graph",
     .description = "Uses deferred public ContentReader callbacks to rebuild shared aliases, forward and weak backward references, "
-                   "checks null references and graph lifetime, and rejects invalid shared-resource indices and types.",
+                   "checks graph lifetime and failures, and audits ReadAsset disposal recording.",
     .apis = {"ContentReader::ReadSharedResource", "ContentReader::ReadObject", "ContentReader::ReadString", "ContentReader::ReadInt32",
-             "ContentTypeReader::Read", "ContentTypeReaderManager::AddTypeCreator", "ContentManager::Load"},
+             "ContentTypeReader::Read", "ContentTypeReaderManager::AddTypeCreator", "ContentManager::Load", "ContentManager::ReadAsset"},
     .tags = {"content", "xnb", "reader", "shared-resources", "ownership"},
     .assets = {"graphs/shared_party.xnb", "graphs/bad_shared_index.xnb", "graphs/bad_shared_type.xnb"},
+    .knownIssue = "CNA-DEMOS-ISSUE-087",
 })

@@ -15,6 +15,33 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-087 -- Disposable XNB shared resources bypass the ReadAsset recorder
+
+- **Area/API:** `ContentManager::ReadAsset`, `ContentReader::ReadSharedResources`,
+  `ContentReader::InnerReadObjectAny` and disposal recording for XNB object graphs.
+- **Reproduction:** make the existing shared graph's `Item` implement `IDisposable`, expose
+  protected `ReadAsset<std::shared_ptr<Party>>` through a derived manager and supply a recorder.
+  The authored graph contains one typed inline Item and two Items in the shared-resource table.
+- **Observed:** the recorder receives the typed inline Item exactly once but receives neither
+  shared-table Item. The complete graph still decodes correctly: both root aliases, the forward
+  edge, weak back edge and all deferred fixups pass. SOFTWARE and OPENGLES3/Xvfb each pass16/17
+  controls and fail only the exact three-resource recorder assertion.
+- **Cause observed in source:** typed `InnerReadObject<T>` calls `RecordDisposable(result)`, while
+  `ReadSharedResources` constructs every table value through `InnerReadObjectAny`. That type-erased
+  route deliberately omits `RecordDisposable`, so a disposable value cannot reach either the
+  supplied callback or the manager fallback. The reference ContentReader performs its runtime
+  IDisposable check even when the static read type is object.
+- **Expected:** the supplied ReadAsset callback receives every IDisposable owned by the asset,
+  including values materialized from the shared-resource table. Alias fixups must not record the
+  same shared object again; each of the two table objects should appear once alongside the inline
+  object.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. This is distinct from ISSUE-011: a nonempty caller
+  recorder is present and demonstrably receives the typed inline object. Explicit cleanup follows
+  the assertion. No graphics, screenshot or manual inspection is involved. Evidence:
+  `/tmp/checkpoint-759-shared-resources-*`. No CNA source was modified and no upstream message was
+  sent.
+
 ### CNA-DEMOS-ISSUE-086 -- Destroying a secondary EasyGL device blacks out the primary device
 
 - **Area/API:** multiple `GraphicsDevice` lifetimes under OPENGLES3/EasyGL, especially

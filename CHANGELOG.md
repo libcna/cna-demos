@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the XNB shared-resource graph with supplied ReadAsset recorder coverage, exposing
+  CNA-DEMOS-ISSUE-087: disposable shared-table values bypass disposal recording.
 - Extended ReadAsset ownership coverage with repeated-identity callback delivery and caller
   deduplication, partial-read resource retention, and callback-exception unwinding.
 - Completed the custom CNJ registration audit with empty-name/factory refusals and fail-fast

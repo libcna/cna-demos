@@ -6738,3 +6738,20 @@ routes. Evidence:`/tmp/checkpoint-758-read-asset-*` and `/tmp/checkpoint-758-cov
 rendering, screenshot or manual inspection was used. No new CNA issue was found. Audit supplied
 ReadAsset recording of disposable shared resources in the existing shared-resource graph next;
 source currently records typed inline children but uses a type-erased path for the shared table.
+
+## Focused759-XNB-shared-resource-disposal-recording
+
+`content.xnb.shared_resources` makes its existing Item implement `IDisposable`, exposes protected
+ReadAsset through a derived manager and adds two controls, reaching17. The supplied recorder gets
+the typed inline Item, proving the callback is installed and functional, but omits both Items read
+from the type-erased shared-resource table. The established alias/fixup/cache/failure/lifetime
+controls remain intact. CNA-DEMOS-ISSUE-087 records the distinct runtime defect.
+
+SOFTWARE and OPENGLES3/Xvfb each pass16/17, and the expected-failure SOFTWARE CTest passes. The
+warning-free incremental build uses at most three jobs; metadata remains636/0, known-issue demos
+increase39->40, validator/checkpoint self-tests pass5/5 and4/4, and generated coverage remains
+302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-759-shared-resources-*` and `/tmp/checkpoint-759-coverage.md`. No rendering,
+screenshot or manual inspection was used. Audit the existing `content.custom.cnb_read_limits`
+workflow next for meaningful malformed container-table boundaries: chunk-count/alignment and
+CMET/XREF-specific limits before lower-value accessor repetition.

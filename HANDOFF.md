@@ -1738,14 +1738,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-758 close the
-texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and typed ReadAsset
-callback failure boundaries. Continue with the existing `content.xnb.shared_resources` workflow:
-expose protected ReadAsset through its manager, make the existing Item disposable and verify a
-supplied recorder sees the inline item plus both type-erased shared-table items exactly once by
-identity. Source inspection predicts CNA currently omits the two shared items; reproduce before
-classifying or recording a new CNA issue. Do not add a narrow lifecycle ID. Build with at most
-three compile jobs and keep focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-759 close the
+texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
+recorder boundaries, with new ISSUE-087 for omitted disposable shared-table values. Continue with
+the existing `content.custom.cnb_read_limits` workflow: audit meaningful malformed container-table
+boundaries, prioritizing chunk-count/alignment and CMET/XREF-specific limits over accessor-only
+variants. Use public CnbWriter/CnbDocument APIs where they can author the case; mutate private
+bytes only for malformed structures no writer can emit. Do not add a narrow guard-only ID. Build
+with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1919,6 +1919,20 @@ known-issue demos remain39, tool self-tests pass5/5 and4/4, and coverage remains
 2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-758-read-asset-*` and `/tmp/checkpoint-758-coverage.md`. No rendering, screenshot
 or manual inspection was used, and no new CNA issue was found.
+
+### Focused759 XNB shared-resource disposal recording
+
+`content.xnb.shared_resources` grows from fifteen to seventeen controls. Its existing Item now
+implements `IDisposable`, and a derived manager exposes protected ReadAsset with a supplied
+recorder. The callback receives the typed inline Item, proving it is installed and functional, but
+omits both Items materialized from the type-erased shared-resource table. All established
+alias/fixup/cache/failure/lifetime controls remain intact. CNA-DEMOS-ISSUE-087 records the defect.
+
+SOFTWARE and OPENGLES3/Xvfb each pass16/17, and the expected-failure SOFTWARE CTest passes. The
+warning-free incremental build uses `-j3`; metadata remains636/0, known-issue demos increase39->40,
+tool self-tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326 members,169/753 fields
+and2999/3205 C routes. Evidence:`/tmp/checkpoint-759-shared-resources-*` and
+`/tmp/checkpoint-759-coverage.md`. No rendering, screenshot or manual inspection was used.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
