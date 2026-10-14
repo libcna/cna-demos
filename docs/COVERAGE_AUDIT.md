@@ -392,6 +392,22 @@ In particular, a successful bounded Game run does not itself verify the rendered
 | DrawString overloads and transforms | `draw_string`, `string_builder` and `transformed_text` show ordinary/mutable text, scalar/per-axis scale, centered rotation and whole-string mirroring. Nonzero text layer depth with sprite/text overlap and pixel-checked transformed bounds remain pending; redundant overload syntax needs no separate demo. |
 | getTextureEXT, getGlyphBoundsEXT, getCroppingEXT, getKerningEXT | `glyph_constructor` now directly reads all four extensions and correlates the atlas, bounds, cropping and kerning entries by the Characters order. Caller-vector mutations prove the tables are retained values. This is the intended custom-layout/binding inspection workflow; no getter-per-demo expansion. Returned references must not outlive the font. |
 
+### GamePad value identity and disconnected capabilities
+
+Source review at CNA `09c3108e5`: GamePadState and its four component value implementations,
+GamePadCapabilities, the SDL population path, and the existing `input.gamepad.state_values` and
+`capabilities` demos. No physical controller was present in this environment.
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| GamePadState Equals, GetHashCode and ToString | `state_values` retains all eleven construction, clamping, virtual-button and operator controls and adds typed/boxed equality with wrong-type rejection, an equal hash and XNA's exact fully-qualified type-name text. The renderer-free direct run passes18/18 with empty stderr. PacketNumber already has a separate polling workflow; arbitrary packet values add no identity concept here. |
+| GamePadButtons/GamePadDPad/GamePadThumbSticks/GamePadTriggers identity and text | One coherent set of controls compares complete authored copies through typed and boxed Equals, equality/inequality operators and equal hashes, while default values remain distinct. Exact diagnostics are `{Buttons:A}`, `{DPad:Up}`, the two labelled stick vectors and the two trigger scalars. These are the four nested parts of the demonstrated state, not separate value-only demos. Together with GamePadState they add twenty XNA-member credits. |
+| HasLeftStickButton and HasRightStickButton | `capabilities` now reads both properties explicitly in its connected summary and all-controls predicate. Its GamePad need was a demo metadata defect: the source already promised meaningful disconnected behavior but preflight prevented that code from running without hardware. With the need removed, all four absent player slots report disconnected and no controls, including both stick buttons. SOFTWARE and OPENGLES3 each pass eight checks with byte-identical stdout and empty stderr. This demonstrates the false/disconnected contract only; it does not claim either button exists on a real controller. |
+
+Temporary generated coverage moves1438->1460/2326 XNA members without changing the627-demo,
+297-type or C-route totals. `capabilities` will change one no-gamepad smoke result from skip to pass
+per renderer at the next complete checkpoint. No screenshot or visual inspection was performed.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

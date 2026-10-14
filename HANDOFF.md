@@ -1342,13 +1342,13 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from the complete634
-baseline. Focused637 projects XNA-member coverage to1438/2326 and records SpriteBatch open-dispose
-counter leak ISSUE-082. Audit `input.gamepad.state_values` next: its operators already establish
-ordinary equality, so add typed/boxed Equals, hash and exact diagnostic text only as one coherent
-value contract. Then decide the two uncredited GamePadCapabilities stick-button properties in the
-existing `input.gamepad.capabilities` workflow without inventing hardware. Run the renderer-free
-value demo directly and exercise capabilities only where its declared GamePad need permits; do not
-claim a physical controller that was not present. Continue immediately to the next useful family.
+baseline. Focused638 projects XNA-member coverage to1460/2326 and closes the GamePadState/component
+value contracts plus disconnected stick-button capabilities. Audit the existing VideoPlayer
+workflows next. Both video demos already call Dispose in UnloadContent but do not credit or assert
+Dispose/IsDisposed. Inspect the implementation, add lifecycle checks and only the useful
+post-dispose behavior to one coherent existing ID, and keep playback/frame validation intact. Run
+SOFTWARE and OPENGLES3 with dummy audio/Xvfb; distinguish decoder availability from API defects and
+do not claim visual quality without inspecting output. Then continue to the next useful family.
 
 The public C audit is at2999/3205 with all remaining routes dispositioned as fixed reflection names,
 hardware/service/manual observations or renderer-specific work. Do not create controls merely to
@@ -2455,6 +2455,17 @@ plus the same expected failure with byte-identical stdout and empty stderr; the 
 passes. Temporary coverage projects1437->1438/2326 through SpriteBatch.Dispose. Evidence:
 `/tmp/checkpoint-637-sprite-batch-*` and `/tmp/checkpoint-637-coverage.md`. No screenshot or visual
 inspection was performed. Clean sibling CNA remains `09c3108e5`; no CNA source was edited.
+
+Focused638 extends `input.gamepad.state_values` from11 to18 controls for typed/boxed equality,
+hashes and exact text across GamePadState and all four nested values. Its renderer-free run passes
+with empty stderr. `input.gamepad.capabilities` now reads both stick-button properties and no longer
+declares a GamePad need: the existing disconnected path had been unreachable under the very
+condition it tested. With no physical controller present, SOFTWARE and OPENGLES3 each pass eight
+checks for four disconnected/no-control slots with byte-identical stdout and empty stderr. This is
+no connected-hardware claim. Both focused CTests pass. Temporary coverage projects1438->1460/2326;
+the next full smoke should convert one skip to pass per renderer. Evidence:
+`/tmp/checkpoint-638-gamepad-*` and `/tmp/checkpoint-638-coverage.md`. No screenshot or visual
+inspection was performed. Final build is diagnostic-free against clean CNA `09c3108e5`.
 
 ## 15. Assumptions the next session must know
 

@@ -43,6 +43,9 @@ namespace
         add(caps.getHasRightXThumbStickProperty() && caps.getHasRightYThumbStickProperty(), "right-stick");
         add(caps.getHasLeftTriggerProperty() && caps.getHasRightTriggerProperty(), "triggers");
         add(caps.getHasLeftShoulderButtonProperty() && caps.getHasRightShoulderButtonProperty(), "shoulders");
+        const bool hasLeftStickButton = caps.getHasLeftStickButtonProperty();
+        const bool hasRightStickButton = caps.getHasRightStickButtonProperty();
+        add(hasLeftStickButton || hasRightStickButton, "stick-buttons");
         add(caps.getHasStartButtonProperty(), "Start");
         add(caps.getHasBackButtonProperty(), "Back");
         add(caps.getHasBigButtonProperty(), "BigButton");
@@ -53,9 +56,12 @@ namespace
 
     bool HasAnything(const GamePadCapabilities& caps)
     {
+        const bool hasLeftStickButton = caps.getHasLeftStickButtonProperty();
+        const bool hasRightStickButton = caps.getHasRightStickButtonProperty();
         return caps.getHasAButtonProperty() || caps.getHasBButtonProperty() || caps.getHasXButtonProperty() ||
                caps.getHasYButtonProperty() || caps.getHasBackButtonProperty() || caps.getHasStartButtonProperty() ||
                caps.getHasBigButtonProperty() || caps.getHasDPadUpButtonProperty() ||
+               hasLeftStickButton || hasRightStickButton ||
                caps.getHasLeftXThumbStickProperty() || caps.getHasRightXThumbStickProperty() ||
                caps.getHasLeftTriggerProperty() || caps.getHasRightTriggerProperty() ||
                caps.getHasLeftVibrationMotorProperty() || caps.getHasRightVibrationMotorProperty();
@@ -130,13 +136,13 @@ CNA_DEMOS_GAME(CapabilitiesDemo, {
              "GamePadCapabilities::HasDPadUpButton", "GamePadCapabilities::HasDPadDownButton",
              "GamePadCapabilities::HasDPadLeftButton", "GamePadCapabilities::HasDPadRightButton",
              "GamePadCapabilities::HasLeftShoulderButton", "GamePadCapabilities::HasRightShoulderButton",
+             "GamePadCapabilities::HasLeftStickButton", "GamePadCapabilities::HasRightStickButton",
              "GamePadCapabilities::HasLeftXThumbStick", "GamePadCapabilities::HasLeftYThumbStick",
              "GamePadCapabilities::HasRightXThumbStick", "GamePadCapabilities::HasRightYThumbStick",
              "GamePadCapabilities::HasLeftTrigger", "GamePadCapabilities::HasRightTrigger",
              "GamePadCapabilities::HasLeftVibrationMotor", "GamePadCapabilities::HasRightVibrationMotor",
              "GamePadCapabilities::HasVoiceSupport", "GamePadType"},
     .tags = {"gamepad", "controller", "capabilities", "connected"},
-    .needs = CnaDemos::Need::GamePad,
     .frames = 3,
     .assets = {"fonts/pixel_font.cnb"},
 })

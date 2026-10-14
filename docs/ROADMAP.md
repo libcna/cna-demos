@@ -4715,3 +4715,21 @@ without changing the627-demo/type/C-route counts. Evidence:`/tmp/checkpoint-637-
 `/tmp/checkpoint-637-coverage.md`. Pixel readback was programmatic; no screenshot or visual
 inspection was performed. Audit GamePadState value identity/diagnostics and the two omitted stick-
 button capability members next.
+
+## Focused638-GamePad-value-identity-and-disconnected-capabilities
+
+`input.gamepad.state_values` retains all11 construction, clamping, virtual-button and operator
+controls and adds seven coherent value-contract checks. GamePadState plus Buttons, DPad,
+ThumbSticks and Triggers now exercise typed/boxed Equals, wrong-type rejection, equality/inequality,
+equal hashes and exact diagnostic strings; the renderer-free run passes18/18 with empty stderr.
+
+`input.gamepad.capabilities` now includes the omitted left/right stick-button properties. Its
+GamePad need was removed because the source already tested disconnected controllers but preflight
+made that path unreachable without hardware. SOFTWARE and OPENGLES3 each pass eight checks over
+four absent player slots with byte-identical stdout and empty stderr. This proves false/disconnected
+behavior only; no physical controller claim is made. Both focused CTests pass. Temporary coverage
+moves XNA members1438->1460/2326 with no ID/type/C-route change; the next full smoke should replace
+one GamePad skip with one pass under each renderer. Evidence:`/tmp/checkpoint-638-gamepad-*` and
+`/tmp/checkpoint-638-coverage.md`. No screenshot or visual inspection was performed. Audit the
+existing VideoPlayer lifecycle next, including the already-called but uncredited Dispose/IsDisposed
+contract and post-dispose behavior.
