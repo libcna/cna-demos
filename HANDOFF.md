@@ -1363,8 +1363,9 @@ two private XNB fixtures prove the Model content-load plus dictionary/foreign-ob
 This completes the header's semantic route audit. The remaining206 uncredited public C routes are
 already dispositioned largely as fixed reflection names, hardware/service/manual observations or
 renderer-specific work. The deeper XNA member/behavior audit has now extended
-`graphics.model.bones` for pose-array and collection contracts. Continue with the documented
-`graphics.model.mesh_parts` null-effect skip gap, using actual pixels and the existing ID. Avoid other renderer-
+`graphics.model.bones` for pose-array/collection contracts and `graphics.model.mesh_parts` for
+null-effect versus zero-primitive omission. Audit the remaining top-level Model/ModelMesh behaviors
+and add only a coherent observable gap to an existing ID. Avoid other renderer-
 dependent `graphics_ext.h` while
 the sibling renderer retirement is incoherent. The two
 remaining KeyboardState routes are fixed reflection
@@ -2633,3 +2634,14 @@ byte-identical stdout and empty stderr. A temporary coverage generation projects
 `checkpoint-631-model-bones-members-focused-*`. No screenshot or visual inspection was performed,
 and full project validation remains blocked by the external sibling state. Extend the existing
 `graphics.model.mesh_parts` workflow with its still-unproved null-effect skip behavior next.
+
+## Focused632-ModelMeshPart-omission-rules
+
+The existing `graphics.model.mesh_parts` retains all10 prior assertions and adds two omission
+controls. A null right-part Effect removes green from Effects, keeps the left triangle red and
+leaves the right pixel clear. After restoring green, zero left primitives keep red in Effects but
+omit only its geometry while the right triangle still draws. The exact updated object compiles
+cleanly and a cumulative isolated relink passes12/12 on SOFTWARE and OPENGLES3 with byte-identical
+stdout and empty stderr. Evidence:`checkpoint-632-model-mesh-parts-skip-focused-*`. Pixel readback
+was programmatic; no screenshot or visual inspection was performed. No ID or coverage count
+changes. Continue the top-level Model/ModelMesh behavior audit before leaving the model family.

@@ -105,22 +105,45 @@ namespace
         void Draw(const GameTime& time) override
         {
             auto& device = getGraphicsDeviceProperty();
-            device.Clear(Color::DarkSlateGray);
             device.setBlendStateProperty(BlendState::Opaque);
             device.setDepthStencilStateProperty(DepthStencilState::None);
             device.setRasterizerStateProperty(RasterizerState::CullNone);
-            mesh_->Draw(); // applies each part's effect and its own buffer ranges
             if (!checked_)
             {
-                const CnaDemos::BackBufferPixels pixels(device);
-                const auto at = [&](float x, float y) {
+                const auto at = [](const CnaDemos::BackBufferPixels& pixels, float x, float y) {
                     return pixels.At(static_cast<int>((x + 1) * .5f * pixels.Width()),
                                      static_cast<int>((1 - y) * .5f * pixels.Height()));
                 };
-                Context().Check(CnaDemos::Near(at(-.35f, -.3f), Color::Red, 2), "the left indexed triangle uses the red effect");
-                Context().Check(CnaDemos::Near(at(.35f, .3f), Color::Lime, 2), "the right base-vertex range uses the green effect");
-                Context().Check(CnaDemos::Near(at(-.65f, .3f), Color::DarkSlateGray, 2), "the unselected half of the left quad stays clear");
-                Context().Check(CnaDemos::Near(at(.65f, -.3f), Color::DarkSlateGray, 2), "the right StartIndex selects the other triangle only");
+
+                right_->setEffectProperty(nullptr);
+                device.Clear(Color::DarkSlateGray);
+                mesh_->Draw();
+                const CnaDemos::BackBufferPixels noRight(device);
+                Context().Check(right_->getEffectProperty() == nullptr &&
+                                    mesh_->getEffectsProperty().getCountProperty() == 2 &&
+                                    !mesh_->getEffectsProperty().Contains(green_.get()) &&
+                                    CnaDemos::Near(at(noRight, -.35f, -.3f), Color::Red, 2) &&
+                                    CnaDemos::Near(at(noRight, .35f, .3f), Color::DarkSlateGray, 2),
+                                "a null Effect removes membership and skips only that mesh part");
+                right_->setEffectProperty(green_.get());
+                left_->SetPrimitiveCount(0);
+                device.Clear(Color::DarkSlateGray);
+                mesh_->Draw();
+                const CnaDemos::BackBufferPixels noLeft(device);
+                Context().Check(mesh_->getEffectsProperty().getCountProperty() == 3 &&
+                                    mesh_->getEffectsProperty().Contains(red_.get()) &&
+                                    CnaDemos::Near(at(noLeft, -.35f, -.3f), Color::DarkSlateGray, 2) &&
+                                    CnaDemos::Near(at(noLeft, .35f, .3f), Color::Lime, 2),
+                                "zero primitives skip geometry without removing the part's Effect membership");
+                left_->SetPrimitiveCount(1);
+
+                device.Clear(Color::DarkSlateGray);
+                mesh_->Draw(); // applies each part's effect and its own buffer ranges
+                const CnaDemos::BackBufferPixels pixels(device);
+                Context().Check(CnaDemos::Near(at(pixels, -.35f, -.3f), Color::Red, 2), "the left indexed triangle uses the red effect");
+                Context().Check(CnaDemos::Near(at(pixels, .35f, .3f), Color::Lime, 2), "the right base-vertex range uses the green effect");
+                Context().Check(CnaDemos::Near(at(pixels, -.65f, .3f), Color::DarkSlateGray, 2), "the unselected half of the left quad stays clear");
+                Context().Check(CnaDemos::Near(at(pixels, .65f, -.3f), Color::DarkSlateGray, 2), "the right StartIndex selects the other triangle only");
                 // A one-pixel line can land on either neighboring raster row. Check a narrow
                 // band at three interior columns instead of assuming identical endpoint rules.
                 bool lineVisible = true;
@@ -134,6 +157,11 @@ namespace
                 }
                 Context().Check(lineVisible, "the line part draws above the triangles with its own topology");
                 checked_ = true;
+            }
+            else
+            {
+                device.Clear(Color::DarkSlateGray);
+                mesh_->Draw();
             }
             Game::Draw(time);
         }
@@ -152,8 +180,8 @@ namespace
 CNA_DEMOS_GAME(MeshPartsDemo, {
     .id = "graphics.model.mesh_parts",
     .title = "Mesh parts share buffers and choose effects and topology",
-    .description = "Builds two parts with shared buffers but different index/base-vertex ranges, checks effect "
-                   "collection membership on replacement, and checks triangle ranges plus a line part with pixels.",
+    .description = "Builds parts with shared buffers but distinct ranges and topology, checks effect membership "
+                   "and omission rules, and verifies every selected or skipped range with pixels.",
     .apis = {"ModelMesh::ModelMesh", "ModelMesh::Draw", "ModelMesh::Effects", "ModelMeshPart::ModelMeshPart",
              "ModelMeshPart::Effect", "ModelMeshPart::NumVertices", "ModelMeshPart::PrimitiveCount",
              "Microsoft::Xna::Framework::Graphics::ModelMeshPart::PrimitiveTypeEXT",

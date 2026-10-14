@@ -4620,3 +4620,15 @@ projection1405->1408/2326 without adding a demo ID. Evidence:
 `checkpoint-631-model-bones-members-focused-*`. No screenshot or visual inspection was performed;
 the sibling CNA checkout is still unsuitable for a full project reconfigure. The null-effect part
 skip identified in the ModelMesh audit is the next focused model behavior.
+
+## Focused632-ModelMeshPart-omission-rules
+
+The existing `graphics.model.mesh_parts` retains all10 original controls and adds two exact
+omission paths. Clearing the right part's Effect removes green from the mesh Effects collection,
+keeps the left triangle red and leaves the right sample at the clear color. Restoring green and
+setting the left PrimitiveCount to zero instead leaves red in Effects while omitting only its
+geometry and drawing the green sibling. The updated object compiles cleanly; an isolated cumulative
+relink passes12/12 under SOFTWARE and OPENGLES3 with byte-identical stdout and empty stderr.
+Evidence:`checkpoint-632-model-mesh-parts-skip-focused-*`. Pixels were read programmatically; no
+screenshot or visual inspection was performed. No demo ID, metadata member or C-route count
+changes. Continue the top-level Model/ModelMesh behavior audit before leaving the model family.
