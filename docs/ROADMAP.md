@@ -7785,3 +7785,21 @@ CMP0148 developer warning during regeneration. Metadata is638/0 and temporary co
 types,2114/2326 members,169/753 fields and3026/3205 C routes, with `graphics_ext.h` at27/42. No
 screenshot or manual visual inspection is claimed. Evidence:`/tmp/checkpoint-818-retro-*` and
 `/tmp/checkpoint-818-coverage.md`. Continue with the remaining15 DebugDraw routes.
+
+## Focused819-C-DebugDraw-geometry-and-list-lifecycle
+
+New `c_api.graphics.debug_draw` covers all15 remaining `graphics_ext.h` routes in28 controls. It
+proves Begin/Clear/End lifecycle, default depth-tested mode, same-frame depth and overlay routing,
+count-only and atomic vertex copies, exact line order and color, null/noncanonical refusals, and
+box/frustum/cross line counts. Four- and128-segment clamps are exercised by the two sphere forms;
+the complete423-line batch has exact cross endpoints and all768 bounding-sphere vertices remain at
+radius two before End issues the real draw and clears the batch.
+
+SOFTWARE and OPENGLES3/Xvfb pass28/28 with byte-identical stdout and empty stderr. The exact
+SOFTWARE CTest passes. The incremental build uses at most three jobs; metadata is639/0, both tool
+self-test suites pass, and temporary coverage is302/329 types,2114/2326 members,169/753 fields and
+3041/3205 C routes. `graphics_ext.h` is42/42 and every public C header now has at least one
+demonstrated route. Evidence:`/tmp/checkpoint-819-debug-draw-*` and
+`/tmp/checkpoint-819-coverage.md`. No screenshot or manual visual-quality inspection is claimed;
+the existing C++ DebugDraw scene retains detailed pixel evidence. Audit and disposition the
+remaining C-route gaps next, beginning with production `core_ext.h` behavior.

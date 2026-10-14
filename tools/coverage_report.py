@@ -265,7 +265,11 @@ def main() -> int:
                 add(f"| `{header}` | {hit_header[header]} / {per_header[header]} |")
         untouched = sorted(h for h in per_header if not hit_header[h])
         add("")
-        add("Headers without a demonstrated route: " + ", ".join(f"`{h}`" for h in untouched) + ".")
+        if untouched:
+            add("Headers without a demonstrated route: " +
+                ", ".join(f"`{h}`" for h in untouched) + ".")
+        else:
+            add("Headers without a demonstrated route: none.")
         add("")
 
     # --- Non-XNA APIs -----------------------------------------------------------------------

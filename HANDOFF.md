@@ -21,7 +21,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 172 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 173 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -66,10 +66,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-638 project-built catalog demos in18 categories: math78, game33, graphics170, audio23, core3,
+639 project-built catalog demos in18 categories: math78, game33, graphics170, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api174. Kinds are163 console,279 game and196 standalone;
-602 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api175. Kinds are163 console,279 game and197 standalone;
+603 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
 totals are `input_gamepad.h`61/63,
@@ -131,6 +131,8 @@ CNA-DEMOS-ISSUE-091 on both renderers because live non-texture handles pass the 
 validity predicate. It adds the first3 `graphics_ext.h` routes, for3002/3205 staged C routes.
 Focused818 adds the next24 `graphics_ext.h` routes without another issue, bringing that header to
 27/42 and staged C coverage to3026/3205.
+Focused819 covers all15 DebugDraw routes, completes `graphics_ext.h` at42/42 and brings staged C
+coverage to3041/3205. Every public C header now has at least one demonstrated route.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -1815,9 +1817,10 @@ victim search; category ReplaceLowestPriority now distinguishes priority from pl
 remaining RPC/variation surface and all seven uncredited Audio members are now dispositioned in
 focused816. Focused817 begins the previously untouched public C `graphics_ext.h` surface with
 availability/image-based-light values and exposes ISSUE-091; focused818 covers all CRT, Depth and
-ASCII routes. Continue with the remaining15 DebugDraw routes as one coherent frame/list/geometry
-workflow. Do not add isolated getter demos. Build with at most three compile jobs and keep focused
-evidence current.
+ASCII routes; focused819 closes `graphics_ext.h` with the remaining DebugDraw frame/list/geometry
+surface. Audit the remaining164 public C routes next. Classify test-only hooks and trivial fixed
+type-name helpers instead of inflating demo count; begin the largest production group in
+`core_ext.h`. Build with at most three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -2983,6 +2986,24 @@ emits only the existing Draco CMP0148 developer warning. Metadata is638/0 and te
 Evidence:`/tmp/checkpoint-818-retro-*` and `/tmp/checkpoint-818-coverage.md`. No screenshot or
 manual visual-quality inspection is claimed, and detailed CRT/Depth pixel behavior remains covered
 by the existing C++ CNAEXT scenes. Continue with the remaining15 DebugDraw routes.
+
+### Focused819-C-DebugDraw-geometry-and-list-lifecycle
+
+New `c_api.graphics.debug_draw` covers all15 remaining `graphics_ext.h` routes in28 controls. It
+proves Begin/Clear/End lifecycle, default depth-tested mode, same-frame depth and overlay routing,
+count-only and atomic vertex copies, exact line order and color, null/noncanonical refusals, and
+box/frustum/cross line counts. Four- and128-segment clamps are exercised by the two sphere forms;
+the complete423-line batch has exact cross endpoints and all768 bounding-sphere vertices remain at
+radius two before End issues the real draw and clears the batch.
+
+SOFTWARE and OPENGLES3/Xvfb pass28/28 with byte-identical stdout and empty stderr. The exact
+SOFTWARE CTest passes. The incremental build uses at most three jobs; metadata is639/0, both tool
+self-test suites pass, and temporary coverage is302/329 types,2114/2326 members,169/753 fields and
+3041/3205 C routes. `graphics_ext.h` is42/42 and every public C header now has at least one
+demonstrated route. Evidence:`/tmp/checkpoint-819-debug-draw-*` and
+`/tmp/checkpoint-819-coverage.md`. No screenshot or manual visual-quality inspection is claimed;
+the existing C++ DebugDraw scene retains detailed pixel evidence. Audit and disposition the
+remaining C-route gaps next, beginning with production `core_ext.h` behavior.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
