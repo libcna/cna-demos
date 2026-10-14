@@ -123,6 +123,9 @@ CNA-DEMOS-ISSUE-032 and -033; `graphics.effect.parameter_values` CNA-DEMOS-ISSUE
 Passing documentation/result issues ISSUE-068, ISSUE-069, ISSUE-071, ISSUE-072, ISSUE-074,
 ISSUE-076, ISSUE-078 and ISSUE-081 do not add
 runtime knownIssue markers.
+Focused748 stages a37th runtime marker: `graphics.texture_cube.face_transfers` names
+CNA-DEMOS-ISSUE-086 only for OPENGLES3. Its next primary frame is wholly black after a secondary
+EasyGL device is destroyed; SOFTWARE remains a12/12 pass.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -1735,13 +1738,35 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-747 close the
-Texture3D behavior table. Continue the adjacent TextureCube lifecycle audit in
-`graphics.texture_cube.sampler_ownership`: inspect copy assignment across devices, an active-binding
-move and device teardown against public source. Add only observable ownership/binding behavior that
-is not already established by Texture3D or the cube's shared-copy sampler, disposition duplicates,
-and then move to the next public member/behavior family. Build with at most three compile jobs and
-keep focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-748 close the
+Texture3D and TextureCube behavior tables. Continue with Texture2D's remaining wrapper lifecycle
+gap in `graphics.texture2d.copy_ownership`: inspect cross-device copy assignment and its distinct
+full-upload copy-on-write behavior against public source. Do not repeat device teardown merely by
+texture dimension: focused748 already exposes common OPENGLES3 CNA-DEMOS-ISSUE-086, and the
+Texture3D diagnostic confirms it independently. Add only observable semantics not already proved by
+the cube/volume workflows, then move to the next public member/behavior family. Build with at most
+three compile jobs and keep focused evidence current.
+
+### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
+
+`graphics.texture_cube.face_transfers` grows from eight to twelve controls. An occupied primary
+cube receives a copied 2x2 mipmapped source from a secondary HiDef device, changes owner/shape/data,
+and detaches its old primary slot. A later source face edit is shared through the assigned wrapper.
+Move construction transfers the source's active secondary slot and retains that payload; explicit
+secondary-device disposal marks both registered wrappers disposed, and the refused destination
+read preserves every output sentinel. All four lifecycle controls pass on both renderers.
+
+SOFTWARE passes12/12 and the exact CTest passes. OPENGLES3 passes those ten non-framebuffer
+transfer/lifecycle controls but fails the two established atlas checks because the next primary
+frame is completely black. A diagnostic run of the existing Texture3D two-device workflow produces
+the same all-black screenshot despite its25 logical controls passing, identifying a common EasyGL
+multi-device teardown defect rather than lost cube data. CNA-DEMOS-ISSUE-086 records it and the
+demo is marked only for OPENGLES3. The incremental build is warning-free at `-j3`, metadata remains
+636/0, tool self-tests pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326
+members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-748-texture-cube-final-*`, `/tmp/checkpoint-748-failed-gl.png` and
+`/tmp/checkpoint-748-texture3d-gl.png`. The two black diagnostic captures were inspected; no
+physical-GPU or non-OPENGLES3 runtime claim is made. No CNA source was modified.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

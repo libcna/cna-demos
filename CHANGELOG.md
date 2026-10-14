@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed the TextureCube wrapper-lifecycle audit with cross-device copy assignment, shared edits,
+  active-binding move transfer and device-owned disposal; the new framebuffer check exposed
+  CNA-DEMOS-ISSUE-086, where destroying a secondary EasyGL device blacks out the primary device.
 - Closed the Texture3D behavior audit with cross-device move assignment, transferred active
   bindings, DXT volume refusal, the HiDef extent ceiling and the Reach-profile prohibition.
 - Extended Texture3D transfers with raw slice-major caller windows, atomic element-width refusal,

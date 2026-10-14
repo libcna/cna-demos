@@ -15,6 +15,43 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-086 -- Destroying a secondary EasyGL device blacks out the primary device
+
+- **Area/API:** multiple `GraphicsDevice` lifetimes under OPENGLES3/EasyGL, especially
+  `GraphicsDevice::Dispose`, renderer context leasing and EasyGL resource-registry teardown.
+- **Reproduction:** while the game-owned primary HiDef device remains alive, construct a second
+  32x32 HiDef device. Create and transfer cube resources on both devices, copy-assign the primary
+  wrapper from the secondary resource, move the actively bound secondary wrapper, unbind it and
+  explicitly dispose the secondary device. Then clear and draw the primary device's ordinary
+  Texture2D atlas through SpriteBatch and read the back buffer. The extended
+  `graphics.texture_cube.face_transfers` performs this sequence. The existing
+  `graphics.texture3d.volume_data` independently creates and destroys secondary Reach and HiDef
+  devices before drawing its atlas.
+- **Observed:** all four cube lifecycle controls pass: cross-device copy assignment reports the
+  secondary owner and exact data, the old primary slot is detached, later source edits are shared,
+  move construction transfers the active binding, and secondary disposal invalidates both
+  registered wrappers atomically. The following primary OPENGLES3 frame is nevertheless completely
+  black. Both established atlas checks fail, and a captured 800x480 frame contains only black
+  pixels. The Texture3D demo still reports its 25 non-framebuffer controls as passing, but its
+  diagnostic screenshot after the same two-device pattern is also completely black. SOFTWARE
+  passes all 12 extended cube checks and renders the expected atlas.
+- **Expected:** destroying one graphics device must not prevent a different live device from
+  clearing, drawing, presenting or returning its framebuffer. The primary's resources and renderer
+  remain owned by the primary device.
+- **Source investigation:** `GraphicsDevice::destroyNativeResources` resets only the disposing
+  device's renderer/presenter/window. EasyGL has per-device platform contexts and frame/resource
+  leases that promise to make the requested context current and restore the previous binding.
+  `EasyGLRenderer` also registers each per-device resource registry with meta-gl. Despite those
+  boundaries, the next primary frame produces no visible clear, text or texture output and emits
+  no diagnostic. The exact shared context/registry state invalidated by secondary teardown remains
+  to be isolated inside CNA; the demo does not restore or recreate it.
+- **Scope/status:** open against the clean isolated CNA `d23e139de9e5c15511b6be745de290896a69ee37`
+  used by `linux-full`. Reproduced under Mesa/X11/Xvfb with OPENGLES3; no physical-GPU, OPENGL33,
+  Vulkan or WebGPU claim is made. `graphics.texture_cube.face_transfers` is marked only for
+  OPENGLES3. Evidence: `/tmp/checkpoint-748-texture-cube-OPENGLES3.*`,
+  `/tmp/checkpoint-748-failed-gl.png` and `/tmp/checkpoint-748-texture3d-gl.png`. No CNA source was
+  modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-085 -- Offline leaderboard writers cannot create or persist stream columns
 
 - **Area/API:** `PropertyDictionary::GetValueStream`, `LeaderboardWriter::GetLeaderboard` and the

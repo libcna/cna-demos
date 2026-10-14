@@ -786,9 +786,11 @@ ContentTypeDescription headers. Source inspection is not runtime coverage of the
 ### TextureCube (face transfers, formats and stream boundaries)
 
 Audit of TextureCube.hpp/.cpp against reflection, render_target_cube and the new face_transfers.
-The focused transfer scene now passes eight checks on SOFTWARE/OPENGLES3 with empty stderr;
-both 800x480 atlas captures were actually inspected and are RGBA-identical. The atlas draws
-public readback through Texture2D; it does not establish direct GPU readback or cube sampling.
+The focused transfer scene now passes all twelve checks on SOFTWARE. OPENGLES3 passes its ten
+transfer/lifecycle controls but fails both established atlas checks after secondary-device teardown
+because of CNA-DEMOS-ISSUE-086; the diagnostic frame was inspected and is completely black. The
+pre-lifecycle 800x480 atlas captures were inspected and are RGBA-identical. The atlas draws public
+readback through Texture2D; it does not establish direct GPU readback or cube sampling.
 
 | Public members / behavior | Decision and evidence |
 |---|---|
@@ -798,8 +800,9 @@ public readback through Texture2D; it does not establish direct GPU readback or 
 | Typed packed, float, raw-value and byte transfers | compressed_blocks now passes eight checks on SOFTWARE/OPENGLES3 with empty stderr. Original DXT1 faces use 32 bytes for 8x8; a 4x4 region copies 8 bytes through guarded source/destination windows, while 4x4/2x2/1x1 authored mips each retain one padded 8-byte block. Short writes and misaligned writes/reads are refused, preserving every neighbor block/face/mip and read guard. Only constructor capability refusal can skip. These are public compressed-byte results, not direct GPU readback, sampling, DDS decoding or DXT3/DXT5 alpha coverage. typed_payloads now adds eight passing checks on both selections: four Bgr565 PackedValues transfer as explicit little-endian 16-bit words through guarded windows, while Vector4 payloads preserve negative/above-one channels, expose sixteen scalar elements for four texels and accept a one-texel typed patch. Oversized element types and short logical scalar counts leave caller buffers unchanged. The observed Bgr565 C++ object size is 16 bytes here, but transferred word width is two; no ABI-size assertion or C++ object reinterpretation is used. Both stderr files are empty. Other packed/half/raw-value types and sampling remain separate; no format-per-demo series is justified. The Color path repacks CNA's polymorphic Color; never reinterpret those objects as texture/vertex bytes. |
 | Refused transfer and caller-output preservation | Header promises complete transfer or an exception before publishing partial/fabricated output. Actual guards cover disposed/null, active-resource use, face/level, range/rectangle and element width. face_transfers now refuses an undersized logical write count using different replacement colors and an out-of-bounds read rectangle. The entire guarded read destination and all six original/patched base faces survive; physical arrays are fully allocated. Other refusal families remain separate. Capability refusals are renderer-specific, not a substitute for testing supported transfers. |
 | DDSFromStreamEXT | dds_streams now executes five focused checks on both renderer selections: an original 506-byte RGB24 cube has six 4x4 faces and authored 2x2/1x1 levels, all read back as opaque Color. Full and prefixed-full streams match all eighteen face/level images; ordinary one-byte truncation throws FormatException. ISSUE-054 records the two remaining failures: seven-byte reads are attempted only once, and the identical truncation at position sixteen is accepted with incorrect pixels because total Length creates zero padding. Both final stderr streams are empty. The demo's initial wrong exception catch was corrected and retained separately; it is not a CNA defect. These checks establish public decoded data, not direct GPU readback, compressed cube formats or cube sampling. |
-| Copy/move wrappers and Dispose | sampler_ownership now passes eight GL checks: copied wrappers keep independent Name values; a complete Color face upload through the source remains shared; disposing the source leaves its sibling readable; custom samplerCube draws all six surviving faces including the changed orange +Z face; four authored +X corners preserve orientation; authored mips distinguish point/linear level selection; and a distinct white cube replaces that survivor on the same shader unit while an untouched red region remains exact. SOFTWARE declares CustomEffects absence, so this ownership scene has no SOFTWARE runtime credit. Unlike the tested simple Texture2D full upload, the cube Color route keeps sharing. Copy assignment across devices, moving an actively bound wrapper and device teardown remain separate lifecycle decisions; plain move syntax needs no independent demo. |
-| GetTypeName, AsTextureCubeEXT, GetRenderer, protected renderer constructor/Dispose hook | Reflection identity and AsTextureCubeEXT returning this cube are trivial inspection/dispatch hooks, not separate game concepts. GetRenderer is the internal renderer bridge, and protected construction supports RenderTargetCube; no independent game-facing examples are justified for these implementation entry points. Device/context-loss restoration is a separate renderer/manual lifecycle workstream, not established by CPU shadows found in source. |
+| Copy/move wrappers and Dispose | sampler_ownership passes eight GL checks: copied wrappers keep independent Name values; a complete Color face upload through the source remains shared; disposing the source leaves its sibling readable; custom samplerCube draws all six surviving faces including the changed orange +Z face; four authored +X corners preserve orientation; authored mips distinguish point/linear level selection; and a distinct white cube replaces that survivor on the same shader unit while an untouched red region remains exact. face_transfers adds four renderer-independent lifecycle controls: cross-device copy assignment replaces an occupied target, changes its device/shape/payload and detaches its former primary slot; a later source face edit is visible through the assigned wrapper; move construction transfers an active secondary slot and retains the shared payload; explicit secondary-device disposal marks both registered wrappers disposed and a rejected read leaves output untouched. All four pass on both renderers. Plain unbound move syntax and same-device copy assignment are now semantic duplicates rather than independent demo concepts. |
+| Device teardown and context independence | Wrapper registration/disposal succeeds on both renderers, but the next primary OPENGLES3 frame is wholly black after the secondary device is destroyed. Both atlas assertions fail with CNA-DEMOS-ISSUE-086, while SOFTWARE renders the expected atlas. The existing Texture3D two-device workflow independently produces a black diagnostic GL screenshot despite its non-framebuffer assertions passing, so this is a common EasyGL multi-device teardown defect rather than cube payload loss. Device-loss/reset recovery and other renderer backends remain separate platform decisions. |
+| GetTypeName, AsTextureCubeEXT, GetRenderer, protected renderer constructor/Dispose hook | Reflection identity and AsTextureCubeEXT returning this cube are trivial inspection/dispatch hooks, not separate game concepts. GetRenderer is the internal renderer bridge, and protected construction supports RenderTargetCube; no independent game-facing examples are justified for these implementation entry points. |
 
 Full 462 at bbddd34 passes all 475 enabled CTests and both complete smokes. The new retained-cube
 scene adds five GL checks/SOFTWARE skip; six automatic-Draw child checks preserve every older
@@ -2136,3 +2139,20 @@ with focused745-746, the Texture3D table is semantically closed: repeated box-co
 packed/half format variants and reflection/renderer hooks are dispositioned rather than inflated
 into duplicate scenes. Evidence:`/tmp/checkpoint-747-texture3d-*`. No screenshot or manual visual
 inspection was performed. No CNA issue was found.
+
+### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
+
+`graphics.texture_cube.face_transfers` now executes12 controls. Four additions establish
+cross-device copy assignment into an occupied/bound target, old-slot detachment, shared later face
+edits, an active slot following move construction, exact retained payload and device-owned wrapper
+disposal with atomic refused readback. All four additions pass on SOFTWARE and OPENGLES3.
+
+SOFTWARE passes the complete12/12 workflow. OPENGLES3 passes the ten data/lifecycle assertions but
+fails the two existing atlas checks because secondary-device teardown leaves the primary frame
+entirely black. A diagnostic Texture3D screenshot after its independent two-device workflow is also
+entirely black despite25 passing logical controls, so CNA-DEMOS-ISSUE-086 records the shared EasyGL
+lifecycle defect. The build is warning-free at `-j3`; metadata remains636/0, self-tests pass5/5 and
+4/4, and generated coverage remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C
+routes. Evidence:`/tmp/checkpoint-748-texture-cube-final-*`, `/tmp/checkpoint-748-failed-gl.png`
+and `/tmp/checkpoint-748-texture3d-gl.png`. The black diagnostic captures were inspected; no
+physical-GPU or other-renderer result is claimed.

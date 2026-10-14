@@ -6541,3 +6541,23 @@ non-field members,169/753 fields and2999/3205 C routes. Evidence:
 reflection/renderer hooks are dispositioned, so the Texture3D behavior table is semantically closed.
 No screenshot or manual visual inspection was performed. No CNA issue was found. Continue with the
 adjacent TextureCube lifecycle audit.
+
+## Focused748-TextureCube-cross-device-lifecycle-and-EasyGL-teardown
+
+`graphics.texture_cube.face_transfers` adds four lifecycle controls, reaching12. Cross-device copy
+assignment replaces an occupied primary target, reports the secondary owner/shape/payload and
+detaches the old primary slot. Later source edits remain shared. Move construction transfers an
+active secondary slot and preserves the payload; explicit secondary-device disposal invalidates
+both registered wrappers before a rejected read can change output.
+
+SOFTWARE passes12/12 and its exact CTest. OPENGLES3 passes all ten transfer/lifecycle controls but
+fails both established atlas pixels because the primary's next frame is completely black. The
+existing Texture3D two-device workflow independently produces the same all-black diagnostic
+screenshot while its25 non-framebuffer controls pass. CNA-DEMOS-ISSUE-086 records this common
+EasyGL device-teardown defect, and the cube demo is marked only for OPENGLES3. The warning-free
+incremental build uses at most three jobs; metadata remains636/0, validator/checkpoint self-tests
+pass5/5 and4/4, and generated coverage remains302/329 types,2114/2326 non-field members,169/753
+fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-748-texture-cube-final-*`,
+`/tmp/checkpoint-748-failed-gl.png` and `/tmp/checkpoint-748-texture3d-gl.png`. The black diagnostic
+captures were inspected; no physical-GPU or other-renderer claim is made. Next audit Texture2D's
+distinct cross-device copy-assignment/copy-on-write behavior without duplicating device teardown.

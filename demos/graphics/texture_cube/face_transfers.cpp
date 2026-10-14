@@ -4,6 +4,7 @@
 #include <array>
 #include <memory>
 #include <optional>
+#include <utility>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
@@ -12,7 +13,12 @@
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "Microsoft/Xna/Framework/Graphics/CubeMapFace.hpp"
+#include "Microsoft/Xna/Framework/Graphics/DepthFormat.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsAdapter.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsProfile.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PresentationParameters.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PresentInterval.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SamplerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteFont.hpp"
@@ -21,6 +27,8 @@
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Graphics/TextureCube.hpp"
 #include "System/ArgumentException.hpp"
+#include "System/InvalidOperationException.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -85,6 +93,11 @@ namespace
             catch (const System::ArgumentException&) { refused = true; }
             ctx.Check(refused && window == saved, "a refused out-of-bounds read leaves the entire caller buffer untouched");
 
+            // Exercise the second device before allocating the 2D atlas resources. This mirrors
+            // the Texture3D lifecycle workflow and makes the later pixels test whether the primary
+            // device can create resources and draw a frame after secondary-device teardown.
+            CheckLifecycle(device);
+
             bool allFacesMatch = true;
             for (int face = 0; face < 6; ++face)
             {
@@ -124,15 +137,73 @@ namespace
                                 CnaDemos::Near(pixels.At(316, 180), Color::White, 0) &&
                                 CnaDemos::Near(pixels.At(340, 180), Color::Black, 0) &&
                                 CnaDemos::Near(pixels.At(292, 132), Color::Blue, 0),
-                                "the read-back +Y atlas tile shows all four updated texels inside its untouched blue border");
+                                "the primary device draws the read-back +Y atlas after secondary-device teardown");
                 Context().Check(CnaDemos::Near(pixels.At(328, 348), Color::Cyan, 0) &&
                                 CnaDemos::Near(pixels.At(448, 348), Color::Magenta, 0),
-                                "the read-back mip tiles show their independently authored colors");
+                                "the primary device draws authored mip tiles after secondary-device teardown");
             }
             DemoGame::Draw(time);
         }
 
     private:
+        void CheckLifecycle(GraphicsDevice& primary)
+        {
+            PresentationParameters parameters;
+            parameters.setBackBufferWidthProperty(32);
+            parameters.setBackBufferHeightProperty(32);
+            parameters.setDepthStencilFormatProperty(DepthFormat::None);
+            parameters.setPresentationIntervalProperty(PresentInterval::Immediate);
+            GraphicsDevice secondary(GraphicsAdapter::getDefaultAdapterProperty(),
+                                     GraphicsProfile::HiDef, parameters);
+
+            TextureCube destination(primary, 1, false, SurfaceFormat::Color);
+            const Color placeholder = Color::Green;
+            destination.SetData(CubeMapFace::PositiveX, &placeholder, 1);
+            primary.getTexturesProperty()(3, &destination);
+
+            TextureCube source(secondary, 2, true, SurfaceFormat::Color);
+            const std::array<Color, 4> payload{
+                Color::Red, Color::Green, Color::Blue, Color::Yellow};
+            source.SetData(CubeMapFace::NegativeZ, payload.data(), 4);
+            destination = source;
+            std::array<Color, 4> observed;
+            observed.fill(Color::Black);
+            destination.GetData(CubeMapFace::NegativeZ, observed.data(), 4);
+            Context().Check(destination.getGraphicsDeviceProperty() == &secondary &&
+                                destination.getSizeProperty() == 2 &&
+                                destination.getLevelCountProperty() == 2 && observed == payload &&
+                                primary.getTexturesProperty()[3] == nullptr,
+                            "cross-device copy assignment replaces the target, changes its owner and detaches its old binding");
+
+            const std::array<Color, 4> sharedEdit{
+                Color::Orange, Color::Cyan, Color::Magenta, Color::White};
+            source.SetData(CubeMapFace::NegativeZ, sharedEdit.data(), 4);
+            destination.GetData(CubeMapFace::NegativeZ, observed.data(), 4);
+            Context().Check(observed == sharedEdit,
+                            "a cross-device-assigned cube shares later face edits with its source wrapper");
+
+            secondary.getTexturesProperty()(3, &source);
+            TextureCube moved(std::move(source));
+            bool boundWriteRefused = false;
+            try { moved.SetData(CubeMapFace::NegativeZ, payload.data(), 4); }
+            catch (const System::InvalidOperationException&) { boundWriteRefused = true; }
+            const bool bindingFollowed = secondary.getTexturesProperty()[3] == &moved;
+            secondary.getTexturesProperty()(3, nullptr);
+            moved.GetData(CubeMapFace::NegativeZ, observed.data(), 4);
+            Context().Check(bindingFollowed && boundWriteRefused && observed == sharedEdit,
+                            "move construction transfers an active cube binding and preserves its shared payload");
+
+            secondary.Dispose();
+            observed.fill(Color::Gold);
+            const auto beforeDisposedRead = observed;
+            bool disposedReadRefused = false;
+            try { destination.GetData(CubeMapFace::NegativeZ, observed.data(), 4); }
+            catch (const System::ObjectDisposedException&) { disposedReadRefused = true; }
+            Context().Check(destination.getIsDisposedProperty() && moved.getIsDisposedProperty() &&
+                                disposedReadRefused && observed == beforeDisposedRead,
+                            "device disposal invalidates every registered cube wrapper before a read can change output");
+        }
+
         std::unique_ptr<SpriteBatch> batch_;
         std::optional<SpriteFont> font_;
         std::vector<Texture2D> faces_, mips_;
@@ -143,13 +214,17 @@ CNA_DEMOS_GAME(CubeTransfersDemo, {
     .id = "graphics.texture_cube.face_transfers",
     .title = "Cube face windows and mip transfers",
     .description = "Uploads independent cube faces, edits a rectangle through an array window, authors non-base mips, "
-                   "checks refused transfers and displays read-back faces and levels as an atlas.",
+                   "checks refused transfers and cube wrapper lifecycle, then displays read-back faces and levels as an atlas.",
     .apis = {"TextureCube::TextureCube", "TextureCube::Size", "TextureCube::SetData", "TextureCube::GetData",
-             "Texture::Format", "Texture::LevelCount", "CubeMapFace::PositiveY"},
-    .tags = {"texture", "cubemap", "mipmap", "readback", "array"},
+             "Texture::Format", "Texture::LevelCount", "GraphicsResource::GraphicsDevice",
+             "GraphicsResource::IsDisposed", "GraphicsDevice::Textures", "GraphicsDevice::Dispose",
+             "CubeMapFace::PositiveY"},
+    .tags = {"texture", "cubemap", "mipmap", "readback", "array", "ownership", "lifetime"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "Color transfers and a 2D atlas of public read-back data; this does not establish cube shader sampling or direct GPU readback.",
+    .restrictions = "CNA-DEMOS-ISSUE-086: destroying a secondary EasyGL device leaves the primary device's later frame black. Color transfers and public read-back do not establish direct GPU readback.",
+    .knownIssue = "CNA-DEMOS-ISSUE-086",
+    .knownIssueRenderers = {"OPENGLES3"},
 })
