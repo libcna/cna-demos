@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended ReadAsset ownership coverage with repeated-identity callback delivery and caller
+  deduplication, partial-read resource retention, and callback-exception unwinding.
 - Completed the custom CNJ registration audit with empty-name/factory refusals and fail-fast
   rejection when a built-in content reader already owns the requested C++ asset type.
 - Extended the custom CNJ loader with unknown-type and future-version envelope refusals that occur

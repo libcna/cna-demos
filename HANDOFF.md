@@ -1738,13 +1738,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-757 close the
-texture/render-target lifetimes, ContentManager disposal and the CNB/CNJ registration tables.
-Continue with the existing `content.content_manager.read_asset_ownership` workflow: audit and
-execute callback deduplication, callback-exception behavior and cleanup of resources recorded
-before a partial read failure. Keep the actual ReadAsset/ContentReader APIs visible and distinguish
-the known default-recorder defect (ISSUE-011) from any new behavior. Do not add a narrow lifecycle
-ID. Build with at most three compile jobs and keep focused evidence current.
+HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-758 close the
+texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and typed ReadAsset
+callback failure boundaries. Continue with the existing `content.xnb.shared_resources` workflow:
+expose protected ReadAsset through its manager, make the existing Item disposable and verify a
+supplied recorder sees the inline item plus both type-erased shared-table items exactly once by
+identity. Source inspection predicts CNA currently omits the two shared items; reproduce before
+classifying or recording a new CNA issue. Do not add a narrow lifecycle ID. Build with at most
+three compile jobs and keep focused evidence current.
 
 ### Focused748 TextureCube cross-device lifecycle and EasyGL teardown
 
@@ -1901,6 +1902,23 @@ incremental build uses `-j3`; metadata remains636/0, tool self-tests pass5/5 and
 remains302/329 types,2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-757-cnj-loader-*` and `/tmp/checkpoint-757-coverage.md`. No rendering, screenshot
 or manual inspection was used, and no CNA issue was found.
+
+### Focused758 ReadAsset callback and partial-failure ownership
+
+`content.content_manager.read_asset_ownership` grows from eighteen to twenty-one controls. Its
+regenerated XNB has two typed tile fields resolved by the custom reader to one disposable identity.
+The supplied callback receives both occurrences while the caller deduplicates them into one
+ownership slot. Removing the final null-field byte proves a later parse failure preserves that
+already delegated resource for explicit cleanup. A callback-thrown sentinel propagates while the
+short-read stream and unclaimed object unwind.
+
+SOFTWARE and OPENGLES3/Xvfb each pass20/21; only the unchanged default-recorder assertion fails as
+CNA-DEMOS-ISSUE-011, and the expected-failure SOFTWARE CTest passes. The ownership asset
+regenerates byte-identically. The warning-free incremental build uses `-j3`; metadata remains636/0,
+known-issue demos remain39, tool self-tests pass5/5 and4/4, and coverage remains302/329 types,
+2114/2326 members,169/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-758-read-asset-*` and `/tmp/checkpoint-758-coverage.md`. No rendering, screenshot
+or manual inspection was used, and no new CNA issue was found.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

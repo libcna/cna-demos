@@ -1162,6 +1162,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   original checkpoint-437 comparisons retain every older failed assertion (29/30 -> 30/31).
   All 451 enabled CTests pass, and the labeled complete evidence/reviews are archived under
   reports/checkpoint-438-*. No graphics/genuine-XNA execution claim.
+- **Focused758 extension:** the regenerated ownership fixture now contains two typed fields that
+  resolve to one disposable identity. Supplied-callback delivery, caller-side identity
+  deduplication, retention after a later parse failure and callback-exception unwinding all pass.
+  The empty-callback path still leaves that same nested resource undisposed after Unload, so the
+  only failed control remains this issue. Both renderer selections report20/21 and the expected
+  SOFTWARE CTest passes. Evidence:`/tmp/checkpoint-758-read-asset-*`.
 
 ### CNA-DEMOS-ISSUE-012 -- `ContentManager::Load<T>` does not reliably load through an `OpenStream` override
 

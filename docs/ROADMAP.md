@@ -6719,3 +6719,22 @@ fields and2999/3205 C routes. Evidence:`/tmp/checkpoint-757-cnj-loader-*` and
 issue was found. The CNJ custom-loader table is semantically closed; continue with the existing
 ReadAsset ownership workflow's callback deduplication, callback-exception and partial-load cleanup
 gaps.
+
+## Focused758-ReadAsset-callback-and-partial-failure-ownership
+
+`content.content_manager.read_asset_ownership` adds three controls, reaching21. Its regenerated
+XNB holds two typed tile fields resolved by the custom reader to one disposable identity. The
+supplied callback receives both occurrences while the caller deduplicates them into one ownership
+slot. Removing the final null-field byte proves a later parse failure preserves that already
+delegated resource for explicit cleanup. A callback-thrown sentinel propagates while the short-read
+stream and unclaimed object unwind.
+
+SOFTWARE and OPENGLES3/Xvfb each pass20/21; only the unchanged default-recorder assertion fails as
+CNA-DEMOS-ISSUE-011, and the expected-failure SOFTWARE CTest passes. The ownership asset
+regenerates byte-identically. The warning-free incremental build uses at most three jobs; metadata
+remains636/0, known-issue demos remain39, validator/checkpoint self-tests pass5/5 and4/4, and
+generated coverage remains302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C
+routes. Evidence:`/tmp/checkpoint-758-read-asset-*` and `/tmp/checkpoint-758-coverage.md`. No
+rendering, screenshot or manual inspection was used. No new CNA issue was found. Audit supplied
+ReadAsset recording of disposable shared resources in the existing shared-resource graph next;
+source currently records typed inline children but uses a type-erased path for the shared table.
