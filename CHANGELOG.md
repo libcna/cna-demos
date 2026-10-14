@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added representative framebuffer checks to `graphics.sprite_batch.tint_and_transparency` for
+  opaque RGB multiplication and premultiplied opacity over a known background.
 - Added exact framebuffer checks to `graphics.sprite_batch.source_rectangle` for four atlas frame
   selections, transparent texels and the whole-strip `std::nullopt` path.
 - Extended `graphics.texture2d.from_stream` with exact transparent palette-GIF decoding and

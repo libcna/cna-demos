@@ -225,6 +225,18 @@ After validation the sibling CNA checkout acquired an unrelated external uncommi
 `modules/renderers/sdl-gpu/tests/CNA/Internal/Renderers/SdlGpu/SdlGpuCompiledEffectTests.cpp`; no
 CNA file was edited here, and both production library hashes remain exact from Complete724.
 
+Focused **728-SpriteBatch-tint-and-premultiplied-fade** adds two representative framebuffer
+controls to `graphics.sprite_batch.tint_and_transparency`. Point-sampled opaque white texels prove
+exact White, Red, Lime and half-red/half-green Blue multiplication; four opacity levels prove the
+expected premultiplied white-over-DimGray blend sequence within tolerance2. SOFTWARE and
+OPENGLES3/X11 pass2/2, the exact SOFTWARE CTest passes, metadata remains634/0, the five validator
+self-tests and four checkpoint-comparison tests pass, and coverage remains302/329 types,
+2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-728-tint-*`. An initial combined Python test invocation used an invalid root-level
+import path; the supported invocations both pass. No screenshot or manual visual inspection was
+performed. The sibling CNA checkout still has only the unrelated external SDL GPU test change;
+the production library hashes remain exact from Complete724.
+
 Complete **717-member-gap-disposition-runtime** is the prior incremental runtime baseline. Exact-current
 metadata validation is632/0, all five validator self-tests pass, and the full CTest run passes all
 645 enabled tests in273.41s; three declared manual tests remain disabled. The complete SOFTWARE/X11
@@ -1488,13 +1500,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-727 are
-staged after it. Add focused framebuffer evidence to the existing
-`graphics.sprite_batch.tint_and_transparency` workflow: distinguish opaque RGB multiplication from
-premultiplied fade over the DimGray background with a few representative pixels, without asserting
-every displayed variant independently. Run both primary renderers and the exact CTest, investigate
-rounding differences rather than hiding them, update status docs and push. Then decide whether the
-destination-only rectangle scene adds a distinct scaling contract beyond focused727.
+HIGHEST PRIORITY: Complete724 is the current full-build/runtime baseline and focused725-728 are
+staged after it. Audit the existing `graphics.sprite_batch.destination_rectangle` scene and add a
+small focused framebuffer contract only if it proves behavior not established by focused727:
+destination bounds and nonuniform whole-texture scaling are the candidate distinction. Run both
+primary renderers and the exact CTest, update status docs and push. Then audit the remaining
+SpriteBatch diagnostic gaps (degenerate/out-of-range rectangles and disposed textures) for a
+coherent existing-demo extension rather than adding overload variants.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

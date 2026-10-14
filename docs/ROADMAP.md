@@ -6207,3 +6207,20 @@ pass3/3. The exact SOFTWARE CTest, metadata634/0 and all five validator self-tes
 remains302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
 `/tmp/checkpoint-727-source-rectangle-*`. No screenshot or manual visual inspection was performed.
 Continue with the distinct tint/fade pixel contract rather than duplicating this source selection.
+
+## Focused728-SpriteBatch-tint-and-premultiplied-fade
+
+The existing `graphics.sprite_batch.tint_and_transparency` gains two representative framebuffer
+controls without turning every displayed variant into a separate assertion. Point sampling an
+authored opaque white texel proves exact White, Red, Lime and half-red/half-green Blue tint
+multiplication. The same texel at opacity1.0,0.75,0.5 and0.25 produces the expected white-to-gray
+sequence from premultiplied AlphaBlend over the(105,105,105) DimGray background, within two channel
+levels for renderer rounding.
+
+SOFTWARE and OPENGLES3/X11 pass2/2, and the exact SOFTWARE CTest passes. Metadata remains634/0,
+all five validator self-tests and all four checkpoint-comparison tests pass, and coverage remains
+302/329 types,2114/2326 non-field members,167/753 fields and2999/3205 C routes. Evidence:
+`/tmp/checkpoint-728-tint-*`. The first combined self-test invocation used the wrong Python import
+path and failed after the five validator tests; both modules then passed with their supported
+invocations. Pixel readback was programmatic; no screenshot or manual visual inspection was
+performed. Decide the distinct destination-rectangle scaling/bounds contract next.
