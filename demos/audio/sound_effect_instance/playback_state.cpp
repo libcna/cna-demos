@@ -9,9 +9,11 @@
 #include "Microsoft/Xna/Framework/Audio/SoundEffectInstance.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundState.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
+#include "Microsoft/Xna/Framework/TitleLocation.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
 using Microsoft::Xna::Framework::Content::ContentManager;
+using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
@@ -37,6 +39,15 @@ namespace
             ctx.Check(voice.getStateProperty() == wanted, std::string(after) + " leaves it " + Name(wanted));
         };
         expect(SoundState::Stopped, "CreateInstance");
+        voice.Pause();
+        expect(SoundState::Stopped, "Pause before Play");
+        voice.Resume();
+        expect(SoundState::Playing, "Resume before Play");
+        voice.Stop();
+        voice.Pause();
+        voice.Resume();
+        expect(SoundState::Stopped, "Pause/Resume after Stop");
+
         voice.Play();
         expect(SoundState::Playing, "Play");
         voice.Pause();
@@ -45,6 +56,15 @@ namespace
         expect(SoundState::Playing, "Resume");
         voice.Stop();
         expect(SoundState::Stopped, "Stop");
+
+        const SoundEffect longTone(TitleLocation::Path() + "/assets/music/rising.wav");
+        SoundEffectInstance replayProbe = longTone.CreateInstance();
+        replayProbe.Play();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1250));
+        replayProbe.Play();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        ctx.Check(replayProbe.getStateProperty() == SoundState::Stopped,
+                  "Play while already Playing leaves progress intact instead of restarting the track");
 
         // A non-looping voice stops by itself at the end of the sound.
         voice.Play();
@@ -61,12 +81,12 @@ namespace
 CNA_DEMOS_CONSOLE(PlaybackState, {
     .id = "audio.sound_effect_instance.playback_state",
     .title = "Control a sound instance",
-    .description = "Creates a SoundEffectInstance and steps it through Play, Pause, Resume and Stop, checking "
-                   "SoundState after each; a non-looping instance stops by itself at the end.",
+    .description = "Exercises SoundEffectInstance transport before first playback, after Stop and while already "
+                   "Playing, then steps through Play, Pause, Resume and natural completion with exact SoundState.",
     .apis = {"SoundEffect::CreateInstance", "SoundEffectInstance::Play", "SoundEffectInstance::Pause",
              "SoundEffectInstance::Resume", "SoundEffectInstance::Stop", "SoundEffectInstance::State",
              "SoundState::Playing", "SoundState::Paused", "SoundState::Stopped"},
     .tags = {"audio", "instance", "state"},
     .needs = CnaDemos::Need::Audio,
-    .assets = {"sounds/tone_660.wav"},
+    .assets = {"sounds/tone_660.wav", "music/rising.wav"},
 })

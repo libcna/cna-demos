@@ -7286,3 +7286,21 @@ remains636/0, validator/checkpoint selftests pass5/5 and4/4, and generated runti
 Evidence:`/tmp/checkpoint-787-media-visualization-disabled-*` and `/tmp/checkpoint-787-coverage.md`.
 No paused-buffer freshness, FFT accuracy, acoustic quality, screenshot or manual visual inspection
 is claimed. Continue with repeated and stopped-state SoundEffectInstance lifecycle behavior.
+
+## Focused788-SoundEffectInstance-transport-boundaries
+
+`audio.sound_effect_instance.playback_state` grows from six to ten controls. Pause before first Play
+leaves Stopped, while Resume before first Play follows the XNA contract and starts playback. After
+Stop, a Pause/Resume pair leaves the retained track Stopped. A separate two-second rising track is
+played, allowed to progress for1.25s, receives Play again and is checked another1s later: Stopped
+proves the second call did not restart it. The original exact transport sequence and bounded natural
+completion of the250ms tone remain intact.
+
+SOFTWARE and OPENGLES3/Xvfb direct runs pass10/10 controls with empty stderr and matching check/state
+output; only the printed natural-completion measurements differ (0.263s versus0.247s). The focused
+SOFTWARE CTest passes. The warning-free build uses at most three jobs; metadata remains636/0,
+validator/checkpoint selftests pass5/5 and4/4, and generated runtime coverage remains302/329 types,
+2114/2326 non-field members,169/753 fields and2999/3205 C routes.
+Evidence:`/tmp/checkpoint-788-audio-instance-transport-*` and `/tmp/checkpoint-788-coverage.md`. No
+audible latency/quality or exact scheduling claim is made. Audit disposed Resume plus safe
+post-dispose Pause/Stop behavior in the existing lifetime demo next.

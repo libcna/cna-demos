@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended SoundEffectInstance transport behavior before first playback and after Stop, and used a
+  long track to prove repeated Play while Playing preserves progress instead of restarting.
 - Added disabled MediaPlayer visualization behavior: nonzero caller buffers are actively cleared
   before the existing enabled-capture spectrum path runs.
 - Verified repeated Pause, Resume and Stop calls in their matching states are quiet no-ops that do
