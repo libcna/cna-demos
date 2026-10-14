@@ -10,9 +10,11 @@
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/GameWindow.hpp"
 #include "Microsoft/Xna/Framework/Input/Mouse.hpp"
+#include "Microsoft/Xna/Framework/Input/Touch/TouchPanel.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using Microsoft::Xna::Framework::Input::Mouse;
+using Microsoft::Xna::Framework::Input::Touch::TouchPanel;
 namespace Platform = CNA::Platform;
 
 namespace
@@ -38,6 +40,16 @@ namespace
             Mouse::setWindowHandleProperty(legacy);
             ctx.Check(cleared && Mouse::getWindowHandleProperty() == legacy,
                       "Mouse.WindowHandle accepts a cleared target and restores the real window token");
+
+            const auto previousTouchTarget = TouchPanel::getWindowHandleProperty();
+            TouchPanel::setWindowHandleProperty(legacy);
+            const bool touchTargetsWindow = TouchPanel::getWindowHandleProperty() == legacy;
+            TouchPanel::setWindowHandleProperty(0);
+            const bool touchCleared = TouchPanel::getWindowHandleProperty() == 0;
+            TouchPanel::setWindowHandleProperty(previousTouchTarget);
+            ctx.Check(touchTargetsWindow && touchCleared &&
+                          TouchPanel::getWindowHandleProperty() == previousTouchTarget,
+                      "TouchPanel.WindowHandle accepts the real window token, clears and restores prior state");
 
             // CNA's handle says which window system the values belong to. Never assume: on Linux
             // the same game runs on X11 or Wayland.
@@ -98,11 +110,13 @@ namespace
 CNA_DEMOS_GAME(NativeHandleDemo, {
     .id = "platform.window.native_handle",
     .title = "The native window handle",
-    .description = "Matches Mouse.WindowHandle to XNA's GameWindow::Handle, then reads CNA's "
+    .description = "Matches Mouse.WindowHandle to XNA's GameWindow::Handle, round-trips that real token through "
+                   "TouchPanel.WindowHandle, then reads CNA's "
                    "GetNativeWindowHandleEXT, whose NativeWindowSystem says "
                    "how to read it (X11 display and XID, Wayland display and surface, HWND, NSWindow), through the "
                    "typed TryGet accessors that refuse a handle of another system.",
-    .apis = {"GameWindow::Handle", "Mouse::WindowHandle", "GameWindow::GetNativeWindowHandleEXT",
+    .apis = {"GameWindow::Handle", "Mouse::WindowHandle", "TouchPanel::WindowHandle",
+             "GameWindow::GetNativeWindowHandleEXT",
              "CNA::Platform::NativeWindowHandle",
              "CNA::Platform::NativeWindowSystem", "CNA::Platform::TryGetX11", "CNA::Platform::TryGetWayland",
              "CNA::Platform::TryGetWin32", "CNA::Platform::TryGetCocoa"},

@@ -5629,3 +5629,17 @@ Media reaches178/192 with only14 dispositioned enumerator artifacts. Evidence:
 `/tmp/checkpoint-692-visualization-*` and `/tmp/checkpoint-692-coverage.md`. Spectrum state was checked
 programmatically; no listening, screenshot or visual-quality result is claimed. Continue with
 TouchPanel.WindowHandle next.
+
+## Focused693-touch-panel-window-targeting
+
+The native-window workflow closes Input.Touch's final ordinary member. It assigns the live
+GameWindow token to TouchPanel.WindowHandle, observes exact identity, clears it to zero and restores
+the previously observed process-wide value. CNA does not automatically attach this property, so the
+control establishes the public opaque state contract without claiming touch delivery.
+
+SOFTWARE correctly skips before controls because it has no window; OPENGLES3/X11 passes7/7 with
+empty stderr. The focused SOFTWARE CTest passes its skip contract. Temporary coverage moves
+2037->2038/2326 at632 demos,301/329 types and156/753 fields; Input.Touch reaches42/48 and retains
+only six dispositioned CLR enumerator artifacts. Evidence:`/tmp/checkpoint-693-touch-window-*` and
+`/tmp/checkpoint-693-coverage.md`. No physical touch, screenshot or visual result is claimed. Audit
+the remaining meaningful ordinary Graphics members next.

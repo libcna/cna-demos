@@ -1361,8 +1361,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused692
-projects the632-demo staged catalog to2037/2326 XNA members and156/753 fields at301/329 types.
+HIGHEST PRIORITY: continue the deeper XNA public member/behavior audit from complete647. Focused693
+projects the632-demo staged catalog to2038/2326 XNA members and156/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
 generated gaps; their collection enumerators are dispositioned CLR/C# machinery. GraphicsDevice's
 ordinary members are complete; DeviceLost is desktop/platform-specific and Finalize is CLR
@@ -1375,9 +1375,11 @@ entries are four nominal .NET attribute-wrapper types and are dispositioned rath
 into inert wrapper demos. Input now has no member gap. Music-library object, collection and library
 lifetime and VisualizationData construction are covered. Media's remaining14 entries are the seven
 collections' generic/non-generic CLR GetEnumerator pairs, dispositioned rather than credited from
-C++ range syntax. Continue with TouchPanel.WindowHandle in the existing real native-window workflow;
-the other six Input.Touch gaps are likewise CLR enumerator machinery. Then continue with the next
-high-value behavior family,
+C++ range syntax. Input.Touch now likewise retains only six CLR enumerator artifacts. Audit the
+remaining meaningful ordinary Graphics entries next, starting with DirectionalLight construction,
+OcclusionQuery.Dispose and VertexDeclaration.Dispose in their existing real workflows; keep the
+already dispositioned finalizers, protected OnApply hooks, explicit-interface aliases and collection
+enumerators separate. Then continue with the next high-value behavior family,
 rebuilding, running both renderers where
 applicable, updating coverage/audit/ROADMAP/HANDOFF and pushing each completed batch.
 
@@ -1386,7 +1388,7 @@ hardware/service/manual observations or renderer-specific work. Do not create co
 raise that count. The core Model inventory is also dispositioned: CLR collection enumerators and
 the arbitrary `ModelMesh::Tag` carrier do not justify new demos. Preserve external state and do not
 claim real hardware, service, manual or visual behavior without executing it. Never edit or revert
-the sibling CNA checkout; focused692 built while external CNA was at clean `f698d0f548`. Recheck
+the sibling CNA checkout; focused693 built while external CNA was at clean `f698d0f548`. Recheck
 that moving checkout before every build.
 
 HISTORICAL FOCUSED NOTES (all built and absorbed by complete634):
@@ -3371,6 +3373,23 @@ remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
 programmatically; no listening, screenshot or visual-quality result is claimed. Sibling CNA
 remained clean external `f698d0f548`; no CNA source was edited. Continue with
 TouchPanel.WindowHandle next.
+
+Focused693 extends `platform.window.native_handle` with Input.Touch's final ordinary member. It
+writes the live GameWindow token to TouchPanel.WindowHandle, observes exact identity, clears it to
+zero and restores the previously observed process-wide value. Unlike Mouse, CNA does not
+automatically attach TouchPanel to the presenting window; the demo therefore proves the public
+opaque property contract without claiming touch delivery or changing the caller's prior state.
+
+SOFTWARE is correctly skipped before controls because it exposes no window; its expected diagnostic
+is the only stderr. OPENGLES3/X11 passes7/7 with empty stderr, and the focused SOFTWARE CTest passes
+its skip contract. Temporary coverage moves2037->2038/2326 at632 demos,301/329 types and156/753
+fields; Input.Touch reaches42/48 with only six dispositioned CLR enumerator artifacts. Evidence:
+`/tmp/checkpoint-693-touch-window-*` and `/tmp/checkpoint-693-coverage.md`. Runner SHA-256 is
+`4cb3144c6e67e1d3b26a076845e4637729805b6105a04e8eb9eb31e8701f5459`; production library hashes
+remain `c7f0cf685edb229058ea24f121e227a3f530c8d4a591d2d2a932a4510e0c09da` and
+`2165091725942665d606a36c27483b4f8cb84b6086b2bbd4fbfd4ebf2cfb8b2c`. No physical touch,
+screenshot or visual result is claimed. Sibling CNA remained clean external `f698d0f548`; no CNA
+source was edited. Audit the remaining meaningful ordinary Graphics members next.
 
 ## 15. Assumptions the next session must know
 
