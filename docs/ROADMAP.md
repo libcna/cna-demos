@@ -4481,3 +4481,19 @@ validation self-tests pass. Staged metadata reaches2821/3205 and `models.h` reac
 Evidence:`checkpoint-622-c-model-mesh-parts-focused-*-direct.*`. No effect, buffer, Model, mesh,
 graphics device, renderer, draw call, visual result or project-built execution is claimed.
 ModelMeshPart resources plus ModelMesh drawing and collections are next.
+
+## Focused623-C-ModelMesh-resources-collections-and-drawing
+
+`c_api.graphics.model_meshes` adds32 more `models.h` routes in33 controls. A real drawable part
+retains its exact BasicEffect, VertexBuffer and IndexBuffer and refuses premature resource
+destruction. Named and empty meshes preserve bounds, tags, parents and text; their live part/effect
+views, duplicate effect mutations and an ordered retained mesh collection establish exact identity,
+lookup, Count bounds and stable alias lifetime. A cull-free indexed draw produces the exact green
+center pixel, while an empty mesh leaves the black clear pixel unchanged. The audit also exposes
+CNA-DEMOS-ISSUE-081: an effect attached before mesh construction is missing from `Effects` until
+the public setter detaches and reattaches it. Both SOFTWARE and OPENGLES3 Xvfb direct runs pass
+33/33 with byte-identical stdout and empty stderr; strict C99 and metadata compilation, diff checks
+and validation self-tests pass. Staged metadata reaches2853/3205 and `models.h` reaches70/216.
+Evidence:`checkpoint-623-c-model-meshes-focused-*-direct.*`. No ContentManager, imported asset,
+top-level Model, screenshot, visual-quality assessment or project-built execution is claimed.
+Top-level Model construction, transforms, owned resources, diagnostics and drawing are next.

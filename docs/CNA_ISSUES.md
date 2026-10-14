@@ -15,6 +15,30 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-081 -- ModelMesh construction omits pre-attached part effects
+
+- **Area/API:** `ModelMesh` constructors and `ModelMeshPart::setEffectProperty` in
+  `modules/graphics/src/Xna`, plus `cna_model_mesh_create[_named]`,
+  `cna_model_mesh_get_effects` and the parallel retained-effect list in
+  `modules/c-api/src/CnaCApiModels.cpp`.
+- **Reproduction:** create a real BasicEffect and a drawable ModelMeshPart, attach the effect to
+  the standalone part, create a ModelMesh from that part and inspect the returned live
+  ModelEffectCollection before changing the part again.
+- **Observed:** the part still returns the exact attached effect and `ModelMesh::Draw` uses it,
+  but `Effects` has count zero. Both native ModelMesh constructors assign each part's parent after
+  its effect was set and never seed `effects_`; the C adapter likewise leaves
+  `MeshResource::effects` empty. Detaching and reattaching through the public setter after
+  construction synchronizes both collections and drawing remains correct.
+- **Expected:** a newly constructed mesh's `Effects` should contain each distinct non-null effect
+  already used by its parts, just as it does after those same assignments are made while the part
+  belongs to the mesh.
+- **Positive controls/status:** buffer/effect retention, post-construction setter synchronization,
+  duplicate collection mutation, stable mesh views, parent ownership and exact green/black
+  framebuffer probes all pass. Open renderer-independent construction/state defect reproduced on
+  both SOFTWARE and OPENGLES3 by the same stable C API library. The passing demo names the issue
+  in its check and `restrictions`; no CNA source was modified or upstream message sent. Evidence:
+  `checkpoint-623-c-model-meshes-focused-*-direct.*`.
+
 ### CNA-DEMOS-ISSUE-080 -- C avatar animation info claims built-in clips have no timeline
 
 - **Area/API:** `CNA_AvatarAnimationInfo` documentation in
