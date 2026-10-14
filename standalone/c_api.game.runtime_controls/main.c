@@ -225,11 +225,12 @@ int main(int argc, char** argv)
 
     cna_demo_check(
         &demo,
-        cna_game_suppress_draw(game) == CNA_RESULT_SUCCESS &&
+        cna_game_set_is_fixed_time_step(game, CNA_FALSE) == CNA_RESULT_SUCCESS &&
+            cna_game_suppress_draw(game) == CNA_RESULT_SUCCESS &&
             cna_game_tick(game) == CNA_RESULT_SUCCESS && state.updates == updates_before + 1 &&
             state.draws == draws_before && cna_game_tick(game) == CNA_RESULT_SUCCESS &&
             state.updates == updates_before + 2 && state.draws == draws_before + 1,
-        "SuppressDraw skips exactly one explicit Tick draw while both ticks update");
+        "in variable-step mode, SuppressDraw skips exactly one Tick draw while both ticks update");
 
 cleanup:
     (void)cna_game_set_target_elapsed_time_ticks(game, INT64_C(166667));

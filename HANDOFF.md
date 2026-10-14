@@ -3893,6 +3893,16 @@ otherwise contained exactly36 expected failures and no unexpected pass. Repeat t
 SOFTWARE report with this fix, then run the complete OPENGLES3 checkpoint and publish the
 consolidated remaining-member dispositions.
 
+The repeated full SOFTWARE/X11 run is clean at558 pass,36 expected fail,35 skip and3 manual.
+The first OPENGLES3 run then exposed two timing-sensitive demo assumptions. The lifecycle-order
+demo required exactly one fixed-step Update before every draw even though a slower renderer may
+legitimately run a catch-up Update; it now requires one or more Updates followed by the exact
+BeginDraw/Draw/EndDraw sequence for each of its first two draws. The C runtime-control demo now
+switches to variable-step timing before its two explicit Tick calls so SuppressDraw is measured
+without fixed-step accumulator variance. Both corrected IDs pass three SOFTWARE repetitions and
+ten OPENGLES3/X11 repetitions each. Re-run the complete OPENGLES3 report, then regenerate coverage
+and publish the consolidated remaining-member dispositions.
+
 ## 15. Assumptions the next session must know
 
 * Current workspace: `/rv/data/development/github.com/libcna/cna-demos`; CNA and the other

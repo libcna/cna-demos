@@ -337,7 +337,7 @@ keeps 37. Stable selected runtime hashes and exact skip/compiler stderr deltas a
 
 | Members / behavior | Decision and evidence |
 |---|---|
-| Game.BeginDraw / EndDraw | `game.lifecycle.method_order` records two complete Update -> BeginDraw -> Draw -> EndDraw cycles through the real GraphicsDeviceManager before checking EndRun and disposal-time UnloadContent. Both renderers pass the same four controls and emit byte-identical output. |
+| Game.BeginDraw / EndDraw | `game.lifecycle.method_order` records two complete draw cycles through the real GraphicsDeviceManager before checking EndRun and disposal-time UnloadContent. Each cycle requires one or more fixed-step Updates followed by BeginDraw -> Draw -> EndDraw: SOFTWARE normally records one Update per draw, while OPENGLES3 may catch up with an additional Update without violating Game-loop ordering. Both renderers pass the same four controls. |
 | Game.GraphicsDevice, Tick and Disposed | `method_order` proves the Game and its manager expose the same device. `run_one_frame` initializes through RunOneFrame three times, then invokes Tick directly; each variable-time call produces one Update and Draw. A subsequent Dispose raises Disposed exactly once. |
 | Game.Finalize | CLR finalizer inventory entry. C++ destruction and explicit Dispose are already demonstrated; no artificial finalizer demo. |
 | Game.ShowMissingRequirementMessage | Platform/host presentation hook. The current base implementation ignores the exception and returns false, and no runtime path calls it. A derived wrapper asserting that no-op would add no meaningful behavior; leave uncredited until a host implements or invokes it. |

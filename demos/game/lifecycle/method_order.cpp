@@ -21,14 +21,8 @@ namespace
         {
             // Run() has returned and UnloadContent has run by the time the game is destroyed.
             Context().Print("calls: {}", Joined());
-            const std::vector<std::string> expectedStart = {
-                "Initialize", "LoadContent", "BeginRun",
-                "Update", "BeginDraw", "Draw", "EndDraw",
-                "Update", "BeginDraw", "Draw", "EndDraw"};
-            Context().Check(calls_.size() >= expectedStart.size() &&
-                                std::vector<std::string>(calls_.begin(), calls_.begin() + expectedStart.size()) ==
-                                    expectedStart,
-                            "each frame runs Update -> BeginDraw -> Draw -> EndDraw");
+            Context().Check(HasTwoOrderedDrawCycles(),
+                            "each draw cycle follows one or more Updates with BeginDraw -> Draw -> EndDraw");
             // As in XNA, UnloadContent is not part of Run: it runs when the game is disposed (the
             // runner calls Dispose after Run, like C#'s "using (var game = new Game1()) game.Run();").
             Context().Check(calls_.size() >= 2 && calls_[calls_.size() - 2] == "EndRun" && calls_.back() == "UnloadContent",
@@ -75,6 +69,28 @@ namespace
         void UnloadContent() override { calls_.push_back("UnloadContent"); }
 
     private:
+        [[nodiscard]] bool HasTwoOrderedDrawCycles() const
+        {
+            std::size_t at = 0;
+            const auto take = [this, &at](const std::string& expected) {
+                return at < calls_.size() && calls_[at++] == expected;
+            };
+            if (!take("Initialize") || !take("LoadContent") || !take("BeginRun"))
+                return false;
+            for (int cycle = 0; cycle < 2; ++cycle)
+            {
+                int updates = 0;
+                while (at < calls_.size() && calls_[at] == "Update")
+                {
+                    ++at;
+                    ++updates;
+                }
+                if (updates == 0 || !take("BeginDraw") || !take("Draw") || !take("EndDraw"))
+                    return false;
+            }
+            return true;
+        }
+
         std::string Joined() const
         {
             std::string text;
@@ -94,8 +110,8 @@ namespace
 CNA_DEMOS_GAME(MethodOrderDemo, {
     .id = "game.lifecycle.method_order",
     .title = "Game method order",
-    .description = "Records initialization, two complete Update/BeginDraw/Draw/EndDraw cycles, run shutdown, "
-                   "content unloading and the Disposed event to check the order of a complete Game run.",
+    .description = "Records initialization, two complete fixed-step update/draw cycles (including catch-up "
+                   "Updates), run shutdown, content unloading and the Disposed event to check a complete Game run.",
     .apis = {"Game::Initialize", "Game::LoadContent", "Game::BeginRun", "Game::Update", "Game::BeginDraw",
              "Game::Draw", "Game::EndDraw", "Game::EndRun", "Game::UnloadContent", "Game::GraphicsDevice",
              "Game::Run", "Game::Dispose", "Game::Disposed"},
