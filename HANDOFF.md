@@ -68,12 +68,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-668 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
-content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform3 and c_api177. Kinds are171 console,295 game and202 standalone;
-632 are automated,33 smoke-only and3 manual. Every declared category has demos.
+669 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
+content47, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, cnaext4, platform3 and c_api177. Kinds are171 console,296 game and202 standalone;
+633 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete938's full runtime reports; they include all666
-baseline IDs in both renderer suites and correctly mark the two post-baseline IDs absent.
+baseline IDs in both renderer suites and correctly mark the three post-baseline IDs absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete938's
 full runtime reports are the baseline inputs for the666-ID catalog. Selected semantic
@@ -372,7 +372,22 @@ warning-free build uses at most three jobs, metadata remains668/0 and the exact 
 passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes;
 the CNA-extension appendix now credits `ProjectGraphicsProfileEXT` and both global accessors.
 Complete938 retains the older two-control form of this stable ID. Evidence:
-`/tmp/checkpoint-946-project-profile/*`. Continue the next coherent public CNA header family.
+`/tmp/checkpoint-946-project-profile/*`.
+
+Focused **947-native-XNB-object-dictionary** adds the669th source/catalog ID,
+`content.xnb.object_dictionary`. It loads the committed heterogeneous dictionary XNB through the
+native map/`std::any` path, boxes the actual result with both `ObjectDictionaryEXT` constructors,
+and checks logical names, membership, complete value access, typed scalar/XNA/array/custom values,
+raw type preservation and both lookup exceptions. The fixture's game-defined class is registered
+through `ReflectiveTypeReaderBuilder::Field` and `RegisterShared`; the existing C demo retains its
+separate exhaustive handle/copy contract.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass10/10 with byte-identical stdout SHA-256
+`cae714c255e241dffcc09357a400e1ceff040afcafba4603e9ac9b07925feac9` and empty stderr. The
+warning-free build uses at most three jobs, metadata is669/0, the exact SOFTWARE CTest passes and
+both validator suites pass. Generated totals remain303/329 types,2114/2326 members,674/753 fields
+and3078/3205 routes; Complete938 now correctly marks all three post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-947-object-dictionary/*`. Run the complete669-demo dual-renderer checkpoint next.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -2487,7 +2502,12 @@ adds direct native unsupported-3D policy evidence and records CNA-DEMOS-ISSUE-10
 missing warned Texture3D null object; do not infer other factory/draw paths from it. Focused945
 closes the ordinary `VertexTypeRegistryEXT` lookup/registration and System::Type buffer-constructor
 workflow. Focused946 closes the process-wide project graphics-profile declaration/get/set and
-manager-snapshot behavior. Continue the next coherent public CNA header family. The diagnostics
+manager-snapshot behavior. Focused947 adds the actual native XNB `ObjectDictionaryEXT` consumer:
+typed and raw values, both constructors, logical type names, membership, full value access, both
+lookup failures and a game-defined reference value registered through `ReflectiveTypeReaderBuilder`.
+Run a complete669-demo SOFTWARE and OPENGLES3 checkpoint next; it will absorb the three new IDs and
+all stable-ID extensions since Complete938. Then continue the next coherent public CNA header
+family. The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered

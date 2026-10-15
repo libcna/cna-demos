@@ -3946,3 +3946,23 @@ SOFTWARE CTest passes. Generated XNA/C totals remain303/329 types,2114/2326 memb
 and3078/3205 routes; the CNA-extension appendix now credits the project-profile declaration,
 getter and setter. Complete938 retains the older two-control form of this stable ID. Evidence:
 `/tmp/checkpoint-946-project-profile/*`. No CNA defect or visual-quality result appeared.
+
+### Focused947 native XNB object dictionary
+
+The new `content.xnb.object_dictionary` loads the committed heterogeneous
+`dictionaries/member_audit.xnb` through native `ContentManager::Load<std::map<std::string,
+std::any>>` and boxes that actual reader product as `ObjectDictionaryEXT`. Ten controls demonstrate
+both logical-type constructors, all sixteen values and exact membership, typed scalar/XNA/array
+lookups, raw `operator[]` type preservation, the complete value map, and distinct missing-key and
+wrong-type exceptions. A game-defined reference entry is read through
+`ReflectiveTypeReaderBuilder::Field` plus `RegisterShared`; the existing C demo retains the separate
+handle, size/copy and malformed-input contract.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass10/10 with byte-identical stdout SHA-256
+`cae714c255e241dffcc09357a400e1ceff040afcafba4603e9ac9b07925feac9` and empty stderr. The
+warning-free incremental build uses at most three jobs, metadata is669/0, the exact SOFTWARE CTest
+passes, and both validator suites pass. Generated XNA/C totals remain303/329 types,2114/2326
+members,674/753 fields and3078/3205 routes; the CNA-extension appendix gains the seven
+ObjectDictionary operations and two reflective-builder operations. Complete938 correctly marks
+the new ID absent. Evidence:`/tmp/checkpoint-947-object-dictionary/*`. No CNA defect or manual
+visual-quality result appeared.

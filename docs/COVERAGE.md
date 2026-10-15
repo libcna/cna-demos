@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**668 demos** in 18 categories. Kinds: console 171, game 295, standalone 202. Automation: automated 632, manual 3, smoke-only 33.
+**669 demos** in 18 categories. Kinds: console 171, game 296, standalone 202. Automation: automated 633, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 46 | 46 | 0 | 0 | 33 / 0 / 13 / 0 / 0 | 33 / 0 / 13 / 0 / 0 |
+| content | 47 | 47 | 0 | 0 | 33 / 0 / 13 / 0 / 1 | 33 / 0 / 13 / 0 / 1 |
 | core | 6 | 6 | 0 | 0 | 5 / 0 / 0 / 0 / 1 | 5 / 0 / 0 / 0 / 1 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `core.platform.capability_matrix`, `graphics.shader_effect.diagnostic_parser`.
-- OPENGLES3: absent from report: `core.platform.capability_matrix`, `graphics.shader_effect.diagnostic_parser`.
+- SOFTWARE: absent from report: `content.xnb.object_dictionary`, `core.platform.capability_matrix`, `graphics.shader_effect.diagnostic_parser`.
+- OPENGLES3: absent from report: `content.xnb.object_dictionary`, `core.platform.capability_matrix`, `graphics.shader_effect.diagnostic_parser`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -203,6 +203,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::DecodeTexture2DFromCnb` -- content.custom.source_root_capabilities
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::IsCnbCompressionSupported` -- content.custom.cnb_read_limits
+- `CNA::Content::ObjectDictionaryEXT` -- content.xnb.object_dictionary
+- `CNA::Content::ObjectDictionaryEXT::ContainsKey` -- content.xnb.object_dictionary
+- `CNA::Content::ObjectDictionaryEXT::Get` -- content.xnb.object_dictionary
+- `CNA::Content::ObjectDictionaryEXT::GetTypeName` -- content.xnb.object_dictionary
+- `CNA::Content::ObjectDictionaryEXT::ObjectDictionaryEXT` -- content.xnb.object_dictionary
+- `CNA::Content::ObjectDictionaryEXT::getValuesProperty` -- content.xnb.object_dictionary
+- `CNA::Content::ObjectDictionaryEXT::operator[]` -- content.xnb.object_dictionary
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Find` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Parse` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildConfiguration::SourceRoots` -- content.custom.incremental_compiler
@@ -940,6 +947,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `PropertyDictionary::Remove` -- gamer_services.leaderboard.paging
 - `PropertyDictionary::Values` -- gamer_services.leaderboard.paging
 - `RectangleConverter::ConvertFrom` -- design.type_converter.string_round_trip
+- `ReflectiveTypeReaderBuilder::Field` -- content.xnb.object_dictionary
+- `ReflectiveTypeReaderBuilder::RegisterShared` -- content.xnb.object_dictionary
 - `ResourceManager::ResourceManager` -- content.content_manager.resource_content_manager
 - `SensorBase::CurrentValue` -- devices.sensors.keyboard_accelerometer
 - `SensorBase::Dispose` -- devices.sensors.availability

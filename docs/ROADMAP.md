@@ -10057,3 +10057,20 @@ passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields an
 the CNA-extension appendix now credits the declaration, getter and setter. Complete938 retains the
 older two-control form of this stable ID. Evidence:`/tmp/checkpoint-946-project-profile/*`.
 Continue the next coherent public CNA header family.
+
+## Focused947-native-XNB-object-dictionary
+
+The new `content.xnb.object_dictionary` loads the existing heterogeneous object-dictionary XNB,
+registers its game-defined reference value with the native reflective-reader builder, and boxes the
+reader's real `std::map<std::string, std::any>` product as `ObjectDictionaryEXT`. Ten controls cover
+both constructors and logical names, membership and complete values, typed scalar/XNA/array/custom
+lookups, raw value type preservation, and the missing-key and invalid-cast branches. This is the
+native C++ consumer workflow; the existing C demo retains the exhaustive C handle/copy contract.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass10/10 with byte-identical stdout SHA-256
+`cae714c255e241dffcc09357a400e1ceff040afcafba4603e9ac9b07925feac9` and empty stderr. The
+warning-free `-j3` build, exact SOFTWARE CTest, metadata669/0 and both validator suites pass.
+Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; the CNA
+extension appendix gains seven ObjectDictionary operations and both reflective-builder operations.
+Evidence:`/tmp/checkpoint-947-object-dictionary/*`. Run a complete669-demo dual-renderer checkpoint
+next, then resume the next coherent public CNA header family.
