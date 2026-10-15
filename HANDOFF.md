@@ -21,7 +21,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 30), 8 (content, 52), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
-* In progress too: 13 (devices 5, phone 1, design 4, diagnostics 5 + logger 2, cnaext 4).
+* In progress too: 13 (devices 5, phone 1, design 4, diagnostics 6 + logger 2, cnaext 4).
 * In progress: 14 (C API, 177 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
@@ -68,12 +68,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-662 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
+663 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics5, cnaext4, platform2 and c_api177. Kinds are167 console,294 game and201 standalone;
-626 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, cnaext4, platform2 and c_api177. Kinds are168 console,294 game and201 standalone;
+627 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete920's full runtime reports for its660 baseline
-IDs and marks the Focused921-922 resource/source IDs absent until the next complete checkpoint.
+IDs and marks the three Focused921-923 diagnostics IDs absent until the next complete checkpoint.
 The surface totals are302/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete920's
 full runtime reports are the baseline inputs for the660-ID catalog. Selected semantic
@@ -2322,16 +2322,16 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete920 is the authoritative660-demo full-build/full-runtime baseline;
-Focused922 is the latest focused behavioral batch. The central full-diagnostics path is now covered
-by an actual `CNA_DIAGNOSTICS=FULL` build: a frame scope, nested manual/macro zones, direct/macro
-markers, frame metrics, bounded recording, snapshot correlation and both binary and Chrome exports.
-Resource metadata covers owned descriptor fields, stable move/update/reset identity, aggregate
-bytes and ordered provider-cursor lifecycle events. Registered sources now cover retained/movable
-lifetime, boundary-only gauge/frame-counter publication, per-frame reset and isolated callback
-failure. Audit the remaining bounded-history/drop and malformed-use reporting before declaring the
-diagnostics public behavior disposition complete. Then resume the broader inventory and
-docs/COVERAGE_AUDIT.md for the highest-value undispositioned behavior, keeping constructors/
-finalizers, CLR collection plumbing and service-only paths classified rather than inflating metadata.
+Focused923 is the latest focused behavioral batch. The diagnostics public behavior audit is now
+semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
+history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered
+sources, history/producer drops and malformed-use counters all have runtime evidence in a real FULL
+build. Remaining unit/accuracy/category/resource-kind enum permutations are stored labels already
+shown by representative values; maximum-depth, malformed-binary and multi-thread saturation are
+CNA unit/stress-test territory. Resume the broader inventory and docs/COVERAGE_AUDIT.md with the
+highest-value undispositioned public behavior; prefer extending an existing workflow where coherent.
+Keep constructors/finalizers, CLR collection plumbing and service-only paths classified rather than
+inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete920 too stale.
@@ -2464,6 +2464,27 @@ counter execution passes and the source takes its declared OFF skip. Both `-j3` 
 apart from the existing vendored Draco CMake warning; metadata is662/0. Generated numeric surface
 totals remain unchanged and Complete920 marks both post-baseline diagnostics IDs absent. Evidence:
 `/tmp/checkpoint-922-frame-sources-*`.
+
+### Focused923-diagnostics-bounded-history-and-misuse-reporting
+
+The new `diagnostics.profiler.bounded_history` demo closes the consumer-visible diagnostics bounds.
+It drains producers while writing EventHistoryCapacity+3 markers, so a retained cursor reports
+exactly three lost events, the new oldest/newest sequences and the first four retained values. A
+separate undrained ThreadEventCapacity+7 burst retains1024 and raises the producer-drop count by7.
+A moved three-event RecordingSession keeps the newest three of five markers and reports two drops;
+zero capacity is inactive. Re-ending a valid manual zone preserves the valid Zone event while
+returning false, incrementing malformedZoneCount and emitting Malformed. Duplicate frame begin/end
+transitions add two malformed counts while one frame completes. Finally242 valid scopes leave the
+newest240 consecutive FrameSamples. `modes` also checks provider InterfaceVersion1.
+
+All six FULL diagnostics CTests pass. The focused demo passes eleven runs, the final ten with
+byte-identical stdout SHA-256
+`c87839623e27a351f59549e9db97c80b4a77bdc917cc126ac8305ba1775c818c` and empty stderr. Its standard
+CTest takes the declared OFF skip; standard modes passes. Both builds use at most three jobs,
+metadata is663/0, validator suites pass and generated surface totals remain unchanged. Complete920
+marks the three post-baseline diagnostics IDs absent. The ordinary public diagnostics behavior audit
+is now dispositioned; enum label permutations and maximum-depth/malformed-binary/multithread stress
+belong in CNA unit tests. Evidence:`/tmp/checkpoint-923-bounded-history-final-*`.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

@@ -571,7 +571,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032 and -033).
 - Remaining net: voice (manual).
 
-## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (21 demos)
+## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (22 demos)
 - ✅ `devices.*` (4): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
   AccelerometerFailedException, Environment::DeviceType), CNAEXT keyboard-emulated accelerometer,
   VibrateController, CNA::Devices SystemInfo/Locale/PowerInfo, ✅ DisplayInfo (content scale, safe
@@ -581,10 +581,11 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   notification channels (need a push service: manual).
 - ✅ `design.*` (4): text round trip and which types parse, cultures, property descriptors and
   CreateInstance, InstanceDescriptor.
-- ✅ `diagnostics.*` (5) and `core.logger.*` (2): diagnostics build/runtime modes, counters and
+- ✅ `diagnostics.*` (6) and `core.logger.*` (2): diagnostics build/runtime modes, counters and
   gauges, one instrumented frame with nested zones/markers and both trace exports, resource metadata
   with provider-cursor lifecycle events, registered frame-source collection/lifetime, plus Logger
-  sinks and levels. Continue the deeper audit of bounded-history/drop and malformed-use reporting.
+  sinks and levels. Bounded history, drop reporting and malformed-use containment are also covered;
+  label-only enum permutations and concurrency stress remain intentionally in CNA's unit tests.
 - ✅ `cnaext.*` (4): AsciiPostProcessEffect (every renderer), CRTEffect and DepthEffect (shader
   renderers), DebugDraw.
 - `platform.*`: ✅ renderer selection with fallback chain (standalone), ✅
@@ -9688,3 +9689,22 @@ runs pass, the final ten byte-identically with empty stderr. The standard counte
 source takes its declared OFF skip. Both builds use at most three jobs, metadata is662/0 and generated
 surface totals remain unchanged. Evidence:`/tmp/checkpoint-922-frame-sources-*`. Audit bounded event
 history/drop and malformed-use reporting next, then disposition the residual diagnostics surface.
+
+## Focused923-diagnostics-bounded-history-and-misuse-reporting
+
+The new `diagnostics.profiler.bounded_history` ID covers all consumer-visible capacity signals. A
+carefully drained EventHistoryCapacity+3 stream reports exactly three events lost before a retained
+cursor and exposes the exact oldest/newest bounds and retained values. An undrained
+ThreadEventCapacity+7 burst keeps1024 and reports seven producer drops. A moved recording retains the
+newest three of five markers and reports two drops; zero capacity stays inactive. Repeated manual-
+zone end and duplicate frame transitions increment their separate malformed counts without losing
+the valid zone/frame, and242 scopes leave the newest240 consecutive frame samples. `modes` adds the
+provider's public InterfaceVersion1 contract.
+
+All six FULL diagnostics CTests pass and eleven focused runs pass, the final ten byte-identically
+with empty stderr. The standard exact test declares its OFF skip while modes passes. Both builds use
+at most three jobs, metadata is663/0, validator suites pass and generated totals remain unchanged.
+Evidence:`/tmp/checkpoint-923-bounded-history-final-*`. The ordinary public diagnostics behavior
+audit is dispositioned. Unit/accuracy/category/resource-kind alternatives are stored labels covered
+by representatives; maximum-depth, malformed-binary and multi-thread saturation remain CNA unit/
+stress-test cases rather than separate application demos. Resume the broader public API audit.

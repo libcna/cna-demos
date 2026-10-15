@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a FULL diagnostics bounds workflow for process-history overwrite, producer-buffer drops,
+  bounded recording, malformed zone/frame transitions and the 240-frame history limit.
 - Added a retained frame-statistics source workflow with explicit gauge/frame-counter metadata,
   per-frame reset, movable registration lifetime and isolated callback failure reporting; expanded
   the counter demo with direct handle IDs, units, accuracy and signed gauge deltas.

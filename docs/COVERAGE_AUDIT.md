@@ -3513,3 +3513,16 @@ completes. The counters workflow now separately exposes explicit CounterHandle/G
 metadata, signed Add and diagnostics-OFF inertness. All five FULL diagnostics CTests pass and ten
 repeated source runs are byte-identical with empty stderr. The ordinary build passes counters and
 declares the source skip. Bounded history/drop and malformed-use reporting remain under audit.
+
+### Focused923 diagnostics bounds and malformed-use containment
+
+The new `diagnostics.profiler.bounded_history` workflow converts the remaining public capacity
+signals into one consumer scenario. A drained history overflow reports three cursor losses and exact
+bounds/retained values; an undrained producer burst reports seven drops; a moved bounded recording
+keeps the newest three of five and reports two drops. Repeated manual-zone end preserves the valid
+zone while emitting/counting one Malformed record, duplicate frame transitions count two errors while
+one frame completes, and242 scopes prove the newest240-frame retention window. `modes` now checks
+provider InterfaceVersion1. All six FULL diagnostics CTests and eleven focused runs pass; the last
+ten runs are byte-identical with empty stderr. The ordinary diagnostics audit is dispositioned:
+representative enum labels already establish storage, while maximum-depth, malformed-binary and
+multi-thread saturation stay in CNA unit/stress tests.

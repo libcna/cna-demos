@@ -26,6 +26,8 @@ namespace
         const Mode build = CNA::Diagnostics::GetBuildMode();
         const Mode runtime = CNA::Diagnostics::GetRuntimeMode();
         ctx.Print("build mode {}, runtime mode {}", Name(build), Name(runtime));
+        ctx.Check(CNA::Diagnostics::IDiagnosticsProvider::InterfaceVersion == 1,
+                  "the pull-provider interface publishes contract version one");
         ctx.Check(static_cast<int>(runtime) <= static_cast<int>(build), "the runtime mode never exceeds the build mode");
 
         // At run time a program may lower the mode (or raise it back up to the build's).
@@ -52,6 +54,6 @@ CNA_DEMOS_CONSOLE(Modes, {
                    "reads both from a provider snapshot.",
     .apis = {"CNA::Diagnostics::GetBuildMode", "CNA::Diagnostics::GetRuntimeMode", "CNA::Diagnostics::SetRuntimeMode",
              "CNA::Diagnostics::GetProvider", "CNA::Diagnostics::IDiagnosticsProvider::CaptureSnapshot",
-             "CNA::Diagnostics::Snapshot"},
+             "CNA::Diagnostics::IDiagnosticsProvider::InterfaceVersion", "CNA::Diagnostics::Snapshot"},
     .tags = {"diagnostics", "profiler", "instrumentation", "performance", "cnaext"},
 })
