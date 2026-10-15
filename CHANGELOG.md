@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete runtime baseline at 693 demos: all 706 enabled CTests and both full
+  renderer smoke suites cover every catalog ID with zero unexpected results; the sole old-assertion
+  delta is the reviewed ISSUE-111 evidence added after Complete990.
 - Added a focused XMA encoder-service workflow covering exact request/result carriers, process-wide
   attachment, all three quality mappings through `AudioContent`, external launcher/argument
   substitution, XMA2 RIFF adoption and deterministic backend refusals.

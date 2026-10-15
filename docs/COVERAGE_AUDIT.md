@@ -5027,3 +5027,32 @@ Generated runtime totals remain303/329 types,2114/2326 members,674/753 fields an
 routes;34 CNA names enter the extension appendix. Evidence:`/tmp/checkpoint-997-xma-service/*`.
 No new CNA defect, genuine XMA encoding, Xbox/audio playback, listening test or genuine-XNA
 behavior is claimed.
+
+### Complete998 generated runtime checkpoint
+
+The authoritative `linux-full` checkpoint at cna-demos
+`ff2012a1def3cc9b3b5ec9eddda8c36357fbad0b` remains pinned to isolated CNA
+`d23e139de9e5c15511b6be745de290896a69ee37` and uses at most three jobs. Its build is warning-free,
+metadata validates693/0, and all706 enabled CTests pass in286.68s; three manual tests remain
+disabled. Full SOFTWARE reports588 pass,54 expected fail,48 skip and3 manual;
+OPENGLES3/Xvfb reports628/55/7/3. Both reports contain all693 catalog IDs with zero unexpected
+failures or unexpected passes.
+
+Against Complete990, the two new service IDs pass on both renderers and all691 prior status values
+are unchanged. Focused994 added the reviewed ISSUE-111 assertion to an existing known-issue demo,
+so failed-assertion evidence moves93->94 on SOFTWARE and97->98 on OPENGLES3; no other assertion
+changes. After normalizing generated temporary-directory IDs and X protocol serial/resource values
+and removing Focused995's two expected new asset-load messages, stderr is byte-identical to
+Complete990 on each renderer. Validator self-tests pass5/5 and comparator self-tests pass4/4.
+
+The initial `tools/validate.sh` process lost its PTY and was externally terminated during the final
+OPENGLES3 stage after build, metadata, CTest and SOFTWARE had completed. The exact documented
+OPENGLES3/Xvfb command was rerun over the unchanged binary and exited0, so the evidence is a
+complete set of stages rather than one uninterrupted wrapper execution. Immutable artifacts are
+under `build/linux-full/reports/checkpoint-998-complete-*`.
+
+Generated totals remain303/329 XNA types,2114/2326 non-field members,674/753 fields and3078/3205
+public C routes, with no absent catalog IDs. This checkpoint absorbs Focused991-997 and records a
+semantic disposition for every public header in build-time `CNA/Content/Pipeline`. The next audit
+returns to the generated XNA gaps, beginning with the eight residual members in root
+`Microsoft.Xna.Framework`.

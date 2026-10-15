@@ -1,7 +1,7 @@
 # HANDOFF
 
 **Read this first in every new session.** It is the single place that says what state the
-project is in and what to do next. Update it after every batch. Last updated: 2026-10-15.
+project is in and what to do next. Update it after every batch. Last updated: 2026-10-16.
 
 ## 1. Purpose (one paragraph)
 
@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 30), 8 (content, 65), 9 (audio 23 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 30), 8 (content, 68), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 6 + logger 2, inspector 3,
@@ -69,15 +69,15 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-691 project-built catalog demos in19 categories: math78, game33, graphics185, audio23, core6,
-content66, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and208
-standalone; 655 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete990's full runtime reports; they include all691
+693 project-built catalog demos in19 categories: math78, game33, graphics185, audio23, core6,
+content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and210
+standalone; 657 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses Complete998's full runtime reports; they include all693
 catalog IDs in both renderer suites with no absent IDs.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
-3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete990's
-full runtime reports are the baseline inputs for the691-ID checkpoint catalog. Selected semantic
+3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete998's
+full runtime reports are the baseline inputs for the693-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -87,7 +87,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete990 exercises all3078 credited C routes and all691 catalog IDs in both full smoke
+Complete998 exercises all3078 credited C routes and all693 catalog IDs in both full smoke
 suites.
 It absorbs focused893-937, including the Video IDs, all public field-value batches through the
 dispositioned Graphics namespace, the complete diagnostics workflow and the canonical C exception
@@ -212,31 +212,39 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **990-691-demo-build-time-extension-checkpoint** is the current full-build and full-runtime baseline. The
+Complete **998-693-demo-build-time-services-checkpoint** is the current full-build and full-runtime baseline. The
 build remains pinned to the isolated CNA worktree `/tmp/cna-demos-cna-d23`, exact commit
 `d23e139de9e5c15511b6be745de290896a69ee37`; do not silently reconfigure it to the moving sibling.
-The documented build and test run used at most three jobs. Metadata is691/0. Of707 registered CTests,
-three manual tests are disabled; all704 enabled entries complete without failure in one
-authoritative `-j3` run (656 passed and48 declared capability/environment skips, 296.32s).
-SOFTWARE/private-Xvfb reports586 pass/54 expected fail/48 skip/3 manual, while OPENGLES3/private-
-Xvfb reports626/55/7/3. Both execute all691 IDs with zero unexpected failures or unexpected passes.
+The documented build and test run used at most three jobs. Metadata is693/0. Of709 registered CTests,
+three manual tests are disabled; all706 enabled entries complete without failure in one
+authoritative `-j3` run (286.68s).
+SOFTWARE reports588 pass/54 expected fail/48 skip/3 manual, while OPENGLES3/private-Xvfb reports
+628/55/7/3. Both execute all693 IDs with zero unexpected failures or unexpected passes.
 The five validator and four checkpoint-comparison self-tests pass.
 
-Compared with Complete981, all683 prior statuses, known-issue identities and failed-assertion
-messages/multiplicities are unchanged. Eight new IDs pass on both renderers. Failed-assertion
-evidence remains93 on SOFTWARE and97 on OPENGLES3. After normalizing temporary-directory IDs and X
-protocol serial/resource numbers, stderr is byte-identical on each renderer.
+Compared with Complete990, all691 prior statuses remain unchanged and two new IDs pass on both
+renderers. Focused994 deliberately added the already documented ISSUE-111 assertion to an existing
+known-issue demo, so failed-assertion evidence moves93->94 on SOFTWARE and97->98 on OPENGLES3;
+there is no other assertion delta. After normalizing temporary-directory IDs and X protocol
+serial/resource numbers and removing Focused995's two expected new asset-load lines, stderr is
+byte-identical on each renderer.
+
+The initial `tools/validate.sh` wrapper invocation lost its PTY and was externally terminated during
+OPENGLES3 after build, metadata, CTest and SOFTWARE had completed. The exact documented
+OPENGLES3/Xvfb command was rerun against the unchanged binary and exited0. Immutable evidence is
+under `build/linux-full/reports/checkpoint-998-complete-*`.
 
 Generated coverage is303/329 types,2114/2326 non-field members,674/753 fields and3078/3205 C
 routes. Tested SHA-256: `cna-demos`
-`82832b96468a6ddd273189f9ac67dccd5c84d50a779b4537218ab24623ec4df4`, `libcna.so`
+`4ebb4756a4a34ff3c41d2f37f11b82cde2011a2df860146edfed33abf81035b6`, `libcna.so`
 `624de5687262040f91736857226b38392f5a5375099c92a0d221b6236b8aa25d`, and `libcna_c_api.so`
 `813bf0a2095524183bbaca66f6fbcc1fbdfcfcd5ddd8148c8ec6ce3138ebee24`. Report hashes are SOFTWARE
-`f54d858fc699363ea5c5280fccc429172a457f741ee8f3e60453e54c1ef17b4c` and OPENGLES3
-`ed79f93b53f4cc9827d0c3aa99ffece2b288431106796508407ebcca1ffec5cb`; catalog hash is
-`d0fae488c43e1201c2886d45a9a8b4baa65e7e4ca532c53df4134e314e1af430`. Tested cna-demos commit
-is `94bc60e9ac75a9d6cc56093f5db6d2c5133c737c`. Evidence is archived as
-`build/linux-full/reports/checkpoint-990-complete-*`. No screenshot, listening test, physical input,
+`4399e755c89249277b22c787bbdf1cfda540aef6a4bd07f53b24c7145b8b4fcb` and OPENGLES3
+`610965dcb312beccdfa6138b4a809795f9025f555c0c573836ee3110ece8e346`; catalog hash is
+`72d74e09b7756ea10cf8a836016b27baa46efc8cbf02decc6e49695b8ffaaaab` and generated coverage hash
+is `ee88a1df8ec98dcc5d70f204aa11c471ca06190a10d0a862162a0685f1b7670f`. Tested cna-demos commit
+is `ff2012a1def3cc9b3b5ec9eddda8c36357fbad0b`. Evidence is archived as
+`build/linux-full/reports/checkpoint-998-complete-*`. No screenshot, listening test, physical input,
 external service session or manual visual-quality inspection was performed.
 
 Focused **939-native-logger-general-and-experiment** extends the stable
@@ -3496,8 +3504,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete990 is the authoritative691-demo full-build/full-runtime baseline and
-absorbs Focused982-989 after Complete981. Focused991 directly closes the platform/parameter
+HIGHEST PRIORITY: Complete998 is the authoritative693-demo full-build/full-runtime baseline and
+absorbs Focused991-997 after Complete990. Focused991 directly closes the platform/parameter
 conversion, adapter-metadata, attribute-free registration and `PipelineComponentScanner` portions
 of `XnaPipelineBridge.hpp` in the stable custom-pipeline demo. Focused992 directly closes the
 one-function `XnaModelBridge.hpp` conversion in the stable model-source demo. Focused993 closes the
@@ -3506,7 +3514,10 @@ closes direct `RegisterXnaXnbOutput` registration and records ISSUE-111 for igno
 targets. Focused995 closes the `XnaXmlSourceContentPipeline.hpp` multi-compiler extension and
 null-refusal contract. Focused996 closes the portable Effect compiler/source service contract with
 a new real-build workflow. Focused997 closes `XmaEncoderService.hpp` through in-process and
-external-process backends. Run the complete 693-demo post-990 checkpoint next.
+external-process backends. The complete public `CNA/Content/Pipeline` build-time header group now
+has semantic dispositions. Return to the generated XNA member-gap audit next, starting with the
+eight residual root `Microsoft.Xna.Framework` members and adding behavior only where an existing
+demo does not already establish it.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3691,6 +3702,23 @@ totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C route
 enter the build-time appendix. No new CNA defect, genuine XMA encoding, Xbox/audio playback,
 listening test or genuine-XNA behavior is claimed. Run the complete 693-demo post-990 checkpoint
 next. Evidence:`/tmp/checkpoint-997-xma-service/*`.
+Complete998 establishes the693-demo post-990 full baseline at cna-demos
+`ff2012a1def3cc9b3b5ec9eddda8c36357fbad0b` and the isolated CNA
+`d23e139de9e5c15511b6be745de290896a69ee37`. The warning-free three-job build validates metadata
+693/0; all706 enabled CTests pass in286.68s and three manual tests remain disabled. SOFTWARE reports
+588 pass/54 expected fail/48 skip/3 manual and OPENGLES3/Xvfb reports628/55/7/3, with every ID
+present and zero unexpected results. The two post-990 IDs pass on both renderers; all691 old status
+values remain fixed. The only old-assertion delta is the reviewed ISSUE-111 assertion introduced by
+Focused994, moving failed assertions93->94 and97->98. Normalized stderr otherwise matches
+Complete990 exactly after removing Focused995's two expected new asset-load lines.
+
+The original `tools/validate.sh` process lost its PTY and was externally terminated during the
+final OPENGLES3 phase after build, metadata, CTest and SOFTWARE had completed. Rerunning that exact
+OPENGLES3 command over the unchanged binary completed successfully. The five validator and four
+comparator self-tests pass. Evidence:`build/linux-full/reports/checkpoint-998-complete-*`. This
+checkpoint closes the public build-time `CNA/Content/Pipeline` header group with semantic
+dispositions; return to the generated XNA member-gap audit, beginning with the eight residual root
+`Microsoft.Xna.Framework` members.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,
@@ -9416,8 +9444,8 @@ and publish the consolidated remaining-member dispositions.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is990-691-demo-build-time-extension-checkpoint; exact results, hashes and
-evidence are in section7. Use its691-demo reports as the comparison baseline.
+Current complete baseline is998-693-demo-build-time-services-checkpoint; exact results, hashes and
+evidence are in section7. Use its693-demo reports as the comparison baseline.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
@@ -9430,8 +9458,8 @@ complete502. The complete504 checkpoint binary was built with clean CNA `f37f8d1
 externally during smoke to clean `fbd8e64a3` through CI/CMake-test/docs/tooling-only changes, while
 both production library hashes stayed unchanged. Complete504, complete524, complete719,
 Complete926, Complete933 and Complete938 remain immutable historical comparison evidence;
-Complete981 remains immutable historical comparison evidence; Complete990 is the current full-
-runtime baseline.
+Complete981 and Complete990 remain immutable historical comparison evidence; Complete998 is the
+current full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.
 

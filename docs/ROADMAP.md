@@ -10737,3 +10737,37 @@ C routes;34 CNA names enter the extension appendix. Evidence:
 `/tmp/checkpoint-997-xma-service/*`. No new CNA defect, genuine XMA encoding, Xbox/audio playback,
 listening test or genuine-XNA behavior is claimed. Run the complete 693-demo post-990 checkpoint
 next.
+
+## Complete998-693-demo-build-time-services-checkpoint
+
+The authoritative `linux-full` checkpoint at cna-demos
+`ff2012a1def3cc9b3b5ec9eddda8c36357fbad0b` remains pinned to isolated CNA
+`d23e139de9e5c15511b6be745de290896a69ee37` and uses at most three build/test jobs. The build is
+warning-free, metadata validates693/0, and all706 enabled CTests pass in286.68s; three manual tests
+remain disabled. Full SOFTWARE reports588 pass,54 expected fail,48 skip and3 manual, while
+OPENGLES3/Xvfb reports628/55/7/3. Both reports contain all693 catalog IDs and have zero unexpected
+failures or unexpected passes.
+
+The exact Complete990 comparison shows the two new service IDs passing on both renderers and every
+one of the691 prior status values unchanged. Focused994 intentionally added the already reviewed
+ISSUE-111 assertion to an existing demo, moving failed-assertion evidence93->94 on SOFTWARE and
+97->98 on OPENGLES3; there is no other assertion delta. After normalizing generated temporary-
+directory IDs and X protocol serial/resource values, and removing the two expected Focused995
+asset-load messages, stderr matches Complete990 byte-for-byte on each renderer. Validator
+self-tests pass5/5 and comparator self-tests pass4/4.
+
+The original `tools/validate.sh` process lost its PTY and was externally terminated during the
+last OPENGLES3 stage after build, metadata, CTest and SOFTWARE had completed. The exact documented
+OPENGLES3/Xvfb command was rerun against the unchanged binary and exited0; this is a completed set
+of checkpoint stages rather than one uninterrupted wrapper invocation. Immutable evidence is under
+`build/linux-full/reports/checkpoint-998-complete-*`.
+
+Generated runtime coverage remains303/329 XNA types,2114/2326 non-field members,674/753 fields and
+3078/3205 public C routes, with no absent IDs. Focused957-997 now give semantic dispositions to
+every public header in the build-time `CNA/Content/Pipeline` group: `BlockCompression`,
+`BuildTimeMediaDecoder`, `DirectXFileReader`, `EffectCompilerService`,
+`EffectSourceContentPipeline`, `FbxFileReader`, `SpriteFontContentPipeline`,
+`TextureCompressionPipeline`, `XmaEncoderService`, `XnaModelBridge`,
+`XnaModelSourceContentPipeline`, `XnaPipelineBridge` and `XnaXmlSourceContentPipeline`. Resume the
+generated XNA member-gap audit with the eight residual root `Microsoft.Xna.Framework` members;
+add behavior only where an existing demo does not already establish it.
