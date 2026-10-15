@@ -345,6 +345,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Diagnostics::ZoneToken` -- diagnostics.profiler.trace_recording
 - `CNA::DisplayColorSpace` -- graphics.device.capability_report
 - `CNA::GetAssemblyTitleEXT` -- platform.window.assembly_title
+- `CNA::GetProjectGraphicsProfileEXT` -- game.graphics_device_manager.graphics_profile
 - `CNA::GetRendererFeatureDescription` -- graphics.device.capability_report
 - `CNA::GetRendererFeatureName` -- graphics.device.capability_report
 - `CNA::GetRendererLimitName` -- graphics.device.capability_report
@@ -485,6 +486,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Platform::TryGetWayland` -- platform.window.native_handle
 - `CNA::Platform::TryGetWin32` -- platform.window.native_handle
 - `CNA::Platform::TryGetX11` -- platform.window.native_handle
+- `CNA::ProjectGraphicsProfileEXT` -- game.graphics_device_manager.graphics_profile
 - `CNA::RendererCapabilityProfile` -- graphics.device.capability_report
 - `CNA::RendererCapabilityProfile::GetAdditionalLimitationsText` -- graphics.device.capability_report
 - `CNA::RendererCapabilityProfile::GetEnglishReport` -- graphics.device.capability_report
@@ -503,6 +505,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::RendererLimit` -- graphics.device.capability_report
 - `CNA::RendererLimitValue` -- graphics.device.capability_report
 - `CNA::SetAssemblyTitleEXT` -- platform.window.assembly_title
+- `CNA::SetProjectGraphicsProfileEXT` -- game.graphics_device_manager.graphics_profile
 - `CNA::ShaderCompilationExceptionEXT::ShaderCompilationExceptionEXT` -- graphics.shader_effect.diagnostic_parser
 - `CNA::ShaderCompilationExceptionEXT::getDiagnostics` -- graphics.shader_effect.diagnostic_parser, graphics.shader_effect.portable_package
 - `CNA::ShaderDiagnosticEXT::ShaderDiagnosticEXT` -- graphics.shader_effect.diagnostic_parser

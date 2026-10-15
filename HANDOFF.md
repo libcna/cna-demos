@@ -360,6 +360,20 @@ the CNA-extension appendix now credits `VertexTypeRegistryEXT` and all three pub
 Complete938 retains the older ten-control form of this stable ID. Evidence:
 `/tmp/checkpoint-945-vertex-registry/*`. Continue the next coherent public CNA header family.
 
+Focused **946-native-project-graphics-profile** extends the stable
+`game.graphics_device_manager.graphics_profile` workflow from two to five controls. The project's
+HiDef declaration seeds the new manager; a later Reach declaration changes the process-wide value
+without rewriting that existing manager; the direct setter restores HiDef before device creation;
+and the prior explicit manager-level Reach device plus HiDef-only refusal remain intact.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass5/5 with byte-identical stdout SHA-256
+`2f0774014669ea982fbf3d464175c90e7a003a123a06a3bb6d3768b0ad1e78b4` and empty stderr. The
+warning-free build uses at most three jobs, metadata remains668/0 and the exact SOFTWARE CTest
+passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes;
+the CNA-extension appendix now credits `ProjectGraphicsProfileEXT` and both global accessors.
+Complete938 retains the older two-control form of this stable ID. Evidence:
+`/tmp/checkpoint-946-project-profile/*`. Continue the next coherent public CNA header family.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2472,7 +2486,8 @@ stage-specific device support, invalid identities and the descriptor-binding hel
 adds direct native unsupported-3D policy evidence and records CNA-DEMOS-ISSUE-104 for STUB's
 missing warned Texture3D null object; do not infer other factory/draw paths from it. Focused945
 closes the ordinary `VertexTypeRegistryEXT` lookup/registration and System::Type buffer-constructor
-workflow. Continue the next coherent public CNA header family. The diagnostics
+workflow. Focused946 closes the process-wide project graphics-profile declaration/get/set and
+manager-snapshot behavior. Continue the next coherent public CNA header family. The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered

@@ -3928,3 +3928,21 @@ Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3
 the CNA-extension appendix now credits `VertexTypeRegistryEXT` and all three public operations.
 Complete938 retains the older ten-control form of this stable ID. Evidence:
 `/tmp/checkpoint-945-vertex-registry/*`. No CNA defect or manual visual-quality result appeared.
+
+### Focused946 native project graphics profile
+
+The stable `game.graphics_device_manager.graphics_profile` workflow grows two to five controls and
+now makes CNA's process-wide project declaration visible beside the existing manager/device
+behavior. It proves that cna-demos' declared HiDef profile seeds a newly constructed
+GraphicsDeviceManager, a later local `ProjectGraphicsProfileEXT(Reach)` declaration changes the
+future global default without rewriting that existing manager, and the direct setter restores the
+original HiDef declaration before device creation. The demo then retains its ordinary explicit
+Reach manager request and HiDef-only back-buffer-read refusal.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass5/5 with byte-identical stdout SHA-256
+`2f0774014669ea982fbf3d464175c90e7a003a123a06a3bb6d3768b0ad1e78b4` and empty stderr. The
+warning-free incremental build uses at most three jobs, metadata remains668/0 and the exact
+SOFTWARE CTest passes. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields
+and3078/3205 routes; the CNA-extension appendix now credits the project-profile declaration,
+getter and setter. Complete938 retains the older two-control form of this stable ID. Evidence:
+`/tmp/checkpoint-946-project-profile/*`. No CNA defect or visual-quality result appeared.

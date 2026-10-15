@@ -10040,3 +10040,20 @@ passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields an
 the CNA-extension appendix now credits the type and Register/TryResolve/Resolve. Complete938 keeps
 the older ten-control result for this stable ID. Evidence:`/tmp/checkpoint-945-vertex-registry/*`.
 Continue the next coherent public CNA header family.
+
+## Focused946-native-project-graphics-profile
+
+The stable `game.graphics_device_manager.graphics_profile` workflow grows two to five controls and
+closes the ordinary `ProjectGraphicsProfileEXT` decision path. It ties the cna-demos project-wide
+HiDef declaration to a new manager's initial value, proves that a later Reach declaration changes
+the process-wide value without retroactively rewriting the manager, restores HiDef through the
+direct setter before device creation, and retains the explicit manager-level Reach request plus
+HiDef-only operation refusal.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass5/5 with byte-identical stdout SHA-256
+`2f0774014669ea982fbf3d464175c90e7a003a123a06a3bb6d3768b0ad1e78b4` and empty stderr. The
+warning-free incremental build uses `-j3`, metadata remains668/0 and the exact SOFTWARE CTest
+passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes;
+the CNA-extension appendix now credits the declaration, getter and setter. Complete938 retains the
+older two-control form of this stable ID. Evidence:`/tmp/checkpoint-946-project-profile/*`.
+Continue the next coherent public CNA header family.
