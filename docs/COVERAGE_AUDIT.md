@@ -791,8 +791,9 @@ rather than adding a CLI-options-only demo.
 All ordinary `ContentCompiler.hpp` declarations now have runtime evidence or an explicit
 integration/boundary disposition. Focused996 now covers the effect compiler seam and source route
 with a controlled service and committed genuine bytecode, while external compiler execution remains
-tool-dependent. XMA encoder and font-host results still require portable assets or controlled tools;
-option propagation alone does not claim those outputs.
+tool-dependent. Focused997 covers the XMA encoder seam with controlled in-process and external-
+process backends while explicitly making no genuine XMA claim. Font-host results still require a
+portable host; option propagation alone does not claim those outputs.
 
 #### `CnjContentPipeline.hpp` declaration-level disposition
 
@@ -5000,3 +5001,29 @@ Generated runtime totals remain303/329 types,2114/2326 members,674/753 fields an
 routes;34 public names enter the extension appendix. Evidence:
 `/tmp/checkpoint-996-effect-source/*`. No new CNA defect, external compiler execution, GPU, visual,
 runtime Effect load or genuine-XNA behavior is claimed.
+
+### XMA encoder service and AudioContent consumer audit
+
+Focused997 adds the renderer-free `content.audio.xma_encoder_service` standalone and dispositions
+every public declaration in `XmaEncoderService.hpp`. Direct controls cover all quality names,
+complete request/result defaults, all identity forms, the unavailable service and its fixed
+sentence, a separately diagnosed missing executable, and exact process-wide null/set/get behavior.
+Three real `AudioContent::ConvertFormat(Xma, ...)` calls forward the same 800-byte PCM16 source,
+channel/rate/bit shape and 400-frame loop with Low, Medium and Best respectively. The XNA-facing
+object then adopts the controlled payload, complete 52-byte XMA2WAVEFORMATEX and backend loop
+values. A failed service retains its identity and both diagnostics; the default service retains the
+canonical unavailability phrase.
+
+The external factory relaunches the demo itself as a controlled encoder-contract process through
+the launcher field. Its argument template proves input/output, quality, loop-start and loop-length
+substitution. The child reads CNA's canonical input WAV and writes XMA2-shaped RIFF test bytes; the
+service parses its format/data chunks and retains the child's diagnostic. Independent invalid-RIFF
+and exit7 modes exercise both backend failures. This stub is deliberately not an XMA encoder. The
+first run's two-temporary iterator range was a demo bug and was corrected before the range reached
+CNA. The warning-free `-j3` build, metadata693/0, ten exact SOFTWARE CTests, ten direct runs under
+each renderer label and self-tests5/5 plus4/4 pass. Every direct run reports17/17 with stdout
+SHA-256 `4da0dfd66eea16f8b2f66d52df96ef20f3fac98a36719371e380486d9f436c24` and empty stderr.
+Generated runtime totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C
+routes;34 CNA names enter the extension appendix. Evidence:`/tmp/checkpoint-997-xma-service/*`.
+No new CNA defect, genuine XMA encoding, Xbox/audio playback, listening test or genuine-XNA
+behavior is claimed.

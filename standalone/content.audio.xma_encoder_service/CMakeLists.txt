@@ -1,0 +1,5 @@
+if(TARGET CNA::ContentPipelineBuild)
+    cna_demos_add_standalone(SOURCES main.cpp LIBRARIES CNA::ContentPipelineBuild)
+else()
+    message(STATUS "cna-demos: XMA encoder-service tool omitted (CNA::ContentPipelineBuild unavailable)")
+endif()

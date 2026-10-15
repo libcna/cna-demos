@@ -3505,8 +3505,8 @@ remaining public bridge contexts and logger through the real custom-pipeline wor
 closes direct `RegisterXnaXnbOutput` registration and records ISSUE-111 for ignored environment
 targets. Focused995 closes the `XnaXmlSourceContentPipeline.hpp` multi-compiler extension and
 null-refusal contract. Focused996 closes the portable Effect compiler/source service contract with
-a new real-build workflow. Audit `XmaEncoderService.hpp` next, then run the complete post-990
-checkpoint for every added ID.
+a new real-build workflow. Focused997 closes `XmaEncoderService.hpp` through in-process and
+external-process backends. Run the complete 693-demo post-990 checkpoint next.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3674,6 +3674,23 @@ totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C route
 the build-time appendix. No new CNA defect, external compiler execution, GPU, visual, runtime
 Effect load or genuine-XNA behavior is claimed. Audit `XmaEncoderService.hpp` next, then run the
 complete post-990 checkpoint. Evidence:`/tmp/checkpoint-996-effect-source/*`.
+Focused997 adds the renderer-free `content.audio.xma_encoder_service` standalone with17 controls.
+It covers all quality names; every request/result/identity field; the canonical unavailable
+backend; distinct explicit-missing-path refusal; and stable process-wide null/set/get behavior.
+Three real `AudioContent::ConvertFormat(Xma, ...)` calls forward byte-exact PCM shape, authored
+loops and Low/Medium/Best, then adopt the controlled service payload, complete 52-byte
+XMA2WAVEFORMATEX and returned loops. Failed and unavailable services preserve backend identity and
+all diagnostics. The external factory then relaunches the demo itself as a deterministic contract
+stub through the launcher field, proves all five argument substitutions, reads the canonical input
+WAV and returns parsed XMA2-shaped RIFF output; invalid RIFF and exit7 retain exact diagnostics.
+The first direct run exposed and fixed a demo-only iterator-lifetime bug before CNA consumed that
+value. The warning-free `-j3` build, metadata693/0, ten exact SOFTWARE CTests, ten direct runs per
+renderer label and self-tests5/5 plus4/4 pass. Every direct run reports17/17 with stdout SHA-256
+`4da0dfd66eea16f8b2f66d52df96ef20f3fac98a36719371e380486d9f436c24` and empty stderr. Runtime
+totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes;34 CNA names
+enter the build-time appendix. No new CNA defect, genuine XMA encoding, Xbox/audio playback,
+listening test or genuine-XNA behavior is claimed. Run the complete 693-demo post-990 checkpoint
+next. Evidence:`/tmp/checkpoint-997-xma-service/*`.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

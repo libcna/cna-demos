@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a focused XMA encoder-service workflow covering exact request/result carriers, process-wide
+  attachment, all three quality mappings through `AudioContent`, external launcher/argument
+  substitution, XMA2 RIFF adoption and deterministic backend refusals.
 - Added a focused effect-source build workflow covering compiler-service identity and request
   propagation, transitive includes, structured diagnostics, real Effect XNB output and deterministic
   unavailable, failed, invalid-bytecode, profile, platform and CNB refusal paths.

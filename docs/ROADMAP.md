@@ -10711,3 +10711,29 @@ public names enter the build-time extension appendix. Evidence:
 `/tmp/checkpoint-996-effect-source/*`. No new CNA defect, external compiler execution, GPU, visual,
 runtime Effect load or genuine-XNA behavior is claimed. Audit `XmaEncoderService.hpp` next, then
 run the complete post-990 checkpoint for every added ID.
+
+## Focused997-XMA-encoder-service-and-AudioContent-consumer
+
+The new renderer-free `content.audio.xma_encoder_service` standalone closes the complete public
+`XmaEncoderService.hpp` surface. It directly covers all three quality spellings, complete safe
+request/result defaults, identity forms, the canonical unavailable backend, distinct explicit-
+missing-path diagnostics and stable process-wide null/set/get attachment. Three real
+`AudioContent::ConvertFormat(Xma, ...)` calls prove byte-exact PCM, channel/rate/bit shape, authored
+loop and Low/Medium/Best propagation; each adopts the controlled payload, full 52-byte
+XMA2WAVEFORMATEX and returned loop values. Failed and unavailable services retain identity and
+every diagnostic through the XNA-facing exception.
+
+The external factory then relaunches the standalone itself as a deterministic contract stub through
+the public launcher field. All five argument placeholders reach it; it reads CNA's canonical PCM
+WAV and returns an XMA2-shaped RIFF whose parsed format, payload, loops and own stdout diagnostic
+are exact. Separate modes prove invalid-RIFF parsing and nonzero-exit diagnostic preservation. The
+stub demonstrates the service boundary and does not encode XMA. The first direct run exposed a
+demo-only iterator-lifetime bug, fixed before CNA consumed the invalid value. The warning-free
+`-j3` build and metadata693/0 pass. Ten exact SOFTWARE CTests, ten direct runs under each renderer
+label and validator/checkpoint self-tests5/5 plus4/4 pass. Every direct run reports17/17 with
+stdout SHA-256 `4da0dfd66eea16f8b2f66d52df96ef20f3fac98a36719371e380486d9f436c24`
+and empty stderr. Runtime totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205
+C routes;34 CNA names enter the extension appendix. Evidence:
+`/tmp/checkpoint-997-xma-service/*`. No new CNA defect, genuine XMA encoding, Xbox/audio playback,
+listening test or genuine-XNA behavior is claimed. Run the complete 693-demo post-990 checkpoint
+next.
