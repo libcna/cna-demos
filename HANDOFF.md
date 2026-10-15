@@ -3519,7 +3519,10 @@ attempt, then passes the complete validation from scratch. Resume the deeper sem
 audit: reconcile explicit residual gaps in `docs/COVERAGE_AUDIT.md` against pinned CNA d23e139de,
 prioritize reachable deterministic behavior that strengthens an existing coherent demo, and then
 revalidate Focused823's127 intentionally uncredited C-route dispositions against the current
-public headers. Do not add metadata merely to raise a count.
+public headers. Focused1004 closes the first selected behavior gap: all four scalar/array uniform
+families used by `uniform_palettes` now upload before the first Apply and produce their exact
+pixels on both OpenGL dialects. Audit ShaderEffect source accessor ownership/identity in the
+existing compiler/clone workflows next. Do not add metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3884,6 +3887,23 @@ values are `587fca9bc8f5c3a4b78cfbb090bef8dc96563c2489a7507f75b468085cf59f42` (S
 `16a023c96cf22266e62cc02ec41ef8a3343aa5fa27ae4854b81abad70adb63d6` (OPENGLES3). Generated
 coverage remains307/329 XNA types,2128/2326 members,674/753 fields and3078/3205 C routes. Continue
 the deeper semantic behavior audit, then revalidate the127 intentional C-route dispositions.
+
+## Focused1004 ShaderEffect pre-Apply uniform delivery
+
+The existing `graphics.shader_effect.uniform_palettes` scene now uploads its scalar Matrix/Vector4
+and Matrix/Vector3 arrays before the effect's first Apply. Exact Red/Lime pixels in the first panel
+therefore prove every setter makes its own program current, copies caller data and preserves that
+data across the later Apply; the later panels retain their ordinary apply-then-update order. This
+directly covers the public call-order behavior behind EasyGL's `MakeProgramCurrent` path without a
+new ID or assertion-count inflation.
+
+The warning-free build uses `-j3`, metadata remains693/0, the SOFTWARE CTest reports its declared
+CustomEffects skip, all15 CLI tests and self-tests5/5 plus4/4 pass. Ten OPENGLES3 and ten OPENGL33
+direct runs pass6/6 with identical stdout SHA-256
+`9cd702a22644957a8d309aada617979e0a0afd346ef29355cd8df30ac4b2faf8` and empty stderr. Evidence:
+`/tmp/checkpoint-1004-shader-preapply/*`. No screenshot, manual visual inspection, uniform-block,
+invalid-count, missing-uniform or non-GL renderer behavior is claimed. Audit source accessor
+ownership/identity in the existing ShaderEffect compiler or clone workflow next.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

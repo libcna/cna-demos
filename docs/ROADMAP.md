@@ -10900,3 +10900,16 @@ check totals rise3085->3099 on SOFTWARE and3315->3328 on OPENGLES3. Self-tests p
 immutable evidence is `build/linux-full/reports/checkpoint-1003-complete-*`. Coverage is307/329 XNA
 types,2128/2326 members,674/753 fields and3078/3205 C routes. Resume the deeper semantic behavior
 audit, followed by a source revalidation of the127 intentional C-route dispositions.
+
+## Focused1004-ShaderEffect-pre-Apply-uniform-delivery
+
+The stable uniform-palette scene now sends one scalar matrix, one Vector4, a two-entry matrix array
+and a two-entry Vector3 array before its first Apply. The exact Red/Lime pixels in that first panel
+prove each public setter selects the effect's own program, copies the caller values and retains them
+through Apply. Later panels retain the ordinary apply-then-update sequence.
+
+The warning-free `-j3` build, metadata693/0, CLI15/15 and self-tests5/5 plus4/4 pass. SOFTWARE keeps
+its declared CustomEffects skip. Ten OPENGLES3 and ten OPENGL33 runs pass6/6 byte-identically with
+empty stderr. Coverage counts remain307/329 types,2128/2326 members,674/753 fields and3078/3205 C
+routes. Evidence:`/tmp/checkpoint-1004-shader-preapply/*`. Audit ShaderEffect source accessor
+ownership/identity in an existing compiler or clone workflow next.

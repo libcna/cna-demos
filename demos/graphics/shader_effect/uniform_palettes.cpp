@@ -119,13 +119,17 @@ void main() { FragColor = vec4(tint * sceneTint.rgb, 1.0) * sceneTint.a; }
                 if (row == 2) colors = {0, 1, 1, 1, 0, 1};
                 device.setBlendStateProperty(row == 2 ? BlendState::AlphaBlend : BlendState::Opaque);
                 device.setViewportProperty(Viewport(0, row * rowHeight, width, rowHeight));
-                shader_->Apply();
+                // The first panel deliberately uploads before Apply. Each public setter must make
+                // this effect's program current itself; otherwise the values are lost or written
+                // to whichever program a prior draw happened to leave bound.
+                if (row != 0) shader_->Apply();
                 shader_->SetUniformMat4("sceneTransform", sceneValues.data()); // one parent matrix
                 if (row == 2) shader_->SetUniformVec4("sceneTint", .5f, .25f, 1, .5f);
                 else shader_->SetUniformVec4("sceneTint", 1, 1, 1, 1);
                 shader_->SetUniformMat4Array("transforms", matrices.data(), 2); // two matrices, not 32 floats
                 shader_->SetUniformVec3Array("paletteColors", colors.data(), 2); // two vectors, not 6 floats
                 sceneValues.fill(0); matrices.fill(0); colors.fill(0); // caller storage can change after the upload
+                if (row == 0) shader_->Apply();
                 device.DrawPrimitives(PrimitiveType::TriangleList, 0, 2);
             }
             device.setViewportProperty(full);
@@ -140,7 +144,7 @@ void main() { FragColor = vec4(tint * sceneTint.rgb, 1.0) * sceneTint.a; }
                 const CnaDemos::BackBufferPixels screen(device);
                 Context().Check(CnaDemos::Near(screen.At(width / 4, rowHeight / 2), Color::Red, 0) &&
                                 CnaDemos::Near(screen.At(width * 3 / 4, rowHeight / 2), Color::Lime, 0),
-                                "both transform and vec3 array entries render their initial palette values after caller buffers change");
+                                "pre-Apply scalar and array uploads render both initial palette values after caller buffers change");
                 Context().Check(CnaDemos::Near(screen.At(width / 4, rowHeight * 3 / 2), Color::Magenta, 0) &&
                                 CnaDemos::Near(screen.At(width * 3 / 4, rowHeight * 3 / 2), Color::Cyan, 0),
                                 "updating the same program swaps the two matrix translations and replaces both color entries");
@@ -171,8 +175,8 @@ void main() { FragColor = vec4(tint * sceneTint.rgb, 1.0) * sceneTint.a; }
 CNA_DEMOS_GAME(UniformPaletteDemo, {
     .id = "graphics.shader_effect.uniform_palettes",
     .title = "Custom shader transform and color arrays",
-    .description = "Uploads two matrix and vec3 palette entries with explicit scalar layout, changes caller storage, "
-                   "then updates the same program. A shared scalar matrix and premultiplied tint compose over both palette entries.",
+    .description = "Uploads scalar and array uniforms before the first Apply, changes caller storage, then updates the "
+                   "same program. A shared scalar matrix and premultiplied tint compose over both palette entries.",
     .apis = {"ShaderEffect::SetUniformMat4Array", "ShaderEffect::SetUniformVec3Array",
              "ShaderEffect::SetUniformMat4", "ShaderEffect::SetUniformVec4", "Effect::Apply",
              "Matrix::CreateTranslation", "GraphicsDevice::DrawPrimitives"},
@@ -182,5 +186,5 @@ CNA_DEMOS_GAME(UniformPaletteDemo, {
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "GLSL only. Counts are two matrices/two vec3 values; no invalid array count, missing-uniform, "
-                    "uniform-block or other array-family behavior is inferred.",
+                    "uniform-block or other renderer-dialect behavior is inferred.",
 })
