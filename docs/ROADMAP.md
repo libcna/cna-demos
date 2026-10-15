@@ -329,7 +329,11 @@ a check that all authored colors remain visible and that a blank texture row can
   representative source refusals), ✅ `content.custom.cnb_loader` (all 45 public
   `CnbFormat.hpp` declarations are dispositioned through exact container constants, chunk/flag/
   compression wire identities, every built-in and custom asset ID/name, logical-name safety and
-  the two container-owned chunks alongside the existing real custom loader), ✅ `content.xnb.pipeline_transcode` (all nine
+  the two container-owned chunks alongside the existing real custom loader),
+  ✅ `content.custom.cnb_read_limits` (the complete public arithmetic, byte-reader, byte-writer and
+  CRC surfaces are dispositioned through an exact 44-byte primitive spelling/round trip, UTF-8 and
+  failure boundaries, uint64 overflow checks, the standard CRC-32C vector and a real CNB header
+  checksum), ✅ `content.xnb.pipeline_transcode` (all nine
   supported XNB roots transcoded through public pipeline registration into decoded native CNB,
   including exact volume/cube bytes, external Song/Video deployment and Model schema-2 shared
   resources; all 35 public Model schema-2 data/codec declarations are dispositioned through exact

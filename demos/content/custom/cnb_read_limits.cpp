@@ -2,11 +2,15 @@
 // A tiny tile layer shows why container budgets and schema allocation limits are distinct.
 #include <algorithm>
 #include <cstdint>
+#include <limits>
 #include <string>
 #include <vector>
 #include "CnaDemos/Demo.hpp"
+#include "CNA/Content/Cnb/CnbArithmetic.hpp"
+#include "CNA/Content/Cnb/CnbByteReader.hpp"
 #include "CNA/Content/Cnb/CnbByteWriter.hpp"
 #include "CNA/Content/Cnb/CnbChunkCompression.hpp"
+#include "CNA/Content/Cnb/CnbCrc32c.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
 
@@ -35,6 +39,142 @@ namespace
         writer.AddChunk(GridChunk, grid.Take(), CnbChunkFlags::Mandatory);
         writer.AddChunk(NoteChunk, note.Take(), CnbChunkFlags::None, 64u);
         const auto image = writer.Build();
+
+        CnbByteWriter primitives({0xAAu});
+        primitives.WriteU8(0x7Fu);
+        primitives.WriteU16(0x1234u);
+        primitives.WriteU32(0x89ABCDEFu);
+        primitives.WriteU64(UINT64_C(0x0123456789ABCDEF));
+        primitives.WriteI32(-2);
+        primitives.WriteF32(1.5f);
+        primitives.WriteF64(-2.25);
+        primitives.WriteString(std::string{"A\xC2\xA2", 3u});
+        primitives.WriteBytes(std::vector<std::uint8_t>{0xDEu, 0xADu});
+        primitives.WriteZeros(3u);
+        const std::vector<std::uint8_t> expectedPrimitives{
+            0xAAu, 0x7Fu, 0x34u, 0x12u, 0xEFu, 0xCDu, 0xABu, 0x89u,
+            0xEFu, 0xCDu, 0xABu, 0x89u, 0x67u, 0x45u, 0x23u, 0x01u,
+            0xFEu, 0xFFu, 0xFFu, 0xFFu, 0x00u, 0x00u, 0xC0u, 0x3Fu,
+            0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x02u, 0xC0u,
+            0x03u, 0x00u, 0x00u, 0x00u, 0x41u, 0xC2u, 0xA2u,
+            0xDEu, 0xADu, 0x00u, 0x00u, 0x00u};
+        ctx.Check(primitives.Size() == expectedPrimitives.size() &&
+                      std::equal(primitives.View().begin(), primitives.View().end(),
+                                 expectedPrimitives.begin(), expectedPrimitives.end()),
+                  "the byte writer appends initial, integer, float, UTF-8, raw and zero data in exact canonical bytes");
+
+        const std::vector<std::uint8_t> primitiveBytes = primitives.Take();
+        ctx.Check(primitiveBytes == expectedPrimitives && primitives.Size() == 0u &&
+                      primitives.View().empty(),
+                  "Take transfers the complete buffer and leaves the writer observably empty");
+
+        CnbByteReader primitiveReader(primitiveBytes, "primitive matrix");
+        const bool readerValues = primitiveReader.Size() == primitiveBytes.size() &&
+            primitiveReader.Position() == 0u &&
+            primitiveReader.Remaining() == primitiveBytes.size() &&
+            primitiveReader.Context() == "primitive matrix" &&
+            primitiveReader.ReadU8() == 0xAAu && primitiveReader.ReadU8() == 0x7Fu &&
+            primitiveReader.ReadU16() == 0x1234u &&
+            primitiveReader.ReadU32() == 0x89ABCDEFu &&
+            primitiveReader.ReadU64() == UINT64_C(0x0123456789ABCDEF) &&
+            primitiveReader.ReadI32() == -2 && primitiveReader.ReadF32() == 1.5f &&
+            primitiveReader.ReadF64() == -2.25 &&
+            primitiveReader.ReadString() == std::string{"A\xC2\xA2", 3u};
+        const std::span<const std::uint8_t> raw = primitiveReader.ReadBytes(2u);
+        primitiveReader.Skip(3u);
+        primitiveReader.RequireExhausted();
+        ctx.Check(readerValues && raw.size() == 2u && raw[0] == 0xDEu && raw[1] == 0xADu &&
+                      primitiveReader.Position() == primitiveBytes.size() &&
+                      primitiveReader.Remaining() == 0u,
+                  "the bounded reader restores every primitive, exposes raw views, skips exactly and reports its cursor state");
+
+        const std::string validUtf8{"A\xC2\xA2\xE2\x82\xAC\xF0\x9F\x98\x80", 10u};
+        const std::string overlongUtf8{"\xC0\xAF", 2u};
+        const std::string surrogateUtf8{"\xED\xA0\x80", 3u};
+        const std::string truncatedUtf8{"\xE2\x82", 2u};
+        const std::string tooLargeUtf8{"\xF4\x90\x80\x80", 4u};
+        ctx.Check(CnbByteReader::IsWellFormedUtf8("") &&
+                      CnbByteReader::IsWellFormedUtf8(validUtf8) &&
+                      !CnbByteReader::IsWellFormedUtf8(overlongUtf8) &&
+                      !CnbByteReader::IsWellFormedUtf8(surrogateUtf8) &&
+                      !CnbByteReader::IsWellFormedUtf8(truncatedUtf8) &&
+                      !CnbByteReader::IsWellFormedUtf8(tooLargeUtf8),
+                  "UTF-8 validation accepts every encoded width and rejects overlong, surrogate, truncated and out-of-range sequences");
+
+        bool badWriterString = false;
+        try
+        {
+            CnbByteWriter invalidString;
+            invalidString.WriteString(overlongUtf8);
+        }
+        catch (const ContentLoadException&)
+        {
+            badWriterString = true;
+        }
+        bool truncatedRead = false;
+        try
+        {
+            CnbByteReader shortReader(std::span<const std::uint8_t>(primitiveBytes).first(3u),
+                                      "short primitive");
+            (void)shortReader.ReadU32();
+        }
+        catch (const ContentLoadException& error)
+        {
+            const std::string message = error.what();
+            truncatedRead = message.find("short primitive") != std::string::npos &&
+                message.find("offset 0") != std::string::npos;
+        }
+        bool explicitFailure = false;
+        try
+        {
+            CnbByteReader failureReader(primitiveBytes, "explicit failure");
+            failureReader.Skip(2u);
+            failureReader.Fail("sentinel reason");
+        }
+        catch (const ContentLoadException& error)
+        {
+            const std::string message = error.what();
+            explicitFailure = message.find("explicit failure") != std::string::npos &&
+                message.find("offset 2") != std::string::npos &&
+                message.find("sentinel reason") != std::string::npos;
+        }
+        ctx.Check(badWriterString && truncatedRead && explicitFailure,
+                  "writer UTF-8, bounded truncation and explicit cursor failures retain their precise context");
+
+        const std::uint64_t max64 = std::numeric_limits<std::uint64_t>::max();
+        bool addOverflow = false;
+        bool multiplyOverflow = false;
+        try { (void)CheckedAdd(max64, 1u, "add probe"); }
+        catch (const ContentLoadException&) { addOverflow = true; }
+        try { (void)CheckedMultiply(max64, 2u, "multiply probe"); }
+        catch (const ContentLoadException&) { multiplyOverflow = true; }
+        ctx.Check(CheckedAdd(max64 - 1u, 1u, "exact add") == max64 &&
+                      CheckedMultiply(max64, 1u, "exact multiply") == max64 &&
+                      CheckedMultiply(max64, 0u, "zero multiply") == 0u &&
+                      addOverflow && multiplyOverflow,
+                  "checked arithmetic accepts exact uint64 boundaries and refuses both wraparound classes");
+
+        const std::vector<std::uint8_t> crcProbe{'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+        const std::uint32_t crc = Crc32c(crcProbe);
+        std::uint32_t continued = Crc32cSeed();
+        continued = Crc32cContinue(continued,
+                                   std::span<const std::uint8_t>(crcProbe).first(4u));
+        continued = Crc32cContinue(continued,
+                                   std::span<const std::uint8_t>(crcProbe).subspan(4u));
+        ctx.Print("CRC-32C path: {}", Crc32cUsesHardwareEXT() ? "hardware" : "portable");
+        ctx.Check(Crc32c({}) == 0u && Crc32cSeed() == 0u && crc == 0xE3069283u &&
+                      continued == crc && Crc32cPortableEXT(crcProbe) == crc,
+                  "CRC-32C matches its standard check vector, incremental fold and portable reference path");
+
+        const auto headerBytes = std::span<const std::uint8_t>(image);
+        const std::uint32_t storedHeaderCrc =
+            static_cast<std::uint32_t>(image[44]) |
+            (static_cast<std::uint32_t>(image[45]) << 8u) |
+            (static_cast<std::uint32_t>(image[46]) << 16u) |
+            (static_cast<std::uint32_t>(image[47]) << 24u);
+        ctx.Check(Crc32c(headerBytes.first(Format::HeaderChecksumCoverage)) == storedHeaderCrc,
+                  "the generic writer stores the public CRC-32C over the exact declared header prefix");
+
         const auto document = CnbDocument::Parse(image, "8x8 tile layer");
         auto input = document.OpenChunk(document.RequireSingle(GridChunk));
         const auto width = input.ReadU32(), height = input.ReadU32();
@@ -195,6 +335,25 @@ CNA_DEMOS_CONSOLE(ReadLimits, {
     .description = "Inspects an aligned tile-layer container and checks every public file/table/metadata budget on "
                    "both writer and reader, plus schema limits and compressed expansion when Zstandard is available.",
     .apis = {"CNA::Content::Cnb::CnbWriter::SetLimits", "CNA::Content::Cnb::CnbWriter::Build",
+             "CNA::Content::Cnb::CheckedAdd", "CNA::Content::Cnb::CheckedMultiply",
+             "CNA::Content::Cnb::CnbByteWriter", "CNA::Content::Cnb::CnbByteWriter::WriteU8",
+             "CNA::Content::Cnb::CnbByteWriter::WriteU16", "CNA::Content::Cnb::CnbByteWriter::WriteU32",
+             "CNA::Content::Cnb::CnbByteWriter::WriteU64", "CNA::Content::Cnb::CnbByteWriter::WriteI32",
+             "CNA::Content::Cnb::CnbByteWriter::WriteF32", "CNA::Content::Cnb::CnbByteWriter::WriteF64",
+             "CNA::Content::Cnb::CnbByteWriter::WriteString", "CNA::Content::Cnb::CnbByteWriter::WriteBytes",
+             "CNA::Content::Cnb::CnbByteWriter::WriteZeros", "CNA::Content::Cnb::CnbByteWriter::Size",
+             "CNA::Content::Cnb::CnbByteWriter::View", "CNA::Content::Cnb::CnbByteWriter::Take",
+             "CNA::Content::Cnb::CnbByteReader", "CNA::Content::Cnb::CnbByteReader::Remaining",
+             "CNA::Content::Cnb::CnbByteReader::Position", "CNA::Content::Cnb::CnbByteReader::Size",
+             "CNA::Content::Cnb::CnbByteReader::Context", "CNA::Content::Cnb::CnbByteReader::ReadU8",
+             "CNA::Content::Cnb::CnbByteReader::ReadU16", "CNA::Content::Cnb::CnbByteReader::ReadU32",
+             "CNA::Content::Cnb::CnbByteReader::ReadU64", "CNA::Content::Cnb::CnbByteReader::ReadI32",
+             "CNA::Content::Cnb::CnbByteReader::ReadF32", "CNA::Content::Cnb::CnbByteReader::ReadF64",
+             "CNA::Content::Cnb::CnbByteReader::ReadBytes", "CNA::Content::Cnb::CnbByteReader::Skip",
+             "CNA::Content::Cnb::CnbByteReader::Fail", "CNA::Content::Cnb::CnbByteReader::IsWellFormedUtf8",
+             "CNA::Content::Cnb::Crc32c", "CNA::Content::Cnb::Crc32cContinue",
+             "CNA::Content::Cnb::Crc32cSeed", "CNA::Content::Cnb::Crc32cUsesHardwareEXT",
+             "CNA::Content::Cnb::Crc32cPortableEXT",
              "CNA::Content::Cnb::CnbWriter::SetMetadata", "CNA::Content::Cnb::CnbWriter::SetExternalReferences",
              "CNA::Content::Cnb::CnbWriter::AddChunk",
              "CNA::Content::Cnb::CnbWriter::SetCompression", "CNA::Content::Cnb::IsCnbCompressionSupported",

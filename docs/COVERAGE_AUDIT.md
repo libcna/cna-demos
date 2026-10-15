@@ -1130,6 +1130,24 @@ All 45 declarations have exact constant, value, helper, enforcement or compile-t
 is a byte/container contract audit; it adds no claim about a platform whose compiler fails the
 header's IEEE assertions or about an unavailable compression implementation.
 
+#### CNB primitive arithmetic, byte cursor/writer and CRC disposition
+
+Focused978 extends `content.custom.cnb_read_limits`, whose accepted and corrupt custom containers
+already consume this primitive layer. It dispositions both public `CnbArithmetic.hpp` helpers, the
+complete public `CnbByteWriter.hpp` and `CnbByteReader.hpp` surfaces, and all five public
+`CnbCrc32c.hpp` functions.
+
+| Declaration family | Disposition |
+|---|---|
+| `CheckedAdd`, `CheckedMultiply` | Exact operations reach `UINT64_MAX`, multiplication by zero remains zero, and one-past addition plus doubled maximum multiplication throw before wraparound. Existing document/count parsing supplies real file-declared uses. |
+| `CnbByteWriter` constructors, writes and buffer accessors | A writer starting with one byte appends U8/U16/U32/U64/I32, binary32/binary64, a two-width UTF-8 string, raw bytes and zeros into one asserted 44-byte little-endian image. `Size` and `View` expose that image; `Take` transfers it exactly and leaves an empty observable buffer. Malformed UTF-8 is refused before output. |
+| `CnbByteReader` construction, state and reads | One bounded cursor restores every value from those exact bytes, reports context/size/position/remaining state, returns a raw span, skips the zero tail and requires exhaustion. Static UTF-8 validation accepts one-through-four-byte sequences and rejects overlong, surrogate, truncated and above-U+10FFFF forms. Truncation and direct `Fail` retain context and exact cursor offset. Existing schema controls separately exercise `ReadCount`, bounded `ReadString` and trailing-byte refusal under copied limits. |
+| `Crc32c`, incremental/seed, portable and hardware-path accessor | Empty input is zero and `123456789` produces standard CRC-32C `0xE3069283`; two-span continuation equals the one-shot value and the portable reference. The runtime reports whether this host selected hardware. The generic writer's stored header checksum equals a direct CRC over exactly the public 44-byte coverage, while the existing one-byte mutation is refused by the parser. |
+
+The full primitive public surface now has exact byte/value, cursor, safety-boundary or real-container
+evidence. Hardware and portable CRC results are compared on this host; no performance claim or
+execution on the alternate host path is made.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,

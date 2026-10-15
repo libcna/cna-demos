@@ -179,6 +179,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::AppendEmbeddedTexture2DChunks` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::AssetTypeIdToString` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::BuildCnbModelFromCnj` -- content.model.pipeline_contract
+- `CNA::Content::Cnb::CheckedAdd` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CheckedMultiply` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::ChunkIdToString` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbAnimationClipChunk::Header` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::CnbAnimationClipChunk::Keys` -- content.cnj.pipeline_assets
@@ -192,9 +194,39 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbAudioFormatMax` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbAudioFormatToString` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbAudioFrameBytes` -- content.sound_effect.cnb_codec
+- `CNA::Content::Cnb::CnbByteReader` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::Context` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::Fail` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::IsWellFormedUtf8` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::Position` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::ReadBytes` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbByteReader::ReadCount` -- content.custom.cnb_read_limits, content.custom.pipeline_components
+- `CNA::Content::Cnb::CnbByteReader::ReadF32` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::ReadF64` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::ReadI32` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbByteReader::ReadString` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::ReadU16` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::ReadU32` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::ReadU64` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::ReadU8` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::Remaining` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbByteReader::RequireExhausted` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbByteReader::Size` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteReader::Skip` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::Size` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::Take` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::View` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::WriteBytes` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::WriteF32` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::WriteF64` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::WriteI32` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::WriteString` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::WriteU16` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::WriteU32` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::WriteU64` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::WriteU8` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbByteWriter::WriteZeros` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbChunkFlags` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbChunkId` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbCompression` -- content.custom.cnb_loader
@@ -341,6 +373,11 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::CnjToCnbResult` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::CompileCnjToCnb` -- content.cnj.pipeline_assets
+- `CNA::Content::Cnb::Crc32c` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::Crc32cContinue` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::Crc32cPortableEXT` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::Crc32cSeed` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::Crc32cUsesHardwareEXT` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::DecodeAnimationClipFromCnb` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::DecodeCurveFromCnb` -- content.cnj.curve, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeDdsAsCnbTextureCube` -- content.cnj.pipeline_assets

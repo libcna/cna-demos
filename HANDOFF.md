@@ -1102,6 +1102,34 @@ Complete956 still marks eight post-baseline IDs absent. Evidence:`/tmp/checkpoin
 codec or unsupported-platform claim is added. Audit `CnbArithmetic.hpp`, `CnbByteReader.hpp`,
 `CnbByteWriter.hpp` and `CnbCrc32c.hpp` next by extending existing custom-schema/read-limit evidence.
 
+Focused **978-CNB-primitive-layer-disposition** extends stable
+`content.custom.cnb_read_limits` from16 to24 controls without adding a catalog ID and dispositions
+both public `CnbArithmetic.hpp` helpers, the complete public `CnbByteWriter.hpp` and
+`CnbByteReader.hpp` surfaces and all five `CnbCrc32c.hpp` functions. One writer beginning with an
+initial byte emits U8/U16/U32/U64/I32, binary32/binary64, two-width UTF-8, raw and zero bytes in an
+exact 44-byte spelling; Size/View expose it and Take transfers it while leaving the writer empty.
+One bounded reader restores every value, context and cursor state, returns a raw span, skips exactly
+and reaches exhaustion. UTF-8 accepts all encoded widths and refuses overlong, surrogate, truncated
+and above-U+10FFFF forms; malformed writer input, truncated reads and explicit Fail retain context.
+
+Checked add/multiply reach exact uint64 boundaries and reject both overflow classes. Empty and
+standard `123456789` CRC-32C values are exact; two-span continuation and the portable reference
+equal the selected path, whose hardware/portable identity is reported. A direct checksum over the
+public 44-byte header prefix equals the CRC stored by the real generic writer. No new CNA issue is
+found.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE-labelled and ten
+OPENGLES3-labelled runs pass24/24 with byte-identical stdout SHA-256
+`d096589f95e38ac33d0c8f49d2c947254e0d3aad7136bef453f1387baaeda93f` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata remains683/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA/C totals remain unchanged; 37 names enter/extend the CNA-extension
+appendix and Complete956 still marks eight post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-978-cnb-primitives/*`, `/tmp/checkpoint-978-cnb-primitives-report.json` and
+`/tmp/checkpoint-978-coverage.md`. The selected and portable CRC implementations agree on this
+host; no performance or alternate-host-path claim is added. Audit `CnbReadLimits.hpp`,
+`CnbChunkCompression.hpp`, `CnbDocument.hpp` and `CnbWriter.hpp` next against the same custom CNB
+workflows.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3264,7 +3292,11 @@ Focused977 closes all45 public `CnbFormat.hpp` declarations in the stable custom
 through exact container constants, chunk/flag/compression wire identities, every asset ID/name,
 custom hashing, logical-name safety and container chunk IDs. Audit `CnbArithmetic.hpp`,
 `CnbByteReader.hpp`, `CnbByteWriter.hpp` and `CnbCrc32c.hpp` next by extending the existing
-read-limit/custom-schema workflows.
+read-limit/custom-schema workflows. Focused978 closes those complete public primitive surfaces with
+an exact 44-byte writer/reader matrix, UTF-8/failure/overflow boundaries, the standard incremental
+CRC-32C vector and a real stored header checksum. Audit `CnbReadLimits.hpp`,
+`CnbChunkCompression.hpp`, `CnbDocument.hpp` and `CnbWriter.hpp` next against the same custom CNB
+workflows.
 The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
