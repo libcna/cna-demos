@@ -3,6 +3,7 @@
 #include <cmath>
 #include <memory>
 #include <optional>
+#include <string_view>
 
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/PixelChecks.hpp"
@@ -10,11 +11,13 @@
 #include "Microsoft/Xna/Framework/Graphics/AnimationPlayer.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GltfImportReportEXT.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Model.hpp"
 #include "Microsoft/Xna/Framework/Graphics/ModelBone.hpp"
 #include "Microsoft/Xna/Framework/Graphics/ModelMesh.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RasterizerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SkinnedEffect.hpp"
+#include "Microsoft/Xna/Framework/Graphics/SkinnedModelEXT.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Viewport.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
@@ -26,6 +29,16 @@ using namespace Microsoft::Xna::Framework::Graphics;
 
 namespace
 {
+    const GltfImportDiagnosticEXT* FindDiagnostic(
+        const GltfImportReportEXT& report, std::string_view code)
+    {
+        for (const GltfImportDiagnosticEXT& diagnostic : report.Diagnostics)
+        {
+            if (diagnostic.Code == code) return &diagnostic;
+        }
+        return nullptr;
+    }
+
     class SkinnedAnimationDemo final : public CnaDemos::DemoGame
     {
     protected:
@@ -75,6 +88,56 @@ namespace
             const float degrees = MathHelper::ToDegrees(std::atan2(upper.M12, upper.M11));
             Context().Print("upper joint at 0.5 s: {:.1f} degrees", degrees);
             Context().CheckNear(degrees, 50.0, 0.01, "at 0.5 s the clip has turned the upper joint by 50 degrees");
+
+            Model mixed =
+                getContentProperty().Load<Model>("models/loose_skinned_rigid_animation");
+            const auto* mixedSkinning =
+                dynamic_cast<const SkinningData*>(mixed.getTagProperty());
+            const auto* mixedRigid =
+                dynamic_cast<const ModelAnimationsEXT*>(mixed.getTagProperty());
+            Context().Check(mixedSkinning != nullptr && mixedRigid == nullptr &&
+                                mixedSkinning->AnimationClips.contains("MixedMotion"),
+                            "a skinned Model retains the mixed source animation only in its joint-palette Tag");
+            if (mixedSkinning != nullptr &&
+                mixedSkinning->AnimationClips.contains("MixedMotion"))
+            {
+                const AnimationClip& mixedClip =
+                    mixedSkinning->AnimationClips.at("MixedMotion");
+                Context().Check(mixedClip.TargetSpace == ClipTargetSpaceEXT::JointPalette &&
+                                    mixedClip.Duration == TimeSpan::FromSeconds(1) &&
+                                    mixedClip.Tracks.size() == 1 &&
+                                    mixedClip.Tracks[0].BoneIndex == 0,
+                                "the retained clip carries only the one joint-palette track");
+                AnimationPlayer mixedPlayer(*mixedSkinning);
+                mixedPlayer.StartClip(mixedClip);
+                mixedPlayer.Update(TimeSpan::FromSeconds(1), false, false);
+                Context().Check(
+                    std::abs(mixedPlayer.GetBoneTransforms()[0]
+                                 .getTranslationProperty().Y - .2f) < 1e-4f &&
+                        std::abs(mixed.getBonesProperty()["RigidControl"]
+                                     ->getTransformProperty().getTranslationProperty().X - .5f) < 1e-4f,
+                    "joint playback reaches its final pose while the dropped rigid node stays at rest");
+            }
+
+            const GltfImportReportEXT& mixedReport =
+                mixed.getGltfImportReportEXTProperty();
+            const auto* unavailable =
+                FindDiagnostic(mixedReport, "animation-targets-unavailable");
+            const auto* rigidDrop =
+                FindDiagnostic(mixedReport, "rigid-animation-dropped-on-skinned-model");
+            Context().Check(unavailable && unavailable->Count == 1 &&
+                                unavailable->Kind == GltfImportDiagnosticKindEXT::DroppedData &&
+                                rigidDrop && rigidDrop->Count == 1 &&
+                                rigidDrop->Kind == GltfImportDiagnosticKindEXT::DroppedData &&
+                                rigidDrop->Subject == "MixedMotion",
+                            "the report names both the unavailable palette target and final rigid-track loss");
+            Context().Check(mixedReport.SkinCount == 1 && mixedReport.AnimationCount == 1 &&
+                                mixedReport.ClipCount == 1 &&
+                                mixedReport.getWarningCountProperty() == 2 &&
+                                mixedReport.getDroppedFeatureCountProperty() == 2 &&
+                                mixedReport.getApproximationCountProperty() == 0 &&
+                                mixedReport.AnythingLost(),
+                            "the mixed import aggregates one retained clip and two explicit loss outcomes");
 
             view_ = Matrix::CreateLookAt(Vector3(0.0f, 2.2f, 8.0f), Vector3(0.0f, 2.2f, 0.0f), Vector3::Up);
             projection_ = Matrix::CreatePerspectiveFieldOfView(MathHelper::PiOver4,
@@ -142,12 +205,15 @@ CNA_DEMOS_GAME(SkinnedAnimationDemo, {
     .title = "Skinned animation",
     .description = "Plays the \"Bend\" clip of a skinned glTF strip: SkinningData from Model.Tag, AnimationPlayer "
                    "(start, advance, seek, loop, clamp and restart) feeding SkinnedEffect::SetBoneTransforms; the pose at 0.5 s "
-                   "is checked numerically and with pixels.",
+                   "is checked numerically and with pixels; a loose mixed-target fixture exposes retained joint "
+                   "motion and reported rigid-track loss on a skinned Model.",
     .apis = {"AnimationPlayer::StartClip", "AnimationPlayer::Update", "AnimationPlayer::GetSkinTransforms",
              "AnimationPlayer::GetWorldTransforms", "AnimationPlayer::GetBoneTransforms",
              "AnimationPlayer::CurrentClip", "AnimationPlayer::CurrentPosition", "SkinningData", "AnimationClip", "Model::Tag",
              "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::EnableDefaultLighting", "ModelMesh::Draw",
-             "Model::Meshes", "ModelMesh::Effects", "SkinnedEffect::View", "SkinnedEffect::Projection"},
+             "Model::Meshes", "ModelMesh::Effects", "SkinnedEffect::View", "SkinnedEffect::Projection",
+             "Model::GltfImportReportEXT", "GltfImportReportEXT::Diagnostics"},
     .tags = {"model", "skinning", "animation", "skeleton", "gltf", "3d"},
     .needs = CnaDemos::Need::ThreeD,
+    .assets = {"models/bending_strip.cnb", "models/loose_skinned_rigid_animation.gltf"},
 })

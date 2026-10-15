@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended skinned-animation coverage with a mixed joint/rigid source clip, proving retained joint
+  playback and exact public diagnostics for the rigid scene-node track that Model.Tag cannot carry.
 - Added a focused loose-glTF animation validation workflow and recorded CNA-DEMOS-ISSUE-093: an
   unknown sampler interpolation token is silently accepted as LINEAR without a warning.
 - Extended node-animation coverage with stable generated clip naming, a nonzero first-key domain,

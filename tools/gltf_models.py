@@ -14,7 +14,8 @@ assets/models/ that is loaded as a loose glTF file at run time.
   SkinnedEffect.
 * turntable.gltf, morph_flag.gltf, camera_rig.gltf, textured_crate.gltf, lit_sphere.gltf,
   slide_rig.gltf, loose_paint_toy.gltf, loose_node_instances.gltf and the three
-  loose_scene_fallback_*.gltf files, loose_animation_diagnostics.gltf and the
+  loose_scene_fallback_*.gltf files, loose_animation_diagnostics.gltf,
+  loose_skinned_rigid_animation.gltf and the
   loose_animation_bad_*.gltf files -- node-animation clips, morph targets with a weights
   animation, glTF cameras, an embedded base-colour texture, KHR_lights_punctual lights,
   STEP/LINEAR/CUBICSPLINE samplers, KHR_materials_variants, rigid shared-mesh placement and scene
@@ -775,6 +776,55 @@ def multiple_skins(path: Path) -> None:
     doc.save(path)
 
 
+def skinned_rigid_animation(path: Path) -> None:
+    """One joint-palette track and one rigid scene-node track in the same named animation."""
+    doc = Document()
+    positions = [(-.2, -.15, .5), (.2, -.15, .5), (.2, .15, .5), (-.2, .15, .5)]
+    attributes = {
+        "POSITION": doc.accessor(positions, "VEC3", minmax=True),
+        "NORMAL": doc.accessor([(0, 0, 1)] * 4, "VEC3"),
+        "TEXCOORD_0": doc.accessor([(.5, .5)] * 4, "VEC2"),
+        "JOINTS_0": doc.accessor([(0, 0, 0, 0)] * 4, "VEC4", UNSIGNED_BYTE),
+        "WEIGHTS_0": doc.accessor([(1, 0, 0, 0)] * 4, "VEC4"),
+    }
+    doc.gltf["meshes"] = [{"name": "SkinnedPatch", "primitives": [{
+        "attributes": attributes,
+        "indices": doc.accessor([0, 1, 2, 0, 2, 3], "SCALAR", UNSIGNED_SHORT,
+                                ELEMENT_ARRAY_BUFFER),
+        "material": 0,
+    }]}]
+    doc.gltf["materials"] = [{"name": "White", "extensions": {"KHR_materials_unlit": {}}}]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+    identity = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+    doc.gltf["skins"] = [{
+        "name": "OneJointRig", "joints": [1], "skeleton": 1,
+        "inverseBindMatrices": doc.accessor([identity], "MAT4", target=None),
+    }]
+    doc.gltf["nodes"] = [
+        {"name": "SkinnedMesh", "mesh": 0, "skin": 0},
+        {"name": "Joint"},
+        {"name": "RigidControl", "translation": [.5, 0, 0]},
+    ]
+    doc.gltf["scenes"] = [{"name": "MixedTargets", "nodes": [0, 1, 2]}]
+    doc.gltf["scene"] = 0
+    times = doc.accessor([0, 1], "SCALAR", target=None)
+    doc.gltf["accessors"][times].update({"min": [0], "max": [1]})
+    doc.gltf["animations"] = [{
+        "name": "MixedMotion",
+        "samplers": [
+            {"input": times,
+             "output": doc.accessor([(0, 0, 0), (0, .2, 0)], "VEC3", target=None)},
+            {"input": times,
+             "output": doc.accessor([(.5, 0, 0), (.8, 0, 0)], "VEC3", target=None)},
+        ],
+        "channels": [
+            {"sampler": 0, "target": {"node": 1, "path": "translation"}},
+            {"sampler": 1, "target": {"node": 2, "path": "translation"}},
+        ],
+    }]
+    doc.save(path)
+
+
 def node_instances(path: Path) -> None:
     """One rigid mesh placed through TRS, a matrix, odd/even composed mirrors and one optional
     EXT_mesh_gpu_instancing node. A second scene carries a decoy that the selected scene excludes."""
@@ -1072,6 +1122,7 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     specular_sampler_quad(assets_root / "models" / "loose_specular_samplers.gltf")
     skin_weight_forms(assets_root / "models" / "loose_skin_weight_forms.gltf")
     multiple_skins(assets_root / "models" / "loose_multi_skin.gltf")
+    skinned_rigid_animation(assets_root / "models" / "loose_skinned_rigid_animation.gltf")
     node_instances(assets_root / "models" / "loose_node_instances.gltf")
     scene_fallbacks(assets_root / "models")
     animation_diagnostics(assets_root / "models" / "loose_animation_diagnostics.gltf")

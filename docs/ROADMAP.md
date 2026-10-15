@@ -8409,3 +8409,19 @@ pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields a
 routes. Evidence:`/tmp/checkpoint-850-animation-*` and `/tmp/checkpoint-850-coverage.md`. No
 screenshot or visual inspection was performed. Audit mixed skinned/rigid animation retention and
 the `rigid-animation-dropped-on-skinned-model` diagnostic next.
+
+## Focused851-mixed-skinned-rigid-animation-retention
+
+The existing `graphics.model.skinned_animation` grows from ten to fifteen controls around a new
+loose one-skin fixture. One `MixedMotion` source clip drives both its joint and a rigid scene node.
+The Model's SkinningData Tag retains exactly the JointPalette track, AnimationPlayer reaches the
+authored joint pose and the rigid ModelBone remains at rest because there is no second Tag carrier.
+
+Exact public report controls distinguish one unavailable palette target from one final
+`rigid-animation-dropped-on-skinned-model` carrier loss naming `MixedMotion`; aggregates expose one
+retained clip and two dropped outcomes. SOFTWARE and OPENGLES3 pass15/15. The `-j3` build, exact
+SOFTWARE CTest, metadata652/0 and both self-test suites pass. Temporary coverage remains302/329
+types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-851-skinned-rigid-*` and `/tmp/checkpoint-851-coverage.md`. Existing pixel readback
+passed; no screenshot or new manual visual inspection was performed. Audit the remaining morph-
+weight track and loose-versus-compiled animation carrier boundaries next.

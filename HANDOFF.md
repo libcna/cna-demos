@@ -321,6 +321,20 @@ members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-850-anim
 mixed skinned/rigid animation retention and the `rigid-animation-dropped-on-skinned-model`
 diagnostic next.
 
+Focused **851-mixed-skinned-rigid-animation-retention** extends
+`graphics.model.skinned_animation` from ten to fifteen controls with one generated loose fixture.
+One source clip targets both a real joint and a rigid scene node. The Model's `SkinningData` Tag
+retains exactly the joint-palette track; AnimationPlayer reaches its authored final pose while the
+rigid ModelBone remains at rest. Exact public report checks distinguish the unavailable palette
+target from the final `rigid-animation-dropped-on-skinned-model` carrier loss, each with count one
+and the latter naming `MixedMotion`; aggregates retain one clip and expose two dropped outcomes.
+SOFTWARE and OPENGLES3 pass15/15. The `-j3` build, exact SOFTWARE CTest, metadata652/0 and tool
+self-tests5/5 and4/4 pass; temporary coverage remains302/329 types,2114/2326 members,169/753
+fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-851-skinned-rigid-*` and
+`/tmp/checkpoint-851-coverage.md`. Existing pixel readback still passed, but no screenshot or new
+manual visual-quality inspection was performed. Audit the remaining morph-weight track and loose-
+versus-compiled animation carrier boundaries next.
+
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
 slice-zero U/V texel centres preserve White/Yellow/Cyan/Magenta row order, while authored uniform
@@ -1898,14 +1912,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-850
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-851
 form the validated652-demo staged state. The glTF scene/node-graph audit is closed with
 CNA-DEMOS-ISSUE-092 retained. Rigid animation channel loss, resampling, duplicate/nonzero times,
 generated clip names and public malformed-sampler refusals now have exact evidence;
-CNA-DEMOS-ISSUE-093 records the silent unknown-interpolation-to-LINEAR fallback. Continue with
-mixed skinned/rigid animation retention and the `rigid-animation-dropped-on-skinned-model`
-diagnostic, extending an existing model workflow where coherent. The complete checkpoint and
-harness findings are recorded in section7.
+CNA-DEMOS-ISSUE-093 records the silent unknown-interpolation-to-LINEAR fallback. Mixed skinned/
+rigid clips now have exact joint-retention and rigid-track-loss evidence. Continue with the
+remaining morph-weight track and loose-versus-compiled animation carrier boundaries, extending
+existing model workflows where coherent. The complete checkpoint and harness findings are recorded
+in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
@@ -3800,6 +3815,25 @@ Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078
 Evidence:`/tmp/checkpoint-850-animation-*` and `/tmp/checkpoint-850-coverage.md`. No screenshot or
 visual-quality inspection was performed. Audit mixed skinned/rigid animation retention and the
 `rigid-animation-dropped-on-skinned-model` diagnostic next.
+
+### Focused851-mixed-skinned-rigid-animation-retention
+
+The existing `graphics.model.skinned_animation` grows from ten to fifteen controls. A generated
+loose fixture authors one `MixedMotion` clip with a joint translation and a rigid scene-node
+translation. The returned Model keeps `SkinningData`, not `ModelAnimationsEXT`, in Tag and retains
+exactly the one JointPalette track. A real AnimationPlayer reaches the joint's authored Y=.2 final
+pose while `RigidControl` remains at its rest X=.5.
+
+The public import report retains SkinCount1, AnimationCount1 and ClipCount1. It separately records
+one `animation-targets-unavailable` palette skip and one
+`rigid-animation-dropped-on-skinned-model` carrier loss whose subject is `MixedMotion`; warning and
+dropped-occurrence aggregates are exactly two with no approximation. SOFTWARE and OPENGLES3 pass
+15/15. The `-j3` build, exact SOFTWARE CTest, metadata652/0 and validator/checkpoint self-tests5/5
+and4/4 pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and
+3078/3205 C routes. Evidence:`/tmp/checkpoint-851-skinned-rigid-*` and
+`/tmp/checkpoint-851-coverage.md`. Existing pixel readback passed; no screenshot or new manual
+visual-quality inspection was performed. No CNA issue appeared. Audit the remaining morph-weight
+track and loose-versus-compiled animation carrier boundaries next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
