@@ -24,6 +24,17 @@ using namespace Microsoft::Xna::Framework::Design;
 
 namespace
 {
+    class ConfigurableMathConverter final : public MathTypeConverter
+    {
+    public:
+        void SetStringConversion(bool enabled) { supportStringConvert = enabled; }
+
+        void SetPropertyDescriptions(const System::ComponentModel::PropertyDescriptorCollection& descriptions)
+        {
+            propertyDescriptions = descriptions;
+        }
+    };
+
     void Properties(CnaDemos::DemoContext& ctx)
     {
         const MathTypeConverter common;
@@ -46,6 +57,18 @@ namespace
         ctx.Print("Color parts: {}", names);
         ctx.Check(parts.getCountProperty() == 4 && parts.getItem(0)->getNameProperty() == "R",
                   "a Color has the parts R, G, B and A");
+
+        ConfigurableMathConverter configured;
+        configured.SetStringConversion(false);
+        const bool disabled = !configured.CanConvertFrom(System::Type::From<std::string>());
+        configured.SetStringConversion(true);
+        ctx.Check(disabled && configured.CanConvertFrom(System::Type::From<std::string>()),
+                  "a subclass controls public string-conversion capability through supportStringConvert");
+        configured.SetPropertyDescriptions(parts);
+        const auto configuredParts = configured.GetProperties(std::any(Color::Orange));
+        ctx.Check(configuredParts.getCountProperty() == parts.getCountProperty() &&
+                      configuredParts.getItem(0) == parts.getItem(0),
+                  "a subclass publishes its propertyDescriptions through GetProperties");
 
         // Editing one part changes the boxed value in place.
         const Vector3Converter vectors;
@@ -157,7 +180,8 @@ CNA_DEMOS_CONSOLE(Properties, {
                    "through its extra Translation part -- what a property grid does.",
     .apis = {"MathTypeConverter::MathTypeConverter", "MathTypeConverter::GetProperties",
              "MathTypeConverter::GetPropertiesSupported",
-             "MathTypeConverter::GetCreateInstanceSupported", "ColorConverter::CreateInstance",
+             "MathTypeConverter::GetCreateInstanceSupported", "MathTypeConverter::propertyDescriptions",
+             "MathTypeConverter::supportStringConvert", "ColorConverter::CreateInstance",
              "PointConverter::CreateInstance", "Vector2Converter::CreateInstance",
              "Vector3Converter::CreateInstance", "Vector4Converter::CreateInstance",
              "QuaternionConverter::CreateInstance", "RectangleConverter::CreateInstance",

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed both Design fields with a subclass that proves their public effects on string conversion
+  capability and published property descriptors.
 - Closed all 11 Audio fields by tying ContentVersion to loaded XACT assets, exercising AsAuthored
   release behavior and verifying microphone name plus stopped/started transitions on dummy input.
 - Closed all 78 root `Microsoft.Xna.Framework` fields through existing geometry behavior plus

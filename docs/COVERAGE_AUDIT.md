@@ -1025,6 +1025,20 @@ under both renderer labels, and their exact SOFTWARE CTests pass ten repetitions
 build uses `-j3`, metadata is659/0 and both validator suites pass. Fields move426->431/753 and Audio
 closes at11/11. Evidence:`/tmp/checkpoint-902-*`. No listening or microphone-hardware claim is made.
 
+### Design protected fields
+
+`design.type_converter.properties` now includes a focused `MathTypeConverter` subclass that uses
+the two documented protected field names directly. Toggling `supportStringConvert` changes the
+public `CanConvertFrom(string)` answer from false to true. Assigning Color's real descriptor
+collection to `propertyDescriptions` makes the same count and first descriptor identity visible
+through public `GetProperties`. These checks demonstrate one shared state source for each field,
+which is the subclass-extension contract; they do not merely read protected storage.
+
+Both renderer-labelled runs pass12/12 with byte-identical output and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions. The warning-free build uses `-j3`, metadata is659/0 and both
+validator suites pass. Fields move431->433/753 and Design closes at2/2. Evidence:
+`/tmp/checkpoint-903-*`.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

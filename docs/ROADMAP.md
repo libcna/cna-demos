@@ -9330,3 +9330,17 @@ build uses at most three jobs, metadata is659/0 and both validator suites pass. 
 426->431/753 fields. Evidence:`/tmp/checkpoint-902-*`. Audit Design's two protected
 MathTypeConverter fields next through a focused subclass only if their effect is not already fully
 observable through the existing concrete converters.
+
+## Focused903-all-public-Design-fields
+
+The stable `design.type_converter.properties` workflow grows10->12 controls and closes Design at
+2/2 fields. A small application-defined MathTypeConverter subclass writes the documented protected
+`supportStringConvert` field and proves that public CanConvertFrom(string) follows it. It then
+assigns real Color descriptors to `propertyDescriptions` and observes the same collection through
+public GetProperties. This is the intended subclass extension behavior, not a storage-only check.
+
+Both renderer-labelled runs pass12/12 with byte-identical output and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions. The warning-free build uses at most three jobs, metadata is
+659/0 and both validator suites pass. Coverage moves431->433/753 fields. Evidence:
+`/tmp/checkpoint-903-*`. Audit the14 remaining Net fields next, preferring existing local-session
+state transitions and explicit fixed capacity constants over synthetic enum casts.
