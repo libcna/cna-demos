@@ -4076,3 +4076,26 @@ pass. Generated XNA/C totals remain 303/329 types, 2114/2326 members, 674/753 fi
 routes; 14 codec names enter the CNA-extension appendix. Complete948 marks all three post-baseline
 IDs absent. Evidence: `/tmp/checkpoint-952-cnb-sound-codec/*`. No audio device, playback or CNA
 defect is involved.
+
+### Focused953 Song pipeline components
+
+The new renderer-free `content.song.pipeline_components` closes the ordinary public
+`SongContentPipeline.hpp` workflow in 16 controls. It proves stable type and parameter names,
+`ImportedSongSource` defaults, the ordinary and named WAV importer descriptors, processor types and
+four distinct validation failures, exact writer schema identity, and combined registration where
+WAV remains a SoundEffect by convention while WAV-as-Song resolves explicitly.
+
+A committed Ogg source travels through the real pipeline without decoding or embedding its media
+bytes. A caller probe supplies duration; the build emits deterministic CNB metadata, one primary
+dependency, one runtime XREF and one deployment file. Parameter overrides move the deployed stream
+and replace the display name and duration together. A named real WAV takes the same external Song
+shape. Direct processing proves authored compatibility-container metadata is the fallback, while a
+default importer records unknown duration as zero and an empty source fails at the Import stage.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 16/16 with byte-identical stdout SHA-256
+`a58bef89ae57c252c44a168e2bef786649025e3e9c2bd7465d0a54dff862cfc4` and empty stderr. The
+warning-free build uses `-j3`; metadata is 673/0; the exact SOFTWARE CTest and both validator suites
+pass. Generated XNA/C totals remain 303/329 types, 2114/2326 members, 674/753 fields and 3078/3205
+routes; 28 component names enter the CNA-extension appendix. Complete948 marks all four post-
+baseline IDs absent. Evidence: `/tmp/checkpoint-953-song-pipeline/*`. No media decoder, audio
+device, playback or CNA defect is claimed.

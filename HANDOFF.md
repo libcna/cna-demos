@@ -460,6 +460,23 @@ validator suites pass. Generated XNA/C totals remain unchanged; 14 codec names e
 extension appendix and Complete948 correctly marks all three post-baseline IDs absent. Evidence:
 `/tmp/checkpoint-952-cnb-sound-codec/*`. No audio device, playback or CNA defect is involved.
 
+Focused **953-Song-pipeline-components** adds the 673rd source/catalog ID,
+`content.song.pipeline_components`, and closes the ordinary public
+`SongContentPipeline.hpp` workflow in 16 controls. It covers all stable type/parameter identities,
+`ImportedSongSource` defaults, both importer descriptors, processor routing and exact validation
+faults, writer schema identity, combined SoundEffect/Song WAV selection, real Ogg and named WAV
+builds, caller duration probing, byte determinism, metadata overrides, authored compatibility
+metadata, the unavailable-duration zero, empty-source refusal, and the separation between build
+dependency, runtime XREF and deployed stream.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 16/16 with byte-identical stdout SHA-256
+`a58bef89ae57c252c44a168e2bef786649025e3e9c2bd7465d0a54dff862cfc4` and empty stderr. The
+warning-free build uses at most three jobs, metadata is 673/0, the exact SOFTWARE CTest and both
+validator suites pass. Generated XNA/C totals remain unchanged; 28 Song component names enter the
+CNA-extension appendix and Complete948 marks all four post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-953-song-pipeline/*`. No media decoder, audio device, playback or CNA defect is
+claimed.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2583,7 +2600,8 @@ requiring an audio device; the adjacent pointer-only `ForeignContentObjectEXT` i
 dispositioned through existing C reader/dictionary/model evidence. Focused951 records
 CNA-DEMOS-ISSUE-105 for the sole named-only importer selection defect. Focused952 closes the whole
 public CNB SoundEffect codec, including format helpers, compatibility and validation behavior.
-Continue the next coherent public CNA content header family.
+Focused953 closes the public Song pipeline, including external-stream deployment and the named
+WAV-as-Song route. Audit the adjacent public `CnbMediaCodec.hpp` Song/Video contract next.
 The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame

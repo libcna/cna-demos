@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**672 demos** in 18 categories. Kinds: console 174, game 296, standalone 202. Automation: automated 636, manual 3, smoke-only 33.
+**673 demos** in 18 categories. Kinds: console 175, game 296, standalone 202. Automation: automated 637, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 50 | 50 | 0 | 0 | 34 / 0 / 13 / 0 / 3 | 34 / 0 / 13 / 0 / 3 |
+| content | 51 | 51 | 0 | 0 | 34 / 0 / 13 / 0 / 4 | 34 / 0 / 13 / 0 / 4 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`.
-- OPENGLES3: absent from report: `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`.
+- SOFTWARE: absent from report: `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`.
+- OPENGLES3: absent from report: `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -290,6 +290,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentValue::StableType` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentWriteResult::additionalOutputs` -- content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentWriteResult::warnings` -- content.custom.pipeline_diagnostics
+- `CNA::Content::Pipeline::ImportedSongSource` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::ImportedSongSourceType` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::ImportedSoundType` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::MakeProcessedSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedFrameBytes` -- content.sound_effect.imported_pcm
@@ -297,15 +299,35 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ProcessedPcmEncoding` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedPcmEncodingName` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedPcmSampleBytes` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::ProcessedSongType` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::ProcessedSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedSoundEffectType` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::RegisterCnjContentPipeline` -- content.custom.source_root_capabilities
+- `CNA::Content::Pipeline::RegisterSongContentPipeline` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::RegisterSoundEffectContentPipeline` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::RegisterTexture2DContentPipeline` -- content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::RegisterXnaImporter` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline
 - `CNA::Content::Pipeline::RunContentCompiler` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication, content.custom.xml_xnb_pipeline
+- `CNA::Content::Pipeline::SongContentWriter::Identity` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongContentWriter::InputType` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongContentWriter::OutputSchemaIdentities` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongContentWriter::Write` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongDurationMsParameter` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongDurationProbe` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongImporter::Identity` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongImporter::Import` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongImporter::OutputTypes` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongImporter::SongImporter` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongImporter::SourceExtensions` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongNameParameter` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongProcessor::Identity` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongProcessor::InputType` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongProcessor::OutputType` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongProcessor::Process` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongProcessor::ValidateParameters` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::SongStreamReferenceParameter` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::SoundEffectContentWriter::Identity` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::SoundEffectContentWriter::InputType` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::SoundEffectContentWriter::OutputSchemaIdentities` -- content.sound_effect.pipeline_components
@@ -321,6 +343,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::WavImporter::Import` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::WavImporter::OutputTypes` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::WavImporter::SourceExtensions` -- content.sound_effect.pipeline_components
+- `CNA::Content::Pipeline::WavSongImporter::Identity` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::WavSongImporter::Import` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::WavSongImporter::OutputTypes` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::WavSongImporter::SelectedByNameOnly` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::WavSongImporter::SourceExtensions` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::WavSongImporter::WavSongImporter` -- content.song.pipeline_components
 - `CNA::DesktopOS` -- core.platform.host_identity
 - `CNA::Devices::DisplayInfo::ContentScale` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::DisplayInfo::SafeArea` -- devices.display_info.scale_and_safe_area

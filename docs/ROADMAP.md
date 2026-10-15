@@ -10172,3 +10172,24 @@ warning-free `-j3` build, exact SOFTWARE CTest, metadata 672/0 and both validato
 Generated totals remain unchanged; 14 codec names enter the CNA-extension appendix and Complete948
 marks all three newer IDs absent. Evidence: `/tmp/checkpoint-952-cnb-sound-codec/*`. Continue the
 next coherent public CNA content header family.
+
+## Focused953-Song-pipeline-components
+
+The new `content.song.pipeline_components` closes the public
+`CNA/Content/Pipeline/SongContentPipeline.hpp` workflow in 16 controls. It covers every stable
+type/parameter identity, imported-source defaults, ordinary and named-WAV importer descriptors,
+processor routing and parameter boundaries, exact writer schema identity, and combined route
+selection where a WAV stays a SoundEffect unless the Song reading is named.
+
+A real Ogg source proves caller-supplied duration probing and deterministic external-media Song
+output. Build dependency, runtime XREF and deployment file remain distinct; overrides move the
+stream and replace its display metadata; an explicitly named real WAV follows the same Song route;
+authored compatibility metadata survives direct processing; absent duration becomes zero; and an
+empty source fails at Import. No compressed media bytes are decoded or embedded.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 16/16 with the same stdout SHA-256
+`a58bef89ae57c252c44a168e2bef786649025e3e9c2bd7465d0a54dff862cfc4` and empty stderr. The
+warning-free `-j3` build, exact SOFTWARE CTest, metadata 673/0 and both validator suites pass.
+Generated totals remain unchanged; 28 names enter the CNA-extension appendix and Complete948 marks
+all four newer IDs absent. Evidence: `/tmp/checkpoint-953-song-pipeline/*`. Audit the adjacent
+public `CnbMediaCodec.hpp` Song/Video contract next.
