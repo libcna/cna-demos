@@ -561,6 +561,35 @@ appendix. Complete956 marks both post-baseline IDs absent. Evidence:
 clean and concurrency evidence; no CNA defect appeared. Audit the remaining core
 `ContentPipeline.hpp` declarations next.
 
+Focused **959-content-pipeline-generated-dependency-and-disposition** closes the remaining
+ordinary public behavior in `ContentPipeline.hpp` without adding a catalog ID. The existing
+`content.custom.incremental_compiler` now runs a separate real compiler node whose processor calls
+`ContentProcessorContext::AddGeneratedDependency` for a contained generated factor. The published
+manifest retains kind `Generated` and the root-relative identity; unchanged bytes skip importer,
+processor and writer with byte-identical manifest text; editing the factor rebuilds the node and
+changes its decoded score from 10 to 30. The standalone now passes 28/28 controls.
+
+A Clang AST audit dispositions all 234 public declarations at pinned CNA `d23e139de`: 199 public
+record declarations, 23 enumerators, seven namespace functions, four constants and one alias.
+Existing real builds cover routing, environment, component/schema identity, values, diagnostics,
+all four dependency kinds, runtime/deployment/nested outputs, logging, registry freezing,
+Build/ImportAndProcess and every pipeline error context. Plain aggregate defaults, equality/order,
+stable enum labels, discovery views, forwarding context getters, deleted copy operations, maximum-
+count saturation and internal/service bridges are explicitly classified rather than inflated into
+synthetic demos. The audit also corrects stale text: Focused958 directly covers manifest
+Set/Serialize/Clear, and Song/Video already inspect ContentParameterError Fault/Parameter.
+
+The warning-free `-j3` build passes. Ten SOFTWARE and ten OPENGLES3-labelled runs each pass 28/28;
+after normalizing only private temporary-directory suffixes, stdout is byte-identical with SHA-256
+`e8c1d170c8260b42c6670efe62d0d603066bc8e49fc2c73c6e4fe8efd5e24f1c` and expected refusal stderr
+is byte-identical with SHA-256
+`a07e20634b2243c63b33fdefc5d0c24d0bf639f91fb95374404ebea0d27c0cd4`.
+The exact SOFTWARE CTest, metadata validation (677/0) and both validator self-test suites pass.
+Generated coverage totals remain unchanged; AddGeneratedDependency enters the CNA-extension
+appendix and Complete956 still correctly marks only the two post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-959-generated-*`. No CNA defect appeared. Audit the compact public
+`ContentCompiler.hpp` service/options surface next, preserving this actual coordinator evidence.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2661,9 +2690,11 @@ HIGHEST PRIORITY: Complete956 is the authoritative675-demo full-build/full-runti
 absorbs Focused949-955 after Complete948. Continue the deeper public API behavior audit with the
 next coherent content-header family. Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
-helpers while retaining compiler-produced manifest behavior in its existing workflows. Audit the
-remaining `ContentPipeline.hpp` declarations next and classify trivial forwarding/defaults before
-adding or extending a demo. The earlier native
+helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
+closes all 234 public `ContentPipeline.hpp` declarations by adding the missing generated-dependency
+workflow and recording explicit dispositions for forwarding, value, label and stress-only members.
+Audit `ContentCompiler.hpp` next, especially service-option propagation and the two embedding
+overloads, before adding or extending a demo. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds

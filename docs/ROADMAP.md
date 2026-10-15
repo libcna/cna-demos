@@ -300,7 +300,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (46 demos; remaining below)
+## Phase 8 -- content 🟨 (55 demos; remaining below)
 
 - ✅ Existing `content.texture_processor.resize_to_power_of_two` now verifies XNB-targeted
   Reach/HiDef mipmap processing, resized payloads matching its rendered CNB and the distinct native
@@ -425,15 +425,22 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `content.custom.incremental_compiler`: real RunContentCompiler registry factory and manifest,
   explicit pre-built-registry service-option refusal, synchronized concurrent factories on
   disjoint roots with distinct service options/registries, unchanged skips, primary/aliased shared
-  dependency invalidation, failed-import preservation, repair,
+  dependency invalidation, generated-dependency recording/skipping/invalidation, failed-import
+  preservation, repair,
   missing-output rebuild, writer-version identity, same-length/timestamp output tampering, corrupt
   manifest recovery, frozen-registry refusal and ownership-aware clean. Typed per-asset Bonus
   changes rebuild only the affected node, whitespace-only configuration edits skip, and source
   removal/reintroduction collects/restores only its owned output. Remapping an external-root alias
-  to identical bytes skips both nodes with an identical manifest (25 child checks). Clean
+  to identical bytes skips both nodes with an identical manifest (28 child checks). Clean
   rejects changed owned bytes without deleting an untouched peer or the manifest.
   multi_artifact_publication separately covers deployment invalidation, partial publication and
   retry, plus independent-process same-root exclusion and stale-lease recovery.
+- ✅ `content.custom.build_configuration`: the complete public versioned configuration parser,
+  deterministic assets/source roots, project and per-asset formats, all five parameter variants,
+  and contextual schema/path/value refusals (11 checks).
+- ✅ `content.custom.build_manifest`: direct manifest construction, ordered mutation and
+  serialization, all fingerprint domains, multi-output/deployment ownership and malformed-record
+  refusal (14 checks), complementing the compiler-produced manifest workflows above.
 - ✅ `content.custom.intermediate_external_references`: filename versus inline data, table
   deduplication, relocation, wrapper/null identity and invalid references. Nine child checks pass;
   native emitted TargetType alias round-trip exposes ISSUE-046. File imports/build publication

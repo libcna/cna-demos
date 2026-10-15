@@ -77,7 +77,12 @@ namespace
     class ScoreProcessor final : public Pipeline::ContentProcessor
     {
     public:
-        Pipeline::ContentComponentIdentity Identity() const override { return {"CnaDemos.ScoreProcessor", "2"}; }
+        explicit ScoreProcessor(bool useGeneratedFactor = false)
+            : useGeneratedFactor_(useGeneratedFactor) {}
+        Pipeline::ContentComponentIdentity Identity() const override
+        {
+            return {"CnaDemos.ScoreProcessor", useGeneratedFactor_ ? "3-generated" : "2"};
+        }
         std::string InputType() const override { return SourceType; }
         std::string OutputType() const override { return ScoreType; }
         void ValidateParameters(const Pipeline::ContentProcessorParameters& parameters) const override
@@ -94,10 +99,19 @@ namespace
         {
             ++processes;
             const auto multiplier = context.ResolveSourceDependency("@shared/multiplier.factor");
+            int generatedFactor = 1;
+            if (useGeneratedFactor_)
+            {
+                context.AddGeneratedDependency("generated.factor");
+                generatedFactor = ReadPositive(context.SourceRoot() / "generated.factor");
+            }
             const auto* bonus = context.Parameters().Find("Bonus");
             const int addition = bonus ? static_cast<int>(std::get<std::int64_t>(*bonus)) : 0;
-            return Pipeline::ContentValue::Create(ScoreType, input.Get<int>() * ReadPositive(multiplier) + addition);
+            return Pipeline::ContentValue::Create(
+                ScoreType, input.Get<int>() * ReadPositive(multiplier) * generatedFactor + addition);
         }
+    private:
+        bool useGeneratedFactor_ = false;
     };
     class ScoreWriter final : public Pipeline::ContentTypeWriter
     {
@@ -276,6 +290,60 @@ int main()
                       imports == importsBeforeParallel + 2 && processes == processesBeforeParallel + 2 &&
                       writes == writesBeforeParallel + 2,
                   "concurrent disjoint roots publish only their independently processed score");
+            imports = 0;
+            processes = 0;
+            writes = 0;
+
+            // A processor-generated input has a distinct manifest kind but participates in the
+            // same byte-based incremental invalidation as an authored source dependency.
+            const auto generated = directory / "generated";
+            for (const auto& path : {generated / "source", generated / "shared"})
+                std::filesystem::create_directories(path);
+            WriteFile(generated / "source" / "solo.score", "5\n");
+            WriteFile(generated / "source" / "generated.factor", "1\n");
+            WriteFile(generated / "shared" / "multiplier.factor", "2\n");
+            WriteFile(generated / "source" / Pipeline::ContentBuildConfigurationFileName,
+                      R"json({"format":"CNA.ContentPipeline.Config","version":1,"sourceRoots":{"shared":"../shared"},"assets":{}})json");
+            const Pipeline::ContentPipelineRegistryFactory generatedFactory =
+                [](const Pipeline::ContentCompilerOptions&) {
+                    auto registry = std::make_shared<Pipeline::ContentPipelineRegistry>();
+                    registry->RegisterImporter(std::make_shared<ScoreImporter>());
+                    registry->RegisterProcessor(std::make_shared<ScoreProcessor>(true));
+                    registry->RegisterWriter(std::make_shared<ScoreWriter>("generated"));
+                    return registry;
+                };
+            const std::vector<std::filesystem::path> generatedArguments{
+                "build", generated / "source", "-o", generated / "output", "--format", "cnb",
+                "--workers", "1", "--quiet"};
+            const int generatedInitial =
+                Pipeline::RunContentCompiler(generatedArguments, generatedFactory);
+            const auto generatedManifest = Pipeline::ContentBuildManifest::Parse(
+                ReadText(generated / "output" / Pipeline::ContentBuildManifestFileName));
+            const auto* generatedEntry = generatedManifest.Find("solo");
+            const bool hasGeneratedFactor = generatedEntry != nullptr &&
+                std::any_of(generatedEntry->dependencies.begin(), generatedEntry->dependencies.end(),
+                            [](const Pipeline::ContentDependency& dependency) {
+                                return dependency.kind == Pipeline::ContentDependencyKind::Generated &&
+                                    dependency.sourceRoot.empty() &&
+                                    dependency.identity == "generated.factor";
+                            });
+            check(generatedInitial == 0 && imports == 1 && processes == 1 && writes == 1 &&
+                      ReadScore(generated / "output" / "solo.cnb") == 10 && hasGeneratedFactor,
+                  "a processor records its contained generated factor with the distinct manifest dependency kind");
+            const auto generatedManifestText = ReadText(
+                generated / "output" / Pipeline::ContentBuildManifestFileName);
+            const int generatedUnchanged =
+                Pipeline::RunContentCompiler(generatedArguments, generatedFactory);
+            check(generatedUnchanged == 0 && imports == 1 && processes == 1 && writes == 1 &&
+                      ReadText(generated / "output" / Pipeline::ContentBuildManifestFileName) ==
+                          generatedManifestText,
+                  "unchanged generated dependency bytes preserve the manifest and skip every component");
+            WriteFile(generated / "source" / "generated.factor", "3\n");
+            const int generatedEdited =
+                Pipeline::RunContentCompiler(generatedArguments, generatedFactory);
+            check(generatedEdited == 0 && imports == 2 && processes == 2 && writes == 2 &&
+                      ReadScore(generated / "output" / "solo.cnb") == 30,
+                  "editing the recorded generated dependency rebuilds its node and changes the compiled value");
             imports = 0;
             processes = 0;
             writes = 0;

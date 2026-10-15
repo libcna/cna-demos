@@ -304,10 +304,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentProcessor::SelectedByNameOnly` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentProcessorContext::AddContentBuildDependency` -- content.custom.dependency_graph
 - `CNA::Content::Pipeline::ContentProcessorContext::AddDeploymentFile` -- content.custom.multi_artifact_publication
+- `CNA::Content::Pipeline::ContentProcessorContext::AddGeneratedDependency` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessorContext::AddRuntimeReference` -- content.custom.dependency_graph, content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentProcessorContext::LogImportant` -- content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ContentProcessorContext::Parameters` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessorContext::ResolveSourceDependency` -- content.custom.incremental_compiler
+- `CNA::Content::Pipeline::ContentProcessorContext::SourceRoot` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessorParameters::Empty` -- content.custom.build_configuration
 - `CNA::Content::Pipeline::ContentProcessorParameters::Find` -- content.custom.build_configuration
 - `CNA::Content::Pipeline::ContentProcessorParameters::Set` -- content.custom.pipeline_components
