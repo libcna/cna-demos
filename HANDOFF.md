@@ -197,6 +197,10 @@ file has no scenes, and identity-root placement for otherwise bare meshes. Both 
 Focused847 confirms that leakage as CNA-DEMOS-ISSUE-092. An explicit empty default scene revives a
 mesh referenced only by another scene, parents it to CNA's synthetic root and reports one placement
 despite reporting zero source nodes. Both renderers fail only that invariant among23 controls.
+Focused848 closes the remaining meaningful scene/node-graph boundaries: a repeated selected-scene
+root is de-duplicated, while a cyclic hierarchy outside the selected scene is still rejected by
+structural validation through ContentLoadException. Both renderers retain only ISSUE-092 among24
+controls; pathological depth remains CNA stress-test territory.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -274,6 +278,18 @@ only the named invariant. The exact known-issue SOFTWARE CTest passes through `W
 is651/0, tool self-tests pass5/5 and4/4, and temporary coverage is unchanged. Evidence:
 `/tmp/checkpoint-847-empty-scene-*` and `/tmp/checkpoint-847-coverage.md`. No screenshot or visual
 claim was added. Continue duplicate-root and malformed/cyclic hierarchy boundaries next.
+
+Focused **848-glTF-node-graph-boundaries** closes those two remaining application-sized cases in
+the same ID. The implicit-first fixture now names the selected root twice and also shares it with
+the unselected scene; exact one-node/one-placement counts prove de-duplication. A separate file has
+one valid selected mesh plus an orphan two-node cycle. Parsing succeeds, but the production loader
+rejects the whole structurally invalid file through ContentLoadException before traversal. SOFTWARE
+and OPENGLES3 each run24 controls with only the established ISSUE-092 failure. The exact known-
+issue SOFTWARE CTest, warning-free `-j3` build, metadata651/0 and both self-test suites pass;
+temporary coverage remains unchanged. Evidence:`/tmp/checkpoint-848-node-graph-*` and
+`/tmp/checkpoint-848-coverage.md`. A 10,000-deep chain and pointer-corruption shapes stay in CNA's
+internal stress tests; they are not coherent application demos. The scene/node-graph audit is now
+closed. Audit glTF animation-channel retention and loss boundaries next.
 
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
@@ -1852,10 +1868,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-847
-form the validated651-demo staged state. CNA-DEMOS-ISSUE-092 now records the selected-empty-scene
-fallback leak. Continue the remaining glTF node-graph audit with duplicate-root de-duplication and
-malformed/cyclic hierarchy refusal before leaving scene selection. The complete checkpoint and
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-848
+form the validated651-demo staged state. The glTF scene/node-graph audit is closed with
+CNA-DEMOS-ISSUE-092 retained. Continue the importer behavior audit with animation-channel
+retention/loss boundaries, especially channels outside the selected scene and unsupported target
+paths, extending existing animation/report demos where coherent. The complete checkpoint and
 harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
@@ -3690,6 +3707,23 @@ build, metadata651/0, validator/checkpoint self-tests5/5 and4/4 pass, and tempor
 `/tmp/checkpoint-847-empty-scene-*` and `/tmp/checkpoint-847-coverage.md`. No CNA source was changed
 or upstream message sent. Continue duplicate-root de-duplication and malformed/cyclic hierarchy
 refusal next.
+
+### Focused848-glTF-node-graph-boundaries
+
+The implicit-first fixture now repeats node0 in the selected root array while the unselected scene
+also references it. The existing exact one-bone, one-mesh and one-placement controls therefore
+prove that scene-root aliases are de-duplicated rather than creating overlapping Model meshes. A
+sixth fixture supplies one valid selected mesh and an orphan CycleA/CycleB loop. cgltf parses this
+shape because no scene root participates in the cycle, then CNA's production structural validation
+rejects it through ContentLoadException before scene traversal.
+
+SOFTWARE and OPENGLES3 each run24 controls and retain exactly the one ISSUE-092 assertion failure.
+The exact known-issue SOFTWARE CTest passes via `WILL_FAIL`; the warning-free `-j3` build,
+metadata651/0 and validator/checkpoint self-tests5/5 and4/4 pass. Temporary coverage remains
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-848-node-graph-*` and `/tmp/checkpoint-848-coverage.md`. Pathological-depth and
+pointer-corruption guards remain correctly owned by CNA's internal stress tests. This closes the
+meaningful public scene/node-graph audit; continue with animation-channel retention/loss boundaries.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

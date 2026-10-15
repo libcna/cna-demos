@@ -196,7 +196,7 @@ namespace
                           implicitMeshes.TryGetValue("ImplicitShape", implicitMesh) &&
                           implicitMesh != nullptr &&
                           implicitMesh->getParentBoneProperty() == implicitFirst,
-                      "omitting the default-scene index selects only the first declared scene");
+                      "omitting the default-scene index selects the first scene and de-duplicates its repeated root");
             const GltfImportReportEXT& implicitReport =
                 implicit.getGltfImportReportEXTProperty();
             ctx.Check(implicitReport.NodeCount == 1 && implicitReport.MeshInstanceCount == 1 &&
@@ -289,6 +289,20 @@ namespace
                       "(CNA-DEMOS-ISSUE-092)");
             ctx.Check(emptySceneRefused || exactEmptySceneLeak,
                       "the known empty-scene leak is isolated to one root-placed mesh with no imported source node");
+
+            bool cycleRefused = false;
+            std::string cycleMessage;
+            try
+            {
+                (void)getContentProperty().Load<Model>("models/loose_scene_fallback_cycle");
+            }
+            catch (const Content::ContentLoadException& error)
+            {
+                cycleRefused = true;
+                cycleMessage = error.what();
+            }
+            ctx.Check(cycleRefused && cycleMessage.find("structural validation") != std::string::npos,
+                      "a cyclic hierarchy outside the selected scene is still rejected structurally");
 
             ready_ = true;
         }
@@ -394,7 +408,7 @@ CNA_DEMOS_GAME(NodeInstancesDemo, {
     .deterministic = true,
     .assets = {"models/loose_node_instances.gltf", "models/loose_scene_fallback_implicit.gltf",
                "models/loose_scene_fallback_nodes.gltf", "models/loose_scene_fallback_meshes.gltf",
-               "models/loose_scene_fallback_empty.gltf"},
+               "models/loose_scene_fallback_empty.gltf", "models/loose_scene_fallback_cycle.gltf"},
     .restrictions = "EXT_mesh_gpu_instancing remains unsupported; CNA-DEMOS-ISSUE-092 records that an explicitly "
                     "selected empty scene incorrectly revives an unselected mesh at the identity root.",
     .knownIssue = "CNA-DEMOS-ISSUE-092",

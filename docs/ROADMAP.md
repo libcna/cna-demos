@@ -8353,3 +8353,18 @@ control pins the exact leaked Model/report shape. The exact known-issue SOFTWARE
 coverage remains unchanged. Evidence:`/tmp/checkpoint-847-empty-scene-*` and
 `/tmp/checkpoint-847-coverage.md`. Continue duplicate-root and malformed/cyclic hierarchy
 boundaries next.
+
+## Focused848-glTF-node-graph-boundaries
+
+The implicit-first fixture now repeats its selected root and shares it with the unselected scene;
+the existing exact one-node/one-placement checks prove de-duplication. A separate fixture combines
+one valid selected mesh with a two-node cycle outside every scene. The parser accepts that shape,
+but the production loader rejects its structural invalidity through ContentLoadException before
+scene traversal.
+
+SOFTWARE and OPENGLES3 each run24 controls and fail only the established ISSUE-092 invariant. The
+exact known-issue SOFTWARE CTest passes through `WILL_FAIL`; the warning-free `-j3` build,
+metadata651/0 and both self-test suites pass. Temporary coverage remains unchanged. Evidence:
+`/tmp/checkpoint-848-node-graph-*` and `/tmp/checkpoint-848-coverage.md`. Very deep or pointer-
+corrupted graphs remain CNA internal stress-test concerns. This closes the meaningful public
+scene/node-graph audit; continue with glTF animation-channel retention/loss boundaries.

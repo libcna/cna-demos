@@ -850,7 +850,8 @@ def scene_fallbacks(directory: Path) -> None:
         {"name": "ImplicitSecond", "mesh": 0, "translation": [.25, 0, 0]},
     ]
     implicit.gltf["scenes"] = [
-        {"name": "First", "nodes": [0]}, {"name": "Second", "nodes": [1]}]
+        # The selected scene deliberately names the same root twice; it must still be imported once.
+        {"name": "First", "nodes": [0, 0]}, {"name": "Second", "nodes": [0, 1]}]
     # Deliberately omit the top-level `scene`: CNA selects the first declared scene.
     implicit.save(directory / "loose_scene_fallback_implicit.gltf")
 
@@ -873,6 +874,16 @@ def scene_fallbacks(directory: Path) -> None:
         {"name": "SelectedEmpty", "nodes": []}, {"name": "Unselected", "nodes": [0]}]
     empty.gltf["scene"] = 0
     empty.save(directory / "loose_scene_fallback_empty.gltf")
+
+    cyclic = marker_document(["ReachableShape"])
+    cyclic.gltf["nodes"] = [
+        {"name": "Reachable", "mesh": 0},
+        {"name": "CycleA", "children": [2]},
+        {"name": "CycleB", "children": [1]},
+    ]
+    cyclic.gltf["scenes"] = [{"name": "Selected", "nodes": [0]}]
+    cyclic.gltf["scene"] = 0
+    cyclic.save(directory / "loose_scene_fallback_cycle.gltf")
 
 
 def imported_topology(path: Path) -> None:

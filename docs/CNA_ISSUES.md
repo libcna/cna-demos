@@ -27,7 +27,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Observed:** loading succeeds. CNA returns one synthetic root, no `ExcludedNode`, and one
   `ExcludedShape` ModelMesh parented to that root. The public report consequently says
   `NodeCount == 0`, `MeshInstanceCount == 1` and `DistinctMeshCount == 1`. SOFTWARE and
-  OPENGLES3/Xvfb each pass the other 22 controls and fail only the selected-empty-scene assertion.
+  OPENGLES3/Xvfb each pass the other 23 of 24 controls and fail only the selected-empty-scene
+  assertion.
 - **Cause observed in source:** `BuildSceneGraph` correctly traverses only the selected empty
   scene, so `CollectMeshGroups` initially produces no groups. Its final fallback then imports every
   `data->meshes` entry whenever `groups.empty()`, without requiring `data->scenes_count == 0`.
@@ -40,8 +41,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   fabricate an identity-root placement.
 - **Scope/status:** open against clean isolated CNA
   `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction is deterministic on both exercised
-  renderers and requires no rendering to observe. Evidence:`/tmp/checkpoint-847-empty-scene-*`.
-  No CNA source was modified and no upstream message was sent.
+  renderers and requires no rendering to observe. Evidence:`/tmp/checkpoint-847-empty-scene-*`
+  and `/tmp/checkpoint-848-node-graph-*`. No CNA source was modified and no upstream message was
+  sent.
 
 ### CNA-DEMOS-ISSUE-091 -- C ImageBasedLight validity accepts live non-texture handles
 

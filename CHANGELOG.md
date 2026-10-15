@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed the glTF scene/node-graph audit with repeated-root de-duplication and public rejection of
+  a parsed cyclic hierarchy outside the selected scene.
 - Recorded CNA-DEMOS-ISSUE-092: an explicitly selected empty glTF scene incorrectly revives a mesh
   referenced only by another scene through the importer’s over-broad bare-mesh fallback.
 - Extended the rigid glTF node-instance workflow with explicit nonzero, implicit-first and
