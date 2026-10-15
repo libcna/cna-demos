@@ -2010,8 +2010,10 @@ the unreconciled palette-local reports. Multiple-part routing now covers every e
 independent palette. AnimationPlayer required-array and borrowed-data validation now has exact
 evidence; CNA-DEMOS-ISSUE-096 records the silent partial-root-prefix fallback. Empty/out-of-range
 track handling and the remaining invalid-input/target-space dispositions close the focused Model/
-animation remainder. Run a complete655-demo `-j3` build, CTest and SOFTWARE/OPENGLES3 checkpoint
-against the pinned CNA before selecting the next uncovered family.
+animation remainder. The first complete attempt found and isolated one stale import-report oracle;
+Focused858 repairs it and passes both renderers plus its exact CTest. Rerun the complete655-demo
+`-j3` CTest and SOFTWARE/OPENGLES3 checkpoint from scratch against the pinned CNA before selecting
+the next uncovered family.
 The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
@@ -4034,6 +4036,24 @@ pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields a
 routes. Evidence:`/tmp/checkpoint-857-palette-sampling-*` and `/tmp/checkpoint-857-coverage.md`. No
 graphics device, screenshot or visual inspection was used. No CNA issue appeared. The focused
 Model/animation remainder is dispositioned; run the complete655-demo checkpoint next.
+
+### Focused858-import-report-multi-part-accounting-repair
+
+The first authoritative complete655 CTest run exposed one demo regression and no new CNA defect:
+`graphics.model.import_report` still expected two imported primitives after Focused855 changed the
+shared two-placement skin fixture from one primitive to two. The importer counts extracted
+primitives per placement, so the exact report value is four. The repaired structural check also
+closes the fixture's newly relevant fields: one source animation produces two palette-local clips.
+
+Both direct SOFTWARE and OPENGLES3 runs pass, as does the exact SOFTWARE CTest. The incremental
+build used `-j3`. The complete attempt otherwise reached667 passes among668 enabled tests, including
+44 declared skips, with the three manual tests disabled; its sole failure was this stale demo
+oracle. Evidence:`/tmp/import-report-{software,opengles3}.json` and
+`build/linux-full/reports/checkpoint-858-complete-ctest.log`. Metadata remains655/0, both self-test
+suites pass5/5 and4/4, and temporary coverage remains302/329 types,2114/2326 members,169/753
+fields and3078/3205 C routes (`/tmp/checkpoint-858-coverage.md`). Commit and push the repair, then
+rerun the complete655-demo checkpoint from scratch before selecting the next uncovered public
+type/member family.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

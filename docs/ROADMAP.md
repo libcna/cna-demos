@@ -8547,3 +8547,13 @@ coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C ro
 screenshot or visual inspection was used. No CNA issue appeared. The focused Model/animation
 remainder is now dispositioned; run the complete655-demo checkpoint before selecting the next
 highest-priority uncovered public type/member family.
+
+## Focused858-import-report-multi-part-accounting-repair
+
+The first complete655 CTest attempt found one stale demo expectation left by Focused855's shared
+fixture change. `GltfImportReportEXT::PrimitiveCount` counts both primitives for each of the two
+imported placements, yielding four, and the same report now explicitly verifies one authored
+animation and its two retained palette-local clips. Direct SOFTWARE and OPENGLES3 runs and the
+exact SOFTWARE CTest pass after the repair; metadata and both self-test suites remain green, and
+temporary coverage is unchanged. This is a cna-demos oracle correction, not a CNA issue; the full
+checkpoint must be rerun from scratch.

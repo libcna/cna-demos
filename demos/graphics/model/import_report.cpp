@@ -75,16 +75,18 @@ namespace
                           !cameraReport.AnythingLost(),
                       "informational camera diagnostics do not make the aggregate report lossy");
 
-            // One authored mesh has two independent placements and skins. That distinguishes all
-            // three mesh counters: two instances, one distinct mesh, one shared mesh.
+            // One authored two-primitive mesh has two independent placements and skins. That
+            // distinguishes all three mesh counters, per-placement primitive accounting, and the
+            // two palette-local clips retained from one source animation.
             const Model skins = getContentProperty().Load<Model>("models/loose_multi_skin");
             const GltfImportReportEXT& skinReport = skins.getGltfImportReportEXTProperty();
-            Add("shared skin mesh: 2 instances / 1 distinct / 1 shared");
+            Add("shared skin mesh: 2 instances / 4 imported primitives");
             ctx.Check(skinReport.NodeCount == 6 && skinReport.MeshInstanceCount == 2 &&
                           skinReport.DistinctMeshCount == 1 && skinReport.SharedMeshCount == 1 &&
-                          skinReport.MaxNodeDepth == 2 && skinReport.PrimitiveCount == 2 &&
-                          skinReport.SkinCount == 2,
-                      "shared authored geometry is counted separately from its two skinned placements");
+                          skinReport.MaxNodeDepth == 2 && skinReport.PrimitiveCount == 4 &&
+                          skinReport.SkinCount == 2 && skinReport.AnimationCount == 1 &&
+                          skinReport.ClipCount == 2,
+                      "shared authored geometry and animation are counted across both skinned placements");
 
             // This loose copy of the existing lit-sphere fixture deliberately carries a stale
             // accessor bound and one optional unknown extension. Its geometry and lights still
