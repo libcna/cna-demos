@@ -330,9 +330,11 @@ a check that all authored colors remain visible and that a blank texture row can
   explicit name-only selection are covered. An explicitly documented absent XNB route gives the
   game's reason at Selection while CNB remains supported.
   ✅ `content.custom.source_root_capabilities`: built-in CNJ texture compilation reads original
-  shared art through a request-local alias. Ten focused checks cover exact pixels, recorded roots,
-  identical output after relocation, ordinary local references, contextual refusals and repair.
-  No GPU, nested-capability propagation or CLI incremental-fingerprint claim.
+  shared art through a request-local alias. Eleven focused Linux checks cover exact pixels,
+  recorded roots, identical output after relocation, ordinary local references, canonical symlink
+  containment, contextual refusals and repair.
+  `content.custom.nested_builds` separately covers propagation into XNA `BuildAsset`. No GPU or CLI
+  incremental-fingerprint claim.
   ✅ `content.custom.pipeline_diagnostics`: an original opacity strip produces real 8-bit
   quantization loss, contextual importer/processor/writer messages and a copied downstream log.
   Nine checks cover exact endpoints without warnings, null sinks, import failure and repair.
@@ -8706,3 +8708,17 @@ and both tool self-test suites pass; temporary coverage remains 302/329 types, 2
 169/753 fields and 3078/3205 C routes. Evidence: `/tmp/checkpoint-867-*`. No capture or manual
 visual inspection was performed in this batch; Focused839 retains the scene's inspected pixel
 evidence.
+
+## Focused868-external-source-root-symlink-containment
+
+`content.custom.source_root_capabilities` grows to eleven checks on the Linux checkpoint host. A
+real symlink inside the granted `art` root targets a file under the different primary source root.
+The built-in CNJ importer canonicalizes it and refuses the alias-qualified reference with complete
+source, asset, stage and component context; restoring the valid recipe still reproduces the
+original build. The probe is conditional only when a platform cannot create symlinks.
+
+Both displayless renderer-labelled runs pass 11/11 with byte-identical path-normalized stdout and
+empty stderr; the exact SOFTWARE CTest passes. The `-j3` incremental build, metadata 655/0 and both
+tool self-test suites pass; temporary coverage remains 302/329 types, 2114/2326 members, 169/753
+fields and 3078/3205 C routes. Evidence: `/tmp/checkpoint-868-*`. This is CPU-side compilation and
+filesystem containment; no renderer, screenshot or visual inspection was used.

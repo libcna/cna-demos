@@ -133,6 +133,20 @@ namespace
             writeRecipe("@art/../source/image.png");
             ctx.Check(refused(request, Pipeline::ContentPipelineStage::Import, "must not contain '.' or '..'"),
                       "an alias-qualified parent traversal cannot read the real image in a neighboring root");
+            std::error_code symlinkError;
+            std::filesystem::create_symlink(source / "image.png", shared / "escape.png", symlinkError);
+            if (!symlinkError)
+            {
+                writeRecipe("@art/escape.png");
+                ctx.Check(refused(request, Pipeline::ContentPipelineStage::Import,
+                                  "resolves outside source root"),
+                          "a symlink inside the granted root cannot escape to another physical root");
+            }
+            else
+            {
+                ctx.Print("Symlink escape control unavailable on this platform: {}",
+                          symlinkError.message());
+            }
             writeRecipe((shared / "image.png").generic_string());
             ctx.Check(refused(request, Pipeline::ContentPipelineStage::Import, "must be relative"),
                       "an absolute authored filename cannot bypass the explicit alias spelling even with a grant");
@@ -153,7 +167,7 @@ namespace
 CNA_DEMOS_CONSOLE(SourceRootCapabilities, {
     .id = "content.custom.source_root_capabilities",
     .title = "Explicit shared-art source roots (CNAEXT)",
-    .description = "Compiles a CNJ texture through an explicit external source-root alias; checks exact pixels, relocation, local references and refused capability/path requests.",
+    .description = "Compiles a CNJ texture through an explicit external source-root alias; checks exact pixels, relocation, local references and refused traversal, absolute and symlink escapes.",
     .apis = {"CNA::Content::Pipeline::ContentSourceRootCapabilities::Add",
              "CNA::Content::Pipeline::ContentBuildRequest::externalSourceRoots",
              "CNA::Content::Pipeline::ContentDependency::sourceRoot",
@@ -163,5 +177,5 @@ CNA_DEMOS_CONSOLE(SourceRootCapabilities, {
              "CNA::Content::Cnb::DecodeTexture2DFromCnb"},
     .tags = {"content", "pipeline", "sources", "cnj", "cnaext"},
     .assets = {"textures/checker.png", "textures/sprite_strip.png"},
-    .restrictions = "In-memory CPU compilation and exact decoded pixels; no GPU rendering, CLI fingerprints, nested capability propagation or exhaustive filesystem containment claim.",
+    .restrictions = "In-memory CPU compilation and exact decoded pixels; the symlink escape control runs only where symlink creation is available. No GPU rendering, CLI fingerprint or platform-path claim.",
 })

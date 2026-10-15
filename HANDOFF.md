@@ -4212,6 +4212,24 @@ Focused839 remains the visual evidence for this unchanged scene.
 Commit and push this batch, then audit the next explicit high-value behavior gap; Complete859
 remains the full baseline.
 
+### Focused868-external-source-root-symlink-containment
+
+The existing `content.custom.source_root_capabilities` workflow grows from ten to eleven controls
+on the Linux checkpoint host. It creates a real symlink inside the granted `art` root that targets
+the different primary root. Referencing that link through `@art` is refused during CNJ import after
+canonical resolution, with exact source, logical name, component and outside-root context. The
+following valid build still reproduces the original bytes and dependencies. Platforms unable to
+create symlinks print the control as unavailable rather than claiming it.
+
+SOFTWARE and OPENGLES3-labelled displayless runs pass11/11 with byte-identical path-normalized
+stdout and empty stderr; the exact SOFTWARE CTest passes. The final incremental build uses `-j3`,
+metadata is655/0 and both tool self-test suites pass. Temporary coverage remains302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is under
+`/tmp/checkpoint-868-*`. No renderer, screenshot or visual inspection was used.
+
+Commit and push this batch, then continue with compiler configuration/fingerprint behavior or the
+next explicit high-value gap; Complete859 remains the full baseline.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
