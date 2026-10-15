@@ -224,7 +224,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (26 demos)
+## Phase 7 -- models, animation, glTF 🟨 (27 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -240,6 +240,8 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.gltf_lights` (KHR_lights_punctual -> the PbrEffect's directional lights; GL
   only), ✅ `graphics.model.clip_interpolation` (STEP/LINEAR/CUBICSPLINE samplers; expected failure,
   CNA-DEMOS-ISSUE-031: all play as LINEAR).
+- ✅ `graphics.model.animation_validation` (decreasing-time and output-count refusal, manager
+  recovery, and unknown interpolation fallback; expected failure, CNA-DEMOS-ISSUE-093).
 - ✅ `graphics.model.material_variants` (KHR_materials_variants, run-time import: CNA's content
   pipeline refuses variants, which the compiled model format cannot carry). Its complete-state
   extension selects an unlit24-byte default, a coloured PBR60-byte Ocean layout and a textured
@@ -8387,3 +8389,23 @@ Evidence:`/tmp/checkpoint-849-animation-diagnostics-*` and
 `/tmp/checkpoint-849-coverage.md`. No screenshot or visual inspection was performed and no CNA
 defect appeared. Audit malformed animation sampler/accessor and interpolation refusal boundaries
 next.
+
+## Focused850-glTF-animation-validation-boundaries
+
+`graphics.model.node_animation` grows from seventeen to nineteen controls: an unnamed fourth
+source animation becomes stable `Clip3`, retains its nonzero one-to-two-second key domain, holds its
+first pose when sampled at zero and interpolates at the midpoint. The report now distinguishes four
+source animations from three retained clips without changing the five warning diagnostics.
+
+New `graphics.model.animation_validation` loads three original malformed loose assets through the
+public ContentManager route. Decreasing input receives CNA's actionable strict-order refusal, an
+output shorter than its input receives structural refusal, and a valid model still loads through
+the same manager. An unknown `CATMULLROM` interpolation is incorrectly accepted without warning as
+a two-key LINEAR clip; CNA-DEMOS-ISSUE-093 records the cgltf zero-enum cause.
+
+Both renderers pass node_animation19/19 and animation_validation4/5, failing only the named issue.
+The `-j3` build, both exact SOFTWARE CTests, metadata652/0 and both self-test suites
+pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C
+routes. Evidence:`/tmp/checkpoint-850-animation-*` and `/tmp/checkpoint-850-coverage.md`. No
+screenshot or visual inspection was performed. Audit mixed skinned/rigid animation retention and
+the `rigid-animation-dropped-on-skinned-model` diagnostic next.

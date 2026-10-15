@@ -115,18 +115,21 @@ namespace
                 getContentProperty().Load<Model>("models/loose_animation_diagnostics");
             const auto* diagnosticAnimations =
                 dynamic_cast<const ModelAnimationsEXT*>(diagnostic.getTagProperty());
-            ctx.Check(diagnosticAnimations != nullptr && diagnosticAnimations->Clips.size() == 2 &&
+            ctx.Check(diagnosticAnimations != nullptr && diagnosticAnimations->Clips.size() == 3 &&
                           diagnosticAnimations->Clips.contains("Mixed") &&
                           diagnosticAnimations->Clips.contains("HardCut") &&
+                          diagnosticAnimations->Clips.contains("Clip3") &&
                           !diagnosticAnimations->Clips.contains("Dropped"),
-                      "supported in-scene channels retain two named clips while the trackless clip is omitted");
+                      "supported in-scene channels retain three stable clips while the trackless clip is omitted");
             if (diagnosticAnimations != nullptr &&
                 diagnosticAnimations->Clips.contains("Mixed") &&
-                diagnosticAnimations->Clips.contains("HardCut"))
+                diagnosticAnimations->Clips.contains("HardCut") &&
+                diagnosticAnimations->Clips.contains("Clip3"))
             {
                 ModelBone* animated = diagnostic.getBonesProperty()["Animated"];
                 const AnimationClip& mixed = diagnosticAnimations->Clips.at("Mixed");
                 const AnimationClip& hardCut = diagnosticAnimations->Clips.at("HardCut");
+                const AnimationClip& delayed = diagnosticAnimations->Clips.at("Clip3");
                 const auto& mixedKeys = mixed.Tracks.at(0).Keys;
                 const auto& cutKeys = hardCut.Tracks.at(0).Keys;
                 ctx.Check(mixed.TargetSpace == ClipTargetSpaceEXT::SceneNode &&
@@ -161,6 +164,21 @@ namespace
                               std::abs(cutKeys[2].Translation.X - 1) < 1e-4f,
                           "equal adjacent input times retain one earlier value and a three-key playable track");
 
+                const auto& delayedKeys = delayed.Tracks.at(0).Keys;
+                ctx.Check(delayed.Duration == TimeSpan::FromSeconds(2) &&
+                              delayed.Tracks.size() == 1 && delayedKeys.size() == 2 &&
+                              delayedKeys[0].Time == TimeSpan::FromSeconds(1) &&
+                              delayedKeys[1].Time == TimeSpan::FromSeconds(2) &&
+                              std::abs(delayedKeys[0].Translation.X + .3f) < 1e-4f &&
+                              std::abs(delayedKeys[1].Translation.X - .3f) < 1e-4f,
+                          "an unnamed fourth source animation has the stable Clip3 name and its own time domain");
+                ApplyClipToBonesEXT(diagnostic, delayed, TimeSpan::Zero);
+                const float beforeFirst = animated->getTransformProperty().getTranslationProperty().X;
+                ApplyClipToBonesEXT(diagnostic, delayed, TimeSpan::FromSeconds(1.5));
+                const float midpoint = animated->getTransformProperty().getTranslationProperty().X;
+                ctx.Check(std::abs(beforeFirst + .3f) < 1e-4f && std::abs(midpoint) < 1e-4f,
+                          "sampling before a nonzero first key holds that pose and the interior still interpolates");
+
                 ApplyClipToBonesEXT(diagnostic, mixed, TimeSpan::FromSeconds(2));
                 Vector3 appliedScale, appliedTranslation;
                 Quaternion appliedRotation;
@@ -175,8 +193,8 @@ namespace
 
             const GltfImportReportEXT& diagnosticReport =
                 diagnostic.getGltfImportReportEXTProperty();
-            ctx.Check(diagnosticReport.AnimationCount == 3 && diagnosticReport.ClipCount == 2,
-                      "the report distinguishes three inspected animations from two retained clips");
+            ctx.Check(diagnosticReport.AnimationCount == 4 && diagnosticReport.ClipCount == 3,
+                      "the report distinguishes four inspected animations from three retained clips");
             const auto* empty = FindDiagnostic(diagnosticReport, "animations-empty");
             const auto* unavailable =
                 FindDiagnostic(diagnosticReport, "animation-targets-unavailable");
@@ -245,7 +263,7 @@ CNA_DEMOS_GAME(NodeAnimationDemo, {
     .title = "Node animation clips (CNAEXT)",
     .description = "Plays glTF clips through ModelAnimationsEXT and ApplyClipToBonesEXT, including untracked state, "
                    "time clamps and target-space refusal; a loose diagnostic fixture exposes channel loss, union "
-                   "resampling and repeated-time behavior through retained clips and GltfImportReportEXT.",
+                   "resampling, generated names and nonzero starts through retained clips and GltfImportReportEXT.",
     .apis = {"ApplyClipToBonesEXT", "ModelAnimationsEXT", "AnimationClipEXT", "ClipTargetSpaceEXT", "Model::Tag",
              "Model::CopyAbsoluteBoneTransformsTo", "Model::CopyBoneTransformsTo", "ModelBone::Transform", "Model::Draw",
              "Model::Bones", "Model::GltfImportReportEXT", "GltfImportReportEXT::AnimationCount",

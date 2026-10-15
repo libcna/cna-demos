@@ -15,6 +15,34 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-093 -- Unknown glTF animation interpolation silently becomes LINEAR
+
+- **Area/API:** loose glTF `ContentManager::Load<Model>`, animation sampler validation,
+  `ModelAnimationsEXT` and `GltfImportReportEXT`.
+- **Reproduction:** `graphics.model.animation_validation` loads an original otherwise valid glTF
+  whose one animation sampler declares `interpolation: "CATMULLROM"`. glTF 2.0 permits only
+  `LINEAR`, `STEP` and `CUBICSPLINE`. Adjacent fixtures prove that the same public loader refuses a
+  decreasing input domain with CNA's actionable ordering diagnostic and an output accessor shorter
+  than its input through structural validation.
+- **Observed:** loading the unknown mode succeeds without a warning. CNA exposes a normal
+  `UnknownInterpolation` scene-node clip with two keys and one-second duration, and sampling it at
+  0.5 seconds produces translation X=0.2, the LINEAR midpoint. SOFTWARE and OPENGLES3/Xvfb each
+  pass the other four of five controls and fail only the required-refusal assertion.
+- **Cause observed in source:** `cgltf_parse_json_animation_sampler` writes the enum only for the
+  three recognised strings. The zero-initialised field otherwise retains enum value zero, which is
+  `cgltf_interpolation_type_linear`; `cgltf_validate` validates animation output counts but does not
+  reject the unknown string. CNA's `ValidateGltfEXT` adds no interpolation-token check, and
+  `LoadChannel` consequently sees an ordinary LINEAR sampler. The original invalid token is no
+  longer available to the importer or report.
+- **Expected:** a sampler declaring any other interpolation string is invalid glTF and must reach
+  the caller as `ContentLoadException`, rather than changing authored motion silently. If CNA ever
+  chooses an explicit compatibility policy, it must at least preserve a structured invalid-source
+  diagnostic; the current unreported LINEAR substitution is not such a policy.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction is deterministic on both exercised
+  renderers and needs no rendering. Evidence:`/tmp/checkpoint-850-animation-validation-*`. No CNA
+  source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-092 -- An empty selected glTF scene resurrects an unselected mesh
 
 - **Area/API:** loose glTF `ContentManager::Load<Model>`, default-scene selection and

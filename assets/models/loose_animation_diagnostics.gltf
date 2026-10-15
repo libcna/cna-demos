@@ -112,7 +112,13 @@
    "bufferView": 9,
    "componentType": 5126,
    "count": 2,
-   "type": "VEC3"
+   "type": "SCALAR",
+   "min": [
+    1
+   ],
+   "max": [
+    2
+   ]
   },
   {
    "bufferView": 10,
@@ -124,18 +130,30 @@
    "bufferView": 11,
    "componentType": 5126,
    "count": 2,
-   "type": "SCALAR"
+   "type": "VEC3"
   },
   {
    "bufferView": 12,
    "componentType": 5126,
    "count": 2,
-   "type": "VEC3"
+   "type": "SCALAR"
   },
   {
    "bufferView": 13,
    "componentType": 5126,
+   "count": 2,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 14,
+   "componentType": 5126,
    "count": 4,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 15,
+   "componentType": 5126,
+   "count": 2,
    "type": "VEC3"
   }
  ],
@@ -192,33 +210,43 @@
   {
    "buffer": 0,
    "byteOffset": 204,
-   "byteLength": 24
-  },
-  {
-   "buffer": 0,
-   "byteOffset": 228,
-   "byteLength": 24
-  },
-  {
-   "buffer": 0,
-   "byteOffset": 252,
    "byteLength": 8
   },
   {
    "buffer": 0,
-   "byteOffset": 260,
+   "byteOffset": 212,
    "byteLength": 24
   },
   {
    "buffer": 0,
-   "byteOffset": 284,
+   "byteOffset": 236,
+   "byteLength": 24
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 260,
+   "byteLength": 8
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 268,
+   "byteLength": 24
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 292,
    "byteLength": 48
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 340,
+   "byteLength": 24
   }
  ],
  "buffers": [
   {
-   "byteLength": 332,
-   "uri": "data:application/octet-stream;base64,zczMvSlcj70AAAA/zczMPSlcj70AAAA/zczMPSlcjz0AAAA/zczMvSlcjz0AAAA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAABAAIAAAACAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAIA/AABAQAAAAAAAAIA/AAAAAAAAgD8AAAAAAACAPwAAgD8AAABAAAAAAAAAAAAAAAAAzczMPgAAAAAAAAAAAACAPwAAgD8AAIA/AAAAQAAAgD8AAIA/AAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAPwAAAAAAAAAAAAAAAAAAAADNzEw+AAAAAAAAAADNzEw/AAAAAAAAAAAAAIA/AAAAAAAAAAA="
+   "byteLength": 364,
+   "uri": "data:application/octet-stream;base64,zczMvSlcj70AAAA/zczMPSlcj70AAAA/zczMPSlcjz0AAAA/zczMvSlcjz0AAAA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAABAAIAAAACAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAIA/AABAQAAAAAAAAIA/AAAAAAAAgD8AAAAAAACAPwAAgD8AAABAAACAPwAAAEAAAAAAAAAAAAAAAADNzMw+AAAAAAAAAAAAAIA/AACAPwAAgD8AAABAAACAPwAAgD8AAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAA/AAAAAAAAAAAAAAAAAAAAAM3MTD4AAAAAAAAAAM3MTD8AAAAAAAAAAAAAgD8AAAAAAAAAAJqZmb4AAAAAAAAAAJqZmT4AAAAAAAAAAA=="
   }
  ],
  "meshes": [
@@ -299,15 +327,15 @@
    "samplers": [
     {
      "input": 4,
-     "output": 9
-    },
-    {
-     "input": 5,
      "output": 10
     },
     {
-     "input": 6,
+     "input": 5,
      "output": 11
+    },
+    {
+     "input": 6,
+     "output": 12
     }
    ],
    "channels": [
@@ -339,7 +367,7 @@
    "samplers": [
     {
      "input": 7,
-     "output": 12
+     "output": 13
     }
    ],
    "channels": [
@@ -357,7 +385,24 @@
    "samplers": [
     {
      "input": 8,
-     "output": 13
+     "output": 14
+    }
+   ],
+   "channels": [
+    {
+     "sampler": 0,
+     "target": {
+      "node": 0,
+      "path": "translation"
+     }
+    }
+   ]
+  },
+  {
+   "samplers": [
+    {
+     "input": 9,
+     "output": 15
     }
    ],
    "channels": [

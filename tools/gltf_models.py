@@ -14,8 +14,8 @@ assets/models/ that is loaded as a loose glTF file at run time.
   SkinnedEffect.
 * turntable.gltf, morph_flag.gltf, camera_rig.gltf, textured_crate.gltf, lit_sphere.gltf,
   slide_rig.gltf, loose_paint_toy.gltf, loose_node_instances.gltf and the three
-  loose_scene_fallback_*.gltf files and loose_animation_diagnostics.gltf -- node-animation clips,
-  morph targets with a weights
+  loose_scene_fallback_*.gltf files, loose_animation_diagnostics.gltf and the
+  loose_animation_bad_*.gltf files -- node-animation clips, morph targets with a weights
   animation, glTF cameras, an embedded base-colour texture, KHR_lights_punctual lights,
   STEP/LINEAR/CUBICSPLINE samplers, KHR_materials_variants, rigid shared-mesh placement and scene
   selection fallbacks; see each function.
@@ -926,6 +926,7 @@ def animation_diagnostics(path: Path) -> None:
     mixed_times_weights = times([0, 1])
     dropped_times = times([0, 1])
     repeated_times = times([0, 1, 1, 2])
+    delayed_times = times([1, 2])
     doc.gltf["animations"] = [
         {"name": "Mixed", "samplers": [
             {"input": mixed_times_translation,
@@ -952,7 +953,63 @@ def animation_diagnostics(path: Path) -> None:
         }], "channels": [{
             "sampler": 0, "target": {"node": 0, "path": "translation"},
         }]},
+        {"samplers": [{
+            "input": delayed_times,
+            "output": doc.accessor([(-.3, 0, 0), (.3, 0, 0)], "VEC3", target=None),
+        }], "channels": [{
+            "sampler": 0, "target": {"node": 0, "path": "translation"},
+        }]},
     ]
+    doc.save(path)
+
+
+def animation_refusal(path: Path, defect: str) -> None:
+    """One otherwise ordinary rigid animation with a deliberately malformed sampler boundary."""
+    doc = Document()
+    positions = [(-.1, -.1, 0), (.1, -.1, 0), (0, .1, 0)]
+    doc.gltf["meshes"] = [{"name": "BadAnimationShape", "primitives": [{
+        "attributes": {"POSITION": doc.accessor(positions, "VEC3", minmax=True)},
+        "indices": doc.accessor([0, 1, 2], "SCALAR", UNSIGNED_SHORT,
+                                ELEMENT_ARRAY_BUFFER),
+        "material": 0,
+    }]}]
+    doc.gltf["materials"] = [{"extensions": {"KHR_materials_unlit": {}}}]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+    doc.gltf["nodes"] = [{"name": "Backwards" if defect == "input_order" else "Animated",
+                          "mesh": 0}]
+    doc.gltf["scenes"] = [{"nodes": [0]}]
+    doc.gltf["scene"] = 0
+
+    if defect == "input_order":
+        authored_times = [0, 2, 1]
+        values = [(0, 0, 0), (.4, 0, 0), (.8, 0, 0)]
+        interpolation = "LINEAR"
+        name = "Backwards"
+    elif defect == "output_count":
+        authored_times = [0, 1]
+        values = [(0, 0, 0)]
+        interpolation = "LINEAR"
+        name = "ShortOutput"
+    elif defect == "interpolation":
+        authored_times = [0, 1]
+        values = [(0, 0, 0), (.4, 0, 0)]
+        interpolation = "CATMULLROM"
+        name = "UnknownInterpolation"
+    else:
+        raise ValueError(f"unknown animation refusal defect: {defect}")
+
+    input_accessor = doc.accessor(authored_times, "SCALAR", target=None)
+    doc.gltf["accessors"][input_accessor].update(
+        {"min": [min(authored_times)], "max": [max(authored_times)]})
+    doc.gltf["animations"] = [{
+        "name": name,
+        "samplers": [{
+            "input": input_accessor,
+            "output": doc.accessor(values, "VEC3", target=None),
+            "interpolation": interpolation,
+        }],
+        "channels": [{"sampler": 0, "target": {"node": 0, "path": "translation"}}],
+    }]
     doc.save(path)
 
 
@@ -1018,4 +1075,10 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     node_instances(assets_root / "models" / "loose_node_instances.gltf")
     scene_fallbacks(assets_root / "models")
     animation_diagnostics(assets_root / "models" / "loose_animation_diagnostics.gltf")
+    animation_refusal(assets_root / "models" / "loose_animation_bad_input_order.gltf",
+                      "input_order")
+    animation_refusal(assets_root / "models" / "loose_animation_bad_output_count.gltf",
+                      "output_count")
+    animation_refusal(assets_root / "models" / "loose_animation_bad_interpolation.gltf",
+                      "interpolation")
     imported_topology(assets_root / "models" / "loose_topology.gltf")

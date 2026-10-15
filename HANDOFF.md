@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 26), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 27), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -304,6 +304,22 @@ self-tests5/5 and4/4 pass; temporary coverage remains302/329 types,2114/2326 mem
 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-849-animation-diagnostics-*` and
 `/tmp/checkpoint-849-coverage.md`. No screenshot or visual-quality claim was made and no CNA defect
 appeared. Audit malformed animation sampler/accessor and interpolation refusal boundaries next.
+
+Focused **850-glTF-animation-validation-boundaries** adds the focused
+`graphics.model.animation_validation` ID and extends `node_animation` from seventeen to nineteen
+controls. The existing loose fixture now proves stable `Clip3` naming for an unnamed fourth source
+animation, its independent nonzero time domain, pre-first-key hold and interior interpolation.
+Three malformed loose assets then exercise the public loader: decreasing input receives CNA's
+actionable clip/channel ordering refusal, a short output accessor receives structural refusal, and
+the same manager successfully loads a valid model afterward. An unknown `CATMULLROM` interpolation
+is incorrectly accepted without warning as an ordinary LINEAR clip; CNA-DEMOS-ISSUE-093 records
+the exact parser/enum cause. Both renderers pass node_animation19/19 and animation_validation4/5,
+with only the named issue failing. The `-j3` build, both exact SOFTWARE CTests,
+metadata652/0 and self-tests5/5 and4/4 pass. Temporary coverage remains302/329 types,2114/2326
+members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-850-animation-*` and
+`/tmp/checkpoint-850-coverage.md`. No screenshot or visual-quality inspection was performed. Audit
+mixed skinned/rigid animation retention and the `rigid-animation-dropped-on-skinned-model`
+diagnostic next.
 
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
@@ -1882,13 +1898,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-849
-form the validated651-demo staged state. The glTF scene/node-graph audit is closed with
-CNA-DEMOS-ISSUE-092 retained, and selected-scene/unsupported-path animation channel loss plus
-resampling/duplicate-time behavior now have exact public evidence. Continue the importer behavior
-audit with malformed animation sampler/accessor and interpolation refusal boundaries, extending
-existing animation/report demos where coherent. The complete checkpoint and harness findings are
-recorded in section7.
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-850
+form the validated652-demo staged state. The glTF scene/node-graph audit is closed with
+CNA-DEMOS-ISSUE-092 retained. Rigid animation channel loss, resampling, duplicate/nonzero times,
+generated clip names and public malformed-sampler refusals now have exact evidence;
+CNA-DEMOS-ISSUE-093 records the silent unknown-interpolation-to-LINEAR fallback. Continue with
+mixed skinned/rigid animation retention and the `rigid-animation-dropped-on-skinned-model`
+diagnostic, extending an existing model workflow where coherent. The complete checkpoint and
+harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
@@ -3760,6 +3777,29 @@ metadata651/0 and validator/checkpoint self-tests5/5 and4/4 pass. Temporary cove
 `/tmp/checkpoint-849-animation-diagnostics-*` and `/tmp/checkpoint-849-coverage.md`. No screenshot
 or visual-quality inspection was performed. No CNA issue was found. Audit malformed animation
 sampler/accessor and interpolation refusal boundaries next.
+
+### Focused850-glTF-animation-validation-boundaries
+
+The loose diagnostics fixture now has an unnamed fourth source animation. `node_animation` grows
+from seventeen to nineteen controls and proves that it becomes stable `Clip3`, retains its own
+one-to-two-second domain, holds the first pose when sampled at zero and linearly interpolates its
+interior. Its report now distinguishes four inspected animations from three retained clips while
+preserving the same five warning diagnostics and exact aggregate counts.
+
+New `graphics.model.animation_validation` isolates three original malformed sampler assets. The
+public loose-Model loader refuses decreasing times with the clip/channel and strict-order rule,
+refuses a short output accessor structurally and remains usable for a valid compiled model. It does
+not refuse `interpolation: "CATMULLROM"`: cgltf leaves its zero-initialised enum at LINEAR, validation
+does not retain or reject the unknown token, and CNA returns a warning-free two-key LINEAR clip.
+CNA-DEMOS-ISSUE-093 records this real defect and its source cause.
+
+SOFTWARE and OPENGLES3 pass node_animation19/19 and animation_validation4/5, with only ISSUE-093
+failing. Both exact SOFTWARE CTests pass, including the known issue through `WILL_FAIL`; the
+`-j3` build, metadata652/0 and validator/checkpoint self-tests5/5 and4/4 pass.
+Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence:`/tmp/checkpoint-850-animation-*` and `/tmp/checkpoint-850-coverage.md`. No screenshot or
+visual-quality inspection was performed. Audit mixed skinned/rigid animation retention and the
+`rigid-animation-dropped-on-skinned-model` diagnostic next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
