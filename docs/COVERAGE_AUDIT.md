@@ -3906,3 +3906,25 @@ the regenerated CNA-extension appendix now credits the enum and both policy memb
 retains this stable ID's older capability-only result. Evidence:
 `/tmp/checkpoint-944-unsupported3d/*`. No other unsupported factory/draw behavior, pixel result or
 visual quality is claimed.
+
+### Focused945 native vertex-type registry
+
+The stable `graphics.vertex_declaration.custom_vertex` workflow grows ten to14 controls and now
+demonstrates the C++ reflection bridge used by the public System::Type vertex-buffer constructors.
+It proves that CNA's stock `VertexPositionColor` resolves without application setup; an
+unregistered application type returns null from `TryResolve` and throws `ArgumentException` from
+`Resolve`; registering a default-constructible `IVertexType` twice is harmless and preserves the
+authored20-byte declaration; and both `VertexBuffer` and `DynamicVertexBuffer` System::Type
+constructors consume that registered declaration with their requested counts and usage.
+
+The registered polymorphic object is used only to report its declaration; the existing plain
+`GlowVertex` remains the actual GPU stream and retains the exact pixel control. This keeps the
+public API visible without suggesting that an `IVertexType` object's C++ vtable bytes belong in a
+vertex upload. Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass14/14 with byte-identical stdout
+SHA-256 `3c15ae72d23e0b03dbddfacdb632a2e17cee50924ff79781ca77fbd0204826ec` and empty stderr. The
+warning-free incremental build uses at most three jobs and the exact SOFTWARE CTest passes.
+
+Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes;
+the CNA-extension appendix now credits `VertexTypeRegistryEXT` and all three public operations.
+Complete938 retains the older ten-control form of this stable ID. Evidence:
+`/tmp/checkpoint-945-vertex-registry/*`. No CNA defect or manual visual-quality result appeared.

@@ -344,6 +344,22 @@ routes; Complete938 retains the older capability-only form of this ID. Evidence:
 `/tmp/checkpoint-944-unsupported3d/*`. Continue the next coherent public CNA header family; do not
 infer the remaining unsupported factory/draw contracts from this one Texture3D path.
 
+Focused **945-native-vertex-type-registry** extends the stable
+`graphics.vertex_declaration.custom_vertex` workflow from ten to14 controls. Stock vertex types
+resolve automatically; an unregistered application type exercises null and throwing lookup; a
+custom default-constructible `IVertexType` can be registered twice without changing its authored
+declaration; and both static and dynamic System::Type buffer constructors consume that layout.
+The polymorphic object is only a declaration probe, while the original plain20-byte structure
+remains the uploaded stream.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass14/14 with byte-identical stdout SHA-256
+`3c15ae72d23e0b03dbddfacdb632a2e17cee50924ff79781ca77fbd0204826ec` and empty stderr. The
+warning-free build uses at most three jobs, metadata remains668/0 and the exact SOFTWARE CTest
+passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes;
+the CNA-extension appendix now credits `VertexTypeRegistryEXT` and all three public operations.
+Complete938 retains the older ten-control form of this stable ID. Evidence:
+`/tmp/checkpoint-945-vertex-registry/*`. Continue the next coherent public CNA header family.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2454,8 +2470,9 @@ diagnostic value/parser/exception contract; the existing compiler demo retains l
 evidence. Focused943 closes the ordinary shader dialect/language selection matrix, including
 stage-specific device support, invalid identities and the descriptor-binding helper. Focused944
 adds direct native unsupported-3D policy evidence and records CNA-DEMOS-ISSUE-104 for STUB's
-missing warned Texture3D null object; do not infer other factory/draw paths from it. Continue the
-next coherent public CNA header family. The diagnostics
+missing warned Texture3D null object; do not infer other factory/draw paths from it. Focused945
+closes the ordinary `VertexTypeRegistryEXT` lookup/registration and System::Type buffer-constructor
+workflow. Continue the next coherent public CNA header family. The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered

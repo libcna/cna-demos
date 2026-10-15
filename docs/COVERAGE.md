@@ -379,6 +379,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Graphics::ShaderCodeEXT` -- graphics.shader_effect.portable_package
 - `CNA::Graphics::ShaderPackageEXT::selectFor` -- graphics.shader_effect.portable_package
 - `CNA::Graphics::ShaderPackageSelectionEXT` -- graphics.shader_effect.portable_package
+- `CNA::Graphics::VertexTypeRegistryEXT` -- graphics.vertex_declaration.custom_vertex
 - `CNA::GraphicsBackendCategory` -- core.renderer.metadata
 - `CNA::GraphicsBackendMaturity` -- core.renderer.metadata
 - `CNA::GraphicsCapability` -- graphics.device.supports_capability
@@ -997,6 +998,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `TouchPanel::MouseTouchEmulationEnabledEXT` -- input.touch.get_state
 - `VertexBuffer::GetDataRawEXT` -- graphics.model.morph_animation_import
 - `VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned` -- graphics.skinned_effect.two_bones, graphics.skinned_effect.weight_channels
+- `VertexTypeRegistryEXT::Register` -- graphics.vertex_declaration.custom_vertex
+- `VertexTypeRegistryEXT::Resolve` -- graphics.vertex_declaration.custom_vertex
+- `VertexTypeRegistryEXT::TryResolve` -- graphics.vertex_declaration.custom_vertex
 - `VibrateController::Default` -- devices.vibrate_controller.start_stop
 - `VibrateController::Start` -- devices.vibrate_controller.start_stop
 - `VibrateController::Stop` -- devices.vibrate_controller.start_stop

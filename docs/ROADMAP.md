@@ -10022,3 +10022,21 @@ credits all three native names. Complete938 retains the older capability-only fo
 ID. Evidence:`/tmp/checkpoint-944-unsupported3d/*`. Continue the next coherent public-header audit;
 other unsupported factories and draw paths remain separately dispositioned rather than inferred
 from this Texture3D result.
+
+## Focused945-native-vertex-type-registry
+
+The stable `graphics.vertex_declaration.custom_vertex` workflow grows ten to14 controls and closes
+the ordinary `CNA::Graphics::VertexTypeRegistryEXT` consumer contract. A stock vertex type resolves
+automatically; an unregistered application type has distinct null-probe and throwing-resolution
+paths; duplicate registration of a default-constructible `IVertexType` is harmless; and the static
+and dynamic System::Type buffer constructors both consume the registered authored declaration.
+The declaration probe remains separate from the plain20-byte GPU stream, so polymorphic C++ object
+layout is not presented as upload data.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass14/14 with byte-identical stdout SHA-256
+`3c15ae72d23e0b03dbddfacdb632a2e17cee50924ff79781ca77fbd0204826ec` and empty stderr. The
+warning-free incremental build uses `-j3`, metadata remains668/0 and the exact SOFTWARE CTest
+passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes;
+the CNA-extension appendix now credits the type and Register/TryResolve/Resolve. Complete938 keeps
+the older ten-control result for this stable ID. Evidence:`/tmp/checkpoint-945-vertex-registry/*`.
+Continue the next coherent public CNA header family.

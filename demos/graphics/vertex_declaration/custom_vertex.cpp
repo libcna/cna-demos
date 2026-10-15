@@ -8,14 +8,19 @@
 #include <type_traits>
 #include <vector>
 
+#include "CNA/Graphics/VertexTypeRegistryEXT.hpp"
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/PixelChecks.hpp"
+#include "System/ArgumentException.hpp"
 #include "System/ObjectDisposedException.hpp"
+#include "System/Type.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BasicEffect.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BufferUsage.hpp"
+#include "Microsoft/Xna/Framework/Graphics/DynamicVertexBuffer.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectPass.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectTechnique.hpp"
+#include "Microsoft/Xna/Framework/Graphics/IVertexType.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PrimitiveType.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RasterizerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexDeclaration.hpp"
@@ -23,6 +28,7 @@
 #include "Microsoft/Xna/Framework/Graphics/VertexElementFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexElementUsage.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexBuffer.hpp"
+#include "Microsoft/Xna/Framework/Graphics/VertexPositionColor.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
@@ -66,6 +72,19 @@ namespace
         };
         return declaration;
     }
+
+    // XNA reflects IVertexType when a buffer constructor receives System::Type. CNA's explicit
+    // registry supplies that missing C++ reflection step; the object itself is only a declaration
+    // probe, so the actual GPU stream remains the plain GlowVertex structure above.
+    struct RegisteredGlowVertex final : IVertexType
+    {
+        [[nodiscard]] const VertexDeclaration& getVertexDeclarationProperty() const override
+        {
+            return GlowVertexDeclaration();
+        }
+    };
+
+    struct UnregisteredVertex {};
 
     class CustomVertexDemo final : public CnaDemos::DemoGame
     {
@@ -174,6 +193,50 @@ namespace
             }
             Context().Check(disposed.getIsDisposedProperty() && refused,
                             "disposed declarations are idempotently marked and cannot bind a vertex buffer");
+
+            const VertexDeclaration* stock = CNA::Graphics::VertexTypeRegistryEXT::TryResolve(
+                System::Type::From<VertexPositionColor>());
+            Context().Check(stock != nullptr &&
+                                stock->GetVertexElements() ==
+                                    VertexPositionColor::getVertexDeclarationStatic().GetVertexElements(),
+                            "CNA's stock vertex structures resolve without application registration");
+
+            const System::Type unregistered = System::Type::From<UnregisteredVertex>();
+            bool resolveRefused = false;
+            try
+            {
+                (void)CNA::Graphics::VertexTypeRegistryEXT::Resolve(unregistered);
+            }
+            catch (const System::ArgumentException&)
+            {
+                resolveRefused = true;
+            }
+            Context().Check(
+                CNA::Graphics::VertexTypeRegistryEXT::TryResolve(unregistered) == nullptr &&
+                    resolveRefused,
+                "an unregistered application type has a null probe and a throwing resolution path");
+
+            CNA::Graphics::VertexTypeRegistryEXT::Register<RegisteredGlowVertex>();
+            CNA::Graphics::VertexTypeRegistryEXT::Register<RegisteredGlowVertex>();
+            const VertexDeclaration* registered = CNA::Graphics::VertexTypeRegistryEXT::TryResolve(
+                System::Type::From<RegisteredGlowVertex>());
+            Context().Check(registered != nullptr &&
+                                registered->getVertexStrideProperty() ==
+                                    static_cast<int>(sizeof(GlowVertex)) &&
+                                registered->GetVertexElements() == authored,
+                            "registering a game vertex twice is harmless and retains its declaration");
+
+            VertexBuffer typed(device, System::Type::From<RegisteredGlowVertex>(), 3,
+                               BufferUsage::None);
+            DynamicVertexBuffer dynamicTyped(
+                device, System::Type::From<RegisteredGlowVertex>(), 6, BufferUsage::WriteOnly);
+            Context().Check(
+                typed.getVertexCountProperty() == 3 &&
+                    typed.getVertexDeclarationProperty().GetVertexElements() == authored &&
+                    dynamicTyped.getVertexCountProperty() == 6 &&
+                    dynamicTyped.getBufferUsageProperty() == BufferUsage::WriteOnly &&
+                    dynamicTyped.getVertexDeclarationProperty().GetVertexElements() == authored,
+                "static and dynamic Type constructors consume the registered application layout");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -209,8 +272,8 @@ namespace
 CNA_DEMOS_GAME(CustomVertexDemo, {
     .id = "graphics.vertex_declaration.custom_vertex",
     .title = "Custom vertex format",
-    .description = "Defines a plain vertex struct with an extra field, describes it with VertexElements in a "
-                   "VertexDeclaration and draws it with DrawUserPrimitives.",
+    .description = "Defines and draws a plain custom vertex layout, then registers an IVertexType declaration so "
+                   "the static and dynamic System::Type buffer constructors can resolve the same application format.",
     .apis = {"VertexDeclaration::VertexDeclaration", "VertexDeclaration::VertexStride",
              "VertexDeclaration::GetVertexElements", "VertexElement::VertexElement", "VertexElement::Offset",
              "VertexElement::VertexElementFormat", "VertexElement::VertexElementUsage", "VertexElement::UsageIndex",
@@ -222,8 +285,11 @@ CNA_DEMOS_GAME(CustomVertexDemo, {
              "VertexElementFormat::HalfVector4", "VertexElementFormat::NormalizedShort2",
              "VertexElementFormat::NormalizedShort4", "VertexElementFormat::Short2", "VertexElementFormat::Short4",
              "VertexElementUsage::Binormal", "VertexElementUsage::Depth", "VertexElementUsage::Fog",
-             "VertexElementUsage::PointSize", "VertexElementUsage::Sample", "VertexElementUsage::TessellateFactor"},
-    .tags = {"3d", "vertex", "layout", "declaration"},
+             "VertexElementUsage::PointSize", "VertexElementUsage::Sample", "VertexElementUsage::TessellateFactor",
+             "CNA::Graphics::VertexTypeRegistryEXT", "VertexTypeRegistryEXT::Register",
+             "VertexTypeRegistryEXT::TryResolve", "VertexTypeRegistryEXT::Resolve", "VertexBuffer::VertexBuffer",
+             "DynamicVertexBuffer::DynamicVertexBuffer"},
+    .tags = {"3d", "vertex", "layout", "declaration", "registry", "reflection", "cnaext"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
     .deterministic = true,
