@@ -513,8 +513,11 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::ShaderDiagnosticEXT::getStage` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.diagnostic_parser
 - `CNA::ShaderDiagnosticEXT::parseCompilerLog` -- graphics.shader_effect.diagnostic_parser
 - `CNA::ShaderDiagnosticSeverityEXT` -- graphics.shader_effect.diagnostic_parser
-- `CNA::ShaderStageEXT` -- graphics.shader_effect.diagnostic_parser
+- `CNA::ShaderDialectEXT` -- graphics.device.capability_report
+- `CNA::ShaderLanguageEXT` -- graphics.device.capability_report
+- `CNA::ShaderStageEXT` -- graphics.device.capability_report, graphics.shader_effect.diagnostic_parser
 - `CNA::TargetPlatform` -- core.platform.host_identity
+- `CNA::UsesDescriptorBindingContractEXT` -- graphics.device.capability_report
 - `CNA::getCurrentDesktopOS` -- core.platform.host_identity
 - `CNA::getCurrentGraphicsBackendCategory` -- core.renderer.metadata
 - `CNA::getCurrentGraphicsBackendMaturity` -- core.renderer.metadata
@@ -648,7 +651,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GltfImportReportEXT::WarningCount` -- graphics.model.import_report
 - `GraphicsAdapter::GetCurrentDeviceTypeEXT` -- graphics.graphics_adapter.display_modes
 - `GraphicsAdapter::GetRequiredRendererEXT` -- graphics.graphics_adapter.display_modes
-- `GraphicsDevice::ExecutesShaderEffectSourceEXT` -- graphics.shader_effect.toon_shading
+- `GraphicsDevice::ExecutesShaderEffectSourceEXT` -- graphics.device.capability_report, graphics.shader_effect.toon_shading
 - `GraphicsDevice::GetDisplayColorSpaceEXT` -- graphics.device.capability_report
 - `GraphicsDevice::GetGraphicsRendererName` -- graphics.device.supports_capability, platform.renderer_selection.set_preferred
 - `GraphicsDevice::GetMaxTextureDimension` -- graphics.device.capability_report
@@ -657,11 +660,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GraphicsDevice::GetRendererFeatureSupportEXT` -- graphics.device.capability_report
 - `GraphicsDevice::GetRendererLimitEXT` -- graphics.device.capability_report
 - `GraphicsDevice::GetRendererSurfaceFormatSupportEXT` -- graphics.device.capability_report
-- `GraphicsDevice::GetShaderDialectEXT` -- graphics.shader_effect.toon_shading
+- `GraphicsDevice::GetShaderDialectEXT` -- graphics.device.capability_report, graphics.shader_effect.toon_shading
 - `GraphicsDevice::SetDisplayColorSpaceEXT` -- graphics.device.capability_report
 - `GraphicsDevice::SupportsCapability` -- graphics.device.supports_capability
 - `GraphicsDevice::SupportsDisplayColorSpaceEXT` -- graphics.device.capability_report
 - `GraphicsDevice::SupportsRendererFeatureEXT` -- graphics.device.capability_report
+- `GraphicsDevice::SupportsShaderLanguageEXT` -- graphics.device.capability_report
 - `GraphicsDevice::SupportsSurfaceFormatAsRenderTargetEXT` -- graphics.device.capability_report
 - `GraphicsDeviceManager::BeginDraw` -- game.graphics_device_manager.device_events
 - `GraphicsDeviceManager::CreateDevice` -- game.graphics_device_manager.device_events

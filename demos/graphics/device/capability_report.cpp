@@ -8,6 +8,8 @@
 
 #include "CNA/DisplayColorSpace.hpp"
 #include "CNA/RendererCapabilityProfile.hpp"
+#include "CNA/ShaderDialectEXT.hpp"
+#include "CNA/ShaderLanguageEXT.hpp"
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SurfaceFormat.hpp"
@@ -40,6 +42,17 @@ namespace
         CNA::RendererFormatUsage::Mipmapped,
         CNA::RendererFormatUsage::Multisample,
         CNA::RendererFormatUsage::ColorTransfer,
+    };
+
+    constexpr std::array ShaderLanguages{
+        CNA::ShaderLanguageEXT::GlslDesktop,
+        CNA::ShaderLanguageEXT::GlslEs,
+        CNA::ShaderLanguageEXT::GlslVulkan,
+        CNA::ShaderLanguageEXT::Hlsl,
+        CNA::ShaderLanguageEXT::Msl,
+        CNA::ShaderLanguageEXT::Wgsl,
+        CNA::ShaderLanguageEXT::SpirV,
+        CNA::ShaderLanguageEXT::Dxil,
     };
 
     constexpr std::uint32_t FormatUsageMask()
@@ -140,6 +153,59 @@ namespace
                                 emptyProfile.GetSurfaceFormatSupport(999).knownUsages == 0,
                             "an empty profile and retired or invalid identities return explicit unknown results");
 
+            const CNA::ShaderDialectEXT dialect = device.GetShaderDialectEXT();
+            const int dialectOrdinal = static_cast<int>(dialect);
+            const bool dialectIsBounded = dialectOrdinal >= static_cast<int>(CNA::ShaderDialectEXT::Unknown) &&
+                                          dialectOrdinal <= static_cast<int>(CNA::ShaderDialectEXT::SpirV);
+            bool dialectMatchesExecutableSource = dialectIsBounded;
+            if (device.ExecutesShaderEffectSourceEXT() && dialect != CNA::ShaderDialectEXT::Unknown)
+            {
+                const auto language = static_cast<CNA::ShaderLanguageEXT>(dialectOrdinal);
+                dialectMatchesExecutableSource &=
+                    device.SupportsShaderLanguageEXT(language, CNA::ShaderStageEXT::Vertex) &&
+                    device.SupportsShaderLanguageEXT(language, CNA::ShaderStageEXT::Fragment);
+            }
+            Context().Check(dialectMatchesExecutableSource,
+                            "a declared executable source dialect maps to a supported vertex/fragment language pair");
+
+            std::size_t supportedShaderPairs = 0;
+            bool shaderLanguageMatrixIsBounded = true;
+            for (const CNA::ShaderLanguageEXT language : ShaderLanguages)
+            {
+                const bool vertex = device.SupportsShaderLanguageEXT(language, CNA::ShaderStageEXT::Vertex);
+                const bool fragment = device.SupportsShaderLanguageEXT(language, CNA::ShaderStageEXT::Fragment);
+                supportedShaderPairs += vertex && fragment ? 1u : 0u;
+                shaderLanguageMatrixIsBounded &=
+                    !device.SupportsShaderLanguageEXT(language, CNA::ShaderStageEXT::Unknown) &&
+                    !device.SupportsShaderLanguageEXT(language, CNA::ShaderStageEXT::Count);
+            }
+            shaderLanguageMatrixIsBounded &=
+                !device.SupportsShaderLanguageEXT(CNA::ShaderLanguageEXT::Unknown,
+                                                  CNA::ShaderStageEXT::Vertex) &&
+                !device.SupportsShaderLanguageEXT(CNA::ShaderLanguageEXT::Count,
+                                                  CNA::ShaderStageEXT::Fragment) &&
+                !device.SupportsShaderLanguageEXT(static_cast<CNA::ShaderLanguageEXT>(-1),
+                                                  CNA::ShaderStageEXT::Vertex) &&
+                !device.SupportsShaderLanguageEXT(CNA::ShaderLanguageEXT::GlslEs,
+                                                  static_cast<CNA::ShaderStageEXT>(-1));
+            Context().Check(shaderLanguageMatrixIsBounded,
+                            "all eight languages accept only live vertex/fragment stage identities");
+
+            bool descriptorBindingsExact = true;
+            for (const CNA::ShaderLanguageEXT language : ShaderLanguages)
+            {
+                descriptorBindingsExact &= CNA::UsesDescriptorBindingContractEXT(language) ==
+                    (language == CNA::ShaderLanguageEXT::SpirV ||
+                     language == CNA::ShaderLanguageEXT::Wgsl);
+            }
+            descriptorBindingsExact &=
+                !CNA::UsesDescriptorBindingContractEXT(CNA::ShaderLanguageEXT::Unknown) &&
+                !CNA::UsesDescriptorBindingContractEXT(CNA::ShaderLanguageEXT::Count);
+            Context().Check(descriptorBindingsExact,
+                            "only SPIR-V and WGSL use CNA's generated-package descriptor binding contract");
+            Context().Print("Shader dialect ordinal {}; {} complete language pair(s) supported",
+                            dialectOrdinal, supportedShaderPairs);
+
             const CNA::DisplayColorSpace originalSpace = device.GetDisplayColorSpaceEXT();
             bool colorSpacesCoherent = device.SupportsDisplayColorSpaceEXT(originalSpace);
             for (const CNA::DisplayColorSpace space : {CNA::DisplayColorSpace::Srgb,
@@ -183,6 +249,8 @@ CNA_DEMOS_GAME(CapabilityReportDemo, {
              "GraphicsDevice::GetRendererSurfaceFormatSupportEXT",
              "GraphicsDevice::SupportsSurfaceFormatAsRenderTargetEXT",
              "GraphicsDevice::GetRendererCapabilityReportEXT", "GraphicsDevice::GetMaxTextureDimension",
+             "GraphicsDevice::GetShaderDialectEXT", "GraphicsDevice::SupportsShaderLanguageEXT",
+             "GraphicsDevice::ExecutesShaderEffectSourceEXT",
              "GraphicsDevice::GetDisplayColorSpaceEXT", "GraphicsDevice::SetDisplayColorSpaceEXT",
              "GraphicsDevice::SupportsDisplayColorSpaceEXT", "CNA::RendererCapabilityProfile",
              "CNA::RendererCapabilityProfile::GetRendererName", "CNA::RendererCapabilityProfile::GetFeature",
@@ -195,7 +263,8 @@ CNA_DEMOS_GAME(CapabilityReportDemo, {
              "CNA::RendererFormatSupport", "CNA::RendererFormatSupport::IsKnown",
              "CNA::RendererFormatSupport::Supports", "CNA::DisplayColorSpace", "CNA::AllRendererFeatures",
              "CNA::GetRendererFeatureName", "CNA::GetRendererFeatureDescription",
-             "CNA::AllRendererLimits", "CNA::GetRendererLimitName"},
+             "CNA::AllRendererLimits", "CNA::GetRendererLimitName", "CNA::ShaderDialectEXT",
+             "CNA::ShaderLanguageEXT", "CNA::ShaderStageEXT", "CNA::UsesDescriptorBindingContractEXT"},
     .tags = {"capability", "renderer", "limits", "cnaext"},
     .frames = 1,
 })

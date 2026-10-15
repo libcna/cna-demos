@@ -9984,3 +9984,21 @@ passes. Generated XNA/C totals remain unchanged; Complete938 correctly marks bot
 absent. Evidence:`/tmp/checkpoint-942-diagnostic-*`. The existing compiler-diagnostics demo keeps
 the separate live GLSL failure and retained-program evidence. Audit shader dialect/language and
 stage-specific device selection next.
+
+## Focused943-native-shader-language-stage-matrix
+
+The stable `graphics.device.capability_report` workflow grows nine to12 controls and closes the
+ordinary native shader dialect/language query surface. All eight executable `ShaderLanguageEXT`
+values are queried independently for Vertex and Fragment; Unknown, Count and negative language or
+stage identities are refused. When the renderer declares an executable source `ShaderDialectEXT`,
+its same-ordinal language must support both stages. The generated-package helper classifies exactly
+SPIR-V and WGSL as using CNA's descriptor binding contract. SOFTWARE reports Unknown with zero
+complete pairs; OPENGLES3 reports GLSL ES with one complete pair.
+
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass12/12 with stable renderer-specific stdout hashes
+`99d2415292cf0d4b20aa61c1d2d20be25c670e7f9833c26fec529d5ab478c7d5` and
+`98dab0b7978bca7d09d4db7cf1a921e62c02d555781f95ca81b5cb2c59514566`; stderr is empty. The changed
+object compiles without warnings in a `-j3` build, metadata remains668/0 and the exact SOFTWARE
+CTest passes. Generated totals remain unchanged and Complete938 retains the older three-control
+result. Evidence:`/tmp/checkpoint-943-shader-*`. No compilation or pixel result is claimed.
+Continue the next coherent native public-header audit.

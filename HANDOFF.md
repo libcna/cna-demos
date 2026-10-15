@@ -308,6 +308,23 @@ Complete938 remains the full baseline and correctly marks this new ID absent. Ev
 `/tmp/checkpoint-942-diagnostic-*`. No real shader compilation, pixel or CNA-defect claim is made
 for this parser-only batch.
 
+Focused **943-native-shader-language-stage-matrix** extends the stable
+`graphics.device.capability_report` workflow from nine to12 controls. It enumerates all eight
+executable `ShaderLanguageEXT` identities across Vertex and Fragment, rejects Unknown/Count and
+negative language/stage identities, and requires an executable declared `ShaderDialectEXT` to map
+to a supported stage pair. `UsesDescriptorBindingContractEXT` is true for exactly SPIR-V and WGSL,
+the two generated-package formats sharing that layout. On the exercised renderers SOFTWARE reports
+Unknown and zero complete pairs, while OPENGLES3 reports GLSL ES and one complete pair.
+
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass12/12 with stable renderer-specific stdout hashes
+`99d2415292cf0d4b20aa61c1d2d20be25c670e7f9833c26fec529d5ab478c7d5` and
+`98dab0b7978bca7d09d4db7cf1a921e62c02d555781f95ca81b5cb2c59514566`; stderr is empty. The
+changed object compiles without warnings in a `-j3` build, metadata remains668/0 and the exact
+SOFTWARE CTest passes. Generated totals stay unchanged because these are CNA extensions;
+Complete938 retains the earlier three-control form of this ID. Evidence:
+`/tmp/checkpoint-943-shader-*`. This is capability selection evidence, not shader compilation,
+pixels or visual inspection, and no CNA defect appeared.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2415,8 +2432,9 @@ queries and safe aggregate defaults. Focused941 closes the ordinary native rende
 consumer surface: detailed features, numeric limits, format-usage masks, display color spaces,
 safe unknowns and the matching English report. Focused942 closes the renderer-independent shader
 diagnostic value/parser/exception contract; the existing compiler demo retains live-driver
-evidence. Audit shader dialect/language selection next, including stage-specific device support and
-the descriptor-binding helper, then continue the next coherent public CNA header family. The diagnostics
+evidence. Focused943 closes the ordinary shader dialect/language selection matrix, including
+stage-specific device support, invalid identities and the descriptor-binding helper. Continue the
+next coherent public CNA header family. The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered

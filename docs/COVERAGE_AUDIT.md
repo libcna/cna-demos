@@ -3862,3 +3862,23 @@ object compiles without warnings with at most three jobs, metadata is668/0 and t
 CTest passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C
 routes because this family is CNA-specific. Complete938 correctly leaves this new ID absent.
 Evidence:`/tmp/checkpoint-942-diagnostic-*`. No CNA defect appeared.
+
+### Focused943 native shader language and stage matrix
+
+The existing `graphics.device.capability_report` demo grows nine to12 controls. It queries all eight
+executable `ShaderLanguageEXT` values against both live stages, while Unknown, Count and negative
+language/stage identities must return false. A bounded non-Unknown `ShaderDialectEXT` on a renderer
+that executes supplied source must map by public ordinal to a supported Vertex/Fragment language
+pair. The separate descriptor-layout helper returns true for exactly SPIR-V and WGSL and false for
+the other executable languages plus both sentinels. This complements actual GLSL selection and
+execution in the portable-package and compiler workflows.
+
+SOFTWARE reports dialect0/Unknown and zero complete pairs; OPENGLES3 reports dialect2/GLSL ES and
+one complete pair. Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass12/12 with stable stdout
+hashes `99d2415292cf0d4b20aa61c1d2d20be25c670e7f9833c26fec529d5ab478c7d5` and
+`98dab0b7978bca7d09d4db7cf1a921e62c02d555781f95ca81b5cb2c59514566`; stderr is empty. The changed
+object compiles without warnings with at most three jobs, metadata remains668/0 and the exact
+SOFTWARE CTest passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and
+3078/3205 C routes because this surface is CNA-specific. Complete938 contains the older
+three-control form of this stable ID. Evidence:`/tmp/checkpoint-943-shader-*`. No CNA defect
+appeared.
