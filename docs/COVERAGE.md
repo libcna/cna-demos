@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**673 demos** in 18 categories. Kinds: console 175, game 296, standalone 202. Automation: automated 637, manual 3, smoke-only 33.
+**674 demos** in 18 categories. Kinds: console 176, game 296, standalone 202. Automation: automated 638, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 51 | 51 | 0 | 0 | 34 / 0 / 13 / 0 / 4 | 34 / 0 / 13 / 0 / 4 |
+| content | 52 | 52 | 0 | 0 | 34 / 0 / 13 / 0 / 5 | 34 / 0 / 13 / 0 / 5 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`.
-- OPENGLES3: absent from report: `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`.
+- SOFTWARE: absent from report: `content.media.cnb_codec`, `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`.
+- OPENGLES3: absent from report: `content.media.cnb_codec`, `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -198,6 +198,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::RequireSingle` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbMaxAudioSampleRate` -- content.sound_effect.cnb_codec
+- `CNA::Content::Cnb::CnbMaxVideoDimension` -- content.media.cnb_codec
+- `CNA::Content::Cnb::CnbMediaChunk::SongHeader` -- content.media.cnb_codec
+- `CNA::Content::Cnb::CnbMediaChunk::VideoHeader` -- content.media.cnb_codec
+- `CNA::Content::Cnb::CnbMediaSchemaVersion` -- content.media.cnb_codec
+- `CNA::Content::Cnb::CnbSongData` -- content.media.cnb_codec
+- `CNA::Content::Cnb::CnbSongHeaderFixedStride` -- content.media.cnb_codec
 - `CNA::Content::Cnb::CnbSoundEffectChunk::Data` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbSoundEffectChunk::Header` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbSoundEffectData` -- content.sound_effect.cnb_codec
@@ -205,6 +211,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbSoundEffectSamplesAsPcm16` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbSoundEffectSchemaVersion` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbSoundEffectSchemaVersionForFormat` -- content.sound_effect.cnb_codec
+- `CNA::Content::Cnb::CnbVideoData` -- content.media.cnb_codec
+- `CNA::Content::Cnb::CnbVideoHeaderStride` -- content.media.cnb_codec
 - `CNA::Content::Cnb::CnbWriter::AddChunk` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::Build` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetCompression` -- content.custom.cnb_read_limits
@@ -212,10 +220,14 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbWriter::SetLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetMetadata` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
+- `CNA::Content::Cnb::DecodeSongFromCnb` -- content.media.cnb_codec
 - `CNA::Content::Cnb::DecodeSoundEffectFromCnb` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::DecodeTexture2DFromCnb` -- content.custom.source_root_capabilities
+- `CNA::Content::Cnb::DecodeVideoFromCnb` -- content.media.cnb_codec
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::EncodeSongToCnb` -- content.media.cnb_codec
 - `CNA::Content::Cnb::EncodeSoundEffectToCnb` -- content.sound_effect.cnb_codec
+- `CNA::Content::Cnb::EncodeVideoToCnb` -- content.media.cnb_codec
 - `CNA::Content::Cnb::ImportWavAsImportedSound` -- content.sound_effect.imported_pcm
 - `CNA::Content::Cnb::IsCnbCompressionSupported` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::ProcessImportedSoundEffect` -- content.sound_effect.imported_pcm

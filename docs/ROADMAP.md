@@ -10193,3 +10193,24 @@ warning-free `-j3` build, exact SOFTWARE CTest, metadata 673/0 and both validato
 Generated totals remain unchanged; 28 names enter the CNA-extension appendix and Complete948 marks
 all four newer IDs absent. Evidence: `/tmp/checkpoint-953-song-pipeline/*`. Audit the adjacent
 public `CnbMediaCodec.hpp` Song/Video contract next.
+
+## Focused954-CNB-media-codec
+
+The new `content.media.cnb_codec` closes the public `CnbMediaCodec.hpp` contract in eight grouped
+controls. It covers every shared constant, both safe data defaults, deterministic Song and Video
+round trips, exact metadata and the required single untyped media XREF. Song encode/decode enforce
+safe references, signed-runtime duration, asset/schema identity, singleton header, XREF shape and
+reserved flags.
+
+Video accepts both dimension boundaries, all three soundtrack values and maximum duration. Its
+encoder rejects unsafe streams and each invalid duration, dimension, frame-rate and soundtrack
+case; raw valid-container fixtures prove the decoder independently rejects the same metadata plus
+wrong identity, missing header/XREF and reserved flags. Generic hostile container bytes remain the
+separate `CnbDocument` audit.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 8/8 with the same stdout SHA-256
+`16b157f17349c7cb652c73481e98412f009598019b80830bcf4168870bc1dcae` and empty stderr. The
+warning-free `-j3` build, exact SOFTWARE CTest, metadata 674/0 and both validator suites pass.
+Generated totals remain unchanged; 12 names enter the CNA-extension appendix and Complete948 marks
+all five newer IDs absent. Evidence: `/tmp/checkpoint-954-cnb-media-codec/*`. Audit the public
+`VideoContentPipeline.hpp` component workflow next.

@@ -4099,3 +4099,26 @@ pass. Generated XNA/C totals remain 303/329 types, 2114/2326 members, 674/753 fi
 routes; 28 component names enter the CNA-extension appendix. Complete948 marks all four post-
 baseline IDs absent. Evidence: `/tmp/checkpoint-953-song-pipeline/*`. No media decoder, audio
 device, playback or CNA defect is claimed.
+
+### Focused954 CNB media codec
+
+The new renderer-free `content.media.cnb_codec` closes every public declaration in
+`CnbMediaCodec.hpp` with eight grouped controls. Shared schema/chunk constants and both data
+structures have exact safe defaults. Song and Video encode deterministically, retain canonical
+type/content metadata, write exactly one untyped external-media XREF and decode every field.
+
+Song encoding refuses empty, escaping, absolute and native-separator stream names plus duration
+outside the signed runtime range. Its decoder independently enforces asset/schema identity, one
+header, one untyped XREF and reserved flags. Video accepts dimensions 1 and 65536, soundtrack
+values 0-2 and duration `INT32_MAX`; its encoder refuses unsafe stream, duration, dimension, finite-
+positive-rate and soundtrack violations. Raw valid-container fixtures prove the decoder repeats
+the metadata and structural checks rather than trusting producers. Generic malformed CNB layout
+remains the existing `CnbDocument` audit's responsibility.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 8/8 with byte-identical stdout SHA-256
+`16b157f17349c7cb652c73481e98412f009598019b80830bcf4168870bc1dcae` and empty stderr. The
+warning-free build uses `-j3`; metadata is 674/0; the exact SOFTWARE CTest and both validator suites
+pass. Generated XNA/C totals remain 303/329 types, 2114/2326 members, 674/753 fields and 3078/3205
+routes; 12 codec names enter the CNA-extension appendix. Complete948 marks all five post-baseline
+IDs absent. Evidence: `/tmp/checkpoint-954-cnb-media-codec/*`. No media decoder, playback or CNA
+defect is involved.

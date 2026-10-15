@@ -477,6 +477,20 @@ CNA-extension appendix and Complete948 marks all four post-baseline IDs absent. 
 `/tmp/checkpoint-953-song-pipeline/*`. No media decoder, audio device, playback or CNA defect is
 claimed.
 
+Focused **954-CNB-media-codec** adds the 674th source/catalog ID,
+`content.media.cnb_codec`, and closes every public declaration in `CnbMediaCodec.hpp` with eight
+controls. It covers shared constants and safe Song/Video defaults; deterministic round trips with
+exact metadata and one untyped media XREF; Song reference/duration validation; decoder identity,
+schema, singleton-header, XREF-shape and flag checks; both Video dimension limits, all soundtrack
+values and maximum duration; and independent encode/decode rejection of every invalid Video field.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 8/8 with byte-identical stdout SHA-256
+`16b157f17349c7cb652c73481e98412f009598019b80830bcf4168870bc1dcae` and empty stderr. The
+warning-free build uses at most three jobs, metadata is 674/0, the exact SOFTWARE CTest and both
+validator suites pass. Generated XNA/C totals remain unchanged; 12 media-codec names enter the
+CNA-extension appendix and Complete948 marks all five post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-954-cnb-media-codec/*`. No media file, decoder, playback or CNA defect is involved.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2601,7 +2615,8 @@ dispositioned through existing C reader/dictionary/model evidence. Focused951 re
 CNA-DEMOS-ISSUE-105 for the sole named-only importer selection defect. Focused952 closes the whole
 public CNB SoundEffect codec, including format helpers, compatibility and validation behavior.
 Focused953 closes the public Song pipeline, including external-stream deployment and the named
-WAV-as-Song route. Audit the adjacent public `CnbMediaCodec.hpp` Song/Video contract next.
+WAV-as-Song route. Focused954 closes the adjacent public Song/Video CNB codec. Audit the public
+`VideoContentPipeline.hpp` component workflow next.
 The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
