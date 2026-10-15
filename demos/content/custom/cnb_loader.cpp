@@ -1,13 +1,18 @@
 // SPDX-License-Identifier: MS-PL
 // A game's binary asset schema and its process-wide CNA loader.
 #include <array>
+#include <atomic>
 #include <chrono>
+#include <condition_variable>
 #include <cstdint>
 #include <filesystem>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <stdexcept>
 #include <system_error>
+#include <thread>
+#include <vector>
 #include "CnaDemos/Demo.hpp"
 #include "CNA/Content/Cnb/CnbByteWriter.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
@@ -22,9 +27,17 @@ namespace
     struct Rules { std::string name; float gravity; std::uint32_t lives; };
     struct CollisionAsset { std::uint8_t marker; };
     struct LoaderState { int reads = 0; };
+    struct ConcurrentAsset { std::uint32_t registration; std::uint32_t payload; };
+    struct ConcurrentLoaderState
+    {
+        std::uint32_t registration;
+        std::atomic<int> reads{0};
+    };
     constexpr auto RulesChunk = MakeChunkId('R', 'U', 'L', 'E');
     constexpr auto CollisionChunk = MakeChunkId('M', 'A', 'R', 'K');
+    constexpr auto ConcurrentChunk = MakeChunkId('R', 'A', 'C', 'E');
     constexpr const char* RulesName = "CnaDemos.GameRules";
+    constexpr const char* ConcurrentName = "CnaDemos.ConcurrentRules";
     // These distinct names deliberately share the same 31-bit FNV-1a custom identifier. Keeping
     // the pair fixed makes the collision defense deterministic instead of doing a search at run time.
     constexpr const char* CollisionAlpha = "CnaDemos.CollisionAsset.AlphavbnQ8GeK";
@@ -112,6 +125,81 @@ namespace
             return state ? state->reads : -1;
         };
 
+        // The registry promises that every accessor is safe across threads and that equivalent
+        // repeat registrations retain the first loader. Release several public registration
+        // calls from one gate so that this covers the contended path rather than serial setup.
+        constexpr std::size_t ConcurrentRegistrations = 8;
+        const auto concurrentTypeId = CnbAssetTypeIdFromName(ConcurrentName);
+        std::vector<std::shared_ptr<ConcurrentLoaderState>> concurrentStates;
+        std::vector<std::weak_ptr<ConcurrentLoaderState>> concurrentWeak;
+        concurrentStates.reserve(ConcurrentRegistrations);
+        concurrentWeak.reserve(ConcurrentRegistrations);
+        for (std::size_t index = 0; index < ConcurrentRegistrations; ++index)
+        {
+            auto state = std::make_shared<ConcurrentLoaderState>();
+            state->registration = static_cast<std::uint32_t>(index + 1);
+            concurrentWeak.push_back(state);
+            concurrentStates.push_back(std::move(state));
+        }
+        std::mutex registrationGateMutex;
+        std::condition_variable registrationGateChanged;
+        std::size_t registrationsReady = 0;
+        bool releaseRegistrations = false;
+        std::atomic<int> registrationFailures{0};
+        std::vector<std::thread> registrationThreads;
+        registrationThreads.reserve(ConcurrentRegistrations);
+        for (const auto& state : concurrentStates)
+        {
+            registrationThreads.emplace_back([&, state] {
+                {
+                    std::unique_lock gateLock(registrationGateMutex);
+                    ++registrationsReady;
+                    registrationGateChanged.notify_all();
+                    registrationGateChanged.wait(gateLock, [&] { return releaseRegistrations; });
+                }
+                try
+                {
+                    ContentManager::RegisterCnbLoaderEXT<ConcurrentAsset>(
+                        concurrentTypeId, ConcurrentName,
+                        [state, concurrentTypeId](const CnbDocument& document, ContentManager&) {
+                            document.RequireAsset(concurrentTypeId, 1);
+                            auto input = document.OpenChunk(document.RequireSingle(ConcurrentChunk));
+                            const std::uint32_t payload = input.ReadU32();
+                            input.RequireExhausted();
+                            ++state->reads;
+                            return ConcurrentAsset{state->registration, payload};
+                        });
+                }
+                catch (...) { ++registrationFailures; }
+            });
+        }
+        bool allRegistrationsReady = false;
+        {
+            std::unique_lock gateLock(registrationGateMutex);
+            allRegistrationsReady = registrationGateChanged.wait_for(
+                gateLock, std::chrono::seconds(5),
+                [&] { return registrationsReady == ConcurrentRegistrations; });
+            releaseRegistrations = true;
+        }
+        registrationGateChanged.notify_all();
+        for (std::thread& registration : registrationThreads) registration.join();
+        registrationThreads.clear();
+        concurrentStates.clear();
+        std::shared_ptr<ConcurrentLoaderState> retainedConcurrent;
+        std::size_t retainedConcurrentCount = 0;
+        for (const auto& weak : concurrentWeak)
+        {
+            if (auto state = weak.lock())
+            {
+                ++retainedConcurrentCount;
+                retainedConcurrent = std::move(state);
+            }
+        }
+        ctx.Check(allRegistrationsReady && registrationFailures == 0,
+                  "all eight synchronized registrations of one custom type complete safely");
+        ctx.Check(retainedConcurrentCount == 1 && retainedConcurrent,
+                  "concurrent equivalent registrations retain exactly one factory capture");
+
         // A real game writes this at build time. Generate a private temporary asset here so the
         // schema, writer and matching runtime reader are visible together in one focused demo.
         auto path = std::filesystem::temp_directory_path() /
@@ -163,6 +251,12 @@ namespace
         ctx.Check(wrongTypeRefused,
                   "RequireAsset rejects a valid document when the decoder requests another asset type");
         writer.WriteToFile((path / "rules.cnb").string());
+        CnbByteWriter concurrentPayload;
+        concurrentPayload.WriteU32(77);
+        CnbWriter concurrentWriter(concurrentTypeId, 1);
+        concurrentWriter.SetMetadata(ConcurrentName, "concurrent");
+        concurrentWriter.AddChunk(ConcurrentChunk, concurrentPayload.Take(), CnbChunkFlags::Mandatory);
+        concurrentWriter.WriteToFile((path / "concurrent.cnb").string());
 
         // A real hash collision passes the writer's hash check, so dispatch must compare the full
         // canonical name before invoking a candidate factory. Repair the same path afterwards to
@@ -186,6 +280,10 @@ namespace
         colliding.WriteToFile((path / "collision.cnb").string());
 
         ContentManager content(nullptr, path.string());
+        const ConcurrentAsset concurrent = content.Load<ConcurrentAsset>("concurrent");
+        ctx.Check(retainedConcurrent && concurrent.registration == retainedConcurrent->registration &&
+                      concurrent.payload == 77 && retainedConcurrent->reads == 1,
+                  "the retained concurrent-registration winner decodes the real asset exactly once");
         bool collisionRefused = false;
         try { (void)content.Load<CollisionAsset>("collision"); }
         catch (const ContentLoadException& error)
@@ -312,7 +410,7 @@ CNA_DEMOS_CONSOLE(CnbLoader, {
     .id = "content.custom.cnb_loader",
     .title = "A custom CNB asset schema (CNAEXT)",
     .description = "Writes a game-rules CNB asset, checks canonical custom-type identity and collision refusal, "
-                   "first-wins registration, caching, extensions, retry after repair and invalid schema layouts.",
+                   "first-wins serial and concurrent registration, caching, extensions, retry after repair and invalid schema layouts.",
     .apis = {"ContentManager::RegisterCnbLoaderEXT", "ContentManager::Load",
              "CNA::Content::Cnb::CnbAssetTypeIdFromName", "CNA::Content::Cnb::CnbWriter::SetMetadata",
              "CNA::Content::Cnb::CnbWriter::AddChunk", "CNA::Content::Cnb::CnbWriter::WriteToFile",
@@ -321,6 +419,6 @@ CNA_DEMOS_CONSOLE(CnbLoader, {
              "CNA::Content::Cnb::CnbDocument::RequireSingle", "CNA::Content::Cnb::CnbByteReader::RequireExhausted",
              "CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood"},
     .tags = {"content", "custom", "cnb", "cnaext"},
-    .restrictions = "Process-global custom registration is isolated in a child process; concurrent registration is not exercised.",
+    .restrictions = "Process-global custom registrations, including the concurrent first-wins probe, are isolated in a child process.",
     .ownProcess = true,
 })

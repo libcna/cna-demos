@@ -314,7 +314,8 @@ a check that all authored colors remain visible and that a blank texture row can
   cropping, kerning), ✅ `content.content_project.xna_content_project` (an XNA `.contentproj` built
   as it is, `CONTENT_PROJECT`). A CNJ texture repeats the texture processor demos (the same
   parameters in JSON). ✅ `content.custom.cnb_loader` uses public CnbWriter and
-  RegisterCnbLoaderEXT for a typed asset, caching and schema rejection. ✅ Existing manifest demo
+  RegisterCnbLoaderEXT for a typed asset, caching, schema rejection and synchronized concurrent
+  first-wins registration. ✅ Existing manifest demo
   now demonstrates explicit snapshot refresh, its independence from the asset cache, per-file reader aggregation and lazy availability after typed loading (13 focused checks on both renderers). ✅
   `content.custom.cnj_loader` uses two named JSON factories for a game-owned Enemy type, actual
   payload decoding with nlohmann-json, manager-local registration and useful error paths. The CNB
@@ -8640,3 +8641,18 @@ incremental `-j3` build, metadata and both self-test suites pass; temporary cove
 demos,302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. This closes
 same-process same-root contention; independent compiler processes and crash consistency remain
 separate gaps. Evidence:`/tmp/checkpoint-863-*`. No screenshot or visual inspection was performed.
+
+## Focused864-concurrent-CNB-loader-registration
+
+`content.custom.cnb_loader` grows from twenty-two to twenty-five controls. Eight threads wait at a
+common gate, then call the public `ContentManager::RegisterCnbLoaderEXT` with distinct owned
+factory state for the same custom ID and canonical name. Every call completes without exception;
+after thread and caller references are released, exactly one capture remains. A real generated CNB
+then decodes payload77 through that retained winner exactly once, extending the established serial
+first-wins and process-lifetime evidence to the registry's documented concurrent-access contract.
+
+SOFTWARE and OPENGLES3 renderer-labelled direct runs pass25/25 with byte-identical normalized
+stdout and empty stderr. The exact SOFTWARE CTest passes twenty consecutive repetitions. The
+full incremental build uses `-j3`, metadata is655/0 and both self-test suites pass. Temporary
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence:`/tmp/checkpoint-864-*`. No renderer, screenshot or visual inspection was used.

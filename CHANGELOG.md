@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the custom CNB loader workflow with eight synchronized public registrations of one
+  type, proving thread-safe first-wins capture retention and decoding through the retained factory.
 - Extended multi-artifact content publication with two concurrent compiler invocations targeting
   one output root, proving that the contender is refused before writing and the lease owner can
   publish a complete set followed by an unchanged skip.

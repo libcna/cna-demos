@@ -4134,6 +4134,26 @@ Independent-process contention and crash consistency remain explicit gaps. Evide
 Continue with the next high-value behavior gap after committing and pushing this batch. Do not
 promote it to a complete checkpoint by itself.
 
+### Focused864-concurrent-CNB-loader-registration
+
+The existing own-process `content.custom.cnb_loader` workflow grows from twenty-two to twenty-five
+controls. Eight threads synchronize at a gate and invoke public
+`ContentManager::RegisterCnbLoaderEXT` for the same custom identifier/name with distinct owned
+factory states. All eight calls return normally; once thread and caller references are gone,
+exactly one capture remains. A generated custom CNB then decodes payload77 through that retained
+winner exactly once, proving the documented concurrent-access and equivalent first-wins behavior
+through the game-facing entry point.
+
+SOFTWARE and OPENGLES3 renderer-labelled direct runs pass25/25 with byte-identical normalized
+stdout and empty stderr. The exact SOFTWARE CTest passes twenty consecutive repetitions. The
+full incremental build uses `-j3`, metadata is655/0 and both self-test suites pass. Temporary
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes; no CNA issue
+appeared. Evidence is under `/tmp/checkpoint-864-*`; no renderer, screenshot or visual inspection
+was used.
+
+Commit and push this batch, then continue to the next explicit high-value behavior gap without a
+complete checkpoint.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
