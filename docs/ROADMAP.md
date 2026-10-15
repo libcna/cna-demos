@@ -9744,3 +9744,15 @@ known-issue SOFTWARE CTest passes ten repetitions. The warning-free build uses a
 metadata remains663/0, both validator suites pass and generated surface totals remain unchanged.
 Evidence:`/tmp/checkpoint-925-content-*`. Continue with another public behavior whose outcome
 changes a caller decision; do not enumerate exception types without a real producing operation.
+
+## Complete926-generated-runtime-checkpoint
+
+The complete pinned-CNA build and outer-Xvfb validation absorb focused921-925. Metadata is663/0;
+all676 enabled CTests pass, with three manual entries disabled. SOFTWARE reports560 pass/53
+expected fail/47 skip/3 manual and OPENGLES3 reports599/54/7/3, with all663 IDs present and zero
+unexpected results. Against Complete920, the three new diagnostics IDs take their declared
+diagnostics-OFF skips, `c_api.content.content_manager` gains only the reviewed ISSUE-103 assertion,
+and SOFTWARE's keyboard/mouse workflow takes its complete42-check path because this Xvfb instance
+exposes the desktop-global pointer. Failed-assertion multiplicities otherwise remain exact at92 and
+96. Generated coverage remains302/329 types,2114/2326 members,674/753 fields and3078/3205 C routes.
+Evidence: `build/linux-full/reports/checkpoint-926-complete-*`.

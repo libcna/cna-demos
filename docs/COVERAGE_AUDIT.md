@@ -3565,3 +3565,15 @@ the warning-free build uses `-j3`, metadata is663/0 and both validator suites pa
 surface totals remain302/329 types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-925-content-*` and `/tmp/checkpoint-925-content-exception-source.txt`. No CNA source
 was edited and no screenshot or manual visual-quality claim was made.
+
+### Complete926 generated runtime checkpoint
+
+The complete pinned-CNA build and outer-Xvfb validation absorb focused921-925. Metadata is663/0;
+all676 enabled CTests pass, with three manual entries disabled. SOFTWARE reports560 pass/53
+expected fail/47 skip/3 manual and OPENGLES3 reports599/54/7/3, with all663 IDs present and zero
+unexpected results. The exact Complete920 comparison adds the three declared diagnostics-OFF skips
+and the reviewed ISSUE-103 failure only; failed-assertion multiplicity moves91->92 and95->96.
+SOFTWARE's keyboard/mouse workflow moves from its valid no-desktop-pointer skip to the full42-check
+pass because this Xvfb instance exposes the global pointer and cursor paths. Generated coverage
+remains302/329 types,2114/2326 members,674/753 fields and3078/3205 C routes, with no absent IDs.
+Evidence: `build/linux-full/reports/checkpoint-926-complete-*`.
