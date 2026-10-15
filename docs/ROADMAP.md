@@ -10979,3 +10979,17 @@ No demo, metadata or count changes, and no runtime or visual result is claimed. 
 `/tmp/checkpoint-1008-uniform-block/source-audit.txt` (SHA-256
 `d65b908e8a45fc1471c382ea40831e3122127261609219cee2c955cc2cd01c04`). Extend the existing
 OcclusionQuery lifecycle workflow through disposal while a Begin/End pair is active next.
+
+## Focused1009-OcclusionQuery-active-disposal
+
+The existing `graphics.occlusion_query.visible_pixels` workflow now disposes a distinct query while
+its native Begin/End pair is open. Public disposed state and renderer release are immediate; the
+subsequent hidden and visible query pair then completes with the established zero/visible results,
+which proves SOFTWARE and EasyGL returned their single active-query slot. This closes the explicit
+active-disposal gap without a new demo ID.
+
+The warning-free `-j3` build, metadata693/0 and exact SOFTWARE CTest pass. Ten SOFTWARE and ten
+OPENGLES3/Xvfb runs pass12/12 with stable per-renderer stdout and empty stderr. Evidence:
+`/tmp/checkpoint-1009-occlusion-query/*`. Counts remain307/329 XNA types,2128/2326 members,674/753
+fields and3079/3205 C routes. No screenshot, manual visual result, device-loss teardown or other
+backend claim is made. Continue with the next reachable explicit resource-behavior gap.

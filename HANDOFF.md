@@ -152,6 +152,9 @@ require hardware/service/platform/external-tool observation.
 Focused1008 revalidates `ShaderEffect::DeclareUniformBlockEXT`: WebGPU is the only current renderer
 override, while every backend in `linux-full` inherits the documented no-op. It remains an
 intentional renderer-specific gap pending real WebGPU/browser layout and pixel evidence.
+Focused1009 extends the existing OcclusionQuery lifecycle through disposal during an active
+Begin/End pair and proves later SOFTWARE/EasyGL queries still complete; both tested renderers pass
+12/12 in ten repeated runs.
 Focused824 adds the actual `PbrEffect` image-based-lighting draw path: invalid fallback, diffuse
 irradiance, intensity scaling, BRDF lookup and roughness-selected prefiltered cube mips.
 Focused825 extends the existing skinned-PBR model with the parallel complete environment bundle and
@@ -3989,8 +3992,25 @@ no-op build, metadata693/0 and validator/comparator self-tests5/5 plus4/4 pass. 
 coverage count changed. Evidence:`/tmp/checkpoint-1008-uniform-block/source-audit.txt`, SHA-256
 `d65b908e8a45fc1471c382ea40831e3122127261609219cee2c955cc2cd01c04`. No runtime or visual result
 is claimed. Extend `graphics.occlusion_query.visible_pixels` through disposal during an active
-Begin/End pair next; both compiled renderers have an explicit native release path and the existing
-queries can prove that the target remains usable.
+Begin/End pair next; both tested renderer implementations have an explicit native release path and
+the existing queries can prove that the target remains usable.
+
+## Focused1009 OcclusionQuery active disposal
+
+`graphics.occlusion_query.visible_pixels` now disposes a separate query while its native Begin/End
+pair remains open. It verifies the public disposed state and renderer release immediately; the
+existing hidden and visible queries then both complete with their established zero/visible results.
+That subsequent result makes native target reuse observable and covers the active-disposal branch
+in SOFTWARE and EasyGL without adding an ID.
+
+The warning-free `-j3` build, metadata693/0 and exact SOFTWARE CTest pass. Ten direct runs per
+renderer pass12/12 with stable stdout and empty stderr. SOFTWARE stdout SHA-256 is
+`cc3685ab121347b234e16e5db25f7c45dbc463449600ef438df1b87fa9d2401f`; OPENGLES3 is
+`8030af18db95b55dc322303da4abf37e7928fcaa0fc931783e1bf15a2eff215e`. Counts remain307/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1009-occlusion-query/*`. Query counters were inspected programmatically; no
+screenshot or manual visual inspection was performed. No CNA issue was found. Audit the next
+reachable explicit resource-behavior gap, favoring an existing coherent graphics demo.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

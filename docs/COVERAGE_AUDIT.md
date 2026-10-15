@@ -1740,7 +1740,7 @@ whole-image identity or fixed GPU completion-latency claim is made.
 | Constructor, Begin and End | visible_pixels creates three queries and brackets actual draws of hidden, open and moving lights. Its fixed controls establish depth rejection and visibility. Constructor refusal under Reach or absent renderer capability is a separate documented path: declared needs/profile selection do not execute every constructor error. A shared profile/capability example could add it if useful; no separate constructor-only scene. |
 | IsComplete, PixelCount and result reuse | The fixed queries are read only after both complete, and the moving query is reused after observing completion. EndRun requires the fixed results to arrive during the automated run. This establishes a bounded polling workflow, not fixed GPU completion latency. A scratch-query preflight now checks fresh IsComplete=false, refused PixelCount without a result, End before Begin, repeated Begin and reuse after End without an IsComplete observation. The successful End after a refused repeated Begin confirms the active pair survives that refusal. All eight added lifecycle controls and the three original visibility checks pass on both selections; the original hidden/open counts remain 0/4422 on SOFTWARE (precise) and 0/1 on OPENGLES3 (boolean). The source records an IsComplete observation even when it returns false; the reuse guard is observation, not a promise that earlier GPU work completed. Do not infer that premature reuse is safe on every renderer or require an initially false GPU poll. Nested distinct active queries remain a separate backend constraint. |
 | isPixelCountPreciseEXT | The existing example selects either a real tally greater than 100 or the documented boolean value 1 for the open light; the hidden light must always yield zero. The extension prevents interpreting an ES3 boolean result as a coverage ratio. This does not establish exact cross-renderer raster counts, sample-versus-pixel behavior with MSAA, or all renderer implementations. |
-| Dispose, IsDisposed, HasRenderer and disposed operations | Normal query ownership is demonstrated by unique_ptr cleanup. The scratch-query preflight ends the native pair, calls public Dispose, verifies IsDisposed and HasRenderer=false, and requires ObjectDisposedException from subsequent Begin and PixelCount. Focused694 corrects metadata to name `OcclusionQuery::Dispose` as well as the inherited resource path. Both renderers pass11/11. Other disposed-operation permutations, repeated Dispose and disposal of an actively open pair are not independently established. HasRenderer is a small lifetime diagnostic, not an independent scene. Query destruction after earlier device/context teardown is a separate lifecycle scenario; no device-loss or all-backend teardown proof is claimed. |
+| Dispose, IsDisposed, HasRenderer and disposed operations | Normal query ownership is demonstrated by unique_ptr cleanup. The scratch-query preflight ends one native pair, calls public Dispose, verifies IsDisposed and HasRenderer=false, and requires ObjectDisposedException from subsequent Begin and PixelCount. Focused694 corrects metadata to name `OcclusionQuery::Dispose` as well as the inherited resource path. Focused1009 adds a distinct query disposed while its Begin/End pair is active; the later hidden/open queries both complete, proving that SOFTWARE and EasyGL release their single native active-query slot. Ten runs per tested renderer pass12/12 with stable output and empty stderr. Repeated Dispose and query destruction after earlier device/context teardown remain separate; no device-loss or all-backend teardown proof is claimed. HasRenderer is a small lifetime diagnostic, not an independent scene. |
 | GetTypeName, inherited Name/Tag and protected Dispose(bool) | Reflection identity and inherited resource bookkeeping do not justify duplicate demos per subclass. The protected hook is framework lifecycle plumbing; applications use public Dispose. The public preflight avoids internal query handles and renderer bridges. |
 
 ### VertexElement and custom vertex declarations
@@ -5290,5 +5290,24 @@ belong to that same workflow. The warning-free `-j3` no-op build, metadata693/0,
 self-tests5/5 and checkpoint-comparison tests4/4 pass. No demo, metadata or coverage count changes.
 The exact source/cache audit is `/tmp/checkpoint-1008-uniform-block/source-audit.txt`, SHA-256
 `d65b908e8a45fc1471c382ea40831e3122127261609219cee2c955cc2cd01c04`. No runtime or visual claim
-is made. Audit active-open `OcclusionQuery` disposal next; both compiled renderers implement a
-native release path and the existing visibility scene can make subsequent target reuse observable.
+is made. Audit active-open `OcclusionQuery` disposal next; both tested renderer implementations
+expose a native release path and the existing visibility scene can make subsequent target reuse
+observable.
+
+### Focused1009 OcclusionQuery active disposal
+
+`graphics.occlusion_query.visible_pixels` now disposes a separate query while its native Begin/End
+pair is open. It immediately verifies the public disposed state and released renderer, then its
+existing hidden and visible queries both complete. This makes native target reuse observable: a
+stale active slot would prevent the later query pair from producing its established zero/visible
+results. The coherent lifecycle scene grows from11 to12 controls without a new ID.
+
+The warning-free `-j3` build, metadata693/0 and exact SOFTWARE CTest pass. Ten direct runs per
+renderer pass12/12 with stable stdout and empty stderr. SOFTWARE reports its precise4422 visible
+samples with SHA-256 `cc3685ab121347b234e16e5db25f7c45dbc463449600ef438df1b87fa9d2401f`;
+OPENGLES3 reports its expected boolean1 with SHA-256
+`8030af18db95b55dc322303da4abf37e7928fcaa0fc931783e1bf15a2eff215e`. Counts remain307/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1009-occlusion-query/*`. Pixel results come from query counters; no screenshot or
+manual visual inspection was performed. No CNA issue was found. Audit the next reachable explicit
+behavioral gap, prioritizing an existing coherent graphics-resource workflow.

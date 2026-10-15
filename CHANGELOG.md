@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the OcclusionQuery lifecycle through disposal during an active Begin/End pair and proved
+  later SOFTWARE and EasyGL queries still complete.
 - Revalidated `ShaderEffect::DeclareUniformBlockEXT` against pinned d23 and kept it explicitly
   WebGPU-specific because every renderer in `linux-full` inherits the documented no-op.
 - Revalidated every uncredited C ABI route against the pinned public headers and corrected the

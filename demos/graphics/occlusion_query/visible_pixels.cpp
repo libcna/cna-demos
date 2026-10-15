@@ -82,6 +82,16 @@ namespace
             ExpectRefusal<System::ObjectDisposedException>(Context(), "PixelCount on a disposed query is refused",
                 [&] { (void)scratch.getPixelCountProperty(); });
 
+            // Disposal is also supported while the native Begin/End pair is still open. The fixed
+            // hidden/open queries below must subsequently complete, which proves this path gave
+            // the renderer's single active-query target back rather than merely disposing the
+            // public wrapper.
+            OcclusionQuery active(device);
+            active.Begin();
+            active.Dispose();
+            Context().Check(active.getIsDisposedProperty() && !active.HasRenderer(),
+                            "disposing an active query releases its renderer");
+
             spriteBatch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             effect_ = std::make_unique<BasicEffect>(device);
@@ -210,7 +220,8 @@ CNA_DEMOS_GAME(OcclusionDemo, {
     .description = "Counts the visible pixels of lights drawn behind a wall with OcclusionQuery::Begin/End: zero "
                    "for one hidden completely, many for one in the open, and a live count for one passing behind "
                    "the wall, read when IsComplete says the answer has arrived; isPixelCountPreciseEXT tells a real "
-                   "tally from the 0/1 flag OpenGL ES 3.0 can only give. A scratch query demonstrates ordering and disposal refusals.",
+                   "tally from the 0/1 flag OpenGL ES 3.0 can only give. Scratch queries demonstrate ordering, "
+                   "ordinary disposal and disposal while a Begin/End pair is active.",
     .apis = {"OcclusionQuery::OcclusionQuery", "OcclusionQuery::Begin", "OcclusionQuery::End",
              "OcclusionQuery::IsComplete", "OcclusionQuery::PixelCount", "OcclusionQuery::isPixelCountPreciseEXT",
              "OcclusionQuery::Dispose", "GraphicsResource::Dispose", "GraphicsResource::IsDisposed",
