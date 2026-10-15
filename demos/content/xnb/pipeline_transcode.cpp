@@ -22,6 +22,7 @@
 #include "CNA/Content/Cnb/CnbSoundEffectCodec.hpp"
 #include "CNA/Content/Cnb/CnbSpriteFontCodec.hpp"
 #include "CNA/Content/Cnb/CnbTextureCodec.hpp"
+#include "CNA/Content/Cnb/CnbWriter.hpp"
 #include "CNA/Content/Pipeline/CnjContentPipeline.hpp"
 #include "CNA/Content/Pipeline/ModelContentPipeline.hpp"
 #include "CNA/Content/Pipeline/SongContentPipeline.hpp"
@@ -192,6 +193,151 @@ namespace
         return Cnb::CnbDocument::Parse(result.output.bytes, name);
     }
 
+    template<class Function>
+    bool Refuses(Function&& function)
+    {
+        try
+        {
+            function();
+            return false;
+        }
+        catch (const std::exception&)
+        {
+            return true;
+        }
+    }
+
+    std::array<float, 16> ModelV2Matrix(const float translation)
+    {
+        return {{1.0f, 0.0f, 0.0f, 0.0f,
+                 0.0f, 1.0f, 0.0f, 0.0f,
+                 0.0f, 0.0f, 1.0f, 0.0f,
+                 translation, translation + 1.0f, translation + 2.0f, 1.0f}};
+    }
+
+    Cnb::CnbModelV2Data CompleteModelV2()
+    {
+        Cnb::CnbModelV2Data model;
+        model.bones = {{"Root", false, -1, ModelV2Matrix(1.0f)},
+                       {"Child", false, 0, ModelV2Matrix(4.0f)}};
+        model.rootBone = 0u;
+
+        const std::array<Cnb::CnbModelV2VertexFormat, 12> formats{
+            Cnb::CnbModelV2VertexFormat::Single,
+            Cnb::CnbModelV2VertexFormat::Vector2,
+            Cnb::CnbModelV2VertexFormat::Vector3,
+            Cnb::CnbModelV2VertexFormat::Vector4,
+            Cnb::CnbModelV2VertexFormat::Color,
+            Cnb::CnbModelV2VertexFormat::Byte4,
+            Cnb::CnbModelV2VertexFormat::Short2,
+            Cnb::CnbModelV2VertexFormat::Short4,
+            Cnb::CnbModelV2VertexFormat::NormalizedShort2,
+            Cnb::CnbModelV2VertexFormat::NormalizedShort4,
+            Cnb::CnbModelV2VertexFormat::HalfVector2,
+            Cnb::CnbModelV2VertexFormat::HalfVector4};
+        const std::array<std::uint32_t, 12> formatSizes{
+            4u, 8u, 12u, 16u, 4u, 4u, 4u, 8u, 4u, 8u, 4u, 8u};
+        Cnb::CnbModelV2VertexDeclaration completeDeclaration;
+        std::uint32_t offset = 0u;
+        for (std::size_t index = 0u; index < formats.size(); ++index)
+        {
+            completeDeclaration.elements.push_back({
+                offset, formats[index], static_cast<Cnb::CnbModelV2VertexUsage>(index), 0u});
+            offset += formatSizes[index];
+        }
+        completeDeclaration.vertexStride = offset;
+        Cnb::CnbModelV2VertexDeclaration finalUsage{
+            4u, {{0u, Cnb::CnbModelV2VertexFormat::Single,
+                  Cnb::CnbModelV2VertexUsage::TessellateFactor, 3u}}};
+        model.vertexDeclarations = {completeDeclaration, finalUsage};
+
+        std::vector<std::uint8_t> firstVertices(completeDeclaration.vertexStride * 4u);
+        for (std::size_t index = 0u; index < firstVertices.size(); ++index)
+            firstVertices[index] = static_cast<std::uint8_t>(index * 13u + 7u);
+        model.vertexBuffers = {{0u, 4u, firstVertices},
+                               {1u, 3u, {1u, 2u, 3u, 4u, 5u, 6u,
+                                         7u, 8u, 9u, 10u, 11u, 12u}}};
+        model.indexBuffers = {{2u, 6u, {0u, 0u, 1u, 0u, 2u, 0u,
+                                        2u, 0u, 1u, 0u, 0u, 0u}},
+                              {4u, 3u, {0u, 0u, 0u, 0u,
+                                        1u, 0u, 0u, 0u,
+                                        2u, 0u, 0u, 0u}}};
+
+        Cnb::CnbModelV2Effect basic;
+        basic.kind = Cnb::CnbModelV2EffectKind::BasicEffect;
+        basic.primaryTexture = "Textures/basic";
+        basic.diffuse = {{0.1f, 0.2f, 0.3f}};
+        basic.emissive = {{0.4f, 0.5f, 0.6f}};
+        basic.specular = {{0.7f, 0.8f, 0.9f}};
+        basic.specularPower = 12.0f;
+        basic.alpha = 0.75f;
+        basic.vertexColorEnabled = true;
+
+        Cnb::CnbModelV2Effect skinned;
+        skinned.kind = Cnb::CnbModelV2EffectKind::SkinnedEffect;
+        skinned.primaryTexture = "Textures/skinned";
+        skinned.diffuse = {{0.2f, 0.3f, 0.4f}};
+        skinned.emissive = {{0.5f, 0.6f, 0.7f}};
+        skinned.specular = {{0.8f, 0.9f, 1.0f}};
+        skinned.specularPower = 24.0f;
+        skinned.alpha = 0.8f;
+        skinned.weightsPerVertex = 4u;
+
+        Cnb::CnbModelV2Effect dual;
+        dual.kind = Cnb::CnbModelV2EffectKind::DualTextureEffect;
+        dual.primaryTexture = "Textures/dual-a";
+        dual.secondaryTexture = "Textures/dual-b";
+        dual.diffuse = {{0.3f, 0.4f, 0.5f}};
+        dual.alpha = 0.85f;
+        dual.vertexColorEnabled = true;
+
+        Cnb::CnbModelV2Effect alpha;
+        alpha.kind = Cnb::CnbModelV2EffectKind::AlphaTestEffect;
+        alpha.primaryTexture = "Textures/alpha";
+        alpha.diffuse = {{0.4f, 0.5f, 0.6f}};
+        alpha.alpha = 0.9f;
+        alpha.alphaFunction = 7u;
+        alpha.referenceAlpha = 173u;
+        alpha.vertexColorEnabled = true;
+
+        Cnb::CnbModelV2Effect environment;
+        environment.kind = Cnb::CnbModelV2EffectKind::EnvironmentMapEffect;
+        environment.primaryTexture = "Textures/environment-base";
+        environment.cubeTexture = "Textures/environment-cube";
+        environment.diffuse = {{0.5f, 0.6f, 0.7f}};
+        environment.emissive = {{0.1f, 0.2f, 0.3f}};
+        environment.specular = {{0.7f, 0.8f, 0.9f}};
+        environment.environmentMapAmount = 0.65f;
+        environment.fresnelFactor = 0.25f;
+        environment.alpha = 0.95f;
+        model.effects = {basic, skinned, dual, alpha, environment};
+
+        Cnb::CnbModelV2Mesh effectMesh;
+        effectMesh.name = "AllEffects";
+        effectMesh.parentBone = 1;
+        effectMesh.boundingSphere = {{1.0f, 2.0f, 3.0f, 4.0f}};
+        for (std::uint32_t effect = 0u; effect < model.effects.size(); ++effect)
+        {
+            effectMesh.parts.push_back({1u, 3u, effect % 2u == 0u ? 0u : 3u,
+                                        1u, 0u, 0u, effect});
+        }
+        Cnb::CnbModelV2Mesh wideIndexMesh{
+            "WideIndices", 0, {{-1.0f, -2.0f, -3.0f, 5.0f}},
+            {{0u, 3u, 0u, 1u, 1u, 1u, 0u}}};
+        model.meshes = {effectMesh, wideIndexMesh};
+        return model;
+    }
+
+    Cnb::CnbDocument BareModelV2Document(const std::uint32_t assetType,
+                                         const std::uint32_t schema,
+                                         const int headerCopies)
+    {
+        Cnb::CnbWriter writer(assetType, schema);
+        for (int copy = 0; copy < headerCopies; ++copy)
+            writer.AddChunk(Cnb::CnbModelV2Chunk::Header, {}, Cnb::CnbChunkFlags::Mandatory, 4u);
+        return Cnb::CnbDocument::Parse(writer.Build(), "bare Model schema-2 CNB");
+    }
+
     void XnbPipelineTranscode(CnaDemos::DemoContext& ctx)
     {
         const Pipeline::XnbImporter importer;
@@ -358,6 +504,205 @@ namespace
                       exactModel,
                   "a Model XNB selects schema 2 and preserves its hierarchy, shared buffers and separate effects");
 
+        ctx.Check(Cnb::CnbModelV2Chunk::Header == Cnb::MakeChunkId('M', '2', 'H', 'D') &&
+                      Cnb::CnbModelV2Chunk::Strings == Cnb::MakeChunkId('M', '2', 'S', 'T') &&
+                      Cnb::CnbModelV2Chunk::Bones == Cnb::MakeChunkId('M', '2', 'B', 'N') &&
+                      Cnb::CnbModelV2Chunk::Meshes == Cnb::MakeChunkId('M', '2', 'M', 'S') &&
+                      Cnb::CnbModelV2Chunk::Parts == Cnb::MakeChunkId('M', '2', 'P', 'T') &&
+                      Cnb::CnbModelV2Chunk::VertexDeclarations ==
+                          Cnb::MakeChunkId('M', '2', 'V', 'D') &&
+                      Cnb::CnbModelV2Chunk::VertexResources ==
+                          Cnb::MakeChunkId('M', '2', 'V', 'R') &&
+                      Cnb::CnbModelV2Chunk::VertexData == Cnb::MakeChunkId('M', 'V', 'T', 'X') &&
+                      Cnb::CnbModelV2Chunk::IndexResources ==
+                          Cnb::MakeChunkId('M', '2', 'I', 'R') &&
+                      Cnb::CnbModelV2Chunk::IndexData == Cnb::MakeChunkId('M', 'I', 'D', 'X') &&
+                      Cnb::CnbModelV2Chunk::Effects == Cnb::MakeChunkId('M', '2', 'F', 'X') &&
+                      Cnb::CnbModelV2SchemaVersion == 2u && Cnb::CnbModelV2HeaderStride == 64u &&
+                      Cnb::CnbModelV2BoneStride == 72u && Cnb::CnbModelV2MeshStride == 32u &&
+                      Cnb::CnbModelV2PartStride == 32u &&
+                      Cnb::CnbModelV2DeclarationStride == 16u &&
+                      Cnb::CnbModelV2ElementStride == 20u &&
+                      Cnb::CnbModelV2ResourceStride == 16u &&
+                      Cnb::CnbModelV2EffectStride == 96u &&
+                      Cnb::CnbModelV2NoIndex == 0xFFFFFFFFu,
+                  "the Model schema-2 chunk IDs, version, row strides and absent-reference sentinel are exact");
+
+        const std::array<Cnb::CnbModelV2VertexFormat, 12> allFormats{
+            Cnb::CnbModelV2VertexFormat::Single,
+            Cnb::CnbModelV2VertexFormat::Vector2,
+            Cnb::CnbModelV2VertexFormat::Vector3,
+            Cnb::CnbModelV2VertexFormat::Vector4,
+            Cnb::CnbModelV2VertexFormat::Color,
+            Cnb::CnbModelV2VertexFormat::Byte4,
+            Cnb::CnbModelV2VertexFormat::Short2,
+            Cnb::CnbModelV2VertexFormat::Short4,
+            Cnb::CnbModelV2VertexFormat::NormalizedShort2,
+            Cnb::CnbModelV2VertexFormat::NormalizedShort4,
+            Cnb::CnbModelV2VertexFormat::HalfVector2,
+            Cnb::CnbModelV2VertexFormat::HalfVector4};
+        bool formatOrdinalsExact = true;
+        for (std::size_t index = 0u; index < allFormats.size(); ++index)
+            formatOrdinalsExact = formatOrdinalsExact &&
+                static_cast<std::uint32_t>(allFormats[index]) == index;
+        ctx.Check(formatOrdinalsExact,
+                  "all twelve stable schema-2 vertex-format ordinals remain contiguous and exact");
+
+        const std::array<Cnb::CnbModelV2VertexUsage, 13> allUsages{
+            Cnb::CnbModelV2VertexUsage::Position, Cnb::CnbModelV2VertexUsage::Color,
+            Cnb::CnbModelV2VertexUsage::TextureCoordinate, Cnb::CnbModelV2VertexUsage::Normal,
+            Cnb::CnbModelV2VertexUsage::Binormal, Cnb::CnbModelV2VertexUsage::Tangent,
+            Cnb::CnbModelV2VertexUsage::BlendIndices, Cnb::CnbModelV2VertexUsage::BlendWeight,
+            Cnb::CnbModelV2VertexUsage::Depth, Cnb::CnbModelV2VertexUsage::Fog,
+            Cnb::CnbModelV2VertexUsage::PointSize, Cnb::CnbModelV2VertexUsage::Sample,
+            Cnb::CnbModelV2VertexUsage::TessellateFactor};
+        bool usageOrdinalsExact = true;
+        for (std::size_t index = 0u; index < allUsages.size(); ++index)
+            usageOrdinalsExact = usageOrdinalsExact &&
+                static_cast<std::uint32_t>(allUsages[index]) == index;
+        ctx.Check(usageOrdinalsExact,
+                  "all thirteen stable schema-2 vertex-usage ordinals remain contiguous and exact");
+
+        ctx.Check(static_cast<std::uint32_t>(Cnb::CnbModelV2EffectKind::BasicEffect) == 0u &&
+                      static_cast<std::uint32_t>(Cnb::CnbModelV2EffectKind::SkinnedEffect) == 1u &&
+                      static_cast<std::uint32_t>(Cnb::CnbModelV2EffectKind::DualTextureEffect) == 2u &&
+                      static_cast<std::uint32_t>(Cnb::CnbModelV2EffectKind::AlphaTestEffect) == 3u &&
+                      static_cast<std::uint32_t>(Cnb::CnbModelV2EffectKind::EnvironmentMapEffect) == 4u,
+                  "all five stock-effect discriminants remain exact");
+
+        const auto realReencoded = Cnb::EncodeModelV2ToCnb(decodedModel, "Legacy/twin-panels-v2");
+        const Cnb::CnbDocument realReencodedDocument =
+            Cnb::CnbDocument::Parse(realReencoded, "re-encoded real Model schema-2 CNB");
+        ctx.Check(realReencoded ==
+                          Cnb::EncodeModelV2ToCnb(decodedModel, "Legacy/twin-panels-v2") &&
+                      Cnb::DecodeModelV2FromCnb(realReencodedDocument) == decodedModel &&
+                      realReencodedDocument.Metadata().assetTypeName ==
+                          "Microsoft.Xna.Framework.Graphics.Model" &&
+                      realReencodedDocument.Metadata().contentName == "Legacy/twin-panels-v2",
+                  "the genuine-XNB-derived shared-resource model re-encodes byte-identically and round trips exactly");
+
+        const Cnb::CnbModelV2Data completeModel = CompleteModelV2();
+        const auto completeBytes =
+            Cnb::EncodeModelV2ToCnb(completeModel, "Models/complete-v2");
+        const Cnb::CnbDocument completeDocument =
+            Cnb::CnbDocument::Parse(completeBytes, "complete Model schema-2 CNB");
+        const Cnb::CnbModelV2Data restoredComplete =
+            Cnb::DecodeModelV2FromCnb(completeDocument);
+        ctx.Check(completeBytes ==
+                          Cnb::EncodeModelV2ToCnb(completeModel, "Models/complete-v2") &&
+                      restoredComplete == completeModel &&
+                      completeDocument.FindAll(Cnb::CnbModelV2Chunk::Header).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelV2Chunk::Strings).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelV2Chunk::Bones).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelV2Chunk::Meshes).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelV2Chunk::Parts).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelV2Chunk::VertexDeclarations).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelV2Chunk::VertexResources).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelV2Chunk::VertexData).size() == 2u &&
+                      completeDocument.FindAll(Cnb::CnbModelV2Chunk::IndexResources).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelV2Chunk::IndexData).size() == 2u &&
+                      completeDocument.FindAll(Cnb::CnbModelV2Chunk::Effects).size() == 1u,
+                  "a complete schema-2 value is byte-deterministic and restores every nested field and chunk");
+
+        ctx.Check(restoredComplete.vertexDeclarations.size() == 2u &&
+                      restoredComplete.vertexDeclarations[0].elements.size() == 12u &&
+                      restoredComplete.vertexDeclarations[1].elements.size() == 1u &&
+                      restoredComplete.vertexBuffers.size() == 2u &&
+                      restoredComplete.vertexBuffers[0].bytes ==
+                          completeModel.vertexBuffers[0].bytes &&
+                      restoredComplete.indexBuffers.size() == 2u &&
+                      restoredComplete.indexBuffers[0].indexElementSize == 2u &&
+                      restoredComplete.indexBuffers[1].indexElementSize == 4u &&
+                      restoredComplete.meshes.size() == 2u &&
+                      restoredComplete.meshes[0].parts.size() == 5u &&
+                      restoredComplete.meshes[1].parts.size() == 1u,
+                  "all formats/usages, both index widths, shared draw resources and exact mesh bounds survive");
+
+        ctx.Check(restoredComplete.effects.size() == 5u &&
+                      restoredComplete.effects[0].primaryTexture == "Textures/basic" &&
+                      restoredComplete.effects[0].vertexColorEnabled &&
+                      restoredComplete.effects[1].weightsPerVertex == 4u &&
+                      restoredComplete.effects[2].secondaryTexture == "Textures/dual-b" &&
+                      restoredComplete.effects[3].alphaFunction == 7u &&
+                      restoredComplete.effects[3].referenceAlpha == 173u &&
+                      restoredComplete.effects[4].cubeTexture == "Textures/environment-cube" &&
+                      restoredComplete.effects[4].environmentMapAmount == 0.65f &&
+                      restoredComplete.effects[4].fresnelFactor == 0.25f,
+                  "all five canonical stock-effect payload shapes retain their active fields and typed references");
+
+        Cnb::CnbModelV2Data nullNamed = completeModel;
+        nullNamed.bones[1].name.clear();
+        nullNamed.bones[1].nameIsNull = true;
+        const Cnb::CnbModelV2Data restoredNullNamed = Cnb::DecodeModelV2FromCnb(
+            Cnb::CnbDocument::Parse(Cnb::EncodeModelV2ToCnb(nullNamed),
+                                    "null-name Model schema-2 CNB"));
+        ctx.Check(restoredNullNamed.bones[1].name.empty() &&
+                      !restoredNullNamed.bones[1].nameIsNull && restoredNullNamed != nullNamed,
+                  "the documented memory-only null-name distinction intentionally becomes an empty name through CNB");
+
+        Cnb::CnbModelV2Data graphOnly;
+        graphOnly.bones = {{"Only", false, -1, ModelV2Matrix(0.0f)}};
+        const Cnb::CnbModelV2Data restoredGraphOnly = Cnb::DecodeModelV2FromCnb(
+            Cnb::CnbDocument::Parse(Cnb::EncodeModelV2ToCnb(graphOnly),
+                                    "graph-only Model schema-2 CNB"));
+        ctx.Check(restoredGraphOnly == graphOnly && restoredGraphOnly.meshes.empty() &&
+                      restoredGraphOnly.vertexDeclarations.empty() &&
+                      restoredGraphOnly.vertexBuffers.empty() &&
+                      restoredGraphOnly.indexBuffers.empty() && restoredGraphOnly.effects.empty(),
+                  "one root bone with no meshes or resources is the schema's valid minimal document");
+
+        Cnb::CnbModelV2Data invalidModel = completeModel;
+        invalidModel.rootBone = 99u;
+        const bool badRoot = Refuses([&] { (void)Cnb::EncodeModelV2ToCnb(invalidModel); });
+        invalidModel = completeModel;
+        invalidModel.vertexDeclarations[0].elements[1].offset = 0u;
+        const bool badDeclaration =
+            Refuses([&] { (void)Cnb::EncodeModelV2ToCnb(invalidModel); });
+        invalidModel = completeModel;
+        invalidModel.vertexBuffers[0].bytes.pop_back();
+        const bool badVertexResource =
+            Refuses([&] { (void)Cnb::EncodeModelV2ToCnb(invalidModel); });
+        invalidModel = completeModel;
+        invalidModel.meshes[0].parts[0].effect = 99u;
+        const bool badPartResource =
+            Refuses([&] { (void)Cnb::EncodeModelV2ToCnb(invalidModel); });
+        invalidModel = completeModel;
+        invalidModel.indexBuffers[0].bytes[0] = 3u;
+        const bool badDrawIndex =
+            Refuses([&] { (void)Cnb::EncodeModelV2ToCnb(invalidModel); });
+        invalidModel = completeModel;
+        invalidModel.effects[2].emissive[0] = 1.0f;
+        const bool badEffect = Refuses([&] { (void)Cnb::EncodeModelV2ToCnb(invalidModel); });
+        invalidModel = completeModel;
+        invalidModel.meshes[0].boundingSphere[3] = -1.0f;
+        const bool badBound = Refuses([&] { (void)Cnb::EncodeModelV2ToCnb(invalidModel); });
+        ctx.Check(badRoot && badDeclaration && badVertexResource && badPartResource &&
+                      badDrawIndex && badEffect && badBound,
+                  "the shared validator refuses invalid graph, declaration, payload, draw, effect and bound data");
+
+        ctx.Check(Refuses([&]
+                  {
+                      (void)Cnb::DecodeModelV2FromCnb(BareModelV2Document(
+                          Cnb::CnbAssetTypeId::Curve, Cnb::CnbModelV2SchemaVersion, 0));
+                  }) &&
+                      Refuses([&]
+                      {
+                          (void)Cnb::DecodeModelV2FromCnb(BareModelV2Document(
+                              Cnb::CnbAssetTypeId::Model,
+                              Cnb::CnbModelV2SchemaVersion + 1u, 0));
+                      }) &&
+                      Refuses([&]
+                      {
+                          (void)Cnb::DecodeModelV2FromCnb(BareModelV2Document(
+                              Cnb::CnbAssetTypeId::Model, Cnb::CnbModelV2SchemaVersion, 0));
+                      }) &&
+                      Refuses([&]
+                      {
+                          (void)Cnb::DecodeModelV2FromCnb(BareModelV2Document(
+                              Cnb::CnbAssetTypeId::Model, Cnb::CnbModelV2SchemaVersion, 2));
+                      }),
+                  "the decoder refuses wrong identity/version and missing or duplicate mandatory headers");
+
         const auto volume = build("volume.xnb", "Legacy/volume");
         const auto decodedVolume = Cnb::DecodeTexture3DFromCnb(Parse(volume, "volume.cnb"));
         bool exactVolume = decodedVolume.representations.size() == 1u &&
@@ -462,7 +807,7 @@ namespace
 CNA_DEMOS_CONSOLE(XnbPipelineTranscode, {
     .id = "content.xnb.pipeline_transcode",
     .title = "Transcode legacy XNB sources to native CNB",
-    .description = "Runs every built-in XNB importer dispatch through CNA's public content pipeline, verifies canonical CNB semantics for nine root types, and demonstrates Video metadata overrides plus external-stream dependency, XREF and deployment behavior.",
+    .description = "Runs every built-in XNB importer dispatch through CNA's public content pipeline, verifies canonical CNB semantics for nine root types, audits the complete Model schema-2 codec, and demonstrates Video metadata overrides plus external-stream deployment behavior.",
     .apis = {"CNA::Content::Pipeline::ImportedXnbVideoType",
              "CNA::Content::Pipeline::ImportedXnbVideo",
              "CNA::Content::Pipeline::XnbImporter::Identity",
@@ -484,10 +829,44 @@ CNA_DEMOS_CONSOLE(XnbPipelineTranscode, {
              "CNA::Content::Cnb::DecodeCurveFromCnb",
              "CNA::Content::Cnb::DecodeSongFromCnb",
              "CNA::Content::Cnb::DecodeVideoFromCnb",
+             "CNA::Content::Cnb::CnbModelV2VertexFormat",
+             "CNA::Content::Cnb::CnbModelV2VertexUsage",
+             "CNA::Content::Cnb::CnbModelV2VertexElement",
+             "CNA::Content::Cnb::CnbModelV2VertexDeclaration",
+             "CNA::Content::Cnb::CnbModelV2VertexBuffer",
+             "CNA::Content::Cnb::CnbModelV2IndexBuffer",
+             "CNA::Content::Cnb::CnbModelV2EffectKind",
+             "CNA::Content::Cnb::CnbModelV2Effect",
+             "CNA::Content::Cnb::CnbModelV2Bone",
+             "CNA::Content::Cnb::CnbModelV2Part",
+             "CNA::Content::Cnb::CnbModelV2Mesh",
+             "CNA::Content::Cnb::CnbModelV2Data",
+             "CNA::Content::Cnb::CnbModelV2Chunk::Header",
+             "CNA::Content::Cnb::CnbModelV2Chunk::Strings",
+             "CNA::Content::Cnb::CnbModelV2Chunk::Bones",
+             "CNA::Content::Cnb::CnbModelV2Chunk::Meshes",
+             "CNA::Content::Cnb::CnbModelV2Chunk::Parts",
+             "CNA::Content::Cnb::CnbModelV2Chunk::VertexDeclarations",
+             "CNA::Content::Cnb::CnbModelV2Chunk::VertexResources",
+             "CNA::Content::Cnb::CnbModelV2Chunk::VertexData",
+             "CNA::Content::Cnb::CnbModelV2Chunk::IndexResources",
+             "CNA::Content::Cnb::CnbModelV2Chunk::IndexData",
+             "CNA::Content::Cnb::CnbModelV2Chunk::Effects",
+             "CNA::Content::Cnb::CnbModelV2SchemaVersion",
+             "CNA::Content::Cnb::CnbModelV2HeaderStride",
+             "CNA::Content::Cnb::CnbModelV2BoneStride",
+             "CNA::Content::Cnb::CnbModelV2MeshStride",
+             "CNA::Content::Cnb::CnbModelV2PartStride",
+             "CNA::Content::Cnb::CnbModelV2DeclarationStride",
+             "CNA::Content::Cnb::CnbModelV2ElementStride",
+             "CNA::Content::Cnb::CnbModelV2ResourceStride",
+             "CNA::Content::Cnb::CnbModelV2EffectStride",
+             "CNA::Content::Cnb::CnbModelV2NoIndex",
+             "CNA::Content::Cnb::EncodeModelV2ToCnb",
              "CNA::Content::Cnb::DecodeModelV2FromCnb"},
     .tags = {"content", "pipeline", "xnb", "cnb", "transcode", "compatibility", "cnaext"},
     .assets = {"xnb/textures/colour_wheel.xnb", "xnb/fonts/pixel_font.xnb",
                "xnb/sounds/chime.xnb", "xnb/curves/bounce.xnb",
                "xnb/models/twin_panels.xnb"},
-    .restrictions = "Headless CPU transcoding and exact CNB decoding; generated media sidecars are opaque non-playable bytes. No GPU upload, playback, rendering, screenshot or genuine-XNA execution claim.",
+    .restrictions = "Headless CPU transcoding and exact CNB decoding; representative Model relationship/schema refusals are covered while arbitrary malformed-container fuzzing remains CNA test-suite work. Generated media sidecars are opaque non-playable bytes. The committed Model source is genuine XNB input, but no genuine-XNA execution, GPU upload, playback, rendering or screenshot is claimed.",
 })

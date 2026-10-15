@@ -323,7 +323,9 @@ a check that all authored colors remain visible and that a blank texture row can
   round trips, both target spaces, empty tracks and representative schema refusals), ✅ `content.xnb.pipeline_transcode` (all nine
   supported XNB roots transcoded through public pipeline registration into decoded native CNB,
   including exact volume/cube bytes, external Song/Video deployment and Model schema-2 shared
-  resources), ✅ `content.xnb.output_pipeline` (all eleven stable output IDs, ten built-in writer
+  resources; all 35 public Model schema-2 data/codec declarations are dispositioned through exact
+  constants/enums, real and exhaustive deterministic round trips, minimal data and representative
+  validation), ✅ `content.xnb.output_pipeline` (all eleven stable output IDs, ten built-in writer
   registrations, option-bound identities/schemas, version-aware texture representation selection,
   deterministic DesktopGL/HiDef/LZ4 output, ISSUE-107's stale digest example and the complete
   compiled-Effect source route: real `.fxb` signature/import/pass-through/XNB bytes plus the

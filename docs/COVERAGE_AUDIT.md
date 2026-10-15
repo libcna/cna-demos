@@ -1036,6 +1036,26 @@ All 35 public named declarations now have exact constant, field, round-trip, ref
 runtime evidence. This audit establishes deterministic CPU/container behavior and does not add a
 GPU, screenshot, visual-quality or genuine-XNA execution claim.
 
+#### `CnbModelV2Data.hpp` / `CnbModelV2Codec.hpp` declaration-level disposition
+
+The pinned headers expose 35 public named declarations under this audit's convention: twelve data
+types, eleven chunk IDs, ten schema/stride/sentinel constants and the encoder/decoder. Focused973
+extends the stable `content.xnb.pipeline_transcode` workflow because its committed twin-panel XNB
+already selects schema 2 and proves the compatibility source route, shared buffers and distinct
+effects. A complete direct value supplies the cases that one small real model does not contain.
+
+| Declaration family | Disposition |
+|---|---|
+| `CnbModelV2Chunk` IDs; schema, strides and sentinel | All eleven exact IDs (`M2HD`, `M2ST`, `M2BN`, `M2MS`, `M2PT`, `M2VD`, `M2VR`, `MVTX`, `M2IR`, `MIDX`, `M2FX`) are frozen with schema 2, the 64/72/32/32/16/20/16/96-byte rows and `CnbModelV2NoIndex`. The complete document has one of every table chunk and two correctly aligned payload chunks of each resource kind. |
+| `CnbModelV2VertexFormat`, `CnbModelV2VertexUsage`, element/declaration/buffer types | Exact contiguous ordinals cover all twelve formats and thirteen usages. Two declarations retain authored element order, offsets, usage indices and strides; two vertex resources preserve declaration indices, counts and every byte. Two index resources distinguish 16-bit and 32-bit widths. The public defaulted equality operators compare the complete nested model after decode. Invalid overlap, payload length and selected index are refused by the shared validator. |
+| Effect kind and effect data | One complete model includes Basic, Skinned, DualTexture, AlphaTest and EnvironmentMap payloads with only their legal active fields: typed 2D/cube references, vector/scalar values, weights per vertex, alpha comparison/reference and vertex-colour flags. All five ordinals and every active field survive exactly; a noncanonical inactive DualTexture emissive value is refused. Existing graphics demos retain GPU effect behavior. |
+| Bone, part, mesh and model data | Two parent-before-child bones preserve names/transforms and explicit root; two bounded meshes carry six contiguous draw records over shared resources and exact spheres. The committed real XNB-derived model separately re-encodes byte-identically with its five-bone/two-mesh shared-resource graph. A graph-only root is the valid minimum. Invalid root/resource references and negative sphere radius are refused. `nameIsNull` is explicitly in-memory-only: the audit proves a null name becomes the documented empty name after CNB while default equality still distinguishes the two carriers. |
+| `EncodeModelV2ToCnb`, `DecodeModelV2FromCnb` | Both the real XNB-derived value and the exhaustive synthetic value encode twice byte-identically, carry exact metadata and round trip through complete public equality. Wrong asset identity/version and missing/duplicate headers are refused. Encoder and decoder both call the same validation function; unlike schema 1, no producer/consumer mismatch was found. Arbitrary reserved-word/chunk mutation and configured-limit saturation remain CNA test-suite work. |
+
+All 35 public named declarations now have exact constant, enum, complete-value, equality,
+round-trip, refusal or shared runtime evidence. The source is a committed genuine XNB fixture, but
+the audit makes no genuine-XNA execution, GPU, screenshot or visual-quality claim.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,

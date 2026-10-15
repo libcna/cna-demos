@@ -970,6 +970,35 @@ visual-quality, GPU or genuine-XNA execution claim is added. Audit the adjacent 
 `CnbModelV2Data.hpp`/`CnbModelV2Codec.hpp` family next, reusing the existing genuine-XNB transcode
 and runtime Model evidence before adding another ID.
 
+Focused **973-CNB-Model-schema2-codec-disposition** extends the stable
+`content.xnb.pipeline_transcode` demo from15 to27 controls without adding a catalog ID and
+dispositions all35 public named declarations in `CnbModelV2Data.hpp` and `CnbModelV2Codec.hpp`.
+The committed twin-panel XNB still proves the genuine compatibility source route and its
+five-bone/two-mesh graph with shared vertex/index resources and distinct effects; directly
+re-encoding that decoded value is byte-deterministic and restores complete equality.
+
+A second exhaustive value freezes all11 chunk IDs, ten schema/stride/sentinel constants, every one
+of the12 vertex-format and13 vertex-usage ordinals, two declarations/resources, both index widths,
+two bounded meshes and six shared draw records. It exercises all five stock effect shapes with
+their legal active fields and typed 2D/cube references. Encoding twice is byte-identical, exact
+metadata/chunk cardinalities are checked, and the public nested equality operators compare every
+restored field. A graph-only root is the valid minimum; the documented in-memory-only
+`nameIsNull` distinction deliberately becomes an empty name through CNB. Shared encoder/decoder
+validation refuses representative graph, declaration, payload, draw, effect, bound and schema
+errors. No new CNA issue is found.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE-labelled and ten
+OPENGLES3-labelled runs pass27/27 with byte-identical stdout SHA-256
+`77c86546fb2011cd5a5a33b9d9ee5036e9f914c715e69fa7e204a089d7fb549a` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata remains683/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA/C totals remain unchanged; 34 names enter the CNA-extension appendix
+and Complete956 still marks eight post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-973-model-v2/*`, `/tmp/checkpoint-973-model-v2-report.json` and
+`/tmp/checkpoint-973-coverage.md`. The committed input is genuine XNB, but no genuine-XNA execution,
+GPU, screenshot or visual-quality claim is added. Audit the adjacent public
+`CnbModelFromCnj.hpp` conversion contract next, reusing the existing Model pipeline fixture and
+codec evidence before adding another ID.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3112,8 +3141,11 @@ time/key helpers, both target spaces, deterministic complete-clip round trips an
 schema refusals. Focused972 extends the stable Model pipeline workflow and closes all35 public
 schema-1 `CnbModelData.hpp`/`CnbModelCodec.hpp` declarations through exact schema constants, a
 deterministic complete-value round trip, empty/invalid values and ISSUE-109's five encoder/decoder
-validation gaps. Audit `CnbModelV2Data.hpp`/`CnbModelV2Codec.hpp` next, reusing the genuine-XNB
-transcode and runtime Model evidence before adding another ID. The earlier native
+validation gaps. Focused973 extends the stable XNB transcode workflow and closes all35 public
+schema-2 `CnbModelV2Data.hpp`/`CnbModelV2Codec.hpp` declarations through exact schema constants,
+every format/usage/effect value, genuine-XNB-derived and exhaustive deterministic round trips,
+minimal data and shared-validator refusals. Audit `CnbModelFromCnj.hpp` next, reusing the Model
+pipeline fixture and codec evidence before adding another ID. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds
