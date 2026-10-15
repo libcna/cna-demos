@@ -418,12 +418,13 @@ a check that all authored colors remain visible and that a blank texture row can
   unchanged skip, authored edit, cache versus Unload/reload and explicit CNB-schema refusal
   (10 child checks). No genuine-XNA or GPU claim; external graphs remain separate work.
 - ✅ `content.custom.incremental_compiler`: real RunContentCompiler registry factory and manifest,
-  unchanged skips, primary/aliased shared dependency invalidation, failed-import preservation, repair,
+  explicit pre-built-registry service-option refusal, unchanged skips, primary/aliased shared
+  dependency invalidation, failed-import preservation, repair,
   missing-output rebuild, writer-version identity, same-length/timestamp output tampering, corrupt
   manifest recovery, frozen-registry refusal and ownership-aware clean. Typed per-asset Bonus
   changes rebuild only the affected node, whitespace-only configuration edits skip, and source
   removal/reintroduction collects/restores only its owned output. Remapping an external-root alias
-  to identical bytes skips both nodes with an identical manifest (21 child checks). Clean
+  to identical bytes skips both nodes with an identical manifest (22 child checks). Clean
   rejects changed owned bytes without deleting an untouched peer or the manifest. Crash consistency,
   parallel publishers and graph/deployment cache cases remain separate work.
 - ✅ `content.custom.intermediate_external_references`: filename versus inline data, table
@@ -8738,3 +8739,17 @@ the exact SOFTWARE CTest passes. The three stderr lines are expected invalid-imp
 diagnostics. The `-j3` incremental build, metadata 655/0 and both tool self-test suites pass;
 temporary coverage remains 302/329 types, 2114/2326 members, 169/753 fields and 3078/3205 C routes.
 Evidence: `/tmp/checkpoint-869-*`. No renderer, screenshot or visual inspection was used.
+
+## Focused870-pre-built-registry-service-option-refusal
+
+`content.custom.incremental_compiler` now invokes the public pre-built-registry overload with
+`--fx-compiler` before its normal builds. It returns status 2, names the
+`ContentPipelineRegistryFactory` overload that can honor the option and leaves importer, processor
+and writer counters at zero. The following factory-based workflow still completes all prior
+controls, for twenty-two internal checks total.
+
+Both renderer-labelled standalone runs pass with byte-identical path-normalized stdout/stderr, and
+the exact SOFTWARE CTest passes. The new first stderr line is the expected option-refusal diagnostic.
+The `-j3` incremental build, metadata 655/0 and both tool self-test suites pass; temporary coverage
+remains 302/329 types, 2114/2326 members, 169/753 fields and 3078/3205 C routes. Evidence:
+`/tmp/checkpoint-870-*`. No renderer, screenshot or visual inspection was used.

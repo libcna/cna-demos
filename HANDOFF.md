@@ -4249,6 +4249,23 @@ inspection was used.
 Commit and push this batch, then continue with the next explicit high-value gap. Platform path
 differences remain outside this Linux evidence; Complete859 remains the full baseline.
 
+### Focused870-pre-built-registry-service-option-refusal
+
+The existing `content.custom.incremental_compiler` standalone grows to twenty-two internal
+controls. Before its factory-based builds it calls the public pre-built-registry overload with
+`--fx-compiler`. The call returns command-line status2, names `ContentPipelineRegistryFactory` in
+its diagnostic and leaves importer, processor and writer counters at zero. Every existing build,
+external-root fingerprint and cleanup control then remains green in the same process.
+
+SOFTWARE and OPENGLES3-labelled runs pass with byte-identical path-normalized stdout/stderr. The
+new first stderr line is the expected service-option refusal; the exact SOFTWARE CTest passes. The
+final incremental build uses `-j3`, metadata is655/0 and both tool self-test suites pass. Temporary
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is
+under `/tmp/checkpoint-870-*`. No renderer, screenshot or visual inspection was used.
+
+Commit and push this batch, then continue with the next explicit high-value gap; Complete859
+remains the full baseline.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <iterator>
 #include <memory>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -166,6 +167,21 @@ int main()
             const std::vector<std::filesystem::path> arguments{
                 "build", source, "-o", output, "--format", "cnb", "--workers", "1"};
             const auto manifestPath = output / Pipeline::ContentBuildManifestFileName;
+            auto prebuiltRegistry = std::make_shared<Pipeline::ContentPipelineRegistry>();
+            prebuiltRegistry->RegisterImporter(std::make_shared<ScoreImporter>());
+            prebuiltRegistry->RegisterProcessor(std::make_shared<ScoreProcessor>());
+            prebuiltRegistry->RegisterWriter(std::make_shared<ScoreWriter>(writerVersion));
+            auto serviceArguments = arguments;
+            serviceArguments.insert(serviceArguments.end(), {"--fx-compiler", "unused-compiler"});
+            std::ostringstream prebuiltDiagnostic;
+            std::streambuf* const previousError = std::cerr.rdbuf(prebuiltDiagnostic.rdbuf());
+            const int prebuiltService = Pipeline::RunContentCompiler(serviceArguments, prebuiltRegistry);
+            std::cerr.rdbuf(previousError);
+            std::cerr << prebuiltDiagnostic.str();
+            check(prebuiltService == 2 &&
+                      prebuiltDiagnostic.str().find("ContentPipelineRegistryFactory") != std::string::npos &&
+                      imports == 0 && processes == 0 && writes == 0,
+                  "a pre-built registry refuses service-selection options that only the factory overload can apply");
             const int initial = Pipeline::RunContentCompiler(arguments, factory);
             check(initial == 0 && imports == 2 && processes == 2 && writes == 2 &&
                   ReadScore(output / "arena.cnb") == 10 && ReadScore(output / "menu.cnb") == 16,

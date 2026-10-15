@@ -4,7 +4,7 @@ CNA_DEMOS_STANDALONE({
     .id = "content.custom.incremental_compiler",
     .title = "Embed an incremental score compiler",
     .description = "Runs CNA's real content compiler with a game-owned registry, inspects published score CNBs and its manifest, "
-                   "then checks unchanged skips, aliased dependency edits/remapping, failure recovery, writer-version/output integrity, typed parameter fingerprints, removed-source collection and ownership-aware cleanup.",
+                   "then checks pre-built registry service refusal, unchanged skips, aliased dependency edits/remapping, failure recovery, writer-version/output integrity, typed parameter fingerprints, removed-source collection and ownership-aware cleanup.",
     .apis = {"CNA::Content::Pipeline::RunContentCompiler", "CNA::Content::Pipeline::ContentBuildManifest::Parse",
              "CNA::Content::Pipeline::ContentBuildManifest::Find", "CNA::Content::Pipeline::ContentFileSha256",
              "CNA::Content::Pipeline::ContentProcessorContext::ResolveSourceDependency",

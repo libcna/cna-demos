@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended compiler embedding coverage to prove that a pre-built registry rejects external
+  service-selection options before any game component runs and directs callers to the factory API.
 - Extended the embedded incremental compiler with configured external source roots, proving that
   alias dependencies invalidate on byte edits and remap with identical bytes without cache churn.
 - Extended shared-art source-root validation with a real symlink escape, proving canonical
