@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: MS-PL
 // SignedInGamer::GameDefaults: the player's preferred settings, for a game's initial options.
+#include <array>
+#include <chrono>
+#include <filesystem>
+#include <fstream>
 #include <memory>
 #include <optional>
 #include <string>
@@ -26,6 +30,22 @@ using namespace Microsoft::Xna::Framework::Graphics;
 
 namespace
 {
+    constexpr const char* Players = "Easy Player,Normal Player,Hard Player";
+
+    struct ExpectedDefaults
+    {
+        const char* player;
+        GameDifficulty difficulty;
+        ControllerSensitivity sensitivity;
+        RacingCameraAngle camera;
+    };
+
+    constexpr std::array<ExpectedDefaults, 3> Expected = {{
+        {"Easy Player", GameDifficulty::Easy, ControllerSensitivity::Low, RacingCameraAngle::Back},
+        {"Normal Player", GameDifficulty::Normal, ControllerSensitivity::Medium, RacingCameraAngle::Front},
+        {"Hard Player", GameDifficulty::Hard, ControllerSensitivity::High, RacingCameraAngle::Inside},
+    }};
+
     std::string YesNo(bool value) { return value ? "yes" : "no"; }
 
     std::string ColorText(const std::optional<Color>& color)
@@ -40,6 +60,30 @@ namespace
 
     class GameDefaultsDemo final : public CnaDemos::GamerServicesDemo
     {
+    public:
+        GameDefaultsDemo() : GamerServicesDemo(Players)
+        {
+            const auto suffix = std::chrono::steady_clock::now().time_since_epoch().count();
+            profilesDirectory_ = std::filesystem::temp_directory_path() /
+                ("cna-demos-game-defaults-" + std::to_string(suffix));
+            std::filesystem::create_directories(profilesDirectory_);
+            std::ofstream profiles(profilesDirectory_ / "profiles.json", std::ios::binary);
+            profiles << R"JSON({"version":1,"profiles":[
+{"gamertag":"Easy Player","gameDefaults":{"gameDifficulty":"Easy","controllerSensitivity":"Low","racingCameraAngle":"Back"}},
+{"gamertag":"Normal Player","gameDefaults":{"gameDifficulty":"Normal","controllerSensitivity":"Medium","racingCameraAngle":"Front"}},
+{"gamertag":"Hard Player","gameDefaults":{"gameDifficulty":"Hard","controllerSensitivity":"High","racingCameraAngle":"Inside"}}
+]})JSON";
+            profiles.close();
+            CnaDemos::SetEnvironment("CNA_GAMER_SERVICES_PROFILES_DIR", profilesDirectory_.string());
+            CnaDemos::SetEnvironment("CNA_GAMER_SERVICES_AUTO_SIGN_IN", Players);
+        }
+
+        ~GameDefaultsDemo() override
+        {
+            std::error_code ignored;
+            std::filesystem::remove_all(profilesDirectory_, ignored);
+        }
+
     protected:
         void LoadContent() override
         {
@@ -50,17 +94,35 @@ namespace
         void Update(GameTime& gameTime) override
         {
             DemoGame::Update(gameTime);
-            SignedInGamer* player = (*Gamer::getSignedInGamersProperty())[PlayerIndex::One];
-            if (!lines_.empty() || player == nullptr)
+            const auto players = Gamer::getSignedInGamersProperty();
+            if (!lines_.empty())
             {
                 return;
             }
+            if (players->getCountProperty() < static_cast<int>(Expected.size()))
+                return;
+
+            bool allProfilesExact = true;
+            for (std::size_t i = 0; i < Expected.size(); ++i)
+            {
+                SignedInGamer* player = (*players)[static_cast<PlayerIndex>(i)];
+                const GameDefaults& defaults = player->getGameDefaultsProperty();
+                allProfilesExact = allProfilesExact && player->getGamertagProperty() == Expected[i].player &&
+                    defaults.getGameDifficultyProperty() == Expected[i].difficulty &&
+                    defaults.getControllerSensitivityProperty() == Expected[i].sensitivity &&
+                    defaults.getRacingCameraAngleProperty() == Expected[i].camera;
+                lines_.push_back(player->getGamertagProperty() + ": " +
+                    std::string(CnaDemos::Name(defaults.getGameDifficultyProperty())) + ", " +
+                    std::string(CnaDemos::Name(defaults.getControllerSensitivityProperty())) + ", " +
+                    std::string(CnaDemos::Name(defaults.getRacingCameraAngleProperty())));
+            }
+            Context().Check(allProfilesExact,
+                            "three stored profiles preserve every difficulty, sensitivity and camera value");
+
             // A game starts a new player with these as its options instead of its own defaults:
             // the difficulty, inverted look, auto-aim... the player chose once, in the profile.
-            const GameDefaults& defaults = player->getGameDefaultsProperty();
-            lines_ = {
-                "GameDifficulty:          " + std::string(CnaDemos::Name(defaults.getGameDifficultyProperty())),
-                "ControllerSensitivity:   " + std::string(CnaDemos::Name(defaults.getControllerSensitivityProperty())),
+            const GameDefaults& defaults = (*players)[PlayerIndex::One]->getGameDefaultsProperty();
+            lines_.insert(lines_.end(), {
                 "InvertYAxis:             " + YesNo(defaults.getInvertYAxisProperty()),
                 "AutoAim:                 " + YesNo(defaults.getAutoAimProperty()),
                 "AutoCenter:              " + YesNo(defaults.getAutoCenterProperty()),
@@ -68,10 +130,9 @@ namespace
                 "PrimaryColor:            " + ColorText(defaults.getPrimaryColorProperty()),
                 "SecondaryColor:          " + ColorText(defaults.getSecondaryColorProperty()),
                 "ManualTransmission:      " + YesNo(defaults.getManualTransmissionProperty()),
-                "RacingCameraAngle:       " + std::string(CnaDemos::Name(defaults.getRacingCameraAngleProperty())),
                 "AccelerateWithButtons:   " + YesNo(defaults.getAccelerateWithButtonsProperty()),
                 "BrakeWithButtons:        " + YesNo(defaults.getBrakeWithButtonsProperty()),
-            };
+            });
             for (const std::string& line : lines_)
             {
                 Context().Print("{}", line);
@@ -94,6 +155,7 @@ namespace
         }
 
     private:
+        std::filesystem::path profilesDirectory_;
         std::vector<std::string> lines_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
@@ -111,7 +173,10 @@ CNA_DEMOS_GAME(GameDefaultsDemo, {
              "GameDefaults::MoveWithRightThumbStick", "GameDefaults::PrimaryColor", "GameDefaults::SecondaryColor",
              "GameDefaults::ManualTransmission", "GameDefaults::RacingCameraAngle",
              "GameDefaults::AccelerateWithButtons", "GameDefaults::BrakeWithButtons",
-             "GameDifficulty", "ControllerSensitivity", "RacingCameraAngle"},
+             "GameDifficulty", "GameDifficulty::Easy", "GameDifficulty::Normal", "GameDifficulty::Hard",
+             "ControllerSensitivity", "ControllerSensitivity::Low", "ControllerSensitivity::Medium",
+             "ControllerSensitivity::High", "RacingCameraAngle", "RacingCameraAngle::Back",
+             "RacingCameraAngle::Front", "RacingCameraAngle::Inside"},
     .tags = {"gamer-services", "profile", "options", "settings", "difficulty"},
     .frames = 20,
     .assets = {"fonts/pixel_font.cnb"},

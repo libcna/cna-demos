@@ -73,8 +73,8 @@ diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses complete912's full runtime reports for all659 catalog
 demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,639/753 fields and
-3078/3205 public C ABI routes. GamerServices field coverage is125/223 after Focused913; Complete912's
+The surface totals are302/329 XNA types,2114/2326 XNA members,661/753 fields and
+3078/3205 public C ABI routes. GamerServices field coverage is147/223 after Focused914; Complete912's
 full runtime reports remain the baseline inputs for the unchanged659-ID catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -279,6 +279,22 @@ non-field members and C routes remain302/329,2114/2326 and3078/3205. Evidence:
 `/tmp/checkpoint-913-avatar-*.json` and `/tmp/checkpoint-913-coverage.md`. No screenshot or manual visual-quality claim
 was made, and no CNA defect appeared. **Next:** audit the remaining GamerServices field families through existing
 presence, Guide, defaults and leaderboard workflows, separating observable policy values from service-only labels.
+
+Focused **914-observable-GamerServices-policy-values** adds22 field values without a new ID. Three isolated
+stored profiles exercise every GameDifficulty, ControllerSensitivity and RacingCameraAngle value through real sign-in
+and GameDefaults parsing. Presence now credits only its observed None->AtMenu->Stage lifecycle; the other57 labels
+remain intentionally uncredited because offline they share the same storage/publish path. Local profile results credit
+GamerPrivilegeSetting::Everyone and GamerZone::Unknown; the remaining service-controlled policies remain uncredited.
+All four LeaderboardKey values create exact independent identities, and four persisted rows round-trip Win, Tie, Loss
+and None outcomes.
+
+Both full GamerServices category runs finish with16 pass, the same two expected ISSUE-017/-085 failures and one manual
+demo on SOFTWARE and OPENGLES3/Xvfb; there are no unexpected results. The changed leaderboard executes21 controls
+and fails only ISSUE-085. Five exact SOFTWARE CTests pass three repetitions. The warning-free build uses `-j3`,
+metadata is659/0 and coverage moves639->661/753 fields, GamerServices125->147/223. Evidence:
+`/tmp/checkpoint-914-gamer-services-*.json` and `/tmp/checkpoint-914-coverage.md`. **Next:** complete the13 observable
+Guide field values by moving one live notification through all nine positions and rendering all four message-box icons,
+then formally disposition the57 synonymous presence labels and six service-account policy/zone values.
 
 Focused **893-public-VideoPlayer-contracts** extends the stable
 `media.video_player.pause_and_loop` ID from12 to27 controls. Both renderer labels pass21 controls
@@ -2289,14 +2305,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline; Focused913
-is the latest validated field-only delta. AvatarAnimationPreset, AvatarBone, AvatarEye, AvatarMouth,
-AvatarEyebrow, AvatarBodyType and AvatarRendererState are now semantically complete, moving current
-field coverage to639/753 and GamerServices to125/223 without changing the catalog. Continue with the
-remaining GamerServices families in existing workflows: first audit GamerPresenceMode against real
-presence state/value behavior, then NotificationPosition, game defaults, leaderboard keys/outcomes
-and message-box icons. Credit a value only when a public operation or result distinguishes it;
-classify service/UI-only values explicitly instead of adding spelling-only controls.
+HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline; Focused914
+is the latest validated field-only delta. Current field coverage is661/753 and GamerServices is
+147/223. Complete the13 observable Guide values next: move the live sign-in notification through all
+nine NotificationPosition placements with rendered-position checks, and render/differentiate all four
+MessageBoxIcon values. Then close the GamerServices field disposition:57 unused GamerPresenceMode
+labels share the already-demonstrated storage/publish behavior, while Blocked/FriendsOnly and the four
+named GamerZone values require service-controlled account data. Keep these uncredited unless a real
+public behavior path distinguishes them in this environment.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete912 too stale.

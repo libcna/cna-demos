@@ -9528,3 +9528,23 @@ free build uses at most three jobs, metadata is659/0 and both validator suites p
 `/tmp/checkpoint-913-avatar-*.json` and `/tmp/checkpoint-913-coverage.md`. Continue with the
 remaining GamerServices presence, Guide, defaults and leaderboard field families, requiring
 observable policy or state behavior rather than integer-only enum checks.
+
+
+## Focused914-observable-GamerServices-policy-values
+
+Five existing workflows add22 semantically backed GamerServices values. The game-defaults demo now
+uses an isolated real profile store with three signed-in players, proving every GameDifficulty,
+ControllerSensitivity and RacingCameraAngle value survives JSON profile parsing and public
+GameDefaults access. Presence credits its observed None, AtMenu and Stage lifecycle only. A local
+profile exposes the actual Everyone privilege policy and Unknown gamer zone; service-controlled
+alternatives stay uncredited. All four LeaderboardKey values create exact independent identity
+strings/modes, while four persisted player rows round-trip all four LeaderboardOutcome values.
+
+Both complete GamerServices category runs report16 pass, the same two expected ISSUE-017/-085
+failures and one manual demo under SOFTWARE and OPENGLES3/Xvfb, with no unexpected result. The
+leaderboard reaches all21 controls and fails only its established stream-column assertion. Five
+exact SOFTWARE CTests pass three repetitions. The warning-free build uses at most three jobs,
+metadata is659/0 and coverage moves639->661/753 fields, GamerServices125->147/223. Evidence:
+`/tmp/checkpoint-914-gamer-services-*.json` and `/tmp/checkpoint-914-coverage.md`. Complete the13
+rendered Guide position/icon values next, then disposition the57 synonymous presence labels and six
+service-account-only privilege/zone values.

@@ -79,6 +79,8 @@ namespace
                       "GamerScore and TotalAchievements add up this title's earned achievements");
             ctx.Check(profile->getTitlesPlayedProperty() == (earned > 0 ? 1 : 0),
                       "TitlesPlayed counts this title once something was earned in it");
+            ctx.Check(profile->getGamerZoneProperty() == GamerZone::Unknown,
+                      "an offline local profile has the service-independent Unknown gamer zone");
             const std::unique_ptr<System::IO::Stream> picture(profile->GetGamerPicture());
             ctx.Check(picture == nullptr, "a local profile has no gamer picture");
 
@@ -164,7 +166,7 @@ CNA_DEMOS_GAME(GetProfileDemo, {
              "GamerProfile::TotalAchievements", "GamerProfile::TitlesPlayed", "GamerProfile::GamerZone",
              "GamerProfile::Reputation", "GamerProfile::Motto", "GamerProfile::Region",
              "GamerProfile::GetGamerPicture", "Gamer::GetFromGamertag",
-             "GamerZone", "Gamer::SignedInGamers"},
+             "GamerZone", "GamerZone::Unknown", "Gamer::SignedInGamers"},
     .tags = {"gamer-services", "profile", "gamerscore", "async", "offline"},
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},

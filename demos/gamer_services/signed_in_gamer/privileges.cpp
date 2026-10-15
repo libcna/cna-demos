@@ -65,6 +65,10 @@ namespace
             // A local profile is not signed in to a service: no online sessions, no purchases.
             Context().Check(!privileges.getAllowOnlineSessionsProperty() && !privileges.getAllowPurchaseContentProperty(),
                             "a local profile may not play online sessions or purchase content");
+            Context().Check(privileges.getAllowCommunicationProperty() == GamerPrivilegeSetting::Everyone &&
+                                privileges.getAllowProfileViewingProperty() == GamerPrivilegeSetting::Everyone &&
+                                privileges.getAllowUserCreatedContentProperty() == GamerPrivilegeSetting::Everyone,
+                            "a local profile exposes unrestricted offline communication, profile and content policy");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -98,7 +102,7 @@ CNA_DEMOS_GAME(PrivilegesDemo, {
     .apis = {"SignedInGamer::Privileges", "GamerPrivileges::AllowOnlineSessions", "GamerPrivileges::AllowCommunication",
              "GamerPrivileges::AllowProfileViewing", "GamerPrivileges::AllowUserCreatedContent",
              "GamerPrivileges::AllowPurchaseContent", "GamerPrivileges::AllowPremiumContent",
-             "GamerPrivileges::AllowTradeContent", "GamerPrivilegeSetting"},
+             "GamerPrivileges::AllowTradeContent", "GamerPrivilegeSetting", "GamerPrivilegeSetting::Everyone"},
     .tags = {"gamer-services", "profile", "privileges", "parental-controls", "online"},
     .frames = 20,
     .assets = {"fonts/pixel_font.cnb"},

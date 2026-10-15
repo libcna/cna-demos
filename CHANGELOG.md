@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Covered all game-default and leaderboard enum values through isolated stored profiles, exact
+  leaderboard identities and persisted outcomes; classified presence and account-only policies.
 - Completed all public avatar preset, body, skeleton, expression and renderer-state values through
   real animation samples, renderer skeleton data, facial property round-trips and lifecycle states.
 - Refreshed the complete runtime baseline at 659 demos: all 672 enabled CTests and both complete

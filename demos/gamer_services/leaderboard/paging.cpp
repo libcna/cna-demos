@@ -53,8 +53,13 @@ namespace
         {4200, LeaderboardOutcome::Win, 112},
         {3100, LeaderboardOutcome::Tie, 130},
         {2600, LeaderboardOutcome::Loss, 141},
-        {1900, LeaderboardOutcome::Loss, 155},
+        {1900, LeaderboardOutcome::None, 155},
     };
+    constexpr std::array<LeaderboardKey, 4> BoardKeys = {
+        LeaderboardKey::BestScoreLifeTime, LeaderboardKey::BestScoreRecent,
+        LeaderboardKey::BestTimeLifeTime, LeaderboardKey::BestTimeRecent};
+    constexpr std::array<const char*, 4> BoardNames = {
+        "BestScoreLifeTime", "BestScoreRecent", "BestTimeLifeTime", "BestTimeRecent"};
     constexpr int PageSize = 2;
 
     const char* OutcomeName(LeaderboardOutcome outcome)
@@ -98,6 +103,15 @@ namespace
                 return;
             }
             done_ = true;
+            bool allBoardKeysExact = true;
+            for (std::size_t i = 0; i < BoardKeys.size(); ++i)
+            {
+                const LeaderboardIdentity identity = LeaderboardIdentity::Create(BoardKeys[i], static_cast<int>(i + 2));
+                allBoardKeysExact = allBoardKeysExact && identity.getKeyProperty() == BoardNames[i] &&
+                    identity.getGameModeProperty() == static_cast<int>(i + 2);
+            }
+            Context().Check(allBoardKeysExact,
+                            "all four stock leaderboard keys create their exact independent board identities");
             // Game mode 1 of the best-score board: a board of its own (gamer_services.leaderboard.
             // write_and_read uses mode 0).
             const LeaderboardIdentity board = LeaderboardIdentity::Create(LeaderboardKey::BestScoreLifeTime, 1);
@@ -239,8 +253,9 @@ namespace
             ctx.Check(reader.getCanPageDownProperty() && !reader.getCanPageUpProperty(),
                       "the first page can page down, not up");
             const auto first = reader.getEntriesProperty();
-            ctx.Check(first[0].getColumnsProperty().GetValueOutcome("Result") == LeaderboardOutcome::Win,
-                      "the leader's row reads back Result = Win");
+            ctx.Check(first[0].getColumnsProperty().GetValueOutcome("Result") == LeaderboardOutcome::Win &&
+                          first[1].getColumnsProperty().GetValueOutcome("Result") == LeaderboardOutcome::Tie,
+                      "the first page reads back Win and Tie outcomes");
             const PropertyDictionary& firstColumns = first[0].getColumnsProperty();
             ctx.Check(firstColumns.GetValueInt32("Round") == 1 &&
                           firstColumns.GetValueInt64("ScoreCopy") == 4200 &&
@@ -356,8 +371,9 @@ namespace
             const PropertyDictionary& third = page[0].getColumnsProperty();
             ctx.Check(page[0].getGamerProperty()->getGamertagProperty() == "Third Player" &&
                           third.GetValueOutcome("Result") == LeaderboardOutcome::Loss &&
-                          third.GetValueTimeSpan("Time") == System::TimeSpan::FromSeconds(141),
-                      "Third Player's row reads back Result = Loss and Time = 2:21");
+                          third.GetValueTimeSpan("Time") == System::TimeSpan::FromSeconds(141) &&
+                          page[1].getColumnsProperty().GetValueOutcome("Result") == LeaderboardOutcome::None,
+                      "the last page reads back Loss and the explicit None outcome");
 
             int upCallbacks = 0;
             bool upStateMatched = false;
@@ -407,8 +423,12 @@ CNA_DEMOS_GAME(PagingDemo, {
              "LeaderboardReader::BeginRead", "LeaderboardReader::EndRead", "LeaderboardReader::CanPageDown",
              "LeaderboardReader::CanPageUp", "LeaderboardReader::PageStart", "LeaderboardReader::TotalLeaderboardSize",
              "LeaderboardReader::LeaderboardIdentity", "LeaderboardReader::Dispose",
-             "LeaderboardReader::IsDisposed", "LeaderboardIdentity::Key", "LeaderboardIdentity::GameMode",
-             "LeaderboardOutcome", "PropertyDictionary::Count", "PropertyDictionary::Item",
+             "LeaderboardReader::IsDisposed", "LeaderboardIdentity::Create", "LeaderboardIdentity::Key",
+             "LeaderboardIdentity::GameMode", "LeaderboardKey", "LeaderboardKey::BestScoreLifeTime",
+             "LeaderboardKey::BestScoreRecent", "LeaderboardKey::BestTimeLifeTime",
+             "LeaderboardKey::BestTimeRecent", "LeaderboardOutcome", "LeaderboardOutcome::None",
+             "LeaderboardOutcome::Win", "LeaderboardOutcome::Loss", "LeaderboardOutcome::Tie",
+             "PropertyDictionary::Count", "PropertyDictionary::Item",
              "PropertyDictionary::ContainsKey", "PropertyDictionary::TryGetValue",
              "PropertyDictionary::GetValueDateTime", "PropertyDictionary::GetValueDouble",
              "PropertyDictionary::GetValueInt32", "PropertyDictionary::GetValueInt64",

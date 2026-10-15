@@ -57,6 +57,8 @@ namespace
             }
             else if (updates_ == 20)
             {
+                ctx.Check(presence.getPresenceModeProperty() == GamerPresenceMode::AtMenu,
+                          "the menu presence survives until play starts");
                 presence.setPresenceModeProperty(GamerPresenceMode::Stage);
                 presence.setPresenceValueProperty(1);
             }
@@ -105,7 +107,8 @@ CNA_DEMOS_GAME(PresenceDemo, {
     .description = "Sets the signed-in gamer's GamerPresence as play moves from the menu to stage 1 and stage 2 "
                    "(PresenceMode AtMenu, then Stage with PresenceValue); offline the presence is only kept locally.",
     .apis = {"SignedInGamer::Presence", "GamerPresence::PresenceMode", "GamerPresence::PresenceValue",
-             "GamerPresenceMode"},
+             "GamerPresenceMode", "GamerPresenceMode::None", "GamerPresenceMode::AtMenu",
+             "GamerPresenceMode::Stage"},
     .tags = {"gamer-services", "presence", "friends", "status"},
     .frames = 60,
     .assets = {"fonts/pixel_font.cnb"},

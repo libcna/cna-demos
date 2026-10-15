@@ -1214,6 +1214,24 @@ the changed workflows pass16,6 and9 controls. This moves fields515->639/753 and 
 1->125/223. It does not claim a fixed asynchronous loading duration, image-quality inspection or
 compatibility with Xbox LIVE avatar bytes. Evidence:`/tmp/checkpoint-913-avatar-*.json`.
 
+### GamerServices defaults, presence, account policy and leaderboard values
+
+Three isolated local profiles carry Easy/Low/Back, Normal/Medium/Front and Hard/High/Inside through
+the production profile JSON reader, real sign-in and public GameDefaults getters. This closes all
+nine values in those three families. The live presence workflow observes None, retains AtMenu and
+then combines Stage with a changing PresenceValue. The other57 presence labels select strings for
+the same private service publication path; cycling their integer identities would add no distinct
+offline behavior, so they remain intentionally uncredited. Similarly, a local profile proves the
+actual Everyone privilege result and Unknown gamer zone. Blocked/FriendsOnly and the four named
+zones come only from service account state in pinned CNA and remain service-test scope.
+
+All four stock leaderboard keys now create exact key strings and distinct game modes through
+LeaderboardIdentity.Create. Four real local gameplay writers persist rows whose public dictionary
+columns return Win, Tie, Loss and explicit None after sorted paging. Both renderer runs reach all21
+controls and retain only the established ISSUE-085 stream-column failure. This moves fields
+639->661/753 and GamerServices125->147/223. Evidence:
+`/tmp/checkpoint-914-gamer-services-*.json`.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and
