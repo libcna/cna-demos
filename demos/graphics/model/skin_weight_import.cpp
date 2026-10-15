@@ -50,6 +50,7 @@ namespace
             if (!ctx.Check(skinning && skinning->BoneCount == 5,
                            "the shared imported skin retains all five joints")) return;
 
+            bool unusedFifthJoint = true;
             for (int i = 0; i < 4; ++i)
             {
                 auto* mesh = model_->getMeshesProperty()[i];
@@ -60,9 +61,23 @@ namespace
                 if (!ctx.Check(effect && part->getVertexBufferProperty(),
                                "each skinned unlit material imports through SkinnedEffect")) return;
                 effects_[static_cast<std::size_t>(i)] = effect;
-                part->getVertexBufferProperty()->GetData(
-                    &vertices_[static_cast<std::size_t>(i)], 0, 1);
+                auto* vertexBuffer = part->getVertexBufferProperty();
+                std::vector<VertexPositionNormalTextureSkinned> publicVertices(
+                    static_cast<std::size_t>(vertexBuffer->getVertexCountProperty()));
+                vertexBuffer->GetData(publicVertices.data(), 0,
+                                      static_cast<int>(publicVertices.size()));
+                vertices_[static_cast<std::size_t>(i)] = publicVertices.front();
+                for (const auto& vertex : publicVertices)
+                {
+                    const std::array<float, 4> weights = {
+                        vertex.BlendWeight.X, vertex.BlendWeight.Y,
+                        vertex.BlendWeight.Z, vertex.BlendWeight.W};
+                    for (std::size_t channel = 0; channel < weights.size(); ++channel)
+                        unusedFifthJoint &= vertex.BlendIndices[channel] != 4 || weights[channel] == 0;
+                }
             }
+            ctx.Check(unusedFifthJoint,
+                      "public vertex data proves that no nonzero influence uses the fifth joint");
 
             const auto& quantized = vertices_[0];
             ctx.Check(quantized.BlendIndices == std::array<std::uint8_t, 4>{3, 1, 2, 0} &&
@@ -120,7 +135,7 @@ namespace
 
             palette_ = {Matrix::getIdentityProperty(), Matrix::CreateTranslation(.12f, 0, 0),
                         Matrix::CreateTranslation(.24f, 0, 0), Matrix::CreateTranslation(.36f, 0, 0),
-                        Matrix::CreateTranslation(.72f, 0, 0)};
+                        Matrix::getIdentityProperty()};
             for (SkinnedEffect* effect : effects_)
             {
                 effect->SetBoneTransforms(palette_);
@@ -133,6 +148,18 @@ namespace
                 effect->getDirectionalLight2Property().setEnabledProperty(false);
                 effect->setFogEnabledProperty(false);
             }
+            const auto usedJointBounds = model_->getBoundingSphereEXTProperty();
+            ctx.Check(usedJointBounds.has_value(),
+                      "the imported skin exposes aggregate bounds for its current palette");
+            palette_[4] = Matrix::CreateTranslation(8, 0, 0);
+            for (SkinnedEffect* effect : effects_) effect->SetBoneTransforms(palette_);
+            const auto fullPaletteBounds = model_->getBoundingSphereEXTProperty();
+            if (usedJointBounds && fullPaletteBounds)
+                ctx.Print("skin bounds: used-joint radius {:.3f}; full-palette radius {:.3f}",
+                          usedJointBounds->Radius, fullPaletteBounds->Radius);
+            ctx.Check(fullPaletteBounds && usedJointBounds &&
+                          fullPaletteBounds->Radius > usedJointBounds->Radius + 2,
+                      "an unused distant palette joint conservatively expands the model bound");
             ready_ = true;
         }
 
@@ -190,9 +217,11 @@ CNA_DEMOS_GAME(SkinWeightImportDemo, {
     .id = "graphics.model.skin_weight_import",
     .title = "Import glTF skin weight forms",
     .description = "Reads back normalized integer and repaired/truncated glTF influences, verifies structured "
-                   "diagnostics, then draws the imported weights through a controlled five-joint palette.",
+                   "diagnostics, demonstrates conservative full-palette model bounds, then draws the imported "
+                   "weights through a controlled five-joint palette.",
     .apis = {"ContentManager::Load", "Model::GltfImportReportEXT", "GltfImportDiagnosticEXT",
-             "VertexBuffer::GetData", "SkinnedEffect::SetBoneTransforms", "ModelMesh::Draw"},
+             "VertexBuffer::GetData", "SkinnedEffect::SetBoneTransforms", "Model::BoundingSphereEXT",
+             "ModelMesh::Draw"},
     .tags = {"model", "gltf", "skinning", "weights", "diagnostics", "animation", "3d"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

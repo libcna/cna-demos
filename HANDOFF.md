@@ -4193,6 +4193,25 @@ inspection, with no screenshot or manual visual inspection.
 Commit and push this batch, then continue with the next explicit high-value behavior gap;
 Complete859 remains the full baseline.
 
+### Focused867-conservative-full-skin-palette-bounds
+
+The existing `graphics.model.skin_weight_import` workflow grows from twenty-one to twenty-four
+controls. Reading every imported vertex proves that joint four has no nonzero influence. Moving
+only that unused palette member from identity to X=8 expands the public aggregate bound from radius
+1.037 to 4.857, while all established analytic pixel checks remain green. This directly demonstrates
+the documented safe full-palette overbound and closes the final explicit `Model::BoundingSphereEXT`
+case in the audit row without a new demo ID.
+
+SOFTWARE and OPENGLES3 Xvfb runs pass24/24 with byte-identical stdout and identical four-line
+expected importer warnings. The exact SOFTWARE CTest passes. The final incremental build uses
+`-j3`, metadata is655/0 and both tool self-test suites pass. Temporary coverage remains302/329
+types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is under
+`/tmp/checkpoint-867-*`. No capture or manual visual inspection was performed in this batch;
+Focused839 remains the visual evidence for this unchanged scene.
+
+Commit and push this batch, then audit the next explicit high-value behavior gap; Complete859
+remains the full baseline.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

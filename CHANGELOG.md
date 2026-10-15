@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended imported skin-weight coverage to prove that an unused distant joint still expands the
+  documented conservative full-palette `Model::BoundingSphereEXT` while rendered vertices stay put.
 - Extended the model-bone workflow with live `ModelMesh::ParentBone` reassignment, proving that
   aggregate model bounds immediately follow the selected parent and the null bone-zero fallback.
 - Extended nested content builds with a Texture2D CNJ that consumes a parent-granted external

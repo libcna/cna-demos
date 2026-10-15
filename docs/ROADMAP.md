@@ -288,7 +288,8 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.specular_sampler_state`: independent imported strength/color sampler slots,
   explicit device selection and exact black/green/red PBR reflection pixels (7 checks on both GL paths).
 - ✅ `graphics.model.skin_weight_import`: normalized UBYTE weights, USHORT joints, malformed-sum
-  repair, extra influence-set truncation and zero-sum reporting with readback and pixels (21 checks).
+  repair, extra influence-set truncation, zero-sum reporting and conservative unused-palette-joint
+  bounds with readback and pixels (24 checks).
 - ✅ `graphics.model.node_instances`: one shared rigid mesh placed through hierarchical TRS, an
   explicit matrix and odd/even composed mirrors; exact hierarchy/report diagnostics, default-scene
   exclusion, unsupported GPU-instancing loss and determinant-aware culling pass on both renderers.
@@ -8690,3 +8691,18 @@ exact SOFTWARE CTest passes. The `-j3` incremental build, metadata 655/0 and bot
 suites pass; temporary coverage remains 302/329 types, 2114/2326 members, 169/753 fields and
 3078/3205 C routes. Evidence: `/tmp/checkpoint-866-*`. These checks inspect public state
 numerically; no screenshot or manual visual inspection was performed.
+
+## Focused867-conservative-full-skin-palette-bounds
+
+`graphics.model.skin_weight_import` grows from twenty-one to twenty-four controls. Full public
+vertex-buffer readback proves that joint four carries no nonzero influence. Moving only that unused
+palette member from identity to X=8 expands `Model::BoundingSphereEXT` from radius 1.037 to 4.857,
+while every established pixel remains at the same analytically predicted position. This closes the
+explicit conservative-overbound case without adding a new catalog ID.
+
+Both Xvfb renderer runs pass 24/24 with byte-identical stdout and the same four expected importer
+warnings on stderr; the exact SOFTWARE CTest passes. The `-j3` incremental build, metadata 655/0
+and both tool self-test suites pass; temporary coverage remains 302/329 types, 2114/2326 members,
+169/753 fields and 3078/3205 C routes. Evidence: `/tmp/checkpoint-867-*`. No capture or manual
+visual inspection was performed in this batch; Focused839 retains the scene's inspected pixel
+evidence.
