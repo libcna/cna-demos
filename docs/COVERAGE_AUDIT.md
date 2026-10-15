@@ -968,6 +968,26 @@ reaches15/15; the two secondary payload properties were already credited elsewhe
 field member total remains2114/2326. Evidence:`/tmp/checkpoint-899-*`. No touch hardware,
 rendering, screenshot or visual judgment is involved.
 
+### Keys public values
+
+`input.keyboard.state_values` now partitions all160 public `Keys` values into seven coherent
+control/navigation/IME, alphanumeric/system, numeric-keypad, function/lock/modifier,
+browser/media/launch, OEM/chatpad and legacy process/editing families. Each family constructs a
+real `KeyboardState`, requires `GetPressedKeys` to return the complete numerically ordered set and
+requires both `IsKeyDown` and the indexer to report every member down. This gives each constant
+state behavior instead of merely casting or listing its integer value. The existing recorded-input
+sequence still demonstrates transition logic separately.
+
+Both renderer-labelled console runs pass16/16 with byte-identical stdout and empty stderr. The
+exact SOFTWARE CTest passes20 repetitions. The warning-free `-j3` build, metadata659/0 and both
+validator suites pass; the catalog contains exactly160 unique `Keys::` entries. Generated fields
+move224->384/753 and Input reaches194/202. The remaining eight Input fields are the hardware-
+reported GamePadType identities AlternateGuitar, ArcadeStick, BigButtonPad, DancePad, DrumKit,
+FlightStick, Guitar and Wheel; they stay intentionally uncredited because this environment has no
+corresponding devices and CNA has no deterministic public injection path. Evidence:
+`/tmp/checkpoint-900-*`. No physical key delivery, keyboard-layout mapping, rendering, screenshot
+or visual judgment is claimed.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

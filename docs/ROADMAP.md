@@ -9281,3 +9281,19 @@ jobs, metadata is659/0 and both validator suites pass. Coverage moves209->224/75
 Input.Touch at15/15; the XNA member total remains2114/2326 because both secondary GestureSample
 payload properties were already credited. Evidence:`/tmp/checkpoint-899-*`. Audit the160 Keys
 constants by semantic families next; do not turn a name table into a false physical-input claim.
+
+## Focused900-all-public-Keys-values
+
+The stable `input.keyboard.state_values` workflow grows9->16 controls and now exercises all160
+public Keys constants in seven semantic families. Every family constructs a KeyboardState,
+requires the complete numeric `GetPressedKeys` order and checks each member through both
+`IsKeyDown` and the indexer. This is deterministic state behavior; physical delivery and host
+keyboard-layout mapping remain outside the claim.
+
+Both renderer-labelled direct runs pass16/16 with byte-identical output and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions. The warning-free build uses at most three jobs, metadata is
+659/0, both validator suites pass and the catalog contains exactly160 unique `Keys::` entries.
+Coverage moves224->384/753 fields and Input reaches194/202; its remaining eight fields are
+hardware-specific GamePadType values already dispositioned as manual/unavailable. Evidence:
+`/tmp/checkpoint-900-*`. Continue with the42 uncredited root Framework fields, adding metadata to
+existing behavior-rich demos where direct evidence already exists before adding new controls.
