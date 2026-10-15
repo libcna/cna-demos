@@ -14,6 +14,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   generated PCM-to-WMA-to-PCM round trip without starting playback.
 - Added direct text/binary DirectX `.x` reader coverage for flattened object carriers, inline
   templates, D3DX-compatible errors and every configurable resource ceiling.
+- Added direct text/binary FBX reader coverage for typed node properties, lookup helpers, plain and
+  zlib-compressed arrays, exact errors and every configurable resource ceiling.
 - Enabled CNA's optional Inspector in `linux-full` and added focused protocol, authenticated
   loopback-session and asynchronous bounded-preview workflows.
 - Covered every Inspector v1 payload family, strict header/type/length/request bounds, explicit

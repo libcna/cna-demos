@@ -301,7 +301,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (64 demos; remaining below)
+## Phase 8 -- content 🟨 (65 demos; remaining below)
 
 - ✅ Existing `content.texture_processor.resize_to_power_of_two` now verifies XNB-targeted
   Reach/HiDef mipmap processing, resized payloads matching its rendered CNB and the distinct native
@@ -10501,3 +10501,20 @@ matches. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fi
 routes; 24 public names enter the CNA-extension appendix and Complete981 marks six post-baseline
 IDs absent. Evidence:`/tmp/checkpoint-987-directx-reader/*`. The initial failed check was corrected
 as demo arithmetic; no CNA defect appeared. Audit `FbxFileReader.hpp` next.
+
+## Focused988-FBX-file-reader
+
+The new renderer-free `content.model.fbx_file_reader` standalone closes all public
+`FbxFileReader.hpp` declarations in seven controls. Deterministic text and binary documents cover
+version/encoding identity, ordered nodes/properties/children, exact-case lookup, typed fallbacks,
+scalar/array flattening and both plain and zlib-compressed binary arrays. Four input/error
+categories and all six resource ceilings are exercised directly.
+
+The source compiles without warnings with at most three jobs and metadata is690/0. Ten SOFTWARE-
+labelled and ten OPENGLES3-labelled direct runs pass7/7 with identical stdout SHA-256
+`ddb318091576bea132de8deab22c749bc42d6a095c4abc3d67e9eaadf52c902a` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator suites pass. Generated XNA/C totals remain
+303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; 27 public names enter the CNA-
+extension appendix and Complete981 marks seven post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-988-fbx-reader/*`. No CNA defect appeared. Audit the one-function
+`XnaModelSourceContentPipeline.hpp` registration and actual `.x`/`.fbx` source routes next.

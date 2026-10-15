@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**689 demos** in 19 categories. Kinds: console 187, game 296, standalone 206. Automation: automated 653, manual 3, smoke-only 33.
+**690 demos** in 19 categories. Kinds: console 187, game 296, standalone 207. Automation: automated 654, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 64 | 64 | 0 | 0 | 47 / 0 / 14 / 0 / 3 | 47 / 0 / 14 / 0 / 3 |
+| content | 65 | 65 | 0 | 0 | 47 / 0 / 14 / 0 / 4 | 47 / 0 / 14 / 0 / 4 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -32,8 +32,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.media.build_time_decoder`, `content.model.directx_file_reader`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
-- OPENGLES3: absent from report: `content.media.build_time_decoder`, `content.model.directx_file_reader`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
+- SOFTWARE: absent from report: `content.media.build_time_decoder`, `content.model.directx_file_reader`, `content.model.fbx_file_reader`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
+- OPENGLES3: absent from report: `content.media.build_time_decoder`, `content.model.directx_file_reader`, `content.model.fbx_file_reader`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -643,6 +643,32 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::DirectXFileObject::type` -- content.model.directx_file_reader
 - `CNA::Content::Pipeline::EncodeBlockCompressedImage` -- content.texture_processor.block_compression
 - `CNA::Content::Pipeline::ExpandCharacterRegions` -- content.sprite_font.pipeline_contract
+- `CNA::Content::Pipeline::FbxFile` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFile::Find` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFile::binary` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFile::nodes` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFile::version` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileError` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileException` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileException::Error` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileException::FbxFileException` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileException::what` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileLimits` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileLimits::maximumArrayLength` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileLimits::maximumBytes` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileLimits::maximumDecompressedBytes` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileLimits::maximumDepth` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileLimits::maximumNodes` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxFileLimits::maximumStringLength` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxNode` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxNode::Find` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxNode::Number` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxNode::Numbers` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxNode::Text` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxNode::children` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxNode::name` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxNode::properties` -- content.model.fbx_file_reader
+- `CNA::Content::Pipeline::FbxProperty` -- content.model.fbx_file_reader
 - `CNA::Content::Pipeline::FindFontFamilyBeside` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::FindSystemFontFile` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::FontCharacterRegion` -- content.sprite_font.pipeline_contract
@@ -736,6 +762,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ProcessedVideoType` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::RasterizeFontDescription` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::ReadDirectXFile` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::ReadFbxFile` -- content.model.fbx_file_reader
 - `CNA::Content::Pipeline::RefreshContentBuildDirectFingerprint` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::RefreshContentBuildEffectiveFingerprint` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::RegisterBuiltInContentPipeline` -- content.custom.incremental_compiler

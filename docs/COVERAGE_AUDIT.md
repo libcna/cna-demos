@@ -4812,3 +4812,23 @@ matches both checked-in fixture copies. Generated XNA/C totals remain303/329 typ
 members,674/753 fields and3078/3205 routes; 24 names enter the CNA-extension appendix. Complete981
 marks this sixth post-baseline ID absent. Evidence:`/tmp/checkpoint-987-directx-reader/*`. The first
 run's wrong expected number count was a demo defect and was corrected; no CNA defect appeared.
+
+### FBX file-reader audit
+
+Focused988 adds the renderer-free `content.model.fbx_file_reader` standalone and dispositions every
+public declaration in `FbxFileReader.hpp`.
+
+| Public family | Current disposition |
+|---|---|
+| Text document | A deterministic FBX 7400 document preserves top-level and child order, exact-case lookup, scalar/quoted/bare-text/array property alternatives and typed fallback behavior. `Numbers()` flattens scalar and array values while skipping strings. |
+| Binary document | A version-7400 record preserves scalar, string and uncompressed double-array properties. A second double array carries fixed zlib bytes and decompresses to its exact values, exercising the optional compressed-array path in this build. Wide version-7500 record layout remains represented by CNA's own reader tests; it is a storage-width variant without a separate consumer concept. |
+| Errors | CannotInitialize, NotFbx, ParseError and Unsupported retain exact identity and owned detail. Empty input, a recognized DirectX file, unrelated bytes and malformed FBX distinguish the first three runtime categories. Unsupported is the no-zlib build disposition; this build has zlib and directly proves successful decompression. |
+| Resource ceilings | All byte/depth/node/array/decompressed-byte/string defaults are exact. Tightening each one independently refuses representative text or binary input before excessive work. Mutation fuzzing and allocation fault injection remain CNA unit/stress-test scope. |
+
+The warning-free source builds with at most three jobs and metadata is690/0. Ten SOFTWARE-labelled
+and ten OPENGLES3-labelled direct runs pass7/7 with byte-identical stdout SHA-256
+`ddb318091576bea132de8deab22c749bc42d6a095c4abc3d67e9eaadf52c902a` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator self-test suites pass. Generated XNA/C
+totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; 27 names enter the
+CNA-extension appendix. Complete981 marks this seventh post-baseline ID absent. Evidence:
+`/tmp/checkpoint-988-fbx-reader/*`. No CNA defect appeared.
