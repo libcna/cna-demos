@@ -2321,19 +2321,36 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline; Focused915
-is the latest validated field-only delta. Current field coverage is674/753 and GamerServices is
+HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline; Focused916
+is the latest validated behavioral delta. Current field coverage is674/753 and GamerServices is
 semantically dispositioned at160/223: all observable local/avatar/Guide values are covered, while its
 remaining63 values require service-account data or repeat the same presence publication behavior.
 The complete field audit now leaves only previously dispositioned environment/platform values in
 other namespaces (eight hardware GamePadType identities, five remote Net states, two renderer device-
-loss states and WindowsMediaConnect). Return to the deeper public member/behavior audit. Use the
+loss states and WindowsMediaConnect). The cascade-selected directional-specular gap is now closed;
+continue the deeper public member/behavior audit with partial punctual-shadow filtering/cone
+transitions or the next higher-value observable gap. Use the
 inventory and docs/COVERAGE_AUDIT.md to choose the highest-value undispositioned behavior, prefer an
 existing workflow, and keep constructors/finalizers, CLR collection plumbing and service-only paths
 classified rather than inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete912 too stale.
+
+### Focused916-cascade-selected-directional-specular
+
+The stable `graphics.skinned_effect.shadow_cascades` workflow grows10->12 pixel controls. Its new
+fourth row zeros diffuse, ambient and emission, enables only directional specular, and uses the
+existing two-slice atlas. View depth2 selects the low-depth near slice and removes the highlight;
+depth4 selects the high-depth far slice and preserves RGB(76,38,13). This distinguishes actual
+cascade-selected specular attenuation from the single-map specular controls in `shadow_receiver`.
+
+OPENGLES3 passes all12 controls in eleven runs including the captured run; OPENGL33 passes12/12.
+Both inspected800x480 captures are byte-identical with SHA-256
+`de1bb160ae255b54eb5581e022ec32d64c1b60f27366a63973dbe531a47374d3`. SOFTWARE retains its declared
+capability skip. The warning-free incremental build uses `-j3`, metadata remains659/0, validator/
+checkpoint self-tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326 non-field members,
+674/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-916-*`. No CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

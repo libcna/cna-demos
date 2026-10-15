@@ -90,7 +90,7 @@ namespace
             effect_->setShadowFilterRadiusEXT(0); // each panel below selects its comparison kernel
             batch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
-            Context().Print("Two authored atlas slices store depths64/255 and192/255. Split depth3 selects the first slice inclusively; depth4 selects the second. A one-unit band blends at depth2.5. A separate fitting camera changes cascade selection without moving the rendering camera. Count0 restores the low-depth single-map lookup. Two panels in the last row send both cascades to the exact same atlas UV(.5,.5); each selected slice must keep radius2 taps in its own region. The final cell uses four horizontal strips: fitting depth7 selects slot3; its comparison depth changes from .5 to .9 and enables the yellow diagnostic tint.");
+            Context().Print("Two authored atlas slices store depths64/255 and192/255. Split depth3 selects the first slice inclusively; depth4 selects the second. A one-unit band blends at depth2.5. A separate fitting camera changes cascade selection without moving the rendering camera. Count0 restores the low-depth single-map lookup. Two panels send both cascades to the exact same atlas UV(.5,.5); each selected slice must keep radius2 taps in its own region. A four-strip atlas then selects slot3 and its yellow diagnostic tint. The final row isolates directional specular light: the near cascade removes it while the far cascade preserves it.");
         }
         void Draw(const GameTime& time) override
         {
@@ -102,14 +102,14 @@ namespace
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             device.SetVertexBuffer(vertices_.get());
             device.setIndicesProperty(indices_.get());
+            const int rowHeight = full.getHeightProperty() / 4;
             const std::array<float, 8> depths{2, 3, 4, 2.5f, 4, 4, 2, 4};
             for (int panel = 0; panel < 8; ++panel)
             {
                 const int column = panel % 3, row = panel / 3;
                 const int left = full.getWidthProperty() * column / 3;
                 const int right = full.getWidthProperty() * (column + 1) / 3;
-                device.setViewportProperty(Viewport(left, row * full.getHeightProperty() / 3,
-                                                   right - left, full.getHeightProperty() / 3));
+                device.setViewportProperty(Viewport(left, row * rowHeight, right - left, rowHeight));
                 effect_->SetBoneTransforms({Matrix::CreateTranslation(0, 0, -depths[panel])});
                 ShadowCascadeStateEXT cascades;
                 cascades.Count = panel == 5 ? 0 : 2;
@@ -144,8 +144,7 @@ namespace
             {
                 const int left = fourthLeft + fourthWidth * variant / 2;
                 const int right = fourthLeft + fourthWidth * (variant + 1) / 2;
-                device.setViewportProperty(Viewport(left, full.getHeightProperty() * 2 / 3,
-                                                   right - left, full.getHeightProperty() / 3));
+                device.setViewportProperty(Viewport(left, rowHeight * 2, right - left, rowHeight));
                 effect_->SetBoneTransforms({Matrix::CreateTranslation(0, 0, -7)});
                 ShadowCascadeStateEXT cascades;
                 cascades.Count = ShadowCascadeStateEXT::kMaxCascades;
@@ -167,6 +166,42 @@ namespace
                     device.DrawIndexedPrimitives(PrimitiveType::TriangleList, 0, 0, 4, 0, 2);
                 }
             }
+            // Isolate the directional specular term in the last row. The two-cascade state
+            // selects the low-depth left slice at view depth2 and the high-depth right slice at
+            // depth4. Diffuse, ambient and emission are zero, so any surviving pixel is specular.
+            effect_->setDiffuseColorProperty(Vector3::Zero);
+            effect_->setAmbientLightColorProperty(Vector3::Zero);
+            effect_->setEmissiveColorProperty(Vector3::Zero);
+            effect_->setSpecularColorProperty(Vector3(.3f, .15f, .05f));
+            effect_->setSpecularPowerProperty(1);
+            effect_->getDirectionalLight0Property().setDiffuseColorProperty(Vector3::Zero);
+            effect_->getDirectionalLight0Property().setSpecularColorProperty(Vector3::One);
+            for (int variant = 0; variant < 2; ++variant)
+            {
+                const int left = full.getWidthProperty() * variant / 2;
+                const int right = full.getWidthProperty() * (variant + 1) / 2;
+                device.setViewportProperty(Viewport(left, rowHeight * 3, right - left,
+                                                   full.getHeightProperty() - rowHeight * 3));
+                effect_->SetBoneTransforms({Matrix::CreateTranslation(0, 0, variant == 0 ? -2.0f : -4.0f)});
+                ShadowCascadeStateEXT cascades;
+                cascades.Count = 2;
+                cascades.WorldToAtlas[0] = Matrix::CreateScale(.5f, .5f, 0) *
+                    Matrix::CreateTranslation(.25f, .5f, .5f);
+                cascades.WorldToAtlas[1] = Matrix::CreateScale(.5f, .5f, 0) *
+                    Matrix::CreateTranslation(.75f, .5f, .5f);
+                cascades.SplitDistance[0] = 3;
+                cascades.SplitDistance[1] = 10;
+                cascades.CameraView = Matrix::getIdentityProperty();
+                cascades.BlendBand = 0;
+                cascades.DebugTint = false;
+                effect_->setShadowFilterRadiusEXT(0);
+                effect_->setShadowCascadesEXT(cascades);
+                for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
+                {
+                    pass.Apply();
+                    device.DrawIndexedPrimitives(PrimitiveType::TriangleList, 0, 0, 4, 0, 2);
+                }
+            }
             device.setViewportProperty(full);
             const std::array<const char*, 8> labels{
                 "Depth 2: near", "Depth 3: split", "Depth 4: far",
@@ -175,10 +210,15 @@ namespace
             for (int panel = 0; panel < 8; ++panel)
                 batch_->DrawString(*font_, labels[panel], Vector2(
                     static_cast<float>((panel % 3) * full.getWidthProperty() / 3 + 8),
-                    static_cast<float>((panel / 3) * full.getHeightProperty() / 3 + 8)), Color::White);
+                    static_cast<float>((panel / 3) * rowHeight + 8)), Color::White);
             batch_->DrawString(*font_, "4th: lit/tinted", Vector2(
                 static_cast<float>(full.getWidthProperty() * 2 / 3 + 8),
-                static_cast<float>(full.getHeightProperty() * 2 / 3 + 8)), Color::White);
+                static_cast<float>(rowHeight * 2 + 8)), Color::White);
+            batch_->DrawString(*font_, "Specular: near shadow", Vector2(8, static_cast<float>(rowHeight * 3 + 8)),
+                               Color::White);
+            batch_->DrawString(*font_, "Specular: far lit", Vector2(
+                static_cast<float>(full.getWidthProperty() / 2 + 8), static_cast<float>(rowHeight * 3 + 8)),
+                               Color::White);
             batch_->End();
             if (FramesDrawn() == 0)
             {
@@ -197,17 +237,22 @@ namespace
                 for (int panel = 0; panel < 8; ++panel)
                 {
                     const int x = pixels.Width() * (2 * (panel % 3) + 1) / 6;
-                    const int y = pixels.Height() * (2 * (panel / 3) + 1) / 6;
+                    const int y = rowHeight * (panel / 3) + rowHeight / 2;
                     Context().Check(CnaDemos::Near(pixels.At(x, y), expected[panel], 1), checks[panel]);
                 }
                 const int lastLeft = pixels.Width() * 2 / 3;
                 const int lastWidth = pixels.Width() - lastLeft;
-                const int lastY = pixels.Height() * 5 / 6;
+                const int lastY = rowHeight * 2 + rowHeight / 2;
                 Context().Check(CnaDemos::Near(pixels.At(lastLeft + lastWidth / 4, lastY), lit, 1),
                                 "four cascades select the last slot and its lit depth at fitting depth7");
                 // DebugTint for slot3 is (1,1,.6), applied to the unquantized ambient/emissive floor.
                 Context().Check(CnaDemos::Near(pixels.At(lastLeft + lastWidth * 3 / 4, lastY), Color(20, 28, 15), 1),
                                 "the last slot's changed depth becomes shadowed with its yellow debug tint");
+                const int specularY = rowHeight * 3 + (pixels.Height() - rowHeight * 3) / 2;
+                Context().Check(CnaDemos::Near(pixels.At(pixels.Width() / 4, specularY), Color::Black, 1),
+                                "the selected near cascade removes isolated directional specular light");
+                Context().Check(CnaDemos::Near(pixels.At(pixels.Width() * 3 / 4, specularY), Color(76, 38, 13), 1),
+                                "the selected far cascade preserves isolated directional specular light");
             }
             Game::Draw(time);
         }
@@ -224,7 +269,8 @@ CNA_DEMOS_GAME(ShadowCascadesDemo, {
     .id = "graphics.skinned_effect.shadow_cascades",
     .title = "Authored cascade atlas selection and sampling",
     .description = "Selects two authored shadow-atlas slices by fitting-camera depth, checks the inclusive split, "
-                   "blends across its near side, restores the single-map path with Count0, isolates the shared atlas edge, and checks last-slot depth and debug tint at the four-cascade limit.",
+                   "blends across its near side, restores the single-map path with Count0, isolates the shared atlas edge, "
+                   "checks last-slot depth/tint, and proves cascades attenuate directional specular light.",
     .apis = {"SkinnedEffect::SetBoneTransforms",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowMapEXT",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowCascadesEXT",
@@ -239,6 +285,7 @@ CNA_DEMOS_GAME(ShadowCascadesDemo, {
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "EasyGL OPENGLES3/OPENGL33 stock receiver path only; other renderers explicitly skipped. "
-                    "Authored Color atlas, two-slice controls and the fourth slot at maximum count; no shadow-map generation, "
-                    "arbitrary atlas layouts, all kernel weights, every four-slice selection/debug color or other-renderer proof.",
+                    "Authored Color atlas, two-slice diffuse/specular controls and the fourth slot at maximum count; no "
+                    "shadow-map generation, arbitrary atlas layouts, all kernel weights, every four-slice selection/debug "
+                    "color or other-renderer proof.",
 })

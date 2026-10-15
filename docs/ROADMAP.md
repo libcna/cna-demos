@@ -9569,3 +9569,22 @@ path already shown by three lifecycle values; Blocked/FriendsOnly and the four n
 come only from service-controlled account records. They are intentionally uncredited. Evidence:
 `/tmp/checkpoint-915-guide-*.json` and `/tmp/checkpoint-915-coverage.md`. Resume the deeper public
 member/behavior audit rather than adding value-name-only controls.
+
+
+## Focused916-cascade-selected-directional-specular
+
+The existing `graphics.skinned_effect.shadow_cascades` keeps all ten prior pixel controls and adds
+two isolated directional-specular checks. Diffuse, ambient and emission are zero, while material
+SpecularColor(.3,.15,.05), power1 and light0 specular One leave only the highlight. The existing
+two-slice atlas makes view depth2 select the low-depth near cascade and produce black; depth4 selects
+the high-depth far cascade and preserves RGB(76,38,13). This closes the cascaded-specular gap
+independently of the single-map specular evidence in `shadow_receiver`.
+
+OPENGLES3 passes12/12 in eleven runs including the captured run; OPENGL33 passes12/12 once. Both
+inspected800x480 captures are byte-identical with SHA-256
+`de1bb160ae255b54eb5581e022ec32d64c1b60f27366a63973dbe531a47374d3`. SOFTWARE retains its declared
+capability skip. The warning-free incremental build uses `-j3`, metadata is659/0, validator and
+checkpoint-comparison self-tests pass5/5 and4/4, and generated coverage remains302/329 types,
+2114/2326 non-field members,674/753 fields and3078/3205 C routes. No CNA defect appeared. Evidence:
+`/tmp/checkpoint-916-*`. Continue with partial punctual-shadow filtering/cone transitions or the
+next higher-value observable behavior gap.

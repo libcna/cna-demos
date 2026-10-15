@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added isolated cascade-selected directional specular pixels to the existing skinned shadow
+  receiver, with identical OPENGLES3 and OPENGL33 captures.
 - Completed every observable Guide notification-position and message-box-icon value with actual
   overlay pixels; dispositioned service-only and synonymous GamerServices field values.
 - Covered all game-default and leaderboard enum values through isolated stored profiles, exact
