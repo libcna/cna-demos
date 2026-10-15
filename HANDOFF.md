@@ -68,12 +68,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-663 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
+664 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core4,
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform2 and c_api177. Kinds are168 console,294 game and201 standalone;
-627 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete933's full runtime reports and includes all663
-catalog IDs in both renderer suites.
+diagnostics6, cnaext4, platform2 and c_api177. Kinds are169 console,294 game and201 standalone;
+628 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses Complete933's full runtime reports for663 IDs and marks
+the focused934 renderer-metadata ID absent from those older aggregate reports.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete933's
 full runtime reports are the baseline inputs for the663-ID catalog. Selected semantic
@@ -2336,7 +2336,11 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete933 is the authoritative663-demo full-build/full-runtime baseline and
-absorbs Focused927-932 after Complete926. The diagnostics public behavior audit is now
+absorbs Focused927-932 after Complete926. Focused934 starts the broader CNA-specific C++ audit with
+the native renderer identity/category/maturity API; its new664th ID has focused evidence and is
+honestly absent from Complete933's aggregate reports. Continue with the next coherent public CNA
+header family, preferring an existing workflow when it already owns the behavior. The diagnostics
+public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered
 sources, history/producer drops and malformed-use counters all have runtime evidence in a real FULL
@@ -2695,6 +2699,24 @@ and unchanged `libcna_c_api.so`
 `813bf0a2095524183bbaca66f6fbcc1fbdfcfcd5ddd8148c8ec6ce3138ebee24`. Evidence:
 `build/linux-full/reports/checkpoint-933-complete-*`. No screenshot, listening, physical-input,
 external-service or manual visual-quality validation was performed.
+
+### Focused934-C++-renderer-metadata
+
+New `core.renderer.metadata` directly demonstrates CNA's native launcher-facing renderer metadata
+without constructing a graphics device. Nine controls cover all ten public renderer identities,
+their exact build-option names, implementation categories and maturity classifications; canonical
+and mixed-case parsing; failed-parse output preservation; all category/maturity display names and
+their unknown fallbacks; and agreement among the current-build and general query helpers.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass9/9 with byte-identical stdout SHA-256
+`bf6d63a21dbbd67963f2d3901bd803d11e717d63a2e572e37ce1275fd9ea66e2` and empty stderr. The
+warning-free incremental build uses `-j3`, metadata is
+664/0 and the exact SOFTWARE CTest passes. Generated XNA/C totals remain303/329 types,
+2114/2326 members,674/753 fields and3078/3205 routes because this is CNA-specific C++ API.
+Complete933 remains the current full runtime baseline, so generated coverage correctly marks this
+new ID absent from both older aggregate reports. Evidence:`/tmp/checkpoint-934-renderer-metadata-*`.
+No graphics device, renderer execution, pixel output, screenshot or visual inspection is claimed.
+No CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

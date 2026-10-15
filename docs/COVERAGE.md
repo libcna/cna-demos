@@ -6,7 +6,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**663 demos** in 18 categories. Kinds: console 168, game 294, standalone 201. Automation: automated 627, manual 3, smoke-only 33.
+**664 demos** in 18 categories. Kinds: console 169, game 294, standalone 201. Automation: automated 628, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -14,7 +14,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 33 / 0 / 13 / 0 / 0 | 33 / 0 / 13 / 0 / 0 |
-| core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
+| core | 4 | 4 | 0 | 0 | 3 / 0 / 0 / 0 / 1 | 3 / 0 / 0 / 0 / 1 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
 | diagnostics | 6 | 6 | 0 | 0 | 2 / 4 / 0 / 0 / 0 | 2 / 4 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `core.renderer.metadata`.
+- OPENGLES3: absent from report: `core.renderer.metadata`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -367,11 +369,14 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Graphics::ShaderCodeEXT` -- graphics.shader_effect.portable_package
 - `CNA::Graphics::ShaderPackageEXT::selectFor` -- graphics.shader_effect.portable_package
 - `CNA::Graphics::ShaderPackageSelectionEXT` -- graphics.shader_effect.portable_package
+- `CNA::GraphicsBackendCategory` -- core.renderer.metadata
+- `CNA::GraphicsBackendMaturity` -- core.renderer.metadata
 - `CNA::GraphicsCapability` -- graphics.device.supports_capability
 - `CNA::GraphicsRendererSelection::GetActive` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::GetAvailable` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::IsLatched` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::SetPreferred` -- platform.renderer_selection.set_preferred
+- `CNA::GraphicsRendererType` -- core.renderer.metadata
 - `CNA::Input::Clipboard::GetDataEXT` -- input.clipboard.data_formats
 - `CNA::Input::Clipboard::GetMimeTypesEXT` -- input.clipboard.data_formats
 - `CNA::Input::Clipboard::GetPrimarySelectionTextEXT` -- input.clipboard.text
@@ -457,11 +462,20 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::ShaderDiagnosticEXT::getSeverity` -- graphics.shader_effect.compiler_diagnostics
 - `CNA::ShaderDiagnosticEXT::getSourceLabel` -- graphics.shader_effect.compiler_diagnostics
 - `CNA::ShaderDiagnosticEXT::getStage` -- graphics.shader_effect.compiler_diagnostics
+- `CNA::getCurrentGraphicsBackendCategory` -- core.renderer.metadata
+- `CNA::getCurrentGraphicsBackendMaturity` -- core.renderer.metadata
+- `CNA::getCurrentGraphicsRendererName` -- core.renderer.metadata
+- `CNA::getCurrentGraphicsRendererType` -- core.renderer.metadata
+- `CNA::getGraphicsBackendCategory` -- core.renderer.metadata
+- `CNA::getGraphicsBackendMaturity` -- core.renderer.metadata
+- `CNA::getGraphicsRendererName` -- core.renderer.metadata
 - `CNA::getVersionMajor` -- core.version.version_string
 - `CNA::getVersionMinor` -- core.version.version_string
 - `CNA::getVersionPatch` -- core.version.version_string
 - `CNA::getVersionString` -- core.version.version_string
 - `CNA::isPreReleaseVersion` -- core.version.version_string
+- `CNA::toStringView` -- core.renderer.metadata
+- `CNA::tryParseGraphicsRendererName` -- core.renderer.metadata
 - `ClipTargetSpaceEXT` -- graphics.model.node_animation
 - `ColorMatrixEffect::ColorMatrixEffect` -- graphics.color_matrix_effect.sepia_and_invert
 - `ColorMatrixEffect::SetColorMatrix` -- graphics.color_matrix_effect.sepia_and_invert

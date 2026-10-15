@@ -9851,3 +9851,17 @@ with all663 IDs and zero unexpected results. Exact comparison with Complete926 c
 assertion multiplicities remain unchanged at92/96. Generated coverage is303/329 types,
 2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
 `build/linux-full/reports/checkpoint-933-complete-*`.
+
+## Focused934-native-C++-renderer-metadata
+
+New `core.renderer.metadata` adds the664th catalog ID and begins the broader CNA-specific C++
+surface audit. Nine renderer-free controls enumerate all ten public renderer identities, exact
+build-option names, categories and maturities; prove canonical and mixed-case parsing plus
+failed-parse output preservation; name every category/maturity value and both unknown fallbacks;
+and correlate the current-build helpers with the general queries. Ten SOFTWARE-labelled and ten
+OPENGLES3-labelled runs pass9/9 with byte-identical stdout and empty stderr. The warning-free
+incremental build uses `-j3`, metadata is664/0 and the exact SOFTWARE CTest passes. XNA/C coverage
+totals stay unchanged. Complete933's older full reports correctly show this new ID as absent.
+Evidence:`/tmp/checkpoint-934-renderer-metadata-*`. Continue the next coherent public CNA C++
+header family; do not duplicate C-adapter coverage unless the native API itself teaches a distinct
+consumer workflow.

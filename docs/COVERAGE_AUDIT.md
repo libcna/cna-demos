@@ -3690,3 +3690,20 @@ assertion messages/multiplicities remain unchanged at92 SOFTWARE and96 OPENGLES3
 coverage is303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
 `build/linux-full/reports/checkpoint-933-complete-*`. No screenshot, listening, physical-input,
 external-service or manual visual-quality validation was performed.
+
+### Focused934 native C++ renderer metadata
+
+New `core.renderer.metadata` supplies direct public C++ evidence for `GraphicsRendererType`,
+`GraphicsBackendCategory` and `GraphicsBackendMaturity`. Nine controls enumerate and classify all
+ten renderer identities, round-trip canonical names, accept mixed case, preserve an output on
+failed parsing, name every category/maturity value including the currently unused historical
+states, verify unknown-value fallbacks and correlate current-build helpers with the general
+queries. This is useful launcher and diagnostic behavior independent of the already audited C
+adapter.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass9/9 with byte-identical stdout and empty
+stderr. The warning-free incremental build uses `-j3`, metadata is664/0 and the exact SOFTWARE
+CTest passes. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and
+3078/3205 routes. Complete933 remains the full runtime baseline, so its reports honestly leave this
+new ID absent. Evidence:`/tmp/checkpoint-934-renderer-metadata-*`. No device, renderer execution,
+pixels or manual visual result is claimed; no CNA defect appeared.
