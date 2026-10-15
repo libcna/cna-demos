@@ -67,12 +67,14 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-655 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
-content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,292 game and199 standalone;
-619 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md is runtime-backed by complete871 at655 demos,302/329 XNA
-types,2114/2326 XNA members,169/753 fields and3078/3205 public C ABI routes. Selected semantic
+656 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
+content46, input40, storage7, media14, gamer services19, net14, devices5, phone1, design4,
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,292 game and200 standalone;
+620 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses complete871's runtime reports for its655-demo baseline;
+Focused887's new playlist ID is explicitly absent there but has separate direct and repeated CTest
+evidence. The surface totals remain302/329 XNA types,2114/2326 XNA members,169/753 fields and
+3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -215,6 +217,14 @@ tests are disabled; all668 enabled entries complete without failure in one autho
 562 pass/47 expected fail/43 skip/3 manual, while OPENGLES3/private-Xvfb reports601/48/3/3. Both
 execute all655 IDs with zero unexpected failures or unexpected passes. The five validator and four
 checkpoint-comparison self-tests pass.
+
+Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
+incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
+with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
+`xvfb-run` wrapper currently returns1 even for `true`; because this renderer-free process directly
+passes with `CNA_GRAPHICS_RENDERER=OPENGLES3`, no Xvfb-backed claim is made. Regenerated coverage
+correctly marks the new ID absent from Complete871's older reports. A new complete checkpoint is
+therefore still due after enough focused work or before the next handoff.
 
 Complete859 comparisons report no ID changes, intended check-count growth in six in-process demos
 and exactly one reviewed status/known-issue change: `math.curve.key_collection` adds the sole
@@ -1996,12 +2006,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete859 is the current655-demo full-build/runtime baseline and closes the
-focused Model/animation remainder with ISSUE-031 and ISSUE-092-096 retained exactly. Continue the
-deeper public-behavior audit with `CurveKeyCollection`: inspect duplicate-position insertion and
-indexed replacement ordering/atomicity against the pinned CNA source, then extend the existing
-`math.curve.key_collection` only where the behavior is distinct and meaningful. Continue to the
-next explicit behavioral gap after that focused batch.
+HIGHEST PRIORITY: Complete871 remains the authoritative655-demo full-runtime baseline; Focused887
+adds one separately validated playlist demo. Continue the semantic Media audit. First classify the
+remaining album-art filename candidates (`cover.jpeg`, `folder.jpeg`, `front.*`, `album.*`, and
+`albumart.*`) without adding one assertion per spelling: use the implementation precedence and
+choose only behaviorally distinct boundaries. Then review MediaLibrary indexing of supported audio
+formats, tag fallbacks and recursive/symlink scanning for the next coherent public behavior. Run a
+new656-demo full checkpoint before relying on runtime-backed coverage for the new ID.
 The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
@@ -4590,6 +4601,27 @@ regenerates byte-identically against the Complete871 reports at302/329 types,211
 or visual inspection is claimed. Complete871 remains the full baseline. The media disposal family
 is now semantically audited; select the next open Media behavior from COVERAGE_AUDIT rather than
 adding disposal variants.
+
+### Focused887-public-playlist-import-boundaries
+
+New standalone `media.media_library.playlist_import` exercises the public MediaLibrary rather than
+crediting CNA's internal parser tests. Four root-level playlists establish case-insensitive M3U/
+M3U8 discovery, filename-derived names, comments, CRLF and surrounding whitespace, a nested audio
+path, authored order and duplicate preservation as the same borrowed Song object. A missing entry
+is skipped. Separate empty public playlists prove that an absolute path is rejected even when it
+names an indexed song and that an in-root symlink resolving outside the playlist directory is
+rejected. An uppercase `.M3U8` resolves a UTF-8 filename; `.pls` and a nested `.m3u` are not scanned.
+
+Both direct renderer-labelled runs pass9/9 with byte-identical stdout and the same eight reviewed
+TitleContainer INFO lines. The OPENGLES3-labelled program is renderer-free and ran directly because
+the available `xvfb-run` wrapper returns1 even for `true`; no Xvfb-backed claim is made. The exact
+SOFTWARE CTest passes20 repetitions. The warning-free incremental build uses `-j3`, metadata
+validates656/0, both validator self-test suites pass, and generated coverage stays302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. The older Complete871 reports correctly
+mark only this ID absent. Evidence is under `/tmp/checkpoint-887-*`. No CNA defect, playback,
+listening, screenshot or visual inspection is claimed. Audit the remaining album-art filename
+families by semantic precedence rather than enumerating every spelling, then continue with public
+audio-index format/tag/recursion boundaries.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

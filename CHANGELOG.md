@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a public MediaLibrary playlist-import workflow covering M3U/M3U8 order, duplicate shared
+  Song identity, comments, missing entries, UTF-8/CRLF input, root-only discovery, supported
+  extensions and absolute/symlink containment refusals.
 - Extended CNA-DEMOS-ISSUE-098 to Song and both picture collection views: none of twenty tested
   ordinary operations produces the required ObjectDisposedException.
 - Extended CNA-DEMOS-ISSUE-098 through all five music collection views and MediaLibrary: none of

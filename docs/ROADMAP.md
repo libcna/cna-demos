@@ -9041,3 +9041,25 @@ Complete871 reports pass; counts remain 302/329 types, 2114/2326 members, 169/75
 3078/3205 C routes. Evidence: `/tmp/checkpoint-886-*`. No CNA source was modified and no playback,
 screenshot or visual inspection is claimed. Return to the remaining semantic Media behavior table
 after this now-complete disposal family audit.
+
+## Focused887-public-playlist-import-boundaries
+
+New standalone `media.media_library.playlist_import` covers the next coherent MediaLibrary behavior
+through public Playlist and Song views. Four root-level fixtures establish M3U/M3U8 discovery,
+filename-derived names, comments, CRLF, surrounding whitespace, a nested audio path, authored
+ordering and duplicate preservation with shared Song identity. Missing files are skipped. Separate
+empty playlists prove refusal of an absolute entry that names an indexed song and an in-root
+symlink whose target escapes the playlist directory. Uppercase `.M3U8` plus a UTF-8 filename
+round-trips, while `.pls` and a nested `.m3u` are not discovered. This adds one meaningful workflow
+rather than format/line variants as separate demos.
+
+Both direct renderer-labelled runs pass9/9 with byte-identical stdout and stderr; stderr contains
+the same eight reviewed TitleContainer INFO lines. The OPENGLES3-labelled process ran without Xvfb
+because it creates no graphics device and the environment's `xvfb-run` currently returns1 even for
+`true`; no Xvfb-backed result is claimed. The exact SOFTWARE CTest passes20 repetitions. The clean
+incremental build uses at most three jobs, metadata is656/0, both validator self-test suites pass,
+and generated coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Complete871's older runtime reports correctly mark only this new ID absent. Evidence:
+`/tmp/checkpoint-887-*`. No CNA defect, playback, listening, screenshot or visual inspection is
+claimed. Classify the remaining album-art filename candidates by distinct precedence behavior,
+then audit supported audio formats, tag fallbacks and recursive/symlink indexing.

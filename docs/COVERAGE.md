@@ -6,7 +6,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**655 demos** in 18 categories. Kinds: console 164, game 292, standalone 199. Automation: automated 619, manual 3, smoke-only 33.
+**656 demos** in 18 categories. Kinds: console 164, game 292, standalone 200. Automation: automated 620, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -23,7 +23,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | graphics | 184 | 184 | 0 | 0 | 146 / 26 / 12 / 0 / 0 | 167 / 3 / 14 / 0 / 0 |
 | input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 74 / 0 / 4 / 0 / 0 | 74 / 0 / 4 / 0 / 0 |
-| media | 13 | 12 | 1 | 0 | 12 / 0 / 1 / 0 / 0 | 12 / 0 / 1 / 0 / 0 |
+| media | 14 | 13 | 1 | 0 | 12 / 0 / 1 / 0 / 1 | 12 / 0 / 1 / 0 / 1 |
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
 | platform | 2 | 2 | 0 | 0 | 1 / 1 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `media.media_library.playlist_import`.
+- OPENGLES3: absent from report: `media.media_library.playlist_import`.
 
 ## XNA 4.0 API surface demonstrated
 
