@@ -10963,3 +10963,19 @@ byte-identical stdout SHA-256 `653383602c657feb42e575fb3d6131e35c2b817f0ab3701c7
 and empty stderr. Evidence:`/tmp/checkpoint-1007-c-route-revalidation/*`. No embedded-resource
 load, hardware, service, screenshot or manual result is claimed. Audit deterministic uniform-block
 delivery in the existing ShaderEffect family next.
+
+## Focused1008-ShaderEffect-uniform-block-disposition-revalidation
+
+Source review against pinned CNA d23 closes the reopened `DeclareUniformBlockEXT` question without
+adding an inert demo. The public call forwards to the effect renderer; the common renderer method is
+a documented no-op for loose uniforms, and WebGPU is the only current override. `linux-full` builds
+OPENGLES3, OPENGL33, SDL_GPU, SOFTWARE, HEADLESS and STUB, so none can provide uniform-block layout
+or pixel evidence. The public docs' earlier IGL/Vulkan consumer is retired.
+
+The member remains intentionally renderer-specific and uncredited until a WebGPU/browser workflow
+can exercise explicit offsets, replacement and zero-count clearing through actual output. The
+warning-free `-j3` no-op build, metadata693/0 and validator/comparator self-tests5/5 plus4/4 pass.
+No demo, metadata or count changes, and no runtime or visual result is claimed. Evidence:
+`/tmp/checkpoint-1008-uniform-block/source-audit.txt` (SHA-256
+`d65b908e8a45fc1471c382ea40831e3122127261609219cee2c955cc2cd01c04`). Extend the existing
+OcclusionQuery lifecycle workflow through disposal while a Begin/End pair is active next.

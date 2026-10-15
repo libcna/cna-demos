@@ -149,6 +149,9 @@ revalidates every name and corrects one classification: `cna_content_manager_cre
 already meaningfully exercised by the loader-registry workflow and now receives metadata credit.
 The remaining126 are84 fixed type-name helpers,21 explicit test hooks and21 production routes that
 require hardware/service/platform/external-tool observation.
+Focused1008 revalidates `ShaderEffect::DeclareUniformBlockEXT`: WebGPU is the only current renderer
+override, while every backend in `linux-full` inherits the documented no-op. It remains an
+intentional renderer-specific gap pending real WebGPU/browser layout and pixel evidence.
 Focused824 adds the actual `PbrEffect` image-based-lighting draw path: invalid fallback, diffuse
 irradiance, intensity scaling, BRDF lookup and roughness-selected prefiltered cube mips.
 Focused825 extends the existing skinned-PBR model with the parallel complete environment bundle and
@@ -3601,11 +3604,11 @@ representative refusals; ISSUE-110 records the direct `None` decompression valid
 `CnbLoaderRegistry.hpp` next by consolidating the existing custom/built-in/collision workflows.
 Focused980 closes all ten registry declarations through direct/custom/built-in lifecycle,
 resolution, collision, copied-loader and reset evidence. The complete public `CNA/Content` header
-tree is now dispositioned. The sole remaining `content.h` C route,
-`cna_content_manager_create_resource`, already has an explicit intentionally unsupported
-disposition: the implementation has no embedded-resource store, and adding construction plus its
-predictable failure would inflate the demo count without demonstrating a usable behavior. Keep
-that disposition until CNA gains a real resource-backed workflow.
+tree is now dispositioned. At that checkpoint the sole remaining `content.h` C route,
+`cna_content_manager_create_resource`, was treated as intentionally unsupported because the
+implementation has no embedded-resource store. Focused1007 later corrects that classification:
+the existing loader-registry demo already proves successful construction, callback use and owner
+destruction; only embedded-resource loading remains unsupported.
 Focused982 enables the optional Inspector in `linux-full` and adds three coherent demos covering
 the complete public wire-codec family, authenticated agent/client lifecycle, demand-driven
 snapshot/events and asynchronous bounded previews. Focused983 extends those stable IDs with
@@ -3971,6 +3974,23 @@ ten OPENGLES3/Xvfb direct runs retain21/21 controls with byte-identical stdout S
 `/tmp/checkpoint-1007-c-route-revalidation/*`. No embedded-resource load, physical hardware,
 service, screenshot or manual result is claimed. Audit deterministic uniform-block delivery in the
 existing ShaderEffect family next.
+
+## Focused1008 ShaderEffect uniform-block disposition revalidation
+
+Pinned CNA d23 forwards `ShaderEffect::DeclareUniformBlockEXT` to the renderer interface, whose
+default implementation is the documented no-op for loose-uniform backends. WebGPU is the only
+current override and owns the staging block plus name-to-offset map. The `linux-full` cache contains
+OPENGLES3, OPENGL33, SDL_GPU, SOFTWARE, HEADLESS and STUB, so a local call cannot establish layout
+delivery. The older IGL/Vulkan consumer named by the public docs is retired.
+
+Keep the member intentionally renderer-specific and uncredited until a WebGPU/browser workflow can
+prove explicit offsets, replacement and zero-count clearing through pixels. The warning-free `-j3`
+no-op build, metadata693/0 and validator/comparator self-tests5/5 plus4/4 pass. No demo, metadata or
+coverage count changed. Evidence:`/tmp/checkpoint-1008-uniform-block/source-audit.txt`, SHA-256
+`d65b908e8a45fc1471c382ea40831e3122127261609219cee2c955cc2cd01c04`. No runtime or visual result
+is claimed. Extend `graphics.occlusion_query.visible_pixels` through disposal during an active
+Begin/End pair next; both compiled renderers have an explicit native release path and the existing
+queries can prove that the target remains usable.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,
@@ -7504,11 +7524,12 @@ object whose bounded JSON, cache reuse, missing-type failure and post-Unload re-
 observable. The initial cube check incorrectly expected the retained DXT1 storage identity; CNA
 decodes this content path to Color, so that was a demo defect. An initial resource-manager check
 also exposed that the old linked checkpoint library predates current CNA's placeholder behavior and
-still fell back to loose files. It was removed rather than treated as current-source evidence;
-`create_resource` retains the existing intentional unsupported/deferred disposition. Both corrected
-Xvfb/dummy-audio selections are byte-identical with empty stderr; strict C99 and metadata compilation
-pass. The generated `assets/textures/cube_faces.dds` reproduces byte-for-byte. `content.h` is31/32
-demonstrated with all routes dispositioned. Evidence:
+still fell back to loose files. It was removed rather than treated as current-source evidence.
+At this checkpoint `create_resource` remained deferred and `content.h` was31/32 demonstrated;
+Focused1007 later credits the constructor through the loader-registry workflow and brings the
+current total to32/32. Both corrected Xvfb/dummy-audio selections are byte-identical with empty
+stderr; strict C99 and metadata compilation pass. The generated `assets/textures/cube_faces.dds`
+reproduces byte-for-byte. Evidence:
 `checkpoint-564-c-content-manager-inspection-focused-*-direct.*` and
 `checkpoint-565-c-content-additional-loaders-focused-*-direct.*`.
 
