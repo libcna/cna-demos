@@ -303,10 +303,19 @@ namespace
                       indexedReplacement->getHeightProperty() == 64 &&
                       ReadImage(*replacementImage) == thumbnailBytes,
                   "a fresh library indexes the replacement dimensions and exact latest bytes");
+            std::unique_ptr<System::IO::Stream> firstSmallThumbnail(
+                indexedReplacement->GetThumbnail());
+            std::unique_ptr<System::IO::Stream> secondSmallThumbnail(
+                indexedReplacement->GetThumbnail());
+            check(firstSmallThumbnail != secondSmallThumbnail &&
+                      ReadImage(*firstSmallThumbnail) == thumbnailBytes &&
+                      ReadImage(*secondSmallThumbnail) == thumbnailBytes,
+                  "an already-small picture returns exact bytes through independent thumbnail streams");
         }
         else
         {
             check(false, "a fresh library indexes the replacement dimensions and exact latest bytes");
+            check(false, "an already-small picture returns exact bytes through independent thumbnail streams");
         }
 
         check(!picture->getIsDisposedProperty() && !album->getIsDisposedProperty(),

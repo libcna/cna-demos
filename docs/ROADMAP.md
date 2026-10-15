@@ -491,7 +491,8 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `media.media_library.save_picture`: standalone Linux fixture verifies private XDG music and
   picture roots before library access, vector/stream saves, borrowed picture/album views,
   caller-owned image/thumbnail streams, smaller aspect-preserving thumbnail, reindexing and a
-  two-level ordinary album tree with exact parent, membership and stream checks.
+  two-level ordinary album tree with exact parent, membership and stream checks. An already-small
+  128x64 PNG remains byte-identical through two independently owned thumbnail streams.
   A valid stream delivering 13-byte chunks exposes ISSUE-041: SavePicture reads once and writes
   a zero-padded image. ISSUE-040 records stale thumbnail comments separately. Other platforms,
   premature/unknown-length streams and further disposal contracts remain unaudited. Same-name
@@ -8877,3 +8878,17 @@ The exact known-issue SOFTWARE CTest passes twenty repetitions. The clean increm
 remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-877-*`. No new CNA defect appeared. Image bytes and dimensions are programmatic
 evidence; no screenshot or visual inspection was used.
+
+## Focused878-already-small-picture-thumbnail
+
+The same picture-library workflow calls `GetThumbnail` twice on the fresh128x64 replacement record.
+Both returned pointers are distinct caller-owned streams, and both contain bytes identical to the
+already-small PNG. This proves the public no-upscale/no-reencode branch and independent ownership
+without inventing a cache or another demo ID. The workflow grows from thirty to thirty-one controls;
+both renderer-labelled direct runs pass thirty and retain only established ISSUE-041, with
+byte-identical stdout and stderr. The exact known-issue SOFTWARE CTest passes twenty consecutive
+runs. The first full `-j3` build succeeds with a recurrence of the tracked ISSUE-057 staging race;
+the unchanged retry is clean. Metadata validates 655/0, both validator self-test suites pass, and
+coverage regeneration is byte-identical at 302/329 types, 2114/2326 members, 169/753 fields and
+3078/3205 C routes. Evidence: `/tmp/checkpoint-878-*`. No new CNA defect, screenshot or visual
+inspection is claimed.

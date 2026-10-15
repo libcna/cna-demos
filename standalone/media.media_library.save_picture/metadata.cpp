@@ -5,7 +5,7 @@ CNA_DEMOS_STANDALONE({
     .id = "media.media_library.save_picture",
     .title = "Save pictures and read image and thumbnail streams",
     .description = "Uses an isolated Linux media library to save an original panorama, check picture/album views and disposal, "
-                   "discover a nested album tree, replace a same-name picture, read owned image streams, save and reindex a smaller thumbnail, and expose incomplete short reads.",
+                   "discover a nested album tree, replace a same-name picture, read independent image/thumbnail streams, check an already-small thumbnail, and expose incomplete short reads.",
     .apis = {"MediaLibrary::SavePicture", "MediaLibrary::Pictures", "MediaLibrary::SavedPictures",
              "MediaLibrary::RootPictureAlbum", "Picture::Name", "Picture::Width", "Picture::Height",
              "Picture::Album", "Picture::Date", "Picture::GetImage", "Picture::GetThumbnail", "Picture::TokenEXT",

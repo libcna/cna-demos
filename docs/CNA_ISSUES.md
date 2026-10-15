@@ -1113,6 +1113,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   workflow recurrence at CNA `d23e139de9e5c15511b6be745de290896a69ee37`, rather than the earlier
   direct header probe; no artifact loss was observed. Evidence:
   `/tmp/checkpoint-873-independent-process-lease-{software,opengles3}{,-serial}.*`.
+- **Recurrence on Focused878:** the first full `-j3` build succeeds, but the content-project step
+  reports `not a validated current-user staging directory` for a `cna_content_stage_v1_*`
+  candidate. This is another conservative validation outcome from the same enumeration/lifecycle
+  window; the candidate is absent after the build and no asset loss is observed. An immediate
+  unchanged `-j3` retry is warning-free. The retry log is
+  `/tmp/checkpoint-878-build-retry.log`; the initial diagnostic was observed in the interactive
+  build output and was not redirected to a file.
 - **Handling:** keep the warning gate and original failure visible, retry the unchanged documented
   full validation after recording the defect, and retain this issue even if scheduling permits a
   clean retry. The eleven OcclusionQuery controls already pass on both renderers independently.

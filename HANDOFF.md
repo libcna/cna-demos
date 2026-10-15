@@ -4403,6 +4403,23 @@ byte-identical temporary coverage remains302/329 types,2114/2326 members,169/753
 baseline. Continue with the next deterministic public-behavior gap. Image dimensions and bytes are
 programmatic evidence; no screenshot or visual inspection was used.
 
+### Focused878-already-small-picture-thumbnail
+
+`media.media_library.save_picture` now calls `GetThumbnail` twice on the fresh128x64 replacement
+record created by Focused877. Both returned pointers are distinct caller-owned streams and both
+contain the exact original PNG bytes, proving the public no-upscale/no-reencode branch without
+assuming a cache. The workflow grows30->31 controls without another ID.
+
+Serial SOFTWARE and OPENGLES3-labelled direct runs each pass30 controls and retain only the
+expected CNA-DEMOS-ISSUE-041 failure; stdout and stderr are byte-identical across labels. The exact
+known-issue SOFTWARE CTest passes20 consecutive runs. The first full `-j3` build succeeds but emits
+the already tracked CNA-DEMOS-ISSUE-057 staging-scavenger race diagnostic; an immediate unchanged
+retry is clean. Metadata validates655/0, both validator self-test suites pass, and regenerated
+coverage is byte-identical at302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence is under `/tmp/checkpoint-878-*`. No new CNA defect, screenshot or visual inspection is
+claimed. Complete871 remains the full baseline; continue with the next deterministic
+public-behavior gap.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

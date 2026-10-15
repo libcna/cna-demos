@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Verified that Picture::GetThumbnail leaves an already-small 128x64 PNG byte-identical and
+  returns a separately owned stream on each call.
 - Added same-name picture-save coverage: the live library retains distinct equal snapshot views,
   one physical file is replaced, and a fresh library observes the latest dimensions and bytes.
 - Extended the isolated picture-library workflow with a two-level ordinary folder tree, verifying
