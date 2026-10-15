@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended CNA-DEMOS-ISSUE-098 to disposed Album, Artist, Genre and Playlist views: none of 37
+  tested ordinary XNA operations throws ObjectDisposedException after disposal.
 - Added a deterministic tagged FLAC with byte-exact embedded PNG art, covering extraction,
   thumbnail ownership and folder-over-embedded album-art precedence.
 - Extended album-art coverage with case-insensitive cover-over-folder priority, independent

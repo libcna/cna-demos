@@ -8979,3 +8979,21 @@ consecutive runs. The warning-free full incremental `-j3` build, metadata 655/0,
 self-test suites and byte-identical coverage regeneration pass; coverage remains 302/329 types,
 2114/2326 members, 169/753 fields and 3078/3205 C routes. Evidence:`/tmp/checkpoint-883-*`. No new
 CNA defect, playback, screenshot or visual inspection is claimed.
+
+## Focused884-disposed-music-entity-refusal
+
+`media.media_library.music_index` now tests the XNA post-disposal contract for Album, Artist,
+Genre and Playlist instead of treating CNA's still-readable relationships as valid behavior. After
+idempotent-disposal and sibling-isolation controls, it invokes 13 ordinary Album operations and
+eight operations on each other entity. Both renderer labels observe 0/13, 0/8, 0/8 and 0/8 exact
+ObjectDisposedException refusals; four grouped ISSUE-098 checks fail while all 29 established
+controls pass. Album's two no-art image calls also establish that disposal should take precedence
+over the ordinary missing-art exception. The demo keeps its stable ID and now names ISSUE-098.
+
+Both direct runs have byte-identical output streams, including six reviewed TitleContainer INFO
+records. The exact known-issue SOFTWARE CTest passes 20 repetitions. The warning-free full
+incremental `-j3` build, metadata 655/0, both validator self-test suites and byte-identical coverage
+regeneration pass; counts remain 302/329 types, 2114/2326 members, 169/753 fields and 3078/3205 C
+routes. Evidence: `/tmp/checkpoint-884-*`. No CNA source was modified and no playback, screenshot
+or visual inspection is claimed. Audit the five music collection views and MediaLibrary disposal
+guards next.

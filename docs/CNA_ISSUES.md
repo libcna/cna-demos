@@ -15,12 +15,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
-### CNA-DEMOS-ISSUE-098 -- Disposed Picture and PictureAlbum objects remain fully usable
+### CNA-DEMOS-ISSUE-098 -- Disposed media entity views remain fully usable
 
-- **Area/API:** `Picture::Dispose`, `PictureAlbum::Dispose`, their ordinary properties, Picture
-  image streams, equality/hashing and text operations.
-- **Demo:** `media.media_library.save_picture`; its singular `knownIssue` metadata now names this
-  issue while the pinned baseline also retains the older ISSUE-041 assertion.
+- **Area/API:** `Picture`, `PictureAlbum`, `Album`, `Artist`, `Genre` and `Playlist` disposal; their
+  ordinary properties, image streams, equality/hashing and text operations.
+- **Demos:** `media.media_library.save_picture` and `media.media_library.music_index`. Both singular
+  `knownIssue` fields name this issue; the pinned save-picture baseline also retains ISSUE-041.
 - **Reproduction:** create and cross-index a real PNG in verified private Linux/XDG folders, retain
   live peer objects for comparisons, then dispose one Picture and its containing PictureAlbum
   twice. First prove the flags are set idempotently and sibling objects remain live. Invoke twelve
@@ -28,24 +28,34 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   GetHashCode and ToString) and nine corresponding PictureAlbum operations (four properties, both
   Equals overloads, equality, GetHashCode and ToString), accepting only exact
   `System::ObjectDisposedException`.
+- **Music-entity follow-up:** `music_index` performs the parallel operation after first proving
+  repeated disposal and sibling isolation. It checks 13 Album operations (six properties, both
+  no-art image methods, both Equals overloads, equality, hash and text) plus eight operations each
+  on Artist, Genre and Playlist (three properties, both Equals overloads, equality, hash and text).
+  Live mirror objects make every comparison valid. The image calls specifically establish that
+  disposal must take precedence over the otherwise expected missing-art InvalidOperationException.
 - **Observed:** both renderer-labelled runs report `Picture 0/12, PictureAlbum 0/9`; every grouped
-  refusal assertion fails. The other31 of34 controls pass except the separately established
+  refusal assertion fails. The other 31 of 34 controls pass except the separately established
   ISSUE-041 short-read assertion, for three total failures. Streams returned by the disposed
   Picture remain caller-owned and are deleted by the probe; no invalid pointer use is involved.
+- **Music-entity observation:** both labels report `Album 0/13, Artist 0/8, Genre 0/8, Playlist
+  0/8`. Four grouped assertions fail and all 29 established controls pass. Album image calls yield
+  the live object's missing-art path rather than the disposal refusal. `music_index` therefore
+  changes from pass to an expected ISSUE-098 failure without changing its ID.
 - **Expected:** XNA's Windows implementation calls `ThrowIfDisposed` from each ordinary member
   above. Only IsDisposed itself remains queryable after disposal. Repeated Dispose stays safe and
   must not dispose sibling library views.
-- **Cause observed in source:** CNA's Picture and PictureAlbum `Dispose` methods only set
+- **Cause observed in source:** all six CNA entity `Dispose` methods only set
   `isDisposed_ = true`; their getters, stream methods and value operations contain no guard. Source
   comments explicitly describe the objects as non-owning views with only a flag to set, but that
   implementation choice contradicts the public XNA disposed-object contract.
 - **Scope/status:** open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`; the two source files are unchanged at the later
-  sibling checkout observed during this audit. Both renderer streams are byte-identical, the exact
-  known-issue SOFTWARE CTest passes20 consecutive runs, and the clean full incremental build and
-  standard validators pass. Evidence:`/tmp/checkpoint-881-*`. No CNA source was modified and no
-  upstream message was sent. This is exact exception/state/stream-lifetime evidence; no screenshot
-  or visual judgment is involved.
+  `d23e139de9e5c15511b6be745de290896a69ee37`; the relevant implementation files are unchanged at
+  the later sibling checkout observed during this audit. Both demos' renderer streams are byte-identical;
+  each exact known-issue SOFTWARE CTest passes20 consecutive runs, and both checkpoints have clean
+  full incremental builds and standard validators. Evidence:`/tmp/checkpoint-881-*` and
+  `/tmp/checkpoint-884-*`. No CNA source was modified and no upstream message was sent. This is
+  exact exception/state/stream-lifetime evidence; no screenshot or visual judgment is involved.
 
 ### CNA-DEMOS-ISSUE-097 -- Nearby CurveKey replacement can violate collection ordering
 

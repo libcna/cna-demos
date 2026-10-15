@@ -4521,6 +4521,27 @@ validator self-test suites pass, and regenerated coverage is byte-identical at30
 Complete871 remains the full baseline. Audit Album/Artist/Genre/Playlist disposed-object refusal as
 the next media-library behavior; ISSUE-098 establishes the parallel Picture family contract.
 
+### Focused884-disposed-music-entity-refusal
+
+`media.media_library.music_index` corrects the same stale expectation found in Focused881 and
+extends CNA-DEMOS-ISSUE-098 across the four music entity views. Repeated Dispose still passes as an
+idempotent flag/sibling-isolation operation. The demo then invokes 13 ordinary Album operations
+(including both no-art image routes, which must prefer ObjectDisposedException), and eight each on
+Artist, Genre and Playlist. Pinned CNA reports 0/13, 0/8, 0/8 and 0/8 exact refusals because every
+implementation only sets its flag and leaves ordinary members unguarded. Four grouped assertions
+fail while all 29 established relationship, duration, identity, collection and library controls
+pass. Metadata now marks this second demo with ISSUE-098.
+
+SOFTWARE and OPENGLES3-labelled direct runs are byte-identical on both streams; stderr retains the
+same six reviewed TitleContainer INFO lines. The exact known-issue SOFTWARE CTest passes20
+consecutive runs. The warning-free full incremental build uses `-j3`, metadata validates655/0, both
+validator self-test suites pass, and regenerated coverage is byte-identical at302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is under
+`/tmp/checkpoint-884-*`. No CNA source was modified and no playback, screenshot or visual
+inspection is claimed. Complete871 remains the full baseline. Audit the five music collections and
+MediaLibrary disposal guards next; their current demo assertions may likewise encode CNA behavior
+rather than the XNA contract.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

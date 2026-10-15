@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -24,6 +25,7 @@
 #include "Microsoft/Xna/Framework/Media/Song.hpp"
 #include "Microsoft/Xna/Framework/Media/SongCollection.hpp"
 #include "System/IO/Stream.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Media;
@@ -39,6 +41,23 @@ namespace
             std::filesystem::remove_all(path, ignored);
         }
     };
+
+    template<typename Action>
+    bool ThrowsObjectDisposed(Action&& action)
+    {
+        try
+        {
+            action();
+        }
+        catch (const System::ObjectDisposedException&)
+        {
+            return true;
+        }
+        catch (...)
+        {
+        }
+        return false;
+    }
 #endif
     int MusicIndex()
     {
@@ -252,9 +271,82 @@ namespace
         selected->Dispose();
         check(firstAlbum->getIsDisposedProperty() && ensemble->getIsDisposedProperty() &&
                   instrumental->getIsDisposedProperty() && selected->getIsDisposedProperty() &&
-                  !secondAlbum->getIsDisposedProperty() && !secondEnsemble->getIsDisposedProperty() &&
-                  firstAlbum->getSongsProperty() == firstSongs && selected->getSongsProperty() == selectedSongs,
-              "object disposal is idempotent, marks only that borrowed view and preserves its relationships");
+                  !secondAlbum->getIsDisposedProperty() && !secondEnsemble->getIsDisposedProperty(),
+              "object disposal is idempotent and marks only the selected borrowed views");
+
+        int albumDisposalRefusals = 0;
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)firstAlbum->getArtistProperty(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)firstAlbum->getDurationProperty(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)firstAlbum->getGenreProperty(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)firstAlbum->getHasArtProperty(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)firstAlbum->getNameProperty(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)firstAlbum->getSongsProperty(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&]
+        {
+            std::unique_ptr<System::IO::Stream> disposedArt(firstAlbum->GetAlbumArt());
+        });
+        albumDisposalRefusals += ThrowsObjectDisposed([&]
+        {
+            std::unique_ptr<System::IO::Stream> disposedThumbnail(firstAlbum->GetThumbnail());
+        });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)firstAlbum->Equals(mirrorFirstAlbum); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&]
+        {
+            (void)firstAlbum->Equals(static_cast<const System::Object*>(mirrorFirstAlbum));
+        });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*firstAlbum == *mirrorFirstAlbum); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)firstAlbum->GetHashCode(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)firstAlbum->ToString(); });
+        check(albumDisposalRefusals == 13,
+              "a disposed Album refuses properties, image streams and value operations (CNA-DEMOS-ISSUE-098)");
+
+        int artistDisposalRefusals = 0;
+        artistDisposalRefusals += ThrowsObjectDisposed([&] { (void)ensemble->getAlbumsProperty(); });
+        artistDisposalRefusals += ThrowsObjectDisposed([&] { (void)ensemble->getNameProperty(); });
+        artistDisposalRefusals += ThrowsObjectDisposed([&] { (void)ensemble->getSongsProperty(); });
+        artistDisposalRefusals += ThrowsObjectDisposed([&] { (void)ensemble->Equals(mirrorEnsemble); });
+        artistDisposalRefusals += ThrowsObjectDisposed([&]
+        {
+            (void)ensemble->Equals(static_cast<const System::Object*>(mirrorEnsemble));
+        });
+        artistDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*ensemble == *mirrorEnsemble); });
+        artistDisposalRefusals += ThrowsObjectDisposed([&] { (void)ensemble->GetHashCode(); });
+        artistDisposalRefusals += ThrowsObjectDisposed([&] { (void)ensemble->ToString(); });
+        check(artistDisposalRefusals == 8,
+              "a disposed Artist refuses properties and value operations (CNA-DEMOS-ISSUE-098)");
+
+        int genreDisposalRefusals = 0;
+        genreDisposalRefusals += ThrowsObjectDisposed([&] { (void)instrumental->getAlbumsProperty(); });
+        genreDisposalRefusals += ThrowsObjectDisposed([&] { (void)instrumental->getNameProperty(); });
+        genreDisposalRefusals += ThrowsObjectDisposed([&] { (void)instrumental->getSongsProperty(); });
+        genreDisposalRefusals += ThrowsObjectDisposed([&] { (void)instrumental->Equals(mirrorInstrumental); });
+        genreDisposalRefusals += ThrowsObjectDisposed([&]
+        {
+            (void)instrumental->Equals(static_cast<const System::Object*>(mirrorInstrumental));
+        });
+        genreDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*instrumental == *mirrorInstrumental); });
+        genreDisposalRefusals += ThrowsObjectDisposed([&] { (void)instrumental->GetHashCode(); });
+        genreDisposalRefusals += ThrowsObjectDisposed([&] { (void)instrumental->ToString(); });
+        check(genreDisposalRefusals == 8,
+              "a disposed Genre refuses properties and value operations (CNA-DEMOS-ISSUE-098)");
+
+        int playlistDisposalRefusals = 0;
+        playlistDisposalRefusals += ThrowsObjectDisposed([&] { (void)selected->getDurationProperty(); });
+        playlistDisposalRefusals += ThrowsObjectDisposed([&] { (void)selected->getNameProperty(); });
+        playlistDisposalRefusals += ThrowsObjectDisposed([&] { (void)selected->getSongsProperty(); });
+        playlistDisposalRefusals += ThrowsObjectDisposed([&] { (void)selected->Equals(mirrorSelected); });
+        playlistDisposalRefusals += ThrowsObjectDisposed([&]
+        {
+            (void)selected->Equals(static_cast<const System::Object*>(mirrorSelected));
+        });
+        playlistDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*selected == *mirrorSelected); });
+        playlistDisposalRefusals += ThrowsObjectDisposed([&] { (void)selected->GetHashCode(); });
+        playlistDisposalRefusals += ThrowsObjectDisposed([&] { (void)selected->ToString(); });
+        check(playlistDisposalRefusals == 8,
+              "a disposed Playlist refuses properties and value operations (CNA-DEMOS-ISSUE-098)");
+        std::cout << "Disposed refusals: Album " << albumDisposalRefusals
+                  << "/13, Artist " << artistDisposalRefusals << "/8, Genre "
+                  << genreDisposalRefusals << "/8, Playlist " << playlistDisposalRefusals << "/8\n";
 
         check(!songs->getIsDisposedProperty() && !albums->getIsDisposedProperty() &&
                   !artists->getIsDisposedProperty() && !genres->getIsDisposedProperty() &&
