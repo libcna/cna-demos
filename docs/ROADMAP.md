@@ -8676,3 +8676,17 @@ and full incremental project build use `-j3`; metadata is655/0 and both self-tes
 Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
 Evidence:`/tmp/checkpoint-865-*`. This is CPU-side build and byte inspection; no renderer,
 screenshot or visual inspection was used.
+
+## Focused866-runtime-model-mesh-reparenting
+
+`graphics.model.bones` grows to fifteen controls without adding a catalog ID. Reassigning its
+loaded Forearm mesh from the authored parent to bone zero immediately changes the public aggregate
+model sphere. A null parent gives the same sphere as bone zero, matching `Model::Draw`, and
+restoring the authored parent restores the exact original aggregate bound. This complements the
+caller-managed deformation bound covered by Focused862.
+
+SOFTWARE and OPENGLES3 Xvfb runs pass 15/15 with byte-identical stdout and empty stderr, and the
+exact SOFTWARE CTest passes. The `-j3` incremental build, metadata 655/0 and both tool self-test
+suites pass; temporary coverage remains 302/329 types, 2114/2326 members, 169/753 fields and
+3078/3205 C routes. Evidence: `/tmp/checkpoint-866-*`. These checks inspect public state
+numerically; no screenshot or manual visual inspection was performed.

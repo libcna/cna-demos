@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
+#include "Microsoft/Xna/Framework/BoundingSphere.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Model.hpp"
 #include "Microsoft/Xna/Framework/Graphics/ModelBone.hpp"
@@ -76,6 +77,26 @@ namespace
             Context().Check(arm.getMeshesProperty()[2]->getParentBoneProperty() == forearm,
                             "ForearmMesh is placed by the Forearm bone");
 
+            ModelMesh* forearmMesh = arm.getMeshesProperty()[2];
+            ModelBone* authoredMeshParent = forearmMesh->getParentBoneProperty();
+            ModelBone* boneZero = arm.getBonesProperty()[0];
+            const auto authoredBounds = arm.getBoundingSphereEXTProperty();
+            forearmMesh->setParentBoneProperty(boneZero);
+            const auto reparentedBounds = arm.getBoundingSphereEXTProperty();
+            Context().Check(authoredBounds && reparentedBounds &&
+                                forearmMesh->getParentBoneProperty() == boneZero &&
+                                *reparentedBounds != *authoredBounds,
+                            "reparenting ForearmMesh to bone zero immediately changes the aggregate model bound");
+            forearmMesh->setParentBoneProperty(nullptr);
+            const auto fallbackBounds = arm.getBoundingSphereEXTProperty();
+            Context().Check(forearmMesh->getParentBoneProperty() == nullptr &&
+                                fallbackBounds == reparentedBounds,
+                            "a null mesh parent uses the same bone-zero placement as Model.Draw");
+            forearmMesh->setParentBoneProperty(authoredMeshParent);
+            Context().Check(forearmMesh->getParentBoneProperty() == forearm &&
+                                arm.getBoundingSphereEXTProperty() == authoredBounds,
+                            "restoring the authored parent restores the exact aggregate model bound");
+
             ModelBone* foundBone = nullptr;
             ModelBone detachedBone(-1, "Detached");
             Context().Check(arm.getBonesProperty().TryGetValue("Forearm", foundBone) && foundBone == forearm &&
@@ -90,7 +111,6 @@ namespace
                             "a parent's Children collection contains and finds the same Forearm object");
 
             ModelMesh* foundMesh = nullptr;
-            ModelMesh* forearmMesh = arm.getMeshesProperty()[2];
             Context().Check(arm.getMeshesProperty().TryGetValue(forearmMesh->getNameProperty(), foundMesh) &&
                                 foundMesh == forearmMesh && arm.getMeshesProperty().Contains(foundMesh) &&
                                 !arm.getMeshesProperty().Contains(nullptr) &&
@@ -181,13 +201,15 @@ CNA_DEMOS_GAME(BonesDemo, {
     .id = "graphics.model.bones",
     .title = "Model bones",
     .description = "Navigates the robot arm's bone and mesh collections, copies local and absolute transforms, "
-                   "applies a complete pose and verifies its hierarchy composition and array boundaries.",
+                   "reparents a mesh with aggregate-bound updates, applies a complete pose and verifies its "
+                   "hierarchy composition and array boundaries.",
     .apis = {"Model::Bones", "Model::Root", "Model::CopyBoneTransformsFrom", "Model::CopyBoneTransformsTo",
              "Model::CopyAbsoluteBoneTransformsTo", "ModelBone::Name", "ModelBone::Index", "ModelBone::Parent",
              "ModelBone::Children", "ModelBone::Transform", "ModelBoneCollection::Count",
              "ModelBoneCollection::Item", "ModelBoneCollection::TryGetValue", "ModelBoneCollection::Contains",
              "ModelMeshCollection::Count", "ModelMeshCollection::Item", "ModelMeshCollection::TryGetValue",
-             "ModelMeshCollection::Contains", "ModelMesh::ParentBone", "ModelMesh::Name", "Model::Meshes"},
+             "ModelMeshCollection::Contains", "ModelMesh::ParentBone", "ModelMesh::Name", "Model::Meshes",
+             "Model::BoundingSphereEXT"},
     .tags = {"model", "bones", "hierarchy", "transforms", "skeleton"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

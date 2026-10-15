@@ -4175,6 +4175,24 @@ no renderer, screenshot or visual inspection was used.
 Commit and push this batch, then continue with the next explicit behavior gap; Complete859 remains
 the full baseline.
 
+### Focused866-runtime-model-mesh-reparenting
+
+The existing `graphics.model.bones` workflow now has fifteen controls. Its loaded Forearm mesh is
+reassigned through public `ModelMesh::ParentBone`: selecting bone zero immediately changes
+`Model::BoundingSphereEXT`, null gives the same aggregate sphere as the bone-zero fallback used by
+`Model::Draw`, and restoring the authored Forearm parent restores the exact original sphere. This
+closes the runtime parent reassignment half of the model mesh audit row; Focused862 already closed
+the caller-managed deformation-bound half.
+
+SOFTWARE and OPENGLES3 Xvfb runs pass15/15 with byte-identical stdout and empty stderr. The exact
+SOFTWARE CTest passes. The final incremental build uses `-j3`, metadata is655/0 and both tool
+self-test suites pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields
+and3078/3205 C routes. Evidence is under `/tmp/checkpoint-866-*`; validation is numeric public-state
+inspection, with no screenshot or manual visual inspection.
+
+Commit and push this batch, then continue with the next explicit high-value behavior gap;
+Complete859 remains the full baseline.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the model-bone workflow with live `ModelMesh::ParentBone` reassignment, proving that
+  aggregate model bounds immediately follow the selected parent and the null bone-zero fallback.
 - Extended nested content builds with a Texture2D CNJ that consumes a parent-granted external
   source-root alias, preserving the aliased dependency, compiled pixels and parent XREF.
 - Extended the custom CNB loader workflow with eight synchronized public registrations of one
