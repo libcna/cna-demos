@@ -264,6 +264,16 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::CnjImporter::Import` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::CnjImporter::OutputTypes` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::CnjImporter::SourceExtensions` -- content.cnj.pipeline_assets
+- `CNA::Content::Pipeline::CompiledEffectHasNoCnbSchemaReason` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::CompiledEffectImporter::Identity` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::CompiledEffectImporter::Import` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::CompiledEffectImporter::OutputTypes` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::CompiledEffectImporter::SourceExtensions` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::CompiledEffectProcessor::Identity` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::CompiledEffectProcessor::InputType` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::CompiledEffectProcessor::OutputType` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::CompiledEffectProcessor::Process` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::CompiledEffectProcessor::ValidateParameters` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::CompressedSoundImporter::Identity` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::CompressedSoundImporter::Import` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::CompressedSoundImporter::OutputTypes` -- content.sound_effect.pipeline_components
@@ -356,6 +366,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ConvertCnbTextureToXnb` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::ImportedAnimationClip` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::ImportedAnimationClipType` -- content.cnj.pipeline_assets
+- `CNA::Content::Pipeline::ImportedCompiledEffect` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::ImportedCompiledEffectType` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::ImportedSongSource` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::ImportedSongSourceType` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::ImportedSoundType` -- content.sound_effect.pipeline_components
@@ -367,11 +379,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ImportedVideoSourceType` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::ImportedXnbVideo` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::ImportedXnbVideoType` -- content.xnb.pipeline_transcode
+- `CNA::Content::Pipeline::IsCompiledEffectBinary` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::MakeContentBuildManifestEntry` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::MakeProcessedSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProbedVideoMetadata` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::ProcessedAnimationClip` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::ProcessedAnimationClipType` -- content.cnj.pipeline_assets
+- `CNA::Content::Pipeline::ProcessedCompiledEffectType` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::ProcessedFrameBytes` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedPcmBitsPerSample` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedPcmEncoding` -- content.sound_effect.imported_pcm
@@ -387,6 +401,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::RefreshContentBuildEffectiveFingerprint` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::RegisterBuiltInContentPipeline` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::RegisterCnjContentPipeline` -- content.cnj.pipeline_assets, content.custom.source_root_capabilities
+- `CNA::Content::Pipeline::RegisterCompiledEffectContentPipeline` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::RegisterSongContentPipeline` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::RegisterSoundEffectContentPipeline` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::RegisterTexture2DContentPipeline` -- content.custom.source_root_capabilities

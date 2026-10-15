@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: MS-PL
 // Inspect the XNB target axis: stable asset IDs, option-bound writers and texture selection.
+#include <algorithm>
 #include <array>
+#include <cstddef>
 #include <cstdint>
+#include <filesystem>
+#include <fstream>
+#include <iterator>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -17,11 +22,13 @@
 #include "CNA/Content/Pipeline/Texture2DContentPipeline.hpp"
 #include "CNA/Content/Pipeline/VideoContentPipeline.hpp"
 #include "CNA/Content/Pipeline/XnbOutputContentPipeline.hpp"
+#include "Microsoft/Xna/Framework/TitleLocation.hpp"
 
 namespace Cnb = CNA::Content::Cnb;
 namespace Pipeline = CNA::Content::Pipeline;
 namespace Xnb = CNA::Internal::Xnb;
 using Microsoft::Xna::Framework::Graphics::SurfaceFormat;
+using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
@@ -47,6 +54,41 @@ namespace
             {Cnb::CnbTextureFormat::Bgra8,
              {std::vector<std::uint8_t>(64u, 0x22u)}}};
         return texture;
+    }
+
+    std::vector<std::uint8_t> ReadBytes(const std::filesystem::path& path)
+    {
+        std::ifstream input(path, std::ios::binary);
+        if (!input) throw std::runtime_error("Could not read the compiled Effect fixture");
+        return {std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>()};
+    }
+
+    std::vector<std::uint8_t> MakeBareEffectSignature()
+    {
+        std::vector<std::uint8_t> bytes(24u, 0x11u);
+        bytes[0] = 0x01u;
+        bytes[1] = 0x09u;
+        bytes[2] = 0xFFu;
+        bytes[3] = 0xFEu;
+        return bytes;
+    }
+
+    std::vector<std::uint8_t> MakeWrappedEffectSignature()
+    {
+        std::vector<std::uint8_t> bytes(32u, 0x22u);
+        bytes[0] = 0xCFu;
+        bytes[1] = 0x0Bu;
+        bytes[2] = 0xF0u;
+        bytes[3] = 0xBCu;
+        bytes[4] = 16u;
+        bytes[5] = 0u;
+        bytes[6] = 0u;
+        bytes[7] = 0u;
+        bytes[16] = 0x01u;
+        bytes[17] = 0x09u;
+        bytes[18] = 0xFFu;
+        bytes[19] = 0xFEu;
+        return bytes;
     }
 
     void XnbOutputPipeline(CnaDemos::DemoContext& ctx)
@@ -202,14 +244,112 @@ namespace
                       writer->Identity().version == "1+d5h4p",
                   "an option-bound writer emits deterministic DesktopGL HiDef LZ4 bytes and reports the actual root reader");
 
-        ctx.Print("Registered 10 built-in XNB writers; XnaObject remains the custom ContentCompiler route.");
+        const auto assetRoot =
+            std::filesystem::canonical(std::filesystem::path(TitleLocation::Path()) / "assets");
+        const std::vector<std::uint8_t> effectBytes =
+            ReadBytes(assetRoot / "effects/CnaConformanceEffect.fxb");
+        std::vector<std::uint8_t> badWrapper = MakeWrappedEffectSignature();
+        badWrapper[4] = 17u;
+        const bool actualSignature = Pipeline::IsCompiledEffectBinary(effectBytes);
+        const bool bareSignature = Pipeline::IsCompiledEffectBinary(MakeBareEffectSignature());
+        const bool wrappedSignature =
+            Pipeline::IsCompiledEffectBinary(MakeWrappedEffectSignature());
+        const bool emptyRejected = !Pipeline::IsCompiledEffectBinary({});
+        const bool foreignRejected = !Pipeline::IsCompiledEffectBinary(
+            std::vector<std::uint8_t>(24u, 0u));
+        const bool unalignedRejected = !Pipeline::IsCompiledEffectBinary(badWrapper);
+        ctx.Check(actualSignature && bareSignature && wrappedSignature && emptyRejected &&
+                      foreignRejected && unalignedRejected,
+                  "compiled-Effect recognition accepts real, bare and wrapped signatures but rejects truncated, foreign and unaligned inputs");
+
+        const Pipeline::ImportedCompiledEffect imported{effectBytes};
+        Pipeline::ImportedCompiledEffect changed = imported;
+        changed.bytecode.back() ^= 0x01u;
+        ctx.Check(imported == Pipeline::ImportedCompiledEffect{effectBytes} &&
+                      imported != changed &&
+                      Pipeline::ImportedCompiledEffectType ==
+                          std::string("CNA.Content.Pipeline.ImportedCompiledEffect") &&
+                      Pipeline::ProcessedCompiledEffectType ==
+                          std::string("CNA.Content.Pipeline.CompiledEffect"),
+                  "the compiled-Effect carrier owns exact bytecode under stable imported and processed type identities");
+
+        const Pipeline::CompiledEffectImporter effectImporter;
+        const Pipeline::CompiledEffectProcessor effectProcessor;
+        ctx.Check(effectImporter.Identity() == Pipeline::ContentComponentIdentity{
+                          "CNA.CompiledEffectImporter", "1"} &&
+                      effectImporter.SourceExtensions() == std::vector<std::string>{".fxb"} &&
+                      effectImporter.OutputTypes() ==
+                          std::vector<std::string>{Pipeline::ImportedCompiledEffectType} &&
+                      !effectImporter.SelectedByNameOnly() &&
+                      effectProcessor.Identity() == Pipeline::ContentComponentIdentity{
+                          "CNA.CompiledEffectProcessor", "1"} &&
+                      effectProcessor.InputType() == Pipeline::ImportedCompiledEffectType &&
+                      effectProcessor.OutputType() == Pipeline::ProcessedCompiledEffectType,
+                  "the compiled-Effect components expose one unambiguous pass-through route");
+
+        Pipeline::ContentProcessorParameters effectParameters;
+        effectParameters.Set("optimize", true);
+        bool parameterRefused = false;
+        try { effectProcessor.ValidateParameters(effectParameters); }
+        catch (const std::invalid_argument& error)
+        {
+            parameterRefused = std::string(error.what()).find("passed through exactly") !=
+                std::string::npos;
+        }
+        ctx.Check(parameterRefused,
+                  "compiled bytecode refuses processor policy because transforming it requires a shader compiler");
+
+        auto effectRegistry = std::make_shared<Pipeline::ContentPipelineRegistry>();
+        Pipeline::RegisterCompiledEffectContentPipeline(*effectRegistry);
+        Pipeline::RegisterXnbOutputContentPipeline(*effectRegistry, defaults);
+        const Pipeline::ContentPipeline effectPipeline(effectRegistry);
+        Pipeline::ContentBuildRequest effectRequest;
+        effectRequest.sourceRoot = assetRoot;
+        effectRequest.source = "effects/CnaConformanceEffect.fxb";
+        effectRequest.logicalName = "Effects/Conformance";
+        effectRequest.outputFormat = Pipeline::ContentOutputFormat::Xnb;
+        const Pipeline::ContentBuildResult effect = effectPipeline.Build(effectRequest);
+        const Pipeline::ContentBuildResult repeatedEffect = effectPipeline.Build(effectRequest);
+        ctx.Check(effect.importer == effectImporter.Identity() &&
+                      effect.processor == effectProcessor.Identity() &&
+                      effect.writer.name == "CNA.XnbEffectWriter" &&
+                      effect.output.assetTypeId == static_cast<std::uint32_t>(Asset::Effect) &&
+                      effect.output.assetTypeName ==
+                          "Microsoft.Xna.Framework.Graphics.Effect" &&
+                      effect.output.rootReaderName ==
+                          "Microsoft.Xna.Framework.Content.EffectReader" &&
+                      effect.output.bytes == repeatedEffect.output.bytes &&
+                      effect.output.bytes.size() > effectBytes.size() &&
+                      std::equal(effectBytes.begin(), effectBytes.end(),
+                                 effect.output.bytes.end() -
+                                     static_cast<std::ptrdiff_t>(effectBytes.size())),
+                  "a real fx_2_0 binary passes through unchanged into deterministic Effect XNB output");
+
+        const std::string noCnbReason = Pipeline::CompiledEffectHasNoCnbSchemaReason();
+        bool cnbRefused = effectRegistry->AbsentWriterReason(
+                              Pipeline::ContentOutputFormat::Cnb,
+                              Pipeline::ProcessedCompiledEffectType) == noCnbReason;
+        bool cnbBuildFailed = false;
+        effectRequest.outputFormat = Pipeline::ContentOutputFormat::Cnb;
+        try { static_cast<void>(effectPipeline.Build(effectRequest)); }
+        catch (const Pipeline::ContentPipelineError& error)
+        {
+            cnbBuildFailed = true;
+            cnbRefused = cnbRefused &&
+                error.Stage() == Pipeline::ContentPipelineStage::Selection &&
+                std::string(error.what()).find(noCnbReason) != std::string::npos;
+        }
+        ctx.Check(cnbBuildFailed && cnbRefused,
+                  "the registered CNB absence gives the shared renderer-portability reason instead of producing unusable shader bytes");
+
+        ctx.Print("Registered 10 built-in XNB writers and passed a real fx_2_0 Effect binary through unchanged.");
     }
 }
 
 CNA_DEMOS_CONSOLE(XnbOutputPipeline, {
     .id = "content.xnb.output_pipeline",
     .title = "Select and bind XNB output writers",
-    .description = "Checks the stable XNB output asset IDs, option digest, version-aware canonical texture representation selection, all built-in writer registrations, the independent CNB/XNB format axis and deterministic option-bound output bytes.",
+    .description = "Checks the stable XNB output asset IDs, option digest, version-aware texture selection and all built-in writer registrations, then passes a real compiled Effect through the only portable build-time route while documenting the deliberate CNB absence.",
     .apis = {"CNA::Content::Pipeline::XnbOutputAssetId",
              "CNA::Content::Pipeline::XnbOutputOptionsDigest",
              "CNA::Content::Pipeline::ConvertCnbTextureToXnb",
@@ -218,7 +358,23 @@ CNA_DEMOS_CONSOLE(XnbOutputPipeline, {
              "CNA::Content::Pipeline::ContentTypeWriter::Identity",
              "CNA::Content::Pipeline::ContentTypeWriter::OutputFormat",
              "CNA::Content::Pipeline::ContentTypeWriter::OutputSchemaIdentities",
-             "CNA::Content::Pipeline::ContentTypeWriter::Write"},
-    .tags = {"content", "pipeline", "xnb", "writer", "texture", "compression", "cnaext"},
-    .restrictions = "Headless writer registration and exact container-byte checks. Existing asset demos own XNB runtime loading, rendering and audio behavior; the emitted probe is not run by genuine XNA.",
+             "CNA::Content::Pipeline::ContentTypeWriter::Write",
+             "CNA::Content::Pipeline::ImportedCompiledEffectType",
+             "CNA::Content::Pipeline::ProcessedCompiledEffectType",
+             "CNA::Content::Pipeline::ImportedCompiledEffect",
+             "CNA::Content::Pipeline::IsCompiledEffectBinary",
+             "CNA::Content::Pipeline::CompiledEffectImporter::Identity",
+             "CNA::Content::Pipeline::CompiledEffectImporter::SourceExtensions",
+             "CNA::Content::Pipeline::CompiledEffectImporter::OutputTypes",
+             "CNA::Content::Pipeline::CompiledEffectImporter::Import",
+             "CNA::Content::Pipeline::CompiledEffectProcessor::Identity",
+             "CNA::Content::Pipeline::CompiledEffectProcessor::InputType",
+             "CNA::Content::Pipeline::CompiledEffectProcessor::OutputType",
+             "CNA::Content::Pipeline::CompiledEffectProcessor::ValidateParameters",
+             "CNA::Content::Pipeline::CompiledEffectProcessor::Process",
+             "CNA::Content::Pipeline::RegisterCompiledEffectContentPipeline",
+             "CNA::Content::Pipeline::CompiledEffectHasNoCnbSchemaReason"},
+    .tags = {"content", "pipeline", "xnb", "writer", "texture", "compression", "effect", "cnaext"},
+    .assets = {"effects/CnaConformanceEffect.fxb"},
+    .restrictions = "Headless writer registration and exact container-byte checks. The real fx_2_0 fixture is serialized but not executed; compiled-Effect rendering is unavailable in this build, and the emitted probe is not run by genuine XNA.",
 })

@@ -850,6 +850,28 @@ or an explicit shared-workflow/boundary disposition. The emitted probe is decode
 its header/result identities only; genuine Microsoft XNA loading, GPU use, audio/video playback and
 visual quality are not claimed.
 
+#### `EffectContentPipeline.hpp` declaration-level disposition
+
+The pinned header exposes sixteen public declarations: two stable type identities, the compiled
+byte carrier and its equality, one signature recognizer, four importer methods, five processor
+methods, the registration function and the shared no-CNB explanation. Focused964 extends the
+existing `content.xnb.output_pipeline` workflow because the useful behavior ends at the already
+audited Effect XNB writer; a second catalog ID would split one coherent source-to-output route.
+
+| Declaration family | Disposition |
+|---|---|
+| ImportedCompiledEffectType, ProcessedCompiledEffectType; ImportedCompiledEffect::bytecode/operator== | The demo reads the committed 5,000-byte `CnaConformanceEffect.fxb`, checks both stable type strings and exact owned bytes, and distinguishes a one-byte mutation through the default equality operation. The same bytes later survive the complete importer/processor/writer route as an exact XNB suffix. This is byte ownership and identity evidence, not shader semantic validation. |
+| IsCompiledEffectBinary | The real fx_2_0 fixture plus synthetic bare and XNA-wrapped Effect Framework 9.1 signatures are accepted. Empty, foreign and deliberately unaligned wrapper inputs are rejected. The helper is a signature preflight by contract; malformed instruction streams after a valid signature belong to the shader compiler/runtime boundary and do not justify misleading demo assertions. |
+| CompiledEffectImporter methods | Identity, `.fxb` extension and sole imported output type are exact, and an ordinary named source selection executes `Import` against the real fixture. The source bytes observed at final output prove that the importer did not transform them. Source-extension case and unreadable/traversing paths repeat shared pipeline selection and source-root guards. |
+| CompiledEffectProcessor methods | Identity, input/output identities and exact pass-through are exercised in the real build. A supplied `optimize` parameter is refused with the documented reason that compiled bytes pass through exactly. Empty/wrong boxed inputs are contract boundary tests already owned by the CNA suite rather than separate user concepts. |
+| RegisterCompiledEffectContentPipeline | A registry containing only this source route plus the standard XNB outputs resolves and builds the real fixture through `CNA.CompiledEffectImporter`, `CNA.CompiledEffectProcessor` and `CNA.XnbEffectWriter`. Two builds are byte-identical; the output reports Effect asset ID 10, the framework Effect type and `EffectReader`. Registration is therefore observed through behavior rather than registry presence alone. |
+| CompiledEffectHasNoCnbSchemaReason | The registry reports the exact shared reason for its deliberate missing CNB writer, and an actual CNB build fails at writer selection with that reason. The sibling `.fx` compiler-service route reuses the same public explanation; compiling source is already demonstrated separately and need not be duplicated here. |
+
+All ordinary public `EffectContentPipeline.hpp` declarations now have direct build-time evidence or
+an explicit boundary disposition. The fixture is serialized but never executed: neither configured
+renderer exposes compiled-Effect execution in this environment, so this checkpoint makes no GPU,
+visual, shader-correctness or genuine-XNA compatibility claim.
+
 ### Runtime XNB readers (separate from intermediate XML)
 
 `content.xnb.custom_type_reader` supplies the game's LevelReader and original generated XNB.

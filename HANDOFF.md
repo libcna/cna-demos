@@ -708,6 +708,35 @@ CNA-extension appendix, and Complete956 marks all five post-baseline IDs absent.
 GPU use, audio/video playback, screenshot or visual inspection is claimed. Audit the adjacent
 public `EffectContentPipeline.hpp` next, reusing compiler-service and XNB-writer evidence.
 
+Focused **964-compiled-Effect-source-route-and-disposition** extends the stable
+`content.xnb.output_pipeline` ID from8 to14 controls and closes all16 public declarations in
+`EffectContentPipeline.hpp` without adding a redundant catalog entry. The committed 5,000-byte
+`CnaConformanceEffect.fxb` is recognized alongside bare and XNA-wrapped Effect Framework9.1
+signatures, while empty, foreign and deliberately unaligned wrapper inputs are rejected. The
+carrier owns exact bytes, distinguishes a one-byte mutation and publishes both stable type
+identities. Importer and processor identities/types are exact; the processor refuses an `optimize`
+parameter because compiled bytecode has no transform policy.
+
+A registry containing this source route and the standard XNB outputs builds the real fixture twice
+through the expected importer, processor and Effect writer. The outputs are byte-identical, publish
+asset ID10, the framework Effect type and `EffectReader`, and contain the original bytecode as an
+exact suffix. An actual CNB request fails at writer selection with the registry's exact shared
+`CompiledEffectHasNoCnbSchemaReason`. The first synthetic wrapper probe left nonzero high offset
+bytes and consequently failed; correcting its little-endian offset produced the documented path,
+so this was a demo-fixture bug rather than a CNA defect.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE and ten
+OPENGLES3-labelled direct runs pass14/14 with byte-identical stdout SHA-256
+`2829fd13dc27199a3ef3b069dcb997a4e4c422f41e17ad6b32b7508e8232ef94` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata remains680/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA and C totals remain unchanged; fifteen public names enter the
+CNA-extension appendix, and Complete956 still marks all five post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-964-effect-pipeline/*` and `/tmp/checkpoint-964-effect-report.json`. The real
+compiled Effect is serialized but not executed; no GPU, visual, shader-correctness or genuine-XNA
+claim is made, and no CNA issue was found. Audit the adjacent public
+`Texture2DContentPipeline.hpp` declarations next, extending an existing texture pipeline demo where
+that keeps one coherent concept.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2820,8 +2849,11 @@ through native CNB transcoding, including Model schema-2 selection and external 
 Focused963 closes the public `XnbOutputContentPipeline.hpp` target axis: all eleven persisted IDs,
 ten built-in writer registrations, option-bound identities, version-aware texture selection and
 deterministic extended output; it records documentation-only ISSUE-107 for the impossible digest
-example. Audit the adjacent public `EffectContentPipeline.hpp` declarations next, reusing the
-existing compiler service and XNB output evidence before adding another ID. The earlier native
+example. Focused964 extends that same stable demo to close all16 public
+`EffectContentPipeline.hpp` declarations with real `.fxb` recognition, import/pass-through/XNB
+serialization and the deliberate CNB absence. Audit the adjacent public
+`Texture2DContentPipeline.hpp` declarations next, extending an existing texture pipeline workflow
+where practical before adding another ID. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds

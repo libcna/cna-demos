@@ -321,7 +321,9 @@ a check that all authored colors remain visible and that a blank texture row can
   including exact volume/cube bytes, external Song/Video deployment and Model schema-2 shared
   resources), ✅ `content.xnb.output_pipeline` (all eleven stable output IDs, ten built-in writer
   registrations, option-bound identities/schemas, version-aware texture representation selection,
-  deterministic DesktopGL/HiDef/LZ4 output and ISSUE-107's stale digest example),
+  deterministic DesktopGL/HiDef/LZ4 output, ISSUE-107's stale digest example and the complete
+  compiled-Effect source route: real `.fxb` signature/import/pass-through/XNB bytes plus the
+  deliberate shared CNB absence),
   ✅ `content.content_project.xna_content_project` (an XNA `.contentproj` built
   as it is, `CONTENT_PROJECT`). A CNJ texture repeats the texture processor demos (the same
   parameters in JSON). ✅ `content.custom.cnb_loader` uses public CnbWriter and
