@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**686 demos** in 19 categories. Kinds: console 187, game 296, standalone 203. Automation: automated 650, manual 3, smoke-only 33.
+**687 demos** in 19 categories. Kinds: console 187, game 296, standalone 204. Automation: automated 651, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 61 | 61 | 0 | 0 | 47 / 0 / 14 / 0 / 0 | 47 / 0 / 14 / 0 / 0 |
+| content | 62 | 62 | 0 | 0 | 47 / 0 / 14 / 0 / 1 | 47 / 0 / 14 / 0 / 1 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -32,8 +32,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
-- OPENGLES3: absent from report: `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
+- SOFTWARE: absent from report: `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
+- OPENGLES3: absent from report: `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -479,6 +479,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::AnimationClipProcessor::Process` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::AnimationClipProcessor::ValidateParameters` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::ApplyPngFileGammaEXT` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Pipeline::BlockCompressedBlockByteCount` -- content.texture_processor.block_compression
+- `CNA::Content::Pipeline::BlockCompressedByteCount` -- content.texture_processor.block_compression
+- `CNA::Content::Pipeline::BlockCompressionFormat` -- content.texture_processor.block_compression
+- `CNA::Content::Pipeline::BlockCompressionFormatName` -- content.texture_processor.block_compression
+- `CNA::Content::Pipeline::BlockCompressionOptions` -- content.texture_processor.block_compression
+- `CNA::Content::Pipeline::BlockCompressionOptions::alphaCutoff` -- content.texture_processor.block_compression
+- `CNA::Content::Pipeline::BlockCompressionOptions::refinementRounds` -- content.texture_processor.block_compression
 - `CNA::Content::Pipeline::BuildCnbTexture2DData` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::BuildFontFromTextureSheet` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::CanonicalModelValue` -- content.model.pipeline_contract
@@ -587,6 +594,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentWriteResult::warnings` -- content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ConvertCnbTextureToXnb` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::DecodeImportedImage` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Pipeline::EncodeBlockCompressedImage` -- content.texture_processor.block_compression
 - `CNA::Content::Pipeline::ExpandCharacterRegions` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::FindFontFamilyBeside` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::FindSystemFontFile` -- content.sprite_font.pipeline_contract
@@ -615,6 +623,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::GltfImporter::Import` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::GltfImporter::OutputTypes` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::GltfImporter::SourceExtensions` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ImageHasPartialTransparency` -- content.texture_processor.block_compression
+- `CNA::Content::Pipeline::ImageHasTransparency` -- content.texture_processor.block_compression
 - `CNA::Content::Pipeline::ImageImporter::Identity` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::ImageImporter::Import` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::ImageImporter::OutputTypes` -- content.texture_processor.pipeline_contract

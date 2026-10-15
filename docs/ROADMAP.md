@@ -301,7 +301,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (61 demos; remaining below)
+## Phase 8 -- content 🟨 (62 demos; remaining below)
 
 - ✅ Existing `content.texture_processor.resize_to_power_of_two` now verifies XNB-targeted
   Reach/HiDef mipmap processing, resized payloads matching its rendered CNB and the distinct native
@@ -10432,3 +10432,21 @@ fuzzing, timeout/rate-window timing stress and real remote exposure stay in CNA 
 manual security testing. Audit the deterministic build-time `BlockCompression.hpp` surface next;
 it belongs to the separately linked content-pipeline module and was outside the completed runtime
 `CNA/Content` header pass.
+
+## Focused984-block-compression-public-surface
+
+The new renderer-free `content.texture_processor.block_compression` standalone links the separate
+`CNA::ContentPipelineBuild` module and closes the public `BlockCompression.hpp` surface in 12
+controls. It checks all three stable BC/DXT identities, block and rounded-grid sizing, default and
+custom options, opaque/cutout/partial classification, deterministic awkward-size output, edge
+replication, BC1 cutoff and transparent-index policy, exact BC2 alpha nibbles and malformed-input
+refusal. Existing texture demos retain runtime decoding, upload, sampling and pixel evidence.
+
+The changed source builds without warnings with at most three jobs and metadata is687/0. Ten
+SOFTWARE-labelled and ten OPENGLES3-labelled direct runs pass12/12 with identical stdout SHA-256
+`12e12168ec7e5a58bc7bb21811ae1cdd1dfb0762a70c5b4b644b5a0ee71b19bb` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator suites pass. Generated XNA/C totals remain
+303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; ten public names enter the
+CNA-extension appendix and Complete981 marks all four post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-984-block-compression-focused/*`. No CNA defect appeared. Extend this same
+standalone with the adjacent one-function `TextureCompressionPipeline.hpp` adapter next.

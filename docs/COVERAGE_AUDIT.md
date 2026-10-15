@@ -4735,3 +4735,26 @@ Inspector extension inventory to127 names. Complete981 correctly marks the three
 Evidence:`/tmp/checkpoint-983-inspector-*`. The public header audit is complete for ordinary
 consumers. Timeout and rate-window timing stress, hostile-input fuzzing, and actual remote exposure
 remain CNA unit, stress or manual security-test scope.
+
+### Block-compression build-time audit
+
+Focused984 adds the renderer-free standalone `content.texture_processor.block_compression` for the
+separately linked `CNA::ContentPipelineBuild` module and dispositions every public declaration in
+`BlockCompression.hpp`.
+
+| Public family | Current disposition |
+|---|---|
+| Format and sizing | Bc1/Bc2/Bc3 retain stable enum identities and Dxt1/Dxt3/Dxt5 names. Exact 8/16-byte block sizes and rounded 1x1, 4x4, 5x5, 13x7 and 16x16 grids are checked. |
+| Alpha policy | Opaque, binary cutout and partial transparency are distinguished. BC1 switches between transparent and opaque modes at a caller-selected cutoff; a fully transparent block selects index three for all texels. BC2 preserves the exact sixteen four-bit alpha values in row-major order. |
+| Encoding behavior | All three formats produce deterministic declared-size output for an awkward 13x7 image. A 1x1 solid image matches its 4x4 edge-replicated form. Zero and eight refinement rounds retain deterministic layout. Exact visual reconstruction quality remains CNA encoder-test and runtime texture-demo scope. |
+| Input boundaries | Zero width, zero height and a pixel span that does not exactly match width times height times four are refused with `std::invalid_argument`. Overflow and allocation-failure stress remain unit/fault-injection scope. |
+
+The changed source builds without warnings with at most three jobs and metadata is687/0. Ten
+SOFTWARE-labelled and ten OPENGLES3-labelled direct runs pass12/12 with byte-identical stdout
+SHA-256 `12e12168ec7e5a58bc7bb21811ae1cdd1dfb0762a70c5b4b644b5a0ee71b19bb` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator self-test suites pass. Generated XNA/C
+totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; ten names enter the
+CNA-extension appendix. Complete981 marks this and the three Inspector IDs absent. Evidence:
+`/tmp/checkpoint-984-block-compression-focused/*`. No graphics device, runtime sampling,
+screenshot, visual inspection or CNA defect is claimed. The adjacent public
+`TextureCompressionPipeline.hpp` adapter should extend this same standalone.

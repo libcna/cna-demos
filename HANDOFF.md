@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 30), 8 (content, 61), 9 (audio 23 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 30), 8 (content, 62), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 6 + logger 2, inspector 3,
@@ -69,13 +69,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-686 project-built catalog demos in19 categories: math78, game33, graphics185, audio23, core6,
-content61, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and203
-standalone; 650 are automated,33 smoke-only and3 manual. Every declared category has demos.
+687 project-built catalog demos in19 categories: math78, game33, graphics185, audio23, core6,
+content62, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and204
+standalone; 651 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete981's full runtime reports; they include all683
-baseline IDs in both renderer suites and correctly mark the three post-baseline Inspector IDs
-absent.
+baseline IDs in both renderer suites and correctly mark the three post-baseline Inspector IDs plus
+the BlockCompression ID absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete981's
 full runtime reports are the baseline inputs for the683-ID checkpoint catalog. Selected semantic
@@ -1263,6 +1263,26 @@ ownership declarations; arbitrary malformed-input fuzzing, timeout/rate-window t
 actual remote binding remain CNA unit, stress or manual security-test scope. No CNA defect appeared.
 Audit `CNA/Content/Pipeline/BlockCompression.hpp` next: it is a deterministic public build-time CPU
 surface not covered by the earlier runtime `CNA/Content` header pass.
+
+Focused **984-block-compression-public-surface** adds the renderer-free standalone
+`content.texture_processor.block_compression`, linked only to the build-time
+`CNA::ContentPipelineBuild` module. Its 12 controls cover all three stable format values and names,
+per-block and partial-grid sizing, default and caller-selected options, opacity classification,
+deterministic 13x7 output, edge replication, the BC1 alpha cutoff and fully transparent block,
+exact BC2 alpha nibbles, and refusal of zero dimensions or a wrongly sized RGBA buffer. All public
+declarations in `BlockCompression.hpp` now have a semantic disposition; runtime decoding and
+sampling remain with the existing texture demos.
+
+The changed source builds without warnings with at most three jobs and metadata is687/0. Ten
+SOFTWARE-labelled and ten OPENGLES3-labelled direct runs pass12/12 with byte-identical stdout
+SHA-256 `12e12168ec7e5a58bc7bb21811ae1cdd1dfb0762a70c5b4b644b5a0ee71b19bb` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator self-test suites pass. Generated XNA/C
+totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; ten public names
+enter the CNA-extension appendix, while Complete981 correctly marks this fourth post-baseline ID
+absent. Evidence:`/tmp/checkpoint-984-block-compression-focused/*`. No graphics device, render,
+screenshot, visual inspection or CNA defect is claimed. Audit the adjacent public
+`TextureCompressionPipeline.hpp` adapter next by extending this build-time standalone rather than
+adding another ID.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -3445,9 +3465,12 @@ Focused982 enables the optional Inspector in `linux-full` and adds three coheren
 the complete public wire-codec family, authenticated agent/client lifecycle, demand-driven
 snapshot/events and asynchronous bounded previews. Focused983 extends those stable IDs with
 request-rate, pending-preview, cooldown and capability-negotiation boundaries and completes the
-declaration-level disposition for `Protocol.hpp`, `Agent.hpp` and `Client.hpp`. Audit the
-deterministic public build-time `CNA/Content/Pipeline/BlockCompression.hpp` surface next. This
-header belongs to the separately linked content-pipeline module and was not part of the completed
+declaration-level disposition for `Protocol.hpp`, `Agent.hpp` and `Client.hpp`. Focused984 adds the
+separate build-time `content.texture_processor.block_compression` standalone and closes all public
+`BlockCompression.hpp` declarations through sizing, alpha-policy, deterministic encoding, edge
+replication, option and malformed-input evidence. Extend it with the adjacent one-function
+`TextureCompressionPipeline.hpp` adapter next; the build-time module is deliberately separate from
+the runtime-linked texture pipeline demo.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a renderer-free build-time BC1/BC2/BC3 workflow covering exact sizing, alpha policy, edge
+  replication, deterministic output, encoder options and malformed-input refusal.
 - Enabled CNA's optional Inspector in `linux-full` and added focused protocol, authenticated
   loopback-session and asynchronous bounded-preview workflows.
 - Covered every Inspector v1 payload family, strict header/type/length/request bounds, explicit
