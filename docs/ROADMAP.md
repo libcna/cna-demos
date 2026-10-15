@@ -224,7 +224,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (29 demos)
+## Phase 7 -- models, animation, glTF 🟨 (30 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -242,6 +242,9 @@ a check that all authored colors remain visible and that a blank texture row can
   CNA-DEMOS-ISSUE-031: all play as LINEAR).
 - ✅ `graphics.model.animation_validation` (decreasing-time and output-count refusal, manager
   recovery, and unknown interpolation fallback; expected failure, CNA-DEMOS-ISSUE-093).
+- ✅ `graphics.model.animation_player_validation` (construction and borrowed-data revalidation,
+  prefix composition and live clip edits; expected failure, CNA-DEMOS-ISSUE-096: a nonempty
+  partial root-prefix array is silently treated as all identity).
 - ✅ `graphics.model.morph_animation_import` (compiled/loose carrier parity, exact vertex upload
   and false loose-report loss; expected failure, CNA-DEMOS-ISSUE-094).
 - ✅ `graphics.model.multi_skin_animation_report` (one source animation split across two retained
@@ -8502,3 +8505,22 @@ fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-855-multiple-skins-*`,
 `/tmp/checkpoint-855-multi-skin-animation-*` and `/tmp/checkpoint-855-coverage.md`. Pixel readback
 was programmatic; no screenshot or visual inspection was performed. No new CNA issue appeared.
 Audit AnimationPlayer malformed borrowed-data and validation boundaries next.
+
+## Focused856-AnimationPlayer-borrowed-data-validation
+
+New renderer-independent `graphics.model.animation_player_validation` separates construction-time
+and per-update checks on public mutable carriers. Required skeleton arrays with the wrong size and
+forward parents are refused. Empty root prefixes produce identity scene context, complete prefixes
+compose through the root and child, later hierarchy/array corruption is revalidated, repaired data
+recovers on the same player, and edits made through the borrowed active clip change and then restore
+the sampled pose.
+
+A nonempty partial `SkeletonRootPrefix` is instead silently treated as entirely absent both during
+construction and after borrowed-data mutation, moving the skeleton into identity context.
+CNA-DEMOS-ISSUE-096 records the missing empty-or-BoneCount validation. Both renderer selections
+pass9/10 with only that combined invariant failing. The `-j3` build, exact known-issue SOFTWARE
+CTest, metadata655/0 and both self-test suites pass. Temporary coverage remains302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-856-animation-player-validation-*` and `/tmp/checkpoint-856-coverage.md`. No
+graphics device, screenshot or visual inspection was used. Audit empty, duplicate and unsorted
+SkinnedModelEXT tracks plus target-space disposition next.

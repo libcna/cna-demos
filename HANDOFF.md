@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 29), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 30), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -67,10 +67,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-654 project-built catalog demos in18 categories: math78, game33, graphics183, audio23, core3,
+655 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,292 game and199 standalone;
-618 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,292 game and199 standalone;
+619 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete844 at650 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -391,6 +391,20 @@ C routes. Evidence:`/tmp/checkpoint-855-multiple-skins-*`,
 `/tmp/checkpoint-855-multi-skin-animation-*` and `/tmp/checkpoint-855-coverage.md`. Pixel readback
 was programmatic; no screenshot or visual inspection was performed. No new CNA issue appeared.
 Audit AnimationPlayer malformed borrowed-data and validation boundaries next.
+
+Focused **856-AnimationPlayer-borrowed-data-validation** adds renderer-independent
+`graphics.model.animation_player_validation`. Required skeleton-array size and parent-order errors
+are refused during construction; later mutations of the borrowed hierarchy and inverse-bind array
+are revalidated, and the same player recovers after repair. Empty versus complete root-prefix
+composition is exact, while edits to the borrowed active clip affect and then restore its sampled
+pose. A nonempty partial `SkeletonRootPrefix` is silently treated as entirely absent at construction
+and on Update, moving the skeleton into identity context; CNA-DEMOS-ISSUE-096 records this missing
+empty-or-BoneCount check. SOFTWARE and OPENGLES3 each pass9/10 with only that combined invariant
+failing. The `-j3` build, exact known-issue SOFTWARE CTest, metadata655/0 and self-tests5/5 and4/4
+pass; temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C
+routes. Evidence:`/tmp/checkpoint-856-animation-player-validation-*` and
+`/tmp/checkpoint-856-coverage.md`. No graphics device, screenshot or visual inspection was used.
+Audit empty, duplicate and unsorted SkinnedModelEXT tracks plus target-space disposition next.
 
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
@@ -1969,8 +1983,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-855
-form the validated654-demo staged state. The glTF scene/node-graph audit is closed with
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-856
+form the validated655-demo staged state. The glTF scene/node-graph audit is closed with
 CNA-DEMOS-ISSUE-092 retained. Rigid animation channel loss, resampling, duplicate/nonzero times,
 generated clip names and public malformed-sampler refusals now have exact evidence;
 CNA-DEMOS-ISSUE-093 records the silent unknown-interpolation-to-LINEAR fallback. Mixed skinned/
@@ -1979,7 +1993,9 @@ diagnostics for a retained morph track. Same-asset runtime evidence now confirms
 CNA-DEMOS-ISSUE-031 on both compiled and loose interpolation carriers. Multi-skin playback retains
 every channel across its two palettes, while CNA-DEMOS-ISSUE-095 records false aggregate loss from
 the unreconciled palette-local reports. Multiple-part routing now covers every effect in each
-independent palette. Audit AnimationPlayer malformed borrowed-data and validation boundaries next.
+independent palette. AnimationPlayer required-array and borrowed-data validation now has exact
+evidence; CNA-DEMOS-ISSUE-096 records the silent partial-root-prefix fallback. Audit empty,
+duplicate and unsorted SkinnedModelEXT tracks plus target-space disposition next.
 The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
@@ -3971,6 +3987,22 @@ C routes. Evidence:`/tmp/checkpoint-855-multiple-skins-*`,
 `/tmp/checkpoint-855-multi-skin-animation-*` and `/tmp/checkpoint-855-coverage.md`. Pixel readback
 was programmatic; no screenshot or visual inspection was performed. No new CNA issue appeared.
 Audit AnimationPlayer malformed borrowed-data and validation boundaries next.
+
+### Focused856-AnimationPlayer-borrowed-data-validation
+
+New renderer-independent `graphics.model.animation_player_validation` passes nine of ten controls
+under both renderer selections. Construction refuses malformed required-array sizes and forward
+parents; every Update revalidates later borrowed hierarchy/array mutation, and repaired data
+recovers on the same player. Empty prefixes mean identity, complete prefixes compose exactly and a
+post-StartClip key edit visibly changes and restores the sampled pose.
+
+The sole failed invariant is CNA-DEMOS-ISSUE-096: a nonempty partial `SkeletonRootPrefix` is
+silently treated as all identity both at construction and after borrowed-data mutation. The `-j3`
+build, exact known-issue SOFTWARE CTest, metadata655/0 and validator/checkpoint self-tests5/5 and4/4
+pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C
+routes. Evidence:`/tmp/checkpoint-856-animation-player-validation-*` and
+`/tmp/checkpoint-856-coverage.md`. No graphics device, screenshot or visual inspection was used.
+Audit empty, duplicate and unsorted SkinnedModelEXT tracks plus target-space disposition next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

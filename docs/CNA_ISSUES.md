@@ -15,6 +15,34 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-096 -- Partial SkinningData root-prefix arrays are silently ignored
+
+- **Area/API:** `SkinningData::SkeletonRootPrefix` and `AnimationPlayer` construction/update.
+- **Reproduction:** `graphics.model.animation_player_validation` constructs a two-bone skeleton
+  whose complete two-entry prefix places its root at X=4 and whose allowed empty prefix places it
+  at X=1. It then supplies a nonempty one-entry prefix with `BoneCount == 2`, both to a new player
+  and by mutating the borrowed SkinningData before an existing player's next `Update`.
+- **Observed:** neither operation throws. The one supplied prefix is discarded and the entire
+  skeleton uses identity scene context. The demo's other nine controls pass: required array-size
+  and parent-order errors are refused, complete/empty prefix behavior is exact, mutations of the
+  borrowed required arrays are revalidated, restored data recovers, and edits through the borrowed
+  clip reference affect and restore the sampled pose. SOFTWARE and OPENGLES3 each fail only the
+  combined partial-prefix invariant.
+- **Cause observed in source:** `AnimationPlayer::RecomputeTransforms` validates
+  `SkeletonHierarchy`, `BindPose` and `InverseBindPose` against `BoneCount`, but not
+  `SkeletonRootPrefix`. It computes `hasPrefix` as exact size equality and otherwise takes the
+  all-identity branch. This correctly handles the documented empty form but gives every other
+  malformed size the same silent meaning.
+- **Expected:** `SkeletonRootPrefix` may be empty, meaning all identity, or contain exactly
+  `BoneCount` entries. A nonempty mismatched array must raise `ArgumentException` during
+  construction and any later recomputation, like the other parallel skeleton arrays, rather than
+  silently moving the skeleton into another coordinate space.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. This renderer-independent reproduction runs under
+  both renderer selections and uses only public numeric transform arrays; no drawing, screenshot
+  or visual judgment is involved. Evidence:`/tmp/checkpoint-856-animation-player-validation-*`.
+  No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-095 -- Multi-skin glTF channels retained by another palette are reported lost
 
 - **Area/API:** loose glTF `ContentManager::Load<Model>`, multiple `ModelSkinEXT` palettes,
