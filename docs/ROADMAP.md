@@ -9196,9 +9196,26 @@ Detached `Video::SetVideoTrackEXT(1)` before Play is ignored and decodes default
 CNA-DEMOS-ISSUE-100 records that `VideoPlayer::OpenDecoder` never consumes either track field stored
 on Video. The audio-side symmetry is source evidence only because no public active-track readback
 exists. Both renderer outputs are byte-identical with empty stderr. The exact known-issue SOFTWARE
-CTest passes20 repetitions, the warning-free build uses at most three jobs, metadata is658/0 and
-two generator runs reproduce SHA-256
+CTest passes20 repetitions, compilation emits no compiler warnings, and the build uses at most
+three jobs. Metadata is658/0; two generator runs reproduce SHA-256
 `61410a468e900cd4b446e45a01c82e0295d600f410a9f131868687d72f4b8e74`. Coverage remains302/329
 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-894-*`.
 Finish the remaining public Video construction/metadata and VideoPlayer failure/transition
 disposition next, then leave this family if no distinct application behavior remains.
+
+## Focused895-Video-URI-and-trusted-metadata-boundaries
+
+New `media.video.uri_and_metadata` closes the remaining meaningful public Video construction and
+failure boundaries in eight controls. Absolute raw probing, missing raw-file refusal, trusted
+metadata without eager I/O and atomic real-file metadata-mismatch refusal all pass. Four FNA
+contracts fail identically on both renderer labels: local file URIs are treated literally,
+relative URIs follow process cwd instead of TitleLocation, non-file absolute URIs take the wrong
+exception, and a trusted Video's deferred missing file makes Play return silently.
+
+CNA-DEMOS-ISSUE-101 records the common URI/open-error causes. Both outputs are byte-identical with
+empty stderr; the exact known-issue SOFTWARE CTest passes20 repetitions. Compilation emits no
+compiler warnings; the build uses at most three jobs, metadata is659/0, and coverage remains
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-895-*`. No network request, audio,
+screenshot or visual judgment occurred. The public Video/VideoPlayer family now has a complete
+semantic disposition; continue the next explicit high-value public behavior gap outside it.

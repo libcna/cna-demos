@@ -67,12 +67,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-658 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
-content46, input40, storage7, media16, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,293 game and201 standalone;
-622 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-894
-overlays for all658 catalog demos.
+659 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
+content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
+623 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-895
+overlays for all659 catalog demos.
 The surface totals remain302/329 XNA types,2114/2326 XNA members,169/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -294,14 +294,34 @@ failure recorded as CNA-DEMOS-ISSUE-100. Source confirms Video stores both selec
 VideoPlayer::OpenDecoder reads only its own independent fields; audio is therefore source-audited,
 not claimed as an audible/runtime selection result.
 
-The warning-free incremental build and required CMake regeneration use at most three jobs;
-metadata validates658/0 and the exact known-issue SOFTWARE CTest passes20 consecutive runs. Two
+The incremental compilation emits no compiler warnings, and the required CMake regeneration and
+build use at most three jobs. Metadata validates658/0 and the exact known-issue SOFTWARE CTest
+passes20 consecutive runs. Two
 generator runs reproduce fixture SHA-256
 `61410a468e900cd4b446e45a01c82e0295d600f410a9f131868687d72f4b8e74`. Coverage remains302/329
 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-894-*`. **Next:** finish the remaining public Video construction/metadata and
 VideoPlayer failure/transition disposition, then leave the video family if no distinct public gap
 remains.
+
+Focused **895-Video-URI-and-trusted-metadata-boundaries** adds the659th stable catalog ID,
+`media.video.uri_and_metadata`. Four controls pass on both renderer labels: absolute local-path
+probing, exact raw missing-file refusal, trusted metadata construction without I/O and atomic real-
+file metadata-mismatch refusal. Four grouped expectations fail identically as
+CNA-DEMOS-ISSUE-101: `file:///` is treated as a literal path, a relative URI follows process cwd
+instead of TitleLocation, HTTPS produces FileNotFoundException instead of InvalidOperationException,
+and Play silently closes a trusted Video whose deferred file is missing instead of throwing.
+
+Both direct renderer outputs are byte-identical with empty stderr and eight total checks. The exact
+known-issue SOFTWARE CTest passes20 consecutive runs; compilation emits no compiler warnings and
+the build/CMake regeneration use at most three jobs. Metadata validates659/0; generated coverage
+remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-895-*`. FNA's
+current public source directly establishes URI and deferred-open expectations. No network request,
+audio, screenshot or visual judgment occurred. `Video::setDurationProperty` is an internal-use
+CNAEXT setter and does not justify another behavior demo. The public Video/VideoPlayer construction,
+transport, frame, selection, disposal and failure inventory is now dispositioned. **Next:** resume
+the next explicit high-value public behavior gap outside this family.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new

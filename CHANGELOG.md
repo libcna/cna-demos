@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added Video URI and trusted-metadata failure coverage, recording CNA-DEMOS-ISSUE-101 for missing
+  URI resolution and silently ignored deferred file-open failures.
 - Added deterministic public multi-track Video selection coverage and recorded
   CNA-DEMOS-ISSUE-100: preferences set on a detached Video are ignored when playback starts.
 - Extended the VideoPlayer workflow to exact XNA validation, retained-Video and disposal contracts;

@@ -15,6 +15,37 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-101 -- Video URI resolution and deferred file failures diverge from FNA
+
+- **Area/API:** `Video::FromUriEXT`, the trusted-metadata Video constructor and
+  `VideoPlayer::Play`.
+- **Demo:** `media.video.uri_and_metadata`.
+- **Reproduction:** use the generated local `track_matrix.mkv` through a plain absolute path, its
+  absolute `file:///` URI and a title-relative URI while the process current directory points
+  elsewhere. Also pass a non-file HTTPS URI. Finally construct a Video with trusted metadata and a
+  nonexistent local path, then call Play. Exception checks accept only the exact System type.
+- **Observed:** the plain absolute path succeeds. CNA treats the `file:///` and HTTPS strings as
+  literal filesystem paths and throws FileNotFoundException; the relative string is resolved below
+  the process current directory instead of TitleLocation and also fails. Trusted construction
+  correctly does no I/O, but Play silently returns in Stopped/null-Video state when decoder open
+  fails rather than reporting the missing file. A separate real-file metadata mismatch does throw
+  InvalidOperationException and closes atomically as documented.
+- **Expected/reference:** FNA's `Video.FromUriEXT(Uri, GraphicsDevice)` converts an absolute local
+  file URI to `LocalPath`, combines a relative URI with `TitleLocation.Path`, and rejects a
+  non-file absolute URI with InvalidOperationException. Its trusted/XNB constructor deliberately
+  postpones file access, while codec Play throws FileNotFoundException when opening the referenced
+  file fails. See FNA's public
+  [`Video.cs`](https://github.com/FNA-XNA/FNA/blob/master/src/Media/Video/Video.cs) and
+  [`VideoPlayerTheora.cs`](https://github.com/FNA-XNA/FNA/blob/master/src/Media/Video/VideoPlayerTheora.cs).
+- **Cause observed in source:** CNA changes the factory parameter from Uri to `std::string` and
+  forwards it unchanged to the raw-file constructor; no URI parsing or TitleLocation combination
+  occurs. `VideoPlayer::OpenDecoder` clears its decoder and Video pointer when `Open` returns false,
+  then `Play` treats the null decoder as an ordinary early return.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction is local and deterministic; the
+  HTTPS spelling is classified without making a network request. No CNA source was modified and no
+  upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-100 -- Detached Video track preferences are ignored by VideoPlayer::Play
 
 - **Area/API:** `Video::SetVideoTrackEXT`, the symmetric `Video::SetAudioTrackEXT`, and

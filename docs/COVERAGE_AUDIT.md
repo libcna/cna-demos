@@ -1237,6 +1237,27 @@ pass eight and fail only the blue-selection invariant with byte-identical stdout
 Evidence:`/tmp/checkpoint-894-*`. Pixel bytes were read programmatically; no screenshot, listening
 test or manual visual-quality judgment was performed.
 
+### Video URI and trusted-metadata construction
+
+New `media.video.uri_and_metadata` closes the remaining public Video construction/failure behavior
+in eight controls. Plain absolute raw probing returns the generated fixture's exact metadata; a
+missing raw file throws FileNotFoundException. The trusted/XNB-style constructor retains supplied
+duration, dimensions, frame rate and soundtrack type without touching its nonexistent path. A
+trusted Video whose dimensions disagree with a real decoded stream then raises
+InvalidOperationException and leaves the player stopped with no Video.
+
+The other four controls expose CNA-DEMOS-ISSUE-101. FNA resolves relative URIs below TitleLocation,
+extracts an absolute file URI's local path, rejects non-file absolute URIs with
+InvalidOperationException, and reports a trusted constructor's deferred missing file during Play.
+CNA instead treats every factory string as a literal process-relative filesystem path and silently
+returns from Play when decoder open fails. Both renderer-labelled runs reproduce all four grouped
+failures with byte-identical stdout and empty stderr. `Video::setDurationProperty` is explicitly an
+internal-use CNAEXT setter; its trivial assignment does not warrant another demo. Together with
+play_video, pause_and_loop and track_selection, the public Video/VideoPlayer construction,
+metadata, transport, frame, track, lifetime, disposal and failure surface now has a semantic
+disposition. Evidence:`/tmp/checkpoint-895-*`. No network request, audio, screenshot or visual
+judgment occurred.
+
 ### Network simulation (measurement boundaries)
 
 | Members / behavior | Decision and evidence |
