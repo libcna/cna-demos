@@ -10270,3 +10270,22 @@ CTest passes20 repetitions and both validator suites pass. Generated totals rema
 public names enter the CNA-extension appendix and Complete956 marks the new ID absent. Evidence:
 `/tmp/checkpoint-957-build-configuration/*`. Audit `ContentBuildManifest.hpp` next, reusing the
 existing compiler-produced manifest evidence before adding direct helper coverage.
+
+## Focused958-content-build-manifest
+
+The new renderer-free `content.custom.build_manifest` closes every public helper in
+`CNA/Content/Pipeline/ContentBuildManifest.hpp` with 14 controls. A representative multi-output
+result becomes contained manifest ownership with exact hashes. Direct state separates each
+rebuild-reason domain; effective state separately requires the content-build dependency result; and
+the combined helper is side-effect free. Ordered Set/replacement/Find, deterministic current-
+version Serialize/Parse and Clear cover the direct lifecycle, including field-complete round trips
+without physical-root leakage and grouped ownership/schema/dependency/digest refusals.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass14/14 with identical stdout SHA-256
+`a608fd41c05f45a4ac13d2dc806bdb0a1180b8d4d60d8a47b7544864cadf638f` and empty stderr. The
+changed object compiles without warnings with at most three jobs; metadata is677/0; the exact
+SOFTWARE CTest passes20 repetitions and both validator suites pass. Generated totals remain
+unchanged; 17 previously unlisted names enter the CNA-extension appendix and Complete956 marks both
+newer IDs absent. Evidence: `/tmp/checkpoint-958-build-manifest/*`. Existing compiler demos retain
+publication, skip, graph, cleanup and concurrency evidence. Audit remaining
+`ContentPipeline.hpp` declarations next.

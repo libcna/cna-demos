@@ -4186,3 +4186,30 @@ XNA types,2114/2326 members,674/753 fields and3078/3205 C routes; 13 public name
 extension appendix. Complete956 marks the new ID absent. Evidence:
 `/tmp/checkpoint-957-build-configuration/*`. No filesystem resolution, compilation or CNA defect is
 claimed by this parser-focused demo.
+
+### Focused958 content build manifest
+
+The new renderer-free `content.custom.build_manifest` closes the public
+`ContentBuildManifest.hpp` helper surface in 14 controls. A representative successful in-memory
+result becomes one root-relative node owning primary and additional compiled outputs plus a
+deployed support file, all with exact byte digests. Direct fingerprint refresh exposes separate
+source-byte, dependency-set/byte, parameter, writer-schema, output-definition and deployment-
+definition domains. Effective refresh separately requires the content-build dependency result;
+changing it leaves direct state fixed, and the combined helper reproduces the stored result without
+mutating its input.
+
+The direct manifest lifecycle covers ordered insertion, replacement, lookup, deterministic
+serialization/current-version parsing and clear. All fields round-trip without a physical source
+root leaking into JSON. Set refuses escaping source identity, missing primary ownership,
+undeclared output schema, deployment without a byte-hashed dependency and a non-lowercase digest;
+Parse refuses malformed or obsolete persisted state. Existing incremental-compiler,
+dependency-graph and multi-artifact demos retain stronger publication, skip, graph, cleanup and
+concurrency evidence.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass14/14 with byte-identical stdout SHA-256
+`a608fd41c05f45a4ac13d2dc806bdb0a1180b8d4d60d8a47b7544864cadf638f` and empty stderr. The
+changed object compiles without warnings with at most three jobs; metadata is677/0; the exact
+SOFTWARE CTest passes20 repetitions and both validator suites pass. Generated totals remain303/329
+XNA types,2114/2326 members,674/753 fields and3078/3205 C routes; 17 previously unlisted public
+names enter the CNA-extension appendix. Complete956 marks both newer IDs absent. Evidence:
+`/tmp/checkpoint-958-build-manifest/*`. No CNA defect appeared.

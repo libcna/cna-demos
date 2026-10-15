@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**676 demos** in 18 categories. Kinds: console 178, game 296, standalone 202. Automation: automated 640, manual 3, smoke-only 33.
+**677 demos** in 18 categories. Kinds: console 179, game 296, standalone 202. Automation: automated 641, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 54 | 54 | 0 | 0 | 39 / 0 / 14 / 0 / 1 | 39 / 0 / 14 / 0 / 1 |
+| content | 55 | 55 | 0 | 0 | 39 / 0 / 14 / 0 / 2 | 39 / 0 / 14 / 0 / 2 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.custom.build_configuration`.
-- OPENGLES3: absent from report: `content.custom.build_configuration`.
+- SOFTWARE: absent from report: `content.custom.build_configuration`, `content.custom.build_manifest`.
+- OPENGLES3: absent from report: `content.custom.build_configuration`, `content.custom.build_manifest`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -250,6 +250,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::CompressedSoundImporter::OutputTypes` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::CompressedSoundImporter::SelectedByNameOnly` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::CompressedSoundImporter::SourceExtensions` -- content.sound_effect.pipeline_components
+- `CNA::Content::Pipeline::ComputeContentBuildDirectFingerprint` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::ComputeContentBuildEffectiveFingerprint` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::ComputeContentBuildFingerprint` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::ContentAssetBuildConfiguration` -- content.custom.build_configuration
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Entries` -- content.custom.build_configuration
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Find` -- content.custom.build_configuration, content.custom.incremental_compiler
@@ -263,17 +266,27 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentBuildEnvironment::strictness` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildEnvironment::targetPlatform` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildEnvironment::targetProfile` -- content.texture_processor.resize_to_power_of_two
+- `CNA::Content::Pipeline::ContentBuildFingerprintState` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::ContentBuildLogger::Log` -- content.custom.pipeline_diagnostics
-- `CNA::Content::Pipeline::ContentBuildManifest::Find` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication
-- `CNA::Content::Pipeline::ContentBuildManifest::Parse` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication
+- `CNA::Content::Pipeline::ContentBuildManifest::Clear` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::ContentBuildManifest::Entries` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::ContentBuildManifest::Find` -- content.custom.build_manifest, content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication
+- `CNA::Content::Pipeline::ContentBuildManifest::Parse` -- content.custom.build_manifest, content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication
+- `CNA::Content::Pipeline::ContentBuildManifest::Serialize` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::ContentBuildManifest::Set` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::ContentBuildManifestDeploymentFile` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::ContentBuildManifestEntry` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::ContentBuildManifestEntry::directFingerprint` -- content.custom.dependency_graph
 - `CNA::Content::Pipeline::ContentBuildManifestEntry::fingerprint` -- content.custom.dependency_graph
+- `CNA::Content::Pipeline::ContentBuildManifestFileName` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::ContentBuildManifestOutput` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::ContentBuildManifestVersion` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::ContentBuildRequest::externalSourceRoots` -- content.custom.nested_builds, content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::ContentBuildRequest::siblings` -- content.custom.nested_builds
 - `CNA::Content::Pipeline::ContentBuildResult::messages` -- content.custom.pipeline_diagnostics, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildResult::parameters` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentDependency::sourceRoot` -- content.custom.nested_builds, content.custom.source_root_capabilities
-- `CNA::Content::Pipeline::ContentFileSha256` -- content.custom.incremental_compiler, content.custom.multi_artifact_publication
+- `CNA::Content::Pipeline::ContentFileSha256` -- content.custom.build_manifest, content.custom.incremental_compiler, content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentImporter::SelectedByNameOnly` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentImporterContext::LogInfo` -- content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ContentPipeline::Build` -- content.custom.nested_builds, content.custom.pipeline_components, content.custom.pipeline_diagnostics, content.custom.source_root_capabilities, content.custom.xna_pipeline_components
@@ -299,6 +312,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentProcessorParameters::Find` -- content.custom.build_configuration
 - `CNA::Content::Pipeline::ContentProcessorParameters::Set` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentProcessorParameters::Values` -- content.custom.build_configuration
+- `CNA::Content::Pipeline::ContentSha256` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::ContentSourceRootCapabilities::Add` -- content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::ContentSourceRootCapabilities::Entries` -- content.custom.build_configuration
 - `CNA::Content::Pipeline::ContentSourceRootCapabilities::Find` -- content.custom.build_configuration
@@ -317,6 +331,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ImportedSoundType` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::ImportedVideoSource` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::ImportedVideoSourceType` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::MakeContentBuildManifestEntry` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::MakeProcessedSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProbedVideoMetadata` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::ProcessedFrameBytes` -- content.sound_effect.imported_pcm
@@ -328,6 +343,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ProcessedSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedSoundEffectType` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::ProcessedVideoType` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::RefreshContentBuildDirectFingerprint` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::RefreshContentBuildEffectiveFingerprint` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::RegisterCnjContentPipeline` -- content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::RegisterSongContentPipeline` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::RegisterSoundEffectContentPipeline` -- content.sound_effect.pipeline_components
