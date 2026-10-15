@@ -59,10 +59,20 @@ namespace
 
         const SoundEffect longTone(TitleLocation::Path() + "/assets/music/rising.wav");
         SoundEffectInstance replayProbe = longTone.CreateInstance();
+        // Half speed makes this two-second asset play for about four seconds.  Observe the voice
+        // at its midpoint, call Play again, then give the original playback three seconds to
+        // finish.  A restarted voice would still need another second at that deadline.  The
+        // wider window also tolerates a delayed dummy-audio callback under a parallel CTest run.
+        replayProbe.setPitchProperty(-1.0f);
         replayProbe.Play();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1250));
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        ctx.Check(replayProbe.getStateProperty() == SoundState::Playing,
+                  "the replay probe is still Playing before the repeated Play call");
         replayProbe.Play();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        const auto replayDeadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        while (replayProbe.getStateProperty() != SoundState::Stopped &&
+               std::chrono::steady_clock::now() < replayDeadline)
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         ctx.Check(replayProbe.getStateProperty() == SoundState::Stopped,
                   "Play while already Playing leaves progress intact instead of restarting the track");
 

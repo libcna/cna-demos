@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Stabilized the repeated-`Play` transport check with an explicit playing precondition and a
+  wider timing window that still distinguishes preserved progress from a restarted voice.
 - Reached the production `StorageDeviceNotConnectedException` constructor with a controlled,
   unusable Linux storage root and closed the final Storage type gap without a new demo ID.
 - Extended the residual Net audit with the real fixed-property enumerator, the exact no-party
