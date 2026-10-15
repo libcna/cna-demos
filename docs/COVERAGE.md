@@ -13,7 +13,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 61 | 61 | 0 | 0 | 39 / 0 / 14 / 0 / 8 | 39 / 0 / 14 / 0 / 8 |
+| content | 61 | 61 | 0 | 0 | 47 / 0 / 14 / 0 / 0 | 47 / 0 / 14 / 0 / 0 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,6 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.cnj.pipeline_assets`, `content.custom.build_configuration`, `content.custom.build_manifest`, `content.model.pipeline_contract`, `content.sprite_font.pipeline_contract`, `content.texture_processor.pipeline_contract`, `content.xnb.output_pipeline`, `content.xnb.pipeline_transcode`.
-- OPENGLES3: absent from report: `content.cnj.pipeline_assets`, `content.custom.build_configuration`, `content.custom.build_manifest`, `content.model.pipeline_contract`, `content.sprite_font.pipeline_contract`, `content.texture_processor.pipeline_contract`, `content.xnb.output_pipeline`, `content.xnb.pipeline_transcode`.
 
 ## XNA 4.0 API surface demonstrated
 

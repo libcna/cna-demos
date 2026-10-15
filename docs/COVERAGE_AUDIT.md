@@ -4679,3 +4679,24 @@ SOFTWARE CTest passes20 repetitions and both validator suites pass. Generated to
 XNA types,2114/2326 members,674/753 fields and3078/3205 C routes; 17 previously unlisted public
 names enter the CNA-extension appendix. Complete956 marks both newer IDs absent. Evidence:
 `/tmp/checkpoint-958-build-manifest/*`. No CNA defect appeared.
+
+### Complete981 generated runtime checkpoint
+
+The authoritative `linux-full` validation at cna-demos commit
+`638e98c332dca53367bd95365c87d2d7cbb6083b` remains pinned to CNA
+`d23e139de9e5c15511b6be745de290896a69ee37` and uses at most three jobs. Metadata validates683/0;
+all696 enabled CTests pass (648 ordinary passes plus48 declared skips, 335.74s), with three manual
+tests disabled. Full SOFTWARE reports578 pass,54 expected fail,48 skip and3 manual;
+OPENGLES3/Xvfb reports618/55/7/3. Both cover every catalog ID with zero unexpected failures or
+unexpected passes.
+
+Compared with Complete956, eight new IDs pass on both renderers and five established IDs have only
+their reviewed check-count increases. All675 prior statuses, known-issue identities and failed-
+assertion messages/multiplicities are unchanged; failed assertions remain93 on SOFTWARE and97 on
+OPENGLES3. Normalized stderr differs only by the expected compiler diagnostic for the newly covered
+mutually exclusive FX service options. Generated totals remain303/329 XNA types,2114/2326 members,
+674/753 fields and3078/3205 C routes. The complete public `CNA/Content` header tree has semantic
+declaration-level dispositions. The remaining `cna_content_manager_create_resource` route is an
+explicit unsupported placeholder and does not warrant a construction-plus-failure demo. Evidence
+is archived under `build/linux-full/reports/checkpoint-981-complete-*`. No screenshot, listening
+test, physical input, external service session or manual visual-quality inspection was performed.

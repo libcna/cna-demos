@@ -10353,3 +10353,23 @@ unchanged; 17 previously unlisted names enter the CNA-extension appendix and Com
 newer IDs absent. Evidence: `/tmp/checkpoint-958-build-manifest/*`. Existing compiler demos retain
 publication, skip, graph, cleanup and concurrency evidence. Audit remaining
 `ContentPipeline.hpp` declarations next.
+
+## Complete981-683-demo-content-header-checkpoint
+
+The authoritative complete validation at cna-demos commit
+`638e98c332dca53367bd95365c87d2d7cbb6083b`, pinned to CNA
+`d23e139de9e5c15511b6be745de290896a69ee37`, absorbs Focused957-980 and replaces Complete956 as
+the comparison baseline. The warning-free build and tests use no more than three jobs. Metadata is
+683/0; all 696 enabled CTests pass (648 ordinary passes and 48 declared skips, 335.74s), with three
+manual tests disabled. Full SOFTWARE reports 578 pass, 54 expected fail, 48 skip and 3 manual;
+OPENGLES3/Xvfb reports 618/55/7/3. Both execute every catalog ID with zero unexpected results.
+
+Exact comparison with Complete956 adds eight passing IDs on each renderer. Five stable IDs have
+only their reviewed check-count increases; every older status, known-issue identity and failed-
+assertion message/multiplicity is unchanged. Failed assertions remain 93 on SOFTWARE and 97 on
+OPENGLES3. Generated coverage remains 303/329 XNA types, 2114/2326 members, 674/753 fields and
+3078/3205 C routes. The complete public `CNA/Content` header tree now has declaration-level
+dispositions. The remaining `cna_content_manager_create_resource` route keeps its explicit
+unsupported disposition until a real embedded-resource store exists. Evidence is archived under
+`build/linux-full/reports/checkpoint-981-complete-*`. Continue with the highest-value
+undispositioned public behavior outside the Content header family.
