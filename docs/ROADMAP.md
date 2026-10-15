@@ -9063,3 +9063,21 @@ Complete871's older runtime reports correctly mark only this new ID absent. Evid
 `/tmp/checkpoint-887-*`. No CNA defect, playback, listening, screenshot or visual inspection is
 claimed. Classify the remaining album-art filename candidates by distinct precedence behavior,
 then audit supported audio formats, tag fallbacks and recursive/symlink indexing.
+
+## Focused888-album-art-filename-precedence
+
+The existing `media.media_library.album_art` workflow grows14->19 controls to cover the distinct
+remaining selection boundaries without manufacturing a demo per spelling. Fresh scans prove the
+intra-family order `cover.jpg > cover.jpeg > cover.png`, then remove successive winners to prove
+the lower family chain `front.jpeg > album.jpg > albumart.png` and acceptance of the final table
+entry. Existing evidence already establishes case-insensitive matching, `cover > folder`, folder
+over embedded art and exact selected bytes. Source inspection shows the other spellings enter the
+same fixed13-candidate loop, so `folder.jpeg`, `front.jpg/png`, `album.png` and `albumart.jpg` are
+intentionally dispositioned rather than repeated.
+
+Both direct renderer-labelled runs pass19/19 with byte-identical stdout and stderr; stderr contains
+the same fourteen reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes20
+repetitions, and the clean incremental build uses at most three jobs. No CNA defect, new catalog ID,
+coverage-count change, playback, screenshot or visual-quality claim is made. Evidence:
+`/tmp/checkpoint-888-*`. Continue the public MediaLibrary audit with supported audio formats, tag
+fallbacks and recursive/symlink indexing.

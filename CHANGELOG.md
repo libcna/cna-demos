@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed album-art filename selection with `jpg > jpeg > png` extension precedence and the
+  lower `front > album > albumart` family chain, including the final recognized fallback.
 - Added a public MediaLibrary playlist-import workflow covering M3U/M3U8 order, duplicate shared
   Song identity, comments, missing entries, UTF-8/CRLF input, root-only discovery, supported
   extensions and absolute/symlink containment refusals.

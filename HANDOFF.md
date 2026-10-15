@@ -2007,12 +2007,11 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete871 remains the authoritative655-demo full-runtime baseline; Focused887
-adds one separately validated playlist demo. Continue the semantic Media audit. First classify the
-remaining album-art filename candidates (`cover.jpeg`, `folder.jpeg`, `front.*`, `album.*`, and
-`albumart.*`) without adding one assertion per spelling: use the implementation precedence and
-choose only behaviorally distinct boundaries. Then review MediaLibrary indexing of supported audio
-formats, tag fallbacks and recursive/symlink scanning for the next coherent public behavior. Run a
-new656-demo full checkpoint before relying on runtime-backed coverage for the new ID.
+adds one separately validated playlist demo and Focused888 completes album-art filename selection.
+Continue the semantic Media audit with MediaLibrary indexing of supported audio formats, tag
+fallbacks and recursive/symlink scanning. Inspect implementation and current fixtures first; add
+one coherent public workflow or extend `music_index` only for behavior that is observably distinct.
+Run a new656-demo full checkpoint before relying on runtime-backed coverage for the new ID.
 The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
@@ -4622,6 +4621,22 @@ mark only this ID absent. Evidence is under `/tmp/checkpoint-887-*`. No CNA defe
 listening, screenshot or visual inspection is claimed. Audit the remaining album-art filename
 families by semantic precedence rather than enumerating every spelling, then continue with public
 audio-index format/tag/recursion boundaries.
+
+### Focused888-album-art-filename-precedence
+
+The stable `media.media_library.album_art` workflow grows14->19 controls and closes the filename-
+selection remainder without one assertion per alias. Starting from the existing mixed-case
+`cover.png` over `folder.png` proof, two fresh scans establish `cover.jpg` over `cover.jpeg` over
+`cover.png`. After the existing corrupt-selected-file fallback, three more scans remove each winner
+in turn and prove `front.jpeg` over `album.jpg` over `albumart.png`, including the final recognized
+candidate. Together with source inspection of the fixed13-entry table, these boundaries disposition
+the unexecuted same-family spelling aliases rather than inflating the demo with equivalent cases.
+
+Both direct renderer-labelled runs pass19/19 with byte-identical stdout and the same fourteen
+reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes20 repetitions. The clean
+incremental build uses `-j3`; no CNA defect, new demo, metadata/API count, playback, screenshot or
+visual-quality claim is added. Evidence is under `/tmp/checkpoint-888-*`. Continue with public
+MediaLibrary audio-format, missing-tag and recursive/symlink indexing behavior.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

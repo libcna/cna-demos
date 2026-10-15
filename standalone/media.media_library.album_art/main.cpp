@@ -217,6 +217,22 @@ namespace
             if (!output) throw std::runtime_error("Could not write album-art priority fixture");
         }
 
+        const auto selectedBareArt = [&]() -> std::vector<std::uint8_t>
+        {
+            MediaLibrary scan;
+            for (Album* candidate : *scan.getAlbumsProperty())
+            {
+                if (candidate && candidate->getArtistProperty() &&
+                    candidate->getArtistProperty()->getNameProperty() == "Second Ensemble" &&
+                    candidate->getHasArtProperty())
+                {
+                    std::unique_ptr<System::IO::Stream> art(candidate->GetAlbumArt());
+                    return ReadBytes(*art);
+                }
+            }
+            return {};
+        };
+
         MediaLibrary priorityLibrary;
         Album* priorityAlbum = nullptr;
         Album* folderOverrideAlbum = nullptr;
@@ -252,6 +268,30 @@ namespace
                   smallPreview->getWidthProperty() == 64 && smallPreview->getHeightProperty() == 64,
               "an already-small album cover returns exact bytes through independent thumbnail streams");
 
+        // One representative image per extension is enough to expose the documented ordering;
+        // the encoded bytes deliberately stay self-describing so GetAlbumArt can be compared exactly.
+        {
+            std::ofstream jpeg(bare / "cover.jpeg", std::ios::binary);
+            jpeg.write(reinterpret_cast<const char*>(embeddedArtBytes.data()),
+                       static_cast<std::streamsize>(embeddedArtBytes.size()));
+            std::ofstream jpg(bare / "cover.jpg", std::ios::binary);
+            jpg.write(reinterpret_cast<const char*>(lowerPriorityBytes.data()),
+                      static_cast<std::streamsize>(lowerPriorityBytes.size()));
+            jpeg.close();
+            jpg.close();
+            if (!jpeg || !jpg) throw std::runtime_error("Could not write album-art extension fixtures");
+        }
+        check(selectedBareArt() == lowerPriorityBytes,
+              "cover.jpg outranks cover.jpeg and cover.png within one filename family");
+        error.clear();
+        if (!std::filesystem::remove(bare / "cover.jpg", error) || error)
+            throw std::runtime_error("Could not remove the highest-priority cover candidate");
+        check(selectedBareArt() == embeddedArtBytes,
+              "cover.jpeg is recognized and outranks the remaining cover.png candidate");
+        error.clear();
+        if (!std::filesystem::remove(bare / "cover.jpeg", error) || error)
+            throw std::runtime_error("Could not remove the JPEG cover candidate");
+
         const std::vector<std::uint8_t> corruptBytes{
             'n', 'o', 't', ' ', 'a', 'n', ' ', 'i', 'm', 'a', 'g', 'e'};
         {
@@ -266,6 +306,37 @@ namespace
         check(priorityAlbum->getHasArtProperty() && ReadBytes(*corruptArt) == corruptBytes &&
                   ReadBytes(*corruptThumbnail) == corruptBytes,
               "a selected corrupt cover stays available and thumbnail generation falls back to its exact bytes");
+
+        error.clear();
+        if (!std::filesystem::remove(bare / "COVER.PNG", error) || error)
+            throw std::runtime_error("Could not remove the cover-family fixture");
+        error.clear();
+        if (!std::filesystem::remove(bare / "FoLdEr.PnG", error) || error)
+            throw std::runtime_error("Could not remove the folder-family fixture");
+        for (const auto& [path, bytes] :
+             std::vector<std::pair<std::filesystem::path, const std::vector<std::uint8_t>*>>{
+                 {bare / "front.jpeg", &preferredBytes},
+                 {bare / "album.jpg", &lowerPriorityBytes},
+                 {bare / "albumart.png", &embeddedArtBytes}})
+        {
+            std::ofstream output(path, std::ios::binary);
+            output.write(reinterpret_cast<const char*>(bytes->data()),
+                         static_cast<std::streamsize>(bytes->size()));
+            output.close();
+            if (!output) throw std::runtime_error("Could not write album-art family fixture");
+        }
+        check(selectedBareArt() == preferredBytes,
+              "front art outranks the album and albumart filename families");
+        error.clear();
+        if (!std::filesystem::remove(bare / "front.jpeg", error) || error)
+            throw std::runtime_error("Could not remove the front-family fixture");
+        check(selectedBareArt() == lowerPriorityBytes,
+              "album art becomes active before the lower albumart fallback");
+        error.clear();
+        if (!std::filesystem::remove(bare / "album.jpg", error) || error)
+            throw std::runtime_error("Could not remove the album-family fixture");
+        check(selectedBareArt() == embeddedArtBytes,
+              "albumart.png is accepted as the final recognized filename fallback");
         std::cout << (passed ? "PASSED" : "FAILED") << " (" << checks << " checks)\n";
         return passed ? 0 : 1;
 #endif
