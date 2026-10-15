@@ -340,17 +340,19 @@ a check that all authored colors remain visible and that a blank texture row can
   Nine checks cover exact endpoints without warnings, null sinks, import failure and repair.
   Concurrent logger callbacks and CLI verbosity are not established by these synchronous builds.
   ✅ `content.custom.multi_artifact_publication`: a real compiler node publishes two declared CNB
-  schemas plus a briefing through native AddDeploymentFile. Seventeen focused checks cover digests,
+  schemas plus a briefing through native AddDeploymentFile. Twenty focused checks cover digests,
   XREF/ownership, skips, missing companion recovery, changed support input, Publish failure/retry,
   graph refusal of two nodes claiming one destination, same-root concurrent compiler refusal and
-  recovery, and clean with/without its manifest.
+  recovery both within one process and against a synchronized child process, and clean with/without
+  its manifest.
   The failed deployment leaves newly published CNBs and the older manifest; no whole-node rollback
-  or independent-process/crash-consistency guarantee is claimed.
+  or crash-consistency guarantee is claimed.
   ✅ `content.custom.dependency_graph`: strong build edges versus runtime-only XREFs, actual
   incremental propagation of effective fingerprints with unchanged parent bytes, fresh runtime
   budgets, cycle/missing-node refusal and repaired skipping. Sixteen focused checks also verify
   actual two-worker importer overlap, byte-identical serial/parallel manifests/artifacts and
-  unchanged parallel skipping. Same-output concurrent compiler processes remain untested.
+  unchanged parallel skipping. The separate multi-artifact workflow covers same-output concurrent
+  compiler processes.
   ✅ Existing cache/Unload demo now shows root switching after Unload and exposes CNA's missing
   loaded-root guard (ISSUE-039). ✅ `content.custom.intermediate_serializer`: a separate build-time
   tool with named/optional/ignored fields, collection item names, absent/present/null distinctions,
@@ -426,8 +428,9 @@ a check that all authored colors remain visible and that a blank texture row can
   changes rebuild only the affected node, whitespace-only configuration edits skip, and source
   removal/reintroduction collects/restores only its owned output. Remapping an external-root alias
   to identical bytes skips both nodes with an identical manifest (25 child checks). Clean
-  rejects changed owned bytes without deleting an untouched peer or the manifest. Crash consistency,
-  independent-process same-root publishers and graph/deployment cache cases remain separate work.
+  rejects changed owned bytes without deleting an untouched peer or the manifest. Crash consistency
+  and graph/deployment cache cases remain separate work; multi_artifact_publication covers
+  independent-process same-root exclusion.
 - ✅ `content.custom.intermediate_external_references`: filename versus inline data, table
   deduplication, relocation, wrapper/null identity and invalid references. Nine child checks pass;
   native emitted TargetType alias round-trip exposes ISSUE-046. File imports/build publication
@@ -8790,3 +8793,22 @@ coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C ro
 loading, so plugin discovery is intentionally not claimed. Independent-process same-root
 contention and crash consistency remain separate. No renderer, screenshot or visual inspection was
 used.
+
+## Focused873-independent-process-output-lease
+
+`content.custom.multi_artifact_publication` grows from seventeen to twenty child controls. The
+program starts itself in a private child role; that process signals only after its importer is
+entered and the public compiler has acquired the shared output-root lease. The parent compiler is
+then refused before its writer or any artifact can appear. Releasing the child lets it publish both
+CNBs, the deployment file and manifest, after which a parent invocation acquires the released lease
+and skips the unchanged node.
+
+Serial SOFTWARE and OPENGLES3-labelled runs pass20/20 with byte-identical path-normalized
+stdout/stderr, and the exact SOFTWARE CTest passes twenty consecutive repetitions. An initial
+parallel launch of the two renderer-labelled parents also passed all controls but reproduced the
+already open CNA-DEMOS-ISSUE-057 missing-owner staging-scavenger warning in one stderr; this is now
+recorded separately and was not hidden from the evidence. The warning-free incremental `-j3` build,
+metadata655/0 and both tool self-test suites pass; coverage remains302/329 types,2114/2326 members,
+169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-873-*`. This closes the explicit
+independent-process same-root lease gap. Crash consistency remains separate. No renderer,
+screenshot or visual inspection was used.

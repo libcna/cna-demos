@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended multi-artifact publication with a child-process lease owner, proving cross-process
+  same-root exclusion before writes and complete publication plus unchanged skipping after release.
 - Extended embedded compiler coverage with two synchronized factory calls on disjoint roots,
   proving per-invocation service options, registry identity/freezing and independent artifacts.
 - Extended compiler embedding coverage to prove that a pre-built registry rejects external

@@ -1104,6 +1104,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   completes7scheduled operations with CMake0/gate0 and all3909inputs unchanged. Focused
   SW/GL and27targeted CTests then pass (GL8pixels, exactSWskip, actual image inspected).
   This permits native validation but does not resolve the staging race.
+- **Recurrence on Focused873:** the first SOFTWARE and OPENGLES3-labelled
+  `content.custom.multi_artifact_publication` runs were launched simultaneously while adding a
+  separate-process output-lease control. Both programs passed20/20, but the SOFTWARE stderr gained
+  the exact `owner metadata is absent or is not a regular file` warning for another live
+  `cna_content_stage_v1_*` directory. Immediate serial reruns passed20/20 with matching normalized
+  streams and only the eight deliberately exercised compiler diagnostics. This is a real compiler
+  workflow recurrence at CNA `d23e139de9e5c15511b6be745de290896a69ee37`, rather than the earlier
+  direct header probe; no artifact loss was observed. Evidence:
+  `/tmp/checkpoint-873-independent-process-lease-{software,opengles3}{,-serial}.*`.
 - **Handling:** keep the warning gate and original failure visible, retry the unchanged documented
   full validation after recording the defect, and retain this issue even if scheduling permits a
   clean retry. The eleven OcclusionQuery controls already pass on both renderers independently.

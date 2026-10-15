@@ -20,6 +20,7 @@
 #include <utility>
 #include <vector>
 
+#include "CnaDemos/StandaloneProgram.hpp"
 #include "CNA/Content/Cnb/CnbByteWriter.hpp"
 #include "CNA/Content/Cnb/CnbDocument.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
@@ -40,6 +41,8 @@ namespace
     bool holdNextImport = false;
     bool importReachedGate = false;
     bool releaseImport = false;
+    std::filesystem::path processReadyPath;
+    std::filesystem::path processReleasePath;
     struct TemporaryDirectory
     {
         std::filesystem::path path;
@@ -70,6 +73,18 @@ namespace
                 throw std::runtime_error("An encounter needs 1..100 waves.");
             file >> std::ws;
             if (!file.eof()) throw std::runtime_error("An encounter contains one wave count.");
+            if (!processReadyPath.empty())
+            {
+                WriteText(processReadyPath, "ready\n");
+                const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(10);
+                while (!std::filesystem::exists(processReleasePath) &&
+                       std::chrono::steady_clock::now() < deadline)
+                {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                }
+                if (!std::filesystem::exists(processReleasePath))
+                    throw std::runtime_error("The independent-process lease gate timed out.");
+            }
             std::unique_lock gateLock(importGateMutex);
             if (holdNextImport)
             {
@@ -149,12 +164,47 @@ namespace
         auto data = document.OpenChunk(document.RequireSingle(DataChunk));
         const auto count = data.ReadU32(); data.RequireExhausted(); return count;
     }
+
+    Pipeline::ContentPipelineRegistryFactory EncounterRegistryFactory()
+    {
+        return [](const Pipeline::ContentCompilerOptions&) {
+            auto registry = std::make_shared<Pipeline::ContentPipelineRegistry>();
+            registry->RegisterImporter(std::make_shared<EncounterImporter>());
+            registry->RegisterProcessor(std::make_shared<EncounterProcessor>());
+            registry->RegisterWriter(std::make_shared<EncounterWriter>());
+            return registry;
+        };
+    }
+
+    int RunIndependentLeaseOwner(const std::filesystem::path& source,
+                                 const std::filesystem::path& output,
+                                 const std::filesystem::path& ready,
+                                 const std::filesystem::path& release)
+    {
+        processReadyPath = ready;
+        processReleasePath = release;
+        return Pipeline::RunContentCompiler(
+            {"build", source, "-o", output, "--format", "cnb", "--workers", "1", "--quiet"},
+            EncounterRegistryFactory());
+    }
 }
 
-int main()
+int main(int argc, char** argv)
 {
     try
     {
+        const auto programArguments = CnaDemos::Standalone::ParseArguments(argc, argv);
+        if (!programArguments.other.empty())
+        {
+            if (programArguments.other.size() == 5 &&
+                programArguments.other.front() == "--lease-owner")
+            {
+                return RunIndependentLeaseOwner(programArguments.other[1], programArguments.other[2],
+                                                programArguments.other[3], programArguments.other[4]);
+            }
+            std::cerr << "Encounter publication demo received an unknown child-process role.\n";
+            return 2;
+        }
         bool passed = true;
         const auto check = [&](bool condition, std::string_view message) {
             std::cout << (condition ? "  check: " : "  CHECK FAILED: ") << message << '\n';
@@ -170,13 +220,7 @@ int main()
             std::filesystem::create_directory(source);
             WriteText(source / "arena.encounter", "3\n");
             WriteText(source / "briefing.txt", "Protect the courtyard.\n");
-            const Pipeline::ContentPipelineRegistryFactory factory = [](const Pipeline::ContentCompilerOptions&) {
-                auto registry = std::make_shared<Pipeline::ContentPipelineRegistry>();
-                registry->RegisterImporter(std::make_shared<EncounterImporter>());
-                registry->RegisterProcessor(std::make_shared<EncounterProcessor>());
-                registry->RegisterWriter(std::make_shared<EncounterWriter>());
-                return registry;
-            };
+            const Pipeline::ContentPipelineRegistryFactory factory = EncounterRegistryFactory();
             const std::vector<std::filesystem::path> arguments{
                 "build", source, "-o", output, "--format", "cnb", "--workers", "1"};
             const auto primary = output / "arena.cnb", companion = output / "rewards/arena.cnb";
@@ -301,6 +345,56 @@ int main()
             check(Pipeline::RunContentCompiler(concurrentArguments, factory) == 0 &&
                       writes == writesAfterConcurrency,
                   "releasing the output lease permits an unchanged follow-up invocation to skip");
+            // Repeat the same boundary with the lease owner in a separate OS process. The child
+            // signals only after entering its importer, which means RunContentCompiler already
+            // owns the output lease, and waits for a second file before it can reach its writer.
+            const auto processOutput = directory / "process-output";
+            const auto processReady = directory / "process-owner-ready";
+            const auto processRelease = directory / "process-owner-release";
+            const std::vector<std::filesystem::path> processArguments{
+                "build", source, "-o", processOutput, "--format", "cnb", "--workers", "1"};
+            const int writesBeforeProcess = writes.load();
+            int processOwnerStatus = -1;
+            std::thread processOwner([&] {
+                processOwnerStatus = CnaDemos::RunProcess(
+                    CnaDemos::Standalone::ThisProgram(
+                        "cna-demo-content-custom-multi_artifact_publication"),
+                    {"--lease-owner", source.string(), processOutput.string(),
+                     processReady.string(), processRelease.string()});
+            });
+            const auto processDeadline =
+                std::chrono::steady_clock::now() + std::chrono::seconds(5);
+            while (!std::filesystem::exists(processReady) &&
+                   std::chrono::steady_clock::now() < processDeadline)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            }
+            const bool processOwnerReachedImporter = std::filesystem::exists(processReady);
+            const int processContenderStatus = processOwnerReachedImporter
+                ? Pipeline::RunContentCompiler(processArguments, factory)
+                : -1;
+            const bool processContenderPublished =
+                std::filesystem::exists(processOutput / "arena.cnb") ||
+                std::filesystem::exists(processOutput / "rewards/arena.cnb") ||
+                std::filesystem::exists(processOutput / "support/briefing.txt") ||
+                std::filesystem::exists(
+                    processOutput / Pipeline::ContentBuildManifestFileName);
+            WriteText(processRelease, "release\n");
+            processOwner.join();
+            check(processOwnerReachedImporter && processContenderStatus == 1 &&
+                      !processContenderPublished && writes == writesBeforeProcess,
+                  "an independent-process lease owner refuses this process before it can write or publish");
+            check(processOwnerStatus == 0 &&
+                      ReadCount(processOutput / "arena.cnb", EncounterType) == 4 &&
+                      ReadCount(processOutput / "rewards/arena.cnb", RewardsType) == 100 &&
+                      ReadText(processOutput / "support/briefing.txt") == "Protect the north gate.\n" &&
+                      std::filesystem::is_regular_file(
+                          processOutput / Pipeline::ContentBuildManifestFileName),
+                  "the independent lease owner publishes its complete artifact set after release");
+            const int writesAfterProcess = writes.load();
+            check(Pipeline::RunContentCompiler(processArguments, factory) == 0 &&
+                      writes == writesAfterProcess,
+                  "a later process-local invocation acquires the released lease and skips the unchanged node");
             // The fixed support destination belongs to one encounter. A second source would
             // claim that same path even though its two CNB names are distinct; the graph refuses it.
             const auto beforeConflictPrimary = ReadText(primary), beforeConflictCompanion = ReadText(companion);

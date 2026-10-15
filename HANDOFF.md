@@ -4310,6 +4310,27 @@ defect appeared. Complete871 remains the full baseline. Audit independent-proces
 contention or the next explicit high-value gap; no renderer, screenshot or visual inspection was
 used.
 
+### Focused873-independent-process-output-lease
+
+`content.custom.multi_artifact_publication` now has twenty child controls. It starts the same
+standalone executable in a private child role; the child signals only after its importer is entered
+and the compiler owns the shared output-root lease, then waits before its writer. The parent
+compiler is refused without a parent writer call or any published artifact. Releasing the child
+produces both CNBs, the deployment file and manifest, and a later parent invocation acquires the
+released lease and skips the unchanged node. This closes the explicit independent-process
+same-root contention gap while retaining crash consistency as separate work.
+
+Serial SOFTWARE and OPENGLES3-labelled runs pass20/20 with byte-identical path-normalized
+stdout/stderr; the exact SOFTWARE CTest passes twenty consecutive repetitions. The first two
+renderer-labelled parents were initially launched simultaneously: both passed20/20, but one
+reproduced the already open CNA-DEMOS-ISSUE-057 staging-scavenger missing-owner warning. That real
+workflow recurrence is recorded in `docs/CNA_ISSUES.md`; the serial comparison has only the eight
+expected publication, two lease and graph diagnostics. The final `-j3` build is warning-free,
+metadata is655/0, both tool self-test suites pass and temporary coverage remains302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is under
+`/tmp/checkpoint-873-*`. Complete871 remains the full baseline. Continue with the next explicit
+high-value behavior gap; no renderer, screenshot or visual inspection was used.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
