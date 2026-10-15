@@ -10091,3 +10091,20 @@ messages/multiplicities remain unchanged at92 SOFTWARE and96 OPENGLES3 assertion
 stderr is unchanged. Coverage remains303/329 XNA types,2114/2326 members,674/753 fields and
 3078/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-948-complete-*`. This is now the
 comparison baseline. Continue the next coherent native public-header/member audit.
+
+## Focused949-native-imported-PCM-processing
+
+The new renderer-free `content.sound_effect.imported_pcm` closes the public
+`CNA/Content/Import/ImportedSound.hpp` consumer workflow. It checks the experimental API marker,
+safe structure defaults and all five encoding helpers. A real committed16-bit WAV preserves exact
+source rate, channel, frame, loop and byte data; explicit AsAuthored and WholeSoundWhenUnset policy
+then differ only in the processed loop. Constructed 24/32-bit and float source samples prove exact
+rounding, saturation, clamping and NaN silence, while malformed byte counts and an unknown encoding
+are refused.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass8/8 with byte-identical stdout SHA-256
+`cab9003311b65e7fed42e08931670a59c58973ec23517e29cf9a43c10a57ed80` and empty stderr. The
+warning-free `-j3` build, exact SOFTWARE CTest, metadata670/0 and both validator suites pass.
+Generated totals remain303/329 XNA types,2114/2326 members,674/753 fields and3078/3205 C routes;
+the CNA-extension appendix gains nine names. Evidence:`/tmp/checkpoint-949-imported-pcm/*`. No
+audio device or playback is involved. Continue the next coherent native public-header audit.

@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**669 demos** in 18 categories. Kinds: console 171, game 296, standalone 202. Automation: automated 633, manual 3, smoke-only 33.
+**670 demos** in 18 categories. Kinds: console 172, game 296, standalone 202. Automation: automated 634, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 47 | 47 | 0 | 0 | 34 / 0 / 13 / 0 / 0 | 34 / 0 / 13 / 0 / 0 |
+| content | 48 | 48 | 0 | 0 | 34 / 0 / 13 / 0 / 1 | 34 / 0 / 13 / 0 / 1 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.sound_effect.imported_pcm`.
+- OPENGLES3: absent from report: `content.sound_effect.imported_pcm`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -200,7 +202,16 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::DecodeTexture2DFromCnb` -- content.custom.source_root_capabilities
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::ImportWavAsImportedSound` -- content.sound_effect.imported_pcm
 - `CNA::Content::Cnb::IsCnbCompressionSupported` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::ProcessImportedSoundEffect` -- content.sound_effect.imported_pcm
+- `CNA::Content::Cnb::SoundEffectLoopPolicy` -- content.sound_effect.imported_pcm
+- `CNA::Content::Import::ImportedContentApiIsExperimental` -- content.sound_effect.imported_pcm
+- `CNA::Content::Import::ImportedPcmEncoding` -- content.sound_effect.imported_pcm
+- `CNA::Content::Import::ImportedPcmEncodingName` -- content.sound_effect.imported_pcm
+- `CNA::Content::Import::ImportedPcmNarrowsToPcm16` -- content.sound_effect.imported_pcm
+- `CNA::Content::Import::ImportedPcmSampleBytes` -- content.sound_effect.imported_pcm
+- `CNA::Content::Import::ImportedSound` -- content.sound_effect.imported_pcm
 - `CNA::Content::ObjectDictionaryEXT` -- content.xnb.object_dictionary
 - `CNA::Content::ObjectDictionaryEXT::ContainsKey` -- content.xnb.object_dictionary
 - `CNA::Content::ObjectDictionaryEXT::Get` -- content.xnb.object_dictionary

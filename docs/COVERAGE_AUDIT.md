@@ -3984,3 +3984,21 @@ serial/resource numbers is byte-identical. Generated totals remain303/329 XNA ty
 members,674/753 fields and3078/3205 C routes. Evidence is archived under
 `build/linux-full/reports/checkpoint-948-complete-*`. No screenshot, listening test, physical input,
 external service session or manual visual-quality inspection was performed.
+
+### Focused949 native imported PCM processing
+
+The new renderer-free `content.sound_effect.imported_pcm` demonstrates the public build-time seam
+between source-oriented WAV data and CNB processing. It verifies the experimental API marker, safe
+`ImportedSound` defaults and every encoding's byte width, narrowing classification and diagnostic
+name. A committed16-bit WAV then preserves exact rate/channel/frame/loop/sample data before
+AsAuthored and WholeSoundWhenUnset apply distinct loop policy without rewriting PCM. Constructed
+24-bit,32-bit and float source values prove exact rounding, saturation, finite clamp and NaN-to-
+silence rules; inconsistent byte counts and an unknown encoding both raise ContentLoadException.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass8/8 with byte-identical stdout SHA-256
+`cab9003311b65e7fed42e08931670a59c58973ec23517e29cf9a43c10a57ed80` and empty stderr. The
+warning-free incremental build uses at most three jobs, metadata is670/0, the exact SOFTWARE CTest
+passes and both validator suites pass. Generated XNA/C totals remain303/329 types,2114/2326
+members,674/753 fields and3078/3205 routes; the CNA-extension appendix gains nine names.
+Complete948 correctly marks the new ID absent. Evidence:`/tmp/checkpoint-949-imported-pcm/*`. No
+audio device, playback, listening test or CNA defect is claimed.

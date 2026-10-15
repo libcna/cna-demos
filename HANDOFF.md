@@ -68,12 +68,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-669 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
-content47, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform3 and c_api177. Kinds are171 console,296 game and202 standalone;
-633 are automated,33 smoke-only and3 manual. Every declared category has demos.
+670 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
+content48, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, cnaext4, platform3 and c_api177. Kinds are172 console,296 game and202 standalone;
+634 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete948's full runtime reports; they include all669
-catalog IDs in both renderer suites with none absent.
+baseline IDs in both renderer suites and correctly mark the one post-baseline ID absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete948's
 full runtime reports are the baseline inputs for the669-ID catalog. Selected semantic
@@ -392,6 +392,21 @@ warning-free build uses at most three jobs, metadata is669/0, the exact SOFTWARE
 both validator suites pass. Generated totals remain303/329 types,2114/2326 members,674/753 fields
 and3078/3205 routes; Complete938 now correctly marks all three post-baseline IDs absent. Evidence:
 `/tmp/checkpoint-947-object-dictionary/*`. Complete948 below absorbs this batch.
+
+Focused **949-native-imported-PCM-processing** adds the670th source/catalog ID,
+`content.sound_effect.imported_pcm`. It separates source-oriented, device-free WAV import from the
+explicit CNB processing policy: all five encoding helpers and the experimental marker, safe
+`ImportedSound` defaults, exact metadata/bytes from the committed16-bit WAV, AsAuthored versus
+WholeSoundWhenUnset loops, exact 24/32-bit rounding/saturation, float clamp/NaN silence and both
+malformed-byte-count/unknown-encoding refusals.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass8/8 with byte-identical stdout SHA-256
+`cab9003311b65e7fed42e08931670a59c58973ec23517e29cf9a43c10a57ed80` and empty stderr. The
+warning-free build uses at most three jobs, metadata is670/0, the exact SOFTWARE CTest passes and
+both validator suites pass. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753
+fields and3078/3205 routes; Complete948 correctly marks this one post-baseline ID absent. Evidence:
+`/tmp/checkpoint-949-imported-pcm/*`. No audio device, playback, listening test or CNA defect is
+claimed.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -2510,7 +2525,9 @@ manager-snapshot behavior. Focused947 adds the actual native XNB `ObjectDictiona
 typed and raw values, both constructors, logical type names, membership, full value access, both
 lookup failures and a game-defined reference value registered through `ReflectiveTypeReaderBuilder`.
 Complete948 validates those three new IDs and every stable-ID extension on both full renderer
-suites. Continue the next coherent public CNA header family. The diagnostics
+suites. Focused949 closes the source-oriented `ImportedSound` encoding, helper and processing-policy
+workflow without requiring an audio device. Continue the next coherent public CNA header family.
+The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered
