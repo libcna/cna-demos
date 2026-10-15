@@ -71,9 +71,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-907
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-908
 overlays for all659 catalog demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,479/753 fields and
+The surface totals are302/329 XNA types,2114/2326 XNA members,495/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -466,6 +466,17 @@ uses `-j3`, metadata validates659/0 and both validator suites pass. Coverage mov
 Graphics reaches154/192. No new CNA defect appeared. Evidence:`/tmp/checkpoint-907-*`. **Next:**
 audit all16 remaining VertexElementFormat/VertexElementUsage values through declarations, buffer
 round-trips and actual layout consumption.
+
+Focused **908-complete-vertex-element-format-and-usage-values** closes both public families. The
+existing skinned draw supplies actual Byte4/Vector2 and BlendIndices/BlendWeight consumption. A
+second eight-element custom declaration proves every remaining compact format's exact contribution
+to a48-byte stride, preserves all remaining usage identities and round-trips a distinct record
+through a readable HiDef VertexBuffer. The original custom layout still drives its checked draw;
+no stock-shader consumption is claimed for the six historical/ignored semantics. SOFTWARE and
+OPENGLES3/Xvfb pass10/10 and3/3, and both exact SOFTWARE CTests pass ten repetitions. The warning-
+free build uses `-j3`, metadata validates659/0 and both validator suites pass. Coverage moves
+479->495/753 and Graphics reaches170/192. Evidence:`/tmp/checkpoint-908-*`. **Next:** audit the six
+remaining TextureFilter values through sampler state and sampled pixels.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
@@ -2230,13 +2241,13 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete892 remains the authoritative657-demo full-runtime baseline; focused893-
-907 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
+908 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
 closed at7/8, Input is dispositioned at194/202, Input.Touch is complete at15/15 and the root
 Framework, Audio and Design namespaces are complete at78/78,11/11 and2/2. Net is dispositioned at
 17/22; its five uncredited values require real full/remote sessions or service/transport loss.
-Graphics is154/192 after closing the render-state and effect-parameter value families. Audit all16
-remaining VertexElementFormat/VertexElementUsage values next through real declarations, buffer
-round-trips and actual layout consumption, then continue through the remaining Graphics fields.
+Graphics is170/192 after also closing both vertex-element value families. Audit its six remaining
+TextureFilter values next through actual sampler state and sampled pixels, then continue through
+the final16 Graphics fields.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete892 too stale.

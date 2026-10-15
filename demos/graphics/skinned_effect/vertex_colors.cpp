@@ -142,7 +142,9 @@ CNA_DEMOS_GAME(VertexColorsDemo, {
     .description = "Uses CNA's SkinnedEffect vertex-color extension with a plain custom vertex declaration, "
                    "contrasting disabled tint with an interpolated COLOR channel multiplied by material and texture.",
     .apis = {"SkinnedEffect::VertexColorEnabled", "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::DiffuseColor",
-             "SkinnedEffect::Texture", "VertexDeclaration::VertexDeclaration", "VertexElementUsage::Color"},
+             "SkinnedEffect::Texture", "VertexDeclaration::VertexDeclaration", "VertexElementUsage::Color",
+             "VertexElementFormat::Byte4", "VertexElementFormat::Vector2", "VertexElementUsage::BlendIndices",
+             "VertexElementUsage::BlendWeight"},
     .tags = {"skinning", "bones", "effect", "vertex", "color", "3d"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

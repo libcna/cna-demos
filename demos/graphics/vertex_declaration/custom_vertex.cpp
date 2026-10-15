@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // A vertex structure of your own: a plain struct described by a VertexDeclaration.
+#include <array>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -44,6 +45,13 @@ namespace
     };
     static_assert(std::is_trivially_copyable_v<GlowVertex> && sizeof(GlowVertex) == 20,
                   "a plain 20-byte vertex: 12 + 4 + 4 bytes, no padding");
+
+    struct FormatInventoryVertex
+    {
+        std::array<std::uint8_t, 48> Bytes;
+        bool operator==(const FormatInventoryVertex&) const = default;
+    };
+    static_assert(std::is_trivially_copyable_v<FormatInventoryVertex> && sizeof(FormatInventoryVertex) == 48);
 
     // One VertexElement per field: byte offset, format, what it means (usage) and usage index.
     const VertexDeclaration& GlowVertexDeclaration()
@@ -126,6 +134,32 @@ namespace
                                     "{Offset:12 Format:Single Usage:TextureCoordinate UsageIndex:1}",
                             "a mutable element value round-trips all four fields and describes itself");
 
+            const std::vector<VertexElement> formatInventory{
+                VertexElement(0, VertexElementFormat::Byte4, VertexElementUsage::BlendIndices, 0),
+                VertexElement(4, VertexElementFormat::HalfVector2, VertexElementUsage::Binormal, 0),
+                VertexElement(8, VertexElementFormat::HalfVector4, VertexElementUsage::BlendWeight, 0),
+                VertexElement(16, VertexElementFormat::NormalizedShort2, VertexElementUsage::Depth, 0),
+                VertexElement(20, VertexElementFormat::NormalizedShort4, VertexElementUsage::Fog, 0),
+                VertexElement(28, VertexElementFormat::Short2, VertexElementUsage::PointSize, 0),
+                VertexElement(32, VertexElementFormat::Short4, VertexElementUsage::Sample, 0),
+                VertexElement(40, VertexElementFormat::Vector2, VertexElementUsage::TessellateFactor, 0),
+            };
+            VertexDeclaration inventoryDeclaration(formatInventory);
+            Context().Check(inventoryDeclaration.getVertexStrideProperty() == 48 &&
+                                inventoryDeclaration.GetVertexElements() == formatInventory,
+                            "all compact formats contribute their exact size and preserve every authored usage");
+
+            FormatInventoryVertex input{};
+            for (std::size_t i = 0; i < input.Bytes.size(); ++i)
+                input.Bytes[i] = static_cast<std::uint8_t>(i * 5 + 3);
+            VertexBuffer inventoryBuffer(device, inventoryDeclaration, 1, BufferUsage::None);
+            inventoryBuffer.SetData(&input, 1);
+            FormatInventoryVertex output{};
+            inventoryBuffer.GetData(&output, 1);
+            Context().Check(output == input &&
+                                inventoryBuffer.getVertexDeclarationProperty().GetVertexElements() == formatInventory,
+                            "a readable HiDef buffer accepts the complete compact declaration and preserves its bytes");
+
             VertexDeclaration disposed(authored);
             disposed.Dispose();
             disposed.Dispose();
@@ -184,7 +218,11 @@ CNA_DEMOS_GAME(CustomVertexDemo, {
              "VertexElement::GetHashCode", "VertexElement::ToString", "VertexElementFormat::Vector3",
              "VertexElementFormat::Single", "VertexElementFormat::Color", "VertexElementUsage::Position",
              "VertexElementUsage::Color", "VertexElementUsage::TextureCoordinate", "VertexDeclaration::Dispose",
-             "GraphicsDevice::DrawUserPrimitives"},
+             "GraphicsDevice::DrawUserPrimitives", "VertexElementFormat::HalfVector2",
+             "VertexElementFormat::HalfVector4", "VertexElementFormat::NormalizedShort2",
+             "VertexElementFormat::NormalizedShort4", "VertexElementFormat::Short2", "VertexElementFormat::Short4",
+             "VertexElementUsage::Binormal", "VertexElementUsage::Depth", "VertexElementUsage::Fog",
+             "VertexElementUsage::PointSize", "VertexElementUsage::Sample", "VertexElementUsage::TessellateFactor"},
     .tags = {"3d", "vertex", "layout", "declaration"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

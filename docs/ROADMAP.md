@@ -9415,3 +9415,20 @@ The warning-free build uses at most three jobs, metadata is659/0 and both valida
 Coverage moves464->479/753 fields and Graphics reaches154/192. No new CNA defect appeared.
 Evidence:`/tmp/checkpoint-907-*`. Audit the16 remaining VertexElementFormat/VertexElementUsage
 values next through real declarations, buffer round-trips and layout consumption.
+
+## Focused908-complete-vertex-element-format-and-usage-values
+
+Two stable vertex workflows close all12 VertexElementFormat and all13 VertexElementUsage values.
+The skinned-colour scene's real draw already consumes Byte4 BlendIndices, Vector2 texture
+coordinates and Vector4 BlendWeight, so its metadata now records the missing values. The custom-
+vertex workflow adds one nonoverlapping eight-element HiDef declaration pairing every remaining
+compact format with every remaining historical usage. Its derived stride is exactly48 bytes, all
+descriptors survive intact, and a readable VertexBuffer accepts the declaration and round-trips a
+distinct 48-byte record exactly. The original Position/Single/Color layout still draws its checked
+fan; no stock-shader consumption is claimed for ignored legacy semantics.
+
+SOFTWARE and OPENGLES3/Xvfb pass10/10 custom-layout and3/3 skinned controls. Both exact SOFTWARE
+CTests pass ten repetitions. The warning-free build uses at most three jobs, metadata is659/0 and
+both validator suites pass. Coverage moves479->495/753 fields and Graphics reaches170/192. No CNA
+or demo defect appeared. Evidence:`/tmp/checkpoint-908-*`. Audit the six remaining TextureFilter
+values next through actual sampler state and sampled pixels.

@@ -1105,6 +1105,23 @@ exact known-issue SOFTWARE CTest passes ten repetitions. The warning-free build 
 jobs, metadata is659/0 and both validator suites pass. Fields move464->479/753 and Graphics reaches
 154/192. Evidence:`/tmp/checkpoint-907-*`.
 
+### Vertex element format and usage values
+
+The skinned-colour workflow already draws through Byte4 BlendIndices, Vector2 texture coordinates
+and Vector4 BlendWeight; its metadata now records the missing values attached to that real skinning
+path. The custom-vertex workflow adds a compact declaration that pairs the other six missing
+formats with the other six missing legacy usages. Exact offsets and documented element widths
+produce stride48, the declaration preserves every descriptor, and a readable HiDef VertexBuffer
+accepts it and returns a distinct 48-byte record unchanged. The demo's original Position/Single/
+Color declaration continues to drive a checked draw. The rare semantics are declaration and buffer
+contract evidence; no stock shader is claimed to consume Binormal, Depth, Fog, PointSize, Sample
+or TessellateFactor.
+
+Both renderers pass10/10 custom-layout and3/3 skinned controls, and both exact SOFTWARE CTests pass
+ten repetitions. The warning-free build uses at most three jobs, metadata is659/0 and both
+validator suites pass. Fields move479->495/753 and Graphics reaches170/192. Evidence:
+`/tmp/checkpoint-908-*`.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and
