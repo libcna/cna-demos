@@ -177,6 +177,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::AssemblyTitleAttributeEXT` -- platform.window.assembly_title
 - `CNA::CNAException` -- core.platform.host_identity
 - `CNA::Content::Cnb::AppendEmbeddedTexture2DChunks` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Cnb::CnbAnimationClipChunk::Header` -- content.cnj.pipeline_assets
+- `CNA::Content::Cnb::CnbAnimationClipChunk::Keys` -- content.cnj.pipeline_assets
+- `CNA::Content::Cnb::CnbAnimationClipChunk::Tracks` -- content.cnj.pipeline_assets
+- `CNA::Content::Cnb::CnbAnimationClipSchemaVersion` -- content.cnj.pipeline_assets
+- `CNA::Content::Cnb::CnbAnimationKeyStride` -- content.cnj.pipeline_assets
+- `CNA::Content::Cnb::CnbAnimationTrackStride` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::CnbAssetTypeIdFromName` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbAudioFormat` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbAudioFormatMax` -- content.sound_effect.cnb_codec
@@ -268,6 +274,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::DecodeTextureCubeFromCnb` -- content.cnj.pipeline_assets, content.texture_processor.pipeline_contract, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeVideoFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::EncodeAnimationClipToCnb` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::EncodeCurveToCnb` -- content.cnj.curve
 - `CNA::Content::Cnb::EncodeSongToCnb` -- content.media.cnb_codec
 - `CNA::Content::Cnb::EncodeSoundEffectToCnb` -- content.sound_effect.cnb_codec
@@ -283,10 +290,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::IsKnownCnbTextureFormat` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::MakeRgba8Texture2DData` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::ProcessImportedSoundEffect` -- content.sound_effect.imported_pcm
+- `CNA::Content::Cnb::ReadCnbKeyframe` -- content.cnj.pipeline_assets
+- `CNA::Content::Cnb::ReadCnbSeconds` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::ReadEmbeddedTexture2DChunks` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::SelectCnbTextureRepresentation` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::SoundEffectLoopPolicy` -- content.sound_effect.imported_pcm
 - `CNA::Content::Cnb::SurfaceFormatToCnbTextureFormat` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Cnb::WriteCnbKeyframe` -- content.cnj.pipeline_assets
 - `CNA::Content::Import::ImportedContentApiIsExperimental` -- content.sound_effect.imported_pcm
 - `CNA::Content::Import::ImportedPcmEncoding` -- content.sound_effect.imported_pcm
 - `CNA::Content::Import::ImportedPcmEncodingName` -- content.sound_effect.imported_pcm

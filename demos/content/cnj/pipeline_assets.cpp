@@ -3,9 +3,11 @@
 #include <algorithm>
 #include <array>
 #include <chrono>
+#include <cmath>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <limits>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -17,6 +19,7 @@
 #include "CNA/Content/Cnb/CnbAnimationClipCodec.hpp"
 #include "CNA/Content/Cnb/CnbDocument.hpp"
 #include "CNA/Content/Cnb/CnbTextureCodec.hpp"
+#include "CNA/Content/Cnb/CnbWriter.hpp"
 #include "CNA/Content/Pipeline/CnjContentPipeline.hpp"
 #include "CNA/Content/Pipeline/ModelContentPipeline.hpp"
 #include "CNA/Content/Pipeline/SoundEffectContentPipeline.hpp"
@@ -26,6 +29,9 @@
 namespace Cnb = CNA::Content::Cnb;
 namespace Pipeline = CNA::Content::Pipeline;
 using Microsoft::Xna::Framework::Graphics::ClipTargetSpaceEXT;
+using Microsoft::Xna::Framework::Graphics::AnimationClipEXT;
+using Microsoft::Xna::Framework::Graphics::BoneTrackEXT;
+using Microsoft::Xna::Framework::Graphics::KeyframeEXT;
 using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
@@ -75,6 +81,104 @@ namespace
             }
         }
         return false;
+    }
+
+    bool SameKey(const KeyframeEXT& left, const KeyframeEXT& right)
+    {
+        return left.Time == right.Time && left.Translation == right.Translation &&
+            left.Rotation == right.Rotation && left.Scale == right.Scale;
+    }
+
+    bool SameClip(const AnimationClipEXT& left, const AnimationClipEXT& right)
+    {
+        if (left.Duration != right.Duration || left.TargetSpace != right.TargetSpace ||
+            left.Tracks.size() != right.Tracks.size())
+        {
+            return false;
+        }
+        for (std::size_t track = 0u; track < left.Tracks.size(); ++track)
+        {
+            if (left.Tracks[track].BoneIndex != right.Tracks[track].BoneIndex ||
+                left.Tracks[track].Keys.size() != right.Tracks[track].Keys.size())
+            {
+                return false;
+            }
+            for (std::size_t key = 0u; key < left.Tracks[track].Keys.size(); ++key)
+            {
+                if (!SameKey(left.Tracks[track].Keys[key], right.Tracks[track].Keys[key]))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    template<class Function>
+    bool Refuses(Function&& function)
+    {
+        try
+        {
+            function();
+            return false;
+        }
+        catch (const std::exception&)
+        {
+            return true;
+        }
+    }
+
+    std::vector<std::uint8_t> ClipHeader(const double duration,
+                                         const std::uint32_t targetSpace,
+                                         const std::uint32_t trackCount,
+                                         const std::uint32_t keyCount)
+    {
+        Cnb::CnbByteWriter bytes;
+        bytes.WriteF64(duration);
+        bytes.WriteU32(targetSpace);
+        bytes.WriteU32(trackCount);
+        bytes.WriteU32(keyCount);
+        return bytes.Take();
+    }
+
+    std::vector<std::uint8_t> ClipTrack(const std::int32_t boneIndex,
+                                        const std::uint32_t firstKey,
+                                        const std::uint32_t keyCount)
+    {
+        Cnb::CnbByteWriter bytes;
+        bytes.WriteI32(boneIndex);
+        bytes.WriteU32(firstKey);
+        bytes.WriteU32(keyCount);
+        return bytes.Take();
+    }
+
+    std::vector<std::uint8_t> ClipKey(const KeyframeEXT& key)
+    {
+        Cnb::CnbByteWriter bytes;
+        Cnb::WriteCnbKeyframe(bytes, key);
+        return bytes.Take();
+    }
+
+    Cnb::CnbDocument ClipDocument(const std::uint32_t assetType,
+                                  const std::uint32_t schema,
+                                  const std::vector<std::uint8_t>& header,
+                                  const std::vector<std::uint8_t>& tracks,
+                                  const std::vector<std::uint8_t>& keys,
+                                  const int headerCopies = 1,
+                                  const int trackCopies = 1,
+                                  const int keyCopies = 1)
+    {
+        Cnb::CnbWriter writer(assetType, schema);
+        writer.SetMetadata("Microsoft.Xna.Framework.Graphics.AnimationClipEXT",
+                           "synthetic/clip");
+        for (int copy = 0; copy < headerCopies; ++copy)
+            writer.AddChunk(Cnb::CnbAnimationClipChunk::Header, header,
+                            Cnb::CnbChunkFlags::Mandatory, 8u);
+        for (int copy = 0; copy < trackCopies; ++copy)
+            writer.AddChunk(Cnb::CnbAnimationClipChunk::Tracks, tracks,
+                            Cnb::CnbChunkFlags::Mandatory, 4u);
+        for (int copy = 0; copy < keyCopies; ++copy)
+            writer.AddChunk(Cnb::CnbAnimationClipChunk::Keys, keys,
+                            Cnb::CnbChunkFlags::Mandatory, 8u);
+        return Cnb::CnbDocument::Parse(writer.Build(), "synthetic AnimationClip CNB");
     }
 
     void CnjPipelineAssets(CnaDemos::DemoContext& ctx)
@@ -280,6 +384,153 @@ namespace
                       decodedClip.Tracks[0].Keys[1].Translation.Z == 6.0f,
                   "the AnimationClip CNB preserves duration, scene-node target and both authored keyframes");
 
+        ctx.Check(Cnb::CnbAnimationClipChunk::Header ==
+                          Cnb::MakeChunkId('A', 'C', 'L', 'H') &&
+                      Cnb::CnbAnimationClipChunk::Tracks ==
+                          Cnb::MakeChunkId('A', 'C', 'L', 'T') &&
+                      Cnb::CnbAnimationClipChunk::Keys ==
+                          Cnb::MakeChunkId('A', 'C', 'L', 'K') &&
+                      Cnb::CnbAnimationClipSchemaVersion == 1u &&
+                      Cnb::CnbAnimationTrackStride == 12u &&
+                      Cnb::CnbAnimationKeyStride == 48u,
+                  "the AnimationClip schema freezes all chunk IDs, version and row strides");
+
+        const auto encodedClip = Cnb::EncodeAnimationClipToCnb(decodedClip, "Animations/roundtrip");
+        const auto repeatedClip = Cnb::EncodeAnimationClipToCnb(decodedClip, "Animations/roundtrip");
+        const Cnb::CnbDocument encodedDocument =
+            Cnb::CnbDocument::Parse(encodedClip, "round-trip AnimationClip CNB");
+        const AnimationClipEXT restoredClip = Cnb::DecodeAnimationClipFromCnb(encodedDocument);
+        ctx.Check(encodedClip == repeatedClip && SameClip(restoredClip, decodedClip) &&
+                      encodedDocument.Metadata().assetTypeName ==
+                          "Microsoft.Xna.Framework.Graphics.AnimationClipEXT" &&
+                      encodedDocument.Metadata().contentName == "Animations/roundtrip" &&
+                      encodedDocument.FindAll(Cnb::CnbAnimationClipChunk::Header).size() == 1u &&
+                      encodedDocument.FindAll(Cnb::CnbAnimationClipChunk::Tracks).size() == 1u &&
+                      encodedDocument.FindAll(Cnb::CnbAnimationClipChunk::Keys).size() == 1u,
+                  "the full codec is byte-deterministic and restores the exact real clip and metadata");
+
+        const KeyframeEXT directKey{
+            System::TimeSpan::FromSeconds(-1.25),
+            {-2.0f, 3.0f, -4.0f},
+            {0.1f, -0.2f, 0.3f, -0.4f},
+            {1.5f, 2.5f, 3.5f}};
+        const std::vector<std::uint8_t> directKeyBytes = ClipKey(directKey);
+        Cnb::CnbByteReader directKeyReader(directKeyBytes, "direct keyframe");
+        const KeyframeEXT restoredKey = Cnb::ReadCnbKeyframe(directKeyReader);
+        ctx.Check(directKeyBytes.size() == Cnb::CnbAnimationKeyStride &&
+                      directKeyReader.Remaining() == 0u && SameKey(restoredKey, directKey),
+                  "the shared keyframe helpers preserve time, translation, rotation and scale in 48 bytes");
+
+        Cnb::CnbByteWriter secondsWriter;
+        secondsWriter.WriteF64(1.25);
+        const std::vector<std::uint8_t> secondsBytes = secondsWriter.Take();
+        Cnb::CnbByteReader secondsReader(secondsBytes, "valid seconds");
+        const double seconds = Cnb::ReadCnbSeconds(secondsReader, "the sample time");
+        const auto refusesSeconds = [](const std::vector<std::uint8_t>& bytes)
+        {
+            return Refuses([&]
+            {
+                Cnb::CnbByteReader reader(bytes, "invalid seconds");
+                (void)Cnb::ReadCnbSeconds(reader, "the sample time");
+            });
+        };
+        Cnb::CnbByteWriter nanWriter;
+        nanWriter.WriteF64(std::numeric_limits<double>::quiet_NaN());
+        Cnb::CnbByteWriter infiniteWriter;
+        infiniteWriter.WriteF64(std::numeric_limits<double>::infinity());
+        ctx.Check(seconds == 1.25 && secondsReader.Remaining() == 0u &&
+                      refusesSeconds(nanWriter.Take()) && refusesSeconds(infiniteWriter.Take()) &&
+                      refusesSeconds(std::vector<std::uint8_t>{0u, 1u, 2u}),
+                  "bounded second decoding accepts an exact finite value and refuses NaN, infinity and truncation");
+
+        AnimationClipEXT paletteClip;
+        paletteClip.Duration = System::TimeSpan::FromSeconds(3.0);
+        paletteClip.TargetSpace = ClipTargetSpaceEXT::JointPalette;
+        BoneTrackEXT populated;
+        populated.BoneIndex = 4;
+        populated.Keys = {directKey,
+                          {System::TimeSpan::FromSeconds(2.75), {8.0f, 9.0f, 10.0f}}};
+        BoneTrackEXT emptyTrack;
+        emptyTrack.BoneIndex = -1;
+        paletteClip.Tracks = {populated, emptyTrack};
+        const AnimationClipEXT restoredPalette = Cnb::DecodeAnimationClipFromCnb(
+            Cnb::CnbDocument::Parse(Cnb::EncodeAnimationClipToCnb(paletteClip),
+                                    "palette AnimationClip CNB"));
+        const AnimationClipEXT emptyClip;
+        const AnimationClipEXT restoredEmpty = Cnb::DecodeAnimationClipFromCnb(
+            Cnb::CnbDocument::Parse(Cnb::EncodeAnimationClipToCnb(emptyClip),
+                                    "empty AnimationClip CNB"));
+        ctx.Check(SameClip(restoredPalette, paletteClip) && SameClip(restoredEmpty, emptyClip) &&
+                      restoredPalette.TargetSpace == ClipTargetSpaceEXT::JointPalette &&
+                      restoredPalette.Tracks[1].Keys.empty() && restoredEmpty.Tracks.empty(),
+                  "joint-palette, negative/empty-track and wholly empty clip states remain distinct");
+
+        const auto emptyHeader = ClipHeader(1.0, 0u, 0u, 0u);
+        const std::vector<std::uint8_t> emptyTable;
+        ctx.Check(
+            Refuses([&]
+            {
+                (void)Cnb::DecodeAnimationClipFromCnb(ClipDocument(
+                    Cnb::CnbAssetTypeId::Curve, 1u, emptyHeader, emptyTable, emptyTable));
+            }) &&
+            Refuses([&]
+            {
+                (void)Cnb::DecodeAnimationClipFromCnb(ClipDocument(
+                    Cnb::CnbAssetTypeId::AnimationClip, 2u, emptyHeader,
+                    emptyTable, emptyTable));
+            }) &&
+            Refuses([&]
+            {
+                (void)Cnb::DecodeAnimationClipFromCnb(ClipDocument(
+                    Cnb::CnbAssetTypeId::AnimationClip, 1u, emptyHeader,
+                    emptyTable, emptyTable, 0, 1, 1));
+            }) &&
+            Refuses([&]
+            {
+                (void)Cnb::DecodeAnimationClipFromCnb(ClipDocument(
+                    Cnb::CnbAssetTypeId::AnimationClip, 1u, emptyHeader,
+                    emptyTable, emptyTable, 2, 1, 1));
+            }),
+            "wrong identity/version and missing or duplicate mandatory clip tables are refused");
+
+        Cnb::CnbByteWriter nanKey;
+        nanKey.WriteF64(std::numeric_limits<double>::quiet_NaN());
+        nanKey.WriteZeros(Cnb::CnbAnimationKeyStride - sizeof(double));
+        ctx.Check(
+            Refuses([&]
+            {
+                (void)Cnb::DecodeAnimationClipFromCnb(ClipDocument(
+                    Cnb::CnbAssetTypeId::AnimationClip, 1u,
+                    ClipHeader(1.0, 2u, 0u, 0u), emptyTable, emptyTable));
+            }) &&
+            Refuses([&]
+            {
+                (void)Cnb::DecodeAnimationClipFromCnb(ClipDocument(
+                    Cnb::CnbAssetTypeId::AnimationClip, 1u,
+                    ClipHeader(1.0, 0u, 1u, 0u), emptyTable, emptyTable));
+            }) &&
+            Refuses([&]
+            {
+                (void)Cnb::DecodeAnimationClipFromCnb(ClipDocument(
+                    Cnb::CnbAssetTypeId::AnimationClip, 1u,
+                    ClipHeader(1.0, 0u, 1u, 1u), ClipTrack(0, 1u, 1u),
+                    ClipKey(directKey)));
+            }) &&
+            Refuses([&]
+            {
+                (void)Cnb::DecodeAnimationClipFromCnb(ClipDocument(
+                    Cnb::CnbAssetTypeId::AnimationClip, 1u,
+                    ClipHeader(std::numeric_limits<double>::quiet_NaN(), 0u, 0u, 0u),
+                    emptyTable, emptyTable));
+            }) &&
+            Refuses([&]
+            {
+                (void)Cnb::DecodeAnimationClipFromCnb(ClipDocument(
+                    Cnb::CnbAssetTypeId::AnimationClip, 1u,
+                    ClipHeader(1.0, 0u, 1u, 1u), ClipTrack(0, 0u, 1u), nanKey.Take()));
+            }),
+            "invalid target/count/range and non-finite duration or key time are refused independently");
+
         Pipeline::ContentBuildRequest xnbRequest;
         xnbRequest.sourceRoot = root;
         xnbRequest.source = "walk.cnj";
@@ -355,6 +606,16 @@ CNA_DEMOS_CONSOLE(CnjPipelineAssets, {
              "CNA::Content::Pipeline::ContentPipeline::Build",
              "CNA::Content::Cnb::DecodeTexture3DFromCnb",
              "CNA::Content::Cnb::DecodeTextureCubeFromCnb",
+             "CNA::Content::Cnb::CnbAnimationClipChunk::Header",
+             "CNA::Content::Cnb::CnbAnimationClipChunk::Tracks",
+             "CNA::Content::Cnb::CnbAnimationClipChunk::Keys",
+             "CNA::Content::Cnb::CnbAnimationClipSchemaVersion",
+             "CNA::Content::Cnb::CnbAnimationTrackStride",
+             "CNA::Content::Cnb::CnbAnimationKeyStride",
+             "CNA::Content::Cnb::ReadCnbSeconds",
+             "CNA::Content::Cnb::WriteCnbKeyframe",
+             "CNA::Content::Cnb::ReadCnbKeyframe",
+             "CNA::Content::Cnb::EncodeAnimationClipToCnb",
              "CNA::Content::Cnb::DecodeAnimationClipFromCnb"},
     .tags = {"content", "pipeline", "cnj", "texture3d", "texturecube", "animation", "cnaext"},
     .assets = {"textures/cube_faces.dds"},

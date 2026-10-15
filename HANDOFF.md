@@ -913,6 +913,32 @@ issue, screenshot, visual-quality or genuine-XNA execution claim is added. Audit
 public `CnbAnimationClipCodec.hpp` contract next, reusing the existing CNJ AnimationClip and runtime
 model-animation evidence.
 
+Focused **971-CNB-AnimationClip-codec-disposition** extends the stable
+`content.cnj.pipeline_assets` demo from13 to20 controls without adding a catalog ID and dispositions
+all11 public `CnbAnimationClipCodec.hpp` declarations. It freezes `ACLH`/`ACLT`/`ACLK`, schema1 and
+the 12/48-byte track/key strides. The real two-key SceneNode result re-encodes twice byte-identically
+with exact metadata and one of each schema chunk, then restores duration, target space, bone index
+and every key field.
+
+Direct shared-helper controls preserve a deliberately asymmetric negative-time key's translation,
+quaternion and nonuniform scale in exactly48 bytes. Bounded second decoding accepts exact finite
+1.25 and refuses NaN, infinity and truncation before `TimeSpan`. A second JointPalette clip keeps a
+populated track distinct from a negative-index empty track, while a wholly empty clip preserves its
+default target and zero tables. Independently built containers refuse wrong identity/version,
+missing/duplicate mandatory tables, invalid target, table-count disagreement, an out-of-range key
+slice and non-finite duration/key time.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE-labelled and ten
+OPENGLES3-labelled runs pass20/20 with byte-identical stdout SHA-256
+`d4370f58c051ec3057e53f3cda4e06f0afbce8e52c70ab5e6f81e048c44fa364` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata remains683/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA/C totals remain unchanged; ten names enter the CNA-extension
+appendix and Complete956 still marks eight post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-971-animation-codec/*` and `/tmp/checkpoint-971-animation-report.json`. No CNA
+issue, screenshot, visual-quality or genuine-XNA execution claim is added. Audit the public
+`CnbModelData.hpp`/`CnbModelCodec.hpp` family next, reusing the existing model pipeline and runtime
+evidence before adding another ID.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3049,8 +3075,11 @@ adds the separate build-time source-pipeline workflow and closes all44 public
 rasterization, CNB/XNB and font-sheet behavior; it records ISSUE-108 for inverted direct ranges.
 Focused970 extends the stable CNJ Curve workflow and closes all six public `CnbCurveCodec.hpp`
 declarations through exact real-asset metadata, deterministic complete-key round trips, every
-persisted enum and representative schema refusals. Audit `CnbAnimationClipCodec.hpp` next, reusing
-the existing CNJ AnimationClip and runtime model-animation evidence. The earlier native
+persisted enum and representative schema refusals. Focused971 extends the stable CNJ pipeline
+workflow and closes all11 public `CnbAnimationClipCodec.hpp` declarations through exact shared
+time/key helpers, both target spaces, deterministic complete-clip round trips and representative
+schema refusals. Audit the public `CnbModelData.hpp`/`CnbModelCodec.hpp` family next, reusing the
+existing model pipeline and runtime evidence before adding another ID. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds

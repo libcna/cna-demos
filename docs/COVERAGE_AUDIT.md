@@ -957,6 +957,24 @@ Curve demos retain detailed evaluation, tangent, collection and loop behavior; t
 workflow retains a separate genuine-XNB source. This extension adds no screenshot, visual or
 genuine-XNA execution claim.
 
+#### `CnbAnimationClipCodec.hpp` declaration-level disposition
+
+The pinned header exposes eleven public declarations: three schema chunk IDs, the schema version,
+two table strides, three shared scalar/keyframe helpers and the complete encoder/decoder.
+Focused971 extends `content.cnj.pipeline_assets`, whose real inline AnimationClip already owns the
+registered source route and exact decoded runtime value.
+
+| Declaration family | Disposition |
+|---|---|
+| Chunk IDs, schema and strides | `ACLH`, `ACLT`, `ACLK`, schema 1, the 12-byte track row and 48-byte key row are asserted exactly. A real pipeline result is re-encoded with exact canonical type/logical name metadata and one of each mandatory schema chunk. |
+| ReadCnbSeconds | Direct bounded decoding preserves 1.25 seconds exactly and consumes the whole scalar. NaN, positive infinity and a truncated value are separately refused before `TimeSpan` construction; the full decoder exercises the same helper for duration and every key time. Negative finite time is retained by the keyframe helper rather than confused with a representation error. |
+| WriteCnbKeyframe and ReadCnbKeyframe | A deliberately asymmetric key with negative time, signed translation, four distinct quaternion components and nonuniform scale writes exactly 48 bytes and restores every field with no unread bytes. Model and standalone AnimationClip schemas share these helpers, so a second embedded-model byte spelling would duplicate the same implementation rather than add behavior. |
+| EncodeAnimationClipToCnb and DecodeAnimationClipFromCnb | The real two-key SceneNode clip encodes twice byte-identically and restores exact duration, target space, bone index and key fields. A second JointPalette clip preserves a populated track plus a distinct negative-index empty track; a wholly empty clip preserves its default target and zero tables. Wrong identity/version, missing/duplicate mandatory tables, invalid target space, mismatched table counts, an out-of-range key slice, and non-finite duration/key time are independently refused. Generic malformed container layout and array-budget saturation remain the shared document/read-limit audits. |
+
+All eleven public declarations now have direct native helper/schema/round-trip evidence. Existing
+model animation demos retain sampling, hierarchy, interpolation and rendered behavior; this CPU
+codec audit adds no screenshot, visual-quality or genuine-XNA execution claim.
+
 #### `CnbSpriteFontCodec.hpp` declaration-level disposition
 
 The pinned header exposes 21 public declarations: five chunk identifiers, six schema/stride/limit

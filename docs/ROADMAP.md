@@ -318,7 +318,9 @@ a check that all authored colors remain visible and that a blank texture row can
   cropping and kerning, plus all 21 public SpriteFont codec declarations through exact schema,
   complete table/atlas round trips and relationship refusals), ✅ `content.cnj.pipeline_assets` (real registered Texture3D, TextureCube and
   AnimationClip CNJ builds with exact decoded CNB values, sidecar dependencies, fixed-parameter
-  refusal and the clip's intentional CNB-only route), ✅ `content.xnb.pipeline_transcode` (all nine
+  refusal and the clip's intentional CNB-only route; all 11 public AnimationClip codec
+  declarations are dispositioned through exact shared time/key helpers, deterministic complete
+  round trips, both target spaces, empty tracks and representative schema refusals), ✅ `content.xnb.pipeline_transcode` (all nine
   supported XNB roots transcoded through public pipeline registration into decoded native CNB,
   including exact volume/cube bytes, external Song/Video deployment and Model schema-2 shared
   resources), ✅ `content.xnb.output_pipeline` (all eleven stable output IDs, ten built-in writer
