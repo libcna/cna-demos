@@ -4767,3 +4767,27 @@ warning-free corrected source builds with at most three jobs, metadata remains68
 SOFTWARE CTest passes ten repetitions and both validator suites pass. Generated totals remain
 unchanged and one adapter name enters the CNA-extension appendix. Evidence:
 `/tmp/checkpoint-985-texture-compression-adapter/*`. Audit the build-time media decoder next.
+
+### Build-time media decoder audit
+
+Focused986 adds `content.media.build_time_decoder`, a renderer-free standalone over the optional
+build-time FFmpeg boundary. It dispositions every public declaration in
+`BuildTimeMediaDecoder.hpp`.
+
+| Public family | Current disposition |
+|---|---|
+| Availability and carriers | The available build reports an empty refusal and a non-`none` fingerprint identity. `DecodedAudio` and `ProbedVideo` defaults are checked field-completely. The unavailable implementation remains a build configuration path and returns the documented skip. |
+| Direct probes | The authored WMV reports 160x120 at 15 fps, positive bit rate, about three seconds and an audio stream. The authored Ogg reports about four seconds. Missing media and an audio-only file take distinct direct refusal paths. |
+| Direct audio decode | Any-format Ogg decoding preserves mono 22050-Hz shape as complete PCM16 frames. The MPEG-only route accepts a real MP3 and resamples to 44100 Hz. Both MPEG-only and WindowsMedia-only routes reject readable Ogg input. |
+| Pipeline adapters | Video metadata converts ticks to milliseconds and song duration returns milliseconds; both contain unreadable input as `nullopt`. The compressed-sound adapter returns owned signed PCM16 at 44100 Hz with exact frame accounting and no invented loop, and likewise contains failure. |
+| Windows Media encode | One second of generated mono PCM becomes a nonempty WMA/ASF file and decodes through the WindowsMedia-only route with the requested shape. Empty input is refused. Encoded bytes and lossy waveform quality are FFmpeg-version-specific and intentionally not asserted. |
+
+The warning-free corrected source builds with at most three jobs and metadata is688/0. Ten
+SOFTWARE-labelled and ten OPENGLES3-labelled direct runs pass12/12 with byte-identical stdout
+SHA-256 `92b193d68f4003a716c26cf7c2cf5269a0d76ec42051d003b14c53802345a69c` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator self-test suites pass. Generated XNA/C
+totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; 24 public names
+enter the CNA-extension appendix. Complete981 marks this fifth post-baseline ID absent. Evidence:
+`/tmp/checkpoint-986-build-time-media/*`. No audio/video device, playback, listening, screenshot or
+visual inspection is claimed. The initial path-composition compiler error belonged to the demo and
+was corrected; no CNA defect appeared.

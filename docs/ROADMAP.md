@@ -301,7 +301,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (62 demos; remaining below)
+## Phase 8 -- content 🟨 (63 demos; remaining below)
 
 - ✅ Existing `content.texture_processor.resize_to_power_of_two` now verifies XNB-targeted
   Reach/HiDef mipmap processing, resized payloads matching its rendered CNB and the distinct native
@@ -10465,3 +10465,21 @@ SOFTWARE CTest passes ten repetitions and both validator suites pass. Generated 
 unchanged; one public name enters the CNA-extension appendix and Complete981 still marks the same
 four post-baseline IDs absent. Evidence:`/tmp/checkpoint-985-texture-compression-adapter/*`. No CNA
 defect appeared. Audit `BuildTimeMediaDecoder.hpp` next against real generated media fixtures.
+
+## Focused986-build-time-media-decoder
+
+The new renderer-free `content.media.build_time_decoder` standalone closes every public declaration
+in `BuildTimeMediaDecoder.hpp` with 12 controls. It probes the real WMV and four-second Ogg; decodes
+Ogg and format-restricted MP3 to complete PCM16; verifies requested 44100-Hz resampling; exercises
+the video, song and compressed-sound adapters including contained failures; distinguishes required
+format mismatches; and encodes generated PCM to WMA/ASF before decoding it through the
+WindowsMedia-only route. Runtime playback remains covered by the existing media demos.
+
+The corrected source compiles without warnings with at most three jobs and metadata is688/0. Ten
+SOFTWARE-labelled and ten OPENGLES3-labelled direct runs pass12/12 with identical stdout SHA-256
+`92b193d68f4003a716c26cf7c2cf5269a0d76ec42051d003b14c53802345a69c` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator suites pass. Generated XNA/C totals remain
+303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; 24 public names enter the CNA-
+extension appendix and Complete981 marks five post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-986-build-time-media/*`. No CNA defect appeared. Audit `DirectXFileReader.hpp`
+next against the existing generated `.x` fixture, followed by the adjacent FBX reader.

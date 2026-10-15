@@ -10,6 +10,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   replication, deterministic output, encoder options and malformed-input refusal.
 - Completed the adjacent texture-compression adapter with exact CNB-format mapping, option
   propagation and unsupported-format refusal.
+- Added direct build-time media coverage for Ogg/MP3/WMV decode/probes, pipeline adapters and a
+  generated PCM-to-WMA-to-PCM round trip without starting playback.
 - Enabled CNA's optional Inspector in `linux-full` and added focused protocol, authenticated
   loopback-session and asynchronous bounded-preview workflows.
 - Covered every Inspector v1 payload family, strict header/type/length/request bounds, explicit

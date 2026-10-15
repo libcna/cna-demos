@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**687 demos** in 19 categories. Kinds: console 187, game 296, standalone 204. Automation: automated 651, manual 3, smoke-only 33.
+**688 demos** in 19 categories. Kinds: console 187, game 296, standalone 205. Automation: automated 652, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 62 | 62 | 0 | 0 | 47 / 0 / 14 / 0 / 1 | 47 / 0 / 14 / 0 / 1 |
+| content | 63 | 63 | 0 | 0 | 47 / 0 / 14 / 0 / 2 | 47 / 0 / 14 / 0 / 2 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -32,8 +32,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
-- OPENGLES3: absent from report: `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
+- SOFTWARE: absent from report: `content.media.build_time_decoder`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
+- OPENGLES3: absent from report: `content.media.build_time_decoder`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -488,6 +488,30 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::BlockCompressionOptions::refinementRounds` -- content.texture_processor.block_compression
 - `CNA::Content::Pipeline::BuildCnbTexture2DData` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::BuildFontFromTextureSheet` -- content.sprite_font.pipeline_contract
+- `CNA::Content::Pipeline::BuildTimeMedia::AudioSourceFormat` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::DecodeAudio` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::DecodedAudio` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::DecodedAudio::bitsPerSample` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::DecodedAudio::channels` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::DecodedAudio::durationTicks` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::DecodedAudio::pcm` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::DecodedAudio::sampleRate` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::EncodeWindowsMediaAudio` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::Identity` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::IsAvailable` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::MakeCompressedSoundDecoder` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::MakeSongDurationProbe` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::MakeVideoMetadataProbe` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::ProbeAudioDurationTicks` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::ProbeVideo` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::ProbedVideo` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::ProbedVideo::bitsPerSecond` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::ProbedVideo::durationTicks` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::ProbedVideo::framesPerSecond` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::ProbedVideo::hasAudio` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::ProbedVideo::height` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::ProbedVideo::width` -- content.media.build_time_decoder
+- `CNA::Content::Pipeline::BuildTimeMedia::UnavailableReason` -- content.media.build_time_decoder
 - `CNA::Content::Pipeline::CanonicalModelValue` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::CnjImporter::Identity` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::CnjImporter::Import` -- content.cnj.pipeline_assets
