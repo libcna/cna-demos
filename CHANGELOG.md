@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Enabled CNA's optional Inspector in `linux-full` and added focused protocol, authenticated
+  loopback-session and asynchronous bounded-preview workflows.
+- Covered every Inspector v1 payload family, strict header/type/length/request bounds, explicit
+  agent lifecycle, both provider choices, negotiated diagnostics, reconnect and preview failures
+  that leave the client session usable.
 - Added a FULL diagnostics bounds workflow for process-history overwrite, producer-buffer drops,
   bounded recording, malformed zone/frame transitions and the 240-frame history limit.
 - Added a retained frame-statistics source workflow with explicit gauge/frame-counter metadata,

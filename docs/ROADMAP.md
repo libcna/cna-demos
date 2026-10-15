@@ -635,7 +635,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032 and -033).
 - Remaining net: voice (manual).
 
-## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (22 demos)
+## Phase 13 -- devices, phone, design, diagnostics, Inspector, platform, CNA extensions 🟨 (25 demos)
 - ✅ `devices.*` (4): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
   AccelerometerFailedException, Environment::DeviceType), CNAEXT keyboard-emulated accelerometer,
   VibrateController, CNA::Devices SystemInfo/Locale/PowerInfo, ✅ DisplayInfo (content scale, safe
@@ -650,6 +650,11 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   with provider-cursor lifecycle events, registered frame-source collection/lifetime, plus Logger
   sinks and levels. Bounded history, drop reporting and malformed-use containment are also covered;
   label-only enum permutations and concurrency stress remain intentionally in CNA's unit tests.
+- 🟨 `inspector.*` (3): all version-one protocol payloads and strict codec boundaries,
+  authenticated loopback agent/client negotiation, selective diagnostics, reconnect and explicit
+  asynchronous bounded previews. Remaining audit: request-rate, pending-preview, cooldown and
+  capability-negotiation boundaries, followed by declaration-level dispositions for the three
+  public headers. The optional module is enabled only by `linux-full`.
 - ✅ `cnaext.*` (4): AsciiPostProcessEffect (every renderer), CRTEffect and DepthEffect (shader
   renderers), DebugDraw.
 - `platform.*`: ✅ renderer selection with fallback chain (standalone), ✅
@@ -10373,3 +10378,30 @@ dispositions. The remaining `cna_content_manager_create_resource` route keeps it
 unsupported disposition until a real embedded-resource store exists. Evidence is archived under
 `build/linux-full/reports/checkpoint-981-complete-*`. Continue with the highest-value
 undispositioned public behavior outside the Content header family.
+
+## Focused982-Inspector-protocol-session-preview
+
+The `linux-full` preset now enables CNA's optional Inspector and the conditional `inspector`
+category links `CNA::Inspector`. Three focused console demos add the first project-level coverage.
+`inspector.protocol.round_trip` exercises the exact protocol version and limits, capability and
+snapshot masks, fixed header and all ten typed payload families; malformed header, type, length,
+trailing-data, request-bound, preview-state and string-bound cases are refused.
+
+`inspector.agent.loopback_session` covers both Agent provider choices, explicit and generated
+tokens, authentication refusal before provider access, exact negotiated identity/capabilities,
+demand-driven selective snapshots and resolved loss-aware events, normal unavailable previews,
+ping, disconnect/reconnect, idempotent stop and guarded remote binding.
+`inspector.agent.preview_pipeline` installs the public asynchronous provider, observes exact
+request bounds, polls Pending to a bounded Ready PNG, retires the ticket and contains malformed
+requests and over-limit provider output while preserving the connection.
+
+The warning-free build uses at most three jobs and metadata is686/0. Ten SOFTWARE and ten
+OPENGLES3-labelled runs of each ID pass20/20,10/10 and18/18 with byte-identical combined stdout
+SHA-256 `1623907d20ef5df25856552529e900eacb7b7de6a5f1564db283c3196dd25cda` and
+empty stderr. The exact SOFTWARE CTest set passes ten repetitions and both validator suites pass.
+Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes;
+54 Inspector names enter the extension appendix. Complete981 correctly marks all three IDs absent.
+Evidence:`/tmp/checkpoint-982-inspector-*`. A sandboxed listener attempt failed solely because
+socket creation was denied; all authoritative loopback runs occurred outside that restriction. No
+browser UI, remote connection, rendering, screenshot or CNA defect is claimed. Extend these same
+IDs with the remaining backpressure and negotiation boundaries next.

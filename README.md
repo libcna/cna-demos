@@ -93,7 +93,7 @@ minutes. `cmake --list-presets` shows all presets:
 | `windowless` | SOFTWARE (default), HEADLESS, STUB | nothing -- no display, no GL siblings; used by CI |
 | `diagnostics-full` | windowless + `CNA_DIAGNOSTICS=FULL` | full profiler zones and trace recording |
 | `linux-multi` | OPENGLES3 (default), OPENGL33, SOFTWARE, HEADLESS, STUB | easy-gl/meta-gl |
-| `linux-full` | linux-multi + SDL_GPU, C API | libshaderc; a supported SDL GPU runtime driver |
+| `linux-full` | linux-multi + SDL_GPU, C API, Inspector | libshaderc; a supported SDL GPU runtime driver |
 
 Without presets: `cmake -S . -B build -DCNA_ROOT_DIR=/path/to/cna -DCNA_GRAPHICS_RENDERER=...`.
 `CNA_ROOT_DIR` may also be set in the environment. Renderer options are CNA's own

@@ -19,6 +19,7 @@ cna_demos_add_category(input)                # Keyboard, Mouse, GamePad, TouchPa
 cna_demos_add_category(storage)              # StorageDevice/StorageContainer, TitleContainer
 cna_demos_add_category(platform)             # CNA platform layer and renderer selection
 cna_demos_add_category(diagnostics)          # CNA diagnostics and instrumentation
+cna_demos_add_category(inspector REQUIRES CNA_BUILD_INSPECTOR LIBRARIES CNA::Inspector)
 cna_demos_add_category(devices)              # Microsoft.Devices sensors and CNA device extensions
 cna_demos_add_category(phone   LIBRARIES CNA::Phone)    # Microsoft.Phone shell and notifications
 cna_demos_add_category(design  LIBRARIES CNA::Design)   # Microsoft.Xna.Framework.Design converters

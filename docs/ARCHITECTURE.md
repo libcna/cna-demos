@@ -65,7 +65,8 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
   `SYSTEM` (CNA headers do not trigger cna-demos' own warning flags).
 * Forced CNA options: `CNA_BUILD_TESTS=OFF`, `CNA_BUILD_EXAMPLES=OFF` (and easy-gl's). Defaults
   changed by cna-demos: `CNA_CNAEXT=ON`, `CNA_DEVICES=ON` -- a demo collection wants the optional
-  modules. Each can be turned off; dependent categories then disappear.
+  modules. The `linux-full` preset additionally enables `CNA_BUILD_INSPECTOR`; its category links
+  the opt-in `CNA::Inspector` target. Each can be turned off; dependent categories then disappear.
 * Modules outside the umbrella (`CNA::Net`, `CNA::GamerServices`, `CNA::Phone`, `CNA::Design`)
   are linked by the categories that need them (`demos/CMakeLists.txt`).
 * Standalone intermediate XML tools (`content.custom.intermediate_*`) and the XNA component

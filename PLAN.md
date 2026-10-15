@@ -67,6 +67,9 @@ Open decisions (to settle when the phase needs them):
   generated sources by `cna_add_content(... FORMAT xnb)`; nothing is copied from CNA's corpus.
 * ~~C API demo preset~~ -- implemented: `linux-full` enables `CNA_BUILD_C_API=ON`, and the
   `c_api` standalone family covers the Phase 14 areas. Deeper C ABI member coverage remains open.
+* ~~Inspector build integration~~ -- implemented: `linux-full` enables `CNA_BUILD_INSPECTOR=ON`
+  and the conditional `inspector` category links `CNA::Inspector`; smaller presets keep CNA's
+  compiled-out default and omit that category.
 
 ## 3. How work proceeds
 

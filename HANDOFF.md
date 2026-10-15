@@ -21,7 +21,8 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 30), 8 (content, 61), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
-* In progress too: 13 (devices 5, phone 1, design 4, diagnostics 6 + logger 2, cnaext 4).
+* In progress too: 13 (devices 5, phone 1, design 4, diagnostics 6 + logger 2, inspector 3,
+  cnaext 4).
 * In progress: 14 (C API, 177 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
@@ -68,15 +69,16 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-683 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
+686 project-built catalog demos in19 categories: math78, game33, graphics185, audio23, core6,
 content61, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform3 and c_api177. Kinds are184 console,296 game and203 standalone;
-647 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and203
+standalone; 650 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete981's full runtime reports; they include all683
-catalog IDs in both renderer suites with no absent post-baseline IDs.
+baseline IDs in both renderer suites and correctly mark the three post-baseline Inspector IDs
+absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete981's
-full runtime reports are the baseline inputs for the683-ID catalog. Selected semantic
+full runtime reports are the baseline inputs for the683-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -1210,6 +1212,32 @@ outside those restrictions. The explicit unsupported disposition for
 `cna_content_manager_create_resource` remains correct and does not justify a construction-plus-
 failure counting demo. Resume the broader public API behavior audit at the highest-value
 undispositioned surface.
+
+Focused **982-Inspector-protocol-session-preview** enables CNA's optional Inspector in the
+`linux-full` preset and adds the conditional `inspector` category with three focused console demos.
+`inspector.protocol.round_trip` covers all ten version-one payload families, the fixed 24-byte
+header, all public carrier state and exact protocol limits; its strict refusal groups include bad
+magic/type/header size, packet type/length/trailing data, invalid request bounds, pending state and
+encoded-string length. `inspector.agent.loopback_session` starts an injected provider, rejects bad
+authentication before provider access, negotiates exact identity/capabilities/limits, performs
+demand-driven selective snapshot and loss-aware event requests, handles unavailable previews,
+pings, disconnects/reconnects, stops idempotently and uses the process-provider overload with a
+generated 256-bit token. Non-loopback binding remains refused without explicit authorization.
+`inspector.agent.preview_pipeline` installs the public asynchronous provider, observes exact request
+bounds, polls Pending to a bounded Ready PNG, retires the ticket and contains malformed requests
+and over-limit provider output without disconnecting the client.
+
+The warning-free build uses at most three jobs and metadata is686/0. Ten SOFTWARE and ten
+OPENGLES3-labelled runs of all three IDs pass20/20,10/10 and18/18 with byte-identical combined
+stdout SHA-256 `1623907d20ef5df25856552529e900eacb7b7de6a5f1564db283c3196dd25cda`
+and empty stderr. The exact SOFTWARE CTest set passes ten repetitions; both validator suites pass.
+Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes;
+54 Inspector names enter the CNA-extension appendix, and Complete981 correctly marks all three new
+IDs absent. Evidence:`/tmp/checkpoint-982-inspector-*`. A sandboxed loopback start failed because
+the environment denied listener creation; every authoritative network run occurred outside that
+restriction. No browser UI, external connection, remote binding, rendering, screenshot or CNA
+defect is claimed. Extend these stable workflows with request-rate, pending-preview, cooldown and
+capability-negotiation boundaries next; avoid a new ID unless one represents a separate concept.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -3388,6 +3416,11 @@ tree is now dispositioned. The sole remaining `content.h` C route,
 disposition: the implementation has no embedded-resource store, and adding construction plus its
 predictable failure would inflate the demo count without demonstrating a usable behavior. Keep
 that disposition until CNA gains a real resource-backed workflow.
+Focused982 enables the optional Inspector in `linux-full` and adds three coherent demos covering
+the complete public wire-codec family, authenticated agent/client lifecycle, demand-driven
+snapshot/events and asynchronous bounded previews. Extend those stable IDs with request-rate,
+pending-preview, cooldown and capability-negotiation boundaries next, then finish an explicit
+declaration-level disposition for `Protocol.hpp`, `Agent.hpp` and `Client.hpp`.
 The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
