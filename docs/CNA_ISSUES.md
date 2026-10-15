@@ -15,6 +15,29 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-107 -- XNB output digest documentation gives an impossible example
+
+- **Area/API:** `CNA::Content::Pipeline::XnbOutputOptionsDigest`, declared in
+  `XnbOutputContentPipeline.hpp`.
+- **Demo/reproduction:** run `content.xnb.output_pipeline`. The public function returns `w5run`
+  for the documented defaults and `d5h4p` for DesktopGL/version5/HiDef/LZ4/portable names. The
+  latter digest also appears in the resolved writer identity and drives an actual deterministic
+  container whose header is `d`, version5 and flags `0x41`.
+- **Observed:** the header documents a human-readable result “such as `w5rn-x`”. The implementation
+  always appends exactly five fields with no separators: one platform byte, one decimal version,
+  one profile byte (`r`/`h`), one compression byte (`u`/`x`/`4`) and one reader-style byte
+  (`n`/`p`). It therefore cannot produce the documented six-character hyphenated example.
+- **Expected:** the example should use a value the public function can return, such as default
+  `w5run`, or explicitly document the five field positions without an example that suggests a
+  different grammar.
+- **Cause/source evidence:** the implementation in `XnbOutputContentPipeline.cpp` appends the five
+  values directly and the same digest is incorporated into both writer and codec versions. This
+  is a stale public comment, not a byte-output or incremental-invalidation defect.
+- **Scope/status:** documentation-only, so the demo remains a passing workflow and has no runtime
+  `knownIssue` marker. Open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified and no upstream message
+  was sent.
+
 ### CNA-DEMOS-ISSUE-106 -- Pre-built content compiler reports every service option as an FX option
 
 - **Area/API:** `CNA::Content::Pipeline::ContentCompilerOptions` and the pre-built-registry

@@ -832,6 +832,24 @@ shared-route/boundary disposition. The result establishes deterministic CPU tran
 native-data semantics for all supported roots; it makes no genuine-XNA execution, GPU, audio,
 video-decoding, playback, screenshot or visual-quality claim.
 
+#### `XnbOutputContentPipeline.hpp` declaration-level disposition
+
+The pinned header exposes eleven persisted `XnbOutputAssetId` values and three public functions.
+Focused963 adds `content.xnb.output_pipeline` for the target-format decision surface around the
+already demonstrated XNB source/compiler/runtime workflows.
+
+| Declaration family | Disposition |
+|---|---|
+| XnbOutputAssetId | One grouped assertion freezes all append-only values: Texture2D through Effect are 1 through 10 and XnaObject is 11. The registered built-in writers independently publish the matching first ten IDs and exact runtime type names in their schema identities. XnaObject belongs to the separate game-defined `ContentCompiler` façade; `content.custom.xml_xnb_pipeline` executes that real writer/reader path, so registering it as a built-in asset writer here would be incorrect. |
+| XnbOutputOptionsDigest | Default Windows/version5/Reach/uncompressed/XNA-name options produce `w5run`; DesktopGL/version5/HiDef/LZ4/portable options produce `d5h4p`. The latter appears in the resolved writer identity and emits an actual `d`/5/`0x41` container deterministically. Limits and the Xbox opt-in control validation rather than successful byte spelling and intentionally do not add digest characters. ISSUE-107 records that the public header's impossible `w5rn-x` example describes neither grammar. |
+| ConvertCnbTextureToXnb | A dual-representation 4x4 texture proves ordered, version-aware choice: version 5 selects first-listed Rgba8/Color bytes, while legacy version 4 skips those and selects second-listed Bgra8/ColorBgraEXT bytes. A BC7-only version-5 request is refused with logical name, format and container version, and a non-square cube is refused with its exact 4x2 shape. The remaining face/depth/empty-data permutations repeat the same public shape guard and stay boundary-test cases. Exact CNJ volume/cube input bytes and runtime DXT/cube upload behavior remain covered by their respective source and graphics workflows. |
+| RegisterXnbOutputContentPipeline | One frozen registry exposes exactly ten format-XNB writers: Texture2D, Texture3D, TextureCube, SpriteFont, SoundEffect, Song, Video, Model, Curve and already-compiled Effect. Every input type, writer identity, output format, asset ID/schema/type name and shared serializer identity is checked. A dual registry resolves the ordinary CNB and XNB Texture2D writers independently by format. The custom option-bound Texture2D writer executes twice with identical bytes and reports the root reader stored in its file. Existing `content_xnb` builds and runtime demos execute original Texture2D/SpriteFont/SoundEffect/Curve/Model outputs; Song/Video and model-loss boundaries remain CNA integration tests until a project authoring workflow needs those target artifacts. |
+
+All public `XnbOutputContentPipeline.hpp` identities and functions now have direct runtime evidence
+or an explicit shared-workflow/boundary disposition. The emitted probe is decoded structurally by
+its header/result identities only; genuine Microsoft XNA loading, GPU use, audio/video playback and
+visual quality are not claimed.
+
 ### Runtime XNB readers (separate from intermediate XML)
 
 `content.xnb.custom_type_reader` supplies the game's LevelReader and original generated XNB.
