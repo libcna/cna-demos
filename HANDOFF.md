@@ -73,10 +73,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and210
 standalone; 657 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete998's full runtime reports; they include all693
+Coverage: generated docs/COVERAGE.md uses Complete1003's full runtime reports; they include all693
 catalog IDs in both renderer suites with no absent IDs.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
-3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete998's
+3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1003's
 full runtime reports are the baseline inputs for the693-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -87,12 +87,10 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete998 exercises all3078 credited C routes and all693 catalog IDs in both full smoke
+Complete1003 exercises all3078 credited C routes and all693 catalog IDs in both full smoke
 suites.
-It absorbs focused893-937, including the Video IDs, all public field-value batches through the
-dispositioned Graphics namespace, the complete diagnostics workflow and the canonical C exception
-identity checks through renderer selection/content loading plus the direct ContentReader math,
-exact-byte and input-limit evidence, followed by the native renderer/host/assembly metadata audit.
+Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
+through Focused1002, including the production StorageDeviceNotConnectedException path.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Complete744 has37 known-issue demos after focused660 adds
 `game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
@@ -3504,18 +3502,9 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete998 is the authoritative693-demo full-build/full-runtime baseline and
-absorbs Focused991-997 after Complete990. Focused991 directly closes the platform/parameter
-conversion, adapter-metadata, attribute-free registration and `PipelineComponentScanner` portions
-of `XnaPipelineBridge.hpp` in the stable custom-pipeline demo. Focused992 directly closes the
-one-function `XnaModelBridge.hpp` conversion in the stable model-source demo. Focused993 closes the
-remaining public bridge contexts and logger through the real custom-pipeline workflow. Focused994
-closes direct `RegisterXnaXnbOutput` registration and records ISSUE-111 for ignored environment
-targets. Focused995 closes the `XnaXmlSourceContentPipeline.hpp` multi-compiler extension and
-null-refusal contract. Focused996 closes the portable Effect compiler/source service contract with
-a new real-build workflow. Focused997 closes `XmaEncoderService.hpp` through in-process and
-external-process backends. The complete public `CNA/Content/Pipeline` build-time header group now
-has semantic dispositions. Focused999 revalidates every residual root, Audio and Content member
+HIGHEST PRIORITY: Complete1003 is the authoritative693-demo full-build/full-runtime baseline at
+cna-demos `5017b7a`. It absorbs Focused999-1002 after Complete998. Focused999 revalidates every
+residual root, Audio and Content member
 disposition, then closes three genuine offline GamerServices behaviors in the existing privileges
 workflow: zero party size plus the exact `IsFriend`/`GetFriends` privilege refusals. The remaining
 74 GamerServices entries are CLR aliases, native finalizers, framework-created payloads or
@@ -3525,8 +3514,12 @@ Graphics entries, Touch's one CLR-only alias and Media's14 CLR-only aliases. Foc
 three reachable Net behaviors and dispositions the remaining31 service, hardware, event-payload or
 CLR-alias entries. Focused1002 reaches the production storage-not-connected constructor and
 dispositions Storage's finalizer/event gaps, completing the namespace-by-namespace generated XNA
-member-gap audit. Run the complete 693-demo post-member-audit checkpoint next, then resume the
-deeper behavior/C-route audit.
+member-gap audit. Complete1003 also fixes the one demo-only timing flaw exposed by its first CTest
+attempt, then passes the complete validation from scratch. Resume the deeper semantic behavior
+audit: reconcile explicit residual gaps in `docs/COVERAGE_AUDIT.md` against pinned CNA d23e139de,
+prioritize reachable deterministic behavior that strengthens an existing coherent demo, and then
+revalidate Focused823's127 intentionally uncredited C-route dispositions against the current
+public headers. Do not add metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3861,6 +3854,36 @@ members; fields remain674/753 and C routes3078/3205. Evidence:
 `/tmp/checkpoint-1002-storage-members/*`. This is Linux filesystem-failure evidence, not removable-
 device, DeviceChanged delivery, other-platform, screenshot or manual evidence. Run the complete
 693-demo post-member-audit checkpoint next, then resume the deeper behavior/C-route audit.
+
+## Complete1003 post-member-audit checkpoint
+
+The authoritative full checkpoint uses cna-demos `5017b7a` and isolated CNA
+`d23e139de9e5c15511b6be745de290896a69ee37`, with every build/test invocation limited to three
+jobs. The incremental build is warning-free, metadata validates693/0 and all706 enabled CTests
+pass in271.90s; three manual tests remain disabled. SOFTWARE reports588 pass,54 expected fail,48
+skip and3 manual. OPENGLES3/Xvfb reports628/55/7/3. Both reports contain all693 IDs, with zero
+unexpected failures or unexpected passes.
+
+Comparison with Complete998 retains every status and every failed-assertion message/multiplicity:
+94 failed assertions on SOFTWARE and98 on OPENGLES3. Passing controls move3085->3099 and
+3315->3328. The deltas are the intended Focused999-1002 additions plus one new audio precondition;
+the SOFTWARE-only incompatible-renderer check accounts for the one-check difference between the
+two renderer totals. Validator self-tests pass5/5 and comparator self-tests pass4/4.
+
+The first complete CTest attempt passed705/706 and exposed a demo bug in
+`audio.sound_effect_instance.playback_state`: its fixed1.25+1.0-second observation left only about
+250ms for a delayed dummy-audio callback. CNA's `Play` implementation already had the correct
+Playing-state no-op, and the old check passed serial repetition. The demo now plays the two-second
+probe at half speed, confirms Playing at its two-second midpoint, repeats Play and waits no more
+than three seconds for completion; a restarted voice would need about four. Fifteen focused runs
+under three concurrent processes, direct SOFTWARE and OPENGLES3 runs and the repeated full CTest
+all pass. This is a corrected demo timing assumption, not a CNA issue.
+
+Immutable evidence is under `build/linux-full/reports/checkpoint-1003-complete-*`; result SHA-256
+values are `587fca9bc8f5c3a4b78cfbb090bef8dc96563c2489a7507f75b468085cf59f42` (SOFTWARE) and
+`16a023c96cf22266e62cc02ec41ef8a3343aa5fa27ae4854b81abad70adb63d6` (OPENGLES3). Generated
+coverage remains307/329 XNA types,2128/2326 members,674/753 fields and3078/3205 C routes. Continue
+the deeper semantic behavior audit, then revalidate the127 intentional C-route dispositions.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,
@@ -9586,7 +9609,7 @@ and publish the consolidated remaining-member dispositions.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is998-693-demo-build-time-services-checkpoint; exact results, hashes and
+Current complete baseline is1003-post-member-audit-checkpoint; exact results, hashes and
 evidence are in section7. Use its693-demo reports as the comparison baseline.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
@@ -9600,8 +9623,8 @@ complete502. The complete504 checkpoint binary was built with clean CNA `f37f8d1
 externally during smoke to clean `fbd8e64a3` through CI/CMake-test/docs/tooling-only changes, while
 both production library hashes stayed unchanged. Complete504, complete524, complete719,
 Complete926, Complete933 and Complete938 remain immutable historical comparison evidence;
-Complete981 and Complete990 remain immutable historical comparison evidence; Complete998 is the
-current full-runtime baseline.
+Complete981, Complete990 and Complete998 remain immutable historical comparison evidence;
+Complete1003 is the current full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.
 

@@ -5175,3 +5175,25 @@ and empty stderr. Coverage moves306->307/329 types and2127->2128/2326 members; f
 and C routes3078/3205. Evidence:`/tmp/checkpoint-1002-storage-members/*`. This closes the semantic
 namespace pass over all generated XNA member gaps while leaving198 intentionally uncredited names.
 Run the complete693-demo checkpoint next, then continue the deeper behavior/C-route audit.
+
+### Complete1003 post-member-audit checkpoint
+
+The full checkpoint at cna-demos `5017b7a` and isolated CNA
+`d23e139de9e5c15511b6be745de290896a69ee37` passes a warning-free three-job build, metadata693/0
+and all706 enabled CTests in271.90s; three manual tests remain disabled. Full SOFTWARE results are
+588 pass/54 expected fail/48 skip/3 manual, while OPENGLES3/Xvfb reports628/55/7/3. Every one of
+the693 catalog IDs is present and neither renderer has an unexpected result.
+
+The first complete CTest exposed a demo-only timing flaw in the repeated-Play assertion. The old
+fixed observation left about250ms for the dummy-audio callback under load. The corrected workflow
+first proves a half-speed four-second voice is Playing at its two-second midpoint, repeats Play,
+then allows three seconds for the original progress to finish; a restarted voice would need about
+four. Fifteen focused runs under three concurrent processes, both direct renderer labels and the
+repeated full CTest pass. No CNA issue is recorded.
+
+Against Complete998 all693 statuses and all failed-assertion messages/multiplicities are unchanged
+(94 SOFTWARE,98 OPENGLES3). Passing check totals move3085->3099 and3315->3328 through the reviewed
+Focused999-1002 additions and the audio precondition. Validator self-tests pass5/5 and comparator
+self-tests4/4. Evidence:`build/linux-full/reports/checkpoint-1003-complete-*`. Generated totals are
+307/329 XNA types,2128/2326 members,674/753 fields and3078/3205 C routes. Continue with explicit
+behavior gaps, then revalidate Focused823's127 intentionally uncredited C routes.

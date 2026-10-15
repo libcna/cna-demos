@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete 693-demo post-member-audit baseline: all 706 enabled CTests and both full
+  renderer suites pass with every catalog ID present and no unexpected result.
 - Stabilized the repeated-`Play` transport check with an explicit playing precondition and a
   wider timing window that still distinguishes preserved progress from a restarted voice.
 - Reached the production `StorageDeviceNotConnectedException` constructor with a controlled,

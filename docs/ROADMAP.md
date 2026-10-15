@@ -10880,3 +10880,23 @@ C routes unchanged. This completes the namespace-by-namespace semantic dispositi
 that remain uncredited in the generated XNA member inventory. Evidence:
 `/tmp/checkpoint-1002-storage-members/*`. Run the complete693-demo post-member-audit checkpoint next,
 then resume the deeper behavior/C-route audit.
+
+## Complete1003-post-member-audit-checkpoint
+
+The authoritative full checkpoint uses cna-demos `5017b7a` and isolated CNA
+`d23e139de9e5c15511b6be745de290896a69ee37`. Its warning-free build and all tests use at most three
+jobs. Metadata is693/0, all706 enabled CTests pass in271.90s and three manual tests remain disabled.
+SOFTWARE reports588 pass/54 expected fail/48 skip/3 manual; OPENGLES3/Xvfb reports628/55/7/3.
+Every catalog ID is present and there are no unexpected results.
+
+The first full CTest caught one demo flaw: `audio.sound_effect_instance.playback_state` had only a
+roughly250ms callback margin in its repeated-Play timing proof. CNA already implements the correct
+Playing-state no-op. The demo now checks a half-speed probe at its midpoint and uses a three-second
+completion deadline that remains one second shorter than a restart. Fifteen focused concurrent
+runs, both direct renderer labels and the complete rerun pass, so this is not filed as a CNA issue.
+
+Complete998 comparison preserves all693 statuses and all known failed-assertion evidence. Passing
+check totals rise3085->3099 on SOFTWARE and3315->3328 on OPENGLES3. Self-tests pass5/5 and4/4;
+immutable evidence is `build/linux-full/reports/checkpoint-1003-complete-*`. Coverage is307/329 XNA
+types,2128/2326 members,674/753 fields and3078/3205 C routes. Resume the deeper semantic behavior
+audit, followed by a source revalidation of the127 intentional C-route dispositions.
