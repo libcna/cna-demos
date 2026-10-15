@@ -10862,3 +10862,21 @@ only ISSUE-032/033 fail. Coverage is306/329 XNA types,2127/2326 members,674/753 
 C routes. Evidence:`/tmp/checkpoint-1001-net-members/*`. No service invitation, leaderboard
 session, guest identity, voice hardware, screenshot, listening or manual claim is made. Audit the
 three residual Storage members next.
+
+## Focused1002-residual-Storage-member-audit
+
+The existing selector workflow now reaches CNA's real storage-root failure on Linux by temporarily
+placing a regular file at `XDG_DATA_HOME`. `SetAppNameEXT` cannot create the per-game directory and
+throws `StorageDeviceNotConnectedException` with the exact message and retained filesystem cause;
+the demo restores the environment and then completes its ordinary connected-device checks. It runs
+in its own process to isolate both environment and static storage-root state.
+
+`StorageDevice::DeviceChanged` has no production raiser on current platforms, while
+`StorageContainer::Finalize` maps to the already demonstrated Dispose/event/native-destruction
+lifetime. They remain intentionally uncredited. The warning-free three-job build, metadata693/0,
+two focused SOFTWARE CTests and ten direct runs per renderer label pass. Normalized stdout is stable
+and stderr empty. Coverage reaches307/329 types and2128/2326 members, with674/753 fields and3078/3205
+C routes unchanged. This completes the namespace-by-namespace semantic disposition of all198 names
+that remain uncredited in the generated XNA member inventory. Evidence:
+`/tmp/checkpoint-1002-storage-members/*`. Run the complete693-demo post-member-audit checkpoint next,
+then resume the deeper behavior/C-route audit.

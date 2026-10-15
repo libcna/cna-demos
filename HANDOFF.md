@@ -75,7 +75,7 @@ diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,
 standalone; 657 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete998's full runtime reports; they include all693
 catalog IDs in both renderer suites with no absent IDs.
-The surface totals are306/329 XNA types,2127/2326 XNA members,674/753 fields and
+The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete998's
 full runtime reports are the baseline inputs for the693-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -3523,7 +3523,10 @@ service/hardware/manual behavior. Focused1000 closes two meaningful Graphics con
 five members of the real explicit TouchCollection enumerator, then dispositions the remaining54
 Graphics entries, Touch's one CLR-only alias and Media's14 CLR-only aliases. Focused1001 closes
 three reachable Net behaviors and dispositions the remaining31 service, hardware, event-payload or
-CLR-alias entries. Audit the three residual Storage members next.
+CLR-alias entries. Focused1002 reaches the production storage-not-connected constructor and
+dispositions Storage's finalizer/event gaps, completing the namespace-by-namespace generated XNA
+member-gap audit. Run the complete 693-demo post-member-audit checkpoint next, then resume the
+deeper behavior/C-route audit.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3829,6 +3832,35 @@ create an ENet host and is not runtime evidence. Coverage moves2124->2127/2326 m
 306/329, fields674/753 and C routes3078/3205. Evidence:`/tmp/checkpoint-1001-net-members/*`. No
 service invitation, leaderboard session, guest identity, voice hardware, screenshot, listening or
 manual claim is made. Audit the three residual Storage members next.
+
+## Focused1002 residual Storage member audit
+
+One of Storage's three gaps has a deterministic production path on the current Linux environment.
+The existing `storage.storage_device.show_selector` workflow now temporarily points `XDG_DATA_HOME`
+at a regular file, so `StorageDevice::SetAppNameEXT` cannot create its per-game directory and throws
+the real `StorageDeviceNotConnectedException`. The demo checks the canonical message and retained
+filesystem cause, restores the exact prior environment, removes its blocker and then continues
+through the normal connected selector/space workflow. The demo now runs in its own process so the
+temporary environment and process-wide storage root cannot affect another catalog entry.
+
+`StorageDevice::DeviceChanged` remains uncredited because CNA exposes subscriptions but has no
+production raiser on current platforms; invoking the public event from demo code would manufacture
+a device change. `StorageContainer::Finalize` remains CLR lifetime machinery represented by the
+existing explicit Dispose, one-shot Disposing event, idempotence and native destruction workflow.
+This closes the namespace-by-namespace semantic disposition of all generated XNA member gaps; the
+remaining198 names are intentional platform/service/manual/CLR/protected/trivial omissions, not198
+missing demos.
+
+The warning-free `-j3` build and metadata693/0 pass. The exact show-selector and container-lifetime
+SOFTWARE CTests pass with an isolated writable `XDG_DATA_HOME`; the first lifetime attempt failed
+only because the sandbox mounts the user's normal data directory read-only. Ten serial direct runs
+per renderer label pass4/4 with empty stderr and normalized stdout SHA-256
+`59e35519566a0823b08414c5a37cb1699b2f99e70c947b2626bbad2b8604ff64`; normalization removes only
+the host's changing free/total-space line. Coverage moves306->307/329 types and2127->2128/2326
+members; fields remain674/753 and C routes3078/3205. Evidence:
+`/tmp/checkpoint-1002-storage-members/*`. This is Linux filesystem-failure evidence, not removable-
+device, DeviceChanged delivery, other-platform, screenshot or manual evidence. Run the complete
+693-demo post-member-audit checkpoint next, then resume the deeper behavior/C-route audit.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

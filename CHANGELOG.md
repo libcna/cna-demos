@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Reached the production `StorageDeviceNotConnectedException` constructor with a controlled,
+  unusable Linux storage root and closed the final Storage type gap without a new demo ID.
 - Extended the residual Net audit with the real fixed-property enumerator, the exact no-party
   invitation refusal and base-first serialization of a production join exception.
 - Audited the residual Graphics, Input.Touch and Media member gaps; added real `EffectMaterial`

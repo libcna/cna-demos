@@ -116,7 +116,7 @@ Decisions:
 
 | Type | Decision |
 |---|---|
-| StorageDeviceNotConnectedException | environment: a removed storage device |
+| StorageDeviceNotConnectedException | shown in `storage.storage_device.show_selector`: on Linux a controlled file in place of `XDG_DATA_HOME` drives CNA's real root-creation failure, preserving the exact exception type and filesystem cause before the demo restores the environment and opens the normal device. |
 | StorageDevice.DeviceChanged | CNA exposes subscription state but has no production path that raises the event. Invoking the public event from a demo would manufacture behavior rather than observe a device change; leave it uncredited until a platform removal path exists. |
 | StorageContainer.Finalize | CLR finalizer inventory entry. Existing workflows explicitly dispose owned containers; no C++ finalizer demo. |
 
@@ -5156,3 +5156,22 @@ members; types remain306/329, fields674/753 and C routes3078/3205. Evidence:
 `/tmp/checkpoint-1001-net-members/*`. No service invitation, leaderboard session, guest identity,
 voice hardware, screenshot, listening or manual claim is made. Audit the three residual Storage
 members next.
+
+### Focused1002 residual Storage member audit
+
+`StorageDeviceNotConnectedException` has a deterministic production path in the current Linux
+environment. The existing selector demo temporarily supplies a regular file as `XDG_DATA_HOME`,
+causing the actual storage-root creation in `SetAppNameEXT` to throw the documented exception with
+its filesystem cause. It restores the prior environment, removes the blocker and completes the
+ordinary connected selector and space checks. Own-process execution isolates both mutations.
+
+The other two names stay uncredited. `StorageDevice::DeviceChanged` has no production raiser on the
+current platforms, and invoking the public event would manufacture delivery. `StorageContainer`
+Finalize is CLR machinery already represented by explicit Dispose, its one-shot Disposing event,
+idempotence and native destruction. The warning-free `-j3` build, metadata693/0, two focused
+SOFTWARE CTests and ten direct runs per renderer label pass. The direct workflow reports4/4,
+normalized stdout SHA-256 `59e35519566a0823b08414c5a37cb1699b2f99e70c947b2626bbad2b8604ff64`
+and empty stderr. Coverage moves306->307/329 types and2127->2128/2326 members; fields remain674/753
+and C routes3078/3205. Evidence:`/tmp/checkpoint-1002-storage-members/*`. This closes the semantic
+namespace pass over all generated XNA member gaps while leaving198 intentionally uncredited names.
+Run the complete693-demo checkpoint next, then continue the deeper behavior/C-route audit.

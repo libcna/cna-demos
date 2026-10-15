@@ -35,8 +35,8 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 306 of 329** (93.0 %).
-- **Methods, properties, constructors and events named by a demo: 2127 of 2326** (91.4 %).
+- **Types with at least one demo: 307 of 329** (93.3 %).
+- **Methods, properties, constructors and events named by a demo: 2128 of 2326** (91.5 %).
 - Fields and enum values named by a demo: 674 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
@@ -52,7 +52,7 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Input.Touch` | 8 / 8 | 47 / 48 | 15 / 15 |
 | `Microsoft.Xna.Framework.Media` | 24 / 24 | 178 / 192 | 7 / 8 |
 | `Microsoft.Xna.Framework.Net` | 22 / 23 | 96 / 127 | 17 / 22 |
-| `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
+| `Microsoft.Xna.Framework.Storage` | 3 / 3 | 23 / 25 | 0 / 0 |
 
 ### Types without a demo yet
 
@@ -63,7 +63,6 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 - `Microsoft.Xna.Framework.GamerServices`: FriendCollection, FriendGamer, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, InviteAcceptedEventArgs, NetworkException, NetworkNotAvailableException
 - `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, ModelBoneCollection.Enumerator, ModelEffectCollection.Enumerator, ModelMeshCollection.Enumerator, ModelMeshPartCollection.Enumerator
 - `Microsoft.Xna.Framework.Net`: WriteLeaderboardsEventArgs
-- `Microsoft.Xna.Framework.Storage`: StorageDeviceNotConnectedException
 
 ## CNA C ABI routes demonstrated
 
