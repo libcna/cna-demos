@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Directly audited `RegisterXnaXnbOutput` inventory, collision, idempotence, writer identity/schema,
+  compression and runtime loading; recorded CNA-DEMOS-ISSUE-111 for ignored environment targets.
 - Completed the XNA bridge-context and logger audit through a real importer/processor build,
   including exact environment properties and all three contextual log levels.
 - Added direct real-model coverage for the XNA-to-canonical model bridge, including shared-resource

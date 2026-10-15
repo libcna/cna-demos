@@ -3501,8 +3501,10 @@ absorbs Focused982-989 after Complete981. Focused991 directly closes the platfor
 conversion, adapter-metadata, attribute-free registration and `PipelineComponentScanner` portions
 of `XnaPipelineBridge.hpp` in the stable custom-pipeline demo. Focused992 directly closes the
 one-function `XnaModelBridge.hpp` conversion in the stable model-source demo. Focused993 closes the
-remaining public bridge contexts and logger through the real custom-pipeline workflow. Audit
-direct `RegisterXnaXnbOutput` registration in the existing XML XNB workflow before adding an ID.
+remaining public bridge contexts and logger through the real custom-pipeline workflow. Focused994
+closes direct `RegisterXnaXnbOutput` registration and records ISSUE-111 for ignored environment
+targets. Audit the `XnaXmlSourceContentPipeline.hpp` multi-compiler extension/null-refusal contract
+in the existing XML workflow next, then the remaining Effect/XMA service build-time headers.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3627,6 +3629,20 @@ build repeated open ISSUE-057; its candidate vanished without artifact loss and 
 was clean. Runtime totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C
 routes;31 public names enter the build-time appendix. Audit direct `RegisterXnaXnbOutput` next.
 Evidence:`/tmp/checkpoint-993-*`.
+Focused994 invokes `RegisterXnaXnbOutput` directly in the stable XML/XNB workflow. It proves an
+exact one-per-compiler-type inventory, preservation of an existing System.Int32 writer, idempotent
+registration, option-bound identity/schema, LZX output that loads value63 and null-compiler
+refusal. The environment-specific assertion reveals CNA-DEMOS-ISSUE-111: the overload receives
+Windows Phone/HiDef but emits Windows/Reach because its implementation reads registration options
+instead of the environment for both target fields. The warning-free `-j3` build, metadata691/0,
+ten exact SOFTWARE CTests, ten serial runs per renderer label, four CLI/catalog tests and both
+self-test suites pass. Direct runs report26 passes and exactly the ISSUE-090/111 failures;
+normalized stdout SHA-256 is
+`f043f692ac5ad687634516a2ecdbdb7ed2cf3d4fa142c8946f7cf5b0e6e8e695` and stderr SHA-256 is
+`d4de1e8a60e84e94cd4430995e7b9d160df8c9e3010e6bd39aa0fdc4cec57dad`. A prior parallel run
+repeated known ISSUE-057 once; all serial runs were clean. Runtime totals remain303/329 types,
+2114/2326 members,674/753 fields and3078/3205 C routes. Audit `XnaXmlSourceContentPipeline.hpp`
+multi-compiler extension/null refusal next. Evidence:`/tmp/checkpoint-994-authoritative-*`.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

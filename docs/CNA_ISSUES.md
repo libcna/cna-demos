@@ -15,6 +15,38 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-111 -- Direct XNA XNB writer ignores its build environment platform and profile
+
+- **Area/API:** `CNA::Content::Pipeline::RegisterXnaXnbOutput`, specifically the registered
+  canonical writer's environment-aware `ContentTypeWriter::Write` overload.
+- **Demo/reproduction:** `content.custom.xml_xnb_pipeline` creates a default XNB compiler, adds its
+  existing `VitalWriter`, and directly calls `RegisterXnaXnbOutput` with container options that
+  retain the default Windows/Reach target while requesting LZX compression. It resolves the
+  resulting `CnaDemos.XmlVital` writer and calls the environment overload with Windows Phone,
+  HiDef and a private output directory. The emitted XNB is loaded through `VitalReader` as a
+  positive control.
+- **Observed:** the XNB is valid, compressed and restores the exact value63, but its header reports
+  `Windows/Reach`; the demo prints that exact pair and retains one labeled failed assertion. Ten
+  serial SOFTWARE and ten serial OPENGLES3-labelled runs each pass26 controls and fail only this
+  assertion plus established ISSUE-090. Their normalized stdout SHA-256 is
+  `f043f692ac5ad687634516a2ecdbdb7ed2cf3d4fa142c8946f7cf5b0e6e8e695`; normalized stderr SHA-256
+  is `d4de1e8a60e84e94cd4430995e7b9d160df8c9e3010e6bd39aa0fdc4cec57dad`.
+- **Expected/contract:** the public `RegisterXnaXnbOutput` declaration says its registration
+  options configure the container while platform and profile come from the build environment at
+  write time. The environment overload should map `targetPlatform` and `targetProfile` into the
+  compiler request, while retaining registration-time compression, reader-name and limit options.
+- **Cause observed in source:** `XnaObjectXnbWriter::Write(..., environment)` forwards only
+  `environment.outputDirectory`. It chooses `CompileOptions::targetPlatform` from
+  `options_.platform` and `targetProfile` from `options_.graphicsProfile`. This also contradicts
+  the implementation comment that calls platform/profile build properties.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The same demo proves complete direct writer
+  registration, collision preservation, idempotence, stable identity/schema, compression and
+  runtime loading. Its end-to-end CLI path remains correct because the registry factory receives
+  command-line platform/profile in the registration options. No CNA source was modified, no
+  upstream message was sent and no genuine-XNA, GPU or visual behavior is claimed. Evidence:
+  `/tmp/checkpoint-994-authoritative-*`.
+
 ### CNA-DEMOS-ISSUE-110 -- Direct uncompressed-chunk helper bypasses its size contract
 
 - **Area/API:** `CNA::Content::Cnb::DecompressCnbChunk` with
@@ -640,7 +672,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   the built-in string writer it intends to cache. The attempt runs on a worker thread with a
   one-second watchdog so the demo reports the failure instead of hanging its test process.
 - **Observed:** `AddTypeWriter` never returns and the watchdog records the one failed invariant.
-  The demo first completes twenty-two positive controls through the same public pipeline and focused
+  The demo first completes twenty-six positive controls through the same public pipeline and focused
   compiler probes: its main
   writer is initialized, resolves a nested custom writer later from `Write`, receives Windows
   Phone/HiDef target context, declines requested LZX compression, while a default writer accepts
@@ -648,9 +680,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   typed/raw, dynamically dispatched, shared-resource and external-reference values, loads them through game
   readers, including ordinary/shared/external nulls, skips an unchanged source and rebuilds an
   edited one; raw null, missing dynamic and foreign explicit writers are refused at their intended
-  boundaries; its compiler inventory/freeze contracts also pass. SOFTWARE and OPENGLES3/Xvfb each
-  pass22/23 controls; their outputs and intended
-  diagnostics are identical after normalizing the private temporary path.
+  boundaries; its compiler inventory/freeze and direct XNB-registration contracts also pass.
+  SOFTWARE and OPENGLES3 each pass26/28 controls; the second failure is independently labeled
+  ISSUE-111. Their outputs and intended diagnostics are identical after normalizing the private
+  temporary path.
 - **Cause observed in source:** `ContentCompiler::AddWriter` acquires its non-recursive `mutex_`
   before invoking `facade->Initialize(*this)`. `GetTypeWriter` immediately tries to acquire the
   same mutex, so the same thread waits on a lock it already owns. CNA's public documentation says
@@ -1543,6 +1576,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   file` for `cna_content_stage_v1_23_18dc22105b79a260_0`. The candidate is absent on later
   inspection, no artifact loss is observed, and an immediate unchanged `-j3` retry is warning-free.
   The diagnostic was observed in the interactive build output and was not redirected to a file.
+- **Recurrence on Focused994:** one of twenty deliberately parallel renderer-labelled direct runs
+  completed with its expected26/28 result but added the same missing-owner warning for
+  `cna_content_stage_v1_16_18dc3fc3c769aa47_0`. All twenty subsequent serial repetitions produced
+  one identical normalized stderr hash without the warning. No artifact loss was observed.
 - **Handling:** keep the warning gate and original failure visible, retry the unchanged documented
   full validation after recording the defect, and retain this issue even if scheduling permits a
   clean retry. The eleven OcclusionQuery controls already pass on both renderers independently.

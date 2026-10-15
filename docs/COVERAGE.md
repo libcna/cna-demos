@@ -797,6 +797,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaProcessorWithoutAttribute` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline
+- `CNA::Content::Pipeline::RegisterXnaXnbOutput` -- content.custom.xml_xnb_pipeline
 - `CNA::Content::Pipeline::RegisterXnbContentPipeline` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::RegisterXnbOutputContentPipeline` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::ResampleRgbaImage` -- content.texture_processor.pipeline_contract
@@ -939,7 +940,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::XnbImporter::OutputTypes` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::XnbImporter::SourceExtensions` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::XnbOutputAssetId` -- content.xnb.output_pipeline
-- `CNA::Content::Pipeline::XnbOutputOptionsDigest` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::XnbOutputOptionsDigest` -- content.custom.xml_xnb_pipeline, content.xnb.output_pipeline
 - `CNA::Content::Pipeline::XnbVideoProcessor::Identity` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::XnbVideoProcessor::InputType` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::XnbVideoProcessor::OutputType` -- content.xnb.pipeline_transcode

@@ -20,7 +20,9 @@
 
 #include "CNA/Content/Pipeline/ContentBuildManifest.hpp"
 #include "CNA/Content/Pipeline/ContentCompiler.hpp"
+#include "CNA/Content/Pipeline/XnaPipelineBridge.hpp"
 #include "CNA/Content/Pipeline/XnaXmlSourceContentPipeline.hpp"
+#include "CNA/Content/Pipeline/XnbOutputContentPipeline.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentReader.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentTypeReader.hpp"
@@ -122,6 +124,28 @@ namespace
         std::string GetRuntimeReader(Xna::TargetPlatform) const override { return "CnaDemos.XmlVitalReader"; }
     protected:
         void Write(Compiler::ContentWriter& output, const Vital& value) override { output.Write(value.health); }
+    };
+    class ExistingInt32XnbWriter final : public Pipeline::ContentTypeWriter
+    {
+    public:
+        Pipeline::ContentComponentIdentity Identity() const override
+        {
+            return {"CnaDemos.ExistingInt32XnbWriter", "1"};
+        }
+        Pipeline::ContentOutputFormat OutputFormat() const override
+        {
+            return Pipeline::ContentOutputFormat::Xnb;
+        }
+        std::vector<Pipeline::ContentWriterSchemaIdentity> OutputSchemaIdentities() const override
+        {
+            return {{static_cast<std::uint32_t>(Pipeline::XnbOutputAssetId::XnaObject), 1u,
+                     "System.Int32", {"CnaDemos.ExistingInt32Xnb", "1"}}};
+        }
+        std::string InputType() const override { return "System.Int32"; }
+        Pipeline::ContentWriteResult Write(const Pipeline::ContentValue&, const std::string&) const override
+        {
+            throw std::logic_error("The collision sentinel is inspection-only.");
+        }
     };
     class BadgeWriter final : public Compiler::ContentTypeWriter<BadgeSource>
     {
@@ -355,6 +379,84 @@ int main()
             std::cout << "Private XML compiler data: " << directory << '\n';
             const auto source = directory / "source", output = directory / "output";
             std::filesystem::create_directory(source);
+            std::filesystem::create_directory(output);
+
+            auto directCompiler = std::make_shared<Compiler::ContentCompiler>();
+            (void)directCompiler->AddTypeWriter<VitalWriter>();
+            Pipeline::ContentPipelineRegistry directRegistry;
+            const auto existingInt32 = std::make_shared<ExistingInt32XnbWriter>();
+            directRegistry.RegisterWriter(existingInt32);
+            CNA::Internal::Xnb::XnbFileOptions directOptions;
+            directOptions.compression = CNA::Internal::Xnb::XnbOutputCompression::Lzx;
+            directOptions.readerNameStyle = CNA::Internal::Xnb::XnbReaderNameStyle::Portable;
+            Pipeline::RegisterXnaXnbOutput(directRegistry, directCompiler, directOptions);
+            const auto directNames = directCompiler->KnownTypeNames();
+            bool directInventory = directRegistry.Writers().size() == directNames.size();
+            for (const auto& name : directNames)
+            {
+                const auto registered = directRegistry.ResolveWriter(name, {}, Pipeline::ContentOutputFormat::Xnb);
+                directInventory &= registered->InputType() == name &&
+                    registered->OutputFormat() == Pipeline::ContentOutputFormat::Xnb;
+            }
+            check(directInventory &&
+                      directRegistry.ResolveWriter("System.Int32", {}, Pipeline::ContentOutputFormat::Xnb) == existingInt32,
+                  "direct XNB registration covers every compiler type while preserving a pre-registered route");
+
+            const auto firstDirectWriters = directRegistry.Writers();
+            Pipeline::RegisterXnaXnbOutput(directRegistry, directCompiler, directOptions);
+            const auto vitalWriter =
+                directRegistry.ResolveWriter("CnaDemos.XmlVital", {}, Pipeline::ContentOutputFormat::Xnb);
+            const auto vitalSchemas = vitalWriter->OutputSchemaIdentities();
+            check(directRegistry.Writers() == firstDirectWriters &&
+                      vitalWriter->Identity() == Pipeline::ContentComponentIdentity{
+                          "CNA.XnaObjectXnbWriter[CnaDemos.XmlVital]",
+                          "1;" + Pipeline::XnbOutputOptionsDigest(directOptions)} &&
+                      vitalSchemas.size() == 1u &&
+                      vitalSchemas.front().assetTypeId ==
+                          static_cast<std::uint32_t>(Pipeline::XnbOutputAssetId::XnaObject) &&
+                      vitalSchemas.front().assetSchemaVersion == 1u &&
+                      vitalSchemas.front().assetTypeName == "CnaDemos.XmlVital",
+                  "repeated direct registration is idempotent and exposes the configured writer identity and schema");
+
+            Pipeline::ContentBuildEnvironment directEnvironment;
+            directEnvironment.targetPlatform = Pipeline::ContentTargetPlatform::WindowsPhone;
+            directEnvironment.targetProfile = Microsoft::Xna::Framework::Graphics::GraphicsProfile::HiDef;
+            directEnvironment.outputDirectory = output;
+            const auto directVital = vitalWriter->Write(
+                Pipeline::ContentValue::Create("CnaDemos.XmlVital", Vital{63}),
+                "direct-registration", directEnvironment);
+            WriteFile(output / "direct-registration.xnb", directVital.bytes);
+            Runtime::ContentTypeReaderManager::AddTypeCreator(
+                "CnaDemos.XmlVitalReader", [] { return std::make_unique<VitalReader>(); });
+            Runtime::ContentManager directContent(nullptr, output.string());
+            check(directVital.assetTypeId == static_cast<std::uint32_t>(Pipeline::XnbOutputAssetId::XnaObject) &&
+                      directVital.assetSchemaVersion == 1u && directVital.assetTypeName == "CnaDemos.XmlVital" &&
+                      directVital.bytes.size() > 6u &&
+                      (static_cast<unsigned char>(directVital.bytes[5]) & 0x80u) != 0u &&
+                      directContent.Load<Vital>("direct-registration").health == 63,
+                  "a directly registered writer applies configured compression and produces a loadable typed XNB");
+            std::cout << "Direct XNB target: "
+                      << (directVital.bytes[3] == 'm' ? "WindowsPhone" :
+                          directVital.bytes[3] == 'x' ? "Xbox360" : "Windows")
+                      << '/' << ((static_cast<unsigned char>(directVital.bytes[5]) & 0x01u) != 0u
+                                     ? "HiDef" : "Reach") << '\n';
+            check(directVital.bytes[3] == 'm' &&
+                      (static_cast<unsigned char>(directVital.bytes[5]) & 0x01u) != 0u,
+                  "the directly registered writer applies the build environment's Windows Phone and HiDef values (CNA-DEMOS-ISSUE-111)");
+
+            bool nullCompilerRefused = false;
+            try
+            {
+                Pipeline::ContentPipelineRegistry nullRegistry;
+                Pipeline::RegisterXnaXnbOutput(nullRegistry, {}, {});
+            }
+            catch (const std::invalid_argument& error)
+            {
+                nullCompilerRefused = std::string(error.what()) ==
+                    "RegisterXnaXnbOutput(): compiler must not be null.";
+            }
+            check(nullCompilerRefused, "direct XNB registration refuses a null compiler before mutating its registry");
+
             AuthorProfile(source / "sentinel.xml", 75, output / "portraits" / "sentinel.xnb", true);
             // Resolve the game's serializer before XmlImporter encounters its Asset Type.
             (void)Intermediate::IntermediateSerializer::TypeSerializerFor<ProfileSource>();
@@ -425,8 +527,6 @@ int main()
             check(entry && entry->importer.name == "XmlImporter" && entry->outputs.size() == 1 &&
                   entry->outputs.front().sha256 == Pipeline::ContentFileSha256(output / "sentinel.xnb"),
                   "the compiler manifest records XmlImporter and the digest of its actual published XNB");
-            Runtime::ContentTypeReaderManager::AddTypeCreator(
-                "CnaDemos.XmlVitalReader", [] { return std::make_unique<VitalReader>(); });
             Runtime::ContentTypeReaderManager::AddTypeCreator(
                 "CnaDemos.XmlBadgeReader", [] { return std::make_unique<BadgeReader>(); });
             Runtime::ContentTypeReaderManager::AddTypeCreator(

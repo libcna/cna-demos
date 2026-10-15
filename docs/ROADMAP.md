@@ -10641,3 +10641,27 @@ ISSUE-057 missing-owner staging warning; the candidate vanished without artifact
 immediate unchanged retry was warning-free. No new CNA defect appeared. Evidence:
 `/tmp/checkpoint-993-*`. Audit direct `RegisterXnaXnbOutput` registration next in the existing XML
 XNB workflow.
+
+## Focused994-direct-XNA-XNB-output-registration
+
+The existing `content.custom.xml_xnb_pipeline` now invokes `RegisterXnaXnbOutput` directly over a
+fresh default compiler plus its custom Vital writer. The registered inventory has exactly one XNB
+route per compiler type while retaining a pre-existing System.Int32 writer. A repeated call keeps
+the exact same writer objects. The resolved custom writer exposes the option digest and XnaObject
+schema, honors configured LZX compression, emits a loadable XNB restoring value63 and rejects a
+null compiler before registry mutation.
+
+The environment control exposes new CNA-DEMOS-ISSUE-111. Calling that writer's environment overload
+with Windows Phone/HiDef still emits a Windows/Reach header. Source review confirms the writer uses
+the environment only for outputDirectory and instead derives both target fields from registration
+options, contrary to its public contract. Ten serial SOFTWARE-labelled and ten serial OPENGLES3-
+labelled runs report26 passes and exactly the ISSUE-090/111 failures, with normalized stdout
+SHA-256 `f043f692ac5ad687634516a2ecdbdb7ed2cf3d4fa142c8946f7cf5b0e6e8e695` and stderr SHA-256
+`d4de1e8a60e84e94cd4430995e7b9d160df8c9e3010e6bd39aa0fdc4cec57dad`. The warning-free `-j3`
+build, metadata691/0, ten exact SOFTWARE CTests, four CLI/catalog tests and self-tests5/5 plus4/4
+pass. Runtime totals remain303/329 XNA types,2114/2326 members,674/753 fields and3078/3205 C
+routes; the direct helper enters the build-time appendix. A prior parallel repetition triggered
+known ISSUE-057 once; all serial repetitions were clean. Evidence:
+`/tmp/checkpoint-994-authoritative-*`. This completes the direct public `XnaPipelineBridge.hpp`
+behavior audit. Audit `XnaXmlSourceContentPipeline.hpp` multi-compiler extension and refusal
+contracts next, then the remaining Effect/XMA service build-time headers.
