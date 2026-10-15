@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**675 demos** in 18 categories. Kinds: console 177, game 296, standalone 202. Automation: automated 639, manual 3, smoke-only 33.
+**676 demos** in 18 categories. Kinds: console 178, game 296, standalone 202. Automation: automated 640, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 53 | 53 | 0 | 0 | 39 / 0 / 14 / 0 / 0 | 39 / 0 / 14 / 0 / 0 |
+| content | 54 | 54 | 0 | 0 | 39 / 0 / 14 / 0 / 1 | 39 / 0 / 14 / 0 / 1 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.custom.build_configuration`.
+- OPENGLES3: absent from report: `content.custom.build_configuration`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -248,9 +250,14 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::CompressedSoundImporter::OutputTypes` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::CompressedSoundImporter::SelectedByNameOnly` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::CompressedSoundImporter::SourceExtensions` -- content.sound_effect.pipeline_components
-- `CNA::Content::Pipeline::ContentBuildConfiguration::Find` -- content.custom.incremental_compiler
-- `CNA::Content::Pipeline::ContentBuildConfiguration::Parse` -- content.custom.incremental_compiler
-- `CNA::Content::Pipeline::ContentBuildConfiguration::SourceRoots` -- content.custom.incremental_compiler
+- `CNA::Content::Pipeline::ContentAssetBuildConfiguration` -- content.custom.build_configuration
+- `CNA::Content::Pipeline::ContentBuildConfiguration::Entries` -- content.custom.build_configuration
+- `CNA::Content::Pipeline::ContentBuildConfiguration::Find` -- content.custom.build_configuration, content.custom.incremental_compiler
+- `CNA::Content::Pipeline::ContentBuildConfiguration::OutputFormat` -- content.custom.build_configuration
+- `CNA::Content::Pipeline::ContentBuildConfiguration::Parse` -- content.custom.build_configuration, content.custom.incremental_compiler
+- `CNA::Content::Pipeline::ContentBuildConfiguration::SourceRoots` -- content.custom.build_configuration, content.custom.incremental_compiler
+- `CNA::Content::Pipeline::ContentBuildConfigurationFileName` -- content.custom.build_configuration
+- `CNA::Content::Pipeline::ContentBuildConfigurationVersion` -- content.custom.build_configuration
 - `CNA::Content::Pipeline::ContentBuildEnvironment::buildConfiguration` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildEnvironment::intermediateDirectory` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildEnvironment::strictness` -- content.custom.xna_pipeline_components
@@ -288,8 +295,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentProcessorContext::LogImportant` -- content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ContentProcessorContext::Parameters` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessorContext::ResolveSourceDependency` -- content.custom.incremental_compiler
+- `CNA::Content::Pipeline::ContentProcessorParameters::Empty` -- content.custom.build_configuration
+- `CNA::Content::Pipeline::ContentProcessorParameters::Find` -- content.custom.build_configuration
 - `CNA::Content::Pipeline::ContentProcessorParameters::Set` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentProcessorParameters::Values` -- content.custom.build_configuration
 - `CNA::Content::Pipeline::ContentSourceRootCapabilities::Add` -- content.custom.source_root_capabilities
+- `CNA::Content::Pipeline::ContentSourceRootCapabilities::Entries` -- content.custom.build_configuration
+- `CNA::Content::Pipeline::ContentSourceRootCapabilities::Find` -- content.custom.build_configuration
 - `CNA::Content::Pipeline::ContentStrictness::XnaCompatible` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentTypeWriter::OutputSchemaIdentities` -- content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentValue::CppType` -- content.custom.pipeline_components

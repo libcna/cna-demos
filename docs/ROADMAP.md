@@ -10252,3 +10252,21 @@ multiplicity moves92->93 and96->97. Normalized stderr is unchanged. Coverage rem
 types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
 `build/linux-full/reports/checkpoint-956-complete-*`. Use Complete956 as the comparison baseline and
 continue the core content build configuration/manifest/pipeline public-header audit.
+
+## Focused957-content-build-configuration
+
+The new renderer-free `content.custom.build_configuration` closes the public
+`CNA/Content/Pipeline/ContentBuildConfiguration.hpp` parser in 11 controls. Stable constants and
+safe empty defaults lead into a complete document whose unordered JSON becomes ordered assets and
+source roots, retains all component/logical/container overrides, and restores exact
+bool/i64/u64/f64/string parameter variants. Grouped refusals cover malformed syntax, schema and
+version drift, unsafe paths, invalid override values, typed-value errors and invalid or duplicate
+source-root grants. Existing compiler demos retain end-to-end application evidence.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass11/11 with identical stdout SHA-256
+`ab027c37510300a73e561bf7ff3a0cce751e73a57f8fb6816397357c42ec23d0` and empty stderr. The changed
+object compiles without warnings with at most three jobs; metadata is676/0; the exact SOFTWARE
+CTest passes20 repetitions and both validator suites pass. Generated totals remain unchanged; 13
+public names enter the CNA-extension appendix and Complete956 marks the new ID absent. Evidence:
+`/tmp/checkpoint-957-build-configuration/*`. Audit `ContentBuildManifest.hpp` next, reusing the
+existing compiler-produced manifest evidence before adding direct helper coverage.

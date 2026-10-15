@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 30), 8 (content, 53), 9 (audio 23 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 30), 8 (content, 54), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 6 + logger 2, cnaext 4).
@@ -68,12 +68,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-675 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
-content53, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform3 and c_api177. Kinds are177 console,296 game and202 standalone;
-639 are automated,33 smoke-only and3 manual. Every declared category has demos.
+676 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
+content54, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, cnaext4, platform3 and c_api177. Kinds are178 console,296 game and202 standalone;
+640 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete956's full runtime reports; they include all675
-catalog IDs in both renderer suites with no absent entries.
+baseline IDs in both renderer suites and correctly mark the one post-baseline ID absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete956's
 full runtime reports are the baseline inputs for the675-ID catalog. Selected semantic
@@ -519,6 +519,25 @@ adds only its reviewed ISSUE-105 failure, moving failed assertions92->93 and96->
 stderr is byte-identical. Coverage remains303/329 XNA types,2114/2326 members,674/753 fields and
 3078/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-956-complete-*`. Complete956 is
 now the comparison baseline; resume the next coherent public content-header audit.
+
+Focused **957-content-build-configuration** adds the 676th source/catalog ID,
+`content.custom.build_configuration`, and closes the public
+`ContentBuildConfiguration.hpp` parsing contract in 11 controls. It proves the version and
+conventional filename, safe minimal defaults, deterministic asset/root ordering, all component and
+logical-name overrides, project/per-asset container selection, and exact bool/i64/u64/f64/string
+parameter variants. Grouped failures retain source context while refusing malformed syntax,
+identity/version/schema drift, unsafe source and logical paths, empty or unknown overrides,
+invalid typed values and duplicate/invalid source-root grants.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled processes pass 11/11 with byte-identical stdout
+SHA-256 `ab027c37510300a73e561bf7ff3a0cce751e73a57f8fb6816397357c42ec23d0` and empty stderr. The
+changed object compiles without warnings in a build limited to three jobs; metadata is676/0; the
+exact SOFTWARE CTest passes20 repetitions and both validator suites pass. Generated XNA/C totals
+remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; 13 configuration/helper
+names enter the CNA-extension appendix. Complete956 correctly marks the new ID absent. Evidence:
+`/tmp/checkpoint-957-build-configuration/*`. Existing compiler demos retain the end-to-end
+application and filesystem-resolution evidence; no CNA defect appeared. Audit
+`ContentBuildManifest.hpp` next.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -2618,8 +2637,10 @@ process-level features; static CNA on CMake < 3.29.
 
 HIGHEST PRIORITY: Complete956 is the authoritative675-demo full-build/full-runtime baseline and
 absorbs Focused949-955 after Complete948. Continue the deeper public API behavior audit with the
-next coherent content-header family, beginning with the core build configuration/manifest/pipeline
-surface and extending existing workflows where that keeps the API visible. The earlier native
+next coherent content-header family. Focused957 closes the strict public build-configuration parser;
+audit `ContentBuildManifest.hpp` next, separating already demonstrated compiler-produced manifest
+behavior from uncovered direct mutation, serialization, hashing and fingerprint helpers. Extend an
+existing workflow where that keeps the API visible. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds

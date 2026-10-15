@@ -4163,3 +4163,26 @@ temporary-directory IDs and X protocol serial/resource numbers is byte-identical
 remain303/329 XNA types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence is
 archived under `build/linux-full/reports/checkpoint-956-complete-*`. No screenshot, listening test,
 physical input, external service session or manual visual-quality inspection was performed.
+
+### Focused957 content build configuration
+
+The new renderer-free `content.custom.build_configuration` closes the public
+`ContentBuildConfiguration.hpp` parsing contract in 11 controls. It proves the format version and
+conventional filename, safe minimal defaults, deterministic asset/root order, every component and
+logical-name override, project and per-asset container choices, and exact bool/i64/u64/f64/string
+parameter variants.
+
+Grouped diagnostics retain the supplied configuration filename while refusing malformed JSON,
+wrong format/version, unknown or duplicate fields, unsafe source/logical paths, empty component
+overrides, unknown containers, mismatched/lossy/non-finite parameter values and invalid or repeated
+source-root grants. The existing incremental-compiler demo retains stronger evidence that parsed
+configuration affects only the intended build node and its fingerprint.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass11/11 with byte-identical stdout SHA-256
+`ab027c37510300a73e561bf7ff3a0cce751e73a57f8fb6816397357c42ec23d0` and empty stderr. The
+changed object compiles without warnings with at most three jobs; metadata is676/0; the exact
+SOFTWARE CTest passes20 repetitions and both validator suites pass. Generated totals remain303/329
+XNA types,2114/2326 members,674/753 fields and3078/3205 C routes; 13 public names enter the CNA-
+extension appendix. Complete956 marks the new ID absent. Evidence:
+`/tmp/checkpoint-957-build-configuration/*`. No filesystem resolution, compilation or CNA defect is
+claimed by this parser-focused demo.
