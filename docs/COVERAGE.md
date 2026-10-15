@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**690 demos** in 19 categories. Kinds: console 187, game 296, standalone 207. Automation: automated 654, manual 3, smoke-only 33.
+**691 demos** in 19 categories. Kinds: console 187, game 296, standalone 208. Automation: automated 655, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 65 | 65 | 0 | 0 | 47 / 0 / 14 / 0 / 4 | 47 / 0 / 14 / 0 / 4 |
+| content | 66 | 66 | 0 | 0 | 47 / 0 / 14 / 0 / 5 | 47 / 0 / 14 / 0 / 5 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -32,8 +32,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.media.build_time_decoder`, `content.model.directx_file_reader`, `content.model.fbx_file_reader`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
-- OPENGLES3: absent from report: `content.media.build_time_decoder`, `content.model.directx_file_reader`, `content.model.fbx_file_reader`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
+- SOFTWARE: absent from report: `content.media.build_time_decoder`, `content.model.directx_file_reader`, `content.model.fbx_file_reader`, `content.model.xna_source_pipeline`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
+- OPENGLES3: absent from report: `content.media.build_time_decoder`, `content.model.directx_file_reader`, `content.model.fbx_file_reader`, `content.model.xna_source_pipeline`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -256,7 +256,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbDocument::Metadata` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::OpenChunk` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::Origin` -- content.custom.cnb_read_limits
-- `CNA::Content::Cnb::CnbDocument::Parse` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::Parse` -- content.custom.cnb_read_limits, content.model.xna_source_pipeline
 - `CNA::Content::Cnb::CnbDocument::ParseFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::RequireAsset` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood` -- content.custom.cnb_loader
@@ -402,7 +402,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::DecodeCurveFromCnb` -- content.cnj.curve, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeDdsAsCnbTextureCube` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::DecodeModelFromCnb` -- content.model.pipeline_contract
-- `CNA::Content::Cnb::DecodeModelV2FromCnb` -- content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeModelV2FromCnb` -- content.model.xna_source_pipeline, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeSongFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeSoundEffectFromCnb` -- content.sound_effect.cnb_codec, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeSpriteFontFromCnb` -- content.cnj.sprite_font, content.xnb.pipeline_transcode
@@ -564,29 +564,47 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentBuildManifestOutput` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::ContentBuildManifestVersion` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::ContentBuildRequest::externalSourceRoots` -- content.custom.nested_builds, content.custom.source_root_capabilities
+- `CNA::Content::Pipeline::ContentBuildRequest::outputFormat` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ContentBuildRequest::siblings` -- content.custom.nested_builds
+- `CNA::Content::Pipeline::ContentBuildResult::importer` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ContentBuildResult::messages` -- content.custom.pipeline_diagnostics, content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentBuildResult::output` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ContentBuildResult::parameters` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentBuildResult::processor` -- content.model.xna_source_pipeline
+- `CNA::Content::Pipeline::ContentBuildResult::writer` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ContentCompilerOptions` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentDependency::sourceRoot` -- content.custom.nested_builds, content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::ContentFileSha256` -- content.custom.build_manifest, content.custom.incremental_compiler, content.custom.multi_artifact_publication
+- `CNA::Content::Pipeline::ContentImporter::DefaultProcessor` -- content.model.xna_source_pipeline
+- `CNA::Content::Pipeline::ContentImporter::Identity` -- content.model.xna_source_pipeline
+- `CNA::Content::Pipeline::ContentImporter::OutputTypes` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ContentImporter::SelectedByNameOnly` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentImporter::SourceExtensions` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ContentImporterContext::LogInfo` -- content.custom.pipeline_diagnostics
-- `CNA::Content::Pipeline::ContentPipeline::Build` -- content.cnj.pipeline_assets, content.custom.nested_builds, content.custom.pipeline_components, content.custom.pipeline_diagnostics, content.custom.source_root_capabilities, content.custom.xna_pipeline_components, content.xnb.pipeline_transcode
+- `CNA::Content::Pipeline::ContentOutputFormat::Cnb` -- content.model.xna_source_pipeline
+- `CNA::Content::Pipeline::ContentOutputFormat::Xnb` -- content.model.xna_source_pipeline
+- `CNA::Content::Pipeline::ContentPipeline::Build` -- content.cnj.pipeline_assets, content.custom.nested_builds, content.custom.pipeline_components, content.custom.pipeline_diagnostics, content.custom.source_root_capabilities, content.custom.xna_pipeline_components, content.model.xna_source_pipeline, content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::ContentPipeline::ImportAndProcess` -- content.texture_processor.resize_to_power_of_two
 - `CNA::Content::Pipeline::ContentPipelineError::Component` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::LogicalName` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::Source` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::Stage` -- content.custom.pipeline_components, content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ContentPipelineRegistry::AbsentWriterReason` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineRegistry::AbsentWriters` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ContentPipelineRegistry::DocumentAbsentWriter` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineRegistry::Importers` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ContentPipelineRegistry::IsFrozen` -- content.custom.incremental_compiler
+- `CNA::Content::Pipeline::ContentPipelineRegistry::Processors` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterProcessor` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterWriter` -- content.custom.incremental_compiler, content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineRegistry::ResolveImporter` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ContentPipelineRegistry::ResolveWriter` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::ContentPipelineRegistryFactory` -- content.custom.incremental_compiler
-- `CNA::Content::Pipeline::ContentProcessor::SelectedByNameOnly` -- content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentProcessor::Identity` -- content.model.xna_source_pipeline
+- `CNA::Content::Pipeline::ContentProcessor::InputType` -- content.model.xna_source_pipeline
+- `CNA::Content::Pipeline::ContentProcessor::OutputType` -- content.model.xna_source_pipeline
+- `CNA::Content::Pipeline::ContentProcessor::SelectedByNameOnly` -- content.custom.pipeline_components, content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ContentProcessorContext::AddContentBuildDependency` -- content.custom.dependency_graph
 - `CNA::Content::Pipeline::ContentProcessorContext::AddDeploymentFile` -- content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentProcessorContext::AddGeneratedDependency` -- content.custom.incremental_compiler
@@ -720,6 +738,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ImportedTextureCubeType` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::ImportedVideoSource` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::ImportedVideoSourceType` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::ImportedXnaNodeGraphType` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ImportedXnbVideo` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::ImportedXnbVideoType` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::IsCompiledEffectBinary` -- content.xnb.output_pipeline
@@ -775,6 +794,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::RegisterTexture2DContentPipeline` -- content.custom.source_root_capabilities, content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::RegisterVideoContentPipeline` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaImporter` -- content.custom.nested_builds, content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::RegisterXnaModelSourceContentPipeline` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline
 - `CNA::Content::Pipeline::RegisterXnbContentPipeline` -- content.xnb.pipeline_transcode

@@ -69,12 +69,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-690 project-built catalog demos in19 categories: math78, game33, graphics185, audio23, core6,
-content65, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and207
-standalone; 654 are automated,33 smoke-only and3 manual. Every declared category has demos.
+691 project-built catalog demos in19 categories: math78, game33, graphics185, audio23, core6,
+content66, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and208
+standalone; 655 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete981's full runtime reports; they include all683
-baseline IDs in both renderer suites and correctly mark the seven post-baseline IDs absent.
+baseline IDs in both renderer suites and correctly mark the eight post-baseline IDs absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete981's
 full runtime reports are the baseline inputs for the683-ID checkpoint catalog. Selected semantic
@@ -1358,6 +1358,29 @@ enter the CNA-extension appendix and Complete981 marks seven post-baseline IDs a
 defect is claimed. Audit the one-function `XnaModelSourceContentPipeline.hpp` registration and
 actual `.x`/`.fbx` source routes next, reusing these parser fixtures rather than adding parser-only
 variants.
+
+Focused **989-XNA-model-source-pipeline** adds the renderer-free standalone
+`content.model.xna_source_pipeline` and covers both declarations in
+`XnaModelSourceContentPipeline.hpp` through the real coordinator. Eight controls prove that one
+registration call adds two importers and three processors, records both intentional material-
+writer absences, resolves case-insensitive `.x`/`.fbx` extensions to distinct importer identities
+and one canonical model processor, and keeps the nested texture adapter name-only. Deterministic
+in-memory `.x` and FBX triangle sources both build through the selected route to valid Model CNB
+and XNB bytes. Decoded schema-2 output preserves the expected format-specific root graphs while
+its vertex declarations, exact vertex/index bytes, bounds, draw ranges and material agree.
+
+The source compiles without warnings with at most three jobs and metadata is691/0. Ten SOFTWARE-
+labelled and ten OPENGLES3-labelled direct runs pass8/8 with byte-identical stdout SHA-256
+`9f324c6110296e4a1d8d479070c1b0f376a7b36cb98e571d52638c6b25c336ca` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator self-test suites pass. Generated XNA/C
+totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; 24 public names
+enter the CNA-extension appendix and Complete981 marks eight post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-989-xna-source/*`. The first direct run exposed a demo-only assumption that two
+format-specific scene graphs must serialize byte-identically; inspecting their schema-2 resources
+isolated the expected extra implicit `.x` root, and the corrected semantic check passes. No CNA
+defect appeared. Audit the one-function `XnaModelBridge.hpp` conversion and the adjacent public
+`XnaPipelineBridge.hpp` adapter families against existing model/custom-pipeline evidence next,
+adding only uncovered behavior.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -3550,8 +3573,12 @@ unsupported formats. Focused986 adds a renderer-free standalone that closes
 generated PCM-to-WMA-to-PCM round trip. Focused987 adds a separate text/binary DirectX `.x` reader
 workflow and closes `DirectXFileReader.hpp`, including all carrier, error and limit declarations.
 Focused988 adds the adjacent text/binary FBX reader workflow and closes `FbxFileReader.hpp`,
-including typed accessors, plain/compressed arrays and every error/limit declaration. Audit the
-one-function `XnaModelSourceContentPipeline.hpp` registration and actual `.x`/`.fbx` routes next.
+including typed accessors, plain/compressed arrays and every error/limit declaration.
+Focused989 adds the end-to-end XNA model source workflow: its one registration call contributes
+all five promised components, both extensions select the intended importers, both intentional
+material-writer absences are visible, and real `.x`/`.fbx` triangles reach valid CNB and XNB Model
+bytes with exact shared geometry/material resources. Audit `XnaModelBridge.hpp` and the adjacent
+public `XnaPipelineBridge.hpp` adapter families against existing evidence next.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

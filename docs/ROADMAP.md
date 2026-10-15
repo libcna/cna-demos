@@ -10518,3 +10518,29 @@ SOFTWARE CTest passes ten repetitions and both validator suites pass. Generated 
 extension appendix and Complete981 marks seven post-baseline IDs absent. Evidence:
 `/tmp/checkpoint-988-fbx-reader/*`. No CNA defect appeared. Audit the one-function
 `XnaModelSourceContentPipeline.hpp` registration and actual `.x`/`.fbx` source routes next.
+
+## Focused989-XNA-model-source-pipeline
+
+The new renderer-free `content.model.xna_source_pipeline` standalone closes both public
+`XnaModelSourceContentPipeline.hpp` declarations in eight controls. One registration call adds the
+promised two importers and three processors plus both documented material-writer absences.
+Case-insensitive `.x` and `.fbx` resolution selects `CNA.XImporter` and `CNA.FbxImporter`, with
+`CNA.XnaModelProcessor` bridging the shared imported node graph to CNA's canonical processed model;
+the nested texture adapter remains name-only so it cannot compete with ordinary texture routing.
+
+Deterministic in-memory DirectX and FBX triangles each build through the actual coordinator to both
+CNB and XNB Model output. Their decoded schema-2 graphs retain the expected source distinction --
+the `.x` importer supplies an implicit unnamed root while the FBX mesh is itself the root -- and
+agree exactly on vertex declaration and bytes, index bytes, bound, draw range and material. This
+separates end-to-end registration/routing evidence from Focused987/988's parser-level evidence.
+
+The source compiles without warnings with at most three jobs and metadata is691/0. Ten SOFTWARE-
+labelled and ten OPENGLES3-labelled direct runs pass8/8 with identical stdout SHA-256
+`9f324c6110296e4a1d8d479070c1b0f376a7b36cb98e571d52638c6b25c336ca` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator suites pass. Generated XNA/C totals remain
+303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; 24 public names enter the CNA-
+extension appendix and Complete981 marks eight post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-989-xna-source/*`. The initial byte-identity check was a demo defect: inspection
+showed the legitimate implicit `.x` root and led to the semantic resource comparison above. No CNA
+defect appeared. Audit `XnaModelBridge.hpp` and the adjacent public `XnaPipelineBridge.hpp` adapter
+families against existing demos next, adding only behavior that lacks meaningful evidence.

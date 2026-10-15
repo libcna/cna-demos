@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added an end-to-end XNA model source-pipeline workflow covering the five-component registration
+  contract, `.x`/`.fbx` routing, intentional material-writer absences and real CNB/XNB builds.
 - Added a renderer-free build-time BC1/BC2/BC3 workflow covering exact sizing, alpha policy, edge
   replication, deterministic output, encoder options and malformed-input refusal.
 - Completed the adjacent texture-compression adapter with exact CNB-format mapping, option

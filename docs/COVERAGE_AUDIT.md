@@ -4832,3 +4832,25 @@ SOFTWARE CTest passes ten repetitions and both validator self-test suites pass. 
 totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; 27 names enter the
 CNA-extension appendix. Complete981 marks this seventh post-baseline ID absent. Evidence:
 `/tmp/checkpoint-988-fbx-reader/*`. No CNA defect appeared.
+
+### XNA model source-pipeline audit
+
+Focused989 adds the renderer-free `content.model.xna_source_pipeline` standalone and dispositions
+both declarations in `XnaModelSourceContentPipeline.hpp` through real registry and build behavior.
+
+| Public family | Current disposition |
+|---|---|
+| Registration contract | One call adds exactly `CNA.XImporter`, `CNA.FbxImporter`, `CNA.XnaModelProcessor`, `MaterialProcessor` and the name-only `TextureProcessor` adapter. The stable imported node-graph identity, extension lists, output types and common default processor are checked directly. |
+| Intentional writer gaps | Both CNB and XNB registry inventories retain a nonempty reason for the absence of a standalone MaterialContent writer: materials are intermediate model content. |
+| Actual source routes | Deterministic `.x` and text FBX triangles run through `ContentPipeline::Build`; each result retains its selected importer and the shared model processor, then produces nonempty Model CNB and XNB containers with the expected signatures and reader identity. |
+| Semantic convergence | Both CNB outputs decode as schema-2 models. The `.x` graph has its expected implicit unnamed root and the FBX mesh is the root, while vertex declaration/bytes, index bytes, bound, draw range and material agree exactly. Parser encodings and resource ceilings remain owned by Focused987/988. |
+
+The warning-free source builds with at most three jobs and metadata is691/0. Ten SOFTWARE-labelled
+and ten OPENGLES3-labelled direct runs pass8/8 with byte-identical stdout SHA-256
+`9f324c6110296e4a1d8d479070c1b0f376a7b36cb98e571d52638c6b25c336ca` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator self-test suites pass. Generated XNA/C
+totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; 24 names enter the
+CNA-extension appendix. Complete981 marks this eighth post-baseline ID absent. Evidence:
+`/tmp/checkpoint-989-xna-source/*`. The first direct run's byte-identity assumption belonged to the
+demo; inspecting both schema-2 graphs established the legitimate source-root distinction and no
+CNA defect appeared.
