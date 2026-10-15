@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete runtime baseline at 655 demos: all 668 enabled CTests and both full
+  renderer smoke suites complete without an unexpected result.
 - Repaired the glTF import-report oracle after the shared multi-skin fixture gained a second
   primitive, and added exact source-animation versus palette-local-clip accounting.
 - Extended palette sampling with safe omission of empty, negative-index and past-end tracks, and

@@ -8557,3 +8557,19 @@ animation and its two retained palette-local clips. Direct SOFTWARE and OPENGLES
 exact SOFTWARE CTest pass after the repair; metadata and both self-test suites remain green, and
 temporary coverage is unchanged. This is a cna-demos oracle correction, not a CNA issue; the full
 checkpoint must be rerun from scratch.
+
+## Complete859-655-demo-full-checkpoint
+
+The complete checkpoint absorbs focused845-858. The warning-free pinned-CNA build uses `-j3` and
+metadata is655/0. All668 enabled CTests pass (624 ordinary/expected-failure passes and44 declared
+skips, 389.54s); three manual tests remain disabled. SOFTWARE/private-Xvfb executes all655 IDs as
+563 pass/46 expected fail/43 skip/3 manual, and OPENGLES3/private-Xvfb reports602/47/3/3. Neither
+renderer has an unexpected failure or unexpected pass.
+
+Complete844 comparisons account for five new IDs, intended check-count growth in four existing
+model demos and only the reviewed ISSUE-031 and ISSUE-092-096 assertion additions. Generated
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Both tool
+self-test suites pass. Evidence:`build/linux-full/reports/checkpoint-859-complete-*`. No screenshot,
+listening test, physical input, external service session or manual visual-quality inspection was
+performed. Continue the deeper behavior audit with duplicate-position insertion and indexed
+replacement boundaries in the existing `math.curve.key_collection` workflow.

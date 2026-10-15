@@ -6,7 +6,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**650 demos** in 18 categories. Kinds: console 163, game 288, standalone 199. Automation: automated 614, manual 3, smoke-only 33.
+**655 demos** in 18 categories. Kinds: console 164, game 292, standalone 199. Automation: automated 619, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 23 / 7 / 2 / 1 / 0 | 30 / 0 / 2 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 16 / 0 / 2 / 1 / 0 | 16 / 0 / 2 / 1 / 0 |
-| graphics | 179 | 179 | 0 | 0 | 146 / 26 / 7 / 0 / 0 | 167 / 3 / 9 / 0 / 0 |
+| graphics | 184 | 184 | 0 | 0 | 146 / 26 / 12 / 0 / 0 | 167 / 3 / 14 / 0 / 0 |
 | input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
 | media | 13 | 12 | 1 | 0 | 12 / 0 / 1 / 0 / 0 | 12 / 0 / 1 / 0 / 0 |
@@ -156,14 +156,14 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `AnimationClipEXT` -- graphics.model.clip_interpolation, graphics.model.node_animation
 - `AnimationPlayer::CurrentClip` -- graphics.model.skinned_animation
 - `AnimationPlayer::CurrentPosition` -- graphics.model.skinned_animation
-- `AnimationPlayer::GetBoneTransforms` -- graphics.model.skinned_animation
+- `AnimationPlayer::GetBoneTransforms` -- graphics.model.multi_skin_animation_report, graphics.model.skinned_animation
 - `AnimationPlayer::GetSkinTransforms` -- graphics.model.skinned_animation, graphics.model.skinned_pbr
 - `AnimationPlayer::GetWorldTransforms` -- graphics.model.skinned_animation
-- `AnimationPlayer::StartClip` -- graphics.model.multiple_skins, graphics.model.skinned_animation, graphics.model.skinned_pbr
-- `AnimationPlayer::Update` -- graphics.model.multiple_skins, graphics.model.skinned_animation
-- `ApplyClipToBonesEXT` -- graphics.model.clip_interpolation, graphics.model.gltf_cameras, graphics.model.node_animation
+- `AnimationPlayer::StartClip` -- graphics.model.multi_skin_animation_report, graphics.model.multiple_skins, graphics.model.skinned_animation, graphics.model.skinned_pbr
+- `AnimationPlayer::Update` -- graphics.model.multi_skin_animation_report, graphics.model.multiple_skins, graphics.model.skinned_animation
+- `ApplyClipToBonesEXT` -- graphics.model.animation_validation, graphics.model.clip_interpolation, graphics.model.gltf_cameras, graphics.model.node_animation
 - `ArgumentException` -- audio.sound_effect.loop_region
-- `BlendMorphTargetsEXT` -- graphics.model.morph_targets
+- `BlendMorphTargetsEXT` -- graphics.model.morph_animation_import, graphics.model.morph_targets
 - `Buttons::Misc1EXT` -- input.gamepad.extra_buttons
 - `Buttons::Paddle1EXT` -- input.gamepad.extra_buttons
 - `Buttons::Paddle2EXT` -- input.gamepad.extra_buttons
@@ -418,7 +418,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `DynamicSoundEffectInstance::Stop` -- audio.dynamic_sound_effect_instance.buffer_formats, audio.dynamic_sound_effect_instance.streaming
 - `Effect::Apply` -- graphics.effect.custom_apply_lifecycle, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.uniform_palettes
 - `Environment::DeviceType` -- devices.sensors.availability
-- `EvaluateMorphWeightsEXT` -- graphics.model.morph_targets
+- `EvaluateMorphWeightsEXT` -- graphics.model.morph_animation_import, graphics.model.morph_targets
 - `FileAccess` -- storage.storage_container.file_modes
 - `FileDropEventArgsEXT::Files` -- game.window.file_drop
 - `FileMode` -- storage.storage_container.file_modes
@@ -467,13 +467,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GamerCollection::Item` -- net.network_session.local_session
 - `GestureSample::GestureSample` -- input.touch.gesture_queue
 - `GltfImportDiagnosticEXT` -- graphics.model.import_report, graphics.model.skin_weight_import
-- `GltfImportDiagnosticEXT::Code` -- graphics.model.import_report
+- `GltfImportDiagnosticEXT::Code` -- graphics.model.import_report, graphics.model.node_animation, graphics.model.node_instances
 - `GltfImportDiagnosticEXT::Count` -- graphics.model.import_report
 - `GltfImportDiagnosticEXT::Details` -- graphics.model.import_report
 - `GltfImportDiagnosticEXT::Kind` -- graphics.model.import_report
 - `GltfImportDiagnosticEXT::Message` -- graphics.model.import_report
 - `GltfImportDiagnosticEXT::Severity` -- graphics.model.import_report
-- `GltfImportDiagnosticEXT::Subject` -- graphics.model.import_report
+- `GltfImportDiagnosticEXT::Subject` -- graphics.model.import_report, graphics.model.node_instances
 - `GltfImportDiagnosticEXT::WorstMagnitude` -- graphics.model.import_report
 - `GltfImportDiagnosticKindEXT` -- graphics.model.import_report
 - `GltfImportDiagnosticKindEXT::Approximation` -- graphics.model.import_report
@@ -486,21 +486,21 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GltfImportDiagnosticSeverityEXT::Information` -- graphics.model.import_report
 - `GltfImportDiagnosticSeverityEXT::Warning` -- graphics.model.import_report
 - `GltfImportReportEXT` -- graphics.model.import_report
-- `GltfImportReportEXT::AnimationCount` -- graphics.model.import_report
-- `GltfImportReportEXT::AnythingLost` -- graphics.model.import_report, graphics.model.imported_topology
+- `GltfImportReportEXT::AnimationCount` -- graphics.model.import_report, graphics.model.node_animation
+- `GltfImportReportEXT::AnythingLost` -- graphics.model.import_report, graphics.model.imported_topology, graphics.model.multi_skin_animation_report
 - `GltfImportReportEXT::ApproximationCount` -- graphics.model.import_report
 - `GltfImportReportEXT::CameraNodeCount` -- graphics.model.import_report
-- `GltfImportReportEXT::ClipCount` -- graphics.model.import_report
-- `GltfImportReportEXT::Diagnostics` -- graphics.model.import_report
-- `GltfImportReportEXT::DistinctMeshCount` -- graphics.model.import_report
+- `GltfImportReportEXT::ClipCount` -- graphics.model.import_report, graphics.model.node_animation
+- `GltfImportReportEXT::Diagnostics` -- graphics.model.import_report, graphics.model.morph_animation_import, graphics.model.multi_skin_animation_report, graphics.model.node_animation, graphics.model.node_instances, graphics.model.skinned_animation
+- `GltfImportReportEXT::DistinctMeshCount` -- graphics.model.import_report, graphics.model.node_instances
 - `GltfImportReportEXT::DroppedFeatureCount` -- graphics.model.import_report
 - `GltfImportReportEXT::ImportedLightCount` -- graphics.model.import_report
 - `GltfImportReportEXT::LightNodeCount` -- graphics.model.import_report
-- `GltfImportReportEXT::MaxNodeDepth` -- graphics.model.import_report
-- `GltfImportReportEXT::MeshInstanceCount` -- graphics.model.import_report
-- `GltfImportReportEXT::NodeCount` -- graphics.model.import_report
+- `GltfImportReportEXT::MaxNodeDepth` -- graphics.model.import_report, graphics.model.node_instances
+- `GltfImportReportEXT::MeshInstanceCount` -- graphics.model.import_report, graphics.model.node_instances
+- `GltfImportReportEXT::NodeCount` -- graphics.model.import_report, graphics.model.node_instances
 - `GltfImportReportEXT::PrimitiveCount` -- graphics.model.import_report
-- `GltfImportReportEXT::SharedMeshCount` -- graphics.model.import_report
+- `GltfImportReportEXT::SharedMeshCount` -- graphics.model.import_report, graphics.model.node_instances
 - `GltfImportReportEXT::SkinCount` -- graphics.model.import_report
 - `GltfImportReportEXT::WarningCount` -- graphics.model.import_report
 - `GraphicsAdapter::GetCurrentDeviceTypeEXT` -- graphics.graphics_adapter.display_modes
@@ -630,11 +630,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateWriter::WriteTypeName` -- content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateWriter::Xml` -- content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Graphics::AnimationClipEXT` -- graphics.model.palette_sampling
-- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::GetBoneTransforms` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::AnimationPlayer` -- graphics.model.animation_player_validation
+- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::GetBoneTransforms` -- graphics.model.animation_player_validation, graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::AnimationPlayer::GetSkinTransforms` -- graphics.model.palette_sampling
-- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::GetWorldTransforms` -- graphics.model.palette_sampling
-- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::StartClip` -- graphics.model.palette_sampling
-- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::Update` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::GetWorldTransforms` -- graphics.model.animation_player_validation, graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::StartClip` -- graphics.model.animation_player_validation, graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::AnimationPlayer::Update` -- graphics.model.animation_player_validation, graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::ApplyBindPoseBoneTransformsEXT` -- graphics.model.multiple_skins
 - `Microsoft::Xna::Framework::Graphics::BoneTrackEXT` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setLightViewProjectionEXT` -- graphics.skinned_effect.shadow_cascades, graphics.skinned_effect.shadow_receiver
@@ -667,15 +668,18 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::ParentBoneIndices` -- graphics.model.palette_sampling
 - `Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::RemovePartEXT` -- graphics.model.skinned_parts
 - `Microsoft::Xna::Framework::Graphics::SkinningData` -- graphics.model.palette_sampling
+- `Microsoft::Xna::Framework::Graphics::SkinningData::InverseBindPose` -- graphics.model.animation_player_validation
+- `Microsoft::Xna::Framework::Graphics::SkinningData::SkeletonHierarchy` -- graphics.model.animation_player_validation
 - `Microsoft::Xna::Framework::Graphics::SkinningData::SkeletonRootNodeIndexEXT` -- graphics.model.multiple_skins
-- `Microsoft::Xna::Framework::Graphics::SkinningData::SkeletonRootPrefix` -- graphics.model.multiple_skins
+- `Microsoft::Xna::Framework::Graphics::SkinningData::SkeletonRootPrefix` -- graphics.model.animation_player_validation, graphics.model.multiple_skins
 - `Microsoft::Xna::Framework::Graphics::Texture2D::DDSFromStreamEXT` -- graphics.texture2d.dds_stream
 - `Microsoft::Xna::Framework::Graphics::VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned` -- graphics.model.skinned_parts
-- `Model::GltfImportReportEXT` -- graphics.model.import_report, graphics.model.imported_topology, graphics.model.skin_weight_import
+- `Model::GltfImportReportEXT` -- graphics.model.animation_validation, graphics.model.clip_interpolation, graphics.model.import_report, graphics.model.imported_topology, graphics.model.morph_animation_import, graphics.model.multi_skin_animation_report, graphics.model.node_animation, graphics.model.node_instances, graphics.model.skin_weight_import, graphics.model.skinned_animation
 - `Model::MaterialVariantEXT` -- graphics.model.material_variants
 - `Model::MaterialVariantNamesEXT` -- graphics.model.material_variants
+- `Model::SkinsEXT` -- graphics.model.multi_skin_animation_report
 - `Model::getCamerasEXTProperty` -- graphics.model.gltf_cameras
-- `ModelAnimationsEXT` -- graphics.model.clip_interpolation, graphics.model.gltf_cameras, graphics.model.node_animation
+- `ModelAnimationsEXT` -- graphics.model.animation_validation, graphics.model.clip_interpolation, graphics.model.gltf_cameras, graphics.model.node_animation
 - `ModelBoneCollection::Contains` -- graphics.model.bones
 - `ModelBoneCollection::Count` -- graphics.model.bones
 - `ModelCameraEXT` -- graphics.model.gltf_cameras
@@ -684,8 +688,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ModelMeshCollection::Count` -- graphics.model.bones, graphics.model.draw
 - `ModelMeshPart::ModelMeshPart` -- graphics.model.mesh_parts
 - `ModelMeshPart::SamplerStatesEXT` -- graphics.model.material_variants
-- `MorphTargetDataEXT` -- graphics.model.material_variants, graphics.model.morph_targets
-- `MorphWeightTrackEXT` -- graphics.model.morph_targets
+- `ModelSkinEXT` -- graphics.model.multi_skin_animation_report
+- `MorphTargetDataEXT` -- graphics.model.material_variants, graphics.model.morph_animation_import, graphics.model.morph_targets
+- `MorphWeightTrackEXT` -- graphics.model.morph_animation_import, graphics.model.morph_targets
 - `Motion::IsSupported` -- devices.sensors.availability
 - `Mouse::ClickedEXT` -- input.mouse.clicked_event
 - `Mouse::IsRelativeMouseModeEXT` -- input.mouse.relative_mode
@@ -778,7 +783,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `SensorBase::IsDataValid` -- devices.sensors.availability, devices.sensors.keyboard_accelerometer
 - `SensorBase::State` -- devices.sensors.availability
 - `SensorState` -- devices.sensors.availability
-- `SetMorphWeightsEXT` -- graphics.model.material_variants, graphics.model.morph_targets
+- `SetMorphWeightsEXT` -- graphics.model.material_variants, graphics.model.morph_animation_import, graphics.model.morph_targets
 - `ShaderEffect::Clone` -- graphics.shader_effect.clone_state
 - `ShaderEffect::GetCompileErrorEXT` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.toon_shading
 - `ShaderEffect::GetSelectedShaderLanguageEXT` -- graphics.shader_effect.clone_state, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package
@@ -807,6 +812,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `SkinnedPbrEffect::ImageBasedLightEXT` -- graphics.model.skinned_pbr
 - `SkinnedPbrEffect::SetBoneTransforms` -- graphics.model.skinned_pbr, graphics.pbr_effect.fog_depth, graphics.pbr_effect.shadow_receivers
 - `SkinningData` -- graphics.model.skinned_animation, graphics.model.skinned_pbr
+- `SkinningData::AnimationClips` -- graphics.model.multi_skin_animation_report
 - `SoundEffectInstance::SoundEffectInstance` -- audio.sound_effect_instance.lifetime
 - `SpriteFont::SpriteFont` -- graphics.sprite_font.glyph_constructor
 - `SpriteFont::getCroppingEXT` -- graphics.sprite_font.glyph_constructor
@@ -830,6 +836,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `TouchLocation::PressureEXT` -- input.touch.touch_values
 - `TouchPanel::EnqueueGesture` -- input.touch.gesture_queue
 - `TouchPanel::MouseTouchEmulationEnabledEXT` -- input.touch.get_state
+- `VertexBuffer::GetDataRawEXT` -- graphics.model.morph_animation_import
 - `VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned` -- graphics.skinned_effect.two_bones, graphics.skinned_effect.weight_channels
 - `VibrateController::Default` -- devices.vibrate_controller.start_stop
 - `VibrateController::Start` -- devices.vibrate_controller.start_stop

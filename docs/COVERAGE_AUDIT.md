@@ -2587,3 +2587,17 @@ material scenes, animated skinned/IBL model and receiver branch scene, every pub
 now has either meaningful behavior evidence or an explicit intentional disposition on d23e139.
 ISSUE-070 and the documented renderer limitations remain visible; no comprehensive CNA-wide claim
 is implied.
+
+### Complete859 generated runtime checkpoint
+
+Focused845-858 are now included in a complete project build and both full smoke suites. Generated
+coverage is655 demos,302/329 types,2114/2326 non-field members,169/753 fields and3078/3205 C
+routes. SOFTWARE reports563 pass/46 expected fail/43 skip/3 manual; OPENGLES3 reports602/47/3/3,
+both across every catalog ID with no unexpected result. All668 enabled CTests pass and three manual
+tests remain disabled. Complete844 comparisons add only the reviewed Model/animation IDs, check
+growth and ISSUE-031/092-096 witnesses.
+
+This runtime checkpoint does not turn the declaration-level member disposition into comprehensive
+behavior coverage. The next concrete recorded gap is `CurveKeyCollection` duplicate-position
+insertion and indexed replacement ordering/atomicity; it belongs in the existing focused workflow
+rather than a new demo ID.
