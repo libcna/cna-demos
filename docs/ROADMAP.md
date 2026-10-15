@@ -9182,3 +9182,23 @@ passes ten consecutive runs. Generated coverage remains302/329 types,2114/2326 m
 fields and3078/3205 C routes; eight named CNA extensions are explicitly outside the XNA inventory.
 Evidence:`/tmp/checkpoint-893-*`. No screenshot, visual-quality or audible-quality claim is made.
 Audit raw Video audio/video track preselection and player override behavior next.
+
+## Focused894-public-multi-track-Video-selection
+
+New `media.video_player.track_selection` adds one coherent ID and an original deterministic MKV
+with same-format red/blue video tracks and two same-format mono audio tracks. Eight of nine public
+controls pass on both renderer labels: raw default metadata, player preselection before Play,
+same/invalid track no-ops, audio/video isolation, `-1` default reset, frame-generation continuity
+and attached-Video forwarding. Exact blue/red Texture2D bytes distinguish video tracks without
+visual judgment.
+
+Detached `Video::SetVideoTrackEXT(1)` before Play is ignored and decodes default red stream zero;
+CNA-DEMOS-ISSUE-100 records that `VideoPlayer::OpenDecoder` never consumes either track field stored
+on Video. The audio-side symmetry is source evidence only because no public active-track readback
+exists. Both renderer outputs are byte-identical with empty stderr. The exact known-issue SOFTWARE
+CTest passes20 repetitions, the warning-free build uses at most three jobs, metadata is658/0 and
+two generator runs reproduce SHA-256
+`61410a468e900cd4b446e45a01c82e0295d600f410a9f131868687d72f4b8e74`. Coverage remains302/329
+types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-894-*`.
+Finish the remaining public Video construction/metadata and VideoPlayer failure/transition
+disposition next, then leave this family if no distinct application behavior remains.

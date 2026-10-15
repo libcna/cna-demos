@@ -1218,6 +1218,25 @@ XNA members were already credited; eight newly named CNA extensions are explicit
 non-XNA metadata. Evidence: `/tmp/checkpoint-893-*`. Frame pixels continue through the established
 draw path, but no screenshot, visual-quality or audible-quality claim is made.
 
+### Video and VideoPlayer multi-track selection
+
+New `media.video_player.track_selection` uses a deterministic original MKV with two conforming
+160x90 YUV420 streams (solid red and blue) and two conforming48kHz mono streams. Public player-level
+preselection before Play returns blue pixels from stream one. Same-track and invalid video indices
+preserve the live Texture2D identity; real, same-format audio switches and their no-op variants do
+not replace that unrelated texture or stop transport. Resetting both player preferences to `-1`
+selects the default red stream on replay while frame generation stays lifetime-monotonic. Calling
+the same selectors on the attached Video reaches its player without stopping playback.
+
+The Video-level pre-Play path exposes CNA-DEMOS-ISSUE-100. FNA documents these methods on Video and
+recommends calling them before Play, but pinned CNA decodes red stream zero after the detached Video
+selected blue stream one. Source inspection shows the parallel audio field is disconnected too;
+because the public surface has no active-audio-track readback, that symmetry is recorded as source
+evidence rather than claimed runtime proof. Both renderer-labelled runs execute nine controls,
+pass eight and fail only the blue-selection invariant with byte-identical stdout and empty stderr.
+Evidence:`/tmp/checkpoint-894-*`. Pixel bytes were read programmatically; no screenshot, listening
+test or manual visual-quality judgment was performed.
+
 ### Network simulation (measurement boundaries)
 
 | Members / behavior | Decision and evidence |

@@ -15,6 +15,33 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-100 -- Detached Video track preferences are ignored by VideoPlayer::Play
+
+- **Area/API:** `Video::SetVideoTrackEXT`, the symmetric `Video::SetAudioTrackEXT`, and
+  `VideoPlayer::Play`.
+- **Demo:** `media.video_player.track_selection`.
+- **Reproduction:** create a raw Video over the generated `track_matrix.mkv`, whose two conforming
+  160x90 YUV420 video streams are solid red and blue and whose two mono audio streams share a
+  48 kHz wave format. Call both Video-level selectors with index one before attaching that Video to
+  a fresh VideoPlayer, then Play and read the first frame through public Texture2D data.
+- **Observed:** the first frame is red, from default video stream zero, rather than blue stream one.
+  The same fixture proves that player-level preselection before Play does select blue stream one,
+  and that calling the Video setters while attached forwards without stopping playback. The
+  audio preference has the same disconnected storage path in source, but the demo deliberately
+  claims no audible or sample-rate observation.
+- **Expected/reference:** FNA's official extension contract defines these methods on Video, says
+  they select tracks in a multi-track file, and specifically recommends calling them before
+  `VideoPlayer.Play` for a clean selection. The fixture obeys its stated same-format constraints.
+  See [FNA Extensions: SetAudioTrackEXT, SetVideoTrackEXT](https://fna-xna.github.io/docs/5%3A-FNA-Extensions/#setaudiotrackext-setvideotrackext).
+- **Cause observed in source:** each Video setter stores its index in `audioTrack_` or
+  `videoTrack_` and forwards only when `parent_` is already non-null. `VideoPlayer::OpenDecoder`
+  applies only the player's separate fields and never reads the Video's stored preferences, so
+  detached selections cannot reach the decoder.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. Runtime evidence is exact public pixel data for the
+  video selector; source inspection establishes the symmetric disconnected audio field without
+  upgrading it to runtime proof. No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-099 -- VideoPlayer validation and lifecycle contracts diverge from XNA
 
 - **Area/API:** `VideoPlayer::Play`, `GetTexture`, `Volume`, `Stop`, `Dispose`, `State`,

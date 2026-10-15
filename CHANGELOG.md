@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added deterministic public multi-track Video selection coverage and recorded
+  CNA-DEMOS-ISSUE-100: preferences set on a detached Video are ignored when playback starts.
 - Extended the VideoPlayer workflow to exact XNA validation, retained-Video and disposal contracts;
   recorded CNA-DEMOS-ISSUE-099 for six grouped incompatibilities while preserving real transport.
 - Refreshed the complete runtime baseline at 657 demos: all 670 enabled CTests and both full

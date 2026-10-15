@@ -67,11 +67,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-657 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
-content46, input40, storage7, media15, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,292 game and201 standalone;
-621 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports for all657 catalog demos.
+658 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
+content46, input40, storage7, media16, gamer services19, net14, devices5, phone1, design4,
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,293 game and201 standalone;
+622 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-894
+overlays for all658 catalog demos.
 The surface totals remain302/329 XNA types,2114/2326 XNA members,169/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -281,6 +282,26 @@ XNA inventory. Evidence:`/tmp/checkpoint-893-*`. No CNA source was edited; no sc
 visual-quality or audible-quality claim was made. **Next:** audit whether raw Video audio/video
 track preselection reaches playback and how player-level selectors override it, using a generated
 multi-track asset only if public observation distinguishes the paths.
+
+Focused **894-public-multi-track-Video-selection** adds the658th stable catalog ID,
+`media.video_player.track_selection`, and an original deterministic one-second MKV containing two
+same-format160x90 YUV420 streams (red/blue) plus two same-format48kHz mono streams. Both renderer
+labels run nine public controls with byte-identical stdout and empty stderr. Eight pass: raw default
+metadata; player-level video/audio preselection; same-track and invalid video no-ops; audio-switch
+texture isolation; `-1` default reset plus monotonic generation; and attached-Video forwarding.
+The detached Video-level preference decodes red stream0 instead of requested blue stream1, the sole
+failure recorded as CNA-DEMOS-ISSUE-100. Source confirms Video stores both selectors but
+VideoPlayer::OpenDecoder reads only its own independent fields; audio is therefore source-audited,
+not claimed as an audible/runtime selection result.
+
+The warning-free incremental build and required CMake regeneration use at most three jobs;
+metadata validates658/0 and the exact known-issue SOFTWARE CTest passes20 consecutive runs. Two
+generator runs reproduce fixture SHA-256
+`61410a468e900cd4b446e45a01c82e0295d600f410a9f131868687d72f4b8e74`. Coverage remains302/329
+types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-894-*`. **Next:** finish the remaining public Video construction/metadata and
+VideoPlayer failure/transition disposition, then leave the video family if no distinct public gap
+remains.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
