@@ -872,6 +872,34 @@ an explicit boundary disposition. The fixture is serialized but never executed: 
 renderer exposes compiled-Effect execution in this environment, so this checkpoint makes no GPU,
 visual, shader-correctness or genuine-XNA compatibility claim.
 
+#### `Texture2DContentPipeline.hpp` declaration-level disposition
+
+The pinned header exposes 48 public declarations under the same counting used above: eight stable
+identities/parameter keys, six build-format values, two format functions, the encoder callable,
+four pixel helpers, eight imported-image fields, three import/canonicalization helpers, four
+importer methods, two processor constructors plus five methods, four writer methods and one
+registration function. Focused965 adds `content.texture_processor.pipeline_contract` as the one
+headless component-contract demo; the existing four processor scenes and XNB DXT scene retain the
+user-facing visual behaviors.
+
+| Declaration family | Disposition |
+|---|---|
+| ImportedImageType, ProcessedTexture2DType; six parameter keys | One grouped assertion freezes both routing identities and the exact `colorKey`, `textureFormat`, `generateMipmaps`, `premultiplyAlpha`, `resizeToPowerOfTwo` and `passThrough` spellings. The existing color-key, mipmap, premultiplied-alpha, resize/profile and DXT scenes demonstrate the first five policies in use. The new DDS control demonstrates pass-through semantically by preserving every authored BC1 block and bypassing the injected encoder. More combinations would multiply policy permutations rather than add concepts. |
+| TextureBuildFormat values; TryParseTextureBuildFormat/TextureBuildFormatName | All six values round-trip to their canonical names; mixed-case `DxtCompressed` parses and unknown `Bc7` remains absent. Existing `content.xnb.dxt_texture` supplies real automatic DXT selection and runtime SurfaceFormat evidence. Separate demos for explicit Dxt1/Dxt3/Dxt5 spelling would only repeat one parser/encoder route. |
+| TextureBlockEncoder; both TextureProcessor constructors | The default component identity is inspected and its strict parameter validation is exercised. A parameterized processor registered through the public helper calls an injected encoder once with exact BC1 format, 64x64 dimensions and all 16,384 RGBA source bytes; its recognizable 2,048-byte result becomes the sole processed level. Those probe blocks are deliberately not treated as a valid visual texture. The existing XNB DXT scene is built by the tool's real encoder and owns actual compressed loading/render evidence. |
+| NextPowerOfTwoDimension, ResampleRgbaImage, PremultiplyRgbaAlpha, GenerateRgbaMipChain | Exact controls cover 0/1/non-power/exact-power sizing, awkward 3-to-2 area averaging, interpolated growth with fixed endpoints, partial/opaque/transparent alpha plus a trailing partial texel, rectangular halving to 1x1 and the 1x1 no-op. Invalid dimensions/buffer lengths and arithmetic ceilings are useful library safety tests, not additional demo concepts. The resize/mipmap/premultiply scenes connect the helpers to real content and rendering. |
+| ImportedImage fields; DecodeImportedImage | A real 64x64 RGBA PNG produces exact dimensions and 16,384 bytes with empty mip/compression/policy side channels. A real 16x8 DXT1 DDS exposes decoded pixels plus its authored BC1 format and every compressed mip for pass-through. A synthetic two-level carrier then proves canonical level ownership/order. The authored colour-key and premultiply optionals are inter-component policy carriers: CNJ and XNB importers populate them, and the existing CNJ source-root and nine-root XNB transcode workflows execute those shared processors. Directly assigning the optionals without an importer would add no author-facing route. |
+| ApplyPngFileGammaEXT | A minimal structurally sufficient RGBA PNG header with `gAMA=45000` maps RGB 128/64/255 to 127/63/255 while retaining alpha 77; non-PNG input is unchanged. Full PNG decoding is separately exercised through a real fixture. sRGB/iCCP, truncated chunks and every PNG colour type remain format-parser boundary tests rather than demo variants. |
+| BuildCnbTexture2DData | A 2x2 level plus its 1x1 child becomes one Rgba8 representation with depth/face count one and exact level order. The full registered PNG build then decodes the actual CNB and matches every original opaque pixel. Invalid mip geometry is a codec validation boundary already owned by CNA tests. |
+| ImageImporter methods | Identity/version, all fourteen routed extensions and the three possible output identities are exact. The registered build executes `Import` for real PNG, ordinary DDS and DDS pass-through; `content.cnj.pipeline_assets` separately exercises the cube-shaped DDS output. PNG and block-compressed DDS represent the ordinary raster and structured-surface branches. One demo per interchangeable JPEG/BMP/TGA/GIF/PSD/HDR/PIC/PNM/DIB/PFM/PPM decoder front end would inflate count without teaching another pipeline concept. |
+| TextureProcessor methods and parameter policy | Identity/version and input/output types are exact; registered `ImportAndProcess` executes ordinary Color, injected Dxt1 and pass-through paths. Validation distinguishes `UnknownName` from `UnconvertibleValue` structurally. Existing focused scenes cover color key, default/explicit premultiplication, mip generation, power-of-two resize and Reach/HiDef/CNB policy. Size/aspect/DXT alignment, wrong boxed types and every malformed spelling are boundary matrices for the CNA suite. |
+| Texture2DContentWriter methods; RegisterTexture2DContentPipeline | Writer identity/input and the frozen Texture2D asset/schema/runtime-type/codec tuple are exact. A registry built only through the public registration function performs the real PNG import, processing and write twice with byte-identical CNB, then public decoding proves dimensions, one Rgba8 level and every source pixel. The injected encoder and DDS pass-through use that same registered processor. Existing runtime texture demos own GPU upload, sampling and visual output. |
+
+All ordinary public `Texture2DContentPipeline.hpp` declarations now have direct evidence, a shared
+workflow owner or an explicit boundary disposition. The new demo is CPU-only and uses synthetic
+encoder output solely to expose the callback contract; it makes no visual-quality, GPU-format,
+cross-platform decoder or genuine-XNA execution claim.
+
 ### Runtime XNB readers (separate from intermediate XML)
 
 `content.xnb.custom_type_reader` supplies the game's LevelReader and original generated XNB.
