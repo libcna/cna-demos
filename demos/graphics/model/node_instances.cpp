@@ -180,6 +180,85 @@ namespace
                           report.getApproximationCountProperty() == 0 && report.AnythingLost(),
                       "the three warnings aggregate three dropped occurrences without inventing an approximation");
 
+            const Model implicit =
+                getContentProperty().Load<Model>("models/loose_scene_fallback_implicit");
+            ModelBone* implicitFirst = nullptr;
+            ModelBone* implicitSecond = nullptr;
+            ModelMesh* implicitMesh = nullptr;
+            const auto& implicitBones = implicit.getBonesProperty();
+            const auto& implicitMeshes = implicit.getMeshesProperty();
+            ctx.Check(implicitBones.getCountProperty() == 2 &&
+                          implicitMeshes.getCountProperty() == 1 &&
+                          implicitBones.TryGetValue("ImplicitFirst", implicitFirst) &&
+                          !implicitBones.TryGetValue("ImplicitSecond", implicitSecond) &&
+                          implicitSecond == nullptr &&
+                          implicitMeshes.TryGetValue("ImplicitShape", implicitMesh) &&
+                          implicitMesh != nullptr &&
+                          implicitMesh->getParentBoneProperty() == implicitFirst,
+                      "omitting the default-scene index selects only the first declared scene");
+            const GltfImportReportEXT& implicitReport =
+                implicit.getGltfImportReportEXTProperty();
+            ctx.Check(implicitReport.NodeCount == 1 && implicitReport.MeshInstanceCount == 1 &&
+                          implicitReport.DistinctMeshCount == 1 &&
+                          implicitReport.SharedMeshCount == 0 && implicitReport.MaxNodeDepth == 1 &&
+                          implicitReport.Diagnostics.empty(),
+                      "the implicit first scene has one node, one placement and no invented warning");
+
+            const Model rooted =
+                getContentProperty().Load<Model>("models/loose_scene_fallback_nodes");
+            ModelBone* fallbackRoot = nullptr;
+            ModelBone* fallbackChild = nullptr;
+            ModelBone* fallbackPeer = nullptr;
+            ModelMesh* fallbackChildMesh = nullptr;
+            ModelMesh* fallbackPeerMesh = nullptr;
+            const auto& rootedBones = rooted.getBonesProperty();
+            const auto& rootedMeshes = rooted.getMeshesProperty();
+            std::vector<Matrix> rootedAbsolute(
+                static_cast<std::size_t>(rootedBones.getCountProperty()));
+            rooted.CopyAbsoluteBoneTransformsTo(rootedAbsolute);
+            const bool rootedNames =
+                rootedBones.TryGetValue("FallbackRoot", fallbackRoot) &&
+                rootedBones.TryGetValue("FallbackChild", fallbackChild) &&
+                rootedBones.TryGetValue("FallbackPeer", fallbackPeer) &&
+                rootedMeshes.TryGetValue("FallbackShape_FallbackChild", fallbackChildMesh) &&
+                rootedMeshes.TryGetValue("FallbackShape_FallbackPeer", fallbackPeerMesh);
+            ctx.Check(rootedNames && rootedBones.getCountProperty() == 4 &&
+                          rootedMeshes.getCountProperty() == 2 &&
+                          fallbackChild->getParentProperty() == fallbackRoot &&
+                          fallbackChildMesh->getParentBoneProperty() == fallbackChild &&
+                          fallbackPeerMesh->getParentBoneProperty() == fallbackPeer &&
+                          Near(Point(rootedAbsolute[static_cast<std::size_t>(
+                                         fallbackChild->getIndexProperty())]),
+                               Vector3(.1f, .3f, 0)) &&
+                          Near(Point(rootedAbsolute[static_cast<std::size_t>(
+                                         fallbackPeer->getIndexProperty())]),
+                               Vector3(.5f, -.2f, 0)),
+                      "a file with no scenes imports every root hierarchy with composed transforms");
+            const GltfImportReportEXT& rootedReport = rooted.getGltfImportReportEXTProperty();
+            ctx.Check(rootedReport.NodeCount == 3 && rootedReport.MeshInstanceCount == 2 &&
+                          rootedReport.DistinctMeshCount == 1 && rootedReport.SharedMeshCount == 1 &&
+                          rootedReport.MaxNodeDepth == 2 && rootedReport.Diagnostics.empty(),
+                      "the no-scenes root fallback reports both placements of the shared mesh");
+
+            const Model bare =
+                getContentProperty().Load<Model>("models/loose_scene_fallback_meshes");
+            ModelMesh* bareA = nullptr;
+            ModelMesh* bareB = nullptr;
+            const auto& bareBones = bare.getBonesProperty();
+            const auto& bareMeshes = bare.getMeshesProperty();
+            ModelBone* bareRoot = bare.getRootProperty();
+            ctx.Check(bareBones.getCountProperty() == 1 && bareMeshes.getCountProperty() == 2 &&
+                          bareMeshes.TryGetValue("BareA", bareA) &&
+                          bareMeshes.TryGetValue("BareB", bareB) && bareRoot != nullptr &&
+                          bareA->getParentBoneProperty() == bareRoot &&
+                          bareB->getParentBoneProperty() == bareRoot,
+                      "a file with neither scenes nor nodes imports every bare mesh at the identity root");
+            const GltfImportReportEXT& bareReport = bare.getGltfImportReportEXTProperty();
+            ctx.Check(bareReport.NodeCount == 0 && bareReport.MeshInstanceCount == 2 &&
+                          bareReport.DistinctMeshCount == 2 && bareReport.SharedMeshCount == 0 &&
+                          bareReport.MaxNodeDepth == 0 && bareReport.Diagnostics.empty(),
+                      "the bare-mesh fallback reports no source nodes and two distinct placements");
+
             ready_ = true;
         }
 
@@ -267,9 +346,9 @@ namespace
 CNA_DEMOS_GAME(NodeInstancesDemo, {
     .id = "graphics.model.node_instances",
     .title = "Rigid glTF node instances",
-    .description = "Imports one mesh through hierarchical TRS, an explicit matrix and odd/even mirrored placements, "
-                   "excludes a non-default-scene decoy, reports unsupported GPU instancing and applies the mirrored "
-                   "winding diagnostic through per-placement culling.",
+    .description = "Imports one mesh through hierarchical TRS, an explicit matrix and odd/even mirrored placements; "
+                   "demonstrates explicit, implicit-first and no-scenes selection, reports unsupported GPU instancing "
+                   "and applies the mirrored-winding diagnostic through per-placement culling.",
     .apis = {"ContentManager::Load", "Model::Bones", "Model::Meshes", "Model::Draw",
              "Model::CopyAbsoluteBoneTransformsTo", "Model::GltfImportReportEXT", "ModelBone::Transform",
              "ModelBone::Parent", "ModelMesh::ParentBone", "ModelMesh::Draw", "BasicEffect::World",
@@ -282,6 +361,7 @@ CNA_DEMOS_GAME(NodeInstancesDemo, {
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
     .deterministic = true,
-    .assets = {"models/loose_node_instances.gltf"},
+    .assets = {"models/loose_node_instances.gltf", "models/loose_scene_fallback_implicit.gltf",
+               "models/loose_scene_fallback_nodes.gltf", "models/loose_scene_fallback_meshes.gltf"},
     .restrictions = "EXT_mesh_gpu_instancing remains unsupported; the demo verifies its explicit loss report and single retained node placement.",
 })

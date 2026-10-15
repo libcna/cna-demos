@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the rigid glTF node-instance workflow with explicit nonzero, implicit-first and
+  no-scenes selection, including transformed root hierarchies and identity-root bare meshes.
 - Added a rigid glTF node-instance workflow covering shared-mesh placement, hierarchical TRS,
   explicit matrices, odd/even mirrors, selected-scene exclusion, unsupported GPU-instancing
   diagnostics and determinant-aware culling on both renderers.

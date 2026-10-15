@@ -190,6 +190,10 @@ hierarchical TRS, an explicit matrix and odd/even composed mirrors while default
 excludes a decoy. Exact public hierarchy/transforms/report diagnostics and determinant-aware
 culling produce five checked placements on both renderers; unsupported GPU-instance transforms
 remain visibly absent and explicitly reported.
+Focused846 extends that workflow with the remaining valid scene-selection fallbacks: explicit
+nonzero default selection, implicit first-scene selection, transformed root hierarchies when the
+file has no scenes, and identity-root placement for otherwise bare meshes. Both renderers pass all
+21 controls; source review identifies selected-empty-scene fallback leakage as the next boundary.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -241,6 +245,20 @@ checkpoint self-tests pass5/5 and4/4. Temporary coverage remains302/329 types,21
 layout added unrelated informational diagnostics, and UnsupportedFeature correctly contributes to
 DroppedFeatureCount. Both were corrected without a CNA issue. Audit the no-scenes/first-scene
 fallback and remaining node-graph boundaries next.
+
+Focused **846-glTF-scene-selection-fallbacks** extends the same demo without adding an ID. The
+primary fixture now puts its decoy in scene zero and names scene one as the explicit default.
+Three additional generated files prove that an omitted default index selects only the first
+declared scene, a file with no scenes imports every root hierarchy with exact composed transforms,
+and a file with neither scenes nor nodes attaches each bare mesh once to CNA's identity root. Exact
+bone/mesh identities and all corresponding report counts remain warning-free. SOFTWARE and
+OPENGLES3 pass21/21; their inspected screenshots remain byte-identical to Focused845 at SHA-256
+`f4e8a92a42fb319ae08963b481a3105a7fac7305cce3b2efe359ad4c93a1f3d5`. The warning-free `-j3`
+build, exact SOFTWARE CTest, metadata651/0 and both self-test suites pass. Temporary coverage is
+unchanged. Evidence:`/tmp/checkpoint-846-scene-fallbacks-*` and
+`/tmp/checkpoint-846-coverage.md`. Source review of `CollectMeshGroups` found that its final bare-
+mesh fallback may leak unselected data when a selected scene is empty; verify that exact runtime
+boundary next before classifying it as a CNA defect.
 
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
@@ -1819,10 +1837,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845 is
-the validated651-demo staged state. Continue the glTF importer behavior audit with the no-scenes/
-first-scene fallback and remaining node-graph boundaries, extending the new focused demo where the
-concept remains coherent. The complete checkpoint and harness findings are recorded in section7.
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-846
+form the validated651-demo staged state. Verify the selected-empty-scene fallback boundary found
+in `CollectMeshGroups`: a file that has scenes must not resurrect meshes from an unselected scene.
+Then continue the remaining glTF node-graph audit. The complete checkpoint and harness findings
+are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
@@ -3615,6 +3634,26 @@ unrelated information entries; moving orange to the material factor isolated the
 warnings. The next run expected only the two DroppedData occurrences, but public aggregate
 semantics also count the UnsupportedFeature occurrence. Both were demo-fixture/oracle corrections,
 not CNA defects. Audit the no-scenes/first-scene fallback and remaining node-graph boundaries next.
+
+### Focused846-glTF-scene-selection-fallbacks
+
+The same `graphics.model.node_instances` ID grows from15 to21 controls. Its primary asset now
+declares the selected content as scene1 after a mesh-bearing decoy scene0, proving a nonzero explicit
+default. Three small generated assets separately prove implicit scene0 selection when the top-level
+index is absent, transformed root-hierarchy traversal when the whole scenes array is absent, and
+identity-root placement of two distinct bare meshes when neither nodes nor scenes exist. Exact
+bone/mesh membership, parent identity, composed centres and GltfImportReportEXT node/placement/
+distinct/shared/depth counts all pass without diagnostics.
+
+SOFTWARE and OPENGLES3 pass21/21. Both inspected800x480 screenshots retain the byte-identical
+Focused845 hash `f4e8a92a42fb319ae08963b481a3105a7fac7305cce3b2efe359ad4c93a1f3d5` because the added
+models are structural controls rather than extra panels. The warning-free `-j3` build, exact
+SOFTWARE CTest, metadata651/0 and validator/checkpoint self-tests5/5 and4/4 pass. Temporary coverage
+is unchanged at302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-846-scene-fallbacks-*` and `/tmp/checkpoint-846-coverage.md`. Source review exposes
+one unverified edge: the final bare-mesh fallback runs whenever selected-scene extraction produced
+zero groups, although GLTF-143 says it must not fire merely because a file's selected scene is
+empty. Verify that runtime case next and record a CNA issue only if it reproduces.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

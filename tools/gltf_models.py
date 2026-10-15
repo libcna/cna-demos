@@ -13,10 +13,11 @@ assets/models/ that is loaded as a loose glTF file at run time.
   animation "Bend" that rotates UpperJoint back and forth. It has NORMAL and COLOR_0, so CNA gives it a
   SkinnedEffect.
 * turntable.gltf, morph_flag.gltf, camera_rig.gltf, textured_crate.gltf, lit_sphere.gltf,
-  slide_rig.gltf, loose_paint_toy.gltf, loose_node_instances.gltf -- node-animation clips, morph
-  targets with a weights animation, glTF cameras, an embedded base-colour texture,
-  KHR_lights_punctual lights, STEP/LINEAR/CUBICSPLINE samplers, KHR_materials_variants and rigid
-  shared-mesh placement; see each function.
+  slide_rig.gltf, loose_paint_toy.gltf, loose_node_instances.gltf and the three
+  loose_scene_fallback_*.gltf files -- node-animation clips, morph targets with a weights
+  animation, glTF cameras, an embedded base-colour texture, KHR_lights_punctual lights,
+  STEP/LINEAR/CUBICSPLINE samplers, KHR_materials_variants, rigid shared-mesh placement and scene
+  selection fallbacks; see each function.
 """
 
 import base64
@@ -815,11 +816,56 @@ def node_instances(path: Path) -> None:
     ]
     doc.gltf["extensionsUsed"] = ["KHR_materials_unlit", "EXT_mesh_gpu_instancing"]
     doc.gltf["scenes"] = [
-        {"name": "Selected", "nodes": [0, 2, 3, 5, 7]},
         {"name": "Decoy", "nodes": [8]},
+        {"name": "Selected", "nodes": [0, 2, 3, 5, 7]},
     ]
-    doc.gltf["scene"] = 0
+    doc.gltf["scene"] = 1
     doc.save(path)
+
+
+def scene_fallbacks(directory: Path) -> None:
+    """Three small files that separate explicit default-scene selection, implicit scene zero and
+    CNA's two no-scenes fallbacks: transformed root nodes and otherwise unplaced mesh objects."""
+
+    def marker_document(mesh_names):
+        doc = Document()
+        positions = [(-.1, -.07, .5), (.1, -.07, .5), (.1, .07, .5), (-.1, .07, .5)]
+        attributes = {
+            "POSITION": doc.accessor(positions, "VEC3", minmax=True),
+            "NORMAL": doc.accessor([(0, 0, 1)] * 4, "VEC3"),
+        }
+        indices = doc.accessor([0, 1, 2, 0, 2, 3], "SCALAR", UNSIGNED_SHORT,
+                               ELEMENT_ARRAY_BUFFER)
+        for name in mesh_names:
+            doc.gltf["meshes"].append({"name": name, "primitives": [{
+                "attributes": attributes, "indices": indices, "material": 0}]})
+        doc.gltf["materials"] = [{"name": "Orange", "pbrMetallicRoughness": {
+            "baseColorFactor": [1, .5, 0, 1]}, "extensions": {"KHR_materials_unlit": {}}}]
+        doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+        return doc
+
+    implicit = marker_document(["ImplicitShape"])
+    implicit.gltf["nodes"] = [
+        {"name": "ImplicitFirst", "mesh": 0, "translation": [-.25, 0, 0]},
+        {"name": "ImplicitSecond", "mesh": 0, "translation": [.25, 0, 0]},
+    ]
+    implicit.gltf["scenes"] = [
+        {"name": "First", "nodes": [0]}, {"name": "Second", "nodes": [1]}]
+    # Deliberately omit the top-level `scene`: CNA selects the first declared scene.
+    implicit.save(directory / "loose_scene_fallback_implicit.gltf")
+
+    rooted = marker_document(["FallbackShape"])
+    rooted.gltf["nodes"] = [
+        {"name": "FallbackRoot", "translation": [-.2, .1, 0], "children": [1]},
+        {"name": "FallbackChild", "mesh": 0, "translation": [.3, .2, 0]},
+        {"name": "FallbackPeer", "mesh": 0, "translation": [.5, -.2, 0]},
+    ]
+    # No `scenes` member: every root node and its hierarchy are imported with authored transforms.
+    rooted.save(directory / "loose_scene_fallback_nodes.gltf")
+
+    bare = marker_document(["BareA", "BareB"])
+    # No nodes and no scenes: each otherwise unplaced mesh is attached once to CNA's identity root.
+    bare.save(directory / "loose_scene_fallback_meshes.gltf")
 
 
 def imported_topology(path: Path) -> None:
@@ -882,4 +928,5 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     skin_weight_forms(assets_root / "models" / "loose_skin_weight_forms.gltf")
     multiple_skins(assets_root / "models" / "loose_multi_skin.gltf")
     node_instances(assets_root / "models" / "loose_node_instances.gltf")
+    scene_fallbacks(assets_root / "models")
     imported_topology(assets_root / "models" / "loose_topology.gltf")

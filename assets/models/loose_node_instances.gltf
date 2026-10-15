@@ -227,6 +227,12 @@
  ],
  "scenes": [
   {
+   "name": "Decoy",
+   "nodes": [
+    8
+   ]
+  },
+  {
    "name": "Selected",
    "nodes": [
     0,
@@ -235,13 +241,7 @@
     5,
     7
    ]
-  },
-  {
-   "name": "Decoy",
-   "nodes": [
-    8
-   ]
   }
  ],
- "scene": 0
+ "scene": 1
 }

@@ -281,6 +281,8 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.node_instances`: one shared rigid mesh placed through hierarchical TRS, an
   explicit matrix and odd/even composed mirrors; exact hierarchy/report diagnostics, default-scene
   exclusion, unsupported GPU-instancing loss and determinant-aware culling pass on both renderers.
+  Its extension also proves explicit nonzero and implicit-first scene selection, transformed
+  no-scenes root traversal and identity-root fallback for files containing only bare meshes.
 - Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
@@ -8321,3 +8323,18 @@ unlit fixture produced unrelated layout information and the first aggregate orac
 UnsupportedFeature occurrence; both were demo corrections, not CNA defects. Evidence:
 `/tmp/checkpoint-845-node-instances-*` and `/tmp/checkpoint-845-coverage.md`. Audit the no-scenes/
 first-scene fallback and remaining node-graph boundaries next.
+
+## Focused846-glTF-scene-selection-fallbacks
+
+The existing `graphics.model.node_instances` grows from15 to21 controls. The primary fixture now
+selects scene1 after a mesh-bearing scene0 decoy. Three additional original fixtures establish
+implicit first-scene selection, no-scenes traversal of every transformed root hierarchy and the
+no-node fallback that places two otherwise bare meshes at CNA's identity root. Exact bone/mesh
+identity, ancestry, composed transforms and structural report counts pass without extra warnings.
+
+SOFTWARE and OPENGLES3 pass21/21, and their inspected800x480 captures retain the byte-identical
+Focused845 hash `f4e8a92a42fb319ae08963b481a3105a7fac7305cce3b2efe359ad4c93a1f3d5`. The warning-free
+`-j3` build, exact SOFTWARE CTest, metadata651/0 and both self-test suites pass. Temporary coverage
+is unchanged. Evidence:`/tmp/checkpoint-846-scene-fallbacks-*` and
+`/tmp/checkpoint-846-coverage.md`. Source review found a possible selected-empty-scene leak through
+the final bare-mesh fallback; verify that exact runtime case next.
