@@ -108,8 +108,9 @@ a check that all authored colors remain visible and that a blank texture row can
   Discard and ContentLost), `graphics.index_buffer.*` (indexed cube, 32-bit indices),
   `graphics.vertex_declaration.custom_vertex`, ✅ `graphics.vertex_buffer.get_data`,
   ✅ `graphics.index_buffer.dynamic_index_buffer`, ✅ `graphics.vertex_buffer.several_streams`
-  (SetVertexBuffers). Remaining: `NoOverwrite` ring buffer (CNA accepts the hint and re-uploads the
-  whole buffer).
+  (SetVertexBuffers). The dynamic vertex workflow now uses a three-segment None/NoOverwrite/
+  Discard ring and demonstrates the bound-buffer distinction; CNA preserves the public semantics
+  while windowed writes re-upload the composed whole buffer.
 - ✅ (4) `graphics.primitives.*`: DrawUserPrimitives, DrawUserIndexedPrimitives, all four
   PrimitiveTypes, ✅ `graphics.primitives.draw_instanced_primitives` (CNA's stock effects read a
   per-instance world matrix from the instance stream).
@@ -9470,3 +9471,22 @@ SOFTWARE CTests pass ten repetitions. The warning-free build uses at most three 
 Graphics values next: GraphicsDeviceStatus Lost/NotReset, PresentInterval Default/One/Two and
 SetDataOptions None/NoOverwrite, with platform-only values explicitly dispositioned when they
 cannot be produced honestly.
+
+## Focused911-disposition-final-graphics-field-values
+
+The owned-device lifecycle now resets and presents through Default, One and Two after its original
+Immediate construction. Each requested identity survives the real device cycle, the device remains
+Normal and every reset emits the ordered Resetting/Reset pair. This also corrects the metadata for
+the repeatedly observed GraphicsDeviceStatus::Normal value. The dynamic-vertex workflow becomes a
+three-segment streaming ring: the first segment uses None, disjoint active segments use
+NoOverwrite and wraparound uses Discard. While the buffer is bound, an ordinary None update is
+refused and a NoOverwrite update to the next segment succeeds before that segment is drawn.
+
+SOFTWARE and OPENGLES3/Xvfb pass12/12 lifecycle and2/2 dynamic-buffer controls. Both exact SOFTWARE
+CTests pass ten repetitions. The warning-free build uses at most three jobs, metadata is659/0 and
+both validator suites pass. Coverage moves509->515/753 fields and Graphics reaches190/192. The two
+remaining values, GraphicsDeviceStatus::Lost and NotReset, are intentionally uncredited: CNA only
+sets them from real renderer-reported device-loss transitions, which SOFTWARE and OPENGLES3 do not
+produce and no public API can inject. No timing claim is made for refresh synchronization, and no
+new CNA defect appeared. Evidence:`/tmp/checkpoint-911-*`. Run the overdue complete659-demo
+checkpoint next, then continue the public-field audit in the next semantically valuable namespace.

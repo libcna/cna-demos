@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the feasible Graphics field-value audit with real present-interval reset cycles and a
+  three-segment dynamic-buffer upload ring; classified Lost/NotReset as device-loss-only values.
 - Completed CubeMapFace, DepthFormat, RenderTargetUsage and classic DXT SurfaceFormat values with
   exact six-face transfers, DXT3/DXT5 blocks, real Depth16 testing and preserved platform targets.
 - Completed all TextureFilter values with exact point-versus-linear magnification pixels, existing

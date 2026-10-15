@@ -78,7 +78,8 @@ Decisions:
 | RenderTargetBinding | demo: `graphics.render_target.multiple_render_targets` |
 | VertexPositionColorTexture, IVertexType | demo: `graphics.vertex_declaration.stock_vertex_types` |
 | EffectAnnotation, EffectAnnotationCollection, EffectMaterial | environment: compiled XNA effects need Microsoft's `fxc` (`fx_2_0`, a Windows tool run through wine) to compile `.fx`, and a CNA build with `CNA_<RENDERER>_COMPILED_EFFECTS` (fetches FNA3D/MojoShader); neither is part of this repository's builds |
-| DeviceLostException, DeviceNotResetException, GraphicsDeviceStatus, NoSuitableGraphicsDeviceException | environment: device loss does not happen on CNA's desktop renderers; no adapter means no demos at all |
+| GraphicsDeviceStatus | `owned_lifecycle` observes Normal through construction, Present and four real Reset cycles. Lost and NotReset remain environment values: CNA changes them only after a renderer reports real device loss/resetting, and the current desktop renderers provide no public deterministic trigger. |
+| DeviceLostException, DeviceNotResetException, NoSuitableGraphicsDeviceException | environment: device loss does not happen on CNA's current desktop test renderers; no adapter means no demos at all |
 
 ## Microsoft.Xna.Framework.Input
 
@@ -1160,6 +1161,29 @@ device pixel failures while all transfer checks pass. All four exact SOFTWARE CT
 repetitions. The warning-free build uses at most three jobs, metadata is659/0 and both validator
 suites pass. Fields move501->509/753 and Graphics reaches184/192. Evidence:
 `/tmp/checkpoint-910-*`.
+
+### Presentation, device status and dynamic upload values
+
+The owned-device workflow takes Default, One and Two through the same real Reset and Present path
+as its original Immediate setting. Each value survives in the device's applied presentation
+parameters, the device remains Normal and each cycle emits exactly one ordered Resetting/Reset
+pair. This demonstrates selection and usable presentation; refresh timing is platform-controlled
+and no wall-clock synchronization claim is made. GraphicsDeviceStatus::Normal is observed after
+construction, ordinary and region presentation, and every reset.
+
+The dynamic-vertex workflow now streams its actual waving strip through a three-segment buffer.
+None initializes the first segment, NoOverwrite fills disjoint segments while the previous one may
+still be consumed, and Discard starts each wrap. A direct bound-buffer control rejects None and
+accepts NoOverwrite into the next segment. CNA currently composes windowed writes in its CPU shadow
+and re-uploads the whole buffer, so the semantic result is established without claiming a native
+driver performance difference.
+
+SOFTWARE and OPENGLES3/Xvfb pass12/12 lifecycle and2/2 buffer controls; both exact SOFTWARE CTests
+pass ten repetitions. The warning-free build uses at most three jobs, metadata is659/0 and both
+validator suites pass. Fields move509->515/753 and Graphics reaches190/192. Lost and NotReset are
+the complete intentional remainder: CNA assigns them only from a real renderer device-event
+callback, and neither tested renderer can deterministically produce or publicly inject that
+environmental transition. Evidence:`/tmp/checkpoint-911-*`.
 
 ### OcclusionQuery (result observation and resource lifetime)
 

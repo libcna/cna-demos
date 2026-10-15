@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Construct, reset, present and dispose a separately owned GraphicsDevice.
+#include <array>
 #include <cstdint>
 #include <optional>
 #include <string>
@@ -151,10 +152,31 @@ namespace
             Context().Check(owned.getGraphicsDeviceStatusProperty() == GraphicsDeviceStatus::Normal,
                             "the reset device presents again with Normal status");
 
+            bool intervalCycle = true;
+            for (const PresentInterval interval :
+                 std::array{PresentInterval::Default, PresentInterval::One, PresentInterval::Two})
+            {
+                PresentationParameters changed = owned.getPresentationParametersProperty().Clone();
+                changed.setPresentationIntervalProperty(interval);
+                owned.Reset(changed);
+                owned.Clear(Color::Black);
+                owned.Present();
+                intervalCycle = intervalCycle &&
+                    owned.getPresentationParametersProperty().getPresentationIntervalProperty() == interval &&
+                    owned.getGraphicsDeviceStatusProperty() == GraphicsDeviceStatus::Normal;
+            }
+            const std::vector<std::string> resetEvents{
+                "resetting", "reset", "resetting", "reset",
+                "resetting", "reset", "resetting", "reset"};
+            Context().Check(intervalCycle && events == resetEvents && !resource.getIsDisposedProperty(),
+                            "Default, One and Two survive real reset/present cycles with ordered events");
+
             owned.Dispose();
+            auto disposedEvents = resetEvents;
+            disposedEvents.emplace_back("disposing");
             Context().Check(owned.getIsDisposedProperty() && disposedDuringEvent &&
                                 resource.getIsDisposedProperty() && resourceDisposingEvents == 1 &&
-                                events == std::vector<std::string>({"resetting", "reset", "disposing"}) &&
+                                events == disposedEvents &&
                                 deviceLostEvents == 0,
                             "Dispose marks the device before its event and disposes owned resources once");
             Context().Check(Throws<System::ObjectDisposedException>([&owned] { owned.Present(); }) &&
@@ -162,9 +184,9 @@ namespace
                             "disposed devices reject Present and Reset");
 
             owned.Dispose();
-            Context().Check(events.size() == 3 && resourceDisposingEvents == 1,
+            Context().Check(events == disposedEvents && resourceDisposingEvents == 1,
                             "disposing the device twice is idempotent");
-            Context().Print("events: resetting, reset, disposing; DeviceLost {}", deviceLostEvents);
+            Context().Print("events: four resetting/reset pairs, disposing; DeviceLost {}", deviceLostEvents);
         }
     };
 }
@@ -172,11 +194,12 @@ namespace
 CNA_DEMOS_GAME(OwnedDeviceLifecycleDemo, {
     .id = "graphics.device.owned_lifecycle",
     .title = "Owned graphics-device lifecycle",
-    .description = "Constructs a separate device, exercises ordinary and region Present contracts before and after a reset, observes ordered reset/disposal events and owned-resource teardown, then checks disposed refusals.",
+    .description = "Constructs a separate device, exercises region Present and every present interval through real resets, observes ordered lifecycle events and resource teardown, then checks disposed refusals.",
     .apis = {"GraphicsDevice::GraphicsDevice", "GraphicsDevice::Present", "GraphicsDevice::Reset",
              "GraphicsDevice::Dispose", "GraphicsDevice::Disposing", "GraphicsDevice::IsDisposed",
              "GraphicsDevice::DeviceResetting", "GraphicsDevice::DeviceReset",
-             "GraphicsDevice::GraphicsDeviceStatus", "GraphicsDeviceStatus"},
+             "GraphicsDevice::GraphicsDeviceStatus", "GraphicsDeviceStatus", "GraphicsDeviceStatus::Normal",
+             "PresentInterval::Default", "PresentInterval::One", "PresentInterval::Two"},
     .tags = {"device", "lifecycle", "reset", "present", "region", "dispose"},
     .frames = 1,
     .restrictions = "SOFTWARE presents source regions; OPENGLES3 truthfully refuses region requests. No presented window pixels are inspected. DeviceLost is observed as absent and not claimed as exercised.",
