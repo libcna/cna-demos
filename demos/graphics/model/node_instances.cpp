@@ -8,6 +8,7 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/PixelChecks.hpp"
+#include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
@@ -259,6 +260,36 @@ namespace
                           bareReport.MaxNodeDepth == 0 && bareReport.Diagnostics.empty(),
                       "the bare-mesh fallback reports no source nodes and two distinct placements");
 
+            bool emptySceneRefused = false;
+            bool exactEmptySceneLeak = false;
+            try
+            {
+                const Model empty =
+                    getContentProperty().Load<Model>("models/loose_scene_fallback_empty");
+                ModelMesh* excludedMesh = nullptr;
+                ModelBone* excludedBone = nullptr;
+                const GltfImportReportEXT& emptyReport =
+                    empty.getGltfImportReportEXTProperty();
+                exactEmptySceneLeak =
+                    empty.getBonesProperty().getCountProperty() == 1 &&
+                    empty.getMeshesProperty().getCountProperty() == 1 &&
+                    empty.getMeshesProperty().TryGetValue("ExcludedShape", excludedMesh) &&
+                    excludedMesh != nullptr &&
+                    excludedMesh->getParentBoneProperty() == empty.getRootProperty() &&
+                    !empty.getBonesProperty().TryGetValue("ExcludedNode", excludedBone) &&
+                    excludedBone == nullptr && emptyReport.NodeCount == 0 &&
+                    emptyReport.MeshInstanceCount == 1 && emptyReport.DistinctMeshCount == 1;
+            }
+            catch (const Content::ContentLoadException&)
+            {
+                emptySceneRefused = true;
+            }
+            ctx.Check(emptySceneRefused,
+                      "an explicitly selected empty scene does not resurrect a mesh from another scene "
+                      "(CNA-DEMOS-ISSUE-092)");
+            ctx.Check(emptySceneRefused || exactEmptySceneLeak,
+                      "the known empty-scene leak is isolated to one root-placed mesh with no imported source node");
+
             ready_ = true;
         }
 
@@ -347,8 +378,8 @@ CNA_DEMOS_GAME(NodeInstancesDemo, {
     .id = "graphics.model.node_instances",
     .title = "Rigid glTF node instances",
     .description = "Imports one mesh through hierarchical TRS, an explicit matrix and odd/even mirrored placements; "
-                   "demonstrates explicit, implicit-first and no-scenes selection, reports unsupported GPU instancing "
-                   "and applies the mirrored-winding diagnostic through per-placement culling.",
+                   "demonstrates explicit, implicit-first, empty and no-scenes selection, reports unsupported GPU "
+                   "instancing and applies the mirrored-winding diagnostic through per-placement culling.",
     .apis = {"ContentManager::Load", "Model::Bones", "Model::Meshes", "Model::Draw",
              "Model::CopyAbsoluteBoneTransformsTo", "Model::GltfImportReportEXT", "ModelBone::Transform",
              "ModelBone::Parent", "ModelMesh::ParentBone", "ModelMesh::Draw", "BasicEffect::World",
@@ -362,6 +393,9 @@ CNA_DEMOS_GAME(NodeInstancesDemo, {
     .frames = 3,
     .deterministic = true,
     .assets = {"models/loose_node_instances.gltf", "models/loose_scene_fallback_implicit.gltf",
-               "models/loose_scene_fallback_nodes.gltf", "models/loose_scene_fallback_meshes.gltf"},
-    .restrictions = "EXT_mesh_gpu_instancing remains unsupported; the demo verifies its explicit loss report and single retained node placement.",
+               "models/loose_scene_fallback_nodes.gltf", "models/loose_scene_fallback_meshes.gltf",
+               "models/loose_scene_fallback_empty.gltf"},
+    .restrictions = "EXT_mesh_gpu_instancing remains unsupported; CNA-DEMOS-ISSUE-092 records that an explicitly "
+                    "selected empty scene incorrectly revives an unselected mesh at the identity root.",
+    .knownIssue = "CNA-DEMOS-ISSUE-092",
 })

@@ -194,6 +194,9 @@ Focused846 extends that workflow with the remaining valid scene-selection fallba
 nonzero default selection, implicit first-scene selection, transformed root hierarchies when the
 file has no scenes, and identity-root placement for otherwise bare meshes. Both renderers pass all
 21 controls; source review identifies selected-empty-scene fallback leakage as the next boundary.
+Focused847 confirms that leakage as CNA-DEMOS-ISSUE-092. An explicit empty default scene revives a
+mesh referenced only by another scene, parents it to CNA's synthetic root and reports one placement
+despite reporting zero source nodes. Both renderers fail only that invariant among23 controls.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -259,6 +262,18 @@ unchanged. Evidence:`/tmp/checkpoint-846-scene-fallbacks-*` and
 `/tmp/checkpoint-846-coverage.md`. Source review of `CollectMeshGroups` found that its final bare-
 mesh fallback may leak unselected data when a selected scene is empty; verify that exact runtime
 boundary next before classifying it as a CNA defect.
+
+Focused **847-empty-selected-glTF-scene-leak** confirms CNA-DEMOS-ISSUE-092. A fifth fixture
+explicitly selects an empty scene while another scene alone references one mesh-bearing node.
+Instead of reaching the loader's no-primitives refusal, CNA returns one synthetic root and one
+`ExcludedShape` mesh parented to it, omits `ExcludedNode`, and reports NodeCount0 alongside
+MeshInstanceCount1/DistinctMeshCount1. This proves the final `CollectMeshGroups` fallback bypasses
+scene reachability whenever selected-scene extraction yields no groups; GLTF-143 documents that it
+must be limited to a file with no scenes. SOFTWARE and OPENGLES3 each pass22/23 controls and fail
+only the named invariant. The exact known-issue SOFTWARE CTest passes through `WILL_FAIL`, metadata
+is651/0, tool self-tests pass5/5 and4/4, and temporary coverage is unchanged. Evidence:
+`/tmp/checkpoint-847-empty-scene-*` and `/tmp/checkpoint-847-coverage.md`. No screenshot or visual
+claim was added. Continue duplicate-root and malformed/cyclic hierarchy boundaries next.
 
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
@@ -1837,11 +1852,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-846
-form the validated651-demo staged state. Verify the selected-empty-scene fallback boundary found
-in `CollectMeshGroups`: a file that has scenes must not resurrect meshes from an unselected scene.
-Then continue the remaining glTF node-graph audit. The complete checkpoint and harness findings
-are recorded in section7.
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-847
+form the validated651-demo staged state. CNA-DEMOS-ISSUE-092 now records the selected-empty-scene
+fallback leak. Continue the remaining glTF node-graph audit with duplicate-root de-duplication and
+malformed/cyclic hierarchy refusal before leaving scene selection. The complete checkpoint and
+harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
@@ -3654,6 +3669,27 @@ is unchanged at302/329 types,2114/2326 members,169/753 fields and3078/3205 C rou
 one unverified edge: the final bare-mesh fallback runs whenever selected-scene extraction produced
 zero groups, although GLTF-143 says it must not fire merely because a file's selected scene is
 empty. Verify that runtime case next and record a CNA issue only if it reproduces.
+
+### Focused847-empty-selected-glTF-scene-leak
+
+The same demo adds a fifth scene-selection fixture and two controls. The file explicitly selects
+empty scene0; scene1 alone contains `ExcludedNode` placing `ExcludedShape`. Correct selection leaves
+no Model geometry and should reach the loader's existing `ContentLoadException` for no primitives.
+CNA instead returns a synthetic-root-only bone collection and an `ExcludedShape` mesh parented to
+that root, while its public report contradictorily says NodeCount0 but MeshInstanceCount1 and
+DistinctMeshCount1. The second control pins that exact leak so the expected-failure marker cannot
+hide another failure.
+
+SOFTWARE and OPENGLES3 each pass22/23 controls and fail only the
+CNA-DEMOS-ISSUE-092 assertion. Source review shows `CollectMeshGroups` correctly filters every
+unreachable node, then its final `if (groups.empty())` branch imports all mesh objects without
+checking that `scenes_count == 0`. This violates the source plan's GLTF-143 distinction and CNA's
+public content-pipeline documentation. The exact SOFTWARE CTest passes via `WILL_FAIL`; the `-j3`
+build, metadata651/0, validator/checkpoint self-tests5/5 and4/4 pass, and temporary coverage remains
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-847-empty-scene-*` and `/tmp/checkpoint-847-coverage.md`. No CNA source was changed
+or upstream message sent. Continue duplicate-root de-duplication and malformed/cyclic hierarchy
+refusal next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

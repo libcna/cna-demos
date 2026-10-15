@@ -867,6 +867,13 @@ def scene_fallbacks(directory: Path) -> None:
     # No nodes and no scenes: each otherwise unplaced mesh is attached once to CNA's identity root.
     bare.save(directory / "loose_scene_fallback_meshes.gltf")
 
+    empty = marker_document(["ExcludedShape"])
+    empty.gltf["nodes"] = [{"name": "ExcludedNode", "mesh": 0}]
+    empty.gltf["scenes"] = [
+        {"name": "SelectedEmpty", "nodes": []}, {"name": "Unselected", "nodes": [0]}]
+    empty.gltf["scene"] = 0
+    empty.save(directory / "loose_scene_fallback_empty.gltf")
+
 
 def imported_topology(path: Path) -> None:
     doc = Document()

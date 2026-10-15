@@ -15,6 +15,34 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-092 -- An empty selected glTF scene resurrects an unselected mesh
+
+- **Area/API:** loose glTF `ContentManager::Load<Model>`, default-scene selection and
+  `GltfImportReportEXT`.
+- **Reproduction:** `graphics.model.node_instances` loads a document whose explicit default is
+  scene zero, an empty scene. Scene one alone references `ExcludedNode`, which places
+  `ExcludedShape`. The demo expects the empty selected scene to yield no importable Model geometry
+  and therefore a `ContentLoadException`; a second control records the exact leaked shape when the
+  defect is present.
+- **Observed:** loading succeeds. CNA returns one synthetic root, no `ExcludedNode`, and one
+  `ExcludedShape` ModelMesh parented to that root. The public report consequently says
+  `NodeCount == 0`, `MeshInstanceCount == 1` and `DistinctMeshCount == 1`. SOFTWARE and
+  OPENGLES3/Xvfb each pass the other 22 controls and fail only the selected-empty-scene assertion.
+- **Cause observed in source:** `BuildSceneGraph` correctly traverses only the selected empty
+  scene, so `CollectMeshGroups` initially produces no groups. Its final fallback then imports every
+  `data->meshes` entry whenever `groups.empty()`, without requiring `data->scenes_count == 0`.
+  That condition is broader than CNA's documented no-scenes fallback and bypasses the preceding
+  reachability filter. The GLTF-143 plan explicitly says the fallback must not fire for a file
+  that has scenes.
+- **Expected:** a file with scenes imports only nodes reachable from its selected scene. If that
+  scene has no mesh placements, meshes referenced only from another scene stay excluded; the
+  current Model loader should then report that there are no mesh primitives to import rather than
+  fabricate an identity-root placement.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction is deterministic on both exercised
+  renderers and requires no rendering to observe. Evidence:`/tmp/checkpoint-847-empty-scene-*`.
+  No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-091 -- C ImageBasedLight validity accepts live non-texture handles
 
 - **Area/API:** `CNA_ImageBasedLightEXT` and `cna_image_based_light_ext_is_valid` in

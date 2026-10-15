@@ -8338,3 +8338,18 @@ Focused845 hash `f4e8a92a42fb319ae08963b481a3105a7fac7305cce3b2efe359ad4c93a1f3d
 is unchanged. Evidence:`/tmp/checkpoint-846-scene-fallbacks-*` and
 `/tmp/checkpoint-846-coverage.md`. Source review found a possible selected-empty-scene leak through
 the final bare-mesh fallback; verify that exact runtime case next.
+
+## Focused847-empty-selected-glTF-scene-leak
+
+The same demo adds an explicit empty default scene while another scene alone owns one mesh-bearing
+node. CNA incorrectly returns that excluded mesh at the synthetic identity root and reports zero
+source nodes but one placement. The final `CollectMeshGroups` fallback runs on any empty group set
+rather than only when the file has no scenes, contradicting GLTF-143 and the documented scene-
+selection contract. CNA-DEMOS-ISSUE-092 records the defect.
+
+SOFTWARE and OPENGLES3 each pass22/23 controls and fail only the named invariant; an adjacent
+control pins the exact leaked Model/report shape. The exact known-issue SOFTWARE CTest passes via
+`WILL_FAIL`; the warning-free `-j3` build, metadata651/0 and both self-test suites pass. Temporary
+coverage remains unchanged. Evidence:`/tmp/checkpoint-847-empty-scene-*` and
+`/tmp/checkpoint-847-coverage.md`. Continue duplicate-root and malformed/cyclic hierarchy
+boundaries next.
