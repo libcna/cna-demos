@@ -4054,3 +4054,25 @@ suites pass. Generated XNA/C totals remain 303/329 types, 2114/2326 members, 674
 3078/3205 routes; 21 public component names enter the CNA-extension appendix. Complete948 marks
 both post-baseline IDs absent. Evidence: `/tmp/checkpoint-951-sound-pipeline/*`. No audio playback,
 listening test or CNA source change is involved.
+
+### Focused952 CNB SoundEffect codec
+
+The new renderer-free `content.sound_effect.cnb_codec` closes every public declaration in
+`CnbSoundEffectCodec.hpp` with 11 controls. It proves safe `CnbSoundEffectData` defaults and the
+frozen format/schema/chunk constants; enumerates the schema version, mono/stereo frame width and
+diagnostic name for all six assigned values plus an unknown value; preserves PCM16 bytes and widens
+the full representative PCM8 range exactly; and refuses adaptation of a reserved codec.
+
+Deterministic encode/decode round trips preserve complete metadata, header size, payload and sound
+fields for both PCM widths. A hand-built schema-1 PCM16 file remains readable, while schema-1 PCM8,
+reserved flags, an inconsistent payload, a wrong asset identity, missing data and a duplicate
+header are refused. The encoder separately rejects reserved format, both sample-rate boundaries,
+invalid channels, payload length and loop bounds.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 11/11 with byte-identical stdout SHA-256
+`d815f7d414ba936100a8757f6f81a0b3adcac56d029beaeb1f0a0827a2972fba` and empty stderr. The
+warning-free build uses `-j3`; metadata is 672/0; the exact SOFTWARE CTest and both validator suites
+pass. Generated XNA/C totals remain 303/329 types, 2114/2326 members, 674/753 fields and 3078/3205
+routes; 14 codec names enter the CNA-extension appendix. Complete948 marks all three post-baseline
+IDs absent. Evidence: `/tmp/checkpoint-952-cnb-sound-codec/*`. No audio device, playback or CNA
+defect is involved.

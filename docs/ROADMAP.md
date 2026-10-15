@@ -10151,3 +10151,24 @@ validator suites pass. Generated XNA/C totals remain unchanged; the CNA-extensio
 21 names and Complete948 marks both newer IDs absent. Evidence:
 `/tmp/checkpoint-951-sound-pipeline/*`. Audit the remaining public
 `CnbSoundEffectCodec.hpp` helper and validation behavior next.
+
+## Focused952-CNB-SoundEffect-codec
+
+The new `content.sound_effect.cnb_codec` completes the public
+`CNA/Content/Cnb/CnbSoundEffectCodec.hpp` audit in 11 controls. Safe defaults and every frozen
+constant are checked together; all assigned and unknown format values have exact schema, frame-
+width and diagnostic behavior; PCM16 remains byte-exact; PCM8 widens by the documented unsigned-
+bias mapping; and reserved runtime adaptation is refused.
+
+Both supported widths make deterministic full encode/decode round trips. Schema-1 PCM16 remains
+readable, while the encoder rejects inconsistent public descriptions and the decoder rejects old-
+schema PCM8, reserved flags, wrong payload length, wrong asset identity, missing data and duplicate
+headers. These are representative schema boundaries; hostile raw-container layout remains the
+generic `CnbDocument` audit's responsibility.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 11/11 with the same stdout SHA-256
+`d815f7d414ba936100a8757f6f81a0b3adcac56d029beaeb1f0a0827a2972fba` and empty stderr. The
+warning-free `-j3` build, exact SOFTWARE CTest, metadata 672/0 and both validator suites pass.
+Generated totals remain unchanged; 14 codec names enter the CNA-extension appendix and Complete948
+marks all three newer IDs absent. Evidence: `/tmp/checkpoint-952-cnb-sound-codec/*`. Continue the
+next coherent public CNA content header family.

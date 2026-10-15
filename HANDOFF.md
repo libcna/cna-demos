@@ -446,6 +446,20 @@ component names enter the CNA-extension appendix and Complete948 correctly marks
 IDs absent. Evidence: `/tmp/checkpoint-951-sound-pipeline/*` and the source excerpt named in the
 issue entry. No CNA source was modified.
 
+Focused **952-CNB-SoundEffect-codec** adds the 672nd source/catalog ID,
+`content.sound_effect.cnb_codec`, and closes every public declaration in
+`CnbSoundEffectCodec.hpp`. Eleven controls cover safe data defaults, frozen schema/chunk constants,
+the complete assigned-plus-unknown format table, exact PCM16 preservation and PCM8 widening,
+reserved-codec refusal, deterministic PCM16 and PCM8 encode/decode round trips, schema-1 PCM16
+compatibility, and grouped public-field/schema/chunk validation failures.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 11/11 with byte-identical stdout SHA-256
+`d815f7d414ba936100a8757f6f81a0b3adcac56d029beaeb1f0a0827a2972fba` and empty stderr. The
+warning-free build uses at most three jobs, metadata is 672/0, the exact SOFTWARE CTest and both
+validator suites pass. Generated XNA/C totals remain unchanged; 14 codec names enter the CNA-
+extension appendix and Complete948 correctly marks all three post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-952-cnb-sound-codec/*`. No audio device, playback or CNA defect is involved.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2567,8 +2581,9 @@ suites. Focused949-951 close source-oriented `ImportedSound`, container-neutral
 `ProcessedSoundEffect`, built-in component registration and end-to-end writer adaptation without
 requiring an audio device; the adjacent pointer-only `ForeignContentObjectEXT` is explicitly
 dispositioned through existing C reader/dictionary/model evidence. Focused951 records
-CNA-DEMOS-ISSUE-105 for the sole named-only importer selection defect. Audit the remaining public
-`CnbSoundEffectCodec.hpp` helpers and validation behavior next.
+CNA-DEMOS-ISSUE-105 for the sole named-only importer selection defect. Focused952 closes the whole
+public CNB SoundEffect codec, including format helpers, compatibility and validation behavior.
+Continue the next coherent public CNA content header family.
 The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
