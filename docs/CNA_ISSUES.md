@@ -15,6 +15,43 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-103 -- C content loaders discard canonical `ContentLoadException` identity
+
+- **Area/API:** the C exception-detail contract in `CNA/C/core.h` and the typed
+  `cna_content_manager_load_*` routes, observed through
+  `cna_content_manager_load_texture2d`.
+- **Demo/reproduction:** `c_api.content.content_manager` changes its live manager root from
+  `assets` to `assets/textures`, unloads the cached `textures/checker` value, then requests that
+  logical name again. The native `ContentManager::Load<Texture2D>` path cannot open the resulting
+  location and throws its ordinary `Microsoft::Xna::Framework::Content::ContentLoadException`.
+  Query `cna_error_get_last_info`, `cna_error_get_last_exception_type_size_ext` and the matching
+  copy route immediately after the failed load.
+- **Observed:** the route correctly returns `CNA_RESULT_IO`; the thread diagnostic keeps result IO,
+  category IO and its nonempty message, but reports zero exception-type bytes. Both SOFTWARE and
+  OPENGLES3/Xvfb print `missing load exception type: <none>` and fail only the exact canonical-type
+  check among54 controls.
+- **Expected/contract:** `core.h` says the exception-type query names the canonical exception behind
+  the most recent failure so a managed binding can rethrow it, and explicitly uses
+  `Microsoft.Xna.Framework.Content.ContentLoadException` as an example. This failure came from that
+  native exception rather than a C-layer argument or handle check, so the type must survive as that
+  exact name. It carries no argument parameter.
+- **Cause observed in source:** `ContentManagerLoadTexture2d` catches `ContentLoadException` inside
+  the route body and calls `IoError(exception.what())`. The outer `CallWithExceptionBarrier` sees a
+  returned result rather than the exception, so `NoteTranslatedException` never records its dynamic
+  type. The same catch-and-`IoError` pattern appears in the sound-effect, cube, font, Effect and
+  Model content loaders; only Texture2D is claimed by runtime evidence here.
+- **Suggested repair:** preserve the caught canonical exception metadata when translating the
+  intended IO result, or let the common exception barrier perform that translation. Keep the
+  existing result/category/message and all output-handle clearing contracts.
+- **Evidence/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. Ten SOFTWARE and ten OPENGLES3/Xvfb runs reproduce
+  exactly one failure and53 passes with byte-identical stdout SHA-256
+  `960cf6f99b002990d67441e387e954a8eeb6a79249356308e9183aabc1edb348` and empty stderr. The exact
+  known-issue CTest passes ten repetitions. Contract/source excerpts are
+  `/tmp/checkpoint-925-content-exception-source.txt`, SHA-256
+  `97cff773d99c041cb9fc457399f1451b781b61358ebf43beb7346013da26ca94`. No CNA source was modified
+  and no upstream message or manual visual-quality claim was made.
+
 ### CNA-DEMOS-ISSUE-102 -- Oversized shadow cascade count overruns fixed draw-parameter arrays
 
 - **Area/API:** `ShadowCascadeStateEXT::Count` and `setShadowCascadesEXT` on `BasicEffect`,

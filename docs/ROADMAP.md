@@ -9726,3 +9726,21 @@ ten repetitions. All twenty stdout files are byte-identical with SHA-256
 coverage remains302/329 types,2114/2326 members,674/753 fields and3078/3205 routes. Evidence:
 `/tmp/checkpoint-924-renderer-*`. Continue the public behavior audit through real production
 failures and state transitions; do not add exception constructors just to enumerate type names.
+
+## Focused925-C-ContentLoadException-identity
+
+The stable `c_api.content.content_manager` workflow extends its real post-Unload missing-asset path
+with the public structured exception queries. Native `ContentManager::Load<Texture2D>` throws
+`Microsoft.Xna.Framework.Content.ContentLoadException`; the C route correctly returns IO/category
+IO with its message, but reports no canonical type. CNA-DEMOS-ISSUE-103 records that the typed
+content adapter catches the exception and calls `IoError` before the common boundary can retain its
+dynamic identity. Source review finds the same catch pattern in the other typed content loaders;
+runtime evidence is deliberately limited to this existing Texture2D scenario.
+
+SOFTWARE and OPENGLES3/Xvfb each retain53 passes and fail only the new identity assertion among54
+controls in ten repetitions. All twenty stdout files are byte-identical with SHA-256
+`960cf6f99b002990d67441e387e954a8eeb6a79249356308e9183aabc1edb348`, stderr is empty, and the exact
+known-issue SOFTWARE CTest passes ten repetitions. The warning-free build uses at most three jobs;
+metadata remains663/0, both validator suites pass and generated surface totals remain unchanged.
+Evidence:`/tmp/checkpoint-925-content-*`. Continue with another public behavior whose outcome
+changes a caller decision; do not enumerate exception types without a real producing operation.

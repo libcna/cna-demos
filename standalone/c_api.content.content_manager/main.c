@@ -216,9 +216,37 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
         if (stage == 1) state->content = CNA_INVALID_HANDLE;
         if (stage == 0 && root_changed) {
             CNA_Handle no_longer_cached = CNA_INVALID_HANDLE;
+            CNA_ErrorInfo error_info;
+            uint64_t exception_bytes = UINT64_MAX;
+            uint64_t exception_copied = UINT64_MAX;
+            char exception_type[128] = {0};
+            int copied_exception = 0;
             result = cna_content_manager_load_texture2d(state->content, view("textures/checker"), &no_longer_cached);
             cna_demo_check(state->demo, result == CNA_RESULT_IO,
                            "Unload removes the cached name, which cannot resolve under the changed root");
+            memset(&error_info, 0, sizeof(error_info));
+            error_info.struct_size = (uint32_t)sizeof(error_info);
+            error_info.struct_version = UINT32_C(1);
+            if (cna_error_get_last_exception_type_size_ext(&exception_bytes) == CNA_RESULT_SUCCESS &&
+                exception_bytes > 0U && exception_bytes < sizeof(exception_type) &&
+                cna_error_copy_last_exception_type_ext(
+                    exception_type, exception_bytes, &exception_copied) == CNA_RESULT_SUCCESS &&
+                exception_copied == exception_bytes) {
+                exception_type[exception_bytes] = '\0';
+                copied_exception = 1;
+            }
+            printf("  missing load exception type: %s\n",
+                   copied_exception ? exception_type : "<none>");
+            cna_demo_check(
+                state->demo,
+                cna_error_get_last_info(&error_info) == CNA_RESULT_SUCCESS &&
+                    error_info.result == CNA_RESULT_IO &&
+                    error_info.category == CNA_ERROR_CATEGORY_IO && copied_exception &&
+                    strcmp(
+                        exception_type,
+                        "Microsoft.Xna.Framework.Content.ContentLoadException") == 0,
+                "the failed native load retains ContentLoadException for a binding to rethrow "
+                "(CNA-DEMOS-ISSUE-103)");
             if (result == CNA_RESULT_SUCCESS)
                 cna_demo_check_result(state->demo, cna_texture2d_destroy(no_longer_cached), "release unexpected cache reload");
         }
