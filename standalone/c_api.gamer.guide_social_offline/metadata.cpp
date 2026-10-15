@@ -18,7 +18,7 @@ CNA_DEMOS_STANDALONE({
              "cna_game_set_frame_hooks_ext", "cna_graphics_device_get_backbuffer_data_rgba8",
              "cna_error_get_last_info", "cna_error_get_last_exception_type_size_ext",
              "cna_error_copy_last_exception_type_ext", "GamerServicesNotAvailableException",
-             "GamerPrivilegeException"},
+             "GamerPrivilegeException", "GuideAlreadyVisibleException"},
     .tags = {"c", "binding", "gamer", "guide", "sign-in", "social", "offline"},
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::Window,
     .frames = 20,

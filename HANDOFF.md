@@ -2348,11 +2348,12 @@ highest-value undispositioned public behavior; prefer extending an existing work
 The resumed audit adds real `ArgumentException(name)`, parameterless `InvalidOperationException`,
 `ObjectDisposedException`, `GamerServicesNotAvailableException`, `NotSupportedException` and
 `GamerPrivilegeException` C diagnostic evidence, then exposes CNA-DEMOS-ISSUE-103 when a native
-ContentLoadException is flattened to untyped IO by the C content adapter. Audit the existing live
-Guide overlay next: a second valid open should retain exact `GuideAlreadyVisibleException` and leave
-the first overlay intact, distinguishing a temporary modal collision from privilege/state failure.
-After that coherent check, leave exception enumeration and return to the next undispositioned
-public behavior.
+ContentLoadException is flattened to untyped IO by the C content adapter. The live Guide overlay
+also retains exact `GuideAlreadyVisibleException` and leaves the first screen intact on a second
+valid open, completing the distinct temporary modal-state decision. Leave exception enumeration
+now. Return to the generated missing-member inventory and the hand-maintained disposition tables;
+select the highest-value ordinary public behavior that is neither already demonstrated nor
+explicitly classified as trivial, platform/service/manual or implementation machinery.
 Keep constructors/finalizers, CLR collection plumbing and service-only paths classified rather than
 inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
@@ -2600,6 +2601,25 @@ the warning-free build uses `-j3`. Two initial bare-binary probes omitted the re
 `--automated --frames 20`; GDB showed `frames=0`, and the correctly parameterized runs pass without
 a source workaround. Evidence:`/tmp/checkpoint-928-guide-final-*` and
 `/tmp/checkpoint-928-guide-exception-source.txt`. Pixel checks are programmatic; no screenshot,
+service session or manual visual-quality result is claimed, and no CNA defect appeared.
+
+### Focused929-C-GuideAlreadyVisible-identity
+
+The stable `c_api.gamer.guide_social_offline` workflow grows26->27 controls. Immediately after the
+real local-profile sign-in overlay opens, a second valid `ShowSignIn(1, false)` returns
+INVALID_STATE/category STATE with exact
+`Microsoft.Xna.Framework.GamerServices.GuideAlreadyVisibleException`. A following public
+`IsVisible` read proves the refusal leaves the first overlay intact for its existing20-frame pixel
+check and automated close. This is the temporary retry/dismiss case distinct from Focused928's
+service, platform and privilege refusals; the exception type already had C++ demo coverage, so
+generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes.
+
+Ten SOFTWARE/Xvfb runs pass27/27 with byte-identical stdout SHA-256
+`8828db2de49322037917e77cb09772c635c4a017a881da9559bc1640e3895bef`; ten OPENGLES3/Xvfb runs
+likewise pass with hash `d011e09ac17589c56a7fd470d492aa3b5bc0fb60b8e257a18453f46901517852`.
+All stderr is empty. The exact SOFTWARE CTest, metadata and validator/checkpoint self-tests pass;
+the warning-free build uses `-j3`. Evidence:`/tmp/checkpoint-929-guide-*` and
+`/tmp/checkpoint-929-guide-visible-source.txt`. Pixel checks are programmatic; no screenshot,
 service session or manual visual-quality result is claimed, and no CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the

@@ -142,9 +142,13 @@ static CNA_Result update(
     CNA_Handle game, const CNA_GameTime* game_time, void* context,
     CNA_CallbackError* out_error)
 {
+    static const char AlreadyVisibleType[] =
+        "Microsoft.Xna.Framework.GamerServices.GuideAlreadyVisibleException";
     SocialState* state = (SocialState*)context;
+    CNA_ErrorInfo error_info;
     CNA_Bool visible = CNA_FALSE;
     CNA_Result result;
+    char exception_type[96];
     (void)game_time;
     (void)out_error;
 
@@ -164,6 +168,23 @@ static CNA_Result update(
                 visible == CNA_TRUE,
             "offline one-pane sign-in opens the local-profile Guide");
         state->opened = result == CNA_RESULT_SUCCESS;
+        if (state->opened) {
+            result = cna_guide_show_sign_in(1, CNA_FALSE);
+            memset(&error_info, 0, sizeof(error_info));
+            error_info.struct_size = (uint32_t)sizeof(error_info);
+            error_info.struct_version = UINT32_C(1);
+            cna_demo_check(
+                state->demo,
+                result == CNA_RESULT_INVALID_STATE &&
+                    read_last_exception_type(exception_type, sizeof(exception_type)) &&
+                    cna_error_get_last_info(&error_info) == CNA_RESULT_SUCCESS &&
+                    error_info.result == CNA_RESULT_INVALID_STATE &&
+                    error_info.category == CNA_ERROR_CATEGORY_STATE &&
+                    strcmp(exception_type, AlreadyVisibleType) == 0 &&
+                    cna_guide_get_is_visible(&visible) == CNA_RESULT_SUCCESS &&
+                    visible == CNA_TRUE,
+                "a second valid sign-in reports GuideAlreadyVisibleException and preserves the overlay");
+        }
         return CNA_RESULT_SUCCESS;
     }
     if (state->overlay_frames >= state->demo->frames && !state->audited) {

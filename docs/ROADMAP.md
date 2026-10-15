@@ -9787,3 +9787,18 @@ Ten final SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass26/26 with stable per-re
 `56324b2f9bcce01bd7890b2dfa7d56d78997ef94360045d24b967b8cc9c67f7e`; stderr is empty. The exact
 SOFTWARE CTest, metadata validation and both validator suites pass, and the warning-free build uses
 at most three jobs. Evidence:`/tmp/checkpoint-928-guide-final-*`. No CNA issue appeared.
+
+## Focused929-C-GuideAlreadyVisible-identity
+
+The stable `c_api.gamer.guide_social_offline` workflow grows26->27 controls. A second valid local
+`ShowSignIn` while the first overlay is live returns INVALID_STATE/category STATE with exact
+`GuideAlreadyVisibleException`, and a following `IsVisible` read proves the original screen remains
+open for its established pixel check and automated close. This adds a temporary modal-state
+decision distinct from service, platform and privilege refusal without adding a variant ID.
+
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass27/27 with stable per-renderer stdout hashes
+`8828db2de49322037917e77cb09772c635c4a017a881da9559bc1640e3895bef` and
+`d011e09ac17589c56a7fd470d492aa3b5bc0fb60b8e257a18453f46901517852`; stderr is empty. The exact
+SOFTWARE CTest, metadata and validator suites pass, and the warning-free build uses at most three
+jobs. Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes.
+Evidence:`/tmp/checkpoint-929-guide-*`. No CNA issue appeared.
