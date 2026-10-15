@@ -999,6 +999,31 @@ GPU, screenshot or visual-quality claim is added. Audit the adjacent public
 `CnbModelFromCnj.hpp` conversion contract next, reusing the existing Model pipeline fixture and
 codec evidence before adding another ID.
 
+Focused **974-CNB-Model-CNJ-front-end-disposition** extends the stable
+`content.model.pipeline_contract` demo from25 to29 controls without adding a catalog ID and
+dispositions all six public declarations in `CnbModelFromCnj.hpp`. While the real glTF importer's
+opaque staging lifetime is live, the filesystem-path overload directly reads its generated Model
+CNJ. The result has populated parts/meshes, every absorbed geometry sidecar resolves inside the
+staging root, and the staged PNG remains exactly one external logical asset. The compatibility
+narrow-string overload returns the same file lists and a model that encodes to byte-identical CNB.
+
+Separate minimal version-1 and version-2 documents both synthesize the documented identity Root
+bone and otherwise-empty safe model, while retaining the XNA-default versus glTF lighting-policy
+fork. Direct files independently refuse a wrong asset type, unsupported Model `sourceFile`,
+material variants outside schema1, a missing meshes array and a sidecar path escaping the content
+root. No new CNA issue is found.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE-labelled and ten
+OPENGLES3-labelled runs pass29/29 with byte-identical stdout SHA-256
+`ba4f54743fcdbe157d5bb52875cc7bc7cbc100e2cf18222504f5d214b0794c8b` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata remains683/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA/C totals remain unchanged; two names enter the CNA-extension appendix
+and Complete956 still marks eight post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-974-model-from-cnj/*`, `/tmp/checkpoint-974-model-from-cnj-report.json` and
+`/tmp/checkpoint-974-coverage.md`. This is CPU/filesystem evidence; no GPU, rendering, screenshot,
+Windows Unicode-path or genuine-XNA claim is added. Audit the public `CnjToCnb.hpp` all-eight-type
+compiler contract next, reusing the existing CNJ and codec workflows before adding another ID.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3144,8 +3169,11 @@ deterministic complete-value round trip, empty/invalid values and ISSUE-109's fi
 validation gaps. Focused973 extends the stable XNB transcode workflow and closes all35 public
 schema-2 `CnbModelV2Data.hpp`/`CnbModelV2Codec.hpp` declarations through exact schema constants,
 every format/usage/effect value, genuine-XNB-derived and exhaustive deterministic round trips,
-minimal data and shared-validator refusals. Audit `CnbModelFromCnj.hpp` next, reusing the Model
-pipeline fixture and codec evidence before adding another ID. The earlier native
+minimal data and shared-validator refusals. Focused974 extends the stable Model pipeline workflow
+and closes all six public `CnbModelFromCnj.hpp` declarations through real staged sidecar/external
+classification, both path overloads, minimal v1/v2 values and representative refusals. Audit the
+public `CnjToCnb.hpp` all-eight-type compiler contract next, reusing existing CNJ and codec
+workflows before adding another ID. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds

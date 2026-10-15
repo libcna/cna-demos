@@ -1056,6 +1056,23 @@ All 35 public named declarations now have exact constant, enum, complete-value, 
 round-trip, refusal or shared runtime evidence. The source is a committed genuine XNB fixture, but
 the audit makes no genuine-XNA execution, GPU, screenshot or visual-quality claim.
 
+#### `CnbModelFromCnj.hpp` declaration-level disposition
+
+The pinned header exposes six public declarations: the result aggregate, its three fields and two
+path overloads. Focused974 extends `content.model.pipeline_contract`, which already owns the real
+glTF-to-staged-CNJ route and schema-1 encoder, so the front-end seam can be observed directly
+without a fabricated second Model workflow.
+
+| Declaration family | Disposition |
+|---|---|
+| `CnbModelFromCnjResult::model` | Directly reading the importer's live staged document produces populated parts and meshes that can be encoded by `EncodeModelToCnb`. The existing registered build independently processes the same staging output and remaps its texture child. Minimal version-1 and version-2 documents synthesize the documented identity root and preserve their distinct XNA versus glTF lighting policies. |
+| `absorbedFiles` and `externalReferences` | Every returned absorbed geometry sidecar resolves to a real file inside the staging root, while the generated PNG remains exactly one external logical asset. The lists agree across both overloads. The original CNJ is intentionally absent from the absorbed list; pipeline dependency collection owns that primary source separately. |
+| Filesystem and narrow-string `BuildCnbModelFromCnj` overloads | Both overloads read the same real importer-produced document and return byte-identical encodable models plus equal file lists. The filesystem overload remains the Unicode-safe primary API; this Linux ASCII-path run establishes compatibility delegation, not Windows Unicode behavior. |
+| Refusal behavior | Direct files independently prove refusal of the wrong asset type, unsupported Model `sourceFile` indirection, material variants that schema 1 cannot retain, a missing mesh table and a sidecar path escaping the content root. Arbitrary JSON/type/sidecar corruption remains CNA parser-test work. |
+
+Every declaration now has direct value, overload, file-classification or refusal evidence. The
+front end is CPU/filesystem-only and adds no GPU, rendering, screenshot or genuine-XNA claim.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,

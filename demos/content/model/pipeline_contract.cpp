@@ -2,9 +2,12 @@
 // Audit the public Model pipeline contract from glTF staging through generated child CNBs.
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <cstdint>
 #include <filesystem>
+#include <fstream>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -14,6 +17,7 @@
 #include "CNA/Content/Cnb/CnbByteWriter.hpp"
 #include "CNA/Content/Cnb/CnbDocument.hpp"
 #include "CNA/Content/Cnb/CnbModelCodec.hpp"
+#include "CNA/Content/Cnb/CnbModelFromCnj.hpp"
 #include "CNA/Content/Cnb/CnbModelV2Codec.hpp"
 #include "CNA/Content/Cnb/CnbTextureCodec.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
@@ -40,6 +44,30 @@ namespace
 
         std::vector<Pipeline::ContentLogMessage> messages;
     };
+
+    class TemporaryDirectory
+    {
+    public:
+        explicit TemporaryDirectory(std::filesystem::path path) : path_(std::move(path)) {}
+        ~TemporaryDirectory()
+        {
+            std::error_code ignored;
+            std::filesystem::remove_all(path_, ignored);
+        }
+
+        TemporaryDirectory(const TemporaryDirectory&) = delete;
+        TemporaryDirectory& operator=(const TemporaryDirectory&) = delete;
+
+    private:
+        std::filesystem::path path_;
+    };
+
+    void WriteText(const std::filesystem::path& path, const std::string& text)
+    {
+        std::ofstream output(path, std::ios::binary);
+        output << text;
+        if (!output) throw std::runtime_error("Could not write a temporary Model CNJ");
+    }
 
     bool SameAdditionalOutputs(
         const std::vector<Pipeline::ContentAdditionalWriteOutput>& left,
@@ -335,6 +363,31 @@ namespace
                           !imported.recordAuthoredSidecars &&
                           !imported.canonicalModel.has_value() && !logger.messages.empty(),
                       "the glTF importer owns one canonical Model document and embedded texture in a live contained staging tree");
+
+            const Cnb::CnbModelFromCnjResult nativeFrontEnd =
+                Cnb::BuildCnbModelFromCnj(imported.document, imported.intermediateRoot);
+            const Cnb::CnbModelFromCnjResult narrowFrontEnd = Cnb::BuildCnbModelFromCnj(
+                imported.document.string(), imported.intermediateRoot.string());
+            const bool absorbedFilesExist = std::all_of(
+                nativeFrontEnd.absorbedFiles.begin(), nativeFrontEnd.absorbedFiles.end(),
+                [&imported](const std::string& name)
+                {
+                    return std::filesystem::is_regular_file(imported.intermediateRoot / name);
+                });
+            const std::string stagedTexture = std::filesystem::relative(
+                imported.generatedTextureFiles[0], imported.intermediateRoot).generic_string();
+            ctx.Check(!nativeFrontEnd.model.parts.empty() &&
+                          !nativeFrontEnd.model.meshes.empty() &&
+                          nativeFrontEnd.absorbedFiles.size() >= 2u && absorbedFilesExist &&
+                          nativeFrontEnd.externalReferences ==
+                              std::vector<std::string>{stagedTexture},
+                      "the public CNJ front end absorbs generated geometry sidecars and retains the staged texture as one external asset");
+            ctx.Check(nativeFrontEnd.absorbedFiles == narrowFrontEnd.absorbedFiles &&
+                          nativeFrontEnd.externalReferences == narrowFrontEnd.externalReferences &&
+                          Cnb::EncodeModelToCnb(nativeFrontEnd.model, "Models/direct-front-end") ==
+                              Cnb::EncodeModelToCnb(narrowFrontEnd.model,
+                                                    "Models/direct-front-end"),
+                      "native filesystem and compatibility narrow-path overloads produce identical model and file lists");
         }
         ctx.Check(!releasedIntermediateRoot.empty() &&
                       !std::filesystem::exists(releasedIntermediateRoot),
@@ -701,6 +754,57 @@ namespace
             }),
             "the encoder currently emits five Model values its decoder refuses (CNA-DEMOS-ISSUE-109)");
 
+        const std::filesystem::path cnjRoot = std::filesystem::temp_directory_path() /
+            ("cna-demos-model-front-end-" +
+             std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+        if (!std::filesystem::create_directory(cnjRoot))
+            throw std::runtime_error("Private Model CNJ directory already exists");
+        TemporaryDirectory removeCnjRoot(cnjRoot);
+        WriteText(cnjRoot / "minimal-v1.cnj",
+                  R"({"cnjVersion":1,"type":"Model","meshes":[]})");
+        WriteText(cnjRoot / "minimal-v2.cnj",
+                  R"({"cnjVersion":2,"type":"Model","bones":[],"meshes":[]})");
+        const Cnb::CnbModelFromCnjResult minimalV1 =
+            Cnb::BuildCnbModelFromCnj(cnjRoot / "minimal-v1.cnj", cnjRoot);
+        const Cnb::CnbModelFromCnjResult minimalV2 =
+            Cnb::BuildCnbModelFromCnj(cnjRoot / "minimal-v2.cnj", cnjRoot);
+        ctx.Check(minimalV1.model.bones.size() == 1u &&
+                      minimalV1.model.bones[0].name == "Root" &&
+                      minimalV1.model.bones[0].parent == -1 &&
+                      minimalV1.model.bones[0].transform == Cnb::CnbModelBone{}.transform &&
+                      !minimalV1.model.hasBoneHierarchy &&
+                      !minimalV1.model.appliesGltfLightingPolicy &&
+                      minimalV1.model.parts.empty() && minimalV1.model.meshes.empty() &&
+                      minimalV1.absorbedFiles.empty() && minimalV1.externalReferences.empty() &&
+                      minimalV2.model.bones.size() == 1u &&
+                      minimalV2.model.bones[0].name == minimalV1.model.bones[0].name &&
+                      minimalV2.model.bones[0].parent == minimalV1.model.bones[0].parent &&
+                      minimalV2.model.bones[0].transform == minimalV1.model.bones[0].transform &&
+                      minimalV2.model.appliesGltfLightingPolicy,
+                  "minimal version-1/2 documents synthesize the same identity root while preserving the glTF lighting-policy fork");
+
+        WriteText(cnjRoot / "wrong-type.cnj",
+                  R"({"cnjVersion":1,"type":"Curve","meshes":[]})");
+        WriteText(cnjRoot / "source-file.cnj",
+                  R"({"cnjVersion":1,"type":"Model","sourceFile":"model.gltf","meshes":[]})");
+        WriteText(cnjRoot / "variants.cnj",
+                  R"({"cnjVersion":1,"type":"Model","materialVariantNames":["Gold"],"meshes":[]})");
+        WriteText(cnjRoot / "missing-meshes.cnj",
+                  R"({"cnjVersion":1,"type":"Model"})");
+        WriteText(cnjRoot / "outside-root.cnj",
+                  R"({"cnjVersion":1,"type":"Model","meshes":[{"vertices":"../outside.bin","indices":"inside.bin"}]})");
+        const auto refusesCnj = [&](const char* filename)
+        {
+            return Refuses([&]
+            {
+                (void)Cnb::BuildCnbModelFromCnj(cnjRoot / filename, cnjRoot);
+            });
+        };
+        ctx.Check(refusesCnj("wrong-type.cnj") && refusesCnj("source-file.cnj") &&
+                      refusesCnj("variants.cnj") && refusesCnj("missing-meshes.cnj") &&
+                      refusesCnj("outside-root.cnj"),
+                  "the front end refuses wrong type, source indirection, variants, missing meshes and root escape");
+
         ctx.Print("Built {} real Model part(s) and round-tripped {} synthetic effect variants.",
                   model.parts.size(), restored.parts.size());
     }
@@ -709,7 +813,7 @@ namespace
 CNA_DEMOS_CONSOLE(ModelPipelineContract, {
     .id = "content.model.pipeline_contract",
     .title = "Audit the Model pipeline contract",
-    .description = "Builds embedded-texture and animated glTF sources through CNA's public Model pipeline, then audits the schema-1 codec with a complete synthetic model covering hierarchy, every effect kind, material state, geometry, morphing, skinning, animation and lights.",
+    .description = "Builds embedded-texture and animated glTF sources through CNA's public Model pipeline, directly audits the CNJ front end and schema-1 codec, and covers hierarchy, every effect kind, material state, geometry, morphing, skinning, animation and lights.",
     .apis = {"CNA::Content::Pipeline::CanonicalModelValue",
              "CNA::Content::Pipeline::ImportedModelDocumentType",
              "CNA::Content::Pipeline::ProcessedModelType",
@@ -765,6 +869,8 @@ CNA_DEMOS_CONSOLE(ModelPipelineContract, {
              "CNA::Content::Cnb::CnbModelPartStride",
              "CNA::Content::Cnb::CnbModelMaterialStride",
              "CNA::Content::Cnb::CnbNoIndex",
+             "CNA::Content::Cnb::CnbModelFromCnjResult",
+             "CNA::Content::Cnb::BuildCnbModelFromCnj",
              "CNA::Content::Cnb::EncodeModelToCnb",
              "CNA::Content::Cnb::DecodeModelFromCnb",
              "CNA::Content::Cnb::DecodeTexture2DFromCnb"},

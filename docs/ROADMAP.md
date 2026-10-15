@@ -340,7 +340,9 @@ a check that all authored colors remain visible and that a blank texture row can
   through real owned glTF staging, component/schema identities, deterministic primary Model and
   generated Texture2D/AnimationClip CNBs plus typed runtime references; all 35 public schema-1
   Model data/codec declarations are also dispositioned through exact constants, a deterministic
-  complete-value round trip, empty/invalid cases and ISSUE-109's encoder/decoder validation gap),
+  complete-value round trip, empty/invalid cases and ISSUE-109's encoder/decoder validation gap;
+  all six public CNJ front-end declarations are dispositioned through real staged sidecars,
+  external references, both path overloads, minimal versions and representative refusals),
   ✅ `content.cnj.curve` (all six public Curve codec declarations through exact compiled metadata,
   deterministic complete-key round trips, every loop/continuity value, empty data and
   representative schema refusals while retaining the original runtime evaluation),

@@ -177,6 +177,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::AssemblyTitleAttributeEXT` -- platform.window.assembly_title
 - `CNA::CNAException` -- core.platform.host_identity
 - `CNA::Content::Cnb::AppendEmbeddedTexture2DChunks` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Cnb::BuildCnbModelFromCnj` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbAnimationClipChunk::Header` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::CnbAnimationClipChunk::Keys` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::CnbAnimationClipChunk::Tracks` -- content.cnj.pipeline_assets
@@ -235,6 +236,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbModelChunk::Strings` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbModelChunk::VertexData` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbModelData` -- content.model.pipeline_contract
+- `CNA::Content::Cnb::CnbModelFromCnjResult` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbModelLight` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbModelMaterialStride` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbModelMesh` -- content.model.pipeline_contract
