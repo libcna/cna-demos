@@ -8907,3 +8907,19 @@ known-issue SOFTWARE CTest passes twenty consecutive runs. The clean incremental
 metadata 655/0, both validator self-test suites and byte-identical coverage regeneration pass;
 coverage remains 302/329 types, 2114/2326 members, 169/753 fields and 3078/3205 C routes. Evidence:
 `/tmp/checkpoint-879-*`. No screenshot or visual inspection was used.
+
+## Focused880-SavePicture-stream-boundary-disposition
+
+The remaining SavePicture stream-input row is closed by source disposition rather than redundant
+failing assertions. In pinned CNA `d23e139de`, the overload allocates total Length, makes one Read
+from the current position and ignores the returned count. Nonzero position and premature EOF are
+therefore the same ISSUE-041 mechanism already demonstrated by a valid short-reading stream.
+SharpRuntime requires `getLengthProperty` and defines it as total bytes, so unknown length has no
+supported sentinel; a throwing implementation is a propagated capability refusal rather than a
+separate image behavior. CNA commit `a83673fc5`, four commits after the pin, loops to Length/EOF and
+shrinks to received bytes, but that later source fix has not been adopted or runtime-validated by
+this project. No demo, metadata or coverage count changes. Continue with the remaining disposal-
+invalidated Picture/PictureAlbum view question. The warning-free incremental `-j3` build, metadata
+655/0, both validator self-test suites and byte-identical coverage regeneration pass; counts remain
+302/329 types, 2114/2326 members, 169/753 fields and 3078/3205 C routes. Evidence:
+`/tmp/checkpoint-880-*`. No runtime, screenshot or visual validation was used for this disposition.

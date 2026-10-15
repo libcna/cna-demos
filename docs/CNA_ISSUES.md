@@ -2215,7 +2215,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   this WILL_FAIL test. Archives/reviews: `build/linux-full/reports/checkpoint-423-*`.
 - **Status:** runtime-confirmed CNA bug. The demo keeps the failing byte-preservation check;
   no loop/workaround was added around CNA's SavePicture call, no CNA source changed and no
-  upstream report was sent.
+  upstream report was sent. Follow-up source audit at Focused880 classifies nonzero starting
+  position and premature EOF as the same ignored-Read-count mechanism, so they do not get
+  duplicate failing controls; SharpRuntime requires a total Length and has no unknown-length
+  sentinel. CNA commit `a83673fc53a2c4694e69eb95238a041960dfc560`, four commits after this
+  project's pinned `d23e139de9e5c15511b6be745de290896a69ee37`, now loops until the advertised
+  length or EOF and resizes to the bytes received. That later fix is source-reviewed here but has
+  not been incorporated into or runtime-validated by the Complete871 baseline, so the marker stays.
 
 ### CNA-DEMOS-ISSUE-042 -- Root-prefix comments describe an older mesh-cancellation representation
 

@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Classified the remaining SavePicture stream boundaries: nonzero positions and premature EOF
+  share ISSUE-041's ignored short-read mechanism, while unknown length is outside Stream's required
+  total-length contract.
 - Verified that Picture::GetThumbnail falls back to the exact current file bytes when thumbnail
   decoding fails after an indexed picture is externally corrupted.
 - Verified that Picture::GetThumbnail leaves an already-small 128x64 PNG byte-identical and

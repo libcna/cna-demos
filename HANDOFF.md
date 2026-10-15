@@ -4439,6 +4439,27 @@ under `/tmp/checkpoint-879-*`. No new CNA defect, screenshot or visual inspectio
 Complete871 remains the full baseline. Audit the remaining stream-input row before deciding whether
 it merits runtime coverage or an explicit source-backed disposition.
 
+### Focused880-SavePicture-stream-boundary-disposition
+
+The last save-picture stream row is now dispositioned against pinned CNA `d23e139de` and
+SharpRuntime `f2aecfefe`. `Stream::getLengthProperty` is pure virtual and explicitly reports total
+bytes, so no supported unknown-length sentinel exists; a subclass that throws merely exposes an
+unsupported capability, which SavePicture propagates before any media operation. A nonzero current
+position makes the single full-Length request return fewer bytes, and premature EOF does the same
+against stale/contradictory Length. Both therefore exercise the exact ignored-Read-count mechanism
+already proven by ISSUE-041; adding duplicate failing controls would not establish a separate
+contract. Later CNA commit `a83673fc5`, four commits after the pinned baseline, loops until Length or
+EOF and resizes to received bytes. That correction is source-reviewed but is not claimed as runtime
+validation and does not remove the current known-issue marker before a deliberate repin.
+
+No demo source, ID, count or coverage credit changes. The warning-free incremental build uses
+`-j3`, metadata validates655/0, both validator self-test suites pass, and regenerated coverage is
+byte-identical at302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is
+under `/tmp/checkpoint-880-*`; no runtime, screenshot or visual validation was needed for this
+source/documentation disposition. Continue with the remaining Picture/PictureAlbum disposal-
+invalidated-view question. Determine whether post-Dispose getters have a specified refusal contract
+before adding runtime assertions.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
