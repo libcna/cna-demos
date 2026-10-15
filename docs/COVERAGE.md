@@ -445,6 +445,16 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::SoundEffectLoopPolicy` -- content.sound_effect.imported_pcm
 - `CNA::Content::Cnb::SurfaceFormatToCnbTextureFormat` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::WriteCnbKeyframe` -- content.cnj.pipeline_assets
+- `CNA::Content::CnbLoaderRegistry` -- content.custom.cnb_loader
+- `CNA::Content::CnbLoaderRegistry::Clear` -- content.custom.cnb_loader
+- `CNA::Content::CnbLoaderRegistry::Find` -- content.custom.cnb_loader
+- `CNA::Content::CnbLoaderRegistry::IsRegistered` -- content.custom.cnb_loader
+- `CNA::Content::CnbLoaderRegistry::LoaderFn` -- content.custom.cnb_loader
+- `CNA::Content::CnbLoaderRegistry::Register` -- content.custom.cnb_loader
+- `CNA::Content::CnbLoaderRegistry::RegisterBuiltIns` -- content.custom.cnb_loader
+- `CNA::Content::CnbLoaderRegistry::RegisteredTypeName` -- content.custom.cnb_loader
+- `CNA::Content::CnbLoaderRegistry::Remove` -- content.custom.cnb_loader
+- `CNA::Content::CnbLoaderRegistry::ResolveForDocument` -- content.custom.cnb_loader
 - `CNA::Content::Import::ImportedContentApiIsExperimental` -- content.sound_effect.imported_pcm
 - `CNA::Content::Import::ImportedPcmEncoding` -- content.sound_effect.imported_pcm
 - `CNA::Content::Import::ImportedPcmEncodingName` -- content.sound_effect.imported_pcm

@@ -329,7 +329,10 @@ a check that all authored colors remain visible and that a blank texture row can
   representative source refusals), ✅ `content.custom.cnb_loader` (all 45 public
   `CnbFormat.hpp` declarations are dispositioned through exact container constants, chunk/flag/
   compression wire identities, every built-in and custom asset ID/name, logical-name safety and
-  the two container-owned chunks alongside the existing real custom loader),
+  the two container-owned chunks alongside the existing real custom loader; all ten public
+  `CnbLoaderRegistry.hpp` declarations are dispositioned through direct registration/query/
+  removal/clear/resolve lifecycles, copied-loader survival, collision defense and exact built-in
+  declaration/installation behavior),
   ✅ `content.custom.cnb_read_limits` (the complete public arithmetic, byte-reader, byte-writer and
   CRC surfaces are dispositioned through an exact 44-byte primitive spelling/round trip, UTF-8 and
   failure boundaries, uint64 overflow checks, the standard CRC-32C vector and a real CNB header

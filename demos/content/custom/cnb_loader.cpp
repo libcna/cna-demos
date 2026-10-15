@@ -15,11 +15,13 @@
 #include <vector>
 #include "CnaDemos/Demo.hpp"
 #include "CNA/Content/Cnb/CnbByteWriter.hpp"
+#include "CNA/Content/Cnb/CnbLoaderRegistry.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
 
 using namespace Microsoft::Xna::Framework::Content;
+using CNA::Content::CnbLoaderRegistry;
 using namespace CNA::Content::Cnb;
 
 namespace
@@ -42,6 +44,14 @@ namespace
     // the pair fixed makes the collision defense deterministic instead of doing a search at run time.
     constexpr const char* CollisionAlpha = "CnaDemos.CollisionAsset.AlphavbnQ8GeK";
     constexpr const char* CollisionBeta = "CnaDemos.CollisionAsset.Beta9nGwK9Ry";
+
+    template <typename Exception, typename Action>
+    bool RefusesAs(Action&& action)
+    {
+        try { action(); }
+        catch (const Exception&) { return true; }
+        return false;
+    }
 
     struct TemporaryContent
     {
@@ -493,6 +503,157 @@ namespace
             ctx.Print("Newer schema refused: {}", error.what());
         }
         ctx.Check(rejected, "the loader refuses an unsupported schema instead of misreading it");
+
+        constexpr std::array<std::uint32_t, 10> BuiltInIds{
+            CnbAssetTypeId::Curve, CnbAssetTypeId::AnimationClip, CnbAssetTypeId::Model,
+            CnbAssetTypeId::Texture2D, CnbAssetTypeId::TextureCube, CnbAssetTypeId::Texture3D,
+            CnbAssetTypeId::SpriteFont, CnbAssetTypeId::SoundEffect,
+            CnbAssetTypeId::Song, CnbAssetTypeId::Video};
+        constexpr std::array<const char*, 10> BuiltInNames{
+            "Microsoft.Xna.Framework.Curve",
+            "Microsoft.Xna.Framework.Graphics.AnimationClipEXT",
+            "Microsoft.Xna.Framework.Graphics.Model",
+            "Microsoft.Xna.Framework.Graphics.Texture2D",
+            "Microsoft.Xna.Framework.Graphics.TextureCube",
+            "Microsoft.Xna.Framework.Graphics.Texture3D",
+            "Microsoft.Xna.Framework.Graphics.SpriteFont",
+            "Microsoft.Xna.Framework.Audio.SoundEffect",
+            "Microsoft.Xna.Framework.Media.Song",
+            "Microsoft.Xna.Framework.Media.Video"};
+        bool declaredBuiltIns = true;
+        for (std::size_t index = 0; index < BuiltInIds.size(); ++index)
+        {
+            declaredBuiltIns = declaredBuiltIns &&
+                CnbLoaderRegistry::IsRegistered(BuiltInIds[index]) &&
+                CnbLoaderRegistry::RegisteredTypeName(BuiltInIds[index]) == BuiltInNames[index] &&
+                CnbLoaderRegistry::Find(BuiltInIds[index]).has_value();
+        }
+        ctx.Check(declaredBuiltIns,
+                  "a ContentManager declares all ten built-in loader IDs, exact names and lookup copies");
+
+        const auto resolvedWrapper = CnbLoaderRegistry::ResolveForDocument(validDocument);
+        const Rules directlyResolved = std::any_cast<Rules>(
+            resolvedWrapper(validDocument, content, "direct wrapper resolution"));
+        ctx.Check(CnbLoaderRegistry::IsRegistered(typeId) &&
+                      CnbLoaderRegistry::RegisteredTypeName(typeId) == RulesName &&
+                      directlyResolved.name == "Moon" && ReadCount() == readsBeforeFailure + 2,
+                  "direct registry resolution returns the process-wide custom loader by value");
+
+        const auto retainedLoader = CnbLoaderRegistry::Find(typeId);
+        const bool firstRemoval = CnbLoaderRegistry::Remove(typeId);
+        const bool secondRemoval = CnbLoaderRegistry::Remove(typeId);
+        const Rules afterRemoval = std::any_cast<Rules>(
+            (*retainedLoader)(validDocument, content, "retained lookup copy"));
+        ctx.Check(firstRemoval && !secondRemoval && !CnbLoaderRegistry::IsRegistered(typeId) &&
+                      !CnbLoaderRegistry::Find(typeId).has_value() &&
+                      CnbLoaderRegistry::RegisteredTypeName(typeId).empty() &&
+                      afterRemoval.name == "Moon",
+                  "Remove reports exact state while a previously returned loader copy stays callable");
+        ctx.Check(RefusesAs<ContentLoadException>([&] {
+                      (void)CnbLoaderRegistry::ResolveForDocument(validDocument);
+                  }),
+                  "document resolution refuses a custom asset after its loader is removed");
+
+        CnbLoaderRegistry::Clear();
+        bool clearRemovedEverything = !CnbLoaderRegistry::IsRegistered(collisionId);
+        for (const auto id : BuiltInIds)
+            clearRemovedEverything = clearRemovedEverything && !CnbLoaderRegistry::IsRegistered(id);
+        ctx.Check(clearRemovedEverything && !CnbLoaderRegistry::Remove(typeId),
+                  "Clear withdraws custom and declared built-in registrations for process isolation");
+
+        CnbLoaderRegistry::LoaderFn emptyLoader;
+        const CnbLoaderRegistry::LoaderFn placeholderLoader =
+            [](const CnbDocument&, ContentManager&, const std::string&) -> std::any {
+                return Rules{};
+            };
+        ctx.Check(RefusesAs<std::invalid_argument>([&] {
+                      CnbLoaderRegistry::Register(CnbAssetTypeId::Invalid, RulesName, placeholderLoader);
+                  }) &&
+                      RefusesAs<std::invalid_argument>([&] {
+                          CnbLoaderRegistry::Register(CnbAssetTypeId::Curve, RulesName, placeholderLoader);
+                      }) &&
+                      RefusesAs<std::invalid_argument>([&] {
+                          CnbLoaderRegistry::Register(CnbAssetTypeId::ReservedRangeFirst,
+                                                      RulesName, placeholderLoader);
+                      }) &&
+                      RefusesAs<std::invalid_argument>([&] {
+                          CnbLoaderRegistry::Register(typeId, "", placeholderLoader);
+                      }) &&
+                      RefusesAs<std::invalid_argument>([&] {
+                          CnbLoaderRegistry::Register(typeId, "CnaDemos.OtherRules", placeholderLoader);
+                      }) &&
+                      RefusesAs<std::invalid_argument>([&] {
+                          CnbLoaderRegistry::Register(typeId, RulesName, emptyLoader);
+                      }),
+                  "direct registration refuses invalid, CNA-owned, unnamed, mismatched and empty-loader inputs");
+
+        auto directCalls = std::make_shared<int>(0);
+        auto directAssetName = std::make_shared<std::string>();
+        CnbLoaderRegistry::Register(
+            typeId, RulesName,
+            [directCalls, directAssetName](const CnbDocument& document, ContentManager&,
+                                            const std::string& assetName) -> std::any {
+                ++*directCalls;
+                *directAssetName = assetName;
+                return Rules{document.Metadata().contentName, 2.5f,
+                             document.AssetSchemaVersion()};
+            });
+        auto ignoredDirectCalls = std::make_shared<int>(0);
+        CnbLoaderRegistry::Register(
+            typeId, RulesName,
+            [ignoredDirectCalls](const CnbDocument&, ContentManager&,
+                                 const std::string&) -> std::any {
+                ++*ignoredDirectCalls;
+                return Rules{"ignored", 0.0f, 0u};
+            });
+        const auto directFound = CnbLoaderRegistry::Find(typeId);
+        const Rules directFoundValue = std::any_cast<Rules>(
+            (*directFound)(validDocument, content, "tools/rules"));
+        const auto directResolved = CnbLoaderRegistry::ResolveForDocument(validDocument);
+        const Rules directResolvedValue = std::any_cast<Rules>(
+            directResolved(validDocument, content, "runtime/rules"));
+        ctx.Check(directFound && directFoundValue.name == "rules" &&
+                      directResolvedValue.name == "rules" && directResolvedValue.gravity == 2.5f &&
+                      directResolvedValue.lives == 1u && *directCalls == 2 &&
+                      *ignoredDirectCalls == 0 && *directAssetName == "runtime/rules",
+                  "Register, Find and Resolve retain the first loader and pass document, manager and asset name");
+
+        CnbLoaderRegistry::Register(collisionId, CollisionAlpha,
+            [](const CnbDocument&, ContentManager&, const std::string&) -> std::any {
+                return CollisionAsset{1u};
+            });
+        const auto collidingDocument = CnbDocument::Parse(colliding.Build(), "direct collision probe");
+        ctx.Check(RefusesAs<std::logic_error>([&] {
+                      CnbLoaderRegistry::Register(collisionId, CollisionBeta,
+                          [](const CnbDocument&, ContentManager&, const std::string&) -> std::any {
+                              return CollisionAsset{2u};
+                          });
+                  }) &&
+                      RefusesAs<ContentLoadException>([&] {
+                          (void)CnbLoaderRegistry::ResolveForDocument(collidingDocument);
+                      }),
+                  "a genuine valid-name hash collision is refused at registration and document resolution");
+
+        CnbLoaderRegistry::Clear();
+        CnbLoaderRegistry::RegisterBuiltIns();
+        CnbLoaderRegistry::RegisterBuiltIns();
+        CnbWriter builtInProbe(CnbAssetTypeId::Curve, 1u);
+        builtInProbe.SetMetadata("Diagnostic.WrongCurveName", "built_in_probe");
+        const auto builtInDocument = CnbDocument::Parse(builtInProbe.Build(), "built-in identity probe");
+        ctx.Check(CnbLoaderRegistry::IsRegistered(CnbAssetTypeId::Curve) &&
+                      CnbLoaderRegistry::IsRegistered(CnbAssetTypeId::AnimationClip) &&
+                      !CnbLoaderRegistry::IsRegistered(CnbAssetTypeId::Texture2D) &&
+                      CnbLoaderRegistry::RegisteredTypeName(CnbAssetTypeId::Curve) == BuiltInNames[0] &&
+                      CnbLoaderRegistry::RegisteredTypeName(CnbAssetTypeId::AnimationClip) == BuiltInNames[1] &&
+                      CnbLoaderRegistry::Find(CnbAssetTypeId::Curve).has_value() &&
+                      CnbLoaderRegistry::Find(CnbAssetTypeId::AnimationClip).has_value() &&
+                      static_cast<bool>(CnbLoaderRegistry::ResolveForDocument(builtInDocument)),
+                  "RegisterBuiltIns idempotently installs only Curve and AnimationClip and built-in identity is numeric");
+        ctx.Check(CnbLoaderRegistry::Remove(CnbAssetTypeId::Curve) &&
+                      !CnbLoaderRegistry::Remove(CnbAssetTypeId::Curve) &&
+                      !CnbLoaderRegistry::IsRegistered(CnbAssetTypeId::Curve),
+                  "a directly installed built-in follows the same exact removal lifecycle");
+        CnbLoaderRegistry::Clear();
     }
 }
 
@@ -513,7 +674,13 @@ CNA_DEMOS_CONSOLE(CnbLoader, {
              "CNA::Content::Cnb::CnbDocument::RequireAsset", "CNA::Content::Cnb::CnbDocument::OpenChunk",
              "CNA::Content::Cnb::CnbDocument::ParseFile", "CNA::Content::Cnb::CnbDocument::FindAll",
              "CNA::Content::Cnb::CnbDocument::RequireSingle", "CNA::Content::Cnb::CnbByteReader::RequireExhausted",
-             "CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood"},
+             "CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood",
+             "CNA::Content::CnbLoaderRegistry", "CNA::Content::CnbLoaderRegistry::LoaderFn",
+             "CNA::Content::CnbLoaderRegistry::Register", "CNA::Content::CnbLoaderRegistry::Remove",
+             "CNA::Content::CnbLoaderRegistry::Clear", "CNA::Content::CnbLoaderRegistry::IsRegistered",
+             "CNA::Content::CnbLoaderRegistry::Find", "CNA::Content::CnbLoaderRegistry::RegisteredTypeName",
+             "CNA::Content::CnbLoaderRegistry::ResolveForDocument",
+             "CNA::Content::CnbLoaderRegistry::RegisterBuiltIns"},
     .tags = {"content", "custom", "cnb", "cnaext"},
     .restrictions = "Process-global custom registrations, including the concurrent first-wins probe, are isolated in a child process.",
     .ownProcess = true,

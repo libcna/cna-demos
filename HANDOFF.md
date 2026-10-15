@@ -1162,6 +1162,34 @@ filesystem path, device, rendering, screenshot, compression-performance or unava
 execution claim is added. Audit `CnbLoaderRegistry.hpp` next, consolidating the existing built-in,
 custom-loader and collision workflows before adding another catalog ID.
 
+Focused **980-CNB-loader-registry-disposition** extends stable own-process
+`content.custom.cnb_loader` from32 to42 controls without adding a catalog ID and dispositions all
+ten public `CnbLoaderRegistry.hpp` declarations. A ContentManager first exposes all ten declared
+built-in IDs, exact canonical names and callable lookup copies. Direct resolution invokes the
+existing typed wrapper; `Remove` reports true then false while a previously returned loader copy
+remains callable, and missing-registration resolution refuses. `Clear` removes both custom and
+declared built-in state inside the isolated child process.
+
+Direct `Register` refuses invalid, built-in, reserved, empty-name, mismatched-hash and empty-loader
+inputs. A direct loader observes the parsed document, manager and exact asset name; equivalent
+registration retains the first callable. The existing real collision pair separately triggers
+both conflicting-name registration and full-name document-resolution refusal. After another clear,
+two `RegisterBuiltIns` calls idempotently install exactly Curve and AnimationClip; Texture2D stays
+absent because the other eight loaders belong to ContentManager. A deliberately wrong optional
+CMET name confirms that built-in resolution uses the frozen numeric ID.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE-labelled and ten
+OPENGLES3-labelled runs pass42/42 with byte-identical nonce-normalized stdout SHA-256
+`1810e2949a2aae933c8105fcb2b5d6423eec32cf0540ca44ebca7eea4750b4c1` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata remains683/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and
+3078/3205 C routes; all ten names enter the CNA-extension appendix and Complete956 still marks
+eight post-baseline IDs absent. Evidence:`/tmp/checkpoint-980-cnb-loader-registry/*`,
+`/tmp/checkpoint-980-cnb-loader-registry-report.json` and `/tmp/checkpoint-980-coverage.md`. No CNA
+defect, scheduler-order, device, rendering or filesystem-portability claim is added. The complete
+public `CNA/Content` header tree is now dispositioned. Audit the sole remaining `content.h` C route,
+`cna_content_manager_create_resource`, next through an existing C content workflow.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3331,6 +3359,10 @@ compression, document and writer declarations through exact defaults and carrier
 metadata state, owned-limit behavior, deterministic output, available-codec round trips and
 representative refusals; ISSUE-110 records the direct `None` decompression validation gap. Audit
 `CnbLoaderRegistry.hpp` next by consolidating the existing custom/built-in/collision workflows.
+Focused980 closes all ten registry declarations through direct/custom/built-in lifecycle,
+resolution, collision, copied-loader and reset evidence. The complete public `CNA/Content` header
+tree is now dispositioned. Audit `cna_content_manager_create_resource`, the sole remaining
+`content.h` C route, next through an existing C content workflow.
 The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title

@@ -1167,6 +1167,25 @@ All public declarations in these four headers now have direct state, round-trip,
 shared-workflow evidence. The compression checks describe this build's available codecs only; they
 make no portability, throughput or alternate-build claim.
 
+#### `CnbLoaderRegistry.hpp` declaration-level disposition
+
+Focused980 extends the own-process `content.custom.cnb_loader` workflow from 32 to 42 controls and
+dispositions all ten public declarations. The existing end-to-end path still owns typed
+`ContentManager` loading, cache behavior, concurrent first-wins registration and a genuine 31-bit
+name collision; the added controls expose the underlying registry contract directly.
+
+| Declaration family | Disposition |
+|---|---|
+| `CnbLoaderRegistry`, `LoaderFn`, `Register` | A direct loader consumes the parsed document, manager reference and exact logical asset name, then returns the expected boxed type. Equivalent repeat registration retains the first callable. Invalid, built-in, reserved, unnamed, differently hashed and empty-loader registrations are refused. Two distinct canonical names with the same valid custom ID exercise the separate conflicting-name refusal. |
+| `IsRegistered`, `Find`, `RegisteredTypeName` | A real `ContentManager` declares all ten built-in IDs with exact canonical names, and each lookup yields a callable copy. Custom registration reports the same exact state. The existing eight-thread registration gate retains one capture; direct lookup followed by removal proves the returned function remains valid independently of later table mutation. |
+| `Remove`, `Clear` | First removal reports true, repeated removal false, and every query reports absence afterward. `Clear` removes both custom entries and declared built-ins in the isolated child process, including a false removal from the empty state. A copied loader remains callable after its table entry is gone. |
+| `ResolveForDocument` | A matching custom document resolves and decodes through both the ContentManager-installed wrapper and a direct loader. Missing registration and a real colliding full name are refused before the wrong loader executes. For a built-in type, the numeric ID remains authoritative even when optional CMET text differs. |
+| `RegisterBuiltIns` | After `Clear`, two calls idempotently install exactly the documented device-independent Curve and AnimationClip loaders, with exact names and lookup functions. Texture2D remains absent because the other eight loaders belong to `ContentManager`; direct built-in removal has the same true/false lifecycle. |
+
+Every public declaration now has direct state, lifetime, identity or refusal evidence. The demo's
+own-process boundary isolates the intentionally destructive global-registry reset. No claim is made
+about private registration entry points or thread-scheduler ordering.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,
