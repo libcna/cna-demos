@@ -8445,3 +8445,19 @@ known-issue SOFTWARE CTest, metadata653/0 and both self-test suites pass. Tempor
 `/tmp/checkpoint-852-morph-animation-*` and `/tmp/checkpoint-852-coverage.md`. No screenshot or
 visual inspection was performed. Compare the same STEP/CUBICSPLINE asset through loose and compiled
 carriers next, tightening CNA-DEMOS-ISSUE-031's runtime scope.
+
+## Focused853-compiled-loose-animation-interpolation-parity
+
+The existing `graphics.model.clip_interpolation` grows from five to twelve controls and loads the
+same generated slide rig as compiled CNB and loose glTF. Both carriers expose `Slide`, agree on all
+three values at.25 seconds and reach the exact common key at one second. LINEAR is correct in both;
+STEP and CUBICSPLINE both collapse to -1.5 instead of -2 and -1.6875. The loose report retains one
+clean clip with no warning or loss, localising the defect to clip/playback semantics and replacing
+ISSUE-031's previous source-only runtime scope with direct evidence.
+
+SOFTWARE and OPENGLES3 reproduce the same twelve controls with exactly the four expected
+STEP/CUBICSPLINE failures. The `-j3` build, exact known-issue SOFTWARE CTest, metadata653/0 and both
+self-test suites pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields
+and3078/3205 C routes. Evidence:`/tmp/checkpoint-853-interpolation-carriers-*` and
+`/tmp/checkpoint-853-coverage.md`. No screenshot or visual inspection was performed. Audit multi-
+skin animation retention and aggregate report accounting next.

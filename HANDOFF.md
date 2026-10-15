@@ -350,6 +350,19 @@ known-issue SOFTWARE CTest, metadata653/0 and self-tests5/5 and4/4 pass; tempora
 visual inspection was performed. Compare the same STEP/CUBICSPLINE asset through loose and compiled
 carriers next, tightening CNA-DEMOS-ISSUE-031's runtime scope.
 
+Focused **853-compiled-loose-animation-interpolation-parity** extends
+`graphics.model.clip_interpolation` from five to twelve controls and generates a loose copy of the
+exact source compiled into its existing CNB. Both carriers expose `Slide`, agree on all three
+sampled values and reach the common key at one second; LINEAR is correct. At.25 seconds both still
+produce -1.5 for STEP and CUBICSPLINE instead of -2 and -1.6875, giving four failures exclusively
+to CNA-DEMOS-ISSUE-031. The loose import report retains one clean clip with no warning/loss, which
+localises the defect to carried clip/playback semantics. Both renderers reproduce the same12-control
+result. The `-j3` build, exact known-issue SOFTWARE CTest, metadata653/0 and self-tests5/5 and4/4
+pass; temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C
+routes. Evidence:`/tmp/checkpoint-853-interpolation-carriers-*` and
+`/tmp/checkpoint-853-coverage.md`. No screenshot or visual inspection was performed. Audit multi-
+skin animation retention and aggregate report accounting next.
+
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
 slice-zero U/V texel centres preserve White/Yellow/Cyan/Magenta row order, while authored uniform
@@ -1927,15 +1940,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-852
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-853
 form the validated653-demo staged state. The glTF scene/node-graph audit is closed with
 CNA-DEMOS-ISSUE-092 retained. Rigid animation channel loss, resampling, duplicate/nonzero times,
 generated clip names and public malformed-sampler refusals now have exact evidence;
 CNA-DEMOS-ISSUE-093 records the silent unknown-interpolation-to-LINEAR fallback. Mixed skinned/
 rigid clips now have exact retention/loss evidence, while CNA-DEMOS-ISSUE-094 records false loss
-diagnostics for a retained morph track. Compare the same STEP/CUBICSPLINE asset through loose and
-compiled carriers next, tightening CNA-DEMOS-ISSUE-031's runtime scope before closing the animation
-importer audit. The complete checkpoint and harness findings are recorded in section7.
+diagnostics for a retained morph track. Same-asset runtime evidence now confirms
+CNA-DEMOS-ISSUE-031 on both compiled and loose interpolation carriers. Audit multi-skin animation
+retention and aggregate report accounting next, especially channels retained by different palettes.
+The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
@@ -3872,6 +3886,24 @@ tests5/5 and4/4 pass. Temporary coverage remains302/329 types,2114/2326 members,
 `/tmp/checkpoint-852-coverage.md`. CPU bytes and real VertexBuffer readback were checked; no
 screenshot or visual inspection was performed. Compare the same STEP/CUBICSPLINE asset through
 loose and compiled carriers next, tightening CNA-DEMOS-ISSUE-031's runtime scope.
+
+### Focused853-compiled-loose-animation-interpolation-parity
+
+The existing `graphics.model.clip_interpolation` grows from five to twelve controls and now loads
+the exact generated `slide_rig` source both as compiled CNB and loose glTF. Both expose the same
+named SceneNode clip, yield identical STEP/LINEAR/CUBICSPLINE values at.25 seconds and reach the
+authored shared key at one second. LINEAR is the correct -1.5 in both paths; STEP and CUBICSPLINE
+are also -1.5 rather than their required -2 hold and -1.6875 Hermite result.
+
+The loose report says AnimationCount1 and ClipCount1 with zero warnings and no loss. The four
+failed assertions are therefore exactly the two non-linear interpolation expectations through two
+carriers, all under CNA-DEMOS-ISSUE-031. SOFTWARE and OPENGLES3 reproduce the same12-control result.
+The exact known-issue SOFTWARE CTest passes via `WILL_FAIL`; the `-j3` build, metadata653/0 and
+validator/checkpoint self-tests5/5 and4/4 pass. Temporary coverage remains302/329 types,2114/2326
+members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-853-interpolation-carriers-*` and `/tmp/checkpoint-853-coverage.md`. No screenshot
+or visual inspection was performed. Audit multi-skin animation retention and aggregate report
+accounting next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

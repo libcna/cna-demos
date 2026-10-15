@@ -1838,14 +1838,25 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   compiled model and the run-time import behave so (the extraction is shared; skinned clips go
   through the same code, not checked separately).
 - **Demos:** `graphics.model.clip_interpolation` (expected failure).
-- **Reproduction:** `content/models/slide_rig.gltf` (tools/gltf_models.py: three translation
-  channels keyed `x = -2, 0, 2` at `0, 1, 2` s, samplers STEP, LINEAR, CUBICSPLINE with zero
-  tangents); `ApplyClipToBonesEXT(model, clip, 0.25 s)`.
-- **Observed:** x = -1.5 for all three.
+- **Reproduction:** `content/models/slide_rig.gltf` and its byte-equivalent generated runtime copy
+  `assets/models/loose_slide_rig.gltf` (tools/gltf_models.py: three translation channels keyed
+  `x = -2, 0, 2` at `0, 1, 2` s, samplers STEP, LINEAR, CUBICSPLINE with zero tangents). The demo
+  loads the first as compiled CNB and the second directly, then calls
+  `ApplyClipToBonesEXT(model, clip, 0.25 s)` on both.
+- **Observed:** x = -1.5 for all three through both carriers. LINEAR and the common key at one
+  second are correct; STEP and CUBICSPLINE each fail their distinct expected values. The loose
+  report still says AnimationCount1/ClipCount1 with no warning or loss, and compiled/loose values
+  match exactly.
 - **Expected:** STEP -2 (held), LINEAR -1.5, CUBICSPLINE -1.6875 (Hermite, flat tangents).
 - **Environment:** CNA 0.1.0, Linux.
 - **Status:** open; not reported upstream yet. Resampling STEP channels with a hold key just before
   each step, and CUBICSPLINE ones densely (or carrying the mode in the clip), would keep them.
+- **Focused runtime confirmation (2026-10-15):** both SOFTWARE and OPENGLES3/Xvfb run twelve
+  controls; four fail, exactly the STEP/CUBICSPLINE expectations for compiled and loose carriers.
+  The exact known-issue SOFTWARE CTest passes via `WILL_FAIL`. Evidence:
+  `/tmp/checkpoint-853-interpolation-carriers-*`. This replaces the previous source-only statement
+  that runtime import shared the defect with direct public-path evidence on clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`.
 
 ---
 

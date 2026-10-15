@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended animation interpolation coverage across byte-equivalent compiled and loose Model
+  carriers, directly confirming CNA-DEMOS-ISSUE-031's STEP/CUBICSPLINE runtime scope.
 - Added a compiled-versus-loose morph-animation carrier workflow with exact vertex upload, and
   recorded CNA-DEMOS-ISSUE-094 for false unsupported/empty loss diagnostics on the retained track.
 - Extended skinned-animation coverage with a mixed joint/rigid source clip, proving retained joint

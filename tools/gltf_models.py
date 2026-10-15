@@ -13,7 +13,7 @@ assets/models/ that is loaded as a loose glTF file at run time.
   animation "Bend" that rotates UpperJoint back and forth. It has NORMAL and COLOR_0, so CNA gives it a
   SkinnedEffect.
 * turntable.gltf, morph_flag.gltf/loose_morph_flag.gltf, camera_rig.gltf, textured_crate.gltf, lit_sphere.gltf,
-  slide_rig.gltf, loose_paint_toy.gltf, loose_node_instances.gltf and the three
+  slide_rig.gltf/loose_slide_rig.gltf, loose_paint_toy.gltf, loose_node_instances.gltf and the three
   loose_scene_fallback_*.gltf files, loose_animation_diagnostics.gltf,
   loose_skinned_rigid_animation.gltf and the
   loose_animation_bad_*.gltf files -- node-animation clips, morph targets with a weights
@@ -1124,6 +1124,7 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     multiple_skins(assets_root / "models" / "loose_multi_skin.gltf")
     skinned_rigid_animation(assets_root / "models" / "loose_skinned_rigid_animation.gltf")
     morph_flag(assets_root / "models" / "loose_morph_flag.gltf")
+    slide_rig(assets_root / "models" / "loose_slide_rig.gltf")
     node_instances(assets_root / "models" / "loose_node_instances.gltf")
     scene_fallbacks(assets_root / "models")
     animation_diagnostics(assets_root / "models" / "loose_animation_diagnostics.gltf")
