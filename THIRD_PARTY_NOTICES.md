@@ -19,10 +19,11 @@ their notices.
 
 ## Assets
 
-Every file under `assets/`, `content/`, `content_xnb/`, `content_media/` and `title/` is original cna-demos content, generated
-deterministically by [`tools/generate_assets.py`](tools/generate_assets.py) from code in this
-repository or written by hand for it (`.cnj`, `.level`, `.cna-content.json`, `.json`). No external images,
-sounds, fonts or models are included.
+Except for the licensed font listed below, every file under `assets/`, `content/`, `content_xnb/`,
+`content_media/` and `title/` is original cna-demos content, generated deterministically by
+[`tools/generate_assets.py`](tools/generate_assets.py) from code in this repository or written by
+hand for it (`.cnj`, `.level`, `.cna-content.json`, `.json`). No external images, sounds or models
+are included.
 
 | Path | Content | Origin |
 |---|---|---|
@@ -50,6 +51,7 @@ sounds, fonts or models are included.
 | `assets/custom/patrol.route` | three waypoints forming a 3-4-5 triangle for the custom pipeline; reproduced by tools/generate_assets.py | generated, original |
 | `assets/levels/level1.level` | five-line text tile map for the custom-reader demo | written for cna-demos, original |
 | `content/fonts/pixel_font.png` | pixel font (printable ASCII, 5x9 grid at 2x) as an XNA font-texture sheet; glyph shapes in `tools/pixel_font.py` | drawn for cna-demos, original |
+| `assets/fonts/liberation_mono/LiberationMono-Regular.ttf` | Liberation Mono Regular, used by the `.spritefont` source-pipeline demo | Liberation Fonts; unmodified; SIL Open Font License 1.1; full license and provenance beside the font |
 | `content/textures/keyed_ship.png` | 64x64 ship on a magenta background (colour-key source) | generated, original |
 | `content/textures/soft_circle_compiled.png` | the soft disc again, compiled with premultiplied alpha | generated, original |
 | `content/textures/odd_size.png` | 100x60 framed gradient (resize source) | generated, original |
@@ -60,5 +62,17 @@ sounds, fonts or models are included.
 | `content_xnb/fonts/pixel_font.png`, `content_xnb/sounds/chime.wav`, `content_xnb/curves/bounce.cnj` | the same font sheet, chime and curve as under `content/`, compiled to XNB | generated / written for cna-demos, original |
 | `title/GamerServices/Achievements.json` | offline achievement catalog: three achievements with names, descriptions and scores | written for cna-demos, original |
 
-When a non-original asset is ever added, list it here with its source, author, licence and the
+### Liberation Mono
+
+`assets/fonts/liberation_mono/LiberationMono-Regular.ttf` is committed so the public
+`.spritefont` pipeline demo rasterizes a real typeface with stable, reproducible metrics instead
+of depending on fonts installed on the host.
+
+Liberation Mono is Copyright © 2012 Red Hat, Inc., with Liberation being a trademark of Red Hat,
+Inc., and is licensed under the **SIL Open Font License, Version 1.1**. The complete license text is
+committed beside the font as `LiberationMono-Regular.LICENSE.txt`; `PROVENANCE.json` records its
+upstream, distributing package, SHA-256 and redistribution purpose. The font is unmodified and
+retains its reserved name.
+
+When another non-original asset is added, list it here with its source, author, licence and the
 exact licence text location, and keep the licence file next to the asset.

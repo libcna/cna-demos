@@ -81,8 +81,9 @@ Console demos with checks; each shows one operation family.
   on both renderers; captures inspected).
 - ✅ (7 demos) `graphics.sprite_font.*`: build-time CNB font (generated font-texture sheet),
   `DrawString`, `MeasureString`, `LineSpacing`, `Spacing`, `DefaultCharacter`, `Characters`,
-  scaled/rotated/mirrored text, `StringBuilder`, the CNAEXT glyph constructor. Remaining: loading
-  an XNB font (Phase 8, content), TrueType `.spritefont` (needs FreeType and a licensed font).
+  scaled/rotated/mirrored text, `StringBuilder`, the CNAEXT glyph constructor. Phase 8 now also
+  covers XNB font loading and the complete build-time TrueType `.spritefont` source contract with
+  a licensed, reproducible font fixture.
 - ✅ (10 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg` (including requested output
   dimensions and unchanged source), `LevelCount`. Remaining:
@@ -300,7 +301,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (60 demos; remaining below)
+## Phase 8 -- content 🟨 (61 demos; remaining below)
 
 - ✅ Existing `content.texture_processor.resize_to_power_of_two` now verifies XNB-targeted
   Reach/HiDef mipmap processing, resized payloads matching its rendered CNB and the distinct native
@@ -334,6 +335,10 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.model.pipeline_contract` (all 33 public Model pipeline declarations dispositioned
   through real owned glTF staging, component/schema identities, deterministic primary Model and
   generated Texture2D/AnimationClip CNBs plus typed runtime references),
+  ✅ `content.sprite_font.pipeline_contract` (all 44 public source-pipeline declarations
+  dispositioned in a separate build-time process through exact XML parsing/search, a committed OFL
+  TrueType face, strict/compatible rasterization, deterministic CNB/XNB builds and synthetic
+  font-sheet processing; ISSUE-108 records the inverted direct-region contract mismatch),
   ✅ `content.content_project.xna_content_project` (an XNA `.contentproj` built
   as it is, `CONTENT_PROJECT`). A CNJ texture repeats the texture processor demos (the same
   parameters in JSON). ✅ `content.custom.cnb_loader` uses public CnbWriter and

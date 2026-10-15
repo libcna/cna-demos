@@ -1,0 +1,12 @@
+{
+  "file": "LiberationMono-Regular.ttf",
+  "upstream": "https://github.com/liberationfonts/liberation-fonts",
+  "distributedBy": "Debian package fonts-liberation, /usr/share/fonts/truetype/liberation/",
+  "license": "SIL Open Font License 1.1",
+  "licenseFile": "LiberationMono-Regular.LICENSE.txt",
+  "copyright": "Digitized data copyright (c) 2010 Google Corporation with Reserved Font Arimo, Tinos and Cousine. Copyright (c) 2012 Red Hat, Inc. with Reserved Font Name Liberation.",
+  "sha256": "395fa5ab8d40c8eba390ced528744ea75a7f69aabf3e68b6f925ca0e39a27370",
+  "byteCount": 319624,
+  "whyItIsHere": "The public .spritefont pipeline demo needs a real font file with stable metrics. The OFL permits bundling and redistribution with this project; the font is unmodified and its reserved name is unchanged.",
+  "notFor": "Only the content-pipeline demo reads this source fixture. It is not linked or embedded into a CNA runtime library."
+}

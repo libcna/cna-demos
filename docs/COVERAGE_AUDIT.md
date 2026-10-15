@@ -959,6 +959,28 @@ shared wrapper/runtime evidence or an explicit parser-boundary disposition. Both
 load and draw the resulting font with matching programmatic pixel checks; no screenshot, manual
 visual assessment or genuine-XNA execution claim is added.
 
+#### `SpriteFontContentPipeline.hpp` declaration-level disposition
+
+The pinned header exposes 44 public declarations under this audit's convention: one imported-type
+identity, four style values, 12 aggregate fields/equality operators, eight free functions, four
+importer methods, five description-processor methods, one font-sheet parameter identity, the
+font-sheet helper, six font-sheet-processor methods and the registration function. Focused969 adds
+the standalone `content.sprite_font.pipeline_contract` build-time workflow because this header
+belongs to `CNA::ContentPipelineBuild`, not the runtime library linked into the main demo browser.
+
+| Declaration family | Disposition |
+|---|---|
+| Imported identity, style values and description carriers | Safe defaults cover every field of `FontCharacterRegion` and `FontDescription`, all four exact style ordinals and both equality operators. Parsing the committed XML restores font name, size, spacing, kerning, style, fallback and its deliberately out-of-order regions exactly. Direct region expansion then sorts, deduplicates an overlap and inserts an out-of-region fallback. Malformed XML and the 8,192-glyph ceiling are refused. ISSUE-108 records that a directly constructed inverted region is silently ignored despite the expansion function's documented refusal; the built-in parser separately rejects that ordering. |
+| Font discovery and rasterization | A committed, unmodified OFL Liberation Mono face makes the result independent of host-installed fonts. Explicit search directories round-trip, beside-family and configured-system searches resolve that exact file, and a missing family returns empty. Direct FreeType rasterization produces the exact sorted eight-character set, one Rgba8 atlas, complete parallel tables, valid packed geometry and authored metrics. Strict mode refuses a missing CJK glyph; XNA-compatible mode retains the notdef glyph with a warning. A requested unavailable bold-italic face is explicitly synthesized and warned. Builds without the optional rasterizer skip the tool rather than making a false runtime claim. |
+| FontDescriptionImporter and FontDescriptionProcessor | Every identity, source/output/input type and ordinary-selection value is exact. Parameter validation accepts the empty description policy and returns structured `UnknownName` state for an extra value. A registry configured through the public registration function imports and processes the real `.spritefont`, records the TrueType face as a source dependency and reproduces direct rasterization. Two complete CNB builds have identical bytes/dependencies and decode to the same font; an XNB build selects DXT3/BC2 atlas data and the SpriteFontReader root. |
+| FontTextureFirstCharacterParameter, BuildFontFromTextureSheet and FontTextureProcessor | Exact component identity/types and named-only selection accompany the accepted three-parameter surface. A 40-glyph synthetic magenta-separated sheet proves sequential characters and the distinct HiDef multiple-of-four versus Reach power-of-two atlas heights. Direct processor calls consume both string and integer first-character forms, preserve or premultiply exact RGBA values, and produce the complete expected BC2 block grid for XNB. Empty first-character and glyphless direct/processed sheets are refused. Existing bitmap SpriteFont demos retain runtime loading, measurement and drawing. |
+| Registration, deployment and licensing boundaries | `RegisterSpriteFontSourceContentPipeline` supplies the importer and both processors; shared CNJ and XNB registrations supply the two writers used by the end-to-end builds. The tool runs in its own executable linked to `CNA::ContentPipelineBuild`, preserving the project's runtime-only browser boundary. The fixture's full SIL OFL 1.1 text, provenance, upstream/package origin and SHA-256 are committed beside it and listed in `THIRD_PARTY_NOTICES.md`. Host font enumeration permutations, shaping, arbitrary Unicode coverage, raster quality and platform-specific font backends remain integration/manual concerns rather than extra demo variants. |
+
+All 44 public declarations now have direct behavior, shared runtime evidence or an explicit
+integration/boundary disposition. The workflow establishes deterministic CPU conversion and
+container semantics. It makes no screenshot, manual raster-quality, host-font portability or
+genuine-XNA execution claim.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,

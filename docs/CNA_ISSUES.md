@@ -15,6 +15,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-108 -- Character-region expansion silently ignores an inverted range
+
+- **Area/API:** `CNA::Content::Pipeline::ExpandCharacterRegions`, declared in
+  `SpriteFontContentPipeline.hpp`.
+- **Demo/reproduction:** run `content.sprite_font.pipeline_contract`. The standalone build-time
+  demo parses a valid `.spritefont`, then copies the public `FontDescription` value and replaces
+  its regions with the directly constructible `FontCharacterRegion{u'Z', u'A'}`, clears the
+  unrelated fallback character, and calls `ExpandCharacterRegions`.
+- **Observed:** expansion returns an empty vector. Its unsigned loop starts at `Z`, tests it
+  against the smaller `A`, and performs no iteration. The XML parser rejects the same ordering,
+  but the public expansion function accepts a `FontDescription` assembled by any caller.
+- **Expected/contract:** the public declaration explicitly documents a `std::runtime_error` for
+  an inverted region. The function should validate every public input region before expanding it,
+  independent of whether that value originated in the built-in XML parser.
+- **Scope/status:** the passing demo labels and asserts the exact current behavior so the rest of
+  the 44-declaration source-pipeline audit remains executable; its metadata names this issue rather
+  than hiding the discrepancy. Malformed XML and a character set above the 8192-glyph limit are
+  separately refused as documented. Open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified, no upstream message was
+  sent, and no genuine-XNA behavior is claimed for direct construction of CNA's extension type.
+
 ### CNA-DEMOS-ISSUE-107 -- XNB output digest documentation gives an impossible example
 
 - **Area/API:** `CNA::Content::Pipeline::XnbOutputOptionsDigest`, declared in

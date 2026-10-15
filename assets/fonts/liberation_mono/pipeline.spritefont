@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A compact, deterministic .spritefont source for the public pipeline demo. -->
+<XnaContent xmlns:Graphics="Microsoft.Xna.Framework.Content.Pipeline.Graphics">
+  <Asset Type="Graphics:FontDescription">
+    <FontName>LiberationMono-Regular</FontName>
+    <Size>14</Size>
+    <Spacing>1.5</Spacing>
+    <UseKerning>true</UseKerning>
+    <Style>Regular</Style>
+    <DefaultCharacter>?</DefaultCharacter>
+    <CharacterRegions>
+      <CharacterRegion>
+        <Start>a</Start>
+        <End>c</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>A</Start>
+        <End>D</End>
+      </CharacterRegion>
+    </CharacterRegions>
+  </Asset>
+</XnaContent>

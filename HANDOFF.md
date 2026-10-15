@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 30), 8 (content, 60), 9 (audio 23 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 30), 8 (content, 61), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 6 + logger 2, cnaext 4).
@@ -68,12 +68,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-682 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
-content60, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform3 and c_api177. Kinds are184 console,296 game and202 standalone;
-646 are automated,33 smoke-only and3 manual. Every declared category has demos.
+683 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
+content61, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, cnaext4, platform3 and c_api177. Kinds are184 console,296 game and203 standalone;
+647 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete956's full runtime reports; they include all675
-baseline IDs in both renderer suites and correctly mark the seven post-baseline IDs absent.
+baseline IDs in both renderer suites and correctly mark the eight post-baseline IDs absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete956's
 full runtime reports are the baseline inputs for the675-ID catalog. Selected semantic
@@ -853,6 +853,41 @@ Neither was a demo or CNA failure, and the required escalated Xvfb runs passed. 
 programmatic; no screenshot, manual visual-quality or genuine-XNA execution claim is added. No CNA
 issue was found. Audit the adjacent public `SpriteFontContentPipeline.hpp` declarations next,
 reusing this real CNJ/runtime/codec evidence.
+
+Focused **969-SpriteFont-source-pipeline-disposition** adds the 683rd catalog ID,
+`content.sprite_font.pipeline_contract`, as a standalone build-time process and dispositions all44
+public `SpriteFontContentPipeline.hpp` declarations. The separate executable is required because
+the header and FreeType implementation belong to `CNA::ContentPipelineBuild`; keeping it out of the
+main browser preserves the established runtime/build-tool dependency boundary. A committed,
+unmodified Liberation Mono Regular face has its complete SIL OFL 1.1 text, provenance, exact
+319,624-byte size and SHA-256 beside it and in `THIRD_PARTY_NOTICES.md`.
+
+Twenty-three controls cover safe description/region defaults and equality, all four style values,
+exact XML parsing, sorted/deduplicated/fallback region expansion, malformed/oversized refusals,
+component identities/routes/parameter policy, exact project-local family search, and real FreeType
+rasterization. Strict missing-glyph refusal differs from XNA-compatible notdef/warning behavior;
+an unavailable bold-italic face is synthesized and warned. Registered import/process records the
+font dependency and matches direct rasterization; repeated CNB builds are byte-identical and decode
+exactly, while XNB selects the expected BC2 atlas and SpriteFontReader. The font-sheet route proves
+40 sequential glyphs, distinct HiDef/Reach heights, exact optional premultiplication, string and
+integer first-character parameters, the complete BC2 block grid and empty-input refusals.
+
+The first direct run corrected a demo-only assumption that an 8x4 BC2 atlas was one block; its
+correct size is two 4x4 blocks. The audit also found **CNA-DEMOS-ISSUE-108**: direct
+`ExpandCharacterRegions` silently ignores `{Z,A}` although its public contract promises an
+exception. The passing control states the exact current behavior, while malformed XML and the
+8,192-glyph limit still refuse as documented. CNA was not modified.
+
+The final incremental compilation is warning-free and uses at most three jobs. Ten SOFTWARE and
+ten OPENGLES3-labelled direct runs pass23/23 with byte-identical stdout SHA-256
+`ad74cf65e589174aff4c4ef1c3b4dcd4cc820b6d010c39d2b951e033be418ecf` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata is683/0 and the validator/checkpoint self-tests pass
+5/5 and4/4. Generated XNA/C totals remain unchanged; 30 public names enter the CNA-extension
+appendix and Complete956 marks all eight post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-969-*` and `/tmp/spritefont-pipeline-report.json`. This is CPU/build/container
+evidence; no screenshot, raster-quality, host-font portability or genuine-XNA execution claim is
+added. Audit the adjacent public `CnbCurveCodec.hpp` contract next, reusing the existing CNJ Curve
+runtime workflow and adding only missing codec behavior.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -2856,7 +2891,9 @@ Platforms: only Linux x86_64 was available. Windows, macOS, web, Android: untest
 
 ## 10. Known CNA issues
 
-See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-068 (the C parameter-collection header calls
+See docs/CNA_ISSUES.md. Open: CNA-DEMOS-ISSUE-108 (`ExpandCharacterRegions` silently ignores a
+directly constructed inverted range despite documenting a refusal),
+CNA-DEMOS-ISSUE-068 (the C parameter-collection header calls
 case-insensitive semantic lookup exact), CNA-DEMOS-ISSUE-067 (C display-color-space routes expose unnamed
 integer ordinals), CNA-DEMOS-ISSUE-066 (SOFTWARE ignores the direct GraphicsDevice
 blend-enable toggle), CNA-DEMOS-ISSUE-065 (the C GraphicsDevice reset declaration is
@@ -2982,9 +3019,12 @@ declarations with exhaustive mappings, exact linear/sRGB mips and deterministic 
 and embedded-container round trips. Audit `CnbSpriteFontCodec.hpp` next, reusing existing
 SpriteFont pipeline and runtime evidence and adding only missing codec behavior. Focused968 extends
 that stable CNJ game and closes all21 codec declarations with exact real-asset tables, deterministic
-round trips and relationship refusals while retaining renderer-backed layout/drawing. Audit
-`SpriteFontContentPipeline.hpp` next, reusing that evidence and adding only missing source-pipeline
-behavior. The earlier native
+round trips and relationship refusals while retaining renderer-backed layout/drawing. Focused969
+adds the separate build-time source-pipeline workflow and closes all44 public
+`SpriteFontContentPipeline.hpp` declarations through a licensed real face, exact discovery,
+rasterization, CNB/XNB and font-sheet behavior; it records ISSUE-108 for inverted direct ranges.
+Audit `CnbCurveCodec.hpp` next, reusing the existing CNJ Curve runtime workflow and adding only
+missing codec behavior. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds
