@@ -53,18 +53,34 @@ void main() { FragColor = vec4(0.0, 1.0, 1.0, 1.0) }
                 Context().Skip("the demo needs a renderer that compiles GLSL source");
             const auto language = es ? CNA::ShaderLanguageEXT::GlslEs : CNA::ShaderLanguageEXT::GlslDesktop;
             const std::string header = es ? "#version 300 es\nprecision mediump float;\n" : "#version 330 core\n";
-            const CNA::Graphics::ShaderCodeEXT vertex(language, CNA::ShaderStageEXT::Vertex,
-                                                     "main", "retained.vert", header + Vertex);
-            const CNA::Graphics::ShaderCodeEXT fragment(language, CNA::ShaderStageEXT::Fragment,
-                                                       "main", "retained.frag", header + Fragment);
-            good_ = std::make_unique<ShaderEffect>(device, vertex, fragment);
+            const std::string expectedVertex = header + Vertex;
+            const std::string expectedFragment = header + Fragment;
+            std::string authoredVertex = expectedVertex;
+            std::string authoredFragment = expectedFragment;
+            {
+                const CNA::Graphics::ShaderCodeEXT vertex(language, CNA::ShaderStageEXT::Vertex,
+                                                         "main", "retained.vert", authoredVertex);
+                const CNA::Graphics::ShaderCodeEXT fragment(language, CNA::ShaderStageEXT::Fragment,
+                                                           "main", "retained.frag", authoredFragment);
+                good_ = std::make_unique<ShaderEffect>(device, vertex, fragment);
+            }
+            authoredVertex.assign("caller vertex storage replaced");
+            authoredFragment.assign("caller fragment storage replaced");
             if (!Context().Check(good_->IsEffectValid() && good_->GetCompileErrorEXT().empty() &&
                                  good_->GetShaderDiagnosticsEXT().empty(),
                                  "the retained valid shader has no compiler log or structured diagnostics"))
                 throw std::runtime_error(good_->GetCompileErrorEXT());
+            const Effect& baseEffect = *good_;
+            Context().Check(good_->getVertexSourceProperty() == expectedVertex &&
+                            good_->getFragmentSourceProperty() == expectedFragment &&
+                            baseEffect.GetVertexSource() == expectedVertex &&
+                            baseEffect.GetFragmentSource() == expectedFragment,
+                            "the source properties and Effect virtual accessors retain exact owned text after caller inputs expire");
             std::vector<CNA::ShaderDiagnosticEXT> diagnostics;
             std::string rawLog, firstMessage;
             {
+                const CNA::Graphics::ShaderCodeEXT vertex(language, CNA::ShaderStageEXT::Vertex,
+                                                         "main", "retained.vert", expectedVertex);
                 const CNA::Graphics::ShaderCodeEXT invalid(language, CNA::ShaderStageEXT::Fragment,
                                                           "main", "replacement.frag", header + InvalidFragment);
                 // A usable explicit pair delegates actual compilation to the nonthrowing compiler.
@@ -134,10 +150,12 @@ void main() { FragColor = vec4(0.0, 1.0, 1.0, 1.0) }
 CNA_DEMOS_GAME(CompilerDiagnosticsDemo, {
     .id = "graphics.shader_effect.compiler_diagnostics",
     .title = "Shader compiler diagnostics and retained program",
-    .description = "Rejects a GLSL fragment with a missing semicolon, retains owned compiler diagnostics after destruction, "
-                   "and draws with the still-valid original shader.",
+    .description = "Retains exact shader source through both concrete and Effect accessors, rejects a fragment with a "
+                   "missing semicolon, keeps owned diagnostics, and draws with the valid original program.",
     .apis = {"ShaderEffect::ShaderEffect", "ShaderEffect::IsEffectValid", "ShaderEffect::GetCompileErrorEXT",
              "ShaderEffect::GetShaderDiagnosticsEXT", "ShaderEffect::GetSelectedShaderLanguageEXT",
+             "ShaderEffect::VertexSource", "ShaderEffect::FragmentSource", "Effect::GetVertexSource",
+             "Effect::GetFragmentSource",
              "CNA::ShaderDiagnosticEXT::getSeverity", "CNA::ShaderDiagnosticEXT::getStage",
              "CNA::ShaderDiagnosticEXT::getSourceLabel", "CNA::ShaderDiagnosticEXT::getLine",
              "CNA::ShaderDiagnosticEXT::getColumn", "CNA::ShaderDiagnosticEXT::getMessage"},

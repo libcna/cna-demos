@@ -315,7 +315,7 @@ explicit code/package language are distinct APIs.
 | DeclareUniformBlockEXT | Renderer-specific std140 layout contract, currently relevant to source-compiling backends with no loose uniforms. Defer to a supported block-uniform scene with explicit offsets and actual pixels; silently ignored declarations on another renderer do not establish coverage. Clearing/replacing declarations belongs with that workflow. |
 | IEffectMatrices World/View/Projection | Existing 3D draws set these properties and the draw path forwards them to the shader. This establishes their role in those authored scenes; noncommuting transform order, cloned state and alternative uniform naming are not implied by getter presence. Extend an existing scene when these distinctions are useful. |
 | Clone and disposal; HasRenderer | clone_state now executes nine checks on OPENGLES3: six pass and three expose ISSUE-055 (identity matrix reset, different viewport pixels, and missing disposed-clone refusal). Both independently compiled programs draw; World mutation is independent, original disposal releases its program, and the clone draws identical surviving pixels. Both frame captures were actually inspected; GL stderr is empty. SOFTWARE is a declared CustomEffects skip. Effect::Clone explicitly promises disposed refusal; matrix retention follows its current-value clone contract and ShaderEffect documents only a program-sharing deviation. No raw uniform/texture-state copy contract or desktop runtime coverage is inferred. |
-| Source properties, GetVertexSource/GetFragmentSource, GetTypeName | Source accessors are useful diagnostics but do not justify independent getter demos; incorporate source ownership/identity only where a compile or clone workflow needs them. GetTypeName is routine reflection identity. |
+| Source properties, GetVertexSource/GetFragmentSource, GetTypeName | `compiler_diagnostics` now constructs its valid program from temporary `ShaderCodeEXT` values, overwrites the caller source strings and verifies both concrete properties plus the virtual `Effect` accessors still return the exact original vertex/fragment text. The same retained program then survives the rejected replacement and draws cyan. GetTypeName remains routine reflection identity without a separate check. |
 | GetEffectRendererPtr, FillGpuDrawParams, protected OnApply/Dispose and portable fallback constructor | Renderer/subclass integration points. Normal draws already reach the apply/parameter bridge; avoid a game demo that merely exposes internal renderer pointers/structures. Protected fallback construction belongs to a real derived-effect integration, not a synthetic constructor-count example. |
 
 Focused836 closes this table's declaration-level disposition. `sample_kernel` provides actual
@@ -5212,3 +5212,18 @@ pass15/15 and validator/comparator self-tests pass5/5 and4/4. Evidence:
 `/tmp/checkpoint-1004-shader-preapply/*`. Counts remain307/329 XNA types,2128/2326 members,674/753
 fields and3078/3205 C routes. No non-GL renderer behavior, invalid count, missing uniform,
 screenshot or manual inspection is claimed. Audit ShaderEffect source accessor ownership next.
+
+### Focused1005 ShaderEffect source ownership
+
+The existing compiler-diagnostics workflow now creates its retained program from temporary
+`ShaderCodeEXT` values, destroys them, overwrites the original caller strings and verifies exact
+vertex/fragment text through both `ShaderEffect` properties and virtual `Effect` accessors. The
+program then retains its established diagnostic isolation and exact cyan draw after a replacement
+compile fails. This closes the source-accessor behavior row without a getter-only demo.
+
+The warning-free three-job build, metadata693/0, CLI15/15 and self-tests5/5 plus4/4 pass. SOFTWARE
+keeps its declared CustomEffects skip. Ten OPENGLES3 and ten OPENGL33 runs pass8/8 with stable
+per-dialect stdout and deliberate compiler stderr. Generated coverage remains307/329 XNA types,
+2128/2326 members,674/753 fields and3078/3205 C routes; the extension appendix gains the four
+source-accessor names. Evidence:`/tmp/checkpoint-1005-shader-sources/*`. No non-GL renderer,
+screenshot or manual visual claim is made. Audit bound RenderTargetCube destruction next.

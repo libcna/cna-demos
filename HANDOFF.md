@@ -3521,8 +3521,10 @@ prioritize reachable deterministic behavior that strengthens an existing coheren
 revalidate Focused823's127 intentionally uncredited C-route dispositions against the current
 public headers. Focused1004 closes the first selected behavior gap: all four scalar/array uniform
 families used by `uniform_palettes` now upload before the first Apply and produce their exact
-pixels on both OpenGL dialects. Audit ShaderEffect source accessor ownership/identity in the
-existing compiler/clone workflows next. Do not add metadata merely to raise a count.
+pixels on both OpenGL dialects. Focused1005 then closes ShaderEffect source ownership through both
+concrete and base virtual accessors after caller storage and code objects expire. Audit the bound
+RenderTargetCube destruction path identified by the resource-lifetime table next. Do not add
+metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3904,6 +3906,25 @@ direct runs pass6/6 with identical stdout SHA-256
 `/tmp/checkpoint-1004-shader-preapply/*`. No screenshot, manual visual inspection, uniform-block,
 invalid-count, missing-uniform or non-GL renderer behavior is claimed. Audit source accessor
 ownership/identity in the existing ShaderEffect compiler or clone workflow next.
+
+## Focused1005 ShaderEffect source ownership
+
+`graphics.shader_effect.compiler_diagnostics` now builds its retained program from temporary
+`ShaderCodeEXT` values, destroys those values, overwrites the original caller strings and compares
+the exact vertex/fragment text through both `ShaderEffect` properties and the virtual `Effect`
+accessors. The same program then retains the established owned-diagnostic and cyan-pixel behavior
+after a replacement compile fails. This adds one coherent control and four extension API names to
+the generated appendix without a new demo ID or XNA count change.
+
+The warning-free build uses `-j3`; metadata remains693/0, the SOFTWARE CTest keeps its declared
+CustomEffects skip, CLI tests pass15/15 and self-tests pass5/5 plus4/4. Ten OPENGLES3 runs pass8/8
+with stdout/stderr SHA-256 `15d248c81d87fa3f2765ed2b6769e52e2f3b070d5f49d22c228309a1bd4a0443` /
+`e98a3819f928cde846b307a47f3aa62fa053b7e5f2f1b83a3fae882d76c7882e`; ten OPENGL33 runs pass8/8
+with `96fe937f566525ac844eddd014688eb87678089addea6c79653433c8111c0065` /
+`0f23836fa3b3c6737003f4d9c666756fb2cc06cbc71165327d7dac949443b889`. Stderr is exactly the
+deliberate syntax-error diagnostic and differs only by the expected header line number. Evidence:
+`/tmp/checkpoint-1005-shader-sources/*`. Counts remain307/329 types,2128/2326 members,674/753
+fields and3078/3205 C routes. Audit bound RenderTargetCube destruction next.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

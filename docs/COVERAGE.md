@@ -1443,6 +1443,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CreateInfinitePerspectiveFieldOfViewEXT` -- graphics.model.gltf_cameras
 - `DynamicSoundEffectInstance::Stop` -- audio.dynamic_sound_effect_instance.buffer_formats, audio.dynamic_sound_effect_instance.streaming
 - `Effect::Apply` -- graphics.effect.custom_apply_lifecycle, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.uniform_palettes
+- `Effect::GetFragmentSource` -- graphics.shader_effect.compiler_diagnostics
+- `Effect::GetVertexSource` -- graphics.shader_effect.compiler_diagnostics
 - `Environment::DeviceType` -- devices.sensors.availability
 - `EvaluateMorphWeightsEXT` -- graphics.model.morph_animation_import, graphics.model.morph_targets
 - `FileAccess` -- storage.storage_container.file_modes
@@ -1850,6 +1852,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `SensorState` -- devices.sensors.availability
 - `SetMorphWeightsEXT` -- graphics.model.material_variants, graphics.model.morph_animation_import, graphics.model.morph_targets
 - `ShaderEffect::Clone` -- graphics.shader_effect.clone_state
+- `ShaderEffect::FragmentSource` -- graphics.shader_effect.compiler_diagnostics
 - `ShaderEffect::GetCompileErrorEXT` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.toon_shading
 - `ShaderEffect::GetSelectedShaderLanguageEXT` -- graphics.shader_effect.clone_state, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package
 - `ShaderEffect::GetShaderDiagnosticsEXT` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package
@@ -1867,6 +1870,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ShaderEffect::SetUniformVec3Array` -- graphics.shader_effect.uniform_palettes
 - `ShaderEffect::SetUniformVec4` -- graphics.shader_effect.uniform_palettes
 - `ShaderEffect::ShaderEffect` -- graphics.render_target.multiple_render_targets, graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.portable_package, graphics.shader_effect.sprite_shader, graphics.shader_effect.toon_shading, graphics.shader_effect.vertex_displacement
+- `ShaderEffect::VertexSource` -- graphics.shader_effect.compiler_diagnostics
 - `SkinnedEffect::LightingEnabled` -- graphics.skinned_effect.normal_lighting
 - `SkinnedEffect::VertexColorEnabled` -- graphics.skinned_effect.vertex_colors
 - `SkinnedPbrEffect` -- graphics.model.skinned_pbr, graphics.pbr_effect.shadow_receivers

@@ -10913,3 +10913,16 @@ its declared CustomEffects skip. Ten OPENGLES3 and ten OPENGL33 runs pass6/6 byt
 empty stderr. Coverage counts remain307/329 types,2128/2326 members,674/753 fields and3078/3205 C
 routes. Evidence:`/tmp/checkpoint-1004-shader-preapply/*`. Audit ShaderEffect source accessor
 ownership/identity in an existing compiler or clone workflow next.
+
+## Focused1005-ShaderEffect-source-ownership
+
+`graphics.shader_effect.compiler_diagnostics` now constructs its retained effect from temporary
+`ShaderCodeEXT` values, destroys them, overwrites the original caller strings and checks that both
+concrete properties and the virtual `Effect` accessors retain the exact original vertex/fragment
+text. The retained program still isolates the rejected replacement diagnostics and draws cyan.
+
+The warning-free `-j3` build, metadata693/0, CLI15/15 and self-tests5/5 plus4/4 pass. SOFTWARE keeps
+its declared capability skip. Ten OPENGLES3 and ten OPENGL33 runs pass8/8 with stable per-dialect
+stdout and the expected deliberate compiler stderr. Counts remain307/329 types,2128/2326 members,
+674/753 fields and3078/3205 C routes; four source-accessor names enter the extension appendix.
+Evidence:`/tmp/checkpoint-1005-shader-sources/*`. Audit bound RenderTargetCube destruction next.
