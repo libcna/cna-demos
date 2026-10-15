@@ -6,7 +6,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**661 demos** in 18 categories. Kinds: console 166, game 294, standalone 201. Automation: automated 625, manual 3, smoke-only 33.
+**662 demos** in 18 categories. Kinds: console 167, game 294, standalone 201. Automation: automated 626, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -17,7 +17,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
-| diagnostics | 4 | 4 | 0 | 0 | 2 / 1 / 0 / 0 / 1 | 2 / 1 / 0 / 0 / 1 |
+| diagnostics | 5 | 5 | 0 | 0 | 2 / 1 / 0 / 0 / 2 | 2 / 1 / 0 / 0 / 2 |
 | game | 33 | 28 | 4 | 1 | 23 / 7 / 2 / 1 / 0 | 30 / 0 / 2 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 16 / 0 / 2 / 1 / 0 | 16 / 0 / 2 / 1 / 0 |
 | graphics | 184 | 184 | 0 | 0 | 146 / 26 / 12 / 0 / 0 | 167 / 3 / 14 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `diagnostics.profiler.resource_metadata`.
-- OPENGLES3: absent from report: `diagnostics.profiler.resource_metadata`.
+- SOFTWARE: absent from report: `diagnostics.profiler.frame_sources`, `diagnostics.profiler.resource_metadata`.
+- OPENGLES3: absent from report: `diagnostics.profiler.frame_sources`, `diagnostics.profiler.resource_metadata`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -268,23 +268,40 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Devices::PowerState` -- devices.system.machine_info
 - `CNA::Devices::SystemInfo::LogicalCpuCoreCount` -- devices.system.machine_info
 - `CNA::Devices::SystemInfo::SystemRamMegabytes` -- devices.system.machine_info
-- `CNA::Diagnostics::Accuracy` -- diagnostics.profiler.resource_metadata
+- `CNA::Diagnostics::Accuracy` -- diagnostics.profiler.counters, diagnostics.profiler.frame_sources, diagnostics.profiler.resource_metadata
+- `CNA::Diagnostics::BeginFrame` -- diagnostics.profiler.frame_sources
 - `CNA::Diagnostics::BeginZone` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::CounterHandle` -- diagnostics.profiler.counters
+- `CNA::Diagnostics::CounterHandle::Add` -- diagnostics.profiler.counters
+- `CNA::Diagnostics::CounterHandle::GetId` -- diagnostics.profiler.counters
+- `CNA::Diagnostics::EndFrame` -- diagnostics.profiler.frame_sources
 - `CNA::Diagnostics::EndZone` -- diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::EventBatch` -- diagnostics.profiler.resource_metadata
 - `CNA::Diagnostics::EventRecord` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::FrameCounterHandle` -- diagnostics.profiler.frame_sources
+- `CNA::Diagnostics::FrameCounterHandle::GetId` -- diagnostics.profiler.frame_sources
 - `CNA::Diagnostics::FrameSample` -- diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::FrameScope` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::FrameStatisticsSink` -- diagnostics.profiler.frame_sources
+- `CNA::Diagnostics::FrameStatisticsSink::Add` -- diagnostics.profiler.frame_sources
+- `CNA::Diagnostics::FrameStatisticsSink::Set` -- diagnostics.profiler.frame_sources
+- `CNA::Diagnostics::GaugeHandle` -- diagnostics.profiler.counters, diagnostics.profiler.frame_sources
+- `CNA::Diagnostics::GaugeHandle::Add` -- diagnostics.profiler.counters
+- `CNA::Diagnostics::GaugeHandle::GetId` -- diagnostics.profiler.counters, diagnostics.profiler.frame_sources
+- `CNA::Diagnostics::GaugeHandle::Set` -- diagnostics.profiler.counters
 - `CNA::Diagnostics::GetBuildMode` -- diagnostics.profiler.modes
 - `CNA::Diagnostics::GetProvider` -- diagnostics.profiler.modes
 - `CNA::Diagnostics::GetRuntimeMode` -- diagnostics.profiler.modes
 - `CNA::Diagnostics::IDiagnosticsProvider::CaptureSnapshot` -- diagnostics.profiler.counters, diagnostics.profiler.modes, diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::IDiagnosticsProvider::ReadEvents` -- diagnostics.profiler.resource_metadata
 - `CNA::Diagnostics::IDiagnosticsProvider::ResolveName` -- diagnostics.profiler.resource_metadata
+- `CNA::Diagnostics::IDiagnosticsSource` -- diagnostics.profiler.frame_sources
 - `CNA::Diagnostics::MarkEvent` -- diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::MetricSample` -- diagnostics.profiler.counters
+- `CNA::Diagnostics::MetricUnit` -- diagnostics.profiler.counters, diagnostics.profiler.frame_sources
 - `CNA::Diagnostics::NameHandle` -- diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::RecordingSession` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::RegisterSource` -- diagnostics.profiler.frame_sources
 - `CNA::Diagnostics::ResourceDescriptor` -- diagnostics.profiler.resource_metadata
 - `CNA::Diagnostics::ResourceHandle` -- diagnostics.profiler.resource_metadata
 - `CNA::Diagnostics::ResourceHandle::GetId` -- diagnostics.profiler.resource_metadata
@@ -295,6 +312,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Diagnostics::SetRuntimeMode` -- diagnostics.profiler.modes
 - `CNA::Diagnostics::Snapshot` -- diagnostics.profiler.counters, diagnostics.profiler.modes
 - `CNA::Diagnostics::Snapshot::registeredResourceBytes` -- diagnostics.profiler.resource_metadata
+- `CNA::Diagnostics::Snapshot::sourceCollectionFailures` -- diagnostics.profiler.frame_sources
+- `CNA::Diagnostics::SourceRegistration` -- diagnostics.profiler.frame_sources
+- `CNA::Diagnostics::SourceRegistration::IsRegistered` -- diagnostics.profiler.frame_sources
+- `CNA::Diagnostics::SourceRegistration::Reset` -- diagnostics.profiler.frame_sources
 - `CNA::Diagnostics::StartRecording` -- diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::StopRecording` -- diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::Trace` -- diagnostics.profiler.trace_recording

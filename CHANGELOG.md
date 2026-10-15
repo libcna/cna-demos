@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a retained frame-statistics source workflow with explicit gauge/frame-counter metadata,
+  per-frame reset, movable registration lifetime and isolated callback failure reporting; expanded
+  the counter demo with direct handle IDs, units, accuracy and signed gauge deltas.
 - Added a FULL diagnostics resource workflow for owned metadata, stable RAII identity, aggregate
   bytes and provider-cursor create/destroy events.
 - Added a `diagnostics-full` preset and a focused full-diagnostics workflow that records one frame

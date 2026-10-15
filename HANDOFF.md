@@ -21,7 +21,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 30), 8 (content, 52), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
-* In progress too: 13 (devices 5, phone 1, design 4, diagnostics 4 + logger 2, cnaext 4).
+* In progress too: 13 (devices 5, phone 1, design 4, diagnostics 5 + logger 2, cnaext 4).
 * In progress: 14 (C API, 177 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
@@ -68,12 +68,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-661 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
+662 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics4, cnaext4, platform2 and c_api177. Kinds are166 console,294 game and201 standalone;
-625 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics5, cnaext4, platform2 and c_api177. Kinds are167 console,294 game and201 standalone;
+626 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete920's full runtime reports for its660 baseline
-IDs and marks the Focused921 resource ID absent until the next complete checkpoint.
+IDs and marks the Focused921-922 resource/source IDs absent until the next complete checkpoint.
 The surface totals are302/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete920's
 full runtime reports are the baseline inputs for the660-ID catalog. Selected semantic
@@ -2322,13 +2322,14 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete920 is the authoritative660-demo full-build/full-runtime baseline;
-Focused921 is the latest focused behavioral batch. The central full-diagnostics path is now covered
+Focused922 is the latest focused behavioral batch. The central full-diagnostics path is now covered
 by an actual `CNA_DIAGNOSTICS=FULL` build: a frame scope, nested manual/macro zones, direct/macro
 markers, frame metrics, bounded recording, snapshot correlation and both binary and Chrome exports.
-Resource metadata now covers owned descriptor fields, stable move/update/reset identity, aggregate
-bytes and ordered provider-cursor lifecycle events. Continue with the remaining registered
-frame-source collection behavior. Prefer extending an existing workflow when coherent; add a
-focused ID only where the lifecycle has an independent concept. Then resume the broader inventory and
+Resource metadata covers owned descriptor fields, stable move/update/reset identity, aggregate
+bytes and ordered provider-cursor lifecycle events. Registered sources now cover retained/movable
+lifetime, boundary-only gauge/frame-counter publication, per-frame reset and isolated callback
+failure. Audit the remaining bounded-history/drop and malformed-use reporting before declaring the
+diagnostics public behavior disposition complete. Then resume the broader inventory and
 docs/COVERAGE_AUDIT.md for the highest-value undispositioned behavior, keeping constructors/
 finalizers, CLR collection plumbing and service-only paths classified rather than inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
@@ -2442,6 +2443,27 @@ FULL diagnostics CTests pass; the standard-build exact CTest takes its declared 
 builds are clean apart from the existing vendored Draco CMake warning, metadata is661/0 and both
 validator suites pass. Generated numeric surface totals remain unchanged; Complete920 reports mark
 the new ID absent until the next full checkpoint. Evidence:`/tmp/checkpoint-921-resource-*`.
+
+### Focused922-diagnostics-frame-sources-and-explicit-metric-handles
+
+The new `diagnostics.profiler.frame_sources` demo adds the optional-subsystem extension seam in13
+FULL controls. A null source is refused; explicit estimated-nanosecond GaugeHandle and exact
+FrameCounterHandle IDs are distinct; move construction/assignment transfer one registration; and
+the registration retains its shared source after caller ownership is released. Two manual
+BeginFrame/EndFrame pairs collect only at their boundaries, update the gauge, publish frame values1
+then2 rather than accumulating3, and advance consecutive frame numbers. Repeated Reset releases the
+source; a following frame keeps the stale gauge and publishes frame-counter zero. A second throwing
+source increments `sourceCollectionFailures` while its enclosing frame still completes.
+
+The existing `diagnostics.profiler.counters` also adds direct CounterHandle/GaugeHandle coverage:
+stable nonzero IDs, estimated byte metadata, Set plus signed Add and complete OFF inertness. All five
+FULL diagnostics CTests pass; the new source passes eleven isolated runs, the final ten with
+byte-identical stdout SHA-256
+`c1aadb207c7f44713852ea2d69f88f07950c9e6e04b87cff687979d0f65e6a0e` and empty stderr. Standard
+counter execution passes and the source takes its declared OFF skip. Both `-j3` builds compile cleanly
+apart from the existing vendored Draco CMake warning; metadata is662/0. Generated numeric surface
+totals remain unchanged and Complete920 marks both post-baseline diagnostics IDs absent. Evidence:
+`/tmp/checkpoint-922-frame-sources-*`.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

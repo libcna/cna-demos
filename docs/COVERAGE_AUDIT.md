@@ -3501,3 +3501,15 @@ was a demo error caused by asking `ReadEvents(0, 8)` for the oldest process even
 current cursor before the lifecycle fixed it. Eleven corrected FULL runs pass, ten byte-identically
 with empty stderr, and all four diagnostics CTests pass. The ordinary OFF build declares a skip.
 Registered frame-source collection remains the next meaningful diagnostics behavior.
+
+### Focused922 diagnostics frame sources and direct metric handles
+
+The new `diagnostics.profiler.frame_sources` workflow covers the optional subsystem extension seam.
+It rejects a null source; proves move-only registration and retained shared ownership; publishes an
+estimated nanosecond gauge plus exact frame counter only at manual frame boundaries; distinguishes
+per-frame reset from accumulation; and proves idempotent unregistration stops collection and releases
+the source. A throwing callback increments `sourceCollectionFailures` while frame publication still
+completes. The counters workflow now separately exposes explicit CounterHandle/GaugeHandle IDs,
+metadata, signed Add and diagnostics-OFF inertness. All five FULL diagnostics CTests pass and ten
+repeated source runs are byte-identical with empty stderr. The ordinary build passes counters and
+declares the source skip. Bounded history/drop and malformed-use reporting remain under audit.

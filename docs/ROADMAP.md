@@ -571,7 +571,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032 and -033).
 - Remaining net: voice (manual).
 
-## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (20 demos)
+## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (21 demos)
 - ✅ `devices.*` (4): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
   AccelerometerFailedException, Environment::DeviceType), CNAEXT keyboard-emulated accelerometer,
   VibrateController, CNA::Devices SystemInfo/Locale/PowerInfo, ✅ DisplayInfo (content scale, safe
@@ -581,10 +581,10 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   notification channels (need a push service: manual).
 - ✅ `design.*` (4): text round trip and which types parse, cultures, property descriptors and
   CreateInstance, InstanceDescriptor.
-- ✅ `diagnostics.*` (4) and `core.logger.*` (2): diagnostics build/runtime modes, counters and
+- ✅ `diagnostics.*` (5) and `core.logger.*` (2): diagnostics build/runtime modes, counters and
   gauges, one instrumented frame with nested zones/markers and both trace exports, resource metadata
-  with provider-cursor lifecycle events, plus Logger sinks and levels. Registered frame-source
-  collection remains the meaningful diagnostics member/behavior candidate.
+  with provider-cursor lifecycle events, registered frame-source collection/lifetime, plus Logger
+  sinks and levels. Continue the deeper audit of bounded-history/drop and malformed-use reporting.
 - ✅ `cnaext.*` (4): AsciiPostProcessEffect (every renderer), CRTEffect and DepthEffect (shader
   renderers), DebugDraw.
 - `platform.*`: ✅ renderer selection with fallback chain (standalone), ✅
@@ -9672,3 +9672,19 @@ stderr, and all four FULL diagnostics CTests pass. The standard exact CTest take
 diagnostics-OFF skip. Both builds use at most three jobs, metadata is661/0, validator suites pass and
 surface totals remain unchanged. Evidence:`/tmp/checkpoint-921-resource-*`. Continue with registered
 frame-source collection and registration lifetime.
+
+## Focused922-diagnostics-frame-sources-and-explicit-metric-handles
+
+The new `diagnostics.profiler.frame_sources` ID validates the optional source seam in13 controls.
+Null registration, distinct explicit handles, move-only registration and retained shared ownership
+precede two manual frame boundaries. Each boundary calls the source once, refreshes its estimated
+nanosecond gauge and publishes an exact frame counter that resets between values1 and2. Idempotent
+unregistration releases the source; the next frame leaves the gauge stale and publishes zero. A
+throwing source increments the public failure count without preventing frame completion.
+
+The existing counter demo now also covers explicit CounterHandle/GaugeHandle IDs, unit/accuracy
+metadata, Set plus signed Add and OFF inertness. All five FULL diagnostics CTests pass; eleven source
+runs pass, the final ten byte-identically with empty stderr. The standard counter passes and the
+source takes its declared OFF skip. Both builds use at most three jobs, metadata is662/0 and generated
+surface totals remain unchanged. Evidence:`/tmp/checkpoint-922-frame-sources-*`. Audit bounded event
+history/drop and malformed-use reporting next, then disposition the residual diagnostics surface.
