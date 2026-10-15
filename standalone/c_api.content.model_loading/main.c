@@ -484,6 +484,7 @@ static CNA_Result load_content(
     CNA_DepthStencilState depth;
     CNA_RasterizerState rasterizer;
     CNA_BlendState blend;
+    CNA_SamplerState sampler;
     (void)game_time;
     (void)out_error;
     ++state->loads;
@@ -517,10 +518,14 @@ static CNA_Result load_content(
             CNA_RASTERIZER_STATE_PRESET_CULL_COUNTER_CLOCKWISE, &rasterizer) ==
             CNA_RESULT_SUCCESS &&
         cna_blend_state_init(CNA_BLEND_STATE_PRESET_OPAQUE, &blend) == CNA_RESULT_SUCCESS &&
+        cna_sampler_state_init(CNA_SAMPLER_STATE_PRESET_POINT_CLAMP, &sampler) ==
+            CNA_RESULT_SUCCESS &&
         cna_graphics_device_set_depth_stencil_state(device, &depth) == CNA_RESULT_SUCCESS &&
         cna_graphics_device_set_rasterizer_state(device, &rasterizer) == CNA_RESULT_SUCCESS &&
-        cna_graphics_device_set_blend_state(device, &blend) == CNA_RESULT_SUCCESS,
-        "prepare the authored camera and deterministic Model drawing state");
+        cna_graphics_device_set_blend_state(device, &blend) == CNA_RESULT_SUCCESS &&
+        cna_graphics_device_set_sampler_state(
+            device, CNA_SHADER_STAGE_PIXEL, UINT32_C(0), &sampler) == CNA_RESULT_SUCCESS,
+        "prepare the authored camera and deterministic PointClamp Model drawing state");
     return CNA_RESULT_SUCCESS;
 }
 
@@ -564,9 +569,9 @@ static CNA_Result draw(
     cna_demo_check(
         state->demo,
         rendered && red.r > 180U && red.b < 60U &&
-            blue.b > 180U && blue.r < 60U &&
+            blue.b > blue.r + 40U && blue.b > blue.g + 40U &&
             gold.r > 200U && gold.g > 150U && gold.b < 80U,
-        "default, Ocean and Gold selections draw the authored red, blue and gold body pixels");
+        "default, Ocean and Gold draw red, blue-dominant PBR and clamped gold body pixels");
     cna_demo_check(
         state->demo,
         rendered && wheel.r < 40U && wheel.g < 40U && wheel.b < 40U,

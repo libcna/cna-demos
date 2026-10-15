@@ -184,6 +184,8 @@ Focused841 extends the camera scene with infinite/absent-aspect projection metad
 clip proving live camera placement comes from its Model bone while WorldTransform stays a snapshot.
 Focused842 completes the structured glTF import-report public contract: every structural/payload
 field, both severities, all six diagnostic kinds, exact aggregates and the empty compiled default.
+Focused843 repairs the C material-variant consumer after the shared fixture deepened: explicit
+PointClamp and a PBR hue oracle restore its30/30 cross-renderer contract.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -3532,6 +3534,23 @@ metadata650/0, self-tests5/5 and checkpoint-comparison tests4/4 pass. Temporary 
 `/tmp/checkpoint-842-import-report-*` and `/tmp/checkpoint-842-coverage.md`. No CNA defect appeared.
 Audit glTF node-instance placement, transform and diagnostic semantics next; keep extending focused
 existing demos unless a distinct public concept warrants a new ID.
+
+### Focused843-C-material-variant-fixture-regression
+
+The first full650 checkpoint attempt reached326/666 CTests before the command runner's five-minute
+limit terminated it with signal143. Before termination it found one real demo regression:
+`c_api.content.model_loading` still assumed Focused840's shared Gold variant was a solid colour and
+Ocean was unlit. Its actual SOFTWARE pixels were red`{217,31,26}`, Ocean`{26,77,230}` and Gold
+`{61,213,190}` because default wrapping sampled the new out-of-range textured material. This was a
+stale demo state/oracle, not a CNA defect.
+
+The C demo now initializes and binds PointClamp explicitly on pixel sampler slot zero and uses the
+same blue-dominance PBR oracle as the C++ workflow. SOFTWARE and OPENGLES3 pass30/30 with byte-
+identical stdout and empty stderr; the focused SOFTWARE CTest passes. Metadata names both state
+routes, but coverage totals do not change because their dedicated demos already cover them.
+Evidence:`/tmp/checkpoint-843-c-model-loading-*`. Retry the complete650 checkpoint in phases that
+fit the command-runner limit, with compilation still capped at `-j3`; then archive/compare it and
+resume the glTF node-instance placement/transform audit.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

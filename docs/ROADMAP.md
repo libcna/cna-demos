@@ -8262,3 +8262,18 @@ and both validation self-test suites pass. Temporary coverage remains302/329 typ
 members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-842-import-report-*` and
 `/tmp/checkpoint-842-coverage.md`. No CNA defect appeared. Continue the glTF importer behavior audit
 with node-instance placement, transform and diagnostic semantics before leaving the model family.
+
+## Focused843-C-material-variant-fixture-regression
+
+The first full-checkpoint attempt exposed one demo regression in
+`c_api.content.model_loading`: Focused840 changed the shared Gold variant from a solid colour to a
+texture at U=1.125 and Ocean from unlit to PBR, while the C sibling still relied on the device's
+default sampler and an unlit blue-intensity threshold. Its SOFTWARE observation was correctly red
+`{217,31,26}`, blue `{26,77,230}` and wrapped cyan/gold `{61,213,190}`. CNA behaved as authored.
+
+The C workflow now initializes and binds PointClamp on pixel slot zero before all three draws, so
+Gold deterministically samples its gold texel, and it judges Ocean by blue-channel dominance as the
+C++ workflow does. Both renderer selections pass30/30 with byte-identical stdout and empty stderr;
+the exact SOFTWARE CTest passes. The fix adds no new ID or C-route credit because both state routes
+already have focused coverage. Evidence:`/tmp/checkpoint-843-c-model-loading-*`. Retry the complete
+650-demo checkpoint next before resuming the node-instance audit.

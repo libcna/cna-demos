@@ -12,6 +12,8 @@ CNA_DEMOS_STANDALONE({
              "cna_model_copy_material_variant_name_ext",
              "cna_model_get_material_variant_ext",
              "cna_model_set_material_variant_ext",
+             "cna_sampler_state_init",
+             "cna_graphics_device_set_sampler_state",
              "cna_model_get_content_tag_dictionary_ext",
              "cna_model_get_content_tag_foreign_object_ext"},
     .tags = {"c", "binding", "content", "model", "gltf", "material-variant", "xnb", "tag"},

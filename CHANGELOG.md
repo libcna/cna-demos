@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Repaired the C material-variant pixel audit after the shared fixture gained a PBR Ocean material
+  and textured Gold material: it now binds PointClamp explicitly and tests Ocean by blue dominance.
 - Extended the glTF import-report workflow to verify every structural count, complete diagnostic
   payloads, all six diagnostic kinds, exact warning/drop/approximation aggregates and the compiled
   model's all-zero default against focused camera, skin, light, topology, weight and variant assets.
