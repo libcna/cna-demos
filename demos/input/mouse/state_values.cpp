@@ -74,6 +74,7 @@ CNA_DEMOS_CONSOLE(StateValues, {
              "MouseState::LeftButton", "MouseState::MiddleButton", "MouseState::RightButton",
              "MouseState::XButton1", "MouseState::XButton2", "MouseState::HorizontalScrollWheelValueEXT",
              "MouseState::Equals", "MouseState::GetHashCode", "MouseState::op_Equality",
-             "MouseState::op_Inequality", "MouseState::ToString", "ButtonState"},
+             "MouseState::op_Inequality", "MouseState::ToString", "ButtonState",
+             "ButtonState::Pressed", "ButtonState::Released"},
     .tags = {"mouse", "state", "value", "equality", "testing"},
 })

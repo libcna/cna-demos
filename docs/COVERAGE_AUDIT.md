@@ -900,6 +900,26 @@ Focused649 raises the staged catalog to628 demos and temporary coverage from1527
 `Microsoft.Xna.Framework.Input` reaches112/113 members; only the dispositioned WindowHandle remains.
 Evidence:`/tmp/checkpoint-649-*`. No physical input, screenshot or visual inspection was performed.
 
+### Input small-state enum values
+
+The authored MouseState workflow directly distinguishes `ButtonState::Pressed` and `Released`
+across five button positions, defaults, equality and exact text. The authored KeyboardState workflow
+likewise distinguishes `KeyState::Down` and `Up` through its indexer while its query and replay
+controls establish the same state changes. Keyboard gamepad emulation deterministically reports
+`GamePadType::GamePad`; the four disconnected capability slots now explicitly report
+`GamePadType::Unknown` together with no controls. The other eight GamePadType identities require
+specific controller hardware, and CNA has no path that reports AlternateGuitar separately, so they
+remain uncredited rather than reduced to integer checks.
+
+The existing dead-zone workflow names and calls `None`, `IndependentAxes` and `Circular` in one
+frame. Both focused renderer runs pass its three scalar helper controls, but no physical controller
+was connected, so the three returned live stick values were neutral and did not distinguish the
+filters. Their side-by-side behavioral comparison remains a manual hardware observation; metadata
+credit records the real public calls, not a claim that the modes were visually or numerically
+separated in this session. All five exact SOFTWARE CTests pass ten repetitions. Metadata validates
+659/0, both validator suites pass and coverage moves175->184/753 fields, with Input at9/202.
+Evidence:`/tmp/checkpoint-897-*`. No screenshot, physical-input or visual-result claim is made.
+
 ### TouchLocation and TouchCollection value behavior
 
 | Members / behavior | Decision and evidence |

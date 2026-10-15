@@ -71,9 +71,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-896
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-897
 overlays for all659 catalog demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,175/753 fields and
+The surface totals are302/329 XNA types,2114/2326 XNA members,184/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -336,6 +336,21 @@ coverage moves169->175/753 fields and Media reaches7/8; types, non-field members
 302/329,2114/2326 and3078/3205. Evidence:`/tmp/checkpoint-896-*`. **Next:** continue the semantic
 public-field audit with Input's existing behavior-rich workflows; name values only where an actual
 control distinguishes them, and explicitly disposition the rest.
+
+Focused **897-public-Input-small-state-enums** gives nine Input values explicit semantic credit.
+Authored mouse and keyboard states distinguish both ButtonState and KeyState values. Keyboard
+gamepad emulation reports GamePad, while four disconnected capability slots explicitly report
+Unknown and no controls; the other eight GamePadType identities remain hardware-specific. The
+existing dead-zone workflow calls all three modes, but with no connected controller its live values
+remain neutral, so numerical/visual separation remains manual-hardware scope rather than a runtime
+claim for this session.
+
+SOFTWARE and OPENGLES3 pass the same8 mouse,9 keyboard,8 capability,4 emulation and3 dead-zone
+controls. All five exact SOFTWARE CTests pass ten repetitions; the warning-free build uses `-j3`,
+metadata validates659/0 and validator self-tests pass5/5 and4/4. Generated coverage moves
+175->184/753 fields and Input reaches9/202; other totals remain302/329 types,2114/2326 non-field
+members and3078/3205 C routes. Evidence:`/tmp/checkpoint-897-*`. **Next:** audit the25 Buttons flags
+through the authored GamePadState workflow and keep hardware-only UI observations separate.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
@@ -2100,11 +2115,11 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete892 remains the authoritative657-demo full-runtime baseline; focused893-
-896 extend the current catalog to659 IDs and close Video/VideoPlayer plus all eight public Media
-field decisions. Continue the semantic public-field audit with `Microsoft.Xna.Framework.Input`,
-where extensive existing keyboard, mouse, gamepad and touch workflows exercise many of the202
-currently uncredited enum values. Add metadata only when a real control distinguishes the value;
-otherwise record the value as trivial, platform/hardware-specific or intentionally unrepresented.
+897 extend the current catalog to659 IDs and begin the semantic public-field audit. Media is closed
+at7/8 by evidence/disposition and Input's small state enums are9/202. Continue with the25 public
+Buttons flags through `input.gamepad.state_values`: use authored states to distinguish flag-to-
+property/virtual-axis behavior, and leave live hardware/UI observations separate. Add metadata only
+when a real control distinguishes the value; otherwise record it as hardware-specific or trivial.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete892 too stale.

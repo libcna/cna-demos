@@ -66,6 +66,6 @@ CNA_DEMOS_CONSOLE(StateValues, {
     .apis = {"KeyboardState::KeyboardState", "KeyboardState::IsKeyDown", "KeyboardState::IsKeyUp",
              "KeyboardState::Item", "KeyboardState::GetPressedKeys", "KeyboardState::Equals",
              "KeyboardState::GetHashCode", "KeyboardState::op_Equality", "KeyboardState::op_Inequality",
-             "KeyState", "Keys"},
+             "KeyState", "KeyState::Down", "KeyState::Up", "Keys"},
     .tags = {"keys", "replay", "testing", "value"},
 })

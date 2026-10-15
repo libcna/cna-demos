@@ -9234,3 +9234,20 @@ with at most three jobs, metadata is659/0 and both validator self-test suites pa
 coverage moves169->175/753 fields, with Media at7/8; types, non-field members and C routes remain
 302/329,2114/2326 and3078/3205. Evidence:`/tmp/checkpoint-896-*`. Continue the semantic public-field
 audit with the next high-value namespace, starting from Input's behavior-rich existing workflows.
+
+## Focused897-public-Input-small-state-enums
+
+Five stable Input workflows now give nine public field values explicit semantic credit. Authored
+MouseState and KeyboardState controls distinguish both ButtonState and KeyState values. Keyboard
+gamepad emulation deterministically reports GamePadType.GamePad, while all four disconnected slots
+report Unknown and no controls. The other eight controller types remain hardware-specific and
+uncredited. The existing dead-zone workflow calls None, IndependentAxes and Circular side by side;
+without a physical controller its focused runs exercise neutral live states, so observable filter
+differences remain explicitly manual-hardware scope.
+
+SOFTWARE and OPENGLES3 pass the same8 mouse,9 keyboard,8 capability,4 emulation and3 dead-zone
+controls. All five exact SOFTWARE CTests pass ten repetitions. The warning-free build uses at most
+three jobs, metadata is659/0 and both validator self-test suites pass. Generated coverage moves
+175->184/753 fields and Input reaches9/202; types, non-field members and C routes remain
+302/329,2114/2326 and3078/3205. Evidence:`/tmp/checkpoint-897-*`. Continue with the 25 Buttons flags
+through the authored GamePadState workflow, separating constructed behavior from hardware-only UI.

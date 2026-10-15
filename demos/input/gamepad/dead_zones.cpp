@@ -121,7 +121,9 @@ CNA_DEMOS_GAME(DeadZonesDemo, {
     .description = "Reads player one's left stick with GamePad::GetState and each GamePadDeadZone (None, "
                    "IndependentAxes, Circular) side by side, and checks the per-axis filter "
                    "GamePad::ExcludeAxisDeadZone (CNAEXT) with XInput's dead-zone size.",
-    .apis = {"GamePad::GetState", "GamePadDeadZone", "GamePad::ExcludeAxisDeadZone", "GamePad::LeftDeadZone",
+    .apis = {"GamePad::GetState", "GamePadDeadZone", "GamePadDeadZone::None",
+             "GamePadDeadZone::IndependentAxes", "GamePadDeadZone::Circular",
+             "GamePad::ExcludeAxisDeadZone", "GamePad::LeftDeadZone",
              "GamePad::RightDeadZone", "GamePad::TriggerThreshold", "GamePadThumbSticks::Left"},
     .tags = {"gamepad", "controller", "thumbstick", "dead-zone", "drift"},
     .needs = CnaDemos::Need::GamePad,

@@ -96,8 +96,9 @@ namespace
                                     "player " + std::to_string(i + 1) +
                                         ": GetCapabilities and GetState agree about the connection");
                     if (!caps.getIsConnectedProperty())
-                        Context().Check(!HasAnything(caps),
-                                        "player " + std::to_string(i + 1) + ": a missing controller reports no controls");
+                        Context().Check(caps.getGamePadTypeProperty() == GamePadType::Unknown && !HasAnything(caps),
+                                        "player " + std::to_string(i + 1) +
+                                            ": a missing controller reports Unknown and no controls");
                 }
             }
             checked_ = true;
@@ -141,7 +142,7 @@ CNA_DEMOS_GAME(CapabilitiesDemo, {
              "GamePadCapabilities::HasRightXThumbStick", "GamePadCapabilities::HasRightYThumbStick",
              "GamePadCapabilities::HasLeftTrigger", "GamePadCapabilities::HasRightTrigger",
              "GamePadCapabilities::HasLeftVibrationMotor", "GamePadCapabilities::HasRightVibrationMotor",
-             "GamePadCapabilities::HasVoiceSupport", "GamePadType"},
+             "GamePadCapabilities::HasVoiceSupport", "GamePadType", "GamePadType::Unknown"},
     .tags = {"gamepad", "controller", "capabilities", "connected"},
     .frames = 3,
     .assets = {"fonts/pixel_font.cnb"},
