@@ -1090,6 +1090,21 @@ repetitions. The warning-free build uses at most three jobs, metadata is659/0 an
 suites pass. Fields move457->464/753 and Graphics reaches139/192. Evidence:
 `/tmp/checkpoint-906-*`. No screenshot or visual-quality judgment is claimed.
 
+### Effect parameter class and type values
+
+The existing typed-parameter workflow now checks the complete reflection value families. Loaded
+BasicEffect parameters supply real Scalar, Vector, Matrix and Texture2D metadata. Authored public
+EffectParameter storage connects Object and Struct plus Bool, Int32, Single, String, generic
+Texture, Texture3D, TextureCube and Void to the value paths already exercised. A generic Texture
+parameter retains the actual Texture2D object. An authored Texture1D parameter preserves its exact
+reflection identity; XNA/CNA has no public Texture1D resource class or getter, so this is explicitly
+metadata coverage rather than a sampling claim.
+
+Both renderers execute31 controls and retain only the established ISSUE-034/-035 failures. The
+exact known-issue SOFTWARE CTest passes ten repetitions. The warning-free build uses at most three
+jobs, metadata is659/0 and both validator suites pass. Fields move464->479/753 and Graphics reaches
+154/192. Evidence:`/tmp/checkpoint-907-*`.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

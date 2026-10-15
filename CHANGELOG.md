@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed all EffectParameterClass and EffectParameterType values through loaded and authored
+  reflection metadata plus real typed value storage.
 - Completed all CompareFunction and StencilOperation values with equal-depth and exact stencil-
   transform evidence on both renderers.
 - Completed all Blend, BlendFunction, ColorWriteChannels and CullMode values with real pixel,

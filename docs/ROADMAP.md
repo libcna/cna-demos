@@ -9398,3 +9398,20 @@ ten repetitions. The warning-free build uses at most three jobs, metadata is659/
 validator suites pass. Coverage moves457->464/753 fields and Graphics reaches139/192. No CNA or
 demo defect appeared in this batch. Evidence:`/tmp/checkpoint-906-*`. Audit the15 remaining
 EffectParameterClass/EffectParameterType values next against real loaded parameter metadata.
+
+## Focused907-complete-effect-parameter-metadata-values
+
+The stable typed-parameter workflow closes all5 EffectParameterClass and all10 EffectParameterType
+values. Real BasicEffect metadata supplies Scalar, Vector, Matrix and Texture2D, while authored
+parameters attach Object/Struct and Bool/Int32/Single/String/Texture/Texture1D/Texture3D/
+TextureCube/Void identities to their matching scalar, vector, string, generic-texture, resource and
+structured-storage behavior. Generic Texture retains a concrete Texture2D identity. Texture1D is
+explicit reflection metadata only because XNA/CNA exposes no public Texture1D resource or getter;
+this batch makes no 1D sampling claim.
+
+SOFTWARE and OPENGLES3/Xvfb each execute31 controls and retain exactly the established
+CNA-DEMOS-ISSUE-034/-035 failures. The exact known-issue SOFTWARE CTest passes ten repetitions.
+The warning-free build uses at most three jobs, metadata is659/0 and both validator suites pass.
+Coverage moves464->479/753 fields and Graphics reaches154/192. No new CNA defect appeared.
+Evidence:`/tmp/checkpoint-907-*`. Audit the16 remaining VertexElementFormat/VertexElementUsage
+values next through real declarations, buffer round-trips and layout consumption.

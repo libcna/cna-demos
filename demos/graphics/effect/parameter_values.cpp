@@ -132,6 +132,15 @@ namespace
             label.SetValue(std::string("polished copper"));
             ctx.Check(label.GetValueString() == "polished copper", "String storage retains authored text");
 
+            EffectParameter genericTexture("GenericTexture", "TEXTURE", 1, 1, EffectParameterClass::Object,
+                                           EffectParameterType::Texture);
+            genericTexture.SetValue(&texture);
+            EffectParameter oneDimensionalTexture("Lookup", "LOOKUP", 1, 1, EffectParameterClass::Object,
+                                                  EffectParameterType::Texture1D);
+            ctx.Check(genericTexture.GetValueTexture2D() == &texture &&
+                          oneDimensionalTexture.getParameterTypeProperty() == EffectParameterType::Texture1D,
+                      "generic Texture stores a concrete resource while Texture1D remains explicit reflection metadata");
+
             Texture3D volume(device, 2, 2, 2, false, SurfaceFormat::Color);
             TextureCube cube(device, 2, false, SurfaceFormat::Color);
             EffectParameter volumeInput("Volume", "VOLUME0", 1, 1, EffectParameterClass::Object,
@@ -178,6 +187,23 @@ namespace
                                  EffectParameterType::Single,
                                  {1.0f, 5.0f, 9.0f, 13.0f, 2.0f, 6.0f, 10.0f, 14.0f,
                                   3.0f, 7.0f, 11.0f, 15.0f, 4.0f, 8.0f, 12.0f, 16.0f}));
+            ctx.Check(power->getParameterClassProperty() == EffectParameterClass::Scalar &&
+                          diffuse->getParameterClassProperty() == EffectParameterClass::Vector &&
+                          world->getParameterClassProperty() == EffectParameterClass::Matrix &&
+                          label.getParameterClassProperty() == EffectParameterClass::Object &&
+                          material.getParameterClassProperty() == EffectParameterClass::Struct,
+                      "loaded and authored parameters distinguish all five parameter classes");
+            ctx.Check(flags.getParameterTypeProperty() == EffectParameterType::Bool &&
+                          integers.getParameterTypeProperty() == EffectParameterType::Int32 &&
+                          singles.getParameterTypeProperty() == EffectParameterType::Single &&
+                          label.getParameterTypeProperty() == EffectParameterType::String &&
+                          genericTexture.getParameterTypeProperty() == EffectParameterType::Texture &&
+                          oneDimensionalTexture.getParameterTypeProperty() == EffectParameterType::Texture1D &&
+                          parameters["Texture"]->getParameterTypeProperty() == EffectParameterType::Texture2D &&
+                          volumeInput.getParameterTypeProperty() == EffectParameterType::Texture3D &&
+                          cubeInput.getParameterTypeProperty() == EffectParameterType::TextureCube &&
+                          material.getParameterTypeProperty() == EffectParameterType::Void,
+                      "loaded and authored parameters distinguish all ten parameter types");
             const EffectParameter* tintMember = material.getStructureMembersProperty().GetParameterBySemantic("color0");
             const EffectAnnotation* uiName = material.getAnnotationsProperty()["UiName"];
             ctx.Check(material.getSemanticProperty() == "MATERIAL0" && tintMember != nullptr &&
@@ -265,7 +291,12 @@ CNA_DEMOS_GAME(ParameterValues, {
              "EffectAnnotation::Semantic", "EffectAnnotation::RowCount", "EffectAnnotation::ColumnCount",
              "EffectAnnotation::ParameterClass", "EffectAnnotation::ParameterType",
              "EffectAnnotationCollection::Count",
-             "EffectAnnotationCollection::Item"},
+             "EffectAnnotationCollection::Item", "EffectParameterClass::Scalar", "EffectParameterClass::Vector",
+             "EffectParameterClass::Matrix", "EffectParameterClass::Object", "EffectParameterClass::Struct",
+             "EffectParameterType::Bool", "EffectParameterType::Int32", "EffectParameterType::Single",
+             "EffectParameterType::String", "EffectParameterType::Texture", "EffectParameterType::Texture1D",
+             "EffectParameterType::Texture2D", "EffectParameterType::Texture3D", "EffectParameterType::TextureCube",
+             "EffectParameterType::Void"},
     .tags = {"effect", "parameters", "reflection", "matrix"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 1,
