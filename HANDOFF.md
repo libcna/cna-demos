@@ -491,6 +491,24 @@ validator suites pass. Generated XNA/C totals remain unchanged; 12 media-codec n
 CNA-extension appendix and Complete948 marks all five post-baseline IDs absent. Evidence:
 `/tmp/checkpoint-954-cnb-media-codec/*`. No media file, decoder, playback or CNA defect is involved.
 
+Focused **955-Video-pipeline-components** adds the 675th source/catalog ID,
+`content.video.pipeline_components`, and closes the ordinary public
+`VideoContentPipeline.hpp` workflow in 15 controls. It covers all stable identities and safe
+source/probe defaults, the importer's full route list, both processor modes, exact parameter
+validation classes, writer schema identity and registration. A real generated MKV proves caller-
+probe metadata, deterministic output, the separation of build dependency/runtime XREF/deployment,
+complete parameter override, recovery from an unreadable probe with explicit frame values, the
+no-probe mode and empty-source refusal.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 15/15 with byte-identical stdout SHA-256
+`f65ad9a43bc7964b89a3705d4c736432be69b7af35f6d59bb9b02f1219bfe072` and empty stderr. The
+warning-free build uses at most three jobs, metadata is 675/0, the exact SOFTWARE CTest and both
+validator suites pass. Generated XNA/C totals remain unchanged; 27 Video component names enter the
+CNA-extension appendix and Complete948 marks all six post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-955-video-pipeline/*`. The real file is treated as an opaque external stream; no
+decoder, playback, visual inspection or CNA defect is claimed. Run a complete 675-demo checkpoint
+next.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2616,7 +2634,8 @@ CNA-DEMOS-ISSUE-105 for the sole named-only importer selection defect. Focused95
 public CNB SoundEffect codec, including format helpers, compatibility and validation behavior.
 Focused953 closes the public Song pipeline, including external-stream deployment and the named
 WAV-as-Song route. Focused954 closes the adjacent public Song/Video CNB codec. Audit the public
-`VideoContentPipeline.hpp` component workflow next.
+`VideoContentPipeline.hpp` component workflow next. Focused955 closes that workflow. Run the full
+675-demo validation checkpoint before the next public content-header family.
 The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame

@@ -4122,3 +4122,25 @@ pass. Generated XNA/C totals remain 303/329 types, 2114/2326 members, 674/753 fi
 routes; 12 codec names enter the CNA-extension appendix. Complete948 marks all five post-baseline
 IDs absent. Evidence: `/tmp/checkpoint-954-cnb-media-codec/*`. No media decoder, playback or CNA
 defect is involved.
+
+### Focused955 Video pipeline components
+
+The new `content.video.pipeline_components` closes the ordinary public
+`VideoContentPipeline.hpp` workflow in 15 controls. Stable value and parameter names, imported and
+probed defaults, every importer extension, both processor metadata modes, exact validation faults,
+writer schema identity and registry wiring are visible directly.
+
+A real generated MKV remains an opaque external stream while a public callback supplies its known
+160x90, 10 fps metadata. The build is byte-deterministic and separately reports the source
+dependency, runtime XREF and deployment file. Parameters override every probed field and the stream
+destination. A `nullopt` probe produces a Process-stage diagnostic without complete frame
+parameters, then succeeds when they are supplied; registration without any probe uses the same
+required triple. An empty file is refused at Import.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 15/15 with byte-identical stdout SHA-256
+`f65ad9a43bc7964b89a3705d4c736432be69b7af35f6d59bb9b02f1219bfe072` and empty stderr. The
+warning-free build uses `-j3`; metadata is 675/0; the exact SOFTWARE CTest and both validator suites
+pass. Generated XNA/C totals remain 303/329 types, 2114/2326 members, 674/753 fields and 3078/3205
+routes; 27 component names enter the CNA-extension appendix. Complete948 marks all six post-
+baseline IDs absent. Evidence: `/tmp/checkpoint-955-video-pipeline/*`. No decoder, playback, visual
+inspection or CNA defect is involved.

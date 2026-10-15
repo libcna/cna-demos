@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**674 demos** in 18 categories. Kinds: console 176, game 296, standalone 202. Automation: automated 638, manual 3, smoke-only 33.
+**675 demos** in 18 categories. Kinds: console 177, game 296, standalone 202. Automation: automated 639, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 52 | 52 | 0 | 0 | 34 / 0 / 13 / 0 / 5 | 34 / 0 / 13 / 0 / 5 |
+| content | 53 | 53 | 0 | 0 | 34 / 0 / 13 / 0 / 6 | 34 / 0 / 13 / 0 / 6 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.media.cnb_codec`, `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`.
-- OPENGLES3: absent from report: `content.media.cnb_codec`, `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`.
+- SOFTWARE: absent from report: `content.media.cnb_codec`, `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`, `content.video.pipeline_components`.
+- OPENGLES3: absent from report: `content.media.cnb_codec`, `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`, `content.video.pipeline_components`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -305,7 +305,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ImportedSongSource` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::ImportedSongSourceType` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::ImportedSoundType` -- content.sound_effect.pipeline_components
+- `CNA::Content::Pipeline::ImportedVideoSource` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::ImportedVideoSourceType` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::MakeProcessedSoundEffect` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::ProbedVideoMetadata` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::ProcessedFrameBytes` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedPcmBitsPerSample` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedPcmEncoding` -- content.sound_effect.imported_pcm
@@ -314,10 +317,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ProcessedSongType` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::ProcessedSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedSoundEffectType` -- content.sound_effect.pipeline_components
+- `CNA::Content::Pipeline::ProcessedVideoType` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::RegisterCnjContentPipeline` -- content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::RegisterSongContentPipeline` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::RegisterSoundEffectContentPipeline` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::RegisterTexture2DContentPipeline` -- content.custom.source_root_capabilities
+- `CNA::Content::Pipeline::RegisterVideoContentPipeline` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaImporter` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline
@@ -351,6 +356,28 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::SoundEffectProcessor::ValidateParameters` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::TextureResizeToPowerOfTwoParameter` -- content.texture_processor.resize_to_power_of_two
 - `CNA::Content::Pipeline::ToCnbSoundEffect` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::VideoContentWriter::Identity` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoContentWriter::InputType` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoContentWriter::OutputSchemaIdentities` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoContentWriter::Write` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoDurationMsParameter` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoFramesPerSecondParameter` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoHeightParameter` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoImporter::Identity` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoImporter::Import` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoImporter::OutputTypes` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoImporter::SourceExtensions` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoImporter::VideoImporter` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoMetadataProbe` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoProcessor::Identity` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoProcessor::InputType` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoProcessor::OutputType` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoProcessor::Process` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoProcessor::ValidateParameters` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoProcessor::VideoProcessor` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoSoundtrackTypeParameter` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoStreamReferenceParameter` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::VideoWidthParameter` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::WavImporter::Identity` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::WavImporter::Import` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::WavImporter::OutputTypes` -- content.sound_effect.pipeline_components

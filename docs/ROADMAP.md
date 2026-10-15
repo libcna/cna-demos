@@ -10214,3 +10214,23 @@ warning-free `-j3` build, exact SOFTWARE CTest, metadata 674/0 and both validato
 Generated totals remain unchanged; 12 names enter the CNA-extension appendix and Complete948 marks
 all five newer IDs absent. Evidence: `/tmp/checkpoint-954-cnb-media-codec/*`. Audit the public
 `VideoContentPipeline.hpp` component workflow next.
+
+## Focused955-Video-pipeline-components
+
+The new `content.video.pipeline_components` closes the public
+`CNA/Content/Pipeline/VideoContentPipeline.hpp` workflow in 15 controls. It covers stable type and
+parameter identities, imported/probed defaults, all source extensions, both processor modes,
+validation boundaries, exact writer schema identity and registry wiring.
+
+A real generated MKV remains external while a caller callback supplies known frame metadata. Its
+build is deterministic and keeps source dependency, runtime XREF and deployment output distinct.
+Explicit parameters replace every probed value and stream destination. A failed probe requires the
+three frame parameters and then succeeds with optional defaults; registration without a probe uses
+the same contract; an empty source fails at Import.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass 15/15 with the same stdout SHA-256
+`f65ad9a43bc7964b89a3705d4c736432be69b7af35f6d59bb9b02f1219bfe072` and empty stderr. The
+warning-free `-j3` build, exact SOFTWARE CTest, metadata 675/0 and both validator suites pass.
+Generated totals remain unchanged; 27 names enter the CNA-extension appendix and Complete948 marks
+all six newer IDs absent. Evidence: `/tmp/checkpoint-955-video-pipeline/*`. No decoder, playback or
+visual inspection is claimed. Run the complete 675-demo validation checkpoint next.
