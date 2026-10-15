@@ -31,8 +31,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 - Extended CurveKeyCollection coverage through stable duplicate insertion, indexed replacement,
   sorted reinsertion and atomic invalid-index refusal, and recorded CNA-DEMOS-ISSUE-097 for an
   epsilon-near replacement that violates the promised ascending order.
-- Refreshed the complete runtime baseline at 655 demos: all 668 enabled CTests and both full
-  renderer smoke suites complete without an unexpected result.
+- Refreshed the complete runtime baseline after focused checkpoints 860-870: all 668 enabled
+  CTests and both 655-demo renderer smoke suites complete without an unexpected result.
 - Repaired the glTF import-report oracle after the shared multi-skin fixture gained a second
   primitive, and added exact source-animation versus palette-local-clip accounting.
 - Extended palette sampling with safe omission of empty, negative-index and past-end tracks, and

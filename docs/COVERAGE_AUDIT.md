@@ -2776,3 +2776,16 @@ the existing invalid-import and guarded-clean diagnostics. The `-j3` incremental
 655/0 and both tool self-test suites pass; temporary coverage remains 302/329 types, 2114/2326
 members, 169/753 fields and 3078/3205 C routes. Evidence: `/tmp/checkpoint-870-*`. No renderer,
 screenshot or visual inspection was used.
+
+### Complete871 generated runtime checkpoint
+
+Focused860-870 are now included in a warning-free complete project build, all668 enabled CTests and
+both 655-ID smoke suites. SOFTWARE reports562 pass/47 expected fail/43 skip/3 manual; OPENGLES3
+reports601/48/3/3, with no unexpected result. Complete859 comparison finds the six intended
+in-process check-count increases and only the reviewed CurveKeyCollection ISSUE-097 failed assertion
+and status change. The standalone compiler/publication controls also pass through their complete
+CTest entries. Generated coverage remains302/329 types,2114/2326 non-field members,169/753 fields
+and3078/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-871-complete-*`.
+
+This checkpoint confirms the recorded behavior and dispositions; it does not turn declaration
+coverage into a comprehensive claim. Continue with the next explicit public-behavior gap.

@@ -71,7 +71,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,292 game and199 standalone;
 619 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md is runtime-backed by complete859 at655 demos,302/329 XNA
+Coverage: generated docs/COVERAGE.md is runtime-backed by complete871 at655 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -82,10 +82,11 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete859 exercises all3078 credited C routes and all655 catalog IDs in both full smoke suites.
-It absorbs Complete844 plus focused845-858: rigid node instances and scene selection, deeper glTF
-animation carriers/validation/reporting, multi-skin part routing, AnimationPlayer validation,
-SkinnedModel track boundaries and the repaired multi-part import-report oracle.
+Complete871 exercises all3078 credited C routes and all655 catalog IDs in both full smoke suites.
+It absorbs Complete859 plus focused860-870: CurveKeyCollection ordering ISSUE-097, XACT release
+state, caller-managed and conservative model bounds, concurrent loader/publication controls,
+nested source-root propagation, symlink containment, stable external-root fingerprints and the
+pre-built compiler-registry service-option refusal.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Complete744 has37 known-issue demos after focused660 adds
 `game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
@@ -205,31 +206,31 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **859-655-demo-full-checkpoint** is the current full-build and full-runtime baseline. The
+Complete **871-655-demo-full-checkpoint** is the current full-build and full-runtime baseline. The
 build remains pinned to the isolated CNA worktree `/tmp/cna-demos-cna-d23`, exact commit
 `d23e139de9e5c15511b6be745de290896a69ee37`; do not silently reconfigure it to the moving sibling.
 The warning-free final rebuild used `-j3`. Metadata is655/0. Of671 registered CTests, three manual
 tests are disabled; all668 enabled entries complete without failure in one authoritative `-j3` run
-(624 passed and44 declared capability/environment skips, 389.54s). SOFTWARE/private-Xvfb reports
-563 pass/46 expected fail/43 skip/3 manual, while OPENGLES3/private-Xvfb reports602/47/3/3. Both
+(625 passed and43 declared capability/environment skips, 294.68s). SOFTWARE/private-Xvfb reports
+562 pass/47 expected fail/43 skip/3 manual, while OPENGLES3/private-Xvfb reports601/48/3/3. Both
 execute all655 IDs with zero unexpected failures or unexpected passes. The five validator and four
 checkpoint-comparison self-tests pass.
 
-The Complete844 comparisons report five new IDs, intended check-count growth in four existing
-model demos and exactly the reviewed ISSUE-031 plus ISSUE-092-096 assertion witnesses. No existing
-status, issue marker or failed-assertion multiplicity changed unexpectedly. The first complete
-CTest attempt found one stale `import_report` primitive-count oracle after the shared skin fixture
-gained a second part; Focused858 corrected it, both renderers and its exact CTest passed, and the
-authoritative full rerun is clean. This was a cna-demos regression, not a CNA defect.
+Complete859 comparisons report no ID changes, intended check-count growth in six in-process demos
+and exactly one reviewed status/known-issue change: `math.curve.key_collection` adds the sole
+ISSUE-097 failed assertion. Failed assertion multiplicity moves64->65 on SOFTWARE and68->69 on
+OPENGLES3; nothing else changes. The authoritative CTest gains one environment pass because
+`c_api.input.keyboard_mouse` can observe the Xvfb desktop pointer (42 checks); without Xvfb it still
+declares the global-warp requirement unavailable. This is environment coverage, not a CNA change.
 
 Generated coverage is302/329 types,2114/2326 non-field members,169/753 fields and3078/3205 C
 routes. Tested SHA-256: `cna-demos`
-`93a9b877062ac0274d0a263457235049518ff194a6d47cfe54ffe54dda380e2b`, `libcna.so`
+`40323b5d02b4f1048414d6065253051212be90c2c68fa23c6ff173e11f17cca9`, `libcna.so`
 `624de5687262040f91736857226b38392f5a5375099c92a0d221b6236b8aa25d`, and `libcna_c_api.so`
 `813bf0a2095524183bbaca66f6fbcc1fbdfcfcd5ddd8148c8ec6ce3138ebee24`. Report hashes are SOFTWARE
-`0e15958048e6c92a000b3e33ac43675f7d2e04e265d6553a54bec67abd42c2ee` and OPENGLES3
-`036f08e42daaec43b7f316e87603c82a77fb7ceb725bfe11245797517b497bb6`. Evidence is archived as
-`build/linux-full/reports/checkpoint-859-complete-*`. Pixel checks were programmatic; no screenshot,
+`8e27d393cd252cd90056ea70bab075b3c621bd7b50f2e52091fe55584363e5f6` and OPENGLES3
+`2216a4693345fe785e1849b329300a376342f0a3e1434c841fb97140f2cea851`. Evidence is archived as
+`build/linux-full/reports/checkpoint-871-complete-*`. Pixel checks were programmatic; no screenshot,
 listening test, physical input, external service session or manual visual-quality inspection was
 performed.
 
@@ -4263,8 +4264,32 @@ final incremental build uses `-j3`, metadata is655/0 and both tool self-test sui
 coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is
 under `/tmp/checkpoint-870-*`. No renderer, screenshot or visual inspection was used.
 
-Commit and push this batch, then continue with the next explicit high-value gap; Complete859
-remains the full baseline.
+Focused870 is committed and pushed as `8a41308`; the complete checkpoint below supersedes the
+earlier Complete859 baseline.
+
+### Complete871-655-demo-full-checkpoint
+
+Focused860-870 are now absorbed by a fresh authoritative checkpoint from source `8a41308`, pinned
+to CNA `d23e139de9e5c15511b6be745de290896a69ee37`. The warning-free build and full CTest use at most
+three workers. Metadata is655/0; all668 enabled CTests pass (625 ordinary/expected-failure passes,
+43 declared skips,294.68s), and three manual tests remain disabled. The only Complete859 CTest
+status difference is `c_api.input.keyboard_mouse`: the outer Xvfb supplies a desktop pointer, so
+all42 controls pass; a separate no-display rerun still produces its declared global-warp skip.
+
+SOFTWARE/private-Xvfb executes every ID as562 pass/47 expected fail/43 skip/3 manual.
+OPENGLES3/private-Xvfb reports601/48/3/3. Both have zero unexpected failures and zero unexpected
+passes. Complete859 comparisons contain only the six reviewed in-process check-count increases and
+the new `math.curve.key_collection` ISSUE-097 witness/status: failed assertions move64->65 on
+SOFTWARE and68->69 on OPENGLES3. Standalone internal controls from Focused863/865/869/870 are
+validated by their full CTests and archived focused logs. Both tool self-test suites pass.
+
+Generated coverage remains655 demos,302/329 types,2114/2326 non-field members,169/753 fields and
+3078/3205 C routes. Evidence is archived under
+`build/linux-full/reports/checkpoint-871-complete-*`; hashes and exact current commands are in the
+current status section above. Pixel checks were programmatic. No screenshot, listening test,
+physical input, external service session or manual visual-quality inspection was performed.
+
+Continue the deeper behavior audit from the next explicit gap. Complete871 is now the full baseline.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

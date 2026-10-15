@@ -3058,3 +3058,25 @@ knownIssue pairs remain exact, and all three new IDs pass under both renderers. 
 297/329 types,1405/2326 XNA members and1109/3205 C routes. The diagnostic-free binary was built
 against clean CNA `b2ded99da9`; production library hashes remain unchanged. No screenshot or visual
 inspection was performed. Evidence:checkpoint-524-complete-*.
+
+## Complete871-655-demo-full-checkpoint
+
+Complete checkpoint **871-655-demo-full-checkpoint**, source `8a41308`, absorbs focused860-870
+against pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37`. The diagnostic-free `-j3`
+build validates metadata655/0. All668 enabled CTests pass in294.68s (625 pass/43 declared skip),
+with three manual tests disabled. The Xvfb desktop lets `c_api.input.keyboard_mouse` pass all42
+controls rather than take Complete859's environment skip; a no-display rerun confirms that skip
+remains intentional.
+
+SOFTWARE is562 pass/47 expected fail/43 skip/3 manual and OPENGLES3 is601/48/3/3 across all655
+IDs, with no unexpected result. Complete859 comparison finds only six intended check-count changes
+and the reviewed ISSUE-097 status/assertion addition; failed-assertion totals move64->65 and68->69.
+Coverage remains302/329 types,2114/2326 XNA members,169/753 fields and3078/3205 C routes. Both tool
+self-test suites pass. Binary SHA-256 is
+`40323b5d02b4f1048414d6065253051212be90c2c68fa23c6ff173e11f17cca9`; unchanged CNA library
+hashes are `624de5687262040f91736857226b38392f5a5375099c92a0d221b6236b8aa25d` and
+`813bf0a2095524183bbaca66f6fbcc1fbdfcfcd5ddd8148c8ec6ce3138ebee24`. Report hashes are
+`8e27d393cd252cd90056ea70bab075b3c621bd7b50f2e52091fe55584363e5f6` (SOFTWARE) and
+`2216a4693345fe785e1849b329300a376342f0a3e1434c841fb97140f2cea851` (OPENGLES3). Evidence:
+`checkpoint-871-complete-*`. Pixel checks were programmatic; no screenshot or manual visual
+inspection was performed.

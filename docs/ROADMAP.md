@@ -8753,3 +8753,20 @@ the exact SOFTWARE CTest passes. The new first stderr line is the expected optio
 The `-j3` incremental build, metadata 655/0 and both tool self-test suites pass; temporary coverage
 remains 302/329 types, 2114/2326 members, 169/753 fields and 3078/3205 C routes. Evidence:
 `/tmp/checkpoint-870-*`. No renderer, screenshot or visual inspection was used.
+
+## Complete871-655-demo-full-checkpoint
+
+Focused860-870 are absorbed by a fresh complete run from source `8a41308` against pinned CNA
+`d23e139de9e5c15511b6be745de290896a69ee37`. The warning-free build uses `-j3`; metadata is655/0.
+All668 enabled CTests pass (625 ordinary/expected-failure passes and43 declared skips in294.68s),
+with three manual tests disabled. The only Complete859 CTest disposition change is the Xvfb-backed
+`c_api.input.keyboard_mouse` global-warp path passing all42 controls; without a desktop pointer its
+focused no-display rerun still declares the intended skip.
+
+SOFTWARE executes all655 IDs as562 pass/47 expected fail/43 skip/3 manual; OPENGLES3 reports
+601/48/3/3. Neither has an unexpected failure or unexpected pass. Complete859 comparisons show
+only six reviewed check-count increases and the new `math.curve.key_collection` ISSUE-097 witness;
+failed assertions move64->65 and68->69 respectively. Coverage remains302/329 types,2114/2326
+members,169/753 fields and3078/3205 C routes. Both tool self-test suites pass. Evidence:
+`build/linux-full/reports/checkpoint-871-complete-*`. Pixel checks were programmatic; no screenshot,
+listening, physical-input, external-service or manual visual-quality validation was performed.

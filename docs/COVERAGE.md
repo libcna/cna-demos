@@ -22,7 +22,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | gamer_services | 19 | 18 | 0 | 1 | 16 / 0 / 2 / 1 / 0 | 16 / 0 / 2 / 1 / 0 |
 | graphics | 184 | 184 | 0 | 0 | 146 / 26 / 12 / 0 / 0 | 167 / 3 / 14 / 0 / 0 |
 | input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
-| math | 78 | 78 | 0 | 0 | 75 / 0 / 3 / 0 / 0 | 75 / 0 / 3 / 0 / 0 |
+| math | 78 | 78 | 0 | 0 | 74 / 0 / 4 / 0 / 0 | 74 / 0 / 4 / 0 / 0 |
 | media | 13 | 12 | 1 | 0 | 12 / 0 / 1 / 0 / 0 | 12 / 0 / 1 / 0 / 0 |
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
@@ -199,6 +199,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::IsCnbCompressionSupported` -- content.custom.cnb_read_limits
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Find` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildConfiguration::Parse` -- content.custom.incremental_compiler
+- `CNA::Content::Pipeline::ContentBuildConfiguration::SourceRoots` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentBuildEnvironment::buildConfiguration` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildEnvironment::intermediateDirectory` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildEnvironment::strictness` -- content.custom.xna_pipeline_components
@@ -209,11 +210,11 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentBuildManifest::Parse` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentBuildManifestEntry::directFingerprint` -- content.custom.dependency_graph
 - `CNA::Content::Pipeline::ContentBuildManifestEntry::fingerprint` -- content.custom.dependency_graph
-- `CNA::Content::Pipeline::ContentBuildRequest::externalSourceRoots` -- content.custom.source_root_capabilities
+- `CNA::Content::Pipeline::ContentBuildRequest::externalSourceRoots` -- content.custom.nested_builds, content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::ContentBuildRequest::siblings` -- content.custom.nested_builds
 - `CNA::Content::Pipeline::ContentBuildResult::messages` -- content.custom.pipeline_diagnostics, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildResult::parameters` -- content.custom.xna_pipeline_components
-- `CNA::Content::Pipeline::ContentDependency::sourceRoot` -- content.custom.source_root_capabilities
+- `CNA::Content::Pipeline::ContentDependency::sourceRoot` -- content.custom.nested_builds, content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::ContentFileSha256` -- content.custom.incremental_compiler, content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentImporter::SelectedByNameOnly` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentImporterContext::LogInfo` -- content.custom.pipeline_diagnostics
@@ -674,6 +675,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Graphics::SkinningData::SkeletonRootPrefix` -- graphics.model.animation_player_validation, graphics.model.multiple_skins
 - `Microsoft::Xna::Framework::Graphics::Texture2D::DDSFromStreamEXT` -- graphics.texture2d.dds_stream
 - `Microsoft::Xna::Framework::Graphics::VertexPositionNormalTextureSkinned::VertexPositionNormalTextureSkinned` -- graphics.model.skinned_parts
+- `Model::BoundingSphereEXT` -- graphics.model.bones, graphics.model.morph_targets, graphics.model.skin_weight_import
 - `Model::GltfImportReportEXT` -- graphics.model.animation_validation, graphics.model.clip_interpolation, graphics.model.import_report, graphics.model.imported_topology, graphics.model.morph_animation_import, graphics.model.multi_skin_animation_report, graphics.model.node_animation, graphics.model.node_instances, graphics.model.skin_weight_import, graphics.model.skinned_animation
 - `Model::MaterialVariantEXT` -- graphics.model.material_variants
 - `Model::MaterialVariantNamesEXT` -- graphics.model.material_variants
