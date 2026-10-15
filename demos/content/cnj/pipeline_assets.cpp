@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <iterator>
 #include <limits>
 #include <memory>
 #include <stdexcept>
@@ -21,6 +22,7 @@
 #include "CNA/Content/Cnb/CnbDocument.hpp"
 #include "CNA/Content/Cnb/CnbModelCodec.hpp"
 #include "CNA/Content/Cnb/CnbSoundEffectCodec.hpp"
+#include "CNA/Content/Cnb/CnbSourceImport.hpp"
 #include "CNA/Content/Cnb/CnbSpriteFontCodec.hpp"
 #include "CNA/Content/Cnb/CnbTextureCodec.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
@@ -72,6 +74,29 @@ namespace
         std::ofstream output(path, std::ios::binary);
         output << text;
         if (!output) throw std::runtime_error("Could not write a temporary CNJ document");
+    }
+
+    std::vector<std::uint8_t> ReadBytes(const std::filesystem::path& path)
+    {
+        std::ifstream input(path, std::ios::binary);
+        if (!input) throw std::runtime_error("Could not read a CNJ source fixture");
+        return {std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>()};
+    }
+
+    bool SameTexture(const Cnb::CnbTextureData& left, const Cnb::CnbTextureData& right)
+    {
+        if (left.width != right.width || left.height != right.height ||
+            left.depth != right.depth || left.faceCount != right.faceCount ||
+            left.mipCount != right.mipCount ||
+            left.representations.size() != right.representations.size())
+            return false;
+        for (std::size_t index = 0u; index < left.representations.size(); ++index)
+        {
+            if (left.representations[index].format != right.representations[index].format ||
+                left.representations[index].levels != right.representations[index].levels)
+                return false;
+        }
+        return true;
     }
 
     bool HasSourceSidecar(const Pipeline::ContentBuildResult& result,
@@ -387,6 +412,31 @@ namespace
                       decodedCube.depth == 1u && decodedCube.faceCount == 6u &&
                       decodedCube.mipCount == 1u && exactFaces,
                   "the TextureCube CNB preserves all six distinct DDS faces in canonical order");
+
+        const std::filesystem::path cubeSource = root / "sky.dds";
+        const std::vector<std::uint8_t> cubeSourceBytes = ReadBytes(cubeSource);
+        const Cnb::CnbTextureData directCubeBytes =
+            Cnb::DecodeDdsAsCnbTextureCube(cubeSourceBytes, "memory sky.dds");
+        const Cnb::CnbTextureData directCubeNative =
+            Cnb::ImportDdsAsCnbTextureCube(cubeSource);
+        const Cnb::CnbTextureData directCubeNarrow =
+            Cnb::ImportDdsAsCnbTextureCube(cubeSource.string());
+        ctx.Check(SameTexture(directCubeBytes, decodedCube) &&
+                      SameTexture(directCubeNative, decodedCube) &&
+                      SameTexture(directCubeNarrow, decodedCube),
+                  "DDS memory and both path overloads share the pipeline's exact six-face RGBA8 decode");
+
+        ctx.Check(Refuses([&]
+                  {
+                      (void)Cnb::DecodeDdsAsCnbTextureCube(
+                          std::span<const std::uint8_t>(cubeSourceBytes).first(64u),
+                          "truncated sky.dds");
+                  }) &&
+                      Refuses([&]
+                      {
+                          (void)Cnb::ImportDdsAsCnbTextureCube(root / "missing.dds");
+                      }),
+                  "DDS import refuses truncated memory and a missing source path independently");
 
         const Pipeline::ContentBuildResult clip = build("walk.cnj", "Animations/walk");
         const auto decodedClip = Cnb::DecodeAnimationClipFromCnb(
@@ -778,7 +828,9 @@ CNA_DEMOS_CONSOLE(CnjPipelineAssets, {
              "CNA::Content::Cnb::EncodeAnimationClipToCnb",
              "CNA::Content::Cnb::DecodeAnimationClipFromCnb",
              "CNA::Content::Cnb::CnjToCnbResult",
-             "CNA::Content::Cnb::CompileCnjToCnb"},
+             "CNA::Content::Cnb::CompileCnjToCnb",
+             "CNA::Content::Cnb::ImportDdsAsCnbTextureCube",
+             "CNA::Content::Cnb::DecodeDdsAsCnbTextureCube"},
     .tags = {"content", "pipeline", "cnj", "texture3d", "texturecube", "animation", "cnaext"},
     .assets = {"textures/cube_faces.dds", "textures/checker.png", "sounds/tone_440.wav"},
     .restrictions = "Headless CPU compilation and exact CNB decoding; no GPU upload, rendering, screenshot or visual-quality claim.",

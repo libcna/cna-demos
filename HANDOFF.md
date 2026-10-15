@@ -1051,6 +1051,31 @@ playback, screenshot, Windows Unicode-path or genuine-XNA claim is added. Audit 
 `CnbSourceImport.hpp` image/DDS/WAV import contract next, consolidating existing texture, cube and
 sound workflows before adding another ID.
 
+Focused **976-CNB-source-import-disposition** extends three stable demos without adding a catalog
+ID and dispositions all16 public declarations in `CnbSourceImport.hpp`.
+`content.texture_processor.pipeline_contract` grows24->27 controls: default native/narrow image
+imports exactly match the public pipeline decoder's 64x64 RGBA bytes, an explicit key preserves
+RGB/nonmatching alpha while clearing every matching opaque pixel, and a missing file is refused.
+`content.cnj.pipeline_assets` grows26->28 controls: DDS memory plus both file-path overloads exactly
+match its registered DXT1 cube's 4x4 six-face RGBA8 value, while truncated memory and a missing file
+are refused. `content.sound_effect.imported_pcm` grows13->16 controls: WAV memory plus both imported-
+sound path overloads agree exactly; the compatibility decoder plus both CNB path overloads equal
+explicit whole-sound-loop processing; truncated memory and a missing file are refused. Its prior
+controls retain all five source encodings, both loop policies, exact wider-PCM narrowing and
+processing validation. The existing C importer workflow owns complementary PCM8 `smpl` loop,
+non-cube, malformed, compressed and caller-buffer boundaries. No new CNA issue is found.
+
+The warning-free incremental build uses at most three jobs. Ten combined SOFTWARE-labelled and ten
+combined OPENGLES3-labelled runs pass27/27,28/28 and16/16 with byte-identical stdout SHA-256
+`7e3c21c7b3aba7ee35e80a1edd3951567ac29109cafc07699e6042dc69a6db0d` and empty stderr. Every exact
+SOFTWARE CTest passes20 repetitions; metadata remains683/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA/C totals remain unchanged; eight names enter/extend the CNA-extension
+appendix and Complete956 still marks eight post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-976-source-import/*` and `/tmp/checkpoint-976-coverage.md`. This is CPU/filesystem
+evidence; no device, rendering, playback, screenshot, Windows Unicode-path or quality claim is
+added. Audit the remaining generic CNB infrastructure headers (`CnbFormat`, byte readers/writers,
+document/writer, compression, CRC and read limits) against the existing custom CNB workflows next.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3204,7 +3229,12 @@ workflows before adding another ID. Focused975 extends the stable CNJ pipeline w
 all seven `CnjToCnb.hpp` declarations through all-eight dispatch, exact result/container identity,
 decoded values, absorbed/external classification, default path/name behavior and representative
 refusals. Audit the public `CnbSourceImport.hpp` image/DDS/WAV import contract next, consolidating
-the existing texture, cube and sound workflows before adding another ID. The earlier native
+the existing texture, cube and sound workflows before adding another ID. Focused976 closes all16
+public `CnbSourceImport.hpp` declarations across those three workflows through exact memory/path
+agreement, image color-key policy, WAV loop-policy separation and representative source refusals.
+Audit the remaining generic CNB infrastructure headers (`CnbFormat`, byte readers/writers,
+document/writer, compression, CRC and read limits) against the existing custom CNB workflows next.
+The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds

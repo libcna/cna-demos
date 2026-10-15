@@ -210,6 +210,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::RequireSingle` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbEffectKind` -- content.model.pipeline_contract
+- `CNA::Content::Cnb::CnbImageImportOptions` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::CnbMaterial` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbMaxAudioSampleRate` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbMaxEffectKind` -- content.model.pipeline_contract
@@ -334,6 +335,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CompileCnjToCnb` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::DecodeAnimationClipFromCnb` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::DecodeCurveFromCnb` -- content.cnj.curve, content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeDdsAsCnbTextureCube` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::DecodeModelFromCnb` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::DecodeModelV2FromCnb` -- content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeSongFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
@@ -343,6 +345,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::DecodeTexture3DFromCnb` -- content.cnj.pipeline_assets, content.texture_processor.pipeline_contract, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeTextureCubeFromCnb` -- content.cnj.pipeline_assets, content.texture_processor.pipeline_contract, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeVideoFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeWavAsCnbSoundEffect` -- content.sound_effect.imported_pcm
+- `CNA::Content::Cnb::DecodeWavAsImportedSound` -- content.sound_effect.imported_pcm
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::EncodeAnimationClipToCnb` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::EncodeCurveToCnb` -- content.cnj.curve
@@ -356,6 +360,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::EncodeTextureCubeToCnb` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::EncodeVideoToCnb` -- content.media.cnb_codec
 - `CNA::Content::Cnb::GenerateRgba8MipChain` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Cnb::ImportDdsAsCnbTextureCube` -- content.cnj.pipeline_assets
+- `CNA::Content::Cnb::ImportImageAsCnbTexture2D` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Cnb::ImportWavAsCnbSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Cnb::ImportWavAsImportedSound` -- content.sound_effect.imported_pcm
 - `CNA::Content::Cnb::IsBlockCompressedCnbTextureFormat` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::IsCnbCompressionSupported` -- content.custom.cnb_read_limits

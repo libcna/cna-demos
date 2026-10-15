@@ -1091,6 +1091,25 @@ evidence. This is deterministic CPU/filesystem compilation; existing demos retai
 GPU/audio construction and rendered/playback behavior. No screenshot, visual-quality, listening,
 Windows Unicode-path or genuine-XNA execution claim is added.
 
+#### `CnbSourceImport.hpp` declaration-level disposition
+
+The pinned header exposes 16 public declarations under this audit's convention: the image-options
+aggregate and field, twelve function overloads and the two `SoundEffectLoopPolicy` values.
+Focused976 extends the three stable workflows that already own the corresponding source and codec
+behavior instead of adding an importer-only catalog ID.
+
+| Declaration family | Disposition |
+|---|---|
+| `CnbImageImportOptions`; both `ImportImageAsCnbTexture2D` overloads | Safe defaults carry no color key. Native-path and narrow-string calls on the committed 64x64 checker are field/byte-identical to each other and to the public pipeline image decoder. An explicit key preserves every RGB byte and every nonmatching alpha while clearing all matching opaque pixels. A missing file is refused. The existing registered pipeline retains PNG gamma, processing and deterministic CNB evidence; the C importer demo independently uses a one-pixel BMP for matching and nonmatching keys. |
+| `DecodeDdsAsCnbTextureCube`; both `ImportDdsAsCnbTextureCube` overloads | Memory, native-path and narrow-string routes over the committed DXT1 cube all produce the same 4x4, six-face, one-mip Rgba8 data as the registered CNJ pipeline. Truncated memory and a missing file are refused. The C importer demo additionally owns caller-buffer lifetime, non-cube/malformed cases and exact zero-block decompression; graphics demos retain actual GPU upload and sampling. |
+| `DecodeWavAsImportedSound`; both `ImportWavAsImportedSound` overloads | A committed mono 16-bit WAV returns identical source-oriented encoding, rate, frame/loop counts and bytes through memory, native-path and narrow-string routes. The same demo already covers safe `ImportedSound` defaults and every supported source encoding's width/name/narrowing policy. |
+| `ProcessImportedSoundEffect`; both policy values; `DecodeWavAsCnbSoundEffect`; both `ImportWavAsCnbSoundEffect` overloads | `AsAuthored` preserves the absent loop while `WholeSoundWhenUnset` assigns every frame. The compatibility memory decoder and both file overloads exactly equal the explicit whole-sound result. Direct synthetic values retain 8/16-bit bytes, deterministically narrow 24/32-bit integer and float data, and refuse short/unknown input. Truncated WAV memory and a missing path are refused; the C importer workflow separately proves a parsed PCM8 `smpl` loop plus compressed/malformed bounds. |
+
+All 16 declarations now have direct value, overload, option/policy or refusal evidence, with deeper
+shared C-wrapper cases explicitly owned by `c_api.content.cnb_importers`. These are headless CPU
+imports. No graphics/audio device, rendering, playback, screenshot, visual/listening quality,
+Windows Unicode-path or arbitrary decoder-format portability claim is added.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,

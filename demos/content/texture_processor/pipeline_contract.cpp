@@ -10,6 +10,7 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "CNA/Content/Cnb/CnbDocument.hpp"
+#include "CNA/Content/Cnb/CnbSourceImport.hpp"
 #include "CNA/Content/Cnb/CnbTextureCodec.hpp"
 #include "CNA/Content/Cnb/CnbTextureFormat.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
@@ -332,6 +333,59 @@ namespace
                       !checker.authoredPremultiplyAlpha.has_value(),
                   "a real PNG decodes to one source-oriented Rgba8 level with no authored policy or compressed side channel");
 
+        const Cnb::CnbImageImportOptions defaultImageOptions;
+        const Cnb::CnbTextureData directNativeImage = Cnb::ImportImageAsCnbTexture2D(
+            assetRoot / "textures/checker.png", defaultImageOptions);
+        const Cnb::CnbTextureData directNarrowImage = Cnb::ImportImageAsCnbTexture2D(
+            (assetRoot / "textures/checker.png").string());
+        ctx.Check(!defaultImageOptions.colorKey.has_value() &&
+                      SameTexture(directNativeImage, directNarrowImage) &&
+                      directNativeImage.width == checker.width &&
+                      directNativeImage.height == checker.height &&
+                      directNativeImage.depth == 1u && directNativeImage.faceCount == 1u &&
+                      directNativeImage.mipCount == 1u &&
+                      directNativeImage.representations.size() == 1u &&
+                      directNativeImage.representations[0].format == Cnb::CnbTextureFormat::Rgba8 &&
+                      directNativeImage.representations[0].levels ==
+                          std::vector<std::vector<std::uint8_t>>{checker.rgbaPixels},
+                  "both direct image-path overloads preserve the decoder's exact pixels and default to no color key");
+
+        Cnb::CnbImageImportOptions keyedOptions;
+        keyedOptions.colorKey = std::array<std::uint8_t, 3>{
+            checker.rgbaPixels[0], checker.rgbaPixels[1], checker.rgbaPixels[2]};
+        const Cnb::CnbTextureData keyedImage = Cnb::ImportImageAsCnbTexture2D(
+            assetRoot / "textures/checker.png", keyedOptions);
+        const auto& keyedPixels = keyedImage.representations[0].levels[0];
+        std::size_t keyedCount = 0u;
+        bool exactKeying = keyedPixels.size() == checker.rgbaPixels.size();
+        for (std::size_t offset = 0u; exactKeying && offset < keyedPixels.size(); offset += 4u)
+        {
+            const bool matches = checker.rgbaPixels[offset] == (*keyedOptions.colorKey)[0] &&
+                checker.rgbaPixels[offset + 1u] == (*keyedOptions.colorKey)[1] &&
+                checker.rgbaPixels[offset + 2u] == (*keyedOptions.colorKey)[2] &&
+                checker.rgbaPixels[offset + 3u] == 255u;
+            keyedCount += matches ? 1u : 0u;
+            exactKeying = keyedPixels[offset] == checker.rgbaPixels[offset] &&
+                keyedPixels[offset + 1u] == checker.rgbaPixels[offset + 1u] &&
+                keyedPixels[offset + 2u] == checker.rgbaPixels[offset + 2u] &&
+                keyedPixels[offset + 3u] ==
+                    (matches ? 0u : checker.rgbaPixels[offset + 3u]);
+        }
+        ctx.Check(exactKeying && keyedCount > 0u && keyedCount < checker.width * checker.height,
+                  "an explicit color key preserves RGB and every nonmatching alpha while clearing all matching opaque pixels");
+
+        bool missingDirectImageRefused = false;
+        try
+        {
+            (void)Cnb::ImportImageAsCnbTexture2D(assetRoot / "textures/missing-image.png");
+        }
+        catch (const Microsoft::Xna::Framework::Content::ContentLoadException&)
+        {
+            missingDirectImageRefused = true;
+        }
+        ctx.Check(missingDirectImageRefused,
+                  "direct image import refuses a missing source before producing a texture description");
+
         Pipeline::ImportedImage synthetic;
         synthetic.width = 2u;
         synthetic.height = 2u;
@@ -558,7 +612,9 @@ CNA_DEMOS_CONSOLE(TexturePipelineContract, {
              "CNA::Content::Cnb::DecodeTexture3DFromCnb",
              "CNA::Content::Cnb::AppendEmbeddedTexture2DChunks",
              "CNA::Content::Cnb::ReadEmbeddedTexture2DChunks",
-             "CNA::Content::Cnb::SelectCnbTextureRepresentation"},
+             "CNA::Content::Cnb::SelectCnbTextureRepresentation",
+             "CNA::Content::Cnb::CnbImageImportOptions",
+             "CNA::Content::Cnb::ImportImageAsCnbTexture2D"},
     .tags = {"content", "pipeline", "texture", "image", "mipmap", "compression", "cnaext"},
     .assets = {"textures/checker.png", "textures/striped_mips.dds"},
     .restrictions = "Headless CPU build and exact byte/data checks. The injected encoder uses recognizable probe blocks to expose its contract; those blocks are not loaded or rendered. Existing texture demos own real compression and visual evidence.",

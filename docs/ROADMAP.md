@@ -323,7 +323,10 @@ a check that all authored colors remain visible and that a blank texture row can
   round trips, both target spaces, empty tracks and representative schema refusals; all seven
   public `CnjToCnb.hpp` declarations are dispositioned through direct compilation of all eight
   supported types, exact result/container identities, absorbed versus external file accounting,
-  default root/name behavior and representative refusals), ✅ `content.xnb.pipeline_transcode` (all nine
+  default root/name behavior and representative refusals; all 16 public `CnbSourceImport.hpp`
+  declarations are dispositioned across the existing texture, cube and sound workflows through
+  exact memory/path overload agreement, image color-key policy, WAV loop-policy separation and
+  representative source refusals), ✅ `content.xnb.pipeline_transcode` (all nine
   supported XNB roots transcoded through public pipeline registration into decoded native CNB,
   including exact volume/cube bytes, external Song/Video deployment and Model schema-2 shared
   resources; all 35 public Model schema-2 data/codec declarations are dispositioned through exact

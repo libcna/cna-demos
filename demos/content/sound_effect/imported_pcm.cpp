@@ -5,7 +5,10 @@
 #include <cmath>
 #include <cstdint>
 #include <filesystem>
+#include <fstream>
+#include <iterator>
 #include <limits>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -25,6 +28,45 @@ using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
+    std::vector<std::uint8_t> ReadBytes(const std::filesystem::path& path)
+    {
+        std::ifstream input(path, std::ios::binary);
+        if (!input) throw std::runtime_error("Could not read the WAV fixture");
+        return {std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>()};
+    }
+
+    bool SameImportedSound(const Import::ImportedSound& left,
+                           const Import::ImportedSound& right)
+    {
+        return left.encoding == right.encoding && left.sampleRate == right.sampleRate &&
+            left.channels == right.channels && left.frameCount == right.frameCount &&
+            left.loopStart == right.loopStart && left.loopLength == right.loopLength &&
+            left.samples == right.samples;
+    }
+
+    bool SameCnbSound(const Cnb::CnbSoundEffectData& left,
+                      const Cnb::CnbSoundEffectData& right)
+    {
+        return left.format == right.format && left.sampleRate == right.sampleRate &&
+            left.channels == right.channels && left.frameCount == right.frameCount &&
+            left.loopStart == right.loopStart && left.loopLength == right.loopLength &&
+            left.samples == right.samples;
+    }
+
+    template<class Function>
+    bool RefusesContent(Function&& function)
+    {
+        try
+        {
+            function();
+            return false;
+        }
+        catch (const ContentLoadException&)
+        {
+            return true;
+        }
+    }
+
     void AppendU32(std::vector<std::uint8_t>& bytes, const std::uint32_t value)
     {
         bytes.push_back(static_cast<std::uint8_t>(value));
@@ -108,6 +150,15 @@ namespace
                       imported.loopLength == 0u && imported.samples.size() == 11024u,
                   "the headless WAV importer preserves the authored PCM width, rate, frames and loop state");
 
+        const std::vector<std::uint8_t> wavBytes = ReadBytes(wavPath);
+        const Import::ImportedSound importedNarrow =
+            Cnb::ImportWavAsImportedSound(wavPath.string());
+        const Import::ImportedSound importedMemory =
+            Cnb::DecodeWavAsImportedSound(wavBytes, "memory tone_660.wav");
+        ctx.Check(SameImportedSound(imported, importedNarrow) &&
+                      SameImportedSound(imported, importedMemory),
+                  "WAV memory and both path overloads return the same source-oriented PCM value");
+
         const auto asAuthored = Cnb::ProcessImportedSoundEffect(
             imported, Cnb::SoundEffectLoopPolicy::AsAuthored);
         const auto wholeSound = Cnb::ProcessImportedSoundEffect(
@@ -117,6 +168,27 @@ namespace
                       wholeSound.samples == imported.samples &&
                       wholeSound.loopStart == 0u && wholeSound.loopLength == imported.frameCount,
                   "processing preserves exact PCM while the selected loop policy owns an unset loop");
+
+        const Cnb::CnbSoundEffectData cnbNative = Cnb::ImportWavAsCnbSoundEffect(wavPath);
+        const Cnb::CnbSoundEffectData cnbNarrow =
+            Cnb::ImportWavAsCnbSoundEffect(wavPath.string());
+        const Cnb::CnbSoundEffectData cnbMemory =
+            Cnb::DecodeWavAsCnbSoundEffect(wavBytes, "memory tone_660.wav");
+        ctx.Check(SameCnbSound(cnbNative, wholeSound) && SameCnbSound(cnbNarrow, wholeSound) &&
+                      SameCnbSound(cnbMemory, wholeSound),
+                  "the compatibility decoder and both file overloads apply the whole-sound loop policy identically");
+
+        ctx.Check(RefusesContent([&]
+                  {
+                      (void)Cnb::DecodeWavAsImportedSound(
+                          std::span<const std::uint8_t>(wavBytes).first(11u), "truncated.wav");
+                  }) &&
+                      RefusesContent([&]
+                      {
+                          (void)Cnb::ImportWavAsCnbSoundEffect(
+                              wavPath.parent_path() / "missing.wav");
+                      }),
+                  "WAV import refuses truncated memory and a missing source path independently");
 
         const Pipeline::ProcessedSoundEffect processedDefaults;
         const auto unknownProcessed = static_cast<Pipeline::ProcessedPcmEncoding>(99);
@@ -252,6 +324,9 @@ CNA_DEMOS_CONSOLE(ImportedPcm, {
              "CNA::Content::Import::ImportedPcmEncoding", "CNA::Content::Import::ImportedPcmSampleBytes",
              "CNA::Content::Import::ImportedPcmNarrowsToPcm16", "CNA::Content::Import::ImportedPcmEncodingName",
              "CNA::Content::Import::ImportedSound", "CNA::Content::Cnb::ImportWavAsImportedSound",
+             "CNA::Content::Cnb::DecodeWavAsImportedSound",
+             "CNA::Content::Cnb::ImportWavAsCnbSoundEffect",
+             "CNA::Content::Cnb::DecodeWavAsCnbSoundEffect",
              "CNA::Content::Cnb::ProcessImportedSoundEffect", "CNA::Content::Cnb::SoundEffectLoopPolicy",
              "CNA::Content::Pipeline::ProcessedPcmEncoding",
              "CNA::Content::Pipeline::ProcessedPcmSampleBytes",
