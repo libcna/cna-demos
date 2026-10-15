@@ -76,14 +76,14 @@ standalone; 657 are automated,33 smoke-only and3 manual. Every declared category
 Coverage: generated docs/COVERAGE.md uses Complete1003's full runtime reports; they include all693
 catalog IDs in both renderer suites with no absent IDs.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
-3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1003's
+3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1003's
 full runtime reports are the baseline inputs for the693-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
 `index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
-`media_player.h`41/41, `net.h`51/51, `net_gamers.h`33/33, `net_sessions.h`104/104,
+`content.h`32/32, `media_player.h`41/41, `net.h`51/51, `net_gamers.h`33/33, `net_sessions.h`104/104,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
@@ -144,10 +144,11 @@ Focused821 adds all18 production renderer selection/fallback routes, brings `cor
 and staged C coverage to3070/3205. Its only gap is the explicitly test-only reset route.
 Focused822 adds eight state/property routes to existing input demos, closes `input_gamepad.h`,
 `input_keyboard.h` and `input_touch.h`, and brings staged C coverage to3078/3205.
-Focused823 classifies every one of the remaining127 public C routes without inflating metadata:
-84 fixed type-name helpers are generic reflection,21 explicit test hooks are implementation test
-plumbing,21 production routes require hardware/service/platform observation or have no public
-readback, and `cna_content_manager_create_resource` is the documented unsupported placeholder.
+Focused823 classified the then-remaining127 public C routes without inflating metadata. Focused1007
+revalidates every name and corrects one classification: `cna_content_manager_create_resource` was
+already meaningfully exercised by the loader-registry workflow and now receives metadata credit.
+The remaining126 are84 fixed type-name helpers,21 explicit test hooks and21 production routes that
+require hardware/service/platform/external-tool observation.
 Focused824 adds the actual `PbrEffect` image-based-lighting draw path: invalid fallback, diffuse
 irradiance, intensity scaling, BRDF lookup and roughness-selected prefiltered cube mips.
 Focused825 extends the existing skinned-PBR model with the parallel complete environment bundle and
@@ -1212,10 +1213,10 @@ compiler refusal when both FX service options are supplied. Coverage remains303/
 2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
 `build/linux-full/reports/checkpoint-981-complete-*`. An initial sandboxed run was discarded after
 read-only-home, ENet socket and Xvfb environment failures; the archived authoritative run executed
-outside those restrictions. The explicit unsupported disposition for
-`cna_content_manager_create_resource` remains correct and does not justify a construction-plus-
-failure counting demo. Resume the broader public API behavior audit at the highest-value
-undispositioned surface.
+outside those restrictions. The then-uncredited `cna_content_manager_create_resource` route kept a
+provisional unsupported disposition here; Focused1007 later corrects it because an existing
+workflow already constructs, uses and destroys that manager. Resume the broader public API
+behavior audit at the highest-value undispositioned surface.
 
 Focused **982-Inspector-protocol-session-preview** enables CNA's optional Inspector in the
 `linux-full` preset and adds the conditional `inspector` category with three focused console demos.
@@ -3524,8 +3525,10 @@ families used by `uniform_palettes` now upload before the first Apply and produc
 pixels on both OpenGL dialects. Focused1005 then closes ShaderEffect source ownership through both
 concrete and base virtual accessors after caller storage and code objects expire. Focused1006 closes
 the resource-lifetime table's bound RenderTargetCube destruction gap, including dangling-binding
-removal, explicit back-buffer recovery, same-address face rebinding and exact readback. Revalidate
-Focused823's127 intentionally uncredited C routes against pinned CNA d23e139de next. Do not add
+removal, explicit back-buffer recovery, same-address face rebinding and exact readback. Focused1007
+then revalidates the C ABI inventory, corrects the already executed resource-manager constructor
+and leaves126 intentional omissions. Audit deterministic `ShaderEffect::DeclareUniformBlockEXT`
+delivery next, using real layout and pixel evidence if the pinned GL backends support it. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
@@ -3947,6 +3950,27 @@ remains307/329 types,2128/2326 members,674/753 fields and3078/3205 C routes. Evi
 `/tmp/checkpoint-1006-render-target-cube/*`. Pixel validation was programmatic; no screenshot or
 manual inspection was performed, and no CNA issue was found. Revalidate Focused823's127
 intentionally uncredited C routes against the pinned public headers next.
+
+## Focused1007 C route disposition revalidation
+
+The current693-demo catalog was compared exactly against all3205 public C declarations in pinned
+CNA `d23e139de9e5c15511b6be745de290896a69ee37`. One Focused823 classification was wrong:
+`c_api.content.cnb_loader_registry` already requires successful
+`cna_content_manager_create_resource`, uses that live manager through repeated custom and built-in
+loader callbacks, verifies callback-view expiry and destroys the owner. The absent embedded-
+resource store makes later loads unsupported, not the constructor. Adding the previously omitted
+metadata name closes `content.h` at32/32 and moves coverage3078->3079/3205.
+
+The remaining126 routes classify exactly as84 fixed type-name size/copy helpers,21 explicit test
+hooks and21 production paths requiring hardware, service traffic, native UI, a real context loss or
+fullscreen transition, or an external graphics debugger. Every route still appears in the pinned
+headers and generated implementations, and each existing disposition remains accurate. The
+warning-free `-j3` build and metadata693/0 pass, as does the exact SOFTWARE CTest. Ten SOFTWARE and
+ten OPENGLES3/Xvfb direct runs retain21/21 controls with byte-identical stdout SHA-256
+`653383602c657feb42e575fb3d6131e35c2b817f0ab3701c71a91050374873f1` and empty stderr. Evidence:
+`/tmp/checkpoint-1007-c-route-revalidation/*`. No embedded-resource load, physical hardware,
+service, screenshot or manual result is claimed. Audit deterministic uniform-block delivery in the
+existing ShaderEffect family next.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

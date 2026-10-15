@@ -4,9 +4,11 @@
 CNA_DEMOS_STANDALONE({
     .id = "c_api.content.cnb_loader_registry",
     .title = "CNB loader registry and callbacks in C",
-    .description = "A standalone C program registers a custom CNB loader, resolves and invokes "
-                   "copied loaders, and verifies callback-scoped handle ownership.",
-    .apis = {"cna_cnb_loader_registry_register", "cna_cnb_loader_registry_remove",
+    .description = "A standalone C program creates the resource-backed ContentManager required by "
+                   "a custom CNB loader, resolves and invokes copied loaders, and verifies "
+                   "callback-scoped handle ownership.",
+    .apis = {"cna_content_manager_create_resource",
+             "cna_cnb_loader_registry_register", "cna_cnb_loader_registry_remove",
              "cna_cnb_loader_registry_clear", "cna_cnb_loader_registry_is_registered",
              "cna_cnb_loader_registry_find",
              "cna_cnb_loader_registry_get_registered_type_name_size",
@@ -18,6 +20,6 @@ CNA_DEMOS_STANDALONE({
     .needs = CnaDemos::Need::CApi,
     .frames = 1,
     .deterministic = true,
-    .restrictions = "Uses a caller-owned graphics device only to construct the ContentManager "
-                    "required by the loader signature. No asset runtime, pixels or drawing is used.",
+    .restrictions = "The resource-backed manager supplies the loader callback but no embedded "
+                    "resource is loaded. No asset runtime, pixels or drawing is used.",
 })

@@ -3266,16 +3266,18 @@ performed.
 
 ### Complete disposition of the remaining public C ABI routes
 
-Focused823 compares the641-demo catalog after focused822 with the exact3205 declarations in the
-clean `d23e139de` CNA headers. The difference is127 routes. Every route below now has an explicit
-semantic decision; only executed, meaningful behavior remains credited, so generated coverage stays
-at3078/3205 rather than treating classification as demonstration.
+Focused823 compared the641-demo catalog after focused822 with the exact3205 declarations in the
+clean `d23e139de` CNA headers. Its original difference was127 routes. Focused1007 repeats the exact
+inventory against the current693-demo catalog and the same pinned headers, and corrects one
+classification: `cna_content_manager_create_resource` was already executed meaningfully by the CNB
+loader-registry workflow. The remaining126 routes retain explicit decisions below; only executed,
+meaningful behavior is credited, so generated coverage is3079/3205.
 
 | Class | Count | Exact disposition |
 |---|---:|---|
 | Fixed type-name reflection | 84 | Fourteen headers contain size/copy pairs returning constant canonical names: `audio.h`8, `graphics.h`2, `graphics_device.h`2, `index_resources.h`2, `media.h`8, `media_library.h`26, `runtime_components.h`4, `runtime_graphics_manager.h`4, `sensors.h`8, `storage.h`2, `texture.h`2, `texture_volume.h`4, `vertex_resources.h`4 and `xact.h`8. Representative value and handle workflows already prove exact sizing, zero-capacity queries, atomic short-buffer refusal and unterminated exact copies. Add one to an existing workflow only when its text is material to that concept; independent controls for all pairs would be count inflation. |
 | Explicit test-only hooks | 21 | `core_ext.h` contributes `cna_graphics_renderer_reset_selection_for_tests_ext`. `sensors.h` contributes ten Accelerometer and ten Gyroscope hooks for subsystem-held/connected probes, started-instance registration, forced dispatch, event-watch failure injection, swallowed-exception inspection and disposal cleanup. They support CNA's own unit tests and are not application behavior. |
-| Unsupported placeholder | 1 | `cna_content_manager_create_resource` has no backing embedded-resource store. The current implementation explicitly reports the unsupported operation; `c_api.content.additional_loaders` already documents why a loose-file fallback from an older binary was rejected as evidence. |
+| Already meaningfully demonstrated | 1 | `cna_content_manager_create_resource` successfully creates the resource-backed manager used by `c_api.content.cnb_loader_registry`, which passes it through repeated custom and built-in loader invocations, observes a live callback-scoped manager and destroys the owner. Embedded-resource loads remain an explicitly unsupported behavior, but that does not make the successful constructor a placeholder. Focused1007 adds the previously missing metadata credit. |
 | Manual/platform/service or externally observable production behavior | 21 | These remain real API, but the current automated environment cannot establish their positive behavior honestly. Exact decisions follow below. |
 
 | Header and routes | Decision |
@@ -4706,9 +4708,11 @@ assertion messages/multiplicities are unchanged; failed assertions remain93 on S
 OPENGLES3. Normalized stderr differs only by the expected compiler diagnostic for the newly covered
 mutually exclusive FX service options. Generated totals remain303/329 XNA types,2114/2326 members,
 674/753 fields and3078/3205 C routes. The complete public `CNA/Content` header tree has semantic
-declaration-level dispositions. The remaining `cna_content_manager_create_resource` route is an
-explicit unsupported placeholder and does not warrant a construction-plus-failure demo. Evidence
-is archived under `build/linux-full/reports/checkpoint-981-complete-*`. No screenshot, listening
+declaration-level dispositions. The then-uncredited `cna_content_manager_create_resource` route was
+provisionally treated as an unsupported placeholder; Focused1007 later corrects that classification
+because the existing loader-registry workflow already performs successful construction, use and
+destruction. Evidence is archived under `build/linux-full/reports/checkpoint-981-complete-*`. No
+screenshot, listening
 test, physical input, external service session or manual visual-quality inspection was performed.
 
 ### Inspector public-header audit
@@ -5247,3 +5251,26 @@ pixel diagnostic differs by renderer, while every assertion passes. Generated co
 `/tmp/checkpoint-1006-render-target-cube/*`. Pixel validation used programmatic readback; no
 screenshot or manual visual inspection was performed. No CNA issue was found. Revalidate the127
 intentionally uncredited C routes against the pinned public headers next.
+
+### Focused1007 C route disposition revalidation
+
+An exact catalog/header comparison against pinned CNA
+`d23e139de9e5c15511b6be745de290896a69ee37` still finds3205 declarations, but the prior127-route
+classification contained one documentation/metadata error. `c_api.content.cnb_loader_registry`
+already calls `cna_content_manager_create_resource`, requires successful construction, passes the
+live manager through three custom-loader invocations plus one built-in invocation, observes the
+callback-scoped view and destroys the owner. The lack of a native embedded-resource store affects
+loads through that manager; it does not make the successful constructor a placeholder. Naming the
+route in the existing metadata closes `content.h` at32/32 and moves C coverage3078->3079/3205.
+
+The remaining126 routes divide exactly into84 constant type-name helpers,21 explicit test-only
+hooks and21 production routes whose positive behavior needs hardware, service traffic, host UI,
+real context loss/fullscreen transition or an external graphics debugger. The prior per-header
+decisions remain valid for every one of them. The warning-free `-j3` build and metadata693/0 pass,
+as does the exact SOFTWARE CTest. Ten SOFTWARE and ten OPENGLES3/Xvfb direct executions retain the
+existing21/21 controls with byte-identical stdout SHA-256
+`653383602c657feb42e575fb3d6131e35c2b817f0ab3701c71a91050374873f1` and empty stderr. Evidence:
+`/tmp/checkpoint-1007-c-route-revalidation/*`. No embedded-resource load, hardware, service,
+screenshot or manual result is claimed. Continue the deeper behavior audit with
+`ShaderEffect::DeclareUniformBlockEXT`, including actual layout/pixel evidence if the pinned GL
+backends expose a deterministic path.

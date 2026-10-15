@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Revalidated every uncredited C ABI route against the pinned public headers and corrected the
+  already exercised resource-backed ContentManager constructor, completing `content.h` at 32/32.
 - Extended the cube render-target lifetime workflow through destruction while bound, explicit
   back-buffer recovery, same-address rebinding with an exact face and pixel readback.
 - Verified that `ShaderEffect` owns its exact source text across expired code objects and caller

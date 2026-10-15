@@ -8011,12 +8011,13 @@ descriptor branches next, then move to remaining production device routes.
 
 ## Focused823-remaining-C-route-dispositions
 
-The exact127-route difference after focused822 is fully dispositioned without manufacturing
-metadata credit. Eighty-four fixed type-name size/copy routes are generic reflection contracts;
-twenty-one `*_for_tests_ext` routes are implementation test plumbing; twenty-one production routes
-need real hardware, service traffic, host UI, context-loss/fullscreen observation or an external
-debugger; and `cna_content_manager_create_resource` is the documented unsupported placeholder.
-The detailed per-header and route-family table is in `docs/COVERAGE_AUDIT.md`.
+The exact127-route difference after focused822 was dispositioned without manufacturing metadata
+credit. Eighty-four fixed type-name size/copy routes are generic reflection contracts; twenty-one
+`*_for_tests_ext` routes are implementation test plumbing; twenty-one production routes need real
+hardware, service traffic, host UI, context-loss/fullscreen observation or an external debugger.
+The remaining constructor was initially treated as an unsupported placeholder; Focused1007 later
+corrects that classification because the existing loader-registry workflow already executes it
+meaningfully. The detailed per-header and route-family table is in `docs/COVERAGE_AUDIT.md`.
 
 The incremental build uses at most three jobs; metadata remains641/0, both tool self-test suites
 pass and temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C
@@ -10376,9 +10377,11 @@ only their reviewed check-count increases; every older status, known-issue ident
 assertion message/multiplicity is unchanged. Failed assertions remain 93 on SOFTWARE and 97 on
 OPENGLES3. Generated coverage remains 303/329 XNA types, 2114/2326 members, 674/753 fields and
 3078/3205 C routes. The complete public `CNA/Content` header tree now has declaration-level
-dispositions. The remaining `cna_content_manager_create_resource` route keeps its explicit
-unsupported disposition until a real embedded-resource store exists. Evidence is archived under
-`build/linux-full/reports/checkpoint-981-complete-*`. Continue with the highest-value
+dispositions. The then-uncredited `cna_content_manager_create_resource` route retained its
+provisional unsupported disposition in this checkpoint; Focused1007 later corrects that
+classification because the existing loader-registry workflow already constructs, uses and destroys
+the resource-backed manager even though embedded-resource loads remain unsupported. Evidence is
+archived under `build/linux-full/reports/checkpoint-981-complete-*`. Continue with the highest-value
 undispositioned public behavior outside the Content header family.
 
 ## Focused982-Inspector-protocol-session-preview
@@ -10941,3 +10944,22 @@ and ten OPENGLES3/Xvfb runs pass13/13 with stable per-renderer stdout and empty 
 `/tmp/checkpoint-1006-render-target-cube/*`. Pixel validation used programmatic readback; no
 screenshot or manual visual inspection was performed. Revalidate the127 intentionally uncredited
 C routes against the current pinned public headers next.
+
+## Focused1007-C-route-disposition-revalidation
+
+The current catalog was compared route-for-route with all3205 declarations in pinned CNA
+`d23e139de9e5c15511b6be745de290896a69ee37`. One Focused823 disposition was inaccurate:
+`c_api.content.cnb_loader_registry` already requires successful
+`cna_content_manager_create_resource`, passes that manager through repeated loader callbacks and
+destroys it. The missing embedded-resource store limits subsequent loads, not construction. Adding
+the existing route to metadata completes `content.h` at32/32 and raises C coverage to3079/3205.
+
+The remaining126 routes are exactly84 fixed type-name helpers,21 explicit test hooks and21
+production paths requiring hardware, a service, native UI, context-loss/fullscreen observation or
+an external debugger. Every name and implementation source was rechecked; none warrants synthetic
+metadata credit in the current environment. The warning-free `-j3` build, metadata693/0 and exact
+SOFTWARE CTest pass. Ten SOFTWARE and ten OPENGLES3/Xvfb executions retain21/21 controls with
+byte-identical stdout SHA-256 `653383602c657feb42e575fb3d6131e35c2b817f0ab3701c71a91050374873f1`
+and empty stderr. Evidence:`/tmp/checkpoint-1007-c-route-revalidation/*`. No embedded-resource
+load, hardware, service, screenshot or manual result is claimed. Audit deterministic uniform-block
+delivery in the existing ShaderEffect family next.

@@ -66,7 +66,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 3078 of 3205** (96.0 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 3079 of 3205** (96.1 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -74,7 +74,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `audio.h` | 66 / 74 |
 | `cnb.h` | 272 / 272 |
 | `color.h` | 24 / 24 |
-| `content.h` | 31 / 32 |
+| `content.h` | 32 / 32 |
 | `content_readers.h` | 62 / 62 |
 | `core.h` | 7 / 7 |
 | `core_ext.h` | 56 / 57 |
