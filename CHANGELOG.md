@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete runtime baseline at 657 demos: all 670 enabled CTests and both full
+  renderer smoke suites complete without an unexpected result.
 - Extended the MediaLibrary format-index workflow with a title-only Vorbis fixture and an external
   directory symlink, proving per-field path fallback and canonical cycle-safe traversal policy.
 - Extended the public album-art workflow with an original ID3v2.4 MP3/APIC fixture, proving exact

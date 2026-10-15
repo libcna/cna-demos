@@ -71,9 +71,8 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media15, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,292 game and201 standalone;
 621 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete871's runtime reports for its655-demo baseline;
-Focused887 and Focused889's two new IDs are explicitly absent there but have separate direct and
-repeated CTest evidence. The surface totals remain302/329 XNA types,2114/2326 XNA members,169/753 fields and
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports for all657 catalog demos.
+The surface totals remain302/329 XNA types,2114/2326 XNA members,169/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -84,11 +83,10 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete871 exercises all3078 credited C routes and all655 catalog IDs in both full smoke suites.
-It absorbs Complete859 plus focused860-870: CurveKeyCollection ordering ISSUE-097, XACT release
-state, caller-managed and conservative model bounds, concurrent loader/publication controls,
-nested source-root propagation, symlink containment, stable external-root fingerprints and the
-pre-built compiler-registry service-option refusal.
+Complete892 exercises all3078 credited C routes and all657 catalog IDs in both full smoke suites.
+It absorbs Complete871 plus focused872-891, including concurrent/stale content publication,
+picture/media-library behavior, ISSUE-098 disposal guards, playlist import, audio-format indexing
+and both folder/embedded album-art selection paths.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Complete744 has37 known-issue demos after focused660 adds
 `game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
@@ -208,15 +206,23 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **871-655-demo-full-checkpoint** is the current full-build and full-runtime baseline. The
+Complete **892-657-demo-full-checkpoint** is the current full-build and full-runtime baseline. The
 build remains pinned to the isolated CNA worktree `/tmp/cna-demos-cna-d23`, exact commit
 `d23e139de9e5c15511b6be745de290896a69ee37`; do not silently reconfigure it to the moving sibling.
-The warning-free final rebuild used `-j3`. Metadata is655/0. Of671 registered CTests, three manual
-tests are disabled; all668 enabled entries complete without failure in one authoritative `-j3` run
-(625 passed and43 declared capability/environment skips, 294.68s). SOFTWARE/private-Xvfb reports
-562 pass/47 expected fail/43 skip/3 manual, while OPENGLES3/private-Xvfb reports601/48/3/3. Both
-execute all655 IDs with zero unexpected failures or unexpected passes. The five validator and four
+The warning-free final rebuild used `-j3`. Metadata is657/0. Of673 registered CTests, three manual
+tests are disabled; all670 enabled entries complete without failure in one authoritative `-j3` run
+(626 passed and44 declared capability/environment skips, 266.62s). SOFTWARE/private-Xvfb reports
+561 pass/49 expected fail/44 skip/3 manual, while OPENGLES3/private-Xvfb reports601/50/3/3. Both
+execute all657 IDs with zero unexpected failures or unexpected passes. The five validator and four
 checkpoint-comparison self-tests pass.
+
+Compared with Complete871, the two new MediaLibrary IDs pass on both renderers. The intended
+ISSUE-098 audit makes `media.media_library.music_index` and `media.song.properties` expected
+failures and changes save_picture's single metadata marker from ISSUE-041 to ISSUE-098 while its
+original ISSUE-041 assertion remains visible. The fifteen added failed-assertion groups are exactly
+the reviewed post-disposal refusals. SOFTWARE alone changes `c_api.input.keyboard_mouse` from pass
+to its declared environment skip because the checkpoint Xvfb did not expose desktop-global pointer
+warping. No other ID status, known-issue marker or failed assertion changed.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -249,12 +255,12 @@ declares the global-warp requirement unavailable. This is environment coverage, 
 
 Generated coverage is302/329 types,2114/2326 non-field members,169/753 fields and3078/3205 C
 routes. Tested SHA-256: `cna-demos`
-`40323b5d02b4f1048414d6065253051212be90c2c68fa23c6ff173e11f17cca9`, `libcna.so`
+`26b02ca7710752a41bbecff72d532c41912caee2b8cbfef71799351c409098eb`, `libcna.so`
 `624de5687262040f91736857226b38392f5a5375099c92a0d221b6236b8aa25d`, and `libcna_c_api.so`
 `813bf0a2095524183bbaca66f6fbcc1fbdfcfcd5ddd8148c8ec6ce3138ebee24`. Report hashes are SOFTWARE
-`8e27d393cd252cd90056ea70bab075b3c621bd7b50f2e52091fe55584363e5f6` and OPENGLES3
-`2216a4693345fe785e1849b329300a376342f0a3e1434c841fb97140f2cea851`. Evidence is archived as
-`build/linux-full/reports/checkpoint-871-complete-*`. Pixel checks were programmatic; no screenshot,
+`561b2a75d97a61d0946c706798c42862968de06b50b1b411b75fc902bb87ab70` and OPENGLES3
+`0113fa4f019cf63f371940e032232b9a812d489b4e5d9687ea1e9df685c35c91`. Evidence is archived as
+`build/linux-full/reports/checkpoint-892-complete-*`. Pixel checks were programmatic; no screenshot,
 listening test, physical input, external service session or manual visual-quality inspection was
 performed.
 
@@ -2020,11 +2026,11 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete871 remains the authoritative655-demo full-runtime baseline; Focused887
-and Focused889 add two separately validated MediaLibrary demos, while Focused888/890/891 close
-folder selection, both FLAC/MP3 embedded-art branches, partial-tag fallback and directory-symlink
-traversal policy. Run a new657-demo full checkpoint now so coverage includes the two post-baseline
-IDs. Then return to the next open semantic Media behavior in COVERAGE_AUDIT.
+HIGHEST PRIORITY: Complete892 is the authoritative657-demo full-runtime baseline and absorbs every
+focused batch through891. The MediaLibrary table now has runtime or explicit disposition for its
+remaining semantic rows. Audit the public Video/VideoPlayer behavior against the two existing video
+workflows and pinned CNA source; extend an existing demo only for a distinct observable gap, and
+record trivial, platform, decoder-quality or manual-only behavior without inflating the catalog.
 The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the

@@ -451,7 +451,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - `content.content_reader.*`: custom `ContentTypeReader`, `ResourceContentManager`,
   `ContentManifestEntry`. ≈ 20
 
-## Phase 9 -- audio and media 🟨 (audio: 23 demos incl. 10 XACT, media: 12 incl. video)
+## Phase 9 -- audio and media 🟨 (audio: 23 demos incl. 10 XACT, media: 15 incl. video)
 - ✅ `audio.sound_effect.*`: Play, Play(volume, pitch, pan), MasterVolume, PCM buffer
   constructor, GetSampleDuration/GetSampleSizeInBytes, ✅ `audio.sound_effect.loop_region` (loop
   points), ✅ `audio.sound_effect.from_stream` (loose WAV; ISSUE-029).
@@ -479,9 +479,9 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `instance_limits` retains its category scenario and adds five per-cue definition
   capacity controls;12checks pass using one extra original sound bank and existing PCM.
   ✅ `audio.xact.instance_limits`: authored category Fail/ReplaceOldest limits, paused slots,
-  isolation and freed-slot reuse checked through public states. Remaining: RPC curves (a variable driving
-  volume/pitch), complex variation selection and cue-level limits.
-- ✅ `media.*` (12): play a song (State, PlayPosition, end), events through FrameworkDispatcher
+  isolation and freed-slot reuse checked through public states. A ReleaseTime-bound RPC now has
+  public Stopping-to-Stopped evidence; output-only RPC/variation behavior remains manual/acoustic.
+- ✅ `media.*` (15): play a song (State, PlayPosition, end), events through FrameworkDispatcher
   without a Game, playlists with Queue/MoveNext/MovePrevious/IsRepeating/IsShuffled, volume and
   mute, visualization data, Song properties, MediaLibrary collections. Songs are generated WAVs
   played from files (`Song::FromUri`, ISSUE-015). ✅ `media.video_player.play_video` (generated WMV)
@@ -505,8 +505,13 @@ a check that all authored colors remain visible and that a blank texture row can
   exact original bytes, large-image downscaling and caller-owned streams beyond library lifetime.
   Case-insensitive `cover`-before-`folder` selection, two independent byte-identical thumbnails for
   an already-small64x64 PNG and exact corrupt-cover fallback bytes are also covered. A generated
-  FLAC PICTURE block proves exact embedded PNG extraction, independent thumbnail ownership and
-  folder-over-embedded priority. Other filename families and non-Linux platforms remain separate.
+  FLAC PICTURE and MP3 APIC blocks prove exact embedded PNG extraction, independent thumbnail
+  ownership and folder-over-embedded priority. The distinct fixed filename-precedence branches are
+  covered; non-Linux platform integration remains separate.
+- ✅ `media.media_library.playlist_import`: public M3U/M3U8 discovery, order, duplicates, missing
+  entries, UTF-8/CRLF input, supported extensions and absolute/symlink containment refusals.
+- ✅ `media.media_library.format_index`: all six supported extensions, four tag layouts, per-field
+  path fallback, rating/track propagation, recursion, ignored formats and directory-symlink policy.
 
 
 ## Phase 10 -- input ✅ (39 demos: keyboard, mouse, text input, clipboard, gamepad, touch, CNAEXT devices)
@@ -9141,3 +9146,20 @@ repetitions. The warning-free incremental build uses at most three jobs, metadat
 validator self-test suites pass, and generated coverage remains302/329 types,2114/2326 members,
 169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-891-*`. No CNA defect, playback,
 listening, screenshot or other-platform claim is made. Run the full657-demo checkpoint next.
+
+## Complete892-657-demo-full-checkpoint
+
+The complete project build and runtime checkpoint now absorbs every focused batch through891.
+Metadata validates657/0. Of673 registered CTests, three manual entries remain disabled and all670
+enabled tests pass with `-j3` in266.62s:626 pass and44 declare capability/environment skips. The
+full SOFTWARE smoke reports561 pass/49 expected fail/44 skip/3 manual; OPENGLES3 under private
+Xvfb reports601/50/3/3. Both execute all657 IDs with zero unexpected failures or unexpected passes.
+
+Exact comparison with Complete871 accepts only the reviewed changes: two new passing MediaLibrary
+IDs, three ISSUE-098 metadata/status changes, fifteen new grouped disposal-refusal assertions and
+one SOFTWARE-only keyboard/mouse environment skip where Xvfb lacks desktop-global pointer warping.
+No other status, known-issue marker or failed assertion changed. Coverage remains302/329 XNA types,
+2114/2326 non-field members,169/753 fields and3078/3205 C routes, now backed by current reports with
+no absent IDs. Both validator self-test suites pass. Evidence:`checkpoint-892-complete-*`. Pixel
+checks were programmatic; no screenshot, listening test, physical input, service session or manual
+visual-quality inspection was performed. Audit public Video/VideoPlayer behavior next.

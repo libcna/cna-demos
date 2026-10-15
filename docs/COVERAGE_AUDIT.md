@@ -3051,3 +3051,14 @@ still terminates the existing self-cycle. Malformed/truncated tag layouts stay d
 internal parser-bounds tests because their public effect is the same field-wise fallback already
 demonstrated. Both renderer-labelled runs pass11/11 byte-identically and the exact SOFTWARE CTest
 passes20 repetitions. Evidence: `/tmp/checkpoint-891-*`.
+
+### Complete892 generated runtime checkpoint
+
+The complete checkpoint absorbs focused872-891 and gives both post-Complete871 MediaLibrary IDs
+full-suite evidence. Metadata is657/0; all670 enabled CTests pass with three manual entries disabled.
+SOFTWARE reports561 pass/49 expected fail/44 skip/3 manual and OPENGLES3 reports601/50/3/3, with
+zero unexpected results. The exact comparison adds only the two passing IDs, the reviewed ISSUE-098
+status/metadata changes and their fifteen grouped failed assertions; SOFTWARE additionally takes
+the declared global-pointer environment skip. Generated coverage remains302/329 types,2114/2326
+members,169/753 fields and3078/3205 C routes, with no absent IDs. Evidence:
+`build/linux-full/reports/checkpoint-892-complete-*`.

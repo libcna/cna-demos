@@ -11,7 +11,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
-| c_api | 177 | 176 | 1 | 0 | 167 / 0 / 10 / 0 / 0 | 168 / 0 / 9 / 0 / 0 |
+| c_api | 177 | 176 | 1 | 0 | 166 / 1 / 10 / 0 / 0 | 168 / 0 / 9 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 33 / 0 / 13 / 0 / 0 | 33 / 0 / 13 / 0 / 0 |
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
@@ -23,7 +23,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | graphics | 184 | 184 | 0 | 0 | 146 / 26 / 12 / 0 / 0 | 167 / 3 / 14 / 0 / 0 |
 | input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 74 / 0 / 4 / 0 / 0 | 74 / 0 / 4 / 0 / 0 |
-| media | 15 | 14 | 1 | 0 | 12 / 0 / 1 / 0 / 2 | 12 / 0 / 1 / 0 / 2 |
+| media | 15 | 14 | 1 | 0 | 12 / 0 / 3 / 0 / 0 | 12 / 0 / 3 / 0 / 0 |
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
 | platform | 2 | 2 | 0 | 0 | 1 / 1 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,6 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `media.media_library.format_index`, `media.media_library.playlist_import`.
-- OPENGLES3: absent from report: `media.media_library.format_index`, `media.media_library.playlist_import`.
 
 ## XNA 4.0 API surface demonstrated
 
