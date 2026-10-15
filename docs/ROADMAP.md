@@ -9607,3 +9607,23 @@ checkpoint-comparison self-tests pass5/5 and4/4, and generated coverage remains3
 2114/2326 non-field members,674/753 fields and3078/3205 C routes. No CNA defect appeared. Evidence:
 `/tmp/checkpoint-917-*`. Continue with invalid shadow states, the remaining four-cascade slot/color
 permutations or the next higher-value observable behavior gap.
+
+
+## Focused918-four-cascade-palette-and-count-safety-audit
+
+The existing `graphics.skinned_effect.shadow_cascades` keeps all twelve prior controls and adds a
+four-panel maximum-count row. Count4 plus fitting depths1/3/5/7 selects slots0/1/2/3. Comparison
+depth.2 is lit in every strip, isolating the complete red/green/blue/yellow DebugTint palette as
+RGB(173,78,46), RGB(104,130,46), RGB(104,78,77) and RGB(173,130,46). OPENGLES3 passes16/16 in eleven
+runs and OPENGL33 passes16/16 once. Both inspected800x480 captures are byte-identical with SHA-256
+`6ac89a24acf24663cb3de51a89339a075c3e6c5f714776c276647f814090938f`; SOFTWARE retains its declared
+skip. The warning-free `-j3` build, metadata659/0, self-tests5/5 and4/4, and unchanged generated
+coverage all pass.
+
+The invalid-state audit found a real CNA defect rather than a demo opportunity. All four public
+effect setters retain arbitrary Count values, and each draw path copies Count entries between fixed
+four-entry arrays before any renderer clamps it. Count>4 therefore reads/writes out of bounds.
+CNA-DEMOS-ISSUE-102 records the clean pinned-source evidence; no undefined runtime path was invoked
+and no knownIssue marker was added. Descending/nonfinite splits/matrices and negative BlendBand have
+no specified refusal contract and do not justify arbitrary invalid-value controls. The observable
+EasyGL shadow-receiver audit is semantically closed; continue with the next high-value behavior gap.

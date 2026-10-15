@@ -15,6 +15,33 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-102 -- Oversized shadow cascade count overruns fixed draw-parameter arrays
+
+- **Area/API:** `ShadowCascadeStateEXT::Count` and `setShadowCascadesEXT` on `BasicEffect`,
+  `SkinnedEffect`, `PbrEffect` and `SkinnedPbrEffect`.
+- **Discovery:** the Focused918 audit first completes safe maximum-count rendering with Count4 and
+  all four selected slots. Source review then follows the same public value into each effect's draw
+  parameter construction. The undefined path is deliberately not invoked by a demo.
+- **Observed source behavior:** all four setters copy an arbitrary `Count` unchanged. When shadows
+  are enabled and Count is positive, every effect loops `c < Count`, reads
+  `WorldToAtlas[c]`/`SplitDistance[c]` and writes `cascadeMatricesColMajor[c * 16 + i]` plus
+  `cascadeSplits[c]`. Both public source arrays and renderer destination arrays have capacity four.
+  The EasyGL, SDL-GPU and WebGPU backends clamp the count to four only after this copy, so Count5
+  has already performed out-of-bounds reads and writes.
+- **Contract:** `ShadowCascadeStateEXT::kMaxCascades` is explicitly the largest receiver count and
+  both arrays use that bound. The public comments do not grant undefined behavior for an oversized
+  Count. A public value crossing the boundary must not corrupt memory.
+- **Expected repair:** validate or clamp Count before any indexed copy, consistently in the shared
+  effect path; preferably make the setter reject values outside `0..kMaxCascades` and preserve the
+  preceding valid state. Add unit coverage for every effect family so the backend's later clamp
+  cannot mask a regression.
+- **Evidence/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The collected public type, four effect and fixed
+  renderer-structure excerpts are `/tmp/checkpoint-918-shadow-count-source.txt`, SHA-256
+  `93baa280e929bff3a999e8eb90556ea7c05915e075a90f064523e932e1709346`. No CNA source was modified,
+  no unsafe runtime call was made and no upstream message was sent. This source-diagnosed memory-
+  safety issue adds no runtime knownIssue marker.
+
 ### CNA-DEMOS-ISSUE-101 -- Video URI resolution and deferred file failures diverge from FNA
 
 - **Area/API:** `Video::FromUriEXT`, the trusted-metadata Video constructor and

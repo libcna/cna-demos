@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed all four maximum-count cascade selections and debug tints; recorded
+  CNA-DEMOS-ISSUE-102 for unchecked oversized cascade counts causing fixed-array overflow.
 - Extended authored punctual shadows with exact 6/9 spot PCF visibility and a midpoint cone
   transition whose squared falloff leaves one-quarter direct-light intensity.
 - Added isolated cascade-selected directional specular pixels to the existing skinned shadow

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <memory>
 #include <optional>
+#include <string>
 #include <string_view>
 #include <vector>
 #include "CnaDemos/Demo.hpp"
@@ -90,7 +91,7 @@ namespace
             effect_->setShadowFilterRadiusEXT(0); // each panel below selects its comparison kernel
             batch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
-            Context().Print("Two authored atlas slices store depths64/255 and192/255. Split depth3 selects the first slice inclusively; depth4 selects the second. A one-unit band blends at depth2.5. A separate fitting camera changes cascade selection without moving the rendering camera. Count0 restores the low-depth single-map lookup. Two panels send both cascades to the exact same atlas UV(.5,.5); each selected slice must keep radius2 taps in its own region. A four-strip atlas then selects slot3 and its yellow diagnostic tint. The final row isolates directional specular light: the near cascade removes it while the far cascade preserves it.");
+            Context().Print("Two authored atlas slices store depths64/255 and192/255. Split depth3 selects the first slice inclusively; depth4 selects the second. A one-unit band blends at depth2.5. A separate fitting camera changes cascade selection without moving the rendering camera. Count0 restores the low-depth single-map lookup. Two panels send both cascades to the exact same atlas UV(.5,.5); each selected slice must keep radius2 taps in its own region. A four-strip atlas then selects slot3 and its yellow diagnostic tint. The next row isolates directional specular light: the near cascade removes it while the far cascade preserves it. The final row selects all four slots at maximum count and verifies their complete debug-tint palette.");
         }
         void Draw(const GameTime& time) override
         {
@@ -102,7 +103,7 @@ namespace
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             device.SetVertexBuffer(vertices_.get());
             device.setIndicesProperty(indices_.get());
-            const int rowHeight = full.getHeightProperty() / 4;
+            const int rowHeight = full.getHeightProperty() / 5;
             const std::array<float, 8> depths{2, 3, 4, 2.5f, 4, 4, 2, 4};
             for (int panel = 0; panel < 8; ++panel)
             {
@@ -202,6 +203,41 @@ namespace
                     device.DrawIndexedPrimitives(PrimitiveType::TriangleList, 0, 0, 4, 0, 2);
                 }
             }
+            // Exercise every slot and debug colour at the four-cascade limit. A comparison depth
+            // of .2 is lit by both atlas halves, so the selected tint is the only color change.
+            effect_->setDiffuseColorProperty(Vector3(.6f, .4f, .2f));
+            effect_->setAmbientLightColorProperty(Vector3(.1f, .2f, .3f));
+            effect_->setEmissiveColorProperty(Vector3(.02f, .03f, .04f));
+            effect_->setSpecularColorProperty(Vector3::Zero);
+            effect_->getDirectionalLight0Property().setDiffuseColorProperty(Vector3::One);
+            effect_->getDirectionalLight0Property().setSpecularColorProperty(Vector3::Zero);
+            for (int selected = 0; selected < ShadowCascadeStateEXT::kMaxCascades; ++selected)
+            {
+                const int left = full.getWidthProperty() * selected / ShadowCascadeStateEXT::kMaxCascades;
+                const int right = full.getWidthProperty() * (selected + 1) / ShadowCascadeStateEXT::kMaxCascades;
+                device.setViewportProperty(Viewport(left, rowHeight * 4, right - left,
+                                                   full.getHeightProperty() - rowHeight * 4));
+                effect_->SetBoneTransforms({Matrix::CreateTranslation(0, 0,
+                    -static_cast<float>(selected * 2 + 1))});
+                ShadowCascadeStateEXT cascades;
+                cascades.Count = ShadowCascadeStateEXT::kMaxCascades;
+                for (int slot = 0; slot < cascades.Count; ++slot)
+                {
+                    const float center = (static_cast<float>(slot) + .5f) / static_cast<float>(cascades.Count);
+                    cascades.WorldToAtlas[slot] = Matrix::CreateScale(0, 0, 0) *
+                        Matrix::CreateTranslation(center, .5f, .2f);
+                    cascades.SplitDistance[slot] = 2.0f * static_cast<float>(slot + 1);
+                }
+                cascades.CameraView = Matrix::getIdentityProperty();
+                cascades.DebugTint = true;
+                effect_->setShadowFilterRadiusEXT(0);
+                effect_->setShadowCascadesEXT(cascades);
+                for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
+                {
+                    pass.Apply();
+                    device.DrawIndexedPrimitives(PrimitiveType::TriangleList, 0, 0, 4, 0, 2);
+                }
+            }
             device.setViewportProperty(full);
             const std::array<const char*, 8> labels{
                 "Depth 2: near", "Depth 3: split", "Depth 4: far",
@@ -219,6 +255,10 @@ namespace
             batch_->DrawString(*font_, "Specular: far lit", Vector2(
                 static_cast<float>(full.getWidthProperty() / 2 + 8), static_cast<float>(rowHeight * 3 + 8)),
                                Color::White);
+            for (int slot = 0; slot < ShadowCascadeStateEXT::kMaxCascades; ++slot)
+                batch_->DrawString(*font_, "4C tint " + std::to_string(slot), Vector2(
+                    static_cast<float>(slot * full.getWidthProperty() / ShadowCascadeStateEXT::kMaxCascades + 8),
+                    static_cast<float>(rowHeight * 4 + 8)), Color::White);
             batch_->End();
             if (FramesDrawn() == 0)
             {
@@ -253,6 +293,18 @@ namespace
                                 "the selected near cascade removes isolated directional specular light");
                 Context().Check(CnaDemos::Near(pixels.At(pixels.Width() * 3 / 4, specularY), Color(76, 38, 13), 1),
                                 "the selected far cascade preserves isolated directional specular light");
+                const int paletteY = rowHeight * 4 + (pixels.Height() - rowHeight * 4) / 2;
+                const std::array<Color, ShadowCascadeStateEXT::kMaxCascades> palette{
+                    Color(173, 78, 46), Color(104, 130, 46), Color(104, 78, 77), Color(173, 130, 46)};
+                const std::array<const char*, ShadowCascadeStateEXT::kMaxCascades> paletteChecks{
+                    "four-cascade depth1 selects slot0 and its red debug tint",
+                    "four-cascade depth3 selects slot1 and its green debug tint",
+                    "four-cascade depth5 selects slot2 and its blue debug tint",
+                    "four-cascade depth7 selects slot3 and its yellow debug tint"};
+                for (int slot = 0; slot < ShadowCascadeStateEXT::kMaxCascades; ++slot)
+                    Context().Check(CnaDemos::Near(pixels.At(
+                        pixels.Width() * (2 * slot + 1) / (2 * ShadowCascadeStateEXT::kMaxCascades),
+                        paletteY), palette[slot], 1), paletteChecks[slot]);
             }
             Game::Draw(time);
         }
@@ -270,7 +322,7 @@ CNA_DEMOS_GAME(ShadowCascadesDemo, {
     .title = "Authored cascade atlas selection and sampling",
     .description = "Selects two authored shadow-atlas slices by fitting-camera depth, checks the inclusive split, "
                    "blends across its near side, restores the single-map path with Count0, isolates the shared atlas edge, "
-                   "checks last-slot depth/tint, and proves cascades attenuate directional specular light.",
+                   "checks all four slots/debug tints, and proves cascades attenuate directional specular light.",
     .apis = {"SkinnedEffect::SetBoneTransforms",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowMapEXT",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setShadowCascadesEXT",
@@ -285,7 +337,6 @@ CNA_DEMOS_GAME(ShadowCascadesDemo, {
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "EasyGL OPENGLES3/OPENGL33 stock receiver path only; other renderers explicitly skipped. "
-                    "Authored Color atlas, two-slice diffuse/specular controls and the fourth slot at maximum count; no "
-                    "shadow-map generation, arbitrary atlas layouts, all kernel weights, every four-slice selection/debug "
-                    "color or other-renderer proof.",
+                    "Authored Color atlas, two-slice diffuse/specular controls and all four slots at maximum count; no "
+                    "shadow-map generation, arbitrary atlas layouts, all kernel weights or other-renderer proof.",
 })

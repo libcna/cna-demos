@@ -2321,16 +2321,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline; Focused917
+HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline; Focused918
 is the latest validated behavioral delta. Current field coverage is674/753 and GamerServices is
 semantically dispositioned at160/223: all observable local/avatar/Guide values are covered, while its
 remaining63 values require service-account data or repeat the same presence publication behavior.
 The complete field audit now leaves only previously dispositioned environment/platform values in
 other namespaces (eight hardware GamePadType identities, five remote Net states, two renderer device-
-loss states and WindowsMediaConnect). Cascade-selected directional specular plus partial punctual
-filtering and cone transition behavior are now closed. Continue the deeper public member/behavior
-audit with invalid shadow states, the remaining four-cascade slot/color permutations, or the next
-higher-value observable gap. Use the
+loss states and WindowsMediaConnect). The shadow-receiver behavior audit is now semantically closed:
+all four cascade slots/tints, directional specular and punctual filtering/cone transitions have
+pixels, while invalid oversized Count is recorded as CNA-DEMOS-ISSUE-102 without executing its
+out-of-bounds draw path. Continue with the next higher-value observable gap. Use the
 inventory and docs/COVERAGE_AUDIT.md to choose the highest-value undispositioned behavior, prefer an
 existing workflow, and keep constructors/finalizers, CLR collection plumbing and service-only paths
 classified rather than inflating metadata.
@@ -2368,6 +2368,28 @@ Both inspected800x480 captures are byte-identical with SHA-256
 capability skip. The warning-free incremental build uses `-j3`, metadata remains659/0, validator/
 checkpoint self-tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326 non-field members,
 674/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-917-*`. No CNA defect appeared.
+
+### Focused918-four-cascade-palette-and-count-safety-audit
+
+The stable `graphics.skinned_effect.shadow_cascades` workflow grows12->16 pixel controls. Its final
+row uses Count4, fitting depths1/3/5/7 and a comparison depth lit by every atlas strip. It therefore
+selects slots0/1/2/3 independently and observes their complete red/green/blue/yellow debug palette
+as RGB(173,78,46), RGB(104,130,46), RGB(104,78,77) and RGB(173,130,46). All twelve prior diffuse,
+blend, boundary, slot3 and specular controls remain.
+
+OPENGLES3 passes all16 controls in eleven runs including the captured run; OPENGL33 passes16/16.
+Both inspected800x480 captures are byte-identical with SHA-256
+`6ac89a24acf24663cb3de51a89339a075c3e6c5f714776c276647f814090938f`. SOFTWARE retains its declared
+capability skip. The warning-free incremental build uses `-j3`, metadata remains659/0, validator/
+checkpoint self-tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326 non-field members,
+674/753 fields and3078/3205 C routes.
+
+Source review against pinned CNA `d23e139de` found that all four public effect implementations store
+an arbitrary cascade Count and copy that many entries during draw into fixed four-entry/64-float
+renderer arrays. Count>4 therefore reads and writes out of bounds before renderer-side clamping.
+CNA-DEMOS-ISSUE-102 records the defect. The demo does not execute undefined behavior; source evidence
+is `/tmp/checkpoint-918-shadow-count-source.txt` (SHA-256
+`93baa280e929bff3a999e8eb90556ea7c05915e075a90f064523e932e1709346`).
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
