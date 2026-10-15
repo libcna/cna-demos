@@ -36,7 +36,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 - **Types with at least one demo: 302 of 329** (91.8 %).
 - **Methods, properties, constructors and events named by a demo: 2114 of 2326** (90.9 %).
-- Fields and enum values named by a demo: 442 of 753 (reported separately: a demo per enum value is not a goal).
+- Fields and enum values named by a demo: 457 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
@@ -45,7 +45,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Content` | 7 / 11 | 41 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 51 / 51 | 2 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 43 / 52 | 167 / 244 | 1 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 91 / 99 | 494 / 550 | 117 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 91 / 99 | 494 / 550 | 132 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 164 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 113 / 113 | 194 / 202 |
 | `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 42 / 48 | 15 / 15 |

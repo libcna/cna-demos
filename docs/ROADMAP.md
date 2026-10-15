@@ -9365,3 +9365,21 @@ HostEndedSession end reasons remain intentionally uncredited: each requires a re
 session, host closure, identity loss or transport loss. Evidence:`/tmp/checkpoint-904-*`. Continue
 the public-field audit with Graphics, crediting only enum values attached to actual state or draw
 behavior.
+
+## Focused905-complete-blend-write-mask-and-cull-values
+
+Three stable graphics workflows close all13 Blend, all5 BlendFunction, all6 ColorWriteChannels and
+all3 CullMode values. `blend_functions` retains its visible multiply/screen/reverse-subtract/min/max
+cells, adds source-minus-destination Subtract and renders every per-pixel factor against distinct
+source, destination and constant RGBA components in a private target. `color_write_channels` now
+distinguishes Alpha and All alongside every existing mask with exact preserved/written RGBA bytes.
+The existing cull grid already proves both windings and no culling, so its metadata now names the
+two directly observed values that were missing.
+
+SOFTWARE and OPENGLES3/Xvfb pass20/20 blend,7/7 write-mask and3/3 cull controls with identical
+reported pixels. All three exact SOFTWARE CTests pass ten repetitions. The warning-free build uses
+at most three jobs, metadata is659/0 and both validator suites pass. Coverage moves442->457/753
+fields and Graphics reaches132/192. An initial mixed-integer Color constructor compile failure and
+an incorrect Subtract-alpha expectation were demo bugs corrected before validation; no CNA issue
+appeared. Evidence:`/tmp/checkpoint-905-*`. Audit the remaining CompareFunction and
+StencilOperation values next with actual depth/stencil results.

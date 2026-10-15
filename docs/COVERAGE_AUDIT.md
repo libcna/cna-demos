@@ -1058,6 +1058,23 @@ host; Ended and HostEndedSession need a remote host closure; Disconnected needs 
 loss; ClientSignedOut needs service identity loss. Those five values remain intentionally
 uncredited until their causes can be observed. Evidence:`/tmp/checkpoint-904-*`.
 
+### Blend, colour-write and cull values
+
+The blend-functions workflow now sends all13 Blend factors through actual render-target blending
+with distinct source, destination and constant RGBA components. It checks the complete resulting
+Color rather than enum integers. Its visible blend-mode row also adds source-minus-destination, so
+all five BlendFunction values have independent pixel evidence. The colour-write workflow adds
+Alpha and All to its existing masks and compares every RGBA byte, including preservation of the
+translucent destination. The cull-mode workflow already renders both triangle windings under all
+three modes; metadata now credits the two observed values that were previously unnamed.
+
+Both renderers pass the blend20/20, write-mask7/7 and cull3/3 controls with identical reported
+pixels. Their exact SOFTWARE CTests pass ten repetitions. The warning-free build uses at most three
+jobs, metadata is659/0 and both validator suites pass. Fields move442->457/753 and Graphics reaches
+132/192. The first compile's mixed integer/byte Color overload and the first Subtract alpha oracle
+were demo defects fixed before the validated runs; no CNA defect appeared. Evidence:
+`/tmp/checkpoint-905-*`.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

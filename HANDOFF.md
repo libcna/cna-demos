@@ -71,9 +71,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-904
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-905
 overlays for all659 catalog demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,442/753 fields and
+The surface totals are302/329 XNA types,2114/2326 XNA members,457/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -433,6 +433,18 @@ Disconnected and HostEndedSession remain intentionally uncredited because their 
 real full/remote session, host closure, identity loss or transport loss. Evidence:
 `/tmp/checkpoint-904-*`. **Next:** continue the public-field audit with Graphics, attaching enum
 values to actual state or draw behavior rather than numeric casts.
+
+Focused **905-complete-blend-write-mask-and-cull-values** closes all Blend, BlendFunction,
+ColorWriteChannels and CullMode values. `blend_functions` checks all13 factors against full RGBA
+render-target results and all five equations including a new source-minus-destination cell;
+`color_write_channels` distinguishes every individual/combined/All/None mask byte-for-byte; and
+the existing cull grid supplies actual winding evidence for all three modes. SOFTWARE and
+OPENGLES3/Xvfb pass20/20,7/7 and3/3 with identical reported pixels, and all three exact SOFTWARE
+CTests pass ten repetitions. The warning-free build uses `-j3`, metadata validates659/0 and both
+validator suites pass. Coverage moves442->457/753 and Graphics reaches132/192. The initial compile
+overload and Subtract-alpha expectation failures were demo defects corrected before validation;
+no CNA issue appeared. Evidence:`/tmp/checkpoint-905-*`. **Next:** close the three remaining
+CompareFunction and four remaining StencilOperation values with actual depth/stencil results.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
@@ -2197,12 +2209,13 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete892 remains the authoritative657-demo full-runtime baseline; focused893-
-904 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
+905 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
 closed at7/8, Input is dispositioned at194/202, Input.Touch is complete at15/15 and the root
 Framework, Audio and Design namespaces are complete at78/78,11/11 and2/2. Net is dispositioned at
 17/22; its five uncredited values require real full/remote sessions or service/transport loss.
-Audit Graphics'75 remaining fields next, beginning with render-state values already attached to
-observable state or drawing and explicitly dispositioning renderer/platform-only values.
+Graphics is132/192 after closing Blend, BlendFunction, ColorWriteChannels and CullMode. Audit its
+three remaining CompareFunction and four remaining StencilOperation values next with actual depth/
+stencil results, then continue through the remaining Graphics field families.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete892 too stale.

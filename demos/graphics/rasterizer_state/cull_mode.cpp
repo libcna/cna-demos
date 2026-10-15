@@ -120,7 +120,8 @@ CNA_DEMOS_GAME(CullModeDemo, {
     .description = "Draws a clockwise and a counter-clockwise triangle under RasterizerState::CullCounterClockwise, "
                    "CullClockwise and CullNone: XNA treats clockwise triangles as front faces.",
     .apis = {"RasterizerState::CullCounterClockwise", "RasterizerState::CullClockwise", "RasterizerState::CullNone",
-             "RasterizerState::CullMode", "GraphicsDevice::RasterizerState", "CullMode::CullCounterClockwiseFace"},
+             "RasterizerState::CullMode", "GraphicsDevice::RasterizerState", "CullMode::CullCounterClockwiseFace",
+             "CullMode::CullClockwiseFace", "CullMode::None"},
     .tags = {"3d", "culling", "winding", "rasterizer", "state"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

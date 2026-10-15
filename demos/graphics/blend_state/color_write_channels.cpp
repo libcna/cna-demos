@@ -30,9 +30,10 @@ namespace
             pixel_->SetData(&white, 1);
 
             // Opaque writing, restricted to the listed channels; the others keep the background.
-            const std::array<ColorWriteChannels, 5> masks = {
+            const std::array<ColorWriteChannels, 7> masks = {
                 ColorWriteChannels::Red, ColorWriteChannels::Green, ColorWriteChannels::Blue,
-                ColorWriteChannels::Red | ColorWriteChannels::Green, ColorWriteChannels::None};
+                ColorWriteChannels::Alpha, ColorWriteChannels::Red | ColorWriteChannels::Green,
+                ColorWriteChannels::All, ColorWriteChannels::None};
             // A new BlendState starts as opaque writing (One, Zero). Built-in states such as
             // BlendState::Opaque cannot be modified -- copies of them share the same, already used state.
             for (std::size_t i = 0; i < masks.size(); ++i)
@@ -42,29 +43,31 @@ namespace
         void Draw(const GameTime& gameTime) override
         {
             GraphicsDevice& device = getGraphicsDeviceProperty();
-            device.Clear(Color(0, 0, 64));
+            const Color background(0, 0, 64, 32);
+            const Color source(255, 255, 255, 192);
+            device.Clear(background);
 
             // A white box in each state: what survives is exactly the enabled channels.
             for (std::size_t i = 0; i < states_.size(); ++i)
             {
                 spriteBatch_->Begin(SpriteSortMode::Deferred, &states_[i], nullptr, nullptr, nullptr);
-                spriteBatch_->Draw(*pixel_, Rectangle(40 + static_cast<int>(i) * 150, 160, 120, 160), Color::White);
+                spriteBatch_->Draw(*pixel_, Rectangle(16 + static_cast<int>(i) * 112, 160, 96, 160), source);
                 spriteBatch_->End();
             }
 
             if (FramesDrawn() == 0)
             {
                 const CnaDemos::BackBufferPixels pixels(device);
-                const std::array<Color, 5> expected = {Color(255, 0, 64), Color(0, 255, 64), Color(0, 0, 255),
-                                                       Color(255, 255, 64), Color(0, 0, 64)};
-                const std::array<const char*, 5> names = {"Red", "Green", "Blue", "Red | Green", "None"};
+                const std::array<Color, 7> expected = {
+                    Color(255, 0, 64, 32), Color(0, 255, 64, 32), Color(0, 0, 255, 32),
+                    Color(0, 0, 64, 192), Color(255, 255, 64, 32), source, background};
+                const std::array<const char*, 7> names = {
+                    "Red", "Green", "Blue", "Alpha", "Red | Green", "All", "None"};
                 for (std::size_t i = 0; i < expected.size(); ++i)
                 {
-                    const Color got = pixels.At(100 + static_cast<int>(i) * 150, 240);
+                    const Color got = pixels.At(64 + static_cast<int>(i) * 112, 240);
                     Context().Print("{:<12} {}", names[i], got.ToString());
-                    Context().Check(got.getRProperty() == expected[i].getRProperty() &&
-                                        got.getGProperty() == expected[i].getGProperty() &&
-                                        got.getBProperty() == expected[i].getBProperty(),
+                    Context().Check(got == expected[i],
                                     std::string("ColorWriteChannels ") + names[i] + " keeps only those channels");
                 }
             }
@@ -75,17 +78,18 @@ namespace
     private:
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::unique_ptr<Texture2D> pixel_;
-        std::array<BlendState, 5> states_;
+        std::array<BlendState, 7> states_;
     };
 }
 
 CNA_DEMOS_GAME(ColorWriteChannelsDemo, {
     .id = "graphics.blend_state.color_write_channels",
     .title = "Write only some colour channels",
-    .description = "Draws white boxes over dark blue with BlendState::ColorWriteChannels set to Red, Green, Blue, "
-                   "Red | Green and None; only the enabled channels change.",
+    .description = "Draws white boxes over translucent dark blue with all individual ColorWriteChannels, a combined "
+                   "mask, All and None; only the enabled RGBA channels change.",
     .apis = {"BlendState::ColorWriteChannels", "ColorWriteChannels::Red", "ColorWriteChannels::Green",
-             "ColorWriteChannels::Blue", "ColorWriteChannels::None"},
+             "ColorWriteChannels::Blue", "ColorWriteChannels::Alpha", "ColorWriteChannels::All",
+             "ColorWriteChannels::None"},
     .tags = {"blend", "channels", "mask", "state"},
     .frames = 3,
     .deterministic = true,

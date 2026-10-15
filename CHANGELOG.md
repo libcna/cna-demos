@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed all Blend, BlendFunction, ColorWriteChannels and CullMode values with real pixel,
+  RGBA-mask and triangle-winding evidence on both renderers.
 - Audited observable Net field values through real capacity refusal, lobby/game transitions,
   join-error evidence and local packet delivery; documented five remote-session-only values.
 - Closed both Design fields with a subclass that proves their public effects on string conversion
