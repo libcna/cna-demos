@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed all TextureFilter values with exact point-versus-linear magnification pixels, existing
+  mip workflows and the anisotropic sampler scene.
 - Completed all VertexElementFormat and VertexElementUsage values through actual skinned input,
   exact declaration sizing and a readable HiDef buffer round-trip.
 - Completed all EffectParameterClass and EffectParameterType values through loaded and authored

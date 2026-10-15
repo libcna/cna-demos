@@ -1122,6 +1122,22 @@ ten repetitions. The warning-free build uses at most three jobs, metadata is659/
 validator suites pass. Fields move479->495/753 and Graphics reaches170/192. Evidence:
 `/tmp/checkpoint-908-*`.
 
+### Texture filter values
+
+The SpriteBatch sampler workflow now gives all four mixed min/mag/mip values sampled behavior. A
+generated two-colour board magnified24x yields exactly zero intermediate pixels for each MagPoint
+value and7488 for each MagLinear value on both renderers, while the public SamplerState property
+retains each complete enum identity. Point and Linear form the controls. Existing texture3D/cube
+workflows already distinguish LinearMipPoint from PointMipLinear, so this batch does not duplicate
+their mip-selection scenes. The anisotropic floor binds the real AnisotropicWrap state and checks
+AnisotropicClamp's filter before drawing; this remains a functional sampler path without a fixed
+cross-renderer sharpness claim.
+
+Both renderers pass6/6 sampler and1/1 anisotropic controls with identical measured counts, and both
+exact SOFTWARE CTests pass ten repetitions. The warning-free build uses at most three jobs,
+metadata is659/0 and both validator suites pass. Fields move495->501/753 and Graphics reaches
+176/192. Evidence:`/tmp/checkpoint-909-*`.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

@@ -9432,3 +9432,19 @@ CTests pass ten repetitions. The warning-free build uses at most three jobs, met
 both validator suites pass. Coverage moves479->495/753 fields and Graphics reaches170/192. No CNA
 or demo defect appeared. Evidence:`/tmp/checkpoint-908-*`. Audit the six remaining TextureFilter
 values next through actual sampler state and sampled pixels.
+
+## Focused909-complete-texture-filter-values
+
+Two stable sampler workflows close all9 TextureFilter values. The SpriteBatch sampler demo now
+magnifies a generated 4x4 two-colour board through Point, Linear and all four mixed min/mag/mip
+filters. Exact readback finds zero invented colours for both MagPoint values and7488 interpolated
+pixels for both MagLinear values, while each SamplerState reports the exact authored identity. The
+existing LinearMipPoint/PointMipLinear texture workflows cover the orthogonal mip components. The
+anisotropic floor already binds and draws AnisotropicWrap after checking AnisotropicClamp's filter;
+its metadata now records that direct value.
+
+SOFTWARE and OPENGLES3/Xvfb produce identical filter counts and pass6/6 sampler plus1/1 anisotropic
+controls. Both exact SOFTWARE CTests pass ten repetitions. The warning-free build uses at most
+three jobs, metadata is659/0 and both validator suites pass. Coverage moves495->501/753 fields and
+Graphics reaches176/192. No CNA or demo defect appeared. Evidence:`/tmp/checkpoint-909-*`. Audit
+CubeMapFace plus the remaining depth/surface/render-target format-policy values next.

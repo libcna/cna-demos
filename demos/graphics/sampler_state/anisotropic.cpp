@@ -150,7 +150,7 @@ CNA_DEMOS_GAME(AnisotropicDemo, {
     .description = "Draws a textured floor receding into the distance with SamplerState::LinearWrap and "
                    "SamplerState::AnisotropicWrap side by side; anisotropic filtering keeps the far checkers sharper.",
     .apis = {"SamplerState::AnisotropicWrap", "SamplerState::AnisotropicClamp", "SamplerState::LinearWrap",
-             "SamplerState::MaxAnisotropy",
+             "SamplerState::MaxAnisotropy", "TextureFilter::Anisotropic",
              "GraphicsDevice::SamplerStates", "BasicEffect::TextureEnabled", "BasicEffect::Texture",
              "VertexPositionTexture::VertexPositionTexture"},
     .tags = {"3d", "sampler", "filtering", "texture", "state"},
