@@ -3,6 +3,7 @@
 #include <array>
 #include <cmath>
 #include <memory>
+#include <optional>
 #include <utility>
 
 #include "CnaDemos/Demo.hpp"
@@ -102,6 +103,7 @@ namespace
             environment_->GetData(CubeMapFace::NegativeZ, 0, &origin, &pixel, 0, 1);
             Context().Check(pixel == Color::Gold,
                             "the cube face remains readable and exact after bound disposal is refused");
+            CheckBoundDestruction(device);
 
             cubeEffect_ = std::make_unique<BasicEffect>(device);
             cubeEffect_->EnableDefaultLighting();
@@ -116,6 +118,47 @@ namespace
             chrome_->setFresnelFactorProperty(0.0f);
             chrome_->setEnvironmentMapAmountProperty(1.0f);
             chrome_->setEnvironmentMapProperty(environment_.get()); // a RenderTargetCube is a TextureCube
+        }
+
+        void CheckBoundDestruction(GraphicsDevice& device)
+        {
+            const Rectangle backBufferBounds = device.getViewportProperty().getBoundsProperty();
+            std::optional<RenderTargetCube> slot;
+            slot.emplace(device, 24, false, SurfaceFormat::Color, DepthFormat::None, 0,
+                         RenderTargetUsage::PreserveContents);
+            const RenderTargetCube* const firstAddress = &*slot;
+            device.SetRenderTarget(&*slot, CubeMapFace::PositiveY);
+            slot.reset();
+
+            bool presentRefused = false;
+            try { device.Present(); }
+            catch (const System::InvalidOperationException&) { presentRefused = true; }
+            Context().Check(device.GetRenderTargets().empty() && presentRefused,
+                            "destroying a bound cube removes its dangling public binding while Present stays refused");
+
+            device.SetRenderTarget(static_cast<RenderTarget2D*>(nullptr));
+            Context().Check(device.GetRenderTargets().empty() &&
+                                device.getViewportProperty().getBoundsProperty() == backBufferBounds,
+                            "an explicit unbind after bound cube destruction restores the complete back-buffer viewport");
+
+            slot.emplace(device, 24, false, SurfaceFormat::Color, DepthFormat::None, 0,
+                         RenderTargetUsage::PreserveContents);
+            const bool addressReused = &*slot == firstAddress;
+            device.SetRenderTarget(&*slot, CubeMapFace::NegativeX);
+            const auto replacementBindings = device.GetRenderTargets();
+            Context().Check(addressReused && replacementBindings.size() == 1 &&
+                                replacementBindings[0].getRenderTargetProperty() == &*slot &&
+                                replacementBindings[0].getCubeMapFaceProperty() == CubeMapFace::NegativeX &&
+                                device.getViewportProperty().getBoundsProperty() == Rectangle(0, 0, 24, 24),
+                            "a replacement cube at the destroyed target's address is genuinely rebound to its selected face");
+
+            device.Clear(Color::CornflowerBlue);
+            device.SetRenderTarget(static_cast<RenderTarget2D*>(nullptr));
+            const Rectangle origin(0, 0, 1, 1);
+            Color pixel = Color::Black;
+            slot->GetData(CubeMapFace::NegativeX, 0, &origin, &pixel, 0, 1);
+            Context().Check(pixel == Color::CornflowerBlue,
+                            "the same-address cube replacement receives rendering through its selected face binding");
         }
 
         void Draw(const GameTime& gameTime) override

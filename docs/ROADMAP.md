@@ -10926,3 +10926,18 @@ its declared capability skip. Ten OPENGLES3 and ten OPENGL33 runs pass8/8 with s
 stdout and the expected deliberate compiler stderr. Counts remain307/329 types,2128/2326 members,
 674/753 fields and3078/3205 C routes; four source-accessor names enter the extension appendix.
 Evidence:`/tmp/checkpoint-1005-shader-sources/*`. Audit bound RenderTargetCube destruction next.
+
+## Focused1006-RenderTargetCube-bound-destruction
+
+The stable dynamic-environment scene now destroys a separate optional-backed cube while PositiveY
+is active. The public binding disappears, Present remains refused until an explicit unbind restores
+the full back-buffer viewport, and reconstruction at the same address yields a real NegativeX
+binding with the expected 24x24 viewport and exact CornflowerBlue face readback. Together with the
+existing refused public Dispose path, this closes the distinct native cube-target lifetime gap.
+
+The warning-free `-j3` build and metadata693/0 pass, as does the exact SOFTWARE CTest. Ten SOFTWARE
+and ten OPENGLES3/Xvfb runs pass13/13 with stable per-renderer stdout and empty stderr. Counts remain
+307/329 types,2128/2326 members,674/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-1006-render-target-cube/*`. Pixel validation used programmatic readback; no
+screenshot or manual visual inspection was performed. Revalidate the127 intentionally uncredited
+C routes against the current pinned public headers next.

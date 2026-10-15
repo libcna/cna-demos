@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the cube render-target lifetime workflow through destruction while bound, explicit
+  back-buffer recovery, same-address rebinding with an exact face and pixel readback.
 - Verified that `ShaderEffect` owns its exact source text across expired code objects and caller
   buffer changes through both concrete properties and virtual `Effect` accessors.
 - Proved that scalar and array `ShaderEffect` uniform setters select their own program and retain

@@ -381,7 +381,7 @@ No screenshot or manual interaction was used.
 | DynamicIndexBuffer.ContentLost | The dynamic board attaches the public event, uses the CNA test seam to deliver one content-loss notification, checks event plus lost state, then proves its next SetData clears the flag before actual indexed drawing. This validates recovery semantics without claiming either exercised renderer really lost a device. Both renderers pass3 controls. |
 | RenderTarget2D.ContentLost and IsContentLost | The render-to-texture workflow similarly observes one explicit notification and lost flag, then proves binding for replacement rendering clears the flag before the target is drawn and sampled. Both renderers pass3 controls. No physical/context device loss is claimed. |
 | RenderTarget2D bound identity, Dispose, destruction and C++ moves | The same workflow now passes thirteen controls on both renderers. A 32x16 target bound with a depth buffer refuses public Dispose and move assignment atomically: the wrapper stays live and bound, both move operands retain their shape/properties, and an authored Gold pixel survives. Moving the active 128x128 source first constructs and then assigns new wrappers while `GetRenderTargets` follows each new identity; a subsequent Orange clear through the transferred binding reads back exactly after unbinding. A separate optional-backed target is destroyed while active: its dangling public binding disappears while Present remains refused until explicit unbind restores the complete back-buffer viewport. Reconstructing at the same address produces a real new binding and exact CornflowerBlue read-back. Copying is unavailable by public type design; cross-device target moves remain unclaimed. |
-| RenderTargetCube bound Dispose | The dynamic environment workflow now passes nine controls on both renderers. It binds the NegativeZ face, clears it Gold and verifies public Dispose is refused while the target stays live and `GetRenderTargets` retains the exact cube/face pair. After unbinding, one exact Gold texel proves the refused call did not release or replace the face storage. RenderTargetCube exposes no target-level copy/move operations; its base TextureCube wrapper behavior is covered separately. Bound C++ destruction remains a distinct lifetime path. |
+| RenderTargetCube bound Dispose and destruction | The dynamic environment workflow now passes thirteen controls on both renderers. It binds the NegativeZ face, clears it Gold and verifies public Dispose is refused while the target stays live and `GetRenderTargets` retains the exact cube/face pair. After unbinding, one exact Gold texel proves the refused call did not release or replace the face storage. A separate optional-backed cube is then destroyed while PositiveY is active: its dangling public binding disappears while Present remains refused until an explicit unbind restores the complete back-buffer viewport. Reconstructing at the same address produces a genuine NegativeX binding with the expected square viewport and exact CornflowerBlue face readback. RenderTargetCube exposes no target-level copy/move operations; its base TextureCube wrapper behavior is covered separately. |
 | IGraphicsDeviceService lifecycle events | `game.graphics_device_manager.device_events` now subscribes through the interface itself before device creation. It observes created, resetting, reset and disposing around actual manager creation, ApplyChanges and Dispose, retaining its six passing lifecycle controls on both renderers. |
 
 Focused662 adds12 member credits without a new ID, moving temporary coverage1702->1714/2326.
@@ -5227,3 +5227,23 @@ per-dialect stdout and deliberate compiler stderr. Generated coverage remains307
 2128/2326 members,674/753 fields and3078/3205 C routes; the extension appendix gains the four
 source-accessor names. Evidence:`/tmp/checkpoint-1005-shader-sources/*`. No non-GL renderer,
 screenshot or manual visual claim is made. Audit bound RenderTargetCube destruction next.
+
+### Focused1006 RenderTargetCube bound destruction
+
+`graphics.render_target.render_target_cube` retains its nine disposal, face-rendering,
+preservation and environment-map controls and adds four for the distinct native-destruction path.
+Destroying an optional-backed cube while PositiveY is active removes its dangling public binding,
+but Present remains refused until an explicit null-target transition restores the saved back-buffer
+viewport. Reconstructing the cube in the same optional storage produces a genuine NegativeX
+binding with a 24x24 viewport; a CornflowerBlue clear reads back exactly from that face after
+unbinding. This closes the resource-lifetime table's cube-specific gap without a new ID.
+
+The warning-free `-j3` build and metadata693/0 pass, as does the exact SOFTWARE CTest. Ten direct
+runs per renderer pass13/13 with stable per-renderer stdout and empty stderr. SOFTWARE stdout
+SHA-256 is `6048b86ccae610fa6c935f1d5fa4d47b1fbd5bf70f2087110ceb0752e5c3413e`; OPENGLES3 is
+`9d1e709a4970ca65066d8c5b34e255ee5ec0c3e4ef94174bb5f3df1a328e3c2a`. Their existing reflected-
+pixel diagnostic differs by renderer, while every assertion passes. Generated coverage remains
+307/329 XNA types,2128/2326 members,674/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-1006-render-target-cube/*`. Pixel validation used programmatic readback; no
+screenshot or manual visual inspection was performed. No CNA issue was found. Revalidate the127
+intentionally uncredited C routes against the pinned public headers next.

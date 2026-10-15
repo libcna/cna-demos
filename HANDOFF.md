@@ -3522,8 +3522,10 @@ revalidate Focused823's127 intentionally uncredited C-route dispositions against
 public headers. Focused1004 closes the first selected behavior gap: all four scalar/array uniform
 families used by `uniform_palettes` now upload before the first Apply and produce their exact
 pixels on both OpenGL dialects. Focused1005 then closes ShaderEffect source ownership through both
-concrete and base virtual accessors after caller storage and code objects expire. Audit the bound
-RenderTargetCube destruction path identified by the resource-lifetime table next. Do not add
+concrete and base virtual accessors after caller storage and code objects expire. Focused1006 closes
+the resource-lifetime table's bound RenderTargetCube destruction gap, including dangling-binding
+removal, explicit back-buffer recovery, same-address face rebinding and exact readback. Revalidate
+Focused823's127 intentionally uncredited C routes against pinned CNA d23e139de next. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
@@ -3925,6 +3927,26 @@ with `96fe937f566525ac844eddd014688eb87678089addea6c79653433c8111c0065` /
 deliberate syntax-error diagnostic and differs only by the expected header line number. Evidence:
 `/tmp/checkpoint-1005-shader-sources/*`. Counts remain307/329 types,2128/2326 members,674/753
 fields and3078/3205 C routes. Audit bound RenderTargetCube destruction next.
+
+## Focused1006 RenderTargetCube bound destruction
+
+`graphics.render_target.render_target_cube` grows from nine to thirteen controls. A separate
+optional-backed cube is destroyed while its PositiveY face is active: the dangling public binding
+disappears while Present remains refused until an explicit null-target transition restores the
+saved back-buffer viewport. Reconstructing in the same storage yields a genuine NegativeX binding
+with its24x24 viewport, and a CornflowerBlue clear reads back exactly from that face after
+unbinding. The existing refused public Dispose, six-face rendering, preservation and environment-
+map checks remain intact.
+
+The warning-free `-j3` build and metadata693/0 pass, as does the exact SOFTWARE CTest. Ten SOFTWARE
+and ten OPENGLES3/Xvfb direct runs pass13/13 with stable per-renderer stdout and empty stderr.
+SOFTWARE stdout SHA-256 is `6048b86ccae610fa6c935f1d5fa4d47b1fbd5bf70f2087110ceb0752e5c3413e`;
+OPENGLES3 is `9d1e709a4970ca65066d8c5b34e255ee5ec0c3e4ef94174bb5f3df1a328e3c2a`. The difference is only
+the existing renderer-sensitive reflected-pixel diagnostic; every assertion passes. Coverage
+remains307/329 types,2128/2326 members,674/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-1006-render-target-cube/*`. Pixel validation was programmatic; no screenshot or
+manual inspection was performed, and no CNA issue was found. Revalidate Focused823's127
+intentionally uncredited C routes against the pinned public headers next.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,
