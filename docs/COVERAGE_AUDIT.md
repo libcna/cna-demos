@@ -3707,3 +3707,20 @@ CTest passes. Generated XNA/C totals remain303/329 types,2114/2326 members,674/7
 3078/3205 routes. Complete933 remains the full runtime baseline, so its reports honestly leave this
 new ID absent. Evidence:`/tmp/checkpoint-934-renderer-metadata-*`. No device, renderer execution,
 pixels or manual visual result is claimed; no CNA defect appeared.
+
+### Focused935 native renderer fallback and latch
+
+The stable `platform.renderer_selection.set_preferred` standalone closes the ordinary native
+`GraphicsRendererSelection` behavior that its earlier preferred-renderer path did not reach. It
+checks fallback's disabled default and automatic toggle, installs an explicit SOFTWARE chain,
+selects absent WEBGL2 through the case-insensitive string overload, preserves WEBGL2 as selected
+while a real device activates SOFTWARE, and reads one nonempty `NotCompiledIn` history record.
+Preferred, chain and automatic mutations all raise `InvalidOperationException` after the latch.
+
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass with stable per-renderer stdout hashes
+`a5eb362d699b4405bb6c41622b97e3772b654d3b2f30cb87bc2a7cec7904f652` and
+`05c747212f7c845a7e7e27be7138562e1862422890c8e6689c36c6c54c15cedb`; their intentional
+warning/info stderr is also byte-stable. The warning-free `-j3` build, exact SOFTWARE CTest,
+metadata and validator suites pass. Counts stay unchanged. Evidence:
+`/tmp/checkpoint-935-renderer-fallback-*`. Test-only reset and the graphics-module handshake are
+implementation/test machinery. No pixel or visual result is claimed, and no CNA defect appeared.

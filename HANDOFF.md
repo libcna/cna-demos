@@ -2338,8 +2338,10 @@ process-level features; static CNA on CMake < 3.29.
 HIGHEST PRIORITY: Complete933 is the authoritative663-demo full-build/full-runtime baseline and
 absorbs Focused927-932 after Complete926. Focused934 starts the broader CNA-specific C++ audit with
 the native renderer identity/category/maturity API; its new664th ID has focused evidence and is
-honestly absent from Complete933's aggregate reports. Continue with the next coherent public CNA
-header family, preferring an existing workflow when it already owns the behavior. The diagnostics
+honestly absent from Complete933's aggregate reports. Focused935 then closes the ordinary native
+renderer-selection/fallback surface in the existing standalone workflow. Continue with the next
+coherent public CNA header family, preferring an existing workflow when it already owns the
+behavior. The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered
@@ -2717,6 +2719,27 @@ Complete933 remains the current full runtime baseline, so generated coverage cor
 new ID absent from both older aggregate reports. Evidence:`/tmp/checkpoint-934-renderer-metadata-*`.
 No graphics device, renderer execution, pixel output, screenshot or visual inspection is claimed.
 No CNA defect appeared.
+
+### Focused935-native-renderer-fallback-and-latch
+
+The stable `platform.renderer_selection.set_preferred` standalone now exercises the rest of the
+ordinary native `GraphicsRendererSelection` contract. It observes fallback disabled by default,
+toggles automatic fallback on and off, installs an explicit chain to SOFTWARE, selects an absent
+WEBGL2 through the case-insensitive string overload and distinguishes that requested identity from
+the active renderer. Real device creation records one `NotCompiledIn` history entry with nonempty
+diagnostic text, and the device reports SOFTWARE. After latching, preferred-renderer, chain and
+automatic-fallback mutations each raise `InvalidOperationException`.
+
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass. Their stable stdout SHA-256 values are
+`a5eb362d699b4405bb6c41622b97e3772b654d3b2f30cb87bc2a7cec7904f652` and
+`05c747212f7c845a7e7e27be7138562e1862422890c8e6689c36c6c54c15cedb`; both share stable expected
+warning/info stderr SHA-256
+`90898f8b3ecdcb28021616399f09abfb0b070704a086d6232b1255b42387562e`. The warning-free `-j3`
+incremental build, exact SOFTWARE CTest, metadata and validator suites pass. Generated XNA/C totals
+remain unchanged. Evidence:`/tmp/checkpoint-935-renderer-fallback-*`. This creates a real SOFTWARE
+device but makes no pixel, screenshot or visual-quality claim. Test-only `ResetForTestingEXT` and
+the internal `GraphicsRendererSelectionAccessEXT` handshake remain CNA test/implementation
+machinery. No CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

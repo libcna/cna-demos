@@ -372,9 +372,17 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::GraphicsBackendCategory` -- core.renderer.metadata
 - `CNA::GraphicsBackendMaturity` -- core.renderer.metadata
 - `CNA::GraphicsCapability` -- graphics.device.supports_capability
+- `CNA::GraphicsRendererFallbackReason` -- platform.renderer_selection.set_preferred
+- `CNA::GraphicsRendererFallbackRecord` -- platform.renderer_selection.set_preferred
+- `CNA::GraphicsRendererSelection::EnableAutomaticFallback` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::GetActive` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::GetAvailable` -- platform.renderer_selection.set_preferred
+- `CNA::GraphicsRendererSelection::GetFallbackHistory` -- platform.renderer_selection.set_preferred
+- `CNA::GraphicsRendererSelection::GetSelected` -- platform.renderer_selection.set_preferred
+- `CNA::GraphicsRendererSelection::IsAvailable` -- platform.renderer_selection.set_preferred
+- `CNA::GraphicsRendererSelection::IsFallbackEnabled` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::IsLatched` -- platform.renderer_selection.set_preferred
+- `CNA::GraphicsRendererSelection::SetFallbackChain` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererSelection::SetPreferred` -- platform.renderer_selection.set_preferred
 - `CNA::GraphicsRendererType` -- core.renderer.metadata
 - `CNA::Input::Clipboard::GetDataEXT` -- input.clipboard.data_formats
@@ -468,6 +476,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::getCurrentGraphicsRendererType` -- core.renderer.metadata
 - `CNA::getGraphicsBackendCategory` -- core.renderer.metadata
 - `CNA::getGraphicsBackendMaturity` -- core.renderer.metadata
+- `CNA::getGraphicsRendererFallbackReasonName` -- platform.renderer_selection.set_preferred
 - `CNA::getGraphicsRendererName` -- core.renderer.metadata
 - `CNA::getVersionMajor` -- core.version.version_string
 - `CNA::getVersionMinor` -- core.version.version_string

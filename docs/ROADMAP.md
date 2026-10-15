@@ -9865,3 +9865,15 @@ totals stay unchanged. Complete933's older full reports correctly show this new 
 Evidence:`/tmp/checkpoint-934-renderer-metadata-*`. Continue the next coherent public CNA C++
 header family; do not duplicate C-adapter coverage unless the native API itself teaches a distinct
 consumer workflow.
+
+## Focused935-native-renderer-fallback-and-latch
+
+The existing `platform.renderer_selection.set_preferred` standalone now covers the meaningful
+native fallback lifecycle. It proves the disabled default, automatic-fallback toggling, an explicit
+SOFTWARE chain, case-insensitive selection of absent WEBGL2, requested-versus-active identity, one
+real `NotCompiledIn` history record and refusal of all three setting mutations after device latch.
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass with stable per-renderer stdout and one stable
+expected warning/info stderr stream. The warning-free incremental build uses `-j3`; the exact
+SOFTWARE CTest, metadata and validator suites pass. Demo and generated XNA/C counts are unchanged.
+Evidence:`/tmp/checkpoint-935-renderer-fallback-*`. `ResetForTestingEXT` and
+`GraphicsRendererSelectionAccessEXT` remain test/internal handshake machinery rather than demo API.

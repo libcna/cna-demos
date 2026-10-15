@@ -4,8 +4,12 @@
 // can only be made at the start of a fresh process.
 //
 // Arguments: [--automated] [--frames N]. Exit code 0 = success, 1 = failure.
+#include <algorithm>
+#include <array>
+#include <cctype>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 #include <string_view>
 
 #include "CNA/GraphicsRendererSelection.hpp"
@@ -14,6 +18,7 @@
 #include "Microsoft/Xna/Framework/Game.hpp"
 #include "Microsoft/Xna/Framework/GraphicsDeviceManager.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "System/InvalidOperationException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 
@@ -78,25 +83,111 @@ int main(int argc, char** argv)
               << CNA::getGraphicsRendererName(GraphicsRendererSelection::GetSelected()) << '\n';
 
     // Pick SOFTWARE when it is compiled in (it needs no display), otherwise keep the default.
-    // SetPreferred must run before the first GraphicsDevice is constructed.
     GraphicsRendererType wanted = GraphicsRendererSelection::GetSelected();
     if (GraphicsRendererSelection::IsAvailable(GraphicsRendererType::Software))
     {
         wanted = GraphicsRendererType::Software;
     }
-    GraphicsRendererSelection::SetPreferred(wanted);
-    std::cout << "SetPreferred(" << CNA::getGraphicsRendererName(wanted) << ")\n";
+
+    constexpr std::array publicRenderers{
+        GraphicsRendererType::OpenGLES3, GraphicsRendererType::OpenGL33,
+        GraphicsRendererType::WebGL2, GraphicsRendererType::WebGPU,
+        GraphicsRendererType::Headless, GraphicsRendererType::Software,
+        GraphicsRendererType::Stub, GraphicsRendererType::DirectX9,
+        GraphicsRendererType::SdlGpu, GraphicsRendererType::Fna3d,
+    };
+    auto absent = publicRenderers.end();
+    for (auto candidate = publicRenderers.begin(); candidate != publicRenderers.end(); ++candidate)
+    {
+        if (!GraphicsRendererSelection::IsAvailable(*candidate))
+        {
+            absent = candidate;
+            break;
+        }
+    }
+    if (absent == publicRenderers.end())
+    {
+        std::cout << "SKIPPED: this build contains every public renderer, so no fallback can be demonstrated\n";
+        return 77;
+    }
+
+    // Automatic fallback is independently configurable. Restore its default before installing an
+    // explicit one-element chain so the actual history below is deterministic.
+    const bool fallbackInitiallyDisabled = !GraphicsRendererSelection::IsFallbackEnabled();
+    GraphicsRendererSelection::EnableAutomaticFallback(true);
+    const bool automaticFallbackEnabled = GraphicsRendererSelection::IsFallbackEnabled();
+    GraphicsRendererSelection::EnableAutomaticFallback(false);
+    const bool automaticFallbackDisabled = !GraphicsRendererSelection::IsFallbackEnabled();
+
+    const std::array fallbackChain{wanted};
+    GraphicsRendererSelection::SetFallbackChain(fallbackChain);
+    const bool explicitFallbackEnabled = GraphicsRendererSelection::IsFallbackEnabled();
+
+    // The string overload is case-insensitive. Ask for an absent renderer so CNA records why it
+    // was rejected, then falls back to the ordinary SOFTWARE renderer.
+    std::string absentName(CNA::getGraphicsRendererName(*absent));
+    std::transform(absentName.begin(), absentName.end(), absentName.begin(),
+                   [](unsigned char value) { return static_cast<char>(std::tolower(value)); });
+    GraphicsRendererSelection::SetPreferred(absentName);
+    const bool selectedRequested = GraphicsRendererSelection::GetSelected() == *absent;
+    std::cout << "Requested absent renderer: " << CNA::getGraphicsRendererName(*absent)
+              << "; fallback: " << CNA::getGraphicsRendererName(wanted) << '\n';
 
     SelectedRendererGame game(frames);
     game.Run();
 
     const GraphicsRendererType active = GraphicsRendererSelection::GetActive();
-    std::cout << "Active renderer: " << CNA::getGraphicsRendererName(active)
-              << " (device reports " << game.rendererName << ")\n"
-              << "Selection latched: " << (GraphicsRendererSelection::IsLatched() ? "yes" : "no") << '\n';
+    const auto history = GraphicsRendererSelection::GetFallbackHistory();
+    const bool historyMatches = history.size() == 1 && history[0].type == *absent &&
+                                history[0].reason == CNA::GraphicsRendererFallbackReason::NotCompiledIn &&
+                                !history[0].message.empty();
 
-    const bool ok = active == wanted && GraphicsRendererSelection::IsLatched()
-                    && game.rendererName == CNA::getGraphicsRendererName(wanted);
-    std::cout << (ok ? "OK" : "UNEXPECTED: the active renderer differs from the preferred one") << '\n';
+    bool preferredRejectedAfterLatch = false;
+    bool chainRejectedAfterLatch = false;
+    bool automaticRejectedAfterLatch = false;
+    try
+    {
+        GraphicsRendererSelection::SetPreferred(wanted);
+    }
+    catch (const System::InvalidOperationException&)
+    {
+        preferredRejectedAfterLatch = true;
+    }
+    try
+    {
+        GraphicsRendererSelection::SetFallbackChain(fallbackChain);
+    }
+    catch (const System::InvalidOperationException&)
+    {
+        chainRejectedAfterLatch = true;
+    }
+    try
+    {
+        GraphicsRendererSelection::EnableAutomaticFallback(true);
+    }
+    catch (const System::InvalidOperationException&)
+    {
+        automaticRejectedAfterLatch = true;
+    }
+
+    std::cout << "Active renderer: " << CNA::getGraphicsRendererName(active)
+              << " (device reports " << game.rendererName << ")\n";
+    if (historyMatches)
+    {
+        std::cout << "Fallback: " << CNA::getGraphicsRendererFallbackReasonName(history[0].reason)
+                  << " (" << history[0].message << ")\n";
+    }
+    else
+    {
+        std::cout << "Fallback: UNEXPECTED HISTORY\n";
+    }
+    std::cout << "Selection latched: " << (GraphicsRendererSelection::IsLatched() ? "yes" : "no") << '\n';
+
+    const bool ok = fallbackInitiallyDisabled && automaticFallbackEnabled && automaticFallbackDisabled &&
+                    explicitFallbackEnabled && selectedRequested && active == wanted && historyMatches &&
+                    GraphicsRendererSelection::IsLatched() &&
+                    game.rendererName == CNA::getGraphicsRendererName(wanted) &&
+                    preferredRejectedAfterLatch && chainRejectedAfterLatch && automaticRejectedAfterLatch;
+    std::cout << (ok ? "OK" : "UNEXPECTED: renderer fallback or latch contract failed") << '\n';
     return ok ? 0 : 1;
 }
