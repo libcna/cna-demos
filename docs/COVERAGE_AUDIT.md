@@ -790,6 +790,26 @@ integration/boundary disposition. The remaining external effect compiler, XMA en
 results require their own portable assets or controlled tools; option propagation alone does not
 claim those outputs.
 
+#### `CnjContentPipeline.hpp` declaration-level disposition
+
+The pinned header exposes 79 declarations: ten stable in-memory type constants, 19 fields across
+eight source/processed aggregate values, 49 virtual component methods and
+`RegisterCnjContentPipeline`. Focused961 adds `content.cnj.pipeline_assets` for the three source
+routes that previously had no direct demo workflow.
+
+| Declaration family | Disposition |
+|---|---|
+| CnjImporter identity, extension, output inventory and Import | The new demo inspects the stable importer identity, ordinary `.cnj` route and deterministic eight-type output list, then selects it through three real builds. `source_root_capabilities` and `nested_builds` already compile Texture2D CNJ through local/aliased dependencies; the project content build compiles Curve and SpriteFont CNJ and their demos consume the exact authored semantics. SoundEffect CNJ is a descriptor over the same shared WAV front end demonstrated by `content.sound_effect.pipeline_components`; Model CNJ selects the same canonical model document and processor exercised by the model and C CNJ workflows. New wrapper-only SoundEffect/Model IDs would duplicate those processing concepts. Envelope corruption, future versions and chaining remain parser boundary tests except where source-root containment is already demonstrated. |
+| Texture3D imported value, processor and writer | A real 2x2x2 raw sidecar becomes one Rgba8 representation with exact dimensions, one face, one mip and every authored byte. The build verifies selected identities, source dependency, logical CNB metadata and repeat-byte determinism. Direct inspection covers the stable input/output/schema declarations, and one unsupported parameter is classified as `ContentParameterFault::UnknownName`. `additionalRgbaMipLevels` is meaningful only when another importer supplies mips; the adjacent XNB source audit owns that case. |
+| TextureCube imported value, processor and writer | A real DXT1 DDS sidecar decodes through CNA's shared importer, stays one canonical Rgba8 representation and reaches the native writer. The decoded CNB proves 4x4 dimensions, six faces and exact red/green/blue/yellow/magenta/cyan order. Selected component/schema identities and the absorbed dependency are checked. Repeating direct class calls or every malformed DDS belongs to the shared DDS codec tests. |
+| AnimationClip imported/processed values, processor and writer | A self-contained two-key SceneNode clip builds through the registered route. Decoding proves duration, target space, bone index, key times and translations, while the sole dependency remains the primary document. An XNB request reaches the registered intentional-absence explanation because standalone `AnimationClipEXT` has no XNA reader. Sidecar-form parsing is the same semantic value with one additional source dependency and is already covered in CNA tests; it adds no separate demo concept. |
+| Curve and SpriteFont values/components | `content.cnj.curve` and `content.cnj.sprite_font` are project-built from authored CNJ and verify the resulting Curve and SpriteFont values, including curve looping/evaluation and atlas/glyph/crop/kerning/default-character behavior. Their importer, processor and writer stages are necessary to those generated CNBs. Constructing the plain source/processed carrier structs or repeating identity getters would add no behavior. |
+| Fixed parameters, constants and registration | The three new routes are resolved from one registry created only by `RegisterCnjContentPipeline`; existing Curve/SpriteFont project builds and the Texture2D registry composition cover the other registrations. All four non-font fixed processors share the same unknown-name helper, represented by Texture3D; SpriteFont's equivalent empty-only policy is inherent in its parameter-free project build and covered at the CNA boundary. Stable type strings drive actual route resolution. Per-constant assertions or repeating the identical refusal for every processor are intentionally omitted. |
+
+All ordinary public `CnjContentPipeline.hpp` behavior now has runtime evidence or an explicit
+shared-route/boundary disposition. This is CPU compilation and CNB decoding evidence; it does not
+claim Texture3D/TextureCube GPU upload, rendering or visual quality.
+
 ### Runtime XNB readers (separate from intermediate XML)
 
 `content.xnb.custom_type_reader` supplies the game's LevelReader and original generated XNB.

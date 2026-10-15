@@ -300,7 +300,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (55 demos; remaining below)
+## Phase 8 -- content 🟨 (56 demos; remaining below)
 
 - ✅ Existing `content.texture_processor.resize_to_power_of_two` now verifies XNB-targeted
   Reach/HiDef mipmap processing, resized payloads matching its rendered CNB and the distinct native
@@ -314,7 +314,9 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.xnb.custom_type_reader` (ContentTypeReader<T> + AddTypeCreator for the game's own
   type; now checks actual reader invocation counts, cache reuse and reader context), ✅ `content.content_manager.resource_content_manager` (content embedded as resources;
   ISSUE-012), ✅ `content.cnj.sprite_font` (a bitmap font authored as CNJ: atlas, glyph rectangles,
-  cropping, kerning), ✅ `content.content_project.xna_content_project` (an XNA `.contentproj` built
+  cropping, kerning), ✅ `content.cnj.pipeline_assets` (real registered Texture3D, TextureCube and
+  AnimationClip CNJ builds with exact decoded CNB values, sidecar dependencies, fixed-parameter
+  refusal and the clip's intentional CNB-only route), ✅ `content.content_project.xna_content_project` (an XNA `.contentproj` built
   as it is, `CONTENT_PROJECT`). A CNJ texture repeats the texture processor demos (the same
   parameters in JSON). ✅ `content.custom.cnb_loader` uses public CnbWriter and
   RegisterCnbLoaderEXT for a typed asset, caching, schema rejection and synchronized concurrent
