@@ -9344,3 +9344,24 @@ SOFTWARE CTest passes20 repetitions. The warning-free build uses at most three j
 659/0 and both validator suites pass. Coverage moves431->433/753 fields. Evidence:
 `/tmp/checkpoint-903-*`. Audit the14 remaining Net fields next, preferring existing local-session
 state transitions and explicit fixed capacity constants over synthetic enum casts.
+
+## Focused904-observable-Net-fields
+
+Four existing workflows give nine more Net fields direct semantic evidence without adding an ID.
+The local-session demo verifies `MaxSupportedGamers == 31` and that capacity32 is refused before
+publication, then checks `MaxPreviousGamers == 100` against the live PreviousGamers view. The game-
+flow workflow observes real Lobby and Playing transitions. The established join-refusal regression
+records CNA's actual SessionNotFound result beside the expected SessionNotJoinable contract. The
+packet workflow sends distinct InOrder, ReliableInOrder and Chat packets to the selected local
+recipient and verifies their complete payloads; this establishes option acceptance and delivery,
+not lossy-network ordering guarantees.
+
+SOFTWARE and OPENGLES3/Xvfb runs pass12/12 local-session,8/8 game-flow and10/10 packet controls.
+The join-refusal workflow preserves exactly CNA-DEMOS-ISSUE-032/-033 under both renderers. All four
+exact SOFTWARE CTests pass ten repetitions; the warning-free build uses at most three jobs,
+metadata is659/0 and both validator suites pass. Coverage moves433->442/753 fields and Net reaches
+17/22. SessionFull, NetworkSessionState.Ended and the ClientSignedOut, Disconnected and
+HostEndedSession end reasons remain intentionally uncredited: each requires a real full/remote
+session, host closure, identity loss or transport loss. Evidence:`/tmp/checkpoint-904-*`. Continue
+the public-field audit with Graphics, crediting only enum values attached to actual state or draw
+behavior.

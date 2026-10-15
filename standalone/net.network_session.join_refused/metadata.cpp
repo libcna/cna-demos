@@ -8,6 +8,7 @@ CNA_DEMOS_STANDALONE({
                    "and NetworkSession::Join fails with a NetworkSessionJoinException whose JoinError is "
                    "SessionNotJoinable; once the host sets AllowJoinInProgress, the second Join enters the game.",
     .apis = {"NetworkSessionJoinException", "NetworkSessionJoinException::JoinError", "NetworkSessionJoinError",
+             "NetworkSessionJoinError::SessionNotFound", "NetworkSessionJoinError::SessionNotJoinable",
              "NetworkSession::AllowJoinInProgress", "NetworkSession::StartGame", "NetworkSession::SessionState",
              "NetworkSession::Join", "NetworkSession::Find"},
     .tags = {"net", "multiplayer", "system-link", "lobby", "error", "join-in-progress"},

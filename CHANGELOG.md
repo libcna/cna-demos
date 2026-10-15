@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Audited observable Net field values through real capacity refusal, lobby/game transitions,
+  join-error evidence and local packet delivery; documented five remote-session-only values.
 - Closed both Design fields with a subclass that proves their public effects on string conversion
   capability and published property descriptors.
 - Closed all 11 Audio fields by tying ContentVersion to loaded XACT assets, exercising AsAuthored

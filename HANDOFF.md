@@ -71,9 +71,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-903
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-904
 overlays for all659 catalog demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,433/753 fields and
+The surface totals are302/329 XNA types,2114/2326 XNA members,442/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -420,6 +420,19 @@ labelled runs pass12/12 byte-identically; the exact SOFTWARE CTest passes20 repe
 warning-free build uses `-j3`, metadata validates659/0 and both validator suites pass. Coverage
 moves431->433/753 fields. Evidence:`/tmp/checkpoint-903-*`. **Next:** audit Net's14 remaining fields
 through existing local-session state and fixed-capacity workflows.
+
+Focused **904-observable-Net-fields** adds semantic evidence for nine Net fields without a new ID.
+The local-session workflow proves capacities31 and100 and atomically refuses capacity32; game flow
+observes Lobby and Playing; the established join-refusal regression records actual SessionNotFound
+beside expected SessionNotJoinable; and distinct InOrder, ReliableInOrder and Chat packets reach
+their selected local recipient intact. Both renderer runs pass12/12,8/8 and10/10 positive controls,
+while `join_refused` preserves exactly CNA-DEMOS-ISSUE-032/-033. All four exact SOFTWARE CTests pass
+ten repetitions. The warning-free build uses `-j3`, metadata validates659/0 and both validator
+suites pass. Coverage moves433->442/753 and Net reaches17/22. SessionFull, Ended, ClientSignedOut,
+Disconnected and HostEndedSession remain intentionally uncredited because their causes require a
+real full/remote session, host closure, identity loss or transport loss. Evidence:
+`/tmp/checkpoint-904-*`. **Next:** continue the public-field audit with Graphics, attaching enum
+values to actual state or draw behavior rather than numeric casts.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
@@ -2184,12 +2197,12 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete892 remains the authoritative657-demo full-runtime baseline; focused893-
-903 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
+904 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
 closed at7/8, Input is dispositioned at194/202, Input.Touch is complete at15/15 and the root
-Framework, Audio and Design namespaces are complete at78/78,11/11 and2/2. Audit Net's14 remaining
-fields next: the two NetworkSession capacity constants; three end reasons; three join errors;
-Lobby/Playing/Ended; and Chat/InOrder/ReliableInOrder. Use existing local-session state transitions,
-refusal paths and packet delivery where possible; explicitly disposition service-only causes.
+Framework, Audio and Design namespaces are complete at78/78,11/11 and2/2. Net is dispositioned at
+17/22; its five uncredited values require real full/remote sessions or service/transport loss.
+Audit Graphics'75 remaining fields next, beginning with render-state values already attached to
+observable state or drawing and explicitly dispositioning renderer/platform-only values.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete892 too stale.

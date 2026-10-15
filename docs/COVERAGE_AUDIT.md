@@ -1039,6 +1039,25 @@ SOFTWARE CTest passes20 repetitions. The warning-free build uses `-j3`, metadata
 validator suites pass. Fields move431->433/753 and Design closes at2/2. Evidence:
 `/tmp/checkpoint-903-*`.
 
+### Net public fields
+
+Nine of the fourteen previously uncredited Net values now connect to observable workflows. The
+local-session path proves the exact public capacities31 and100, atomically refuses a requested
+capacity32 and bounds its current PreviousGamers view. The game-flow path directly observes Lobby
+and Playing. The known join-refusal workflow observes CNA's SessionNotFound result and keeps the
+expected SessionNotJoinable result visible as CNA-DEMOS-ISSUE-032. The packet workflow sends three
+distinct payloads with InOrder, ReliableInOrder and Chat and receives each from the selected local
+sender; this is evidence for public option handling and local delivery, not real-network reliability
+or ordering.
+
+Both renderer runs pass the three positive workflows at12/12,8/8 and10/10. The known-issue join
+workflow retains its reviewed failures on both. All four exact SOFTWARE CTests pass ten repetitions,
+the warning-free build uses at most three jobs, metadata is659/0 and both validator suites pass.
+Fields move433->442/753 and Net reaches17/22. SessionFull needs a second live join against a full
+host; Ended and HostEndedSession need a remote host closure; Disconnected needs actual transport
+loss; ClientSignedOut needs service identity loss. Those five values remain intentionally
+uncredited until their causes can be observed. Evidence:`/tmp/checkpoint-904-*`.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

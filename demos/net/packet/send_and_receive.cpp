@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // PacketWriter, LocalNetworkGamer::SendData / ReceiveData and PacketReader in a System Link session.
+#include <array>
 #include <memory>
 #include <optional>
 #include <string>
@@ -92,6 +93,7 @@ namespace
             {
                 // A typical state packet: what changed this frame, in a fixed order.
                 PacketWriter writer;
+                writer.Write(0);                              // payload kind: complete state
                 writer.Write(Vector3(12.5f, 0.0f, -3.25f)); // position
                 writer.Write(1.5f);                       // heading in radians
                 writer.Write(42);                         // score
@@ -108,6 +110,16 @@ namespace
                 // XNA sends the bytes before Position and rewinds the writer: the same writer is
                 // reused for every packet, its old bytes overwritten.
                 ctx.Check(writer.getPositionProperty() == 0, "SendData rewinds the writer for the next packet");
+
+                const std::array modes = {
+                    SendDataOptions::InOrder, SendDataOptions::ReliableInOrder, SendDataOptions::Chat};
+                for (std::size_t i = 0; i < modes.size(); ++i)
+                {
+                    PacketWriter marker;
+                    marker.Write(static_cast<int>(i + 1));
+                    marker.Write("mode-" + std::to_string(i + 1));
+                    sender->SendData(marker, modes[i], receiver);
+                }
             }
 
             // Everyone drains their incoming packets each frame.
@@ -116,6 +128,17 @@ namespace
                 PacketReader reader;
                 NetworkGamer* from = nullptr;
                 const int bytes = receiver->ReceiveData(reader, from);
+                const int kind = reader.ReadInt32();
+                if (kind != 0)
+                {
+                    if (kind >= 1 && kind <= static_cast<int>(receivedModes_.size()))
+                    {
+                        receivedModes_[static_cast<std::size_t>(kind - 1)] = reader.ReadString();
+                    }
+                    ctx.Check(from == sender && reader.getPositionProperty() == reader.getLengthProperty(),
+                              "the option-specific marker arrives intact from the selected sender");
+                    continue;
+                }
                 const Vector3 position = reader.ReadVector3();
                 const float heading = reader.ReadSingle();
                 const int score = reader.ReadInt32();
@@ -155,6 +178,8 @@ namespace
             if (Context().Automated())
             {
                 Context().Check(!received_.empty(), "the packet arrived");
+                Context().Check(receivedModes_ == std::array<std::string, 3>{"mode-1", "mode-2", "mode-3"},
+                                "InOrder, ReliableInOrder and Chat packets all reach the local recipient");
             }
             DemoGame::EndRun();
         }
@@ -184,6 +209,7 @@ namespace
         int waited_ = 0;
         int updates_ = 0;
         std::vector<std::string> received_;
+        std::array<std::string, 3> receivedModes_;
         Color teamColor_ = Color::LightGray;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
@@ -200,6 +226,7 @@ CNA_DEMOS_GAME(SendAndReceiveDemo, {
              "LocalNetworkGamer::SendData", "LocalNetworkGamer::ReceiveData", "LocalNetworkGamer::IsDataAvailable",
              "PacketReader::PacketReader", "PacketReader::ReadVector3", "PacketReader::ReadColor",
              "PacketReader::Position", "PacketReader::Length", "SendDataOptions", "NetworkSessionType",
+             "SendDataOptions::InOrder", "SendDataOptions::ReliableInOrder", "SendDataOptions::Chat",
              "PacketReader::ReadSingle", "PacketReader::ReadDouble", "PacketReader::ReadVector2",
              "PacketReader::ReadVector4", "PacketReader::ReadQuaternion", "PacketReader::ReadMatrix"},
     .tags = {"net", "packet", "serialization", "system-link", "multiplayer"},

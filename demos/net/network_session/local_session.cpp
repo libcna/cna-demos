@@ -22,6 +22,7 @@
 #include "Microsoft/Xna/Framework/Net/NetworkSessionState.hpp"
 #include "Microsoft/Xna/Framework/Net/NetworkSessionType.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
 #include "System/ObjectDisposedException.hpp"
 #include "System/Object.hpp"
 
@@ -70,6 +71,23 @@ namespace
                 }
                 // Up to two players on this machine, four in all. A Local session never uses
                 // the network: it is how a split-screen game uses the same code as an online one.
+                bool aboveMaximumRefused = false;
+                std::unique_ptr<NetworkSession> invalid;
+                try
+                {
+                    invalid.reset(NetworkSession::Create(
+                        NetworkSessionType::Local, 2, NetworkSession::MaxSupportedGamers + 1));
+                }
+                catch (const System::ArgumentOutOfRangeException&)
+                {
+                    aboveMaximumRefused = true;
+                }
+                if (invalid)
+                {
+                    invalid->Dispose();
+                }
+                ctx.Check(NetworkSession::MaxSupportedGamers == 31 && aboveMaximumRefused,
+                          "MaxSupportedGamers is 31 and the next capacity is refused atomically");
                 session_.reset(NetworkSession::Create(NetworkSessionType::Local, 2, 4));
                 joinedToken_ = session_->GamerJoined.Add([this](System::Object*, const GamerJoinedEventArgs& args) {
                     const NetworkGamer* gamer = args.getGamerProperty();
@@ -84,6 +102,9 @@ namespace
                 ctx.Check(session_->getLocalGamersProperty().getCountProperty() == 2 &&
                               session_->getRemoteGamersProperty().getCountProperty() == 0,
                           "both signed-in players joined as local gamers; there are no remote ones");
+                ctx.Check(NetworkSession::MaxPreviousGamers == 100 &&
+                              session_->getPreviousGamersProperty().getCountProperty() <= NetworkSession::MaxPreviousGamers,
+                          "the public history capacity is 100 and bounds the PreviousGamers view");
                 // As on XNA, subscribing to GamerJoined reports every gamer already in the
                 // session at once, so a handler added after Create misses nobody.
                 ctx.Check(joined_.size() == 2, "subscribing raised GamerJoined for both gamers already there");
@@ -181,7 +202,8 @@ CNA_DEMOS_GAME(LocalSessionDemo, {
                    "No network is used.",
     .apis = {"NetworkSession::Create", "NetworkSession::Update", "NetworkSession::GamerJoined",
              "NetworkSession::SessionType", "NetworkSession::SessionState", "NetworkSession::IsHost",
-             "NetworkSession::MaxGamers", "NetworkSession::LocalGamers", "NetworkSession::RemoteGamers",
+             "NetworkSession::MaxGamers", "NetworkSession::MaxPreviousGamers", "NetworkSession::MaxSupportedGamers",
+             "NetworkSession::LocalGamers", "NetworkSession::RemoteGamers",
              "NetworkSession::AllGamers", "NetworkSession::Host", "NetworkSession::FindGamerById",
              "NetworkGamer::Id", "NetworkGamer::IsHost", "NetworkGamer::IsLocal", "NetworkGamer::Machine",
              "NetworkMachine::Gamers", "GamerJoinedEventArgs::Gamer", "NetworkSession::Dispose",
