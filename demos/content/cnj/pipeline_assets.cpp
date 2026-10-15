@@ -17,9 +17,14 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "CNA/Content/Cnb/CnbAnimationClipCodec.hpp"
+#include "CNA/Content/Cnb/CnbCurveCodec.hpp"
 #include "CNA/Content/Cnb/CnbDocument.hpp"
+#include "CNA/Content/Cnb/CnbModelCodec.hpp"
+#include "CNA/Content/Cnb/CnbSoundEffectCodec.hpp"
+#include "CNA/Content/Cnb/CnbSpriteFontCodec.hpp"
 #include "CNA/Content/Cnb/CnbTextureCodec.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
+#include "CNA/Content/Cnb/CnjToCnb.hpp"
 #include "CNA/Content/Pipeline/CnjContentPipeline.hpp"
 #include "CNA/Content/Pipeline/ModelContentPipeline.hpp"
 #include "CNA/Content/Pipeline/SoundEffectContentPipeline.hpp"
@@ -291,6 +296,27 @@ namespace
         WriteText(root / "walk.cnj",
                   R"({"cnjVersion":1,"type":"AnimationClip","duration":2,"targetSpace":"SceneNode","tracks":[{"boneIndex":2,"keys":[{"time":0,"translation":[1,2,3],"rotation":[0,0,0,1],"scale":[1,1,1]},{"time":1.5,"translation":[4,5,6]}]}]})");
 
+        WriteText(root / "bounce.cnj",
+                  R"({"cnjVersion":1,"type":"Curve","preLoop":"Constant","postLoop":"Cycle","keys":[{"position":0,"value":0,"tangentIn":0,"tangentOut":2},{"position":0.5,"value":1,"tangentIn":0,"tangentOut":0},{"position":1,"value":0,"tangentIn":-2,"tangentOut":0}]})");
+        WriteBytes(root / "triangle.vertices.bin",
+                   {0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u, 9u, 10u, 11u});
+        WriteBytes(root / "triangle.indices.bin", {0u, 0u, 1u, 0u, 2u, 0u});
+        WriteText(root / "triangle.cnj",
+                  R"({"cnjVersion":1,"type":"Model","meshes":[{"name":"Triangle","vertices":"triangle.vertices.bin","indices":"triangle.indices.bin","vertexStride":4,"texture":"textures/shared.png"}]})");
+        std::filesystem::copy_file(
+            std::filesystem::path(TitleLocation::Path()) / "assets/textures/checker.png",
+            root / "checker.png");
+        WriteText(root / "checker.cnj",
+                  R"({"cnjVersion":1,"type":"Texture2D","sourceFile":"checker.png"})");
+        std::filesystem::copy_file(root / "checker.png", root / "tiny-atlas.png");
+        WriteText(root / "tiny-font.cnj",
+                  R"({"cnjVersion":1,"type":"SpriteFont","texture":"tiny-atlas.png","lineSpacing":12,"spacing":1.5,"defaultCharacter":"A","glyphs":[{"char":65,"source":[0,0,8,8],"crop":[1,2,8,8],"kerning":[1,8,2]},{"char":66,"source":[8,0,8,8],"crop":[0,1,8,8],"kerning":[0,8,1]}]})");
+        std::filesystem::copy_file(
+            std::filesystem::path(TitleLocation::Path()) / "assets/sounds/tone_440.wav",
+            root / "tone.wav");
+        WriteText(root / "tone.cnj",
+                  R"({"cnjVersion":1,"type":"SoundEffect","sourceFile":"tone.wav"})");
+
         const Pipeline::ContentPipeline pipeline(registry);
         const auto build = [&](const std::string& source, const std::string& logicalName)
         {
@@ -383,6 +409,140 @@ namespace
                       decodedClip.Tracks[0].Keys[1].Translation.Y == 5.0f &&
                       decodedClip.Tracks[0].Keys[1].Translation.Z == 6.0f,
                   "the AnimationClip CNB preserves duration, scene-node target and both authored keyframes");
+
+        const auto compile = [&](const char* source, const char* logicalName)
+        {
+            return Cnb::CompileCnjToCnb((root / source).string(), root.string(), logicalName);
+        };
+        const Cnb::CnjToCnbResult compiledCurve = compile("bounce.cnj", "Curves/bounce");
+        const Cnb::CnjToCnbResult compiledClip = compile("walk.cnj", "Animations/walk");
+        const Cnb::CnjToCnbResult compiledModel = compile("triangle.cnj", "Models/triangle");
+        const Cnb::CnjToCnbResult compiledImage = compile("checker.cnj", "Textures/checker");
+        const Cnb::CnjToCnbResult compiledVolume = compile("volume.cnj", "Volumes/checker");
+        const Cnb::CnjToCnbResult compiledCube = compile("sky.cnj", "Skies/six_faces");
+        const Cnb::CnjToCnbResult compiledFont = compile("tiny-font.cnj", "Fonts/tiny");
+        const Cnb::CnjToCnbResult compiledSound = compile("tone.cnj", "Sounds/tone");
+
+        struct CompiledExpectation
+        {
+            const Cnb::CnjToCnbResult* result;
+            std::uint32_t assetTypeId;
+            const char* assetTypeName;
+            const char* contentName;
+        };
+        const std::array<CompiledExpectation, 8> compiled{{
+            {&compiledCurve, Cnb::CnbAssetTypeId::Curve,
+             "Microsoft.Xna.Framework.Curve", "Curves/bounce"},
+            {&compiledClip, Cnb::CnbAssetTypeId::AnimationClip,
+             "Microsoft.Xna.Framework.Graphics.AnimationClipEXT", "Animations/walk"},
+            {&compiledModel, Cnb::CnbAssetTypeId::Model,
+             "Microsoft.Xna.Framework.Graphics.Model", "Models/triangle"},
+            {&compiledImage, Cnb::CnbAssetTypeId::Texture2D,
+             "Microsoft.Xna.Framework.Graphics.Texture2D", "Textures/checker"},
+            {&compiledVolume, Cnb::CnbAssetTypeId::Texture3D,
+             "Microsoft.Xna.Framework.Graphics.Texture3D", "Volumes/checker"},
+            {&compiledCube, Cnb::CnbAssetTypeId::TextureCube,
+             "Microsoft.Xna.Framework.Graphics.TextureCube", "Skies/six_faces"},
+            {&compiledFont, Cnb::CnbAssetTypeId::SpriteFont,
+             "Microsoft.Xna.Framework.Graphics.SpriteFont", "Fonts/tiny"},
+            {&compiledSound, Cnb::CnbAssetTypeId::SoundEffect,
+             "Microsoft.Xna.Framework.Audio.SoundEffect", "Sounds/tone"},
+        }};
+        bool exactCompilerIdentities = true;
+        for (const CompiledExpectation& expected : compiled)
+        {
+            const Cnb::CnbDocument document =
+                Cnb::CnbDocument::Parse(expected.result->bytes, expected.contentName);
+            exactCompilerIdentities = exactCompilerIdentities &&
+                !expected.result->bytes.empty() &&
+                expected.result->assetTypeId == expected.assetTypeId &&
+                expected.result->assetTypeName == expected.assetTypeName &&
+                document.AssetTypeId() == expected.assetTypeId && document.Metadata().present &&
+                document.Metadata().assetTypeName == expected.assetTypeName &&
+                document.Metadata().contentName == expected.contentName;
+        }
+        ctx.Check(exactCompilerIdentities,
+                  "the direct compiler reports and writes exact identities and logical names for all eight CNJ types");
+
+        const auto directCurve = Cnb::DecodeCurveFromCnb(
+            Cnb::CnbDocument::Parse(compiledCurve.bytes, "direct Curve CNB"));
+        const auto directModel = Cnb::DecodeModelFromCnb(
+            Cnb::CnbDocument::Parse(compiledModel.bytes, "direct Model CNB"));
+        const auto directImage = Cnb::DecodeTexture2DFromCnb(
+            Cnb::CnbDocument::Parse(compiledImage.bytes, "direct Texture2D CNB"));
+        const auto directFont = Cnb::DecodeSpriteFontFromCnb(
+            Cnb::CnbDocument::Parse(compiledFont.bytes, "direct SpriteFont CNB"));
+        const auto directSound = Cnb::DecodeSoundEffectFromCnb(
+            Cnb::CnbDocument::Parse(compiledSound.bytes, "direct SoundEffect CNB"));
+        ctx.Check(directCurve.getKeysProperty().getCountProperty() == 3 &&
+                      directCurve.getPreLoopProperty() == Microsoft::Xna::Framework::CurveLoopType::Constant &&
+                      directCurve.getPostLoopProperty() == Microsoft::Xna::Framework::CurveLoopType::Cycle &&
+                      directModel.parts.size() == 1u && directModel.meshes.size() == 1u &&
+                      directModel.parts[0].vertexCount == 3u && directModel.parts[0].indexCount == 3u &&
+                      directImage.width == 64u && directImage.height == 64u &&
+                      directImage.faceCount == 1u && directImage.representations.size() == 1u &&
+                      directFont.characters == std::vector<SharpRuntime::charcs>{u'A', u'B'} &&
+                      directFont.lineSpacing == 12 && directFont.spacing == 1.5f &&
+                      directFont.defaultCharacter == u'A' && directFont.atlas.width == 64u &&
+                      directSound.format == Cnb::CnbAudioFormat::Pcm16 &&
+                      directSound.sampleRate == 22050u && directSound.channels == 1u &&
+                      directSound.frameCount == 11025u &&
+                      directSound.samples.size() == directSound.frameCount * 2u,
+                  "the five additional compiler routes decode to their exact authored CPU values");
+
+        ctx.Check(compiledClip.bytes == clip.output.bytes &&
+                      compiledVolume.bytes == volume.output.bytes &&
+                      compiledCube.bytes == cube.output.bytes,
+                  "the direct compiler is byte-identical to the registered pipeline for all three extended routes");
+
+        ctx.Check(compiledCurve.absorbedFiles == std::vector<std::string>{"bounce.cnj"} &&
+                      compiledClip.absorbedFiles == std::vector<std::string>{"walk.cnj"} &&
+                      compiledModel.absorbedFiles ==
+                          std::vector<std::string>{"triangle.cnj", "triangle.vertices.bin",
+                                                   "triangle.indices.bin"} &&
+                      compiledModel.externalReferences ==
+                          std::vector<std::string>{"textures/shared.png"} &&
+                      compiledImage.absorbedFiles ==
+                          std::vector<std::string>{"checker.cnj", "checker.png"} &&
+                      compiledVolume.absorbedFiles ==
+                          std::vector<std::string>{"volume.cnj", "volume.rgba"} &&
+                      compiledCube.absorbedFiles ==
+                          std::vector<std::string>{"sky.cnj", "sky.dds"} &&
+                      compiledFont.absorbedFiles ==
+                          std::vector<std::string>{"tiny-font.cnj", "tiny-atlas.png"} &&
+                      compiledSound.absorbedFiles ==
+                          std::vector<std::string>{"tone.cnj", "tone.wav"} &&
+                      compiledCurve.externalReferences.empty() &&
+                      compiledClip.externalReferences.empty() &&
+                      compiledImage.externalReferences.empty() &&
+                      compiledVolume.externalReferences.empty() &&
+                      compiledCube.externalReferences.empty() &&
+                      compiledFont.externalReferences.empty() &&
+                      compiledSound.externalReferences.empty(),
+                  "the result separates every absorbed source/sidecar from the Model's surviving external reference");
+
+        const Cnb::CnjToCnbResult defaulted =
+            Cnb::CompileCnjToCnb((root / "bounce.cnj").string());
+        const Cnb::CnjToCnbResult defaultedAgain =
+            Cnb::CompileCnjToCnb((root / "bounce.cnj").string());
+        ctx.Check(defaulted.bytes == defaultedAgain.bytes &&
+                      Cnb::CnbDocument::Parse(defaulted.bytes, "defaulted Curve CNB")
+                              .Metadata().contentName == "bounce" &&
+                      defaulted.absorbedFiles == std::vector<std::string>{"bounce.cnj"},
+                  "default root/name resolution is deterministic and uses the source parent and stem");
+
+        WriteText(root / "unsupported.cnj", R"({"cnjVersion":1,"type":"Effect"})");
+        WriteText(root / "future-image.cnj",
+                  R"({"cnjVersion":2,"type":"Texture2D","sourceFile":"checker.png"})");
+        WriteText(root / "missing-image.cnj",
+                  R"({"cnjVersion":1,"type":"Texture2D","sourceFile":"missing.png"})");
+        WriteText(root / "escaping-image.cnj",
+                  R"({"cnjVersion":1,"type":"Texture2D","sourceFile":"../checker.png"})");
+        ctx.Check(Refuses([&] { (void)compile("unsupported.cnj", "Bad/type"); }) &&
+                      Refuses([&] { (void)compile("future-image.cnj", "Bad/version"); }) &&
+                      Refuses([&] { (void)compile("missing-image.cnj", "Bad/missing"); }) &&
+                      Refuses([&] { (void)compile("escaping-image.cnj", "Bad/escape"); }),
+                  "unsupported type/version, missing sidecar and content-root escape are refused independently");
 
         ctx.Check(Cnb::CnbAnimationClipChunk::Header ==
                           Cnb::MakeChunkId('A', 'C', 'L', 'H') &&
@@ -551,7 +711,7 @@ namespace
         ctx.Check(xnbAbsenceExplained,
                   "AnimationClip's intentional XNB absence explains why the CNA extension is CNB-only");
 
-        ctx.Print("Compiled Texture3D {}x{}x{}, TextureCube {} faces, AnimationClip {} keys.",
+        ctx.Print("Compiled all eight CNJ types: Texture3D {}x{}x{}, TextureCube {} faces, AnimationClip {} keys.",
                   decodedVolume.width, decodedVolume.height, decodedVolume.depth,
                   decodedCube.faceCount, decodedClip.Tracks[0].Keys.size());
     }
@@ -560,7 +720,7 @@ namespace
 CNA_DEMOS_CONSOLE(CnjPipelineAssets, {
     .id = "content.cnj.pipeline_assets",
     .title = "Extended assets through the CNJ pipeline",
-    .description = "Builds raw-volume Texture3D, DDS TextureCube and inline AnimationClip CNJ sources through CNA's registered importer, processors and writers; decodes their native CNBs and verifies dependencies, exact values, determinism, parameter refusal and the clip's intentional CNB-only route.",
+    .description = "Builds all eight supported CNJ asset types through the direct compiler, compares the three extended routes with CNA's registered pipeline, decodes exact CPU values and verifies identity, absorbed/external files, defaults, determinism and refusals.",
     .apis = {"CNA::Content::Pipeline::ImportedTexture3DType",
              "CNA::Content::Pipeline::ProcessedTexture3DType",
              "CNA::Content::Pipeline::ImportedTextureCubeType",
@@ -616,8 +776,10 @@ CNA_DEMOS_CONSOLE(CnjPipelineAssets, {
              "CNA::Content::Cnb::WriteCnbKeyframe",
              "CNA::Content::Cnb::ReadCnbKeyframe",
              "CNA::Content::Cnb::EncodeAnimationClipToCnb",
-             "CNA::Content::Cnb::DecodeAnimationClipFromCnb"},
+             "CNA::Content::Cnb::DecodeAnimationClipFromCnb",
+             "CNA::Content::Cnb::CnjToCnbResult",
+             "CNA::Content::Cnb::CompileCnjToCnb"},
     .tags = {"content", "pipeline", "cnj", "texture3d", "texturecube", "animation", "cnaext"},
-    .assets = {"textures/cube_faces.dds"},
+    .assets = {"textures/cube_faces.dds", "textures/checker.png", "sounds/tone_440.wav"},
     .restrictions = "Headless CPU compilation and exact CNB decoding; no GPU upload, rendering, screenshot or visual-quality claim.",
 })

@@ -330,6 +330,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbWriter::SetLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetMetadata` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
+- `CNA::Content::Cnb::CnjToCnbResult` -- content.cnj.pipeline_assets
+- `CNA::Content::Cnb::CompileCnjToCnb` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::DecodeAnimationClipFromCnb` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::DecodeCurveFromCnb` -- content.cnj.curve, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeModelFromCnb` -- content.model.pipeline_contract

@@ -1073,6 +1073,24 @@ without a fabricated second Model workflow.
 Every declaration now has direct value, overload, file-classification or refusal evidence. The
 front end is CPU/filesystem-only and adds no GPU, rendering, screenshot or genuine-XNA claim.
 
+#### `CnjToCnb.hpp` declaration-level disposition
+
+The pinned header exposes seven public declarations under this audit's convention: the result
+aggregate, its five fields and `CompileCnjToCnb`. Focused975 extends
+`content.cnj.pipeline_assets`, which already owns the registered Texture3D, TextureCube and
+AnimationClip source routes and the codecs used to inspect their output.
+
+| Declaration family | Disposition |
+|---|---|
+| `CnjToCnbResult::bytes`, `assetTypeId` and `assetTypeName` | One matrix directly compiles Curve, AnimationClip, Model, Texture2D, Texture3D, TextureCube, SpriteFont and SoundEffect documents. Every result has nonempty bytes, the exact built-in asset ID and canonical type name, and a parsed container carrying those same values plus the requested logical name. Public decoders recover the five routes newly introduced in this control with exact curve, geometry, image, font and PCM values. |
+| `absorbedFiles` and `externalReferences` | Every result lists its CNJ first. Texture/image/font/sound sidecars and the Model's vertex/index payloads follow under their authored names. Only the Model's shared texture remains external, proving that the two lists describe distinct deployment outcomes rather than duplicate dependency inventories. |
+| `CompileCnjToCnb` all-eight dispatch | Direct output for the three extended types is byte-identical to the existing registered pipeline output at the same logical name. Calling the function twice with omitted root/name uses the CNJ parent and stem and remains byte-deterministic. A representative unsupported type, non-Model version 2, missing image and root-escaping sidecar are independently refused. Type-specific codec relationship and hostile-container matrices remain their focused audits. |
+
+All seven declarations now have direct value, dispatch, default, file-classification or refusal
+evidence. This is deterministic CPU/filesystem compilation; existing demos retain runtime loading,
+GPU/audio construction and rendered/playback behavior. No screenshot, visual-quality, listening,
+Windows Unicode-path or genuine-XNA execution claim is added.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,

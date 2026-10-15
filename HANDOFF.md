@@ -1024,6 +1024,33 @@ and Complete956 still marks eight post-baseline IDs absent. Evidence:
 Windows Unicode-path or genuine-XNA claim is added. Audit the public `CnjToCnb.hpp` all-eight-type
 compiler contract next, reusing the existing CNJ and codec workflows before adding another ID.
 
+Focused **975-CNJ-to-CNB-all-eight-compiler-disposition** extends the stable
+`content.cnj.pipeline_assets` demo from20 to26 controls without adding a catalog ID and
+dispositions all seven public declarations in `CnjToCnb.hpp`. One direct matrix compiles Curve,
+AnimationClip, Model, Texture2D, Texture3D, TextureCube, SpriteFont and SoundEffect documents. Each
+result reports nonempty bytes, the exact built-in ID and canonical type name, while its parsed
+container carries the same identity and requested logical name. Public decoders recover exact
+curve keys/loops, Model geometry, 64x64 pixels, two-glyph font metrics/atlas and 22.05-kHz mono
+PCM. The three extended results are byte-identical to their registered pipeline outputs.
+
+Every result lists its CNJ first and then only absorbed sidecars under authored names. The Model
+adds its vertex/index files there while preserving one shared texture solely as an external
+reference. Two calls with omitted root/name use the source parent/stem and produce identical bytes.
+Independent inputs refuse an unsupported type, non-Model version2, missing image and root-escaping
+sidecar. No new CNA issue is found.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE-labelled and ten
+OPENGLES3-labelled runs pass26/26 with byte-identical stdout SHA-256
+`a3e62f1649c49002a4ce56f2a97877ceefd30dddbad0f088853b1527062a1098` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata remains683/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA/C totals remain unchanged; two names enter the CNA-extension
+appendix and Complete956 still marks eight post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-975-cnj-to-cnb/*`, `/tmp/checkpoint-975-cnj-to-cnb-report.json` and
+`/tmp/checkpoint-975-coverage.md`. This is CPU/filesystem evidence; no GPU/audio-device, rendering,
+playback, screenshot, Windows Unicode-path or genuine-XNA claim is added. Audit the public
+`CnbSourceImport.hpp` image/DDS/WAV import contract next, consolidating existing texture, cube and
+sound workflows before adding another ID.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3173,7 +3200,11 @@ minimal data and shared-validator refusals. Focused974 extends the stable Model 
 and closes all six public `CnbModelFromCnj.hpp` declarations through real staged sidecar/external
 classification, both path overloads, minimal v1/v2 values and representative refusals. Audit the
 public `CnjToCnb.hpp` all-eight-type compiler contract next, reusing existing CNJ and codec
-workflows before adding another ID. The earlier native
+workflows before adding another ID. Focused975 extends the stable CNJ pipeline workflow and closes
+all seven `CnjToCnb.hpp` declarations through all-eight dispatch, exact result/container identity,
+decoded values, absorbed/external classification, default path/name behavior and representative
+refusals. Audit the public `CnbSourceImport.hpp` image/DDS/WAV import contract next, consolidating
+the existing texture, cube and sound workflows before adding another ID. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds
