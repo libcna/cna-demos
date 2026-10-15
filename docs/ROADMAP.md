@@ -571,7 +571,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032 and -033).
 - Remaining net: voice (manual).
 
-## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (19 demos)
+## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (20 demos)
 - ✅ `devices.*` (4): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
   AccelerometerFailedException, Environment::DeviceType), CNAEXT keyboard-emulated accelerometer,
   VibrateController, CNA::Devices SystemInfo/Locale/PowerInfo, ✅ DisplayInfo (content scale, safe
@@ -581,10 +581,10 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   notification channels (need a push service: manual).
 - ✅ `design.*` (4): text round trip and which types parse, cultures, property descriptors and
   CreateInstance, InstanceDescriptor.
-- ✅ `diagnostics.*` (3) and `core.logger.*` (2): diagnostics build/runtime modes, counters and
-  gauges, one instrumented frame with nested zones/markers and both trace exports, plus Logger
-  sinks and levels. Resource metadata and registered frame-source collection remain candidates for
-  the deeper diagnostics member/behavior audit.
+- ✅ `diagnostics.*` (4) and `core.logger.*` (2): diagnostics build/runtime modes, counters and
+  gauges, one instrumented frame with nested zones/markers and both trace exports, resource metadata
+  with provider-cursor lifecycle events, plus Logger sinks and levels. Registered frame-source
+  collection remains the meaningful diagnostics member/behavior candidate.
 - ✅ `cnaext.*` (4): AsciiPostProcessEffect (every renderer), CRTEffect and DepthEffect (shader
   renderers), DebugDraw.
 - `platform.*`: ✅ renderer selection with fallback chain (standalone), ✅
@@ -9655,3 +9655,20 @@ new ID and takes its declared diagnostics-OFF skip. The five GamerServices/shado
 only the reviewed check-count growth, while existing status and failure-message multiplicities are
 unchanged. Runtime-backed coverage remains302/329 types,2114/2326 members,674/753 fields and
 3078/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-920-complete-*`.
+
+## Focused921-diagnostics-resource-metadata-and-event-cursor
+
+The new `diagnostics.profiler.resource_metadata` ID runs one complete FULL resource lifecycle.
+Registration copies every descriptor field and updates snapshot count/bytes; Update replaces the
+record and aggregate without changing its ID; move construction/assignment retain exactly one live
+registration; idempotent Reset restores the baseline. The provider's sequence cursor and name
+resolver expose the ordered Core ResourceCreated/ResourceDestroyed pair, and a simultaneous bounded
+recording retains those same two events without drops.
+
+The first run used `ReadEvents(0, 8)` and therefore read eight older process-startup events; changing
+the demo to capture the current sequence before registration fixed this consumer error. CNA behaved
+as documented. Eleven corrected FULL runs pass, including ten byte-identical repetitions with empty
+stderr, and all four FULL diagnostics CTests pass. The standard exact CTest takes its declared
+diagnostics-OFF skip. Both builds use at most three jobs, metadata is661/0, validator suites pass and
+surface totals remain unchanged. Evidence:`/tmp/checkpoint-921-resource-*`. Continue with registered
+frame-source collection and registration lifetime.

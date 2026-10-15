@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a FULL diagnostics resource workflow for owned metadata, stable RAII identity, aggregate
+  bytes and provider-cursor create/destroy events.
 - Added a `diagnostics-full` preset and a focused full-diagnostics workflow that records one frame
   with nested zones, markers and a frame counter, correlates the trace with its snapshot, and
   round-trips CNA's binary and Chrome Trace exports.

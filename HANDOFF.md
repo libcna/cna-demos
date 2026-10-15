@@ -21,7 +21,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 30), 8 (content, 52), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
-* In progress too: 13 (devices 5, phone 1, design 4, diagnostics 3 + logger 2, cnaext 4).
+* In progress too: 13 (devices 5, phone 1, design 4, diagnostics 4 + logger 2, cnaext 4).
 * In progress: 14 (C API, 177 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
@@ -68,12 +68,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-660 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
+661 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics3, cnaext4, platform2 and c_api177. Kinds are165 console,294 game and201 standalone;
-624 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete920's full runtime reports for all660 catalog
-demos.
+diagnostics4, cnaext4, platform2 and c_api177. Kinds are166 console,294 game and201 standalone;
+625 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses Complete920's full runtime reports for its660 baseline
+IDs and marks the Focused921 resource ID absent until the next complete checkpoint.
 The surface totals are302/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete920's
 full runtime reports are the baseline inputs for the660-ID catalog. Selected semantic
@@ -2322,12 +2322,13 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete920 is the authoritative660-demo full-build/full-runtime baseline;
-Focused919 is the latest focused behavioral batch. The central full-diagnostics path is now covered
+Focused921 is the latest focused behavioral batch. The central full-diagnostics path is now covered
 by an actual `CNA_DIAGNOSTICS=FULL` build: a frame scope, nested manual/macro zones, direct/macro
 markers, frame metrics, bounded recording, snapshot correlation and both binary and Chrome exports.
-Continue the deeper public diagnostics audit with the meaningful remaining resource-metadata and
-registered frame-source behavior. Prefer extending an existing workflow when coherent; add a focused
-ID only where the lifecycle has an independent concept. Then resume the broader inventory and
+Resource metadata now covers owned descriptor fields, stable move/update/reset identity, aggregate
+bytes and ordered provider-cursor lifecycle events. Continue with the remaining registered
+frame-source collection behavior. Prefer extending an existing workflow when coherent; add a
+focused ID only where the lifecycle has an independent concept. Then resume the broader inventory and
 docs/COVERAGE_AUDIT.md for the highest-value undispositioned behavior, keeping constructors/
 finalizers, CLR collection plumbing and service-only paths classified rather than inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
@@ -2421,6 +2422,26 @@ SOFTWARE/OPENGLES3 result hashes are respectively
 `d92a3a4c33c249d17890a3a7d95e1ebe648f9604b814786c2a70618b81e5c708`. Evidence is preserved as
 `build/linux-full/reports/checkpoint-920-complete-*`. No screenshot, listening test, physical input,
 external service session or manual visual-quality inspection was performed.
+
+### Focused921-diagnostics-resource-metadata-and-event-cursor
+
+The new `diagnostics.profiler.resource_metadata` demo gives resource diagnostics one coherent FULL
+lifecycle. It proves that registration owns all texture descriptor strings/fields, contributes its
+estimated bytes to the snapshot, and that Update replaces every field and the aggregate while
+preserving the resource ID. Move construction/assignment transfer one registration; idempotent Reset
+removes it and restores baseline count/bytes. `IDiagnosticsProvider::ReadEvents` and `ResolveName`
+then expose exactly the ordered Core ResourceCreated/ResourceDestroyed pair through a retained
+sequence cursor, while the simultaneous bounded recording reports the same two events without loss.
+
+The first focused run found a demo cursor bug: `ReadEvents(0, 8)` returned the oldest eight process
+events, which preceded the demo's resource. The trace already contained the correct pair. Capturing
+the provider's latest sequence before registration fixed the consumer; this was not a CNA defect.
+The corrected FULL demo passes in eleven runs, the final ten with byte-identical stdout SHA-256
+`20a66bc89380b813f14119c0e7bbe03afaa033546feeb5b1915d6369c9d9f4d7` and empty stderr. All four
+FULL diagnostics CTests pass; the standard-build exact CTest takes its declared skip. Both `-j3`
+builds are clean apart from the existing vendored Draco CMake warning, metadata is661/0 and both
+validator suites pass. Generated numeric surface totals remain unchanged; Complete920 reports mark
+the new ID absent until the next full checkpoint. Evidence:`/tmp/checkpoint-921-resource-*`.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

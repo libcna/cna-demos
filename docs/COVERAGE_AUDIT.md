@@ -3488,3 +3488,16 @@ unexpected results. Against Complete912, the trace ID is the only addition and t
 diagnostics-OFF skip; existing statuses and failed-assertion multiplicities are unchanged. Generated
 coverage remains302/329 types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
 `build/linux-full/reports/checkpoint-920-complete-*`.
+
+### Focused921 diagnostics resource metadata and provider cursor
+
+The new `diagnostics.profiler.resource_metadata` workflow validates the public resource contract in
+an actual FULL build. Owned descriptor strings and every dimension/format/accuracy field survive
+caller mutation; Update keeps the stable ID while replacing metadata and aggregate bytes; moves
+transfer exactly one registration; repeated Reset restores the baseline. A retained provider cursor
+returns the ordered Core create/destroy events, `ResolveName` supplies their canonical names, and the
+parallel bounded recording contains exactly those two events without drops. The initial failed run
+was a demo error caused by asking `ReadEvents(0, 8)` for the oldest process events; capturing the
+current cursor before the lifecycle fixed it. Eleven corrected FULL runs pass, ten byte-identically
+with empty stderr, and all four diagnostics CTests pass. The ordinary OFF build declares a skip.
+Registered frame-source collection remains the next meaningful diagnostics behavior.
