@@ -9802,3 +9802,16 @@ Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass27/27 with stable per-renderer
 SOFTWARE CTest, metadata and validator suites pass, and the warning-free build uses at most three
 jobs. Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes.
 Evidence:`/tmp/checkpoint-929-guide-*`. No CNA issue appeared.
+
+## Focused930-ContentReader-BoundingSphere
+
+The existing `content.xnb.custom_type_reader` adds a coherent encounter volume to its game-owned
+Level schema. Its reader calls public `ContentReader::ReadBoundingSphere` directly and verifies the
+exact authored center and radius after `ContentManager::Load`; the deterministic generator appends
+the canonical four-float payload to `levels/castle.xnb`. Ten SOFTWARE and ten OPENGLES3/Xvfb runs
+pass11/11 with identical stdout hash
+`4b468c20346030f7073fecbf22998e30a3cddcf49b4af4266d63c2402c25e31b` and empty stderr, and the
+exact SOFTWARE CTest passes ten repetitions. This public FNA-compatible helper is outside CNA's
+documented XNA inventory, so generated totals remain303/329 types,2114/2326 members,674/753 fields
+and3078/3205 C routes. Evidence:`/tmp/checkpoint-930-content-sphere-*`. Continue the reader audit
+with byte/cursor helpers only where an authored schema gives them meaningful behavior.

@@ -279,8 +279,9 @@ def custom_level_xnb(relative: str) -> None:
     """An XNA 4.0 .xnb file holding the game's own type, the way a custom ContentTypeWriter would
     write it: the type-reader table names "CnaDemos.LevelReader, CnaDemos" (version 0), and the
     root object (reader 1) is a name, a row count, the rows, the number of gems and an authored
-    scalar/color/math state block. Strings are .NET BinaryWriter strings (7-bit encoded length +
-    UTF-8); all numeric values use BinaryWriter's little-endian XNB representation."""
+    scalar/color/math state block, including an encounter bounding sphere. Strings are .NET
+    BinaryWriter strings (7-bit encoded length + UTF-8); all numeric values use BinaryWriter's
+    little-endian XNB representation."""
     def seven_bit(value: int) -> bytes:
         out = bytearray()
         while True:
@@ -309,6 +310,7 @@ def custom_level_xnb(relative: str) -> None:
     body += struct.pack("<2f", 1.25, -2.5)             # spawn
     body += struct.pack("<3f", 3.5, 4.5, -5.5)         # camera
     body += struct.pack("<4f", -1.0, 2.0, -3.0, 4.0)  # fog
+    body += struct.pack("<4f", 6.5, -7.5, 8.5, 9.25)   # encounter sphere center XYZ + radius
     header = b"XNBw" + bytes([5, 0])           # Windows, XNA 4.0, not compressed, Reach
     data = header + struct.pack("<I", len(header) + 4 + len(body)) + bytes(body)
     path = ROOT / relative

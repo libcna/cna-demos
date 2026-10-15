@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
+#include "Microsoft/Xna/Framework/BoundingSphere.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentReader.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentTypeReader.hpp"
@@ -44,6 +45,7 @@ namespace
         Vector2 spawn;
         Vector3 camera;
         Vector4 fog;
+        BoundingSphere encounterVolume;
     };
 
     // Process-wide registration uses a capture-free factory; observations also outlive readers.
@@ -88,6 +90,7 @@ namespace
             level.spawn = input.ReadVector2();
             level.camera = input.ReadVector3();
             level.fog = input.ReadVector4();
+            level.encounterVolume = input.ReadBoundingSphere();
             return level;
         }
     };
@@ -134,6 +137,8 @@ namespace
                           level_.camera == Vector3(3.5f, 4.5f, -5.5f) &&
                           level_.fog == Vector4(-1.0f, 2.0f, -3.0f, 4.0f),
                       "the vector readers preserve every authored component in order");
+            ctx.Check(level_.encounterVolume == BoundingSphere(Vector3(6.5f, -7.5f, 8.5f), 9.25f),
+                      "ReadBoundingSphere preserves the encounter volume's center and radius");
 
             // Loaded once, cached like any other asset.
             const Level again = getContentProperty().Load<Level>("levels/castle");
@@ -169,14 +174,15 @@ namespace
 CNA_DEMOS_GAME(CustomTypeReaderDemo, {
     .id = "content.xnb.custom_type_reader",
     .title = "A custom ContentTypeReader",
-    .description = "Reads a level of the game's own type and its authored scalar, color, matrix, quaternion and vector "
-                   "fields from an .xnb file with a ContentTypeReader<Level> subclass registered under the reader name "
+    .description = "Reads a level of the game's own type and its authored scalar, color, matrix, quaternion, vector and "
+                   "bounding-sphere fields from an .xnb file with a ContentTypeReader<Level> subclass registered under "
+                   "the reader name "
                    "in the file's type-reader table, then loads it with ContentManager::Load<Level>.",
     .apis = {"ContentTypeReader::Read", "ContentTypeReader::ContentTypeReader",
              "ContentTypeReaderManager::AddTypeCreator", "ContentReader::ReadString", "ContentReader::ReadInt32",
              "ContentReader::ReadSingle", "ContentReader::ReadDouble", "ContentReader::ReadColor",
              "ContentReader::ReadMatrix", "ContentReader::ReadQuaternion", "ContentReader::ReadVector2",
-             "ContentReader::ReadVector3", "ContentReader::ReadVector4",
+             "ContentReader::ReadVector3", "ContentReader::ReadVector4", "ContentReader::ReadBoundingSphere",
              "ContentManager::Load", "ContentReader::AssetName", "ContentReader::ContentManager",
              "ContentReader", "ContentTypeReaderManager"},
     .tags = {"content", "xnb", "custom", "reader", "level", "math"},

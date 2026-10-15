@@ -2351,9 +2351,13 @@ The resumed audit adds real `ArgumentException(name)`, parameterless `InvalidOpe
 ContentLoadException is flattened to untyped IO by the C content adapter. The live Guide overlay
 also retains exact `GuideAlreadyVisibleException` and leaves the first screen intact on a second
 valid open, completing the distinct temporary modal-state decision. Leave exception enumeration
-now. Return to the generated missing-member inventory and the hand-maintained disposition tables;
-select the highest-value ordinary public behavior that is neither already demonstrated nor
-explicitly classified as trivial, platform/service/manual or implementation machinery.
+now. Focused930 adds direct authored-XNB evidence for public `ContentReader::ReadBoundingSphere` in
+the existing custom-reader workflow; this CNA/FNA reader helper is outside the XNA inventory, so
+the generated totals remain unchanged. Continue the ContentReader/BinaryReader behavior audit:
+only add byte/cursor helpers when a coherent authored schema uses them, then return to the broader
+hand-maintained disposition tables for the highest-value ordinary public behavior that is neither
+already demonstrated nor explicitly classified as trivial, platform/service/manual or
+implementation machinery.
 Keep constructors/finalizers, CLR collection plumbing and service-only paths classified rather than
 inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
@@ -2621,6 +2625,21 @@ All stderr is empty. The exact SOFTWARE CTest, metadata and validator/checkpoint
 the warning-free build uses `-j3`. Evidence:`/tmp/checkpoint-929-guide-*` and
 `/tmp/checkpoint-929-guide-visible-source.txt`. Pixel checks are programmatic; no screenshot,
 service session or manual visual-quality result is claimed, and no CNA defect appeared.
+
+### Focused930-ContentReader-BoundingSphere
+
+The stable `content.xnb.custom_type_reader` workflow extends its authored Level schema with an
+encounter volume. Its game-owned reader calls public `ContentReader::ReadBoundingSphere` directly
+and checks the exact center `(6.5,-7.5,8.5)` and radius `9.25`. The deterministic generator appends
+the canonical center-XYZ/radius float payload to `levels/castle.xnb`; no new demo ID is added.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass11/11 with byte-identical stdout SHA-256
+`4b468c20346030f7073fecbf22998e30a3cddcf49b4af4266d63c2402c25e31b` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions; the warning-free incremental build uses `-j3`, metadata is
+663/0 and both validator suites pass. Generated totals remain303/329 types,2114/2326 members,
+674/753 fields and3078/3205 routes because this FNA-compatible helper is outside the documented
+XNA inventory; `docs/COVERAGE.md` now lists it among CNA-specific/unmatched metadata names.
+Evidence:`/tmp/checkpoint-930-content-sphere-*`. No CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
