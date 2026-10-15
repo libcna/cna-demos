@@ -13,7 +13,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 53 | 53 | 0 | 0 | 34 / 0 / 13 / 0 / 6 | 34 / 0 / 13 / 0 / 6 |
+| content | 53 | 53 | 0 | 0 | 39 / 0 / 14 / 0 / 0 | 39 / 0 / 14 / 0 / 0 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,6 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.media.cnb_codec`, `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`, `content.video.pipeline_components`.
-- OPENGLES3: absent from report: `content.media.cnb_codec`, `content.song.pipeline_components`, `content.sound_effect.cnb_codec`, `content.sound_effect.imported_pcm`, `content.sound_effect.pipeline_components`, `content.video.pipeline_components`.
 
 ## XNA 4.0 API surface demonstrated
 

@@ -10234,3 +10234,21 @@ warning-free `-j3` build, exact SOFTWARE CTest, metadata 675/0 and both validato
 Generated totals remain unchanged; 27 names enter the CNA-extension appendix and Complete948 marks
 all six newer IDs absent. Evidence: `/tmp/checkpoint-955-video-pipeline/*`. No decoder, playback or
 visual inspection is claimed. Run the complete 675-demo validation checkpoint next.
+
+## Complete956-675-demo-content-codec-checkpoint
+
+One authoritative `tools/validate.sh linux-full` run at cna-demos commit
+`89e31fc93b956947639f2754a87fc8032dc29bbe`, pinned to CNA
+`d23e139de9e5c15511b6be745de290896a69ee37`, absorbs Focused949-955. The warning-free build and
+tests use at most three jobs. Metadata is675/0; all688 enabled CTests pass (640 ordinary passes and
+48 declared skips, 320.03s), with three manual tests disabled. Full SOFTWARE reports570 pass,54
+expected fail,48 skip and3 manual; OPENGLES3/Xvfb reports610/55/7/3. Both execute all675 IDs with
+zero unexpected results.
+
+Exact comparison with Complete948 adds five passes and the reviewed
+`content.sound_effect.pipeline_components` ISSUE-105 failure on each renderer. Every one of the669
+older statuses, known-issue identities and failed-assertion messages remains unchanged; assertion
+multiplicity moves92->93 and96->97. Normalized stderr is unchanged. Coverage remains303/329 XNA
+types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-956-complete-*`. Use Complete956 as the comparison baseline and
+continue the core content build configuration/manifest/pipeline public-header audit.

@@ -4144,3 +4144,22 @@ pass. Generated XNA/C totals remain 303/329 types, 2114/2326 members, 674/753 fi
 routes; 27 component names enter the CNA-extension appendix. Complete948 marks all six post-
 baseline IDs absent. Evidence: `/tmp/checkpoint-955-video-pipeline/*`. No decoder, playback, visual
 inspection or CNA defect is involved.
+
+### Complete956 generated runtime checkpoint
+
+The authoritative `linux-full` validation at cna-demos commit
+`89e31fc93b956947639f2754a87fc8032dc29bbe` remains pinned to CNA
+`d23e139de9e5c15511b6be745de290896a69ee37` and uses at most three jobs. Metadata validates675/0;
+all688 enabled CTests pass (640 ordinary passes plus48 declared skips, 320.03s), with three manual
+tests disabled. Full SOFTWARE reports570 pass,54 expected fail,48 skip and3 manual;
+OPENGLES3/Xvfb reports610/55/7/3. Both cover every catalog ID with zero unexpected failures or
+unexpected passes.
+
+Compared with Complete948, the five ordinary new IDs pass on both renderers and
+`content.sound_effect.pipeline_components` has only the reviewed CNA-DEMOS-ISSUE-105 failure. All
+669 prior statuses, known-issue identities and failed-assertion messages/multiplicities are
+unchanged; failure evidence moves92->93 on SOFTWARE and96->97 on OPENGLES3. Stderr normalized for
+temporary-directory IDs and X protocol serial/resource numbers is byte-identical. Generated totals
+remain303/329 XNA types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence is
+archived under `build/linux-full/reports/checkpoint-956-complete-*`. No screenshot, listening test,
+physical input, external service session or manual visual-quality inspection was performed.
