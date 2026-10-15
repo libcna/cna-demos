@@ -7,7 +7,9 @@ CNA_DEMOS_STANDALONE({
     .description = "Imports three original tagged FLAC tracks and an M3U into a private Linux library; checks its shared relationships, "
                    "optional durations and disposed-object refusals across entity, collection and library views.",
     .apis = {"MediaLibrary::MediaLibrary", "MediaLibrary::Songs", "MediaLibrary::Albums", "MediaLibrary::Artists",
-             "MediaLibrary::Genres", "MediaLibrary::Playlists", "Song::Name", "Song::TrackNumber",
+             "MediaLibrary::Genres", "MediaLibrary::Playlists", "MediaLibrary::MediaSource", "MediaLibrary::Pictures",
+             "MediaLibrary::SavedPictures", "MediaLibrary::RootPictureAlbum", "MediaLibrary::GetPictureFromToken",
+             "MediaLibrary::SavePicture", "Song::Name", "Song::TrackNumber",
              "Song::Album", "Song::Artist", "Song::Genre", "Album::Name", "Album::Artist", "Album::Genre",
              "Album::Songs", "Album::Equals", "Artist::Name", "Artist::Songs", "Artist::Albums", "Genre::Name", "Genre::Songs",
              "Genre::Albums", "Playlist::Name", "Playlist::Songs", "Playlist::Duration", "Album::Duration", "Song::Duration", "SongCollection::Count",
@@ -29,7 +31,7 @@ CNA_DEMOS_STANDALONE({
     .assets = {"media/library_music/track_a.flac", "media/library_music/track_b.flac", "media/library_music/track_c.flac"},
     .restrictions = "Standalone process selects private XDG roots before first CNA/SDL use. Linux/XDG resolution is required; "
                     "otherwise skipped before accessing a library. All collection entries are library-owned; disposal is observed before destruction. "
-                    "CNA-DEMOS-ISSUE-098: disposed Album/Artist/Genre/Playlist operations remain usable instead of throwing ObjectDisposedException. "
+                    "CNA-DEMOS-ISSUE-098: disposed entity, collection and MediaLibrary operations do not throw ObjectDisposedException. "
                     "Positive duration checks require CNA_FFMPEG_AVAILABLE; other builds retain the relationship checks. No playback or album-art validation.",
     .knownIssue = "CNA-DEMOS-ISSUE-098",
 })

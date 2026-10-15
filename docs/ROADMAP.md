@@ -8997,3 +8997,25 @@ regeneration pass; counts remain 302/329 types, 2114/2326 members, 169/753 field
 routes. Evidence: `/tmp/checkpoint-884-*`. No CNA source was modified and no playback, screenshot
 or visual inspection is claimed. Audit the five music collection views and MediaLibrary disposal
 guards next.
+
+## Focused885-disposed-music-collection-and-library-refusal
+
+The same workflow now corrects its stale post-disposal expectations for all five top-level music
+collections and MediaLibrary. Windows XNA 4.0 IL requires ObjectDisposedException before Count,
+Item and GetEnumerator on each collection, and before every ordinary MediaLibrary property and
+picture method. It also confirms that disposing the library leaves previously obtained children
+live. Retained CNA children do remain valid, but each disposed collection reports 0/2 exact Count
+and Item refusals: Count reads zero and Item takes the bounds path. MediaLibrary reports 0/12 across
+its nine properties, token lookup and both SavePicture overloads. The unguarded saves use one-byte
+inputs in the verified private root and cleanup removes their files. The demo remains on its stable
+ID and ISSUE-098 marker.
+
+Both renderer-labelled direct runs contain 29 passing controls and ten grouped expected failures,
+with byte-identical stdout and the same six reviewed INFO lines on stderr. The exact known-issue
+SOFTWARE CTest passes 20 repetitions. A clean full incremental `-j3` build, metadata 655/0, both
+validator self-test suites and coverage regeneration against the Complete871 reports pass;
+coverage remains 302/329 types, 2114/2326 members, 169/753 fields and 3078/3205 C routes. Evidence:
+`/tmp/checkpoint-885-*`; the inspected Windows assembly has SHA-256
+`38e7093f52d7474bbc6256906519781a1210d7da50a1c667b52716fcf49ca130`. No CNA source was modified
+and no playback, screenshot or visual inspection is claimed. Audit Song and the two picture
+collection types for the same missing guard next.

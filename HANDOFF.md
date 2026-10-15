@@ -4542,6 +4542,30 @@ inspection is claimed. Complete871 remains the full baseline. Audit the five mus
 MediaLibrary disposal guards next; their current demo assertions may likewise encode CNA behavior
 rather than the XNA contract.
 
+### Focused885-disposed-music-collection-and-library-refusal
+
+Windows XNA 4.0 IL from the installed reference assembly confirms that Count, Item and
+GetEnumerator on all five music collections must guard disposal. All nine MediaLibrary properties,
+GetPictureFromToken and both SavePicture overloads have the same guard, while MediaLibrary Dispose
+does not cascade into previously obtained child views. `music_index` now expresses that split
+contract. Retained CNA children stay live, but every disposed collection reports 0/2 exact Count
+and Item refusals: Count returns zero and Item throws the wrong bounds exception. The disposed
+library reports 0/12; every property remains callable, token lookup executes and both isolated
+one-byte saves complete. Together with the entity checks, both renderer labels now execute 39
+controls: 29 pass and ten grouped ISSUE-098 assertions fail. The CLR GetEnumerator member is
+source-dispositioned because CNA exposes separate CNAEXT range adapters rather than that method.
+
+The two direct runs have byte-identical stdout and stderr, with the same six reviewed TitleContainer
+INFO lines. The exact known-issue SOFTWARE CTest passes20 consecutive runs. The warning-free full
+incremental build uses `-j3`, metadata validates655/0, both validator self-test suites pass, and
+coverage regenerates byte-identically against the Complete871 reports at302/329 types,2114/2326
+members,169/753 fields and3078/3205 C routes. Evidence is under `/tmp/checkpoint-885-*`; the
+inspected Windows assembly SHA-256 is
+`38e7093f52d7474bbc6256906519781a1210d7da50a1c667b52716fcf49ca130`. No CNA source was modified
+and no playback, screenshot or visual inspection is claimed. Complete871 remains the full
+baseline. Audit Song and the two picture collection types for the same missing disposal guards
+next, then continue to the next semantic Media gap.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

@@ -24,6 +24,7 @@
 #include "Microsoft/Xna/Framework/Media/PlaylistCollection.hpp"
 #include "Microsoft/Xna/Framework/Media/Song.hpp"
 #include "Microsoft/Xna/Framework/Media/SongCollection.hpp"
+#include "System/IO/MemoryStream.hpp"
 #include "System/IO/Stream.hpp"
 #include "System/ObjectDisposedException.hpp"
 
@@ -364,18 +365,69 @@ namespace
         playlists->Dispose();
         check(songs->getIsDisposedProperty() && albums->getIsDisposedProperty() &&
                   artists->getIsDisposedProperty() && genres->getIsDisposedProperty() &&
-                  playlists->getIsDisposedProperty() && songs->getCountProperty() == 0 &&
-                  albums->getCountProperty() == 0 && artists->getCountProperty() == 0 &&
-                  genres->getCountProperty() == 0 && playlists->getCountProperty() == 0 &&
-                  secondAlbum->getNameProperty() == "Field Notes",
-              "collection disposal is idempotent and clears each non-owning view without destroying its objects");
+                  playlists->getIsDisposedProperty() && secondAlbum->getNameProperty() == "Field Notes",
+              "collection disposal is idempotent and does not destroy its borrowed objects");
+
+        int songCollectionDisposalRefusals = 0;
+        songCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)songs->getCountProperty(); });
+        songCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*songs)[0]; });
+        check(songCollectionDisposalRefusals == 2,
+              "a disposed SongCollection refuses Count and Item (CNA-DEMOS-ISSUE-098)");
+
+        int albumCollectionDisposalRefusals = 0;
+        albumCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)albums->getCountProperty(); });
+        albumCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*albums)[0]; });
+        check(albumCollectionDisposalRefusals == 2,
+              "a disposed AlbumCollection refuses Count and Item (CNA-DEMOS-ISSUE-098)");
+
+        int artistCollectionDisposalRefusals = 0;
+        artistCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)artists->getCountProperty(); });
+        artistCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*artists)[0]; });
+        check(artistCollectionDisposalRefusals == 2,
+              "a disposed ArtistCollection refuses Count and Item (CNA-DEMOS-ISSUE-098)");
+
+        int genreCollectionDisposalRefusals = 0;
+        genreCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)genres->getCountProperty(); });
+        genreCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*genres)[0]; });
+        check(genreCollectionDisposalRefusals == 2,
+              "a disposed GenreCollection refuses Count and Item (CNA-DEMOS-ISSUE-098)");
+
+        int playlistCollectionDisposalRefusals = 0;
+        playlistCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)playlists->getCountProperty(); });
+        playlistCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*playlists)[0]; });
+        check(playlistCollectionDisposalRefusals == 2,
+              "a disposed PlaylistCollection refuses Count and Item (CNA-DEMOS-ISSUE-098)");
+        std::cout << "Disposed collection refusals: Song " << songCollectionDisposalRefusals
+                  << "/2, Album " << albumCollectionDisposalRefusals << "/2, Artist "
+                  << artistCollectionDisposalRefusals << "/2, Genre " << genreCollectionDisposalRefusals
+                  << "/2, Playlist " << playlistCollectionDisposalRefusals << "/2\n";
 
         check(!mirror.getIsDisposedProperty(), "the independent mirror library starts live");
         mirror.Dispose();
         mirror.Dispose();
-        check(mirror.getIsDisposedProperty() && mirror.getAlbumsProperty() == mirrorAlbums &&
+        check(mirror.getIsDisposedProperty() && !mirrorAlbums->getIsDisposedProperty() &&
                   mirrorAlbums->getCountProperty() == 2 && !mirrorFirstAlbum->getIsDisposedProperty(),
-              "library disposal is idempotent and does not cascade into its borrowed object graph");
+              "library disposal is idempotent and does not cascade into retained collection or object views");
+
+        const std::vector<std::uint8_t> disposedBytes{0x42};
+        System::IO::MemoryStream disposedStream(disposedBytes.data(),
+                                                static_cast<SharpRuntime::intcs>(disposedBytes.size()));
+        int libraryDisposalRefusals = 0;
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.getAlbumsProperty(); });
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.getArtistsProperty(); });
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.getGenresProperty(); });
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.getMediaSourceProperty(); });
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.getPicturesProperty(); });
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.getPlaylistsProperty(); });
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.getRootPictureAlbumProperty(); });
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.getSavedPicturesProperty(); });
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.getSongsProperty(); });
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.GetPictureFromToken(""); });
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.SavePicture("DisposedBytes", disposedBytes); });
+        libraryDisposalRefusals += ThrowsObjectDisposed([&] { (void)mirror.SavePicture("DisposedStream", &disposedStream); });
+        check(libraryDisposalRefusals == 12,
+              "a disposed MediaLibrary refuses all properties and picture methods (CNA-DEMOS-ISSUE-098)");
+        std::cout << "Disposed MediaLibrary refusals: " << libraryDisposalRefusals << "/12\n";
         std::cout << (passed ? "PASSED" : "FAILED") << " (" << checks << " checks)\n";
         // Library destruction releases all borrowed objects before cleanup removes the private files.
         return passed ? 0 : 1;
