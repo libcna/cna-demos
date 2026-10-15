@@ -10544,3 +10544,22 @@ extension appendix and Complete981 marks eight post-baseline IDs absent. Evidenc
 showed the legitimate implicit `.x` root and led to the semantic resource comparison above. No CNA
 defect appeared. Audit `XnaModelBridge.hpp` and the adjacent public `XnaPipelineBridge.hpp` adapter
 families against existing demos next, adding only behavior that lacks meaningful evidence.
+
+## Complete990-691-demo-build-time-extension-checkpoint
+
+The authoritative complete validation at cna-demos commit
+`94bc60e9ac75a9d6cc56093f5db6d2c5133c737c`, pinned to CNA
+`d23e139de9e5c15511b6be745de290896a69ee37`, absorbs Focused982-989 and replaces Complete981 as
+the comparison baseline. The warning-free build and tests use no more than three jobs. Metadata is
+691/0; all704 enabled CTests pass (656 ordinary passes and48 declared skips, 296.32s), with three
+manual tests disabled. Full SOFTWARE reports586 pass,54 expected fail,48 skip and3 manual;
+OPENGLES3/Xvfb reports626/55/7/3. Both execute every catalog ID with zero unexpected results.
+
+Exact comparison with Complete981 adds eight passing IDs on each renderer. All683 prior statuses,
+known-issue identities and failed-assertion messages/multiplicities are unchanged; failed
+assertions remain93 on SOFTWARE and97 on OPENGLES3. Stderr is byte-identical per renderer after
+normalizing only generated temporary-directory IDs and X protocol serial/resource numbers.
+Generated coverage remains303/329 XNA types,2114/2326 members,674/753 fields and3078/3205 C routes,
+with no absent IDs. Evidence is archived under
+`build/linux-full/reports/checkpoint-990-complete-*`. Continue with the one-function
+`XnaModelBridge.hpp` conversion and adjacent `XnaPipelineBridge.hpp` adapter families.

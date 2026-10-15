@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete runtime baseline at 691 demos: all 704 enabled CTests and both full
+  renderer smoke suites complete with every catalog ID present and zero unexpected results.
 - Added an end-to-end XNA model source-pipeline workflow covering the five-component registration
   contract, `.x`/`.fbx` routing, intentional material-writer absences and real CNB/XNB builds.
 - Added a renderer-free build-time BC1/BC2/BC3 workflow covering exact sizing, alpha policy, edge

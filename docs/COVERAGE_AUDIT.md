@@ -4854,3 +4854,21 @@ CNA-extension appendix. Complete981 marks this eighth post-baseline ID absent. E
 `/tmp/checkpoint-989-xna-source/*`. The first direct run's byte-identity assumption belonged to the
 demo; inspecting both schema-2 graphs established the legitimate source-root distinction and no
 CNA defect appeared.
+
+### Complete990 generated runtime checkpoint
+
+The authoritative `linux-full` validation at cna-demos commit
+`94bc60e9ac75a9d6cc56093f5db6d2c5133c737c` remains pinned to CNA
+`d23e139de9e5c15511b6be745de290896a69ee37` and uses at most three jobs. Metadata validates691/0;
+all704 enabled CTests pass (656 ordinary passes plus48 declared skips, 296.32s), with three manual
+tests disabled. Full SOFTWARE reports586 pass,54 expected fail,48 skip and3 manual;
+OPENGLES3/Xvfb reports626/55/7/3. Both cover every catalog ID with zero unexpected failures or
+unexpected passes.
+
+Compared with Complete981, eight new IDs pass on both renderers. All683 prior statuses, known-issue
+identities and failed-assertion messages/multiplicities are unchanged; failed assertions remain93
+on SOFTWARE and97 on OPENGLES3. Normalized stderr is identical after replacing only generated
+temporary-directory IDs and X protocol serial/resource numbers. Generated totals remain303/329 XNA
+types,2114/2326 members,674/753 fields and3078/3205 C routes; no catalog ID is absent. Evidence is
+archived under `build/linux-full/reports/checkpoint-990-complete-*`. No screenshot, listening test,
+physical input, external service session or manual visual-quality inspection was performed.
