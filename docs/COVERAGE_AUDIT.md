@@ -1196,19 +1196,27 @@ This classifies existing evidence and follow-up work; it adds no runtime or acou
 | CNA initialization/shutdown and internal state hooks | Publicly reachable bridge/hooks should not replace ordinary game transport APIs in demonstrations. Revisit only for an explicit embedding lifecycle; reflection, constant getters and deleted copy operators do not justify standalone demos. |
 | C explicit update, ProgramExit and MediaQueue type names | `cna_media_player_program_exit_ext` releases resources during live playback and the same independent caller-owned Song immediately restarts. The final behavioral route is now demonstrated after the game loop: a real 250 ms track finishes while the public state remains Playing, then `cna_media_player_update_ext` consumes the pending native end notification and transitions the one-song, non-repeating queue to Stopped. Both renderer runs retain all92 older controls in order and pass the two additions with byte-identical output and empty stderr. The two remaining routes are ordinary generated size/copy helpers for the fixed `Microsoft.Xna.Framework.Media.MediaQueue` reflection name; CNA's pure-C smoke already asserts the exact text and generic buffer contract, so they remain intentionally trivial and uncredited. Every `media_player.h` route now has a semantic disposition at39/41 demonstrated. Evidence: `checkpoint-474-c-player-program-exit-*`, `checkpoint-521-c-player-update-focused-*`. |
 
-### VideoPlayer active disposal and post-dispose refusal
+### VideoPlayer validation, transport, frame and lifecycle behavior
 
 The existing `media.video_player.pause_and_loop` keeps its real decode, pause, resume and
-end-to-start loop workflow and now disposes the player while that loop is active. Both SOFTWARE and
-OPENGLES3 pass12/12 controls with empty stderr: the player is live and Playing before disposal;
-Dispose publishes IsDisposed, Stopped state, null Video and zero PlayPosition; a second Dispose is
-idempotent; and Play, Stop and GetTexture each throw ObjectDisposedException afterwards. The two
-runs naturally report different playback positions and loop timing, so no byte-identical-output
-claim is made. This closes the previously uncredited Dispose and IsDisposed inventory members and
-moves the focused XNA-member projection1460->1462/2326 without adding a demo. The same bounded
-playback and frame acquisition remain intact, but no screenshot, frame-pixel inspection, visual
-quality or audible-quality claim was made. Evidence: `/tmp/checkpoint-639-video-lifecycle-*` and
-`/tmp/checkpoint-639-coverage.md`.
+end-to-start loop workflow and expands from12 to27 controls. Its21 passing controls establish fresh
+defaults, configuration round-trips, first-frame decode, stable paused position, resumed playback,
+loop transport, lifetime-monotonic frame generation and nonnegative frame timestamps. A raw
+`Video::FromUriEXT` matches the compiled Video's probed dimensions, rate, positive duration, path,
+device and type name. Destroying an active raw C++ Video safely stops its dependent player, and all
+seven already-guarded transport/texture/CNAEXT track methods throw ObjectDisposedException after
+player disposal.
+
+Direct Windows XNA 4.0 assembly inspection adds six grouped compatibility expectations. On pinned
+CNA, `GetTexture` before Play returns null, `Play(nullptr)` is ignored, and invalid volumes clamp;
+Stop and Dispose clear the last Video pointer; and disposed State/PlayPosition reads plus the three
+configuration setters remain callable. Windows XNA throws the exact corresponding validation and
+disposal exceptions and retains `activeVideo`. Both renderer-labelled runs reproduce exactly these
+six failures, now CNA-DEMOS-ISSUE-099, with all other controls passing. Different wall-clock pause
+and wrap positions make byte-identical output inappropriate. Coverage remains2114/2326 because the
+XNA members were already credited; eight newly named CNA extensions are explicitly reported as
+non-XNA metadata. Evidence: `/tmp/checkpoint-893-*`. Frame pixels continue through the established
+draw path, but no screenshot, visual-quality or audible-quality claim is made.
 
 ### Network simulation (measurement boundaries)
 

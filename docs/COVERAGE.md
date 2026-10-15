@@ -23,7 +23,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | graphics | 184 | 184 | 0 | 0 | 146 / 26 / 12 / 0 / 0 | 167 / 3 / 14 / 0 / 0 |
 | input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 74 / 0 / 4 / 0 / 0 | 74 / 0 / 4 / 0 / 0 |
-| media | 15 | 14 | 1 | 0 | 12 / 0 / 3 / 0 / 0 | 12 / 0 / 3 / 0 / 0 |
+| media | 15 | 14 | 1 | 0 | 11 / 0 / 4 / 0 / 0 | 11 / 0 / 4 / 0 / 0 |
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
 | platform | 2 | 2 | 0 | 0 | 1 / 1 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
@@ -843,6 +843,14 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `VibrateController::Default` -- devices.vibrate_controller.start_stop
 - `VibrateController::Start` -- devices.vibrate_controller.start_stop
 - `VibrateController::Stop` -- devices.vibrate_controller.start_stop
+- `Video::FromUriEXT` -- media.video_player.pause_and_loop
+- `Video::GetTypeName` -- media.video_player.pause_and_loop
+- `Video::getFileNameProperty` -- media.video_player.pause_and_loop
+- `Video::getGraphicsDeviceProperty` -- media.video_player.pause_and_loop
+- `VideoPlayer::GetFrameGenerationEXT` -- media.video_player.pause_and_loop
+- `VideoPlayer::GetFramePresentationTimeEXT` -- media.video_player.pause_and_loop
+- `VideoPlayer::SetAudioTrackEXT` -- media.video_player.pause_and_loop
+- `VideoPlayer::SetVideoTrackEXT` -- media.video_player.pause_and_loop
 
 ## How these numbers are computed
 

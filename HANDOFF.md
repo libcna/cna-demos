@@ -264,6 +264,24 @@ routes. Tested SHA-256: `cna-demos`
 listening test, physical input, external service session or manual visual-quality inspection was
 performed.
 
+Focused **893-public-VideoPlayer-contracts** extends the stable
+`media.video_player.pause_and_loop` ID from12 to27 controls. Both renderer labels pass21 controls
+covering fresh defaults, real decode/pause/resume/loop transport, frame generations and timestamps,
+raw `Video::FromUriEXT` metadata/device/type identity, safe active-Video destruction and all seven
+already-guarded post-disposal methods. Both fail the same six exact Windows XNA expectations:
+GetTexture-before-Play and null-Play exception validation, non-clamping invalid Volume refusal,
+last-Video retention across Stop/Dispose, and disposal guards on state getters/configuration
+setters. CNA-DEMOS-ISSUE-099 records the source-level divergence.
+
+The warning-free incremental build used `-j3`; metadata validates657/0. Both direct runs report the
+same six failed labels and27 total checks; timing lines differ naturally. The exact known-issue
+SOFTWARE CTest passes ten consecutive repetitions. Coverage stays302/329 types,2114/2326 members,
+169/753 fields and3078/3205 C routes, with eight newly named CNA extensions classified outside the
+XNA inventory. Evidence:`/tmp/checkpoint-893-*`. No CNA source was edited; no screenshot,
+visual-quality or audible-quality claim was made. **Next:** audit whether raw Video audio/video
+track preselection reaches playback and how player-level selectors override it, using a generated
+multi-track asset only if public observation distinguishes the paths.
+
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
 `graphics.model.node_instances` loads one shared rigid mesh through nested TRS, an explicit glTF

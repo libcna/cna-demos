@@ -15,6 +15,40 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-099 -- VideoPlayer validation and lifecycle contracts diverge from XNA
+
+- **Area/API:** `VideoPlayer::Play`, `GetTexture`, `Volume`, `Stop`, `Dispose`, `State`,
+  `PlayPosition`, `IsLooped`, `IsMuted` and their post-disposal behavior.
+- **Demo:** `media.video_player.pause_and_loop`; its singular `knownIssue` field names this issue.
+- **Reproduction:** on a fresh player, call `GetTexture`, pass a null `Video` to `Play`, and assign
+  `Volume` values below zero and above one. Play a real compiled video, stop a second player, and
+  compare its `Video` identity with the object it played. Dispose the active first player, compare
+  its last `Video`, then read `State` and `PlayPosition` and assign `IsLooped`, `IsMuted` and
+  `Volume`. Every exception check accepts only the exact documented System exception type.
+- **Observed:** pinned CNA returns null from `GetTexture`, silently ignores `Play(nullptr)`, and
+  clamps the two invalid volumes to zero and one. `Stop` and `Dispose` clear the observable Video
+  pointer. After disposal, both state getters and all three configuration setters remain callable.
+  The focused demo therefore fails six grouped contract checks while its 21 controls pass,
+  including real decode, pause/resume/loop transport, monotonic frame generation, raw-Video
+  metadata and safe C++ destruction of a Video that still has a dependent player.
+- **Expected/reference:** Windows XNA 4.0 throws `InvalidOperationException` from `GetTexture`
+  without an active video, `ArgumentNullException("video")` from `Play(nullptr)`, and
+  `ArgumentOutOfRangeException("value")` without mutating Volume for values outside `[0,1]`.
+  `Stop` and `Dispose` retain `activeVideo`. `State` and `PlayPosition` getters and the setters of
+  `IsLooped`, `IsMuted` and `Volume` call `ThrowIfDisposed`; their three getters and `Video` remain
+  readable. This was checked directly in the installed Windows
+  `Microsoft.Xna.Framework.Video.dll`, SHA-256
+  `17538b1ca9d48a993e2cd88c96b436df08e7abb4aec5d4758eb21feb580d6e06`.
+- **Cause observed in source:** CNA has explicit early returns for null `Play` and no-active-video
+  `GetTexture`, clamps Volume with `std::clamp`, and `CloseDecoder` unconditionally nulls `video_`.
+  The two state getters and three configuration setters do not call `CheckDisposed`. The guarded
+  transport, texture and CNAEXT track-selection methods correctly throw after disposal.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction uses public state and exact
+  exception types. Frame pixels are drawn through the established path, but no screenshot, visual
+  quality or audible result is claimed. No CNA source was modified and no upstream message was
+  sent.
+
 ### CNA-DEMOS-ISSUE-098 -- Disposed media library types do not enforce their access guards
 
 - **Area/API:** `Picture`, `PictureAlbum`, `Song`, `Album`, `Artist`, `Genre`, `Playlist`, all seven

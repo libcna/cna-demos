@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the VideoPlayer workflow to exact XNA validation, retained-Video and disposal contracts;
+  recorded CNA-DEMOS-ISSUE-099 for six grouped incompatibilities while preserving real transport.
 - Refreshed the complete runtime baseline at 657 demos: all 670 enabled CTests and both full
   renderer smoke suites complete without an unexpected result.
 - Extended the MediaLibrary format-index workflow with a title-only Vorbis fixture and an external

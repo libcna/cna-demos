@@ -9163,3 +9163,22 @@ No other status, known-issue marker or failed assertion changed. Coverage remain
 no absent IDs. Both validator self-test suites pass. Evidence:`checkpoint-892-complete-*`. Pixel
 checks were programmatic; no screenshot, listening test, physical input, service session or manual
 visual-quality inspection was performed. Audit public Video/VideoPlayer behavior next.
+
+## Focused893-public-VideoPlayer-contracts
+
+The stable `media.video_player.pause_and_loop` workflow grows12->27 controls while retaining its
+real decode, pause/resume and end-to-start loop. Twenty-one controls pass on both renderer labels:
+fresh defaults and configuration, decoded frame generation/timestamps, monotonic generation across
+the loop, raw `Video::FromUriEXT` metadata/device/type identity, safe active-Video destruction and
+all seven already-guarded post-disposal methods. Direct inspection of the Windows XNA 4.0 Video
+assembly adds exact validation, retained-Video and disposal-accessor contracts.
+
+Pinned CNA fails the same six grouped expectations under SOFTWARE and OPENGLES3: GetTexture before
+Play returns null, null Play is ignored, out-of-range Volume clamps, Stop and Dispose clear the
+last Video identity, and two state getters plus three configuration setters remain callable after
+disposal. CNA-DEMOS-ISSUE-099 records the distinct source causes. The warning-free incremental
+build uses at most three jobs, metadata validates657/0 and the exact known-issue SOFTWARE CTest
+passes ten consecutive runs. Generated coverage remains302/329 types,2114/2326 members,169/753
+fields and3078/3205 C routes; eight named CNA extensions are explicitly outside the XNA inventory.
+Evidence:`/tmp/checkpoint-893-*`. No screenshot, visual-quality or audible-quality claim is made.
+Audit raw Video audio/video track preselection and player override behavior next.
