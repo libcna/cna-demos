@@ -18,6 +18,7 @@
 #include "Microsoft/Xna/Framework/TitleContainer.hpp"
 #include "System/ArgumentNullException.hpp"
 #include "System/IDisposable.hpp"
+#include "System/IO/EndOfStreamException.hpp"
 #include "System/IO/MemoryStream.hpp"
 #include "System/ObjectDisposedException.hpp"
 
@@ -44,8 +45,7 @@ namespace
         {
             const int count = input.ReadInt32();
             if (count < 0 || count > 1024) throw ContentLoadException("Invalid tile byte count");
-            auto bytes = input.ReadBytes(count);
-            if (bytes.size() != static_cast<std::size_t>(count)) throw ContentLoadException("Truncated tile data");
+            auto bytes = input.ReadBytesExactOrThrow(count, TilesReaderName);
             if (auto tiles = canonical_.lock(); tiles && tiles->bytes == bytes) return tiles;
             auto tiles = std::make_shared<Tiles>();
             tiles->bytes = std::move(bytes);
@@ -108,10 +108,14 @@ namespace
         {
             return ReadAsset<Level>(name, std::move(record));
         }
+        TilesPtr ReadTiles(const std::string& name, std::function<void(std::shared_ptr<System::IDisposable>)> record)
+        {
+            return ReadAsset<TilesPtr>(name, std::move(record));
+        }
     protected:
         std::unique_ptr<System::IO::Stream> OpenStream(const std::string& name) override
         {
-            if (name != "level") throw ContentLoadException("Unknown packed level");
+            if (name != "level" && name != "tiles") throw ContentLoadException("Unknown packed asset");
             ++streams.opened;
             return std::make_unique<PackStream>(bytes_, streams);
         }
@@ -132,16 +136,38 @@ namespace
         ScopedReaders cleanup;
         ContentTypeReaderManager::AddTypeCreator(LevelReaderName, [] { return std::make_unique<LevelReader>(); });
         ContentTypeReaderManager::AddTypeCreator(TilesReaderName, [] { return std::make_unique<TilesReader>(); });
-        const auto file = Microsoft::Xna::Framework::TitleContainer::OpenStream("assets/ownership/level.xnb");
-        std::vector<std::uint8_t> bytes(static_cast<std::size_t>(file->getLengthProperty()));
-        int offset = 0;
-        while (offset < static_cast<int>(bytes.size()))
-        {
-            const int read = file->Read(bytes.data(), offset, static_cast<int>(bytes.size()) - offset);
-            if (read == 0) throw ContentLoadException("Truncated authored level fixture");
-            offset += read;
-        }
+        const auto readFixture = [](const std::string& path) {
+            const auto file = Microsoft::Xna::Framework::TitleContainer::OpenStream(path);
+            std::vector<std::uint8_t> result(static_cast<std::size_t>(file->getLengthProperty()));
+            int offset = 0;
+            while (offset < static_cast<int>(result.size()))
+            {
+                const int read = file->Read(result.data(), offset, static_cast<int>(result.size()) - offset);
+                if (read == 0) throw ContentLoadException("Truncated authored fixture");
+                offset += read;
+            }
+            return result;
+        };
+        auto bytes = readFixture("assets/ownership/level.xnb");
         const auto sourceSize = static_cast<int>(bytes.size());
+
+        PackManager truncated(readFixture("assets/ownership/truncated_tiles.xnb"));
+        int truncatedRecordCalls = 0;
+        bool exactReadRefused = false;
+        try
+        {
+            (void)truncated.ReadTiles("tiles", [&](std::shared_ptr<System::IDisposable>) {
+                ++truncatedRecordCalls;
+            });
+        }
+        catch (const System::IO::EndOfStreamException& error)
+        {
+            exactReadRefused = std::string(error.what()).find(TilesReaderName) != std::string::npos;
+        }
+        ctx.Check(exactReadRefused && truncatedRecordCalls == 0 && truncated.streams.opened == 1 &&
+                      truncated.streams.destroyed == 1,
+                  "ReadBytesExactOrThrow rejects a short declared tile blob before publishing a resource");
+
         PackManager pack(bytes); // retain the same authored bytes for the default-recorder comparison
         // The callback is per typed read occurrence. This caller wants exactly-once disposal, so
         // its ownership list explicitly deduplicates repeated identities.
@@ -271,12 +297,14 @@ namespace
 CNA_DEMOS_CONSOLE(ReadAssetOwnership, {
     .id = "content.content_manager.read_asset_ownership",
     .title = "Control packed asset lifetime",
-    .description = "Reads a packed level repeatedly through ReadAsset, records its nested disposable tiles, "
-                   "deduplicates aliased ownership, and checks failure cleanup against the default recorder.",
+    .description = "Reads a packed level repeatedly through ReadAsset, rejects a truncated declared byte blob, records "
+                   "its nested disposable tiles, deduplicates aliased ownership, and checks failure cleanup against "
+                   "the default recorder.",
     .apis = {"ContentManager::ReadAsset", "ContentManager::OpenStream", "ContentManager::Unload", "ContentManager::Dispose",
-             "ContentReader::ReadObject", "ContentTypeReader::Read", "ContentTypeReaderManager::AddTypeCreator"},
+             "ContentReader::ReadObject", "ContentReader::ReadBytesExactOrThrow", "ContentTypeReader::Read",
+             "ContentTypeReaderManager::AddTypeCreator"},
     .tags = {"content", "xnb", "pack-file", "lifetime", "dispose", "callback"},
-    .assets = {"ownership/level.xnb"},
-    .restrictions = "Supplied and absent callbacks with typed shared_ptr IDisposable children; default tracking reproduces ISSUE-011. Raw/untyped and shared-resource disposal discovery remain separate contracts.",
+    .assets = {"ownership/level.xnb", "ownership/truncated_tiles.xnb"},
+    .restrictions = "Supplied and absent callbacks with typed shared_ptr IDisposable children; exact byte-blob success and truncation; default tracking reproduces ISSUE-011. Raw/untyped and shared-resource disposal discovery remain separate contracts.",
     .knownIssue = "CNA-DEMOS-ISSUE-011",
 })

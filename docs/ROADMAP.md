@@ -9815,3 +9815,15 @@ exact SOFTWARE CTest passes ten repetitions. This public FNA-compatible helper i
 documented XNA inventory, so generated totals remain303/329 types,2114/2326 members,674/753 fields
 and3078/3205 C routes. Evidence:`/tmp/checkpoint-930-content-sphere-*`. Continue the reader audit
 with byte/cursor helpers only where an authored schema gives them meaningful behavior.
+
+## Focused931-ContentReader-exact-byte-blobs
+
+The stable `content.content_manager.read_asset_ownership` workflow replaces its manual short-read
+check with public `ContentReader::ReadBytesExactOrThrow`. A second deterministic XNB declares a
+nine-byte tile payload but physically ends after eight bytes; the actual `ContentTypeReader` load
+raises `EndOfStreamException` naming the reader before any disposable reaches the recorder. Both
+renderer-labelled runs retain the sole expected ISSUE-011 failure among22 controls in ten
+repetitions, with byte-identical stdout hash
+`c51873402c61efa4028feafe84bc33e6012825ed89f342aaf1422d648ec9fe3c` and empty stderr. The exact
+known-issue SOFTWARE CTest passes ten repetitions. Generated inventory totals remain unchanged
+because this hardened helper is CNA-specific. Evidence:`/tmp/checkpoint-931-content-exact-*`.

@@ -2351,13 +2351,14 @@ The resumed audit adds real `ArgumentException(name)`, parameterless `InvalidOpe
 ContentLoadException is flattened to untyped IO by the C content adapter. The live Guide overlay
 also retains exact `GuideAlreadyVisibleException` and leaves the first screen intact on a second
 valid open, completing the distinct temporary modal-state decision. Leave exception enumeration
-now. Focused930 adds direct authored-XNB evidence for public `ContentReader::ReadBoundingSphere` in
-the existing custom-reader workflow; this CNA/FNA reader helper is outside the XNA inventory, so
-the generated totals remain unchanged. Continue the ContentReader/BinaryReader behavior audit:
-only add byte/cursor helpers when a coherent authored schema uses them, then return to the broader
-hand-maintained disposition tables for the highest-value ordinary public behavior that is neither
-already demonstrated nor explicitly classified as trivial, platform/service/manual or
-implementation machinery.
+now. Focused930 adds direct authored-XNB evidence for public `ContentReader::ReadBoundingSphere`,
+and Focused931 uses `ReadBytesExactOrThrow` in a real owned-tile reader and proves physical
+truncation fails before publishing a resource. Both are CNA/FNA reader helpers outside the XNA
+inventory, so generated totals remain unchanged. The coherent ContentReader math/blob audit is now
+closed; inherited primitive reads are already represented by actual schemas and do not justify one
+control per numeric width. Return to the broader hand-maintained disposition tables for the
+highest-value ordinary public behavior that is neither already demonstrated nor explicitly
+classified as trivial, platform/service/manual or implementation machinery.
 Keep constructors/finalizers, CLR collection plumbing and service-only paths classified rather than
 inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
@@ -2640,6 +2641,24 @@ SOFTWARE CTest passes ten repetitions; the warning-free incremental build uses `
 674/753 fields and3078/3205 routes because this FNA-compatible helper is outside the documented
 XNA inventory; `docs/COVERAGE.md` now lists it among CNA-specific/unmatched metadata names.
 Evidence:`/tmp/checkpoint-930-content-sphere-*`. No CNA defect appeared.
+
+### Focused931-ContentReader-exact-byte-blobs
+
+The stable `content.content_manager.read_asset_ownership` workflow now uses public
+`ContentReader::ReadBytesExactOrThrow` for its real variable-length tile payload. A second original
+XNB fixture declares nine bytes but physically contains eight; loading it through the same
+`ContentTypeReader` raises `EndOfStreamException` naming that reader before constructing or
+publishing a disposable resource. The successful aliased eight-byte path and all ownership/
+cleanup controls remain intact.
+
+Ten SOFTWARE and ten OPENGLES3-labelled runs each retain the sole expected ISSUE-011 failure among
+22 controls (21 pass/1 expected fail), with byte-identical stdout SHA-256
+`c51873402c61efa4028feafe84bc33e6012825ed89f342aaf1422d648ec9fe3c` and empty stderr. The exact
+known-issue SOFTWARE CTest passes ten repetitions; the warning-free incremental build uses `-j3`.
+Metadata remains663/0 and generated totals remain303/329 types,2114/2326 members,674/753 fields
+and3078/3205 routes. The deterministic truncated fixture SHA-256 is
+`8372f26ed80680997daf02fecabd319233e6d26e49a3ee8803448b981010d5f8`. Evidence:
+`/tmp/checkpoint-931-content-exact-*`. No new CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

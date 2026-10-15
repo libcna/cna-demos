@@ -19,3 +19,8 @@ def write_all(assets_root: Path) -> None:
     root = assets_root / 'ownership'
     root.mkdir(parents=True, exist_ok=True)
     (root / 'level.xnb').write_bytes(b'XNBw' + bytes([5, 0]) + struct.pack('<I', 10 + len(data)) + data)
+
+    short = bytes([1]) + string('CnaDemos.OwnedTilesReader, CnaDemos') + struct.pack('<i', 0)
+    short += bytes([0, 1]) + struct.pack('<i', len(tiles) + 1) + tiles
+    (root / 'truncated_tiles.xnb').write_bytes(
+        b'XNBw' + bytes([5, 0]) + struct.pack('<I', 10 + len(short)) + short)
