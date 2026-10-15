@@ -408,6 +408,24 @@ fields and3078/3205 routes; Complete948 correctly marks this one post-baseline I
 `/tmp/checkpoint-949-imported-pcm/*`. No audio device, playback, listening test or CNA defect is
 claimed.
 
+Focused **950-processed-sound-and-foreign-carrier-disposition** extends the stable
+`content.sound_effect.imported_pcm` workflow from eight to 13 controls. It now covers
+`ProcessedSoundEffect` defaults and the complete two-encoding helper table, proves the XNA-
+compatible processor preserves 16-bit and 8-bit source widths while assigning the whole-source loop,
+shows `ToCnbSoundEffect` changes only the container format identity, and distinguishes that strict
+8/16-bit processor boundary from the general CNB path's documented wider-PCM narrowing.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass 13/13 with the same byte-identical stdout
+SHA-256 `cab9003311b65e7fed42e08931670a59c58973ec23517e29cf9a43c10a57ed80` and empty stderr. The
+warning-free build uses at most three jobs, metadata remains 670/0, the exact SOFTWARE CTest passes
+and both validator suites pass. Generated XNA/C totals remain unchanged; the CNA-extension appendix
+adds eight processed-sound names. `ForeignContentObjectEXT` is intentionally dispositioned without
+a synthetic native demo: it is one opaque non-owning pointer with no methods, while
+`c_api.content.reflective_reader`, `c_api.content.object_dictionary` and
+`c_api.content.model_loading` already prove caller identity, shared/value reader shapes, cache
+reuse and survival without CNA freeing or mutating the object. Evidence:
+`/tmp/checkpoint-950-processed-sound/*`. No CNA defect appeared.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2525,8 +2543,10 @@ manager-snapshot behavior. Focused947 adds the actual native XNB `ObjectDictiona
 typed and raw values, both constructors, logical type names, membership, full value access, both
 lookup failures and a game-defined reference value registered through `ReflectiveTypeReaderBuilder`.
 Complete948 validates those three new IDs and every stable-ID extension on both full renderer
-suites. Focused949 closes the source-oriented `ImportedSound` encoding, helper and processing-policy
-workflow without requiring an audio device. Continue the next coherent public CNA header family.
+suites. Focused949-950 close the source-oriented `ImportedSound`, container-neutral
+`ProcessedSoundEffect` and writer-adaptation workflow without requiring an audio device; the
+adjacent pointer-only `ForeignContentObjectEXT` is explicitly dispositioned through existing C
+reader/dictionary/model evidence. Continue the next coherent public CNA header family.
 The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame

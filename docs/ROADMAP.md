@@ -10108,3 +10108,23 @@ warning-free `-j3` build, exact SOFTWARE CTest, metadata670/0 and both validator
 Generated totals remain303/329 XNA types,2114/2326 members,674/753 fields and3078/3205 C routes;
 the CNA-extension appendix gains nine names. Evidence:`/tmp/checkpoint-949-imported-pcm/*`. No
 audio device or playback is involved. Continue the next coherent native public-header audit.
+
+## Focused950-processed-sound-and-foreign-carrier-disposition
+
+The stable `content.sound_effect.imported_pcm` grows eight to 13 controls. It adds the complete
+`ProcessedSoundEffect` helper/default contract, exact 16-bit processing of the real WAV, exact 8-bit
+preservation, whole-source XNA loop policy, container-only CNB adaptation and refusal of wider PCM
+at the XNA-compatible processor boundary. This distinguishes the processed value shared by XNB and
+CNB writers from the broader explicit-narrowing CNB route covered in Focused949.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass 13/13 with unchanged byte-identical
+stdout SHA-256 `cab9003311b65e7fed42e08931670a59c58973ec23517e29cf9a43c10a57ed80` and empty stderr. The
+warning-free `-j3` build, exact SOFTWARE CTest, metadata 670/0 and both validator suites pass.
+Generated totals remain unchanged and the CNA-extension appendix gains eight names. Evidence:
+`/tmp/checkpoint-950-processed-sound/*`.
+
+The adjacent `ForeignContentObjectEXT` needs no standalone demo: its only public state is a
+default-null non-owning `void*`. Existing reflective-reader, object-dictionary and Model-loading C
+demos already prove the meaningful behavior around exact caller pointer identity, cache reuse and
+non-ownership across container destruction. This is classified as trivial direct surface with
+complete indirect adapter behavior, rather than inflating the catalog with aggregate construction.

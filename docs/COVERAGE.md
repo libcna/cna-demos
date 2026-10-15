@@ -271,6 +271,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentValue::StableType` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentWriteResult::additionalOutputs` -- content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentWriteResult::warnings` -- content.custom.pipeline_diagnostics
+- `CNA::Content::Pipeline::MakeProcessedSoundEffect` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::ProcessedFrameBytes` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::ProcessedPcmBitsPerSample` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::ProcessedPcmEncoding` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::ProcessedPcmEncodingName` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::ProcessedPcmSampleBytes` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::ProcessedSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::RegisterCnjContentPipeline` -- content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::RegisterTexture2DContentPipeline` -- content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::RegisterXnaImporter` -- content.custom.nested_builds, content.custom.xna_pipeline_components
@@ -278,6 +285,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline
 - `CNA::Content::Pipeline::RunContentCompiler` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication, content.custom.xml_xnb_pipeline
 - `CNA::Content::Pipeline::TextureResizeToPowerOfTwoParameter` -- content.texture_processor.resize_to_power_of_two
+- `CNA::Content::Pipeline::ToCnbSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::DesktopOS` -- core.platform.host_identity
 - `CNA::Devices::DisplayInfo::ContentScale` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::DisplayInfo::SafeArea` -- devices.display_info.scale_and_safe_area

@@ -4002,3 +4002,29 @@ passes and both validator suites pass. Generated XNA/C totals remain303/329 type
 members,674/753 fields and3078/3205 routes; the CNA-extension appendix gains nine names.
 Complete948 correctly marks the new ID absent. Evidence:`/tmp/checkpoint-949-imported-pcm/*`. No
 audio device, playback, listening test or CNA defect is claimed.
+
+### Focused950 processed sound and foreign-carrier disposition
+
+The stable `content.sound_effect.imported_pcm` grows eight to 13 controls and now covers the
+container-neutral value produced by the XNA-compatible sound processor. `ProcessedSoundEffect`
+defaults safely; both supported encoding identities expose exact byte/bit widths and names; and
+unknown helpers return zero plus an explicit diagnostic. The real 16-bit imported WAV becomes an
+exact processed value with the XNA whole-source loop, then `ToCnbSoundEffect` changes only the
+container format identity. An authored 8-bit value remains byte-for-byte 8-bit through both steps,
+while a 24-bit value is refused at this XNA boundary even though the earlier general CNB path
+demonstrates its explicit narrowing policy.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass 13/13 with unchanged byte-identical
+stdout SHA-256 `cab9003311b65e7fed42e08931670a59c58973ec23517e29cf9a43c10a57ed80` and empty stderr. The
+warning-free incremental build uses at most three jobs, metadata remains 670/0, the exact SOFTWARE
+CTest passes and both validator suites pass. Generated XNA/C totals remain unchanged; eight
+processed-sound names enter the CNA-extension appendix. Evidence:
+`/tmp/checkpoint-950-processed-sound/*`. No audio device, playback or CNA defect is involved.
+
+`CNA::Content::ForeignContentObjectEXT` is intentionally not given an independent demo or metadata
+credit. Its complete public surface is one default-null, opaque, non-owning `void*` field with no
+operation to exercise. The behavior that justifies the carrier already has stronger end-to-end C
+evidence: `c_api.content.reflective_reader` proves value/shared reader shapes and exact caller
+object identity; `c_api.content.object_dictionary` proves cached reuse and typed foreign lookup;
+and `c_api.content.model_loading` proves a Model returns the exact pointer and destruction neither
+frees nor mutates it. Direct aggregate construction would only restate the field initializer.

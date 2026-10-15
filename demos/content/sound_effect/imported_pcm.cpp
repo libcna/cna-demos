@@ -12,11 +12,14 @@
 #include "CnaDemos/Demo.hpp"
 #include "CNA/Content/Cnb/CnbSourceImport.hpp"
 #include "CNA/Content/Import/ImportedSound.hpp"
+#include "CNA/Content/Pipeline/ProcessedSoundEffect.hpp"
+#include "CNA/Content/Pipeline/SoundEffectContentPipeline.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
 
 namespace Import = CNA::Content::Import;
 namespace Cnb = CNA::Content::Cnb;
+namespace Pipeline = CNA::Content::Pipeline;
 using Microsoft::Xna::Framework::Content::ContentLoadException;
 using Microsoft::Xna::Framework::TitleLocation;
 
@@ -115,6 +118,73 @@ namespace
                       wholeSound.loopStart == 0u && wholeSound.loopLength == imported.frameCount,
                   "processing preserves exact PCM while the selected loop policy owns an unset loop");
 
+        const Pipeline::ProcessedSoundEffect processedDefaults;
+        const auto unknownProcessed = static_cast<Pipeline::ProcessedPcmEncoding>(99);
+        ctx.Check(processedDefaults.encoding ==
+                          Pipeline::ProcessedPcmEncoding::Signed16LittleEndian &&
+                      processedDefaults.sampleRate == 0u && processedDefaults.channels == 0u &&
+                      processedDefaults.frameCount == 0u && processedDefaults.loopStart == 0u &&
+                      processedDefaults.loopLength == 0u && processedDefaults.samples.empty() &&
+                      Pipeline::ProcessedPcmSampleBytes(Pipeline::ProcessedPcmEncoding::Unsigned8) == 1u &&
+                      Pipeline::ProcessedPcmBitsPerSample(Pipeline::ProcessedPcmEncoding::Unsigned8) == 8u &&
+                      Pipeline::ProcessedPcmSampleBytes(
+                          Pipeline::ProcessedPcmEncoding::Signed16LittleEndian) == 2u &&
+                      Pipeline::ProcessedPcmBitsPerSample(
+                          Pipeline::ProcessedPcmEncoding::Signed16LittleEndian) == 16u &&
+                      std::string(Pipeline::ProcessedPcmEncodingName(
+                          Pipeline::ProcessedPcmEncoding::Unsigned8)) == "8-bit unsigned PCM" &&
+                      Pipeline::ProcessedPcmSampleBytes(unknownProcessed) == 0u &&
+                      Pipeline::ProcessedPcmBitsPerSample(unknownProcessed) == 0u &&
+                      std::string(Pipeline::ProcessedPcmEncodingName(unknownProcessed)) ==
+                          "an unknown encoding",
+                  "ProcessedSoundEffect exposes safe defaults and its complete two-encoding helper table");
+
+        const Pipeline::ProcessedSoundEffect xnaProcessed =
+            Pipeline::MakeProcessedSoundEffect(imported);
+        ctx.Check(xnaProcessed.encoding ==
+                          Pipeline::ProcessedPcmEncoding::Signed16LittleEndian &&
+                      xnaProcessed.sampleRate == imported.sampleRate &&
+                      xnaProcessed.channels == imported.channels &&
+                      xnaProcessed.frameCount == imported.frameCount &&
+                      xnaProcessed.loopStart == 0u &&
+                      xnaProcessed.loopLength == imported.frameCount &&
+                      xnaProcessed.samples == imported.samples &&
+                      Pipeline::ProcessedFrameBytes(xnaProcessed) == 2u,
+                  "the XNA-compatible processor preserves 16-bit PCM and supplies the whole-source loop");
+
+        const Cnb::CnbSoundEffectData adapted = Pipeline::ToCnbSoundEffect(xnaProcessed);
+        ctx.Check(adapted.format == Cnb::CnbAudioFormat::Pcm16 &&
+                      adapted.sampleRate == xnaProcessed.sampleRate &&
+                      adapted.channels == xnaProcessed.channels &&
+                      adapted.frameCount == xnaProcessed.frameCount &&
+                      adapted.loopStart == xnaProcessed.loopStart &&
+                      adapted.loopLength == xnaProcessed.loopLength &&
+                      adapted.samples == xnaProcessed.samples,
+                  "the CNB writer adapter changes only the container-specific format identity");
+
+        const Pipeline::ProcessedSoundEffect pcm8Processed =
+            Pipeline::MakeProcessedSoundEffect(MakeImported(
+                ImportedPcmEncoding::Unsigned8, {0u, 64u, 128u, 255u}, 4u));
+        ctx.Check(pcm8Processed.encoding == Pipeline::ProcessedPcmEncoding::Unsigned8 &&
+                      Pipeline::ProcessedFrameBytes(pcm8Processed) == 1u &&
+                      pcm8Processed.loopLength == 4u &&
+                      pcm8Processed.samples == std::vector<std::uint8_t>{0u, 64u, 128u, 255u} &&
+                      Pipeline::ToCnbSoundEffect(pcm8Processed).format == Cnb::CnbAudioFormat::Pcm8,
+                  "the processor and CNB adapter retain an 8-bit source without widening it");
+
+        bool widerXnaSourceRejected = false;
+        try
+        {
+            (void)Pipeline::MakeProcessedSoundEffect(MakeImported(
+                ImportedPcmEncoding::Signed24LittleEndian, {0u, 0u, 0u}, 1u));
+        }
+        catch (const ContentLoadException&)
+        {
+            widerXnaSourceRejected = true;
+        }
+        ctx.Check(widerXnaSourceRejected,
+                  "the XNA-compatible processor refuses wider PCM instead of silently narrowing it");
+
         const auto pcm24 = Cnb::ProcessImportedSoundEffect(MakeImported(
             ImportedPcmEncoding::Signed24LittleEndian,
             {0x00u, 0x00u, 0x80u, 0xFFu, 0xFFu, 0xFFu,
@@ -182,7 +252,15 @@ CNA_DEMOS_CONSOLE(ImportedPcm, {
              "CNA::Content::Import::ImportedPcmEncoding", "CNA::Content::Import::ImportedPcmSampleBytes",
              "CNA::Content::Import::ImportedPcmNarrowsToPcm16", "CNA::Content::Import::ImportedPcmEncodingName",
              "CNA::Content::Import::ImportedSound", "CNA::Content::Cnb::ImportWavAsImportedSound",
-             "CNA::Content::Cnb::ProcessImportedSoundEffect", "CNA::Content::Cnb::SoundEffectLoopPolicy"},
+             "CNA::Content::Cnb::ProcessImportedSoundEffect", "CNA::Content::Cnb::SoundEffectLoopPolicy",
+             "CNA::Content::Pipeline::ProcessedPcmEncoding",
+             "CNA::Content::Pipeline::ProcessedPcmSampleBytes",
+             "CNA::Content::Pipeline::ProcessedPcmBitsPerSample",
+             "CNA::Content::Pipeline::ProcessedPcmEncodingName",
+             "CNA::Content::Pipeline::ProcessedSoundEffect",
+             "CNA::Content::Pipeline::ProcessedFrameBytes",
+             "CNA::Content::Pipeline::MakeProcessedSoundEffect",
+             "CNA::Content::Pipeline::ToCnbSoundEffect"},
     .tags = {"content", "pipeline", "audio", "wav", "pcm", "import"},
     .assets = {"sounds/tone_660.wav"},
 })
