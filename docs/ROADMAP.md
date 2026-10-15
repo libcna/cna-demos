@@ -9899,3 +9899,15 @@ SOFTWARE/Xvfb runs take the declared no-window skip; the initial failure assumpt
 after source review confirmed SOFTWARE intentionally creates no platform window. The `-j3` build,
 metadata666/0, exact SOFTWARE skip CTest and validator suites pass. Counts stay unchanged apart
 from the new ID. Evidence:`/tmp/checkpoint-937-assembly-title-*`.
+
+## Complete938-generated-runtime-checkpoint
+
+The full pinned-CNA build and runtime validation absorb focused934-937. Metadata is666/0; all679
+enabled CTests pass (631 ordinary passes and48 declared skips), with three manual tests disabled.
+SOFTWARE reports562 pass/53 expected fail/48 skip/3 manual and OPENGLES3 reports602/54/7/3, both
+with all666 IDs and zero unexpected results. Exact comparison with Complete933 adds only the two
+passing core metadata IDs on both renderers and the assembly-title pass on OPENGLES3/declared
+no-window skip on SOFTWARE. All663 old statuses, known issues and failed-assertion
+multiplicities remain unchanged at92/96. Generated coverage is303/329 types,2114/2326 members,
+674/753 fields and3078/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-938-complete-*`.

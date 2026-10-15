@@ -3756,3 +3756,15 @@ the first draft's assumption because SOFTWARE intentionally exposes no platform 
 `-j3` build, metadata666/0, exact SOFTWARE skip CTest and validator suites pass. Generated XNA/C
 totals remain unchanged. Evidence:`/tmp/checkpoint-937-assembly-title-*`. No pixel or visual result
 is claimed, and no CNA defect appeared.
+
+### Complete938 generated runtime checkpoint
+
+The complete pinned-CNA validation absorbs the native core batches through focused937. Metadata is
+666/0; all679 enabled CTests pass (631 ordinary passes and48 declared skips), with three manual
+tests disabled. SOFTWARE reports562 pass/53 expected fail/48 skip/3 manual and OPENGLES3 reports
+602/54/7/3. Both execute every ID with zero unexpected results. Against Complete933, the three new
+IDs take exactly their intended statuses; all663 existing statuses, knownIssue identities and
+failed-assertion messages/multiplicities remain unchanged at92 SOFTWARE and96 OPENGLES3. Generated
+coverage remains303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-938-complete-*`. No screenshot, listening, physical-input,
+external-service or manual visual-quality validation was performed.
