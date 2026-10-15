@@ -941,6 +941,24 @@ runtime owner or an explicit safety-boundary disposition. Synthetic cube/volume/
 decoded on CPU; existing demos retain actual source import and GPU behavior, and no screenshot,
 visual-quality or genuine-XNA container claim is added.
 
+#### `CnbSpriteFontCodec.hpp` declaration-level disposition
+
+The pinned header exposes 21 public declarations: five chunk identifiers, six schema/stride/limit
+constants, eight decoded-data fields and two codec functions. Focused968 extends the stable
+`content.cnj.sprite_font` workflow because it already owns the real authored font, runtime object,
+text layout and rendered pixel evidence; a second codec-only catalog ID would repeat that concept.
+
+| Declaration family | Disposition |
+|---|---|
+| CnbSpriteFontChunk values; schema/stride/limit constants | `FONT`, `GLYP`, `CROP`, `KERN` and `CHAR` are asserted as exact four-byte IDs alongside schema 1, the 24/16/12/4-byte strides and 65,536-glyph ceiling. Missing/duplicate chunks, bad flags, oversized counts and mismatched raw lengths are hostile-container matrices retained by CNA's codec tests. |
+| CnbSpriteFontData fields | Default construction proves the safe empty atlas, four empty parallel tables, zero metrics and absent fallback. Decoding the committed eleven-glyph score font then verifies every character, source rectangle, crop, kerning triple, line spacing, spacing and fallback. Its embedded 204x32 atlas is byte-identical to the separately compiled Texture2D. |
+| EncodeSpriteFontToCnb/DecodeSpriteFontFromCnb | The decoded real asset encodes twice byte-identically and the result restores the atlas and every table/metric exactly. A second round trip preserves an absent fallback independently of the first encoded character. Direct refusals cover a short parallel table, unsorted characters, an absent fallback target and a non-2D atlas. The C API font codec demo independently exercises the same native implementation through ownership, sizing and output-buffer boundaries; the XNB transcode demo retains a separate genuine-XNB source. |
+
+All public `CnbSpriteFontCodec.hpp` declarations now have direct native value/round-trip evidence,
+shared wrapper/runtime evidence or an explicit parser-boundary disposition. Both compiled renderers
+load and draw the resulting font with matching programmatic pixel checks; no screenshot, manual
+visual assessment or genuine-XNA execution claim is added.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,

@@ -199,6 +199,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbDocument::RequireSingle` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbMaxAudioSampleRate` -- content.sound_effect.cnb_codec
+- `CNA::Content::Cnb::CnbMaxSpriteFontGlyphs` -- content.cnj.sprite_font
 - `CNA::Content::Cnb::CnbMaxTextureMipLevels` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::CnbMaxTextureRepresentations` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::CnbMaxVideoDimension` -- content.media.cnb_codec
@@ -215,6 +216,17 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbSoundEffectSamplesAsPcm16` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbSoundEffectSchemaVersion` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbSoundEffectSchemaVersionForFormat` -- content.sound_effect.cnb_codec
+- `CNA::Content::Cnb::CnbSpriteFontCharacterStride` -- content.cnj.sprite_font
+- `CNA::Content::Cnb::CnbSpriteFontChunk::Characters` -- content.cnj.sprite_font
+- `CNA::Content::Cnb::CnbSpriteFontChunk::Cropping` -- content.cnj.sprite_font
+- `CNA::Content::Cnb::CnbSpriteFontChunk::GlyphBounds` -- content.cnj.sprite_font
+- `CNA::Content::Cnb::CnbSpriteFontChunk::Header` -- content.cnj.sprite_font
+- `CNA::Content::Cnb::CnbSpriteFontChunk::Kerning` -- content.cnj.sprite_font
+- `CNA::Content::Cnb::CnbSpriteFontData` -- content.cnj.sprite_font
+- `CNA::Content::Cnb::CnbSpriteFontHeaderStride` -- content.cnj.sprite_font
+- `CNA::Content::Cnb::CnbSpriteFontKerningStride` -- content.cnj.sprite_font
+- `CNA::Content::Cnb::CnbSpriteFontRectangleStride` -- content.cnj.sprite_font
+- `CNA::Content::Cnb::CnbSpriteFontSchemaVersion` -- content.cnj.sprite_font
 - `CNA::Content::Cnb::CnbTextureChunk::Header` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::CnbTextureChunk::Payload` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::CnbTextureChunk::Representations` -- content.texture_processor.pipeline_contract
@@ -246,7 +258,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::DecodeModelV2FromCnb` -- content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeSongFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeSoundEffectFromCnb` -- content.sound_effect.cnb_codec, content.xnb.pipeline_transcode
-- `CNA::Content::Cnb::DecodeSpriteFontFromCnb` -- content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeSpriteFontFromCnb` -- content.cnj.sprite_font, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeTexture2DFromCnb` -- content.custom.source_root_capabilities, content.model.pipeline_contract, content.texture_processor.pipeline_contract, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeTexture3DFromCnb` -- content.cnj.pipeline_assets, content.texture_processor.pipeline_contract, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeTextureCubeFromCnb` -- content.cnj.pipeline_assets, content.texture_processor.pipeline_contract, content.xnb.pipeline_transcode
@@ -254,6 +266,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::EncodeSongToCnb` -- content.media.cnb_codec
 - `CNA::Content::Cnb::EncodeSoundEffectToCnb` -- content.sound_effect.cnb_codec
+- `CNA::Content::Cnb::EncodeSpriteFontToCnb` -- content.cnj.sprite_font
 - `CNA::Content::Cnb::EncodeTexture2DToCnb` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::EncodeTexture3DToCnb` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::EncodeTextureCubeToCnb` -- content.texture_processor.pipeline_contract

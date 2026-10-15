@@ -314,7 +314,8 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.xnb.custom_type_reader` (ContentTypeReader<T> + AddTypeCreator for the game's own
   type; now checks actual reader invocation counts, cache reuse and reader context), ✅ `content.content_manager.resource_content_manager` (content embedded as resources;
   ISSUE-012), ✅ `content.cnj.sprite_font` (a bitmap font authored as CNJ: atlas, glyph rectangles,
-  cropping, kerning), ✅ `content.cnj.pipeline_assets` (real registered Texture3D, TextureCube and
+  cropping and kerning, plus all 21 public SpriteFont codec declarations through exact schema,
+  complete table/atlas round trips and relationship refusals), ✅ `content.cnj.pipeline_assets` (real registered Texture3D, TextureCube and
   AnimationClip CNJ builds with exact decoded CNB values, sidecar dependencies, fixed-parameter
   refusal and the clip's intentional CNB-only route), ✅ `content.xnb.pipeline_transcode` (all nine
   supported XNB roots transcoded through public pipeline registration into decoded native CNB,

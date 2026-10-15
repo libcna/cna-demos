@@ -826,6 +826,34 @@ headless CPU/container evidence; format mapping does not claim backend support, 
 visual-quality or genuine-XNA claim is added. No CNA issue was found. Audit the adjacent public
 `CnbSpriteFontCodec.hpp` contract next, reusing existing SpriteFont pipeline/runtime evidence.
 
+Focused **968-CNB-SpriteFont-codec-disposition** extends the stable `content.cnj.sprite_font`
+game from7 to15 controls without adding a catalog ID and dispositions all21 public
+`CnbSpriteFontCodec.hpp` declarations. It freezes all five chunk IDs, schema, four table strides
+and the glyph ceiling, plus safe defaults for all eight carrier fields. The committed eleven-glyph
+score font decodes with exact metadata and singleton tables; every character, glyph rectangle,
+crop, kerning triple and metric matches the authored CNJ, while its embedded 204x32 atlas is
+byte-identical to the independently compiled Texture2D.
+
+Direct encoding is byte-deterministic and round-trips every field. A second round trip keeps an
+absent default character distinct from the first encoded glyph. The encoder separately refuses a
+short parallel table, unsorted character map, fallback outside the map and non-2D atlas. The
+existing C wrapper demo retains ownership/buffer boundaries, the XNB transcode demo retains its
+separate XNB source, and the same updated game still loads, measures and draws the font.
+
+The warning-free build uses at most three jobs. Ten SOFTWARE and ten OPENGLES3 Xvfb runs pass15/15
+with byte-identical stdout SHA-256
+`6a41b2410b5fddf4c14d1fa8a8f8458538ef66d2c47c4fa580cbe5584e4815c4` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata remains682/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA and C totals remain unchanged; 13 public names enter the
+CNA-extension appendix, and Complete956 still marks all seven
+post-baseline IDs absent. Evidence:`/tmp/checkpoint-968-sprite-font-codec/escalated/*`. The first
+interactive invocation omitted `--automated` and therefore correctly stayed open; the first
+sandboxed OPENGLES3 loop could not create an X11 socket because `/tmp/.X11-unix` is not root-owned.
+Neither was a demo or CNA failure, and the required escalated Xvfb runs passed. Pixel checks were
+programmatic; no screenshot, manual visual-quality or genuine-XNA execution claim is added. No CNA
+issue was found. Audit the adjacent public `SpriteFontContentPipeline.hpp` declarations next,
+reusing this real CNJ/runtime/codec evidence.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2952,7 +2980,11 @@ headers now have declaration-level dispositions. Focused967 extends the stable t
 contract and closes all36 public `CnbTextureFormat.hpp` plus all31 public `CnbTextureCodec.hpp`
 declarations with exhaustive mappings, exact linear/sRGB mips and deterministic 2D, cube, volume
 and embedded-container round trips. Audit `CnbSpriteFontCodec.hpp` next, reusing existing
-SpriteFont pipeline and runtime evidence and adding only missing codec behavior. The earlier native
+SpriteFont pipeline and runtime evidence and adding only missing codec behavior. Focused968 extends
+that stable CNJ game and closes all21 codec declarations with exact real-asset tables, deterministic
+round trips and relationship refusals while retaining renderer-backed layout/drawing. Audit
+`SpriteFontContentPipeline.hpp` next, reusing that evidence and adding only missing source-pipeline
+behavior. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds
