@@ -1138,6 +1138,29 @@ exact SOFTWARE CTests pass ten repetitions. The warning-free build uses at most 
 metadata is659/0 and both validator suites pass. Fields move495->501/753 and Graphics reaches
 176/192. Evidence:`/tmp/checkpoint-909-*`.
 
+### Cube faces, depth, compressed formats and target usage values
+
+The existing cube-transfer workflow uploads a different Color image to every face, reads all six
+back exactly and builds its displayed atlas from those results. Its metadata now names every
+CubeMapFace value attached to that behavior. The compressed-cube workflow adds Dxt3 and Dxt5
+resources beside Dxt1; each reports its requested format and round-trips a distinct sixteen-byte
+alpha-plus-colour block exactly. This is public compressed storage and transfer evidence, without
+a claim about sampling, DDS decoding or direct GPU readback.
+
+The render-target depth workflow now runs identical overlapping geometry through None, Depth16 and
+Depth24 resources. Exact target readback is blue without depth and red with either real depth
+attachment. The usage workflow adds a PlatformContents target, checks its retained policy and
+observes its first red drawing after an unbind/rebind before adding blue, matching CNA's documented
+desktop policy. This closes all values in CubeMapFace, DepthFormat, SurfaceFormat and
+RenderTargetUsage.
+
+SOFTWARE and OPENGLES3/Xvfb pass3/3 depth,4/4 usage and9/9 compressed controls. The face-transfer
+workflow passes12/12 on SOFTWARE; OPENGLES3 retains only the established ISSUE-086 post-secondary-
+device pixel failures while all transfer checks pass. All four exact SOFTWARE CTests pass ten
+repetitions. The warning-free build uses at most three jobs, metadata is659/0 and both validator
+suites pass. Fields move501->509/753 and Graphics reaches184/192. Evidence:
+`/tmp/checkpoint-910-*`.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

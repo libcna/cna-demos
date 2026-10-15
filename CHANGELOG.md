@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed CubeMapFace, DepthFormat, RenderTargetUsage and classic DXT SurfaceFormat values with
+  exact six-face transfers, DXT3/DXT5 blocks, real Depth16 testing and preserved platform targets.
 - Completed all TextureFilter values with exact point-versus-linear magnification pixels, existing
   mip workflows and the anisotropic sampler scene.
 - Completed all VertexElementFormat and VertexElementUsage values through actual skinned input,

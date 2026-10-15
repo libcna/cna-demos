@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MS-PL
-// RenderTargetUsage: DiscardContents clears a target whenever it is set again, PreserveContents keeps it.
+// RenderTargetUsage: DiscardContents clears a target when rebound; Preserve/PlatformContents retain it.
 #include <memory>
 #include <optional>
 #include <vector>
@@ -39,10 +39,14 @@ namespace
                                                         0, RenderTargetUsage::DiscardContents);
             preserve_ = std::make_unique<RenderTarget2D>(device, 256, 256, false, SurfaceFormat::Color,
                                                          DepthFormat::None, 0, RenderTargetUsage::PreserveContents);
+            platform_ = std::make_unique<RenderTarget2D>(device, 256, 256, false, SurfaceFormat::Color,
+                                                         DepthFormat::None, 0, RenderTargetUsage::PlatformContents);
+            Context().Check(platform_->getRenderTargetUsageProperty() == RenderTargetUsage::PlatformContents,
+                            "the target retains the platform-selected contents policy");
 
             // Frame 0 paints a red square into both targets, once. Every later frame only adds a
             // blue square, without clearing -- so what survives of the red one is the usage.
-            for (RenderTarget2D* target : {discard_.get(), preserve_.get()})
+            for (RenderTarget2D* target : {discard_.get(), preserve_.get(), platform_.get()})
             {
                 device.SetRenderTarget(target);
                 device.Clear(Color::DimGray);
@@ -54,7 +58,7 @@ namespace
         void Draw(const GameTime& gameTime) override
         {
             GraphicsDevice& device = getGraphicsDeviceProperty();
-            for (RenderTarget2D* target : {discard_.get(), preserve_.get()})
+            for (RenderTarget2D* target : {discard_.get(), preserve_.get(), platform_.get()})
             {
                 device.SetRenderTarget(target);  // set again: DiscardContents loses what was there
                 Paint(Rectangle(106, 106, 120, 120), Color::Blue);
@@ -65,14 +69,18 @@ namespace
             {
                 Context().Check(!HasRed(*discard_), "DiscardContents: the earlier drawing is gone");
                 Context().Check(HasRed(*preserve_), "PreserveContents: the earlier drawing is still there");
+                Context().Check(HasRed(*platform_),
+                                "PlatformContents: this desktop platform preserves the earlier drawing");
             }
 
             device.Clear(Color::DarkSlateBlue);
             spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
-            spriteBatch_->Draw(*discard_, Vector2(110.0f, 100.0f), Color::White);
-            spriteBatch_->Draw(*preserve_, Vector2(434.0f, 100.0f), Color::White);
-            spriteBatch_->DrawString(*font_, "DiscardContents", Vector2(110.0f, 370.0f), Color::White);
-            spriteBatch_->DrawString(*font_, "PreserveContents", Vector2(434.0f, 370.0f), Color::White);
+            spriteBatch_->Draw(*discard_, Rectangle(20, 90, 240, 240), Color::White);
+            spriteBatch_->Draw(*preserve_, Rectangle(280, 90, 240, 240), Color::White);
+            spriteBatch_->Draw(*platform_, Rectangle(540, 90, 240, 240), Color::White);
+            spriteBatch_->DrawString(*font_, "DiscardContents", Vector2(20.0f, 350.0f), Color::White);
+            spriteBatch_->DrawString(*font_, "PreserveContents", Vector2(280.0f, 350.0f), Color::White);
+            spriteBatch_->DrawString(*font_, "PlatformContents", Vector2(540.0f, 350.0f), Color::White);
             spriteBatch_->End();
 
             Game::Draw(gameTime);
@@ -100,15 +108,17 @@ namespace
         std::unique_ptr<Texture2D> pixel_;
         std::unique_ptr<RenderTarget2D> discard_;
         std::unique_ptr<RenderTarget2D> preserve_;
+        std::unique_ptr<RenderTarget2D> platform_;
     };
 }
 
 CNA_DEMOS_GAME(UsageDemo, {
     .id = "graphics.render_target.usage",
     .title = "Discard or preserve contents",
-    .description = "Paints into two render targets once, then sets them again every frame: RenderTargetUsage::"
-                   "DiscardContents loses the earlier drawing, PreserveContents keeps it.",
-    .apis = {"RenderTargetUsage::DiscardContents", "RenderTargetUsage::PreserveContents", "RenderTarget2D::RenderTarget2D",
+    .description = "Paints into three render targets once, then sets them again every frame: DiscardContents loses "
+                   "the earlier drawing while PreserveContents and desktop PlatformContents retain it.",
+    .apis = {"RenderTargetUsage::DiscardContents", "RenderTargetUsage::PreserveContents",
+             "RenderTargetUsage::PlatformContents", "RenderTarget2D::RenderTarget2D",
              "RenderTarget2D::RenderTargetUsage", "GraphicsDevice::SetRenderTarget"},
     .tags = {"render-target", "offscreen", "usage", "accumulate"},
     .frames = 3,

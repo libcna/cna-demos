@@ -4,6 +4,7 @@
 #include <array>
 #include <cstdint>
 #include <optional>
+#include <utility>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
@@ -25,6 +26,27 @@ namespace
     {
         return {static_cast<std::uint8_t>(rgb565), static_cast<std::uint8_t>(rgb565 >> 8),
                 0, 0, 0, 0, 0, 0};
+    }
+
+    using AlphaBlock = std::array<std::uint8_t, 16>;
+
+    AlphaBlock SolidAlphaBlock(SurfaceFormat format, std::uint16_t rgb565)
+    {
+        AlphaBlock block{};
+        if (format == SurfaceFormat::Dxt3)
+        {
+            // Sixteen explicit four-bit alpha values, all opaque.
+            std::fill_n(block.begin(), 8, std::uint8_t{0xff});
+        }
+        else
+        {
+            // Equal opaque endpoints plus selectors that all choose endpoint zero.
+            block[0] = 0xff;
+            block[1] = 0xff;
+        }
+        const Block color = SolidBlock(rgb565);
+        std::copy(color.begin(), color.end(), block.begin() + 8);
+        return block;
     }
 
     class CompressedCubeDemo final : public CnaDemos::DemoGame
@@ -112,6 +134,28 @@ namespace
                 isolated = isolated && observed == smallMips[level - 1];
             }
             Context().Check(isolated, "the patch and refused transfers preserve neighboring blocks other faces and authored small mips");
+
+            bool alphaFormats = true;
+            for (const auto& [format, endpoint] :
+                 {std::pair{SurfaceFormat::Dxt3, std::uint16_t{0x07e0}},
+                  std::pair{SurfaceFormat::Dxt5, std::uint16_t{0x001f}}})
+            {
+                std::optional<TextureCube> alphaCube;
+                try { alphaCube.emplace(getGraphicsDeviceProperty(), 4, false, format); }
+                catch (const System::NotSupportedException&)
+                {
+                    Context().Skip("the live device cannot create every declared DXT cube format");
+                    return;
+                }
+                const AlphaBlock authored = SolidAlphaBlock(format, endpoint);
+                AlphaBlock observed{};
+                alphaCube->SetData(CubeMapFace::PositiveX, authored.data(), 16);
+                alphaCube->GetData(CubeMapFace::PositiveX, observed.data(), 16);
+                alphaFormats = alphaFormats && alphaCube->getFormatProperty() == format &&
+                               Texture::GetFormatSizeEXT(format) == 16 && observed == authored;
+            }
+            Context().Check(alphaFormats,
+                            "Dxt3 and Dxt5 cubes retain their distinct sixteen-byte alpha-plus-color blocks exactly");
         }
     };
 }
@@ -120,13 +164,13 @@ CNA_DEMOS_GAME(CompressedCubeDemo, {
     .id = "graphics.texture_cube.compressed_blocks",
     .title = "Compressed cube block windows and small mips",
     .description = "Transfers original DXT1 cube blocks through guarded byte windows, authors padded small mip levels, "
-                   "and verifies that refused short or misaligned transfers preserve all data.",
+                   "checks exact DXT3/DXT5 alpha-plus-color blocks, and verifies refused transfers preserve all data.",
     .apis = {"TextureCube::TextureCube", "TextureCube::SetData", "TextureCube::GetData", "Texture::LevelCount", "Texture::Format",
-             "TextureCube::Size", "SurfaceFormat::Dxt1"},
+             "TextureCube::Size", "SurfaceFormat::Dxt1", "SurfaceFormat::Dxt3", "SurfaceFormat::Dxt5"},
     .tags = {"texture", "cube", "compression", "mipmap", "array"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 1,
     .deterministic = true,
-    .restrictions = "Requires Dxt1 cube creation; only constructor capability refusal is skipped. "
-                    "Checks public compressed bytes, not direct GPU readback, cube sampling, DDS decoding or DXT3/DXT5 alpha.",
+    .restrictions = "Requires Dxt1, Dxt3 and Dxt5 cube creation; only constructor capability refusal is skipped. "
+                    "Checks public compressed bytes, not direct GPU readback, cube sampling or DDS decoding.",
 })

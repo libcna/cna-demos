@@ -71,9 +71,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-909
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-910
 overlays for all659 catalog demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,501/753 fields and
+The surface totals are302/329 XNA types,2114/2326 XNA members,509/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -487,6 +487,18 @@ Both renderers pass6/6 and1/1; both exact SOFTWARE CTests pass ten repetitions. 
 build uses `-j3`, metadata validates659/0 and both validator suites pass. Coverage moves495->501/753
 and Graphics reaches176/192. Evidence:`/tmp/checkpoint-909-*`. **Next:** audit CubeMapFace and the
 remaining depth/surface/render-target format-policy values through actual resources and transfers.
+
+Focused **910-complete-cube-depth-compressed-and-target-policy-values** closes all CubeMapFace,
+DepthFormat, RenderTargetUsage and SurfaceFormat values. Existing six-face transfers now name all
+observed identities; Dxt3/Dxt5 cubes round-trip exact sixteen-byte blocks; identical overlapping
+geometry proves Depth16 and Depth24 both retain the nearer surface; and PlatformContents preserves
+the earlier drawing across an unbind/rebind on both desktop renderers. SOFTWARE and OPENGLES3/Xvfb
+pass3/3 depth,4/4 usage and9/9 compressed controls. Face transfers pass12/12 on SOFTWARE and retain
+only established OPENGLES3 ISSUE-086. All four exact SOFTWARE CTests pass ten repetitions. The
+warning-free build uses `-j3`, metadata validates659/0 and both validator suites pass. Coverage
+moves501->509/753 and Graphics reaches184/192. Evidence:`/tmp/checkpoint-910-*`. **Next:** audit the
+final eight Graphics values: GraphicsDeviceStatus Lost/NotReset, PresentInterval Default/One/Two
+and SetDataOptions None/NoOverwrite, dispositioning platform-only outcomes honestly.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
@@ -2251,13 +2263,14 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete892 remains the authoritative657-demo full-runtime baseline; focused893-
-909 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
+910 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
 closed at7/8, Input is dispositioned at194/202, Input.Touch is complete at15/15 and the root
 Framework, Audio and Design namespaces are complete at78/78,11/11 and2/2. Net is dispositioned at
 17/22; its five uncredited values require real full/remote sessions or service/transport loss.
-Graphics is176/192 after also closing TextureFilter. Audit CubeMapFace plus the remaining depth,
-surface and render-target format/policy values next through actual resources and transfers, then
-continue through the final device/status/upload fields.
+Graphics is184/192 after closing the resource format/policy families. Audit the final eight device,
+presentation and upload values next: GraphicsDeviceStatus Lost/NotReset, PresentInterval Default/
+One/Two and SetDataOptions None/NoOverwrite. Lost/NotReset require real device-loss transitions and
+must remain intentionally uncredited if no public deterministic trigger exists.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete892 too stale.

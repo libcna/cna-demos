@@ -53,6 +53,10 @@ namespace
                                                              DepthFormat::None);
             withDepth_ = std::make_unique<RenderTarget2D>(device, 320, 240, false, SurfaceFormat::Color,
                                                           DepthFormat::Depth24);
+            withDepth16_ = std::make_unique<RenderTarget2D>(device, 320, 240, false, SurfaceFormat::Color,
+                                                            DepthFormat::Depth16);
+            Context().Check(withDepth16_->getDepthStencilFormatProperty() == DepthFormat::Depth16,
+                            "the render target retains its requested 16-bit depth format");
 
             effect_ = std::make_unique<BasicEffect>(device);
             effect_->setVertexColorEnabledProperty(true);
@@ -65,7 +69,7 @@ namespace
         {
             GraphicsDevice& device = getGraphicsDeviceProperty();
             // The same scene into both targets: near red square first, far blue square second.
-            for (RenderTarget2D* target : {withoutDepth_.get(), withDepth_.get()})
+            for (RenderTarget2D* target : {withoutDepth_.get(), withDepth16_.get(), withDepth_.get()})
             {
                 device.SetRenderTarget(target);
                 device.Clear(Color::Black);
@@ -82,25 +86,30 @@ namespace
             }
             device.SetRenderTarget(nullptr);
 
-            device.Clear(Color::DimGray);
-            spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
-            spriteBatch_->Draw(*withoutDepth_, Vector2(40.0f, 80.0f), Color::White);
-            spriteBatch_->Draw(*withDepth_, Vector2(440.0f, 80.0f), Color::White);
-            spriteBatch_->DrawString(*font_, "DepthFormat::None", Vector2(40.0f, 340.0f), Color::White);
-            spriteBatch_->DrawString(*font_, "DepthFormat::Depth24", Vector2(440.0f, 340.0f), Color::White);
-            spriteBatch_->End();
-
             if (FramesDrawn() == 0)
             {
-                const CnaDemos::BackBufferPixels pixels(device);
-                // The middle of each target is where the two squares overlap.
-                const Color without = pixels.At(40 + 175, 80 + 120);
-                const Color with = pixels.At(440 + 175, 80 + 120);
-                Context().Print("overlap: without depth buffer {}, with depth buffer {}", without.ToString(),
-                                with.ToString());
-                Context().Check(without == Color::Blue, "without a depth buffer the later (far) square covers");
-                Context().Check(with == Color::Red, "with Depth24 the nearer square stays in front");
+                const Rectangle overlap(175, 120, 1, 1);
+                Color without, depth16, depth24;
+                withoutDepth_->GetData(0, &overlap, &without, 0, 1);
+                withDepth16_->GetData(0, &overlap, &depth16, 0, 1);
+                withDepth_->GetData(0, &overlap, &depth24, 0, 1);
+                Context().Print("overlap: no depth {}, Depth16 {}, Depth24 {}", without.ToString(),
+                                depth16.ToString(), depth24.ToString());
+                Context().Check(without == Color::Blue,
+                                "without a depth buffer the later far square covers the overlap");
+                Context().Check(depth16 == Color::Red && depth24 == Color::Red,
+                                "both 16-bit and 24-bit depth buffers retain the nearer square");
             }
+
+            device.Clear(Color::DimGray);
+            spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
+            spriteBatch_->Draw(*withoutDepth_, Rectangle(20, 80, 240, 180), Color::White);
+            spriteBatch_->Draw(*withDepth16_, Rectangle(280, 80, 240, 180), Color::White);
+            spriteBatch_->Draw(*withDepth_, Rectangle(540, 80, 240, 180), Color::White);
+            spriteBatch_->DrawString(*font_, "DepthFormat::None", Vector2(20.0f, 280.0f), Color::White);
+            spriteBatch_->DrawString(*font_, "DepthFormat::Depth16", Vector2(280.0f, 280.0f), Color::White);
+            spriteBatch_->DrawString(*font_, "DepthFormat::Depth24", Vector2(540.0f, 280.0f), Color::White);
+            spriteBatch_->End();
 
             Game::Draw(gameTime);
         }
@@ -109,6 +118,7 @@ namespace
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
         std::unique_ptr<RenderTarget2D> withoutDepth_;
+        std::unique_ptr<RenderTarget2D> withDepth16_;
         std::unique_ptr<RenderTarget2D> withDepth_;
         std::unique_ptr<BasicEffect> effect_;
     };
@@ -117,10 +127,10 @@ namespace
 CNA_DEMOS_GAME(RenderTargetDepthDemo, {
     .id = "graphics.render_target.depth_buffer",
     .title = "Render target with a depth buffer",
-    .description = "Renders the same overlapping 3D squares into a RenderTarget2D with DepthFormat::None and one with "
-                   "DepthFormat::Depth24: only the second is depth-tested.",
+    .description = "Renders the same overlapping 3D squares into RenderTarget2D resources with no depth, Depth16 and "
+                   "Depth24: both real depth buffers retain the nearer surface.",
     .apis = {"RenderTarget2D::RenderTarget2D", "RenderTarget2D::DepthStencilFormat", "DepthFormat::Depth24",
-             "DepthFormat::None"},
+             "DepthFormat::Depth16", "DepthFormat::None"},
     .tags = {"render-target", "depth", "3d", "offscreen"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

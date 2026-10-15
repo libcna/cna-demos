@@ -128,8 +128,9 @@ a check that all authored colors remain visible and that a blank texture row can
   rectangle windows, neighboring faces, authored mip levels and refused-call preservation.
   Both inspected readback-atlas captures are RGBA-identical; no direct GPU-readback claim.
   Full 457 passes all 470 enabled CTests and both smokes, retaining all original 35/36 failures.
-  ✅ `graphics.texture_cube.compressed_blocks`: eight checks on both renderer selections cover
-  exact DXT1 blocks, guarded byte windows, padded small mips and refused-transfer preservation.
+  ✅ `graphics.texture_cube.compressed_blocks`: nine checks on both renderer selections cover
+  exact DXT1 blocks, guarded byte windows, padded small mips, refused-transfer preservation and
+  exact DXT3/DXT5 alpha-and-colour block transfers.
   Empty stderr; no decoded-pixel/sampling or direct GPU-readback claim.
   ✅ `graphics.texture_cube.typed_payloads`: eight checks on both selections cover packed-word
   serialization, guarded element windows, unclamped Vector4 channels, scalar views, a typed
@@ -9448,3 +9449,24 @@ controls. Both exact SOFTWARE CTests pass ten repetitions. The warning-free buil
 three jobs, metadata is659/0 and both validator suites pass. Coverage moves495->501/753 fields and
 Graphics reaches176/192. No CNA or demo defect appeared. Evidence:`/tmp/checkpoint-909-*`. Audit
 CubeMapFace plus the remaining depth/surface/render-target format-policy values next.
+
+## Focused910-complete-cube-depth-compressed-and-target-policy-values
+
+Four stable resource workflows close all6 CubeMapFace, all4 DepthFormat, all3 RenderTargetUsage and
+all27 SurfaceFormat values. The cube-transfer workflow already writes and reads distinct data for
+all six faces; its metadata now names every observed identity. The compressed-cube workflow adds
+real Dxt3 and Dxt5 resources and exact sixteen-byte alpha-plus-colour block round-trips beside its
+original Dxt1 regions and mips. The render-target depth scene adds an actual Depth16 attachment:
+the same overlapping geometry reads blue with no depth buffer and red with both Depth16 and
+Depth24. The usage scene adds PlatformContents, verifies the retained property and observes the
+earlier red drawing after an unbind/rebind cycle, matching CNA's desktop preservation policy.
+
+SOFTWARE and OPENGLES3/Xvfb pass3/3 depth,4/4 usage and9/9 compressed-block controls. The cube-face
+workflow passes12/12 on SOFTWARE; OPENGLES3 retains exactly the established ISSUE-086 two-pixel-
+group failure after secondary-device teardown while all public transfers pass. All four exact
+SOFTWARE CTests pass ten repetitions. The warning-free build uses at most three jobs, metadata is
+659/0 and both validator suites pass. Coverage moves501->509/753 fields and Graphics reaches
+184/192. No new CNA defect appeared. Evidence:`/tmp/checkpoint-910-*`. Audit the final eight
+Graphics values next: GraphicsDeviceStatus Lost/NotReset, PresentInterval Default/One/Two and
+SetDataOptions None/NoOverwrite, with platform-only values explicitly dispositioned when they
+cannot be produced honestly.
