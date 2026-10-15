@@ -12,7 +12,7 @@ assets/models/ that is loaded as a loose glTF file at run time.
 * bending_strip.gltf -- a vertical strip skinned to two joints (LowerJoint -> UpperJoint) with an
   animation "Bend" that rotates UpperJoint back and forth. It has NORMAL and COLOR_0, so CNA gives it a
   SkinnedEffect.
-* turntable.gltf, morph_flag.gltf, camera_rig.gltf, textured_crate.gltf, lit_sphere.gltf,
+* turntable.gltf, morph_flag.gltf/loose_morph_flag.gltf, camera_rig.gltf, textured_crate.gltf, lit_sphere.gltf,
   slide_rig.gltf, loose_paint_toy.gltf, loose_node_instances.gltf and the three
   loose_scene_fallback_*.gltf files, loose_animation_diagnostics.gltf,
   loose_skinned_rigid_animation.gltf and the
@@ -1123,6 +1123,7 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     skin_weight_forms(assets_root / "models" / "loose_skin_weight_forms.gltf")
     multiple_skins(assets_root / "models" / "loose_multi_skin.gltf")
     skinned_rigid_animation(assets_root / "models" / "loose_skinned_rigid_animation.gltf")
+    morph_flag(assets_root / "models" / "loose_morph_flag.gltf")
     node_instances(assets_root / "models" / "loose_node_instances.gltf")
     scene_fallbacks(assets_root / "models")
     animation_diagnostics(assets_root / "models" / "loose_animation_diagnostics.gltf")

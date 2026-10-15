@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 27), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 28), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -334,6 +334,21 @@ fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-851-skinned-rigid-*` and
 `/tmp/checkpoint-851-coverage.md`. Existing pixel readback still passed, but no screenshot or new
 manual visual-quality inspection was performed. Audit the remaining morph-weight track and loose-
 versus-compiled animation carrier boundaries next.
+
+Focused **852-morph-animation-carrier-reporting** adds
+`graphics.model.morph_animation_import`. The same generated two-target flag loads through compiled
+CNB and loose glTF with identical base bytes, stride, defaults and four-key `Morph` track. Both
+evaluate at1.5 seconds to weights(1,.5) and produce identical blended bytes; real
+`SetMorphWeightsEXT` storage plus `VertexBuffer::GetDataRawEXT` proves the loose path uploads those
+bytes exactly. The loose report incorrectly adds `animation-paths-unsupported` and
+`animations-empty`, warning twice and counting two dropped occurrences for that retained playable
+track. CNA-DEMOS-ISSUE-094 records the missing reconciliation between the morph and bone-clip
+extractors. SOFTWARE and OPENGLES3 pass6/7 with only that invariant failing. The `-j3` build, exact
+known-issue SOFTWARE CTest, metadata653/0 and self-tests5/5 and4/4 pass; temporary coverage remains
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-852-morph-animation-*` and `/tmp/checkpoint-852-coverage.md`. No screenshot or
+visual inspection was performed. Compare the same STEP/CUBICSPLINE asset through loose and compiled
+carriers next, tightening CNA-DEMOS-ISSUE-031's runtime scope.
 
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
@@ -1912,15 +1927,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-851
-form the validated652-demo staged state. The glTF scene/node-graph audit is closed with
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-852
+form the validated653-demo staged state. The glTF scene/node-graph audit is closed with
 CNA-DEMOS-ISSUE-092 retained. Rigid animation channel loss, resampling, duplicate/nonzero times,
 generated clip names and public malformed-sampler refusals now have exact evidence;
 CNA-DEMOS-ISSUE-093 records the silent unknown-interpolation-to-LINEAR fallback. Mixed skinned/
-rigid clips now have exact joint-retention and rigid-track-loss evidence. Continue with the
-remaining morph-weight track and loose-versus-compiled animation carrier boundaries, extending
-existing model workflows where coherent. The complete checkpoint and harness findings are recorded
-in section7.
+rigid clips now have exact retention/loss evidence, while CNA-DEMOS-ISSUE-094 records false loss
+diagnostics for a retained morph track. Compare the same STEP/CUBICSPLINE asset through loose and
+compiled carriers next, tightening CNA-DEMOS-ISSUE-031's runtime scope before closing the animation
+importer audit. The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
@@ -3834,6 +3849,29 @@ and4/4 pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 f
 `/tmp/checkpoint-851-coverage.md`. Existing pixel readback passed; no screenshot or new manual
 visual-quality inspection was performed. No CNA issue appeared. Audit the remaining morph-weight
 track and loose-versus-compiled animation carrier boundaries next.
+
+### Focused852-morph-animation-carrier-reporting
+
+New `graphics.model.morph_animation_import` loads the same generated two-target flag through its
+compiled CNB and loose glTF forms. Both ModelMeshPart Tags expose identical base bytes, stride,
+zero defaults and four-key linear track. At1.5 seconds both evaluate to weights(1,.5) and blend to
+the same bytes. `SetMorphWeightsEXT` stores those weights and raw VertexBuffer readback matches the
+independently computed payload exactly.
+
+The loose public report nevertheless marks the retained weights channel as unsupported and its
+animation as empty. Alongside the informational two-target summary it contains two warnings and
+counts two dropped occurrences, even though the public morph carrier is playable. Source review
+shows `ExtractMorphWeightTrack` succeeds, then the independent scene-node clip gatherer classifies
+the same path as unsupported and the report never reconciles the outcomes. CNA-DEMOS-ISSUE-094
+records this defect.
+
+SOFTWARE and OPENGLES3 pass6/7 with only the no-false-loss invariant failing. The exact known-issue
+SOFTWARE CTest passes via `WILL_FAIL`; the `-j3` build, metadata653/0 and validator/checkpoint self-
+tests5/5 and4/4 pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and
+3078/3205 C routes. Evidence:`/tmp/checkpoint-852-morph-animation-*` and
+`/tmp/checkpoint-852-coverage.md`. CPU bytes and real VertexBuffer readback were checked; no
+screenshot or visual inspection was performed. Compare the same STEP/CUBICSPLINE asset through
+loose and compiled carriers next, tightening CNA-DEMOS-ISSUE-031's runtime scope.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

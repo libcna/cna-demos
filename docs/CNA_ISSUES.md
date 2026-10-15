@@ -15,6 +15,36 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-094 -- Retained glTF morph animation is reported as unsupported and lost
+
+- **Area/API:** loose glTF `ContentManager::Load<Model>`, `MorphTargetDataEXT::WeightTrack` and
+  `GltfImportReportEXT` animation diagnostics.
+- **Reproduction:** `graphics.model.morph_animation_import` loads the same original two-target
+  `Morph` asset through compiled CNB and loose glTF routes. Both parts retain the same four-key
+  weight track. Evaluating it at 1.5 seconds yields weights `(1, 0.5)`, both carriers compute the
+  same vertex bytes, and `SetMorphWeightsEXT` uploads those exact bytes on the loose path.
+- **Observed:** the loose Model nevertheless reports `animation-paths-unsupported` count one and
+  `animations-empty` count one. Both are warnings with loss kinds, so `AnythingLost()` is true and
+  `DroppedFeatureCount` is two for a weight channel that remains available and playable through
+  the public morph carrier. The compiled format's ordinary import report is empty. SOFTWARE and
+  OPENGLES3/Xvfb each pass the other six of seven controls and fail only the no-false-loss
+  invariant.
+- **Cause observed in source:** `ExtractMorphWeightTrack` correctly extracts the weights channel
+  and `ContentModelLoaders` attaches it to every relevant `MorphTargetDataEXT`. Independently,
+  `ExtractSceneNodeClips` sends the same channel through `GatherChannels`, whose bone-clip carrier
+  understands only translation, rotation and scale. It counts `weights` as an unsupported path,
+  leaves the bone clip empty and appends both loss diagnostics. The final report never reconciles
+  that bone-clip result with the successfully retained morph track.
+- **Expected:** a weights channel retained in `MorphTargetDataEXT::WeightTrack` is supported by the
+  returned Model and must not contribute unsupported-path, empty-animation or dropped-feature
+  loss. The report may identify the separate morph carrier as information; it must not tell an
+  application that authored motion was lost when the public playback data is present.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction uses exact CPU output and real
+  VertexBuffer readback on both exercised renderers; no visual judgment is involved. Evidence:
+  `/tmp/checkpoint-852-morph-animation-*`. No CNA source was modified and no upstream message was
+  sent.
+
 ### CNA-DEMOS-ISSUE-093 -- Unknown glTF animation interpolation silently becomes LINEAR
 
 - **Area/API:** loose glTF `ContentManager::Load<Model>`, animation sampler validation,

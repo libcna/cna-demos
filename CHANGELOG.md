@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a compiled-versus-loose morph-animation carrier workflow with exact vertex upload, and
+  recorded CNA-DEMOS-ISSUE-094 for false unsupported/empty loss diagnostics on the retained track.
 - Extended skinned-animation coverage with a mixed joint/rigid source clip, proving retained joint
   playback and exact public diagnostics for the rigid scene-node track that Model.Tag cannot carry.
 - Added a focused loose-glTF animation validation workflow and recorded CNA-DEMOS-ISSUE-093: an

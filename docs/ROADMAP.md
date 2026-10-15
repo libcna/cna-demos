@@ -224,7 +224,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (27 demos)
+## Phase 7 -- models, animation, glTF 🟨 (28 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -242,6 +242,8 @@ a check that all authored colors remain visible and that a blank texture row can
   CNA-DEMOS-ISSUE-031: all play as LINEAR).
 - ✅ `graphics.model.animation_validation` (decreasing-time and output-count refusal, manager
   recovery, and unknown interpolation fallback; expected failure, CNA-DEMOS-ISSUE-093).
+- ✅ `graphics.model.morph_animation_import` (compiled/loose carrier parity, exact vertex upload
+  and false loose-report loss; expected failure, CNA-DEMOS-ISSUE-094).
 - ✅ `graphics.model.material_variants` (KHR_materials_variants, run-time import: CNA's content
   pipeline refuses variants, which the compiled model format cannot carry). Its complete-state
   extension selects an unlit24-byte default, a coloured PBR60-byte Ocean layout and a textured
@@ -8425,3 +8427,21 @@ types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-851-skinned-rigid-*` and `/tmp/checkpoint-851-coverage.md`. Existing pixel readback
 passed; no screenshot or new manual visual inspection was performed. Audit the remaining morph-
 weight track and loose-versus-compiled animation carrier boundaries next.
+
+## Focused852-morph-animation-carrier-reporting
+
+New `graphics.model.morph_animation_import` compares one generated flag through compiled CNB and
+loose glTF Model loading. Both part Tags retain identical base bytes, stride, defaults and four-key
+weight track; both evaluate at1.5 seconds to weights(1,.5) and identical blended bytes. Real
+`SetMorphWeightsEXT` storage and raw VertexBuffer readback prove the loose path uploads that exact
+payload.
+
+The loose report still emits `animation-paths-unsupported` and `animations-empty`, producing two
+warnings and two dropped occurrences for the retained playable track. CNA-DEMOS-ISSUE-094 records
+the missing reconciliation between the successful morph extractor and independent bone-clip
+report. SOFTWARE and OPENGLES3 pass6/7 with only that invariant failing. The `-j3` build, exact
+known-issue SOFTWARE CTest, metadata653/0 and both self-test suites pass. Temporary coverage remains
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-852-morph-animation-*` and `/tmp/checkpoint-852-coverage.md`. No screenshot or
+visual inspection was performed. Compare the same STEP/CUBICSPLINE asset through loose and compiled
+carriers next, tightening CNA-DEMOS-ISSUE-031's runtime scope.
