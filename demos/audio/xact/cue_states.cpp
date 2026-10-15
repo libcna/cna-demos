@@ -139,6 +139,33 @@ namespace
         ctx.Check(interrupted->getIsStoppedProperty() && !interrupted->getIsStoppingProperty(),
                   "Immediate interrupts an authored release without waiting for its deadline");
         interrupted->Dispose();
+
+        // A separate settings bank binds a volume RPC to XACT's built-in ReleaseTime variable.
+        // This simple cue has no fadeOut field, so its Stopping tail comes only from the RPC's
+        // final 150 ms input point rather than the authored cue fade exercised above.
+        AudioEngine rpcEngine("assets/xact/release_rpc.xgs");
+        WaveBank rpcWaves(&rpcEngine, "assets/xact/release.xwb");
+        SoundBank rpcSounds(&rpcEngine, "assets/xact/release_rpc.xsb");
+        std::unique_ptr<Cue> rpcRelease(rpcSounds.GetCue("ReleaseTimeCue"));
+        rpcRelease->Play();
+        rpcEngine.Update();
+        ctx.Check(rpcRelease->getIsPlayingProperty(), "the ReleaseTime-RPC cue starts playing");
+        rpcRelease->Stop(AudioStopOptions::AsAuthored);
+        const auto rpcStarted = std::chrono::steady_clock::now();
+        ctx.Check(rpcRelease->getIsStoppingProperty() && !rpcRelease->getIsStoppedProperty(),
+                  "a ReleaseTime RPC gives a simple cue an observable Stopping phase");
+        const auto rpcDeadline = rpcStarted + std::chrono::seconds(2);
+        while (rpcRelease->getIsStoppingProperty() && std::chrono::steady_clock::now() < rpcDeadline)
+        {
+            rpcEngine.Update();
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+        ctx.Check(rpcRelease->getIsStoppedProperty() && !rpcRelease->getIsStoppingProperty(),
+                  "the RPC-only release reaches Stopped while the engine is pumped");
+        ctx.Print("Observed RPC-only release state wait: {} ms (not output-sample timing)",
+                  std::chrono::duration_cast<std::chrono::milliseconds>(
+                      std::chrono::steady_clock::now() - rpcStarted).count());
+        rpcRelease->Dispose();
     }
 }
 
@@ -146,12 +173,13 @@ CNA_DEMOS_CONSOLE(CueStates, {
     .id = "audio.xact.cue_states",
     .title = "XACT cue states",
     .description = "Walks a one-shot Cue through Play/Pause/Resume/Stop and disposal, checks repeated transport "
-                   "calls in each state, then contrasts immediate and authored releases.",
+                   "calls in each state, then contrasts immediate, authored-fade and ReleaseTime-RPC releases.",
     .apis = {"SoundBank::GetCue", "Cue::Play", "Cue::Pause", "Cue::Resume", "Cue::Stop", "Cue::Name",
              "Cue::IsCreated", "Cue::IsPreparing", "Cue::IsPrepared", "Cue::IsPlaying", "Cue::IsPaused",
              "Cue::IsStopping", "Cue::IsStopped", "Cue::IsDisposed", "Cue::Dispose", "Cue::Disposing",
              "AudioStopOptions"},
     .tags = {"audio", "xact", "cue", "state"},
     .needs = CnaDemos::Need::Audio,
-    .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb", "xact/release.xwb", "xact/release.xsb"},
+    .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb", "xact/release.xwb", "xact/release.xsb",
+               "xact/release_rpc.xgs", "xact/release_rpc.xsb"},
 })

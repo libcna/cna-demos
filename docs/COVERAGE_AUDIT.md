@@ -2617,3 +2617,18 @@ runs pass20/21 with byte-identical output and empty stderr; the exact expected-f
 Temporary generated coverage is numerically unchanged because every named member already had
 declaration credit. Evidence:`/tmp/checkpoint-860-curve-key-collection-*` and
 `/tmp/checkpoint-860-coverage.md`. No rendering or visual inspection was involved.
+
+### Focused861 XACT ReleaseTime RPC state transition
+
+The explicit later candidate left by Focused816 is now closed in the existing
+`audio.xact.cue_states` workflow. A generated settings bank binds a three-point volume RPC to the
+built-in `ReleaseTime` variable, and a simple cue references it without carrying any authored fade.
+Its public state enters `Stopping` after `Stop(AsAuthored)` and reaches `Stopped` after the RPC's
+150ms domain while the engine is pumped. This distinguishes the RPC-only release branch from both
+immediate stop and the already demonstrated500ms authored cue fade.
+
+Both renderer-labelled runs pass23/23 with empty stderr, and all ten SOFTWARE XACT CTests pass.
+Temporary generated coverage is numerically unchanged because the involved Cue members already
+had declaration credit. Evidence:`/tmp/checkpoint-861-xact-release-rpc-*` and
+`/tmp/checkpoint-861-coverage.md`. This is public transport-state evidence only; volume, envelope
+shape, samples and audible output remain outside the claim.

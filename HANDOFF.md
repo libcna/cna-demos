@@ -4073,6 +4073,21 @@ Continue the deeper public-behavior audit from the next explicit uncovered famil
 complete checkpoint solely for this extension. Preserve the Complete859 full baseline until a
 substantial focused batch accumulates.
 
+### Focused861-XACT-ReleaseTime-RPC-state-transition
+
+The deferred public XACT RPC candidate is now covered without a new demo ID.
+`audio.xact.cue_states` adds three controls and two generated original assets: a simple cue has no
+authored fade, while its sound references a volume RPC bound to the built-in `ReleaseTime`
+variable with a150ms final point. `Stop(AsAuthored)` visibly enters `Stopping`, then reaches
+`Stopped` as the separate engine is pumped. Both renderer-labelled runs pass23/23 with empty
+stderr and observed152ms state waits. All ten SOFTWARE XACT CTests pass. The Python generator,
+`-j3` build, metadata and self-tests are green; temporary coverage is unchanged. Evidence is
+`/tmp/checkpoint-861-*`. No listening, mixed-volume, sample timing or acoustic result is claimed.
+
+Continue the next high-value public-behavior gap from the audit. The remaining XACT
+volume/pitch/filter and variation results have no public readback and stay dispositioned; do not
+duplicate this transport fixture merely to exercise private mixer state.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

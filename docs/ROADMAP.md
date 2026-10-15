@@ -8590,3 +8590,20 @@ coverage remains655 demos,302/329 types,2114/2326 members,169/753 fields and3078
 Evidence:`/tmp/checkpoint-860-curve-key-collection-*` and `/tmp/checkpoint-860-coverage.md`. No
 graphics device, screenshot or visual inspection was used. Continue with the next explicit
 behavior-level gap from the public API audit.
+
+## Focused861-XACT-ReleaseTime-RPC-state-transition
+
+The existing `audio.xact.cue_states` workflow grows from twenty to twenty-three controls. Two new
+original assets define a simple cue with no authored fade and a volume RPC bound to XACT's built-in
+`ReleaseTime` variable; the curve's last point is150ms. Public Cue state proves that
+`Stop(AsAuthored)` enters `Stopping` rather than stopping immediately, then reaches `Stopped` while
+the separate AudioEngine is pumped. The observed waits were152ms in both focused renderer-labelled
+runs, beside the existing authored-fade controls.
+
+SOFTWARE and OPENGLES3-labelled direct runs pass23/23 with empty stderr. All ten SOFTWARE XACT
+CTests pass, the Python generator compiles, the `-j3` build is clean, metadata is655/0 and both tool
+self-test suites pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields
+and3078/3205 C routes. Evidence:`/tmp/checkpoint-861-xact-release-rpc-*` and
+`/tmp/checkpoint-861-coverage.md`. This establishes public state timing only; it makes no listening,
+mixed-volume, envelope-shape or output-sample timing claim. Continue the next high-value
+public-behavior gap without creating a redundant XACT variant.

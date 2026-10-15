@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the XACT cue-state workflow with a generated ReleaseTime-bound volume RPC, proving the
+  public RPC-only Stopping phase and its eventual transition to Stopped without an authored fade.
 - Extended CurveKeyCollection coverage through stable duplicate insertion, indexed replacement,
   sorted reinsertion and atomic invalid-index refusal, and recorded CNA-DEMOS-ISSUE-097 for an
   epsilon-near replacement that violates the promised ascending order.
