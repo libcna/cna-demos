@@ -6,7 +6,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**659 demos** in 18 categories. Kinds: console 164, game 294, standalone 201. Automation: automated 623, manual 3, smoke-only 33.
+**660 demos** in 18 categories. Kinds: console 165, game 294, standalone 201. Automation: automated 624, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -17,7 +17,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | core | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
-| diagnostics | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
+| diagnostics | 3 | 3 | 0 | 0 | 2 / 1 / 0 / 0 / 0 | 2 / 1 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 23 / 7 / 2 / 1 / 0 | 30 / 0 / 2 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 16 / 0 / 2 / 1 / 0 | 16 / 0 / 2 / 1 / 0 |
 | graphics | 184 | 184 | 0 | 0 | 146 / 26 / 12 / 0 / 0 | 167 / 3 / 14 / 0 / 0 |
@@ -266,13 +266,29 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Devices::PowerState` -- devices.system.machine_info
 - `CNA::Devices::SystemInfo::LogicalCpuCoreCount` -- devices.system.machine_info
 - `CNA::Devices::SystemInfo::SystemRamMegabytes` -- devices.system.machine_info
+- `CNA::Diagnostics::BeginZone` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::EndZone` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::EventRecord` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::FrameSample` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::FrameScope` -- diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::GetBuildMode` -- diagnostics.profiler.modes
 - `CNA::Diagnostics::GetProvider` -- diagnostics.profiler.modes
 - `CNA::Diagnostics::GetRuntimeMode` -- diagnostics.profiler.modes
-- `CNA::Diagnostics::IDiagnosticsProvider::CaptureSnapshot` -- diagnostics.profiler.counters, diagnostics.profiler.modes
+- `CNA::Diagnostics::IDiagnosticsProvider::CaptureSnapshot` -- diagnostics.profiler.counters, diagnostics.profiler.modes, diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::MarkEvent` -- diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::MetricSample` -- diagnostics.profiler.counters
+- `CNA::Diagnostics::NameHandle` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::RecordingSession` -- diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::SetRuntimeMode` -- diagnostics.profiler.modes
 - `CNA::Diagnostics::Snapshot` -- diagnostics.profiler.counters, diagnostics.profiler.modes
+- `CNA::Diagnostics::StartRecording` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::StopRecording` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::Trace` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::Trace::ReadBinary` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::Trace::WriteBinary` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::Trace::WriteChromeTrace` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::ZoneScope` -- diagnostics.profiler.trace_recording
+- `CNA::Diagnostics::ZoneToken` -- diagnostics.profiler.trace_recording
 - `CNA::Graphics::AsciiPostProcessEffect::AsciiPostProcessEffect` -- cnaext.ascii_post_process.scene
 - `CNA::Graphics::AsciiPostProcessEffect::Draw` -- cnaext.ascii_post_process.scene
 - `CNA::Graphics::AsciiPostProcessEffect::GetLastGridDimensions` -- cnaext.ascii_post_process.scene

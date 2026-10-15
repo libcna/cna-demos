@@ -29,6 +29,15 @@
       }
     },
     {
+      "name": "diagnostics-full",
+      "inherits": "windowless",
+      "displayName": "Windowless renderers with full CNA diagnostics",
+      "description": "SOFTWARE;HEADLESS;STUB plus CNA's full timing zones, event history and trace recording.",
+      "cacheVariables": {
+        "CNA_DIAGNOSTICS": "FULL"
+      }
+    },
+    {
       "name": "linux-multi",
       "inherits": "base",
       "displayName": "Linux: GL and the windowless renderers in one binary",
@@ -62,6 +71,7 @@
   "buildPresets": [
     { "name": "default", "configurePreset": "default" },
     { "name": "windowless", "configurePreset": "windowless" },
+    { "name": "diagnostics-full", "configurePreset": "diagnostics-full" },
     { "name": "linux-multi", "configurePreset": "linux-multi" },
     { "name": "linux-full", "configurePreset": "linux-full" },
     { "name": "linux-full-release", "configurePreset": "linux-full-release" }
@@ -72,6 +82,12 @@
       "configurePreset": "windowless",
       "output": { "outputOnFailure": true },
       "execution": { "jobs": 4 }
+    },
+    {
+      "name": "diagnostics-full",
+      "configurePreset": "diagnostics-full",
+      "output": { "outputOnFailure": true },
+      "execution": { "jobs": 3 }
     },
     {
       "name": "linux-full",

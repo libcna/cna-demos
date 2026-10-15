@@ -80,7 +80,7 @@ git -C cna submodule update --init third_party/SDL third_party/SDL_image third_p
 git clone https://github.com/libcna/cna-demos.git
 cd cna-demos
 
-cmake --preset linux-multi          # or: windowless, default, linux-full (adds SDL_GPU + C API)
+cmake --preset linux-multi          # or: windowless, diagnostics-full, default, linux-full
 cmake --build --preset linux-multi
 ```
 
@@ -91,6 +91,7 @@ minutes. `cmake --list-presets` shows all presets:
 |---|---|---|
 | `default` | CNA's platform default (OPENGLES3 on Linux, SDL_GPU on Windows/macOS) | a display for running |
 | `windowless` | SOFTWARE (default), HEADLESS, STUB | nothing -- no display, no GL siblings; used by CI |
+| `diagnostics-full` | windowless + `CNA_DIAGNOSTICS=FULL` | full profiler zones and trace recording |
 | `linux-multi` | OPENGLES3 (default), OPENGL33, SOFTWARE, HEADLESS, STUB | easy-gl/meta-gl |
 | `linux-full` | linux-multi + SDL_GPU, C API | libshaderc; a supported SDL GPU runtime driver |
 

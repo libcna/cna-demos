@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a `diagnostics-full` preset and a focused full-diagnostics workflow that records one frame
+  with nested zones, markers and a frame counter, correlates the trace with its snapshot, and
+  round-trips CNA's binary and Chrome Trace exports.
+- Refreshed the complete runtime baseline at 660 demos: all 673 enabled CTests and both complete
+  renderer smoke suites finish with zero unexpected failures or unexpected passes.
 - Completed all four maximum-count cascade selections and debug tints; recorded
   CNA-DEMOS-ISSUE-102 for unchecked oversized cascade counts causing fixed-array overflow.
 - Extended authored punctual shadows with exact 6/9 spot PCF visibility and a midpoint cone
@@ -18,8 +23,6 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   leaderboard identities and persisted outcomes; classified presence and account-only policies.
 - Completed all public avatar preset, body, skeleton, expression and renderer-state values through
   real animation samples, renderer skeleton data, facial property round-trips and lifecycle states.
-- Refreshed the complete runtime baseline at 659 demos: all 672 enabled CTests and both complete
-  renderer smoke suites finish with zero unexpected failures or unexpected passes.
 - Completed the feasible Graphics field-value audit with real present-interval reset cycles and a
   three-segment dynamic-buffer upload ring; classified Lost/NotReset as device-loss-only values.
 - Completed CubeMapFace, DepthFormat, RenderTargetUsage and classic DXT SurfaceFormat values with

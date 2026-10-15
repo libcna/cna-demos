@@ -571,7 +571,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032 and -033).
 - Remaining net: voice (manual).
 
-## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (18 demos)
+## Phase 13 -- devices, phone, design, diagnostics, platform, CNA extensions 🟨 (19 demos)
 - ✅ `devices.*` (4): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
   AccelerometerFailedException, Environment::DeviceType), CNAEXT keyboard-emulated accelerometer,
   VibrateController, CNA::Devices SystemInfo/Locale/PowerInfo, ✅ DisplayInfo (content scale, safe
@@ -581,9 +581,10 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   notification channels (need a push service: manual).
 - ✅ `design.*` (4): text round trip and which types parse, cultures, property descriptors and
   CreateInstance, InstanceDescriptor.
-- ✅ `diagnostics.*` (2) and `core.logger.*` (2): diagnostics build/runtime modes, counters and
-  gauges (recorded only in STATS/FULL builds), Logger sinks and levels. Remaining: zones, frame
-  scopes and trace recording (need a CNA build with `CNA_DIAGNOSTICS=FULL`).
+- ✅ `diagnostics.*` (3) and `core.logger.*` (2): diagnostics build/runtime modes, counters and
+  gauges, one instrumented frame with nested zones/markers and both trace exports, plus Logger
+  sinks and levels. Resource metadata and registered frame-source collection remain candidates for
+  the deeper diagnostics member/behavior audit.
 - ✅ `cnaext.*` (4): AsciiPostProcessEffect (every renderer), CRTEffect and DepthEffect (shader
   renderers), DebugDraw.
 - `platform.*`: ✅ renderer selection with fallback chain (standalone), ✅
@@ -9627,3 +9628,30 @@ CNA-DEMOS-ISSUE-102 records the clean pinned-source evidence; no undefined runti
 and no knownIssue marker was added. Descending/nonfinite splits/matrices and negative BlendBand have
 no specified refusal contract and do not justify arbitrary invalid-value controls. The observable
 EasyGL shadow-receiver audit is semantically closed; continue with the next high-value behavior gap.
+
+## Focused919-full-diagnostics-frame-and-trace-recording
+
+The new `diagnostics.profiler.trace_recording` ID and `diagnostics-full` preset exercise CNA's actual
+FULL instrumentation path. One frame contains a three-item frame counter, nested manual/macro CPU
+zones and direct/macro markers. Fourteen controls correlate the resulting five events with the
+provider snapshot, verify parent/category/payload fields, stop the bounded session without drops and
+round-trip CNA's binary plus Chrome Trace exports. The standard diagnostics-OFF build takes an
+explicit capability skip.
+
+The FULL demo passes14/14 in eleven runs, including ten with byte-identical stdout and empty stderr;
+all three diagnostics CTests pass in that build. The ordinary warning-free `linux-full` incremental
+build uses at most three jobs, metadata is660/0 and both validator suites pass. Generated XNA/field/C
+totals remain302/329,2114/2326,674/753 and3078/3205. Evidence:`/tmp/checkpoint-919-*`. Continue with
+resource metadata and registered frame-source collection, the meaningful remaining diagnostics
+public behaviors.
+
+## Complete920-660-demo-diagnostics-checkpoint
+
+The full pinned-CNA build and outer-Xvfb validation absorb focused913-919. Metadata is660/0; all673
+enabled CTests pass in325.08s with three manual entries disabled. SOFTWARE reports560 pass/52
+expected fail/45 skip/3 manual and OPENGLES3 reports600/53/4/3; every one of the660 IDs is present,
+with zero unexpected failure or unexpected pass. Against Complete912, trace recording is the only
+new ID and takes its declared diagnostics-OFF skip. The five GamerServices/shadow workflows carry
+only the reviewed check-count growth, while existing status and failure-message multiplicities are
+unchanged. Runtime-backed coverage remains302/329 types,2114/2326 members,674/753 fields and
+3078/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-920-complete-*`.
