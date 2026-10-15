@@ -3966,3 +3966,21 @@ members,674/753 fields and3078/3205 routes; the CNA-extension appendix gains the
 ObjectDictionary operations and two reflective-builder operations. Complete938 correctly marks
 the new ID absent. Evidence:`/tmp/checkpoint-947-object-dictionary/*`. No CNA defect or manual
 visual-quality result appeared.
+
+### Complete948 generated runtime checkpoint
+
+The authoritative `linux-full` validation at cna-demos commit
+`9a97c46aa4a47c36f543b6daa70f4c51f356948a` remains pinned to CNA
+`d23e139de9e5c15511b6be745de290896a69ee37` and uses at most three jobs. Metadata validates669/0;
+all682 enabled CTests pass (634 ordinary passes plus48 declared skips), with three manual tests
+disabled. Full SOFTWARE reports565 pass,53 expected fail,48 skip and3 manual; OPENGLES3/Xvfb
+reports605/54/7/3. Both cover every catalog ID with zero unexpected failures or unexpected passes.
+
+Compared with Complete938, the three new IDs pass on both renderers and the five reviewed stable
+IDs have only their intended check-count growth. Every one of the666 prior statuses, known-issue
+identities and failed-assertion messages/multiplicities is unchanged; failure evidence remains92
+SOFTWARE and96 OPENGLES3 assertions. Stderr normalized for temporary-directory IDs and X protocol
+serial/resource numbers is byte-identical. Generated totals remain303/329 XNA types,2114/2326
+members,674/753 fields and3078/3205 C routes. Evidence is archived under
+`build/linux-full/reports/checkpoint-948-complete-*`. No screenshot, listening test, physical input,
+external service session or manual visual-quality inspection was performed.

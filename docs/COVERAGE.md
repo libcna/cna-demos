@@ -13,14 +13,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 47 | 47 | 0 | 0 | 33 / 0 / 13 / 0 / 1 | 33 / 0 / 13 / 0 / 1 |
-| core | 6 | 6 | 0 | 0 | 5 / 0 / 0 / 0 / 1 | 5 / 0 / 0 / 0 / 1 |
+| content | 47 | 47 | 0 | 0 | 34 / 0 / 13 / 0 / 0 | 34 / 0 / 13 / 0 / 0 |
+| core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
 | diagnostics | 6 | 6 | 0 | 0 | 2 / 4 / 0 / 0 / 0 | 2 / 4 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 23 / 7 / 2 / 1 / 0 | 30 / 0 / 2 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 16 / 0 / 2 / 1 / 0 | 16 / 0 / 2 / 1 / 0 |
-| graphics | 185 | 185 | 0 | 0 | 146 / 26 / 12 / 0 / 1 | 167 / 3 / 14 / 0 / 1 |
+| graphics | 185 | 185 | 0 | 0 | 147 / 26 / 12 / 0 / 0 | 168 / 3 / 14 / 0 / 0 |
 | input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 74 / 0 / 4 / 0 / 0 | 74 / 0 / 4 / 0 / 0 |
 | media | 17 | 16 | 1 | 0 | 11 / 0 / 6 / 0 / 0 | 11 / 0 / 6 / 0 / 0 |
@@ -31,8 +31,6 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.xnb.object_dictionary`, `core.platform.capability_matrix`, `graphics.shader_effect.diagnostic_parser`.
-- OPENGLES3: absent from report: `content.xnb.object_dictionary`, `core.platform.capability_matrix`, `graphics.shader_effect.diagnostic_parser`.
 
 ## XNA 4.0 API surface demonstrated
 

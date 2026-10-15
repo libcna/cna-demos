@@ -10072,5 +10072,22 @@ Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass10/10 with byte-identical stdout SH
 warning-free `-j3` build, exact SOFTWARE CTest, metadata669/0 and both validator suites pass.
 Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; the CNA
 extension appendix gains seven ObjectDictionary operations and both reflective-builder operations.
-Evidence:`/tmp/checkpoint-947-object-dictionary/*`. Run a complete669-demo dual-renderer checkpoint
-next, then resume the next coherent public CNA header family.
+Evidence:`/tmp/checkpoint-947-object-dictionary/*`. Complete948 below absorbs this batch; resume the
+next coherent public CNA header family.
+
+## Complete948-669-demo-native-extension-checkpoint
+
+One authoritative `tools/validate.sh linux-full` run at cna-demos commit
+`9a97c46aa4a47c36f543b6daa70f4c51f356948a`, pinned to CNA
+`d23e139de9e5c15511b6be745de290896a69ee37`, absorbs Focused939-947. The build and tests use at most
+three jobs. Metadata is669/0; all682 enabled CTests pass (634 ordinary passes and48 declared
+skips), with three manual tests disabled. Full SOFTWARE reports565 pass,53 expected fail,48 skip
+and3 manual; OPENGLES3/Xvfb reports605/54/7/3. Both execute all669 IDs with zero unexpected
+results.
+
+Exact comparison with Complete938 adds the three expected passing IDs and only the five reviewed
+check-count increases. All666 pre-existing statuses, known-issue identities and failed-assertion
+messages/multiplicities remain unchanged at92 SOFTWARE and96 OPENGLES3 assertions. Normalized
+stderr is unchanged. Coverage remains303/329 XNA types,2114/2326 members,674/753 fields and
+3078/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-948-complete-*`. This is now the
+comparison baseline. Continue the next coherent native public-header/member audit.
