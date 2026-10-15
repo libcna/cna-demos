@@ -1185,6 +1185,17 @@ the complete intentional remainder: CNA assigns them only from a real renderer d
 callback, and neither tested renderer can deterministically produce or publicly inject that
 environmental transition. Evidence:`/tmp/checkpoint-911-*`.
 
+### Complete912 generated runtime checkpoint
+
+The complete pinned-CNA build and outer-Xvfb validation absorb focused893-911. Metadata is659/0;
+all672 enabled CTests pass, with three manual entries disabled. SOFTWARE reports560 pass/52
+expected fail/44 skip/3 manual and OPENGLES3 reports600/53/3/3. Both execute all659 IDs with zero
+unexpected results. Against Complete892, the only status changes are the two new expected-failure
+Video IDs and the reviewed ISSUE-099 transition of the existing VideoPlayer contract workflow;
+exactly eleven new failed-assertion groups match ISSUE-099/-100/-101. Runtime-backed coverage is
+302/329 types,2114/2326 members,515/753 fields and3078/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-912-complete-*`.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

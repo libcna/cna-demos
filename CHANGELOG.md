@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete runtime baseline at 659 demos: all 672 enabled CTests and both complete
+  renderer smoke suites finish with zero unexpected failures or unexpected passes.
 - Completed the feasible Graphics field-value audit with real present-interval reset cycles and a
   three-segment dynamic-buffer upload ring; classified Lost/NotReset as device-loss-only values.
 - Completed CubeMapFace, DepthFormat, RenderTargetUsage and classic DXT SurfaceFormat values with

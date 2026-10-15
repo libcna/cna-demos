@@ -9490,3 +9490,21 @@ sets them from real renderer-reported device-loss transitions, which SOFTWARE an
 produce and no public API can inject. No timing claim is made for refresh synchronization, and no
 new CNA defect appeared. Evidence:`/tmp/checkpoint-911-*`. Run the overdue complete659-demo
 checkpoint next, then continue the public-field audit in the next semantically valuable namespace.
+
+## Complete912-659-demo-field-audit-checkpoint
+
+The documented warning-free `linux-full` build and complete outer-Xvfb validation run against
+pinned CNA `d23e139de`. Metadata is659/0. All672 enabled CTests pass in316.68s, comprising628
+ordinary passes and44 declared capability/environment skips; three manual tests remain disabled.
+SOFTWARE reports560 pass/52 expected fail/44 skip/3 manual and OPENGLES3 reports600/53/3/3. Both
+reports contain every659 catalog ID with zero unexpected failures or unexpected passes.
+
+The exact comparison with Complete892 adds the two expected-failure Video IDs and changes only the
+existing VideoPlayer contract workflow from pass to its reviewed ISSUE-099 failure. Those three
+status/marker changes account for exactly eleven added failed-assertion groups. Twenty-seven
+existing workflows have only reviewed check-count growth; OPENGLES3 also executes the three new
+orientation checks that SOFTWARE capability-skips. No other status, known-issue marker or failed
+assertion changes. Runtime-backed coverage is302/329 types,2114/2326 non-field members,515/753
+fields and3078/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-912-complete-*`. No
+screenshot, listening test, physical input, external service session or manual visual inspection
+was performed. Continue the semantic field audit with GamerServices.
