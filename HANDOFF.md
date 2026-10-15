@@ -1239,6 +1239,31 @@ restriction. No browser UI, external connection, remote binding, rendering, scre
 defect is claimed. Extend these stable workflows with request-rate, pending-preview, cooldown and
 capability-negotiation boundaries next; avoid a new ID unless one represents a separate concept.
 
+Focused **983-Inspector-boundaries-and-header-disposition** extends the same three stable IDs
+without increasing the catalog. `inspector.agent.loopback_session` moves20->23 controls: it ties
+the process-provider overload's advertised capabilities to the compiled diagnostics mode, proves a
+STATS-only provider omits FULL event/zone capabilities and refuses ReadEvents before provider
+access, and observes two accepted requests followed by Busy while the rate-limited connection
+stays usable. `inspector.agent.preview_pipeline` moves10->13 controls: a one-ticket ceiling rejects
+a second request before provider access, a first poll remains Pending, a second becomes Ready,
+and the 60-second configured cooldown refuses immediate reuse after completion. The protocol demo
+moves18->20 controls by round-tripping all seven error codes and the distinct Failed preview state.
+Its metadata now names every public carrier field; Agent and Client metadata names every public
+configuration field actually consumed by the workflows.
+
+Ten SOFTWARE and ten OPENGLES3-labelled runs pass23/23,13/13 and20/20 with the same byte-identical
+combined stdout SHA-256 `1623907d20ef5df25856552529e900eacb7b7de6a5f1564db283c3196dd25cda`
+and empty stderr. The warning-free incremental build uses at most three jobs, metadata remains
+686/0, the exact SOFTWARE CTest set passes ten repetitions and both validator self-test suites
+pass. Generated XNA/C totals remain unchanged; 127 public Inspector names are in the CNA-extension
+appendix and Complete981 still correctly marks the three IDs absent. Evidence:
+`/tmp/checkpoint-983-inspector-*`. `Protocol.hpp`, `Agent.hpp` and `Client.hpp` now have semantic
+dispositions for every public declaration. Deleted copy operations/destructors are ordinary C++
+ownership declarations; arbitrary malformed-input fuzzing, timeout/rate-window timing stress and
+actual remote binding remain CNA unit, stress or manual security-test scope. No CNA defect appeared.
+Audit `CNA/Content/Pipeline/BlockCompression.hpp` next: it is a deterministic public build-time CPU
+surface not covered by the earlier runtime `CNA/Content` header pass.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3418,9 +3443,12 @@ predictable failure would inflate the demo count without demonstrating a usable 
 that disposition until CNA gains a real resource-backed workflow.
 Focused982 enables the optional Inspector in `linux-full` and adds three coherent demos covering
 the complete public wire-codec family, authenticated agent/client lifecycle, demand-driven
-snapshot/events and asynchronous bounded previews. Extend those stable IDs with request-rate,
-pending-preview, cooldown and capability-negotiation boundaries next, then finish an explicit
-declaration-level disposition for `Protocol.hpp`, `Agent.hpp` and `Client.hpp`.
+snapshot/events and asynchronous bounded previews. Focused983 extends those stable IDs with
+request-rate, pending-preview, cooldown and capability-negotiation boundaries and completes the
+declaration-level disposition for `Protocol.hpp`, `Agent.hpp` and `Client.hpp`. Audit the
+deterministic public build-time `CNA/Content/Pipeline/BlockCompression.hpp` surface next. This
+header belongs to the separately linked content-pipeline module and was not part of the completed
+runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title

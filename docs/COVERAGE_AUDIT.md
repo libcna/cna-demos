@@ -4704,17 +4704,17 @@ test, physical input, external service session or manual visual-quality inspecti
 ### Inspector public-header audit
 
 Focused982 enables the optional module in `linux-full` and adds three coherent workflows for the
-public `Protocol.hpp`, `Agent.hpp` and `Client.hpp` surface. This is a semantic audit in progress;
-the ordinary protocol, lifecycle and preview paths are direct, while the remaining backpressure
-and negotiation boundaries are the next focused extension.
+public `Protocol.hpp`, `Agent.hpp` and `Client.hpp` surface. Focused983 extends those same stable
+IDs with the remaining ordinary backpressure and negotiation boundaries and completes the semantic
+declaration-level disposition.
 
 | Public family | Current disposition |
 |---|---|
-| Protocol constants, masks and carrier types | Exact version and maximum payload/event/preview bounds are checked. Every carrier has populated state encoded and decoded, including ordered metadata, snapshot loss/accuracy/resource state, resolved events, ready preview bytes and structured errors. Capability and snapshot-part helpers test present and absent bits. |
-| `ProtocolCodec` | The fixed 24-byte header and all ten typed `Encode`/`Decode` payload pairs run directly. Grouped refusals cover header size/magic/type, packet type/length/trailing bytes, event/preview/poll bounds, pending tickets and encoded string length. Label-only enum permutations and hostile-input fuzzing remain CNA unit-test scope. |
-| Agent configuration and lifecycle | Safe local defaults, an injected provider, the process provider, explicit/generated tokens, endpoint getters, idempotent stop and the non-loopback authorization guard are direct. Authentication fails before provider access. Deleted copy operations and destructors are normal C++ ownership declarations and need no runtime demo. |
-| Client configuration and lifecycle | A real synchronous loopback client connects, exposes its negotiated session, captures a selective snapshot, reads cursor-based events, handles unavailable previews, pings, disconnects safely and reconnects. Requests while disconnected refuse. |
-| Preview provider | A public provider receives the exact bounded request, returns a Pending ticket and then a bounded Ready PNG through `PollPreview`. Completed tickets, invalid resource identity and oversized provider output are contained while the connection remains usable. |
+| Protocol constants, masks and carrier types | Exact version and maximum payload/event/preview bounds are checked. Every public field has populated encoded/decoded state, including ordered metadata, snapshot loss/accuracy/resource state, resolved events and preview bytes. Capability and snapshot-part helpers test present and absent bits. Every structured error code retains its wire identity; Unavailable, Pending, Ready and Failed have distinct response behavior. |
+| `ProtocolCodec` | The fixed 24-byte header and all ten typed `Encode`/`Decode` payload pairs run directly. Grouped refusals cover header size/magic/type, packet type/length/trailing bytes, event/preview/poll bounds, pending tickets and encoded string length. Arbitrary hostile-input fuzzing remains CNA unit-test scope. |
+| Agent configuration and lifecycle | Every configuration field has direct default or applied behavior. An injected provider and the process provider both run; explicit/generated tokens, endpoint getters, idempotent stop and the non-loopback authorization guard are direct. Authentication fails before provider access. Process capabilities track the compiled mode, and a STATS provider omits FULL event/zone service. Two admitted requests followed by Busy prove the rate limit without disconnecting. Deleted copy operations and destructors are ordinary C++ ownership declarations and need no independent runtime demo. |
+| Client configuration and lifecycle | Every configuration field has direct default or applied behavior. A real synchronous loopback client connects, exposes its negotiated session, captures a selective snapshot, reads cursor-based events, handles unavailable previews, pings, disconnects safely and reconnects. Disconnected and unnegotiated-capability requests refuse without provider access. |
+| Preview provider | A public provider receives exact bounded input, returns Pending twice and then a bounded Ready PNG through `PollPreview`. A one-ticket ceiling, completed-ticket retirement, cooldown, invalid resource identity and oversized provider output are contained while the connection remains usable. |
 
 The warning-free `-j3` build validates686/0 metadata. Ten SOFTWARE and ten OPENGLES3-labelled runs
 of the three IDs pass20/20,10/10 and18/18 with the same combined stdout SHA-256
@@ -4725,3 +4725,13 @@ enter the CNA-extension appendix. Complete981 marks the three new IDs absent. Ev
 `/tmp/checkpoint-982-inspector-*`. A sandboxed listener refusal is environmental; authoritative
 network runs occurred outside the sandbox. No browser UI, remote connection, render output or CNA
 defect is claimed.
+
+Focused983's warning-free incremental build keeps686/0 metadata. Ten SOFTWARE and ten OPENGLES3-
+labelled runs pass23/23,13/13 and20/20 with the same combined stdout SHA-256
+`1623907d20ef5df25856552529e900eacb7b7de6a5f1564db283c3196dd25cda` and empty
+stderr. The exact SOFTWARE CTest set passes ten repetitions and both validator suites pass.
+Generated XNA/C totals remain unchanged; explicit carrier/configuration metadata brings the
+Inspector extension inventory to127 names. Complete981 correctly marks the three IDs absent.
+Evidence:`/tmp/checkpoint-983-inspector-*`. The public header audit is complete for ordinary
+consumers. Timeout and rate-window timing stress, hostile-input fuzzing, and actual remote exposure
+remain CNA unit, stress or manual security-test scope.

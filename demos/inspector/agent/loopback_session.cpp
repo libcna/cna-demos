@@ -252,7 +252,91 @@ namespace
                            });
         ctx.Check(generatedTokenValid,
                   "omitting a token generates a 256-bit lowercase hexadecimal session secret");
-        if (generatedTokenAgent) generatedTokenAgent->Stop();
+        Client processClient;
+        bool processCapabilitiesMatch = false;
+        if (generatedTokenAgent)
+        {
+            error.clear();
+            if (processClient.Connect(MakeClientConfiguration(*generatedTokenAgent), error))
+            {
+                const auto buildMode = CNA::Diagnostics::GetBuildMode();
+                const auto capabilities = processClient.GetSession().capabilities;
+                processCapabilitiesMatch = HasCapability(capabilities, Capability::Snapshots)
+                    && HasCapability(capabilities, Capability::Accuracy)
+                    && HasCapability(capabilities, Capability::Discontinuities)
+                    && HasCapability(capabilities, Capability::ResourceMetadata)
+                        == (buildMode >= CNA::Diagnostics::Mode::Stats)
+                    && HasCapability(capabilities, Capability::Events)
+                        == (buildMode >= CNA::Diagnostics::Mode::Full)
+                    && HasCapability(capabilities, Capability::CpuZones)
+                        == (buildMode >= CNA::Diagnostics::Mode::Full);
+                processClient.Disconnect();
+            }
+            generatedTokenAgent->Stop();
+        }
+        ctx.Check(processCapabilitiesMatch,
+                  "process-provider overload negotiates capabilities from the compiled diagnostics mode");
+
+        AgentConfiguration statsConfiguration = MakeAgentConfiguration();
+        statsConfiguration.authenticationToken = "stats-only-token";
+        provider.snapshot.buildMode = CNA::Diagnostics::Mode::Stats;
+        provider.snapshot.runtimeMode = CNA::Diagnostics::Mode::Stats;
+        error.clear();
+        auto statsAgent = Agent::Start(provider, statsConfiguration, error);
+        Client statsClient;
+        bool statsBoundaryObserved = false;
+        if (statsAgent)
+        {
+            error.clear();
+            if (statsClient.Connect(MakeClientConfiguration(*statsAgent), error))
+            {
+                const auto capabilities = statsClient.GetSession().capabilities;
+                const int eventCallsBefore = provider.eventCalls.load();
+                EventsResponse unavailableEvents;
+                error.clear();
+                statsBoundaryObserved = HasCapability(capabilities, Capability::Snapshots)
+                    && HasCapability(capabilities, Capability::ResourceMetadata)
+                    && !HasCapability(capabilities, Capability::Events)
+                    && !HasCapability(capabilities, Capability::CpuZones)
+                    && !statsClient.ReadEvents({0, 1}, unavailableEvents, error)
+                    && !error.empty() && provider.eventCalls.load() == eventCallsBefore
+                    && statsClient.IsConnected();
+                std::string pingError;
+                statsBoundaryObserved = statsBoundaryObserved && statsClient.Ping(pingError);
+                statsClient.Disconnect();
+            }
+            statsAgent->Stop();
+        }
+        ctx.Check(statsBoundaryObserved,
+                  "STATS negotiation omits FULL event capabilities and refuses before provider access");
+
+        AgentConfiguration rateConfiguration = MakeAgentConfiguration();
+        rateConfiguration.authenticationToken = "rate-limit-token";
+        rateConfiguration.maximumRequestsPerSecond = 2;
+        provider.snapshot.buildMode = CNA::Diagnostics::Mode::Full;
+        provider.snapshot.runtimeMode = CNA::Diagnostics::Mode::Full;
+        error.clear();
+        auto rateAgent = Agent::Start(provider, rateConfiguration, error);
+        Client rateClient;
+        bool boundedRateObserved = false;
+        if (rateAgent)
+        {
+            error.clear();
+            if (rateClient.Connect(MakeClientConfiguration(*rateAgent), error))
+            {
+                std::string firstError;
+                std::string secondError;
+                std::string thirdError;
+                boundedRateObserved = rateClient.Ping(firstError) && firstError.empty()
+                    && rateClient.Ping(secondError) && secondError.empty()
+                    && !rateClient.Ping(thirdError) && !thirdError.empty()
+                    && rateClient.IsConnected();
+                rateClient.Disconnect();
+            }
+            rateAgent->Stop();
+        }
+        ctx.Check(boundedRateObserved,
+                  "request-rate backpressure reports busy without disconnecting the client");
 
         AgentConfiguration remoteConfiguration = MakeAgentConfiguration();
         remoteConfiguration.bindAddress = "0.0.0.0";
@@ -271,10 +355,24 @@ CNA_DEMOS_CONSOLE(LoopbackSession, {
     .title = "Inspector loopback session",
     .description = "Starts an explicitly owned Inspector agent, negotiates an authenticated client and requests diagnostics on demand.",
     .apis = {"CNA::Inspector::IResourcePreviewProvider", "CNA::Inspector::AgentConfiguration",
+             "CNA::Inspector::AgentConfiguration::bindAddress",
+             "CNA::Inspector::AgentConfiguration::port",
+             "CNA::Inspector::AgentConfiguration::allowRemote",
+             "CNA::Inspector::AgentConfiguration::authenticationToken",
+             "CNA::Inspector::AgentConfiguration::applicationName",
+             "CNA::Inspector::AgentConfiguration::platformBackend",
+             "CNA::Inspector::AgentConfiguration::buildConfiguration",
+             "CNA::Inspector::AgentConfiguration::metadata",
+             "CNA::Inspector::AgentConfiguration::maximumRequestsPerSecond",
              "CNA::Inspector::Agent::Start", "CNA::Inspector::Agent::Stop",
              "CNA::Inspector::Agent::IsRunning", "CNA::Inspector::Agent::GetBindAddress",
              "CNA::Inspector::Agent::GetPort", "CNA::Inspector::Agent::GetAuthenticationToken",
-             "CNA::Inspector::ClientConfiguration", "CNA::Inspector::Client::Client",
+             "CNA::Inspector::ClientConfiguration", "CNA::Inspector::ClientConfiguration::host",
+             "CNA::Inspector::ClientConfiguration::port",
+             "CNA::Inspector::ClientConfiguration::authenticationToken",
+             "CNA::Inspector::ClientConfiguration::clientName",
+             "CNA::Inspector::ClientConfiguration::timeoutMilliseconds",
+             "CNA::Inspector::Client::Client",
              "CNA::Inspector::Client::Connect", "CNA::Inspector::Client::Disconnect",
              "CNA::Inspector::Client::IsConnected", "CNA::Inspector::Client::GetSession",
              "CNA::Inspector::Client::CaptureSnapshot", "CNA::Inspector::Client::ReadEvents",

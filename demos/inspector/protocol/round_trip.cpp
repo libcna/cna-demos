@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // CNA Inspector protocol identities, message round trips and strict decoder boundaries.
+#include <array>
 #include <cstdint>
 #include <stdexcept>
 #include <string>
@@ -263,6 +264,35 @@ namespace
                       && decodedFailure.message == "try later",
                   "structured error preserves its code and message");
 
+        constexpr std::array errorCodes = {ErrorCode::InvalidRequest,
+            ErrorCode::UnsupportedVersion, ErrorCode::Unauthorized, ErrorCode::Unavailable,
+            ErrorCode::LimitExceeded, ErrorCode::Busy, ErrorCode::InternalError};
+        bool everyErrorCodeRoundTrips = true;
+        for (const ErrorCode code : errorCodes)
+        {
+            const Packet packet = ProtocolCodec::Encode(ErrorResponse{code, "error"}, 20);
+            ErrorResponse decoded;
+            error.clear();
+            everyErrorCodeRoundTrips = everyErrorCodeRoundTrips
+                && ProtocolCodec::Decode(packet, decoded, error) && decoded.code == code;
+        }
+        ctx.Check(everyErrorCodeRoundTrips,
+                  "every structured error code retains its exact wire identity");
+
+        PreviewResponse failedPreview;
+        failedPreview.status = PreviewStatus::Failed;
+        failedPreview.ticket = 42;
+        failedPreview.message = "readback failed";
+        const Packet failedPreviewPacket = ProtocolCodec::Encode(failedPreview, 20);
+        error.clear();
+        ctx.Check(ProtocolCodec::Decode(failedPreviewPacket, decodedPreview, error)
+                      && decodedPreview.status == PreviewStatus::Failed
+                      && decodedPreview.ticket == 42 && decodedPreview.width == 0
+                      && decodedPreview.height == 0 && decodedPreview.mimeType.empty()
+                      && decodedPreview.encodedImage.empty()
+                      && decodedPreview.message == "readback failed",
+                  "failed preview carries a ticket and message without image data");
+
         Packet malformed = eventsRequestPacket;
         malformed.header.type = MessageType::SnapshotRequest;
         error.clear();
@@ -326,6 +356,57 @@ CNA_DEMOS_CONSOLE(ProtocolRoundTrip, {
              "CNA::Inspector::ResolvedEvent", "CNA::Inspector::EventsResponse",
              "CNA::Inspector::PreviewRequest", "CNA::Inspector::PreviewPollRequest",
              "CNA::Inspector::PreviewResponse", "CNA::Inspector::ErrorResponse",
+             "CNA::Inspector::PacketHeader::majorVersion",
+             "CNA::Inspector::PacketHeader::minorVersion", "CNA::Inspector::PacketHeader::type",
+             "CNA::Inspector::PacketHeader::flags", "CNA::Inspector::PacketHeader::payloadBytes",
+             "CNA::Inspector::PacketHeader::requestId", "CNA::Inspector::Packet::header",
+             "CNA::Inspector::Packet::payload", "CNA::Inspector::MetadataEntry::key",
+             "CNA::Inspector::MetadataEntry::value",
+             "CNA::Inspector::HelloRequest::minimumMajorVersion",
+             "CNA::Inspector::HelloRequest::maximumMajorVersion",
+             "CNA::Inspector::HelloRequest::requestedCapabilities",
+             "CNA::Inspector::HelloRequest::clientName",
+             "CNA::Inspector::HelloRequest::authenticationToken",
+             "CNA::Inspector::HelloResponse::selectedMajorVersion",
+             "CNA::Inspector::HelloResponse::selectedMinorVersion",
+             "CNA::Inspector::HelloResponse::providerInterfaceVersion",
+             "CNA::Inspector::HelloResponse::capabilities",
+             "CNA::Inspector::HelloResponse::maximumPayloadBytes",
+             "CNA::Inspector::HelloResponse::maximumEventsPerResponse",
+             "CNA::Inspector::HelloResponse::maximumPreviewBytes",
+             "CNA::Inspector::HelloResponse::localOnly",
+             "CNA::Inspector::HelloResponse::applicationName",
+             "CNA::Inspector::HelloResponse::cnaVersion",
+             "CNA::Inspector::HelloResponse::targetPlatform",
+             "CNA::Inspector::HelloResponse::platformBackend",
+             "CNA::Inspector::HelloResponse::graphicsRenderer",
+             "CNA::Inspector::HelloResponse::buildConfiguration",
+             "CNA::Inspector::HelloResponse::metadata",
+             "CNA::Inspector::SnapshotRequest::parts",
+             "CNA::Inspector::SnapshotResponse::includedParts",
+             "CNA::Inspector::SnapshotResponse::metricCount",
+             "CNA::Inspector::SnapshotResponse::frameCount",
+             "CNA::Inspector::SnapshotResponse::resourceCount",
+             "CNA::Inspector::SnapshotResponse::snapshot",
+             "CNA::Inspector::EventsRequest::afterSequence",
+             "CNA::Inspector::EventsRequest::maximumEvents",
+             "CNA::Inspector::ResolvedEvent::event", "CNA::Inspector::ResolvedEvent::name",
+             "CNA::Inspector::EventsResponse::events",
+             "CNA::Inspector::EventsResponse::oldestAvailableSequence",
+             "CNA::Inspector::EventsResponse::newestAvailableSequence",
+             "CNA::Inspector::EventsResponse::eventsDroppedBeforeStart",
+             "CNA::Inspector::EventsResponse::producerEventsDropped",
+             "CNA::Inspector::PreviewRequest::resourceId",
+             "CNA::Inspector::PreviewRequest::maximumWidth",
+             "CNA::Inspector::PreviewRequest::maximumHeight",
+             "CNA::Inspector::PreviewRequest::maximumBytes",
+             "CNA::Inspector::PreviewPollRequest::ticket",
+             "CNA::Inspector::PreviewResponse::status", "CNA::Inspector::PreviewResponse::ticket",
+             "CNA::Inspector::PreviewResponse::width", "CNA::Inspector::PreviewResponse::height",
+             "CNA::Inspector::PreviewResponse::mimeType",
+             "CNA::Inspector::PreviewResponse::encodedImage",
+             "CNA::Inspector::PreviewResponse::message", "CNA::Inspector::ErrorResponse::code",
+             "CNA::Inspector::ErrorResponse::message",
              "CNA::Inspector::ProtocolCodec::EncodeHeader",
              "CNA::Inspector::ProtocolCodec::DecodeHeader", "CNA::Inspector::ProtocolCodec::Encode",
              "CNA::Inspector::ProtocolCodec::Decode", "CNA::Inspector::HasCapability",

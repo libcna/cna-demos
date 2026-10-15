@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: MS-PL
 // CNA Inspector's explicit asynchronous and bounded resource-preview provider contract.
-#include <chrono>
 #include <atomic>
 #include <cstdint>
 #include <memory>
 #include <string>
-#include <thread>
 #include <vector>
 
 #include "CNA/Inspector/Agent.hpp"
@@ -45,7 +43,10 @@ namespace
         PreviewResponse RequestPreview(const PreviewRequest& request) override
         {
             ++requestCalls;
-            lastRequest = request;
+            lastResourceId.store(request.resourceId);
+            lastMaximumWidth.store(request.maximumWidth);
+            lastMaximumHeight.store(request.maximumHeight);
+            lastMaximumBytes.store(request.maximumBytes);
             if (returnOversizedImage)
             {
                 PreviewResponse invalid;
@@ -66,7 +67,15 @@ namespace
         PreviewResponse PollPreview(std::uint64_t ticket) override
         {
             ++pollCalls;
-            lastPollTicket = ticket;
+            lastPollTicket.store(ticket);
+            if (pollCalls.load() <= pendingPolls)
+            {
+                PreviewResponse pending;
+                pending.status = PreviewStatus::Pending;
+                pending.ticket = ticket;
+                pending.message = "readback still pending";
+                return pending;
+            }
             PreviewResponse ready;
             ready.status = PreviewStatus::Ready;
             ready.ticket = ticket;
@@ -78,10 +87,14 @@ namespace
             return ready;
         }
 
-        int requestCalls = 0;
-        int pollCalls = 0;
-        PreviewRequest lastRequest;
-        std::uint64_t lastPollTicket = 0;
+        std::atomic<int> requestCalls{0};
+        std::atomic<int> pollCalls{0};
+        std::atomic<CNA::Diagnostics::ResourceId> lastResourceId{0};
+        std::atomic<std::uint32_t> lastMaximumWidth{0};
+        std::atomic<std::uint32_t> lastMaximumHeight{0};
+        std::atomic<std::uint32_t> lastMaximumBytes{0};
+        std::atomic<std::uint64_t> lastPollTicket{0};
+        int pendingPolls = 1;
         bool returnOversizedImage = false;
     };
 
@@ -103,7 +116,7 @@ namespace
         agentConfiguration.applicationName = "Inspector preview demo";
         agentConfiguration.previewProvider = previews;
         agentConfiguration.maximumPendingPreviews = 1;
-        agentConfiguration.previewCooldownMilliseconds = 50;
+        agentConfiguration.previewCooldownMilliseconds = 60000;
         std::string error;
         auto agent = Agent::Start(diagnostics, agentConfiguration, error);
         ctx.Check(agent != nullptr && error.empty(),
@@ -140,14 +153,26 @@ namespace
         const bool requested = client.RequestPreview(request, response, error);
         ctx.Check(requested && error.empty() && response.status == PreviewStatus::Pending
                       && response.ticket == 42 && response.message == "readback pending"
-                      && previews->requestCalls == 1
-                      && previews->lastRequest.resourceId == 17
-                      && previews->lastRequest.maximumWidth == 64
-                      && previews->lastRequest.maximumHeight == 64
-                      && previews->lastRequest.maximumBytes == 4096,
+                      && previews->requestCalls.load() == 1
+                      && previews->lastResourceId.load() == 17
+                      && previews->lastMaximumWidth.load() == 64
+                      && previews->lastMaximumHeight.load() == 64
+                      && previews->lastMaximumBytes.load() == 4096,
                   "explicit texture request reaches the provider with exact negotiated bounds");
-        ctx.Check(diagnostics.snapshotCalls == 2,
+        ctx.Check(diagnostics.snapshotCalls.load() == 2,
                   "preview request checks current resource metadata after handshake");
+
+        error.clear();
+        ctx.Check(!client.RequestPreview({17, 32, 32, 2048}, response, error)
+                      && !error.empty() && previews->requestCalls.load() == 1 && client.IsConnected(),
+                  "pending-preview bound applies before invoking the provider again");
+
+        error.clear();
+        const bool firstPoll = client.PollPreview({42}, response, error);
+        ctx.Check(firstPoll && error.empty() && response.status == PreviewStatus::Pending
+                      && response.ticket == 42 && response.message == "readback still pending"
+                      && previews->pollCalls.load() == 1,
+                  "provider can keep the same asynchronous ticket pending across a poll");
 
         error.clear();
         const bool polled = client.PollPreview({response.ticket}, response, error);
@@ -157,32 +182,62 @@ namespace
                       && response.encodedImage
                           == std::vector<std::uint8_t>({0x89, 0x50, 0x4E, 0x47})
                       && response.message == "readback complete"
-                      && previews->pollCalls == 1 && previews->lastPollTicket == 42,
+                      && previews->pollCalls.load() == 2 && previews->lastPollTicket.load() == 42,
                   "poll returns the provider's bounded ready image and stable ticket");
 
         error.clear();
         ctx.Check(!client.PollPreview({42}, response, error) && !error.empty()
-                      && previews->pollCalls == 1 && client.IsConnected(),
+                      && previews->pollCalls.load() == 2 && client.IsConnected(),
                   "completed ticket is retired without invoking the provider again or disconnecting");
 
         error.clear();
-        ctx.Check(!client.RequestPreview({0, 64, 64, 4096}, response, error)
-                      && !error.empty() && previews->requestCalls == 1 && client.IsConnected(),
-                  "invalid resource identity is refused before preview-provider access");
+        ctx.Check(!client.RequestPreview({17, 64, 64, 4096}, response, error)
+                      && !error.empty() && previews->requestCalls.load() == 1 && client.IsConnected(),
+                  "preview cooldown reports busy after completion without invoking the provider");
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(60));
-        previews->returnOversizedImage = true;
         error.clear();
-        ctx.Check(!client.RequestPreview({17, 1, 1, 4096}, response, error)
-                      && !error.empty() && previews->requestCalls == 2 && client.IsConnected(),
-                  "provider image exceeding the caller's dimensions fails without breaking the session");
-        error.clear();
-        ctx.Check(client.Ping(error) && error.empty(),
-                  "agent remains responsive after rejecting invalid provider output");
+        ctx.Check(!client.RequestPreview({0, 64, 64, 4096}, response, error)
+                      && !error.empty() && previews->requestCalls.load() == 1 && client.IsConnected(),
+                  "invalid resource identity is refused before preview-provider access");
 
         client.Disconnect();
         agent->Stop();
-        ctx.Check(!agent->IsRunning(), "preview session shuts down cleanly");
+
+        previews->returnOversizedImage = true;
+        previews->pendingPolls = 0;
+        AgentConfiguration invalidConfiguration = agentConfiguration;
+        invalidConfiguration.authenticationToken = "invalid-preview-token";
+        error.clear();
+        auto invalidAgent = Agent::Start(diagnostics, invalidConfiguration, error);
+        Client invalidClient;
+        bool invalidOutputContained = false;
+        if (invalidAgent)
+        {
+            ClientConfiguration invalidClientConfiguration;
+            invalidClientConfiguration.host = invalidAgent->GetBindAddress();
+            invalidClientConfiguration.port = invalidAgent->GetPort();
+            invalidClientConfiguration.authenticationToken = invalidAgent->GetAuthenticationToken();
+            invalidClientConfiguration.timeoutMilliseconds = 2000;
+            error.clear();
+            if (invalidClient.Connect(invalidClientConfiguration, error))
+            {
+                error.clear();
+                invalidOutputContained = !invalidClient.RequestPreview(
+                    {17, 1, 1, 4096}, response, error)
+                    && !error.empty() && previews->requestCalls.load() == 2
+                    && invalidClient.IsConnected();
+            }
+        }
+        ctx.Check(invalidOutputContained,
+                  "provider image exceeding the caller's dimensions fails without breaking the session");
+        error.clear();
+        ctx.Check(invalidClient.Ping(error) && error.empty(),
+                  "agent remains responsive after rejecting invalid provider output");
+
+        invalidClient.Disconnect();
+        if (invalidAgent) invalidAgent->Stop();
+        ctx.Check(!agent->IsRunning() && invalidAgent && !invalidAgent->IsRunning(),
+                  "both preview sessions shut down cleanly");
         ctx.Print("Preview ticket 42 completed as {}x{} {} ({} bytes)",
                   2, 1, "image/png", 4);
     }

@@ -650,11 +650,11 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   with provider-cursor lifecycle events, registered frame-source collection/lifetime, plus Logger
   sinks and levels. Bounded history, drop reporting and malformed-use containment are also covered;
   label-only enum permutations and concurrency stress remain intentionally in CNA's unit tests.
-- 🟨 `inspector.*` (3): all version-one protocol payloads and strict codec boundaries,
+- ✅ `inspector.*` (3): all version-one protocol payloads and strict codec boundaries,
   authenticated loopback agent/client negotiation, selective diagnostics, reconnect and explicit
-  asynchronous bounded previews. Remaining audit: request-rate, pending-preview, cooldown and
-  capability-negotiation boundaries, followed by declaration-level dispositions for the three
-  public headers. The optional module is enabled only by `linux-full`.
+  asynchronous bounded previews, including request-rate, pending-preview, cooldown and capability-
+  negotiation boundaries. All three public headers have declaration-level dispositions. The
+  optional module is enabled only by `linux-full`.
 - ✅ `cnaext.*` (4): AsciiPostProcessEffect (every renderer), CRTEffect and DepthEffect (shader
   renderers), DebugDraw.
 - `platform.*`: ✅ renderer selection with fallback chain (standalone), ✅
@@ -10405,3 +10405,30 @@ Evidence:`/tmp/checkpoint-982-inspector-*`. A sandboxed listener attempt failed 
 socket creation was denied; all authoritative loopback runs occurred outside that restriction. No
 browser UI, remote connection, rendering, screenshot or CNA defect is claimed. Extend these same
 IDs with the remaining backpressure and negotiation boundaries next.
+
+## Focused983-Inspector-boundaries-and-header-disposition
+
+The same stable Inspector demos now close the remaining ordinary public boundaries without adding
+a catalog ID. The loopback session grows from20 to23 controls: process-provider capabilities track
+the compiled diagnostics mode, a STATS provider advertises resources but omits FULL events/zones
+and refuses the request before provider access, and a two-request limit returns Busy on the third
+request without disconnecting. The preview workflow grows10->13 controls: a one-ticket ceiling
+rejects a second request, repeated polling retains Pending then produces Ready, and the configured
+cooldown blocks immediate reuse after completion. The protocol workflow grows18->20 controls by
+round-tripping every error code and the distinct Failed preview state.
+
+All public carrier and configuration fields used by the workflows now appear explicitly in demo
+metadata, placing127 Inspector names in the extension appendix. Ten SOFTWARE and ten OPENGLES3-
+labelled runs pass23/23,13/13 and20/20 with the same combined stdout SHA-256
+`1623907d20ef5df25856552529e900eacb7b7de6a5f1564db283c3196dd25cda` and empty
+stderr. The warning-free build uses at most three jobs; metadata is686/0; the exact SOFTWARE CTest
+set passes ten repetitions and both validator suites pass. Generated XNA/C totals remain unchanged
+and Complete981 still marks all three Inspector IDs absent. Evidence:
+`/tmp/checkpoint-983-inspector-*`.
+
+`Protocol.hpp`, `Agent.hpp` and `Client.hpp` now have semantic dispositions for every public
+declaration. Deleted copy operations and destructors express ordinary ownership; hostile-input
+fuzzing, timeout/rate-window timing stress and real remote exposure stay in CNA unit, stress or
+manual security testing. Audit the deterministic build-time `BlockCompression.hpp` surface next;
+it belongs to the separately linked content-pipeline module and was outside the completed runtime
+`CNA/Content` header pass.

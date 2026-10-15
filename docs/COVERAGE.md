@@ -1005,7 +1005,16 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Inspector::Agent::Start` -- inspector.agent.loopback_session
 - `CNA::Inspector::Agent::Stop` -- inspector.agent.loopback_session
 - `CNA::Inspector::AgentConfiguration` -- inspector.agent.loopback_session
+- `CNA::Inspector::AgentConfiguration::allowRemote` -- inspector.agent.loopback_session
+- `CNA::Inspector::AgentConfiguration::applicationName` -- inspector.agent.loopback_session
+- `CNA::Inspector::AgentConfiguration::authenticationToken` -- inspector.agent.loopback_session
+- `CNA::Inspector::AgentConfiguration::bindAddress` -- inspector.agent.loopback_session
+- `CNA::Inspector::AgentConfiguration::buildConfiguration` -- inspector.agent.loopback_session
 - `CNA::Inspector::AgentConfiguration::maximumPendingPreviews` -- inspector.agent.preview_pipeline
+- `CNA::Inspector::AgentConfiguration::maximumRequestsPerSecond` -- inspector.agent.loopback_session
+- `CNA::Inspector::AgentConfiguration::metadata` -- inspector.agent.loopback_session
+- `CNA::Inspector::AgentConfiguration::platformBackend` -- inspector.agent.loopback_session
+- `CNA::Inspector::AgentConfiguration::port` -- inspector.agent.loopback_session
 - `CNA::Inspector::AgentConfiguration::previewCooldownMilliseconds` -- inspector.agent.preview_pipeline
 - `CNA::Inspector::AgentConfiguration::previewProvider` -- inspector.agent.preview_pipeline
 - `CNA::Inspector::Capability` -- inspector.protocol.round_trip
@@ -1020,14 +1029,48 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Inspector::Client::ReadEvents` -- inspector.agent.loopback_session
 - `CNA::Inspector::Client::RequestPreview` -- inspector.agent.loopback_session, inspector.agent.preview_pipeline
 - `CNA::Inspector::ClientConfiguration` -- inspector.agent.loopback_session
+- `CNA::Inspector::ClientConfiguration::authenticationToken` -- inspector.agent.loopback_session
+- `CNA::Inspector::ClientConfiguration::clientName` -- inspector.agent.loopback_session
+- `CNA::Inspector::ClientConfiguration::host` -- inspector.agent.loopback_session
+- `CNA::Inspector::ClientConfiguration::port` -- inspector.agent.loopback_session
+- `CNA::Inspector::ClientConfiguration::timeoutMilliseconds` -- inspector.agent.loopback_session
 - `CNA::Inspector::ErrorCode` -- inspector.protocol.round_trip
 - `CNA::Inspector::ErrorResponse` -- inspector.protocol.round_trip
+- `CNA::Inspector::ErrorResponse::code` -- inspector.protocol.round_trip
+- `CNA::Inspector::ErrorResponse::message` -- inspector.protocol.round_trip
 - `CNA::Inspector::EventsRequest` -- inspector.protocol.round_trip
+- `CNA::Inspector::EventsRequest::afterSequence` -- inspector.protocol.round_trip
+- `CNA::Inspector::EventsRequest::maximumEvents` -- inspector.protocol.round_trip
 - `CNA::Inspector::EventsResponse` -- inspector.protocol.round_trip
+- `CNA::Inspector::EventsResponse::events` -- inspector.protocol.round_trip
+- `CNA::Inspector::EventsResponse::eventsDroppedBeforeStart` -- inspector.protocol.round_trip
+- `CNA::Inspector::EventsResponse::newestAvailableSequence` -- inspector.protocol.round_trip
+- `CNA::Inspector::EventsResponse::oldestAvailableSequence` -- inspector.protocol.round_trip
+- `CNA::Inspector::EventsResponse::producerEventsDropped` -- inspector.protocol.round_trip
 - `CNA::Inspector::HasCapability` -- inspector.protocol.round_trip
 - `CNA::Inspector::HasSnapshotPart` -- inspector.protocol.round_trip
 - `CNA::Inspector::HelloRequest` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloRequest::authenticationToken` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloRequest::clientName` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloRequest::maximumMajorVersion` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloRequest::minimumMajorVersion` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloRequest::requestedCapabilities` -- inspector.protocol.round_trip
 - `CNA::Inspector::HelloResponse` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::applicationName` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::buildConfiguration` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::capabilities` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::cnaVersion` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::graphicsRenderer` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::localOnly` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::maximumEventsPerResponse` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::maximumPayloadBytes` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::maximumPreviewBytes` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::metadata` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::platformBackend` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::providerInterfaceVersion` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::selectedMajorVersion` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::selectedMinorVersion` -- inspector.protocol.round_trip
+- `CNA::Inspector::HelloResponse::targetPlatform` -- inspector.protocol.round_trip
 - `CNA::Inspector::IResourcePreviewProvider` -- inspector.agent.loopback_session
 - `CNA::Inspector::IResourcePreviewProvider::PollPreview` -- inspector.agent.preview_pipeline
 - `CNA::Inspector::IResourcePreviewProvider::RequestPreview` -- inspector.agent.preview_pipeline
@@ -1036,11 +1079,33 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Inspector::MaximumPreviewBytes` -- inspector.protocol.round_trip
 - `CNA::Inspector::MessageType` -- inspector.protocol.round_trip
 - `CNA::Inspector::MetadataEntry` -- inspector.protocol.round_trip
+- `CNA::Inspector::MetadataEntry::key` -- inspector.protocol.round_trip
+- `CNA::Inspector::MetadataEntry::value` -- inspector.protocol.round_trip
 - `CNA::Inspector::Packet` -- inspector.protocol.round_trip
+- `CNA::Inspector::Packet::header` -- inspector.protocol.round_trip
+- `CNA::Inspector::Packet::payload` -- inspector.protocol.round_trip
 - `CNA::Inspector::PacketHeader` -- inspector.protocol.round_trip
+- `CNA::Inspector::PacketHeader::flags` -- inspector.protocol.round_trip
+- `CNA::Inspector::PacketHeader::majorVersion` -- inspector.protocol.round_trip
+- `CNA::Inspector::PacketHeader::minorVersion` -- inspector.protocol.round_trip
+- `CNA::Inspector::PacketHeader::payloadBytes` -- inspector.protocol.round_trip
+- `CNA::Inspector::PacketHeader::requestId` -- inspector.protocol.round_trip
+- `CNA::Inspector::PacketHeader::type` -- inspector.protocol.round_trip
 - `CNA::Inspector::PreviewPollRequest` -- inspector.agent.preview_pipeline, inspector.protocol.round_trip
+- `CNA::Inspector::PreviewPollRequest::ticket` -- inspector.protocol.round_trip
 - `CNA::Inspector::PreviewRequest` -- inspector.agent.preview_pipeline, inspector.protocol.round_trip
+- `CNA::Inspector::PreviewRequest::maximumBytes` -- inspector.protocol.round_trip
+- `CNA::Inspector::PreviewRequest::maximumHeight` -- inspector.protocol.round_trip
+- `CNA::Inspector::PreviewRequest::maximumWidth` -- inspector.protocol.round_trip
+- `CNA::Inspector::PreviewRequest::resourceId` -- inspector.protocol.round_trip
 - `CNA::Inspector::PreviewResponse` -- inspector.agent.preview_pipeline, inspector.protocol.round_trip
+- `CNA::Inspector::PreviewResponse::encodedImage` -- inspector.protocol.round_trip
+- `CNA::Inspector::PreviewResponse::height` -- inspector.protocol.round_trip
+- `CNA::Inspector::PreviewResponse::message` -- inspector.protocol.round_trip
+- `CNA::Inspector::PreviewResponse::mimeType` -- inspector.protocol.round_trip
+- `CNA::Inspector::PreviewResponse::status` -- inspector.protocol.round_trip
+- `CNA::Inspector::PreviewResponse::ticket` -- inspector.protocol.round_trip
+- `CNA::Inspector::PreviewResponse::width` -- inspector.protocol.round_trip
 - `CNA::Inspector::PreviewStatus` -- inspector.agent.preview_pipeline, inspector.protocol.round_trip
 - `CNA::Inspector::ProtocolCodec::Decode` -- inspector.protocol.round_trip
 - `CNA::Inspector::ProtocolCodec::DecodeHeader` -- inspector.protocol.round_trip
@@ -1049,9 +1114,17 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Inspector::ProtocolMajorVersion` -- inspector.protocol.round_trip
 - `CNA::Inspector::ProtocolMinorVersion` -- inspector.protocol.round_trip
 - `CNA::Inspector::ResolvedEvent` -- inspector.protocol.round_trip
+- `CNA::Inspector::ResolvedEvent::event` -- inspector.protocol.round_trip
+- `CNA::Inspector::ResolvedEvent::name` -- inspector.protocol.round_trip
 - `CNA::Inspector::SnapshotPart` -- inspector.protocol.round_trip
 - `CNA::Inspector::SnapshotRequest` -- inspector.protocol.round_trip
+- `CNA::Inspector::SnapshotRequest::parts` -- inspector.protocol.round_trip
 - `CNA::Inspector::SnapshotResponse` -- inspector.protocol.round_trip
+- `CNA::Inspector::SnapshotResponse::frameCount` -- inspector.protocol.round_trip
+- `CNA::Inspector::SnapshotResponse::includedParts` -- inspector.protocol.round_trip
+- `CNA::Inspector::SnapshotResponse::metricCount` -- inspector.protocol.round_trip
+- `CNA::Inspector::SnapshotResponse::resourceCount` -- inspector.protocol.round_trip
+- `CNA::Inspector::SnapshotResponse::snapshot` -- inspector.protocol.round_trip
 - `CNA::LogCategory` -- core.logger.custom_sink, core.logger.minimum_level
 - `CNA::LogLevel` -- core.logger.custom_sink, core.logger.minimum_level
 - `CNA::Logger::Debug` -- core.logger.minimum_level
