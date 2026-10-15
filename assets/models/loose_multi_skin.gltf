@@ -47,17 +47,23 @@
   {
    "bufferView": 5,
    "componentType": 5123,
-   "count": 6,
+   "count": 3,
    "type": "SCALAR"
   },
   {
    "bufferView": 6,
+   "componentType": 5123,
+   "count": 3,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 7,
    "componentType": 5126,
    "count": 1,
    "type": "MAT4"
   },
   {
-   "bufferView": 7,
+   "bufferView": 8,
    "componentType": 5126,
    "count": 2,
    "type": "SCALAR",
@@ -69,13 +75,13 @@
    ]
   },
   {
-   "bufferView": 8,
+   "bufferView": 9,
    "componentType": 5126,
    "count": 2,
    "type": "VEC3"
   },
   {
-   "bufferView": 9,
+   "bufferView": 10,
    "componentType": 5126,
    "count": 2,
    "type": "VEC3"
@@ -115,34 +121,40 @@
   {
    "buffer": 0,
    "byteOffset": 208,
-   "byteLength": 12,
+   "byteLength": 6,
    "target": 34963
   },
   {
    "buffer": 0,
-   "byteOffset": 220,
+   "byteOffset": 216,
+   "byteLength": 6,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 224,
    "byteLength": 64
   },
   {
    "buffer": 0,
-   "byteOffset": 284,
+   "byteOffset": 288,
    "byteLength": 8
   },
   {
    "buffer": 0,
-   "byteOffset": 292,
+   "byteOffset": 296,
    "byteLength": 24
   },
   {
    "buffer": 0,
-   "byteOffset": 316,
+   "byteOffset": 320,
    "byteLength": 24
   }
  ],
  "buffers": [
   {
-   "byteLength": 340,
-   "uri": "data:application/octet-stream;base64,zcxMvpqZGb4AAAA/zcxMPpqZGb4AAAA/zcxMPpqZGT4AAAA/zcxMvpqZGT4AAAA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAQACAAAAAgADAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAACAPwAAAAAAAAAAAAAAAAAAAADNzEw+AAAAAAAAAAAAAAAAAAAAAAAAAACamZm+AAAAAA=="
+   "byteLength": 344,
+   "uri": "data:application/octet-stream;base64,zcxMvpqZGb4AAAA/zcxMPpqZGb4AAAA/zcxMPpqZGT4AAAA/zcxMvpqZGT4AAAA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAQACAAAAAAACAAMAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAzcxMPgAAAAAAAAAAAAAAAAAAAAAAAAAAmpmZvgAAAAA="
   }
  ],
  "meshes": [
@@ -159,6 +171,17 @@
      },
      "indices": 5,
      "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2,
+      "JOINTS_0": 3,
+      "WEIGHTS_0": 4
+     },
+     "indices": 6,
+     "material": 1
     }
    ]
   }
@@ -215,7 +238,13 @@
  ],
  "materials": [
   {
-   "name": "SharedWhite",
+   "name": "SharedWhiteA",
+   "extensions": {
+    "KHR_materials_unlit": {}
+   }
+  },
+  {
+   "name": "SharedWhiteB",
    "extensions": {
     "KHR_materials_unlit": {}
    }
@@ -231,7 +260,7 @@
     1
    ],
    "skeleton": 1,
-   "inverseBindMatrices": 6
+   "inverseBindMatrices": 7
   },
   {
    "name": "RightRig",
@@ -239,7 +268,7 @@
     3
    ],
    "skeleton": 3,
-   "inverseBindMatrices": 6
+   "inverseBindMatrices": 7
   }
  ],
  "scenes": [
@@ -259,12 +288,12 @@
    "name": "SplitMotion",
    "samplers": [
     {
-     "input": 7,
-     "output": 8
+     "input": 8,
+     "output": 9
     },
     {
-     "input": 7,
-     "output": 9
+     "input": 8,
+     "output": 10
     }
    ],
    "channels": [

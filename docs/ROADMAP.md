@@ -275,9 +275,10 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.xnb_model`: original `.x` compiled to XNB, restored hierarchy/shared-buffer
   fixups, independent part ranges/materials and actual mesh placements (11 checks per renderer).
 - ✅ `graphics.model.multiple_skins`: independent palettes for shared authored geometry/material,
-  retained non-joint ancestry, ignored mesh-node placement, selective bind-pose restoration and
-  live bounds responding to a controlled distant palette before the final rendered pose (21 checks).
-  ISSUE-042 records stale root-prefix comments only; the runtime workflow passes.
+  two primitive/material parts per placement, retained non-joint ancestry, ignored mesh-node
+  placement, all-part selective bind-pose restoration and live bounds responding to a controlled
+  distant palette before the final rendered pose (21 checks). ISSUE-042 records stale root-prefix
+  comments only; the runtime workflow passes.
 - ✅ `graphics.model.imported_topology`: all seven glTF primitive modes, line-loop closure,
   strip/fan normalization, exact public index ranges and topology-dependent counts, incomplete
   line/triangle-tail diagnostics, plus actual point/line/filled pixels (39 checks).
@@ -8483,3 +8484,21 @@ self-test suites pass. Temporary coverage remains302/329 types,2114/2326 members
 and3078/3205 C routes. Evidence:`/tmp/checkpoint-854-multi-skin-animation-*` and
 `/tmp/checkpoint-854-coverage.md`. No screenshot or visual inspection was performed. Audit multiple
 parts per independent skin and AnimationPlayer malformed-data boundaries next.
+
+## Focused855-multi-skin-multiple-part-pose-routing
+
+The generated multi-skin mesh now has two real primitive/material parts, each covering one triangle
+of the original quad. `graphics.model.multiple_skins` requires both parts on both placements and
+four distinct SkinnedEffect objects. Import initializes both effects in each skin from the correct
+contextual bind palette. The left animation is applied to both left effects; after both right
+effects are deliberately disturbed, `ApplyBindPoseBoneTransformsEXT` reports and restores exactly
+two effects while preserving both left poses. Live-bound movement and the original red/green/clear
+pixel controls still pass.
+
+SOFTWARE and OPENGLES3 pass all21 controls; `multi_skin_animation_report` retains its exact8/9
+ISSUE-095 result on both renderers. The `-j3` build, both exact SOFTWARE CTests, metadata654/0 and
+both self-test suites pass. Temporary coverage remains302/329 types,2114/2326 members,169/753
+fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-855-multiple-skins-*`,
+`/tmp/checkpoint-855-multi-skin-animation-*` and `/tmp/checkpoint-855-coverage.md`. Pixel readback
+was programmatic; no screenshot or visual inspection was performed. No new CNA issue appeared.
+Audit AnimationPlayer malformed borrowed-data and validation boundaries next.

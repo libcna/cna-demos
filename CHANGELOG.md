@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the multi-skin workflow to two primitive/material parts per placement, proving selective
+  pose and bind restoration reaches every effect of one palette without mutating the other.
 - Added a two-palette glTF animation workflow and recorded CNA-DEMOS-ISSUE-095: channels retained
   by one skin are falsely counted as unavailable loss while extracting the other skin's clip.
 - Extended animation interpolation coverage across byte-equivalent compiled and loose Model

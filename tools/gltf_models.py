@@ -755,10 +755,20 @@ def multiple_skins(path: Path) -> None:
                   "TEXCOORD_0": doc.accessor([(.5, .5)] * 4, "VEC2"),
                   "JOINTS_0": doc.accessor([(0, 0, 0, 0)] * 4, "VEC4", UNSIGNED_BYTE),
                   "WEIGHTS_0": doc.accessor([(1, 0, 0, 0)] * 4, "VEC4")}
-    doc.gltf["meshes"] = [{"name": "SharedPatch", "primitives": [{"attributes": attributes,
-                           "indices": doc.accessor([0, 1, 2, 0, 2, 3], "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
-                           "material": 0}]}]
-    doc.gltf["materials"] = [{"name": "SharedWhite", "extensions": {"KHR_materials_unlit": {}}}]
+    # Two material parts share the vertex streams and form the two halves of one quad. Every skin
+    # placement must retain both parts and apply its palette to both independent effects.
+    doc.gltf["meshes"] = [{"name": "SharedPatch", "primitives": [
+        {"attributes": attributes,
+         "indices": doc.accessor([0, 1, 2], "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+         "material": 0},
+        {"attributes": attributes,
+         "indices": doc.accessor([0, 2, 3], "SCALAR", UNSIGNED_SHORT, ELEMENT_ARRAY_BUFFER),
+         "material": 1},
+    ]}]
+    doc.gltf["materials"] = [
+        {"name": "SharedWhiteA", "extensions": {"KHR_materials_unlit": {}}},
+        {"name": "SharedWhiteB", "extensions": {"KHR_materials_unlit": {}}},
+    ]
     doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
     identity = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
     inverse = doc.accessor([identity], "MAT4", target=None)

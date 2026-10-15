@@ -378,6 +378,20 @@ issue SOFTWARE CTest, metadata654/0 and self-tests5/5 and4/4 pass; temporary cov
 visual inspection was performed. Audit multiple parts per independent skin and AnimationPlayer
 malformed-data boundaries next.
 
+Focused **855-multi-skin-multiple-part-pose-routing** extends the shared fixture and
+`graphics.model.multiple_skins` without adding an ID. Each skin placement now contains two genuine
+primitive/material parts and two distinct SkinnedEffect objects. Both effects begin with their
+skin's contextual bind palette, both left effects receive the animated pose, and after deliberate
+disturbance `ApplyBindPoseBoneTransformsEXT` reports/restores exactly the two right effects without
+changing either left effect. The live-bound and original red/green/clear pixel controls remain
+valid. SOFTWARE and OPENGLES3 pass21/21; the shared `multi_skin_animation_report` keeps its exact
+8/9 ISSUE-095 result. The `-j3` build, both exact SOFTWARE CTests, metadata654/0 and self-tests5/5
+and4/4 pass; temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205
+C routes. Evidence:`/tmp/checkpoint-855-multiple-skins-*`,
+`/tmp/checkpoint-855-multi-skin-animation-*` and `/tmp/checkpoint-855-coverage.md`. Pixel readback
+was programmatic; no screenshot or visual inspection was performed. No new CNA issue appeared.
+Audit AnimationPlayer malformed borrowed-data and validation boundaries next.
+
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
 slice-zero U/V texel centres preserve White/Yellow/Cyan/Magenta row order, while authored uniform
@@ -1955,7 +1969,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-854
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-855
 form the validated654-demo staged state. The glTF scene/node-graph audit is closed with
 CNA-DEMOS-ISSUE-092 retained. Rigid animation channel loss, resampling, duplicate/nonzero times,
 generated clip names and public malformed-sampler refusals now have exact evidence;
@@ -1964,8 +1978,8 @@ rigid clips now have exact retention/loss evidence, while CNA-DEMOS-ISSUE-094 re
 diagnostics for a retained morph track. Same-asset runtime evidence now confirms
 CNA-DEMOS-ISSUE-031 on both compiled and loose interpolation carriers. Multi-skin playback retains
 every channel across its two palettes, while CNA-DEMOS-ISSUE-095 records false aggregate loss from
-the unreconciled palette-local reports. Audit multiple parts per independent skin and
-AnimationPlayer malformed-data boundaries next.
+the unreconciled palette-local reports. Multiple-part routing now covers every effect in each
+independent palette. Audit AnimationPlayer malformed borrowed-data and validation boundaries next.
 The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
@@ -3940,6 +3954,23 @@ checkpoint self-tests5/5 and4/4 pass. Temporary coverage remains302/329 types,21
 169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-854-multi-skin-animation-*` and
 `/tmp/checkpoint-854-coverage.md`. No screenshot or visual inspection was performed. Audit multiple
 parts per independent skin and AnimationPlayer malformed-data boundaries next.
+
+### Focused855-multi-skin-multiple-part-pose-routing
+
+The generated multi-skin mesh now has two primitive/material parts per placement.
+`graphics.model.multiple_skins` requires four distinct SkinnedEffect objects and proves that both
+effects of each skin start with the correct contextual bind palette. Both left effects receive the
+animated pose; after both right effects are disturbed, `ApplyBindPoseBoneTransformsEXT` returns two
+and restores exactly those effects while preserving both left poses. Live-bound behavior and the
+existing red/green/clear pixels remain intact.
+
+SOFTWARE and OPENGLES3 pass21/21; `multi_skin_animation_report` remains8/9 with only ISSUE-095.
+The `-j3` build, both exact SOFTWARE CTests, metadata654/0 and validator/checkpoint self-tests5/5
+and4/4 pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205
+C routes. Evidence:`/tmp/checkpoint-855-multiple-skins-*`,
+`/tmp/checkpoint-855-multi-skin-animation-*` and `/tmp/checkpoint-855-coverage.md`. Pixel readback
+was programmatic; no screenshot or visual inspection was performed. No new CNA issue appeared.
+Audit AnimationPlayer malformed borrowed-data and validation boundaries next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

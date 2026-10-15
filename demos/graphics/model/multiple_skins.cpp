@@ -46,13 +46,24 @@ namespace
             if (!Context().Check(left && right && left->Data && right->Data && left->Data != right->Data &&
                                   left->Meshes.size() == 1 && right->Meshes.size() == 1 && left->Meshes[0] != right->Meshes[0],
                                   "each named skin maps distinct skeleton data and its own mesh placement")) return;
-            if (!Context().Check(left->Meshes[0]->getMeshPartsProperty().getCountProperty() == 1 &&
-                                  right->Meshes[0]->getMeshPartsProperty().getCountProperty() == 1,
-                                  "each placement carries one part from the shared authored mesh")) return;
-            auto* red = dynamic_cast<SkinnedEffect*>(left->Meshes[0]->getMeshPartsProperty()[0]->getEffectProperty());
-            auto* green = dynamic_cast<SkinnedEffect*>(right->Meshes[0]->getMeshPartsProperty()[0]->getEffectProperty());
-            if (!Context().Check(red && green && red != green,
-                                  "a shared authored material still has independent mutable palettes for the two skins")) return;
+            const auto& leftParts = left->Meshes[0]->getMeshPartsProperty();
+            const auto& rightParts = right->Meshes[0]->getMeshPartsProperty();
+            if (!Context().Check(leftParts.getCountProperty() == 2 &&
+                                  rightParts.getCountProperty() == 2,
+                                  "each placement carries both primitive parts from the shared authored mesh")) return;
+            std::vector<SkinnedEffect*> red = {
+                dynamic_cast<SkinnedEffect*>(leftParts[0]->getEffectProperty()),
+                dynamic_cast<SkinnedEffect*>(leftParts[1]->getEffectProperty()),
+            };
+            std::vector<SkinnedEffect*> green = {
+                dynamic_cast<SkinnedEffect*>(rightParts[0]->getEffectProperty()),
+                dynamic_cast<SkinnedEffect*>(rightParts[1]->getEffectProperty()),
+            };
+            if (!Context().Check(red[0] && red[1] && green[0] && green[1] &&
+                                  red[0] != red[1] && green[0] != green[1] &&
+                                  red[0] != green[0] && red[0] != green[1] &&
+                                  red[1] != green[0] && red[1] != green[1],
+                                  "both material parts have independent mutable effects in each skin")) return;
             if (!Context().Check(left->Data->BoneCount == 1 && right->Data->BoneCount == 1 &&
                                   left->Data->SkeletonRootPrefix.size() == 1 && right->Data->SkeletonRootPrefix.size() == 1,
                                   "each one-joint skeleton carries a scene-root prefix")) return;
@@ -82,9 +93,11 @@ namespace
                             sceneBones[rightRoot]->getNameProperty() == "RightJoint",
                             "declared rig roots are scene-node indices, distinct from joint slot zero");
             AnimationPlayer leftRest(*left->Data), rightRest(*right->Data);
-            Context().Check(red->GetBoneTransforms(1) == leftRest.GetSkinTransforms() &&
-                            green->GetBoneTransforms(1) == rightRest.GetSkinTransforms(),
-                            "the importer initializes each effect with its own contextual bind palette");
+            Context().Check(red[0]->GetBoneTransforms(1) == leftRest.GetSkinTransforms() &&
+                            red[1]->GetBoneTransforms(1) == leftRest.GetSkinTransforms() &&
+                            green[0]->GetBoneTransforms(1) == rightRest.GetSkinTransforms() &&
+                            green[1]->GetBoneTransforms(1) == rightRest.GetSkinTransforms(),
+                            "the importer initializes every part effect with its contextual bind palette");
             // Replace only the root's LOCAL transform. Scene context must remain in its prefix.
             AnimationClip lift;
             lift.Duration = TimeSpan::FromSeconds(1);
@@ -98,13 +111,17 @@ namespace
             const auto leftPose = player.GetSkinTransforms();
             Context().Check(leftPose.size() == 1 && Vector3::Distance(leftPose[0].getTranslationProperty(), Vector3(-.5f, .4f, 0)) < .0001f,
                             "animating the root replaces its local pose without discarding scene ancestry");
-            red->SetBoneTransforms(leftPose);
-            green->SetBoneTransforms({Matrix::CreateTranslation(0, 7, 0)}); // deliberately disturb only the right palette
+            for (SkinnedEffect* effect : red) effect->SetBoneTransforms(leftPose);
+            for (SkinnedEffect* effect : green)
+                effect->SetBoneTransforms({Matrix::CreateTranslation(0, 7, 0)});
             const auto posed = ApplyBindPoseBoneTransformsEXT(*model_, *right->Data);
-            Context().Check(posed == 1 && green->GetBoneTransforms(1) == rightRest.GetSkinTransforms(),
-                            "explicit bind-pose application repairs only the right skin's one effect");
-            Context().Check(red->GetBoneTransforms(1) == leftPose,
-                            "restoring the right skin leaves the left skin's animation intact");
+            Context().Check(posed == 2 &&
+                            green[0]->GetBoneTransforms(1) == rightRest.GetSkinTransforms() &&
+                            green[1]->GetBoneTransforms(1) == rightRest.GetSkinTransforms(),
+                            "explicit bind-pose application repairs both right-skin part effects");
+            Context().Check(red[0]->GetBoneTransforms(1) == leftPose &&
+                            red[1]->GetBoneTransforms(1) == leftPose,
+                            "restoring the right skin leaves both left-skin part effects animated");
             // A bound can already be loose. Pick a distant pose from the observed bound itself,
             // so returning a stale bind/previous-pose sphere cannot accidentally pass this check.
             const auto originalBounds = model_->getBoundingSphereEXTProperty();
@@ -112,15 +129,16 @@ namespace
             const Vector3 distantCenter(-.5f, originalBounds->Center.Y + originalBounds->Radius + 2, .5f);
             Context().Check(originalBounds->Contains(distantCenter) == ContainmentType::Disjoint,
                             "the temporary distant pose is definitely outside the currently reported bounds");
-            red->SetBoneTransforms({Matrix::CreateTranslation(distantCenter.X, distantCenter.Y, 0)});
+            for (SkinnedEffect* effect : red)
+                effect->SetBoneTransforms({Matrix::CreateTranslation(distantCenter.X, distantCenter.Y, 0)});
             const auto distantBounds = model_->getBoundingSphereEXTProperty();
             Context().Check(distantBounds && distantBounds->Contains(distantCenter) != ContainmentType::Disjoint,
                             "model bounds follow a changed live skin palette without a draw call");
-            red->SetBoneTransforms(leftPose); // restore the visible animation before rendering
+            for (SkinnedEffect* effect : red) effect->SetBoneTransforms(leftPose);
             const auto restoredBounds = model_->getBoundingSphereEXTProperty();
             Context().Check(restoredBounds && restoredBounds->Contains(distantCenter) == ContainmentType::Disjoint,
                             "restoring the visible palette also restores bounds that exclude the distant pose");
-            for (auto* effect : {red, green})
+            for (SkinnedEffect* effect : {red[0], red[1], green[0], green[1]})
             {
                 effect->setWeightsPerVertexProperty(1);
                 effect->setAmbientLightColorProperty(Vector3::One);
@@ -128,8 +146,8 @@ namespace
                 effect->getDirectionalLight1Property().setEnabledProperty(false);
                 effect->getDirectionalLight2Property().setEnabledProperty(false);
             }
-            red->setDiffuseColorProperty(Vector3(1, 0, 0));
-            green->setDiffuseColorProperty(Vector3(0, 1, 0));
+            for (SkinnedEffect* effect : red) effect->setDiffuseColorProperty(Vector3(1, 0, 0));
+            for (SkinnedEffect* effect : green) effect->setDiffuseColorProperty(Vector3(0, 1, 0));
             ready_ = true;
         }
 
@@ -167,8 +185,8 @@ namespace
 CNA_DEMOS_GAME(MultipleSkinsDemo, {
     .id = "graphics.model.multiple_skins",
     .title = "Pose independent skins in scene context",
-    .description = "Imports two skins sharing authored geometry and material, retains non-joint ancestry while ignoring skinned mesh-node placement, "
-                   "animates one root, restores the other bind pose independently, and verifies that live palettes update model bounds.",
+    .description = "Imports two skins sharing a two-part authored mesh, retains non-joint ancestry while ignoring skinned mesh-node placement, "
+                   "animates both effects of one palette, restores both effects of the other independently, and verifies that live palettes update model bounds.",
     .apis = {"Microsoft::Xna::Framework::Graphics::Model::SkinsEXT", "Microsoft::Xna::Framework::Graphics::ModelSkinEXT",
              "Microsoft::Xna::Framework::Graphics::SkinningData::SkeletonRootPrefix",
              "Microsoft::Xna::Framework::Graphics::SkinningData::SkeletonRootNodeIndexEXT",
