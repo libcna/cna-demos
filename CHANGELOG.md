@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended album-art coverage with case-insensitive cover-over-folder priority, independent
+  already-small thumbnail streams and exact corrupt-file fallback bytes.
 - Added disposed Picture and PictureAlbum refusal coverage, exposing CNA-DEMOS-ISSUE-098: CNA
   sets IsDisposed but none of 21 tested XNA members throws ObjectDisposedException afterward.
 - Classified the remaining SavePicture stream boundaries: nonzero positions and premature EOF

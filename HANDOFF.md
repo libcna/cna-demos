@@ -4482,6 +4482,26 @@ validates655/0, both validator self-test suites pass, and regenerated coverage i
 used. Complete871 remains the full baseline. Continue with the explicit Album art filename-
 selection and small/corrupt-thumbnail fallback gaps.
 
+### Focused882-album-art-fallbacks
+
+`media.media_library.album_art` grows8->12 controls without another ID. After retaining its large
+640x320 cover, missing-art refusals,128x64 downscale and stream-lifetime checks, the private fixture
+adds distinct `COVER.PNG` and `FoLdEr.PnG` files to the formerly bare tagged album. Exact public
+GetAlbumArt bytes prove case-insensitive matching and `cover`-before-`folder` priority. Two distinct
+GetThumbnail streams both preserve the chosen already-small64x64 PNG byte-for-byte, and public
+SavePicture confirms its decoded dimensions. Overwriting the selected cover with twelve invalid
+bytes leaves HasArt true; GetAlbumArt and GetThumbnail each return those exact current bytes,
+closing the file-based corrupt-thumbnail fallback.
+
+SOFTWARE and OPENGLES3-labelled direct runs pass12/12 with byte-identical stdout and stderr; stderr
+contains the same ten reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes20
+consecutive runs. The warning-free full incremental build uses `-j3`, metadata validates655/0, both
+validator self-test suites pass, and regenerated coverage is byte-identical at302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is under
+`/tmp/checkpoint-882-*`. No new CNA defect, playback, screenshot or visual inspection is claimed.
+Complete871 remains the full baseline. Audit the remaining embedded-art branch and album disposal
+contract before moving beyond the media-library table.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

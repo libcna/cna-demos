@@ -501,6 +501,11 @@ a check that all authored colors remain visible and that a blank texture row can
   instead of throwing ObjectDisposedException. Same-name
   saves replace one file while the live library retains distinct equal snapshot views; a fresh
   library observes only the latest dimensions and bytes.
+- ✅ `media.media_library.album_art`: private tagged folders establish folder-art/no-art behavior,
+  exact original bytes, large-image downscaling and caller-owned streams beyond library lifetime.
+  Case-insensitive `cover`-before-`folder` selection, two independent byte-identical thumbnails for
+  an already-small64x64 PNG and exact corrupt-cover fallback bytes are also covered. Embedded art,
+  other filename families and non-Linux platforms remain separate.
 
 
 ## Phase 10 -- input ✅ (39 demos: keyboard, mouse, text input, clipboard, gamepad, touch, CNAEXT devices)
@@ -8940,3 +8945,20 @@ passes twenty consecutive runs. The warning-free full incremental `-j3` build, m
 validator self-test suites and byte-identical coverage regeneration pass; coverage remains 302/329
 types, 2114/2326 members, 169/753 fields and 3078/3205 C routes. Evidence:
 `/tmp/checkpoint-881-*`. No screenshot or visual inspection was used.
+
+## Focused882-album-art-fallbacks
+
+The existing album-art workflow grows from eight to twelve controls. It adds distinct
+`COVER.PNG` and `FoLdEr.PnG` files to the formerly bare tagged album: exact GetAlbumArt bytes prove
+case-insensitive matching and the documented cover-before-folder precedence. Two distinct
+GetThumbnail streams preserve the selected already-small64x64 PNG byte-for-byte, with public
+SavePicture confirming its dimensions. After the selected cover is overwritten by twelve invalid
+bytes, HasArt stays true and both GetAlbumArt and GetThumbnail return those exact current bytes,
+closing the file-based corrupt-thumbnail fallback without another demo ID.
+
+Both renderer-labelled direct runs pass12/12 with byte-identical stdout and stderr; stderr contains
+the same ten reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes twenty consecutive
+runs. The warning-free full incremental `-j3` build, metadata 655/0, both validator self-test suites
+and byte-identical coverage regeneration pass; coverage remains 302/329 types, 2114/2326 members,
+169/753 fields and 3078/3205 C routes. Evidence:`/tmp/checkpoint-882-*`. No new CNA defect,
+playback, screenshot or visual inspection is claimed.

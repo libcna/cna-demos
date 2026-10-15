@@ -178,6 +178,62 @@ namespace
         thumbnail->setPositionProperty(0);
         check(ReadBytes(*original) == encoded && ReadBytes(*thumbnail) == thumbnailBytes,
               "caller-owned cover and thumbnail streams remain readable after library destruction");
+
+        const auto preferredInput = TitleContainer::OpenStream("assets/textures/checker.png");
+        const auto preferredBytes = ReadBytes(*preferredInput);
+        const auto lowerPriorityInput = TitleContainer::OpenStream("assets/textures/arrow.png");
+        const auto lowerPriorityBytes = ReadBytes(*lowerPriorityInput);
+        for (const auto& [path, bytes] :
+             std::vector<std::pair<std::filesystem::path, const std::vector<std::uint8_t>*>>{
+                 {bare / "COVER.PNG", &preferredBytes},
+                 {bare / "FoLdEr.PnG", &lowerPriorityBytes}})
+        {
+            std::ofstream output(path, std::ios::binary);
+            output.write(reinterpret_cast<const char*>(bytes->data()),
+                         static_cast<std::streamsize>(bytes->size()));
+            output.close();
+            if (!output) throw std::runtime_error("Could not write album-art priority fixture");
+        }
+
+        MediaLibrary priorityLibrary;
+        Album* priorityAlbum = nullptr;
+        for (Album* candidate : *priorityLibrary.getAlbumsProperty())
+        {
+            if (candidate && candidate->getArtistProperty() &&
+                candidate->getArtistProperty()->getNameProperty() == "Second Ensemble")
+            {
+                priorityAlbum = candidate;
+            }
+        }
+        if (!check(priorityAlbum && priorityAlbum->getHasArtProperty(),
+                   "case-insensitive album-art candidates make the formerly bare album report art")) return 1;
+        std::unique_ptr<System::IO::Stream> preferredArt(priorityAlbum->GetAlbumArt());
+        check(ReadBytes(*preferredArt) == preferredBytes,
+              "cover names outrank folder names independently of filename case");
+        std::unique_ptr<System::IO::Stream> firstSmallThumbnail(priorityAlbum->GetThumbnail());
+        std::unique_ptr<System::IO::Stream> secondSmallThumbnail(priorityAlbum->GetThumbnail());
+        const auto firstSmallBytes = ReadBytes(*firstSmallThumbnail);
+        const auto secondSmallBytes = ReadBytes(*secondSmallThumbnail);
+        Picture* smallPreview = priorityLibrary.SavePicture("SmallAlbumPreview.png", firstSmallBytes);
+        check(firstSmallThumbnail != secondSmallThumbnail && firstSmallBytes == preferredBytes &&
+                  secondSmallBytes == preferredBytes && smallPreview &&
+                  smallPreview->getWidthProperty() == 64 && smallPreview->getHeightProperty() == 64,
+              "an already-small album cover returns exact bytes through independent thumbnail streams");
+
+        const std::vector<std::uint8_t> corruptBytes{
+            'n', 'o', 't', ' ', 'a', 'n', ' ', 'i', 'm', 'a', 'g', 'e'};
+        {
+            std::ofstream output(bare / "COVER.PNG", std::ios::binary | std::ios::trunc);
+            output.write(reinterpret_cast<const char*>(corruptBytes.data()),
+                         static_cast<std::streamsize>(corruptBytes.size()));
+            output.close();
+            if (!output) throw std::runtime_error("Could not corrupt the selected album-art fixture");
+        }
+        std::unique_ptr<System::IO::Stream> corruptArt(priorityAlbum->GetAlbumArt());
+        std::unique_ptr<System::IO::Stream> corruptThumbnail(priorityAlbum->GetThumbnail());
+        check(priorityAlbum->getHasArtProperty() && ReadBytes(*corruptArt) == corruptBytes &&
+                  ReadBytes(*corruptThumbnail) == corruptBytes,
+              "a selected corrupt cover stays available and thumbnail generation falls back to its exact bytes");
         std::cout << (passed ? "PASSED" : "FAILED") << " (" << checks << " checks)\n";
         return passed ? 0 : 1;
 #endif
