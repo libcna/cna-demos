@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the glTF node-animation workflow with exact selected-scene/unsupported-path channel
+  loss, trackless-clip omission, disjoint-time resampling, duplicate-time collapse and import-report
+  diagnostics on both renderers.
 - Closed the glTF scene/node-graph audit with repeated-root de-duplication and public rejection of
   a parsed cyclic hierarchy outside the selected scene.
 - Recorded CNA-DEMOS-ISSUE-092: an explicitly selected empty glTF scene incorrectly revives a mesh

@@ -14,7 +14,8 @@ assets/models/ that is loaded as a loose glTF file at run time.
   SkinnedEffect.
 * turntable.gltf, morph_flag.gltf, camera_rig.gltf, textured_crate.gltf, lit_sphere.gltf,
   slide_rig.gltf, loose_paint_toy.gltf, loose_node_instances.gltf and the three
-  loose_scene_fallback_*.gltf files -- node-animation clips, morph targets with a weights
+  loose_scene_fallback_*.gltf files and loose_animation_diagnostics.gltf -- node-animation clips,
+  morph targets with a weights
   animation, glTF cameras, an embedded base-colour texture, KHR_lights_punctual lights,
   STEP/LINEAR/CUBICSPLINE samplers, KHR_materials_variants, rigid shared-mesh placement and scene
   selection fallbacks; see each function.
@@ -886,6 +887,75 @@ def scene_fallbacks(directory: Path) -> None:
     cyclic.save(directory / "loose_scene_fallback_cycle.gltf")
 
 
+def animation_diagnostics(path: Path) -> None:
+    """Rigid animation channels that exercise public retention/loss diagnostics: disjoint key
+    times, a repeated input time, one morph-weight path and one target outside the selected scene."""
+    doc = Document()
+    positions = [(-.1, -.07, .5), (.1, -.07, .5), (.1, .07, .5), (-.1, .07, .5)]
+    primitive = {
+        "attributes": {
+            "POSITION": doc.accessor(positions, "VEC3", minmax=True),
+            "NORMAL": doc.accessor([(0, 0, 1)] * 4, "VEC3"),
+        },
+        "indices": doc.accessor([0, 1, 2, 0, 2, 3], "SCALAR", UNSIGNED_SHORT,
+                                ELEMENT_ARRAY_BUFFER),
+        "targets": [{"POSITION": doc.accessor([(0, 0, 0)] * 4, "VEC3", minmax=True)}],
+        "material": 0,
+    }
+    doc.gltf["meshes"] = [{"name": "AnimatedShape", "weights": [0],
+                            "primitives": [primitive]}]
+    doc.gltf["materials"] = [{"name": "Orange", "pbrMetallicRoughness": {
+        "baseColorFactor": [1, .5, 0, 1]}, "extensions": {"KHR_materials_unlit": {}}}]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit"]
+    rest_turn = math.sin(math.radians(15)), math.cos(math.radians(15))
+    doc.gltf["nodes"] = [
+        {"name": "Animated", "mesh": 0, "rotation": [0, 0, rest_turn[0], rest_turn[1]]},
+        {"name": "OffScene"},
+    ]
+    doc.gltf["scenes"] = [
+        {"name": "Selected", "nodes": [0]}, {"name": "Decoy", "nodes": [1]}]
+    doc.gltf["scene"] = 0
+
+    def times(values):
+        accessor = doc.accessor(values, "SCALAR", target=None)
+        doc.gltf["accessors"][accessor].update({"min": [min(values)], "max": [max(values)]})
+        return accessor
+
+    mixed_times_translation = times([0, 2])
+    mixed_times_scale = times([1, 3])
+    mixed_times_weights = times([0, 1])
+    dropped_times = times([0, 1])
+    repeated_times = times([0, 1, 1, 2])
+    doc.gltf["animations"] = [
+        {"name": "Mixed", "samplers": [
+            {"input": mixed_times_translation,
+             "output": doc.accessor([(0, 0, 0), (.4, 0, 0)], "VEC3", target=None)},
+            {"input": mixed_times_scale,
+             "output": doc.accessor([(1, 1, 1), (2, 1, 1)], "VEC3", target=None)},
+            {"input": mixed_times_weights,
+             "output": doc.accessor([0, 1], "SCALAR", target=None)},
+        ], "channels": [
+            {"sampler": 0, "target": {"node": 0, "path": "translation"}},
+            {"sampler": 1, "target": {"node": 0, "path": "scale"}},
+            {"sampler": 2, "target": {"node": 0, "path": "weights"}},
+        ]},
+        {"name": "Dropped", "samplers": [{
+            "input": dropped_times,
+            "output": doc.accessor([(0, 0, 0), (0, .5, 0)], "VEC3", target=None),
+        }], "channels": [{
+            "sampler": 0, "target": {"node": 1, "path": "translation"},
+        }]},
+        {"name": "HardCut", "samplers": [{
+            "input": repeated_times,
+            "output": doc.accessor([(0, 0, 0), (.2, 0, 0), (.8, 0, 0), (1, 0, 0)],
+                                   "VEC3", target=None),
+        }], "channels": [{
+            "sampler": 0, "target": {"node": 0, "path": "translation"},
+        }]},
+    ]
+    doc.save(path)
+
+
 def imported_topology(path: Path) -> None:
     doc = Document()
     shapes = [
@@ -947,4 +1017,5 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     multiple_skins(assets_root / "models" / "loose_multi_skin.gltf")
     node_instances(assets_root / "models" / "loose_node_instances.gltf")
     scene_fallbacks(assets_root / "models")
+    animation_diagnostics(assets_root / "models" / "loose_animation_diagnostics.gltf")
     imported_topology(assets_root / "models" / "loose_topology.gltf")

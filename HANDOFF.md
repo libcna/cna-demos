@@ -289,7 +289,21 @@ issue SOFTWARE CTest, warning-free `-j3` build, metadata651/0 and both self-test
 temporary coverage remains unchanged. Evidence:`/tmp/checkpoint-848-node-graph-*` and
 `/tmp/checkpoint-848-coverage.md`. A 10,000-deep chain and pointer-corruption shapes stay in CNA's
 internal stress tests; they are not coherent application demos. The scene/node-graph audit is now
-closed. Audit glTF animation-channel retention and loss boundaries next.
+closed.
+
+Focused **849-glTF-animation-channel-diagnostics** extends the existing
+`graphics.model.node_animation` from nine to seventeen controls with one generated loose asset.
+Three source animations retain exactly the two clips with supported selected-scene tracks. The
+fixture proves union resampling of disjoint translation/scale times, rest-rotation retention,
+duplicate-time collapse to the earlier value and application of the resulting pose to a public
+Model bone. A morph-weight channel and an off-scene target are omitted, while the now-trackless
+clip is dropped. Exact report controls cover inspected-versus-retained animation counts, all five
+warning codes and the three dropped/two approximated aggregate occurrences. SOFTWARE and
+OPENGLES3 pass17/17. The warning-free `-j3` build, exact SOFTWARE CTest, metadata651/0 and tool
+self-tests5/5 and4/4 pass; temporary coverage remains302/329 types,2114/2326 members,169/753
+fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-849-animation-diagnostics-*` and
+`/tmp/checkpoint-849-coverage.md`. No screenshot or visual-quality claim was made and no CNA defect
+appeared. Audit malformed animation sampler/accessor and interpolation refusal boundaries next.
 
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
@@ -1868,12 +1882,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-848
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-849
 form the validated651-demo staged state. The glTF scene/node-graph audit is closed with
-CNA-DEMOS-ISSUE-092 retained. Continue the importer behavior audit with animation-channel
-retention/loss boundaries, especially channels outside the selected scene and unsupported target
-paths, extending existing animation/report demos where coherent. The complete checkpoint and
-harness findings are recorded in section7.
+CNA-DEMOS-ISSUE-092 retained, and selected-scene/unsupported-path animation channel loss plus
+resampling/duplicate-time behavior now have exact public evidence. Continue the importer behavior
+audit with malformed animation sampler/accessor and interpolation refusal boundaries, extending
+existing animation/report demos where coherent. The complete checkpoint and harness findings are
+recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
@@ -3723,7 +3738,28 @@ metadata651/0 and validator/checkpoint self-tests5/5 and4/4 pass. Temporary cove
 302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-848-node-graph-*` and `/tmp/checkpoint-848-coverage.md`. Pathological-depth and
 pointer-corruption guards remain correctly owned by CNA's internal stress tests. This closes the
-meaningful public scene/node-graph audit; continue with animation-channel retention/loss boundaries.
+meaningful public scene/node-graph audit.
+
+### Focused849-glTF-animation-channel-diagnostics
+
+The existing `graphics.model.node_animation` grows from nine to seventeen controls. A generated
+loose fixture contains three source animations but retains only `Mixed` and `HardCut`: an off-scene
+target leaves `Dropped` trackless, and an unsupported morph-weight path is omitted from `Mixed`.
+Disjoint translation/scale input times become one ordered four-key union track with interpolated
+driven components and the authored rest rotation. Equal adjacent times collapse to one earlier
+value in a playable three-key track. Applying the retained mixed clip at two seconds produces the
+same exact translation, scale and rotation on the public Model bone.
+
+The public import report exposes AnimationCount3 versus ClipCount2 and exact DroppedData,
+UnsupportedFeature and Approximation diagnostics for the trackless animation, off-scene target,
+unsupported path, resampling and duplicate input time. Its five warnings aggregate to three
+dropped and two approximated occurrences; the sixth entry is the existing informational morph
+summary. SOFTWARE and OPENGLES3 pass17/17. The warning-free `-j3` build, exact SOFTWARE CTest,
+metadata651/0 and validator/checkpoint self-tests5/5 and4/4 pass. Temporary coverage remains
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-849-animation-diagnostics-*` and `/tmp/checkpoint-849-coverage.md`. No screenshot
+or visual-quality inspection was performed. No CNA issue was found. Audit malformed animation
+sampler/accessor and interpolation refusal boundaries next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

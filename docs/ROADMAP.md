@@ -8367,4 +8367,23 @@ exact known-issue SOFTWARE CTest passes through `WILL_FAIL`; the warning-free `-
 metadata651/0 and both self-test suites pass. Temporary coverage remains unchanged. Evidence:
 `/tmp/checkpoint-848-node-graph-*` and `/tmp/checkpoint-848-coverage.md`. Very deep or pointer-
 corrupted graphs remain CNA internal stress-test concerns. This closes the meaningful public
-scene/node-graph audit; continue with glTF animation-channel retention/loss boundaries.
+scene/node-graph audit.
+
+## Focused849-glTF-animation-channel-diagnostics
+
+The existing `graphics.model.node_animation` grows from nine to seventeen controls around a new
+generated loose fixture. Three source animations retain exactly two named scene-node clips. An
+off-scene target is unavailable, a morph-weight target path is unsupported by the rigid clip
+carrier, and the resulting trackless animation is omitted. Disjoint translation and scale times
+form one four-key union with interpolated values and the rest rotation; duplicate adjacent times
+collapse to the earlier value in a playable three-key track. Applying the retained clip produces
+the exact public Model-bone pose.
+
+SOFTWARE and OPENGLES3 pass17/17. Exact `GltfImportReportEXT` controls distinguish AnimationCount3
+from ClipCount2 and pin five warning diagnostics, three dropped occurrences and two approximations.
+The warning-free `-j3` build, exact SOFTWARE CTest, metadata651/0 and both self-test suites pass.
+Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence:`/tmp/checkpoint-849-animation-diagnostics-*` and
+`/tmp/checkpoint-849-coverage.md`. No screenshot or visual inspection was performed and no CNA
+defect appeared. Audit malformed animation sampler/accessor and interpolation refusal boundaries
+next.
