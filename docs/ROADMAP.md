@@ -10450,3 +10450,18 @@ SOFTWARE CTest passes ten repetitions and both validator suites pass. Generated 
 CNA-extension appendix and Complete981 marks all four post-baseline IDs absent. Evidence:
 `/tmp/checkpoint-984-block-compression-focused/*`. No CNA defect appeared. Extend this same
 standalone with the adjacent one-function `TextureCompressionPipeline.hpp` adapter next.
+
+## Focused985-texture-compression-adapter
+
+The same stable standalone grows from12 to14 controls and closes the sole public declaration in
+`TextureCompressionPipeline.hpp`. Its real callable maps CNB Bc1/Bc2/Bc3 to the corresponding
+encoder output byte-for-byte, preserves caller options and refuses both Rgba8 and Bc3Srgb instead
+of silently producing a different format.
+
+The corrected source compiles without warnings with at most three jobs and metadata remains687/0.
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled direct runs pass14/14 with identical stdout
+SHA-256 `f07c28a07541778c22d377dda1c769f54564e581e567791ac30250cd5e1ed8d0` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator suites pass. Generated XNA/C totals remain
+unchanged; one public name enters the CNA-extension appendix and Complete981 still marks the same
+four post-baseline IDs absent. Evidence:`/tmp/checkpoint-985-texture-compression-adapter/*`. No CNA
+defect appeared. Audit `BuildTimeMediaDecoder.hpp` next against real generated media fixtures.

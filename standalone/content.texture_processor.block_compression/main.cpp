@@ -8,13 +8,17 @@
 #include <span>
 #include <stdexcept>
 #include <string_view>
+#include <utility>
 #include <vector>
 
+#include "CNA/Content/Cnb/CnbTextureFormat.hpp"
 #include "CNA/Content/Pipeline/BlockCompression.hpp"
+#include "CNA/Content/Pipeline/TextureCompressionPipeline.hpp"
 
 namespace
 {
     namespace Pipeline = CNA::Content::Pipeline;
+    namespace Cnb = CNA::Content::Cnb;
     using Pipeline::BlockCompressionFormat;
 
     template<typename Function>
@@ -116,6 +120,33 @@ namespace
         }
         check(sizesAndDeterminism,
               "every format produces its declared byte count deterministically on a partial grid");
+
+        Pipeline::BlockCompressionOptions adapterOptions;
+        adapterOptions.refinementRounds = 0u;
+        adapterOptions.alphaCutoff = 127u;
+        const Pipeline::TextureBlockEncoder adapter =
+            Pipeline::MakeBlockCompressionTextureEncoder(adapterOptions);
+        bool adapterMapsFormats = true;
+        for (const auto& [containerFormat, blockFormat] :
+             {std::pair{Cnb::CnbTextureFormat::Bc1, BlockCompressionFormat::Bc1},
+              std::pair{Cnb::CnbTextureFormat::Bc2, BlockCompressionFormat::Bc2},
+              std::pair{Cnb::CnbTextureFormat::Bc3, BlockCompressionFormat::Bc3}})
+        {
+            adapterMapsFormats = adapterMapsFormats
+                && adapter(containerFormat, image, 13u, 7u)
+                    == Pipeline::EncodeBlockCompressedImage(
+                        blockFormat, image, 13u, 7u, adapterOptions);
+        }
+        check(adapterMapsFormats,
+              "the texture-pipeline adapter maps BC1, BC2 and BC3 and preserves encoder options");
+
+        check(RefusesInvalidArgument([&] {
+                  (void) adapter(Cnb::CnbTextureFormat::Rgba8, image, 13u, 7u);
+              })
+                  && RefusesInvalidArgument([&] {
+                      (void) adapter(Cnb::CnbTextureFormat::Bc3Srgb, image, 13u, 7u);
+                  }),
+              "the adapter refuses both uncompressed and unsupported compressed CNB formats");
 
         bool edgeReplication = true;
         for (const BlockCompressionFormat format :

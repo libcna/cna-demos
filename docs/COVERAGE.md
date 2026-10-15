@@ -651,6 +651,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ImportedXnbVideoType` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::IsCompiledEffectBinary` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::IsFontRasterizationAvailable` -- content.sprite_font.pipeline_contract
+- `CNA::Content::Pipeline::MakeBlockCompressionTextureEncoder` -- content.texture_processor.block_compression
 - `CNA::Content::Pipeline::MakeContentBuildManifestEntry` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::MakeProcessedSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ModelContentWriter::Identity` -- content.model.pipeline_contract

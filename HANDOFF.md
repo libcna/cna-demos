@@ -1284,6 +1284,22 @@ screenshot, visual inspection or CNA defect is claimed. Audit the adjacent publi
 `TextureCompressionPipeline.hpp` adapter next by extending this build-time standalone rather than
 adding another ID.
 
+Focused **985-texture-compression-adapter** extends that stable standalone from12 to14 controls and
+closes the sole public `TextureCompressionPipeline.hpp` declaration. The real adapter maps CNB
+Bc1/Bc2/Bc3 requests byte-for-byte to the corresponding direct encoder while preserving a custom
+zero-refinement/alpha-cutoff option set. It refuses both an uncompressed Rgba8 request and the
+unsupported Bc3Srgb compressed variant with `std::invalid_argument`.
+
+The corrected source compiles without warnings with at most three jobs and metadata remains687/0.
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled direct runs pass14/14 with byte-identical stdout
+SHA-256 `f07c28a07541778c22d377dda1c769f54564e581e567791ac30250cd5e1ed8d0` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions and both validator self-test suites pass. Generated XNA/C
+totals remain unchanged and one adapter name enters the CNA-extension appendix; Complete981 still
+marks the same four post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-985-texture-compression-adapter/*`. No CNA defect appeared. Audit the public
+`BuildTimeMediaDecoder.hpp` surface next, reusing the generated MP3/WMA/WMV fixtures and keeping it
+separate from runtime playback evidence.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3468,9 +3484,10 @@ request-rate, pending-preview, cooldown and capability-negotiation boundaries an
 declaration-level disposition for `Protocol.hpp`, `Agent.hpp` and `Client.hpp`. Focused984 adds the
 separate build-time `content.texture_processor.block_compression` standalone and closes all public
 `BlockCompression.hpp` declarations through sizing, alpha-policy, deterministic encoding, edge
-replication, option and malformed-input evidence. Extend it with the adjacent one-function
-`TextureCompressionPipeline.hpp` adapter next; the build-time module is deliberately separate from
-the runtime-linked texture pipeline demo.
+replication, option and malformed-input evidence. Focused985 extends that stable ID with the sole
+`TextureCompressionPipeline.hpp` adapter, covering exact CNB-format mapping, caller options and
+unsupported formats. Audit `BuildTimeMediaDecoder.hpp` next against real generated media fixtures;
+keep build-time decode/probe claims separate from runtime playback evidence.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

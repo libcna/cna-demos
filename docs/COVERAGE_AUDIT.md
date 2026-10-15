@@ -4748,6 +4748,7 @@ separately linked `CNA::ContentPipelineBuild` module and dispositions every publ
 | Alpha policy | Opaque, binary cutout and partial transparency are distinguished. BC1 switches between transparent and opaque modes at a caller-selected cutoff; a fully transparent block selects index three for all texels. BC2 preserves the exact sixteen four-bit alpha values in row-major order. |
 | Encoding behavior | All three formats produce deterministic declared-size output for an awkward 13x7 image. A 1x1 solid image matches its 4x4 edge-replicated form. Zero and eight refinement rounds retain deterministic layout. Exact visual reconstruction quality remains CNA encoder-test and runtime texture-demo scope. |
 | Input boundaries | Zero width, zero height and a pixel span that does not exactly match width times height times four are refused with `std::invalid_argument`. Overflow and allocation-failure stress remain unit/fault-injection scope. |
+| Texture-pipeline adapter | Focused985 maps CNB Bc1/Bc2/Bc3 requests to byte-identical direct encoder output with the caller's options. Rgba8 and unsupported Bc3Srgb requests are refused. This closes the one-function `TextureCompressionPipeline.hpp` surface. |
 
 The changed source builds without warnings with at most three jobs and metadata is687/0. Ten
 SOFTWARE-labelled and ten OPENGLES3-labelled direct runs pass12/12 with byte-identical stdout
@@ -4758,3 +4759,11 @@ CNA-extension appendix. Complete981 marks this and the three Inspector IDs absen
 `/tmp/checkpoint-984-block-compression-focused/*`. No graphics device, runtime sampling,
 screenshot, visual inspection or CNA defect is claimed. The adjacent public
 `TextureCompressionPipeline.hpp` adapter should extend this same standalone.
+
+Focused985 extends that stable ID from12 to14 controls. Ten SOFTWARE-labelled and ten OPENGLES3-
+labelled direct runs pass14/14 with byte-identical stdout SHA-256
+`f07c28a07541778c22d377dda1c769f54564e581e567791ac30250cd5e1ed8d0` and empty stderr. The
+warning-free corrected source builds with at most three jobs, metadata remains687/0, the exact
+SOFTWARE CTest passes ten repetitions and both validator suites pass. Generated totals remain
+unchanged and one adapter name enters the CNA-extension appendix. Evidence:
+`/tmp/checkpoint-985-texture-compression-adapter/*`. Audit the build-time media decoder next.
