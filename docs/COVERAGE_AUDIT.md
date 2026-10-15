@@ -4791,3 +4791,24 @@ enter the CNA-extension appendix. Complete981 marks this fifth post-baseline ID 
 `/tmp/checkpoint-986-build-time-media/*`. No audio/video device, playback, listening, screenshot or
 visual inspection is claimed. The initial path-composition compiler error belonged to the demo and
 was corrected; no CNA defect appeared.
+
+### DirectX file-reader audit
+
+Focused987 adds the renderer-free `content.model.directx_file_reader` standalone and dispositions
+every public declaration in `DirectXFileReader.hpp`.
+
+| Public family | Current disposition |
+|---|---|
+| Text object model | The generated twin-panel model parses as one named Frame with ordered transform and child-frame objects. Case-insensitive `TypeIs`, names and exact flattened mesh numbers are checked. A second source omits its inline template while preserving strings, references and a nested object's numbers. |
+| Binary object model | An in-memory `bin` token stream declares an inline template containing primitive and array tokens, then parses one named Vector with exact float-list values. Binary 64-bit-float input is refused rather than misread. |
+| Errors | BadFile, BadFileType, BadFileVersion and ParseError retain their exact D3DX code names and owned details. Empty, foreign, unknown-version, compressed and truncated documents take the expected distinct category. |
+| Resource ceilings | All default byte/depth/object/number/string limits are exact. Individually tightening each limit refuses representative input before excessive allocation or traversal. Mutation fuzzing and allocation fault injection remain CNA unit/stress-test scope. |
+
+The warning-free corrected source builds with at most three jobs and metadata is689/0. Ten
+SOFTWARE-labelled and ten OPENGLES3-labelled direct runs pass9/9 with byte-identical stdout SHA-256
+`5367924f0bbba25aa3dbd8633e6098b6c89dd3bba2745c4efc148227254271da` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions, both validator suites pass and isolated generator output
+matches both checked-in fixture copies. Generated XNA/C totals remain303/329 types,2114/2326
+members,674/753 fields and3078/3205 routes; 24 names enter the CNA-extension appendix. Complete981
+marks this sixth post-baseline ID absent. Evidence:`/tmp/checkpoint-987-directx-reader/*`. The first
+run's wrong expected number count was a demo defect and was corrected; no CNA defect appeared.

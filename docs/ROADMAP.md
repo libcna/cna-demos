@@ -301,7 +301,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (63 demos; remaining below)
+## Phase 8 -- content 🟨 (64 demos; remaining below)
 
 - ✅ Existing `content.texture_processor.resize_to_power_of_two` now verifies XNB-targeted
   Reach/HiDef mipmap processing, resized payloads matching its rendered CNB and the distinct native
@@ -10483,3 +10483,21 @@ SOFTWARE CTest passes ten repetitions and both validator suites pass. Generated 
 extension appendix and Complete981 marks five post-baseline IDs absent. Evidence:
 `/tmp/checkpoint-986-build-time-media/*`. No CNA defect appeared. Audit `DirectXFileReader.hpp`
 next against the existing generated `.x` fixture, followed by the adjacent FBX reader.
+
+## Focused987-DirectX-file-reader
+
+The new renderer-free `content.model.directx_file_reader` standalone closes all public
+`DirectXFileReader.hpp` declarations in nine controls. A generated twin-panel text model and an
+in-memory binary stream prove both encodings, skipped inline templates, case-insensitive types and
+ordered flattened carriers. All four D3DX-compatible error categories, each configurable resource
+ceiling, compressed input, truncation and unsupported binary 64-bit floats have direct evidence.
+The asset generator emits byte-identical source for the XNB build and reader demo.
+
+The corrected source compiles without warnings with at most three jobs and metadata is689/0. Ten
+SOFTWARE-labelled and ten OPENGLES3-labelled direct runs pass9/9 with identical stdout SHA-256
+`5367924f0bbba25aa3dbd8633e6098b6c89dd3bba2745c4efc148227254271da` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions, both validator suites pass and isolated asset regeneration
+matches. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205
+routes; 24 public names enter the CNA-extension appendix and Complete981 marks six post-baseline
+IDs absent. Evidence:`/tmp/checkpoint-987-directx-reader/*`. The initial failed check was corrected
+as demo arithmetic; no CNA defect appeared. Audit `FbxFileReader.hpp` next.

@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 30), 8 (content, 63), 9 (audio 23 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 30), 8 (content, 64), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 6 + logger 2, inspector 3,
@@ -69,12 +69,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-688 project-built catalog demos in19 categories: math78, game33, graphics185, audio23, core6,
-content63, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and205
-standalone; 652 are automated,33 smoke-only and3 manual. Every declared category has demos.
+689 project-built catalog demos in19 categories: math78, game33, graphics185, audio23, core6,
+content64, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and206
+standalone; 653 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete981's full runtime reports; they include all683
-baseline IDs in both renderer suites and correctly mark the five post-baseline IDs absent.
+baseline IDs in both renderer suites and correctly mark the six post-baseline IDs absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete981's
 full runtime reports are the baseline inputs for the683-ID checkpoint catalog. Selected semantic
@@ -1318,6 +1318,26 @@ Evidence:`/tmp/checkpoint-986-build-time-media/*`. The first compile failure was
 `std::string`/path composition error and was corrected before validation; no CNA defect appeared.
 Audit the public `DirectXFileReader.hpp` parser next against the existing generated `.x` fixture,
 then take the adjacent FBX reader as its own coherent batch.
+
+Focused **987-DirectX-file-reader** adds the renderer-free standalone
+`content.model.directx_file_reader` and covers every public declaration in
+`DirectXFileReader.hpp`. Nine controls parse a generated twin-panel text model and an in-memory
+binary token stream, including case-insensitive type checks, ordered names/numbers/strings,
+references, children and skipped inline templates. All four errors retain their D3DX code and
+owned detail; empty, foreign, version, compressed and truncated inputs take exact categories; each
+of the five configurable ceilings is exercised, and binary 64-bit floats are explicitly refused.
+The asset generator now emits the same deterministic `.x` source for XNB compilation and direct
+reader use, and an isolated regeneration proves the two copies byte-identical.
+
+The corrected source compiles without warnings with at most three jobs and metadata is689/0. Ten
+SOFTWARE-labelled and ten OPENGLES3-labelled direct runs pass9/9 with byte-identical stdout SHA-256
+`5367924f0bbba25aa3dbd8633e6098b6c89dd3bba2745c4efc148227254271da` and empty stderr. The exact
+SOFTWARE CTest passes ten repetitions, both validator suites pass and the Python generators compile.
+Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes;
+24 public names enter the CNA-extension appendix and Complete981 marks six post-baseline IDs absent.
+Evidence:`/tmp/checkpoint-987-directx-reader/*`. The first run's 26-versus-22 payload expectation
+was a demo arithmetic error and was corrected; no CNA defect appeared. Audit the adjacent public
+`FbxFileReader.hpp` surface next as a separate text/binary parser workflow.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -3507,8 +3527,9 @@ replication, option and malformed-input evidence. Focused985 extends that stable
 `TextureCompressionPipeline.hpp` adapter, covering exact CNB-format mapping, caller options and
 unsupported formats. Focused986 adds a renderer-free standalone that closes
 `BuildTimeMediaDecoder.hpp` through real Ogg/MP3/WMV decode/probes, all three adapters and a
-generated PCM-to-WMA-to-PCM round trip. Audit `DirectXFileReader.hpp` next against the existing
-generated `.x` fixture, then take the adjacent FBX reader as a separate coherent batch.
+generated PCM-to-WMA-to-PCM round trip. Focused987 adds a separate text/binary DirectX `.x` reader
+workflow and closes `DirectXFileReader.hpp`, including all carrier, error and limit declarations.
+Audit the adjacent `FbxFileReader.hpp` surface next as its own coherent parser workflow.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**688 demos** in 19 categories. Kinds: console 187, game 296, standalone 205. Automation: automated 652, manual 3, smoke-only 33.
+**689 demos** in 19 categories. Kinds: console 187, game 296, standalone 206. Automation: automated 653, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 63 | 63 | 0 | 0 | 47 / 0 / 14 / 0 / 2 | 47 / 0 / 14 / 0 / 2 |
+| content | 64 | 64 | 0 | 0 | 47 / 0 / 14 / 0 / 3 | 47 / 0 / 14 / 0 / 3 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -32,8 +32,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.media.build_time_decoder`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
-- OPENGLES3: absent from report: `content.media.build_time_decoder`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
+- SOFTWARE: absent from report: `content.media.build_time_decoder`, `content.model.directx_file_reader`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
+- OPENGLES3: absent from report: `content.media.build_time_decoder`, `content.model.directx_file_reader`, `content.texture_processor.block_compression`, `inspector.agent.loopback_session`, `inspector.agent.preview_pipeline`, `inspector.protocol.round_trip`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -618,6 +618,29 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentWriteResult::warnings` -- content.custom.pipeline_diagnostics
 - `CNA::Content::Pipeline::ConvertCnbTextureToXnb` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::DecodeImportedImage` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Pipeline::DirectXFile` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFile::encoding` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFile::objects` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileError` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileException` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileException::CodeName` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileException::DirectXFileException` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileException::Error` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileException::what` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileLimits` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileLimits::maximumBytes` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileLimits::maximumDepth` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileLimits::maximumNumbersPerObject` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileLimits::maximumObjects` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileLimits::maximumStringLength` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileObject` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileObject::TypeIs` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileObject::children` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileObject::name` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileObject::numbers` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileObject::references` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileObject::strings` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::DirectXFileObject::type` -- content.model.directx_file_reader
 - `CNA::Content::Pipeline::EncodeBlockCompressedImage` -- content.texture_processor.block_compression
 - `CNA::Content::Pipeline::ExpandCharacterRegions` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::FindFontFamilyBeside` -- content.sprite_font.pipeline_contract
@@ -712,6 +735,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ProcessedTextureCubeType` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::ProcessedVideoType` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::RasterizeFontDescription` -- content.sprite_font.pipeline_contract
+- `CNA::Content::Pipeline::ReadDirectXFile` -- content.model.directx_file_reader
 - `CNA::Content::Pipeline::RefreshContentBuildDirectFingerprint` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::RefreshContentBuildEffectiveFingerprint` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::RegisterBuiltInContentPipeline` -- content.custom.incremental_compiler

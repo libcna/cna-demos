@@ -3,7 +3,7 @@
 from pathlib import Path
 
 
-def write_all(content_xnb_root: Path) -> None:
+def write_all(content_xnb_root: Path, assets_root: Path | None = None) -> None:
     def matrix(x, y):
         return f"FrameTransformMatrix {{ 1,0,0,0, 0,1,0,0, 0,0,1,0, {x},{y},0,1;; }}"
     def panel(name, x, color):
@@ -46,3 +46,7 @@ def write_all(content_xnb_root: Path) -> None:
     path = content_xnb_root / "models" / "twin_panels.x"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(source)
+    if assets_root is not None:
+        demo_path = assets_root / "models" / "directx_twin_panels.x"
+        demo_path.parent.mkdir(parents=True, exist_ok=True)
+        demo_path.write_text(source)

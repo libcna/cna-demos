@@ -382,7 +382,7 @@ def main() -> None:
     gltf_models.write_all(CONTENT_ROOT, ROOT)
     dds_assets.write_all(ROOT)
     skinned_bundles.write_all(ROOT)
-    xnb_models.write_all(CONTENT_XNB_ROOT)
+    xnb_models.write_all(CONTENT_XNB_ROOT, ROOT)
     xnb_graphs.write_all(ROOT)
     xnb_loadouts.write_all(ROOT)
     xnb_external_assets.write_all(ROOT)

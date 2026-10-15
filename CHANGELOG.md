@@ -12,6 +12,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   propagation and unsupported-format refusal.
 - Added direct build-time media coverage for Ogg/MP3/WMV decode/probes, pipeline adapters and a
   generated PCM-to-WMA-to-PCM round trip without starting playback.
+- Added direct text/binary DirectX `.x` reader coverage for flattened object carriers, inline
+  templates, D3DX-compatible errors and every configurable resource ceiling.
 - Enabled CNA's optional Inspector in `linux-full` and added focused protocol, authenticated
   loopback-session and asynchronous bounded-preview workflows.
 - Covered every Inspector v1 payload family, strict header/type/length/request bounds, explicit
