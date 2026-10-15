@@ -25,6 +25,7 @@ namespace
         ctx.Print("after dividing by W = {}", ndc.ToString());
 
         ctx.CheckNear(clip.W, 10.0, 1e-4, "W is the distance in front of the camera");
+        ctx.CheckNear(clip.Y, 0.0, 1e-6, "a point on the camera's horizontal axis keeps clip-space Y at zero");
         ctx.CheckNear(ndc.X, 1.0, 1e-5, "the point lands on the right edge (x = 1)");
         ctx.Check(ndc.Z > 0.0f && ndc.Z < 1.0f, "depth lies between the near and far planes (0..1)");
     }
@@ -35,6 +36,7 @@ CNA_DEMOS_CONSOLE(Vector4Homogeneous, {
     .title = "Homogeneous coordinates",
     .description = "Projects a 3D point with Vector4::Transform and a perspective matrix, then divides by W to "
                    "get normalized device coordinates.",
-    .apis = {"Vector4::Vector4", "Vector4::Transform", "Matrix::CreatePerspectiveFieldOfView"},
+    .apis = {"Vector4::Vector4", "Vector4::Transform", "Vector4::X", "Vector4::Y", "Vector4::Z", "Vector4::W",
+             "Matrix::CreatePerspectiveFieldOfView"},
     .tags = {"projection", "clip-space", "perspective"},
 })

@@ -11,6 +11,7 @@ namespace
     {
         const Vector3 a(1.0f, 2.0f, 3.0f);
         const Vector3 b(4.0f, 5.0f, 6.0f);
+        ctx.Check(a.X == 1.0f && a.Y == 2.0f && a.Z == 3.0f, "the constructor preserves X, Y and Z");
 
         ctx.Print("a + b     = {}", (a + b).ToString());
         ctx.Print("b - a     = {}", (b - a).ToString());
@@ -37,6 +38,6 @@ CNA_DEMOS_CONSOLE(Vector3Arithmetic, {
                    "the equivalent static methods.",
     .apis = {"Vector3::Vector3", "Vector3::Add", "Vector3::Subtract", "Vector3::Multiply", "Vector3::Divide", "Vector3::Negate",
              "Vector3::op_Addition", "Vector3::op_Subtraction", "Vector3::op_Multiply", "Vector3::op_Division",
-             "Vector3::op_UnaryNegation"},
+             "Vector3::op_UnaryNegation", "Vector3::X", "Vector3::Y", "Vector3::Z"},
     .tags = {"vector", "operators"},
 })

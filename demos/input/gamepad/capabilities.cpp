@@ -79,18 +79,20 @@ namespace
         void Update(GameTime& gameTime) override
         {
             // Capabilities can change while the game runs: check again when a controller connects.
-            for (int i = 0; i < 4; ++i)
+            constexpr std::array players = {
+                PlayerIndex::One, PlayerIndex::Two, PlayerIndex::Three, PlayerIndex::Four};
+            for (std::size_t i = 0; i < players.size(); ++i)
             {
-                const auto player = static_cast<PlayerIndex>(i);
+                const PlayerIndex player = players[i];
                 const GamePadCapabilities caps = GamePad::GetCapabilities(player);
-                lines_[static_cast<std::size_t>(i)] =
+                lines_[i] =
                     "Player " + std::to_string(i + 1) + ": " +
                     (caps.getIsConnectedProperty() ? std::string(CnaDemos::Name(caps.getGamePadTypeProperty())) + ", " +
                                                          Controls(caps)
                                                    : std::string("not connected"));
                 if (!checked_)
                 {
-                    Context().Print("{}", lines_[static_cast<std::size_t>(i)]);
+                    Context().Print("{}", lines_[i]);
                     Context().Check(caps.getIsConnectedProperty() ==
                                         GamePad::GetState(player).getIsConnectedProperty(),
                                     "player " + std::to_string(i + 1) +
@@ -142,7 +144,8 @@ CNA_DEMOS_GAME(CapabilitiesDemo, {
              "GamePadCapabilities::HasRightXThumbStick", "GamePadCapabilities::HasRightYThumbStick",
              "GamePadCapabilities::HasLeftTrigger", "GamePadCapabilities::HasRightTrigger",
              "GamePadCapabilities::HasLeftVibrationMotor", "GamePadCapabilities::HasRightVibrationMotor",
-             "GamePadCapabilities::HasVoiceSupport", "GamePadType", "GamePadType::Unknown"},
+             "GamePadCapabilities::HasVoiceSupport", "GamePadType", "GamePadType::Unknown",
+             "PlayerIndex::One", "PlayerIndex::Two", "PlayerIndex::Three", "PlayerIndex::Four"},
     .tags = {"gamepad", "controller", "capabilities", "connected"},
     .frames = 3,
     .assets = {"fonts/pixel_font.cnb"},

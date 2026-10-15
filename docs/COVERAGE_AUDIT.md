@@ -988,6 +988,27 @@ corresponding devices and CNA has no deterministic public injection path. Eviden
 `/tmp/checkpoint-900-*`. No physical key delivery, keyboard-layout mapping, rendering, screenshot
 or visual judgment is claimed.
 
+### Root Framework public fields
+
+The root `Microsoft.Xna.Framework` namespace now has a semantic decision for all78 inventory
+fields. Existing geometry workflows already compare `BoundingFrustum::CornerCount` with the
+returned corner vector and classify a box behind a plane as `PlaneIntersectionType::Back`; their
+metadata now records those direct uses. The value workflows add compact constructor round-trips
+for every Matrix, Quaternion, Rectangle and Vector2/3/4 public component. Matrix's check maps the
+distinct values1..16 across all row-major fields, while the vector, rectangle and quaternion
+checks preserve distinct per-component values rather than testing only equality.
+
+`input.gamepad.capabilities` now sends the named PlayerIndex One, Two, Three and Four values to
+real `GetCapabilities` and `GetState` calls instead of casting loop indices. The window-orientation
+workflow proves the manager's initial Default policy, its existing Portrait-to-LandscapeLeft
+transition and a second live transition to LandscapeRight, including presentation state and one
+additional event. Eight renderer-free workflows pass on both labels; capabilities passes8/8 on
+both; orientation passes9/9 on OPENGLES3 under Xvfb and keeps SOFTWARE's declared no-window skip.
+All ten exact SOFTWARE CTests pass or take that one declared skip through ten repetitions. The
+warning-free build uses `-j3`, metadata remains659/0 and both validator suites pass. Fields move
+384->426/753 and the root namespace closes at78/78. Evidence:`/tmp/checkpoint-901-*`. No physical
+controller, screenshot or visual-quality claim is made.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

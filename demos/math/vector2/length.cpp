@@ -10,6 +10,7 @@ namespace
     void Vector2Length(CnaDemos::DemoContext& ctx)
     {
         const Vector2 v(3.0f, 4.0f);
+        ctx.Check(v.X == 3.0f && v.Y == 4.0f, "the constructor preserves X and Y");
 
         const float length = v.Length();                // sqrt(3*3 + 4*4)
         const float lengthSquared = v.LengthSquared();  // 3*3 + 4*4, no square root
@@ -32,6 +33,6 @@ CNA_DEMOS_CONSOLE(Vector2Length, {
     .description = "Computes the length and squared length of a Vector2; LengthSquared avoids the square root "
                    "when only comparing distances.",
     .apis = {"Vector2::Vector2", "Vector2::Length", "Vector2::LengthSquared", "Vector2::Zero",
-             "Vector2::One", "Vector2::UnitX", "Vector2::UnitY"},
+             "Vector2::One", "Vector2::UnitX", "Vector2::UnitY", "Vector2::X", "Vector2::Y"},
     .tags = {"vector", "magnitude"},
 })

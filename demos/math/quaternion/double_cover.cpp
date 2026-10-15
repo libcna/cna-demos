@@ -22,6 +22,9 @@ namespace
                       !positiveB.Equals(std::any{42}) && !positiveB.Equals(std::any{}) &&
                       positiveB.GetHashCode() == samePositiveB.GetHashCode(),
                   "component construction, typed/boxed equality and hashing agree");
+        const Quaternion ordered(1.0f, 2.0f, 3.0f, 4.0f);
+        ctx.Check(ordered.X == 1.0f && ordered.Y == 2.0f && ordered.Z == 3.0f && ordered.W == 4.0f,
+                  "the component constructor preserves X, Y, Z and W in order");
         ctx.CheckNear(Quaternion::Dot(b, positiveB), -1.0, 1e-6, "antipodal unit quaternions have dot -1");
         ctx.CheckNear(Vector3::Distance(Vector3::Transform(Vector3::Forward, b),
                                        Vector3::Transform(Vector3::Forward, positiveB)),
@@ -77,6 +80,7 @@ CNA_DEMOS_CONSOLE(DoubleCover, {
              "Quaternion::Add", "Quaternion::Subtract", "Quaternion::Normalize", "Quaternion::LengthSquared",
              "Quaternion::Equals", "Quaternion::GetHashCode", "Quaternion::op_Addition",
              "Quaternion::op_Equality", "Quaternion::op_Inequality", "Quaternion::op_Subtraction",
-             "Quaternion::Slerp", "Quaternion::Divide", "Quaternion::op_Division"},
+             "Quaternion::Slerp", "Quaternion::Divide", "Quaternion::op_Division",
+             "Quaternion::X", "Quaternion::Y", "Quaternion::Z", "Quaternion::W"},
     .tags = {"quaternion", "rotation", "interpolation", "precision"},
 })

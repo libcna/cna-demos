@@ -59,7 +59,7 @@ CNA_DEMOS_CONSOLE(BoundingBoxIntersects, {
     .title = "Box collision tests",
     .description = "Tests a BoundingBox with BoundingBox::Intersects against boxes (overlap, touching, separated), "
                    "spheres, rays (the hit distance, or none) and planes (Front, Back, Intersecting).",
-    .apis = {"BoundingBox::Intersects", "BoundingBox::BoundingBox", "PlaneIntersectionType", "Ray::Ray",
+    .apis = {"BoundingBox::Intersects", "BoundingBox::BoundingBox", "PlaneIntersectionType", "PlaneIntersectionType::Back", "Ray::Ray",
              "Plane::Plane"},
     .tags = {"collision", "box", "aabb", "ray", "picking"},
 })

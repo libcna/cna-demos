@@ -14,6 +14,8 @@ namespace
     {
         // Integer rectangle: top-left corner (X, Y), Width, Height. Y grows downwards on screen.
         const Rectangle button(100, 50, 200, 40);
+        ctx.Check(button.X == 100 && button.Y == 50 && button.Width == 200 && button.Height == 40,
+                  "the constructor preserves the public position and size fields");
         ctx.Print("button = {}", button.ToString());
         ctx.Print("Left {} Top {} Right {} Bottom {}", button.getLeftProperty(), button.getTopProperty(),
                   button.getRightProperty(), button.getBottomProperty());
@@ -43,6 +45,6 @@ CNA_DEMOS_CONSOLE(RectangleEdges, {
     .apis = {"Rectangle::Rectangle", "Rectangle::Left", "Rectangle::Top", "Rectangle::Right", "Rectangle::Bottom",
              "Rectangle::Location", "Rectangle::Center", "Rectangle::IsEmpty", "Rectangle::Empty",
              "Rectangle::ToString", "Rectangle::Equals", "Rectangle::GetHashCode", "Rectangle::op_Equality",
-             "Rectangle::op_Inequality"},
+             "Rectangle::op_Inequality", "Rectangle::X", "Rectangle::Y", "Rectangle::Width", "Rectangle::Height"},
     .tags = {"rectangle", "bounds", "ui"},
 })

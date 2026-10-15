@@ -9297,3 +9297,20 @@ Coverage moves224->384/753 fields and Input reaches194/202; its remaining eight 
 hardware-specific GamePadType values already dispositioned as manual/unavailable. Evidence:
 `/tmp/checkpoint-900-*`. Continue with the42 uncredited root Framework fields, adding metadata to
 existing behavior-rich demos where direct evidence already exists before adding new controls.
+
+## Focused901-root-Framework-field-values
+
+The root `Microsoft.Xna.Framework` field inventory closes at78/78 without new demo IDs. Existing
+frustum and box workflows already connect CornerCount and PlaneIntersectionType.Back to returned
+geometry. Compact constructor checks now round-trip every Matrix, Quaternion, Rectangle and
+Vector2/3/4 component. Gamepad capabilities sends all four named PlayerIndex values through live
+queries, while the orientation workflow observes Default and performs real Portrait,
+LandscapeLeft and LandscapeRight policy transitions with matching presentation state and events.
+
+Eight console workflows pass under both renderer labels; capabilities passes8/8 on both; orientation
+passes9/9 under OPENGLES3/Xvfb and retains SOFTWARE's declared no-window skip. The ten exact
+SOFTWARE CTests remain stable through ten repetitions. The warning-free build uses at most three
+jobs, metadata is659/0 and both validator suites pass. Coverage moves384->426/753 fields and the
+root namespace reaches78/78. Evidence:`/tmp/checkpoint-901-*`. Continue with Audio's five remaining
+fields: distinguish the stop mode and microphone states through existing workflows, credit the
+observed device name and disposition the compiled-content version constant.

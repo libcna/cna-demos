@@ -72,7 +72,7 @@ CNA_DEMOS_CONSOLE(BoundingFrustumCulling, {
     .apis = {"BoundingFrustum::BoundingFrustum", "BoundingFrustum::Contains", "BoundingFrustum::Intersects",
              "BoundingFrustum::Near", "BoundingFrustum::Far", "BoundingFrustum::Left",
              "BoundingFrustum::Right", "BoundingFrustum::Top", "BoundingFrustum::Bottom",
-             "BoundingFrustum::GetCorners", "BoundingFrustum::Matrix", "BoundingFrustum::Equals",
+             "BoundingFrustum::GetCorners", "BoundingFrustum::CornerCount", "BoundingFrustum::Matrix", "BoundingFrustum::Equals",
              "BoundingFrustum::GetHashCode", "BoundingFrustum::ToString", "BoundingFrustum::op_Equality",
              "BoundingFrustum::op_Inequality"},
     .tags = {"culling", "camera", "frustum"},

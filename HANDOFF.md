@@ -71,9 +71,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-900
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-901
 overlays for all659 catalog demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,384/753 fields and
+The surface totals are302/329 XNA types,2114/2326 XNA members,426/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -388,6 +388,18 @@ moves224->384/753 fields and Input reaches194/202; its remaining eight values ar
 GamePadType identities already dispositioned as unavailable/manual. Evidence:`/tmp/checkpoint-900-*`.
 No physical key delivery or keyboard-layout mapping is claimed. **Next:** audit the42 remaining
 root `Microsoft.Xna.Framework` fields, crediting existing direct behavior before adding controls.
+
+Focused **901-root-Framework-field-values** closes the root namespace at78/78 fields without a new
+ID. Existing frustum and box checks now credit CornerCount and PlaneIntersectionType.Back; compact
+constructor controls round-trip every Matrix, Quaternion, Rectangle and Vector2/3/4 component.
+Gamepad capabilities sends all four named PlayerIndex values through live calls, and the orientation
+workflow observes Default plus real Portrait, LandscapeLeft and LandscapeRight transitions with
+presentation state and events. Eight console workflows pass on both labels, capabilities passes8/8
+on both, and orientation passes9/9 on OPENGLES3/Xvfb while SOFTWARE keeps its declared no-window
+skip. Ten exact SOFTWARE CTests remain stable through ten repetitions. The warning-free build uses
+`-j3`, metadata validates659/0 and both validator suites pass. Coverage moves384->426/753 fields.
+Evidence:`/tmp/checkpoint-901-*`. **Next:** audit Audio's five remaining fields through existing
+stop/microphone workflows and disposition `AudioEngine::ContentVersion` precisely.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
@@ -2152,13 +2164,12 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete892 remains the authoritative657-demo full-runtime baseline; focused893-
-900 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
-closed at7/8, Input is dispositioned at194/202, and Input.Touch is complete at15/15. Audit the42
-remaining root `Microsoft.Xna.Framework` fields next: BoundingFrustum CornerCount;
-DisplayOrientation's four values; fifteen Matrix components; PlaneIntersectionType.Back; four
-PlayerIndex values; Quaternion's four components; Rectangle's four components; and all Vector2/3/4
-components. First credit existing direct behavior, then add only controls that establish a missing
-semantic relationship. Do not turn field access or numeric constants into artificial demos.
+901 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
+closed at7/8, Input is dispositioned at194/202, Input.Touch is complete at15/15 and the root
+Framework namespace is complete at78/78. Audit Audio's five remaining fields next:
+`AudioStopOptions::AsAuthored`, `Microphone::Name`, both MicrophoneState values and
+`AudioEngine::ContentVersion`. Use the existing cue and microphone workflows for observable values;
+determine whether ContentVersion has application-facing behavior before crediting it.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete892 too stale.

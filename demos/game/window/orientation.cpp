@@ -40,6 +40,7 @@ namespace
     public:
         OrientationDemo()
         {
+            defaultWasUnrestricted_ = Graphics().getSupportedOrientationsProperty() == DisplayOrientation::Default;
             // A portrait game: taller than wide, Portrait only. (With the default
             // SupportedOrientations, the back buffer's shape alone would say the same.)
             Graphics().setPreferredBackBufferWidthProperty(480);
@@ -65,6 +66,7 @@ namespace
                       pp.getBackBufferWidthProperty(), pp.getBackBufferHeightProperty());
             ctx.Check(getWindowProperty().getCurrentOrientationProperty() == DisplayOrientation::Portrait,
                       "a Portrait-only game starts in Portrait");
+            ctx.Check(defaultWasUnrestricted_, "SupportedOrientations starts at Default before the game chooses a policy");
             ctx.Check(pp.getBackBufferWidthProperty() < pp.getBackBufferHeightProperty(),
                       "the back buffer is taller than wide");
             changesAtStart_ = changes_;
@@ -91,6 +93,16 @@ namespace
                 Context().Check(getPresentationParametersOrientation() == DisplayOrientation::LandscapeLeft,
                                 "PresentationParameters::DisplayOrientation follows");
             }
+            else if (updates_ == 6)
+            {
+                Graphics().setSupportedOrientationsProperty(DisplayOrientation::LandscapeRight);
+                Graphics().ApplyChanges();
+                Context().Check(getWindowProperty().getCurrentOrientationProperty() == DisplayOrientation::LandscapeRight &&
+                                    getPresentationParametersOrientation() == DisplayOrientation::LandscapeRight,
+                                "with only LandscapeRight supported, both window and presentation turn right");
+                Context().Check(changes_ == changesAtStart_ + 2,
+                                "the second distinct orientation raises one more OrientationChanged event");
+            }
         }
 
         void Draw(const GameTime& gameTime) override
@@ -115,6 +127,7 @@ namespace
         int updates_ = 0;
         int changes_ = 0;
         int changesAtStart_ = 0;
+        bool defaultWasUnrestricted_ = false;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
     };
@@ -130,6 +143,8 @@ CNA_DEMOS_GAME(OrientationDemo, {
     .apis = {"GraphicsDeviceManager::SupportedOrientations", "GameWindow::CurrentOrientation",
              "GameWindow::OrientationChanged", "GameWindow::OnOrientationChanged",
              "GameWindow::SetSupportedOrientations", "PresentationParameters::DisplayOrientation", "DisplayOrientation",
+             "DisplayOrientation::Default", "DisplayOrientation::LandscapeLeft",
+             "DisplayOrientation::LandscapeRight", "DisplayOrientation::Portrait",
              "GameWindow::KeyboardOrientationEmulationEnabledEXT", "GraphicsDeviceManager::ApplyChanges",
              "GraphicsDeviceManager::PreferredBackBufferWidth", "GraphicsDeviceManager::PreferredBackBufferHeight",
              "PresentationParameters::BackBufferWidth", "PresentationParameters::BackBufferHeight"},
