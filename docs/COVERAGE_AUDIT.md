@@ -1135,7 +1135,7 @@ coverage credit; the Pan/3D mode row now separately records actual focused nativ
 Reviewed against CNA ce74063e6 (media source unchanged from e60fa35f7). The standalone
 `media.media_library.save_picture` configures Linux XDG before first CNA/SDL use and verifies
 both resolved roots before constructing a library. No internal path override or real user
-pictures are used. Both renderer selections reproduce 27 child checks with exactly one
+pictures are used. Both renderer selections reproduce 30 child checks with exactly one
 ISSUE-041 failure; this is filesystem/stream evidence, not visual or GPU validation.
 
 | Public behavior | Evidence / decision |
@@ -1145,7 +1145,7 @@ ISSUE-041 failure; this is filesystem/stream evidence, not visual or GPU validat
 | Picture Name / Width / Height / Date / Album and token identity | The immediate saved record keeps authored filename/dimensions, the borrowed parent, and a Date bounded by the SavePicture call. Its CNAEXT path token resolves the independent reopened Picture through public MediaLibrary.GetPictureFromToken; an unknown token returns null and the indexed Date is populated. Original/reopened Pictures establish path-based typed/object equality, operators, equal hashes and name text while Preview is unequal. The corresponding Saved Pictures albums establish the same contracts by path and reject a Picture object. Disposal-invalidated views remain a gap. |
 | GetImage / GetThumbnail ownership and content | Caller-owned streams use unique_ptr; full image bytes match exactly and saved thumbnail is smaller with the same 2:1 aspect. Current 128x64 output is observed, not assumed as a universal contract. Header contradiction is ISSUE-040. Thumbnail fallback/caching and corrupted-source handling remain gaps. |
 | Stream positions, premature EOF, unknown length | Not exercised by the short-read fixture, which starts at zero with a valid known length. Extend this workflow if a distinct public contract can be established; do not infer these behaviors from ISSUE-041. |
-| MediaSource selection, tokens, same-name saves and disposal | `media_library.collections` now adopts every raw pointer returned by GetAvailableMediaSources, verifies each actual record has matching nonempty Name/ToString, and constructs its MediaLibrary from the returned Local Device record. The library exposes a distinct copied MediaSource with the same name/type/text, while its existing IsDisposed=false check is now credited. Both focused runs used fresh empty XDG music/picture roots and found zero items, leaving both directories empty. This establishes CNA's one returned desktop source and copy ownership, not wider device enumeration. Picture token lookup is demonstrated by save_picture. music_index separately proves that repeated MediaLibrary::Dispose sets IsDisposed without cascading into its borrowed graph. Same-name saves remain separate. Evidence: `/tmp/checkpoint-645-media-source-*`, `/tmp/checkpoint-646-picture-values-*`. |
+| MediaSource selection, tokens, same-name saves and disposal | `media_library.collections` now adopts every raw pointer returned by GetAvailableMediaSources, verifies each actual record has matching nonempty Name/ToString, and constructs its MediaLibrary from the returned Local Device record. The library exposes a distinct copied MediaSource with the same name/type/text, while its existing IsDisposed=false check is now credited. Both focused runs used fresh empty XDG music/picture roots and found zero items, leaving both directories empty. This establishes CNA's one returned desktop source and copy ownership, not wider device enumeration. Picture token lookup is demonstrated by save_picture. Saving `Panorama.png` again with the valid thumbnail bytes leaves the physical file count unchanged but appends a distinct live Picture view. The two views compare equal and share a token because identity is path-based, while each retains its creation-time dimensions. A fresh library resolves that token to one 128x64 record whose stream contains the exact replacement bytes. music_index separately proves that repeated MediaLibrary::Dispose sets IsDisposed without cascading into its borrowed graph. Evidence: `/tmp/checkpoint-645-media-source-*`, `/tmp/checkpoint-646-picture-values-*`, `/tmp/checkpoint-877-*`. |
 | Platform folder integration | Verified only on Linux/XDG; the demo skips before access if private roots cannot be confirmed. Windows/macOS/device integration requires separate environment validation. |
 
 ### Song caller-created value identity
@@ -2854,3 +2854,17 @@ build, metadata655/0, both self-tests and byte-identical coverage regeneration p
 302/329 types,2114/2326 non-field members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-876-*`. Image bytes and dimensions were inspected programmatically; no screenshot
 or visual inspection was used.
+
+### Focused877 same-name picture replacement
+
+`media.media_library.save_picture` now repeats the original name with the valid128x64 thumbnail
+bytes. The physical file count remains fixed, while the live library appends a distinct snapshot
+view. Both Picture objects share path-based equality and token identity but retain their respective
+640x320 and128x64 creation-time dimensions. A fresh library resolves that token to one128x64
+Picture whose caller-owned stream reproduces the replacement bytes. This closes the explicit
+same-name-save gap without a new ID. The workflow executes30 controls per renderer label:29 pass
+and only established ISSUE-041 fails. The exact known-issue SOFTWARE CTest passes twenty
+repetitions. The clean incremental `-j3` build, metadata655/0, both tool self-tests and byte-
+identical coverage regeneration pass; counts remain302/329 types,2114/2326 non-field members,
+169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-877-*`. No screenshot or visual
+inspection was used.

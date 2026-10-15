@@ -4384,6 +4384,25 @@ Evidence is under `/tmp/checkpoint-876-*`. Complete871 remains the full baseline
 next deterministic media-library or public-behavior gap. Image files and decoded dimensions were
 checked programmatically; no screenshot or visual inspection was used.
 
+### Focused877-same-name-picture-replacement
+
+The same isolated picture-library workflow now saves `Panorama.png` a second time with the valid
+128x64 thumbnail bytes. The private Saved Pictures directory keeps the same regular-file count,
+while the already open library appends a distinct Picture view. Old and new views compare equal and
+share their path token, yet preserve their own640x320 and128x64 creation-time dimensions. A fresh
+public `MediaLibrary` resolves that token to one128x64 record whose caller-owned stream contains the
+exact latest bytes. This closes the recorded name-collision gap and grows the workflow27->30
+controls without another ID.
+
+Serial SOFTWARE and OPENGLES3-labelled direct runs each pass29 controls and retain only the
+expected CNA-DEMOS-ISSUE-041 failure; stdout/stderr are byte-identical and stderr is empty. No new
+CNA defect appeared. The exact known-issue SOFTWARE CTest passes twenty consecutive repetitions.
+The clean incremental build uses `-j3`, metadata is655/0, both tool self-test suites pass and
+byte-identical temporary coverage remains302/329 types,2114/2326 members,169/753 fields and
+3078/3205 C routes. Evidence is under `/tmp/checkpoint-877-*`. Complete871 remains the full
+baseline. Continue with the next deterministic public-behavior gap. Image dimensions and bytes are
+programmatic evidence; no screenshot or visual inspection was used.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

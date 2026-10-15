@@ -494,7 +494,9 @@ a check that all authored colors remain visible and that a blank texture row can
   two-level ordinary album tree with exact parent, membership and stream checks.
   A valid stream delivering 13-byte chunks exposes ISSUE-041: SavePicture reads once and writes
   a zero-padded image. ISSUE-040 records stale thumbnail comments separately. Other platforms,
-  name collisions and further stream/disposal contracts remain unaudited.
+  premature/unknown-length streams and further disposal contracts remain unaudited. Same-name
+  saves replace one file while the live library retains distinct equal snapshot views; a fresh
+  library observes only the latest dimensions and bytes.
 
 
 ## Phase 10 -- input ✅ (39 demos: keyboard, mouse, text input, clipboard, gamepad, touch, CNAEXT devices)
@@ -8858,3 +8860,20 @@ The exact known-issue SOFTWARE CTest passes twenty repetitions. The clean increm
 `-j3`, metadata is655/0, both tool self-test suites pass and coverage remains302/329 types,
 2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-876-*`. Image
 files and dimensions were checked programmatically; no screenshot or visual inspection was used.
+
+## Focused877-same-name-picture-replacement
+
+The isolated save-picture workflow grows from twenty-seven to thirty controls. It saves
+`Panorama.png` again using the valid128x64 thumbnail bytes. The physical Saved Pictures file count
+does not grow, while the already open library appends a distinct Picture snapshot. The old and new
+views share path-based equality and token identity but retain their own640x320 and128x64 dimensions.
+A fresh public library resolves the token to one128x64 record and its caller-owned stream contains
+the exact replacement bytes.
+
+Serial SOFTWARE and OPENGLES3-labelled direct runs each pass29 controls and retain only the
+expected CNA-DEMOS-ISSUE-041 short-read failure, with byte-identical stdout/stderr and empty stderr.
+The exact known-issue SOFTWARE CTest passes twenty repetitions. The clean incremental build uses
+`-j3`, metadata is655/0, both tool self-test suites pass and byte-identical coverage regeneration
+remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-877-*`. No new CNA defect appeared. Image bytes and dimensions are programmatic
+evidence; no screenshot or visual inspection was used.

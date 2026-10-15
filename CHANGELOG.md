@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added same-name picture-save coverage: the live library retains distinct equal snapshot views,
+  one physical file is replaced, and a fresh library observes the latest dimensions and bytes.
 - Extended the isolated picture-library workflow with a two-level ordinary folder tree, verifying
   public album parent links, per-album picture membership and exact owned image streams.
 - Classified process termination between multi-artifact replacements as CNA fault-injection

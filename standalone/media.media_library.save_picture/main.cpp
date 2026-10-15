@@ -275,6 +275,40 @@ namespace
             check(false, "nested picture streams retain the exact original encoded bytes");
         }
 
+        const auto savedPicturesPath = pictures / "Saved Pictures";
+        const auto regularFileCount = [](const std::filesystem::path& path)
+        {
+            return std::count_if(std::filesystem::directory_iterator(path),
+                                 std::filesystem::directory_iterator(), [](const auto& entry)
+                                 { return entry.is_regular_file(); });
+        };
+        const auto savedFilesBeforeCollision = regularFileCount(savedPicturesPath);
+        Picture* replacement = library.SavePicture("Panorama.png", thumbnailBytes);
+        check(replacement && replacement != picture &&
+                  regularFileCount(savedPicturesPath) == savedFilesBeforeCollision &&
+                  library.getSavedPicturesProperty()->getCountProperty() == 4 &&
+                  album->getPicturesProperty()->getCountProperty() == 4,
+              "saving the same name replaces one file but appends a distinct live picture view");
+        check(replacement && replacement->Equals(picture) &&
+                  replacement->getTokenEXT() == picture->getTokenEXT() &&
+                  replacement->getWidthProperty() == 128 && replacement->getHeightProperty() == 64 &&
+                  picture->getWidthProperty() == 640 && picture->getHeightProperty() == 320,
+              "same-path picture views share identity while retaining their creation-time dimensions");
+        MediaLibrary collisionIndex;
+        Picture* indexedReplacement = collisionIndex.GetPictureFromToken(picture->getTokenEXT());
+        if (indexedReplacement)
+        {
+            std::unique_ptr<System::IO::Stream> replacementImage(indexedReplacement->GetImage());
+            check(indexedReplacement->getWidthProperty() == 128 &&
+                      indexedReplacement->getHeightProperty() == 64 &&
+                      ReadImage(*replacementImage) == thumbnailBytes,
+                  "a fresh library indexes the replacement dimensions and exact latest bytes");
+        }
+        else
+        {
+            check(false, "a fresh library indexes the replacement dimensions and exact latest bytes");
+        }
+
         check(!picture->getIsDisposedProperty() && !album->getIsDisposedProperty(),
               "library-owned picture and picture-album views start live");
         picture->Dispose();
@@ -283,7 +317,8 @@ namespace
         album->Dispose();
         check(picture->getIsDisposedProperty() && album->getIsDisposedProperty() &&
                   !preview->getIsDisposedProperty() && !chunked->getIsDisposedProperty() &&
-                  picture->getAlbumProperty() == album && album->getPicturesProperty()->getCountProperty() == 3,
+                  !replacement->getIsDisposedProperty() && picture->getAlbumProperty() == album &&
+                  album->getPicturesProperty()->getCountProperty() == 4,
               "object disposal is idempotent, marks only that borrowed view and preserves its relationships");
 
         auto* reopenedPictures = reopened.getPicturesProperty();
