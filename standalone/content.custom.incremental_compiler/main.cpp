@@ -199,6 +199,21 @@ int main()
                       prebuiltDiagnostic.str().find("ContentPipelineRegistryFactory") != std::string::npos &&
                       imports == 0 && processes == 0 && writes == 0,
                   "a pre-built registry refuses service-selection options that only the factory overload can apply");
+            std::ostringstream prebuiltXmaDiagnostic;
+            std::cerr.rdbuf(prebuiltXmaDiagnostic.rdbuf());
+            const int prebuiltXma = Pipeline::RunContentCompiler(
+                {"build", source, "-o", output, "--format", "cnb", "--workers", "1",
+                 "--xma-encoder", "unused-encoder"},
+                prebuiltRegistry);
+            std::cerr.rdbuf(previousError);
+            std::cerr << prebuiltXmaDiagnostic.str();
+            check(prebuiltXma == 2 &&
+                      prebuiltXmaDiagnostic.str().find("ContentPipelineRegistryFactory") !=
+                          std::string::npos &&
+                      prebuiltXmaDiagnostic.str().find("--fx-compiler") != std::string::npos &&
+                      prebuiltXmaDiagnostic.str().find("--xma-encoder") == std::string::npos &&
+                      imports == 0 && processes == 0 && writes == 0,
+                  "a pre-built registry refuses XMA selection before discovery, but its diagnostic names only FX options (ISSUE-106)");
 
             // Two embedded compiler calls may overlap when their output roots are disjoint. Hold
             // both factories at the same gate so this proves actual overlap, and give each one a
@@ -344,6 +359,84 @@ int main()
             check(generatedEdited == 0 && imports == 2 && processes == 2 && writes == 2 &&
                       ReadScore(generated / "output" / "solo.cnb") == 30,
                   "editing the recorded generated dependency rebuilds its node and changes the compiled value");
+            imports = 0;
+            processes = 0;
+            writes = 0;
+
+            // Exercise the complete public factory option carrier without launching any selected
+            // service: the built-in routes retain those choices, while this score uses its own
+            // importer, processor and CNB writer.
+            const auto optionRoot = directory / "options";
+            for (const auto& path : {optionRoot / "source", optionRoot / "shared",
+                                     optionRoot / "fonts-a", optionRoot / "fonts-b"})
+                std::filesystem::create_directories(path);
+            WriteFile(optionRoot / "source" / "configured.score", "5\n");
+            WriteFile(optionRoot / "shared" / "multiplier.factor", "2\n");
+            WriteFile(optionRoot / "source" / Pipeline::ContentBuildConfigurationFileName,
+                      R"json({"format":"CNA.ContentPipeline.Config","version":1,"sourceRoots":{"shared":"../shared"},"assets":{}})json");
+            Pipeline::ContentCompilerOptions capturedOptions;
+            bool optionsFactoryCalled = false;
+            std::shared_ptr<Pipeline::ContentPipelineRegistry> optionRegistry;
+            const Pipeline::ContentPipelineRegistryFactory optionFactory =
+                [&](const Pipeline::ContentCompilerOptions& options) {
+                    capturedOptions = options;
+                    optionsFactoryCalled = true;
+                    auto registry = std::make_shared<Pipeline::ContentPipelineRegistry>();
+                    Pipeline::RegisterBuiltInContentPipeline(*registry, options);
+                    registry->RegisterImporter(std::make_shared<ScoreImporter>());
+                    registry->RegisterProcessor(std::make_shared<ScoreProcessor>());
+                    registry->RegisterWriter(std::make_shared<ScoreWriter>("options"));
+                    optionRegistry = registry;
+                    return registry;
+                };
+            const std::vector<std::filesystem::path> optionArguments{
+                "build", optionRoot / "source", "-o", optionRoot / "output", "--format", "cnb",
+                "--workers", "1", "--quiet",
+                "--fx-compiler", "tools/fxc-custom", "--fx-compiler-launcher", "tools/wine-fx",
+                "--xma-encoder", "tools/xma-custom", "--xma-encoder-launcher", "tools/wine-xma",
+                "--xma-encoder-arg", "--input={input}", "--xma-encoder-arg", "--output={output}",
+                "--font-directory", optionRoot / "fonts-a", "--font-directory", optionRoot / "fonts-b",
+                "--build-configuration", "Debug", "--xnb-platform", "desktopgl",
+                "--xnb-version", "5", "--xnb-profile", "hidef", "--xnb-compress", "lz4",
+                "--xnb-reader-names", "portable", "--xnb-allow-unverified-xbox"};
+            const int optionStatus = Pipeline::RunContentCompiler(optionArguments, optionFactory);
+            check(optionStatus == 0 && optionsFactoryCalled && optionRegistry &&
+                      optionRegistry->IsFrozen() &&
+                      optionRegistry->HasImporterForSource("configured.score") &&
+                      optionRegistry->HasImporterForSource("effect.fx") &&
+                      optionRegistry->HasImporterForSource("font.spritefont") &&
+                      optionRegistry->HasImporterForSource("image.png") &&
+                      ReadScore(optionRoot / "output" / "configured.cnb") == 10 &&
+                      imports == 1 && processes == 1 && writes == 1,
+                  "the factory registers built-in and game routes once, then the coordinator freezes and runs the selected score route");
+            check(capturedOptions.effectCompilerExecutable == "tools/fxc-custom" &&
+                      capturedOptions.effectCompilerLauncher == "tools/wine-fx" &&
+                      capturedOptions.xmaEncoderExecutable == "tools/xma-custom" &&
+                      capturedOptions.xmaEncoderLauncher == "tools/wine-xma" &&
+                      capturedOptions.xmaEncoderArguments ==
+                          std::vector<std::string>{"--input={input}", "--output={output}"} &&
+                      capturedOptions.fontDirectories ==
+                          std::vector<std::filesystem::path>{optionRoot / "fonts-a", optionRoot / "fonts-b"} &&
+                      capturedOptions.buildConfiguration == "Debug" &&
+                      capturedOptions.xnbContainer.platform ==
+                          CNA::Internal::Xnb::XnbTargetPlatform::DesktopGL &&
+                      capturedOptions.xnbContainer.version ==
+                          CNA::Internal::Xnb::XnbContainerVersion::Xna40 &&
+                      capturedOptions.xnbContainer.graphicsProfile ==
+                          CNA::Internal::Xnb::XnbGraphicsProfile::HiDef &&
+                      capturedOptions.xnbContainer.compression ==
+                          CNA::Internal::Xnb::XnbOutputCompression::Lz4 &&
+                      capturedOptions.xnbContainer.readerNameStyle ==
+                          CNA::Internal::Xnb::XnbReaderNameStyle::Portable &&
+                      capturedOptions.xnbContainer.allowUnverifiedXboxPayloads,
+                  "every service, font, configuration and XNB container option reaches the registry factory exactly");
+            auto containerOnlyChange = capturedOptions;
+            containerOnlyChange.xnbContainer.compression =
+                CNA::Internal::Xnb::XnbOutputCompression::None;
+            auto serviceChange = capturedOptions;
+            serviceChange.buildConfiguration = "Release";
+            check(containerOnlyChange == capturedOptions && serviceChange != capturedOptions,
+                  "option equality deliberately ignores coordinator-owned XNB settings but observes registry-affecting services");
             imports = 0;
             processes = 0;
             writes = 0;

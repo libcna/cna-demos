@@ -590,6 +590,40 @@ appendix and Complete956 still correctly marks only the two post-baseline IDs ab
 `/tmp/checkpoint-959-generated-*`. No CNA defect appeared. Audit the compact public
 `ContentCompiler.hpp` service/options surface next, preserving this actual coordinator evidence.
 
+Focused **960-content-compiler-options-and-disposition** closes all 13 public declarations in
+`ContentCompiler.hpp` by extending the same stable incremental-compiler ID to 32 controls. One
+option-complete real invocation passes distinct effect and XMA executable/launcher selections, two
+XMA argument templates, two font directories, Debug configuration and explicit DesktopGL/version
+5/HiDef/LZ4/portable-name/unverified-Xbox container settings. Its factory observes every value
+exactly, calls `RegisterBuiltInContentPipeline`, adds the game score route, and returns a registry
+that CNA freezes. Representative `.fx`, `.spritefont`, `.png` and `.score` importer discovery
+succeeds; the custom score builds and decodes to 10 without launching the unused external tools.
+Changing only XNB compression preserves ContentCompilerOptions equality, while changing build
+configuration does not, proving the documented coordinator-versus-registry ownership split.
+
+The pre-built-registry overload retains its FX refusal and now also receives an XMA-only selection.
+Both return status 2 before discovery, name the factory overload and enter no component. The XMA
+case exposes CNA-DEMOS-ISSUE-106: its diagnostic still says only `--fx-compiler` and
+`--fx-compiler-launcher`; source review proves the same hard-coded text covers XMA, font-directory
+and build-configuration differences. The refusal is functionally correct, so this is a passing
+diagnostic observation rather than an expected-failure status. The 13-declaration audit
+dispositions null/empty factory and malformed-CLI permutations as CNA boundary tests, and external
+compiler/encoder/font output as controlled-tool or host-font integration rather than inferring it
+from option propagation.
+
+The warning-free `-j3` build passes. Ten SOFTWARE and ten OPENGLES3-labelled runs each pass 32/32;
+normalized stdout is byte-identical at SHA-256
+`aa8d6995d0e334cebc2285673afc72112f1cf5d946d9a48f566dcae9fbcbeaf9` and expected diagnostic
+stderr is byte-identical at
+`679dc290bbc7de722962e751aaa27f15e2bd326da6761e066b2c432c847a1a4b`.
+The exact SOFTWARE CTest, metadata validation (677/0) and both validator self-test suites pass.
+Generated XNA/C totals stay unchanged; three compiler names enter the CNA-extension appendix and
+Complete956 still marks only the two post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-960-compiler-options-*`; the source evidence hash is
+`cc2385482db71984b5d78ef6171bb06381a59ce6b7537eab442364e30d258c15`.
+No CNA source was modified. Audit the adjacent public `CnjContentPipeline.hpp` and
+`XnbContentPipeline.hpp` source-route declarations next.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2693,8 +2727,10 @@ Focused958 closes the remaining direct manifest mutation, serialization, hashing
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
 closes all 234 public `ContentPipeline.hpp` declarations by adding the missing generated-dependency
 workflow and recording explicit dispositions for forwarding, value, label and stress-only members.
-Audit `ContentCompiler.hpp` next, especially service-option propagation and the two embedding
-overloads, before adding or extending a demo. The earlier native
+Focused960 closes all 13 public `ContentCompiler.hpp` declarations with exact option propagation,
+built-in registration, both embedding overloads and ISSUE-106 for the XMA refusal's FX-only text.
+Audit the adjacent `CnjContentPipeline.hpp` and `XnbContentPipeline.hpp` source-route declarations
+next, extending existing workflows only for meaningful gaps. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds

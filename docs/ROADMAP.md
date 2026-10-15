@@ -423,6 +423,7 @@ a check that all authored colors remain visible and that a blank texture row can
   unchanged skip, authored edit, cache versus Unload/reload and explicit CNB-schema refusal
   (10 child checks). No genuine-XNA or GPU claim; external graphs remain separate work.
 - ✅ `content.custom.incremental_compiler`: real RunContentCompiler registry factory and manifest,
+  complete service/font/configuration/XNB factory-option propagation and built-in registration,
   explicit pre-built-registry service-option refusal, synchronized concurrent factories on
   disjoint roots with distinct service options/registries, unchanged skips, primary/aliased shared
   dependency invalidation, generated-dependency recording/skipping/invalidation, failed-import
@@ -431,10 +432,11 @@ a check that all authored colors remain visible and that a blank texture row can
   manifest recovery, frozen-registry refusal and ownership-aware clean. Typed per-asset Bonus
   changes rebuild only the affected node, whitespace-only configuration edits skip, and source
   removal/reintroduction collects/restores only its owned output. Remapping an external-root alias
-  to identical bytes skips both nodes with an identical manifest (28 child checks). Clean
+  to identical bytes skips both nodes with an identical manifest (32 child checks). Clean
   rejects changed owned bytes without deleting an untouched peer or the manifest.
   multi_artifact_publication separately covers deployment invalidation, partial publication and
-  retry, plus independent-process same-root exclusion and stale-lease recovery.
+  retry, plus independent-process same-root exclusion and stale-lease recovery. ISSUE-106 records
+  that the pre-built overload's XMA refusal still names only FX options.
 - ✅ `content.custom.build_configuration`: the complete public versioned configuration parser,
   deterministic assets/source roots, project and per-asset formats, all five parameter variants,
   and contextual schema/path/value refusals (11 checks).

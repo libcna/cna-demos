@@ -15,6 +15,36 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-106 -- Pre-built content compiler reports every service option as an FX option
+
+- **Area/API:** `CNA::Content::Pipeline::ContentCompilerOptions` and the pre-built-registry
+  `RunContentCompiler` overload.
+- **Demo/reproduction:** run `content.custom.incremental_compiler`. It first supplies a configured
+  registry with `--fx-compiler`, then repeats the same build with only
+  `--xma-encoder unused-encoder`. Both calls are captured before source discovery and enter no
+  importer, processor or writer.
+- **Observed:** both correctly return command-line status 2 and direct the caller to the
+  `ContentPipelineRegistryFactory` overload. The XMA-only call nevertheless says only that
+  `--fx-compiler and --fx-compiler-launcher` select a build-time service and never names XMA.
+  Source review shows the same hard-coded diagnostic is also used when `fontDirectories` or
+  `buildConfiguration` make the options non-default.
+- **Expected:** the refusal should name the supplied option, or generically name every
+  registry-affecting service/configuration option. A caller selecting an XMA encoder, font search
+  directory or build configuration should not be told that they selected an FX compiler.
+- **Cause observed in source:** the overload compares `ContentCompilerOptions` with its defaults.
+  Its equality operator intentionally includes effect and XMA executable/launcher settings, XMA
+  arguments, font directories and build configuration while excluding coordinator-owned XNB
+  container settings. The failure text was written only for the original two FX fields and was
+  not broadened with the public options structure.
+- **Scope/status:** the refusal itself is correct and prevents silent option loss; this is a
+  user-facing diagnostic/documentation defect, so the demo records it in a passing observation
+  rather than becoming an expected-failure demo. Open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. Relevant public contract and implementation are in
+  `/tmp/checkpoint-960-compiler-options-source.txt`, SHA-256
+  `cc2385482db71984b5d78ef6171bb06381a59ce6b7537eab442364e30d258c15`; direct stderr is retained
+  in `/tmp/checkpoint-960-compiler-options.err`. No CNA source was modified and no upstream
+  message was sent.
+
 ### CNA-DEMOS-ISSUE-105 -- A sole named-only importer becomes the convention route
 
 - **Area/API:** `CNA::Content::Pipeline::ContentImporter::SelectedByNameOnly` and

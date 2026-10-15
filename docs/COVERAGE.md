@@ -285,6 +285,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentBuildRequest::siblings` -- content.custom.nested_builds
 - `CNA::Content::Pipeline::ContentBuildResult::messages` -- content.custom.pipeline_diagnostics, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ContentBuildResult::parameters` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentCompilerOptions` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentDependency::sourceRoot` -- content.custom.nested_builds, content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::ContentFileSha256` -- content.custom.build_manifest, content.custom.incremental_compiler, content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentImporter::SelectedByNameOnly` -- content.custom.pipeline_components
@@ -301,6 +302,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterImporter` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterProcessor` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineRegistry::RegisterWriter` -- content.custom.incremental_compiler, content.custom.pipeline_components
+- `CNA::Content::Pipeline::ContentPipelineRegistryFactory` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::ContentProcessor::SelectedByNameOnly` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentProcessorContext::AddContentBuildDependency` -- content.custom.dependency_graph
 - `CNA::Content::Pipeline::ContentProcessorContext::AddDeploymentFile` -- content.custom.multi_artifact_publication
@@ -347,6 +349,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ProcessedVideoType` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::RefreshContentBuildDirectFingerprint` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::RefreshContentBuildEffectiveFingerprint` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::RegisterBuiltInContentPipeline` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::RegisterCnjContentPipeline` -- content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::RegisterSongContentPipeline` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::RegisterSoundEffectContentPipeline` -- content.sound_effect.pipeline_components
