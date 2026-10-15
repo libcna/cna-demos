@@ -6,7 +6,8 @@ CNA_DEMOS_STANDALONE({
     .title = "Renderer selection and fallback in C",
     .description = "A standalone C game inspects compiled renderers, selects by name and identity, "
                    "then requests an absent public renderer with an explicit fallback and inspects "
-                   "the active renderer, latch and diagnostic history.",
+                   "the active renderer, latch and diagnostic history. Its refusal paths retain exact "
+                   "ArgumentException(name) and InvalidOperationException details.",
     .apis = {"cna_graphics_renderer_set_preferred_ext",
              "cna_graphics_renderer_set_preferred_by_name_ext",
              "cna_graphics_renderer_get_selected_ext", "cna_graphics_renderer_get_active_ext",
@@ -23,7 +24,10 @@ CNA_DEMOS_STANDALONE({
              "cna_graphics_renderer_fallback_copy_message_ext",
              "cna_graphics_renderer_fallback_reason_get_name_size_ext",
              "cna_graphics_renderer_fallback_reason_copy_name_ext",
-             "cna_graphics_renderer_try_parse_name_ext"},
+             "cna_graphics_renderer_try_parse_name_ext", "cna_error_get_last_info",
+             "cna_error_get_last_exception_type_size_ext", "cna_error_copy_last_exception_type_ext",
+             "cna_error_get_last_exception_param_name_size_ext",
+             "cna_error_copy_last_exception_param_name_ext"},
     .tags = {"c", "binding", "platform", "renderer", "selection", "fallback", "lifecycle"},
     .needs = CnaDemos::Need::CApi,
     .frames = 1,

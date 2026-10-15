@@ -2322,7 +2322,7 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete920 is the authoritative660-demo full-build/full-runtime baseline;
-Focused923 is the latest focused behavioral batch. The diagnostics public behavior audit is now
+Focused924 is the latest focused behavioral batch. The diagnostics public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered
 sources, history/producer drops and malformed-use counters all have runtime evidence in a real FULL
@@ -2330,6 +2330,10 @@ build. Remaining unit/accuracy/category/resource-kind enum permutations are stor
 shown by representative values; maximum-depth, malformed-binary and multi-thread saturation are
 CNA unit/stress-test territory. Resume the broader inventory and docs/COVERAGE_AUDIT.md with the
 highest-value undispositioned public behavior; prefer extending an existing workflow where coherent.
+The first resumed batch adds real `ArgumentException(name)` and parameterless
+`InvalidOperationException` C diagnostic evidence to renderer selection. Continue with another
+production exception/state path only when it adds a distinct caller decision; otherwise move to the
+next undispositioned behavior rather than enumerating exception class names.
 Keep constructors/finalizers, CLR collection plumbing and service-only paths classified rather than
 inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
@@ -2485,6 +2489,23 @@ metadata is663/0, validator suites pass and generated surface totals remain unch
 marks the three post-baseline diagnostics IDs absent. The ordinary public diagnostics behavior audit
 is now dispositioned; enum label permutations and maximum-depth/malformed-binary/multithread stress
 belong in CNA unit tests. Evidence:`/tmp/checkpoint-923-bounded-history-final-*`.
+
+### Focused924-canonical-renderer-selection-exception-details
+
+The stable `c_api.platform.renderer_selection` workflow grows18->20 controls. Its existing unknown-
+name refusal now proves INVALID_ARGUMENT/ARGUMENT retains exact `System.ArgumentException` and
+`ParamName=name`. After a real fallback device latches the renderer, an existing mutation refusal
+proves INVALID_STATE/STATE retains exact `System.InvalidOperationException` and no parameter. The
+public exception-detail count/copy routes use exact payload capacities and caller terminators; no
+exception is constructed merely for coverage.
+
+The warning-free incremental build uses `-j3`; metadata is663/0, the exact SOFTWARE CTest passes,
+and validator/checkpoint self-tests pass5/5 and4/4. Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass
+20/20 with byte-identical stdout SHA-256
+`f4d21e6243e71683408004f4593e8ab64f31f766a9f2a938a54359c0fa28a19f` and empty stderr. Generated
+coverage remains302/329 types,2114/2326 members,674/753 fields and3078/3205 C routes; Complete920
+remains the full-runtime baseline. Evidence:`/tmp/checkpoint-924-renderer-*`. No pixel or manual
+visual-quality result is claimed.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

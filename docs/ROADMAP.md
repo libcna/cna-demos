@@ -9708,3 +9708,21 @@ Evidence:`/tmp/checkpoint-923-bounded-history-final-*`. The ordinary public diag
 audit is dispositioned. Unit/accuracy/category/resource-kind alternatives are stored labels covered
 by representatives; maximum-depth, malformed-binary and multi-thread saturation remain CNA unit/
 stress-test cases rather than separate application demos. Resume the broader public API audit.
+
+## Focused924-canonical-renderer-selection-exception-details
+
+The stable `c_api.platform.renderer_selection` workflow adds two structured diagnostic controls to
+its existing real refusal paths. An unknown renderer spelling returns INVALID_ARGUMENT/ARGUMENT and
+retains exact `System.ArgumentException` plus `ParamName=name`; selection mutation after a real
+device latch returns INVALID_STATE/STATE and retains exact `System.InvalidOperationException` with
+no parameter. The four exception-detail count/copy routes use their exact byte capacities, with the
+caller supplying terminators. This extends the prior `ArgumentOutOfRangeException(value)` evidence
+without adding a synthetic exception or a variant demo.
+
+The warning-free incremental build uses at most three jobs. Metadata remains663/0, the exact
+SOFTWARE CTest and both validator suites pass, and SOFTWARE plus OPENGLES3/Xvfb each pass20/20 in
+ten repetitions. All twenty stdout files are byte-identical with SHA-256
+`f4d21e6243e71683408004f4593e8ab64f31f766a9f2a938a54359c0fa28a19f`; stderr is empty. Generated
+coverage remains302/329 types,2114/2326 members,674/753 fields and3078/3205 routes. Evidence:
+`/tmp/checkpoint-924-renderer-*`. Continue the public behavior audit through real production
+failures and state transitions; do not add exception constructors just to enumerate type names.

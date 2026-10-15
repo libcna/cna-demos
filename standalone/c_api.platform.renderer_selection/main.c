@@ -37,6 +37,34 @@ static CNA_StringView view(const char* text)
     return result;
 }
 
+static int read_last_exception_details(
+    char* type, size_t type_capacity, char* parameter, size_t parameter_capacity)
+{
+    uint64_t type_bytes = UINT64_MAX;
+    uint64_t parameter_bytes = UINT64_MAX;
+    uint64_t copied = UINT64_MAX;
+
+    if (cna_error_get_last_exception_type_size_ext(&type_bytes) != CNA_RESULT_SUCCESS ||
+        type_bytes >= type_capacity ||
+        cna_error_copy_last_exception_type_ext(type, type_bytes, &copied) != CNA_RESULT_SUCCESS ||
+        copied != type_bytes) {
+        return 0;
+    }
+    type[type_bytes] = '\0';
+    if (cna_error_get_last_exception_param_name_size_ext(&parameter_bytes) != CNA_RESULT_SUCCESS ||
+        parameter_bytes >= parameter_capacity) {
+        return 0;
+    }
+    if (parameter_bytes != 0U &&
+        (cna_error_copy_last_exception_param_name_ext(parameter, parameter_bytes, &copied) !=
+             CNA_RESULT_SUCCESS ||
+         copied != parameter_bytes)) {
+        return 0;
+    }
+    parameter[parameter_bytes] = '\0';
+    return 1;
+}
+
 static const char* renderer_name(CNA_GraphicsRendererType type)
 {
     size_t index;
@@ -157,6 +185,7 @@ int main(int argc, char** argv)
     CNA_GraphicsRendererType absent = CNA_GRAPHICS_RENDERER_UNKNOWN;
     CNA_GraphicsRendererType invalid_chain[2];
     CNA_GraphicsRendererFallbackRecord record;
+    CNA_ErrorInfo error_info;
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
@@ -168,6 +197,8 @@ int main(int argc, char** argv)
     uint64_t copied = UINT64_MAX;
     char lower_name[32];
     char message[512];
+    char exception_type[128];
+    char exception_parameter[32];
     char short_message[32];
     char before[32];
     const char* initial_name;
@@ -233,6 +264,20 @@ int main(int argc, char** argv)
             cna_graphics_renderer_get_selected_ext(&selected) == CNA_RESULT_SUCCESS &&
             selected == initial,
         "an unavailable renderer needs fallback while malformed requests preserve the selection");
+    memset(&error_info, 0, sizeof(error_info));
+    error_info.struct_size = (uint32_t)sizeof(error_info);
+    error_info.struct_version = UINT32_C(1);
+    cna_demo_check(
+        &demo,
+        cna_error_get_last_info(&error_info) == CNA_RESULT_SUCCESS &&
+            error_info.result == CNA_RESULT_INVALID_ARGUMENT &&
+            error_info.category == CNA_ERROR_CATEGORY_ARGUMENT &&
+            read_last_exception_details(
+                exception_type, sizeof(exception_type), exception_parameter,
+                sizeof(exception_parameter)) &&
+            strcmp(exception_type, "System.ArgumentException") == 0 &&
+            strcmp(exception_parameter, "name") == 0,
+        "an unknown renderer preserves canonical ArgumentException and parameter-name details");
 
     cna_demo_check(
         &demo,
@@ -350,6 +395,20 @@ int main(int argc, char** argv)
             cna_graphics_renderer_get_active_ext(&active) == CNA_RESULT_SUCCESS &&
             active == initial,
         "all selection mutation is refused after latching without changing selected or active identity");
+    memset(&error_info, 0, sizeof(error_info));
+    error_info.struct_size = (uint32_t)sizeof(error_info);
+    error_info.struct_version = UINT32_C(1);
+    cna_demo_check(
+        &demo,
+        cna_error_get_last_info(&error_info) == CNA_RESULT_SUCCESS &&
+            error_info.result == CNA_RESULT_INVALID_STATE &&
+            error_info.category == CNA_ERROR_CATEGORY_STATE &&
+            read_last_exception_details(
+                exception_type, sizeof(exception_type), exception_parameter,
+                sizeof(exception_parameter)) &&
+            strcmp(exception_type, "System.InvalidOperationException") == 0 &&
+            exception_parameter[0] == '\0',
+        "a latched renderer mutation preserves canonical InvalidOperationException without a parameter");
 
     if (manager != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_graphics_device_manager_destroy(manager),
