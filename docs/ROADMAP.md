@@ -490,10 +490,11 @@ a check that all authored colors remain visible and that a blank texture row can
   (Pause/Resume, IsLooped, Volume, IsMuted).
 - ✅ `media.media_library.save_picture`: standalone Linux fixture verifies private XDG music and
   picture roots before library access, vector/stream saves, borrowed picture/album views,
-  caller-owned image/thumbnail streams, smaller aspect-preserving thumbnail and reindexing.
+  caller-owned image/thumbnail streams, smaller aspect-preserving thumbnail, reindexing and a
+  two-level ordinary album tree with exact parent, membership and stream checks.
   A valid stream delivering 13-byte chunks exposes ISSUE-041: SavePicture reads once and writes
   a zero-padded image. ISSUE-040 records stale thumbnail comments separately. Other platforms,
-  media tokens, name collisions and further stream/disposal contracts remain unaudited.
+  name collisions and further stream/disposal contracts remain unaudited.
 
 
 ## Phase 10 -- input ✅ (39 demos: keyboard, mouse, text input, clipboard, gamepad, touch, CNAEXT devices)
@@ -8830,3 +8831,30 @@ types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-874-*`. This establishes stale output-lease recovery only for a process exit before
 writer/publication; interruption between individual artifact replacements and manifest publication
 remains outside the claim. No renderer, screenshot or visual inspection was used.
+
+## Focused875-mid-publication-crash-disposition
+
+Source review closes the remaining content-publication crash wording by disposition. CNA replaces
+the primary, additional and deployment files atomically but sequentially, and its public compiler
+surface exposes no callback or barrier between those operations. The existing blocked-deployment
+control already gives deterministic public evidence that earlier CNBs can be new while the later
+support file and last successful manifest remain old, followed by a complete successful retry.
+Killing a process in the narrow interval between replacements would be a race-prone demo and
+belongs in CNA's internal fault-injection tests. The documentation-only `-j3` build, metadata655/0,
+both self-test suites and byte-identical coverage regeneration pass. Evidence:
+`/tmp/checkpoint-875-*`. No runtime, renderer, screenshot or visual claim was added.
+
+## Focused876-nested-picture-album-tree
+
+`media.media_library.save_picture` grows from twenty-four to twenty-seven controls. Inside its
+verified private Linux/XDG Pictures root it writes an ordinary `Trips/Day One` folder tree. A fresh
+public `MediaLibrary` discovers both levels with exact parent identities. Each album exposes only
+its own decoded640x320 picture, each Picture points back to its album, and caller-owned `GetImage`
+streams reproduce the original PNG bytes. Sibling ordering is not assumed.
+
+Serial SOFTWARE and OPENGLES3-labelled direct runs each pass26 controls and retain only the
+expected CNA-DEMOS-ISSUE-041 short-read failure, with byte-identical stdout/stderr and empty stderr.
+The exact known-issue SOFTWARE CTest passes twenty repetitions. The clean incremental build uses
+`-j3`, metadata is655/0, both tool self-test suites pass and coverage remains302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-876-*`. Image
+files and dimensions were checked programmatically; no screenshot or visual inspection was used.

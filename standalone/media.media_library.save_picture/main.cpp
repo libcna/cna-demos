@@ -68,6 +68,15 @@ namespace
         }
         return bytes;
     }
+
+    void WriteImage(const std::filesystem::path& path, const std::vector<std::uint8_t>& bytes)
+    {
+        std::ofstream file(path, std::ios::binary);
+        file.write(reinterpret_cast<const char*>(bytes.data()),
+                   static_cast<std::streamsize>(bytes.size()));
+        file.close();
+        if (!file) throw std::runtime_error("Could not write the nested picture fixture");
+    }
 #endif
 
     int SavePicture()
@@ -211,6 +220,60 @@ namespace
                   << 'x' << chunked->getHeightProperty() << '\n';
         check(savedBytes == encoded && chunks.getPositionProperty() == chunks.getLengthProperty(),
               "SavePicture consumes every chunk and preserves the complete encoded image (CNA-DEMOS-ISSUE-041)");
+
+        // Add an ordinary two-level folder tree outside Saved Pictures and let a fresh public
+        // MediaLibrary discover it. This keeps the test about album relationships rather than
+        // using an internal index or constructing PictureAlbum values directly.
+        const auto tripsPath = pictures / "Trips";
+        const auto dayPath = tripsPath / "Day One";
+        std::filesystem::create_directories(dayPath);
+        WriteImage(tripsPath / "overview.png", encoded);
+        WriteImage(dayPath / "frame.png", encoded);
+        MediaLibrary hierarchy;
+        PictureAlbum* hierarchyRoot = hierarchy.getRootPictureAlbumProperty();
+        PictureAlbum* tripsAlbum = nullptr;
+        if (hierarchyRoot && hierarchyRoot->getAlbumsProperty())
+        {
+            for (PictureAlbum* candidate : *hierarchyRoot->getAlbumsProperty())
+            {
+                if (candidate && candidate->getNameProperty() == "Trips") tripsAlbum = candidate;
+            }
+        }
+        PictureAlbum* dayAlbum = nullptr;
+        if (tripsAlbum && tripsAlbum->getAlbumsProperty())
+        {
+            for (PictureAlbum* candidate : *tripsAlbum->getAlbumsProperty())
+            {
+                if (candidate && candidate->getNameProperty() == "Day One") dayAlbum = candidate;
+            }
+        }
+        check(tripsAlbum && dayAlbum && tripsAlbum->getParentProperty() == hierarchyRoot &&
+                  dayAlbum->getParentProperty() == tripsAlbum,
+              "a fresh library preserves both levels and parent links of an ordinary album tree");
+        Picture* overview = tripsAlbum && tripsAlbum->getPicturesProperty() &&
+                                    tripsAlbum->getPicturesProperty()->getCountProperty() == 1
+                                ? (*tripsAlbum->getPicturesProperty())[0]
+                                : nullptr;
+        Picture* frame = dayAlbum && dayAlbum->getPicturesProperty() &&
+                                 dayAlbum->getPicturesProperty()->getCountProperty() == 1
+                             ? (*dayAlbum->getPicturesProperty())[0]
+                             : nullptr;
+        check(overview && frame && overview->getNameProperty() == "overview" &&
+                  frame->getNameProperty() == "frame" && overview->getAlbumProperty() == tripsAlbum &&
+                  frame->getAlbumProperty() == dayAlbum && overview->getWidthProperty() == 640 &&
+                  frame->getHeightProperty() == 320,
+              "each nested album exposes only its own decoded picture with the matching back-reference");
+        if (overview && frame)
+        {
+            std::unique_ptr<System::IO::Stream> overviewImage(overview->GetImage());
+            std::unique_ptr<System::IO::Stream> frameImage(frame->GetImage());
+            check(ReadImage(*overviewImage) == encoded && ReadImage(*frameImage) == encoded,
+                  "nested picture streams retain the exact original encoded bytes");
+        }
+        else
+        {
+            check(false, "nested picture streams retain the exact original encoded bytes");
+        }
 
         check(!picture->getIsDisposedProperty() && !album->getIsDisposedProperty(),
               "library-owned picture and picture-album views start live");

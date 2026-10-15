@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the isolated picture-library workflow with a two-level ordinary folder tree, verifying
+  public album parent links, per-album picture membership and exact owned image streams.
 - Classified process termination between multi-artifact replacements as CNA fault-injection
   territory: the public demo already proves per-file atomicity, partial-set recovery and the
   retained-manifest contract through a deterministic later-output failure.

@@ -1135,17 +1135,17 @@ coverage credit; the Pan/3D mode row now separately records actual focused nativ
 Reviewed against CNA ce74063e6 (media source unchanged from e60fa35f7). The standalone
 `media.media_library.save_picture` configures Linux XDG before first CNA/SDL use and verifies
 both resolved roots before constructing a library. No internal path override or real user
-pictures are used. Both renderer selections reproduce 14 child checks with exactly one
+pictures are used. Both renderer selections reproduce 27 child checks with exactly one
 ISSUE-041 failure; this is filesystem/stream evidence, not visual or GPU validation.
 
 | Public behavior | Evidence / decision |
 |---|---|
 | SavePicture byte-vector and Stream overloads | One original 640x320 PNG and its generated thumbnail save successfully. The normal memory stream is consumed. A separate valid 13-byte short-read stream exposes ISSUE-041; the independent control reader proves its full bytes are available. No workaround hides the failing CNA call. |
-| Pictures / SavedPictures / RootPictureAlbum and child album views | Empty initial collections, new Saved Pictures child, its parent identity and counts across library/album views are checked. A fresh library reindexes both saved files. PictureCollection.Item exposes the two names in either filesystem order and PictureAlbumCollection.Item exposes their shared Saved Pictures parent. Nested external album trees and ordering remain gaps. |
+| Pictures / SavedPictures / RootPictureAlbum and child album views | Empty initial collections, new Saved Pictures child, its parent identity and counts across library/album views are checked. A fresh library reindexes both saved files. PictureCollection.Item exposes the two names in either filesystem order and PictureAlbumCollection.Item exposes their shared Saved Pictures parent. The workflow then writes an ordinary `Trips/Day One` hierarchy and a fresh library exposes both levels with exact parent links. Each album contains only its own decoded 640x320 picture, whose Album points back to that node and whose owned GetImage stream matches the original PNG. Filesystem-dependent sibling ordering is deliberately not assumed. |
 | Picture Name / Width / Height / Date / Album and token identity | The immediate saved record keeps authored filename/dimensions, the borrowed parent, and a Date bounded by the SavePicture call. Its CNAEXT path token resolves the independent reopened Picture through public MediaLibrary.GetPictureFromToken; an unknown token returns null and the indexed Date is populated. Original/reopened Pictures establish path-based typed/object equality, operators, equal hashes and name text while Preview is unequal. The corresponding Saved Pictures albums establish the same contracts by path and reject a Picture object. Disposal-invalidated views remain a gap. |
 | GetImage / GetThumbnail ownership and content | Caller-owned streams use unique_ptr; full image bytes match exactly and saved thumbnail is smaller with the same 2:1 aspect. Current 128x64 output is observed, not assumed as a universal contract. Header contradiction is ISSUE-040. Thumbnail fallback/caching and corrupted-source handling remain gaps. |
 | Stream positions, premature EOF, unknown length | Not exercised by the short-read fixture, which starts at zero with a valid known length. Extend this workflow if a distinct public contract can be established; do not infer these behaviors from ISSUE-041. |
-| MediaSource selection, tokens, same-name saves and disposal | `media_library.collections` now adopts every raw pointer returned by GetAvailableMediaSources, verifies each actual record has matching nonempty Name/ToString, and constructs its MediaLibrary from the returned Local Device record. The library exposes a distinct copied MediaSource with the same name/type/text, while its existing IsDisposed=false check is now credited. Both focused runs used fresh empty XDG music/picture roots and found zero items, leaving both directories empty. This establishes CNA's one returned desktop source and copy ownership, not wider device enumeration. Picture token lookup is now demonstrated by save_picture as described above. Same-name saves and explicit library disposal remain separate. Evidence: `/tmp/checkpoint-645-media-source-*`, `/tmp/checkpoint-646-picture-values-*`. |
+| MediaSource selection, tokens, same-name saves and disposal | `media_library.collections` now adopts every raw pointer returned by GetAvailableMediaSources, verifies each actual record has matching nonempty Name/ToString, and constructs its MediaLibrary from the returned Local Device record. The library exposes a distinct copied MediaSource with the same name/type/text, while its existing IsDisposed=false check is now credited. Both focused runs used fresh empty XDG music/picture roots and found zero items, leaving both directories empty. This establishes CNA's one returned desktop source and copy ownership, not wider device enumeration. Picture token lookup is demonstrated by save_picture. music_index separately proves that repeated MediaLibrary::Dispose sets IsDisposed without cascading into its borrowed graph. Same-name saves remain separate. Evidence: `/tmp/checkpoint-645-media-source-*`, `/tmp/checkpoint-646-picture-values-*`. |
 | Platform folder integration | Verified only on Linux/XDG; the demo skips before access if private roots cannot be confirmed. Windows/macOS/device integration requires separate environment validation. |
 
 ### Song caller-created value identity
@@ -1168,7 +1168,7 @@ identity is inferred. Evidence: `/tmp/checkpoint-642-song-values-*`.
 | Equality, hashing and reflection helpers | A second independent MediaLibrary indexes the same fixture and supplies distinct Album/Artist/Genre/Playlist objects. Album typed/object equality, operators, equal hashes and text establish (title, artist) identity: the mirror Field Notes/Demo Ensemble pair is equal while the same title under Second Ensemble is unequal. Artist, Genre and Playlist establish the corresponding name-based typed/object equality, operators, equal hashes and exact text; Genre/Playlist object overloads also reject the other media type. Different hashes for unequal values are not guaranteed and are not asserted. Reflection names remain intentionally uncredited. Both runs retain exactly six TitleContainer INFO records because the second scan reads the already isolated files directly. Evidence: `/tmp/checkpoint-643-media-values-*`. |
 | Group Dispose/IsDisposed | Source Dispose only sets the group object's flag; these are non-owning views over library-owned members. The demo intentionally leaves borrowed objects to library lifetime. Flag round-trips alone would not demonstrate resource release; no independent flag-only demo or post-destruction pointer access. |
 | Duration and album art | music_index passes18child checks in two FFmpeg-enabled native runs: all15original relationship checks remain, with positive250/500/375msSong lengths, artist-specific750/375msAlbum sums and750msPlaylist sum excluding the third song. This is import-time metadata, not playback or audible timing; the non-FFmpeg branch has syntax-only evidence. The separate album_art standalone passes eight identical child checks in two native runs: HasArt distinguishes folder art from no art, both missing-art calls throw InvalidOperationException, GetAlbumArt returns exact authored bytes, GetThumbnail returns distinct public-decodable128x64bytes, and both caller-owned streams survive library destruction. Parent JSON remains0 and six exact TitleContainer INFO lines occur per run. Embedded art, filename priority, small/corrupt fallback, visual quality and other platforms remain separate. ISSUE-040 now has Album runtime evidence for its stale thumbnail comment. Evidence:checkpoint-473-duration-focused-* and checkpoint-474-art-focused-*. |
-| Root isolation, ownership and limits | Both standalone workflows select XDG_CONFIG_HOME before first CNA/SDL use and verify public music/picture roots before library access. No real user collection is read or changed. music_index leaves borrowed groups/collections to library lifetime. album_art retains only caller-owned streams after destruction and never touches stale Album/Picture pointers. Library reindexing and disposal invalidation remain unestablished. FLAC encoding/tag inspection is preparation evidence, not playback validation. |
+| Root isolation, ownership and limits | The standalone workflows select XDG_CONFIG_HOME before first CNA/SDL use and verify public music/picture roots before library access. No real user collection is read or changed. music_index leaves borrowed groups/collections to library lifetime. album_art retains only caller-owned streams after destruction and never touches stale Album/Picture pointers. save_picture verifies fresh-library reindexing of Saved Pictures and an ordinary nested tree. Post-destruction borrowed-pointer use remains intentionally untested. FLAC encoding/tag inspection is preparation evidence, not playback validation. |
 
 ### MediaPlayer and MediaQueue (member and behavior decisions)
 
@@ -2831,3 +2831,26 @@ warning-free `-j3` build, metadata655/0 and both self-tests pass; coverage remai
 2114/2326 non-field members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-874-*`. This is pre-write process-exit recovery, not a claim about interruption
 during multi-file publication; no renderer, screenshot or visual inspection was used.
+
+### Focused875 mid-publication crash disposition
+
+The public content compiler exposes no callback or barrier between its sequential per-file atomic
+replacements. The deterministic blocked-deployment control already proves the observable contract:
+earlier CNBs may be new while a later support destination and the last successful manifest remain
+old, and retry publishes the complete current set. A real process kill inside that narrow interval
+needs CNA-internal fault injection to avoid a scheduling race, so it is intentionally not added as
+a demo. The documentation-only `-j3` build, metadata655/0, both self-tests and byte-identical
+coverage regeneration pass. Evidence:`/tmp/checkpoint-875-*`. No runtime or visual claim was added.
+
+### Focused876 nested picture-album tree
+
+The isolated save-picture workflow adds an ordinary two-level `Trips/Day One` folder tree and lets
+a fresh public `MediaLibrary` discover it. Exact parent identities, one local picture per album,
+Picture-to-Album back-references, decoded640x320 dimensions and caller-owned streams containing the
+original PNG bytes all pass. The workflow now executes27 controls under each renderer label:26 pass
+and only the established ISSUE-041 short-read assertion fails. Normalized output is byte-identical,
+stderr is empty and the exact known-issue SOFTWARE CTest passes twenty repetitions. The clean `-j3`
+build, metadata655/0, both self-tests and byte-identical coverage regeneration pass; counts remain
+302/329 types,2114/2326 non-field members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-876-*`. Image bytes and dimensions were inspected programmatically; no screenshot
+or visual inspection was used.

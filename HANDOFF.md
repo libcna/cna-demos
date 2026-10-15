@@ -4367,6 +4367,23 @@ self-test suites and byte-identical temporary coverage regeneration pass; eviden
 `/tmp/checkpoint-875-*`. Continue with the next deterministic public-behavior gap; no renderer,
 screenshot or visual inspection was used.
 
+### Focused876-nested-picture-album-tree
+
+`media.media_library.save_picture` now creates an ordinary `Trips/Day One` tree below its verified
+private Linux/XDG Pictures root. A fresh public `MediaLibrary` discovers both album levels with
+exact parent identities. Each album exposes only its own decoded640x320 picture, both Picture
+objects point back to the correct album, and caller-owned `GetImage` streams reproduce the original
+PNG bytes. The workflow grows24->27 controls without adding an ID.
+
+Serial SOFTWARE and OPENGLES3-labelled direct runs each pass26 controls and retain only the
+expected CNA-DEMOS-ISSUE-041 short-read failure; stdout/stderr are byte-identical and stderr is
+empty. The exact known-issue SOFTWARE CTest passes twenty consecutive repetitions. The clean
+incremental build uses `-j3`, metadata is655/0, both tool self-test suites pass and byte-identical
+temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence is under `/tmp/checkpoint-876-*`. Complete871 remains the full baseline. Continue with the
+next deterministic media-library or public-behavior gap. Image files and decoded dimensions were
+checked programmatically; no screenshot or visual inspection was used.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
