@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the MediaLibrary format-index workflow with a title-only Vorbis fixture and an external
+  directory symlink, proving per-field path fallback and canonical cycle-safe traversal policy.
 - Extended the public album-art workflow with an original ID3v2.4 MP3/APIC fixture, proving exact
   embedded PNG extraction, independent thumbnail streams and public 64x64 decoding.
 - Added a public MediaLibrary format-index workflow covering Ogg/OGA, MP3, WAV, FLAC and Opus,

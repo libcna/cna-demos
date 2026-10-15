@@ -37,6 +37,8 @@ FORMAT_TRACKS = (
     ('format_opus.opus', 'libopus', 'Opus Song', 'Format Ensemble', 5, 500.0, False),
 )
 
+PARTIAL_TRACK = ('format_partial.ogg', 'Partial Tag', 520.0)
+
 
 def write_all(assets_root: Path) -> None:
     encoder = shutil.which('ffmpeg')
@@ -109,3 +111,13 @@ def write_all(assets_root: Path) -> None:
         command.append(str(destination))
         subprocess.run(command, input=pcm, check=True)
         print(f'wrote {destination} ({destination.stat().st_size} bytes, {codec})')
+
+    name, title, frequency = PARTIAL_TRACK
+    pcm = b''.join(struct.pack('<h', int(10000 * math.sin(2 * math.pi * frequency * i / 16000)
+                     * min(1.0, i / 80, (sample_count - i) / 80))) for i in range(sample_count))
+    destination = format_folder / name
+    command = [encoder, '-loglevel', 'error', '-y', '-f', 's16le', '-ar', '16000', '-ac', '1',
+               '-i', 'pipe:0', '-map_metadata', '-1', '-fflags', '+bitexact', '-flags:a', '+bitexact',
+               '-c:a', 'libvorbis', '-q:a', '2', '-metadata', 'title=' + title, str(destination)]
+    subprocess.run(command, input=pcm, check=True)
+    print(f'wrote {destination} ({destination.stat().st_size} bytes, partial Vorbis tags)')

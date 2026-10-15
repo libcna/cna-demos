@@ -232,6 +232,14 @@ Both direct renderer-labelled processes pass9/9 with byte-identical streams, the
 CTest passes20 repetitions, metadata validates657/0 and the build uses `-j3`. Complete871's reports
 now correctly mark the two post-baseline IDs absent.
 
+Focused891 extends that stable ID to11 controls. A generated title-only Vorbis file keeps its real
+title while artist and album fall back independently from the nested path; genre and track remain
+absent. A directory symlink under Music to an outside fixture is followed once, preserves its real
+FLAC tags and remains bounded by the canonical visited-directory set. Both direct renderer-labelled
+processes pass11/11 byte-identically, the exact SOFTWARE CTest passes20 repetitions, metadata is
+657/0 and the warning-free build uses `-j3`. Malformed/truncated tag byte layouts remain internal
+parser safety cases whose public result is the already-demonstrated filename fallback.
+
 Complete859 comparisons report no ID changes, intended check-count growth in six in-process demos
 and exactly one reviewed status/known-issue change: `math.curve.key_collection` adds the sole
 ISSUE-097 failed assertion. Failed assertion multiplicity moves64->65 on SOFTWARE and68->69 on
@@ -2013,11 +2021,10 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete871 remains the authoritative655-demo full-runtime baseline; Focused887
-and Focused889 add two separately validated MediaLibrary demos, while Focused888/890 close folder-
-selection and both FLAC/MP3 embedded-art branches. Continue the semantic Media audit by classifying
-partial/malformed tag fallback and external-directory symlink policy. Add runtime only for a public,
-observable contract that is not already equivalent to filename fallback or cycle termination.
-Then run a new657-demo full checkpoint so coverage includes the two post-baseline IDs.
+and Focused889 add two separately validated MediaLibrary demos, while Focused888/890/891 close
+folder selection, both FLAC/MP3 embedded-art branches, partial-tag fallback and directory-symlink
+traversal policy. Run a new657-demo full checkpoint now so coverage includes the two post-baseline
+IDs. Then return to the next open semantic Media behavior in COVERAGE_AUDIT.
 The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
@@ -4681,6 +4688,30 @@ incremental build uses `-j3`; metadata remains657/0 and generated coverage is un
 is under `/tmp/checkpoint-890-*`. No CNA defect, playback, listening, screenshot or manual visual-
 quality claim is made. Classify partial/malformed tag fallback and external-directory symlink
 policy next, then run a full657-demo checkpoint.
+
+### Focused891-partial-tags-and-linked-music-directory
+
+The stable `media.media_library.format_index` workflow grows9->11 controls. A deterministic
+title-only Vorbis fixture proves field-by-field fallback: the public Song retains `Partial Tag`,
+derives artist and album from its nested path, and invents neither genre nor track. A Music child
+symlink to an outside private fixture directory is intentionally followed once; its tagged FLAC is
+indexed with the exact title/artist/album/genre while the existing canonical visited-directory set
+continues to terminate the self-cycle. The resulting eight Songs form four artists, four albums and
+two genres, and all retain positive import-time durations.
+
+Malformed and truncated tag layouts remain CNA's internal parser-bounds cases. Their only public
+MediaLibrary outcome is empty fields followed by the same per-field filename fallback already
+covered by the WAV and partial-tag records, so a corrupt-file variant would not add a distinct
+public behavior. Music-directory traversal has no public root-containment promise; following the
+user-selected tree differs from playlist entry containment, whose untrusted authored paths are
+explicitly restricted.
+
+Both direct renderer-labelled runs pass11/11 with byte-identical stdout and the same twenty-two
+reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes20 repetitions. The warning-free
+incremental build uses `-j3`; metadata is657/0, both validator self-test suites pass and coverage
+regenerates byte-identically at302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence is under `/tmp/checkpoint-891-*`. No CNA defect, playback, listening, screenshot or other-
+platform claim is made. Run the full657-demo checkpoint next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

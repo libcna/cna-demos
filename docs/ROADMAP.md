@@ -9119,3 +9119,25 @@ and the clean incremental build uses at most three jobs. Metadata remains657/0 a
 do not change. Evidence:`/tmp/checkpoint-890-*`. No CNA defect, playback, listening, screenshot or
 manual visual-quality claim is made. Classify partial/malformed tag fallback and external-directory
 symlink policy next, then run a full657-demo checkpoint.
+
+## Focused891-partial-tags-and-linked-music-directory
+
+The existing format-index workflow grows9->11 controls with two distinct public boundaries. A new
+deterministic title-only Vorbis asset retains its real title while absent artist and album values
+fall back independently from the nested path, with no invented genre or track. A child directory
+symlink from Music to an outside private fixture is followed once and exposes the exact tags of its
+FLAC record; the canonical visited-directory set still terminates the self-link. Eight Songs now
+form four artists, four albums and two genres with positive import-time durations.
+
+Malformed and truncated tag layouts remain internal parser safety cases. Through MediaLibrary they
+only yield empty fields and the same per-field path fallback already demonstrated by the WAV and
+partial-tag records, so another corrupt fixture would add no distinct public behavior. The scanner
+has no public root-containment contract for the user-selected directory tree; this is separate from
+playlist entry containment, which explicitly treats authored relative paths as untrusted.
+
+Both renderer-labelled direct runs pass11/11 with byte-identical stdout and stderr; stderr contains
+the same twenty-two reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes20
+repetitions. The warning-free incremental build uses at most three jobs, metadata is657/0, both
+validator self-test suites pass, and generated coverage remains302/329 types,2114/2326 members,
+169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-891-*`. No CNA defect, playback,
+listening, screenshot or other-platform claim is made. Run the full657-demo checkpoint next.
