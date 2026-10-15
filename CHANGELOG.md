@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed all public avatar preset, body, skeleton, expression and renderer-state values through
+  real animation samples, renderer skeleton data, facial property round-trips and lifecycle states.
 - Refreshed the complete runtime baseline at 659 demos: all 672 enabled CTests and both complete
   renderer smoke suites finish with zero unexpected failures or unexpected passes.
 - Completed the feasible Graphics field-value audit with real present-interval reset cycles and a

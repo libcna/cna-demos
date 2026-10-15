@@ -9508,3 +9508,23 @@ assertion changes. Runtime-backed coverage is302/329 types,2114/2326 non-field m
 fields and3078/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-912-complete-*`. No
 screenshot, listening test, physical input, external service session or manual visual inspection
 was performed. Continue the semantic field audit with GamerServices.
+
+
+## Focused913-semantic-avatar-field-values
+
+Three stable avatar workflows close the public avatar field families without adding a demo. The
+animation gallery constructs and midpoint-samples every one of the31 AvatarAnimationPreset clips,
+requiring positive duration, exact seek position and complete71-bone plus bounded-expression
+payloads. Its six rendered descriptions also prove both requested AvatarBodyType identities. The
+custom-pose workflow maps all55 named AvatarBone values uniquely into the Ready renderer's actual
+parent and finite bind-pose arrays, and round-trips all14 mouth,14 eye and5 eyebrow values through
+both facial sides before restoring its visible wink. The render workflow observes Loading, reaches
+Ready and creates a deterministic Unavailable renderer from an opaque nonzero1021-byte description.
+
+Both complete avatar-category batches pass5/5 on SOFTWARE and OPENGLES3/Xvfb. The changed demos
+pass16/16,6/6 and9/9; their exact SOFTWARE CTests pass three consecutive repetitions. The warning-
+free build uses at most three jobs, metadata is659/0 and both validator suites pass. Coverage moves
+515->639/753 fields and GamerServices moves1->125/223. No CNA defect appeared. Evidence:
+`/tmp/checkpoint-913-avatar-*.json` and `/tmp/checkpoint-913-coverage.md`. Continue with the
+remaining GamerServices presence, Guide, defaults and leaderboard field families, requiring
+observable policy or state behavior rather than integer-only enum checks.

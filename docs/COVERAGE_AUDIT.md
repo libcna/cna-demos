@@ -1196,6 +1196,24 @@ exactly eleven new failed-assertion groups match ISSUE-099/-100/-101. Runtime-ba
 302/329 types,2114/2326 members,515/753 fields and3078/3205 C routes. Evidence:
 `build/linux-full/reports/checkpoint-912-complete-*`.
 
+### Avatar preset, skeleton, expression and renderer-state values
+
+The existing avatar workflows now attach all public avatar values to real data paths. Every one of
+the31 stock presets constructs an AvatarAnimation and yields a positive-duration midpoint sample
+with71 transforms and bounded facial state. Female and Male requests survive random description
+creation. All55 named bone indices address distinct slots in the Ready renderer's real71-element
+parent/bind-pose data, with valid hierarchy and finite matrices. All14 mouth,14 eye and5 eyebrow
+values round-trip through the public AvatarExpression properties before the demo restores and draws
+its asymmetric expression.
+
+AvatarRendererState is covered as a lifecycle rather than an ordinal list: real runs observed the
+recognized description in Loading, later asserted Ready and used its bind pose, while a nonzero
+1021-byte description that satisfies AvatarDescription.IsValid but cannot be decoded produces
+Unavailable deterministically. Both renderer selections pass the complete five-demo avatar batch;
+the changed workflows pass16,6 and9 controls. This moves fields515->639/753 and GamerServices
+1->125/223. It does not claim a fixed asynchronous loading duration, image-quality inspection or
+compatibility with Xbox LIVE avatar bytes. Evidence:`/tmp/checkpoint-913-avatar-*.json`.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

@@ -73,8 +73,9 @@ diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses complete912's full runtime reports for all659 catalog
 demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,515/753 fields and
-3078/3205 public C ABI routes. Selected semantic
+The surface totals are302/329 XNA types,2114/2326 XNA members,639/753 fields and
+3078/3205 public C ABI routes. GamerServices field coverage is125/223 after Focused913; Complete912's
+full runtime reports remain the baseline inputs for the unchanged659-ID catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -263,6 +264,21 @@ routes. Tested SHA-256: `cna-demos`
 `build/linux-full/reports/checkpoint-912-complete-*`. Pixel checks were programmatic; no screenshot,
 listening test, physical input, external service session or manual visual-quality inspection was
 performed.
+
+Focused **913-semantic-avatar-field-values** closes the avatar field families without adding an ID. All31
+AvatarAnimationPreset values create and midpoint-sample real timed clips with complete skeleton/expression payloads;
+both AvatarBodyType values survive CreateRandom. All55 named AvatarBone slots map uniquely into the Ready renderer's
+71-bone hierarchy with finite bind transforms, and every14 mouth,14 eye and5 eyebrow values round-trip through both
+sides of AvatarExpression before the visible wink is restored. The renderer workflow observes Loading, reaches Ready
+and deterministically produces Unavailable from an opaque1021-byte nonzero description.
+
+Both full avatar-category batches pass5/5 on SOFTWARE and OPENGLES3/Xvfb. The changed demos pass16/16,6/6 and9/9;
+the three exact SOFTWARE CTests pass three consecutive repetitions. The warning-free build uses `-j3`, metadata is
+659/0 and both validator suites pass. Coverage moves515->639/753 fields and GamerServices moves1->125/223; types,
+non-field members and C routes remain302/329,2114/2326 and3078/3205. Evidence:
+`/tmp/checkpoint-913-avatar-*.json` and `/tmp/checkpoint-913-coverage.md`. No screenshot or manual visual-quality claim
+was made, and no CNA defect appeared. **Next:** audit the remaining GamerServices field families through existing
+presence, Guide, defaults and leaderboard workflows, separating observable policy values from service-only labels.
 
 Focused **893-public-VideoPlayer-contracts** extends the stable
 `media.video_player.pause_and_loop` ID from12 to27 controls. Both renderer labels pass21 controls
@@ -2273,17 +2289,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline and
-absorbs focused893-911. Media is closed at7/8, Input is dispositioned at194/202, Input.Touch is
-complete at15/15 and the root
-Framework, Audio and Design namespaces are complete at78/78,11/11 and2/2. Net is dispositioned at
-17/22; its five uncredited values require real full/remote sessions or service/transport loss.
-Graphics is dispositioned at190/192. The only uncredited values are GraphicsDeviceStatus Lost and
-NotReset, which CNA changes only from real renderer-reported device-loss transitions; the current
-SOFTWARE and OPENGLES3 environments have no public deterministic trigger. Continue the field audit
-with GamerServices, starting with the actual AvatarAnimationPreset clips and avatar expression/
-skeleton value families before deciding which rich-presence labels are meaningful independent
-behavior rather than spelling-only variants.
+HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline; Focused913
+is the latest validated field-only delta. AvatarAnimationPreset, AvatarBone, AvatarEye, AvatarMouth,
+AvatarEyebrow, AvatarBodyType and AvatarRendererState are now semantically complete, moving current
+field coverage to639/753 and GamerServices to125/223 without changing the catalog. Continue with the
+remaining GamerServices families in existing workflows: first audit GamerPresenceMode against real
+presence state/value behavior, then NotificationPosition, game defaults, leaderboard keys/outcomes
+and message-box icons. Credit a value only when a public operation or result distinguishes it;
+classify service/UI-only values explicitly instead of adding spelling-only controls.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete912 too stale.

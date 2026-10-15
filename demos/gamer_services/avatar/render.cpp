@@ -3,6 +3,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/GamerServicesDemo.hpp"
@@ -62,9 +63,23 @@ namespace
                             "CreateRandom made a valid female avatar description");
             renderer_ = std::make_unique<AvatarRenderer>(&*description_, true);
             animation_ = std::make_unique<AvatarAnimation>(AvatarAnimationPreset::Wave);
+            const AvatarRendererState initialState = renderer_->getStateProperty();
+            Context().Check(initialState == AvatarRendererState::Loading || initialState == AvatarRendererState::Ready,
+                            "a recognized avatar begins Loading or has already completed as Ready");
             Context().Print("height {:.2f} m, Wave lasts {:.2f} s, renderer {}", description_->getHeightProperty(),
                             animation_->getLengthProperty().getTotalSecondsProperty(),
-                            StateName(renderer_->getStateProperty()));
+                            StateName(initialState));
+
+            // XNA's shallow IsValid rule accepts any 1021-byte nonzero buffer, while the renderer
+            // can only decode CNA avatar data. This public boundary deterministically yields
+            // Unavailable and therefore draws nothing.
+            std::vector<SharpRuntime::bytecs> opaqueDescription(1021);
+            opaqueDescription[0] = 1;
+            unavailableDescription_.emplace(opaqueDescription);
+            unavailableRenderer_ = std::make_unique<AvatarRenderer>(&*unavailableDescription_, true);
+            Context().Check(unavailableDescription_->getIsValidProperty() &&
+                                unavailableRenderer_->getStateProperty() == AvatarRendererState::Unavailable,
+                            "an opaque but superficially valid description is Unavailable to the renderer");
 
             const float aspect = getGraphicsDeviceProperty().getViewportProperty().getAspectRatioProperty();
             renderer_->setViewProperty(Matrix::CreateLookAt(Vector3(0.0f, 1.0f, 3.2f), Vector3(0.0f, 0.9f, 0.0f),
@@ -84,6 +99,7 @@ namespace
         {
             animation_.reset();
             renderer_.reset();
+            unavailableRenderer_.reset();
         }
 
         void Update(GameTime& gameTime) override
@@ -207,7 +223,9 @@ namespace
         }
 
         std::optional<AvatarDescription> description_;
+        std::optional<AvatarDescription> unavailableDescription_;
         std::unique_ptr<AvatarRenderer> renderer_;
+        std::unique_ptr<AvatarRenderer> unavailableRenderer_;
         std::unique_ptr<AvatarAnimation> animation_;
         float yaw_ = 0.0f;
         int readyUpdates_ = 0;
@@ -229,7 +247,8 @@ CNA_DEMOS_GAME(AvatarRenderDemo, {
              "AvatarRenderer::LightColor", "AvatarRenderer::LightDirection", "AvatarRenderer::AmbientLightColor",
              "AvatarRenderer::Dispose", "AvatarRenderer::IsDisposed",
              "AvatarAnimation::AvatarAnimation", "AvatarAnimation::Update", "AvatarAnimation::Length",
-             "AvatarAnimationPreset", "AvatarRendererState"},
+             "AvatarAnimationPreset", "AvatarRendererState", "AvatarRendererState::Loading",
+             "AvatarRendererState::Ready", "AvatarRendererState::Unavailable"},
     .tags = {"gamer-services", "avatar", "3d", "animation", "character"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 90,

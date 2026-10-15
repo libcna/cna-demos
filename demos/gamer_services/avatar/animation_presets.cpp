@@ -31,6 +31,14 @@ using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::GamerServices;
 using namespace Microsoft::Xna::Framework::Graphics;
 
+#define CNA_DEMOS_AVATAR_ANIMATION_PRESETS(APPLY) \
+    APPLY(Stand0) APPLY(Stand1) APPLY(Stand2) APPLY(Stand3) APPLY(Stand4) APPLY(Stand5) APPLY(Stand6) APPLY(Stand7) \
+    APPLY(Clap) APPLY(Wave) APPLY(Celebrate) \
+    APPLY(FemaleIdleCheckNails) APPLY(FemaleIdleLookAround) APPLY(FemaleIdleShiftWeight) APPLY(FemaleIdleFixShoe) \
+    APPLY(FemaleAngry) APPLY(FemaleConfused) APPLY(FemaleLaugh) APPLY(FemaleCry) APPLY(FemaleShocked) APPLY(FemaleYawn) \
+    APPLY(MaleIdleLookAround) APPLY(MaleIdleStretch) APPLY(MaleIdleShiftWeight) APPLY(MaleIdleCheckHand) \
+    APPLY(MaleAngry) APPLY(MaleConfused) APPLY(MaleLaugh) APPLY(MaleCry) APPLY(MaleSurprised) APPLY(MaleYawn)
+
 namespace
 {
     struct Slot
@@ -49,6 +57,12 @@ namespace
         {AvatarAnimationPreset::MaleYawn, AvatarBodyType::Male, "MaleYawn"},
     }};
 
+#define CNA_DEMOS_AVATAR_ANIMATION_VALUE(name) AvatarAnimationPreset::name,
+    constexpr std::array<AvatarAnimationPreset, 31> AllPresets = {{
+        CNA_DEMOS_AVATAR_ANIMATION_PRESETS(CNA_DEMOS_AVATAR_ANIMATION_VALUE)
+    }};
+#undef CNA_DEMOS_AVATAR_ANIMATION_VALUE
+
     class AnimationPresetsDemo final : public CnaDemos::GamerServicesDemo
     {
     protected:
@@ -62,6 +76,8 @@ namespace
             for (std::size_t i = 0; i < Slots.size(); ++i)
             {
                 descriptions_[i].emplace(AvatarDescription::CreateRandom(Slots[i].body));
+                Context().Check(descriptions_[i]->getBodyTypeProperty() == Slots[i].body,
+                                std::string(Slots[i].label) + " preserves its requested body type");
                 renderers_[i] = std::make_unique<AvatarRenderer>(&*descriptions_[i], true);
                 // An avatar faces -Z: turned by pi, it faces the camera.
                 renderers_[i]->setWorldProperty(Matrix::CreateRotationY(MathHelper::Pi) *
@@ -76,6 +92,35 @@ namespace
                 // avatars is slow on the SOFTWARE renderer, so an automated run is only a few frames.
                 animations_[i]->setCurrentPositionProperty(System::TimeSpan::FromSeconds(seconds * 0.4));
             }
+
+            // Each public preset selects a distinct stock clip. Sample every one at its midpoint
+            // and validate the complete renderer-facing payload instead of merely naming the enum.
+            bool allPresetsSampled = true;
+            long long totalLengthTicks = 0;
+            for (const AvatarAnimationPreset preset : AllPresets)
+            {
+                AvatarAnimation clip(preset);
+                const long long lengthTicks = clip.getLengthProperty().getTicksProperty();
+                const auto midpoint = System::TimeSpan::FromTicks(lengthTicks / 2);
+                clip.setCurrentPositionProperty(midpoint);
+                const auto expression = clip.getExpressionProperty();
+                allPresetsSampled = allPresetsSampled && lengthTicks > 0 &&
+                    clip.getCurrentPositionProperty().getTicksProperty() == midpoint.getTicksProperty() &&
+                    clip.getBoneTransformsProperty().getCountProperty() == AvatarRenderer::BoneCount &&
+                    static_cast<int>(expression.getMouthProperty()) >= static_cast<int>(AvatarMouth::Neutral) &&
+                    static_cast<int>(expression.getMouthProperty()) <= static_cast<int>(AvatarMouth::PhoneticDth) &&
+                    static_cast<int>(expression.getLeftEyeProperty()) >= static_cast<int>(AvatarEye::Neutral) &&
+                    static_cast<int>(expression.getLeftEyeProperty()) <= static_cast<int>(AvatarEye::Blink) &&
+                    static_cast<int>(expression.getRightEyeProperty()) >= static_cast<int>(AvatarEye::Neutral) &&
+                    static_cast<int>(expression.getRightEyeProperty()) <= static_cast<int>(AvatarEye::Blink) &&
+                    static_cast<int>(expression.getLeftEyebrowProperty()) >= static_cast<int>(AvatarEyebrow::Neutral) &&
+                    static_cast<int>(expression.getLeftEyebrowProperty()) <= static_cast<int>(AvatarEyebrow::Raised) &&
+                    static_cast<int>(expression.getRightEyebrowProperty()) >= static_cast<int>(AvatarEyebrow::Neutral) &&
+                    static_cast<int>(expression.getRightEyebrowProperty()) <= static_cast<int>(AvatarEyebrow::Raised);
+                totalLengthTicks += lengthTicks;
+            }
+            Context().Check(allPresetsSampled && totalLengthTicks > 0,
+                            "all 31 stock presets provide timed skeleton and expression samples");
 
             // Inspect one independent stock clip at a documented keyed frame. BoneTransforms and
             // Expression are the values AvatarRenderer consumes; this instance is kept separate so
@@ -163,20 +208,28 @@ namespace
     };
 }
 
+#define CNA_DEMOS_AVATAR_ANIMATION_API(name) "AvatarAnimationPreset::" #name,
+
 CNA_DEMOS_GAME(AnimationPresetsDemo, {
     .id = "gamer_services.avatar.animation_presets",
     .title = "Avatar animation presets",
     .description = "Six random avatars play six of the 31 standard AvatarAnimationPreset clips side by side -- clap, "
                    "celebrate, laugh, confused, an idle and a yawn -- each with its own facial expression.",
-    .apis = {"AvatarAnimationPreset", "AvatarAnimation::AvatarAnimation", "AvatarAnimation::Update",
+    .apis = {"AvatarAnimationPreset",
+             CNA_DEMOS_AVATAR_ANIMATION_PRESETS(CNA_DEMOS_AVATAR_ANIMATION_API)
+             "AvatarAnimation::AvatarAnimation", "AvatarAnimation::Update",
              "AvatarAnimation::Length", "AvatarAnimation::CurrentPosition", "AvatarAnimation::BoneTransforms",
              "AvatarAnimation::Expression", "AvatarAnimation::Dispose", "AvatarAnimation::IsDisposed",
              "AvatarRenderer::Draw",
              "AvatarDescription::CreateRandom",
-             "AvatarBodyType", "AvatarRenderer::World", "AvatarRenderer::View", "AvatarRenderer::Projection"},
+             "AvatarDescription::BodyType", "AvatarBodyType", "AvatarBodyType::Female", "AvatarBodyType::Male",
+             "AvatarRenderer::World", "AvatarRenderer::View", "AvatarRenderer::Projection"},
     .tags = {"gamer-services", "avatar", "3d", "animation", "gallery"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 12,
     .assets = {"fonts/pixel_font.cnb"},
     .ownProcess = true,
 })
+
+#undef CNA_DEMOS_AVATAR_ANIMATION_API
+#undef CNA_DEMOS_AVATAR_ANIMATION_PRESETS
