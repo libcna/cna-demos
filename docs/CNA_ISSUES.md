@@ -15,6 +15,32 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-097 -- Nearby CurveKey replacement can violate collection ordering
+
+- **Area/API:** `CurveKeyCollection::setItemProperty`, the writable `Item` property and the
+  collection's ascending-position invariant.
+- **Reproduction:** `math.curve.key_collection` adds keys at positions zero and one half of
+  `MathHelper::MachineEpsilonFloat`, then replaces index zero with a key at three quarters of that
+  epsilon. The replacement position is greater than the following key, while remaining within
+  one machine epsilon of the old position.
+- **Observed:** the setter leaves the replacement at index zero. The resulting positions are
+  descending, with `0.75 * epsilon` before `0.5 * epsilon`. SOFTWARE and OPENGLES3-labelled runs
+  each pass the other twenty controls and fail only the ascending-order invariant. Ordinary
+  duplicate insertion is stable, exact-position replacement stays in place, a larger position
+  change is reinserted correctly, and invalid indices throw without mutation.
+- **Cause observed in source:** `setItemProperty` compares the old and replacement positions with
+  `MathHelper::WithinEpsilon`. It assigns in place when that comparison succeeds and performs the
+  sorted remove-and-`Add` path otherwise. The in-place branch does not compare the new position to
+  either neighbour. This can contradict the public header's explicit promise to preserve position
+  ordering.
+- **Expected:** every successful indexed replacement must leave positions in ascending order.
+  Exact-position replacement may remain in place; any changed position should be inserted through
+  the same sorted path as `Add`, or otherwise checked against both neighbours.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction is renderer-independent and uses
+  public collection values only. Evidence:`/tmp/checkpoint-860-curve-key-collection-*`. No CNA
+  source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-096 -- Partial SkinningData root-prefix arrays are silently ignored
 
 - **Area/API:** `SkinningData::SkeletonRootPrefix` and `AnimationPlayer` construction/update.

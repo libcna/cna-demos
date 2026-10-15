@@ -8573,3 +8573,20 @@ self-test suites pass. Evidence:`build/linux-full/reports/checkpoint-859-complet
 listening test, physical input, external service session or manual visual-quality inspection was
 performed. Continue the deeper behavior audit with duplicate-position insertion and indexed
 replacement boundaries in the existing `math.curve.key_collection` workflow.
+
+## Focused860-CurveKeyCollection-duplicate-and-replacement-boundaries
+
+`math.curve.key_collection` grows from sixteen to twenty-one controls without adding a catalog ID.
+Equal-position insertion preserves the three values' order, exact-position indexed replacement
+stays between its duplicate neighbours, a changed position is removed and reinserted at its sorted
+location, and both invalid index directions throw without changing the collection.
+
+An epsilon-near position change exposes CNA-DEMOS-ISSUE-097: `setItemProperty` treats the changed
+position as equal to the old one and assigns in place, leaving the new position greater than its
+next neighbour despite the public ascending-order promise. SOFTWARE and OPENGLES3-labelled direct
+runs pass20/21 with identical stdout and empty stderr. The exact SOFTWARE CTest accepts the single
+known failure. The `-j3` build, metadata and both tool self-test suites pass; temporary generated
+coverage remains655 demos,302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence:`/tmp/checkpoint-860-curve-key-collection-*` and `/tmp/checkpoint-860-coverage.md`. No
+graphics device, screenshot or visual inspection was used. Continue with the next explicit
+behavior-level gap from the public API audit.

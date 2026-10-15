@@ -4057,6 +4057,22 @@ section7. No screenshot, listening test, physical input, external service sessio
 inspection was performed. Audit `CurveKeyCollection` duplicate-position insertion and indexed
 replacement boundaries next in its existing demo, then continue to the next explicit behavior gap.
 
+### Focused860-CurveKeyCollection-duplicate-and-replacement-boundaries
+
+`math.curve.key_collection` now has twenty-one controls. Stable equal-position insertion,
+same-position replacement, remove-and-sorted-reinsert after a larger position change, and atomic
+negative/past-end replacement refusal all pass. A replacement within
+`MathHelper::MachineEpsilonFloat` of the old position can remain in place after moving beyond its
+next neighbour; the resulting descending pair violates the public ordering contract and is kept as
+the sole failing invariant under CNA-DEMOS-ISSUE-097. SOFTWARE and OPENGLES3-labelled direct runs
+are byte-identical at20/21 with empty stderr, and the exact SOFTWARE CTest accepts that known
+failure. The `-j3` build, metadata, self-tests and temporary coverage are green; evidence is under
+`/tmp/checkpoint-860-*`. No rendering, screenshot or visual inspection was used.
+
+Continue the deeper public-behavior audit from the next explicit uncovered family; do not rerun a
+complete checkpoint solely for this extension. Preserve the Complete859 full baseline until a
+substantial focused batch accumulates.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

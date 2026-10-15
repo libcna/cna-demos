@@ -2601,3 +2601,19 @@ This runtime checkpoint does not turn the declaration-level member disposition i
 behavior coverage. The next concrete recorded gap is `CurveKeyCollection` duplicate-position
 insertion and indexed replacement ordering/atomicity; it belongs in the existing focused workflow
 rather than a new demo ID.
+
+### Focused860 CurveKeyCollection duplicate and replacement boundaries
+
+The existing `math.curve.key_collection` workflow now covers stable insertion of three keys at one
+position, exact-position replacement between duplicate neighbours, sorted reinsertion after a
+position change and atomic refusal of both invalid index directions. This closes the recorded
+duplicate and ordinary replacement behavior gap without inventing another demo ID.
+
+The nearby-position boundary exposes CNA-DEMOS-ISSUE-097. Replacing position zero with
+`0.75 * MachineEpsilonFloat` while the next key is at `0.5 * MachineEpsilonFloat` assigns in place
+and leaves the collection descending. The implementation's epsilon shortcut therefore contradicts
+the public promise that indexed replacement preserves position ordering. Both renderer-labelled
+runs pass20/21 with byte-identical output and empty stderr; the exact expected-failure CTest passes.
+Temporary generated coverage is numerically unchanged because every named member already had
+declaration credit. Evidence:`/tmp/checkpoint-860-curve-key-collection-*` and
+`/tmp/checkpoint-860-coverage.md`. No rendering or visual inspection was involved.
