@@ -9888,3 +9888,14 @@ Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass4/4 with byte-identica
 stderr. The `-j3` updated object, metadata665/0, exact SOFTWARE CTest and validator suites pass.
 XNA/C totals stay unchanged and Complete933's older reports honestly mark both newer IDs absent.
 Evidence:`/tmp/checkpoint-936-host-identity-*`.
+
+## Focused937-assembly-title-and-window-default
+
+New isolated `platform.window.assembly_title` adds the666th ID. A namespace-scope
+`AssemblyTitleAttributeEXT` registers one product title, `SetAssemblyTitleEXT` replaces it before
+game construction, `GetAssemblyTitleEXT` exposes the replacement and a real OPENGLES3/X11
+GameWindow starts with the same title. Ten OPENGLES3/Xvfb runs pass with stable output. Ten
+SOFTWARE/Xvfb runs take the declared no-window skip; the initial failure assumption was corrected
+after source review confirmed SOFTWARE intentionally creates no platform window. The `-j3` build,
+metadata666/0, exact SOFTWARE skip CTest and validator suites pass. Counts stay unchanged apart
+from the new ID. Evidence:`/tmp/checkpoint-937-assembly-title-*`.

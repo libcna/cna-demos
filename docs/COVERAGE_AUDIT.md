@@ -3739,3 +3739,20 @@ Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass4/4 with byte-identica
 remain unchanged; Complete933 correctly leaves both post-checkpoint IDs absent. Evidence:
 `/tmp/checkpoint-936-host-identity-*`. No renderer/window behavior or visual result is claimed, and
 no CNA defect appeared.
+
+### Focused937 assembly title and real window default
+
+New isolated `platform.window.assembly_title` covers the process-wide assembly-title API without
+polluting the shared runner. A namespace-scope `AssemblyTitleAttributeEXT` installs the first value,
+an explicit `SetAssemblyTitleEXT` call replaces it before Game construction,
+`GetAssemblyTitleEXT` returns the replacement and a real OPENGLES3/X11 GameWindow begins with that
+exact title.
+
+Ten OPENGLES3/Xvfb runs pass with stable stdout SHA-256
+`47a978c8d138130681cefbceea59d5d8dd428e7e2a82ad29fe1f9f7c771c0082`. Ten SOFTWARE/Xvfb runs
+take the declared no-window skip with stable stdout SHA-256
+`d5c3657edd163f1e505730cd235e73fcf99c52c55511b8b8e4889e25597aa4a2`; source review corrected
+the first draft's assumption because SOFTWARE intentionally exposes no platform window. The
+`-j3` build, metadata666/0, exact SOFTWARE skip CTest and validator suites pass. Generated XNA/C
+totals remain unchanged. Evidence:`/tmp/checkpoint-937-assembly-title-*`. No pixel or visual result
+is claimed, and no CNA defect appeared.

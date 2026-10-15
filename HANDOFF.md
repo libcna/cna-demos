@@ -68,13 +68,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-665 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core5,
+666 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core5,
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform2 and c_api177. Kinds are170 console,294 game and201 standalone;
-629 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, cnaext4, platform3 and c_api177. Kinds are170 console,294 game and202 standalone;
+630 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete933's full runtime reports for663 IDs and marks
-the focused934 renderer-metadata and focused936 host-identity IDs absent from those older aggregate
-reports.
+the focused934 renderer-metadata, focused936 host-identity and focused937 assembly-title IDs absent
+from those older aggregate reports.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete933's
 full runtime reports are the baseline inputs for the663-ID catalog. Selected semantic
@@ -2341,9 +2341,10 @@ absorbs Focused927-932 after Complete926. Focused934 starts the broader CNA-spec
 the native renderer identity/category/maturity API; its new664th ID has focused evidence and is
 honestly absent from Complete933's aggregate reports. Focused935 then closes the ordinary native
 renderer-selection/fallback surface in the existing standalone workflow, and Focused936 covers the
-native compile-target/mobile/Apple/desktop-OS identity family. Continue with the next coherent
-public CNA header family, preferring an existing workflow when it already owns the behavior. The
-diagnostics
+native compile-target/mobile/Apple/desktop-OS identity family. Focused937 isolates process-wide
+assembly-title state and proves its real initial GameWindow title on a windowed renderer. Continue
+with the next coherent public CNA header family, preferring an existing workflow when it already
+owns the behavior. The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered
@@ -2759,6 +2760,24 @@ and3078/3205 routes because this family is CNA-specific. Complete933 remains the
 baseline, so its reports correctly mark both post-checkpoint IDs absent. Evidence:
 `/tmp/checkpoint-936-host-identity-*`. No renderer, device, window or visual behavior is claimed,
 and no CNA defect appeared.
+
+### Focused937-assembly-title-and-real-window-default
+
+New isolated `platform.window.assembly_title` gives the666th catalog ID a meaningful home for the
+process-wide `AssemblyTitleAttributeEXT`, `SetAssemblyTitleEXT` and `GetAssemblyTitleEXT` APIs. A
+namespace-scope attribute installs the first value, an explicit pre-game call replaces it and a
+real OPENGLES3/X11 GameWindow starts with exactly that replacement title. Keeping the workflow in a
+standalone process prevents its global title from leaking into unrelated demos.
+
+Ten OPENGLES3/Xvfb runs pass with stable stdout SHA-256
+`47a978c8d138130681cefbceea59d5d8dd428e7e2a82ad29fe1f9f7c771c0082`. Ten SOFTWARE/Xvfb runs
+take the declared no-window skip with stable stdout SHA-256
+`d5c3657edd163f1e505730cd235e73fcf99c52c55511b8b8e4889e25597aa4a2`; the first draft treated
+its empty `GameWindow::Title` as a failure before source review confirmed that SOFTWARE
+intentionally creates no platform window. Per-renderer informational stderr is byte-stable. The
+`-j3` build, metadata666/0, exact declared-skip SOFTWARE CTest and validator suites pass. Generated
+XNA/C totals remain unchanged. Evidence:`/tmp/checkpoint-937-assembly-title-*`. No pixel,
+screenshot or visual-quality claim is made, and no CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

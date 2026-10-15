@@ -6,7 +6,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**665 demos** in 18 categories. Kinds: console 170, game 294, standalone 201. Automation: automated 629, manual 3, smoke-only 33.
+**666 demos** in 18 categories. Kinds: console 170, game 294, standalone 202. Automation: automated 630, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -26,13 +26,13 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | media | 17 | 16 | 1 | 0 | 11 / 0 / 6 / 0 / 0 | 11 / 0 / 6 / 0 / 0 |
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
-| platform | 2 | 2 | 0 | 0 | 1 / 1 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
+| platform | 3 | 3 | 0 | 0 | 1 / 1 / 0 / 0 / 1 | 2 / 0 / 0 / 0 / 1 |
 | storage | 7 | 7 | 0 | 0 | 7 / 0 / 0 / 0 / 0 | 7 / 0 / 0 / 0 / 0 |
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `core.platform.host_identity`, `core.renderer.metadata`.
-- OPENGLES3: absent from report: `core.platform.host_identity`, `core.renderer.metadata`.
+- SOFTWARE: absent from report: `core.platform.host_identity`, `core.renderer.metadata`, `platform.window.assembly_title`.
+- OPENGLES3: absent from report: `core.platform.host_identity`, `core.renderer.metadata`, `platform.window.assembly_title`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -172,6 +172,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Buttons::Paddle3EXT` -- input.gamepad.extra_buttons
 - `Buttons::Paddle4EXT` -- input.gamepad.extra_buttons
 - `Buttons::TouchPadEXT` -- input.gamepad.touchpad
+- `CNA::AssemblyTitleAttributeEXT` -- platform.window.assembly_title
 - `CNA::CNAException` -- core.platform.host_identity
 - `CNA::Content::Cnb::CnbAssetTypeIdFromName` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbByteReader::ReadCount` -- content.custom.cnb_read_limits, content.custom.pipeline_components
@@ -340,6 +341,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Diagnostics::Trace::WriteChromeTrace` -- diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::ZoneScope` -- diagnostics.profiler.trace_recording
 - `CNA::Diagnostics::ZoneToken` -- diagnostics.profiler.trace_recording
+- `CNA::GetAssemblyTitleEXT` -- platform.window.assembly_title
 - `CNA::Graphics::AsciiPostProcessEffect::AsciiPostProcessEffect` -- cnaext.ascii_post_process.scene
 - `CNA::Graphics::AsciiPostProcessEffect::Draw` -- cnaext.ascii_post_process.scene
 - `CNA::Graphics::AsciiPostProcessEffect::GetLastGridDimensions` -- cnaext.ascii_post_process.scene
@@ -465,6 +467,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Platform::TryGetWin32` -- platform.window.native_handle
 - `CNA::Platform::TryGetX11` -- platform.window.native_handle
 - `CNA::RendererLimit` -- graphics.device.capability_report
+- `CNA::SetAssemblyTitleEXT` -- platform.window.assembly_title
 - `CNA::ShaderCompilationExceptionEXT::getDiagnostics` -- graphics.shader_effect.portable_package
 - `CNA::ShaderDiagnosticEXT::getColumn` -- graphics.shader_effect.compiler_diagnostics
 - `CNA::ShaderDiagnosticEXT::getLine` -- graphics.shader_effect.compiler_diagnostics
