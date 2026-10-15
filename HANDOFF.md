@@ -3499,9 +3499,10 @@ process-level features; static CNA on CMake < 3.29.
 HIGHEST PRIORITY: Complete990 is the authoritative691-demo full-build/full-runtime baseline and
 absorbs Focused982-989 after Complete981. Focused991 directly closes the platform/parameter
 conversion, adapter-metadata, attribute-free registration and `PipelineComponentScanner` portions
-of `XnaPipelineBridge.hpp` in the stable custom-pipeline demo. Continue with the one-function
-`XnaModelBridge.hpp` conversion, then finish the remaining bridge context/logger and direct
-`RegisterXnaXnbOutput` dispositions by extending existing workflows before adding an ID.
+of `XnaPipelineBridge.hpp` in the stable custom-pipeline demo. Focused992 directly closes the
+one-function `XnaModelBridge.hpp` conversion in the stable model-source demo. Finish the remaining
+bridge context/logger and direct `RegisterXnaXnbOutput` dispositions by extending existing
+workflows before adding an ID.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3603,8 +3604,16 @@ behavior. The `-j3` build, metadata691/0, exact known-issue CTest repeated ten t
 renderer-labelled 33-pass/two-expected-failure runs repeated ten times, four CLI/catalog tests and
 the5/5 plus4/4 tool self-tests all pass; normalized stdout SHA-256 is
 `ab7718b8c6a6a3acb983f170f06931d09b4e2c681b8bf7d6a7b6eba2db7b0434`. Audit
-`XnaModelBridge.hpp`, then close remaining context/logger and direct XNB-output registration
-behavior. Evidence:`/tmp/checkpoint-991-xna-bridge-*`.
+That batch left `XnaModelBridge.hpp`, the remaining context/logger behavior and direct XNB-output
+registration for the following audits. Evidence:`/tmp/checkpoint-991-xna-bridge-*`.
+Focused992 then runs the public `ToCanonicalModel` over a real XImporter/ModelProcessor result,
+matches its schema-2 projection to the registered route, proves vertex/index/material sharing
+across two parts and exercises both documented PipelineException branches. The warning-free `-j3`
+build, metadata691/0, ten exact SOFTWARE CTests, ten direct runs per renderer label and both tool
+self-test suites pass; all20 direct outputs have SHA-256
+`572b1f47c9ec41ddf98102ad4c1bdf7de1076b2f0a275718e46c6ef9279d9b52`. Continue the remaining
+bridge context/logger and direct XNB-output registration audit. Evidence:
+`/tmp/checkpoint-992-xna-model-*`.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

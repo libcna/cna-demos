@@ -10593,3 +10593,27 @@ and3078/3205 C routes because the build-time pipeline surface is outside that ru
 `/tmp/checkpoint-991-xna-bridge-*`. No new CNA defect appeared. Audit the direct
 `XnaModelBridge::ToCanonicalModel` conversion next, then finish remaining context/logger and direct
 XNB-output registration dispositions.
+
+## Focused992-XNA-model-bridge-conversion
+
+The stable `content.model.xna_source_pipeline` workflow adds four passing controls and directly
+closes the sole public `XnaModelBridge.hpp` declaration. The real `XImporter` reads the existing
+deterministic DirectX fixture through `XnaBridgeImporterContext`; the real `ModelProcessor` then
+uses `XnaBridgeProcessorContext` and the same frozen coordinator for nested material conversion.
+`ToCanonicalModel` projects that resulting `ModelContent` to a schema-2 value exactly equal to the
+one emitted by the registered source route, apart from the documented nonserialized null-name bit.
+
+A second mesh part shares the original vertex buffer, index buffer and material. Conversion emits
+exactly three resources and both parts name the same three indices. Focused mutations separately
+prove the documented PipelineException for a missing vertex buffer/declaration and for a material
+outside the five supported stock types.
+
+The warning-free incremental build uses at most three jobs and metadata remains691/0. Ten exact
+SOFTWARE CTests and ten direct runs under each renderer label pass12/12; all20 direct outputs have
+SHA-256 `572b1f47c9ec41ddf98102ad4c1bdf7de1076b2f0a275718e46c6ef9279d9b52` and empty stderr.
+Validator/checkpoint self-tests pass5/5 and4/4. Runtime coverage totals remain303/329 XNA types,
+2114/2326 members,674/753 fields and3078/3205 C routes; `ToCanonicalModel` enters the build-time
+extension appendix. Evidence:`/tmp/checkpoint-992-xna-model-*`. The first compile used the XNA
+namespace for CNA's bridge contexts; correcting that demo qualification resolved the build and no
+CNA defect appeared. Finish the remaining `XnaPipelineBridge` context/logger and direct
+`RegisterXnaXnbOutput` audit next.

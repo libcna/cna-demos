@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added direct real-model coverage for the XNA-to-canonical model bridge, including shared-resource
+  deduplication and its documented missing-buffer and unsupported-material failures.
 - Extended the XNA component workflow with direct bridge platform/parameter conversions, adapter
   metadata, attribute-free registration and complete catalog-scanner behavior.
 - Refreshed the complete runtime baseline at 691 demos: all 704 enabled CTests and both full

@@ -4846,6 +4846,7 @@ both declarations in `XnaModelSourceContentPipeline.hpp` through real registry a
 | Intentional writer gaps | Both CNB and XNB registry inventories retain a nonempty reason for the absence of a standalone MaterialContent writer: materials are intermediate model content. |
 | Actual source routes | Deterministic `.x` and text FBX triangles run through `ContentPipeline::Build`; each result retains its selected importer and the shared model processor, then produces nonempty Model CNB and XNB containers with the expected signatures and reader identity. |
 | Semantic convergence | Both CNB outputs decode as schema-2 models. The `.x` graph has its expected implicit unnamed root and the FBX mesh is the root, while vertex declaration/bytes, index bytes, bound, draw range and material agree exactly. Parser encodings and resource ceilings remain owned by Focused987/988. |
+| Direct XNA model bridge | The actual XImporter and ModelProcessor run through public bridge contexts over the same frozen coordinator. `ToCanonicalModel` produces the exact schema-2 graph emitted by the registered route after normalizing the documented nonserialized null-name bit. Two parts sharing a vertex buffer, index buffer and material retain the same three resource indices; missing vertex data and an unsupported material each produce the documented PipelineException. |
 
 The warning-free source builds with at most three jobs and metadata is691/0. Ten SOFTWARE-labelled
 and ten OPENGLES3-labelled direct runs pass8/8 with byte-identical stdout SHA-256
@@ -4892,4 +4893,20 @@ four CLI/catalog tests and validator/checkpoint self-tests5/5 and4/4 pass. Runti
 remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes; the build-time API is
 outside that inventory and its25 newly direct names appear in the extension appendix. Evidence:
 `/tmp/checkpoint-991-xna-bridge-*`. No screenshot, GPU, genuine-XNA oracle or new CNA defect is
+claimed.
+
+### Direct XNA model conversion audit
+
+Focused992 extends `content.model.xna_source_pipeline` from eight to twelve passing controls and
+closes the one public `XnaModelBridge.hpp` function. It deliberately obtains `ModelContent` from
+the real public XNA importer and processor over CNA bridge contexts instead of hand-authoring a
+minimal graph. Its canonical projection agrees exactly with the already validated end-to-end CNB
+route, and separate shared-resource and refusal models cover the function-specific contract.
+
+The warning-free `-j3` build, metadata691/0, ten exact SOFTWARE CTests, ten direct SOFTWARE and ten
+direct OPENGLES3-labelled runs, and validator/checkpoint self-tests5/5 and4/4 pass. Direct stdout is
+byte-identical with SHA-256 `572b1f47c9ec41ddf98102ad4c1bdf7de1076b2f0a275718e46c6ef9279d9b52`;
+stderr is empty. Generated runtime totals remain303/329 types,2114/2326 members,674/753 fields and
+3078/3205 C routes; this build-time helper enters the extension appendix. Evidence:
+`/tmp/checkpoint-992-xna-model-*`. No renderer, screenshot, genuine-XNA oracle or new CNA defect is
 claimed.

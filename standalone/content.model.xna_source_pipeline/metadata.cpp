@@ -4,11 +4,12 @@
 CNA_DEMOS_STANDALONE({
     .id = "content.model.xna_source_pipeline",
     .title = "Build XNA model sources",
-    .description = "Registers CNA's XNA model source pipeline, inspects its five-component contract, and builds equivalent deterministic .x and .fbx geometry through the selected importers and model processor to both CNB and XNB output.",
+    .description = "Registers CNA's XNA model source pipeline, builds equivalent deterministic .x and .fbx geometry to CNB and XNB, and directly converts a real XNA ModelContent graph with shared-resource and refusal checks.",
     .apis = {"CNA::Content::Cnb::CnbDocument::Parse",
              "CNA::Content::Cnb::DecodeModelV2FromCnb",
              "CNA::Content::Pipeline::ImportedXnaNodeGraphType",
              "CNA::Content::Pipeline::RegisterXnaModelSourceContentPipeline",
+             "CNA::Content::Pipeline::ToCanonicalModel",
              "CNA::Content::Pipeline::ContentPipelineRegistry::Importers",
              "CNA::Content::Pipeline::ContentPipelineRegistry::Processors",
              "CNA::Content::Pipeline::ContentPipelineRegistry::AbsentWriters",

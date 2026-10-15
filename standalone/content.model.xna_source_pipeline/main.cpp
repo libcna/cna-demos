@@ -18,14 +18,23 @@
 #include "CNA/Content/Pipeline/ModelContentPipeline.hpp"
 #include "CNA/Content/Pipeline/Texture2DContentPipeline.hpp"
 #include "CNA/Content/Pipeline/TextureCompressionPipeline.hpp"
+#include "CNA/Content/Pipeline/XnaModelBridge.hpp"
 #include "CNA/Content/Pipeline/XnaModelSourceContentPipeline.hpp"
+#include "CNA/Content/Pipeline/XnaPipelineBridge.hpp"
 #include "CNA/Content/Pipeline/XnbOutputContentPipeline.hpp"
 #include "CNA/Internal/Xnb/XnbFileOptions.hpp"
+#include "Microsoft/Xna/Framework/Content/Pipeline/Graphics/MaterialContent.hpp"
+#include "Microsoft/Xna/Framework/Content/Pipeline/ModelImporters.hpp"
+#include "Microsoft/Xna/Framework/Content/Pipeline/PipelineException.hpp"
+#include "Microsoft/Xna/Framework/Content/Pipeline/Processors/ModelProcessor.hpp"
 
 namespace
 {
     namespace Pipeline = CNA::Content::Pipeline;
     namespace Cnb = CNA::Content::Cnb;
+    namespace XnaPipeline = Microsoft::Xna::Framework::Content::Pipeline;
+    namespace XnaGraphics = Microsoft::Xna::Framework::Content::Pipeline::Graphics;
+    namespace XnaProcessors = Microsoft::Xna::Framework::Content::Pipeline::Processors;
 
     constexpr std::string_view DirectXTriangle =
         "xof 0303txt 0032\n"
@@ -148,6 +157,13 @@ Version5:  {
         return pipeline.Build(request);
     }
 
+    class RecordingLogger final : public Pipeline::ContentBuildLogger
+    {
+    public:
+        void Log(const Pipeline::ContentLogMessage& message) override { messages.push_back(message); }
+        std::vector<Pipeline::ContentLogMessage> messages;
+    };
+
     int Run()
     {
         bool passed = true;
@@ -264,6 +280,92 @@ Version5:  {
                   && xModel.indexBuffers == fbxModel.indexBuffers
                   && xModel.effects == fbxModel.effects,
               "the routes preserve their format-specific root graphs while converging on exact geometry, bounds, draw ranges and material");
+
+        Pipeline::ContentSourceRootCapabilities sourceRoots;
+        Pipeline::ContentDependencyCollector directDependencies;
+        RecordingLogger directLogger;
+        Pipeline::ContentBuildEnvironment directEnvironment;
+        directEnvironment.outputDirectory = source.Path() / "out";
+        const auto directSource = source.Path() / "triangle.x";
+        Pipeline::ContentImporterContext canonicalImporterContext(
+            source.Path(), directSource, "Models/triangle", "CNA.XImporter", sourceRoots,
+            directDependencies, directLogger, directEnvironment);
+        Pipeline::XnaBridgeImporterContext importerContext(canonicalImporterContext);
+        XnaPipeline::XImporter directImporter;
+        const auto importedGraph = directImporter.Import(directSource.string(), importerContext);
+        Pipeline::ContentProcessorParameters directParameters;
+        Pipeline::ContentProcessorContext canonicalProcessorContext(
+            source.Path(), directSource, "Models/triangle", "CNA.XnaModelProcessor", directParameters,
+            sourceRoots, directDependencies, directLogger, Pipeline::ContentOutputFormat::Cnb,
+            directEnvironment, &pipeline);
+        Pipeline::XnaBridgeProcessorContext processorContext(canonicalProcessorContext);
+        XnaProcessors::ModelProcessor directProcessor;
+        const auto directModel = directProcessor.Process(importedGraph, processorContext);
+        const auto canonicalModel = Pipeline::ToCanonicalModel(*directModel);
+        auto directV2 = CNA::Internal::Xnb::ConvertXnbModelToCnbV2(
+            canonicalModel, [](const std::string& authored) { return authored; });
+        for (auto& bone : directV2.bones) bone.nameIsNull = false;
+        check(directV2 == xModel,
+              "direct XNA import and processing converts to the exact schema-2 graph emitted by the registered route");
+
+        const auto& originalMesh = directModel->getMeshesProperty().front();
+        const auto& originalPart = originalMesh->getMeshPartsProperty().front();
+        auto duplicatePart = std::make_shared<XnaProcessors::ModelMeshPartContent>(
+            originalPart->getVertexBufferProperty(), originalPart->getIndexBufferProperty(),
+            originalPart->getVertexOffsetProperty(), originalPart->getNumVerticesProperty(),
+            originalPart->getStartIndexProperty(), originalPart->getPrimitiveCountProperty());
+        duplicatePart->setMaterialProperty(originalPart->getMaterialProperty());
+        auto duplicateMesh = std::make_shared<XnaProcessors::ModelMeshContent>(
+            originalMesh->getNameProperty(), originalMesh->getSourceMeshProperty(),
+            originalMesh->getParentBoneProperty(), originalMesh->getBoundingSphereProperty(),
+            XnaProcessors::ModelMeshPartContentCollection{originalPart, duplicatePart});
+        const XnaProcessors::ModelContent duplicateModel(
+            directModel->getRootProperty(), directModel->getBonesProperty(),
+            XnaProcessors::ModelMeshContentCollection{duplicateMesh});
+        const auto sharedCanonical = Pipeline::ToCanonicalModel(duplicateModel);
+        check(sharedCanonical.sharedResources.size() == 3u
+                  && sharedCanonical.meshes.size() == 1u
+                  && sharedCanonical.meshes.front().parts.size() == 2u
+                  && sharedCanonical.meshes.front().parts[0].vertexBufferResource
+                      == sharedCanonical.meshes.front().parts[1].vertexBufferResource
+                  && sharedCanonical.meshes.front().parts[0].indexBufferResource
+                      == sharedCanonical.meshes.front().parts[1].indexBufferResource
+                  && sharedCanonical.meshes.front().parts[0].effectResource
+                      == sharedCanonical.meshes.front().parts[1].effectResource,
+              "two parts sharing their buffers and material produce exactly three shared resources");
+
+        auto missingVertexPart = std::make_shared<XnaProcessors::ModelMeshPartContent>(
+            nullptr, originalPart->getIndexBufferProperty(), originalPart->getVertexOffsetProperty(),
+            originalPart->getNumVerticesProperty(), originalPart->getStartIndexProperty(),
+            originalPart->getPrimitiveCountProperty());
+        missingVertexPart->setMaterialProperty(originalPart->getMaterialProperty());
+        auto missingVertexMesh = std::make_shared<XnaProcessors::ModelMeshContent>(
+            "MissingVertex", originalMesh->getSourceMeshProperty(), originalMesh->getParentBoneProperty(),
+            originalMesh->getBoundingSphereProperty(),
+            XnaProcessors::ModelMeshPartContentCollection{missingVertexPart});
+        const XnaProcessors::ModelContent missingVertexModel(
+            directModel->getRootProperty(), directModel->getBonesProperty(),
+            XnaProcessors::ModelMeshContentCollection{missingVertexMesh});
+        bool missingVertexRefused = false;
+        try { (void)Pipeline::ToCanonicalModel(missingVertexModel); }
+        catch (const XnaPipeline::PipelineException& error)
+        {
+            missingVertexRefused = std::string(error.what()).find("no vertex buffer") != std::string::npos;
+        }
+        check(missingVertexRefused,
+              "a model part without a vertex buffer is refused with the documented pipeline exception");
+
+        const auto stockMaterial = originalPart->getMaterialProperty();
+        originalPart->setMaterialProperty(std::make_shared<XnaGraphics::MaterialContent>());
+        bool unsupportedMaterialRefused = false;
+        try { (void)Pipeline::ToCanonicalModel(*directModel); }
+        catch (const XnaPipeline::PipelineException& error)
+        {
+            unsupportedMaterialRefused = std::string(error.what()).find("five stock materials") != std::string::npos;
+        }
+        originalPart->setMaterialProperty(stockMaterial);
+        check(unsupportedMaterialRefused,
+              "a material outside the five supported stock types is refused with its model context");
 
         std::cout << "Built equivalent DirectX and FBX sources through CNA's registered XNA model route.\n";
         return passed ? 0 : 1;

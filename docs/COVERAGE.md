@@ -866,6 +866,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::TextureProcessor::TextureProcessor` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::TextureProcessor::ValidateParameters` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::TextureResizeToPowerOfTwoParameter` -- content.texture_processor.pipeline_contract, content.texture_processor.resize_to_power_of_two
+- `CNA::Content::Pipeline::ToCanonicalModel` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::ToCnbSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ToOpaqueData` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ToProcessorParameters` -- content.custom.xna_pipeline_components
