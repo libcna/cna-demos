@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended output-lease recovery with a child that exits from its importer without unwinding,
+  proving stale lease takeover and complete rebuilding before any prior artifact was published.
 - Extended multi-artifact publication with a child-process lease owner, proving cross-process
   same-root exclusion before writes and complete publication plus unchanged skipping after release.
 - Extended embedded compiler coverage with two synchronized factory calls on disjoint roots,

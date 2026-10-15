@@ -4331,6 +4331,25 @@ metadata is655/0, both tool self-test suites pass and temporary coverage remains
 `/tmp/checkpoint-873-*`. Complete871 remains the full baseline. Continue with the next explicit
 high-value behavior gap; no renderer, screenshot or visual inspection was used.
 
+### Focused874-stale-output-lease-recovery
+
+`content.custom.multi_artifact_publication` now has twenty-two child controls. A second private
+child role uses its own temporary root and exits with `_Exit(86)` from inside the importer, after
+the public compiler owns its persistent output lease and staging directory but before its writer.
+The parent proves that the lease file remains regular while no artifact exists, then a fresh public
+compiler call claims the unlocked stale lease and publishes both CNBs, the deployment file and
+manifest. The deliberately orphaned child staging root is contained below the demo workspace and
+explicitly removed after the check.
+
+SOFTWARE and OPENGLES3-labelled direct runs pass22/22 with byte-identical path-normalized
+stdout/stderr; the exact SOFTWARE CTest passes twenty consecutive repetitions. The final
+incremental build uses `-j3`, metadata is655/0, both tool self-test suites pass and temporary
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is
+under `/tmp/checkpoint-874-*`. No CNA defect appeared. This establishes recovery from a pre-writer
+process exit only; a crash between artifact replacements and manifest publication remains an
+explicit separate gap. Complete871 remains the full baseline. Continue with the next high-value
+behavior audit; no renderer, screenshot or visual inspection was used.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

@@ -340,13 +340,13 @@ a check that all authored colors remain visible and that a blank texture row can
   Nine checks cover exact endpoints without warnings, null sinks, import failure and repair.
   Concurrent logger callbacks and CLI verbosity are not established by these synchronous builds.
   ✅ `content.custom.multi_artifact_publication`: a real compiler node publishes two declared CNB
-  schemas plus a briefing through native AddDeploymentFile. Twenty focused checks cover digests,
+  schemas plus a briefing through native AddDeploymentFile. Twenty-two focused checks cover digests,
   XREF/ownership, skips, missing companion recovery, changed support input, Publish failure/retry,
   graph refusal of two nodes claiming one destination, same-root concurrent compiler refusal and
-  recovery both within one process and against a synchronized child process, and clean with/without
-  its manifest.
+  recovery both within one process and against a synchronized child process, stale output-lease
+  takeover after a child exits from Import, and clean with/without its manifest.
   The failed deployment leaves newly published CNBs and the older manifest; no whole-node rollback
-  or crash-consistency guarantee is claimed.
+  or mid-publication crash-consistency guarantee is claimed.
   ✅ `content.custom.dependency_graph`: strong build edges versus runtime-only XREFs, actual
   incremental propagation of effective fingerprints with unchanged parent bytes, fresh runtime
   budgets, cycle/missing-node refusal and repaired skipping. Sixteen focused checks also verify
@@ -428,9 +428,9 @@ a check that all authored colors remain visible and that a blank texture row can
   changes rebuild only the affected node, whitespace-only configuration edits skip, and source
   removal/reintroduction collects/restores only its owned output. Remapping an external-root alias
   to identical bytes skips both nodes with an identical manifest (25 child checks). Clean
-  rejects changed owned bytes without deleting an untouched peer or the manifest. Crash consistency
-  and graph/deployment cache cases remain separate work; multi_artifact_publication covers
-  independent-process same-root exclusion.
+  rejects changed owned bytes without deleting an untouched peer or the manifest. Mid-publication
+  crash consistency and graph/deployment cache cases remain separate work;
+  multi_artifact_publication covers independent-process same-root exclusion.
 - ✅ `content.custom.intermediate_external_references`: filename versus inline data, table
   deduplication, relocation, wrapper/null identity and invalid references. Nine child checks pass;
   native emitted TargetType alias round-trip exposes ISSUE-046. File imports/build publication
@@ -8812,3 +8812,20 @@ metadata655/0 and both tool self-test suites pass; coverage remains302/329 types
 169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-873-*`. This closes the explicit
 independent-process same-root lease gap. Crash consistency remains separate. No renderer,
 screenshot or visual inspection was used.
+
+## Focused874-stale-output-lease-recovery
+
+`content.custom.multi_artifact_publication` grows from twenty to twenty-two child controls. A
+second private child role receives its own temporary root and calls `_Exit(86)` from the importer,
+after the public compiler has acquired its output lease and initialized staging but before the
+writer runs. The parent observes the regular persistent lease and no CNB, deployment file or
+manifest. Its next compiler invocation claims that now-unlocked lease and publishes the complete
+current set; the demo then removes the deliberately orphaned private staging root.
+
+SOFTWARE and OPENGLES3-labelled runs pass22/22 with byte-identical path-normalized stdout/stderr,
+and the exact SOFTWARE CTest passes twenty consecutive repetitions. The warning-free incremental
+build uses `-j3`, metadata is655/0, both tool self-test suites pass and coverage remains302/329
+types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-874-*`. This establishes stale output-lease recovery only for a process exit before
+writer/publication; interruption between individual artifact replacements and manifest publication
+remains outside the claim. No renderer, screenshot or visual inspection was used.

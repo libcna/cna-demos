@@ -5,6 +5,7 @@
 #include <chrono>
 #include <condition_variable>
 #include <cstdint>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -43,6 +44,7 @@ namespace
     bool releaseImport = false;
     std::filesystem::path processReadyPath;
     std::filesystem::path processReleasePath;
+    std::filesystem::path crashMarkerPath;
     struct TemporaryDirectory
     {
         std::filesystem::path path;
@@ -73,6 +75,16 @@ namespace
                 throw std::runtime_error("An encounter needs 1..100 waves.");
             file >> std::ws;
             if (!file.eof()) throw std::runtime_error("An encounter contains one wave count.");
+            if (!crashMarkerPath.empty())
+            {
+                // The public compiler owns both its persistent output lock and a fully initialized
+                // staging directory before Import runs. Exit without unwinding either owner so the
+                // parent can demonstrate stale-lock recovery rather than normal RAII cleanup.
+                WriteText(crashMarkerPath, "entered importer\n");
+                std::cout.flush();
+                std::cerr.flush();
+                std::_Exit(86);
+            }
             if (!processReadyPath.empty())
             {
                 WriteText(processReadyPath, "ready\n");
@@ -187,6 +199,27 @@ namespace
             {"build", source, "-o", output, "--format", "cnb", "--workers", "1", "--quiet"},
             EncounterRegistryFactory());
     }
+
+    int RunCrashedLeaseOwner(const std::filesystem::path& source,
+                             const std::filesystem::path& output,
+                             const std::filesystem::path& marker,
+                             const std::filesystem::path& privateTemp)
+    {
+        std::filesystem::create_directories(privateTemp);
+#if defined(_WIN32)
+        if (_putenv_s("TEMP", privateTemp.string().c_str()) != 0 ||
+            _putenv_s("TMP", privateTemp.string().c_str()) != 0)
+#else
+        if (::setenv("TMPDIR", privateTemp.string().c_str(), 1) != 0)
+#endif
+        {
+            throw std::runtime_error("Could not isolate the crashing child's temporary files.");
+        }
+        crashMarkerPath = marker;
+        return Pipeline::RunContentCompiler(
+            {"build", source, "-o", output, "--format", "cnb", "--workers", "1", "--quiet"},
+            EncounterRegistryFactory());
+    }
 }
 
 int main(int argc, char** argv)
@@ -201,6 +234,12 @@ int main(int argc, char** argv)
             {
                 return RunIndependentLeaseOwner(programArguments.other[1], programArguments.other[2],
                                                 programArguments.other[3], programArguments.other[4]);
+            }
+            if (programArguments.other.size() == 5 &&
+                programArguments.other.front() == "--crash-lease-owner")
+            {
+                return RunCrashedLeaseOwner(programArguments.other[1], programArguments.other[2],
+                                            programArguments.other[3], programArguments.other[4]);
             }
             std::cerr << "Encounter publication demo received an unknown child-process role.\n";
             return 2;
@@ -395,6 +434,40 @@ int main(int argc, char** argv)
             check(Pipeline::RunContentCompiler(processArguments, factory) == 0 &&
                       writes == writesAfterProcess,
                   "a later process-local invocation acquires the released lease and skips the unchanged node");
+            // A process can also disappear without destructing its lease or staging owners. Give
+            // that child a private temporary root, exit it from Import, then prove the next
+            // invocation can claim the now-unlocked persistent lease and build from scratch.
+            const auto crashOutput = directory / "crash-output";
+            const auto crashMarker = directory / "crash-owner-entered-import";
+            const auto crashTemp = directory / "crash-private-temp";
+            const int crashOwnerStatus = CnaDemos::RunProcess(
+                CnaDemos::Standalone::ThisProgram(
+                    "cna-demo-content-custom-multi_artifact_publication"),
+                {"--crash-lease-owner", source.string(), crashOutput.string(),
+                 crashMarker.string(), crashTemp.string()});
+            const auto crashLease = crashOutput / ".cna-content.lock";
+            const bool crashPublished =
+                std::filesystem::exists(crashOutput / "arena.cnb") ||
+                std::filesystem::exists(crashOutput / "rewards/arena.cnb") ||
+                std::filesystem::exists(crashOutput / "support/briefing.txt") ||
+                std::filesystem::exists(
+                    crashOutput / Pipeline::ContentBuildManifestFileName);
+            check(crashOwnerStatus == 86 && std::filesystem::is_regular_file(crashMarker) &&
+                      std::filesystem::is_regular_file(crashLease) && !crashPublished,
+                  "an owner exiting inside its importer leaves an unlocked lease but publishes no artifact");
+            const std::vector<std::filesystem::path> crashArguments{
+                "build", source, "-o", crashOutput, "--format", "cnb", "--workers", "1"};
+            const int writesBeforeCrashRecovery = writes.load();
+            const int crashRecovery = Pipeline::RunContentCompiler(crashArguments, factory);
+            const bool removedPrivateCrashTemp = std::filesystem::remove_all(crashTemp) > 0;
+            check(crashRecovery == 0 && writes == writesBeforeCrashRecovery + 1 &&
+                      ReadCount(crashOutput / "arena.cnb", EncounterType) == 4 &&
+                      ReadCount(crashOutput / "rewards/arena.cnb", RewardsType) == 100 &&
+                      ReadText(crashOutput / "support/briefing.txt") == "Protect the north gate.\n" &&
+                      std::filesystem::is_regular_file(
+                          crashOutput / Pipeline::ContentBuildManifestFileName) &&
+                      removedPrivateCrashTemp && !std::filesystem::exists(crashTemp),
+                  "the next invocation reclaims the stale lease, publishes a complete set and removes the private crash staging root");
             // The fixed support destination belongs to one encounter. A second source would
             // claim that same path even though its two CNB names are distinct; the graph refuses it.
             const auto beforeConflictPrimary = ReadText(primary), beforeConflictCompanion = ReadText(companion);
