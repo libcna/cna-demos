@@ -74,7 +74,7 @@ diagnostics6, cnaext4, platform2 and c_api177. Kinds are168 console,294 game and
 627 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete926's full runtime reports and includes all663
 catalog IDs in both renderer suites.
-The surface totals are302/329 XNA types,2114/2326 XNA members,674/753 fields and
+The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete926's
 full runtime reports are the baseline inputs for the663-ID catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -2345,13 +2345,14 @@ build. Remaining unit/accuracy/category/resource-kind enum permutations are stor
 shown by representative values; maximum-depth, malformed-binary and multi-thread saturation are
 CNA unit/stress-test territory. Resume the broader inventory and docs/COVERAGE_AUDIT.md with the
 highest-value undispositioned public behavior; prefer extending an existing workflow where coherent.
-The resumed audit adds real `ArgumentException(name)`, parameterless `InvalidOperationException`
-and `ObjectDisposedException` C diagnostic evidence, then exposes CNA-DEMOS-ISSUE-103 when a native
-ContentLoadException is flattened to untyped IO by the C content adapter. Audit the existing
-`c_api.gamer.guide_social_offline` service refusal next: exact
-`GamerServicesNotAvailableException` identity distinguishes an unavailable account service from a
-generic unsupported API. If the public route cannot expose that decision, document the source/
-runtime disposition and move to the next undispositioned behavior rather than enumerating names.
+The resumed audit adds real `ArgumentException(name)`, parameterless `InvalidOperationException`,
+`ObjectDisposedException`, `GamerServicesNotAvailableException`, `NotSupportedException` and
+`GamerPrivilegeException` C diagnostic evidence, then exposes CNA-DEMOS-ISSUE-103 when a native
+ContentLoadException is flattened to untyped IO by the C content adapter. Audit the existing live
+Guide overlay next: a second valid open should retain exact `GuideAlreadyVisibleException` and leave
+the first overlay intact, distinguishing a temporary modal collision from privilege/state failure.
+After that coherent check, leave exception enumeration and return to the next undispositioned
+public behavior.
 Keep constructors/finalizers, CLR collection plumbing and service-only paths classified rather than
 inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
@@ -2578,6 +2579,28 @@ build uses `-j3`, metadata is663/0 and validator/checkpoint self-tests pass5/5 a
 surface totals remain302/329 types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-927-net-*` and `/tmp/checkpoint-927-net-exception-source.txt`. No socket, renderer,
 external service or manual validation is claimed, and no CNA defect appeared.
+
+### Focused928-C-Guide-exception-identities
+
+The stable `c_api.gamer.guide_social_offline` workflow grows24->26 controls and distinguishes three
+real public refusal causes. `ShowFriends` returns NOT_SUPPORTED/category NOT_SUPPORTED with exact
+`Microsoft.Xna.Framework.GamerServices.GamerServicesNotAvailableException`; the Windows Phone-only
+`ShowGameInvite(sessionId)` overload returns the same result/category with exact
+`System.NotSupportedException`; and Marketplace returns INVALID_STATE/category STATE with exact
+`Microsoft.Xna.Framework.GamerServices.GamerPrivilegeException` for the offline profile. All use
+the public exception-type size/copy routes with exact capacities. The last type now has semantic
+metadata credit, moving generated coverage302->303/329 types and GamerServices43->44/52; member,
+field and C-route totals remain2114/2326,674/753 and3078/3205.
+
+Ten final SOFTWARE/Xvfb runs pass26/26 with byte-identical stdout SHA-256
+`a3106c9033bccd3596aac18f3fc485c6b707a0a2ed5309dc4be83640fcfebb21`; ten OPENGLES3/Xvfb runs
+likewise pass with hash `56324b2f9bcce01bd7890b2dfa7d56d78997ef94360045d24b967b8cc9c67f7e`.
+All stderr is empty. The exact SOFTWARE CTest, metadata and validator/checkpoint self-tests pass;
+the warning-free build uses `-j3`. Two initial bare-binary probes omitted the required
+`--automated --frames 20`; GDB showed `frames=0`, and the correctly parameterized runs pass without
+a source workaround. Evidence:`/tmp/checkpoint-928-guide-final-*` and
+`/tmp/checkpoint-928-guide-exception-source.txt`. Pixel checks are programmatic; no screenshot,
+service session or manual visual-quality result is claimed, and no CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

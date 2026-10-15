@@ -9771,3 +9771,19 @@ and empty stderr. The exact SOFTWARE CTest passes ten repetitions; the warning-f
 most three jobs, metadata is663/0 and both validator suites pass. Generated coverage remains
 302/329 types,2114/2326 members,674/753 fields and3078/3205 routes. Evidence:
 `/tmp/checkpoint-927-net-*`. No CNA issue appeared.
+
+## Focused928-C-Guide-exception-identities
+
+The stable `c_api.gamer.guide_social_offline` workflow grows24->26 controls and distinguishes three
+real public refusal causes. Friends preserves `GamerServicesNotAvailableException`, the Windows
+Phone-only invitation overload preserves `System.NotSupportedException`, and Marketplace preserves
+`GamerPrivilegeException`; their exact result/category pairs remain NOT_SUPPORTED/NOT_SUPPORTED,
+NOT_SUPPORTED/NOT_SUPPORTED and INVALID_STATE/STATE. The public exception-type size/copy routes use
+exact capacities. `GamerPrivilegeException` now has real type-level evidence, moving generated
+coverage302->303/329 types and GamerServices43->44/52.
+
+Ten final SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass26/26 with stable per-renderer stdout hashes
+`a3106c9033bccd3596aac18f3fc485c6b707a0a2ed5309dc4be83640fcfebb21` and
+`56324b2f9bcce01bd7890b2dfa7d56d78997ef94360045d24b967b8cc9c67f7e`; stderr is empty. The exact
+SOFTWARE CTest, metadata validation and both validator suites pass, and the warning-free build uses
+at most three jobs. Evidence:`/tmp/checkpoint-928-guide-final-*`. No CNA issue appeared.

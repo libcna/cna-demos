@@ -27,12 +27,34 @@ static CNA_StringView text_view(const char* data, uint64_t byte_length)
     return value;
 }
 
+static int read_last_exception_type(char* type, size_t capacity)
+{
+    uint64_t bytes = UINT64_MAX;
+    uint64_t copied = UINT64_MAX;
+    if (cna_error_get_last_exception_type_size_ext(&bytes) != CNA_RESULT_SUCCESS ||
+        bytes == 0U || bytes >= capacity ||
+        cna_error_copy_last_exception_type_ext(type, bytes, &copied) != CNA_RESULT_SUCCESS ||
+        copied != bytes) {
+        return 0;
+    }
+    type[bytes] = '\0';
+    return 1;
+}
+
 static void audit_offline_social_calls(SocialState* state)
 {
     static const char Message[] = "A local message draft";
     static const char Session[] = "phone-session";
+    static const char ServiceUnavailableType[] =
+        "Microsoft.Xna.Framework.GamerServices.GamerServicesNotAvailableException";
+    static const char PrivilegeType[] =
+        "Microsoft.Xna.Framework.GamerServices.GamerPrivilegeException";
+    static const char UnsupportedType[] = "System.NotSupportedException";
     CNA_GamerHandle recipients[1];
+    CNA_ErrorInfo error_info;
+    CNA_Result result;
     CNA_Bool visible = CNA_TRUE;
+    char exception_type[96];
     recipients[0] = state->target;
 
     cna_demo_check(
@@ -50,14 +72,26 @@ static void audit_offline_social_calls(SocialState* state)
             cna_guide_show_player_review(CNA_PLAYER_INDEX_ONE, state->target) ==
                 CNA_RESULT_NOT_SUPPORTED,
         "friend request, gamer card and player review accept the target but require service identity");
+    result = cna_guide_show_friends(CNA_PLAYER_INDEX_ONE);
+    memset(&error_info, 0, sizeof(error_info));
+    error_info.struct_size = (uint32_t)sizeof(error_info);
+    error_info.struct_version = UINT32_C(1);
     cna_demo_check(
         state->demo,
-        cna_guide_show_friends(CNA_PLAYER_INDEX_ONE) == CNA_RESULT_NOT_SUPPORTED &&
-            cna_guide_show_messages(CNA_PLAYER_INDEX_ONE) == CNA_RESULT_NOT_SUPPORTED &&
+        result == CNA_RESULT_NOT_SUPPORTED &&
+            read_last_exception_type(exception_type, sizeof(exception_type)) &&
+            cna_error_get_last_info(&error_info) == CNA_RESULT_SUCCESS &&
+            error_info.result == CNA_RESULT_NOT_SUPPORTED &&
+            error_info.category == CNA_ERROR_CATEGORY_NOT_SUPPORTED &&
+            strcmp(exception_type, ServiceUnavailableType) == 0,
+        "friends reports the exact unavailable-account-service exception to a binding");
+    cna_demo_check(
+        state->demo,
+        cna_guide_show_messages(CNA_PLAYER_INDEX_ONE) == CNA_RESULT_NOT_SUPPORTED &&
             cna_guide_show_players(CNA_PLAYER_INDEX_ONE) == CNA_RESULT_NOT_SUPPORTED &&
             cna_guide_show_achievements_ext(CNA_PLAYER_INDEX_ONE) ==
                 CNA_RESULT_NOT_SUPPORTED,
-        "friends, messages, recent players and achievements refuse without a service player");
+        "messages, recent players and achievements refuse without a service player");
     cna_demo_check(
         state->demo,
         cna_guide_show_party(CNA_PLAYER_INDEX_ONE) == CNA_RESULT_NOT_SUPPORTED &&
@@ -68,14 +102,35 @@ static void audit_offline_social_calls(SocialState* state)
         state->demo,
         cna_guide_show_game_invite(
             CNA_PLAYER_INDEX_ONE, recipients, UINT64_C(1)) ==
-                CNA_RESULT_NOT_SUPPORTED &&
-            cna_guide_show_game_invite_for_session(
-                text_view(Session, sizeof(Session) - 1U)) == CNA_RESULT_NOT_SUPPORTED,
-        "both invitation overloads report their unavailable offline/platform contracts");
+                CNA_RESULT_NOT_SUPPORTED,
+        "the player invitation overload reports its unavailable offline service");
+    result = cna_guide_show_game_invite_for_session(
+        text_view(Session, sizeof(Session) - 1U));
+    memset(&error_info, 0, sizeof(error_info));
+    error_info.struct_size = (uint32_t)sizeof(error_info);
+    error_info.struct_version = UINT32_C(1);
     cna_demo_check(
         state->demo,
-        cna_guide_show_marketplace(CNA_PLAYER_INDEX_ONE) == CNA_RESULT_INVALID_STATE,
-        "marketplace reports the distinct missing signed-in purchase privilege state");
+        result == CNA_RESULT_NOT_SUPPORTED &&
+            read_last_exception_type(exception_type, sizeof(exception_type)) &&
+            cna_error_get_last_info(&error_info) == CNA_RESULT_SUCCESS &&
+            error_info.result == CNA_RESULT_NOT_SUPPORTED &&
+            error_info.category == CNA_ERROR_CATEGORY_NOT_SUPPORTED &&
+            strcmp(exception_type, UnsupportedType) == 0,
+        "the phone-only invitation overload reports the exact unsupported-platform exception");
+    result = cna_guide_show_marketplace(CNA_PLAYER_INDEX_ONE);
+    memset(&error_info, 0, sizeof(error_info));
+    error_info.struct_size = (uint32_t)sizeof(error_info);
+    error_info.struct_version = UINT32_C(1);
+    cna_demo_check(
+        state->demo,
+        result == CNA_RESULT_INVALID_STATE &&
+            read_last_exception_type(exception_type, sizeof(exception_type)) &&
+            cna_error_get_last_info(&error_info) == CNA_RESULT_SUCCESS &&
+            error_info.result == CNA_RESULT_INVALID_STATE &&
+            error_info.category == CNA_ERROR_CATEGORY_STATE &&
+            strcmp(exception_type, PrivilegeType) == 0,
+        "marketplace reports the exact missing purchase-privilege exception to a binding");
     cna_demo_check(
         state->demo,
         cna_guide_get_is_visible(&visible) == CNA_RESULT_SUCCESS && visible == CNA_FALSE,
