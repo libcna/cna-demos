@@ -4,8 +4,8 @@ CNA_DEMOS_STANDALONE({
     .id = "content.custom.xml_xnb_pipeline",
     .title = "Compile custom XML into runtime XNB",
     .description = "Registers the game's XML serializer and XNB type writers, builds original profile XML through CNA's "
-                   "source pipeline, directly audits complete XNB writer registration, and exercises writer lifecycle, target "
-                   "context, dynamic/typed/raw dispatch, shared identity and external paths before runtime loading.",
+                   "source pipeline, audits direct and multi-compiler XNB route registration, and exercises writer lifecycle, "
+                   "target context, dynamic/typed/raw dispatch, shared identity and external paths before runtime loading.",
     .apis = {"CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline",
              "CNA::Content::Pipeline::RegisterXnaXnbOutput",
              "CNA::Content::Pipeline::XnbOutputOptionsDigest",

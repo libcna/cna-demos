@@ -46,6 +46,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   command-line platform/profile in the registration options. No CNA source was modified, no
   upstream message was sent and no genuine-XNA, GPU or visual behavior is claimed. Evidence:
   `/tmp/checkpoint-994-authoritative-*`.
+- **Additional evidence:** Focused995 adds five passing `RegisterXnaXmlSourceContentPipeline`
+  controls around the same writer. The current demo passes31/33 controls, retaining only
+  ISSUE-090/111. Ten serial runs per renderer label share normalized stdout SHA-256
+  `2be8ac174e57aa7e88203f9a6fc49adcb3064b25343b3cffc24b3e8e71b944d7` and stderr SHA-256
+  `df194fd20910f4cf1206a8a06e8a4429fa6194cb7ada323069f3b791395e6d89`.
 
 ### CNA-DEMOS-ISSUE-110 -- Direct uncompressed-chunk helper bypasses its size contract
 
@@ -672,7 +677,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   the built-in string writer it intends to cache. The attempt runs on a worker thread with a
   one-second watchdog so the demo reports the failure instead of hanging its test process.
 - **Observed:** `AddTypeWriter` never returns and the watchdog records the one failed invariant.
-  The demo first completes twenty-six positive controls through the same public pipeline and focused
+  The demo first completes thirty-one positive controls through the same public pipeline and focused
   compiler probes: its main
   writer is initialized, resolves a nested custom writer later from `Write`, receives Windows
   Phone/HiDef target context, declines requested LZX compression, while a default writer accepts
@@ -681,7 +686,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   readers, including ordinary/shared/external nulls, skips an unchanged source and rebuilds an
   edited one; raw null, missing dynamic and foreign explicit writers are refused at their intended
   boundaries; its compiler inventory/freeze and direct XNB-registration contracts also pass.
-  SOFTWARE and OPENGLES3 each pass26/28 controls; the second failure is independently labeled
+  SOFTWARE and OPENGLES3 each pass31/33 controls; the second failure is independently labeled
   ISSUE-111. Their outputs and intended diagnostics are identical after normalizing the private
   temporary path.
 - **Cause observed in source:** `ContentCompiler::AddWriter` acquires its non-recursive `mutex_`

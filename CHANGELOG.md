@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the XML source-route registration contract with multi-compiler extension, exact
+  idempotence, a real second-compiler XML/XNB/runtime path and pre-mutation null refusal.
 - Directly audited `RegisterXnaXnbOutput` inventory, collision, idempotence, writer identity/schema,
   compression and runtime loading; recorded CNA-DEMOS-ISSUE-111 for ignored environment targets.
 - Completed the XNA bridge-context and logger audit through a real importer/processor build,

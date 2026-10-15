@@ -3503,8 +3503,9 @@ of `XnaPipelineBridge.hpp` in the stable custom-pipeline demo. Focused992 direct
 one-function `XnaModelBridge.hpp` conversion in the stable model-source demo. Focused993 closes the
 remaining public bridge contexts and logger through the real custom-pipeline workflow. Focused994
 closes direct `RegisterXnaXnbOutput` registration and records ISSUE-111 for ignored environment
-targets. Audit the `XnaXmlSourceContentPipeline.hpp` multi-compiler extension/null-refusal contract
-in the existing XML workflow next, then the remaining Effect/XMA service build-time headers.
+targets. Focused995 closes the `XnaXmlSourceContentPipeline.hpp` multi-compiler extension and
+null-refusal contract. Audit the remaining Effect compiler/source and XMA encoder build-time
+service headers next, reusing existing effect/audio workflows where practical.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3643,6 +3644,18 @@ normalized stdout SHA-256 is
 repeated known ISSUE-057 once; all serial runs were clean. Runtime totals remain303/329 types,
 2114/2326 members,674/753 fields and3078/3205 C routes. Audit `XnaXmlSourceContentPipeline.hpp`
 multi-compiler extension/null refusal next. Evidence:`/tmp/checkpoint-994-authoritative-*`.
+Focused995 adds five passing controls to that XML/XNB workflow. One XmlImporter and one
+processor/writer per first-compiler type extend in place with only a second compiler's new type;
+repeating registration preserves every component object. A real private XML fixture traverses the
+appended route and loads rank42, while null is refused before registry mutation. The first globally
+sorted output-type assumption was a demo error; the live importer intentionally retains first-
+compiler order and appends new types. The warning-free `-j3` build, metadata691/0, ten exact
+SOFTWARE CTests, ten serial runs per renderer label, four CLI/catalog tests and both self-test
+suites pass. Direct runs report31 passes plus only established ISSUE-090/111; normalized stdout
+SHA-256 is `2be8ac174e57aa7e88203f9a6fc49adcb3064b25343b3cffc24b3e8e71b944d7` and stderr SHA-256 is
+`df194fd20910f4cf1206a8a06e8a4429fa6194cb7ada323069f3b791395e6d89`. Runtime totals remain
+303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes. Audit the remaining Effect
+compiler/source and XMA encoder service headers next. Evidence:`/tmp/checkpoint-995-authoritative-*`.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

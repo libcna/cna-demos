@@ -10665,3 +10665,24 @@ known ISSUE-057 once; all serial repetitions were clean. Evidence:
 `/tmp/checkpoint-994-authoritative-*`. This completes the direct public `XnaPipelineBridge.hpp`
 behavior audit. Audit `XnaXmlSourceContentPipeline.hpp` multi-compiler extension and refusal
 contracts next, then the remaining Effect/XMA service build-time headers.
+
+## Focused995-XNA-XML-source-registration-extension
+
+The existing XML/XNB workflow now completes the one-function `XnaXmlSourceContentPipeline.hpp`
+contract. Its first direct registration creates one shared XmlImporter and one pass-through
+processor/XNB writer per compiler type. A second compiler preserves every existing route while
+appending only its new `XmlExtensionSource` type, and repeating that compiler preserves exact
+component objects. A private XML document then builds through the appended importer/processor/writer
+route and restores rank42 through its runtime reader. A null compiler is refused before any registry
+mutation. The initial globally sorted-list assumption was a demo bug: the documented live importer
+preserves the first compiler's order and appends new types; correcting the expectation left all
+extension behavior passing.
+
+The warning-free `-j3` build and metadata691/0 pass. Ten exact SOFTWARE CTests and ten serial direct
+runs under each renderer label report31 passes plus only established ISSUE-090/111. Normalized
+stdout SHA-256 is `2be8ac174e57aa7e88203f9a6fc49adcb3064b25343b3cffc24b3e8e71b944d7`; stderr SHA-256 is
+`df194fd20910f4cf1206a8a06e8a4429fa6194cb7ada323069f3b791395e6d89`. Four CLI/catalog tests and
+self-tests5/5 plus4/4 pass. Runtime totals remain303/329 XNA types,2114/2326 members,674/753
+fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-995-authoritative-*`. No new CNA defect,
+GPU, visual, external compiler or genuine-XNA claim. Audit the remaining Effect compiler/source
+and XMA encoder build-time service headers next.

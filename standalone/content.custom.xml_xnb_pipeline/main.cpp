@@ -100,6 +100,19 @@ namespace
             type.Field("Portrait", &ProfileSource::portrait);
         }
     };
+    struct ExtensionSource : System::Object
+    {
+        static constexpr std::string_view XnaTypeName = "CnaDemos.XmlExtensionSource";
+        const std::string& GetTypeName() const override
+        {
+            static const std::string name(XnaTypeName); return name;
+        }
+        int rank = 0;
+        static void DescribeContent(Intermediate::ContentTypeDescriptor<ExtensionSource>& type)
+        {
+            type.Field("Rank", &ExtensionSource::rank);
+        }
+    };
     // Runtime data has no dependency on XML descriptors or the build-time Object hierarchy.
     struct Badge
     {
@@ -118,6 +131,7 @@ namespace
         std::shared_ptr<Badge> sharedBadgeB;
         std::string portrait;
     };
+    struct ExtensionValue { int rank = 0; };
     class VitalWriter final : public Compiler::ContentTypeWriter<Vital>
     {
     public:
@@ -211,6 +225,23 @@ namespace
         }
     private:
         Compiler::ContentCompiler* compiler_ = nullptr;
+    };
+    class ExtensionWriter final : public Compiler::ContentTypeWriter<ExtensionSource>
+    {
+    public:
+        std::string GetRuntimeReader(Xna::TargetPlatform) const override
+        {
+            return "CnaDemos.XmlExtensionReader";
+        }
+        std::string GetRuntimeType(Xna::TargetPlatform) const override
+        {
+            return "CnaDemos.XmlExtension";
+        }
+    protected:
+        void Write(Compiler::ContentWriter& output, const TargetCarrier& value) override
+        {
+            output.Write(value->rank);
+        }
     };
     class InitializeCacheProbeWriter final : public Compiler::ContentTypeWriter<ProfileSource>
     {
@@ -322,6 +353,16 @@ namespace
                 [profile](std::shared_ptr<Badge> badge) { profile->sharedBadgeB = std::move(badge); });
             profile->portrait = input.ReadString();
             return profile;
+        }
+    };
+    class ExtensionReader final : public Runtime::ContentTypeReader<ExtensionValue>
+    {
+    public:
+        ExtensionReader() : ContentTypeReader<ExtensionValue>("CnaDemos.XmlExtension") {}
+    protected:
+        ExtensionValue Read(Runtime::ContentReader& input, std::optional<ExtensionValue>) override
+        {
+            return {input.ReadInt32()};
         }
     };
     struct TemporaryDirectory
@@ -456,6 +497,83 @@ int main()
                     "RegisterXnaXnbOutput(): compiler must not be null.";
             }
             check(nullCompilerRefused, "direct XNB registration refuses a null compiler before mutating its registry");
+
+            const auto extensionSource = directory / "extension-source";
+            const auto extensionOutput = directory / "extension-output";
+            std::filesystem::create_directory(extensionSource);
+            std::filesystem::create_directory(extensionOutput);
+            {
+                std::ofstream file(extensionSource / "extension.xml");
+                file << "<XnaContent xmlns:CnaDemos=\"CnaDemos\"><Asset "
+                        "Type=\"CnaDemos:XmlExtensionSource\"><Rank>42</Rank></Asset></XnaContent>\n";
+            }
+            (void)Intermediate::IntermediateSerializer::TypeSerializerFor<ExtensionSource>();
+            auto baseXmlCompiler = std::make_shared<Compiler::ContentCompiler>();
+            auto extensionCompiler = std::make_shared<Compiler::ContentCompiler>();
+            (void)extensionCompiler->AddTypeWriter<ExtensionWriter>();
+            auto extensionRegistry = std::make_shared<Pipeline::ContentPipelineRegistry>();
+            Pipeline::RegisterXnaXmlSourceContentPipeline(*extensionRegistry, baseXmlCompiler, {});
+            const auto xmlImporter = extensionRegistry->ResolveImporter("probe.xml");
+            const auto baseNames = baseXmlCompiler->KnownTypeNames();
+            check(extensionRegistry->Importers().size() == 1u &&
+                      xmlImporter->OutputTypes() == baseNames &&
+                      extensionRegistry->Processors().size() == baseNames.size() &&
+                      extensionRegistry->Writers().size() == baseNames.size(),
+                  "the first XML registration exposes one importer plus one processor and XNB writer per compiler type");
+
+            Pipeline::RegisterXnaXmlSourceContentPipeline(*extensionRegistry, extensionCompiler, {});
+            auto extendedNames = baseNames;
+            for (const auto& name : extensionCompiler->KnownTypeNames())
+                if (std::find(extendedNames.begin(), extendedNames.end(), name) == extendedNames.end())
+                    extendedNames.push_back(name);
+            check(extensionRegistry->Importers().size() == 1u &&
+                      extensionRegistry->ResolveImporter("probe.xml") == xmlImporter &&
+                      xmlImporter->OutputTypes() == extendedNames &&
+                      extensionRegistry->Processors().size() == extendedNames.size() &&
+                      extensionRegistry->Writers().size() == extendedNames.size() &&
+                      extensionRegistry->ResolveProcessor("CnaDemos.XmlExtensionSource") &&
+                      extensionRegistry->ResolveWriter("CnaDemos.XmlExtensionSource", {},
+                                                        Pipeline::ContentOutputFormat::Xnb),
+                  "a second compiler extends the existing XML route with only its new type");
+
+            const auto extendedImporters = extensionRegistry->Importers();
+            const auto extendedProcessors = extensionRegistry->Processors();
+            const auto extendedWriters = extensionRegistry->Writers();
+            Pipeline::RegisterXnaXmlSourceContentPipeline(*extensionRegistry, extensionCompiler, {});
+            check(extensionRegistry->Importers() == extendedImporters &&
+                      extensionRegistry->Processors() == extendedProcessors &&
+                      extensionRegistry->Writers() == extendedWriters,
+                  "repeating the same XML compiler registration preserves every component object");
+
+            const Pipeline::ContentPipeline extensionPipeline(extensionRegistry);
+            Pipeline::ContentBuildRequest extensionRequest;
+            extensionRequest.sourceRoot = extensionSource;
+            extensionRequest.source = "extension.xml";
+            extensionRequest.logicalName = "multi-extension";
+            extensionRequest.outputFormat = Pipeline::ContentOutputFormat::Xnb;
+            extensionRequest.environment.outputDirectory = extensionOutput;
+            const auto extensionBuilt = extensionPipeline.Build(extensionRequest);
+            WriteFile(extensionOutput / "multi-extension.xnb", extensionBuilt.output.bytes);
+            Runtime::ContentTypeReaderManager::AddTypeCreator(
+                "CnaDemos.XmlExtensionReader", [] { return std::make_unique<ExtensionReader>(); });
+            Runtime::ContentManager extensionContent(nullptr, extensionOutput.string());
+            check(extensionBuilt.importer.name == "XmlImporter" &&
+                      extensionBuilt.processor.name == "PassThroughProcessor(CnaDemos.XmlExtensionSource)" &&
+                      extensionBuilt.writer.name == "CNA.XnaObjectXnbWriter[CnaDemos.XmlExtensionSource]" &&
+                      extensionContent.Load<ExtensionValue>("multi-extension").rank == 42,
+                  "the extended XML route imports, passes through, writes and loads the second compiler's type");
+
+            Pipeline::ContentPipelineRegistry nullXmlRegistry;
+            bool nullXmlCompilerRefused = false;
+            try { Pipeline::RegisterXnaXmlSourceContentPipeline(nullXmlRegistry, {}, {}); }
+            catch (const std::invalid_argument& error)
+            {
+                nullXmlCompilerRefused = std::string(error.what()) ==
+                    "RegisterXnaXmlSourceContentPipeline(): compiler must not be null.";
+            }
+            check(nullXmlCompilerRefused && nullXmlRegistry.Importers().empty() &&
+                      nullXmlRegistry.Processors().empty() && nullXmlRegistry.Writers().empty(),
+                  "XML registration refuses a null compiler before mutating its registry");
 
             AuthorProfile(source / "sentinel.xml", 75, output / "portraits" / "sentinel.xnb", true);
             // Resolve the game's serializer before XmlImporter encounters its Asset Type.
