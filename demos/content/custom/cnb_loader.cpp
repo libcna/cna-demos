@@ -55,6 +55,96 @@ namespace
 
     void CnbLoader(CnaDemos::DemoContext& ctx)
     {
+        ctx.Check(Format::Magic == std::array<std::uint8_t, 4>{0x43u, 0x4Eu, 0x42u, 0x1Au} &&
+                      Format::HeaderSize == 64u && Format::TocEntrySize == 48u &&
+                      Format::HeaderChecksumCoverage == 44u &&
+                      Format::HeaderChecksumOffset == 44u &&
+                      Format::HeaderReservedSize == 16u && Format::ContainerMajor == 1u &&
+                      Format::ContainerMinor == 0u && Format::DefaultTocOffset == 64u,
+                  "the container magic, layout sizes, checksum range, version and default table offset are frozen");
+
+        constexpr CnbChunkId exactRule = MakeChunkId('R', 'U', 'L', 'E');
+        constexpr CnbChunkId malformedId{0xFF7E0A41u};
+        ctx.Check(exactRule == RulesChunk && exactRule.value == 0x454C5552u &&
+                      ChunkIdToString(exactRule) == "RULE" && IsWellFormedChunkId(exactRule) &&
+                      ChunkIdToString(malformedId) == "A?~?" &&
+                      !IsWellFormedChunkId(malformedId),
+                  "chunk IDs pack little-endian, compare by value and sanitize malformed bytes in diagnostics");
+
+        ctx.Check(CnbChunkFlags::None == 0u && CnbChunkFlags::Mandatory == 1u &&
+                      CnbChunkFlags::KnownMask == CnbChunkFlags::Mandatory &&
+                      static_cast<std::uint32_t>(CnbCompression::None) == 0u &&
+                      static_cast<std::uint32_t>(CnbCompression::Lz4) == 1u &&
+                      static_cast<std::uint32_t>(CnbCompression::Zstd) == 2u &&
+                      static_cast<std::uint32_t>(CnbCompression::Deflate) == 3u &&
+                      CnbCompression::ReservedLz4 == CnbCompression::Lz4 &&
+                      CnbCompression::ReservedZstd == CnbCompression::Zstd &&
+                      CnbCompression::ReservedDeflate == CnbCompression::Deflate,
+                  "chunk flags and every assigned or compatibility compression identifier keep their wire values");
+
+        struct AssetTypeExpectation
+        {
+            std::uint32_t id;
+            const char* name;
+        };
+        constexpr std::array assetTypes{
+            AssetTypeExpectation{CnbAssetTypeId::Invalid, "Invalid"},
+            AssetTypeExpectation{CnbAssetTypeId::Texture2D, "Texture2D"},
+            AssetTypeExpectation{CnbAssetTypeId::Texture3D, "Texture3D"},
+            AssetTypeExpectation{CnbAssetTypeId::TextureCube, "TextureCube"},
+            AssetTypeExpectation{CnbAssetTypeId::SpriteFont, "SpriteFont"},
+            AssetTypeExpectation{CnbAssetTypeId::Model, "Model"},
+            AssetTypeExpectation{CnbAssetTypeId::AnimationClip, "AnimationClip"},
+            AssetTypeExpectation{CnbAssetTypeId::Curve, "Curve"},
+            AssetTypeExpectation{CnbAssetTypeId::SoundEffect, "SoundEffect"},
+            AssetTypeExpectation{CnbAssetTypeId::Song, "Song"},
+            AssetTypeExpectation{CnbAssetTypeId::Video, "Video"},
+            AssetTypeExpectation{CnbAssetTypeId::Effect, "Effect"},
+        };
+        bool exactAssetTypes = true;
+        for (std::size_t index = 0u; index < assetTypes.size(); ++index)
+        {
+            exactAssetTypes = exactAssetTypes && assetTypes[index].id == index &&
+                AssetTypeIdToString(assetTypes[index].id) == assetTypes[index].name;
+        }
+        ctx.Check(exactAssetTypes && CnbAssetTypeId::ReservedRangeFirst == 0x40000000u &&
+                      CnbAssetTypeId::CustomRangeFirst == 0x80000000u &&
+                      !IsCustomAssetTypeId(CnbAssetTypeId::ReservedRangeFirst) &&
+                      IsCustomAssetTypeId(CnbAssetTypeId::CustomRangeFirst) &&
+                      AssetTypeIdToString(0x40000001u) == "unknown type 0x40000001" &&
+                      AssetTypeIdToString(0x80000001u) == "custom type 0x80000001",
+                  "every built-in asset ID/name and both reserved/custom range boundaries are exact");
+
+        bool emptyTypeNameRefused = false;
+        try
+        {
+            (void)CnbAssetTypeIdFromName("");
+        }
+        catch (const std::invalid_argument&)
+        {
+            emptyTypeNameRefused = true;
+        }
+        ctx.Check(CnbAssetTypeIdFromName(RulesName) == 0xE7632F12u &&
+                      IsCustomAssetTypeId(CnbAssetTypeIdFromName(RulesName)) &&
+                      emptyTypeNameRefused,
+                  "custom type hashing is deterministic, sets the custom bit and refuses an empty canonical name");
+
+        const std::string invalidUtf8{"\xC0\xAF", 2u};
+        ctx.Check(CnbLogicalNameProblem("textures/hero") == "" &&
+                      CnbLogicalNameProblem("textures/a..b") == "" &&
+                      CnbLogicalNameProblem("") == "is empty" &&
+                      CnbLogicalNameProblem(invalidUtf8) == "is not well-formed UTF-8" &&
+                      !CnbLogicalNameProblem("textures\\hero").empty() &&
+                      CnbLogicalNameProblem("/textures/hero") == "is an absolute path" &&
+                      CnbLogicalNameProblem("C:textures/hero") ==
+                          "is a drive-qualified absolute path" &&
+                      CnbLogicalNameProblem("textures/../hero") == "contains a '..' segment",
+                  "the shared logical-name rule accepts contained names and classifies every unsafe form");
+
+        ctx.Check(CnbContainerChunk::Metadata == MakeChunkId('C', 'M', 'E', 'T') &&
+                      CnbContainerChunk::ExternalReferences == MakeChunkId('X', 'R', 'E', 'F'),
+                  "the two container-owned chunk identifiers are exact and distinct from schema chunks");
+
         const auto typeId = CnbAssetTypeIdFromName(RulesName);
         // Registration outlives every manager, so capture owned state rather than local references.
         auto firstState = std::make_shared<LoaderState>();
@@ -412,7 +502,13 @@ CNA_DEMOS_CONSOLE(CnbLoader, {
     .description = "Writes a game-rules CNB asset, checks canonical custom-type identity and collision refusal, "
                    "first-wins serial and concurrent registration, caching, extensions, retry after repair and invalid schema layouts.",
     .apis = {"ContentManager::RegisterCnbLoaderEXT", "ContentManager::Load",
+             "CNA::Content::Cnb::Format", "CNA::Content::Cnb::CnbChunkId",
+             "CNA::Content::Cnb::MakeChunkId", "CNA::Content::Cnb::ChunkIdToString",
+             "CNA::Content::Cnb::IsWellFormedChunkId", "CNA::Content::Cnb::CnbChunkFlags",
+             "CNA::Content::Cnb::CnbCompression", "CNA::Content::Cnb::CnbAssetTypeId",
              "CNA::Content::Cnb::CnbAssetTypeIdFromName", "CNA::Content::Cnb::CnbWriter::SetMetadata",
+             "CNA::Content::Cnb::IsCustomAssetTypeId", "CNA::Content::Cnb::AssetTypeIdToString",
+             "CNA::Content::Cnb::CnbLogicalNameProblem", "CNA::Content::Cnb::CnbContainerChunk",
              "CNA::Content::Cnb::CnbWriter::AddChunk", "CNA::Content::Cnb::CnbWriter::WriteToFile",
              "CNA::Content::Cnb::CnbDocument::RequireAsset", "CNA::Content::Cnb::CnbDocument::OpenChunk",
              "CNA::Content::Cnb::CnbDocument::ParseFile", "CNA::Content::Cnb::CnbDocument::FindAll",

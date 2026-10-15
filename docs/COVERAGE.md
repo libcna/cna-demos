@@ -177,13 +177,16 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::AssemblyTitleAttributeEXT` -- platform.window.assembly_title
 - `CNA::CNAException` -- core.platform.host_identity
 - `CNA::Content::Cnb::AppendEmbeddedTexture2DChunks` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Cnb::AssetTypeIdToString` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::BuildCnbModelFromCnj` -- content.model.pipeline_contract
+- `CNA::Content::Cnb::ChunkIdToString` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbAnimationClipChunk::Header` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::CnbAnimationClipChunk::Keys` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::CnbAnimationClipChunk::Tracks` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::CnbAnimationClipSchemaVersion` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::CnbAnimationKeyStride` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::CnbAnimationTrackStride` -- content.cnj.pipeline_assets
+- `CNA::Content::Cnb::CnbAssetTypeId` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbAssetTypeIdFromName` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbAudioFormat` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbAudioFormatMax` -- content.sound_effect.cnb_codec
@@ -192,6 +195,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbByteReader::ReadCount` -- content.custom.cnb_read_limits, content.custom.pipeline_components
 - `CNA::Content::Cnb::CnbByteReader::ReadString` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbByteReader::RequireExhausted` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbChunkFlags` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbChunkId` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbCompression` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbContainerChunk` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbCurveChunk::Header` -- content.cnj.curve
 - `CNA::Content::Cnb::CnbCurveChunk::Keys` -- content.cnj.curve
 - `CNA::Content::Cnb::CnbCurveKeyStride` -- content.cnj.curve
@@ -211,6 +218,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbDocument::RequireSingle` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbEffectKind` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbImageImportOptions` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Cnb::CnbLogicalNameProblem` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbMaterial` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbMaxAudioSampleRate` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::CnbMaxEffectKind` -- content.model.pipeline_contract
@@ -359,6 +367,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::EncodeTexture3DToCnb` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::EncodeTextureCubeToCnb` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::EncodeVideoToCnb` -- content.media.cnb_codec
+- `CNA::Content::Cnb::Format` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::GenerateRgba8MipChain` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::ImportDdsAsCnbTextureCube` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::ImportImageAsCnbTexture2D` -- content.texture_processor.pipeline_contract
@@ -366,7 +375,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::ImportWavAsImportedSound` -- content.sound_effect.imported_pcm
 - `CNA::Content::Cnb::IsBlockCompressedCnbTextureFormat` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::IsCnbCompressionSupported` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::IsCustomAssetTypeId` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::IsKnownCnbTextureFormat` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Cnb::IsWellFormedChunkId` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::MakeChunkId` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::MakeRgba8Texture2DData` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::ProcessImportedSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Cnb::ReadCnbKeyframe` -- content.cnj.pipeline_assets

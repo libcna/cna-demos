@@ -1076,6 +1076,32 @@ evidence; no device, rendering, playback, screenshot, Windows Unicode-path or qu
 added. Audit the remaining generic CNB infrastructure headers (`CnbFormat`, byte readers/writers,
 document/writer, compression, CRC and read limits) against the existing custom CNB workflows next.
 
+Focused **977-CNB-wire-format-disposition** extends the stable own-process
+`content.custom.cnb_loader` demo from25 to32 controls without adding a catalog ID and dispositions
+all45 public declarations in `CnbFormat.hpp`. Exact checks freeze `CNB\x1A`, header/TOC/checksum/
+reserved sizes, container1.0 and the default TOC offset. `RULE` proves little-endian packing,
+equality, literal rendering and well-formedness; a malformed ID is rejected and safely rendered.
+Flag values, every assigned compression ordinal and all compatibility aliases remain exact.
+
+Invalid plus all11 assigned built-in asset IDs keep their 0..11 values and names; reserved/custom
+ranges, boundary classification and unknown/custom hex rendering are exact. `CnaDemos.GameRules`
+hashes to fixed `0xE7632F12`, sets the custom bit and an empty name is refused; the existing real
+collision retains end-to-end metadata dispatch evidence. Contained names pass while empty,
+malformed-UTF8, backslash, absolute, drive-qualified and parent-segment forms are classified.
+`CMET`/`XREF` IDs are exact. The existing custom writer/parser/loader controls keep real enforcement
+evidence. No new CNA issue is found.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE-labelled and ten
+OPENGLES3-labelled runs pass32/32 with empty stderr and byte-identical normalized stdout SHA-256
+`5f9a95485b2365cadbda35e30a5e553c8b3e276ef29561e2a265bd19e1891c8c`; normalization replaces only
+the private temporary directory nonce printed in diagnostics. The exact SOFTWARE CTest passes20
+repetitions; metadata remains683/0 and the validator/checkpoint self-tests pass5/5 and4/4.
+Generated XNA/C totals remain unchanged; eleven names enter/extend the CNA-extension appendix and
+Complete956 still marks eight post-baseline IDs absent. Evidence:`/tmp/checkpoint-977-cnb-format/*`,
+`/tmp/checkpoint-977-cnb-format-report.json` and `/tmp/checkpoint-977-coverage.md`. No unavailable-
+codec or unsupported-platform claim is added. Audit `CnbArithmetic.hpp`, `CnbByteReader.hpp`,
+`CnbByteWriter.hpp` and `CnbCrc32c.hpp` next by extending existing custom-schema/read-limit evidence.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3234,6 +3260,11 @@ public `CnbSourceImport.hpp` declarations across those three workflows through e
 agreement, image color-key policy, WAV loop-policy separation and representative source refusals.
 Audit the remaining generic CNB infrastructure headers (`CnbFormat`, byte readers/writers,
 document/writer, compression, CRC and read limits) against the existing custom CNB workflows next.
+Focused977 closes all45 public `CnbFormat.hpp` declarations in the stable custom-loader workflow
+through exact container constants, chunk/flag/compression wire identities, every asset ID/name,
+custom hashing, logical-name safety and container chunk IDs. Audit `CnbArithmetic.hpp`,
+`CnbByteReader.hpp`, `CnbByteWriter.hpp` and `CnbCrc32c.hpp` next by extending the existing
+read-limit/custom-schema workflows.
 The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title

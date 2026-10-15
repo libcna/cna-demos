@@ -1110,6 +1110,26 @@ shared C-wrapper cases explicitly owned by `c_api.content.cnb_importers`. These 
 imports. No graphics/audio device, rendering, playback, screenshot, visual/listening quality,
 Windows Unicode-path or arbitrary decoder-format portability claim is added.
 
+#### `CnbFormat.hpp` declaration-level disposition
+
+The pinned header exposes 45 public declarations under this audit's convention: nine container
+constants, the chunk-ID carrier/value/equality plus three helpers, three flag constants, seven
+compression values/aliases, fourteen asset-type constants, four asset/logical-name helpers and two
+container chunk IDs. Focused977 extends `content.custom.cnb_loader`, where these wire identities
+already govern a real game-defined schema and runtime dispatch.
+
+| Declaration family | Disposition |
+|---|---|
+| Floating representation and `Format` constants | The header's compile-time assertions require binary32/binary64 representation and byte spelling. Runtime controls freeze `CNB\x1A`, 64-byte header, 48-byte TOC row, checksum coverage/offset 44, 16 reserved bytes, container 1.0 and TOC offset 64. The existing writer/parser round trip proves those constants describe accepted bytes. |
+| `CnbChunkId`, `MakeChunkId`, string/well-formed helpers | `RULE` packs as exact little-endian `0x454C5552`, compares equal and renders literally. A deliberately malformed four-byte value is rejected and renders control/non-ASCII bytes as `?`, preserving safe diagnostics. Existing schema chunks prove the same values through writer, parser and mandatory-chunk dispatch. |
+| `CnbChunkFlags`; `CnbCompression` values and aliases | None, Mandatory and KnownMask retain exact 0/1 values. None/Lz4/Zstd/Deflate retain 0..3 and all three former Reserved aliases equal their assigned codecs. Actual compression capability, stored/logical sizes and expansion budgets remain the focused read-limit workflow rather than being inferred from identifiers. |
+| `CnbAssetTypeId` constants and helpers | Invalid and all eleven assigned built-ins retain exact 0..11 values and diagnostic names; reserved/custom ranges begin at `0x40000000`/`0x80000000`, with boundary classification and unknown/custom hexadecimal rendering. `CnaDemos.GameRules` hashes deterministically to `0xE7632F12`, while an empty canonical name is refused. The existing collision pair proves why full metadata identity remains required after hashing. |
+| `CnbLogicalNameProblem`; `CnbContainerChunk` IDs | Contained and embedded-dot names pass. Empty, malformed UTF-8, backslash, absolute, drive-qualified and parent-segment forms receive their documented classifications. Existing XREF writing independently proves enforcement. `CMET` and `XREF` IDs are exact, and the writer/parser workflows prove their singleton metadata/reference roles. |
+
+All 45 declarations have exact constant, value, helper, enforcement or compile-time evidence. This
+is a byte/container contract audit; it adds no claim about a platform whose compiler fails the
+header's IEEE assertions or about an unavailable compression implementation.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,
