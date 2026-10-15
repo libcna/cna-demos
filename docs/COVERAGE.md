@@ -707,6 +707,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::FontTextureProcessor::Process` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::FontTextureProcessor::SelectedByNameOnly` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::FontTextureProcessor::ValidateParameters` -- content.sprite_font.pipeline_contract
+- `CNA::Content::Pipeline::FromXnaTargetPlatform` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::GenerateRgbaMipChain` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::GltfImporter::Identity` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::GltfImporter::Import` -- content.model.pipeline_contract
@@ -794,6 +795,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::RegisterXnaImporter` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaModelSourceContentPipeline` -- content.model.xna_source_pipeline
 - `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.nested_builds, content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::RegisterXnaProcessorWithoutAttribute` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline
 - `CNA::Content::Pipeline::RegisterXnbContentPipeline` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::RegisterXnbOutputContentPipeline` -- content.xnb.output_pipeline
@@ -865,6 +867,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::TextureProcessor::ValidateParameters` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::TextureResizeToPowerOfTwoParameter` -- content.texture_processor.pipeline_contract, content.texture_processor.resize_to_power_of_two
 - `CNA::Content::Pipeline::ToCnbSoundEffect` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::ToOpaqueData` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ToProcessorParameters` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ToXnaTargetPlatform` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::TryParseTextureBuildFormat` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::VideoContentWriter::Identity` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::VideoContentWriter::InputType` -- content.video.pipeline_components
@@ -898,6 +903,15 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::WavSongImporter::SelectedByNameOnly` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::WavSongImporter::SourceExtensions` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::WavSongImporter::WavSongImporter` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::XnaComponentMetadata::Catalog` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::XnaComponentMetadata::XnaClassName` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::XnaImporterMetadata::Attribute` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::XnaImporterMetadata::OutputTypeName` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::XnaProcessorMetadata::Attribute` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::XnaProcessorMetadata::HasAttribute` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::XnaProcessorMetadata::InputTypeName` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::XnaProcessorMetadata::OutputTypeName` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::XnaProcessorMetadata::Parameters` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::XnbImporter::Identity` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::XnbImporter::Import` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::XnbImporter::OutputTypes` -- content.xnb.pipeline_transcode
@@ -1507,6 +1521,17 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::ExternalReference` -- content.custom.intermediate_external_references, content.custom.nested_builds
 - `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::Filename` -- content.custom.intermediate_external_references
 - `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::Errors` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ImporterAttributes` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ImporterNames` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ImporterOutputTypes` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ProcessorAttributes` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ProcessorInputTypes` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ProcessorNames` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ProcessorOutputTypes` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ProcessorParameters` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::Update` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ProcessorParameterBindings::Add` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Compiler::ContentCompiler::AddTypeWriter` -- content.custom.xml_xnb_pipeline
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Compiler::ContentCompiler::Compile` -- content.custom.xml_xnb_pipeline

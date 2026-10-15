@@ -2857,8 +2857,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   warnings and inspect `result.parameters.Values()`.
 - **Observed:** the build succeeds, warns once for each rejected parameter and emits bytes equal
   to the default bounds. Nevertheless, both rejected entries remain in `result.parameters`.
-  The focused demo has 17 passing checks and two failures (this discrepancy plus older ISSUE-047)
-  under both displayless SOFTWARE and OPENGLES3 selections. A valid Padding override survives
+  The current focused demo has 33 passing checks and two failures (this discrepancy plus older
+  ISSUE-047) under both displayless SOFTWARE and OPENGLES3 selections. A valid Padding override survives
   removal of the unknown parameter; a missing processor input still refuses the build.
 - **Cause verified in source:** RunImportAndProcess computes a local `effective` set and supplies
   it to ContentProcessorContext, but Build later assigns `result.parameters = request.parameters`.

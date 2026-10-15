@@ -429,8 +429,10 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.custom.xna_pipeline_components`: actual XNA importer/processor adapters, default
   processor selection, typed parameter conversion/isolation, source sidecar dependency and
   nested Convert producing compiled route bounds. The extension reads a processor label dependency
-  and writes a bounds summary. With the strictness/environment extensions, 20 of 22 checks pass;
-  target platform and build configuration reach the processor and writer, while one explicit
+  and writes a bounds summary. The bridge/scanner extension brings this to 33 of 35 checks passing;
+  it directly round-trips platforms and parameters, inspects adapter metadata and scans complete,
+  filtered, missing and detached catalog states. Target platform and build configuration reach
+  the processor and writer, while one explicit
   intermediate directory reaches all three stages and holds a real processor scratch file.
   AddOutputFile refuses the configured separate output root (ISSUE-047), and returned effective
   parameters retain entries dropped by XnaCompatible (ISSUE-048). Defaulted compiled bounds,
@@ -10563,3 +10565,31 @@ Generated coverage remains303/329 XNA types,2114/2326 members,674/753 fields and
 with no absent IDs. Evidence is archived under
 `build/linux-full/reports/checkpoint-990-complete-*`. Continue with the one-function
 `XnaModelBridge.hpp` conversion and adjacent `XnaPipelineBridge.hpp` adapter families.
+
+## Focused991-XNA-pipeline-bridge-metadata-and-scanner
+
+The stable `content.custom.xna_pipeline_components` workflow adds thirteen passing controls while
+retaining its two established ISSUE-047/048 failures. All three canonical target platforms
+round-trip through the XNA enum. Every canonical parameter variant boxes under its exact XNA type
+and round-trips; 32-bit numeric boxes widen, a `Vector2` receives the processor parser's text form,
+and an unsupported game object is refused with its stable type name.
+
+The registered importer and processor adapters expose exact class/catalog/attribute/type and
+parameter metadata. A third processor registered without an attribute stays discoverable but is
+correctly absent from the attribute dictionary. The public `PipelineComponentScanner` covers both
+constructors, all nine result properties and both `Update` overloads: a complete scan is sorted,
+an identical scan reports no change, a catalog filter removes the hidden component, a known
+dependency catalog is accepted while a missing scanned catalog produces one error, and a detached
+scanner remains empty.
+
+The warning-free incremental build uses at most three jobs and metadata remains691/0. Ten
+SOFTWARE-labelled and ten OPENGLES3-labelled direct runs each report33 passes and the same two
+expected failures with normalized stdout SHA-256
+`ab7718b8c6a6a3acb983f170f06931d09b4e2c681b8bf7d6a7b6eba2db7b0434` and empty stderr. The exact
+known-issue SOFTWARE CTest passes ten repetitions; CLI/catalog checks and validator/checkpoint
+self-tests pass. Generated runtime totals remain303/329 XNA types,2114/2326 members,674/753 fields
+and3078/3205 C routes because the build-time pipeline surface is outside that runtime inventory;
+25 newly direct public names enter the extension appendix. Evidence:
+`/tmp/checkpoint-991-xna-bridge-*`. No new CNA defect appeared. Audit the direct
+`XnaModelBridge::ToCanonicalModel` conversion next, then finish remaining context/logger and direct
+XNB-output registration dispositions.

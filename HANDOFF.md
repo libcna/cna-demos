@@ -3497,9 +3497,11 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete990 is the authoritative691-demo full-build/full-runtime baseline and
-absorbs Focused982-989 after Complete981. Continue the public build-time bridge audit with the
-one-function `XnaModelBridge.hpp` conversion and the adjacent `XnaPipelineBridge.hpp` adapter
-families, reusing the existing model-source and custom-pipeline evidence before adding an ID.
+absorbs Focused982-989 after Complete981. Focused991 directly closes the platform/parameter
+conversion, adapter-metadata, attribute-free registration and `PipelineComponentScanner` portions
+of `XnaPipelineBridge.hpp` in the stable custom-pipeline demo. Continue with the one-function
+`XnaModelBridge.hpp` conversion, then finish the remaining bridge context/logger and direct
+`RegisterXnaXnbOutput` dispositions by extending existing workflows before adding an ID.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3594,8 +3596,15 @@ including typed accessors, plain/compressed arrays and every error/limit declara
 Focused989 adds the end-to-end XNA model source workflow: its one registration call contributes
 all five promised components, both extensions select the intended importers, both intentional
 material-writer absences are visible, and real `.x`/`.fbx` triangles reach valid CNB and XNB Model
-bytes with exact shared geometry/material resources. Audit `XnaModelBridge.hpp` and the adjacent
-public `XnaPipelineBridge.hpp` adapter families against existing evidence next.
+bytes with exact shared geometry/material resources. Focused991 extends the stable XNA component
+demo with all platform/parameter conversion helpers, importer/processor metadata, attribute-free
+registration and both scanner update forms, including filtered, missing-catalog and detached
+behavior. The `-j3` build, metadata691/0, exact known-issue CTest repeated ten times, both
+renderer-labelled 33-pass/two-expected-failure runs repeated ten times, four CLI/catalog tests and
+the5/5 plus4/4 tool self-tests all pass; normalized stdout SHA-256 is
+`ab7718b8c6a6a3acb983f170f06931d09b4e2c681b8bf7d6a7b6eba2db7b0434`. Audit
+`XnaModelBridge.hpp`, then close remaining context/logger and direct XNB-output registration
+behavior. Evidence:`/tmp/checkpoint-991-xna-bridge-*`.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

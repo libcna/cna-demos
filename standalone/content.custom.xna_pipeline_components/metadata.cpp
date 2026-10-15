@@ -4,11 +4,24 @@
 CNA_DEMOS_STANDALONE({
     .id = "content.custom.xna_pipeline_components",
     .title = "XNA component adapters and nested conversion",
-    .description = "Registers XNA-shaped importer and processor classes with CNA's coordinator, converts route "
+    .description = "Registers and scans XNA-shaped importer and processor classes with CNA's coordinator, "
+                   "inspects their adapter metadata, round-trips bridge platforms and parameters, converts route "
                    "units through another processor, records a sidecar dependency and compiles padded bounds; "
                    "checks build-environment propagation, strict versus warning/default parameter handling, "
                    "processor dependencies and a generated route summary.",
     .apis = {"CNA::Content::Pipeline::RegisterXnaImporter", "CNA::Content::Pipeline::RegisterXnaProcessor",
+             "CNA::Content::Pipeline::RegisterXnaProcessorWithoutAttribute",
+             "CNA::Content::Pipeline::ToXnaTargetPlatform", "CNA::Content::Pipeline::FromXnaTargetPlatform",
+             "CNA::Content::Pipeline::ToOpaqueData", "CNA::Content::Pipeline::ToProcessorParameters",
+             "CNA::Content::Pipeline::XnaComponentMetadata::XnaClassName",
+             "CNA::Content::Pipeline::XnaComponentMetadata::Catalog",
+             "CNA::Content::Pipeline::XnaImporterMetadata::Attribute",
+             "CNA::Content::Pipeline::XnaImporterMetadata::OutputTypeName",
+             "CNA::Content::Pipeline::XnaProcessorMetadata::Attribute",
+             "CNA::Content::Pipeline::XnaProcessorMetadata::HasAttribute",
+             "CNA::Content::Pipeline::XnaProcessorMetadata::InputTypeName",
+             "CNA::Content::Pipeline::XnaProcessorMetadata::OutputTypeName",
+             "CNA::Content::Pipeline::XnaProcessorMetadata::Parameters",
              "CNA::Content::Pipeline::ContentPipeline::Build",
              "CNA::Content::Pipeline::ContentBuildEnvironment::targetPlatform",
              "CNA::Content::Pipeline::ContentBuildEnvironment::buildConfiguration",
@@ -29,8 +42,19 @@ CNA_DEMOS_STANDALONE({
              "Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::IntermediateDirectory",
              "Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::TargetPlatform",
              "Microsoft::Xna::Framework::Content::Pipeline::ProcessorParameterBindings::Add",
-             "Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue"},
-    .tags = {"content", "custom", "pipeline", "parameters", "dependencies", "cnaext"},
+             "Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue",
+             "Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner",
+             "Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::Errors",
+             "Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ImporterAttributes",
+             "Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ImporterNames",
+             "Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ImporterOutputTypes",
+             "Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ProcessorAttributes",
+             "Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ProcessorInputTypes",
+             "Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ProcessorNames",
+             "Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ProcessorOutputTypes",
+             "Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ProcessorParameters",
+             "Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::Update"},
+    .tags = {"content", "custom", "pipeline", "parameters", "dependencies", "scanner", "cnaext"},
     .assets = {"custom/patrol.route", "custom/patrol.scale"},
     .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild. "
                     "ISSUE-048: returned effective parameters retain dropped entries. Compiled CNB bytes are inspected in memory. Temporary source/output files are removed; explicit builds do not establish incremental caching.",

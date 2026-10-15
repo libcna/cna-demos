@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // Port XNA-shaped components into CNA's real coordinator, including a nested conversion.
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <chrono>
 #include <filesystem>
@@ -22,6 +23,7 @@
 #include "CNA/Content/Cnb/CnbWriter.hpp"
 #include "CNA/Content/Pipeline/XnaPipelineBridge.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/InvalidContentException.hpp"
+#include "Microsoft/Xna/Framework/Content/Pipeline/PipelineComponentScanner.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
 
@@ -35,6 +37,9 @@ namespace
     constexpr const char* ImporterName = "CnaDemos.UnitRouteImporter";
     constexpr const char* ScaleName = "CnaDemos.PointScaleProcessor";
     constexpr const char* BoundsName = "CnaDemos.RouteBoundsProcessor";
+    constexpr const char* HiddenScaleName = "CnaDemos.UnattributedScaleProcessor";
+    constexpr const char* RouteCatalog = "CnaDemos.RoutePipeline";
+    constexpr const char* HiddenCatalog = "CnaDemos.HiddenPipeline";
     constexpr const char* BoundsType = "CnaDemos.RouteBounds";
     constexpr auto BoundsChunk = Cnb::MakeChunkId('B', 'N', 'D', 'S');
 
@@ -284,10 +289,129 @@ int main()
         auto registry = std::make_shared<Pipeline::ContentPipelineRegistry>();
         Xna::ContentImporterAttribute importer(".route");
         importer.setDefaultProcessorProperty(BoundsName);
-        Pipeline::RegisterXnaImporter<UnitRouteImporter>(*registry, ImporterName, importer);
-        Pipeline::RegisterXnaProcessor<PointScaleProcessor>(*registry, ScaleName, Xna::ContentProcessorAttribute{});
-        Pipeline::RegisterXnaProcessor<RouteBoundsProcessor>(*registry, BoundsName, Xna::ContentProcessorAttribute{});
+        importer.setDisplayNameProperty("Route points");
+        Xna::ContentProcessorAttribute scaleAttribute;
+        scaleAttribute.setDisplayNameProperty("Scale route points");
+        Xna::ContentProcessorAttribute boundsAttribute;
+        boundsAttribute.setDisplayNameProperty("Compute route bounds");
+        Pipeline::RegisterXnaImporter<UnitRouteImporter>(*registry, ImporterName, importer, "3", RouteCatalog);
+        Pipeline::RegisterXnaProcessor<PointScaleProcessor>(*registry, ScaleName, scaleAttribute, "3", RouteCatalog);
+        Pipeline::RegisterXnaProcessor<RouteBoundsProcessor>(*registry, BoundsName, boundsAttribute, "3", RouteCatalog);
+        Pipeline::RegisterXnaProcessorWithoutAttribute<PointScaleProcessor>(
+            *registry, HiddenScaleName, "3", HiddenCatalog);
         registry->RegisterWriter(std::make_shared<BoundsWriter>());
+
+        const std::array platforms{
+            Pipeline::ContentTargetPlatform::Windows,
+            Pipeline::ContentTargetPlatform::Xbox360,
+            Pipeline::ContentTargetPlatform::WindowsPhone,
+        };
+        bool platformsRoundTrip = true;
+        for (const auto platform : platforms)
+            platformsRoundTrip &= Pipeline::FromXnaTargetPlatform(Pipeline::ToXnaTargetPlatform(platform)) == platform;
+        check(platformsRoundTrip,
+              "all canonical target platforms round-trip through their XNA-shaped values");
+
+        Pipeline::ContentProcessorParameters canonicalParameters;
+        canonicalParameters.Set("Boolean", true);
+        canonicalParameters.Set("Signed", std::int64_t{-7});
+        canonicalParameters.Set("Unsigned", std::uint64_t{9});
+        canonicalParameters.Set("Floating", 2.5);
+        canonicalParameters.Set("Text", std::string("route"));
+        const auto opaqueParameters = Pipeline::ToOpaqueData(canonicalParameters);
+        check(opaqueParameters.getCountProperty() == 5 && Xna::Holds<bool>(opaqueParameters["Boolean"]) &&
+                  Xna::Unbox<bool>(opaqueParameters["Boolean"]) &&
+                  Xna::Holds<std::int64_t>(opaqueParameters["Signed"]) &&
+                  Xna::Unbox<std::int64_t>(opaqueParameters["Signed"]) == -7 &&
+                  Xna::Holds<std::uint64_t>(opaqueParameters["Unsigned"]) &&
+                  Xna::Unbox<std::uint64_t>(opaqueParameters["Unsigned"]) == 9 &&
+                  Xna::Holds<double>(opaqueParameters["Floating"]) &&
+                  Xna::Unbox<double>(opaqueParameters["Floating"]) == 2.5 &&
+                  Xna::Holds<std::string>(opaqueParameters["Text"]) &&
+                  Xna::Unbox<std::string>(opaqueParameters["Text"]) == "route",
+              "canonical processor parameter variants box under their exact XNA types");
+        check(Pipeline::ToProcessorParameters(opaqueParameters) == canonicalParameters,
+              "the boxed XNA parameter dictionary round-trips to the canonical ordered set");
+        Xna::OpaqueDataDictionary forwardedParameters;
+        forwardedParameters.SetValue<std::int32_t>("Signed", -3);
+        forwardedParameters.SetValue<std::uint32_t>("Unsigned", 4);
+        forwardedParameters.SetValue<float>("Floating", 1.25f);
+        forwardedParameters.SetValue<Vector2>("Point", Vector2(2.0f, -5.5f));
+        const auto forwarded = Pipeline::ToProcessorParameters(forwardedParameters);
+        check(forwarded.Find("Signed") && std::holds_alternative<std::int64_t>(*forwarded.Find("Signed")) &&
+                  std::get<std::int64_t>(*forwarded.Find("Signed")) == -3 &&
+                  forwarded.Find("Unsigned") && std::holds_alternative<std::uint64_t>(*forwarded.Find("Unsigned")) &&
+                  std::get<std::uint64_t>(*forwarded.Find("Unsigned")) == 4 &&
+                  forwarded.Find("Floating") && std::holds_alternative<double>(*forwarded.Find("Floating")) &&
+                  std::get<double>(*forwarded.Find("Floating")) == 1.25 &&
+                  forwarded.Find("Point") && std::holds_alternative<std::string>(*forwarded.Find("Point")) &&
+                  std::get<std::string>(*forwarded.Find("Point")) == "2,-5.5",
+              "narrow numeric boxes widen and a forwarded Vector2 receives its parseable text spelling");
+        Xna::OpaqueDataDictionary unsupportedParameters;
+        unsupportedParameters.Set("Route", Xna::Box<RoutePoints>(RoutePoints{}));
+        bool unsupportedParameterRefused = false;
+        try { (void)Pipeline::ToProcessorParameters(unsupportedParameters); }
+        catch (const std::invalid_argument& error)
+        {
+            unsupportedParameterRefused = std::string(error.what()).find("CnaDemos.RoutePoints") != std::string::npos;
+        }
+        check(unsupportedParameterRefused,
+              "a boxed object without a canonical or text parameter representation is refused by type");
+
+        const auto registeredImporter = registry->ResolveImporter("patrol.route", ImporterName);
+        const auto registeredBounds = registry->ResolveProcessor(RoutePoints::XnaTypeName.data(), BoundsName);
+        const auto registeredHidden = registry->ResolveProcessor(RoutePoints::XnaTypeName.data(), HiddenScaleName);
+        const auto* importerMetadata = dynamic_cast<const Pipeline::XnaImporterMetadata*>(registeredImporter.get());
+        const auto* boundsMetadata = dynamic_cast<const Pipeline::XnaProcessorMetadata*>(registeredBounds.get());
+        const auto* hiddenMetadata = dynamic_cast<const Pipeline::XnaProcessorMetadata*>(registeredHidden.get());
+        check(importerMetadata && importerMetadata->XnaClassName() == ImporterName &&
+                  importerMetadata->Catalog() == RouteCatalog &&
+                  importerMetadata->Attribute().getDisplayNameProperty() == "Route points" &&
+                  importerMetadata->OutputTypeName() == RoutePoints::XnaTypeName,
+              "the importer adapter exposes its class, catalog, attribute and output type metadata");
+        check(boundsMetadata && boundsMetadata->XnaClassName() == BoundsName &&
+                  boundsMetadata->Catalog() == RouteCatalog && boundsMetadata->HasAttribute() &&
+                  boundsMetadata->Attribute().getDisplayNameProperty() == "Compute route bounds" &&
+                  boundsMetadata->InputTypeName() == RoutePoints::XnaTypeName &&
+                  boundsMetadata->OutputTypeName() == BoundsType &&
+                  boundsMetadata->Parameters().getCountProperty() == 2 &&
+                  boundsMetadata->Parameters().Find("ExportSummary") &&
+                  boundsMetadata->Parameters().Find("Padding"),
+              "the processor adapter exposes its declared types, attribute and two parameter bindings");
+        check(hiddenMetadata && hiddenMetadata->XnaClassName() == HiddenScaleName &&
+                  hiddenMetadata->Catalog() == HiddenCatalog && !hiddenMetadata->HasAttribute() &&
+                  hiddenMetadata->InputTypeName() == RoutePoints::XnaTypeName &&
+                  hiddenMetadata->OutputTypeName() == RoutePoints::XnaTypeName,
+              "the attribute-free processor registration remains discoverable with its own catalog");
+
+        Xna::PipelineComponentScanner scanner(registry);
+        const std::vector<std::string> allProcessorNames{ScaleName, BoundsName, HiddenScaleName};
+        check(scanner.Update({}) && scanner.getErrorsProperty().empty() &&
+                  scanner.getImporterNamesProperty() == std::vector<std::string>{ImporterName} &&
+                  scanner.getProcessorNamesProperty() == allProcessorNames,
+              "an unfiltered component scan returns every registered XNA importer and processor in name order");
+        check(scanner.getImporterAttributesProperty().at(ImporterName).getDefaultProcessorProperty() == BoundsName &&
+                  scanner.getImporterOutputTypesProperty().at(ImporterName) == RoutePoints::XnaTypeName &&
+                  scanner.getProcessorAttributesProperty().size() == 2 &&
+                  scanner.getProcessorAttributesProperty().count(HiddenScaleName) == 0 &&
+                  scanner.getProcessorInputTypesProperty().at(BoundsName) == RoutePoints::XnaTypeName &&
+                  scanner.getProcessorOutputTypesProperty().at(BoundsName) == BoundsType &&
+                  scanner.getProcessorParametersProperty().at(BoundsName).getCountProperty() == 2,
+              "scanner dictionaries preserve registration attributes, types and parameter descriptions");
+        check(!scanner.Update({}) && scanner.Update({RouteCatalog}) &&
+                  scanner.getImporterNamesProperty() == std::vector<std::string>{ImporterName} &&
+                  scanner.getProcessorNamesProperty() == std::vector<std::string>{ScaleName, BoundsName},
+              "an unchanged scan reports no change while a catalog filter removes the hidden component");
+        check(scanner.Update({"Missing.RouteCatalog"}, {HiddenCatalog}) &&
+                  scanner.getImporterNamesProperty().empty() && scanner.getProcessorNamesProperty().empty() &&
+                  scanner.getErrorsProperty().size() == 1 &&
+                  scanner.getErrorsProperty().front().find("Missing.RouteCatalog") != std::string::npos,
+              "the dependency overload accepts a known dependency catalog and reports one missing scanned catalog");
+        Xna::PipelineComponentScanner detachedScanner;
+        check(!detachedScanner.Update({}) && detachedScanner.getImporterNamesProperty().empty() &&
+                  detachedScanner.getProcessorNamesProperty().empty() && detachedScanner.getErrorsProperty().empty(),
+              "a default-constructed scanner stays empty and reports no registry change");
+
         const Pipeline::ContentPipeline pipeline(registry);
         Pipeline::ContentBuildRequest request;
         request.sourceRoot = CnaDemos::ExecutableDirectory() / "assets";

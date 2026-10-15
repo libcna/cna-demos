@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the XNA component workflow with direct bridge platform/parameter conversions, adapter
+  metadata, attribute-free registration and complete catalog-scanner behavior.
 - Refreshed the complete runtime baseline at 691 demos: all 704 enabled CTests and both full
   renderer smoke suites complete with every catalog ID present and zero unexpected results.
 - Added an end-to-end XNA model source-pipeline workflow covering the five-component registration
