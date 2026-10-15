@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MS-PL
 """Original tagged tones for isolated MediaLibrary import demos.
 
-All PCM samples and tags are authored here. The embedded-art track also carries one of this
-project's generated PNGs. A compact format matrix covers MediaLibrary's Ogg/OGA, MP3, FLAC and
+All PCM samples and tags are authored here. The embedded-art tracks also carry this project's
+generated PNGs. A compact format matrix covers MediaLibrary's Ogg/OGA, MP3, FLAC and
 Opus tag paths; the demos use an existing WAV for the filename fallback. ffmpeg encodes the
 original audio and muxes that image; committed fixtures let demo users run without the encoder
 installed.
@@ -22,6 +22,11 @@ TRACKS = (
 EMBEDDED_TRACK = (
     'track_embedded.flac', 'Inside', 'Embedded Ensemble', 'Inner Notes', 1, 330.0, 5000,
     'textures/gradient.png',
+)
+
+EMBEDDED_MP3_TRACK = (
+    'track_embedded_mp3.mp3', 'Pocket', 'MP3 Ensemble', 'ID3 Pictures', 1, 280.0, 3600,
+    'textures/checker.png',
 )
 
 FORMAT_TRACKS = (
@@ -59,6 +64,22 @@ def write_all(assets_root: Path) -> None:
                '-i', 'pipe:0', '-i', str(assets_root / art), '-map', '0:a', '-map', '1:v:0',
                '-map_metadata', '-1', '-fflags', '+bitexact', '-flags:a', '+bitexact',
                '-c:a', 'flac', '-c:v', 'copy', '-disposition:v', 'attached_pic',
+               '-metadata', 'title=' + title, '-metadata', 'artist=' + artist,
+               '-metadata', 'album=' + album, '-metadata', 'genre=Instrumental',
+               '-metadata', 'track=' + str(track), str(destination)]
+    subprocess.run(command, input=pcm, check=True)
+    print(f'wrote {destination} ({destination.stat().st_size} bytes, embedded {art})')
+
+    name, title, artist, album, track, frequency, count, art = EMBEDDED_MP3_TRACK
+    pcm = b''.join(struct.pack('<h', int(12000 * math.sin(2 * math.pi * frequency * i / 16000)
+                     * min(1.0, i / 80, (count - i) / 80))) for i in range(count))
+    destination = folder / name
+    command = [encoder, '-loglevel', 'error', '-y', '-f', 's16le', '-ar', '16000', '-ac', '1',
+               '-i', 'pipe:0', '-i', str(assets_root / art), '-map', '0:a', '-map', '1:v:0',
+               '-map_metadata', '-1', '-fflags', '+bitexact', '-flags:a', '+bitexact',
+               '-c:a', 'libmp3lame', '-b:a', '48k', '-id3v2_version', '4', '-write_id3v1', '0',
+               '-c:v', 'copy', '-disposition:v', 'attached_pic',
+               '-metadata:s:v', 'title=Album cover', '-metadata:s:v', 'comment=Cover (front)',
                '-metadata', 'title=' + title, '-metadata', 'artist=' + artist,
                '-metadata', 'album=' + album, '-metadata', 'genre=Instrumental',
                '-metadata', 'track=' + str(track), str(destination)]

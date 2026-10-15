@@ -112,14 +112,16 @@ namespace
         check(pictureIsPrivate && musicIsPrivate, "both media roots resolve to private fixture directories before library access");
 
         const auto covered = music / "covered", bare = music / "bare", embedded = music / "embedded";
+        const auto embeddedMp3 = music / "embedded-mp3";
         std::filesystem::create_directory(covered);
         std::filesystem::create_directory(bare);
         std::filesystem::create_directory(embedded);
-        // The private folders hold one tagged album each; one gets a folder cover, one has no art,
-        // and one carries an embedded FLAC PICTURE block.
+        std::filesystem::create_directory(embeddedMp3);
+        // The private folders hold one tagged album each: folder cover, no art, FLAC PICTURE and
+        // MP3 ID3v2 APIC.
         for (const auto& [name, folder] : std::vector<std::pair<std::string, std::filesystem::path>>{
                  {"track_a.flac", covered}, {"track_c.flac", bare},
-                 {"track_embedded.flac", embedded}})
+                 {"track_embedded.flac", embedded}, {"track_embedded_mp3.mp3", embeddedMp3}})
         {
             const auto input = TitleContainer::OpenStream("assets/media/library_music/" + name);
             const auto bytes = ReadBytes(*input);
@@ -132,6 +134,8 @@ namespace
         const auto encoded = ReadBytes(*coverInput);
         const auto embeddedArtInput = TitleContainer::OpenStream("assets/textures/gradient.png");
         const auto embeddedArtBytes = ReadBytes(*embeddedArtInput);
+        const auto mp3ArtInput = TitleContainer::OpenStream("assets/textures/checker.png");
+        const auto mp3ArtBytes = ReadBytes(*mp3ArtInput);
         {
             std::ofstream output(covered / "cover.png", std::ios::binary);
             output.write(reinterpret_cast<const char*>(encoded.data()), static_cast<std::streamsize>(encoded.size()));
@@ -144,11 +148,12 @@ namespace
         {
             MediaLibrary library;
             auto* albums = library.getAlbumsProperty();
-            if (!check(albums && albums->getCountProperty() == 3,
-                       "three private tagged folders create three albums")) return 1;
+            if (!check(albums && albums->getCountProperty() == 4,
+                       "four private tagged folders create four albums")) return 1;
             Album* withArt = nullptr;
             Album* withoutArt = nullptr;
             Album* withEmbeddedArt = nullptr;
+            Album* withMp3EmbeddedArt = nullptr;
             for (int i = 0; i < albums->getCountProperty(); ++i)
             {
                 auto* album = (*albums)[i];
@@ -157,10 +162,13 @@ namespace
                 if (album->getArtistProperty()->getNameProperty() == "Second Ensemble") withoutArt = album;
                 if (album->getArtistProperty()->getNameProperty() == "Embedded Ensemble")
                     withEmbeddedArt = album;
+                if (album->getArtistProperty()->getNameProperty() == "MP3 Ensemble")
+                    withMp3EmbeddedArt = album;
             }
-            if (!check(withArt && withoutArt && withEmbeddedArt && withArt->getHasArtProperty() &&
-                           !withoutArt->getHasArtProperty() && withEmbeddedArt->getHasArtProperty(),
-                       "HasArt distinguishes folder, embedded and missing album art")) return 1;
+            if (!check(withArt && withoutArt && withEmbeddedArt && withMp3EmbeddedArt &&
+                           withArt->getHasArtProperty() && !withoutArt->getHasArtProperty() &&
+                           withEmbeddedArt->getHasArtProperty() && withMp3EmbeddedArt->getHasArtProperty(),
+                       "HasArt distinguishes folder, FLAC/MP3 embedded and missing album art")) return 1;
             bool missingOriginal = false, missingThumbnail = false;
             try { std::unique_ptr<System::IO::Stream> unused(withoutArt->GetAlbumArt()); }
             catch (const System::InvalidOperationException&) { missingOriginal = true; }
@@ -193,6 +201,17 @@ namespace
                       ReadBytes(*secondEmbeddedThumbnail) == embeddedArtBytes && embeddedPreview &&
                       embeddedPreview->getWidthProperty() == 128 && embeddedPreview->getHeightProperty() == 128,
                   "embedded art and its independent thumbnail streams preserve the exact decodable PNG");
+
+            std::unique_ptr<System::IO::Stream> mp3Original(withMp3EmbeddedArt->GetAlbumArt());
+            std::unique_ptr<System::IO::Stream> firstMp3Thumbnail(withMp3EmbeddedArt->GetThumbnail());
+            std::unique_ptr<System::IO::Stream> secondMp3Thumbnail(withMp3EmbeddedArt->GetThumbnail());
+            const auto mp3ThumbnailBytes = ReadBytes(*firstMp3Thumbnail);
+            Picture* mp3Preview = library.SavePicture("Mp3AlbumPreview.png", mp3ThumbnailBytes);
+            check(ReadBytes(*mp3Original) == mp3ArtBytes &&
+                      firstMp3Thumbnail != secondMp3Thumbnail && mp3ThumbnailBytes == mp3ArtBytes &&
+                      ReadBytes(*secondMp3Thumbnail) == mp3ArtBytes && mp3Preview &&
+                      mp3Preview->getWidthProperty() == 64 && mp3Preview->getHeightProperty() == 64,
+                  "ID3v2 APIC art and independent thumbnails preserve the exact decodable PNG");
         }
         // Album and Picture pointers are now invalid; the independently owned streams survive.
         original->setPositionProperty(0);
@@ -200,8 +219,7 @@ namespace
         check(ReadBytes(*original) == encoded && ReadBytes(*thumbnail) == thumbnailBytes,
               "caller-owned cover and thumbnail streams remain readable after library destruction");
 
-        const auto preferredInput = TitleContainer::OpenStream("assets/textures/checker.png");
-        const auto preferredBytes = ReadBytes(*preferredInput);
+        const auto& preferredBytes = mp3ArtBytes;
         const auto lowerPriorityInput = TitleContainer::OpenStream("assets/textures/arrow.png");
         const auto lowerPriorityBytes = ReadBytes(*lowerPriorityInput);
         for (const auto& [path, bytes] :

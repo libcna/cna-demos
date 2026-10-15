@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the public album-art workflow with an original ID3v2.4 MP3/APIC fixture, proving exact
+  embedded PNG extraction, independent thumbnail streams and public 64x64 decoding.
 - Added a public MediaLibrary format-index workflow covering Ogg/OGA, MP3, WAV, FLAC and Opus,
   four tag layouts, rating/track propagation, path fallback, recursion, extension filtering and a
   self-referential directory symlink.

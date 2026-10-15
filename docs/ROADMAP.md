@@ -9102,3 +9102,20 @@ and3078/3205 C routes. Complete871's older reports correctly mark the two post-b
 absent. Evidence:`/tmp/checkpoint-889-*`. No CNA defect, playback, listening, malformed-tag,
 screenshot or other-platform claim is made. Audit the public MP3 APIC embedded-art path next, then
 partial/malformed tag fallback and external-directory symlink policy.
+
+## Focused890-public-MP3-APIC-album-art
+
+The existing album-art workflow grows19->20 controls with the distinct ID3v2 APIC extraction path.
+A new original tagged MP3 carries the generated64x64 checker PNG as a real APIC front cover. Its
+hash is stable across two generator runs and all prior music/format assets stay byte-identical. A
+public MediaLibrary scan creates a fourth Album with HasArt; GetAlbumArt returns the exact PNG, two
+GetThumbnail calls return distinct caller-owned streams with the same bytes, and public SavePicture
+decodes them as64x64. This complements the existing native-FLAC PICTURE evidence without another
+demo ID.
+
+Both direct renderer-labelled runs pass20/20 with byte-identical stdout and stderr; stderr contains
+the same sixteen reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes20 repetitions
+and the clean incremental build uses at most three jobs. Metadata remains657/0 and coverage totals
+do not change. Evidence:`/tmp/checkpoint-890-*`. No CNA defect, playback, listening, screenshot or
+manual visual-quality claim is made. Classify partial/malformed tag fallback and external-directory
+symlink policy next, then run a full657-demo checkpoint.

@@ -2013,12 +2013,11 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete871 remains the authoritative655-demo full-runtime baseline; Focused887
-and Focused889 add two separately validated MediaLibrary demos, while Focused888 completes folder-
-art filename selection. Continue the semantic Media audit with the untested MP3 ID3v2 APIC embedded-
-art path through public Album.GetAlbumArt/GetThumbnail, preferably by extending the existing
-`album_art` workflow and deterministic generator. Then classify partial/malformed tag fallback and
-external-directory symlink policy. Run a new657-demo full checkpoint before relying on runtime-
-backed coverage for the two new IDs.
+and Focused889 add two separately validated MediaLibrary demos, while Focused888/890 close folder-
+selection and both FLAC/MP3 embedded-art branches. Continue the semantic Media audit by classifying
+partial/malformed tag fallback and external-directory symlink policy. Add runtime only for a public,
+observable contract that is not already equivalent to filename fallback or cycle termination.
+Then run a new657-demo full checkpoint so coverage includes the two post-baseline IDs.
 The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
@@ -4665,6 +4664,23 @@ older reports correctly mark this and Focused887's playlist ID absent. Evidence 
 `/tmp/checkpoint-889-*`. No CNA defect, playback, listening, malformed-tag, screenshot or other-
 platform validation is claimed. Audit the MP3 APIC embedded-art branch next, then partial/malformed
 tag fallback and external-directory symlink policy.
+
+### Focused890-public-MP3-APIC-album-art
+
+The stable `media.media_library.album_art` workflow grows19->20 controls and now covers CNA's other
+embedded-art parser through public Album behavior. The generator authors a fourth tagged album as
+an ID3v2.4 MP3 with a real PNG APIC front-cover stream. Two generator runs reproduce its exact hash
+and preserve every prior music/format asset. With no folder cover, HasArt is true, GetAlbumArt
+returns the exact embedded64x64 checker PNG, two GetThumbnail calls return distinct caller-owned
+streams with the same exact bytes, and public SavePicture decodes them as64x64. Existing FLAC
+PICTURE, missing, folder-priority, thumbnail and filename-precedence controls remain intact.
+
+Both direct renderer-labelled runs pass20/20 with byte-identical stdout and the same sixteen
+reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes20 repetitions. The clean
+incremental build uses `-j3`; metadata remains657/0 and generated coverage is unchanged. Evidence
+is under `/tmp/checkpoint-890-*`. No CNA defect, playback, listening, screenshot or manual visual-
+quality claim is made. Classify partial/malformed tag fallback and external-directory symlink
+policy next, then run a full657-demo checkpoint.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
