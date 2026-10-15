@@ -272,6 +272,25 @@ routes. Complete938
 remains the full runtime baseline, so its reports correctly mark this new ID absent. Evidence:
 `/tmp/checkpoint-940-platform-*`. No physical feature availability or CNA defect is claimed.
 
+Focused **941-native-renderer-capability-profile** extends the stable
+`graphics.device.capability_report` workflow from three to nine controls. It now consumes the
+cached `RendererCapabilityProfile` directly: all28 live detailed features have unique names,
+descriptions and non-Unknown classifications agreeing with both device query forms; all eight live
+limits are uniquely named, known and identical through profile/device access; and all27 public
+surface formats return bounded known/supported masks whose render-target bit agrees with the direct
+query. A default profile plus retired identities return explicit unknown results. All three display
+color spaces are probed and set only according to advertised support with the original restored,
+and the English report is tied back to the same structured snapshot.
+
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass9/9 with stable renderer-specific stdout hashes
+`106bd6671659437351ca4e7906a405e818111d0f71a9a1406b12d24a8bada0f3` and
+`d06b74bed37872baf2ad8a7491b41d0346d86dac25e015c238ad326b0213f964`; stderr is empty. The
+changed object compiles without warnings in a `-j3` build, metadata remains667/0 and the exact
+SOFTWARE CTest passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and
+3078/3205 C routes because this family is CNA-specific. Complete938 remains the full baseline and
+contains the earlier three-control form of this stable ID. Evidence:
+`/tmp/checkpoint-941-capability-final-*`. No pixel, visual-quality or CNA-defect claim is made.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2375,8 +2394,10 @@ families now have direct C++ evidence. Focused939 closes the ordinary native Log
 the EXPERIMENT threshold, general conditional/category delivery and a representative experimental
 conditional wrapper to the existing sink, severity and `WarnIf` workflows. Focused940 adds the
 Game-owned platform capability decision surface: all31 stable names, cached aggregate, focused
-queries and safe aggregate defaults. Continue with the next coherent public CNA header family,
-preferring an existing workflow when it already owns the behavior. The diagnostics
+queries and safe aggregate defaults. Focused941 closes the ordinary native renderer-profile
+consumer surface: detailed features, numeric limits, format-usage masks, display color spaces,
+safe unknowns and the matching English report. Continue with the next coherent public CNA header
+family, preferring an existing workflow when it already owns the behavior. The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered

@@ -9947,3 +9947,23 @@ Complete938's older full
 reports correctly mark the new ID absent. Evidence:`/tmp/checkpoint-940-platform-*`. Individual
 feature behavior remains with its focused demos or platform/manual disposition. Continue the next
 coherent native public-header family.
+
+## Focused941-native-renderer-capability-profile
+
+The stable `graphics.device.capability_report` workflow grows three to nine controls and closes the
+ordinary native structured renderer-profile surface. It validates all28 live feature identities,
+their unique names/descriptions and exact profile/device support agreement; all eight live,
+uniquely named numeric limits through both access paths; and bounded known/supported usage masks
+for all27 public surface formats, including agreement with every direct render-target verdict.
+Default and retired identities retain explicit unknown state. Probing and setting all three display
+color spaces follows advertised support and restores the original, while the complete English
+report is proven to describe the same cached profile.
+
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass9/9 with stable renderer-specific stdout hashes
+`106bd6671659437351ca4e7906a405e818111d0f71a9a1406b12d24a8bada0f3` and
+`d06b74bed37872baf2ad8a7491b41d0346d86dac25e015c238ad326b0213f964`; stderr is empty. The changed
+object compiles without warnings in a `-j3` build, metadata remains667/0 and the exact SOFTWARE
+CTest passes. Generated XNA/C totals are unchanged because this is CNA-specific. Complete938
+remains the full baseline with the earlier three-control form of the stable ID. Evidence:
+`/tmp/checkpoint-941-capability-final-*`. No pixel or visual-quality result is claimed. Continue the
+next coherent native public-header family.

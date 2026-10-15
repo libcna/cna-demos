@@ -3811,3 +3811,29 @@ SOFTWARE CTest passes.
 Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes because
 this family is CNA-specific. Complete938 remains the full baseline and correctly leaves the new ID
 absent. Evidence:`/tmp/checkpoint-940-platform-*`. No CNA defect appeared.
+
+### Focused941 native renderer capability profile
+
+The existing `graphics.device.capability_report` demo grows three to nine controls. Its live
+`RendererCapabilityProfile` reference is stable and bears the active renderer name. Every one of
+the28 defined `RendererFeature` values has a unique stable name, a description and a non-Unknown
+classification; profile `Supports` and both device query forms agree on the meaning of Supported.
+All eight defined `RendererLimit` values are uniquely named, known and identical through profile
+and device access. All27 public `SurfaceFormat` values expose bounded known/supported masks,
+supported remains a subset of known, and the render-target usage agrees with the direct query.
+
+An empty profile plus retired feature/limit and out-of-range format identities return explicit
+unknown state. The three `DisplayColorSpace` values are probed without state change and each setter
+must agree with the advertised result before restoring the original. The generated English report
+is the cached profile's own report, includes its renderer/features/limits/formats and has explicit
+additional limitations. This closes the ordinary native structured-profile consumer contract; the
+separate legacy capability demo already enumerates every coarse `GraphicsCapability`, while actual
+feature pixels and refusals stay with their focused renderer demos.
+
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass9/9 with stable renderer-specific stdout hashes
+`106bd6671659437351ca4e7906a405e818111d0f71a9a1406b12d24a8bada0f3` and
+`d06b74bed37872baf2ad8a7491b41d0346d86dac25e015c238ad326b0213f964`; stderr is empty. The changed
+object compiles without warnings with at most three jobs, metadata remains667/0 and the exact
+SOFTWARE CTest passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and
+3078/3205 C routes because this family is CNA-specific. Complete938 retains the prior three-check
+result for this stable ID. Evidence:`/tmp/checkpoint-941-capability-final-*`. No CNA defect appeared.
