@@ -4420,6 +4420,25 @@ Evidence is under `/tmp/checkpoint-878-*`. No new CNA defect, screenshot or visu
 claimed. Complete871 remains the full baseline; continue with the next deterministic
 public-behavior gap.
 
+### Focused879-corrupt-picture-thumbnail-fallback
+
+`media.media_library.save_picture` now uses the fresh replacement Picture's public path token to
+overwrite its already indexed backing file with a short invalid image. `GetThumbnail` cannot decode
+that current file and returns a caller-owned stream containing its exact twelve bytes. This closes
+the corrupt-source fallback branch without a new ID or treating the bytes as a decoded image. An
+initial failed assertion wrote `Panorama.png` instead of CNA's actual `Panorama.png.png`; source
+review found SavedPictureStore appends the sniffed extension, and switching the fixture to the
+public token corrected the demo rather than misclassifying it as a CNA defect.
+
+Serial SOFTWARE and OPENGLES3-labelled direct runs each pass31 controls and retain only the
+expected CNA-DEMOS-ISSUE-041 failure; stdout and stderr are byte-identical across labels. The exact
+known-issue SOFTWARE CTest passes20 consecutive runs. The full incremental build is clean with
+`-j3`, metadata validates655/0, both validator self-test suites pass, and regenerated coverage is
+byte-identical at302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is
+under `/tmp/checkpoint-879-*`. No new CNA defect, screenshot or visual inspection is claimed.
+Complete871 remains the full baseline. Audit the remaining stream-input row before deciding whether
+it merits runtime coverage or an explicit source-backed disposition.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

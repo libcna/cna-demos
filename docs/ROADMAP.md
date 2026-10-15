@@ -492,7 +492,8 @@ a check that all authored colors remain visible and that a blank texture row can
   picture roots before library access, vector/stream saves, borrowed picture/album views,
   caller-owned image/thumbnail streams, smaller aspect-preserving thumbnail, reindexing and a
   two-level ordinary album tree with exact parent, membership and stream checks. An already-small
-  128x64 PNG remains byte-identical through two independently owned thumbnail streams.
+  128x64 PNG remains byte-identical through two independently owned thumbnail streams; after
+  external corruption, thumbnail decoding falls back to the exact current file bytes.
   A valid stream delivering 13-byte chunks exposes ISSUE-041: SavePicture reads once and writes
   a zero-padded image. ISSUE-040 records stale thumbnail comments separately. Other platforms,
   premature/unknown-length streams and further disposal contracts remain unaudited. Same-name
@@ -8892,3 +8893,17 @@ the unchanged retry is clean. Metadata validates 655/0, both validator self-test
 coverage regeneration is byte-identical at 302/329 types, 2114/2326 members, 169/753 fields and
 3078/3205 C routes. Evidence: `/tmp/checkpoint-878-*`. No new CNA defect, screenshot or visual
 inspection is claimed.
+
+## Focused879-corrupt-picture-thumbnail-fallback
+
+The picture-library workflow now overwrites an already indexed replacement through its public path
+token with twelve invalid image bytes. `Picture::GetThumbnail` fails decoding and returns a
+caller-owned stream over those exact current bytes, closing the public corrupt-source fallback
+branch without another demo ID. A first failing fixture had guessed the physical filename and was
+corrected after source review showed SavedPictureStore appends a sniffed extension; this was a demo
+bug rather than a CNA defect. Both renderer-labelled direct runs pass thirty-one of thirty-two
+controls and retain only established ISSUE-041, with byte-identical stdout and stderr. The exact
+known-issue SOFTWARE CTest passes twenty consecutive runs. The clean incremental `-j3` build,
+metadata 655/0, both validator self-test suites and byte-identical coverage regeneration pass;
+coverage remains 302/329 types, 2114/2326 members, 169/753 fields and 3078/3205 C routes. Evidence:
+`/tmp/checkpoint-879-*`. No screenshot or visual inspection was used.

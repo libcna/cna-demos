@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Verified that Picture::GetThumbnail falls back to the exact current file bytes when thumbnail
+  decoding fails after an indexed picture is externally corrupted.
 - Verified that Picture::GetThumbnail leaves an already-small 128x64 PNG byte-identical and
   returns a separately owned stream on each call.
 - Added same-name picture-save coverage: the live library retains distinct equal snapshot views,

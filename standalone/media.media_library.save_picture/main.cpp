@@ -311,11 +311,19 @@ namespace
                       ReadImage(*firstSmallThumbnail) == thumbnailBytes &&
                       ReadImage(*secondSmallThumbnail) == thumbnailBytes,
                   "an already-small picture returns exact bytes through independent thumbnail streams");
+            const std::vector<std::uint8_t> corruptBytes{
+                'n', 'o', 't', ' ', 'a', 'n', ' ', 'i', 'm', 'a', 'g', 'e'};
+            WriteImage(std::filesystem::path(indexedReplacement->getTokenEXT()), corruptBytes);
+            std::unique_ptr<System::IO::Stream> corruptThumbnail(
+                indexedReplacement->GetThumbnail());
+            check(ReadImage(*corruptThumbnail) == corruptBytes,
+                  "thumbnail generation failure falls back to the exact current file bytes");
         }
         else
         {
             check(false, "a fresh library indexes the replacement dimensions and exact latest bytes");
             check(false, "an already-small picture returns exact bytes through independent thumbnail streams");
+            check(false, "thumbnail generation failure falls back to the exact current file bytes");
         }
 
         check(!picture->getIsDisposedProperty() && !album->getIsDisposedProperty(),

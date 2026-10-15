@@ -1135,7 +1135,7 @@ coverage credit; the Pan/3D mode row now separately records actual focused nativ
 Reviewed against CNA ce74063e6 (media source unchanged from e60fa35f7). The standalone
 `media.media_library.save_picture` configures Linux XDG before first CNA/SDL use and verifies
 both resolved roots before constructing a library. No internal path override or real user
-pictures are used. Both renderer selections reproduce 31 child checks with exactly one
+pictures are used. Both renderer selections reproduce 32 child checks with exactly one
 ISSUE-041 failure; this is filesystem/stream evidence, not visual or GPU validation.
 
 | Public behavior | Evidence / decision |
@@ -1143,7 +1143,7 @@ ISSUE-041 failure; this is filesystem/stream evidence, not visual or GPU validat
 | SavePicture byte-vector and Stream overloads | One original 640x320 PNG and its generated thumbnail save successfully. The normal memory stream is consumed. A separate valid 13-byte short-read stream exposes ISSUE-041; the independent control reader proves its full bytes are available. No workaround hides the failing CNA call. |
 | Pictures / SavedPictures / RootPictureAlbum and child album views | Empty initial collections, new Saved Pictures child, its parent identity and counts across library/album views are checked. A fresh library reindexes both saved files. PictureCollection.Item exposes the two names in either filesystem order and PictureAlbumCollection.Item exposes their shared Saved Pictures parent. The workflow then writes an ordinary `Trips/Day One` hierarchy and a fresh library exposes both levels with exact parent links. Each album contains only its own decoded 640x320 picture, whose Album points back to that node and whose owned GetImage stream matches the original PNG. Filesystem-dependent sibling ordering is deliberately not assumed. |
 | Picture Name / Width / Height / Date / Album and token identity | The immediate saved record keeps authored filename/dimensions, the borrowed parent, and a Date bounded by the SavePicture call. Its CNAEXT path token resolves the independent reopened Picture through public MediaLibrary.GetPictureFromToken; an unknown token returns null and the indexed Date is populated. Original/reopened Pictures establish path-based typed/object equality, operators, equal hashes and name text while Preview is unequal. The corresponding Saved Pictures albums establish the same contracts by path and reject a Picture object. Disposal-invalidated views remain a gap. |
-| GetImage / GetThumbnail ownership and content | Caller-owned streams use unique_ptr; full image bytes match exactly and the large panorama's thumbnail is smaller with the same 2:1 aspect. Current 128x64 output is observed, not assumed as a universal contract. A fresh indexed 128x64 replacement then returns the exact original PNG bytes from two distinct caller-owned thumbnail streams, proving the no-upscale/no-reencode branch and per-call ownership. Header contradiction is ISSUE-040. Corrupted-source fallback remains a separate error-path behavior; CNA deliberately has no thumbnail cache. |
+| GetImage / GetThumbnail ownership and content | Caller-owned streams use unique_ptr; full image bytes match exactly and the large panorama's thumbnail is smaller with the same 2:1 aspect. Current 128x64 output is observed, not assumed as a universal contract. A fresh indexed 128x64 replacement then returns the exact original PNG bytes from two distinct caller-owned thumbnail streams, proving the no-upscale/no-reencode branch and per-call ownership. The demo next overwrites that indexed file through its public path token; failed thumbnail decoding returns a stream over the exact current corrupt bytes, closing the fallback branch without treating them as an image. Header contradiction is ISSUE-040. CNA deliberately has no thumbnail cache. |
 | Stream positions, premature EOF, unknown length | Not exercised by the short-read fixture, which starts at zero with a valid known length. Extend this workflow if a distinct public contract can be established; do not infer these behaviors from ISSUE-041. |
 | MediaSource selection, tokens, same-name saves and disposal | `media_library.collections` now adopts every raw pointer returned by GetAvailableMediaSources, verifies each actual record has matching nonempty Name/ToString, and constructs its MediaLibrary from the returned Local Device record. The library exposes a distinct copied MediaSource with the same name/type/text, while its existing IsDisposed=false check is now credited. Both focused runs used fresh empty XDG music/picture roots and found zero items, leaving both directories empty. This establishes CNA's one returned desktop source and copy ownership, not wider device enumeration. Picture token lookup is demonstrated by save_picture. Saving `Panorama.png` again with the valid thumbnail bytes leaves the physical file count unchanged but appends a distinct live Picture view. The two views compare equal and share a token because identity is path-based, while each retains its creation-time dimensions. A fresh library resolves that token to one 128x64 record whose stream contains the exact replacement bytes. music_index separately proves that repeated MediaLibrary::Dispose sets IsDisposed without cascading into its borrowed graph. Evidence: `/tmp/checkpoint-645-media-source-*`, `/tmp/checkpoint-646-picture-values-*`, `/tmp/checkpoint-877-*`. |
 | Platform folder integration | Verified only on Linux/XDG; the demo skips before access if private roots cannot be confirmed. Windows/macOS/device integration requires separate environment validation. |
@@ -2881,3 +2881,17 @@ unchanged retry is clean. Metadata validates655/0, both validator self-test suit
 byte-identical coverage regeneration remains302/329 types,2114/2326 members,169/753 fields and
 3078/3205 C routes. Evidence:`/tmp/checkpoint-878-*`. No new CNA defect, screenshot or visual
 inspection is claimed.
+
+### Focused879 corrupt Picture thumbnail fallback
+
+The fresh replacement Picture's public path token now supplies a deterministic external mutation:
+the workflow overwrites the indexed file with twelve invalid image bytes, then proves
+`GetThumbnail` returns a caller-owned stream over those exact current bytes when decoding fails.
+This closes the corrupt-source fallback without another ID or a decoded-image claim. The first
+fixture failure wrote an assumed filename; source review showed SavedPictureStore appends a sniffed
+extension, so the corrected test uses the public token and records no CNA defect. Both renderer
+labels execute32 controls:31 pass and only established ISSUE-041 fails, with byte-identical stdout
+and stderr. The exact known-issue SOFTWARE CTest passes20 consecutive runs. The clean incremental
+`-j3` build, metadata655/0, both validator self-test suites and byte-identical coverage regeneration
+pass; counts remain302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-879-*`. No screenshot or visual inspection was used.
