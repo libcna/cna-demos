@@ -75,7 +75,7 @@ diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,
 standalone; 657 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete998's full runtime reports; they include all693
 catalog IDs in both renderer suites with no absent IDs.
-The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
+The surface totals are303/329 XNA types,2117/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete998's
 full runtime reports are the baseline inputs for the693-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -3515,9 +3515,12 @@ targets. Focused995 closes the `XnaXmlSourceContentPipeline.hpp` multi-compiler 
 null-refusal contract. Focused996 closes the portable Effect compiler/source service contract with
 a new real-build workflow. Focused997 closes `XmaEncoderService.hpp` through in-process and
 external-process backends. The complete public `CNA/Content/Pipeline` build-time header group now
-has semantic dispositions. Return to the generated XNA member-gap audit next, starting with the
-eight residual root `Microsoft.Xna.Framework` members and adding behavior only where an existing
-demo does not already establish it.
+has semantic dispositions. Focused999 revalidates every residual root, Audio and Content member
+disposition, then closes three genuine offline GamerServices behaviors in the existing privileges
+workflow: zero party size plus the exact `IsFriend`/`GetFriends` privilege refusals. The remaining
+74 GamerServices entries are CLR aliases, native finalizers, framework-created payloads or
+service/hardware/manual behavior. Audit the56 residual Graphics members next, adding behavior only
+where an existing demo does not already establish it.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3719,6 +3722,33 @@ comparator self-tests pass. Evidence:`build/linux-full/reports/checkpoint-998-co
 checkpoint closes the public build-time `CNA/Content/Pipeline` header group with semantic
 dispositions; return to the generated XNA member-gap audit, beginning with the eight residual root
 `Microsoft.Xna.Framework` members.
+Focused999 revalidates those eight root dispositions against pinned CNA d23e139de: the two
+CurveKeyCollection CLR enumerator names map to already exercised C++ ranges; Game and GameComponent
+finalizers map to demonstrated native destruction/Dispose; `ShowMissingRequirementMessage` remains
+a protected, uncalled default-false hook; and the three protected `GameWindow::On*` entries remain
+empty and uncalled. The seven Audio and seven Content entries retain their prior dispositions:
+native destruction, environment/manual exception paths and nominal serializer wrappers whose real
+descriptor behavior is already covered. An invalid SDL audio-driver probe reaches the production
+`NoAudioHardwareException` path and is correctly reported as a declared skip rather than synthetic
+constructor coverage.
+
+The same batch audits all77 generated GamerServices gaps and extends the stable
+`gamer_services.signed_in_gamer.privileges` workflow with the three meaningful offline members:
+`PartySize` is zero, and both `IsFriend` and `GetFriends` throw `GamerPrivilegeException` before
+online service access. Coverage moves2114->2117/2326 with no new ID. The remaining74 entries are
+explicitly dispositioned as CLR collection aliases, native finalizers, framework-created event or
+exception payloads, service-only friend/social/Guide/partner-token behavior, the unraised title-
+update event, avatar-change polling without a public offline mutation route, FriendCollection
+lifecycle obtainable only from a service snapshot, and microphone-dependent `IsHeadset`.
+
+The warning-free `-j3` build and metadata693/0 pass. Ten serial runs under each renderer label pass
+4/4 with identical stdout SHA-256
+`bf7bf411eda2d695c5764241de18e3780e644302a0939991ed0d1d5346793ca2` and empty stderr; the exact
+SOFTWARE CTest, all15 CLI tests and self-tests5/5 plus4/4 pass. The first sandboxed Xvfb attempt was
+blocked before demo entry by the X11 socket; the repeated unsandboxed OPENGLES3/Xvfb runs are the
+runtime evidence. Evidence:`/tmp/checkpoint-999-gamer-members/*`. No service connection, friend,
+party, microphone, avatar-change event, visual or manual claim is made. Audit the56 residual
+Graphics members next.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

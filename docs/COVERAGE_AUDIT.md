@@ -5056,3 +5056,46 @@ public C routes, with no absent catalog IDs. This checkpoint absorbs Focused991-
 semantic disposition for every public header in build-time `CNA/Content/Pipeline`. The next audit
 returns to the generated XNA gaps, beginning with the eight residual members in root
 `Microsoft.Xna.Framework`.
+
+### Focused999 residual root, Audio, Content and GamerServices member audit
+
+The generated gap list after Complete998 begins with eight root members. Source review against CNA
+d23e139de confirms that both `CurveKeyCollection` enumerator spellings are CLR aliases for C++
+ranges already traversed, and that `Game`/`GameComponent` finalizers map to demonstrated native
+destruction and explicit disposal. `Game::ShowMissingRequirementMessage` is a protected, uncalled
+default-false hook. `GameWindow::OnActivated`, `OnDeactivated` and `OnPaint` are protected empty
+methods without a production caller. These dispositions remain intentionally uncredited.
+
+Audio's seven gaps remain four native-lifetime finalizers and three exception constructors. A
+fresh-process invalid SDL audio-driver probe reaches the real `NoAudioHardwareException` path and
+is reported as a declared requirement skip. Missing microphone hardware remains manual, and CNA's
+production XACT capacity path still never throws `InstancePlayLimitException`. Content's seven
+gaps are the nominal collection-name, ignore, runtime-type and type-version attribute wrappers;
+the serializer consumes the already demonstrated public C++ descriptors rather than these wrapper
+objects. Synthetic construction would increase the generated count without new semantics.
+
+Of77 GamerServices gaps, three are meaningful in the existing offline privileges concept.
+`SignedInGamer::PartySize` returns zero for a local player outside a party, and both
+`SignedInGamer::IsFriend` and `SignedInGamer::GetFriends` throw `GamerPrivilegeException` before
+service access. The other74 divide as follows:
+
+| Residual family | Disposition |
+|---|---|
+| AchievementCollection, GamerCollection and PropertyDictionary CLR aliases | Their useful C++ indexing, mutation and range behavior is already exercised; the CLR-mangled names have no separate C++ entry point. |
+| AvatarAnimation/AvatarRenderer finalizers | Explicit disposal and native destruction are already demonstrated. |
+| AvatarDescription.Changed | CNA polls cached local/service avatars, but there is no public offline avatar-mutation route; the real delivery path remains service/editor dependent. |
+| FriendCollection lifecycle and FriendGamer state | These require an online service snapshot. Calling public `CreateInternal` only to manufacture a collection would not demonstrate the XNA retrieval path. |
+| Gamer lookups/tokens and Guide social calls | Gamertag lookup, partner tokens, friends, messages, invites, parties, cards, reviews, marketplace and players require configured service identities or interactive Guide UI. `DelayNotifications` only affects service invitation prompts. |
+| Event/exception constructors and InstallingTitleUpdate | Event payloads are framework-created, direct exception construction adds no failed operation, and CNA has no production raiser for InstallingTitleUpdate. |
+| SignedInGamer.IsHeadset | Requires an enumerated microphone and remains in the manual microphone workflow. |
+
+The warning-free `-j3` build and metadata693/0 pass. Ten serial direct runs per renderer label pass
+4/4 with identical stdout SHA-256
+`bf7bf411eda2d695c5764241de18e3780e644302a0939991ed0d1d5346793ca2` and empty stderr. The exact
+SOFTWARE CTest, all15 CLI tests and validator/comparator self-tests5/5 plus4/4 pass. Generated
+coverage moves2114->2117/2326 non-field members; types remain303/329, fields674/753 and C routes
+3078/3205. An initial sandboxed GL launch was blocked at the X11 socket before demo entry; the
+unsandboxed OPENGLES3/Xvfb repetitions are the recorded runtime result. Evidence:
+`/tmp/checkpoint-999-gamer-members/*`. No online service, real friend/party, microphone, avatar-
+change delivery, screenshot or manual inspection is claimed. Continue with the56 residual Graphics
+members.

@@ -10771,3 +10771,45 @@ every public header in the build-time `CNA/Content/Pipeline` group: `BlockCompre
 `XnaModelSourceContentPipeline`, `XnaPipelineBridge` and `XnaXmlSourceContentPipeline`. Resume the
 generated XNA member-gap audit with the eight residual root `Microsoft.Xna.Framework` members;
 add behavior only where an existing demo does not already establish it.
+
+## Focused999-generated-root-Audio-Content-and-GamerServices-member-audit
+
+The post-Complete998 generated audit first revalidates all eight residual root
+`Microsoft.Xna.Framework` members against pinned CNA d23e139de. Both `CurveKeyCollection`
+enumerator spellings are CLR aliases for the real C++ ranges already traversed. `Game::Finalize`
+and `GameComponent::Finalize` map to demonstrated destruction and explicit disposal.
+`Game::ShowMissingRequirementMessage` remains a protected, uncalled default-false platform hook;
+`GameWindow::OnActivated`, `OnDeactivated` and `OnPaint` remain protected empty methods with no
+production caller. Naming any of these in metadata would add no behavior.
+
+The seven Audio gaps remain four CLR finalizers plus three exception constructors. Existing
+SoundEffectInstance/XACT lifetime workflows already exercise deterministic disposal and native
+destruction. A fresh-process invalid SDL audio-driver probe reaches CNA's real
+`NoAudioHardwareException` route and the runner correctly reports the declared audio requirement as
+a skip. Microphone absence remains manual, while CNA still has no production throw of
+`InstancePlayLimitException`; direct construction would be synthetic. The seven Content gaps remain
+nominal serializer attribute wrappers. Real intermediate descriptor workflows already establish
+collection item names, ignored members, polymorphic runtime types and versioned readers; CNA's C++
+serializer consumes those descriptors rather than wrapper instances.
+
+Reviewing the77 GamerServices gaps finds three meaningful offline paths. The existing
+`gamer_services.signed_in_gamer.privileges` workflow now proves a local player reports party size
+zero and that both `IsFriend` and `GetFriends` reject it with `GamerPrivilegeException` before
+service access. The remaining74 entries are intentionally classified: collection/enumerator CLR
+aliases already represented by C++ workflows; AvatarAnimation/AvatarRenderer finalizers already
+represented by native lifetimes; event-argument and exception constructors created by the
+framework; service-only friend state, gamertag/partner-token requests, social Guide calls, invite
+payloads and party state; the never-raised title-update event; avatar-change polling without a
+public offline mutation path; FriendCollection lifecycle available only from a service snapshot;
+and microphone-dependent `IsHeadset`. `Guide::DelayNotifications` affects service invitation
+prompts and has no observable offline result.
+
+The warning-free incremental build uses at most three jobs and metadata remains693/0. Ten serial
+SOFTWARE and ten OPENGLES3/Xvfb runs pass4/4 with identical stdout SHA-256
+`bf7bf411eda2d695c5764241de18e3780e644302a0939991ed0d1d5346793ca2` and empty stderr. The exact
+SOFTWARE CTest, all15 CLI tests and validator/comparator self-tests5/5 plus4/4 pass. Generated
+coverage moves2114->2117/2326 non-field members; types remain303/329, fields674/753 and C routes
+3078/3205. The first sandboxed GL attempt could not reach X11 and failed before demo entry; the
+unsandboxed repetitions are authoritative. Evidence:`/tmp/checkpoint-999-gamer-members/*`. No
+service connection, real friend/party, microphone, avatar-change delivery, visual or manual claim
+is made. Audit the56 residual Graphics members next.

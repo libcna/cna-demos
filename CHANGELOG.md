@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the offline gamer-privilege workflow with party-size state and the exact `IsFriend` and
+  `GetFriends` privilege refusals, while re-auditing the remaining root, Audio, Content and
+  GamerServices generated member gaps by behavior.
 - Refreshed the complete runtime baseline at 693 demos: all 706 enabled CTests and both full
   renderer smoke suites cover every catalog ID with zero unexpected results; the sole old-assertion
   delta is the reviewed ISSUE-111 evidence added after Complete990.

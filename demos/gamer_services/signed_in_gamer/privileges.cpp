@@ -10,6 +10,7 @@
 #include "CnaDemos/GamerServicesNames.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/Gamer.hpp"
+#include "Microsoft/Xna/Framework/GamerServices/GamerPrivilegeException.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/GamerPrivileges.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/SignedInGamer.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/SignedInGamerCollection.hpp"
@@ -69,6 +70,29 @@ namespace
                                 privileges.getAllowProfileViewingProperty() == GamerPrivilegeSetting::Everyone &&
                                 privileges.getAllowUserCreatedContentProperty() == GamerPrivilegeSetting::Everyone,
                             "a local profile exposes unrestricted offline communication, profile and content policy");
+            Context().Check(player->getPartySizeProperty() == 0,
+                            "a local profile that has joined no service party reports party size zero");
+
+            bool friendLookupRefused = false;
+            bool friendListRefused = false;
+            try
+            {
+                (void) player->IsFriend(player);
+            }
+            catch (const GamerPrivilegeException&)
+            {
+                friendLookupRefused = true;
+            }
+            try
+            {
+                (void) player->GetFriends();
+            }
+            catch (const GamerPrivilegeException&)
+            {
+                friendListRefused = true;
+            }
+            Context().Check(friendLookupRefused && friendListRefused,
+                            "friend lookup and enumeration require an online account");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -97,12 +121,14 @@ CNA_DEMOS_GAME(PrivilegesDemo, {
     .id = "gamer_services.signed_in_gamer.privileges",
     .title = "Gamer privileges",
     .description = "Lists the signed-in gamer's GamerPrivileges -- online sessions, communication, profile viewing, "
-                   "user-created content and purchases -- that a game checks before offering those features; a "
-                   "local profile may not play online or buy.",
+                   "user-created content and purchases -- then shows that a local profile has no party and cannot "
+                   "query online friends.",
     .apis = {"SignedInGamer::Privileges", "GamerPrivileges::AllowOnlineSessions", "GamerPrivileges::AllowCommunication",
              "GamerPrivileges::AllowProfileViewing", "GamerPrivileges::AllowUserCreatedContent",
              "GamerPrivileges::AllowPurchaseContent", "GamerPrivileges::AllowPremiumContent",
-             "GamerPrivileges::AllowTradeContent", "GamerPrivilegeSetting", "GamerPrivilegeSetting::Everyone"},
+             "GamerPrivileges::AllowTradeContent", "SignedInGamer::PartySize", "SignedInGamer::IsFriend",
+             "SignedInGamer::GetFriends", "GamerPrivilegeException", "GamerPrivilegeSetting",
+             "GamerPrivilegeSetting::Everyone"},
     .tags = {"gamer-services", "profile", "privileges", "parental-controls", "online"},
     .frames = 20,
     .assets = {"fonts/pixel_font.cnb"},
