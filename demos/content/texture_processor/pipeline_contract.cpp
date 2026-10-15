@@ -11,8 +11,11 @@
 #include "CnaDemos/Demo.hpp"
 #include "CNA/Content/Cnb/CnbDocument.hpp"
 #include "CNA/Content/Cnb/CnbTextureCodec.hpp"
+#include "CNA/Content/Cnb/CnbTextureFormat.hpp"
+#include "CNA/Content/Cnb/CnbWriter.hpp"
 #include "CNA/Content/Pipeline/CnjContentPipeline.hpp"
 #include "CNA/Content/Pipeline/Texture2DContentPipeline.hpp"
+#include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
 
 namespace Cnb = CNA::Content::Cnb;
@@ -21,6 +24,22 @@ using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
+    bool SameTexture(const Cnb::CnbTextureData& left, const Cnb::CnbTextureData& right)
+    {
+        if (left.width != right.width || left.height != right.height ||
+            left.depth != right.depth || left.faceCount != right.faceCount ||
+            left.mipCount != right.mipCount ||
+            left.representations.size() != right.representations.size())
+            return false;
+        for (std::size_t index = 0u; index < left.representations.size(); ++index)
+        {
+            if (left.representations[index].format != right.representations[index].format ||
+                left.representations[index].levels != right.representations[index].levels)
+                return false;
+        }
+        return true;
+    }
+
     void WriteBigEndian32(std::vector<std::uint8_t>& bytes, const std::size_t offset,
                           const std::uint32_t value)
     {
@@ -86,6 +105,51 @@ namespace
                       Pipeline::TexturePassThroughParameter == std::string("passThrough"),
                   "the imported/processed identities and six processor parameter keys are stable");
 
+        bool formatsStable = static_cast<std::uint32_t>(Cnb::CnbTextureFormat::Unknown) == 0u &&
+            static_cast<std::uint32_t>(Cnb::CnbTextureFormat::Rgba8) == 1u &&
+            static_cast<std::uint32_t>(Cnb::CnbTextureFormat::Bc1) == 22u &&
+            static_cast<std::uint32_t>(Cnb::CnbTextureFormat::Bc7Srgb) == 27u &&
+            Cnb::CnbTextureFormatMax == 27u && !Cnb::IsKnownCnbTextureFormat(0u) &&
+            !Cnb::IsKnownCnbTextureFormat(28u);
+        for (std::uint32_t raw = 1u; raw <= Cnb::CnbTextureFormatMax; ++raw)
+        {
+            const auto format = static_cast<Cnb::CnbTextureFormat>(raw);
+            formatsStable = formatsStable && Cnb::IsKnownCnbTextureFormat(raw) &&
+                Cnb::SurfaceFormatToCnbTextureFormat(
+                    Cnb::CnbTextureFormatToSurfaceFormat(format)) == format &&
+                !Cnb::CnbTextureFormatToString(format).empty() &&
+                Cnb::CnbTextureFormatUnitBytes(format) > 0u &&
+                Cnb::IsBlockCompressedCnbTextureFormat(format) == (raw >= 22u);
+        }
+        ctx.Check(formatsStable,
+                  "all 27 frozen CNB formats map bijectively to SurfaceFormat with names, storage units and exact block classification");
+
+        ctx.Check(Cnb::CnbTextureLevelByteSize(Cnb::CnbTextureFormat::Bc7, 1u, 1u, 1u) == 16u &&
+                      Cnb::CnbTextureLevelByteSize(Cnb::CnbTextureFormat::Bc7, 5u, 4u, 1u) == 32u &&
+                      Cnb::CnbTextureLevelByteSize(Cnb::CnbTextureFormat::Bc1, 8u, 8u, 1u) == 32u &&
+                      Cnb::CnbTextureLevelByteSize(Cnb::CnbTextureFormat::Rgba8, 3u, 5u, 1u) == 60u &&
+                      Cnb::CnbTextureLevelByteSize(Cnb::CnbTextureFormat::Rgba8, 4u, 4u, 4u) == 256u,
+                  "format sizing rounds compressed dimensions to whole blocks and includes volume depth for texel formats");
+
+        const Cnb::CnbTextureRepresentation safeRepresentation;
+        const Cnb::CnbTextureData safeTexture;
+        ctx.Check(Cnb::CnbTextureChunk::Header == Cnb::MakeChunkId('T', 'E', 'X', 'H') &&
+                      Cnb::CnbTextureChunk::Representations ==
+                          Cnb::MakeChunkId('T', 'E', 'X', 'R') &&
+                      Cnb::CnbTextureChunk::Payload == Cnb::MakeChunkId('T', 'E', 'X', 'D') &&
+                      Cnb::CnbTextureSchemaVersion == 1u &&
+                      Cnb::CnbTextureHeaderStride == 24u &&
+                      Cnb::CnbTextureRepresentationStride == 24u &&
+                      Cnb::CnbTextureCubeFaceCount == 6u &&
+                      Cnb::CnbMaxTextureMipLevels == 16u &&
+                      Cnb::CnbMaxTextureRepresentations == 8u &&
+                      safeRepresentation.format == Cnb::CnbTextureFormat::Unknown &&
+                      safeRepresentation.levels.empty() && safeTexture.width == 0u &&
+                      safeTexture.height == 0u && safeTexture.depth == 1u &&
+                      safeTexture.faceCount == 1u && safeTexture.mipCount == 1u &&
+                      safeTexture.representations.empty(),
+                  "texture chunk IDs, schema strides and safety ceilings are frozen and decoded carriers have safe defaults");
+
         ctx.Check(Pipeline::NextPowerOfTwoDimension(0u) == 1u &&
                       Pipeline::NextPowerOfTwoDimension(1u) == 1u &&
                       Pipeline::NextPowerOfTwoDimension(3u) == 4u &&
@@ -123,6 +187,128 @@ namespace
                           std::vector<std::uint8_t>(4u, 7u), 1u, 1u)
                           .empty(),
                   "mipmap generation halves both axes to 1x1 and a 1x1 source needs no child level");
+
+        std::vector<std::uint8_t> halfBlackHalfWhite(16u, 0u);
+        std::fill_n(halfBlackHalfWhite.begin(), 8u, 255u);
+        Cnb::CnbTextureData linear = Cnb::MakeRgba8Texture2DData(
+            2u, 2u, halfBlackHalfWhite);
+        Cnb::CnbTextureData srgb = linear;
+        Cnb::GenerateRgba8MipChain(linear, Cnb::CnbMipColorSpace::Linear);
+        Cnb::GenerateRgba8MipChain(srgb, Cnb::CnbMipColorSpace::Srgb);
+        std::uint32_t mipWidth = 0u;
+        std::uint32_t mipHeight = 0u;
+        std::uint32_t mipDepth = 0u;
+        Cnb::CnbTextureLevelDimensions(linear, 1u, mipWidth, mipHeight, mipDepth);
+        const auto& linearMip = linear.representations[0].levels[1];
+        const auto& srgbMip = srgb.representations[0].levels[1];
+        ctx.Check(linear.mipCount == 2u && srgb.mipCount == 2u && mipWidth == 1u &&
+                      mipHeight == 1u && mipDepth == 1u && linearMip.size() == 4u &&
+                      linearMip[0] >= 127u && linearMip[0] <= 128u &&
+                      srgbMip[0] >= 186u && srgbMip[0] <= 190u &&
+                      srgbMip[3] >= 127u && srgbMip[3] <= 128u,
+                  "codec mip generation reaches 1x1, averages stored data linearly and treats sRGB colour as light while alpha stays linear");
+
+        const std::vector<std::uint8_t> linearBytes =
+            Cnb::EncodeTexture2DToCnb(linear, "Textures/codec-linear");
+        const Cnb::CnbDocument linearDocument =
+            Cnb::CnbDocument::Parse(linearBytes, "codec-linear.cnb");
+        ctx.Check(linearDocument.AssetTypeId() == Cnb::CnbAssetTypeId::Texture2D &&
+                      linearDocument.AssetSchemaVersion() == Cnb::CnbTextureSchemaVersion &&
+                      linearDocument.Metadata().assetTypeName ==
+                          "Microsoft.Xna.Framework.Graphics.Texture2D" &&
+                      linearDocument.Metadata().contentName == "Textures/codec-linear" &&
+                      SameTexture(linear, Cnb::DecodeTexture2DFromCnb(linearDocument)) &&
+                      linearBytes == Cnb::EncodeTexture2DToCnb(linear, "Textures/codec-linear"),
+                  "a generated two-level Texture2D encodes deterministically with exact metadata and round-trips every byte");
+
+        Cnb::CnbTextureData cube;
+        cube.width = 2u;
+        cube.height = 2u;
+        cube.depth = 1u;
+        cube.faceCount = Cnb::CnbTextureCubeFaceCount;
+        cube.mipCount = 1u;
+        Cnb::CnbTextureRepresentation cubeRepresentation;
+        cubeRepresentation.format = Cnb::CnbTextureFormat::Rgba8;
+        for (std::uint8_t face = 0u; face < Cnb::CnbTextureCubeFaceCount; ++face)
+            cubeRepresentation.levels.push_back(std::vector<std::uint8_t>(16u, face + 1u));
+        cube.representations.push_back(std::move(cubeRepresentation));
+        const std::vector<std::uint8_t> cubeBytes =
+            Cnb::EncodeTextureCubeToCnb(cube, "Textures/codec-cube");
+        const Cnb::CnbTextureData decodedCube = Cnb::DecodeTextureCubeFromCnb(
+            Cnb::CnbDocument::Parse(cubeBytes, "codec-cube.cnb"));
+        ctx.Check(SameTexture(cube, decodedCube) &&
+                      decodedCube.representations[0].levels.front() !=
+                          decodedCube.representations[0].levels.back(),
+                  "TextureCube encoding preserves all six distinct faces in canonical face-major order");
+
+        Cnb::CnbTextureData volume;
+        volume.width = 4u;
+        volume.height = 2u;
+        volume.depth = 2u;
+        volume.faceCount = 1u;
+        volume.mipCount = 2u;
+        volume.representations.push_back(
+            {Cnb::CnbTextureFormat::Rgba8,
+             {std::vector<std::uint8_t>(64u, 0x31u),
+              std::vector<std::uint8_t>(8u, 0x62u)}});
+        Cnb::CnbTextureLevelDimensions(volume, 1u, mipWidth, mipHeight, mipDepth);
+        const std::vector<std::uint8_t> volumeBytes =
+            Cnb::EncodeTexture3DToCnb(volume, "Textures/codec-volume");
+        ctx.Check(mipWidth == 2u && mipHeight == 1u && mipDepth == 1u &&
+                      SameTexture(volume, Cnb::DecodeTexture3DFromCnb(
+                                              Cnb::CnbDocument::Parse(
+                                                  volumeBytes, "codec-volume.cnb"))),
+                  "Texture3D sizing halves depth with width and height and round-trips both volume levels exactly");
+
+        Cnb::CnbWriter embeddedWriter(Cnb::CnbAssetTypeId::SpriteFont, 1u);
+        embeddedWriter.SetMetadata("Microsoft.Xna.Framework.Graphics.SpriteFont",
+                                   "Fonts/codec-atlas");
+        Cnb::AppendEmbeddedTexture2DChunks(embeddedWriter, linear, "SpriteFont");
+        const Cnb::CnbDocument embeddedDocument = Cnb::CnbDocument::Parse(
+            embeddedWriter.Build(), "embedded-atlas.cnb");
+        ctx.Check(SameTexture(linear,
+                              Cnb::ReadEmbeddedTexture2DChunks(
+                                  embeddedDocument, "SpriteFont")),
+                  "the embedded texture adapter reuses the exact TEXH/TEXR/TEXD layout inside a SpriteFont container");
+
+        Cnb::CnbTextureData choices = linear;
+        choices.representations.insert(
+            choices.representations.begin(),
+            {Cnb::CnbTextureFormat::Bc7,
+             {std::vector<std::uint8_t>(16u), std::vector<std::uint8_t>(16u)}});
+        choices.representations.push_back(
+            {Cnb::CnbTextureFormat::Bgra8,
+             {std::vector<std::uint8_t>(16u), std::vector<std::uint8_t>(4u)}});
+        const std::size_t first = Cnb::SelectCnbTextureRepresentation(
+            choices, [](Cnb::CnbTextureFormat) { return true; });
+        const std::size_t firstUncompressed = Cnb::SelectCnbTextureRepresentation(
+            choices, [](const Cnb::CnbTextureFormat format)
+            { return !Cnb::IsBlockCompressedCnbTextureFormat(format); });
+        const std::size_t none = Cnb::SelectCnbTextureRepresentation(
+            choices, [](Cnb::CnbTextureFormat) { return false; });
+        ctx.Check(first == 0u && firstUncompressed == 1u &&
+                      none == choices.representations.size(),
+                  "representation selection respects author order, skips unsupported block formats and returns size when none match");
+
+        bool badPayloadRefused = false;
+        Cnb::CnbTextureData badPayload = Cnb::MakeRgba8Texture2DData(
+            2u, 2u, std::vector<std::uint8_t>(16u));
+        badPayload.representations[0].levels[0].push_back(0u);
+        try { static_cast<void>(Cnb::EncodeTexture2DToCnb(badPayload)); }
+        catch (const Microsoft::Xna::Framework::Content::ContentLoadException&)
+        {
+            badPayloadRefused = true;
+        }
+        bool oblongCubeRefused = false;
+        Cnb::CnbTextureData oblongCube = cube;
+        oblongCube.height = 1u;
+        try { static_cast<void>(Cnb::EncodeTextureCubeToCnb(oblongCube)); }
+        catch (const Microsoft::Xna::Framework::Content::ContentLoadException&)
+        {
+            oblongCubeRefused = true;
+        }
+        ctx.Check(badPayloadRefused && oblongCubeRefused,
+                  "the public encoders refuse a mismatched payload and a non-square cube before producing an unusable container");
 
         std::vector<std::uint8_t> gammaPixels{128u, 64u, 255u, 77u};
         Pipeline::ApplyPngFileGammaEXT(MakeGammaPngHeader(), gammaPixels);
@@ -297,14 +483,14 @@ namespace
                       passedTexture.representations[0].levels == dds.sourceCompressedLevels,
                   "pass-through preserves every authored DDS BC1 block and bypasses the encoder and pixel policies");
 
-        ctx.Print("Audited 14 image routes, 6 build formats and exact PNG/DDS processor paths.");
+        ctx.Print("Audited 27 CNB formats, 14 image routes and exact 2D/cube/volume containers.");
     }
 }
 
 CNA_DEMOS_CONSOLE(TexturePipelineContract, {
     .id = "content.texture_processor.pipeline_contract",
     .title = "Audit the Texture2D pipeline contract",
-    .description = "Exercises CNA's public Texture2D build-time contract: component identities, format parsing, decoded-image ownership, deterministic resampling/premultiplication/mip helpers, PNG gamma compatibility, exact CNB output, injected block encoding and DDS pass-through.",
+    .description = "Exercises CNA's public Texture2D build-time and CNB codec contracts: all format mappings, component identities, decoded-image ownership, linear/sRGB mips, exact 2D/cube/volume and embedded containers, PNG gamma compatibility, injected block encoding and DDS pass-through.",
     .apis = {"CNA::Content::Pipeline::ImportedImageType",
              "CNA::Content::Pipeline::ProcessedTexture2DType",
              "CNA::Content::Pipeline::TextureColorKeyParameter",
@@ -340,7 +526,39 @@ CNA_DEMOS_CONSOLE(TexturePipelineContract, {
              "CNA::Content::Pipeline::Texture2DContentWriter::InputType",
              "CNA::Content::Pipeline::Texture2DContentWriter::Write",
              "CNA::Content::Pipeline::RegisterTexture2DContentPipeline",
-             "CNA::Content::Cnb::DecodeTexture2DFromCnb"},
+             "CNA::Content::Cnb::CnbTextureFormat",
+             "CNA::Content::Cnb::CnbTextureFormatMax",
+             "CNA::Content::Cnb::IsKnownCnbTextureFormat",
+             "CNA::Content::Cnb::CnbTextureFormatToString",
+             "CNA::Content::Cnb::IsBlockCompressedCnbTextureFormat",
+             "CNA::Content::Cnb::CnbTextureFormatUnitBytes",
+             "CNA::Content::Cnb::CnbTextureLevelByteSize",
+             "CNA::Content::Cnb::CnbTextureFormatToSurfaceFormat",
+             "CNA::Content::Cnb::SurfaceFormatToCnbTextureFormat",
+             "CNA::Content::Cnb::CnbTextureChunk::Header",
+             "CNA::Content::Cnb::CnbTextureChunk::Representations",
+             "CNA::Content::Cnb::CnbTextureChunk::Payload",
+             "CNA::Content::Cnb::CnbTextureSchemaVersion",
+             "CNA::Content::Cnb::CnbTextureHeaderStride",
+             "CNA::Content::Cnb::CnbTextureRepresentationStride",
+             "CNA::Content::Cnb::CnbTextureCubeFaceCount",
+             "CNA::Content::Cnb::CnbMaxTextureMipLevels",
+             "CNA::Content::Cnb::CnbMaxTextureRepresentations",
+             "CNA::Content::Cnb::CnbTextureRepresentation",
+             "CNA::Content::Cnb::CnbTextureData",
+             "CNA::Content::Cnb::CnbTextureLevelDimensions",
+             "CNA::Content::Cnb::MakeRgba8Texture2DData",
+             "CNA::Content::Cnb::CnbMipColorSpace",
+             "CNA::Content::Cnb::GenerateRgba8MipChain",
+             "CNA::Content::Cnb::EncodeTexture2DToCnb",
+             "CNA::Content::Cnb::EncodeTextureCubeToCnb",
+             "CNA::Content::Cnb::EncodeTexture3DToCnb",
+             "CNA::Content::Cnb::DecodeTexture2DFromCnb",
+             "CNA::Content::Cnb::DecodeTextureCubeFromCnb",
+             "CNA::Content::Cnb::DecodeTexture3DFromCnb",
+             "CNA::Content::Cnb::AppendEmbeddedTexture2DChunks",
+             "CNA::Content::Cnb::ReadEmbeddedTexture2DChunks",
+             "CNA::Content::Cnb::SelectCnbTextureRepresentation"},
     .tags = {"content", "pipeline", "texture", "image", "mipmap", "compression", "cnaext"},
     .assets = {"textures/checker.png", "textures/striped_mips.dds"},
     .restrictions = "Headless CPU build and exact byte/data checks. The injected encoder uses recognizable probe blocks to expose its contract; those blocks are not loaded or rendered. Existing texture demos own real compression and visual evidence.",

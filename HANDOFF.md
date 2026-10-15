@@ -799,6 +799,33 @@ and no CNA issue was found. The public top-level content-pipeline component head
 declaration-level dispositions; audit the adjacent `CnbTextureCodec.hpp` container contract next,
 reusing the new texture pipeline evidence before adding another ID.
 
+Focused **967-CNB-texture-format-and-codec-disposition** extends the stable
+`content.texture_processor.pipeline_contract` demo from14 to24 controls without adding a catalog
+ID. It dispositions all36 public `CnbTextureFormat.hpp` declarations and all31 public
+`CnbTextureCodec.hpp` declarations. One exhaustive loop freezes the 27 persisted format IDs,
+diagnostic names, block classification, unit sizes and bijective SurfaceFormat mappings. Exact byte
+sizes cover sub-block BC7, BC1, awkward uncompressed dimensions and a volume; the chunk IDs,
+schema, strides, face count, ceilings and safe carrier defaults are exact.
+
+The public mip generator distinguishes stored-value linear averaging near128 from sRGB-light
+averaging near188 while keeping alpha linear. Deterministic 2D encoding preserves two exact levels
+and metadata; six distinct cube faces and a two-level 4x2x2 volume round-trip byte-for-byte. A real
+`CnbWriter` embeds and recovers the same texture inside a SpriteFont container. Ordered
+BC7/Rgba8/Bgra8 selection proves first-supported and no-match behavior, while malformed payload
+size and a non-square cube are refused before output. Existing source-import, compressed-runtime
+and GPU demos retain those separate concerns.
+
+The warning-free build uses at most three jobs. Ten SOFTWARE and ten OPENGLES3-labelled direct
+runs pass24/24 with byte-identical stdout SHA-256
+`1a421298edc462cf537a322040f9962fd1bb684f80c6ab7d4e35b915b9411061` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata remains682/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA and C totals remain unchanged; 30 public names enter or extend the
+CNA-extension appendix, and Complete956 still marks all seven post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-967-texture-codec/*` and `/tmp/checkpoint-967-texture-codec-report.json`. This is
+headless CPU/container evidence; format mapping does not claim backend support, and no screenshot,
+visual-quality or genuine-XNA claim is added. No CNA issue was found. Audit the adjacent public
+`CnbSpriteFontCodec.hpp` contract next, reusing existing SpriteFont pipeline/runtime evidence.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2921,8 +2948,11 @@ adjacent public `ModelContentPipeline.hpp` next, reusing the substantial model/g
 adding a new ID. Focused966 closes all33 Model pipeline declarations with real owned glTF staging,
 deterministic primary/child CNBs and texture/animation child variants; the established XNB routes
 own the schema-2 and XNA-shaped alternatives. The public top-level content-pipeline component
-headers now have declaration-level dispositions. Audit `CnbTextureCodec.hpp` next, reusing the new
-texture pipeline evidence and adding only missing container behavior. The earlier native
+headers now have declaration-level dispositions. Focused967 extends the stable texture pipeline
+contract and closes all36 public `CnbTextureFormat.hpp` plus all31 public `CnbTextureCodec.hpp`
+declarations with exhaustive mappings, exact linear/sRGB mips and deterministic 2D, cube, volume
+and embedded-container round trips. Audit `CnbSpriteFontCodec.hpp` next, reusing existing
+SpriteFont pipeline and runtime evidence and adding only missing codec behavior. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds

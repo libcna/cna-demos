@@ -326,7 +326,10 @@ a check that all authored colors remain visible and that a blank texture row can
   deliberate shared CNB absence),
   ✅ `content.texture_processor.pipeline_contract` (all 48 public Texture2D pipeline declarations
   dispositioned through exact component/schema identities, format parsing, pixel helpers, PNG
-  gamma behavior, deterministic CNB output, injected block encoding and verbatim DDS pass-through),
+  gamma behavior, deterministic CNB output, injected block encoding and verbatim DDS pass-through;
+  all 36 public CNB texture-format and 31 texture-codec declarations are also dispositioned through
+  exhaustive format mappings, linear/sRGB mip generation, exact 2D/cube/volume/embedded round trips
+  and ordered representation selection),
   ✅ `content.model.pipeline_contract` (all 33 public Model pipeline declarations dispositioned
   through real owned glTF staging, component/schema identities, deterministic primary Model and
   generated Texture2D/AnimationClip CNBs plus typed runtime references),

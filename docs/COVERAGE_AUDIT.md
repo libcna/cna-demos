@@ -900,6 +900,47 @@ workflow owner or an explicit boundary disposition. The new demo is CPU-only and
 encoder output solely to expose the callback contract; it makes no visual-quality, GPU-format,
 cross-platform decoder or genuine-XNA execution claim.
 
+#### `CnbTextureFormat.hpp` declaration-level disposition
+
+The pinned header exposes 36 public declarations: 28 frozen format values, the maximum identifier
+and seven classification/size/mapping functions. Focused967 extends the stable
+`content.texture_processor.pipeline_contract` demo because these persisted identifiers are the
+codec and processor's shared format axis.
+
+| Declaration family | Disposition |
+|---|---|
+| CnbTextureFormat values, CnbTextureFormatMax, IsKnownCnbTextureFormat | One loop visits every identifier 1 through 27, with explicit anchors at Unknown=0, Rgba8=1, Bc1=22 and Bc7Srgb=27; zero and 28 are rejected. This freezes the persisted range without one assertion/demo per spelling. The existing runtime `surface_formats`, `floating_formats` and `normalized_formats` scenes supply actual transfer/sampling behavior for the classic uncompressed families, while the XNB DXT scene supplies compressed runtime evidence. |
+| CnbTextureFormatToString, IsBlockCompressedCnbTextureFormat, CnbTextureFormatUnitBytes | Every assigned value has a nonempty diagnostic name and nonzero unit size; exactly 22 through 27 classify as block formats. Individual diagnostic strings and all repeated unit values are table data, so the grouped exhaustive loop is stronger and smaller than format-specific demos. Unknown-format diagnostics and zero sizes remain error-boundary unit tests. |
+| CnbTextureLevelByteSize | Exact controls cover 1x1 and partial-block BC7 rounding, an 8x8 BC1 level, an awkward 3x5 Rgba8 level and a 4x4x4 volume. Zero dimensions, unknown formats and 64-bit overflow are parser/allocator safety boundaries retained by CNA tests. |
+| CnbTextureFormatToSurfaceFormat/SurfaceFormatToCnbTextureFormat | All 27 values round-trip through the runtime enum bijectively. Actual GPU support remains renderer-dependent and is separately queried/used by graphics format demos; the persisted mapping itself must not be mistaken for hardware support. |
+
+All public `CnbTextureFormat.hpp` declarations now have exhaustive value/mapping evidence or a
+named runtime/boundary owner. Only CNA's compiled renderer set was available; no claim is made that
+every mapped format can be created on every backend.
+
+#### `CnbTextureCodec.hpp` declaration-level disposition
+
+The pinned header exposes 31 public declarations: nine persisted chunk/schema/limit constants, two
+representation fields, six texture-data fields, two mip-colour-space values and twelve functions.
+Focused967 grows the same stable texture contract from 14 to 24 controls.
+
+| Declaration family | Disposition |
+|---|---|
+| CnbTextureChunk constants; schema/stride/face/limit constants | `TEXH`, `TEXR`, `TEXD`, schema 1, both 24-byte strides, six cube faces, sixteen mip levels and eight representations are asserted exactly. These are persisted grammar values and therefore grouped in one control. Ceiling-plus-one and malformed chunk-table matrices belong to the codec safety tests. |
+| CnbTextureRepresentation and CnbTextureData fields | Default construction proves Unknown/empty representation state and 0x0x1, one-face, one-mip empty texture state. Real controls then populate every field: generated two-level 2D, six-face cube, depth-two volume and a three-representation selection carrier. Field-per-demo expansion would obscure the relationships the shapes enforce. |
+| CnbTextureLevelDimensions, MakeRgba8Texture2DData | The helper constructs a validated 2x2 Rgba8 image, and level one reports exactly 1x1x1. A 4x2x2 volume reports a 2x1x1 child, proving depth halves with the other axes. The Texture2D pipeline demo's real PNG carrier supplies the larger ordinary case. Zero/mismatched inputs are explicitly codec-boundary tests. |
+| CnbMipColorSpace, GenerateRgba8MipChain | The same half-black/half-white 2x2 source produces a stored-code linear average near 128 but an sRGB-light average near 188; alpha remains near 128 in both. Both chains terminate at 1x1 and the linear chain survives deterministic encode/decode exactly. Existing processor mip scenes retain rendered/runtime evidence; the two public generators intentionally have different filtering contracts. |
+| Encode/Decode Texture2D | A generated two-level texture encodes twice byte-identically with exact built-in asset/schema/type/content metadata and decodes every field/level byte. The registered real-PNG build independently exercises the writer adapter. A payload one byte too long is refused before output. |
+| Encode/Decode TextureCube | Six distinct 2x2 faces encode and decode in exact face-major order; a non-square description is refused. The CNJ/XNB pipeline demos separately retain real DDS cube bytes and the graphics cube demos own GPU sampling. Other face/mip-count corruptions are the same shape guard's test matrix. |
+| Encode/Decode Texture3D | A synthetic 4x2x2 volume with an exact 2x1x1 child round-trips both levels byte-for-byte. The CNJ/XNB source demos separately preserve real authored volume bytes; native unsupported-3D policy and supported renderer uploads remain graphics responsibilities. |
+| AppendEmbeddedTexture2DChunks/ReadEmbeddedTexture2DChunks | The two-level texture is embedded under a real SpriteFont asset identity through a public `CnbWriter`, parsed and recovered exactly. Existing SpriteFont content demos load/draw the user-facing font; duplicating glyph behavior here would mix schema concerns. |
+| SelectCnbTextureRepresentation | A synthetic ordered BC7/Rgba8/Bgra8 set selects index zero when all are supported, index one when block formats are unavailable and `size()` when none match. CNB schema 1 currently writes one Rgba8 representation, while the XNB output demo supplies a real version-aware multi-representation consumer; this control deliberately tests the future-compatible ordering contract without claiming a schema-1 multi-format encoder. |
+
+All public `CnbTextureCodec.hpp` declarations now have direct value/round-trip evidence, a shared
+runtime owner or an explicit safety-boundary disposition. Synthetic cube/volume/selection data is
+decoded on CPU; existing demos retain actual source import and GPU behavior, and no screenshot,
+visual-quality or genuine-XNA container claim is added.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,
