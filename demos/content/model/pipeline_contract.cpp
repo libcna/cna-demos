@@ -1,23 +1,31 @@
 // SPDX-License-Identifier: MS-PL
 // Audit the public Model pipeline contract from glTF staging through generated child CNBs.
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <filesystem>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
 #include "CNA/Content/Cnb/CnbAnimationClipCodec.hpp"
+#include "CNA/Content/Cnb/CnbByteWriter.hpp"
 #include "CNA/Content/Cnb/CnbDocument.hpp"
 #include "CNA/Content/Cnb/CnbModelCodec.hpp"
 #include "CNA/Content/Cnb/CnbModelV2Codec.hpp"
 #include "CNA/Content/Cnb/CnbTextureCodec.hpp"
+#include "CNA/Content/Cnb/CnbWriter.hpp"
 #include "CNA/Content/Pipeline/ModelContentPipeline.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
 
 namespace Cnb = CNA::Content::Cnb;
 namespace Pipeline = CNA::Content::Pipeline;
+using Microsoft::Xna::Framework::Graphics::AnimationClipEXT;
+using Microsoft::Xna::Framework::Graphics::BoneTrackEXT;
+using Microsoft::Xna::Framework::Graphics::ClipTargetSpaceEXT;
+using Microsoft::Xna::Framework::Graphics::KeyframeEXT;
 using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
@@ -50,6 +58,183 @@ namespace
                 return false;
         }
         return true;
+    }
+
+    template<class Function>
+    bool Refuses(Function&& function)
+    {
+        try
+        {
+            function();
+            return false;
+        }
+        catch (const std::exception&)
+        {
+            return true;
+        }
+    }
+
+    std::array<float, 16> Matrix(const float translation)
+    {
+        return {{1.0f, 0.0f, 0.0f, 0.0f,
+                 0.0f, 1.0f, 0.0f, 0.0f,
+                 0.0f, 0.0f, 1.0f, 0.0f,
+                 translation, translation + 1.0f, translation + 2.0f, 1.0f}};
+    }
+
+    bool SameKey(const KeyframeEXT& left, const KeyframeEXT& right)
+    {
+        return left.Time == right.Time && left.Translation == right.Translation &&
+            left.Rotation == right.Rotation && left.Scale == right.Scale;
+    }
+
+    bool SameClip(const AnimationClipEXT& left, const AnimationClipEXT& right)
+    {
+        if (left.Duration != right.Duration || left.TargetSpace != right.TargetSpace ||
+            left.Tracks.size() != right.Tracks.size()) return false;
+        for (std::size_t track = 0u; track < left.Tracks.size(); ++track)
+        {
+            if (left.Tracks[track].BoneIndex != right.Tracks[track].BoneIndex ||
+                left.Tracks[track].Keys.size() != right.Tracks[track].Keys.size()) return false;
+            for (std::size_t key = 0u; key < left.Tracks[track].Keys.size(); ++key)
+            {
+                if (!SameKey(left.Tracks[track].Keys[key], right.Tracks[track].Keys[key]))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    Cnb::CnbModelData CompleteModel()
+    {
+        Cnb::CnbModelData model;
+        model.bones = {{"Root", -1, Matrix(3.0f)}, {"Child", 0, Matrix(6.0f)}};
+        model.hasBoneHierarchy = true;
+        model.appliesGltfLightingPolicy = true;
+
+        Cnb::CnbMaterial material;
+        material.baseColorTexture = "Textures/base";
+        material.texture2 = "Textures/second";
+        material.normalMap = "Textures/normal";
+        material.metallicRoughnessMap = "Textures/metallic-roughness";
+        material.emissiveMap = "Textures/emissive";
+        material.occlusionMap = "Textures/occlusion";
+        material.specularMap = "Textures/specular";
+        material.specularColorMap = "Textures/specular-color";
+        material.baseColorFactor = {{0.1f, 0.2f, 0.3f, 0.4f}};
+        material.emissiveFactor = {{0.5f, 0.6f, 0.7f}};
+        material.specularColorFactor = {{0.8f, 0.9f, 1.0f}};
+        material.metallicFactor = 0.11f;
+        material.roughnessFactor = 0.22f;
+        material.ior = 1.33f;
+        material.specularFactor = 0.44f;
+        material.normalScale = 0.55f;
+        material.occlusionStrength = 0.66f;
+        material.alphaCutoff = 0.77f;
+        material.alphaMode = 2u;
+        material.doubleSided = true;
+        for (std::size_t slot = 0u; slot < Cnb::CnbTextureSlotCount; ++slot)
+        {
+            material.textureCoordinateSets[slot] = static_cast<std::uint8_t>(slot % 2u);
+            material.textureTransforms[slot] = {
+                static_cast<float>(slot) + 0.1f, static_cast<float>(slot) + 0.2f,
+                static_cast<float>(slot) + 1.3f, static_cast<float>(slot) + 1.4f,
+                static_cast<float>(slot) + 0.5f};
+            material.samplers[slot] = {
+                static_cast<std::uint32_t>(slot + 1u),
+                static_cast<std::uint32_t>(slot + 11u),
+                static_cast<std::uint32_t>(slot + 21u), slot % 2u == 0u};
+        }
+
+        const std::array<Cnb::CnbEffectKind, 6> effects{
+            Cnb::CnbEffectKind::BasicEffect, Cnb::CnbEffectKind::SkinnedEffect,
+            Cnb::CnbEffectKind::DualTextureEffect, Cnb::CnbEffectKind::PbrEffect,
+            Cnb::CnbEffectKind::SkinnedPbrEffect, Cnb::CnbEffectKind::External};
+        for (std::size_t index = 0u; index < effects.size(); ++index)
+        {
+            Cnb::CnbModelPart part;
+            part.name = "Part" + std::to_string(index);
+            part.vertexStride = 4u;
+            part.vertexCount = 3u;
+            part.indexCount = 3u;
+            part.indexElementSize = 2u;
+            part.primitiveTopology = 4u;
+            part.primitiveCount = 1u;
+            part.effectKind = effects[index];
+            if (effects[index] == Cnb::CnbEffectKind::External)
+                part.externalEffect = "Effects/custom";
+            part.vertexColorEnabled = index % 2u == 0u;
+            part.unlit = index % 2u != 0u;
+            part.material = material;
+            part.vertexBytes = {static_cast<std::uint8_t>(index), 1u, 2u, 3u,
+                                4u, 5u, 6u, 7u, 8u, 9u, 10u, 11u};
+            part.indexBytes = {0u, 0u, 1u, 0u, 2u, 0u};
+            model.parts.push_back(std::move(part));
+        }
+
+        Cnb::CnbMorphData cubicMorph;
+        cubicMorph.vertexCount = 3u;
+        cubicMorph.recomputeFlatNormals = true;
+        cubicMorph.targets = {
+            {{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f},
+             {},
+             {1.1f, 1.2f, 1.3f, 1.4f, 1.5f, 1.6f, 1.7f, 1.8f, 1.9f}},
+            {{}, {-0.1f, -0.2f, -0.3f, -0.4f, -0.5f, -0.6f, -0.7f, -0.8f, -0.9f}, {}}};
+        cubicMorph.weights = {0.25f, 0.75f};
+        cubicMorph.weightTrackCubicSpline = true;
+        cubicMorph.weightTrackKeys = {
+            {0.5, {0.2f, 0.8f}, {-0.1f, -0.2f}, {0.3f, 0.4f}}};
+        model.parts[0].morph = cubicMorph;
+
+        Cnb::CnbMorphData stepMorph;
+        stepMorph.vertexCount = 3u;
+        stepMorph.targets = {{{0.0f, 0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.2f, 0.0f, 0.0f}, {}, {}}};
+        stepMorph.weights = {1.0f};
+        stepMorph.weightTrackStepInterpolation = true;
+        stepMorph.weightTrackKeys = {{1.25, {0.5f}, {}, {}}};
+        model.parts[1].morph = stepMorph;
+
+        model.meshes = {{"AllEffects", 1, {0u, 1u, 2u, 3u, 4u, 5u}}};
+        model.skeleton = Cnb::CnbModelSkeleton{
+            {-1, 0}, {Matrix(10.0f), Matrix(20.0f)},
+            {Matrix(30.0f), Matrix(40.0f)}, {Matrix(50.0f), Matrix(60.0f)}};
+
+        AnimationClipEXT clip;
+        clip.Duration = System::TimeSpan::FromSeconds(2.0);
+        clip.TargetSpace = ClipTargetSpaceEXT::JointPalette;
+        clip.Tracks = {{1, {{System::TimeSpan::FromSeconds(0.75),
+                            {1.0f, 2.0f, 3.0f}, {0.1f, 0.2f, 0.3f, 0.9f},
+                            {1.5f, 1.6f, 1.7f}}}}};
+        model.animations = {{"Wave", clip}};
+        model.lights = {{{{0.0f, 1.0f, 0.0f}}, {{0.9f, 0.8f, 0.7f}}},
+                        {{{-1.0f, 0.0f, 0.0f}}, {{0.2f, 0.3f, 0.4f}}}};
+        return model;
+    }
+
+    Cnb::CnbDocument EmptyModelDocument(const std::uint32_t assetType,
+                                        const std::uint32_t schema,
+                                        const int headerCopies = 1,
+                                        const bool includeStrings = true)
+    {
+        Cnb::CnbByteWriter header;
+        for (int field = 0; field < 6; ++field) header.WriteU32(0u);
+        Cnb::CnbByteWriter emptyCount;
+        emptyCount.WriteU32(0u);
+        const std::vector<std::uint8_t> headerBytes = header.Take();
+        const std::vector<std::uint8_t> countBytes = emptyCount.Take();
+        Cnb::CnbWriter writer(assetType, schema);
+        writer.SetMetadata("Microsoft.Xna.Framework.Graphics.Model", "synthetic/empty");
+        for (int copy = 0; copy < headerCopies; ++copy)
+            writer.AddChunk(Cnb::CnbModelChunk::Header, headerBytes,
+                            Cnb::CnbChunkFlags::Mandatory, 4u);
+        if (includeStrings)
+            writer.AddChunk(Cnb::CnbModelChunk::Strings, countBytes,
+                            Cnb::CnbChunkFlags::Mandatory, 4u);
+        writer.AddChunk(Cnb::CnbModelChunk::Meshes, countBytes,
+                        Cnb::CnbChunkFlags::Mandatory, 4u);
+        writer.AddChunk(Cnb::CnbModelChunk::Materials, countBytes,
+                        Cnb::CnbChunkFlags::Mandatory, 4u);
+        return Cnb::CnbDocument::Parse(writer.Build(), "synthetic empty Model CNB");
     }
 
     void ModelPipelineContract(CnaDemos::DemoContext& ctx)
@@ -258,15 +443,273 @@ namespace
         ctx.Check(!animatedModel.animations.empty() && standaloneAnimation,
                   "generated-child mode retains the embedded Model animation and emits its decodable standalone AnimationClip companion");
 
-        ctx.Print("Built {} Model part(s), {} Texture2D child and a standalone AnimationClip.",
-                  model.parts.size(), built.output.additionalOutputs.size());
+        ctx.Check(Cnb::CnbModelChunk::Header == Cnb::MakeChunkId('M', 'D', 'L', 'H') &&
+                      Cnb::CnbModelChunk::Strings == Cnb::MakeChunkId('M', 'S', 'T', 'R') &&
+                      Cnb::CnbModelChunk::Bones == Cnb::MakeChunkId('M', 'B', 'O', 'N') &&
+                      Cnb::CnbModelChunk::Meshes == Cnb::MakeChunkId('M', 'M', 'S', 'H') &&
+                      Cnb::CnbModelChunk::Materials == Cnb::MakeChunkId('M', 'M', 'A', 'T') &&
+                      Cnb::CnbModelChunk::VertexData == Cnb::MakeChunkId('M', 'V', 'T', 'X') &&
+                      Cnb::CnbModelChunk::IndexData == Cnb::MakeChunkId('M', 'I', 'D', 'X') &&
+                      Cnb::CnbModelChunk::MorphData == Cnb::MakeChunkId('M', 'M', 'R', 'P') &&
+                      Cnb::CnbModelChunk::Skeleton == Cnb::MakeChunkId('M', 'S', 'K', 'L') &&
+                      Cnb::CnbModelChunk::Animations == Cnb::MakeChunkId('M', 'A', 'N', 'M') &&
+                      Cnb::CnbModelChunk::Lights == Cnb::MakeChunkId('M', 'L', 'I', 'T') &&
+                      Cnb::CnbModelSchemaVersion == 1u && Cnb::CnbModelBoneStride == 72u &&
+                      Cnb::CnbModelMeshStride == 16u && Cnb::CnbModelPartStride == 56u &&
+                      Cnb::CnbModelMaterialStride == 368u && Cnb::CnbNoIndex == 0xFFFFFFFFu &&
+                      Cnb::CnbTextureSlotCount == 7u && Cnb::CnbMaxEffectKind == 5u,
+                  "the schema freezes all eleven Model chunk IDs, version, strides, sentinel and public bounds");
+
+        ctx.Check(static_cast<std::uint32_t>(Cnb::CnbEffectKind::BasicEffect) == 0u &&
+                      static_cast<std::uint32_t>(Cnb::CnbEffectKind::SkinnedEffect) == 1u &&
+                      static_cast<std::uint32_t>(Cnb::CnbEffectKind::DualTextureEffect) == 2u &&
+                      static_cast<std::uint32_t>(Cnb::CnbEffectKind::PbrEffect) == 3u &&
+                      static_cast<std::uint32_t>(Cnb::CnbEffectKind::SkinnedPbrEffect) == 4u &&
+                      static_cast<std::uint32_t>(Cnb::CnbEffectKind::External) == 5u,
+                  "all six persisted Model effect ordinals remain exact");
+
+        const Cnb::CnbModelData complete = CompleteModel();
+        const std::vector<std::uint8_t> completeBytes =
+            Cnb::EncodeModelToCnb(complete, "Models/complete-codec");
+        const Cnb::CnbDocument completeDocument =
+            Cnb::CnbDocument::Parse(completeBytes, "complete Model CNB");
+        const Cnb::CnbModelData restored = Cnb::DecodeModelFromCnb(completeDocument);
+        ctx.Check(completeBytes == Cnb::EncodeModelToCnb(complete, "Models/complete-codec") &&
+                      completeDocument.Metadata().assetTypeName ==
+                          "Microsoft.Xna.Framework.Graphics.Model" &&
+                      completeDocument.Metadata().contentName == "Models/complete-codec" &&
+                      completeDocument.FindAll(Cnb::CnbModelChunk::Header).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelChunk::Strings).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelChunk::Bones).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelChunk::Meshes).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelChunk::Materials).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelChunk::VertexData).size() == 6u &&
+                      completeDocument.FindAll(Cnb::CnbModelChunk::IndexData).size() == 6u &&
+                      completeDocument.FindAll(Cnb::CnbModelChunk::MorphData).size() == 2u &&
+                      completeDocument.FindAll(Cnb::CnbModelChunk::Skeleton).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelChunk::Animations).size() == 1u &&
+                      completeDocument.FindAll(Cnb::CnbModelChunk::Lights).size() == 1u,
+                  "a complete Model encodes deterministically with exact metadata and schema chunk cardinalities");
+
+        ctx.Check(restored.hasBoneHierarchy && restored.appliesGltfLightingPolicy &&
+                      restored.bones.size() == 2u && restored.bones[0].name == "Root" &&
+                      restored.bones[0].parent == -1 && restored.bones[0].transform == Matrix(3.0f) &&
+                      restored.bones[1].name == "Child" && restored.bones[1].parent == 0 &&
+                      restored.bones[1].transform == Matrix(6.0f),
+                  "Model flags and the parent-before-child bone names, indices and transforms round trip exactly");
+
+        bool partsExact = restored.parts.size() == complete.parts.size();
+        for (std::size_t index = 0u; partsExact && index < restored.parts.size(); ++index)
+        {
+            const auto& left = restored.parts[index];
+            const auto& right = complete.parts[index];
+            partsExact = left.name == right.name && left.vertexStride == right.vertexStride &&
+                left.vertexCount == right.vertexCount && left.indexCount == right.indexCount &&
+                left.indexElementSize == right.indexElementSize &&
+                left.primitiveTopology == right.primitiveTopology &&
+                left.primitiveCount == right.primitiveCount && left.effectKind == right.effectKind &&
+                left.externalEffect == right.externalEffect &&
+                left.vertexColorEnabled == right.vertexColorEnabled && left.unlit == right.unlit &&
+                left.vertexBytes == right.vertexBytes && left.indexBytes == right.indexBytes;
+        }
+        ctx.Check(partsExact && restored.meshes.size() == 1u &&
+                      restored.meshes[0].name == "AllEffects" &&
+                      restored.meshes[0].parentBone == 1 &&
+                      restored.meshes[0].partIndices ==
+                          std::vector<std::uint32_t>({0u, 1u, 2u, 3u, 4u, 5u}),
+                  "all six effect kinds preserve their part geometry, flags, external effect and mesh ordering");
+
+        const Cnb::CnbMaterial& restoredMaterial = restored.parts[0].material;
+        const Cnb::CnbMaterial& sourceMaterial = complete.parts[0].material;
+        ctx.Check(restoredMaterial.baseColorTexture == sourceMaterial.baseColorTexture &&
+                      restoredMaterial.texture2 == sourceMaterial.texture2 &&
+                      restoredMaterial.normalMap == sourceMaterial.normalMap &&
+                      restoredMaterial.metallicRoughnessMap == sourceMaterial.metallicRoughnessMap &&
+                      restoredMaterial.emissiveMap == sourceMaterial.emissiveMap &&
+                      restoredMaterial.occlusionMap == sourceMaterial.occlusionMap &&
+                      restoredMaterial.specularMap == sourceMaterial.specularMap &&
+                      restoredMaterial.specularColorMap == sourceMaterial.specularColorMap &&
+                      restoredMaterial.baseColorFactor == sourceMaterial.baseColorFactor &&
+                      restoredMaterial.emissiveFactor == sourceMaterial.emissiveFactor &&
+                      restoredMaterial.specularColorFactor == sourceMaterial.specularColorFactor &&
+                      restoredMaterial.metallicFactor == sourceMaterial.metallicFactor &&
+                      restoredMaterial.roughnessFactor == sourceMaterial.roughnessFactor &&
+                      restoredMaterial.ior == sourceMaterial.ior &&
+                      restoredMaterial.specularFactor == sourceMaterial.specularFactor &&
+                      restoredMaterial.normalScale == sourceMaterial.normalScale &&
+                      restoredMaterial.occlusionStrength == sourceMaterial.occlusionStrength &&
+                      restoredMaterial.alphaCutoff == sourceMaterial.alphaCutoff &&
+                      restoredMaterial.alphaMode == sourceMaterial.alphaMode &&
+                      restoredMaterial.doubleSided == sourceMaterial.doubleSided,
+                  "all material texture references, factors, alpha mode and sidedness round trip exactly");
+
+        bool textureStateExact =
+            restoredMaterial.textureCoordinateSets == sourceMaterial.textureCoordinateSets;
+        for (std::size_t slot = 0u; textureStateExact && slot < Cnb::CnbTextureSlotCount; ++slot)
+        {
+            const auto& leftTransform = restoredMaterial.textureTransforms[slot];
+            const auto& rightTransform = sourceMaterial.textureTransforms[slot];
+            const auto& leftSampler = restoredMaterial.samplers[slot];
+            const auto& rightSampler = sourceMaterial.samplers[slot];
+            textureStateExact = leftTransform.offsetX == rightTransform.offsetX &&
+                leftTransform.offsetY == rightTransform.offsetY &&
+                leftTransform.scaleX == rightTransform.scaleX &&
+                leftTransform.scaleY == rightTransform.scaleY &&
+                leftTransform.rotation == rightTransform.rotation &&
+                leftSampler.filter == rightSampler.filter &&
+                leftSampler.addressU == rightSampler.addressU &&
+                leftSampler.addressV == rightSampler.addressV &&
+                leftSampler.declared == rightSampler.declared;
+        }
+        ctx.Check(textureStateExact,
+                  "all seven coordinate-set, UV-transform and sampler records remain distinct");
+
+        const auto& cubic = *restored.parts[0].morph;
+        const auto& step = *restored.parts[1].morph;
+        ctx.Check(cubic.vertexCount == 3u && cubic.recomputeFlatNormals &&
+                      cubic.targets.size() == 2u &&
+                      cubic.targets[0].positionDeltas ==
+                          complete.parts[0].morph->targets[0].positionDeltas &&
+                      cubic.targets[0].normalDeltas.empty() &&
+                      cubic.targets[0].tangentDeltas ==
+                          complete.parts[0].morph->targets[0].tangentDeltas &&
+                      cubic.targets[1].positionDeltas.empty() &&
+                      cubic.targets[1].normalDeltas ==
+                          complete.parts[0].morph->targets[1].normalDeltas &&
+                      cubic.weights == std::vector<float>({0.25f, 0.75f}) &&
+                      cubic.weightTrackCubicSpline && !cubic.weightTrackStepInterpolation &&
+                      cubic.weightTrackKeys.size() == 1u &&
+                      cubic.weightTrackKeys[0].timeSeconds == 0.5 &&
+                      cubic.weightTrackKeys[0].weights == std::vector<float>({0.2f, 0.8f}) &&
+                      cubic.weightTrackKeys[0].inTangent == std::vector<float>({-0.1f, -0.2f}) &&
+                      cubic.weightTrackKeys[0].outTangent == std::vector<float>({0.3f, 0.4f}) &&
+                      step.weightTrackStepInterpolation && !step.weightTrackCubicSpline &&
+                      step.weightTrackKeys[0].weights == std::vector<float>({0.5f}),
+                  "sparse morph streams, default weights and cubic/step weight-track payloads round trip");
+
+        ctx.Check(restored.skeleton.has_value() &&
+                      restored.skeleton->hierarchy == std::vector<std::int32_t>({-1, 0}) &&
+                      restored.skeleton->bindPose == complete.skeleton->bindPose &&
+                      restored.skeleton->inverseBindPose == complete.skeleton->inverseBindPose &&
+                      restored.skeleton->rootPrefix == complete.skeleton->rootPrefix,
+                  "the skeleton preserves hierarchy, bind pose, inverse bind pose and optional root prefixes");
+        ctx.Check(restored.animations.size() == 1u && restored.animations[0].name == "Wave" &&
+                      SameClip(restored.animations[0].clip, complete.animations[0].clip),
+                  "the embedded named animation preserves duration, target space, track and key fields");
+        ctx.Check(restored.lights.size() == 2u &&
+                      restored.lights[0].direction == complete.lights[0].direction &&
+                      restored.lights[0].diffuseColor == complete.lights[0].diffuseColor &&
+                      restored.lights[1].direction == complete.lights[1].direction &&
+                      restored.lights[1].diffuseColor == complete.lights[1].diffuseColor,
+                  "multiple directional lights preserve exact direction and diffuse colour");
+
+        const Cnb::CnbModelData emptyModel;
+        const Cnb::CnbModelData restoredEmpty = Cnb::DecodeModelFromCnb(
+            Cnb::CnbDocument::Parse(Cnb::EncodeModelToCnb(emptyModel), "empty Model CNB"));
+        ctx.Check(restoredEmpty.bones.empty() && restoredEmpty.parts.empty() &&
+                      restoredEmpty.meshes.empty() && !restoredEmpty.skeleton.has_value() &&
+                      restoredEmpty.animations.empty() && restoredEmpty.lights.empty() &&
+                      !restoredEmpty.appliesGltfLightingPolicy && !restoredEmpty.hasBoneHierarchy,
+                  "the wholly empty Model remains a valid value distinct from every optional payload");
+
+        Cnb::CnbModelData invalid = complete;
+        invalid.bones[1].parent = 1;
+        const bool badBone = Refuses([&] { (void)Cnb::EncodeModelToCnb(invalid); });
+        invalid = complete;
+        invalid.parts[0].vertexBytes.pop_back();
+        const bool badGeometry = Refuses([&] { (void)Cnb::EncodeModelToCnb(invalid); });
+        invalid = complete;
+        invalid.parts[0].primitiveCount = 2u;
+        const bool badPrimitiveCount = Refuses([&] { (void)Cnb::EncodeModelToCnb(invalid); });
+        invalid = complete;
+        invalid.parts[0].morph->targets[0].positionDeltas.pop_back();
+        const bool badMorph = Refuses([&] { (void)Cnb::EncodeModelToCnb(invalid); });
+        invalid = complete;
+        invalid.meshes[0].partIndices.push_back(99u);
+        const bool badMesh = Refuses([&] { (void)Cnb::EncodeModelToCnb(invalid); });
+        invalid = complete;
+        invalid.skeleton->bindPose.pop_back();
+        const bool badSkeleton = Refuses([&] { (void)Cnb::EncodeModelToCnb(invalid); });
+        ctx.Check(badBone && badGeometry && badPrimitiveCount && badMorph && badMesh && badSkeleton,
+                  "the encoder refuses invalid hierarchy, geometry, draw, morph, mesh and skeleton relationships");
+
+        ctx.Check(Refuses([&]
+                  {
+                      (void)Cnb::DecodeModelFromCnb(EmptyModelDocument(
+                          Cnb::CnbAssetTypeId::Curve, Cnb::CnbModelSchemaVersion));
+                  }) &&
+                      Refuses([&]
+                      {
+                          (void)Cnb::DecodeModelFromCnb(EmptyModelDocument(
+                              Cnb::CnbAssetTypeId::Model, Cnb::CnbModelSchemaVersion + 1u));
+                      }) &&
+                      Refuses([&]
+                      {
+                          (void)Cnb::DecodeModelFromCnb(EmptyModelDocument(
+                              Cnb::CnbAssetTypeId::Model, Cnb::CnbModelSchemaVersion, 0));
+                      }) &&
+                      Refuses([&]
+                      {
+                          (void)Cnb::DecodeModelFromCnb(EmptyModelDocument(
+                              Cnb::CnbAssetTypeId::Model, Cnb::CnbModelSchemaVersion, 2));
+                      }) &&
+                      Refuses([&]
+                      {
+                          (void)Cnb::DecodeModelFromCnb(EmptyModelDocument(
+                              Cnb::CnbAssetTypeId::Model, Cnb::CnbModelSchemaVersion, 1, false));
+                      }),
+                  "the decoder refuses wrong identity/version and missing or duplicate mandatory tables");
+
+        const auto encoderEmitsDecoderRefused = [&](const auto& corrupt)
+        {
+            Cnb::CnbModelData candidate = complete;
+            corrupt(candidate);
+            try
+            {
+                const auto bytes = Cnb::EncodeModelToCnb(candidate, "Models/invalid");
+                return Refuses([&]
+                {
+                    (void)Cnb::DecodeModelFromCnb(
+                        Cnb::CnbDocument::Parse(bytes, "encoder-produced invalid Model CNB"));
+                });
+            }
+            catch (const std::exception&)
+            {
+                return false;
+            }
+        };
+        ctx.Check(
+            encoderEmitsDecoderRefused([](Cnb::CnbModelData& value)
+            {
+                value.bones[0].parent = -2;
+            }) &&
+            encoderEmitsDecoderRefused([](Cnb::CnbModelData& value)
+            {
+                value.meshes[0].parentBone = -2;
+            }) &&
+            encoderEmitsDecoderRefused([](Cnb::CnbModelData& value)
+            {
+                value.parts[0].indexBytes[0] = 3u;
+            }) &&
+            encoderEmitsDecoderRefused([](Cnb::CnbModelData& value)
+            {
+                value.parts[0].material.alphaMode = 3u;
+            }) &&
+            encoderEmitsDecoderRefused([](Cnb::CnbModelData& value)
+            {
+                value.parts[0].material.textureCoordinateSets[0] = 2u;
+            }),
+            "the encoder currently emits five Model values its decoder refuses (CNA-DEMOS-ISSUE-109)");
+
+        ctx.Print("Built {} real Model part(s) and round-tripped {} synthetic effect variants.",
+                  model.parts.size(), restored.parts.size());
     }
 }
 
 CNA_DEMOS_CONSOLE(ModelPipelineContract, {
     .id = "content.model.pipeline_contract",
     .title = "Audit the Model pipeline contract",
-    .description = "Builds an embedded-texture glTF through CNA's public Model importer, processor and writer; verifies staging lifetime, component/schema identities, generated-child policy, canonical bundle variants, deterministic Model/Texture2D CNBs and typed runtime references.",
+    .description = "Builds embedded-texture and animated glTF sources through CNA's public Model pipeline, then audits the schema-1 codec with a complete synthetic model covering hierarchy, every effect kind, material state, geometry, morphing, skinning, animation and lights.",
     .apis = {"CNA::Content::Pipeline::CanonicalModelValue",
              "CNA::Content::Pipeline::ImportedModelDocumentType",
              "CNA::Content::Pipeline::ProcessedModelType",
@@ -289,9 +732,43 @@ CNA_DEMOS_CONSOLE(ModelPipelineContract, {
              "CNA::Content::Pipeline::ModelContentWriter::InputType",
              "CNA::Content::Pipeline::ModelContentWriter::Write",
              "CNA::Content::Pipeline::RegisterModelContentPipeline",
+             "CNA::Content::Cnb::CnbModelBone",
+             "CNA::Content::Cnb::CnbEffectKind",
+             "CNA::Content::Cnb::CnbMaxEffectKind",
+             "CNA::Content::Cnb::CnbTextureTransform",
+             "CNA::Content::Cnb::CnbSamplerState",
+             "CNA::Content::Cnb::CnbTextureSlotCount",
+             "CNA::Content::Cnb::CnbMaterial",
+             "CNA::Content::Cnb::CnbMorphTarget",
+             "CNA::Content::Cnb::CnbMorphWeightKey",
+             "CNA::Content::Cnb::CnbMorphData",
+             "CNA::Content::Cnb::CnbModelPart",
+             "CNA::Content::Cnb::CnbModelMesh",
+             "CNA::Content::Cnb::CnbModelSkeleton",
+             "CNA::Content::Cnb::CnbModelAnimation",
+             "CNA::Content::Cnb::CnbModelLight",
+             "CNA::Content::Cnb::CnbModelData",
+             "CNA::Content::Cnb::CnbModelChunk::Header",
+             "CNA::Content::Cnb::CnbModelChunk::Strings",
+             "CNA::Content::Cnb::CnbModelChunk::Bones",
+             "CNA::Content::Cnb::CnbModelChunk::Meshes",
+             "CNA::Content::Cnb::CnbModelChunk::Materials",
+             "CNA::Content::Cnb::CnbModelChunk::VertexData",
+             "CNA::Content::Cnb::CnbModelChunk::IndexData",
+             "CNA::Content::Cnb::CnbModelChunk::MorphData",
+             "CNA::Content::Cnb::CnbModelChunk::Skeleton",
+             "CNA::Content::Cnb::CnbModelChunk::Animations",
+             "CNA::Content::Cnb::CnbModelChunk::Lights",
+             "CNA::Content::Cnb::CnbModelSchemaVersion",
+             "CNA::Content::Cnb::CnbModelBoneStride",
+             "CNA::Content::Cnb::CnbModelMeshStride",
+             "CNA::Content::Cnb::CnbModelPartStride",
+             "CNA::Content::Cnb::CnbModelMaterialStride",
+             "CNA::Content::Cnb::CnbNoIndex",
+             "CNA::Content::Cnb::EncodeModelToCnb",
              "CNA::Content::Cnb::DecodeModelFromCnb",
              "CNA::Content::Cnb::DecodeTexture2DFromCnb"},
     .tags = {"content", "pipeline", "model", "gltf", "generated", "texture", "cnaext"},
     .assets = {"models/loose_textured_crate.gltf", "models/loose_slide_rig.gltf"},
-    .restrictions = "Headless CPU conversion and exact canonical/container checks. Existing graphics.model demos own GPU upload, rendering, animation and visual evidence; no screenshot or genuine-XNA execution is claimed.",
+    .restrictions = "CNA-DEMOS-ISSUE-109: EncodeModelToCnb can emit some invalid parent, index and material values that DecodeModelFromCnb refuses. Headless CPU conversion and exact canonical/container checks. Representative relationship and schema refusals are covered; arbitrary malformed-container fuzzing remains CNA test-suite work. Existing graphics.model demos own GPU upload, rendering, animation and visual evidence; no screenshot or genuine-XNA execution is claimed.",
 })

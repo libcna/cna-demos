@@ -336,7 +336,9 @@ a check that all authored colors remain visible and that a blank texture row can
   and ordered representation selection),
   ✅ `content.model.pipeline_contract` (all 33 public Model pipeline declarations dispositioned
   through real owned glTF staging, component/schema identities, deterministic primary Model and
-  generated Texture2D/AnimationClip CNBs plus typed runtime references),
+  generated Texture2D/AnimationClip CNBs plus typed runtime references; all 35 public schema-1
+  Model data/codec declarations are also dispositioned through exact constants, a deterministic
+  complete-value round trip, empty/invalid cases and ISSUE-109's encoder/decoder validation gap),
   ✅ `content.cnj.curve` (all six public Curve codec declarations through exact compiled metadata,
   deterministic complete-key round trips, every loop/continuity value, empty data and
   representative schema refusals while retaining the original runtime evaluation),

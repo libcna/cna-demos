@@ -15,6 +15,37 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-109 -- Model encoder emits values its paired decoder refuses
+
+- **Area/API:** `CNA::Content::Cnb::EncodeModelToCnb` and `DecodeModelFromCnb`, schema 1.
+- **Demo/reproduction:** run `content.model.pipeline_contract`. The demo first round-trips a
+  complete valid `CnbModelData`, then makes five independent copies and changes exactly one public
+  field in each: bone parent `-2`, mesh parent `-2`, a 16-bit index equal to `vertexCount`, material
+  `alphaMode` 3, or texture-coordinate set 2. For every copy it calls the public encoder, parses the
+  returned container successfully, and passes it to the public decoder.
+- **Observed:** `EncodeModelToCnb` returns bytes for all five inconsistent values.
+  `CnbDocument::Parse` accepts each structurally valid container, then `DecodeModelFromCnb` refuses
+  it under its documented schema checks. The same encoder separately rejects later/self bone
+  parents, byte-count disagreement, an incorrect derived primitive count, malformed morph stream,
+  out-of-range mesh part and mismatched skeleton arrays.
+- **Expected/contract:** the encoder documents `ContentLoadException` for an internally
+  inconsistent model and explicitly names an out-of-range index. A successful result from the
+  schema encoder should be accepted by the paired schema decoder under the same default limits.
+  Validate negative parent sentinels, decoded index bounds and the decoder's material ordinals
+  before returning bytes, while preserving the existing positive relationship checks.
+- **Cause observed in source:** bone and mesh parent checks only enter their range branches for
+  nonnegative values; the encoder validates index byte length but not decoded index values; and
+  `WriteMaterial` serializes `alphaMode` and coordinate sets without applying the bounds enforced
+  by `ReadMaterial`. These are five instances of one producer/consumer validation asymmetry.
+- **Evidence/status:** the complete source/contract excerpt is
+  `/tmp/checkpoint-972-model/model-codec-contract-and-validation.txt`, SHA-256
+  `3824b21b5fa5eb1a28a706a1c632adca97590a287be367e07dd35e43cef2de68`. Ten SOFTWARE and ten
+  OPENGLES3-labelled direct runs pass all 25 demo controls with byte-identical stdout SHA-256
+  `ba4f54743fcdbe157d5bb52875cc7bc7cbc100e2cf18222504f5d214b0794c8b` and empty stderr. The issue
+  is recorded as a passing diagnostic control rather than an expected demo failure. Open against
+  clean isolated CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified,
+  no upstream message was sent, and no malformed file from outside the public encoder is needed.
+
 ### CNA-DEMOS-ISSUE-108 -- Character-region expansion silently ignores an inverted range
 
 - **Area/API:** `CNA::Content::Pipeline::ExpandCharacterRegions`, declared in

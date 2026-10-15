@@ -1015,6 +1015,27 @@ integration/boundary disposition. The workflow establishes deterministic CPU con
 container semantics. It makes no screenshot, manual raster-quality, host-font portability or
 genuine-XNA execution claim.
 
+#### `CnbModelData.hpp` / `CnbModelCodec.hpp` declaration-level disposition
+
+The pinned headers expose 35 public named declarations under this audit's convention: sixteen
+data/type/bound declarations, eleven schema chunk IDs, six schema/stride/sentinel constants and
+the encoder/decoder. Focused972 extends the stable `content.model.pipeline_contract`; its real
+glTF builds retain the source-pipeline boundary while a direct complete value isolates schema-1
+codec behavior without adding another catalog ID.
+
+| Declaration family | Disposition |
+|---|---|
+| `CnbModelChunk` IDs; schema, strides and sentinel | All eleven four-byte IDs (`MDLH`, `MSTR`, `MBON`, `MMSH`, `MMAT`, `MVTX`, `MIDX`, `MMRP`, `MSKL`, `MANM`, `MLIT`) are asserted exactly with schema 1, the 72/16/56/368-byte fixed rows, `CnbNoIndex`, seven texture slots and effect maximum 5. The complete document has exact canonical metadata and expected singleton/repeated chunk cardinalities. |
+| `CnbModelBone`, `CnbModelMesh`, `CnbModelPart`, `CnbEffectKind` | A two-bone parent-before-child hierarchy preserves names, indices and nonidentity transforms. One mesh retains its parent and ordered references to six parts. Those parts exercise every effect ordinal, external-effect reference, alternating vertex-colour/unlit flags, exact vertex/index bytes, stride/count/topology and derived primitive count. Direct refusals cover a later/self parent, bad geometry length, wrong primitive count and out-of-range mesh part. |
+| `CnbMaterial`, `CnbTextureTransform`, `CnbSamplerState` | One fully populated material preserves all eight logical texture names, three factor arrays, seven scalar factors, alpha mode and double-sided state. Each of seven slots has a distinct coordinate set, five-field UV transform and four-field sampler record. Reuse by six parts also exercises encoded material interning without changing values. Runtime effect application and sampling remain the existing focused graphics/model demos. |
+| `CnbMorphTarget`, `CnbMorphWeightKey`, `CnbMorphData` | Two parts distinguish cubic and step weight tracks. Sparse position/normal/tangent target streams, vertex count, flat-normal recomputation, default weights, finite key time and value/in/out-tangent arrays all round trip. A short delta stream is refused by the encoder. Actual blending, upload and animated rendering remain `graphics.model.morph_targets`. |
+| `CnbModelSkeleton`, `CnbModelAnimation`, `CnbModelLight`, `CnbModelData` | The complete value preserves two-joint hierarchy plus bind, inverse-bind and optional root-prefix matrices; one named JointPalette clip and its exact key; two directional lights; and both model policy flags. The wholly empty model separately proves every optional collection/payload absent with safe defaults. Existing model demos own pose sampling, multiple skins, lighting and rendered behavior. |
+| `EncodeModelToCnb`, `DecodeModelFromCnb` | Encoding the complete value twice is byte-identical and decoding restores every field above. Wrong asset identity/schema, missing or duplicate header, and missing string table are refused. ISSUE-109 records five public values the encoder currently accepts but its paired decoder refuses: negative parent sentinels below -1, an out-of-range decoded index, alpha mode 3 and coordinate set 2. The passing diagnostic keeps that asymmetry visible; arbitrary hostile chunk mutation and resource-limit saturation remain CNA test-suite work. |
+
+All 35 public named declarations now have exact constant, field, round-trip, refusal or shared
+runtime evidence. This audit establishes deterministic CPU/container behavior and does not add a
+GPU, screenshot, visual-quality or genuine-XNA execution claim.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,

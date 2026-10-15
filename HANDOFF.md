@@ -939,6 +939,37 @@ issue, screenshot, visual-quality or genuine-XNA execution claim is added. Audit
 `CnbModelData.hpp`/`CnbModelCodec.hpp` family next, reusing the existing model pipeline and runtime
 evidence before adding another ID.
 
+Focused **972-CNB-Model-schema1-codec-disposition** extends the stable
+`content.model.pipeline_contract` demo from10 to25 controls without adding a catalog ID and
+dispositions all35 public named declarations in `CnbModelData.hpp` and `CnbModelCodec.hpp`. The
+existing real embedded-texture and animated glTF builds retain their pipeline/child evidence. A
+complete direct schema-1 value adds exact coverage for all11 chunk IDs, schema/stride/sentinel
+constants, both policy flags, parent-before-child bones, all six effect kinds, geometry and mesh
+ordering, every material texture/factor/scalar, all seven distinct UV/sampler slots, sparse cubic
+and step morph data, skeleton matrices/root prefixes, an embedded JointPalette clip and two lights.
+Encoding is byte-deterministic with exact metadata/chunk cardinalities, and decoding restores every
+field. A wholly empty model remains valid; representative encoder and decoder relationship/schema
+refusals are separate controls.
+
+The audit finds `CNA-DEMOS-ISSUE-109`: `EncodeModelToCnb` successfully emits five values its paired
+decoder refuses after container parsing--bone parent -2, mesh parent -2, an index equal to the
+vertex count, alpha mode3 and texture-coordinate set2. The passing diagnostic keeps the public
+producer/consumer validation asymmetry visible without turning the whole demo into an expected
+failure. Source inspection confirms the missing encoder checks and no CNA source is modified.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE-labelled and ten
+OPENGLES3-labelled final runs pass25/25 with byte-identical stdout SHA-256
+`ba4f54743fcdbe157d5bb52875cc7bc7cbc100e2cf18222504f5d214b0794c8b` and empty stderr. An initial
+exact CTest correctly failed because the first draft incorrectly marked the passing diagnostic as
+`knownIssue`; removing that metadata mistake makes the exact SOFTWARE CTest pass20 repetitions.
+Metadata remains683/0 and the validator/checkpoint self-tests pass5/5 and4/4. Generated XNA/C
+totals remain unchanged; 34 names enter the CNA-extension appendix and Complete956 still marks
+eight post-baseline IDs absent. Evidence:`/tmp/checkpoint-972-model/*`,
+`/tmp/checkpoint-972-model-report.json` and `/tmp/checkpoint-972-coverage.md`. No screenshot,
+visual-quality, GPU or genuine-XNA execution claim is added. Audit the adjacent public
+`CnbModelV2Data.hpp`/`CnbModelV2Codec.hpp` family next, reusing the existing genuine-XNB transcode
+and runtime Model evidence before adding another ID.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3078,8 +3109,11 @@ declarations through exact real-asset metadata, deterministic complete-key round
 persisted enum and representative schema refusals. Focused971 extends the stable CNJ pipeline
 workflow and closes all11 public `CnbAnimationClipCodec.hpp` declarations through exact shared
 time/key helpers, both target spaces, deterministic complete-clip round trips and representative
-schema refusals. Audit the public `CnbModelData.hpp`/`CnbModelCodec.hpp` family next, reusing the
-existing model pipeline and runtime evidence before adding another ID. The earlier native
+schema refusals. Focused972 extends the stable Model pipeline workflow and closes all35 public
+schema-1 `CnbModelData.hpp`/`CnbModelCodec.hpp` declarations through exact schema constants, a
+deterministic complete-value round trip, empty/invalid values and ISSUE-109's five encoder/decoder
+validation gaps. Audit `CnbModelV2Data.hpp`/`CnbModelV2Codec.hpp` next, reusing the genuine-XNB
+transcode and runtime Model evidence before adding another ID. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds
