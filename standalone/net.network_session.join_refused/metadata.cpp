@@ -7,7 +7,8 @@ CNA_DEMOS_STANDALONE({
     .description = "Two processes: the second finds a System Link session in its lobby, the host starts the game, "
                    "and NetworkSession::Join fails with a NetworkSessionJoinException whose JoinError is "
                    "SessionNotJoinable; once the host sets AllowJoinInProgress, the second Join enters the game.",
-    .apis = {"NetworkSessionJoinException", "NetworkSessionJoinException::JoinError", "NetworkSessionJoinError",
+    .apis = {"NetworkSessionJoinException", "NetworkSessionJoinException::JoinError",
+             "NetworkSessionJoinException::GetObjectData", "NetworkSessionJoinError",
              "NetworkSessionJoinError::SessionNotFound", "NetworkSessionJoinError::SessionNotJoinable",
              "NetworkSession::AllowJoinInProgress", "NetworkSession::StartGame", "NetworkSession::SessionState",
              "NetworkSession::Join", "NetworkSession::Find"},

@@ -84,6 +84,40 @@ namespace
                           ranged[Map] == 7 && !ranged[Difficulty].has_value(),
                       "lookup and C++ range iteration preserve the fixed eight-slot value shape");
 
+            std::unique_ptr<System::Collections::Generic::IEnumerator<std::optional<int>>> cursor(
+                properties.GetEnumerator());
+            bool beforeStartRefused = false;
+            try
+            {
+                static_cast<void>(cursor->Current());
+            }
+            catch (const System::InvalidOperationException&)
+            {
+                beforeStartRefused = true;
+            }
+            std::vector<std::optional<int>> enumerated;
+            while (cursor->MoveNext())
+            {
+                enumerated.push_back(cursor->Current());
+            }
+            bool afterEndRefused = false;
+            try
+            {
+                static_cast<void>(cursor->Current());
+            }
+            catch (const System::InvalidOperationException&)
+            {
+                afterEndRefused = true;
+            }
+            ctx.Check(beforeStartRefused && afterEndRefused && enumerated == ranged,
+                      "the explicit enumerator visits the same eight slots and guards both invalid positions");
+
+            cursor->Reset();
+            properties.setItem(GameMode, 4);
+            ctx.Check(cursor->MoveNext() && cursor->Current() == 4,
+                      "Reset restarts the explicit enumerator and fixed-slot writes remain visible");
+            properties.setItem(GameMode, 2);
+
             std::vector<std::optional<int>> shortOutput(9, -99);
             bool shortCopyRefused = false;
             try
@@ -186,6 +220,7 @@ CNA_DEMOS_GAME(SessionPropertiesDemo, {
              "NetworkSessionProperties::CopyTo", "NetworkSessionProperties::Add",
              "NetworkSessionProperties::Insert", "NetworkSessionProperties::Remove",
              "NetworkSessionProperties::RemoveAt", "NetworkSessionProperties::Clear",
+             "NetworkSessionProperties::GetEnumerator",
              "NetworkSession::SessionProperties", "NetworkSession::Create"},
     .tags = {"net", "session", "properties", "matchmaking"},
     .frames = 20,

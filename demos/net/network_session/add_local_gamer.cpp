@@ -97,11 +97,23 @@ namespace
             ctx.Check(session_->getLocalGamersProperty().getCountProperty() == 2,
                       "AddLocalGamer adds player two as a second local gamer");
             ctx.Check(!log_.empty() && log_.back() == "GamerJoined: Second Player", "GamerJoined announces player two");
-            const LocalNetworkGamer* one = session_->getLocalGamersProperty()[0];
-            const LocalNetworkGamer* two = session_->getLocalGamersProperty()[1];
+            LocalNetworkGamer* one = session_->getLocalGamersProperty()[0];
+            LocalNetworkGamer* two = session_->getLocalGamersProperty()[1];
             ctx.Check(one->getMachineProperty().getGamersProperty().getCountProperty() == 2 &&
                           two->getSignedInGamerProperty() == second,
                       "both play on this machine; LocalNetworkGamer::SignedInGamer is player two's profile");
+
+            bool partyInviteRefused = false;
+            try
+            {
+                one->SendPartyInvites();
+            }
+            catch (const System::InvalidOperationException&)
+            {
+                partyInviteRefused = true;
+            }
+            ctx.Check(partyInviteRefused,
+                      "a local player without another service-party member cannot send party invites");
 
             bool refused = false;
             try
@@ -174,7 +186,8 @@ CNA_DEMOS_GAME(AddLocalGamerDemo, {
                    "AllowJoinInProgress is set.",
     .apis = {"NetworkSession::AddLocalGamer", "NetworkSession::AllowJoinInProgress", "NetworkSession::Create",
              "NetworkSession::GamerJoined", "LocalNetworkGamer::SignedInGamer", "NetworkGamer::Machine",
-             "NetworkMachine::Gamers", "NetworkSession::StartGame", "NetworkSession::LocalGamers"},
+             "LocalNetworkGamer::SendPartyInvites", "NetworkMachine::Gamers", "NetworkSession::StartGame",
+             "NetworkSession::LocalGamers"},
     .tags = {"net", "multiplayer", "split-screen", "join"},
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},

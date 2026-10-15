@@ -75,7 +75,7 @@ diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,
 standalone; 657 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete998's full runtime reports; they include all693
 catalog IDs in both renderer suites with no absent IDs.
-The surface totals are306/329 XNA types,2124/2326 XNA members,674/753 fields and
+The surface totals are306/329 XNA types,2127/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete998's
 full runtime reports are the baseline inputs for the693-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -3521,8 +3521,9 @@ workflow: zero party size plus the exact `IsFriend`/`GetFriends` privilege refus
 74 GamerServices entries are CLR aliases, native finalizers, framework-created payloads or
 service/hardware/manual behavior. Focused1000 closes two meaningful Graphics constructors and all
 five members of the real explicit TouchCollection enumerator, then dispositions the remaining54
-Graphics entries, Touch's one CLR-only alias and Media's14 CLR-only aliases. Audit the34 residual
-Net members next, adding behavior only where an existing demo does not already establish it.
+Graphics entries, Touch's one CLR-only alias and Media's14 CLR-only aliases. Focused1001 closes
+three reachable Net behaviors and dispositions the remaining31 service, hardware, event-payload or
+CLR-alias entries. Audit the three residual Storage members next.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3793,6 +3794,41 @@ stderr throughout. Generated coverage moves303->306/329 types and2117->2124/2326
 remain674/753 and C routes3078/3205. Evidence:`/tmp/checkpoint-1000-graphics-members/*`. No physical
 device loss, compiled-FX material asset, screenshot, visual inspection or manual media interaction
 is claimed. Audit the34 residual Net members next.
+
+## Focused1001 residual Net member audit
+
+Three of the34 generated Net gaps expose useful behavior in the existing workflows.
+`net.network_session.session_properties` now owns the public `GetEnumerator` cursor, proves invalid
+Current before and after traversal, visits the same eight optional values as the C++ range, resets
+to the first slot and observes an in-place fixed-slot write. The ten remaining CLR-mangled
+ICollection/IList/IEnumerable names have no separate C++ entry points. In
+`net.network_session.add_local_gamer`, a real local session gamer with an offline profile and no
+second party member now proves `SendPartyInvites` refuses at its first policy boundary. Successful
+delivery remains service-only. Finally, the real System Link exception caught by
+`net.network_session.join_refused` writes `Message`, `InnerException` and `joinError` in base-first
+order through `GetObjectData`, retaining its actual message and error value.
+
+The remaining31 Net entries are intentionally uncredited: six framework-created event-argument
+constructors; the join-exception constructor; `EnableSendVoice` plus four voice/guest getters that
+need hardware, a remote participant or a service guest for meaningful positive state; four invited-
+join/event members that require an accepted service invitation; three leaderboard events and two
+payload properties that require service-backed gameplay; and the ten explicit CLR collection
+aliases above. Existing real event, System Link, roster and session-property workflows already
+cover their reachable payload or collection behavior.
+
+The warning-free `-j3` build and metadata693/0 pass. The three exact SOFTWARE CTests pass; the
+System Link CTest was repeated outside the network sandbox and reached its expected ISSUE-032/033
+contract in3.16s. Ten serial direct runs of every changed workflow under both renderer labels are
+stable: session properties SHA-256
+`15ac011ae724d39b7fd3492943ed1595ba230f5c09929fd81c064d7732a3ec80`, local gamer
+`1b431f1bb30ab9a9d827aba0e436393b003ec7433b06990d5bc5bd3bfcda46e6`, and refused join
+`9c29ca10e1395b2a7950a8e0804e016249f0ca18b6b8167ab30280f0fd010b97`, identical across SOFTWARE
+and OPENGLES3 with empty stderr. The refused-join run reaches the new passing serialization check
+before only the established ISSUE-032/033 assertions fail. An initial sandboxed attempt could not
+create an ENet host and is not runtime evidence. Coverage moves2124->2127/2326 members; types remain
+306/329, fields674/753 and C routes3078/3205. Evidence:`/tmp/checkpoint-1001-net-members/*`. No
+service invitation, leaderboard session, guest identity, voice hardware, screenshot, listening or
+manual claim is made. Audit the three residual Storage members next.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

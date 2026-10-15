@@ -53,6 +53,8 @@
 #include "Microsoft/Xna/Framework/Net/NetworkSessionState.hpp"
 #include "Microsoft/Xna/Framework/Net/NetworkSessionType.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/Runtime/Serialization/SerializationInfo.hpp"
+#include "System/Runtime/Serialization/StreamingContext.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::GamerServices;
@@ -304,6 +306,15 @@ namespace
                 {
                     report_.Log("NetworkSessionJoinException: " + std::string(exception.what()));
                     report_.Log("JoinError: " + JoinErrorName(exception.getJoinErrorProperty()));
+                    System::Runtime::Serialization::SerializationInfo serialized;
+                    const System::Runtime::Serialization::StreamingContext context;
+                    exception.GetObjectData(serialized, context);
+                    const std::vector<std::string> names = serialized.GetNames();
+                    report_.Check(names == std::vector<std::string>{"Message", "InnerException", "joinError"} &&
+                                      serialized.GetString("Message") == exception.what() &&
+                                      serialized.GetInt32("joinError") ==
+                                          static_cast<SharpRuntime::intcs>(exception.getJoinErrorProperty()),
+                                  "GetObjectData preserves the real refusal message and JoinError in base-first order");
                     // (CNA-DEMOS-ISSUE-032: CNA reports SessionNotFound -- the host closes the
                     // connection without saying why.)
                     report_.Check(exception.getJoinErrorProperty() == NetworkSessionJoinError::SessionNotJoinable,

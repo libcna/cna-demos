@@ -10841,3 +10841,24 @@ stderr; exact hashes and evidence are recorded in HANDOFF.md and
 with674/753 fields and3078/3205 C routes unchanged. No new CNA defect, physical device loss,
 compiled-FX material asset, screenshot, visual inspection or manual media interaction is claimed.
 Audit the34 residual Net members next.
+
+## Focused1001-residual-Net-member-audit
+
+Three reachable paths remain among the34 generated Net gaps. The stable session-properties demo
+now directly drives CNA's public enumerator through invalid pre/post positions, all eight values,
+Reset and a visible in-place slot write. The ten remaining explicit CLR collection aliases have no
+distinct C++ entry point. The local-gamer workflow reaches `SendPartyInvites` on a real session
+gamer and proves the no-party-member policy refusal. The refused System Link join serializes its
+real `NetworkSessionJoinException` through `GetObjectData`, preserving base-first field order,
+message and actual JoinError.
+
+The remaining31 entries are framework-created constructors, voice/guest state needing hardware or
+service participants, accepted-invitation paths, service leaderboard callbacks and explicit CLR
+aliases. They are dispositioned without synthetic metadata. The warning-free three-job build,
+metadata693/0 and three focused SOFTWARE CTests pass. Ten serial direct runs of each changed
+workflow pass their intended contracts under both renderer labels with identical per-workflow
+stdout and empty stderr; the known-issue join consistently reaches the new passing check before
+only ISSUE-032/033 fail. Coverage is306/329 XNA types,2127/2326 members,674/753 fields and3078/3205
+C routes. Evidence:`/tmp/checkpoint-1001-net-members/*`. No service invitation, leaderboard
+session, guest identity, voice hardware, screenshot, listening or manual claim is made. Audit the
+three residual Storage members next.

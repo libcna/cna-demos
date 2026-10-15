@@ -2159,13 +2159,14 @@ non-host call or online-service synchronization.
 | Inventory family | Decision |
 |---|---|
 | `NetworkSession::IsDisposed` | Covered by focused700 in the existing Local-session ownership workflow: a live session is disposed twice, reports disposed, clears Host and all four roster views, and refuses Update. |
-| `NetworkSessionProperties` explicit `ICollection`/`IList` members and two GetEnumerator entries | Focused701 now demonstrates the useful underlying fixed-shape C++ list behavior: lookup, range iteration, atomic copy and structural refusal. CNA does not expose the CLR-mangled aliases as separate entry points, so their generated inventory names remain intentionally uncredited. |
+| `NetworkSessionProperties` explicit `ICollection`/`IList` members and GetEnumerator entries | Focused701 demonstrates the useful fixed-shape list behavior. Focused1001 additionally exercises CNA's actual public `GetEnumerator` cursor; the remaining ten CLR-mangled interface aliases have no separate C++ entry points and stay intentionally uncredited. |
 | GameStarted/GameEnded/GamerJoined/GamerLeft/HostChanged/NetworkSessionEnded event-argument constructors | Framework-created payloads. Existing real events demonstrate their meaningful properties; manually constructing payload objects would add no event behavior. |
 | `LocalNetworkGamer::EnableSendVoice`; NetworkGamer HasVoice/IsTalking/IsMutedByLocalUser; `SendDataOptions::Chat` | Voice requires a capture device, a second participant and audible/manual observation. Keep as hardware/manual work; a default-false getter batch would be misleading. |
-| `SendPartyInvites`, InviteAccepted and Join/BeginJoin/EndJoinInvited | Require an online service identity plus another user accepting an invitation. Service/manual; ordinary System Link Join does not imply invitation coverage. |
+| `SendPartyInvites` | Focused1001 reaches its real first policy boundary: an actual local session gamer whose offline profile has no other party member gets `InvalidOperationException`. Successful delivery still requires an online service party. |
+| InviteAccepted and Join/BeginJoin/EndJoinInvited | Require an online service identity plus another user accepting an invitation. Service/manual; ordinary System Link Join does not imply invitation coverage. |
 | WriteArbitratedLeaderboard, WriteTrueSkill, WriteUnarbitratedLeaderboard and WriteLeaderboardsEventArgs properties | Ranked/leaderboard service callbacks. Existing offline sessions cannot raise them; service/manual. |
 | `NetworkGamer::IsGuest` | A meaningful positive state requires a service-backed guest sign-in and propagation into a NetworkSession. The current offline profiles only establish non-guest state; defer with the service/Guide guest workflow rather than crediting a constant false. |
-| NetworkSessionJoinException constructor/GetObjectData | `join_refused` catches a real exception and observes JoinError. Explicit construction and CLR serialization plumbing do not justify an independent demo. |
+| NetworkSessionJoinException constructor/GetObjectData | `join_refused` catches a real exception and observes JoinError. Focused1001 invokes `GetObjectData` on that production exception and proves base-first message/inner/join-error storage. The framework-created constructor remains intentionally uncredited. |
 | MaxPreviousGamers/MaxSupportedGamers and remaining enum fields | Constants and enum identities are reported separately from member coverage. Credit only fields used by real behavior; do not create getter-style demos for constants or switch-only labels. Focused702 now creates and disposes `LocalWithLeaderboards`, retaining its exact session type and local roster; the other uncredited enum/constant identities do not justify switch-only controls. |
 
 ### NetworkSession disposal state
@@ -2192,11 +2193,13 @@ outer sentinels. Add, Insert, Remove, RemoveAt and Clear each throw NotSupported
 every authored value remain exact. IsReadOnly is false because indexed replacement remains allowed,
 even though the collection's shape cannot change.
 
-Both renderers pass8/8 with identical stdout and empty stderr. Evidence:
+Both renderers originally passed8/8 with identical stdout and empty stderr. Focused1001 adds the
+explicit public enumerator: invalid Current before/after traversal, all eight values in the same
+order, Reset and visibility of a fixed-slot write. Both renderers now pass10/10 with identical
+stdout and empty stderr. Evidence:
 `/tmp/checkpoint-701-session-properties-*`. This demonstrates CNA's actual public C++ collection
-surface without falsely naming the inventory's explicit CLR interface aliases or its two
-GetEnumerator forms. Enumerator invalid-position/reset/version behavior remains CLR machinery and
-does not warrant a separate demo.
+surface without falsely naming the inventory's explicit CLR interface aliases. Focused1001 evidence
+is under `/tmp/checkpoint-1001-net-members/*`.
 
 ### LocalWithLeaderboards offline session type
 
@@ -5128,3 +5131,28 @@ coverage moves303->306/329 types and2117->2124/2326 members; fields remain674/75
 3078/3205. Evidence:`/tmp/checkpoint-1000-graphics-members/*`. No physical device loss, compiled-FX
 material asset, screenshot, visual inspection or manual media interaction is claimed. Audit the34
 residual Net members next.
+
+### Focused1001 residual Net member audit
+
+The public `NetworkSessionProperties::GetEnumerator` is substantive even though ten adjacent
+inventory names are CLR aliases. The existing fixed-shape demo now checks invalid Current before
+and after traversal, all eight values, Reset and visibility of an in-place slot write. A real local
+session gamer also reaches `SendPartyInvites` and proves the exact no-other-party-member refusal;
+successful delivery remains service-only. The actual System Link exception in `join_refused` now
+passes through `GetObjectData`, which writes the base message/inner fields before `joinError` and
+retains the runtime values.
+
+The other31 Net entries remain six framework-created event payload constructors, the join-exception
+constructor, five voice/guest members needing hardware or a service identity for positive behavior,
+four accepted-invitation paths, five service leaderboard event/payload members and ten explicit CLR
+collection aliases. Existing workflows already establish their reachable event and collection
+semantics; synthetic construction or constant-false getters would add no useful coverage.
+
+The warning-free `-j3` build and metadata693/0 pass. All three focused SOFTWARE CTests pass, with
+the network test repeated outside the sandbox. Ten direct runs of every changed workflow under both
+renderer labels have matching per-workflow stdout and empty stderr. The known-issue join reaches the
+new passing serialization assertion before only ISSUE-032/033 remain. Coverage moves2124->2127/2326
+members; types remain306/329, fields674/753 and C routes3078/3205. Evidence:
+`/tmp/checkpoint-1001-net-members/*`. No service invitation, leaderboard session, guest identity,
+voice hardware, screenshot, listening or manual claim is made. Audit the three residual Storage
+members next.
