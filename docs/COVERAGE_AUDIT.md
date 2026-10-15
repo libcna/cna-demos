@@ -3677,3 +3677,16 @@ known-issue SOFTWARE CTest passes ten repetitions; the warning-free build uses `
 totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes because both
 helpers are CNA-specific. Evidence:`/tmp/checkpoint-932-content-limits-*`. No new CNA defect
 appeared.
+
+### Complete933 generated runtime checkpoint
+
+The full pinned-CNA build and runtime validation absorb focused927-932. Metadata is663/0; all676
+enabled CTests pass (629 ordinary passes and47 declared skips), with three manual tests disabled.
+SOFTWARE reports560 pass/53 expected fail/47 skip/3 manual and OPENGLES3 reports599/54/7/3, both
+with all663 IDs and zero unexpected results. Exact comparison with Complete926 changes only the
+intended check counts: `content.xnb.custom_type_reader`10->11 and
+`content.content_manager.read_asset_ownership`21->24. Statuses, knownIssue identities and failed-
+assertion messages/multiplicities remain unchanged at92 SOFTWARE and96 OPENGLES3. Generated
+coverage is303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-933-complete-*`. No screenshot, listening, physical-input,
+external-service or manual visual-quality validation was performed.

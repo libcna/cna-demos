@@ -72,10 +72,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, cnaext4, platform2 and c_api177. Kinds are168 console,294 game and201 standalone;
 627 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete926's full runtime reports and includes all663
+Coverage: generated docs/COVERAGE.md uses Complete933's full runtime reports and includes all663
 catalog IDs in both renderer suites.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
-3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete926's
+3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete933's
 full runtime reports are the baseline inputs for the663-ID catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -86,10 +86,11 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete926 exercises all3078 credited C routes and all663 catalog IDs in both full smoke suites.
-It absorbs focused893-925, including the Video IDs, all public field-value batches through the
+Complete933 exercises all3078 credited C routes and all663 catalog IDs in both full smoke suites.
+It absorbs focused893-932, including the Video IDs, all public field-value batches through the
 dispositioned Graphics namespace, the complete diagnostics workflow and the canonical C exception
-identity checks through renderer selection and content loading.
+identity checks through renderer selection/content loading plus the direct ContentReader math,
+exact-byte and input-limit evidence.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Complete744 has37 known-issue demos after focused660 adds
 `game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
@@ -209,35 +210,33 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **926-663-demo-public-error-checkpoint** is the current full-build and full-runtime baseline. The
+Complete **933-663-demo-content-reader-checkpoint** is the current full-build and full-runtime baseline. The
 build remains pinned to the isolated CNA worktree `/tmp/cna-demos-cna-d23`, exact commit
 `d23e139de9e5c15511b6be745de290896a69ee37`; do not silently reconfigure it to the moving sibling.
-The clean rebuild and test run used at most three jobs. Metadata is663/0. Of679 registered CTests,
+The documented build and test run used at most three jobs. Metadata is663/0. Of679 registered CTests,
 three manual tests are disabled; all676 enabled entries complete without failure in one
-authoritative `-j3` run (629 passed and47 declared capability/environment skips, 230.50s).
+authoritative `-j3` run (629 passed and47 declared capability/environment skips, 244.59s).
 SOFTWARE/private-Xvfb reports560 pass/53 expected fail/47 skip/3 manual, while OPENGLES3/private-
 Xvfb reports599/54/7/3. Both execute all663 IDs with zero unexpected failures or unexpected passes.
 The five validator and four checkpoint-comparison self-tests pass.
 
-Compared with Complete920, the three new diagnostics IDs all take their declared standard-build
-skip because Complete926 intentionally keeps `CNA_DIAGNOSTICS=OFF`; their focused FULL-build
-evidence is retained separately. `c_api.content.content_manager` changes from pass to its reviewed
-CNA-DEMOS-ISSUE-103 expected failure, adding exactly one failed assertion on each renderer
-(91->92 SOFTWARE and95->96 OPENGLES3). SOFTWARE's `c_api.input.keyboard_mouse` changes from a
-declared no-desktop-pointer skip to a42-check pass because this Xvfb instance exposed the global
-pointer and cursor paths; OPENGLES3 remains a pass. The comparison reports no other status,
-known-issue or failed-assertion changes. `diagnostics.profiler.modes` has the reviewed one-check
-InterfaceVersion growth.
+Compared with Complete926, all663 IDs, statuses, known-issue identities and failed-assertion
+messages/multiplicities are unchanged at92 SOFTWARE and96 OPENGLES3. Only
+`content.xnb.custom_type_reader` grows10->11 controls and
+`content.content_manager.read_asset_ownership` grows21->24 controls. The latter remains an expected
+ISSUE-011 failure solely at its original default-recorder assertion. Focused927-929's C standalone
+diagnostics preserve passing project-level status while their focused runs retain the detailed
+exception identities.
 
-Generated coverage is302/329 types,2114/2326 non-field members,674/753 fields and3078/3205 C
+Generated coverage is303/329 types,2114/2326 non-field members,674/753 fields and3078/3205 C
 routes. Tested SHA-256: `cna-demos`
-`c7148901a3689266816bbdb65d5d3a505fd33a1017d0a88e847c27634d248ea4`, `libcna.so`
+`ca8691a3ddc35aab5cf4c4cb13b0a9df2b5c11687c17f473e7fec32f4009623c`, `libcna.so`
 `624de5687262040f91736857226b38392f5a5375099c92a0d221b6236b8aa25d`, and `libcna_c_api.so`
 `813bf0a2095524183bbaca66f6fbcc1fbdfcfcd5ddd8148c8ec6ce3138ebee24`. Report hashes are SOFTWARE
-`ef0db87f406c51e833b9c3f78e1673d2fb5f6f9287cd23f20381dafec6bfe7fb` and OPENGLES3
-`8846303aa157eeac7ea7f62ffac389b8b2cc354de4b7367498c6163c8dd8ad3b`; catalog hash is
-`53555e793701fc1a72ca973d955965f9901a094b964f044e511ecb88d16bd628`. Evidence is archived as
-`build/linux-full/reports/checkpoint-926-complete-*`. No screenshot, listening test, physical input,
+`5dbf28a25ffad8dba304d6992ca093e7d41a96f0f09e43d88e665ace0d256cf9` and OPENGLES3
+`a43d59cad4460852c39126119c3a7c3d626a2e2863d8edf552f2e87c487e08d4`; catalog hash is
+`830fbf32e653553cd9d13048eaf9d72677791e5a77cb177f4e003a59efc4033e`. Evidence is archived as
+`build/linux-full/reports/checkpoint-933-complete-*`. No screenshot, listening test, physical input,
 external service session or manual visual-quality inspection was performed.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
@@ -2336,8 +2335,8 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete926 is the authoritative663-demo full-build/full-runtime baseline and
-absorbs Focused921-925. The diagnostics public behavior audit is now
+HIGHEST PRIORITY: Complete933 is the authoritative663-demo full-build/full-runtime baseline and
+absorbs Focused927-932 after Complete926. The diagnostics public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered
 sources, history/producer drops and malformed-use counters all have runtime evidence in a real FULL
@@ -2357,16 +2356,15 @@ truncation fails before publishing a resource. Both are CNA/FNA reader helpers o
 inventory, so generated totals remain unchanged. Focused932 adds actual oversized collection and
 decoded-byte declarations through the two public limit helpers. The coherent ContentReader
 math/blob/limit audit is now closed; inherited primitive reads are already represented by actual
-schemas and do not justify one control per numeric width. HIGHEST PRIORITY: run a complete
-663-demo build/runtime checkpoint absorbing focused927-932, then return to the broader
-hand-maintained disposition tables for the highest-value ordinary public behavior that is neither
+schemas and do not justify one control per numeric width. Return to the broader hand-maintained
+disposition tables for the highest-value ordinary public behavior that is neither
 already demonstrated nor explicitly classified as trivial, platform/service/manual or
 implementation machinery.
 Keep constructors/finalizers, CLR collection plumbing and service-only paths classified rather than
 inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
-before another handoff that would make Complete926 too stale.
+before another handoff that would make Complete933 too stale.
 
 ### Focused916-cascade-selected-directional-specular
 
@@ -2678,6 +2676,25 @@ controls (23 pass/1 expected fail); stdout stays byte-identical with SHA-256
 known-issue SOFTWARE CTest passes ten repetitions; the warning-free incremental build uses `-j3`.
 Metadata remains663/0 and generated totals remain303/329 types,2114/2326 members,674/753 fields
 and3078/3205 routes. Evidence:`/tmp/checkpoint-932-content-limits-*`. No new CNA defect appeared.
+
+### Complete933-663-demo-content-reader-checkpoint
+
+The documented pinned-CNA `validate.sh linux-full` run absorbs focused927-932. Metadata is663/0;
+all676 enabled CTests pass, with629 ordinary passes,47 declared skips and three manual entries
+disabled in244.59s. SOFTWARE reports560 pass/53 expected fail/47 skip/3 manual and OPENGLES3
+reports599/54/7/3. Both execute every catalog ID with zero unexpected failures or unexpected
+passes. The five validation and four checkpoint-comparison self-tests pass.
+
+Exact comparison with Complete926 reports only the intended check-count growth:
+`content.xnb.custom_type_reader`10->11 and
+`content.content_manager.read_asset_ownership`21->24. All statuses, knownIssue identities and
+failed-assertion messages/multiplicities remain unchanged at92 SOFTWARE and96 OPENGLES3. Tested
+hashes are runner `ca8691a3ddc35aab5cf4c4cb13b0a9df2b5c11687c17f473e7fec32f4009623c`,
+unchanged `libcna.so` `624de5687262040f91736857226b38392f5a5375099c92a0d221b6236b8aa25d`
+and unchanged `libcna_c_api.so`
+`813bf0a2095524183bbaca66f6fbcc1fbdfcfcd5ddd8148c8ec6ce3138ebee24`. Evidence:
+`build/linux-full/reports/checkpoint-933-complete-*`. No screenshot, listening, physical-input,
+external-service or manual visual-quality validation was performed.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
@@ -7916,7 +7933,7 @@ and publish the consolidated remaining-member dispositions.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is926-663-demo-public-error-checkpoint; exact results, hashes and evidence
+Current complete baseline is933-663-demo-content-reader-checkpoint; exact results, hashes and evidence
 are in section7. Use its663-demo reports as the comparison baseline.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
@@ -7928,8 +7945,9 @@ device-values and resource-events extensions, texture slots and buffer bindings 
 complete500. Device clears, owned-device lifecycle and device profile/policy state are included in
 complete502. The complete504 checkpoint binary was built with clean CNA `f37f8d184`; CNA advanced
 externally during smoke to clean `fbd8e64a3` through CI/CMake-test/docs/tooling-only changes, while
-both production library hashes stayed unchanged. Complete504, complete524 and complete719 remain
-immutable historical comparison evidence; Complete926 is the current full-runtime baseline.
+both production library hashes stayed unchanged. Complete504, complete524, complete719 and
+Complete926 remain immutable historical comparison evidence; Complete933 is the current
+full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.
 
