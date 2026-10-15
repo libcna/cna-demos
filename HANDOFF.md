@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 30), 8 (content, 56), 9 (audio 23 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 30), 8 (content, 57), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 6 + logger 2, cnaext 4).
@@ -68,12 +68,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-678 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
-content56, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform3 and c_api177. Kinds are180 console,296 game and202 standalone;
-642 are automated,33 smoke-only and3 manual. Every declared category has demos.
+679 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
+content57, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, cnaext4, platform3 and c_api177. Kinds are181 console,296 game and202 standalone;
+643 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete956's full runtime reports; they include all675
-baseline IDs in both renderer suites and correctly mark the three post-baseline IDs absent.
+baseline IDs in both renderer suites and correctly mark the four post-baseline IDs absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete956's
 full runtime reports are the baseline inputs for the675-ID catalog. Selected semantic
@@ -650,6 +650,35 @@ and C totals stay unchanged; 44 public names enter the CNA-extension appendix, a
 marks all three post-baseline IDs absent. Evidence: `/tmp/checkpoint-961-cnj-*`. No GPU path,
 rendering, screenshot, visual inspection or CNA defect is claimed. Audit the public
 `XnbContentPipeline.hpp` declarations and source-root behavior next.
+
+Focused **962-XNB-source-transcode-and-disposition** adds the 679th catalog ID,
+`content.xnb.pipeline_transcode`, and closes all 13 public declarations in
+`XnbContentPipeline.hpp`. One explicitly composed registry verifies importer and Video-adapter
+identities, exact `.xnb` selection, the deterministic nine-output inventory and registration, then
+builds every supported root into native CNB. Project-built XNBs cover Texture2D, SpriteFont,
+SoundEffect, Curve and Model; bounded original wire fixtures cover Texture3D, TextureCube, Song and
+Video. The volume preserves every byte in all three mip levels, the cube preserves every byte in
+all six faces, and the Model correctly selects schema2 while retaining its five-bone/two-mesh
+hierarchy, shared vertex/index resources and two distinct effects.
+
+Song and Video select generated native sidecars and keep build dependency, runtime XREF and
+deployment identities distinct. Song retains its authored duration; Video retains all five
+metadata values, then a second build replaces every field plus the published stream destination.
+Unknown Video parameters and zero dimensions exercise distinct validation faults. A first runtime
+attempt exposed two demo assumptions: the generated chime is22.05kHz, and the twin-panel model
+needs schema2's dedicated decoder. Source review and the matching public codecs confirmed both as
+demo defects; correcting them produced no CNA issue.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE and ten
+OPENGLES3-labelled direct runs pass15/15 with byte-identical stdout SHA-256
+`77c86546fb2011cd5a5a33b9d9ee5036e9f914c715e69fa7e204a089d7fb549a` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata is679/0 and the validator/checkpoint self-tests pass
+5/5 and4/4. Generated XNA and C totals remain unchanged; 22 public names enter or extend the
+CNA-extension appendix, and Complete956 marks all four post-baseline IDs absent. Evidence:
+`/tmp/checkpoint-962-xnb/*`. This is CPU transcoding and exact CNB decoding; no generated media
+playback, GPU path, screenshot, visual inspection or genuine-XNA execution is claimed. Audit the
+adjacent public `XnbOutputContentPipeline.hpp` target-side declarations next, reusing existing XNB
+writer workflows before adding a new ID.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -2757,9 +2786,11 @@ workflow and recording explicit dispositions for forwarding, value, label and st
 Focused960 closes all 13 public `ContentCompiler.hpp` declarations with exact option propagation,
 built-in registration, both embedding overloads and ISSUE-106 for the XMA refusal's FX-only text.
 Focused961 closes all 79 public `CnjContentPipeline.hpp` declarations and adds real Texture3D,
-TextureCube and AnimationClip source builds. Audit the adjacent `XnbContentPipeline.hpp`
-declarations and supported XNB-to-CNB source routes next, extending existing workflows only for
-meaningful gaps. The earlier native
+TextureCube and AnimationClip source builds. Focused962 closes all 13 public
+`XnbContentPipeline.hpp` declarations and runs every one of the nine advertised XNB root types
+through native CNB transcoding, including Model schema-2 selection and external media publication.
+Audit the adjacent `XnbOutputContentPipeline.hpp` target-side declarations next, reusing the
+existing XNB-writing workflows and extending them only for meaningful gaps. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds

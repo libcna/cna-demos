@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**678 demos** in 18 categories. Kinds: console 180, game 296, standalone 202. Automation: automated 642, manual 3, smoke-only 33.
+**679 demos** in 18 categories. Kinds: console 181, game 296, standalone 202. Automation: automated 643, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 56 | 56 | 0 | 0 | 39 / 0 / 14 / 0 / 3 | 39 / 0 / 14 / 0 / 3 |
+| content | 57 | 57 | 0 | 0 | 39 / 0 / 14 / 0 / 4 | 39 / 0 / 14 / 0 / 4 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.cnj.pipeline_assets`, `content.custom.build_configuration`, `content.custom.build_manifest`.
-- OPENGLES3: absent from report: `content.cnj.pipeline_assets`, `content.custom.build_configuration`, `content.custom.build_manifest`.
+- SOFTWARE: absent from report: `content.cnj.pipeline_assets`, `content.custom.build_configuration`, `content.custom.build_manifest`, `content.xnb.pipeline_transcode`.
+- OPENGLES3: absent from report: `content.cnj.pipeline_assets`, `content.custom.build_configuration`, `content.custom.build_manifest`, `content.xnb.pipeline_transcode`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -221,12 +221,15 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbWriter::SetMetadata` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::DecodeAnimationClipFromCnb` -- content.cnj.pipeline_assets
-- `CNA::Content::Cnb::DecodeSongFromCnb` -- content.media.cnb_codec
-- `CNA::Content::Cnb::DecodeSoundEffectFromCnb` -- content.sound_effect.cnb_codec
-- `CNA::Content::Cnb::DecodeTexture2DFromCnb` -- content.custom.source_root_capabilities
-- `CNA::Content::Cnb::DecodeTexture3DFromCnb` -- content.cnj.pipeline_assets
-- `CNA::Content::Cnb::DecodeTextureCubeFromCnb` -- content.cnj.pipeline_assets
-- `CNA::Content::Cnb::DecodeVideoFromCnb` -- content.media.cnb_codec
+- `CNA::Content::Cnb::DecodeCurveFromCnb` -- content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeModelV2FromCnb` -- content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeSongFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeSoundEffectFromCnb` -- content.sound_effect.cnb_codec, content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeSpriteFontFromCnb` -- content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeTexture2DFromCnb` -- content.custom.source_root_capabilities, content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeTexture3DFromCnb` -- content.cnj.pipeline_assets, content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeTextureCubeFromCnb` -- content.cnj.pipeline_assets, content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeVideoFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::EncodeSongToCnb` -- content.media.cnb_codec
 - `CNA::Content::Cnb::EncodeSoundEffectToCnb` -- content.sound_effect.cnb_codec
@@ -306,7 +309,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ContentFileSha256` -- content.custom.build_manifest, content.custom.incremental_compiler, content.custom.multi_artifact_publication
 - `CNA::Content::Pipeline::ContentImporter::SelectedByNameOnly` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentImporterContext::LogInfo` -- content.custom.pipeline_diagnostics
-- `CNA::Content::Pipeline::ContentPipeline::Build` -- content.cnj.pipeline_assets, content.custom.nested_builds, content.custom.pipeline_components, content.custom.pipeline_diagnostics, content.custom.source_root_capabilities, content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::ContentPipeline::Build` -- content.cnj.pipeline_assets, content.custom.nested_builds, content.custom.pipeline_components, content.custom.pipeline_diagnostics, content.custom.source_root_capabilities, content.custom.xna_pipeline_components, content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::ContentPipeline::ImportAndProcess` -- content.texture_processor.resize_to_power_of_two
 - `CNA::Content::Pipeline::ContentPipelineError::Component` -- content.custom.pipeline_components
 - `CNA::Content::Pipeline::ContentPipelineError::LogicalName` -- content.custom.pipeline_components
@@ -357,6 +360,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ImportedTextureCubeType` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::ImportedVideoSource` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::ImportedVideoSourceType` -- content.video.pipeline_components
+- `CNA::Content::Pipeline::ImportedXnbVideo` -- content.xnb.pipeline_transcode
+- `CNA::Content::Pipeline::ImportedXnbVideoType` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::MakeContentBuildManifestEntry` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::MakeProcessedSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProbedVideoMetadata` -- content.video.pipeline_components
@@ -384,6 +389,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::RegisterXnaImporter` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaProcessor` -- content.custom.nested_builds, content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline
+- `CNA::Content::Pipeline::RegisterXnbContentPipeline` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::RunContentCompiler` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication, content.custom.xml_xnb_pipeline
 - `CNA::Content::Pipeline::SongContentWriter::Identity` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::SongContentWriter::InputType` -- content.song.pipeline_components
@@ -464,6 +470,15 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::WavSongImporter::SelectedByNameOnly` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::WavSongImporter::SourceExtensions` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::WavSongImporter::WavSongImporter` -- content.song.pipeline_components
+- `CNA::Content::Pipeline::XnbImporter::Identity` -- content.xnb.pipeline_transcode
+- `CNA::Content::Pipeline::XnbImporter::Import` -- content.xnb.pipeline_transcode
+- `CNA::Content::Pipeline::XnbImporter::OutputTypes` -- content.xnb.pipeline_transcode
+- `CNA::Content::Pipeline::XnbImporter::SourceExtensions` -- content.xnb.pipeline_transcode
+- `CNA::Content::Pipeline::XnbVideoProcessor::Identity` -- content.xnb.pipeline_transcode
+- `CNA::Content::Pipeline::XnbVideoProcessor::InputType` -- content.xnb.pipeline_transcode
+- `CNA::Content::Pipeline::XnbVideoProcessor::OutputType` -- content.xnb.pipeline_transcode
+- `CNA::Content::Pipeline::XnbVideoProcessor::Process` -- content.xnb.pipeline_transcode
+- `CNA::Content::Pipeline::XnbVideoProcessor::ValidateParameters` -- content.xnb.pipeline_transcode
 - `CNA::DesktopOS` -- core.platform.host_identity
 - `CNA::Devices::DisplayInfo::ContentScale` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::DisplayInfo::SafeArea` -- devices.display_info.scale_and_safe_area

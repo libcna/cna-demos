@@ -810,6 +810,28 @@ All ordinary public `CnjContentPipeline.hpp` behavior now has runtime evidence o
 shared-route/boundary disposition. This is CPU compilation and CNB decoding evidence; it does not
 claim Texture3D/TextureCube GPU upload, rendering or visual quality.
 
+#### `XnbContentPipeline.hpp` declaration-level disposition
+
+The pinned header exposes 13 declarations: the imported-Video type constant, both
+`ImportedXnbVideo` fields, four `XnbImporter` methods, five `XnbVideoProcessor` methods and
+`RegisterXnbContentPipeline`. Focused962 adds `content.xnb.pipeline_transcode` and runs every one
+of the importer's nine advertised root types through the public build coordinator.
+
+| Declaration family | Disposition |
+|---|---|
+| XnbImporter identity, source route and output inventory | The demo checks identity version 3, the exact `.xnb` extension, ordinary automatic selection and the deterministic nine-type output order. One registry composed from the XNB slice and each shared destination slice resolves the route and performs every build. Direct `Import` calls would bypass the selection, dependency and writer behavior the example is intended to teach. |
+| Texture2D, SpriteFont, SoundEffect and Curve roots | Project-built original XNB fixtures become native CNB through the shared processors. Decoding proves the 128x128 texture has real pixels, the font retains complete parallel glyph tables, the 22.05 kHz mono sound retains all 6,615 frames and the three-key curve keeps its midpoint evaluation. Rebuilding the texture is byte-identical. Runtime loading/rendering/playback remains with the existing focused asset demos. |
+| Texture3D and TextureCube roots | Original bounded wire fixtures exercise both previously unshown XNB source routes. The volume preserves every byte across 4x2x2, 2x1x1 and 1x1x1 mip levels. The cube preserves every RGBA byte of all six distinct 4x4 faces in canonical order. These are headless import/process/write/decode checks; GPU upload and sampling are separate graphics workflows. |
+| Model root and schema selection | The project-built five-bone, two-mesh fixture requires Model schema 2. The output declares schema 2 and the matching public decoder proves its hierarchy, one shared vertex buffer, one shared index buffer and two independently coloured effects. This intentionally covers the fidelity fallback rather than forcing the asset through schema 1; the existing runtime XNB Model scene owns draw and pixel evidence. |
+| Song root | An original root with an authored `.wma` path selects the available `.ogg` sidecar, preserves its 4,321 ms duration and logical name, and records the selected source separately as build dependency, runtime XREF and deployment output. The sidecar is deliberately opaque non-playable data, so no media decoding or playback result is claimed. |
+| ImportedXnbVideo and XnbVideoProcessor | An original Video root populates both imported fields and reaches the dedicated adapter. Exact original duration, dimensions, frame rate, soundtrack type and selected `.ogv` reference survive. A second build supplies all six standard overrides and proves the changed metadata, XREF logical name, original deployment source and new output path. Identity/input/output are explicit; validation distinguishes `UnknownName` from a zero-dimension range error. Other type/range permutations are boundary-test variants. |
+| Registration, malformed input and compatibility limits | `RegisterXnbContentPipeline` is the sole source of the importer and Video adapter in the demo registry; established pipeline slices supply destination processors/writers. Header/compression/type-table corruption, unsupported readers, invalid model subsets, missing media, traversal and size ceilings are extensive CNA parser/pipeline tests rather than useful demo concepts. Existing runtime XNB demos retain genuine loader and GPU/audio behavior. |
+
+All ordinary public `XnbContentPipeline.hpp` declarations now have runtime evidence or an explicit
+shared-route/boundary disposition. The result establishes deterministic CPU transcoding and exact
+native-data semantics for all supported roots; it makes no genuine-XNA execution, GPU, audio,
+video-decoding, playback, screenshot or visual-quality claim.
+
 ### Runtime XNB readers (separate from intermediate XML)
 
 `content.xnb.custom_type_reader` supplies the game's LevelReader and original generated XNB.
