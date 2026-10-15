@@ -15,6 +15,37 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-095 -- Multi-skin glTF channels retained by another palette are reported lost
+
+- **Area/API:** loose glTF `ContentManager::Load<Model>`, multiple `ModelSkinEXT` palettes,
+  `SkinningData::AnimationClips` and aggregate `GltfImportReportEXT` animation diagnostics.
+- **Reproduction:** `graphics.model.multi_skin_animation_report` loads an original two-skin glTF
+  with one `SplitMotion` source animation. One translation channel targets `LeftRig`'s only joint
+  and the other targets `RightRig`'s only joint. Both named SkinningData objects retain a one-track
+  JointPalette clip, and two AnimationPlayers reach the authored final Y translations +0.2 and
+  -0.3. The report correctly distinguishes one source animation from two retained palette clips.
+- **Observed:** the Model report also contains two separate `animation-targets-unavailable`
+  DroppedData warnings, each with count one. `WarningCount` and `DroppedFeatureCount` are therefore
+  both two and `AnythingLost()` is true, although every authored channel is publicly retained and
+  playable by one of the Model's palettes. No `rigid-animation-dropped-on-skinned-model`
+  diagnostic is present. SOFTWARE and OPENGLES3/Xvfb each pass the other eight of nine controls
+  and fail only the no-false-loss invariant.
+- **Cause observed in source:** `ContentModelLoaders` calls `ExtractClips` independently for each
+  skeleton and immediately appends each palette-local `AnimationReportEXT` to the one Model report.
+  `ExtractClips` correctly skips and counts channels outside its current joint map, but the
+  aggregate path never reconciles those skips with tracks retained by another skin. In contrast,
+  the later rigid-track accounting explicitly tests every retained skeleton before calling a
+  scene-node track lost.
+- **Expected:** aggregate Model diagnostics must report a source channel unavailable only when no
+  retained palette can carry its target. Palette-local skips may remain internal details, but they
+  must not produce Model-level dropped-data counts for motion available through another
+  `ModelSkinEXT::Data`.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction is deterministic on both exercised
+  renderers and uses public clip data and numeric player poses; no screenshot or visual judgment
+  is involved. Evidence:`/tmp/checkpoint-854-multi-skin-animation-*`. No CNA source was modified
+  and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-094 -- Retained glTF morph animation is reported as unsupported and lost
 
 - **Area/API:** loose glTF `ContentManager::Load<Model>`, `MorphTargetDataEXT::WeightTrack` and

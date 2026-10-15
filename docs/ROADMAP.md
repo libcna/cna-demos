@@ -224,7 +224,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (28 demos)
+## Phase 7 -- models, animation, glTF 🟨 (29 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -244,6 +244,9 @@ a check that all authored colors remain visible and that a blank texture row can
   recovery, and unknown interpolation fallback; expected failure, CNA-DEMOS-ISSUE-093).
 - ✅ `graphics.model.morph_animation_import` (compiled/loose carrier parity, exact vertex upload
   and false loose-report loss; expected failure, CNA-DEMOS-ISSUE-094).
+- ✅ `graphics.model.multi_skin_animation_report` (one source animation split across two retained
+  palette clips; expected failure, CNA-DEMOS-ISSUE-095: each palette-local skip is falsely counted
+  as aggregate Model loss even though the other palette retains that channel).
 - ✅ `graphics.model.material_variants` (KHR_materials_variants, run-time import: CNA's content
   pipeline refuses variants, which the compiled model format cannot carry). Its complete-state
   extension selects an unlit24-byte default, a coloured PBR60-byte Ocean layout and a textured
@@ -8461,3 +8464,22 @@ self-test suites pass. Temporary coverage remains302/329 types,2114/2326 members
 and3078/3205 C routes. Evidence:`/tmp/checkpoint-853-interpolation-carriers-*` and
 `/tmp/checkpoint-853-coverage.md`. No screenshot or visual inspection was performed. Audit multi-
 skin animation retention and aggregate report accounting next.
+
+## Focused854-multi-skin-animation-report-accounting
+
+New `graphics.model.multi_skin_animation_report` extends the generated two-skin asset with one
+`SplitMotion` animation: one translation channel belongs to each independent one-joint palette.
+Both `ModelSkinEXT::Data` objects retain their own one-track JointPalette clip, and independent
+AnimationPlayers reach the authored final Y translations +0.2 and -0.3. The public report correctly
+records SkinCount2, AnimationCount1 and ClipCount2, with no final rigid-track loss.
+
+The same report incorrectly appends one `animation-targets-unavailable` warning from each
+palette-local extraction. It therefore reports two dropped occurrences and `AnythingLost()` even
+though the two public palettes jointly retain every source channel. CNA-DEMOS-ISSUE-095 records the
+missing cross-palette reconciliation. SOFTWARE and OPENGLES3 pass8/9 with only that invariant
+failing; the original `multiple_skins` workflow still passes21/21 on both renderers with the shared
+asset. The `-j3` incremental build, exact known-issue SOFTWARE CTest, metadata654/0 and both tool
+self-test suites pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields
+and3078/3205 C routes. Evidence:`/tmp/checkpoint-854-multi-skin-animation-*` and
+`/tmp/checkpoint-854-coverage.md`. No screenshot or visual inspection was performed. Audit multiple
+parts per independent skin and AnimationPlayer malformed-data boundaries next.

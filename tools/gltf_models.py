@@ -15,7 +15,7 @@ assets/models/ that is loaded as a loose glTF file at run time.
 * turntable.gltf, morph_flag.gltf/loose_morph_flag.gltf, camera_rig.gltf, textured_crate.gltf, lit_sphere.gltf,
   slide_rig.gltf/loose_slide_rig.gltf, loose_paint_toy.gltf, loose_node_instances.gltf and the three
   loose_scene_fallback_*.gltf files, loose_animation_diagnostics.gltf,
-  loose_skinned_rigid_animation.gltf and the
+  loose_multi_skin.gltf, loose_skinned_rigid_animation.gltf and the
   loose_animation_bad_*.gltf files -- node-animation clips, morph targets with a weights
   animation, glTF cameras, an embedded base-colour texture, KHR_lights_punctual lights,
   STEP/LINEAR/CUBICSPLINE samplers, KHR_materials_variants, rigid shared-mesh placement and scene
@@ -773,6 +773,24 @@ def multiple_skins(path: Path) -> None:
                          {"name": "RightMesh", "mesh": 0, "skin": 1, "translation": [-4, 0, 0]}]
     doc.gltf["scenes"] = [{"name": "IndependentSkins", "nodes": [0, 2, 4, 5]}]
     doc.gltf["scene"] = 0
+    # One source animation deliberately drives a joint in each independent palette. Each retained
+    # SkinningData must receive its own one-track clip, while the model-level report must recognize
+    # that the two palettes jointly retain every authored channel.
+    times = doc.accessor([0, 1], "SCALAR", target=None)
+    doc.gltf["accessors"][times].update({"min": [0], "max": [1]})
+    doc.gltf["animations"] = [{
+        "name": "SplitMotion",
+        "samplers": [
+            {"input": times,
+             "output": doc.accessor([(0, 0, 0), (0, .2, 0)], "VEC3", target=None)},
+            {"input": times,
+             "output": doc.accessor([(0, 0, 0), (0, -.3, 0)], "VEC3", target=None)},
+        ],
+        "channels": [
+            {"sampler": 0, "target": {"node": 1, "path": "translation"}},
+            {"sampler": 1, "target": {"node": 3, "path": "translation"}},
+        ],
+    }]
     doc.save(path)
 
 

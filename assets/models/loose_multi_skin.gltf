@@ -55,6 +55,30 @@
    "componentType": 5126,
    "count": 1,
    "type": "MAT4"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5126,
+   "count": 2,
+   "type": "SCALAR",
+   "min": [
+    0
+   ],
+   "max": [
+    1
+   ]
+  },
+  {
+   "bufferView": 8,
+   "componentType": 5126,
+   "count": 2,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 9,
+   "componentType": 5126,
+   "count": 2,
+   "type": "VEC3"
   }
  ],
  "bufferViews": [
@@ -98,12 +122,27 @@
    "buffer": 0,
    "byteOffset": 220,
    "byteLength": 64
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 284,
+   "byteLength": 8
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 292,
+   "byteLength": 24
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 316,
+   "byteLength": 24
   }
  ],
  "buffers": [
   {
-   "byteLength": 284,
-   "uri": "data:application/octet-stream;base64,zcxMvpqZGb4AAAA/zcxMPpqZGb4AAAA/zcxMPpqZGT4AAAA/zcxMvpqZGT4AAAA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAQACAAAAAgADAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8="
+   "byteLength": 340,
+   "uri": "data:application/octet-stream;base64,zcxMvpqZGb4AAAA/zcxMPpqZGb4AAAA/zcxMPpqZGT4AAAA/zcxMvpqZGT4AAAA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAQACAAAAAgADAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAACAPwAAAAAAAAAAAAAAAAAAAADNzEw+AAAAAAAAAAAAAAAAAAAAAAAAAACamZm+AAAAAA=="
   }
  ],
  "meshes": [
@@ -214,5 +253,36 @@
    ]
   }
  ],
- "scene": 0
+ "scene": 0,
+ "animations": [
+  {
+   "name": "SplitMotion",
+   "samplers": [
+    {
+     "input": 7,
+     "output": 8
+    },
+    {
+     "input": 7,
+     "output": 9
+    }
+   ],
+   "channels": [
+    {
+     "sampler": 0,
+     "target": {
+      "node": 1,
+      "path": "translation"
+     }
+    },
+    {
+     "sampler": 1,
+     "target": {
+      "node": 3,
+      "path": "translation"
+     }
+    }
+   ]
+  }
+ ]
 }

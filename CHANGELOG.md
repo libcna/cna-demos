@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a two-palette glTF animation workflow and recorded CNA-DEMOS-ISSUE-095: channels retained
+  by one skin are falsely counted as unavailable loss while extracting the other skin's clip.
 - Extended animation interpolation coverage across byte-equivalent compiled and loose Model
   carriers, directly confirming CNA-DEMOS-ISSUE-031's STEP/CUBICSPLINE runtime scope.
 - Added a compiled-versus-loose morph-animation carrier workflow with exact vertex upload, and

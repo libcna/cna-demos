@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 28), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 29), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -67,10 +67,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-651 project-built catalog demos in18 categories: math78, game33, graphics180, audio23, core3,
+654 project-built catalog demos in18 categories: math78, game33, graphics183, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,289 game and199 standalone;
-615 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,292 game and199 standalone;
+618 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete844 at650 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -362,6 +362,21 @@ pass; temporary coverage remains302/329 types,2114/2326 members,169/753 fields a
 routes. Evidence:`/tmp/checkpoint-853-interpolation-carriers-*` and
 `/tmp/checkpoint-853-coverage.md`. No screenshot or visual inspection was performed. Audit multi-
 skin animation retention and aggregate report accounting next.
+
+Focused **854-multi-skin-animation-report-accounting** adds
+`graphics.model.multi_skin_animation_report` and extends the generated two-skin fixture with a
+single `SplitMotion` source animation. Each independent SkinningData retains and plays its own
+one-track JointPalette clip to the exact authored final pose; the report correctly records
+SkinCount2, AnimationCount1 and ClipCount2 and reports no final rigid-track loss. It incorrectly
+appends one palette-local `animation-targets-unavailable` warning per skin, so two dropped
+occurrences and `AnythingLost()` falsely describe channels retained by the other public palette.
+CNA-DEMOS-ISSUE-095 records the missing aggregate reconciliation. SOFTWARE and OPENGLES3 pass8/9;
+the shared-asset `multiple_skins` regression remains21/21 on both. The `-j3` build, exact known-
+issue SOFTWARE CTest, metadata654/0 and self-tests5/5 and4/4 pass; temporary coverage remains
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-854-multi-skin-animation-*` and `/tmp/checkpoint-854-coverage.md`. No screenshot or
+visual inspection was performed. Audit multiple parts per independent skin and AnimationPlayer
+malformed-data boundaries next.
 
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
@@ -1940,15 +1955,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-853
-form the validated653-demo staged state. The glTF scene/node-graph audit is closed with
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-854
+form the validated654-demo staged state. The glTF scene/node-graph audit is closed with
 CNA-DEMOS-ISSUE-092 retained. Rigid animation channel loss, resampling, duplicate/nonzero times,
 generated clip names and public malformed-sampler refusals now have exact evidence;
 CNA-DEMOS-ISSUE-093 records the silent unknown-interpolation-to-LINEAR fallback. Mixed skinned/
 rigid clips now have exact retention/loss evidence, while CNA-DEMOS-ISSUE-094 records false loss
 diagnostics for a retained morph track. Same-asset runtime evidence now confirms
-CNA-DEMOS-ISSUE-031 on both compiled and loose interpolation carriers. Audit multi-skin animation
-retention and aggregate report accounting next, especially channels retained by different palettes.
+CNA-DEMOS-ISSUE-031 on both compiled and loose interpolation carriers. Multi-skin playback retains
+every channel across its two palettes, while CNA-DEMOS-ISSUE-095 records false aggregate loss from
+the unreconciled palette-local reports. Audit multiple parts per independent skin and
+AnimationPlayer malformed-data boundaries next.
 The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
@@ -3904,6 +3921,25 @@ members,169/753 fields and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-853-interpolation-carriers-*` and `/tmp/checkpoint-853-coverage.md`. No screenshot
 or visual inspection was performed. Audit multi-skin animation retention and aggregate report
 accounting next.
+
+### Focused854-multi-skin-animation-report-accounting
+
+New `graphics.model.multi_skin_animation_report` extends the generated two-skin asset with one
+`SplitMotion` animation whose two translation channels belong to different one-joint palettes.
+Both named `ModelSkinEXT::Data` objects retain their own one-track JointPalette clip, and separate
+AnimationPlayers reach the authored final Y translations +0.2 and -0.3. The public report correctly
+records two skins, one source animation and two retained clips, with no final rigid-track loss.
+
+The report nevertheless appends one `animation-targets-unavailable` warning from each palette-
+local extraction. Its two warnings/two dropped occurrences and `AnythingLost()` therefore claim
+loss even though the palettes jointly retain every channel. CNA-DEMOS-ISSUE-095 records this
+missing cross-palette reconciliation. SOFTWARE and OPENGLES3 pass8/9 with only that invariant
+failing; the original `multiple_skins` still passes21/21 on both renderers against the extended
+asset. The `-j3` incremental build, exact known-issue SOFTWARE CTest, metadata654/0 and validator/
+checkpoint self-tests5/5 and4/4 pass. Temporary coverage remains302/329 types,2114/2326 members,
+169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-854-multi-skin-animation-*` and
+`/tmp/checkpoint-854-coverage.md`. No screenshot or visual inspection was performed. Audit multiple
+parts per independent skin and AnimationPlayer malformed-data boundaries next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
