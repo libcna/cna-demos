@@ -6,6 +6,12 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
+#include "Microsoft/Xna/Framework/Graphics/DepthFormat.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsAdapter.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsProfile.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PresentationParameters.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PresentInterval.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RenderTarget2D.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
@@ -28,6 +34,7 @@ namespace
 
             CheckMoveIdentity(device);
             CheckBoundDestruction(device);
+            CheckCrossDeviceMove(device);
 
             // A 128x128 off-screen colour buffer. RenderTarget2D derives from Texture2D, so once
             // rendered it can be drawn like any texture.
@@ -184,19 +191,81 @@ namespace
                             "the same-address replacement receives rendering through its new binding");
         }
 
+        void CheckCrossDeviceMove(GraphicsDevice& primary)
+        {
+            PresentationParameters parameters;
+            parameters.setBackBufferWidthProperty(32);
+            parameters.setBackBufferHeightProperty(32);
+            parameters.setDepthStencilFormatProperty(DepthFormat::None);
+            parameters.setPresentationIntervalProperty(PresentInterval::Immediate);
+            secondary_ = std::make_unique<GraphicsDevice>(
+                GraphicsAdapter::getDefaultAdapterProperty(), GraphicsProfile::HiDef, parameters);
+
+            RenderTarget2D destination(primary, 8, 4, false, SurfaceFormat::Color,
+                                       DepthFormat::Depth16, 0, RenderTargetUsage::DiscardContents);
+            primary.getTexturesProperty()(3, &destination);
+
+            RenderTarget2D source(*secondary_, 20, 10, false, SurfaceFormat::Color,
+                                  DepthFormat::Depth24Stencil8, 0,
+                                  RenderTargetUsage::PreserveContents);
+            const Rectangle origin(0, 0, 1, 1);
+            const Color lime = Color::LimeGreen;
+            secondary_->SetRenderTarget(&source);
+            secondary_->Clear(lime);
+            secondary_->SetRenderTarget(static_cast<RenderTarget2D*>(nullptr));
+            Color pixel = Color::Black;
+            source.GetData(0, &origin, &pixel, 0, 1);
+            Context().Check(pixel == lime,
+                            "a secondary EasyGL device binds its own render target before clearing it");
+
+            // Keep the cross-device move proof independent from the EasyGL context bug above.
+            source.SetData(0, &origin, &lime, 0, 1);
+            secondary_->SetRenderTarget(&source);
+
+            destination = std::move(source);
+            const auto bindings = secondary_->GetRenderTargets();
+            Context().Check(source.getIsDisposedProperty() &&
+                                destination.getGraphicsDeviceProperty() == secondary_.get() &&
+                                destination.getWidthProperty() == 20 &&
+                                destination.getHeightProperty() == 10 &&
+                                destination.getDepthStencilFormatProperty() == DepthFormat::Depth24Stencil8 &&
+                                destination.getRenderTargetUsageProperty() == RenderTargetUsage::PreserveContents &&
+                                primary.getTexturesProperty()[3] == nullptr &&
+                                bindings.size() == 1 &&
+                                bindings[0].getRenderTargetProperty() == &destination,
+                            "cross-device move assignment transfers ownership and the active target binding");
+
+            secondary_->SetRenderTarget(static_cast<RenderTarget2D*>(nullptr));
+            pixel = Color::Black;
+            destination.GetData(0, &origin, &pixel, 0, 1);
+            Context().Check(pixel == lime,
+                            "cross-device move assignment preserves the source target payload");
+
+            const Color orange = Color::Orange;
+            destination.SetData(0, &origin, &orange, 0, 1);
+            pixel = Color::Black;
+            destination.GetData(0, &origin, &pixel, 0, 1);
+            Context().Check(pixel == Color::Orange,
+                            "the cross-device moved target remains writable after unbinding");
+        }
+
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::unique_ptr<RenderTarget2D> target_;
         Texture2D arrow_;
         int contentLost_ = 0;
         bool checkedRestore_ = false;
+        // Keep the second device alive through the primary frame. Its teardown has separate
+        // OPENGLES3 coverage under CNA-DEMOS-ISSUE-086.
+        std::unique_ptr<GraphicsDevice> secondary_;
     };
 }
 
 CNA_DEMOS_GAME(RenderTarget2DDemo, {
     .id = "graphics.render_target.render_target2d",
     .title = "Render to a texture",
-    .description = "Checks bound-target move and destruction identity, draws a sprite into a RenderTarget2D, "
-                   "then draws the target as an ordinary texture at several sizes and with a tint.",
+    .description = "Checks bound-target move, cross-device ownership and destruction identity, draws a sprite "
+                   "into a RenderTarget2D, then draws the target as an ordinary texture at several sizes and "
+                   "with a tint.",
     .apis = {"RenderTarget2D::RenderTarget2D", "RenderTarget2D::ContentLost", "RenderTarget2D::IsContentLost",
              "GraphicsDevice::SetRenderTarget", "GraphicsDevice::GetRenderTargets", "GraphicsDevice::Present",
              "GraphicsResource::Dispose",
@@ -205,4 +274,8 @@ CNA_DEMOS_GAME(RenderTarget2DDemo, {
     .frames = 10,
     .deterministic = true,
     .assets = {"textures/arrow.png"},
+    .restrictions = "CNA-DEMOS-ISSUE-112: SetRenderTarget on a secondary EasyGL device binds without acquiring "
+                    "that device's context, so its following Clear reaches no readable target under OPENGLES3.",
+    .knownIssue = "CNA-DEMOS-ISSUE-112",
+    .knownIssueRenderers = {"OPENGLES3"},
 })

@@ -15,6 +15,41 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-112 -- Secondary EasyGL SetRenderTarget runs without its device context
+
+- **Area/API:** `GraphicsDevice::SetRenderTarget`/`SetRenderTargets`, EasyGL renderer-context
+  leasing and multiple simultaneously live `GraphicsDevice` instances.
+- **Demo/reproduction:** run `graphics.render_target.render_target2d` with OPENGLES3. The game-owned
+  primary device stays live while the demo creates a second 32x32 HiDef device and a 20x10
+  `RenderTarget2D` owned by it. Outside a Game frame, call the secondary device's
+  `SetRenderTarget`, clear LimeGreen, unbind and read the target's origin. The same sequence passes
+  on SOFTWARE. Cross-device move controls then use explicit texture transfer so they remain
+  independent positive controls.
+- **Observed:** OPENGLES3 reads transparent black `{0,0,0,0}` both before and after the initial
+  diagnostic variant moved the target; SOFTWARE reads exact LimeGreen. The final focused workflow
+  fails only the pre-move secondary binding assertion. Its other16 controls pass, including
+  cross-device owner/shape transfer, detachment of the old primary texture slot, transfer of the
+  secondary public render-target binding, retained payload and post-unbind writes. Ten runs per
+  renderer reproduce17/17 SOFTWARE passes and the same single OPENGLES3 failure with empty stderr.
+- **Expected:** binding an owned target through a `GraphicsDevice` must execute against that
+  device's renderer context. Its immediately following `Clear` already leases the correct context,
+  so unbinding and readback should return the requested LimeGreen pixel just as they do for the
+  primary device and SOFTWARE.
+- **Cause observed in source:** `GraphicsDevice::Clear`, `Present` and `Reset` acquire a renderer
+  thread-context lease. `GraphicsDevice::SetRenderTargets` calls
+  `renderer_->SetRenderTargets(...)` directly, and EasyGL's `SetRenderTarget2D` also performs its
+  framebuffer work without `EnsureCallingThreadContext` or a lease. Outside a frame there is no
+  secondary-device frame lease to supply the missing current context, so the public binding state
+  changes while the intended EasyGL framebuffer does not become the clear destination.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`, reproduced under Mesa/X11/Xvfb with OPENGLES3.
+  No OPENGL33, physical-GPU, WebGPU or secondary-device presentation claim is made. This occurs
+  before device destruction and is distinct from ISSUE-086's later primary-device blackout.
+  Evidence: `/tmp/checkpoint-1010-render-target-cross-device/*`; the diagnostic source and context
+  audit have SHA-256 `17130e03d200cfdcb0e7f3fcd7f3744f092241c58be934f71ff70551e694482e`
+  and `7a2cfc151a43ead9fc54e24ff18133dfc76d095a00e38836da0c2fa6b2220464`.
+  No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-111 -- Direct XNA XNB writer ignores its build environment platform and profile
 
 - **Area/API:** `CNA::Content::Pipeline::RegisterXnaXnbOutput`, specifically the registered

@@ -10993,3 +10993,24 @@ OPENGLES3/Xvfb runs pass12/12 with stable per-renderer stdout and empty stderr. 
 `/tmp/checkpoint-1009-occlusion-query/*`. Counts remain307/329 XNA types,2128/2326 members,674/753
 fields and3079/3205 C routes. No screenshot, manual visual result, device-loss teardown or other
 backend claim is made. Continue with the next reachable explicit resource-behavior gap.
+
+## Focused1010-RenderTarget2D-cross-device-move-and-secondary-context
+
+The existing RenderTarget2D lifecycle scene now assigns an occupied primary-device wrapper from an
+actively bound secondary-device source. It verifies the transferred owner and complete shape, old
+primary texture-slot detachment, secondary public target-binding identity, retained authored
+payload and a post-unbind write. These three cross-device move controls pass under both tested
+renderers and close the explicit target-move gap without another ID.
+
+The initial attempt to render through the transferred target instead exposed a distinct defect
+before the move: secondary OPENGLES3 `SetRenderTarget` does not acquire that device's context, so a
+following leased Clear leaves the target transparent black. SOFTWARE returns exact LimeGreen.
+CNA-DEMOS-ISSUE-112 records the source-isolated missing context lease; the final demo preserves one
+expected GL failure and sixteen passing controls.
+
+The warning-free `-j3` build, metadata693/0 and exact SOFTWARE CTest pass. Ten SOFTWARE runs pass
+17/17; ten OPENGLES3/Xvfb runs reproduce only ISSUE-112, with stable per-renderer stdout and empty
+stderr. The batch runner reports one expected failure and no unexpected pass. Counts remain307/329
+XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1010-render-target-cross-device/*`. No screenshot or manual visual inspection was
+performed. Audit invalid-count and missing-name ShaderEffect uniform behavior next.

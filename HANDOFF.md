@@ -155,6 +155,9 @@ intentional renderer-specific gap pending real WebGPU/browser layout and pixel e
 Focused1009 extends the existing OcclusionQuery lifecycle through disposal during an active
 Begin/End pair and proves later SOFTWARE/EasyGL queries still complete; both tested renderers pass
 12/12 in ten repeated runs.
+Focused1010 closes the RenderTarget2D cross-device move gap and records CNA-DEMOS-ISSUE-112: a
+secondary EasyGL SetRenderTarget omits its renderer-context lease, so its following Clear does not
+reach the target. SOFTWARE passes17/17; OPENGLES3 retains exactly that expected failure.
 Focused824 adds the actual `PbrEffect` image-based-lighting draw path: invalid fallback, diffuse
 irradiance, intensity scaling, BRDF lookup and roughness-selected prefiltered cube mips.
 Focused825 extends the existing skinned-PBR model with the parallel complete environment bundle and
@@ -4011,6 +4014,31 @@ types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1009-occlusion-query/*`. Query counters were inspected programmatically; no
 screenshot or manual visual inspection was performed. No CNA issue was found. Audit the next
 reachable explicit resource-behavior gap, favoring an existing coherent graphics demo.
+
+## Focused1010 RenderTarget2D cross-device move and secondary-context defect
+
+`graphics.render_target.render_target2d` now assigns an occupied primary-device wrapper from an
+actively bound secondary-device source. Owner and complete shape transfer, the old primary texture
+slot detaches, the secondary public target binding follows the destination, an authored LimeGreen
+texel survives and a later Orange write succeeds after unbinding. Those three cross-device move
+controls pass on SOFTWARE and OPENGLES3 and close the explicit target-move gap.
+
+The first attempt to Clear through the moved target exposed a distinct pre-existing problem before
+the move: a secondary EasyGL device binds its target without acquiring its renderer context, so the
+following context-leased Clear leaves transparent black. SOFTWARE returns exact LimeGreen. Source
+review confirms `GraphicsDevice::SetRenderTargets` and EasyGL's binding path omit the lease that
+Clear, Present and Reset acquire. CNA-DEMOS-ISSUE-112 records this genuine CNA defect; the final
+demo retains one renderer-scoped expected failure.
+
+The warning-free `-j3` build, metadata693/0 and exact SOFTWARE CTest pass. Ten SOFTWARE direct runs
+pass17/17; ten OPENGLES3/Xvfb runs retain16 passing controls plus exactly ISSUE-112. Stable stdout
+SHA-256 values are `3488cbe6c4875f248908b547fd1f7d71d7f475cdf71d3bdb424c2e1e40778929` and
+`6cc0d5a4fde3dbab0fbffa6df1510d055c18d9763729e5eb2ab2e388b8cbf8ee`; stderr is empty. The GL
+batch run reports one expected failure and no unexpected pass. Counts remain307/329 XNA types,
+2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1010-render-target-cross-device/*`. Readback was programmatic; no screenshot or
+manual visual inspection was performed. Audit invalid-count and missing-name ShaderEffect uniform
+behavior next; strengthen an existing shader demo rather than adding setter variants.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

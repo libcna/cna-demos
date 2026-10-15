@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Covered cross-device RenderTarget2D move ownership, binding and payload behavior, and recorded
+  CNA-DEMOS-ISSUE-112 for a missing secondary EasyGL render-target context lease.
 - Extended the OcclusionQuery lifecycle through disposal during an active Begin/End pair and proved
   later SOFTWARE and EasyGL queries still complete.
 - Revalidated `ShaderEffect::DeclareUniformBlockEXT` against pinned d23 and kept it explicitly

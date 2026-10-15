@@ -380,7 +380,7 @@ No screenshot or manual interaction was used.
 | IndexBuffer.BufferUsage and Dispose | The indexed-cube workflow checks its 36-entry 16-bit WriteOnly shape, performs the actual indexed draw and explicitly disposes during UnloadContent. Both renderers pass2 controls. |
 | DynamicIndexBuffer.ContentLost | The dynamic board attaches the public event, uses the CNA test seam to deliver one content-loss notification, checks event plus lost state, then proves its next SetData clears the flag before actual indexed drawing. This validates recovery semantics without claiming either exercised renderer really lost a device. Both renderers pass3 controls. |
 | RenderTarget2D.ContentLost and IsContentLost | The render-to-texture workflow similarly observes one explicit notification and lost flag, then proves binding for replacement rendering clears the flag before the target is drawn and sampled. Both renderers pass3 controls. No physical/context device loss is claimed. |
-| RenderTarget2D bound identity, Dispose, destruction and C++ moves | The same workflow now passes thirteen controls on both renderers. A 32x16 target bound with a depth buffer refuses public Dispose and move assignment atomically: the wrapper stays live and bound, both move operands retain their shape/properties, and an authored Gold pixel survives. Moving the active 128x128 source first constructs and then assigns new wrappers while `GetRenderTargets` follows each new identity; a subsequent Orange clear through the transferred binding reads back exactly after unbinding. A separate optional-backed target is destroyed while active: its dangling public binding disappears while Present remains refused until explicit unbind restores the complete back-buffer viewport. Reconstructing at the same address produces a real new binding and exact CornflowerBlue read-back. Copying is unavailable by public type design; cross-device target moves remain unclaimed. |
+| RenderTarget2D bound identity, Dispose, destruction and C++ moves | The workflow now executes seventeen controls. A 32x16 target bound with a depth buffer refuses public Dispose and move assignment atomically: the wrapper stays live and bound, both move operands retain their shape/properties, and an authored Gold pixel survives. Moving the active 128x128 source first constructs and then assigns new wrappers while `GetRenderTargets` follows each new identity; a subsequent Orange clear through the transferred binding reads back exactly after unbinding. A separate optional-backed target is destroyed while active: its dangling public binding disappears while Present remains refused until explicit unbind restores the complete back-buffer viewport. Reconstructing at the same address produces a real new binding and exact CornflowerBlue read-back. Focused1010 assigns an occupied primary-device wrapper from an actively bound secondary-device source: ownership and complete shape move, the old primary texture slot detaches, the secondary public target binding follows the new identity, and explicit payload survives and remains writable after unbinding. SOFTWARE passes17/17; OPENGLES3 passes those sixteen controls but exposes ISSUE-112 before the move because secondary `SetRenderTarget` misses its renderer-context lease. Copying is unavailable by public type design. No successful secondary EasyGL render is claimed. |
 | RenderTargetCube bound Dispose and destruction | The dynamic environment workflow now passes thirteen controls on both renderers. It binds the NegativeZ face, clears it Gold and verifies public Dispose is refused while the target stays live and `GetRenderTargets` retains the exact cube/face pair. After unbinding, one exact Gold texel proves the refused call did not release or replace the face storage. A separate optional-backed cube is then destroyed while PositiveY is active: its dangling public binding disappears while Present remains refused until an explicit unbind restores the complete back-buffer viewport. Reconstructing at the same address produces a genuine NegativeX binding with the expected square viewport and exact CornflowerBlue face readback. RenderTargetCube exposes no target-level copy/move operations; its base TextureCube wrapper behavior is covered separately. |
 | IGraphicsDeviceService lifecycle events | `game.graphics_device_manager.device_events` now subscribes through the interface itself before device creation. It observes created, resetting, reset and disposing around actual manager creation, ApplyChanges and Dispose, retaining its six passing lifecycle controls on both renderers. |
 
@@ -5311,3 +5311,29 @@ types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1009-occlusion-query/*`. Pixel results come from query counters; no screenshot or
 manual visual inspection was performed. No CNA issue was found. Audit the next reachable explicit
 behavioral gap, prioritizing an existing coherent graphics-resource workflow.
+
+### Focused1010 RenderTarget2D cross-device move and secondary-context defect
+
+`graphics.render_target.render_target2d` closes its cross-device move gap with an occupied target on
+the primary device and an actively bound source on a live secondary device. Move assignment changes
+the owner and complete 20x10/Depth24Stencil8/PreserveContents shape, detaches the old primary texture
+slot, transfers the secondary public target binding, preserves an authored LimeGreen texel and
+accepts a later Orange write after unbinding. These three move controls pass on both tested
+renderers, growing the coherent lifecycle scene from13 to17 total controls.
+
+The first attempted post-move Clear failed on OPENGLES3, and a pre-move control isolated it from the
+move: a target created and bound through the secondary device already reads transparent black after
+Clear, while SOFTWARE reads exact LimeGreen. Source review shows that Clear leases its device's
+renderer context but `GraphicsDevice::SetRenderTargets` and EasyGL's binding path do not.
+CNA-DEMOS-ISSUE-112 records the genuine defect; the demo retains exactly that pre-move expected
+failure for OPENGLES3.
+
+The warning-free `-j3` build, metadata693/0 and exact SOFTWARE CTest pass. Ten SOFTWARE runs pass
+17/17; ten OPENGLES3/Xvfb runs reproduce16 passes plus exactly ISSUE-112. Stdout is stable with
+SHA-256 `3488cbe6c4875f248908b547fd1f7d71d7f475cdf71d3bdb424c2e1e40778929` and
+`6cc0d5a4fde3dbab0fbffa6df1510d055c18d9763729e5eb2ab2e388b8cbf8ee`; stderr is empty. The batch
+runner classifies the GL result as one expected failure and no unexpected pass. Counts remain
+307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1010-render-target-cross-device/*`. Data checks used programmatic readback; no
+screenshot or manual visual inspection was performed. Audit invalid-count and missing-name
+ShaderEffect uniform behavior next without duplicating already covered setter families.
