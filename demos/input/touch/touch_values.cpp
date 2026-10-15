@@ -8,6 +8,7 @@
 #include "Microsoft/Xna/Framework/Input/Touch/TouchLocation.hpp"
 #include "Microsoft/Xna/Framework/Input/Touch/TouchLocationState.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Input::Touch;
@@ -65,6 +66,40 @@ namespace
         ctx.Check(frame.Contains(held) && frame.IndexOf(held) == 0 && frame[1].getIdProperty() == 9,
                   "Contains, IndexOf and the indexer work like any list");
 
+        auto cursor = frame.GetEnumerator();
+        bool currentBeforeStartThrows = false;
+        try
+        {
+            static_cast<void>(cursor.Current());
+        }
+        catch (const System::ArgumentOutOfRangeException&)
+        {
+            currentBeforeStartThrows = true;
+        }
+        ctx.Check(currentBeforeStartThrows && cursor.MoveNext() && cursor.Current() == held,
+                  "the explicit enumerator starts before the first touch and advances to it");
+
+        auto copiedCursor = cursor;
+        ctx.Check(cursor.MoveNext() && cursor.Current().getIdProperty() == 9 && !cursor.MoveNext() &&
+                      copiedCursor.Current() == held && copiedCursor.MoveNext() &&
+                      copiedCursor.Current().getIdProperty() == 9,
+                  "copied enumerators keep independent positions over the same value snapshot");
+
+        cursor.Reset();
+        System::Collections::IEnumerator& erasedCursor = cursor;
+        const bool resetToBeforeStart = cursor.MoveNext() &&
+            std::any_cast<TouchLocation>(erasedCursor.getCurrentProperty()) == held;
+        cursor.Dispose();
+        ctx.Check(resetToBeforeStart && cursor.Current() == held,
+                  "Reset restarts the cursor, its non-generic Current boxes the value and Dispose is harmless");
+
+        TouchCollection snapshotSource = frame;
+        auto snapshotCursor = snapshotSource.GetEnumerator();
+        snapshotSource.Clear();
+        ctx.Check(snapshotCursor.MoveNext() && snapshotCursor.Current() == held && snapshotCursor.MoveNext() &&
+                      snapshotCursor.Current().getIdProperty() == 9 && !snapshotCursor.MoveNext(),
+                  "an enumerator owns a snapshot that survives later collection mutation");
+
         std::vector<TouchLocation> copied{down};
         frame.CopyTo(copied, 1);
         ctx.Check(copied.size() == 3 && copied[0] == down && copied[1] == held &&
@@ -95,7 +130,8 @@ CNA_DEMOS_CONSOLE(TouchValues, {
     .id = "input.touch.touch_values",
     .title = "TouchLocation and TouchCollection values",
     .description = "Builds TouchLocation values with previous locations and pressure, checks their XNA equality, hash "
-                   "and text contracts, then searches, copies and edits a TouchCollection whose IsReadOnly flag is advisory.",
+                   "and text contracts, then enumerates, searches, copies and edits a TouchCollection whose IsReadOnly "
+                   "flag is advisory.",
     .apis = {"TouchLocation::TouchLocation", "TouchLocation::TryGetPreviousLocation", "TouchLocation::Id",
              "TouchLocation::State", "TouchLocation::Position", "TouchLocation::PressureEXT", "TouchLocation::Equals",
              "TouchLocation::GetHashCode", "TouchLocation::op_Equality", "TouchLocation::op_Inequality",
@@ -104,6 +140,10 @@ CNA_DEMOS_CONSOLE(TouchValues, {
              "TouchCollection::Contains", "TouchCollection::CopyTo", "TouchCollection::IndexOf",
              "TouchCollection::Item", "TouchCollection::Add", "TouchCollection::Insert",
              "TouchCollection::Remove", "TouchCollection::RemoveAt", "TouchCollection::Clear",
+             "TouchCollection.Enumerator::Current", "TouchCollection.Enumerator::MoveNext",
+             "TouchCollection.Enumerator::System#Collections#IEnumerator#Current",
+             "TouchCollection.Enumerator::System#Collections#IEnumerator#Reset",
+             "TouchCollection.Enumerator::Dispose",
              "TouchLocationState::Invalid", "TouchLocationState::Released",
              "TouchLocationState::Pressed", "TouchLocationState::Moved"},
     .tags = {"touch", "multitouch", "finger", "testing", "value", "collection"},

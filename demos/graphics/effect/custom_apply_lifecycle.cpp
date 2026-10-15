@@ -2,6 +2,7 @@
 // Derive from Effect to observe the protected OnApply hook and public disposal contract.
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Effect.hpp"
+#include "Microsoft/Xna/Framework/Graphics/EffectMaterial.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectPass.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectTechnique.hpp"
 #include "System/EventArgs.hpp"
@@ -61,6 +62,13 @@ namespace
             Context().Check(effect.ApplyCount() == 2,
                             "applying the current pass invokes the same OnApply hook once");
 
+            EffectMaterial material(effect);
+            Context().Check(material.getParametersProperty().getCountProperty() == 0 &&
+                                material.getTechniquesProperty().getCountProperty() == 1 &&
+                                material.getCurrentTechniqueProperty() != technique &&
+                                material.getCurrentTechniqueProperty()->getNameProperty() == "Default",
+                            "an EffectMaterial independently clones the source reflection graph");
+
             int disposingEvents = 0;
             effect.Disposing += [&disposingEvents](System::Object*, const System::EventArgs&) {
                 ++disposingEvents;
@@ -68,6 +76,9 @@ namespace
             effect.Dispose();
             Context().Check(effect.getIsDisposedProperty() && disposingEvents == 1,
                             "Dispose marks the effect and raises one Disposing event");
+            material.Apply();
+            Context().Check(!material.getIsDisposedProperty(),
+                            "the cloned EffectMaterial remains usable after its source is disposed");
             Context().Check(ThrowsDisposed([&effect] { effect.Apply(); }) &&
                                 ThrowsDisposed([pass] { pass->Apply(); }) &&
                                 effect.ApplyCount() == 2,
@@ -84,8 +95,10 @@ namespace
 CNA_DEMOS_GAME(CustomApplyLifecycleDemo, {
     .id = "graphics.effect.custom_apply_lifecycle",
     .title = "Custom effect apply and lifetime",
-    .description = "Derives from Effect, observes OnApply through direct and pass application, then checks disposal events, refusal and idempotence.",
+    .description = "Derives from Effect, observes OnApply through direct and pass application, clones an independent "
+                   "EffectMaterial, then checks disposal events, refusal and idempotence.",
     .apis = {"Effect::Effect", "Effect::OnApply", "Effect::Dispose", "Effect::Apply",
+             "EffectMaterial::EffectMaterial",
              "Effect::Parameters", "Effect::Techniques", "Effect::CurrentTechnique",
              "EffectPass::Apply", "GraphicsResource::Disposing", "GraphicsResource::IsDisposed"},
     .tags = {"effect", "apply", "lifetime", "dispose", "cnaext"},

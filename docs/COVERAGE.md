@@ -35,8 +35,8 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 303 of 329** (92.1 %).
-- **Methods, properties, constructors and events named by a demo: 2117 of 2326** (91.0 %).
+- **Types with at least one demo: 306 of 329** (93.0 %).
+- **Methods, properties, constructors and events named by a demo: 2124 of 2326** (91.3 %).
 - Fields and enum values named by a demo: 674 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
@@ -46,10 +46,10 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | `Microsoft.Xna.Framework.Content` | 7 / 11 | 41 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 51 / 51 | 2 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 44 / 52 | 170 / 244 | 160 / 223 |
-| `Microsoft.Xna.Framework.Graphics` | 91 / 99 | 494 / 550 | 190 / 192 |
+| `Microsoft.Xna.Framework.Graphics` | 93 / 99 | 496 / 550 | 190 / 192 |
 | `Microsoft.Xna.Framework.Graphics.PackedVector` | 18 / 18 | 164 / 164 | 0 / 0 |
 | `Microsoft.Xna.Framework.Input` | 17 / 17 | 113 / 113 | 194 / 202 |
-| `Microsoft.Xna.Framework.Input.Touch` | 7 / 8 | 42 / 48 | 15 / 15 |
+| `Microsoft.Xna.Framework.Input.Touch` | 8 / 8 | 47 / 48 | 15 / 15 |
 | `Microsoft.Xna.Framework.Media` | 24 / 24 | 178 / 192 | 7 / 8 |
 | `Microsoft.Xna.Framework.Net` | 22 / 23 | 93 / 127 | 17 / 22 |
 | `Microsoft.Xna.Framework.Storage` | 2 / 3 | 22 / 25 | 0 / 0 |
@@ -61,8 +61,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 - `Microsoft.Xna.Framework.Audio`: InstancePlayLimitException, NoAudioHardwareException, NoMicrophoneConnectedException
 - `Microsoft.Xna.Framework.Content`: ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute
 - `Microsoft.Xna.Framework.GamerServices`: FriendCollection, FriendGamer, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, InviteAcceptedEventArgs, NetworkException, NetworkNotAvailableException
-- `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, EffectMaterial, ModelBoneCollection.Enumerator, ModelEffectCollection.Enumerator, ModelMeshCollection.Enumerator, ModelMeshPartCollection.Enumerator, NoSuitableGraphicsDeviceException
-- `Microsoft.Xna.Framework.Input.Touch`: TouchCollection.Enumerator
+- `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, ModelBoneCollection.Enumerator, ModelEffectCollection.Enumerator, ModelMeshCollection.Enumerator, ModelMeshPartCollection.Enumerator
 - `Microsoft.Xna.Framework.Net`: WriteLeaderboardsEventArgs
 - `Microsoft.Xna.Framework.Storage`: StorageDeviceNotConnectedException
 
@@ -1926,7 +1925,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 ## How these numbers are computed
 
 - The inventory is CNA's `docs/xna-4-runtime-member-coverage.json`: every documented member of the XNA 4.0 runtime assemblies. Overloads count once per member name.
-- A member counts as demonstrated when at least one demo lists it in its `.apis` metadata as `Type::Member` (a constructor as `Type::Type`). The type is matched by its short name, so a short name shared by two namespaces credits both. A bare type name (an enumeration such as `Buttons`, an exception type) credits the type, not any of its members.
+- A member counts as demonstrated when at least one demo lists it in its `.apis` metadata as `Type::Member` (a constructor as `Type::Type`). An unqualified type is matched by its short name, so a short name shared by two namespaces credits both; use an owner-qualified dotted name such as `TouchCollection.Enumerator::MoveNext` to disambiguate a nested type. A bare type name (an enumeration such as `Buttons`, an exception type) credits the type, not any of its members.
 - "Demonstrated" means a demo exists and claims to show the member. Whether that demo has been executed is the separate "Run on" column above, taken from `--report` files of real runs.
 - No percentage here measures CNA's correctness, and none is weighted by importance.
 

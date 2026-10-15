@@ -10813,3 +10813,31 @@ coverage moves2114->2117/2326 non-field members; types remain303/329, fields674/
 unsandboxed repetitions are authoritative. Evidence:`/tmp/checkpoint-999-gamer-members/*`. No
 service connection, real friend/party, microphone, avatar-change delivery, visual or manual claim
 is made. Audit the56 residual Graphics members next.
+
+## Focused1000-residual-Graphics-Input.Touch-and-Media-member-audit
+
+Two of the56 Graphics gaps expose reachable production behavior. The stable custom-effect workflow
+constructs an `EffectMaterial`, proves its independently cloned Default reflection graph and keeps
+using it after the source Effect is disposed. The stable adapter workflow latches SOFTWARE with a
+real GraphicsDevice, changes the process request to HEADLESS and observes the second constructor's
+real `NoSuitableGraphicsDeviceException` refusal before restoring the flags. The remaining54 are
+protected stock-effect hooks already reached by pass application, CLR enumerator aliases, native
+finalizers, physical-device-loss-only paths, an arbitrary Tag carrier or explicit-interface aliases
+of already demonstrated behavior.
+
+Input.Touch required a correction to the prior disposition: CNA's public
+`TouchCollection::Enumerator` is a usable value cursor. `input.touch.touch_values` now covers its
+invalid pre-start state, ordered movement, independent copies, Reset, typed and erased Current,
+Dispose and snapshot independence. The coverage matcher now accepts owner-qualified nested types,
+so those five members credit only `TouchCollection.Enumerator`; its remaining non-generic CLR alias
+stays uncredited. Media's14 generic/non-generic collection enumerator names remain CLR artifacts;
+the meaningful collection/index/lifetime behavior and representative C++ ranges are already in the
+media-library workflows.
+
+The warning-free three-job build, metadata693/0 and nine focused SOFTWARE CTests pass. Ten serial
+direct runs of each changed workflow pass under both renderer labels with stable stdout and empty
+stderr; exact hashes and evidence are recorded in HANDOFF.md and
+`/tmp/checkpoint-1000-graphics-members/*`. Coverage moves to306/329 XNA types and2124/2326 members,
+with674/753 fields and3078/3205 C routes unchanged. No new CNA defect, physical device loss,
+compiled-FX material asset, screenshot, visual inspection or manual media interaction is claimed.
+Audit the34 residual Net members next.

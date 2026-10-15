@@ -3,11 +3,14 @@
 #include <algorithm>
 #include <vector>
 
+#include "CNA/GraphicsRendererSelection.hpp"
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/GraphicsNames.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DisplayMode.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DisplayModeCollection.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsAdapter.hpp"
+#include "Microsoft/Xna/Framework/Graphics/NoSuitableGraphicsDeviceException.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SurfaceFormat.hpp"
 
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -77,6 +80,31 @@ namespace
                       GraphicsAdapter::getUseReferenceDeviceProperty() == originalReference,
                   "the process-wide device-selection flags are restored");
 
+        // With SOFTWARE selected we can create a displayless device to latch that renderer, then
+        // prove that changing the process-wide intent to HEADLESS is refused rather than ignored.
+        // A direct GL-selected console run has no platform window, so its real mismatch remains a
+        // renderer/platform case instead of manufacturing a surface solely for this control.
+        if (CNA::GraphicsRendererSelection::GetSelected() == CNA::GraphicsRendererType::Software)
+        {
+            GraphicsAdapter::setUseNullDeviceProperty(false);
+            GraphicsAdapter::setUseReferenceDeviceProperty(false);
+            GraphicsDevice latchedDevice;
+            GraphicsAdapter::setUseNullDeviceProperty(true);
+            bool mismatchedDeviceRefused = false;
+            try
+            {
+                GraphicsDevice mismatchedDevice;
+            }
+            catch (const NoSuitableGraphicsDeviceException&)
+            {
+                mismatchedDeviceRefused = true;
+            }
+            GraphicsAdapter::setUseNullDeviceProperty(originalNull);
+            GraphicsAdapter::setUseReferenceDeviceProperty(originalReference);
+            ctx.Check(mismatchedDeviceRefused,
+                      "a latched SOFTWARE device refuses a later HEADLESS device-selection request");
+        }
+
         // What the desktop runs at right now: a windowed game usually picks a smaller size,
         // a full-screen game often matches this.
         const DisplayMode current = adapter.getCurrentDisplayModeProperty();
@@ -124,6 +152,7 @@ CNA_DEMOS_CONSOLE(DisplayModes, {
              "GraphicsAdapter::SubSystemId", "GraphicsAdapter::MonitorHandle",
              "GraphicsAdapter::UseNullDevice", "GraphicsAdapter::UseReferenceDevice",
              "GraphicsAdapter::GetCurrentDeviceTypeEXT", "GraphicsAdapter::GetRequiredRendererEXT",
+             "NoSuitableGraphicsDeviceException::NoSuitableGraphicsDeviceException",
              "GraphicsAdapter::CurrentDisplayMode", "GraphicsAdapter::SupportedDisplayModes", "DisplayMode::Width",
              "DisplayMode::Height", "DisplayMode::Format", "DisplayMode::AspectRatio",
              "DisplayMode::TitleSafeArea", "DisplayMode::ToString",

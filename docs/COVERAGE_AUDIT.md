@@ -77,16 +77,18 @@ Decisions:
 | ModelMeshCollection, ModelMeshPartCollection, ModelEffectCollection | shown in `graphics.model.bones` (the indexer), `graphics.model.morph_targets`, `graphics.model.mesh_effects`; their enumerators are C#'s `foreach` machinery |
 | RenderTargetBinding | demo: `graphics.render_target.multiple_render_targets` |
 | VertexPositionColorTexture, IVertexType | demo: `graphics.vertex_declaration.stock_vertex_types` |
-| EffectAnnotation, EffectAnnotationCollection, EffectMaterial | environment: compiled XNA effects need Microsoft's `fxc` (`fx_2_0`, a Windows tool run through wine) to compile `.fx`, and a CNA build with `CNA_<RENDERER>_COMPILED_EFFECTS` (fetches FNA3D/MojoShader); neither is part of this repository's builds |
+| EffectAnnotation, EffectAnnotationCollection | environment: compiled XNA effects need Microsoft's `fxc` (`fx_2_0`, a Windows tool run through wine) to compile `.fx`, and a CNA build with `CNA_<RENDERER>_COMPILED_EFFECTS` (fetches FNA3D/MojoShader); neither is part of this repository's builds |
+| EffectMaterial | shown in `graphics.effect.custom_apply_lifecycle`: construction clones the source Effect's fallback reflection graph, and the material remains usable after the source is disposed. This covers the public constructor and independent lifetime without claiming a compiled-FX material asset. |
 | GraphicsDeviceStatus | `owned_lifecycle` observes Normal through construction, Present and four real Reset cycles. Lost and NotReset remain environment values: CNA changes them only after a renderer reports real device loss/resetting, and the current desktop renderers provide no public deterministic trigger. |
-| DeviceLostException, DeviceNotResetException, NoSuitableGraphicsDeviceException | environment: device loss does not happen on CNA's current desktop test renderers; no adapter means no demos at all |
+| DeviceLostException, DeviceNotResetException | environment: device loss does not happen on CNA's current desktop test renderers |
+| NoSuitableGraphicsDeviceException | shown in `graphics.graphics_adapter.display_modes`: after a SOFTWARE device latches the renderer, changing the global request to HEADLESS makes a second real GraphicsDevice construction take CNA's production incompatibility refusal. |
 
 ## Microsoft.Xna.Framework.Input
 
 | Type | Decision |
 |---|---|
 | Keys, KeyState | shown in `input.keyboard.state_values` |
-| TouchCollection.Enumerator | not meaningful: C#'s `foreach` machinery (C++ range-for) |
+| TouchCollection.Enumerator | shown in `input.touch.touch_values`: the explicit public value enumerator now proves invalid pre-start state, ordered movement, independent cursor copies, reset, typed and erased Current, harmless Dispose and snapshot independence after source mutation. |
 
 ## Microsoft.Xna.Framework.Media
 
@@ -5099,3 +5101,30 @@ unsandboxed OPENGLES3/Xvfb repetitions are the recorded runtime result. Evidence
 `/tmp/checkpoint-999-gamer-members/*`. No online service, real friend/party, microphone, avatar-
 change delivery, screenshot or manual inspection is claimed. Continue with the56 residual Graphics
 members.
+
+### Focused1000 residual Graphics, Input.Touch and Media member audit
+
+The residual Graphics review adds only two behaviors. `graphics.effect.custom_apply_lifecycle`
+constructs `EffectMaterial` from a base Effect, verifies the independent fallback reflection graph
+and keeps applying the clone after source disposal. `graphics.graphics_adapter.display_modes`
+reaches the production `NoSuitableGraphicsDeviceException` path by latching SOFTWARE with one real
+device and requesting incompatible HEADLESS selection for a second device. The remaining54 names
+are protected hooks already reached indirectly, CLR iterator machinery, native finalizers,
+physical-loss-only behavior, an already represented arbitrary Tag carrier or explicit-interface
+aliases. They remain uncredited.
+
+The Input.Touch review finds that its five nested enumerator members are substantive CNA APIs,
+rather than mere CLR aliases. `input.touch.touch_values` now checks pre-start refusal, sequence,
+copied cursor independence, Reset, typed and erased Current, Dispose and snapshot ownership. The
+coverage matcher accepts an owner-qualified nested name so this evidence cannot accidentally credit
+the four unrelated Graphics `Enumerator` types. Only TouchCollection's non-generic CLR
+`GetEnumerator` remains intentionally uncredited. Media's14 residual collection enumerator names
+have no separate C++ methods; the already exercised count/index/lifetime behavior and representative
+public ranges remain their semantic disposition.
+
+The warning-free `-j3` build, metadata693/0 and nine focused SOFTWARE CTests pass. Ten serial runs
+of each changed workflow pass on both renderer labels with stable stdout and empty stderr. Generated
+coverage moves303->306/329 types and2117->2124/2326 members; fields remain674/753 and C routes
+3078/3205. Evidence:`/tmp/checkpoint-1000-graphics-members/*`. No physical device loss, compiled-FX
+material asset, screenshot, visual inspection or manual media interaction is claimed. Audit the34
+residual Net members next.

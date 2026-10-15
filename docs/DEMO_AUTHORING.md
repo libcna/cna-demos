@@ -101,7 +101,7 @@ open. `--screenshot` still captures the last frame it drew.
 | `id` | yes | see section 2 |
 | `title` | yes | short, sentence case, no trailing period |
 | `description` | yes | one or two sentences, what the demo shows; ends with a period |
-| `apis` | yes | CNA members the demo is about, `Type::Member` with XNA member names (`SpriteBatch::Draw`, `Texture2D::Width`, a constructor as `RenderTarget2D::RenderTarget2D`, CNA extensions fully qualified `CNA::GraphicsRendererSelection::SetPreferred`). These feed the coverage report: spell them exactly. |
+| `apis` | yes | CNA members the demo is about, `Type::Member` with XNA member names (`SpriteBatch::Draw`, `Texture2D::Width`, a constructor as `RenderTarget2D::RenderTarget2D`, an ambiguous nested type as `TouchCollection.Enumerator::MoveNext`, CNA extensions fully qualified `CNA::GraphicsRendererSelection::SetPreferred`). These feed the coverage report: spell them exactly. |
 | `tags` | no | extra lower-case search words |
 | `automation` | no (`Automated`) | `Automated`: an unattended run checks the feature. `SmokeOnly`: an unattended run only proves start-up/shutdown (input demos). `Manual`: cannot run unattended (needs hardware, a service, a person from the start) |
 | `needs` | no | `Need::ThreeD`, `Need::Audio`, `Need::Window`, ... combined with `|`. Unmet graphics needs and missing audio hardware end the run as SKIPPED with a reason. Input needs document that a person is required |

@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Audited the residual Graphics, Input.Touch and Media member gaps; added real `EffectMaterial`
+  cloning, the production incompatible-renderer device refusal and the complete explicit
+  `TouchCollection.Enumerator` lifecycle without adding demo IDs.
 - Extended the offline gamer-privilege workflow with party-size state and the exact `IsFriend` and
   `GetFriends` privilege refusals, while re-auditing the remaining root, Audio, Content and
   GamerServices generated member gaps by behavior.

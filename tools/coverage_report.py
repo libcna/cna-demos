@@ -80,13 +80,25 @@ def demonstrated_members(catalog: dict, inventory: dict):
     for full in inventory:
         by_short[short_type(full)].append(full)
 
+    def matching_types(name: str):
+        """Resolves a short or qualified metadata type name to inventory types.
+
+        A dotted qualifier is useful for nested types whose short name is ambiguous, for example
+        ``TouchCollection.Enumerator::MoveNext``. C++ ``::`` qualification is accepted too.
+        """
+        normalized = name.replace("::", ".")
+        if "." not in normalized:
+            return by_short.get(normalized, [])
+        suffix = "." + normalized
+        return [full for full in inventory if full == normalized or full.endswith(suffix)]
+
     hits = collections.defaultdict(list)
     type_hits = collections.defaultdict(list)
     unmatched = collections.defaultdict(list)
     for demo in catalog["demos"]:
         for api in demo["apis"]:
-            if "::" not in api and api in by_short:
-                for full in by_short[api]:
+            if "::" not in api and matching_types(api):
+                for full in matching_types(api):
                     type_hits[full].append(demo["id"])
                 continue
             if api.startswith("cna_") or api.startswith("CNA_"):
@@ -95,11 +107,10 @@ def demonstrated_members(catalog: dict, inventory: dict):
                 unmatched[api].append(demo["id"])
                 continue
             type_name, member = api.rsplit("::", 1)
-            type_name = type_name.split("::")[-1]
             matched = False
-            for full in by_short.get(type_name, []):
+            for full in matching_types(type_name):
                 members = inventory[full]["members"]
-                candidate = "#ctor" if member == type_name else member
+                candidate = "#ctor" if member == short_type(full) else member
                 if candidate in members:
                     hits[(full, candidate)].append(demo["id"])
                     matched = True
@@ -289,9 +300,10 @@ def main() -> int:
     add("- The inventory is CNA's `docs/xna-4-runtime-member-coverage.json`: every documented member of the "
         "XNA 4.0 runtime assemblies. Overloads count once per member name.")
     add("- A member counts as demonstrated when at least one demo lists it in its `.apis` metadata as "
-        "`Type::Member` (a constructor as `Type::Type`). The type is matched by its short name, so a short "
-        "name shared by two namespaces credits both. A bare type name (an enumeration such as `Buttons`, an "
-        "exception type) credits the type, not any of its members.")
+        "`Type::Member` (a constructor as `Type::Type`). An unqualified type is matched by its short name, so "
+        "a short name shared by two namespaces credits both; use an owner-qualified dotted name such as "
+        "`TouchCollection.Enumerator::MoveNext` to disambiguate a nested type. A bare type name (an enumeration "
+        "such as `Buttons`, an exception type) credits the type, not any of its members.")
     add("- \"Demonstrated\" means a demo exists and claims to show the member. Whether that demo has been "
         "executed is the separate \"Run on\" column above, taken from `--report` files of real runs.")
     add("- No percentage here measures CNA's correctness, and none is weighted by importance.")

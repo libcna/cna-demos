@@ -75,7 +75,7 @@ diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,
 standalone; 657 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete998's full runtime reports; they include all693
 catalog IDs in both renderer suites with no absent IDs.
-The surface totals are303/329 XNA types,2117/2326 XNA members,674/753 fields and
+The surface totals are306/329 XNA types,2124/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete998's
 full runtime reports are the baseline inputs for the693-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -3519,8 +3519,10 @@ has semantic dispositions. Focused999 revalidates every residual root, Audio and
 disposition, then closes three genuine offline GamerServices behaviors in the existing privileges
 workflow: zero party size plus the exact `IsFriend`/`GetFriends` privilege refusals. The remaining
 74 GamerServices entries are CLR aliases, native finalizers, framework-created payloads or
-service/hardware/manual behavior. Audit the56 residual Graphics members next, adding behavior only
-where an existing demo does not already establish it.
+service/hardware/manual behavior. Focused1000 closes two meaningful Graphics constructors and all
+five members of the real explicit TouchCollection enumerator, then dispositions the remaining54
+Graphics entries, Touch's one CLR-only alias and Media's14 CLR-only aliases. Audit the34 residual
+Net members next, adding behavior only where an existing demo does not already establish it.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3749,6 +3751,48 @@ blocked before demo entry by the X11 socket; the repeated unsandboxed OPENGLES3/
 runtime evidence. Evidence:`/tmp/checkpoint-999-gamer-members/*`. No service connection, friend,
 party, microphone, avatar-change event, visual or manual claim is made. Audit the56 residual
 Graphics members next.
+
+## Focused1000 residual Graphics, Input.Touch and Media member audit
+
+The56 generated Graphics gaps contain two reachable production behaviors. The existing
+`graphics.effect.custom_apply_lifecycle` workflow now constructs an `EffectMaterial` from its
+authored base Effect, proves an independent Default technique/reflection graph and applies the
+material after disposing the source. The existing `graphics.graphics_adapter.display_modes`
+workflow uses SOFTWARE to construct and latch a real device, switches the process request to
+HEADLESS and proves a second GraphicsDevice constructor throws `NoSuitableGraphicsDeviceException`;
+it restores both selection flags. The OPENGLES3 console path retains the existing flag controls
+without manufacturing a window merely to create a GL device.
+
+The other54 Graphics entries are intentionally uncredited: five protected stock-effect `OnApply`
+overrides are already reached through real pass application; DisplayMode and four Effect collection
+enumerator names plus the four Model collection owners/nested cursors are CLR machinery represented
+by C++ indexing/ranges; GraphicsDevice/GraphicsResource finalizers map to native lifetime;
+`GraphicsDevice::DeviceLost` and the two loss exceptions require a physical renderer loss not
+offered by the current platforms; `ModelMesh::Tag` repeats the arbitrary payload boundary already
+shown by Model/ModelMeshPart; and the SkinnedEffect and four stock-vertex explicit-interface names
+alias already demonstrated public behavior.
+
+The Input.Touch audit corrects the earlier broad enumerator disposition. CNA exposes a real public
+`TouchCollection::Enumerator`, so `input.touch.touch_values` now proves its invalid pre-start state,
+ordered movement, independent copied positions, Reset, typed and erased Current, harmless Dispose
+and a value snapshot surviving later source mutation. A coverage-tool fix lets metadata qualify the
+otherwise ambiguous nested type as `TouchCollection.Enumerator`; it credits exactly its five real
+members instead of all five Graphics nested Enumerator types. Touch's lone remaining non-generic
+`IEnumerable` name has no separate C++ entry point. Media's14 gaps are the generic/non-generic CLR
+`GetEnumerator` pairs for seven collections; their useful index/count/lifetime contracts and
+representative C++ ranges are already exercised, so those names remain uncredited.
+
+The warning-free `-j3` build and metadata693/0 pass. Nine focused SOFTWARE CTests cover the two
+Graphics workflows, touch values, representative Model collection workflows and three real media-
+library workflows. Ten serial direct runs of each changed workflow under both renderer labels pass:
+Graphics hashes are `c689f82bc57b7a7340a696b6874832096efb8fe6c911156590dcd348052366fc`,
+`fe05808bfbb477271e5fae2c15ba1e6a106974ecd8c5fc44ba6a8f43c488419f` and
+`74e9aad4c511dd2c80395c245c6d03a24b88dd03dba5c78f1bb6b7b22c37d270`; touch is
+`744c16c6c2d6e4e7a21ae820296ad4ee21580d0d446cfd0a96c4e69f10d58567` on both labels, with empty
+stderr throughout. Generated coverage moves303->306/329 types and2117->2124/2326 members; fields
+remain674/753 and C routes3078/3205. Evidence:`/tmp/checkpoint-1000-graphics-members/*`. No physical
+device loss, compiled-FX material asset, screenshot, visual inspection or manual media interaction
+is claimed. Audit the34 residual Net members next.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,
