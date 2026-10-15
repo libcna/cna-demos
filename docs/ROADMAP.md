@@ -9383,3 +9383,18 @@ fields and Graphics reaches132/192. An initial mixed-integer Color constructor c
 an incorrect Subtract-alpha expectation were demo bugs corrected before validation; no CNA issue
 appeared. Evidence:`/tmp/checkpoint-905-*`. Audit the remaining CompareFunction and
 StencilOperation values next with actual depth/stencil results.
+
+## Focused906-complete-compare-and-stencil-operation-values
+
+Two stable depth/stencil workflows close all8 CompareFunction and all8 StencilOperation values.
+The depth-function demo pre-fills four regions at one depth, overlays them at exactly equal depth
+and proves Less/Greater reject equality while LessEqual/GreaterEqual accept it before running its
+original X-ray scene. The stencil-counting demo seeds four exact values, applies
+DecrementSaturation at0, IncrementSaturation at255, Invert at0x0f and Zero at123, then reveals only
+the exact expected0,255,0xf0 and0 results before its original overlap-counting scene.
+
+SOFTWARE and OPENGLES3/Xvfb pass7/7 depth and8/8 stencil controls. Both exact SOFTWARE CTests pass
+ten repetitions. The warning-free build uses at most three jobs, metadata is659/0 and both
+validator suites pass. Coverage moves457->464/753 fields and Graphics reaches139/192. No CNA or
+demo defect appeared in this batch. Evidence:`/tmp/checkpoint-906-*`. Audit the15 remaining
+EffectParameterClass/EffectParameterType values next against real loaded parameter metadata.

@@ -71,9 +71,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-905
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-906
 overlays for all659 catalog demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,457/753 fields and
+The surface totals are302/329 XNA types,2114/2326 XNA members,464/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -445,6 +445,16 @@ validator suites pass. Coverage moves442->457/753 and Graphics reaches132/192. T
 overload and Subtract-alpha expectation failures were demo defects corrected before validation;
 no CNA issue appeared. Evidence:`/tmp/checkpoint-905-*`. **Next:** close the three remaining
 CompareFunction and four remaining StencilOperation values with actual depth/stencil results.
+
+Focused **906-complete-compare-and-stencil-operation-values** closes both eight-value families.
+Equal-depth overlays prove strict Less/Greater reject equality while LessEqual/GreaterEqual accept
+it. Exact stencil seeding and equality-gated readback prove decrement saturation at0, increment
+saturation at255, inversion0x0f->0xf0 and zeroing123->0 before the original counting scene.
+SOFTWARE and OPENGLES3/Xvfb pass7/7 and8/8; both exact SOFTWARE CTests pass ten repetitions. The
+warning-free build uses `-j3`, metadata validates659/0 and both validator suites pass. Coverage
+moves457->464/753 and Graphics reaches139/192. No CNA or demo defect appeared. Evidence:
+`/tmp/checkpoint-906-*`. **Next:** audit all15 EffectParameterClass/EffectParameterType values
+through real loaded parameter metadata.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
@@ -2209,13 +2219,13 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete892 remains the authoritative657-demo full-runtime baseline; focused893-
-905 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
+906 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
 closed at7/8, Input is dispositioned at194/202, Input.Touch is complete at15/15 and the root
 Framework, Audio and Design namespaces are complete at78/78,11/11 and2/2. Net is dispositioned at
 17/22; its five uncredited values require real full/remote sessions or service/transport loss.
-Graphics is132/192 after closing Blend, BlendFunction, ColorWriteChannels and CullMode. Audit its
-three remaining CompareFunction and four remaining StencilOperation values next with actual depth/
-stencil results, then continue through the remaining Graphics field families.
+Graphics is139/192 after also closing CompareFunction and StencilOperation. Audit all15
+EffectParameterClass/EffectParameterType values next through real loaded parameter metadata, then
+continue through the remaining Graphics field families.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete892 too stale.

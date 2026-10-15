@@ -2,12 +2,14 @@
 // DepthBufferFunction: draw only where something is in front -- an "X-ray" silhouette through a wall.
 #include <array>
 #include <memory>
+#include <string>
 
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BasicEffect.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BlendState.hpp"
+#include "Microsoft/Xna/Framework/Graphics/ClearOptions.hpp"
 #include "Microsoft/Xna/Framework/Graphics/CompareFunction.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectPass.hpp"
@@ -47,11 +49,23 @@ namespace
             xray_.setDepthBufferEnableProperty(true);
             xray_.setDepthBufferFunctionProperty(CompareFunction::Greater);
             xray_.setDepthBufferWriteEnableProperty(false);
+
+            const auto comparison = [](DepthStencilState& state, CompareFunction function) {
+                state.setDepthBufferEnableProperty(true);
+                state.setDepthBufferWriteEnableProperty(false);
+                state.setDepthBufferFunctionProperty(function);
+            };
+            comparison(less_, CompareFunction::Less);
+            comparison(lessEqual_, CompareFunction::LessEqual);
+            comparison(greater_, CompareFunction::Greater);
+            comparison(greaterEqual_, CompareFunction::GreaterEqual);
         }
 
         void Draw(const GameTime& gameTime) override
         {
             GraphicsDevice& device = getGraphicsDeviceProperty();
+            if (FramesDrawn() == 0)
+                CheckEqualityBoundaries(device);
             device.Clear(Color::Black);
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             device.setBlendStateProperty(BlendState::Opaque);
@@ -81,6 +95,35 @@ namespace
         }
 
     private:
+        void CheckEqualityBoundaries(GraphicsDevice& device)
+        {
+            const std::array<DepthStencilState*, 4> comparisons = {
+                &less_, &lessEqual_, &greater_, &greaterEqual_};
+            const std::array<const char*, 4> names = {"Less", "LessEqual", "Greater", "GreaterEqual"};
+            const std::array<bool, 4> equalityPasses = {false, true, false, true};
+
+            device.Clear(ClearOptions::Target | ClearOptions::DepthBuffer, Color::Black, 1.0f, 0);
+            device.setRasterizerStateProperty(RasterizerState::CullNone);
+            device.setBlendStateProperty(BlendState::Opaque);
+            device.setDepthStencilStateProperty(DepthStencilState::Default);
+            for (std::size_t i = 0; i < comparisons.size(); ++i)
+                Draw(Quad(Rectangle(40 + static_cast<int>(i) * 190, 200, 150, 100), -5.0f, Color::Crimson));
+            for (std::size_t i = 0; i < comparisons.size(); ++i)
+            {
+                device.setDepthStencilStateProperty(*comparisons[i]);
+                Draw(Quad(Rectangle(40 + static_cast<int>(i) * 190, 200, 150, 100), -5.0f, Color::Lime));
+            }
+
+            const CnaDemos::BackBufferPixels pixels(device);
+            for (std::size_t i = 0; i < comparisons.size(); ++i)
+            {
+                const Color expected = equalityPasses[i] ? Color::Lime : Color::Crimson;
+                Context().Check(pixels.At(115 + static_cast<int>(i) * 190, 250) == expected,
+                                std::string(names[i]) + (equalityPasses[i] ? " accepts" : " rejects") +
+                                    " equal depth");
+            }
+        }
+
         void Draw(const std::array<VertexPositionColor, 6>& quad)
         {
             for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
@@ -92,6 +135,10 @@ namespace
 
         std::unique_ptr<BasicEffect> effect_;
         DepthStencilState xray_;
+        DepthStencilState less_;
+        DepthStencilState lessEqual_;
+        DepthStencilState greater_;
+        DepthStencilState greaterEqual_;
     };
 }
 
@@ -101,7 +148,8 @@ CNA_DEMOS_GAME(DepthFunctionDemo, {
     .description = "Draws an object hidden partly behind a wall, then again with DepthBufferFunction Greater and no "
                    "depth writes, so only its hidden part appears -- as a silhouette.",
     .apis = {"DepthStencilState::DepthBufferFunction", "DepthStencilState::DepthBufferWriteEnable",
-             "DepthStencilState::DepthBufferEnable", "CompareFunction::Greater"},
+             "DepthStencilState::DepthBufferEnable", "CompareFunction::Greater", "CompareFunction::GreaterEqual",
+             "CompareFunction::Less", "CompareFunction::LessEqual"},
     .tags = {"3d", "depth", "silhouette", "xray", "state"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,

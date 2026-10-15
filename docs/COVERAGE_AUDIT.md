@@ -1075,6 +1075,21 @@ jobs, metadata is659/0 and both validator suites pass. Fields move442->457/753 a
 were demo defects fixed before the validated runs; no CNA defect appeared. Evidence:
 `/tmp/checkpoint-905-*`.
 
+### Compare and stencil-operation values
+
+The depth-function workflow now uses equal submitted depths to distinguish strict Less/Greater
+from inclusive LessEqual/GreaterEqual before its original hidden-object Greater scene. The stencil-
+counting workflow seeds exact stencil values and then verifies the four previously missing
+transformations through equality-gated coloured readback: decrement saturation keeps0, increment
+saturation keeps255, invert maps0x0f to0xf0 and zero maps123 to0. Together with the existing depth,
+stencil-fail, depth-fail, winding and overlap workflows, every value in both enums now has actual
+buffer behavior.
+
+Both renderer runs pass7/7 depth and8/8 stencil controls, and both exact SOFTWARE CTests pass ten
+repetitions. The warning-free build uses at most three jobs, metadata is659/0 and both validator
+suites pass. Fields move457->464/753 and Graphics reaches139/192. Evidence:
+`/tmp/checkpoint-906-*`. No screenshot or visual-quality judgment is claimed.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and
