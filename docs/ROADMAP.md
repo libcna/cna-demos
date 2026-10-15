@@ -333,7 +333,10 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.custom.cnb_read_limits` (the complete public arithmetic, byte-reader, byte-writer and
   CRC surfaces are dispositioned through an exact 44-byte primitive spelling/round trip, UTF-8 and
   failure boundaries, uint64 overflow checks, the standard CRC-32C vector and a real CNB header
-  checksum), ✅ `content.xnb.pipeline_transcode` (all nine
+  checksum; the remaining public read-limit, compression, document and writer surfaces are
+  dispositioned through exact defaults/carriers/TOC metadata, copied limits, deterministic output,
+  available-codec round trips and representative refusals, with ISSUE-110 recording the direct
+  uncompressed-helper validation gap), ✅ `content.xnb.pipeline_transcode` (all nine
   supported XNB roots transcoded through public pipeline registration into decoded native CNB,
   including exact volume/cube bytes, external Song/Video deployment and Model schema-2 shared
   resources; all 35 public Model schema-2 data/codec declarations are dispositioned through exact

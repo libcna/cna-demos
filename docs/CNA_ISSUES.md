@@ -15,6 +15,29 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-110 -- Direct uncompressed-chunk helper bypasses its size contract
+
+- **Area/API:** `CNA::Content::Cnb::DecompressCnbChunk` with
+  `CnbCompression::None`.
+- **Demo/reproduction:** run `content.custom.cnb_read_limits`. The passing diagnostic supplies
+  4096 stored bytes, declares 4097 uncompressed bytes, sets the maximum uncompressed size to one
+  byte, and calls the public helper directly.
+- **Observed:** the helper returns a 4096-byte copy successfully. Its `None` branch returns before
+  comparing the declared size with the stored size or checking the configured ceiling.
+- **Expected/contract:** the public header says the input must expand to exactly
+  `uncompressedSize`, that this attacker-controlled value is checked against
+  `maxUncompressedSize` before allocation, and that either violation throws
+  `ContentLoadException`. Those requirements should apply to the no-compression path too.
+- **Scope/status:** `CnbDocument` first enforces equal stored/logical sizes and all configured
+  limits while validating its table of contents, and it does not call the helper for uncompressed
+  chunks. Ordinary container parsing therefore remains bounded. A direct caller can nevertheless
+  get a second copy larger than its stated ceiling, contrary to the public helper contract. The
+  exact header/implementation excerpt is
+  `/tmp/checkpoint-979-cnb-infrastructure/decompress-contract-and-source.txt`, SHA-256
+  `994a2ae3717617eb1f5b8c101fada0e70f70dad5e06d734028a44951b5f74615`. Open against clean
+  isolated CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified and no upstream
+  message was sent. The issue is a passing diagnostic rather than a runtime `knownIssue` marker.
+
 ### CNA-DEMOS-ISSUE-109 -- Model encoder emits values its paired decoder refuses
 
 - **Area/API:** `CNA::Content::Cnb::EncodeModelToCnb` and `DecodeModelFromCnb`, schema 1.

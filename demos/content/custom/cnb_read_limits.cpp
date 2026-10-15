@@ -2,6 +2,7 @@
 // A tiny tile layer shows why container budgets and schema allocation limits are distinct.
 #include <algorithm>
 #include <cstdint>
+#include <exception>
 #include <limits>
 #include <string>
 #include <vector>
@@ -23,8 +24,47 @@ namespace
     constexpr auto NoteChunk = MakeChunkId('N', 'O', 'T', 'E');
     constexpr const char* TileType = "CnaDemos.BoundedTileLayer";
 
+    template <typename Action>
+    bool Refuses(Action&& action)
+    {
+        try { action(); }
+        catch (const std::exception&) { return true; }
+        return false;
+    }
+
     void ReadLimits(CnaDemos::DemoContext& ctx)
     {
+        const CnbReadLimits defaults;
+        const auto& sharedDefaults = DefaultCnbReadLimits();
+        ctx.Check(defaults.maxFileSize == 512ull * 1024ull * 1024ull &&
+                      defaults.maxChunkCount == 65536u &&
+                      defaults.maxChunkSize == 384ull * 1024ull * 1024ull &&
+                      defaults.maxTotalUncompressedSize == 1024ull * 1024ull * 1024ull &&
+                      defaults.maxStringBytes == 1024u * 1024u &&
+                      defaults.maxArrayElementCount == 16u * 1024u * 1024u &&
+                      defaults.maxChunkAlignment == 4096u &&
+                      sharedDefaults.maxFileSize == defaults.maxFileSize,
+                  "the public CNB read limits expose the exact documented safe defaults");
+
+        const CnbChunkEntry emptyEntry;
+        const CnbExternalReference emptyReference;
+        const CnbMetadata emptyMetadata;
+        ctx.Check(emptyEntry.type == CnbChunkId{} && emptyEntry.flags == 0u &&
+                      emptyEntry.offset == 0u && emptyEntry.storedSize == 0u &&
+                      emptyEntry.uncompressedSize == 0u && emptyEntry.checksum == 0u &&
+                      emptyEntry.compression == CnbCompression::None &&
+                      emptyEntry.alignment == 1u && !emptyEntry.IsMandatory() &&
+                      emptyReference.flags == 0u &&
+                      emptyReference.expectedAssetTypeId == CnbAssetTypeId::Invalid &&
+                      emptyReference.logicalName.empty() && !emptyMetadata.present &&
+                      emptyMetadata.flags == 0u && emptyMetadata.assetTypeName.empty() &&
+                      emptyMetadata.contentName.empty(),
+                  "document carrier values have safe observable default states");
+
+        ctx.Check(Refuses([] { (void)CnbWriter(CnbAssetTypeId::Invalid, 1u); }) &&
+                      Refuses([] { (void)CnbWriter(CnbAssetTypeId::Texture2D, 0u); }),
+                  "the writer constructor refuses invalid asset identity and schema zero");
+
         std::vector<std::uint8_t> tiles(64);
         for (std::size_t i = 0; i < tiles.size(); ++i) tiles[i] = static_cast<std::uint8_t>((i / 8 + i % 8) % 2);
         CnbByteWriter grid;
@@ -35,9 +75,24 @@ namespace
         const std::string authorNote(80, 'L');
         note.WriteString(authorNote);
         CnbWriter writer(CnbAssetTypeIdFromName(TileType), 1);
+        ctx.Check(writer.SchemaChunkCount() == 0u &&
+                      writer.Limits().maxFileSize == sharedDefaults.maxFileSize &&
+                      writer.Limits().maxChunkAlignment == sharedDefaults.maxChunkAlignment,
+                  "a new writer has no schema chunks and owns the default read limits");
         writer.SetMetadata(TileType, "tile_layer");
         writer.AddChunk(GridChunk, grid.Take(), CnbChunkFlags::Mandatory);
         writer.AddChunk(NoteChunk, note.Take(), CnbChunkFlags::None, 64u);
+        ctx.Check(writer.SchemaChunkCount() == 2u,
+                  "schema chunk accounting excludes generated CMET and XREF chunks");
+
+        CnbWriter invalidChunks(CnbAssetTypeId::Texture2D, 1u);
+        ctx.Check(Refuses([&] { invalidChunks.AddChunk(CnbChunkId{}, {}); }) &&
+                      Refuses([&] { invalidChunks.AddChunk(GridChunk, {}, 2u); }) &&
+                      Refuses([&] { invalidChunks.AddChunk(GridChunk, {}, 0u, 3u); }) &&
+                      Refuses([&] { invalidChunks.AddChunk(GridChunk, {}, 0u, 8192u); }) &&
+                      Refuses([&] { invalidChunks.AddChunk(CnbContainerChunk::Metadata, {}); }) &&
+                      Refuses([&] { invalidChunks.AddChunk(CnbContainerChunk::ExternalReferences, {}); }),
+                  "AddChunk refuses malformed IDs, unknown flags, bad alignments and container-owned IDs");
         const auto image = writer.Build();
 
         CnbByteWriter primitives({0xAAu});
@@ -175,7 +230,110 @@ namespace
         ctx.Check(Crc32c(headerBytes.first(Format::HeaderChecksumCoverage)) == storedHeaderCrc,
                   "the generic writer stores the public CRC-32C over the exact declared header prefix");
 
+        const std::vector<std::uint8_t> compressionProbe(4096u, 0x5Au);
+        const auto noneCompressed = CompressCnbChunk(compressionProbe, CnbCompression::None);
+        const auto noneRestored = DecompressCnbChunk(noneCompressed, CnbCompression::None,
+                                                     noneCompressed.size(), noneCompressed.size(),
+                                                     "uncompressed probe");
+        ctx.Check(IsCnbCompressionSupported(CnbCompression::None) &&
+                      CnbCompressionToString(CnbCompression::None) == "none" &&
+                      CnbCompressionToString(CnbCompression::ReservedLz4) == "LZ4" &&
+                      CnbCompressionToString(CnbCompression::ReservedZstd) == "Zstandard" &&
+                      CnbCompressionToString(CnbCompression::ReservedDeflate) == "Deflate" &&
+                      CnbCompressionToString(static_cast<CnbCompression>(99u)) == "unknown codec 99" &&
+                      noneCompressed == compressionProbe && noneRestored == compressionProbe,
+                  "compression identity, names and the no-compression copy path are exact");
+
+        // CNA-DEMOS-ISSUE-110: the public contract says both checks happen for every codec, but
+        // the None branch returns before either one. CnbDocument validates these fields first, so
+        // ordinary container loading remains bounded; the defect is observable through this
+        // direct public helper call.
+        const auto wrongSizeNone = DecompressCnbChunk(
+            compressionProbe, CnbCompression::None, compressionProbe.size() + 1u, 1u,
+            "CNA-DEMOS-ISSUE-110 probe");
+        ctx.Check(wrongSizeNone == compressionProbe,
+                  "CNA-DEMOS-ISSUE-110: direct None decompression currently bypasses declared-size and allocation-limit checks");
+
+        const bool zstdAvailable = IsCnbCompressionSupported(CnbCompression::Zstd);
+        bool codecBehavior = !IsCnbCompressionSupported(CnbCompression::ReservedLz4) &&
+            !IsCnbCompressionSupported(CnbCompression::ReservedDeflate) &&
+            Refuses([&] { (void)CompressCnbChunk(compressionProbe, CnbCompression::ReservedLz4); }) &&
+            Refuses([&] { (void)DecompressCnbChunk(compressionProbe, CnbCompression::ReservedDeflate,
+                                                   compressionProbe.size(), compressionProbe.size(),
+                                                   "unsupported codec probe"); });
+        if (zstdAvailable)
+        {
+            const auto packedProbe = CompressCnbChunk(compressionProbe, CnbCompression::Zstd);
+            codecBehavior = codecBehavior && packedProbe.size() < compressionProbe.size() &&
+                DecompressCnbChunk(packedProbe, CnbCompression::Zstd, compressionProbe.size(),
+                                   compressionProbe.size(), "Zstandard probe") == compressionProbe &&
+                Refuses([&] { (void)DecompressCnbChunk(packedProbe, CnbCompression::Zstd,
+                                                       compressionProbe.size() + 1u,
+                                                       compressionProbe.size() + 1u,
+                                                       "wrong decoded size"); }) &&
+                Refuses([&] { (void)DecompressCnbChunk(packedProbe, CnbCompression::Zstd,
+                                                       compressionProbe.size(),
+                                                       compressionProbe.size() - 1u,
+                                                       "decoded allocation ceiling"); });
+        }
+        ctx.Check(codecBehavior,
+                  "implemented compression round-trips exactly and refuses size, ceiling and unsupported-codec violations");
+
         const auto document = CnbDocument::Parse(image, "8x8 tile layer");
+        document.RequireAsset(CnbAssetTypeIdFromName(TileType), 1u);
+        const auto& metadata = document.Metadata();
+        ctx.Check(document.Origin() == "8x8 tile layer" &&
+                      document.ContainerMajor() == Format::ContainerMajor &&
+                      document.ContainerMinor() == Format::ContainerMinor &&
+                      document.AssetTypeId() == CnbAssetTypeIdFromName(TileType) &&
+                      document.AssetSchemaVersion() == 1u && metadata.present &&
+                      metadata.flags == 0u && metadata.assetTypeName == TileType &&
+                      metadata.contentName == "tile_layer" &&
+                      document.ExternalReferences().empty() &&
+                      document.Limits().maxFileSize == sharedDefaults.maxFileSize,
+                  "the parsed document exposes exact origin, versions, asset identity, metadata and limits");
+
+        const auto gridIndex = document.RequireSingle(GridChunk);
+        const auto noteIndex = document.RequireSingle(NoteChunk);
+        const auto& gridEntry = document.ChunkAt(gridIndex);
+        const auto& noteEntry = document.ChunkAt(noteIndex);
+        ctx.Check(gridEntry.type == GridChunk && gridEntry.flags == CnbChunkFlags::Mandatory &&
+                      gridEntry.storedSize == 76u && gridEntry.uncompressedSize == 76u &&
+                      gridEntry.checksum == Crc32c(document.ChunkData(gridIndex)) &&
+                      gridEntry.compression == CnbCompression::None && gridEntry.alignment == 4u &&
+                      gridEntry.offset % gridEntry.alignment == 0u && gridEntry.IsMandatory() &&
+                      noteEntry.type == NoteChunk && noteEntry.flags == CnbChunkFlags::None &&
+                      noteEntry.storedSize == 84u && noteEntry.uncompressedSize == 84u &&
+                      noteEntry.checksum == Crc32c(document.ChunkData(noteIndex)) &&
+                      noteEntry.compression == CnbCompression::None && noteEntry.alignment == 64u &&
+                      noteEntry.offset % noteEntry.alignment == 0u && !noteEntry.IsMandatory(),
+                  "table entries expose exact IDs, flags, offsets, sizes, checksums, codecs and alignments");
+
+        ctx.Check(document.FindAll(GridChunk) == std::vector<std::size_t>{gridIndex} &&
+                      document.FindSingle(GridChunk) == gridIndex &&
+                      !document.FindSingle(MakeChunkId('M', 'I', 'S', 'S')).has_value() &&
+                      Refuses([&] { (void)document.ChunkAt(document.ChunkCount()); }) &&
+                      Refuses([&] { (void)document.ChunkData(document.ChunkCount()); }) &&
+                      Refuses([&] { (void)document.OpenChunk(document.ChunkCount()); }) &&
+                      Refuses([&] { (void)document.ExternalReferenceAt(0u, "tile atlas"); }),
+                  "document lookup distinguishes one, absent and out-of-range chunks and references");
+
+        auto copiedLimits = DefaultCnbReadLimits();
+        copiedLimits.maxFileSize = image.size();
+        CnbWriter copiedLimitWriter(CnbAssetTypeIdFromName(TileType), 1u);
+        copiedLimitWriter.SetMetadata(TileType, "tile_layer");
+        copiedLimitWriter.AddChunk(GridChunk, std::vector<std::uint8_t>{1u});
+        copiedLimitWriter.SetLimits(copiedLimits);
+        copiedLimits.maxFileSize = 1u;
+        const auto copiedLimitImage = copiedLimitWriter.Build();
+        auto parserLimits = DefaultCnbReadLimits();
+        parserLimits.maxFileSize = copiedLimitImage.size();
+        const auto copiedLimitDocument = CnbDocument::Parse(copiedLimitImage, "copied limits", parserLimits);
+        parserLimits.maxFileSize = 1u;
+        ctx.Check(copiedLimitWriter.Limits().maxFileSize == image.size() &&
+                      copiedLimitDocument.Limits().maxFileSize == copiedLimitImage.size() &&
+                      copiedLimitWriter.Build() == copiedLimitImage,
+                  "writers and documents own copied limits and deterministic builds ignore later caller mutation");
         auto input = document.OpenChunk(document.RequireSingle(GridChunk));
         const auto width = input.ReadU32(), height = input.ReadU32();
         const auto count = input.ReadCount(1, "tiles");
@@ -356,11 +514,25 @@ CNA_DEMOS_CONSOLE(ReadLimits, {
              "CNA::Content::Cnb::Crc32cPortableEXT",
              "CNA::Content::Cnb::CnbWriter::SetMetadata", "CNA::Content::Cnb::CnbWriter::SetExternalReferences",
              "CNA::Content::Cnb::CnbWriter::AddChunk",
-             "CNA::Content::Cnb::CnbWriter::SetCompression", "CNA::Content::Cnb::IsCnbCompressionSupported",
+             "CNA::Content::Cnb::CnbWriter::SchemaChunkCount", "CNA::Content::Cnb::CnbWriter::SetCompression",
+             "CNA::Content::Cnb::CnbWriter::Limits", "CNA::Content::Cnb::CnbReadLimits",
+             "CNA::Content::Cnb::IsCnbCompressionSupported", "CNA::Content::Cnb::CnbCompressionToString",
+             "CNA::Content::Cnb::CompressCnbChunk", "CNA::Content::Cnb::DecompressCnbChunk",
+             "CNA::Content::Cnb::CnbChunkEntry", "CNA::Content::Cnb::CnbChunkEntry::IsMandatory",
+             "CNA::Content::Cnb::CnbExternalReference", "CNA::Content::Cnb::CnbMetadata",
+             "CNA::Content::Cnb::CnbDocument", "CNA::Content::Cnb::CnbWriter",
              "CNA::Content::Cnb::CnbDocument::ChunkData",
              "CNA::Content::Cnb::CnbDocument::Parse", "CNA::Content::Cnb::CnbDocument::ChunkCount",
              "CNA::Content::Cnb::CnbDocument::ChunkAt", "CNA::Content::Cnb::CnbDocument::OpenChunk",
-             "CNA::Content::Cnb::CnbDocument::HasMagic", "CNA::Content::Cnb::CnbByteReader::ReadCount",
+             "CNA::Content::Cnb::CnbDocument::HasMagic", "CNA::Content::Cnb::CnbDocument::Origin",
+             "CNA::Content::Cnb::CnbDocument::ContainerMajor", "CNA::Content::Cnb::CnbDocument::ContainerMinor",
+             "CNA::Content::Cnb::CnbDocument::AssetTypeId", "CNA::Content::Cnb::CnbDocument::AssetSchemaVersion",
+             "CNA::Content::Cnb::CnbDocument::FindAll", "CNA::Content::Cnb::CnbDocument::FindSingle",
+             "CNA::Content::Cnb::CnbDocument::RequireSingle", "CNA::Content::Cnb::CnbDocument::Metadata",
+             "CNA::Content::Cnb::CnbDocument::ExternalReferences",
+             "CNA::Content::Cnb::CnbDocument::ExternalReferenceAt",
+             "CNA::Content::Cnb::CnbDocument::RequireAsset", "CNA::Content::Cnb::CnbDocument::Limits",
+             "CNA::Content::Cnb::CnbByteReader::ReadCount",
              "CNA::Content::Cnb::CnbByteReader::ReadString", "CNA::Content::Cnb::DefaultCnbReadLimits"},
     .tags = {"content", "custom", "cnb", "limits", "compression", "validation", "cnaext"},
     .restrictions = "Small in-memory fixtures; compressed checks require runtime Zstandard support. Structural byte mutation is limited to checksum corruption; no timing or allocation profiling.",

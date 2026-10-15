@@ -1130,6 +1130,38 @@ host; no performance or alternate-host-path claim is added. Audit `CnbReadLimits
 `CnbChunkCompression.hpp`, `CnbDocument.hpp` and `CnbWriter.hpp` next against the same custom CNB
 workflows.
 
+Focused **979-CNB-document-writer-compression-disposition** extends stable
+`content.custom.cnb_read_limits` from24 to37 controls without adding a catalog ID and closes the
+remaining public generic-container declarations in `CnbReadLimits.hpp`,
+`CnbChunkCompression.hpp`, `CnbDocument.hpp` and `CnbWriter.hpp`. Exact defaults cover all seven
+limits and safe carrier states. Real parsed entries expose complete GRID/NOTE identities, flags,
+offsets, stored/logical sizes, CRCs, codecs, alignments and mandatory state; the document exposes
+exact origin, versions, asset/schema identity, metadata, absent references, lookup outcomes,
+out-of-range refusals and its owned limit copy. Writer controls add constructor/input validation,
+schema-only counts, default/copied limit state and repeated byte-identical builds. Existing custom
+loader/reference workflows retain file parsing/writing, populated XREF, mandatory/duplicate chunk
+and registry-dispatch evidence.
+
+All codec names/support states and the `None` copy route are exact. This build's Zstandard path
+compresses a 4096-byte value, restores it exactly and refuses both wrong decoded size and an
+undersized ceiling; unsupported LZ4/Deflate routes refuse. The audit finds
+`CNA-DEMOS-ISSUE-110`: direct `DecompressCnbChunk(..., None, ...)` returns before enforcing either
+the declared exact size or maximum. `CnbDocument` validates those values earlier and never invokes
+the helper for uncompressed chunks, so ordinary container parsing remains bounded. A passing
+diagnostic keeps the public contract gap visible without adding a runtime known-issue marker.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE-labelled and ten
+OPENGLES3-labelled runs pass37/37 with byte-identical stdout SHA-256
+`d096589f95e38ac33d0c8f49d2c947254e0d3aad7136bef453f1387baaeda93f` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata remains683/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and
+3078/3205 C routes; 20 public names enter the CNA-extension appendix and Complete956 still marks
+eight post-baseline IDs absent. Evidence:`/tmp/checkpoint-979-cnb-infrastructure/*`,
+`/tmp/checkpoint-979-cnb-infrastructure-report.json` and `/tmp/checkpoint-979-coverage.md`. No
+filesystem path, device, rendering, screenshot, compression-performance or unavailable-codec
+execution claim is added. Audit `CnbLoaderRegistry.hpp` next, consolidating the existing built-in,
+custom-loader and collision workflows before adding another catalog ID.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3294,9 +3326,11 @@ custom hashing, logical-name safety and container chunk IDs. Audit `CnbArithmeti
 `CnbByteReader.hpp`, `CnbByteWriter.hpp` and `CnbCrc32c.hpp` next by extending the existing
 read-limit/custom-schema workflows. Focused978 closes those complete public primitive surfaces with
 an exact 44-byte writer/reader matrix, UTF-8/failure/overflow boundaries, the standard incremental
-CRC-32C vector and a real stored header checksum. Audit `CnbReadLimits.hpp`,
-`CnbChunkCompression.hpp`, `CnbDocument.hpp` and `CnbWriter.hpp` next against the same custom CNB
-workflows.
+CRC-32C vector and a real stored header checksum. Focused979 closes the remaining read-limit,
+compression, document and writer declarations through exact defaults and carriers, real TOC and
+metadata state, owned-limit behavior, deterministic output, available-codec round trips and
+representative refusals; ISSUE-110 records the direct `None` decompression validation gap. Audit
+`CnbLoaderRegistry.hpp` next by consolidating the existing custom/built-in/collision workflows.
 The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title

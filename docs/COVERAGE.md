@@ -227,28 +227,41 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbByteWriter::WriteU64` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbByteWriter::WriteU8` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbByteWriter::WriteZeros` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbChunkEntry` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbChunkEntry::IsMandatory` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbChunkFlags` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbChunkId` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbCompression` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbCompressionToString` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbContainerChunk` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbCurveChunk::Header` -- content.cnj.curve
 - `CNA::Content::Cnb::CnbCurveChunk::Keys` -- content.cnj.curve
 - `CNA::Content::Cnb::CnbCurveKeyStride` -- content.cnj.curve
 - `CNA::Content::Cnb::CnbCurveSchemaVersion` -- content.cnj.curve
+- `CNA::Content::Cnb::CnbDocument` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::AssetSchemaVersion` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::AssetTypeId` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ChunkAt` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ChunkCount` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ChunkData` -- content.custom.cnb_read_limits
-- `CNA::Content::Cnb::CnbDocument::ExternalReferenceAt` -- content.custom.cnb_external_references
-- `CNA::Content::Cnb::CnbDocument::ExternalReferences` -- content.custom.cnb_external_references
-- `CNA::Content::Cnb::CnbDocument::FindAll` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbDocument::ContainerMajor` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::ContainerMinor` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::ExternalReferenceAt` -- content.custom.cnb_external_references, content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::ExternalReferences` -- content.custom.cnb_external_references, content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::FindAll` -- content.custom.cnb_loader, content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::FindSingle` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::HasMagic` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::Limits` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::Metadata` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::OpenChunk` -- content.custom.cnb_loader, content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbDocument::Origin` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::Parse` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ParseFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
-- `CNA::Content::Cnb::CnbDocument::RequireAsset` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbDocument::RequireAsset` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::RequireMandatoryChunksUnderstood` -- content.custom.cnb_loader
-- `CNA::Content::Cnb::CnbDocument::RequireSingle` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbDocument::RequireSingle` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbEffectKind` -- content.model.pipeline_contract
+- `CNA::Content::Cnb::CnbExternalReference` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbImageImportOptions` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::CnbLogicalNameProblem` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbMaterial` -- content.model.pipeline_contract
@@ -261,6 +274,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbMediaChunk::SongHeader` -- content.media.cnb_codec
 - `CNA::Content::Cnb::CnbMediaChunk::VideoHeader` -- content.media.cnb_codec
 - `CNA::Content::Cnb::CnbMediaSchemaVersion` -- content.media.cnb_codec
+- `CNA::Content::Cnb::CnbMetadata` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbMipColorSpace` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Cnb::CnbModelAnimation` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbModelBone` -- content.model.pipeline_contract
@@ -323,6 +337,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbMorphTarget` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbMorphWeightKey` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbNoIndex` -- content.model.pipeline_contract
+- `CNA::Content::Cnb::CnbReadLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbSamplerState` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbSongData` -- content.media.cnb_codec
 - `CNA::Content::Cnb::CnbSongHeaderFixedStride` -- content.media.cnb_codec
@@ -364,8 +379,11 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbTextureTransform` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::CnbVideoData` -- content.media.cnb_codec
 - `CNA::Content::Cnb::CnbVideoHeaderStride` -- content.media.cnb_codec
+- `CNA::Content::Cnb::CnbWriter` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::AddChunk` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::Build` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbWriter::Limits` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::CnbWriter::SchemaChunkCount` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetCompression` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::SetExternalReferences` -- content.custom.cnb_external_references, content.custom.cnb_read_limits, content.custom.multi_artifact_publication, content.custom.nested_builds
 - `CNA::Content::Cnb::CnbWriter::SetLimits` -- content.custom.cnb_read_limits
@@ -373,6 +391,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::CnjToCnbResult` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::CompileCnjToCnb` -- content.cnj.pipeline_assets
+- `CNA::Content::Cnb::CompressCnbChunk` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::Crc32c` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::Crc32cContinue` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::Crc32cPortableEXT` -- content.custom.cnb_read_limits
@@ -392,6 +411,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::DecodeVideoFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeWavAsCnbSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Cnb::DecodeWavAsImportedSound` -- content.sound_effect.imported_pcm
+- `CNA::Content::Cnb::DecompressCnbChunk` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::EncodeAnimationClipToCnb` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::EncodeCurveToCnb` -- content.cnj.curve

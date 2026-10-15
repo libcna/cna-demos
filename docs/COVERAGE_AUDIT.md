@@ -1148,6 +1148,25 @@ The full primitive public surface now has exact byte/value, cursor, safety-bound
 evidence. Hardware and portable CRC results are compared on this host; no performance claim or
 execution on the alternate host path is made.
 
+#### CNB limits, compression, document and writer disposition
+
+Focused979 completes the remaining generic container audit across `CnbReadLimits.hpp`,
+`CnbChunkCompression.hpp`, `CnbDocument.hpp` and `CnbWriter.hpp`. It extends the same
+`content.custom.cnb_read_limits` workflow, retaining the existing custom loader and external-
+reference demos for file I/O, registry dispatch and mandatory-chunk behavior.
+
+| Declaration family | Disposition |
+|---|---|
+| `CnbReadLimits`, `DefaultCnbReadLimits` | Every public field has its exact default: 512 MiB file, 65,536 chunks, 384 MiB per chunk, 1 GiB aggregate decoded bytes, 1 MiB strings, 16 Mi elements and 4096-byte alignment. Existing small injected limits prove symmetric reader/writer enforcement. Writer and document controls now also prove that each stores its own copy rather than retaining the caller's mutable object. |
+| Compression helpers | Every codec name and implemented/unsupported result is exact. `None` copies losslessly. When Zstandard is present, a compressible 4096-byte value shrinks, restores byte-exactly and refuses both a wrong decoded size and an undersized ceiling; LZ4 and Deflate are refused in this build. ISSUE-110 records that the direct `None` decompression branch returns before the two checks promised by its public contract. The ordinary document path performs those structural checks earlier and remains bounded. |
+| `CnbChunkEntry`, `CnbExternalReference`, `CnbMetadata` | Default values are safe and exact. Real GRID/NOTE entries expose expected IDs, flags, offsets, stored/logical sizes, CRCs, compression, alignment and mandatory classification. Parsed CMET identity/provenance is exact and an absent XREF is observably empty; the focused external-reference workflow owns populated fields and indexed lookup. |
+| `CnbDocument` | Parse/HasMagic, chunk count/data/cursors, lookup, required asset/mandatory chunks, metadata/references and corruption/limit behavior already run against accepted and damaged images. The extension adds exact origin, container versions, asset identity/schema, all remaining TOC accessors, present/absent `FindSingle`, copied limits and every out-of-range accessor. Existing custom demos retain `ParseFile`, populated XREF and duplicate/unknown-chunk cases. |
+| `CnbWriter` | Constructor validation, default/current limits and schema-only chunk count are direct. Metadata, references, chunk addition, compression, building and file writing retain real round trips. New controls refuse malformed IDs, unknown flags, non-power-of-two/excessive alignments and container-owned IDs, and repeated `Build` with copied limits is byte-identical. Existing custom-type collision, unsafe reference and budget controls retain deeper writer/parser symmetry evidence. |
+
+All public declarations in these four headers now have direct state, round-trip, refusal or named
+shared-workflow evidence. The compression checks describe this build's available codecs only; they
+make no portability, throughput or alternate-build claim.
+
 #### `ModelContentPipeline.hpp` declaration-level disposition
 
 The pinned header exposes 33 public declarations: two variant aliases, three stable identities,
