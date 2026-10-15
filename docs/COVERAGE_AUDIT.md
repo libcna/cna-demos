@@ -4028,3 +4028,29 @@ evidence: `c_api.content.reflective_reader` proves value/shared reader shapes an
 object identity; `c_api.content.object_dictionary` proves cached reuse and typed foreign lookup;
 and `c_api.content.model_loading` proves a Model returns the exact pointer and destruction neither
 frees nor mutates it. Direct aggregate construction would only restate the field initializer.
+
+### Focused951 SoundEffect pipeline components
+
+The new renderer-free `content.sound_effect.pipeline_components` makes the public built-in
+SoundEffect components visible rather than relying only on generated assets. Fourteen controls
+prove importer, processor and writer identities and routes, the fixed no-parameter policy, exact
+CNB writer schema/codec identity, registry wiring, a real deterministic WAV-to-CNB build, ordered
+diagnostics and dependency shape, exact PCM plus whole-source loop behavior, contextual failure,
+and the named compressed adapter's callback and two decoder refusals. The compressed success case
+deliberately gives a copied WAV payload to a caller-supplied decoder under an `.mp3` name; it tests
+the adapter contract and makes no claim about real MP3 decoding.
+
+The fifteenth control exposes `CNA-DEMOS-ISSUE-105`. A sole importer whose
+`SelectedByNameOnly()` returns true is nevertheless selected by an unnamed convention lookup.
+Source review isolates the cause: `ContentPipelineRegistry::ResolveImporter` removes named-only
+candidates only in its multiple-candidate branch, then its generic resolver accepts the sole
+candidate. Explicit-name resolution and the subsequent build both work as documented.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb processes reproduce 14 passes and that one expected failure
+with byte-identical stdout SHA-256
+`252bfb6aeb6e22c2040fd11c2515be8b006542b7b8ae332ef44b266762967e66` and empty stderr. The
+warning-free build uses `-j3`; metadata is 671/0; the exact known-issue CTest and both validator
+suites pass. Generated XNA/C totals remain 303/329 types, 2114/2326 members, 674/753 fields and
+3078/3205 routes; 21 public component names enter the CNA-extension appendix. Complete948 marks
+both post-baseline IDs absent. Evidence: `/tmp/checkpoint-951-sound-pipeline/*`. No audio playback,
+listening test or CNA source change is involved.

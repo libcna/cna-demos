@@ -15,6 +15,37 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-105 -- A sole named-only importer becomes the convention route
+
+- **Area/API:** `CNA::Content::Pipeline::ContentImporter::SelectedByNameOnly` and
+  `ContentPipelineRegistry::ResolveImporter`.
+- **Demo/reproduction:** run `content.sound_effect.pipeline_components`. Register the built-in
+  SoundEffect pipeline with a compressed decoder, then resolve an `.mp3` without an explicit
+  importer name. `CompressedSoundImporter` is the only component declaring that extension and its
+  public `SelectedByNameOnly()` result is true. The demo separately proves that the same component
+  resolves and builds successfully when explicitly named.
+- **Observed:** default resolution returns `CNA.CompressedSoundImporter` instead of reporting that
+  no ordinary importer is available. Fourteen other controls pass, including the descriptor
+  contract, the complete real-WAV route, deterministic CNB output, contextual parameter failure,
+  explicit compressed callback success, and missing/unsuccessful decoder failures. The final
+  named-only exclusion control fails under the renderer-independent pipeline code.
+- **Expected/contract:** the base-class documentation says a named-only importer is left out of
+  default resolution, still runs when a build names it, and never becomes the answer to which
+  importer reads an extension on its own. `CompressedSoundImporter` documents the same rule so a
+  convention build of compressed audio remains on its ordinary song route.
+- **Cause observed in source:** `ResolveImporter` filters `SelectedByNameOnly()` candidates only
+  when more than one importer declares the extension. With exactly one candidate it forwards an
+  empty explicit name to the generic route resolver, which selects that sole candidate without
+  consulting `SelectedByNameOnly()`. The equivalent processor resolver has the same conditional
+  shape and should be audited with the repair.
+- **Suggested repair:** always form the eligible default candidate set by excluding named-only
+  components, then require exactly one eligible candidate. Preserve explicit-name resolution.
+- **Evidence/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. Contract and implementation excerpts are
+  `/tmp/checkpoint-951-named-only-importer-source.txt`, SHA-256
+  `eac283ca9615ae578d490836551e7bb8a768c0679bed6de952db2863339bc38d`. No CNA source was
+  modified, no upstream message was sent, and the demo names this issue as an expected failure.
+
 ### CNA-DEMOS-ISSUE-104 -- STUB does not provide the promised WarnAndStub Texture3D null object
 
 - **Area/API:** `CNA::Unsupported3DGraphicsCallBehavior`,

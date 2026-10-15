@@ -10128,3 +10128,26 @@ default-null non-owning `void*`. Existing reflective-reader, object-dictionary a
 demos already prove the meaningful behavior around exact caller pointer identity, cache reuse and
 non-ownership across container destruction. This is classified as trivial direct surface with
 complete indirect adapter behavior, rather than inflating the catalog with aggregate construction.
+
+## Focused951-sound-pipeline-components
+
+The new `content.sound_effect.pipeline_components` closes the ordinary public component workflow
+around Focused949-950. Fourteen passing controls cover stable importer/processor/writer identities,
+routes and value types, the fixed parameter policy, exact CNB schema/codec declaration, registry
+wiring, a real deterministic WAV build, ordered diagnostics and dependency shape, exact PCM and
+whole-source loop output, contextual refusal, and explicit compressed-import callback behavior
+including unavailable decoders. The callback intentionally reads a copied WAV payload under an
+`.mp3` name; this is adapter evidence, not a real compressed-codec claim.
+
+The final control records `CNA-DEMOS-ISSUE-105`: default importer resolution wrongly selects a
+sole `SelectedByNameOnly()` candidate. The implementation filters named-only candidates only when
+more than one component declares the extension, contradicting the public base-class and compressed-
+importer contracts. Explicit selection still succeeds.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs reproduce 14 passes plus the expected failure with the
+same stdout SHA-256 `252bfb6aeb6e22c2040fd11c2515be8b006542b7b8ae332ef44b266762967e66`
+and empty stderr. The warning-free `-j3` build, exact known-issue CTest, metadata 671/0 and both
+validator suites pass. Generated XNA/C totals remain unchanged; the CNA-extension appendix gains
+21 names and Complete948 marks both newer IDs absent. Evidence:
+`/tmp/checkpoint-951-sound-pipeline/*`. Audit the remaining public
+`CnbSoundEffectCodec.hpp` helper and validation behavior next.

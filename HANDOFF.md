@@ -426,6 +426,26 @@ a synthetic native demo: it is one opaque non-owning pointer with no methods, wh
 reuse and survival without CNA freeing or mutating the object. Evidence:
 `/tmp/checkpoint-950-processed-sound/*`. No CNA defect appeared.
 
+Focused **951-sound-pipeline-components** adds the 671st source/catalog ID,
+`content.sound_effect.pipeline_components`. Its first 14 controls cover all public built-in
+SoundEffect component identities/routes/types, fixed parameter policy, exact writer schema/codec
+identity, a real deterministic WAV-to-CNB build, ordered import/process messages, primary
+dependency, exact PCM and whole-source loop, contextual pipeline failure, and the explicit-name
+compressed adapter's successful callback plus missing/unsuccessful decoder refusals. It opens no
+audio device; the deterministic compressed callback reads a copied WAV payload under an `.mp3`
+name and is not claimed as real compressed decoding.
+
+The final control exposes **CNA-DEMOS-ISSUE-105**: `ContentPipelineRegistry::ResolveImporter`
+filters `SelectedByNameOnly()` only when an extension has multiple candidates, so a sole named-only
+importer incorrectly becomes the convention route despite the public contract. Ten SOFTWARE and
+ten OPENGLES3/Xvfb runs reproduce 14 passes plus that one expected failure with byte-identical
+stdout SHA-256 `252bfb6aeb6e22c2040fd11c2515be8b006542b7b8ae332ef44b266762967e66`
+and empty stderr. The warning-free build uses at most three jobs, metadata is 671/0, the exact
+known-issue CTest and both validator suites pass. Generated XNA/C totals remain unchanged; 21
+component names enter the CNA-extension appendix and Complete948 correctly marks both post-baseline
+IDs absent. Evidence: `/tmp/checkpoint-951-sound-pipeline/*` and the source excerpt named in the
+issue entry. No CNA source was modified.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2543,10 +2563,12 @@ manager-snapshot behavior. Focused947 adds the actual native XNB `ObjectDictiona
 typed and raw values, both constructors, logical type names, membership, full value access, both
 lookup failures and a game-defined reference value registered through `ReflectiveTypeReaderBuilder`.
 Complete948 validates those three new IDs and every stable-ID extension on both full renderer
-suites. Focused949-950 close the source-oriented `ImportedSound`, container-neutral
-`ProcessedSoundEffect` and writer-adaptation workflow without requiring an audio device; the
-adjacent pointer-only `ForeignContentObjectEXT` is explicitly dispositioned through existing C
-reader/dictionary/model evidence. Continue the next coherent public CNA header family.
+suites. Focused949-951 close source-oriented `ImportedSound`, container-neutral
+`ProcessedSoundEffect`, built-in component registration and end-to-end writer adaptation without
+requiring an audio device; the adjacent pointer-only `ForeignContentObjectEXT` is explicitly
+dispositioned through existing C reader/dictionary/model evidence. Focused951 records
+CNA-DEMOS-ISSUE-105 for the sole named-only importer selection defect. Audit the remaining public
+`CnbSoundEffectCodec.hpp` helpers and validation behavior next.
 The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
