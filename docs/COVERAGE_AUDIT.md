@@ -3724,3 +3724,18 @@ warning/info stderr is also byte-stable. The warning-free `-j3` build, exact SOF
 metadata and validator suites pass. Counts stay unchanged. Evidence:
 `/tmp/checkpoint-935-renderer-fallback-*`. Test-only reset and the graphics-module handshake are
 implementation/test machinery. No pixel or visual result is claimed, and no CNA defect appeared.
+
+### Focused936 native host-platform identity
+
+New renderer-free `core.platform.host_identity` provides direct C++ evidence for the public
+`TargetPlatform` and `DesktopOS` families rather than relying only on the C adapter. Four controls
+tie mobile to Android/iOS, Apple to iOS/macOS, the target enum to its stable diagnostic name and,
+on the validated Desktop/Linux build, the desktop OS to Linux. On a non-desktop target the same
+source instead requires the documented `CNAException` from the desktop-only query.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass4/4 with byte-identical stdout SHA-256
+`0539f7336f101f817f8b5e4ea5262d111123caefbb0d3e4242377d4d45e8c475` and empty stderr. The
+`-j3` updated object, metadata665/0, exact SOFTWARE CTest and validator suites pass. XNA/C totals
+remain unchanged; Complete933 correctly leaves both post-checkpoint IDs absent. Evidence:
+`/tmp/checkpoint-936-host-identity-*`. No renderer/window behavior or visual result is claimed, and
+no CNA defect appeared.

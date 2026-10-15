@@ -68,12 +68,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-664 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core4,
+665 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core5,
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform2 and c_api177. Kinds are169 console,294 game and201 standalone;
-628 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, cnaext4, platform2 and c_api177. Kinds are170 console,294 game and201 standalone;
+629 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete933's full runtime reports for663 IDs and marks
-the focused934 renderer-metadata ID absent from those older aggregate reports.
+the focused934 renderer-metadata and focused936 host-identity IDs absent from those older aggregate
+reports.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete933's
 full runtime reports are the baseline inputs for the663-ID catalog. Selected semantic
@@ -2339,9 +2340,10 @@ HIGHEST PRIORITY: Complete933 is the authoritative663-demo full-build/full-runti
 absorbs Focused927-932 after Complete926. Focused934 starts the broader CNA-specific C++ audit with
 the native renderer identity/category/maturity API; its new664th ID has focused evidence and is
 honestly absent from Complete933's aggregate reports. Focused935 then closes the ordinary native
-renderer-selection/fallback surface in the existing standalone workflow. Continue with the next
-coherent public CNA header family, preferring an existing workflow when it already owns the
-behavior. The diagnostics
+renderer-selection/fallback surface in the existing standalone workflow, and Focused936 covers the
+native compile-target/mobile/Apple/desktop-OS identity family. Continue with the next coherent
+public CNA header family, preferring an existing workflow when it already owns the behavior. The
+diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered
@@ -2740,6 +2742,23 @@ remain unchanged. Evidence:`/tmp/checkpoint-935-renderer-fallback-*`. This creat
 device but makes no pixel, screenshot or visual-quality claim. Test-only `ResetForTestingEXT` and
 the internal `GraphicsRendererSelectionAccessEXT` handshake remain CNA test/implementation
 machinery. No CNA defect appeared.
+
+### Focused936-native-host-platform-identity
+
+New renderer-free `core.platform.host_identity` gives the665th catalog ID direct native evidence
+for `TargetPlatform`, `DesktopOS` and the related query helpers. Four controls correlate the mobile
+flag with Android/iOS, the Apple flag with iOS/macOS, the target enum with its stable diagnostic
+name and, on this Desktop/Linux build, `getCurrentDesktopOS()` with the specific Linux name. The
+same source takes the documented `CNAException` refusal path on non-desktop targets.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass4/4 with byte-identical stdout SHA-256
+`0539f7336f101f817f8b5e4ea5262d111123caefbb0d3e4242377d4d45e8c475` and empty stderr. The
+updated object compiles cleanly with `-j3`; metadata is665/0, the exact SOFTWARE CTest and both
+validator suites pass. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields
+and3078/3205 routes because this family is CNA-specific. Complete933 remains the full runtime
+baseline, so its reports correctly mark both post-checkpoint IDs absent. Evidence:
+`/tmp/checkpoint-936-host-identity-*`. No renderer, device, window or visual behavior is claimed,
+and no CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

@@ -6,7 +6,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**664 demos** in 18 categories. Kinds: console 169, game 294, standalone 201. Automation: automated 628, manual 3, smoke-only 33.
+**665 demos** in 18 categories. Kinds: console 170, game 294, standalone 201. Automation: automated 629, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -14,7 +14,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 33 / 0 / 13 / 0 / 0 | 33 / 0 / 13 / 0 / 0 |
-| core | 4 | 4 | 0 | 0 | 3 / 0 / 0 / 0 / 1 | 3 / 0 / 0 / 0 / 1 |
+| core | 5 | 5 | 0 | 0 | 3 / 0 / 0 / 0 / 2 | 3 / 0 / 0 / 0 / 2 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
 | diagnostics | 6 | 6 | 0 | 0 | 2 / 4 / 0 / 0 / 0 | 2 / 4 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `core.renderer.metadata`.
-- OPENGLES3: absent from report: `core.renderer.metadata`.
+- SOFTWARE: absent from report: `core.platform.host_identity`, `core.renderer.metadata`.
+- OPENGLES3: absent from report: `core.platform.host_identity`, `core.renderer.metadata`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -172,6 +172,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Buttons::Paddle3EXT` -- input.gamepad.extra_buttons
 - `Buttons::Paddle4EXT` -- input.gamepad.extra_buttons
 - `Buttons::TouchPadEXT` -- input.gamepad.touchpad
+- `CNA::CNAException` -- core.platform.host_identity
 - `CNA::Content::Cnb::CnbAssetTypeIdFromName` -- content.custom.cnb_loader
 - `CNA::Content::Cnb::CnbByteReader::ReadCount` -- content.custom.cnb_read_limits, content.custom.pipeline_components
 - `CNA::Content::Cnb::CnbByteReader::ReadString` -- content.custom.cnb_read_limits
@@ -258,6 +259,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::RegisterXnaXmlSourceContentPipeline` -- content.custom.xml_xnb_pipeline
 - `CNA::Content::Pipeline::RunContentCompiler` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication, content.custom.xml_xnb_pipeline
 - `CNA::Content::Pipeline::TextureResizeToPowerOfTwoParameter` -- content.texture_processor.resize_to_power_of_two
+- `CNA::DesktopOS` -- core.platform.host_identity
 - `CNA::Devices::DisplayInfo::ContentScale` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::DisplayInfo::SafeArea` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::Locale::PreferredLocales` -- devices.system.machine_info
@@ -470,10 +472,14 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::ShaderDiagnosticEXT::getSeverity` -- graphics.shader_effect.compiler_diagnostics
 - `CNA::ShaderDiagnosticEXT::getSourceLabel` -- graphics.shader_effect.compiler_diagnostics
 - `CNA::ShaderDiagnosticEXT::getStage` -- graphics.shader_effect.compiler_diagnostics
+- `CNA::TargetPlatform` -- core.platform.host_identity
+- `CNA::getCurrentDesktopOS` -- core.platform.host_identity
 - `CNA::getCurrentGraphicsBackendCategory` -- core.renderer.metadata
 - `CNA::getCurrentGraphicsBackendMaturity` -- core.renderer.metadata
 - `CNA::getCurrentGraphicsRendererName` -- core.renderer.metadata
 - `CNA::getCurrentGraphicsRendererType` -- core.renderer.metadata
+- `CNA::getCurrentPlatform` -- core.platform.host_identity
+- `CNA::getCurrentPlatformName` -- core.platform.host_identity
 - `CNA::getGraphicsBackendCategory` -- core.renderer.metadata
 - `CNA::getGraphicsBackendMaturity` -- core.renderer.metadata
 - `CNA::getGraphicsRendererFallbackReasonName` -- platform.renderer_selection.set_preferred
@@ -482,6 +488,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::getVersionMinor` -- core.version.version_string
 - `CNA::getVersionPatch` -- core.version.version_string
 - `CNA::getVersionString` -- core.version.version_string
+- `CNA::isApplePlatform` -- core.platform.host_identity
+- `CNA::isMobilePlatform` -- core.platform.host_identity
 - `CNA::isPreReleaseVersion` -- core.version.version_string
 - `CNA::toStringView` -- core.renderer.metadata
 - `CNA::tryParseGraphicsRendererName` -- core.renderer.metadata

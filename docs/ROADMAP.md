@@ -9877,3 +9877,14 @@ expected warning/info stderr stream. The warning-free incremental build uses `-j
 SOFTWARE CTest, metadata and validator suites pass. Demo and generated XNA/C counts are unchanged.
 Evidence:`/tmp/checkpoint-935-renderer-fallback-*`. `ResetForTestingEXT` and
 `GraphicsRendererSelectionAccessEXT` remain test/internal handshake machinery rather than demo API.
+
+## Focused936-native-host-platform-identity
+
+New renderer-free `core.platform.host_identity` adds the665th ID and covers CNA's native build-
+target identity family. Four controls correlate `TargetPlatform` with its stable name, mobile with
+Android/iOS, Apple with iOS/macOS and, on this Desktop/Linux build, `DesktopOS::Linux` with the
+specific platform name; non-desktop builds exercise the documented `CNAException` refusal instead.
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass4/4 with byte-identical stdout and empty
+stderr. The `-j3` updated object, metadata665/0, exact SOFTWARE CTest and validator suites pass.
+XNA/C totals stay unchanged and Complete933's older reports honestly mark both newer IDs absent.
+Evidence:`/tmp/checkpoint-936-host-identity-*`.
