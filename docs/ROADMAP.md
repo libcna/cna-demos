@@ -418,15 +418,16 @@ a check that all authored colors remain visible and that a blank texture row can
   unchanged skip, authored edit, cache versus Unload/reload and explicit CNB-schema refusal
   (10 child checks). No genuine-XNA or GPU claim; external graphs remain separate work.
 - ✅ `content.custom.incremental_compiler`: real RunContentCompiler registry factory and manifest,
-  explicit pre-built-registry service-option refusal, unchanged skips, primary/aliased shared
+  explicit pre-built-registry service-option refusal, synchronized concurrent factories on
+  disjoint roots with distinct service options/registries, unchanged skips, primary/aliased shared
   dependency invalidation, failed-import preservation, repair,
   missing-output rebuild, writer-version identity, same-length/timestamp output tampering, corrupt
   manifest recovery, frozen-registry refusal and ownership-aware clean. Typed per-asset Bonus
   changes rebuild only the affected node, whitespace-only configuration edits skip, and source
   removal/reintroduction collects/restores only its owned output. Remapping an external-root alias
-  to identical bytes skips both nodes with an identical manifest (22 child checks). Clean
+  to identical bytes skips both nodes with an identical manifest (25 child checks). Clean
   rejects changed owned bytes without deleting an untouched peer or the manifest. Crash consistency,
-  parallel publishers and graph/deployment cache cases remain separate work.
+  independent-process same-root publishers and graph/deployment cache cases remain separate work.
 - ✅ `content.custom.intermediate_external_references`: filename versus inline data, table
   deduplication, relocation, wrapper/null identity and invalid references. Nine child checks pass;
   native emitted TargetType alias round-trip exposes ISSUE-046. File imports/build publication
@@ -8770,3 +8771,22 @@ failed assertions move64->65 and68->69 respectively. Coverage remains302/329 typ
 members,169/753 fields and3078/3205 C routes. Both tool self-test suites pass. Evidence:
 `build/linux-full/reports/checkpoint-871-complete-*`. Pixel checks were programmatic; no screenshot,
 listening, physical-input, external-service or manual visual-quality validation was performed.
+
+## Focused872-concurrent-disjoint-registry-factories
+
+`content.custom.incremental_compiler` grows from twenty-two to twenty-five internal controls. Two
+threads enter one public `ContentPipelineRegistryFactory` concurrently and wait at a common gate.
+Their compiler invocations use disjoint source/output roots and distinct `--fx-compiler` values;
+each receives its own option, returns a distinct registry that CNA freezes, records that option in
+its writer identity and publishes only its independently processed score. This demonstrates the
+documented per-call registry model under actual overlap without treating `--workers 1` as threading
+evidence.
+
+SOFTWARE and OPENGLES3-labelled direct runs pass25/25 with byte-identical path-normalized
+stdout/stderr. The exact SOFTWARE CTest passes twenty consecutive repetitions. The warning-free
+incremental build uses `-j3`, metadata is655/0, both tool self-test suites pass and generated
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-872-*`. CNA exposes explicit game-owned registration rather than dynamic plugin
+loading, so plugin discovery is intentionally not claimed. Independent-process same-root
+contention and crash consistency remain separate. No renderer, screenshot or visual inspection was
+used.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended embedded compiler coverage with two synchronized factory calls on disjoint roots,
+  proving per-invocation service options, registry identity/freezing and independent artifacts.
 - Extended compiler embedding coverage to prove that a pre-built registry rejects external
   service-selection options before any game component runs and directs callers to the factory API.
 - Extended the embedded incremental compiler with configured external source roots, proving that

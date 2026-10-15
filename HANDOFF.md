@@ -4291,6 +4291,25 @@ physical input, external service session or manual visual-quality inspection was
 
 Continue the deeper behavior audit from the next explicit gap. Complete871 is now the full baseline.
 
+### Focused872-concurrent-disjoint-registry-factories
+
+The existing `content.custom.incremental_compiler` now has twenty-five internal controls. Two
+threads synchronize inside one public `ContentPipelineRegistryFactory` while compiling disjoint
+source/output roots. Distinct `--fx-compiler` selections reach their own calls; each returns a
+separate registry that CNA freezes, records its service-derived writer version in the real manifest
+and publishes only the expected independent score. This is actual invocation overlap rather than
+an inference from `--workers 1`.
+
+SOFTWARE and OPENGLES3-labelled direct runs pass25/25 with byte-identical path-normalized
+stdout/stderr. The exact SOFTWARE CTest passes twenty consecutive repetitions. The final
+incremental build uses `-j3`, metadata is655/0, both tool self-test suites pass and temporary
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is
+under `/tmp/checkpoint-872-*`. CNA has no public dynamic-plugin loader; explicit game-owned
+registration is the documented extension point, so no plugin-discovery demo is warranted. No CNA
+defect appeared. Complete871 remains the full baseline. Audit independent-process same-root lease
+contention or the next explicit high-value gap; no renderer, screenshot or visual inspection was
+used.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

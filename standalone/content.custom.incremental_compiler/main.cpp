@@ -3,17 +3,20 @@
 #include <algorithm>
 #include <atomic>
 #include <chrono>
+#include <condition_variable>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <iterator>
 #include <memory>
+#include <mutex>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <thread>
 #include <utility>
 #include <vector>
 #include <variant>
@@ -182,6 +185,101 @@ int main()
                       prebuiltDiagnostic.str().find("ContentPipelineRegistryFactory") != std::string::npos &&
                       imports == 0 && processes == 0 && writes == 0,
                   "a pre-built registry refuses service-selection options that only the factory overload can apply");
+
+            // Two embedded compiler calls may overlap when their output roots are disjoint. Hold
+            // both factories at the same gate so this proves actual overlap, and give each one a
+            // different service option so a shared/cached registry would be visible in its
+            // manifest writer identity even though these score routes do not launch that service.
+            const auto parallelA = directory / "parallel-a", parallelB = directory / "parallel-b";
+            for (const auto& root : {parallelA, parallelB})
+            {
+                std::filesystem::create_directories(root / "source");
+                std::filesystem::create_directories(root / "shared");
+                WriteFile(root / "source" / Pipeline::ContentBuildConfigurationFileName,
+                          R"json({"format":"CNA.ContentPipeline.Config","version":1,"sourceRoots":{"shared":"../shared"},"assets":{}})json");
+            }
+            WriteFile(parallelA / "source" / "alpha.score", "5\n");
+            WriteFile(parallelA / "shared" / "multiplier.factor", "2\n");
+            WriteFile(parallelB / "source" / "beta.score", "7\n");
+            WriteFile(parallelB / "shared" / "multiplier.factor", "3\n");
+            std::mutex parallelFactoryMutex;
+            std::condition_variable parallelFactoryChanged;
+            std::size_t parallelFactoriesReady = 0;
+            bool releaseParallelFactories = false;
+            std::vector<std::pair<std::string, std::shared_ptr<Pipeline::ContentPipelineRegistry>>>
+                parallelRegistries;
+            const Pipeline::ContentPipelineRegistryFactory parallelFactory =
+                [&](const Pipeline::ContentCompilerOptions& options) {
+                    const std::string service = options.effectCompilerExecutable.filename().string();
+                    auto registry = std::make_shared<Pipeline::ContentPipelineRegistry>();
+                    registry->RegisterImporter(std::make_shared<ScoreImporter>());
+                    registry->RegisterProcessor(std::make_shared<ScoreProcessor>());
+                    registry->RegisterWriter(std::make_shared<ScoreWriter>(service));
+                    std::unique_lock lock(parallelFactoryMutex);
+                    parallelRegistries.emplace_back(service, registry);
+                    ++parallelFactoriesReady;
+                    parallelFactoryChanged.notify_all();
+                    parallelFactoryChanged.wait(lock, [&] { return releaseParallelFactories; });
+                    return registry;
+                };
+            const auto parallelArguments = [](const std::filesystem::path& root,
+                                              const char* compiler) {
+                return std::vector<std::filesystem::path>{
+                    "build", root / "source", "-o", root / "output", "--format", "cnb",
+                    "--workers", "1", "--quiet", "--fx-compiler", compiler};
+            };
+            int parallelStatusA = -1, parallelStatusB = -1;
+            const int importsBeforeParallel = imports.load();
+            const int processesBeforeParallel = processes.load();
+            const int writesBeforeParallel = writes.load();
+            std::thread compilerA([&] {
+                parallelStatusA = Pipeline::RunContentCompiler(
+                    parallelArguments(parallelA, "compiler-a"), parallelFactory);
+            });
+            std::thread compilerB([&] {
+                parallelStatusB = Pipeline::RunContentCompiler(
+                    parallelArguments(parallelB, "compiler-b"), parallelFactory);
+            });
+            bool bothFactoriesOverlapped = false;
+            {
+                std::unique_lock lock(parallelFactoryMutex);
+                bothFactoriesOverlapped = parallelFactoryChanged.wait_for(
+                    lock, std::chrono::seconds(5), [&] { return parallelFactoriesReady == 2; });
+                releaseParallelFactories = true;
+            }
+            parallelFactoryChanged.notify_all();
+            compilerA.join();
+            compilerB.join();
+            const auto registryFor = [&](std::string_view service) {
+                const auto match = std::find_if(
+                    parallelRegistries.begin(), parallelRegistries.end(),
+                    [&](const auto& entry) { return entry.first == service; });
+                return match == parallelRegistries.end()
+                    ? std::shared_ptr<Pipeline::ContentPipelineRegistry>{}
+                    : match->second;
+            };
+            const auto registryA = registryFor("compiler-a"), registryB = registryFor("compiler-b");
+            check(bothFactoriesOverlapped && parallelRegistries.size() == 2 && registryA && registryB,
+                  "two disjoint compiler calls overlap inside one shared registry factory and receive their own service options");
+            const auto manifestA = Pipeline::ContentBuildManifest::Parse(
+                ReadText(parallelA / "output" / Pipeline::ContentBuildManifestFileName));
+            const auto manifestB = Pipeline::ContentBuildManifest::Parse(
+                ReadText(parallelB / "output" / Pipeline::ContentBuildManifestFileName));
+            const auto* alpha = manifestA.Find("alpha");
+            const auto* beta = manifestB.Find("beta");
+            check(parallelStatusA == 0 && parallelStatusB == 0 && registryA != registryB &&
+                      registryA->IsFrozen() && registryB->IsFrozen() && alpha && beta &&
+                      alpha->writer.version == "compiler-a" && beta->writer.version == "compiler-b",
+                  "each concurrent invocation freezes a distinct registry with its own writer identity");
+            check(ReadScore(parallelA / "output" / "alpha.cnb") == 10 &&
+                      ReadScore(parallelB / "output" / "beta.cnb") == 21 &&
+                      imports == importsBeforeParallel + 2 && processes == processesBeforeParallel + 2 &&
+                      writes == writesBeforeParallel + 2,
+                  "concurrent disjoint roots publish only their independently processed score");
+            imports = 0;
+            processes = 0;
+            writes = 0;
+
             const int initial = Pipeline::RunContentCompiler(arguments, factory);
             check(initial == 0 && imports == 2 && processes == 2 && writes == 2 &&
                   ReadScore(output / "arena.cnb") == 10 && ReadScore(output / "menu.cnb") == 16,
