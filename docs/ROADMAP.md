@@ -418,11 +418,12 @@ a check that all authored colors remain visible and that a blank texture row can
   unchanged skip, authored edit, cache versus Unload/reload and explicit CNB-schema refusal
   (10 child checks). No genuine-XNA or GPU claim; external graphs remain separate work.
 - ✅ `content.custom.incremental_compiler`: real RunContentCompiler registry factory and manifest,
-  unchanged skips, primary/shared dependency invalidation, failed-import preservation, repair,
+  unchanged skips, primary/aliased shared dependency invalidation, failed-import preservation, repair,
   missing-output rebuild, writer-version identity, same-length/timestamp output tampering, corrupt
   manifest recovery, frozen-registry refusal and ownership-aware clean. Typed per-asset Bonus
   changes rebuild only the affected node, whitespace-only configuration edits skip, and source
-  removal/reintroduction collects/restores only its owned output (20 child checks). Clean
+  removal/reintroduction collects/restores only its owned output. Remapping an external-root alias
+  to identical bytes skips both nodes with an identical manifest (21 child checks). Clean
   rejects changed owned bytes without deleting an untouched peer or the manifest. Crash consistency,
   parallel publishers and graph/deployment cache cases remain separate work.
 - ✅ `content.custom.intermediate_external_references`: filename versus inline data, table
@@ -8722,3 +8723,18 @@ empty stderr; the exact SOFTWARE CTest passes. The `-j3` incremental build, meta
 tool self-test suites pass; temporary coverage remains 302/329 types, 2114/2326 members, 169/753
 fields and 3078/3205 C routes. Evidence: `/tmp/checkpoint-868-*`. This is CPU-side compilation and
 filesystem containment; no renderer, screenshot or visual inspection was used.
+
+## Focused869-configured-external-root-fingerprint-stability
+
+`content.custom.incremental_compiler` now obtains its multiplier through a `shared` source root in
+the conventional `.cna-content.json`. The first manifest records `multiplier.factor` against that
+stable alias, and the existing byte edit rebuilds both dependent nodes. After the parameter and
+source-retirement controls, remapping the alias from `shared-a` to `shared-b` with identical bytes
+skips both nodes without entering game components and preserves the exact manifest and outputs.
+This brings the standalone workflow to twenty-one internal controls.
+
+Both renderer-labelled standalone runs pass with byte-identical path-normalized stdout/stderr, and
+the exact SOFTWARE CTest passes. The three stderr lines are expected invalid-import and guarded-clean
+diagnostics. The `-j3` incremental build, metadata 655/0 and both tool self-test suites pass;
+temporary coverage remains 302/329 types, 2114/2326 members, 169/753 fields and 3078/3205 C routes.
+Evidence: `/tmp/checkpoint-869-*`. No renderer, screenshot or visual inspection was used.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the embedded incremental compiler with configured external source roots, proving that
+  alias dependencies invalidate on byte edits and remap with identical bytes without cache churn.
 - Extended shared-art source-root validation with a real symlink escape, proving canonical
   containment rejects a link from the granted root into a different physical root.
 - Extended imported skin-weight coverage to prove that an unused distant joint still expands the

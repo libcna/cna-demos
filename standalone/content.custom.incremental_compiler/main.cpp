@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Embed CNA's actual content compiler: callbacks show when its manifest skips or rebuilds work.
+#include <algorithm>
 #include <atomic>
 #include <chrono>
 #include <cstdint>
@@ -88,7 +89,7 @@ namespace
                                        Pipeline::ContentProcessorContext& context) const override
         {
             ++processes;
-            const auto multiplier = context.ResolveSourceDependency("multiplier.factor");
+            const auto multiplier = context.ResolveSourceDependency("@shared/multiplier.factor");
             const auto* bonus = context.Parameters().Find("Bonus");
             const int addition = bonus ? static_cast<int>(std::get<std::int64_t>(*bonus)) : 0;
             return Pipeline::ContentValue::Create(ScoreType, input.Get<int>() * ReadPositive(multiplier) + addition);
@@ -142,9 +143,15 @@ int main()
             TemporaryDirectory cleanup{directory};
             std::cout << "Private compiler data: " << directory << '\n';
             const auto source = directory / "source", output = directory / "output";
-            std::filesystem::create_directory(source);
+            const auto sharedA = directory / "shared-a", sharedB = directory / "shared-b";
+            for (const auto& path : {source, sharedA, sharedB}) std::filesystem::create_directory(path);
             WriteFile(source / "arena.score", "5\n"); WriteFile(source / "menu.score", "8\n");
-            WriteFile(source / "multiplier.factor", "2\n");
+            WriteFile(sharedA / "multiplier.factor", "2\n");
+            WriteFile(sharedB / "multiplier.factor", "3\n");
+            const auto configurationPath = source / Pipeline::ContentBuildConfigurationFileName;
+            const std::string baseConfiguration =
+                R"json({"format":"CNA.ContentPipeline.Config","version":1,"sourceRoots":{"shared":"../shared-a"},"assets":{}})json";
+            WriteFile(configurationPath, baseConfiguration);
             std::string writerVersion = "1";
             std::shared_ptr<Pipeline::ContentPipelineRegistry> latestRegistry;
             const Pipeline::ContentPipelineRegistryFactory factory = [&](const Pipeline::ContentCompilerOptions&) {
@@ -166,9 +173,16 @@ int main()
             const auto firstManifestText = ReadText(manifestPath);
             const auto firstManifest = Pipeline::ContentBuildManifest::Parse(firstManifestText);
             const auto* arena = firstManifest.Find("arena");
+            const bool hasExternalMultiplier = arena != nullptr &&
+                std::any_of(arena->dependencies.begin(), arena->dependencies.end(),
+                            [](const Pipeline::ContentDependency& dependency) {
+                                return dependency.sourceRoot == "shared" &&
+                                    dependency.identity == "multiplier.factor";
+                            });
             check(firstManifest.Entries().size() == 2 && arena && arena->outputs.size() == 1 &&
+                  hasExternalMultiplier &&
                   arena->outputs.front().sha256 == Pipeline::ContentFileSha256(output / "arena.cnb"),
-                  "the actual compiler manifest records both nodes and the published arena artifact's digest");
+                  "the manifest records both nodes, the shared-alias dependency and arena output digest");
             bool lateRegistration = false;
             try { latestRegistry->RegisterWriter(std::make_shared<ScoreWriter>("late")); }
             catch (const std::logic_error& error)
@@ -187,7 +201,7 @@ int main()
             check(edited == 0 && imports == 3 && processes == 3 && writes == 3 &&
                   ReadScore(output / "arena.cnb") == 14 && ReadScore(output / "menu.cnb") == 16,
                   "editing one primary source rebuilds only its node and retains the other score");
-            WriteFile(source / "multiplier.factor", "3\n");
+            WriteFile(sharedA / "multiplier.factor", "3\n");
             const int dependency = Pipeline::RunContentCompiler(arguments, factory);
             check(dependency == 0 && imports == 5 && processes == 5 && writes == 5 &&
                   ReadScore(output / "arena.cnb") == 21 && ReadScore(output / "menu.cnb") == 24,
@@ -231,19 +245,20 @@ int main()
                   recoveredManifest.Entries().size() == 2 && ReadScore(output / "arena.cnb") == 27 && ReadScore(output / "menu.cnb") == 24,
                   "a corrupt manifest triggers fresh node builds and is replaced by a valid manifest");
             WriteFile(output / "manual.txt", "Unowned author note.\n");
-            const auto configurationPath = source / Pipeline::ContentBuildConfigurationFileName;
-            const std::string configuration = R"json({"format":"CNA.ContentPipeline.Config","version":1,"assets":{"arena.score":{"parameters":{"Bonus":{"type":"i64","value":"5"}}}}})json";
+            const std::string configuration = R"json({"format":"CNA.ContentPipeline.Config","version":1,"sourceRoots":{"shared":"../shared-a"},"assets":{"arena.score":{"parameters":{"Bonus":{"type":"i64","value":"5"}}}}})json";
             WriteFile(configurationPath, configuration);
             const auto parsedConfiguration = Pipeline::ContentBuildConfiguration::Parse(configuration, configurationPath);
             const auto* settings = parsedConfiguration.Find("arena.score");
             const auto* configuredBonus = settings ? std::get_if<std::int64_t>(settings->parameters.Find("Bonus")) : nullptr;
+            const auto* configuredRoot = parsedConfiguration.SourceRoots().Find("shared");
             const int configured = Pipeline::RunContentCompiler(arguments, factory);
             const auto configuredManifestText = ReadText(manifestPath);
             const auto configuredManifest = Pipeline::ContentBuildManifest::Parse(configuredManifestText);
             const auto* configuredArena = configuredManifest.Find("arena");
             const auto* recoveredArena = recoveredManifest.Find("arena");
             const auto* recordedBonus = configuredArena ? std::get_if<std::int64_t>(configuredArena->parameters.Find("Bonus")) : nullptr;
-            check(configured == 0 && configuredBonus && *configuredBonus == 5 && recordedBonus && *recordedBonus == 5 &&
+            check(configured == 0 && configuredRoot && *configuredRoot == "../shared-a" &&
+                  configuredBonus && *configuredBonus == 5 && recordedBonus && *recordedBonus == 5 &&
                   configuredArena && recoveredArena && configuredArena->fingerprint != recoveredArena->fingerprint &&
                   imports == 14 && processes == 13 && writes == 13 && ReadScore(output / "arena.cnb") == 32 &&
                   ReadText(output / "menu.cnb") == originalMenu,
@@ -278,6 +293,16 @@ int main()
                   Pipeline::ContentBuildManifest::Parse(ReadText(manifestPath)).Entries().size() == 2 &&
                   ReadText(output / "menu.cnb") == originalMenu && ReadScore(output / "arena.cnb") == 33,
                   "restoring the source publishes its node again without rebuilding the retained configured score");
+            auto remappedConfiguration = changedConfiguration;
+            remappedConfiguration.replace(remappedConfiguration.find("../shared-a"),
+                                          std::string("../shared-a").size(), "../shared-b");
+            WriteFile(configurationPath, remappedConfiguration);
+            const auto beforeRootRemap = ReadText(manifestPath);
+            const int remappedRoot = Pipeline::RunContentCompiler(arguments, factory);
+            check(remappedRoot == 0 && imports == 16 && processes == 15 && writes == 15 &&
+                  ReadText(manifestPath) == beforeRootRemap && ReadScore(output / "arena.cnb") == 33 &&
+                  ReadText(output / "menu.cnb") == originalMenu,
+                  "remapping the shared alias to identical dependency bytes skips both nodes and preserves the manifest");
             const auto cleanManifest = ReadText(manifestPath), cleanArena = ReadText(output / "arena.cnb");
             WriteFile(output / "arena.cnb", "Hand-edited compiled content.\n");
             const int guarded = Pipeline::RunContentCompiler({"clean", output}, factory);

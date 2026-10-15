@@ -4230,6 +4230,25 @@ metadata is655/0 and both tool self-test suites pass. Temporary coverage remains
 Commit and push this batch, then continue with compiler configuration/fingerprint behavior or the
 next explicit high-value gap; Complete859 remains the full baseline.
 
+### Focused869-configured-external-root-fingerprint-stability
+
+The existing `content.custom.incremental_compiler` standalone now has twenty-one internal controls.
+Its multiplier is resolved through the `shared` source root declared in `.cna-content.json`; the
+manifest records the alias-relative identity, and editing those external bytes rebuilds both score
+nodes. Remapping `shared` from `shared-a` to `shared-b` with identical bytes later skips both nodes,
+enters no importer/processor/writer and preserves the exact manifest and output values. The public
+configuration `SourceRoots` accessor is checked alongside the existing typed Bonus setting.
+
+SOFTWARE and OPENGLES3-labelled runs pass with byte-identical path-normalized stdout/stderr. The
+three stderr lines are the deliberate invalid-import and guarded-clean diagnostics; the exact
+SOFTWARE CTest passes. The final incremental build uses `-j3`, metadata is655/0 and both tool
+self-test suites pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields
+and3078/3205 C routes. Evidence is under `/tmp/checkpoint-869-*`. No renderer, screenshot or visual
+inspection was used.
+
+Commit and push this batch, then continue with the next explicit high-value gap. Platform path
+differences remain outside this Linux evidence; Complete859 remains the full baseline.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
