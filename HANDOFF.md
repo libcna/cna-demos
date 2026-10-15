@@ -71,8 +71,8 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,288 game and199 standalone;
 614 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md is runtime-backed by complete744 at636 demos,302/329 XNA
-types,2114/2326 XNA members,169/753 fields and2999/3205 public C ABI routes. Selected semantic
+Coverage: generated docs/COVERAGE.md is runtime-backed by complete844 at650 demos,302/329 XNA
+types,2114/2326 XNA members,169/753 fields and3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -82,11 +82,10 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete744 exercises all2999 credited C routes and all636 catalog IDs in both full smoke suites.
-It absorbs every staged C batch through complete `models.h`, the focused SpriteFont route, the
-deeper XNA member audit through focused716, the Texture2D behavior batches through focused726 and
-the SpriteBatch/SpriteFont behavior batches through focused740 plus the ShaderEffect cube batches
-through focused743.
+Complete844 exercises all3078 credited C routes and all650 catalog IDs in both full smoke suites.
+It absorbs Complete744 plus every focused745-843 batch: texture/render-target ownership, deeper
+content/audio/media behavior, the remaining production C renderer/input routes, PBR and ShaderEffect
+dispositions, and the glTF topology/specular/skin/material/camera/report work.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Complete744 has37 known-issue demos after focused660 adds
 `game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
@@ -190,34 +189,34 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **744-SpriteBatch-SpriteFont-cube-full-checkpoint** is the current full-build and
-full-runtime baseline. Because the live sibling CNA changed externally to a newer dirty checkout,
-the build was configured against an isolated worktree at `/tmp/cna-demos-cna-d23`, exactly commit
-`d23e139de9e5c15511b6be745de290896a69ee37`. Recreate that worktree or reconfigure only after the
-sibling is clean; the current build tree records the temporary path. The full rebuild used at most
-three compile jobs. Metadata is636/0, all649 enabled CTests pass in187.73s and three declared manual
-tests remain disabled. SOFTWARE/Xvfb reports562 pass/36 expected fail/35 skip/3 manual;
-OPENGLES3/Xvfb reports594/36/3/3. Both execute all636 IDs with zero unexpected failures or
-unexpected passes; all five validator self-tests and all four checkpoint-comparison tests pass.
+Complete **844-650-demo-full-checkpoint** is the current full-build and full-runtime baseline. The
+build remains pinned to the isolated CNA worktree `/tmp/cna-demos-cna-d23`, exact commit
+`d23e139de9e5c15511b6be745de290896a69ee37`; do not silently reconfigure it to the moving sibling.
+The warning-free rebuild used `-j3`. Metadata is650/0. All663 enabled CTest entries complete without
+failure in four `-j3` ranges (619 passed and44 declared capability/environment skips, aggregate
+409.33s); three declared manual tests remain disabled. SOFTWARE/Xvfb reports563 pass/41 expected
+fail/43 skip/3 manual, while OPENGLES3/Xvfb reports602/42/3/3. Both execute all650 IDs with zero
+unexpected failures or unexpected passes. The five validator and four checkpoint-comparison
+self-tests pass.
 
-Every Complete735 status/knownIssue pair and failed-assertion multiplicity remains exact on both
-renderers. The only added ID, `graphics.sprite_batch.stock_effect`, passes on both. Intended check
-growth is limited to SpriteBatch layer-depth sorting, SpriteFont draw/transformed text and the GL
-cube sampler; normalized stderr is byte-for-byte equivalent to Complete735 for each renderer.
-Generated coverage is302/329 types,2114/2326 non-field members,169/753 fields and2999/3205 C
-routes. During validation, the C error-handling demo was corrected to use variable time so each
-explicit RunOneFrame produces one planned callback, and four demos that mutate global pointer,
-clipboard or screen-saver state were made `RUN_SERIAL`. These were demo/test-harness races, not CNA
-defects. A sandboxed CTest attempt predictably failed storage, localhost-network and X11 mutations;
-the authoritative unrestricted rerun is the passing result above.
+The Complete744 comparison reports all14 added IDs, intended check-count growth and the expected
+newly recorded issue witnesses. Every status/knownIssue or failed-assertion change was reviewed;
+there is no unexplained regression. Full parallel probing exposed a harness race: dummy-audio
+transport time can be delayed by concurrent processes. All audio-needing CTests now share one
+resource lock, and the two wall-clock transport tests
+`audio.sound_effect_instance.playback_state` and `media.media_player.play_song` run serially. Their
+serial controls pass, as does the authoritative `-j3` suite; no CNA issue was filed. A first
+sandboxed SOFTWARE smoke attempt also failed writable-storage, clipboard and local-socket checks;
+the authoritative private-Xvfb run with isolated writable XDG storage passes those controls.
 
-Tested SHA-256: `cna-demos`
-`fa2475c6a782f3a0f0030edffbf27a7316a99a5cfb9b0b0328f9ced2aa124cf9`, `libcna.so`
-`3827917b8b1219fb659c031039f518680e76670dfb6c69bc891c942049f469ce`, and `libcna_c_api.so`
+Generated coverage is302/329 types,2114/2326 non-field members,169/753 fields and3078/3205 C
+routes. Tested SHA-256: `cna-demos`
+`8be4b96ee2cb6c58d5e19282486cbc215b7dca71e78ddb865cfe8c7c0822a3f9`, `libcna.so`
+`624de5687262040f91736857226b38392f5a5375099c92a0d221b6236b8aa25d`, and `libcna_c_api.so`
 `813bf0a2095524183bbaca66f6fbcc1fbdfcfcd5ddd8148c8ec6ce3138ebee24`. Report hashes are SOFTWARE
-`f3fb7bd967ddd8ca5d6794a3681fef199c1866a565206da7b555a13c79380852` and OPENGLES3
-`c246872d21ece0d8cc6af3ecd50dca88dcd9158ebe4de336fb11e6b498d06785`. Evidence is archived as
-`build/linux-full/reports/checkpoint-744-complete-*`. Pixel checks were programmatic; no screenshot,
+`329887cd305c6dce1c6243f904691ea29211415ef1e3c77f17bcf27a4db239e9` and OPENGLES3
+`f564209bc9a023138a338ffd346d418659b33a66708603acd57e09538c8ec143`. Evidence is archived as
+`build/linux-full/reports/checkpoint-844-complete-*`. Pixel checks were programmatic; no screenshot,
 listening test, physical input, external service session or manual visual-quality inspection was
 performed.
 
@@ -1798,7 +1797,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete744 is the current full-build/runtime baseline; focused745-815 close the
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused745-843
+are absorbed. Continue the glTF importer behavior audit with node-instance placement, transform
+and diagnostic semantics, extending existing focused demos unless a distinct public concept needs
+a new ID. The complete checkpoint and harness findings are recorded in section7.
+
+Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
 recorder boundaries plus component selection/environment propagation. ISSUE-087 records omitted
 disposable shared-table values, ISSUE-088 records partial intermediate-serializer registration and
@@ -3548,9 +3552,25 @@ The C demo now initializes and binds PointClamp explicitly on pixel sampler slot
 same blue-dominance PBR oracle as the C++ workflow. SOFTWARE and OPENGLES3 pass30/30 with byte-
 identical stdout and empty stderr; the focused SOFTWARE CTest passes. Metadata names both state
 routes, but coverage totals do not change because their dedicated demos already cover them.
-Evidence:`/tmp/checkpoint-843-c-model-loading-*`. Retry the complete650 checkpoint in phases that
-fit the command-runner limit, with compilation still capped at `-j3`; then archive/compare it and
-resume the glTF node-instance placement/transform audit.
+Evidence:`/tmp/checkpoint-843-c-model-loading-*`. Complete844 below absorbs this correction.
+
+### Complete844-650-demo-full-checkpoint
+
+The complete checkpoint now absorbs every focused745-843 batch. The warning-free pinned-CNA build
+used `-j3`; metadata is650/0. Four contiguous `ctest -j3` ranges cover all666 declared entries:
+619 pass,44 take declared skips, three manual tests remain disabled and none fail. SOFTWARE/Xvfb
+executes all650 IDs as563 pass/41 expected fail/43 skip/3 manual; OPENGLES3/Xvfb is602/42/3/3.
+Neither renderer has an unexpected failure or pass. Complete744 comparisons account for all14 new
+IDs, intended assertion growth and newly documented CNA issue witnesses. Both tool self-test suites
+pass and generated coverage is302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+
+An aggressive preliminary CTest run made dummy-audio wall-clock transport checks fail under process
+contention even though their serial controls passed. Audio-needing tests now share a resource lock,
+and `audio.sound_effect_instance.playback_state` plus `media.media_player.play_song` are explicitly
+serial. The authoritative `-j3` ranges pass; this was a harness scheduling defect, not a CNA bug.
+Evidence:`build/linux-full/reports/checkpoint-844-complete-*`. No new screenshot, listening,
+physical-input, service or manual visual-quality validation was performed. Resume the glTF node-
+instance placement/transform/diagnostic audit next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

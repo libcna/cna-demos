@@ -96,6 +96,18 @@ foreach(_renderer IN LISTS CNA_DEMOS_TEST_RENDERERS)
         if(_needs MATCHES "(^|,)network(,|$)")
             set_tests_properties(${_name} PROPERTIES RESOURCE_LOCK cna_demos_system_link)
         endif()
+        # Dummy-audio transport still advances on a backend thread. Concurrent audio-demo
+        # processes can starve that thread long enough for wall-clock playback assertions to test
+        # scheduler contention instead of Play/Pause/Stop behavior.
+        if(_needs MATCHES "(^|,)audio(,|$)")
+            set_tests_properties(${_name} PROPERTIES RESOURCE_LOCK cna_demos_audio_timing)
+        endif()
+        # These two assertions distinguish transport behavior solely through elapsed playback
+        # time. Run them without unrelated CPU-heavy demos that can delay the backend clock.
+        if(_id STREQUAL "audio.sound_effect_instance.playback_state" OR
+           _id STREQUAL "media.media_player.play_song")
+            set_tests_properties(${_name} PROPERTIES RUN_SERIAL TRUE)
+        endif()
         # These demos temporarily mutate process-external desktop state. Concurrent
         # SDL processes on the same display can move the pointer, replace clipboard
         # ownership or toggle the X11 screen saver between mutation and observation.

@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete runtime baseline at 650 demos: all 663 enabled CTest entries complete
+  without failure, and both SOFTWARE and OPENGLES3 execute every catalog ID without unexpected
+  failures or passes.
+- Serialized dummy-audio timing tests against competing audio processes and made the two wall-clock
+  transport tests fully serial, eliminating scheduler-contention flakes in parallel CTest runs.
 - Repaired the C material-variant pixel audit after the shared fixture gained a PBR Ocean material
   and textured Gold material: it now binds PointClamp explicitly and tests Ocean by blue dominance.
 - Extended the glTF import-report workflow to verify every structural count, complete diagnostic

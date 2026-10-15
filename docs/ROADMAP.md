@@ -8275,5 +8275,28 @@ The C workflow now initializes and binds PointClamp on pixel slot zero before al
 Gold deterministically samples its gold texel, and it judges Ocean by blue-channel dominance as the
 C++ workflow does. Both renderer selections pass30/30 with byte-identical stdout and empty stderr;
 the exact SOFTWARE CTest passes. The fix adds no new ID or C-route credit because both state routes
-already have focused coverage. Evidence:`/tmp/checkpoint-843-c-model-loading-*`. Retry the complete
-650-demo checkpoint next before resuming the node-instance audit.
+already have focused coverage. Evidence:`/tmp/checkpoint-843-c-model-loading-*`. Complete844 below
+absorbs this correction.
+
+## Complete844-650-demo-full-checkpoint
+
+The full checkpoint absorbs focused745 through843 against the pinned clean CNA `d23e139de`. The
+warning-free rebuild uses at most three compile jobs and metadata validates650/0. Four contiguous
+`ctest -j3` ranges cover all666 declared tests: 619 pass,44 take their declared skips, three manual
+tests remain disabled and none fail. Complete SOFTWARE/Xvfb smoke is563 pass/41 expected fail/
+43 skip/3 manual; OPENGLES3/Xvfb is602/42/3/3. Both reports contain all650 IDs and no unexpected
+failure or pass.
+
+Comparison with Complete744 accounts for the14 new IDs, intended check-count growth and the new
+documented issue witnesses. The validator self-tests pass5/5, checkpoint-comparison tests pass4/4,
+and regenerated runtime-backed coverage is302/329 types,2114/2326 members,169/753 fields and
+3078/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-844-complete-*`.
+
+The first high-parallelism probe exposed scheduler sensitivity in two dummy-audio wall-clock
+transport tests. All audio-needing CTests now share a resource lock, while
+`audio.sound_effect_instance.playback_state` and `media.media_player.play_song` run serially. Their
+isolated controls and the authoritative `-j3` suite pass, so this is a test-harness correction, not
+a CNA defect. A sandbox-only storage/clipboard/socket failure set was likewise excluded after the
+documented private-Xvfb, writable-XDG run passed. No new screenshot, listening, physical-input,
+external-service or manual visual-quality validation was performed. Continue the glTF node-instance
+placement, transform and diagnostic-semantics audit.
