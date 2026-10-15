@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the morph-target workflow to prove that weight uploads leave imported mesh bounds
+  caller-managed and that updating `ModelMesh::BoundingSphere` immediately expands the aggregate
+  `Model::BoundingSphereEXT` around the stretched vertices.
 - Extended the XACT cue-state workflow with a generated ReleaseTime-bound volume RPC, proving the
   public RPC-only Stopping phase and its eventual transition to Stopped without an authored fade.
 - Extended CurveKeyCollection coverage through stable duplicate insertion, indexed replacement,

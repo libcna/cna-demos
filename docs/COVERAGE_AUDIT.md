@@ -2632,3 +2632,20 @@ Temporary generated coverage is numerically unchanged because the involved Cue m
 had declaration credit. Evidence:`/tmp/checkpoint-861-xact-release-rpc-*` and
 `/tmp/checkpoint-861-coverage.md`. This is public transport-state evidence only; volume, envelope
 shape, samples and audible output remain outside the claim.
+
+### Focused862 morph-target caller-managed bounds
+
+The existing `graphics.model.morph_targets` workflow closes the recorded runtime morph-bound
+update gap. Public blended vertex bytes place the taller target outside the imported base-pose
+sphere. `SetMorphWeightsEXT` updates weights without changing that caller-managed bound; assigning
+`BoundingSphere::CreateFromPoints` over every stretched position to
+`ModelMesh::BoundingSphere` immediately expands `Model::BoundingSphereEXT` around them.
+
+The first oracle asked strict `BoundingSphere::Contains` to accept every generated boundary point.
+Float rounding classified one point as `Disjoint` even though its printed distance equalled the
+radius. The final geometric radius-plus-`1e-5` test matches CNA's own `CreateFromPoints` enclosure
+tests and the already documented numerical-boundary disposition, so this was a demo correction and
+not a CNA issue. Both Xvfb renderer runs pass9/9 with byte-identical output and empty stderr; the
+exact SOFTWARE CTest also passes. Temporary coverage remains numerically unchanged because both
+named properties already had declaration credit. Evidence:`/tmp/checkpoint-862-*`. No screenshot
+or manual visual inspection was performed.

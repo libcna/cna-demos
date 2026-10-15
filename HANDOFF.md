@@ -4088,6 +4088,30 @@ Continue the next high-value public-behavior gap from the audit. The remaining X
 volume/pitch/filter and variation results have no public readback and stay dispositioned; do not
 duplicate this transport fixture merely to exercise private mixer state.
 
+### Focused862-morph-target-caller-managed-bounds
+
+The existing `graphics.model.morph_targets` workflow now has nine controls. Its public blended
+vertex bytes establish that the stretched top-right corner lies outside the imported base-pose
+bound. `SetMorphWeightsEXT` changes the public weights but deliberately leaves that caller-managed
+bound unchanged; assigning a sphere built from all stretched positions through
+`ModelMesh::BoundingSphere` immediately expands `Model::BoundingSphereEXT` to enclose them. The
+demo restores both the imported sphere and zero weights before its normal animation begins.
+
+The first focused run used strict `BoundingSphere::Contains` for every generated boundary point.
+One point whose printed distance equals the generated radius was classified `Disjoint` because of
+float rounding. CNA's own `CreateFromPoints` tests use a geometric epsilon for this enclosure
+property, as already recorded by the public audit, so the demo oracle now compares the farthest
+distance against radius plus `1e-5`. This was a cna-demos oracle correction, not a CNA defect.
+
+SOFTWARE and OPENGLES3 Xvfb runs pass9/9 with byte-identical stdout and empty stderr, and the exact
+SOFTWARE CTest passes. The `-j3` build, metadata and both tool self-test suites pass; temporary
+coverage remains655 demos,302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence is under `/tmp/checkpoint-862-*`. Validation was numeric and programmatic; no screenshot
+or manual visual inspection was performed.
+
+Continue with the next explicit public-behavior gap from the audit. Preserve Complete859 as the
+last complete baseline until enough focused work accumulates to justify another full checkpoint.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

@@ -8607,3 +8607,19 @@ and3078/3205 C routes. Evidence:`/tmp/checkpoint-861-xact-release-rpc-*` and
 `/tmp/checkpoint-861-coverage.md`. This establishes public state timing only; it makes no listening,
 mixed-volume, envelope-shape or output-sample timing claim. Continue the next high-value
 public-behavior gap without creating a redundant XACT variant.
+
+## Focused862-morph-target-caller-managed-bounds
+
+`graphics.model.morph_targets` grows to nine controls without adding a catalog ID. The public
+blended bytes prove that the deliberately taller morph extends beyond the imported base-pose
+sphere. Uploading its weights leaves that documented caller-managed sphere unchanged, while
+assigning a sphere built from all stretched positions through `ModelMesh::BoundingSphere`
+immediately expands the aggregate `Model::BoundingSphereEXT` and encloses every vertex.
+
+An initial strict `BoundingSphere::Contains` oracle rejected one generated boundary point whose
+distance rounded to the sphere radius. The replacement uses the same geometric tolerance as CNA's
+own `CreateFromPoints` tests; this is a demo oracle correction rather than a CNA issue. SOFTWARE
+and OPENGLES3 Xvfb runs pass9/9 with byte-identical stdout and empty stderr, and the exact SOFTWARE
+CTest passes. The `-j3` build, metadata, both self-test suites and temporary coverage are green;
+coverage remains655 demos,302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence:`/tmp/checkpoint-862-*`. No screenshot or manual visual inspection was performed.
