@@ -1009,6 +1009,22 @@ warning-free build uses `-j3`, metadata remains659/0 and both validator suites p
 384->426/753 and the root namespace closes at78/78. Evidence:`/tmp/checkpoint-901-*`. No physical
 controller, screenshot or visual-quality claim is made.
 
+### Audio public fields
+
+The five previously uncredited Audio fields now attach to existing workflows. The XACT play-cue
+demo checks `AudioEngine::ContentVersion` against version46, the generation encoded by the original
+XGS/XWB/XSB assets it then successfully loads. The cue-state workflow already contrasts
+`AudioStopOptions::AsAuthored` with Immediate using no-release, authored-fade and ReleaseTime-RPC
+cues, so its metadata now credits the behavior it directly observes.
+
+The manual microphone workflow now requires a nonempty public `Name`, starts in Stopped, enters
+Started, returns to Stopped and starts again before its ordinary capture loop. With SDL's dummy
+recording device it passes7/7 under SOFTWARE and OPENGLES3/Xvfb; this validates enumeration and
+state transitions without claiming physical input or recording quality. Both XACT workflows pass
+under both renderer labels, and their exact SOFTWARE CTests pass ten repetitions. The warning-free
+build uses `-j3`, metadata is659/0 and both validator suites pass. Fields move426->431/753 and Audio
+closes at11/11. Evidence:`/tmp/checkpoint-902-*`. No listening or microphone-hardware claim is made.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

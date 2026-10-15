@@ -9314,3 +9314,19 @@ jobs, metadata is659/0 and both validator suites pass. Coverage moves384->426/75
 root namespace reaches78/78. Evidence:`/tmp/checkpoint-901-*`. Continue with Audio's five remaining
 fields: distinguish the stop mode and microphone states through existing workflows, credit the
 observed device name and disposition the compiled-content version constant.
+
+## Focused902-all-public-Audio-fields
+
+Audio closes at11/11 fields without a new ID. The play-cue workflow connects public
+AudioEngine.ContentVersion 46 to the same generated XACT asset generation it successfully loads.
+The cue-state workflow already distinguishes AsAuthored through immediate, authored-fade and RPC-
+release behavior. The microphone workflow now verifies a nonempty device Name and the exact
+Stopped -> Started -> Stopped -> Started lifecycle before continuing capture.
+
+Both XACT workflows pass under both renderer labels and their exact SOFTWARE CTests remain stable
+through ten repetitions. SDL's dummy recording device lets the manual microphone workflow pass7/7
+under SOFTWARE and OPENGLES3/Xvfb without implying physical capture quality. The warning-free
+build uses at most three jobs, metadata is659/0 and both validator suites pass. Coverage moves
+426->431/753 fields. Evidence:`/tmp/checkpoint-902-*`. Audit Design's two protected
+MathTypeConverter fields next through a focused subclass only if their effect is not already fully
+observable through the existing concrete converters.

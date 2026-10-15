@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed all 11 Audio fields by tying ContentVersion to loaded XACT assets, exercising AsAuthored
+  release behavior and verifying microphone name plus stopped/started transitions on dummy input.
 - Closed all 78 root `Microsoft.Xna.Framework` fields through existing geometry behavior plus
   explicit component round-trips, named player slots and both landscape orientation transitions.
 - Audited all 160 public `Keys` values through constructed `KeyboardState` families, exact pressed-

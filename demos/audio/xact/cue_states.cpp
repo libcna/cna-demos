@@ -177,7 +177,7 @@ CNA_DEMOS_CONSOLE(CueStates, {
     .apis = {"SoundBank::GetCue", "Cue::Play", "Cue::Pause", "Cue::Resume", "Cue::Stop", "Cue::Name",
              "Cue::IsCreated", "Cue::IsPreparing", "Cue::IsPrepared", "Cue::IsPlaying", "Cue::IsPaused",
              "Cue::IsStopping", "Cue::IsStopped", "Cue::IsDisposed", "Cue::Dispose", "Cue::Disposing",
-             "AudioStopOptions"},
+             "AudioStopOptions", "AudioStopOptions::AsAuthored"},
     .tags = {"audio", "xact", "cue", "state"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"xact/demo.xgs", "xact/tones.xwb", "xact/tones.xsb", "xact/release.xwb", "xact/release.xsb",

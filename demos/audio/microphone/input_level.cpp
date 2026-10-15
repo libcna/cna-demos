@@ -44,6 +44,9 @@ namespace
 
             Context().Check(!microphones.empty() && microphones.front() == microphone_,
                             "Default is the first device enumerated by All");
+            Context().Check(!microphone_->Name.empty(), "the enumerated microphone exposes a nonempty device name");
+            Context().Check(microphone_->getStateProperty() == MicrophoneState::Stopped,
+                            "an enumerated microphone starts stopped");
             isHeadset_ = microphone_->getIsHeadsetProperty();
 
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
@@ -60,6 +63,14 @@ namespace
                             "GetSampleDuration reverses the 100 ms mono capture buffer size");
             microphone_->BufferReady += [this](System::Object*, const System::EventArgs&) { ReadBuffer(); };
             microphone_->Start();
+            Context().Check(microphone_->getStateProperty() == MicrophoneState::Started,
+                            "Start moves the microphone to Started");
+            microphone_->Stop();
+            Context().Check(microphone_->getStateProperty() == MicrophoneState::Stopped,
+                            "Stop returns the microphone to Stopped");
+            microphone_->Start();
+            Context().Check(microphone_->getStateProperty() == MicrophoneState::Started,
+                            "the same microphone can start recording again");
             Context().Print("recording {} at {} Hz ({})", microphone_->Name, microphone_->getSampleRateProperty(),
                             isHeadset_ ? "headset" : "not a headset");
         }
@@ -116,8 +127,8 @@ CNA_DEMOS_GAME(InputLevelDemo, {
                    "100 ms buffers and shows their input level while checking byte/duration conversion.",
     .apis = {"Microphone::All", "Microphone::Default", "Microphone::BufferDuration", "Microphone::BufferReady",
              "Microphone::GetData", "Microphone::GetSampleDuration", "Microphone::GetSampleSizeInBytes",
-             "Microphone::IsHeadset", "Microphone::SampleRate", "Microphone::Start", "Microphone::Stop",
-             "Microphone::State", "MicrophoneState"},
+             "Microphone::IsHeadset", "Microphone::Name", "Microphone::SampleRate", "Microphone::Start", "Microphone::Stop",
+             "Microphone::State", "MicrophoneState", "MicrophoneState::Started", "MicrophoneState::Stopped"},
     .tags = {"audio", "microphone", "recording", "voice"},
     .automation = CnaDemos::Automation::Manual,
     .needs = CnaDemos::Need::Microphone,

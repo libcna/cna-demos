@@ -34,6 +34,8 @@ namespace
         AudioEngine engine("assets/xact/demo.xgs");
         WaveBank waves(&engine, "assets/xact/tones.xwb");
         SoundBank sounds(&engine, "assets/xact/tones.xsb");
+        ctx.Check(AudioEngine::ContentVersion == 46,
+                  "ContentVersion identifies the XACT generation used by the loaded settings and banks");
         ctx.Check(waves.getIsPreparedProperty(), "an in-memory wave bank is prepared as soon as it loads");
 
         bool emptyGetRefused = false;
@@ -89,7 +91,7 @@ CNA_DEMOS_CONSOLE(PlayCue, {
     .title = "Play an XACT cue",
     .description = "Loads XACT settings, a wave bank and a sound bank, rejects empty and unknown cue names through "
                    "GetCue and PlayCue, then plays valid cues while pumping AudioEngine::Update.",
-    .apis = {"AudioEngine::AudioEngine", "AudioEngine::Update", "WaveBank::WaveBank", "WaveBank::IsPrepared",
+    .apis = {"AudioEngine::AudioEngine", "AudioEngine::ContentVersion", "AudioEngine::Update", "WaveBank::WaveBank", "WaveBank::IsPrepared",
              "SoundBank::SoundBank", "SoundBank::GetCue", "SoundBank::PlayCue", "SoundBank::IsInUse"},
     .tags = {"audio", "xact", "cue", "sound-bank", "wave-bank"},
     .needs = CnaDemos::Need::Audio,

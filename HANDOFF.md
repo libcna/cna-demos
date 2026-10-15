@@ -71,9 +71,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-901
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-902
 overlays for all659 catalog demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,426/753 fields and
+The surface totals are302/329 XNA types,2114/2326 XNA members,431/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -400,6 +400,17 @@ skip. Ten exact SOFTWARE CTests remain stable through ten repetitions. The warni
 `-j3`, metadata validates659/0 and both validator suites pass. Coverage moves384->426/753 fields.
 Evidence:`/tmp/checkpoint-901-*`. **Next:** audit Audio's five remaining fields through existing
 stop/microphone workflows and disposition `AudioEngine::ContentVersion` precisely.
+
+Focused **902-all-public-Audio-fields** closes Audio at11/11 fields without a new ID.
+`AudioEngine::ContentVersion` is checked as version46 alongside successful loads of the same XACT
+asset generation; cue-state metadata credits the existing real `AsAuthored` immediate/fade/RPC
+contrasts. The manual microphone workflow now verifies a nonempty Name and exact
+Stopped->Started->Stopped->Started transitions. Both XACT workflows pass under both labels and
+their exact SOFTWARE CTests pass ten repetitions. SDL dummy input lets the microphone workflow
+pass7/7 under SOFTWARE and OPENGLES3/Xvfb without a physical-input claim. The warning-free build
+uses `-j3`, metadata validates659/0 and both validator suites pass. Coverage moves426->431/753
+fields. Evidence:`/tmp/checkpoint-902-*`. **Next:** audit Design's two protected
+`MathTypeConverter` fields through the existing concrete-converter behavior or one focused probe.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
@@ -2164,12 +2175,13 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete892 remains the authoritative657-demo full-runtime baseline; focused893-
-901 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
+902 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
 closed at7/8, Input is dispositioned at194/202, Input.Touch is complete at15/15 and the root
-Framework namespace is complete at78/78. Audit Audio's five remaining fields next:
-`AudioStopOptions::AsAuthored`, `Microphone::Name`, both MicrophoneState values and
-`AudioEngine::ContentVersion`. Use the existing cue and microphone workflows for observable values;
-determine whether ContentVersion has application-facing behavior before crediting it.
+Framework and Audio namespaces are complete at78/78 and11/11. Audit Design's two remaining
+`MathTypeConverter` fields next. They are protected subclass extension state: establish how
+`supportStringConvert` changes conversion capability and how `propertyDescriptions` feeds the
+public descriptor surface, preferably by extending the existing properties workflow rather than
+adding a value-only demo.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete892 too stale.
