@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // GamePadState as a value: build one, and the virtual stick and trigger buttons it derives.
 #include <any>
+#include <array>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Input/ButtonState.hpp"
@@ -17,6 +18,14 @@ using namespace Microsoft::Xna::Framework::Input;
 
 namespace
 {
+    template<std::size_t N>
+    bool AllDown(const GamePadState& state, const std::array<Buttons, N>& buttons)
+    {
+        for (const Buttons button : buttons)
+            if (!state.IsButtonDown(button)) return false;
+        return true;
+    }
+
     void StateValues(CnaDemos::DemoContext& ctx)
     {
         // Left stick pushed right, right stick pulled down, left trigger half in, A and D-pad up
@@ -42,6 +51,60 @@ namespace
         ctx.Check(state.IsButtonDown(Buttons::A | Buttons::LeftTrigger),
                   "IsButtonDown with several flags is true when all of them are down");
         ctx.Check(!state.IsButtonDown(Buttons::A | Buttons::B), "...and false when one of them is up");
+
+        const std::array physicalFlags = {
+            Buttons::A, Buttons::B, Buttons::X, Buttons::Y, Buttons::Back, Buttons::Start,
+            Buttons::BigButton, Buttons::LeftShoulder, Buttons::RightShoulder,
+            Buttons::LeftStick, Buttons::RightStick,
+            Buttons::DPadUp, Buttons::DPadDown, Buttons::DPadLeft, Buttons::DPadRight};
+        const GamePadState physical(
+            Vector2::Zero, Vector2::Zero, 0.0f, 0.0f,
+            {Buttons::A, Buttons::B, Buttons::X, Buttons::Y, Buttons::Back, Buttons::Start,
+             Buttons::BigButton, Buttons::LeftShoulder, Buttons::RightShoulder,
+             Buttons::LeftStick, Buttons::RightStick,
+             Buttons::DPadUp, Buttons::DPadDown, Buttons::DPadLeft, Buttons::DPadRight});
+        const GamePadButtons& physicalButtons = physical.getButtonsProperty();
+        const GamePadDPad& physicalDPad = physical.getDPadProperty();
+        ctx.Check(AllDown(physical, physicalFlags) &&
+                      physicalButtons.getAProperty() == ButtonState::Pressed &&
+                      physicalButtons.getBProperty() == ButtonState::Pressed &&
+                      physicalButtons.getXProperty() == ButtonState::Pressed &&
+                      physicalButtons.getYProperty() == ButtonState::Pressed &&
+                      physicalButtons.getBackProperty() == ButtonState::Pressed &&
+                      physicalButtons.getStartProperty() == ButtonState::Pressed &&
+                      physicalButtons.getBigButtonProperty() == ButtonState::Pressed &&
+                      physicalButtons.getLeftShoulderProperty() == ButtonState::Pressed &&
+                      physicalButtons.getRightShoulderProperty() == ButtonState::Pressed &&
+                      physicalButtons.getLeftStickProperty() == ButtonState::Pressed &&
+                      physicalButtons.getRightStickProperty() == ButtonState::Pressed &&
+                      physicalDPad.getUpProperty() == ButtonState::Pressed &&
+                      physicalDPad.getDownProperty() == ButtonState::Pressed &&
+                      physicalDPad.getLeftProperty() == ButtonState::Pressed &&
+                      physicalDPad.getRightProperty() == ButtonState::Pressed,
+                  "all fifteen physical button flags reach IsButtonDown and their component properties");
+
+        const GamePadState positiveAnalog(Vector2(1.0f, 1.0f), Vector2(1.0f, 1.0f), 1.0f, 1.0f, {});
+        const std::array positiveFlags = {
+            Buttons::LeftThumbstickRight, Buttons::LeftThumbstickUp,
+            Buttons::RightThumbstickRight, Buttons::RightThumbstickUp,
+            Buttons::LeftTrigger, Buttons::RightTrigger};
+        ctx.Check(AllDown(positiveAnalog, positiveFlags) &&
+                      positiveAnalog.IsButtonUp(Buttons::LeftThumbstickLeft) &&
+                      positiveAnalog.IsButtonUp(Buttons::LeftThumbstickDown) &&
+                      positiveAnalog.IsButtonUp(Buttons::RightThumbstickLeft) &&
+                      positiveAnalog.IsButtonUp(Buttons::RightThumbstickDown),
+                  "positive stick axes and both triggers derive their six virtual button flags");
+
+        const GamePadState negativeAnalog(Vector2(-1.0f, -1.0f), Vector2(-1.0f, -1.0f), 0.0f, 0.0f, {});
+        const std::array negativeFlags = {
+            Buttons::LeftThumbstickLeft, Buttons::LeftThumbstickDown,
+            Buttons::RightThumbstickLeft, Buttons::RightThumbstickDown};
+        ctx.Check(AllDown(negativeAnalog, negativeFlags) &&
+                      negativeAnalog.IsButtonUp(Buttons::LeftThumbstickRight) &&
+                      negativeAnalog.IsButtonUp(Buttons::LeftThumbstickUp) &&
+                      negativeAnalog.IsButtonUp(Buttons::RightThumbstickRight) &&
+                      negativeAnalog.IsButtonUp(Buttons::RightThumbstickUp),
+                  "negative stick axes derive the four opposite virtual button flags");
 
         // Stick positions are clamped to -1..1 per axis, trigger values to 0..1.
         const GamePadThumbSticks sticks(Vector2(2.0f, 0.5f), Vector2(-3.0f, -3.0f));
@@ -122,6 +185,14 @@ CNA_DEMOS_CONSOLE(StateValues, {
              "GamePadTriggers::op_Inequality", "GamePadThumbSticks::GamePadThumbSticks",
              "GamePadTriggers::GamePadTriggers", "GamePadButtons::GamePadButtons", "GamePadDPad::GamePadDPad",
              "Buttons", "GamePadButtons::A", "GamePadDPad::Up", "GamePadThumbSticks::Left",
-             "GamePadThumbSticks::Right", "GamePadTriggers::Left", "GamePadTriggers::Right"},
+             "GamePadThumbSticks::Right", "GamePadTriggers::Left", "GamePadTriggers::Right",
+             "Buttons::A", "Buttons::B", "Buttons::X", "Buttons::Y", "Buttons::Back", "Buttons::Start",
+             "Buttons::BigButton", "Buttons::LeftShoulder", "Buttons::RightShoulder",
+             "Buttons::LeftStick", "Buttons::RightStick", "Buttons::DPadUp", "Buttons::DPadDown",
+             "Buttons::DPadLeft", "Buttons::DPadRight", "Buttons::LeftTrigger", "Buttons::RightTrigger",
+             "Buttons::LeftThumbstickLeft", "Buttons::LeftThumbstickRight",
+             "Buttons::LeftThumbstickUp", "Buttons::LeftThumbstickDown",
+             "Buttons::RightThumbstickLeft", "Buttons::RightThumbstickRight",
+             "Buttons::RightThumbstickUp", "Buttons::RightThumbstickDown"},
     .tags = {"gamepad", "controller", "virtual-buttons", "testing", "value"},
 })

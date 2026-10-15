@@ -9251,3 +9251,18 @@ three jobs, metadata is659/0 and both validator self-test suites pass. Generated
 175->184/753 fields and Input reaches9/202; types, non-field members and C routes remain
 302/329,2114/2326 and3078/3205. Evidence:`/tmp/checkpoint-897-*`. Continue with the 25 Buttons flags
 through the authored GamePadState workflow, separating constructed behavior from hardware-only UI.
+
+## Focused898-all-public-Buttons-flags
+
+The stable `input.gamepad.state_values` workflow grows18->21 controls and now distinguishes all25
+public XNA Buttons values. An authored all-physical state requires every face/menu/shoulder/stick-
+click/D-pad flag through both IsButtonDown and its component property. Separate positive and
+negative analog states derive all eight directional virtual flags and both trigger flags while
+requiring their opposites to remain up. These are behavioral mappings, not integer-mask checks.
+
+SOFTWARE and OPENGLES3 direct runs pass21/21 with byte-identical output and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions. The warning-free build uses at most three jobs, metadata is
+659/0 and both validator self-test suites pass. Generated coverage moves184->209/753 fields and
+Input reaches34/202; types, non-field members and C routes remain302/329,2114/2326 and3078/3205.
+Evidence:`/tmp/checkpoint-898-*`. Audit the15 Input.Touch enum values next through authored touch
+locations and queued gesture samples before deciding how to disposition the160 Keys constants.

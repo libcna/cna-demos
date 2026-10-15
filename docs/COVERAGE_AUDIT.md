@@ -920,6 +920,22 @@ separated in this session. All five exact SOFTWARE CTests pass ten repetitions. 
 659/0, both validator suites pass and coverage moves175->184/753 fields, with Input at9/202.
 Evidence:`/tmp/checkpoint-897-*`. No screenshot, physical-input or visual-result claim is made.
 
+### Buttons flag values
+
+`input.gamepad.state_values` now distinguishes every one of the25 public XNA Buttons flags without
+adding per-button demos. One authored state holds all fifteen physical face, menu, shoulder, stick-
+click and D-pad flags; one aggregate control requires every `IsButtonDown` result and every matching
+GamePadButtons/GamePadDPad property to be Pressed. A positive-axis state derives both right/up flags
+for both sticks plus both trigger flags, while a negative-axis state derives the four left/down
+flags and each state requires all opposite directions to remain up. This connects each constant to
+observable GamePadState behavior rather than checking numeric masks.
+
+Both renderer-labelled console runs pass21/21 with byte-identical output and empty stderr, retaining
+all18 prior construction, clamping, identity and text controls. The exact SOFTWARE CTest passes20
+repetitions. Metadata validates659/0, validator suites pass5/5 and4/4, and generated coverage moves
+184->209/753 fields with Input at34/202. Evidence:`/tmp/checkpoint-898-*`. No physical controller,
+rendering, screenshot or visual judgment is involved.
+
 ### TouchLocation and TouchCollection value behavior
 
 | Members / behavior | Decision and evidence |

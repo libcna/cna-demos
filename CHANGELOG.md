@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the authored GamePadState workflow to distinguish all 25 public Buttons flags through
+  physical component properties, stick directions and trigger thresholds.
 - Audited Input's small state enums through authored mouse/keyboard values, keyboard-emulated and
   disconnected gamepads, and the existing hardware-facing dead-zone workflow.
 - Completed the public Media enum-value audit: seven of eight values now have direct behavioral

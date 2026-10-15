@@ -71,9 +71,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-897
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-898
 overlays for all659 catalog demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,184/753 fields and
+The surface totals are302/329 XNA types,2114/2326 XNA members,209/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -351,6 +351,19 @@ metadata validates659/0 and validator self-tests pass5/5 and4/4. Generated cover
 175->184/753 fields and Input reaches9/202; other totals remain302/329 types,2114/2326 non-field
 members and3078/3205 C routes. Evidence:`/tmp/checkpoint-897-*`. **Next:** audit the25 Buttons flags
 through the authored GamePadState workflow and keep hardware-only UI observations separate.
+
+Focused **898-all-public-Buttons-flags** extends `input.gamepad.state_values` from18 to21 controls
+and distinguishes all25 XNA Buttons values without new IDs. One authored state connects every
+physical face/menu/shoulder/stick-click/D-pad flag to IsButtonDown and its component property;
+positive and negative analog states derive all eight stick-direction flags and both triggers while
+requiring their opposites to remain up.
+
+Both renderer-labelled console runs pass21/21 with byte-identical output and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; the warning-free build uses `-j3`, metadata validates659/0 and
+validator self-tests pass5/5 and4/4. Coverage moves184->209/753 fields and Input reaches34/202;
+other totals remain302/329 types,2114/2326 members and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-898-*`. **Next:** audit all15 Input.Touch enum values through authored touch
+locations and queued GestureSamples, then disposition the much larger Keys constant family.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
@@ -2115,11 +2128,11 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete892 remains the authoritative657-demo full-runtime baseline; focused893-
-897 extend the current catalog to659 IDs and begin the semantic public-field audit. Media is closed
-at7/8 by evidence/disposition and Input's small state enums are9/202. Continue with the25 public
-Buttons flags through `input.gamepad.state_values`: use authored states to distinguish flag-to-
-property/virtual-axis behavior, and leave live hardware/UI observations separate. Add metadata only
-when a real control distinguishes the value; otherwise record it as hardware-specific or trivial.
+898 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
+closed at7/8 by evidence/disposition and Input reaches34/202 after all small-state and Buttons
+values. Audit all15 `Microsoft.Xna.Framework.Input.Touch` fields next: four TouchLocationState
+values are already authored, and the GestureSample queue can distinguish every GestureType without
+physical input. Then disposition the160 Keys constants rather than crediting unused names.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete892 too stale.
