@@ -9911,3 +9911,21 @@ no-window skip on SOFTWARE. All663 old statuses, known issues and failed-asserti
 multiplicities remain unchanged at92/96. Generated coverage is303/329 types,2114/2326 members,
 674/753 fields and3078/3205 C routes. Evidence:
 `build/linux-full/reports/checkpoint-938-complete-*`.
+
+## Focused939-native-logger-general-and-experiment
+
+The stable `core.logger.minimum_level` workflow grows four to seven controls and closes the
+ordinary native Logger behavior gaps. WARN, TRACE and EXPERIMENT thresholds distinguish the three
+severe messages, all six production severities and all seven severities respectively. The public
+general `Logger::Log` path now proves conditional delivery with an explicit INPUT category, while
+`ExperimentIf` proves the experimental severity, default APPLICATION category and false-condition
+suppression. Existing sink/reset and `WarnIf` evidence represents the other severity-specific
+conditional wrappers, whose implementations are identical forwards and do not justify separate
+controls.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass7/7 byte-identically with empty stderr;
+the warning-free incremental build uses `-j3`, metadata remains666/0 and the exact SOFTWARE CTest
+passes. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205
+routes because these are CNA extensions. Complete938 remains the full baseline. Evidence:
+`/tmp/checkpoint-939-logger-*`. Continue the next coherent native public-header audit without
+duplicating semantically identical wrappers or the already exhaustive C adapter.

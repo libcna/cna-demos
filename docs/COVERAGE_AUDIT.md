@@ -3768,3 +3768,24 @@ failed-assertion messages/multiplicities remain unchanged at92 SOFTWARE and96 OP
 coverage remains303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
 `build/linux-full/reports/checkpoint-938-complete-*`. No screenshot, listening, physical-input,
 external-service or manual visual-quality validation was performed.
+
+### Focused939 native Logger general and experimental paths
+
+The stable `core.logger.minimum_level` demo grows four to seven checks. It distinguishes WARN's
+three severe messages, TRACE's six production severities and EXPERIMENT's complete seven-level
+stream. It also sends a true and false conditional message through the general `Logger::Log`
+overload and checks the delivered DEBUG level, explicit INPUT category and exact message, then does
+the same for `ExperimentIf` with its EXPERIMENT level and default APPLICATION category.
+
+This closes the meaningful ordinary Logger remainder alongside the existing custom sink, reset,
+minimum-level and `WarnIf` evidence. `FatalIf`, `ErrorIf`, `InfoIf`, `DebugIf` and `TraceIf` are the
+same severity-specific forwarding shape already represented by `WarnIf` and `ExperimentIf`; adding
+one assertion per spelling would inflate controls without demonstrating distinct behavior. The C
+adapter remains exhaustively covered separately.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass7/7 with byte-identical stdout SHA-256
+`7406560520b74fb8046818acf498bf5030ec9d98be52e70e39ba9bf030e6f878` and empty stderr. The exact
+SOFTWARE CTest passes, the warning-free build uses at most three jobs and metadata remains666/0.
+Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes because
+the Logger family is CNA-specific. Complete938 remains the complete-runtime baseline. Evidence:
+`/tmp/checkpoint-939-logger-*`. No CNA defect appeared.

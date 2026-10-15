@@ -445,13 +445,16 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Input::Sensors::GetAccelerometerEXT` -- input.sensors.motion
 - `CNA::Input::Sensors::GetGyroscopeEXT` -- input.sensors.motion
 - `CNA::Input::Sensors::GetSensorsEXT` -- input.devices.list, input.sensors.motion
-- `CNA::LogCategory` -- core.logger.custom_sink
+- `CNA::LogCategory` -- core.logger.custom_sink, core.logger.minimum_level
 - `CNA::LogLevel` -- core.logger.custom_sink, core.logger.minimum_level
 - `CNA::Logger::Debug` -- core.logger.minimum_level
 - `CNA::Logger::Error` -- core.logger.custom_sink
+- `CNA::Logger::Experiment` -- core.logger.minimum_level
+- `CNA::Logger::ExperimentIf` -- core.logger.minimum_level
 - `CNA::Logger::Fatal` -- core.logger.minimum_level
 - `CNA::Logger::GetMinimumLevel` -- core.logger.minimum_level
 - `CNA::Logger::Info` -- core.logger.custom_sink
+- `CNA::Logger::Log` -- core.logger.minimum_level
 - `CNA::Logger::ResetSink` -- core.logger.custom_sink
 - `CNA::Logger::SetMinimumLevel` -- core.logger.minimum_level
 - `CNA::Logger::SetSink` -- core.logger.custom_sink

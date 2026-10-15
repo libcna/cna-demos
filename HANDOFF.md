@@ -238,6 +238,22 @@ routes. Tested SHA-256: `cna-demos`
 `build/linux-full/reports/checkpoint-938-complete-*`. No screenshot, listening test, physical input,
 external service session or manual visual-quality inspection was performed.
 
+Focused **939-native-logger-general-and-experiment** extends the stable
+`core.logger.minimum_level` workflow from four to seven controls. It proves that TRACE admits the
+six production severities but not the later EXPERIMENT severity, while an explicit EXPERIMENT
+minimum admits all seven. The general `Logger::Log` route preserves an explicit INPUT category and
+obeys its condition, and `ExperimentIf` uses EXPERIMENT with the default APPLICATION category while
+suppressing a false condition. Together with the existing custom-sink and `WarnIf` evidence, this
+dispositions the remaining severity-specific conditional wrappers as identical public forwards;
+one control per spelling would add no new behavior.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass7/7 with byte-identical stdout SHA-256
+`7406560520b74fb8046818acf498bf5030ec9d98be52e70e39ba9bf030e6f878` and empty stderr. The
+warning-free incremental build uses `-j3`; metadata remains666/0 and the exact SOFTWARE CTest
+passes. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205
+routes; the newly named APIs are CNA extensions outside that inventory. Complete938 remains the
+full runtime baseline. Evidence:`/tmp/checkpoint-939-logger-*`. No CNA defect appeared.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2337,9 +2353,11 @@ process-level features; static CNA on CMake < 3.29.
 HIGHEST PRIORITY: Complete938 is the authoritative666-demo full-build/full-runtime baseline and
 absorbs Focused934-937 after Complete933. The native renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
-families now have direct C++ evidence. Continue
-with the next coherent public CNA header family, preferring an existing workflow when it already
-owns the behavior. The diagnostics
+families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds
+the EXPERIMENT threshold, general conditional/category delivery and a representative experimental
+conditional wrapper to the existing sink, severity and `WarnIf` workflows. Continue with the next
+coherent public CNA header family, preferring an existing workflow when it already owns the
+behavior. The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered
