@@ -4154,6 +4154,27 @@ was used.
 Commit and push this batch, then continue to the next explicit high-value behavior gap without a
 complete checkpoint.
 
+### Focused865-nested-source-root-capability-propagation
+
+The existing `content.custom.nested_builds` standalone workflow grows from twenty to twenty-three
+child controls and adds an original Texture2D CNJ. Its `@art/checker.png` sidecar is inaccessible
+without a parent capability, producing the expected nested importer diagnostic through the outer
+stage processor. Adding the disjoint textures root to the parent request is propagated by public
+XNA `BuildAsset`: the nested CNB contains exact checker pixels, the merged dependency retains
+sourceRoot `art`, and the parent has matching Texture2D XREF/runtime-reference identities.
+
+The first focused run failed only because the demo searched for `unknown root 'art'` rather than
+CNA's exact `unknown root alias 'art'`; the corrected oracle passes and no CNA issue was found.
+SOFTWARE and OPENGLES3 renderer-labelled direct runs pass23/23 with byte-identical normalized
+stdout/stderr. The exact SOFTWARE CTest passes five consecutive repetitions and the focused target
+and full incremental project build use `-j3`; metadata is655/0 and both self-test suites pass.
+Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence is under `/tmp/checkpoint-865-*`. Validation is CPU-side compilation and byte inspection;
+no renderer, screenshot or visual inspection was used.
+
+Commit and push this batch, then continue with the next explicit behavior gap; Complete859 remains
+the full baseline.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

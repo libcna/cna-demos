@@ -17,7 +17,10 @@
 #include "CnaDemos/Process.hpp"
 #include "CNA/Content/Cnb/CnbByteWriter.hpp"
 #include "CNA/Content/Cnb/CnbDocument.hpp"
+#include "CNA/Content/Cnb/CnbTextureCodec.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
+#include "CNA/Content/Pipeline/CnjContentPipeline.hpp"
+#include "CNA/Content/Pipeline/Texture2DContentPipeline.hpp"
 #include "CNA/Content/Pipeline/XnaPipelineBridge.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/ExternalReference.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/InvalidContentException.hpp"
@@ -35,6 +38,7 @@ namespace
     constexpr const char* ProfileProcessorName = "CnaDemos.NestedProfileProcessor";
     constexpr const char* StageProcessorName = "CnaDemos.NestedStageProcessor";
     constexpr const char* ChildName = "profiles/guard";
+    constexpr const char* SharedTextureName = "textures/nested_shared_checker";
     constexpr auto DataChunk = Cnb::MakeChunkId('D', 'A', 'T', 'A');
     std::atomic<int> profileWrites{0}; // observation only; registered writers may serve concurrent nodes
     struct Profile
@@ -43,17 +47,24 @@ namespace
         std::string name;
         int health = 0;
     };
+    struct TextureAsset
+    {
+        static constexpr std::string_view XnaTypeName =
+            "Microsoft.Xna.Framework.Graphics.Texture2D";
+    };
     struct StageSource
     {
         static constexpr std::string_view XnaTypeName = "CnaDemos.NestedStageSource";
         int count = 0;
         Xna::ExternalReference<Profile> profile;
+        Xna::ExternalReference<TextureAsset> texture;
     };
     struct Stage
     {
         static constexpr std::string_view XnaTypeName = "CnaDemos.NestedStage";
         int healthBudget = 0;
         std::string profileAsset;
+        std::string textureAsset;
     };
     using SharedProfile = std::shared_ptr<const Profile>;
     struct LoadedStage { int healthBudget = 0; SharedProfile profile; };
@@ -95,12 +106,14 @@ namespace
         {
             const std::filesystem::path path(std::u8string(filename.begin(), filename.end()));
             std::ifstream file(path);
-            StageSource result; std::string child;
-            if (!(file >> result.count >> child) || result.count < 1 || result.count > 100)
-                throw Xna::InvalidContentException("A stage needs Count in 1..100 and a profile filename.");
+            StageSource result; std::string child, texture;
+            if (!(file >> result.count >> child >> texture) || result.count < 1 || result.count > 100)
+                throw Xna::InvalidContentException(
+                    "A stage needs Count in 1..100 plus profile and texture filenames.");
             file >> std::ws;
             if (!file.eof()) throw Xna::InvalidContentException("Unexpected stage fields.");
             result.profile = Xna::ExternalReference<Profile>(child, Xna::ContentIdentity(filename));
+            result.texture = Xna::ExternalReference<TextureAsset>(texture, Xna::ContentIdentity(filename));
             return result;
         }
     };
@@ -133,17 +146,21 @@ namespace
         void setCompileChildProperty(bool value) { compileChild_ = value; }
         bool getCollideProperty() const { return collide_; }
         void setCollideProperty(bool value) { collide_ = value; }
+        bool getCompileSharedTextureProperty() const { return compileSharedTexture_; }
+        void setCompileSharedTextureProperty(bool value) { compileSharedTexture_ = value; }
         static void DescribeParameters(Xna::ProcessorParameterBindings<StageProcessor>& parameters)
         {
             parameters.Add<bool>("UseSiblingName", &StageProcessor::getUseSiblingNameProperty, &StageProcessor::setUseSiblingNameProperty);
             parameters.Add<bool>("CompileChild", &StageProcessor::getCompileChildProperty, &StageProcessor::setCompileChildProperty);
             parameters.Add<bool>("Collide", &StageProcessor::getCollideProperty, &StageProcessor::setCollideProperty);
+            parameters.Add<bool>("CompileSharedTexture", &StageProcessor::getCompileSharedTextureProperty,
+                                 &StageProcessor::setCompileSharedTextureProperty);
         }
         Stage Process(const StageSource& input, Xna::ContentProcessorContext& context) override
         {
             Xna::OpaqueDataDictionary parameters; parameters.SetValue<int>("Scale", 2);
             const auto profile = context.BuildAndLoadAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters);
-            Stage result{input.count * profile.health, {}};
+            Stage result{input.count * profile.health, {}, {}};
             if (compileChild_)
             {
                 const std::string requestedName = useSiblingName_ ? std::string{} : ChildName;
@@ -162,10 +179,21 @@ namespace
                     (void)context.BuildAsset<Profile, Profile>(input.profile, ProfileProcessorName, parameters, {}, requestedName);
                 }
             }
+            if (compileSharedTexture_)
+            {
+                Xna::OpaqueDataDictionary textureParameters;
+                textureParameters.SetValue<std::string>(Pipeline::TextureFormatParameter, "Color");
+                textureParameters.SetValue<bool>(Pipeline::TexturePremultiplyAlphaParameter, false);
+                const auto built = context.BuildAsset<TextureAsset, TextureAsset>(
+                    input.texture, {}, textureParameters, {}, SharedTextureName);
+                std::filesystem::path path(built.getFilenameProperty());
+                result.textureAsset = path.replace_extension().generic_string();
+            }
             return result;
         }
     private:
         bool compileChild_ = false, collide_ = false, useSiblingName_ = false;
+        bool compileSharedTexture_ = false;
     };
     class ProfileWriter final : public Pipeline::ContentTypeWriter
     {
@@ -204,8 +232,15 @@ namespace
             Cnb::CnbByteWriter data; data.WriteU32(static_cast<std::uint32_t>(stage.healthBudget));
             Cnb::CnbWriter writer(Cnb::CnbAssetTypeIdFromName(InputType()), 1);
             writer.SetMetadata(InputType(), logicalName);
+            std::vector<Cnb::CnbExternalReference> references;
             if (!stage.profileAsset.empty())
-                writer.SetExternalReferences({Cnb::CnbExternalReference{0u, Cnb::CnbAssetTypeIdFromName(std::string(Profile::XnaTypeName)), stage.profileAsset}});
+                references.push_back({static_cast<std::uint32_t>(references.size()),
+                                      Cnb::CnbAssetTypeIdFromName(std::string(Profile::XnaTypeName)),
+                                      stage.profileAsset});
+            if (!stage.textureAsset.empty())
+                references.push_back({static_cast<std::uint32_t>(references.size()),
+                                      Cnb::CnbAssetTypeId::Texture2D, stage.textureAsset});
+            if (!references.empty()) writer.SetExternalReferences(std::move(references));
             writer.AddChunk(DataChunk, data.Take(), Cnb::CnbChunkFlags::Mandatory);
             Pipeline::ContentWriteResult result;
             result.bytes = writer.Build(); result.assetTypeId = Cnb::CnbAssetTypeIdFromName(InputType());
@@ -231,11 +266,13 @@ int main()
         Pipeline::RegisterXnaImporter<StageImporter>(*registry, "CnaDemos.NestedStageImporter", stageImporter);
         Pipeline::RegisterXnaProcessor<ProfileProcessor>(*registry, ProfileProcessorName, Xna::ContentProcessorAttribute{});
         Pipeline::RegisterXnaProcessor<StageProcessor>(*registry, StageProcessorName, Xna::ContentProcessorAttribute{});
+        Pipeline::RegisterCnjContentPipeline(*registry);
+        Pipeline::RegisterTexture2DContentPipeline(*registry);
         registry->RegisterWriter(std::make_shared<ProfileWriter>()); registry->RegisterWriter(std::make_shared<StageWriter>());
         const Pipeline::ContentPipeline pipeline(registry);
         Pipeline::ContentBuildRequest request;
-        request.sourceRoot = CnaDemos::ExecutableDirectory() / "assets";
-        request.source = "nested_builds/arena.stage"; request.logicalName = "stages/arena";
+        request.sourceRoot = CnaDemos::ExecutableDirectory() / "assets/nested_builds";
+        request.source = "arena.stage"; request.logicalName = "stages/arena";
         const auto loaded = pipeline.Build(request);
         const auto loadedDocument = Cnb::CnbDocument::Parse(loaded.output.bytes, "stage with processed profile");
         auto budget = loadedDocument.OpenChunk(loadedDocument.RequireSingle(DataChunk));
@@ -293,6 +330,59 @@ int main()
         check(repeated.output.bytes == compiled.output.bytes && repeated.output.additionalOutputs.size() == 1 &&
               repeated.output.additionalOutputs.front().bytes == output.bytes,
               "a fresh valid build is deterministic after the failed conflicting request");
+        auto capabilityRequest = request;
+        capabilityRequest.parameters.Set("CompileChild", false);
+        capabilityRequest.parameters.Set("CompileSharedTexture", true);
+        bool ungrantedNestedRefused = false;
+        try { (void)pipeline.Build(capabilityRequest); }
+        catch (const Pipeline::ContentPipelineError& error)
+        {
+            ungrantedNestedRefused = error.Stage() == Pipeline::ContentPipelineStage::Process &&
+                error.Component() == StageProcessorName &&
+                std::string(error.what()).find("unknown root alias 'art'") != std::string::npos;
+            std::cout << "Ungranted nested capability refused: " << error.what() << '\n';
+        }
+        check(ungrantedNestedRefused,
+              "a nested CNJ cannot use an external source-root alias absent from the parent request");
+        const auto textureAssets = CnaDemos::ExecutableDirectory() / "assets/textures";
+        capabilityRequest.externalSourceRoots.Add("art", textureAssets);
+        const auto capability = pipeline.Build(capabilityRequest);
+        bool nestedRecipe = false, nestedArt = false;
+        for (const auto& dependency : capability.dependencies)
+        {
+            nestedRecipe |= dependency.kind == Pipeline::ContentDependencyKind::SourceFile &&
+                dependency.identity.ends_with("/nested_builds/shared_texture.cnj") &&
+                dependency.sourceRoot.empty();
+            nestedArt |= dependency.kind == Pipeline::ContentDependencyKind::SourceFile &&
+                dependency.identity.ends_with("/textures/checker.png") && dependency.sourceRoot == "art";
+        }
+        bool exactTexture = capability.output.additionalOutputs.size() == 1;
+        if (exactTexture)
+        {
+            const auto& textureOutput = capability.output.additionalOutputs.front();
+            const auto textureDocument = Cnb::CnbDocument::Parse(textureOutput.bytes, "nested shared texture");
+            const auto decoded = Cnb::DecodeTexture2DFromCnb(textureDocument);
+            const auto checker = Pipeline::DecodeImportedImage(textureAssets / "checker.png");
+            exactTexture = textureOutput.logicalName == SharedTextureName &&
+                textureOutput.assetTypeId == Cnb::CnbAssetTypeId::Texture2D &&
+                decoded.width == checker.width && decoded.height == checker.height &&
+                decoded.depth == 1 && decoded.faceCount == 1 && decoded.mipCount == 1 &&
+                decoded.representations.size() == 1 &&
+                decoded.representations.front().format == Cnb::CnbTextureFormat::Rgba8 &&
+                decoded.representations.front().levels ==
+                    std::vector<std::vector<std::uint8_t>>{checker.rgbaPixels};
+        }
+        check(nestedRecipe && nestedArt && exactTexture,
+              "BuildAsset propagates the art capability and emits the exact nested checker texture");
+        const auto capabilityParent = Cnb::CnbDocument::Parse(
+            capability.output.bytes, "stage referencing nested shared texture");
+        check(capabilityParent.ExternalReferences().size() == 1 &&
+                  capabilityParent.ExternalReferenceAt(0, "nested texture").logicalName == SharedTextureName &&
+                  capabilityParent.ExternalReferenceAt(0, "nested texture").expectedAssetTypeId ==
+                      Cnb::CnbAssetTypeId::Texture2D &&
+                  capability.runtimeReferences.size() == 1 &&
+                  capability.runtimeReferences.front().logicalName == SharedTextureName,
+              "the parent records the propagated nested texture as its runtime reference and XREF");
         // Authoring and runtime shapes differ: the loaded stage carries its resolved profile.
         ContentManager::RegisterCnbLoaderEXT<SharedProfile>(Cnb::CnbAssetTypeIdFromName(std::string(Profile::XnaTypeName)),
             std::string(Profile::XnaTypeName), [](const Cnb::CnbDocument& document, ContentManager&) -> SharedProfile {
@@ -341,7 +431,7 @@ int main()
             // A matching project item owns the child build; an empty assetName lets BuildAsset recognize it.
             const std::string scheduledName = "profiles/scheduled_guard";
             Pipeline::ContentBuildSibling sibling;
-            sibling.source = std::filesystem::canonical(request.sourceRoot / "nested_builds/guard.profile");
+            sibling.source = std::filesystem::canonical(request.sourceRoot / "guard.profile");
             sibling.logicalName = scheduledName; sibling.importer = "CnaDemos.NestedProfileImporter";
             sibling.processor = ProfileProcessorName; sibling.parameters.Set("Scale", std::int64_t{2});
             auto scheduledRequest = request;

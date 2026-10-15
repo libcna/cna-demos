@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended nested content builds with a Texture2D CNJ that consumes a parent-granted external
+  source-root alias, preserving the aliased dependency, compiled pixels and parent XREF.
 - Extended the custom CNB loader workflow with eight synchronized public registrations of one
   type, proving thread-safe first-wins capture retention and decoding through the retained factory.
 - Extended multi-artifact content publication with two concurrent compiler invocations targeting

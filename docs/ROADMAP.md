@@ -404,7 +404,9 @@ a check that all authored colors remain visible and that a blank texture row can
   deduplication, writer schemas and changed-processing name collision. The caller now publishes
   actual parent/child bytes: missing-child refusal, same-manager retry, restored profile data,
   shared runtime cache and cleanup are verified. Matching sibling items now defer compilation
-  to their host; mismatched parameters produce a generated child (20 child checks).
+  to their host; mismatched parameters produce a generated child. A nested Texture2D CNJ now
+  consumes a parent-granted `art` root and preserves exact pixels, dependency alias and XREF
+  (23 child checks).
 - ✅ `content.custom.intermediate_existing_instances`: ordinary and raw reads populate preallocated
   reference objects, preserve nonserialized state, distinguish Null/type attributes and use an
   explicit per-field compact serializer without replacing the default descriptor (10 child checks).
@@ -8656,3 +8658,21 @@ stdout and empty stderr. The exact SOFTWARE CTest passes twenty consecutive repe
 full incremental build uses `-j3`, metadata is655/0 and both self-test suites pass. Temporary
 coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
 Evidence:`/tmp/checkpoint-864-*`. No renderer, screenshot or visual inspection was used.
+
+## Focused865-nested-source-root-capability-propagation
+
+`content.custom.nested_builds` grows from twenty to twenty-three child controls and gains one
+original Texture2D CNJ source. Without an `art` grant, its nested `BuildAsset` fails in the outer
+stage processor with the nested `CNA.CnjImporter` unknown-alias context. Granting the parent
+request the disjoint textures root propagates it automatically: the generated child has exact
+checker pixels, its dependency retains sourceRoot `art`, and the parent carries matching Texture2D
+XREF and runtime-reference names.
+
+The first direct run expected `unknown root 'art'` while CNA correctly emitted
+`unknown root alias 'art'`; updating that diagnostic predicate was a demo oracle correction, not a
+CNA defect. Both renderer-labelled runs then pass23/23 with byte-identical normalized stdout/stderr,
+and the exact SOFTWARE CTest passes five consecutive repetitions. The focused standalone target
+and full incremental project build use `-j3`; metadata is655/0 and both self-test suites pass.
+Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence:`/tmp/checkpoint-865-*`. This is CPU-side build and byte inspection; no renderer,
+screenshot or visual inspection was used.
