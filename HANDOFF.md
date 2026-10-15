@@ -4350,6 +4350,23 @@ process exit only; a crash between artifact replacements and manifest publicatio
 explicit separate gap. Complete871 remains the full baseline. Continue with the next high-value
 behavior audit; no renderer, screenshot or visual inspection was used.
 
+### Focused875-mid-publication-crash-disposition
+
+Source review of CNA's public content compiler closes the remaining crash-consistency wording by
+disposition rather than a timing-dependent child-process demo. Each primary, additional and
+deployment artifact is replaced atomically in a fixed loop, but the public API exposes no callback
+or barrier between replacements. The existing deterministic blocked-deployment control already
+proves the public behavior that matters: earlier CNBs can be new while the support file and last
+successful manifest remain old, and retry rebuilds the complete current set. A process kill in the
+few instructions between replacements would need CNA's internal fault-injection support to be
+reliable and belongs in CNA's test suite.
+
+The documentation-only checkpoint retains the655-demo Complete871 runtime baseline and
+Focused874's22/22 direct evidence. The incremental `-j3` build, metadata validation, both tool
+self-test suites and byte-identical temporary coverage regeneration pass; evidence is under
+`/tmp/checkpoint-875-*`. Continue with the next deterministic public-behavior gap; no renderer,
+screenshot or visual inspection was used.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

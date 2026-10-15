@@ -345,8 +345,9 @@ a check that all authored colors remain visible and that a blank texture row can
   graph refusal of two nodes claiming one destination, same-root concurrent compiler refusal and
   recovery both within one process and against a synchronized child process, stale output-lease
   takeover after a child exits from Import, and clean with/without its manifest.
-  The failed deployment leaves newly published CNBs and the older manifest; no whole-node rollback
-  or mid-publication crash-consistency guarantee is claimed.
+  The failed deployment leaves newly published CNBs and the older manifest, and retry rebuilds the
+  complete set. Actual process termination between individual atomic replacements has no public
+  synchronization point and remains CNA fault-injection territory rather than a race-prone demo.
   ✅ `content.custom.dependency_graph`: strong build edges versus runtime-only XREFs, actual
   incremental propagation of effective fingerprints with unchanged parent bytes, fresh runtime
   budgets, cycle/missing-node refusal and repaired skipping. Sixteen focused checks also verify
@@ -428,9 +429,9 @@ a check that all authored colors remain visible and that a blank texture row can
   changes rebuild only the affected node, whitespace-only configuration edits skip, and source
   removal/reintroduction collects/restores only its owned output. Remapping an external-root alias
   to identical bytes skips both nodes with an identical manifest (25 child checks). Clean
-  rejects changed owned bytes without deleting an untouched peer or the manifest. Mid-publication
-  crash consistency and graph/deployment cache cases remain separate work;
-  multi_artifact_publication covers independent-process same-root exclusion.
+  rejects changed owned bytes without deleting an untouched peer or the manifest.
+  multi_artifact_publication separately covers deployment invalidation, partial publication and
+  retry, plus independent-process same-root exclusion and stale-lease recovery.
 - ✅ `content.custom.intermediate_external_references`: filename versus inline data, table
   deduplication, relocation, wrapper/null identity and invalid references. Nine child checks pass;
   native emitted TargetType alias round-trip exposes ISSUE-046. File imports/build publication

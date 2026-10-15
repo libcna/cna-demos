@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Classified process termination between multi-artifact replacements as CNA fault-injection
+  territory: the public demo already proves per-file atomicity, partial-set recovery and the
+  retained-manifest contract through a deterministic later-output failure.
 - Extended output-lease recovery with a child that exits from its importer without unwinding,
   proving stale lease takeover and complete rebuilding before any prior artifact was published.
 - Extended multi-artifact publication with a child-process lease owner, proving cross-process
