@@ -900,6 +900,30 @@ workflow owner or an explicit boundary disposition. The new demo is CPU-only and
 encoder output solely to expose the callback contract; it makes no visual-quality, GPU-format,
 cross-platform decoder or genuine-XNA execution claim.
 
+#### `ModelContentPipeline.hpp` declaration-level disposition
+
+The pinned header exposes 33 public declarations: two variant aliases, three stable identities,
+nine imported-document fields, two child fields, three bundle fields, four importer methods, five
+processor methods, four writer methods and the registration function. Focused966 adds
+`content.model.pipeline_contract` for the build-time carrier/component boundary. The existing 30
+graphics/model demos retain model interpretation, animation, material, GPU and pixel evidence.
+
+| Declaration family | Disposition |
+|---|---|
+| CanonicalModelValue; ImportedModelDocumentType, ProcessedModelType, ModelGenerateChildAssetsParameter | The exact two carrier identities and child-policy spelling are frozen. A real glTF produces the schema-1 alternative; `content.xnb.pipeline_transcode` separately proves schema-2 selection on the twin-panel XNB model. The processor accepts a bool child policy and distinguishes an unknown name from a mistyped value. Repeating true/false spelling through more source shapes adds policy permutations rather than a new concept. |
+| ImportedModelDocument staging fields | A direct public importer invocation produces one canonical Model CNJ, one generated embedded texture, the source-stem prefix, a common contained intermediate root and a live opaque owner. It has no additional model/animation document, authored-sidecar flag or canonical XNB value for this source. Destroying the carrier removes the whole staging tree, directly proving the ownership field rather than only observing successful processing. Authored Model CNJ sets `recordAuthoredSidecars`; the shared dependency collector behavior is already demonstrated by source-root/nested-build workflows, so directly toggling this inter-component flag would not add an author-facing route. |
+| ImportedModelDocument::canonicalModel | The glTF route deliberately leaves it empty and stages CNJ. The nine-root XNB transcode demo supplies the alternative directly, selects schema 2 and verifies the complete hierarchy/shared geometry/effects after native decoding. Schema-1 XNB conversion is the same carrier alternative and existing runtime/source model workflows own it. |
+| ProcessedModelChildValue/ProcessedModelChild | The embedded-texture source produces a deterministically named Texture2D child whose value reaches a decodable additional CNB and a typed runtime reference. The animated slide-rig source retains its embedded animation and emits a separately decodable AnimationClip child. The remaining Model alternative belongs to multi-model glTF splitting; CNA's integration test proves it, but this repository has no authoring fixture that intentionally splits into multiple models. It remains explicit integration-test evidence rather than a fabricated aggregate-only demo claim. |
+| ProcessedModelBundle fields | Real processing yields a schema-1 primary, no XNA-shaped carrier and one sorted child. The XNA `.x` source workflow behind `graphics.model.xnb_model` supplies the `xnaModel` fidelity path to the XNB writer, while the XNB-to-CNB demo supplies the canonical schema-2 primary. An absent primary is the deliberate EffectMaterialContent CNB refusal and is best retained as a writer boundary test until such a project source is added. |
+| GltfImporter methods | Identity/version, `.gltf`/`.glb` routes and sole output identity are exact; direct `Import` executes the shared converter against the committed embedded-texture glTF. `.glb` changes container packaging, not the importer/component contract, and existing CNA parity fixtures cover both spellings. Source-side buffers, images, unicode, invalid accessors and glTF extensions already have focused model demos or CNA parser tests. |
+| ModelProcessor methods | Identity/version and input/output identities are exact. Registered `ImportAndProcess` consumes the owned staging documents, remaps the generated texture reference, creates the primary/child variants and reports typed runtime references. A second real source creates the animation child. Multi-model collisions, output ceilings, staging escapes and malformed generated CNJ are safety/integration matrices rather than additional demonstrations. |
+| ModelContentWriter methods; RegisterModelContentPipeline | The writer declares the exact sorted Texture2D, Model schema-1, Model schema-2 and AnimationClip asset/schema/type/codec tuples. A registry configured only through the public function performs real import, processing and writing twice; primary and child bytes, dependencies and runtime references are identical. Public decoders recover a nonempty Model whose material names the child, the exact Texture2D child and the standalone AnimationClip. Existing model scenes own runtime loading and drawing. |
+
+All public `ModelContentPipeline.hpp` declarations now have direct evidence, a named shared-workflow
+owner or an explicit intentional disposition. This checkpoint performs CPU conversion and CNB
+decoding only; it adds no GPU, animation-playback, screenshot, visual-quality, external-tool or
+genuine-XNA execution claim.
+
 ### Runtime XNB readers (separate from intermediate XML)
 
 `content.xnb.custom_type_reader` supplies the game's LevelReader and original generated XNB.

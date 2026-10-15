@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**681 demos** in 18 categories. Kinds: console 183, game 296, standalone 202. Automation: automated 645, manual 3, smoke-only 33.
+**682 demos** in 18 categories. Kinds: console 184, game 296, standalone 202. Automation: automated 646, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 59 | 59 | 0 | 0 | 39 / 0 / 14 / 0 / 6 | 39 / 0 / 14 / 0 / 6 |
+| content | 60 | 60 | 0 | 0 | 39 / 0 / 14 / 0 / 7 | 39 / 0 / 14 / 0 / 7 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `content.cnj.pipeline_assets`, `content.custom.build_configuration`, `content.custom.build_manifest`, `content.texture_processor.pipeline_contract`, `content.xnb.output_pipeline`, `content.xnb.pipeline_transcode`.
-- OPENGLES3: absent from report: `content.cnj.pipeline_assets`, `content.custom.build_configuration`, `content.custom.build_manifest`, `content.texture_processor.pipeline_contract`, `content.xnb.output_pipeline`, `content.xnb.pipeline_transcode`.
+- SOFTWARE: absent from report: `content.cnj.pipeline_assets`, `content.custom.build_configuration`, `content.custom.build_manifest`, `content.model.pipeline_contract`, `content.texture_processor.pipeline_contract`, `content.xnb.output_pipeline`, `content.xnb.pipeline_transcode`.
+- OPENGLES3: absent from report: `content.cnj.pipeline_assets`, `content.custom.build_configuration`, `content.custom.build_manifest`, `content.model.pipeline_contract`, `content.texture_processor.pipeline_contract`, `content.xnb.output_pipeline`, `content.xnb.pipeline_transcode`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -222,11 +222,12 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::DecodeAnimationClipFromCnb` -- content.cnj.pipeline_assets
 - `CNA::Content::Cnb::DecodeCurveFromCnb` -- content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeModelFromCnb` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::DecodeModelV2FromCnb` -- content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeSongFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeSoundEffectFromCnb` -- content.sound_effect.cnb_codec, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeSpriteFontFromCnb` -- content.xnb.pipeline_transcode
-- `CNA::Content::Cnb::DecodeTexture2DFromCnb` -- content.custom.source_root_capabilities, content.texture_processor.pipeline_contract, content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeTexture2DFromCnb` -- content.custom.source_root_capabilities, content.model.pipeline_contract, content.texture_processor.pipeline_contract, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeTexture3DFromCnb` -- content.cnj.pipeline_assets, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeTextureCubeFromCnb` -- content.cnj.pipeline_assets, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeVideoFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
@@ -262,6 +263,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::AnimationClipProcessor::ValidateParameters` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::ApplyPngFileGammaEXT` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::BuildCnbTexture2DData` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Pipeline::CanonicalModelValue` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::CnjImporter::Identity` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::CnjImporter::Import` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::CnjImporter::OutputTypes` -- content.cnj.pipeline_assets
@@ -368,6 +370,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ConvertCnbTextureToXnb` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::DecodeImportedImage` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::GenerateRgbaMipChain` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Pipeline::GltfImporter::Identity` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::GltfImporter::Import` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::GltfImporter::OutputTypes` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::GltfImporter::SourceExtensions` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::ImageImporter::Identity` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::ImageImporter::Import` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::ImageImporter::OutputTypes` -- content.texture_processor.pipeline_contract
@@ -378,6 +384,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ImportedCompiledEffectType` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::ImportedImage` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::ImportedImageType` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Pipeline::ImportedModelDocument` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ImportedModelDocumentType` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::ImportedSongSource` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::ImportedSongSourceType` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::ImportedSoundType` -- content.sound_effect.pipeline_components
@@ -392,6 +400,16 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::IsCompiledEffectBinary` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::MakeContentBuildManifestEntry` -- content.custom.build_manifest
 - `CNA::Content::Pipeline::MakeProcessedSoundEffect` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::ModelContentWriter::Identity` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ModelContentWriter::InputType` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ModelContentWriter::OutputSchemaIdentities` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ModelContentWriter::Write` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ModelGenerateChildAssetsParameter` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ModelProcessor::Identity` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ModelProcessor::InputType` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ModelProcessor::OutputType` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ModelProcessor::Process` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ModelProcessor::ValidateParameters` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::NextPowerOfTwoDimension` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::PremultiplyRgbaAlpha` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::ProbedVideoMetadata` -- content.video.pipeline_components
@@ -399,6 +417,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ProcessedAnimationClipType` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::ProcessedCompiledEffectType` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::ProcessedFrameBytes` -- content.sound_effect.imported_pcm
+- `CNA::Content::Pipeline::ProcessedModelBundle` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ProcessedModelChild` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ProcessedModelChildValue` -- content.model.pipeline_contract
+- `CNA::Content::Pipeline::ProcessedModelType` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::ProcessedPcmBitsPerSample` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedPcmEncoding` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ProcessedPcmEncodingName` -- content.sound_effect.imported_pcm
@@ -415,6 +437,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::RegisterBuiltInContentPipeline` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::RegisterCnjContentPipeline` -- content.cnj.pipeline_assets, content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::RegisterCompiledEffectContentPipeline` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::RegisterModelContentPipeline` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::RegisterSongContentPipeline` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::RegisterSoundEffectContentPipeline` -- content.sound_effect.pipeline_components
 - `CNA::Content::Pipeline::RegisterTexture2DContentPipeline` -- content.custom.source_root_capabilities, content.texture_processor.pipeline_contract

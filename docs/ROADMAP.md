@@ -300,7 +300,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (59 demos; remaining below)
+## Phase 8 -- content 🟨 (60 demos; remaining below)
 
 - ✅ Existing `content.texture_processor.resize_to_power_of_two` now verifies XNB-targeted
   Reach/HiDef mipmap processing, resized payloads matching its rendered CNB and the distinct native
@@ -327,6 +327,9 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.texture_processor.pipeline_contract` (all 48 public Texture2D pipeline declarations
   dispositioned through exact component/schema identities, format parsing, pixel helpers, PNG
   gamma behavior, deterministic CNB output, injected block encoding and verbatim DDS pass-through),
+  ✅ `content.model.pipeline_contract` (all 33 public Model pipeline declarations dispositioned
+  through real owned glTF staging, component/schema identities, deterministic primary Model and
+  generated Texture2D/AnimationClip CNBs plus typed runtime references),
   ✅ `content.content_project.xna_content_project` (an XNA `.contentproj` built
   as it is, `CONTENT_PROJECT`). A CNJ texture repeats the texture processor demos (the same
   parameters in JSON). ✅ `content.custom.cnb_loader` uses public CnbWriter and

@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 30), 8 (content, 59), 9 (audio 23 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 30), 8 (content, 60), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 6 + logger 2, cnaext 4).
@@ -68,12 +68,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-681 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
-content59, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform3 and c_api177. Kinds are183 console,296 game and202 standalone;
-645 are automated,33 smoke-only and3 manual. Every declared category has demos.
+682 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
+content60, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, cnaext4, platform3 and c_api177. Kinds are184 console,296 game and202 standalone;
+646 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete956's full runtime reports; they include all675
-baseline IDs in both renderer suites and correctly mark the six post-baseline IDs absent.
+baseline IDs in both renderer suites and correctly mark the seven post-baseline IDs absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete956's
 full runtime reports are the baseline inputs for the675-ID catalog. Selected semantic
@@ -767,6 +767,37 @@ headless CPU/build evidence; the recognizable injected blocks are not loaded or 
 new GPU, screenshot, visual-quality, cross-platform-decoder or genuine-XNA claim is made. Audit the
 adjacent public `ModelContentPipeline.hpp` declarations next, reusing existing glTF/model pipeline
 workflows before adding another ID.
+
+Focused **966-Model-pipeline-contract-and-disposition** adds the 682nd catalog ID,
+`content.model.pipeline_contract`, and dispositions all33 public declarations in
+`ModelContentPipeline.hpp`. It freezes both carrier identities, the child-policy spelling, both
+source extensions, every component version/type and the writer's four exact schema/codec
+identities. Direct importer invocation over the committed embedded-texture glTF exposes its
+canonical Model document, generated texture, source-stem prefix, contained intermediate root,
+opaque lifetime and empty canonical-XNB alternative; destroying the carrier removes that staging
+tree. Structured validation separates an unknown parameter from a mistyped bool.
+
+The registered pipeline then produces a schema-1 primary plus one deterministically named texture
+child. The full build decodes to a nonempty Model whose material names that child, decodes the
+child's Rgba8 CNB and records its typed runtime reference separately from the sole primary-source
+dependency. A second existing animated glTF retains its embedded Model animation and emits a
+decodable standalone AnimationClip child. Repeated embedded-source builds preserve primary bytes,
+all additional-output identities/bytes, dependencies and runtime references exactly. The schema-2
+canonical and XNA-shaped bundle alternatives remain owned by the existing XNB transcode and `.x`
+source workflows; the multi-model child alternative is explicitly integration-test evidence until
+this repository has an intentional multi-model authoring fixture.
+
+The warning-free build uses at most three jobs. Ten SOFTWARE and ten OPENGLES3-labelled direct
+runs pass10/10 with byte-identical stdout SHA-256
+`831ceb4190d04e2ca0b5202cc5ab6410eb76ad5d5dd0192332b1c9ea4c3617bd` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata is682/0. Generated XNA and C totals remain unchanged;
+23 new public names enter the CNA-extension appendix and Complete956 marks all seven post-baseline
+IDs absent. Evidence:`/tmp/checkpoint-966-model-pipeline/*` and
+`/tmp/checkpoint-966-model-report.json`. This is headless CPU conversion/container evidence; no
+GPU, animation playback, screenshot, visual-quality, external-tool or genuine-XNA claim is added,
+and no CNA issue was found. The public top-level content-pipeline component headers now have
+declaration-level dispositions; audit the adjacent `CnbTextureCodec.hpp` container contract next,
+reusing the new texture pipeline evidence before adding another ID.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -2887,7 +2918,11 @@ serialization and the deliberate CNB absence. Audit the adjacent public
 where practical before adding another ID. Focused965 closes all48 declarations with one coherent
 headless component-contract demo plus the existing parameter and rendering workflows. Audit the
 adjacent public `ModelContentPipeline.hpp` next, reusing the substantial model/glTF evidence before
-adding a new ID. The earlier native
+adding a new ID. Focused966 closes all33 Model pipeline declarations with real owned glTF staging,
+deterministic primary/child CNBs and texture/animation child variants; the established XNB routes
+own the schema-2 and XNA-shaped alternatives. The public top-level content-pipeline component
+headers now have declaration-level dispositions. Audit `CnbTextureCodec.hpp` next, reusing the new
+texture pipeline evidence and adding only missing container behavior. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds
