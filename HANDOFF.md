@@ -2321,15 +2321,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline; Focused916
+HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline; Focused917
 is the latest validated behavioral delta. Current field coverage is674/753 and GamerServices is
 semantically dispositioned at160/223: all observable local/avatar/Guide values are covered, while its
 remaining63 values require service-account data or repeat the same presence publication behavior.
 The complete field audit now leaves only previously dispositioned environment/platform values in
 other namespaces (eight hardware GamePadType identities, five remote Net states, two renderer device-
-loss states and WindowsMediaConnect). The cascade-selected directional-specular gap is now closed;
-continue the deeper public member/behavior audit with partial punctual-shadow filtering/cone
-transitions or the next higher-value observable gap. Use the
+loss states and WindowsMediaConnect). Cascade-selected directional specular plus partial punctual
+filtering and cone transition behavior are now closed. Continue the deeper public member/behavior
+audit with invalid shadow states, the remaining four-cascade slot/color permutations, or the next
+higher-value observable gap. Use the
 inventory and docs/COVERAGE_AUDIT.md to choose the highest-value undispositioned behavior, prefer an
 existing workflow, and keep constructors/finalizers, CLR collection plumbing and service-only paths
 classified rather than inflating metadata.
@@ -2351,6 +2352,22 @@ Both inspected800x480 captures are byte-identical with SHA-256
 capability skip. The warning-free incremental build uses `-j3`, metadata remains659/0, validator/
 checkpoint self-tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326 non-field members,
 674/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-916-*`. No CNA defect appeared.
+
+### Focused917-partial-punctual-shadow-and-cone-transition
+
+The stable `graphics.skinned_effect.punctual_shadows` workflow grows8->10 pixel controls. A second
+authored 4x4 spot map divides low and high normalized distances so the receiver's 3x3 kernel has
+exactly six lit taps; the resulting RGB(56,52,37) distinguishes fractional filtering from both the
+fully lit and ambient/emissive floor controls. A map-free spot light aims at a cosine exactly midway
+between its .3-radian inner and .5-radian outer cone limits. CNA's squared transition leaves one-
+quarter direct-light intensity, observed as RGB(34,37,30).
+
+OPENGLES3 passes all10 controls in eleven runs including the captured run; OPENGL33 passes10/10.
+Both inspected800x480 captures are byte-identical with SHA-256
+`068d037ba94ea6ba8000b22974cedd3a6f23a930ac8e0b68de43bb46a1e6d824`. SOFTWARE retains its declared
+capability skip. The warning-free incremental build uses `-j3`, metadata remains659/0, validator/
+checkpoint self-tests pass5/5 and4/4, and coverage remains302/329 types,2114/2326 non-field members,
+674/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-917-*`. No CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

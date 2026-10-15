@@ -9588,3 +9588,22 @@ checkpoint-comparison self-tests pass5/5 and4/4, and generated coverage remains3
 2114/2326 non-field members,674/753 fields and3078/3205 C routes. No CNA defect appeared. Evidence:
 `/tmp/checkpoint-916-*`. Continue with partial punctual-shadow filtering/cone transitions or the
 next higher-value observable behavior gap.
+
+
+## Focused917-partial-punctual-shadow-and-cone-transition
+
+The existing `graphics.skinned_effect.punctual_shadows` keeps all eight prior controls and adds two
+isolated punctual-light checks. A second 4x4 spot map divides low and high normalized distances so
+the center 3x3 kernel contains exactly six lit taps, producing RGB(56,52,37). A map-free spot aims
+at a cosine halfway between its .3-radian inner and .5-radian outer limits; the shader's squared
+cone transition leaves one-quarter direct-light intensity at RGB(34,37,30). Both results differ
+from the retained fully lit RGB(74,64,43) and ambient/emissive floor RGB(20,28,26) controls.
+
+OPENGLES3 passes10/10 in eleven runs including the captured run; OPENGL33 passes10/10 once. Both
+inspected800x480 captures are byte-identical with SHA-256
+`068d037ba94ea6ba8000b22974cedd3a6f23a930ac8e0b68de43bb46a1e6d824`. SOFTWARE retains its declared
+capability skip. The warning-free incremental build uses `-j3`, metadata is659/0, validator and
+checkpoint-comparison self-tests pass5/5 and4/4, and generated coverage remains302/329 types,
+2114/2326 non-field members,674/753 fields and3078/3205 C routes. No CNA defect appeared. Evidence:
+`/tmp/checkpoint-917-*`. Continue with invalid shadow states, the remaining four-cascade slot/color
+permutations or the next higher-value observable behavior gap.

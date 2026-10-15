@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended authored punctual shadows with exact 6/9 spot PCF visibility and a midpoint cone
+  transition whose squared falloff leaves one-quarter direct-light intensity.
 - Added isolated cascade-selected directional specular pixels to the existing skinned shadow
   receiver, with identical OPENGLES3 and OPENGL33 captures.
 - Completed every observable Guide notification-position and message-box-icon value with actual

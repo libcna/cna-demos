@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // Authored distance maps distinguish point and spot shadow reception after skinning.
 #include <array>
+#include <cmath>
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -65,6 +66,11 @@ namespace
             std::array<Color, 16> distances;
             distances.fill(Color(64, 0, 0)); // normalized distance/range, not projected depth
             shadow_->SetData(distances.data(), static_cast<int>(distances.size()));
+            filteredShadow_ = std::make_unique<Texture2D>(device, 4, 4);
+            std::array<Color, 16> filteredDistances;
+            for (int index = 0; index < 16; ++index)
+                filteredDistances[index] = Color(index % 4 < 2 ? 64 : 192, 0, 0);
+            filteredShadow_->SetData(filteredDistances.data(), static_cast<int>(filteredDistances.size()));
             cube_ = std::make_unique<TextureCube>(device, 4, false, SurfaceFormat::Color);
             for (int face = 0; face < 6; ++face)
                 cube_->SetData(static_cast<CubeMapFace>(face), distances.data(), static_cast<int>(distances.size()));
@@ -85,7 +91,7 @@ namespace
             effect_->getDirectionalLight2Property().setEnabledProperty(false);
             batch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
-            Context().Print("The bone puts the receiver three units from a point/spot light. Linear light intensity4 makes the comparison visible. Range6 gives normalized distance.5; both authored maps store64/255. No map leaves direct diffuse light, the map removes it, and bias.3 restores it. Separate controls exclude the receiver by range or cone. Ambient and emission remain. These are authored receiver inputs, not generated shadows.");
+            Context().Print("The bone puts the receiver three units from a point/spot light. Linear light intensity4 makes the comparison visible. Range6 gives normalized distance.5; both original authored maps store64/255. No map leaves direct diffuse light, the map removes it, and bias.3 restores it. Separate controls exclude the receiver by range or cone. A split-depth spot map leaves six of nine PCF taps lit, while a direction halfway between the inner/outer cosines leaves one-quarter cone intensity. Ambient and emission remain. These are authored receiver inputs, not generated shadows.");
         }
         void Draw(const GameTime& time) override
         {
@@ -97,23 +103,38 @@ namespace
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             device.SetVertexBuffer(vertices_.get());
             device.setIndicesProperty(indices_.get());
-            for (int panel = 0; panel < 8; ++panel)
+            const int rowHeight = full.getHeightProperty() / 3;
+            for (int panel = 0; panel < 10; ++panel)
             {
-                const int column = panel % 4, row = panel / 4;
-                const int left = full.getWidthProperty() * column / 4;
-                const int right = full.getWidthProperty() * (column + 1) / 4;
-                device.setViewportProperty(Viewport(left, row * full.getHeightProperty() / 2,
-                                                   right - left, full.getHeightProperty() / 2));
+                const bool focusedControl = panel >= 8;
+                const int columns = focusedControl ? 2 : 4;
+                const int column = focusedControl ? panel - 8 : panel % 4;
+                const int row = focusedControl ? 2 : panel / 4;
+                const int left = full.getWidthProperty() * column / columns;
+                const int right = full.getWidthProperty() * (column + 1) / columns;
+                const int height = row == 2 ? full.getHeightProperty() - rowHeight * 2 : rowHeight;
+                device.setViewportProperty(Viewport(left, row * rowHeight, right - left, height));
                 PunctualLightEXT light;
-                light.Kind = row == 0 ? PunctualLightKindEXT::Point : PunctualLightKindEXT::Spot;
+                light.Kind = panel < 4 ? PunctualLightKindEXT::Point : PunctualLightKindEXT::Spot;
                 light.Position = Vector3::Zero;
-                light.Direction = panel == 7 ? Vector3(1, 0, 0) : Vector3(0, 0, -1);
+                if (panel == 7)
+                    light.Direction = Vector3(1, 0, 0);
+                else if (panel == 9)
+                {
+                    const float transitionCos = (std::cos(.3f) + std::cos(.5f)) * .5f;
+                    const float transitionAngle = std::acos(transitionCos);
+                    light.Direction = Vector3(std::sin(transitionAngle), 0, -transitionCos);
+                }
+                else
+                    light.Direction = Vector3(0, 0, -1);
                 light.DiffuseColor = Vector3(4, 4, 4); // linear intensity, for a clearly visible comparison
                 light.Range = panel == 3 ? 2.0f : 6.0f;
                 light.InnerAngle = .3f;
                 light.OuterAngle = .5f;
-                light.ShadowDepthBias = column == 2 ? .3f : 0.0f;
-                if (column == 1 || column == 2)
+                light.ShadowDepthBias = !focusedControl && column == 2 ? .3f : 0.0f;
+                if (panel == 8)
+                    light.ShadowMap = filteredShadow_.get();
+                else if (!focusedControl && (column == 1 || column == 2))
                 {
                     if (row == 0) light.ShadowCube = cube_.get();
                     else light.ShadowMap = shadow_.get();
@@ -136,7 +157,12 @@ namespace
             for (int panel = 0; panel < 8; ++panel)
                 batch_->DrawString(*font_, labels[panel], Vector2(
                     static_cast<float>((panel % 4) * full.getWidthProperty() / 4 + 8),
-                    static_cast<float>((panel / 4) * full.getHeightProperty() / 2 + 8)), Color::White);
+                    static_cast<float>((panel / 4) * rowHeight + 8)), Color::White);
+            batch_->DrawString(*font_, "Spot: 6/9 PCF", Vector2(8, static_cast<float>(rowHeight * 2 + 8)),
+                               Color::White);
+            batch_->DrawString(*font_, "Spot: mid cone", Vector2(
+                static_cast<float>(full.getWidthProperty() / 2 + 8), static_cast<float>(rowHeight * 2 + 8)),
+                               Color::White);
             batch_->End();
             if (FramesDrawn() == 0)
             {
@@ -145,8 +171,9 @@ namespace
                 // attenuation is (1-(3/6)^4)^2/(1+3^2)=.087890625, with N dot L=1.
                 // Multiply by the light intensity4 and material diffuse, then add the floor (.08,.11,.10).
                 const Color lit(74, 64, 43), floor(20, 28, 26);
-                const std::array<Color, 8> expected{lit, floor, lit, floor, lit, floor, lit, floor};
-                const std::array<const char*, 8> checks{
+                const std::array<Color, 10> expected{lit, floor, lit, floor, lit, floor, lit, floor,
+                                                     Color(56, 52, 37), Color(34, 37, 30)};
+                const std::array<const char*, 10> checks{
                     "a point light without a cube contributes distance-attenuated diffuse light",
                     "the point distance cube removes direct light after the bone translation",
                     "point bias in normalized range units removes the authored shadow",
@@ -154,18 +181,27 @@ namespace
                     "an aligned spot without a map contributes its central diffuse light",
                     "the spot distance map removes direct light after the bone translation",
                     "spot bias in normalized range units removes the authored shadow",
-                    "a spot pointing away contributes nothing outside its cone"};
-                for (int panel = 0; panel < 8; ++panel)
+                    "a spot pointing away contributes nothing outside its cone",
+                    "the spot shadow kernel averages six lit samples out of nine",
+                    "the midpoint between the inner and outer cone cosines leaves one-quarter intensity"};
+                for (int panel = 0; panel < 10; ++panel)
+                {
+                    const bool focusedControl = panel >= 8;
+                    const int columns = focusedControl ? 2 : 4;
+                    const int column = focusedControl ? panel - 8 : panel % 4;
+                    const int row = focusedControl ? 2 : panel / 4;
+                    const int height = row == 2 ? pixels.Height() - rowHeight * 2 : rowHeight;
                     Context().Check(CnaDemos::Near(pixels.At(
-                        pixels.Width() * (2 * (panel % 4) + 1) / 8,
-                        pixels.Height() * (2 * (panel / 4) + 1) / 4), expected[panel], 1), checks[panel]);
+                        pixels.Width() * (2 * column + 1) / (2 * columns),
+                        row * rowHeight + height / 2), expected[panel], 1), checks[panel]);
+                }
             }
             Game::Draw(time);
         }
     private:
         std::unique_ptr<VertexBuffer> vertices_;
         std::unique_ptr<IndexBuffer> indices_;
-        std::unique_ptr<Texture2D> white_, shadow_;
+        std::unique_ptr<Texture2D> white_, shadow_, filteredShadow_;
         std::unique_ptr<TextureCube> cube_;
         std::unique_ptr<SkinnedEffect> effect_;
         std::unique_ptr<SpriteBatch> batch_;
@@ -176,7 +212,7 @@ CNA_DEMOS_GAME(PunctualShadowsDemo, {
     .id = "graphics.skinned_effect.punctual_shadows",
     .title = "Point and spot distance-map reception",
     .description = "Compares unshadowed point and spot lights with authored distance-map shadows, normalized bias, "
-                   "range exclusion and cone exclusion after a bone translation.",
+                   "range exclusion, a partial spot PCF kernel, and exact cone transition intensity after skinning.",
     .apis = {"SkinnedEffect::SetBoneTransforms", "TextureCube::SetData", "Texture2D::SetData",
              "Microsoft::Xna::Framework::Graphics::IShadowReceiverEXT::setPunctualLightEXT",
              "Microsoft::Xna::Framework::Graphics::PunctualLightEXT"},
@@ -186,6 +222,6 @@ CNA_DEMOS_GAME(PunctualShadowsDemo, {
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "EasyGL OPENGLES3/OPENGL33 stock light path only; other renderers explicitly skipped. "
-                    "Authored constant-distance maps; no shadow generation, all-face direction or seam proof, "
-                    "partial spot-kernel weights, cone-edge interpolation, punctual specular or other-renderer evidence.",
+                    "Authored distance maps; no shadow generation, all-face direction or seam proof, arbitrary spot-kernel "
+                    "patterns, punctual specular or other-renderer evidence.",
 })
