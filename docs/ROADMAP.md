@@ -10002,3 +10002,23 @@ object compiles without warnings in a `-j3` build, metadata remains668/0 and the
 CTest passes. Generated totals remain unchanged and Complete938 retains the older three-control
 result. Evidence:`/tmp/checkpoint-943-shader-*`. No compilation or pixel result is claimed.
 Continue the next coherent native public-header audit.
+
+## Focused944-native-unsupported-3d-policy
+
+The stable `graphics.device.supports_capability` workflow adds direct native evidence for
+`Unsupported3DGraphicsCallBehavior` and the GraphicsDevice setter/getter. It proves the fresh
+Throw default, immediate policy changes, invariant capability reporting, continued argument
+validation and restoration. On a renderer that reports no 3D it additionally requires Throw to
+refuse a valid volume and WarnAndStub to return a safe zero-reading Texture3D null object while
+logging the repeated creation once.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass all five applicable controls with stable stdout and
+empty stderr. Ten STUB runs consistently pass five of seven: Texture3D construction bypasses the
+capability refusal under WarnAndStub, but STUB inherits a null factory, so SetData throws and no
+warning is emitted. This is recorded as renderer-specific CNA-DEMOS-ISSUE-104. The warning-free
+incremental build uses `-j3` and the exact SOFTWARE CTest passes. Generated XNA/C totals remain
+303/329 types,2114/2326 members,674/753 fields and3078/3205 routes; the CNA-extension appendix now
+credits all three native names. Complete938 retains the older capability-only form of this stable
+ID. Evidence:`/tmp/checkpoint-944-unsupported3d/*`. Continue the next coherent public-header audit;
+other unsupported factories and draw paths remain separately dispositioned rather than inferred
+from this Texture3D result.

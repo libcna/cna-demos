@@ -3882,3 +3882,27 @@ SOFTWARE CTest passes. Generated totals remain303/329 types,2114/2326 members,67
 3078/3205 C routes because this surface is CNA-specific. Complete938 contains the older
 three-control form of this stable ID. Evidence:`/tmp/checkpoint-943-shader-*`. No CNA defect
 appeared.
+
+### Focused944 native unsupported-3D policy and STUB defect
+
+The stable `graphics.device.supports_capability` workflow now names
+`CNA::Unsupported3DGraphicsCallBehavior` and both GraphicsDevice policy members directly. Four
+portable controls prove the fresh `Throw` default, the immediate `WarnAndStub` round trip, an
+unchanged `ThreeD` capability answer, continued invalid-dimension refusal and restoration of the
+original policy. A renderer reporting no 3D receives three further controls: `Throw` must refuse a
+valid Texture3D, while `WarnAndStub` must provide a usable zero-reading volume null object and emit
+only one RENDER warning across two creations.
+
+SOFTWARE and OPENGLES3 each pass all five applicable controls in ten runs, with stable stdout
+SHA-256 `e0cef59accec93d66bbc0938db50c781d849da30b493dab8df410103ec17ecd2` and
+`de1d45804b6b0eabfa8d56e97ecce3dc37143eee6e74b6d389ce7d84775355c7`; stderr is empty. STUB
+repeats a stable5/7 result ten times: the default refusal works, but its inherited null
+`CreateTexture3D` result makes the first transfer throw and emits no policy warning. The demo names
+renderer-specific CNA-DEMOS-ISSUE-104 rather than hiding either failed assertion. The warning-free
+incremental build uses at most three jobs and the exact SOFTWARE CTest passes.
+
+Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes;
+the regenerated CNA-extension appendix now credits the enum and both policy members. Complete938
+retains this stable ID's older capability-only result. Evidence:
+`/tmp/checkpoint-944-unsupported3d/*`. No other unsupported factory/draw behavior, pixel result or
+visual quality is claimed.

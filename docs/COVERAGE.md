@@ -517,6 +517,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::ShaderLanguageEXT` -- graphics.device.capability_report
 - `CNA::ShaderStageEXT` -- graphics.device.capability_report, graphics.shader_effect.diagnostic_parser
 - `CNA::TargetPlatform` -- core.platform.host_identity
+- `CNA::Unsupported3DGraphicsCallBehavior` -- graphics.device.supports_capability
 - `CNA::UsesDescriptorBindingContractEXT` -- graphics.device.capability_report
 - `CNA::getCurrentDesktopOS` -- core.platform.host_identity
 - `CNA::getCurrentGraphicsBackendCategory` -- core.renderer.metadata
@@ -661,7 +662,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `GraphicsDevice::GetRendererLimitEXT` -- graphics.device.capability_report
 - `GraphicsDevice::GetRendererSurfaceFormatSupportEXT` -- graphics.device.capability_report
 - `GraphicsDevice::GetShaderDialectEXT` -- graphics.device.capability_report, graphics.shader_effect.toon_shading
+- `GraphicsDevice::GetUnsupported3DGraphicsCallBehavior` -- graphics.device.supports_capability
 - `GraphicsDevice::SetDisplayColorSpaceEXT` -- graphics.device.capability_report
+- `GraphicsDevice::SetUnsupported3DGraphicsCallBehavior` -- graphics.device.supports_capability
 - `GraphicsDevice::SupportsCapability` -- graphics.device.supports_capability
 - `GraphicsDevice::SupportsDisplayColorSpaceEXT` -- graphics.device.capability_report
 - `GraphicsDevice::SupportsRendererFeatureEXT` -- graphics.device.capability_report

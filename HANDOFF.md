@@ -325,6 +325,25 @@ Complete938 retains the earlier three-control form of this ID. Evidence:
 `/tmp/checkpoint-943-shader-*`. This is capability selection evidence, not shader compilation,
 pixels or visual inspection, and no CNA defect appeared.
 
+Focused **944-native-unsupported-3d-policy** extends the stable
+`graphics.device.supports_capability` workflow with the public
+`Unsupported3DGraphicsCallBehavior` type and both GraphicsDevice policy members. The portable
+controls prove the Throw default, setter/getter round trip, unchanged ThreeD capability, preserved
+invalid-dimension errors and restoration. A no-3D renderer must additionally refuse a valid volume
+under Throw, then provide a safe zero-reading Texture3D null object and one warning for two
+creations under WarnAndStub.
+
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass all five applicable controls with stable stdout
+hashes `e0cef59accec93d66bbc0938db50c781d849da30b493dab8df410103ec17ecd2` and
+`de1d45804b6b0eabfa8d56e97ecce3dc37143eee6e74b6d389ce7d84775355c7`; stderr is empty. Ten STUB
+runs stably pass5/7 and expose CNA-DEMOS-ISSUE-104: the Texture3D constructor returns with no
+renderer object, SetData throws, and no RENDER warning is delivered. The demo carries a STUB-only
+known-issue marker. The warning-free build uses at most three jobs and the exact SOFTWARE CTest
+passes. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205
+routes; Complete938 retains the older capability-only form of this ID. Evidence:
+`/tmp/checkpoint-944-unsupported3d/*`. Continue the next coherent public CNA header family; do not
+infer the remaining unsupported factory/draw contracts from this one Texture3D path.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -2433,7 +2452,9 @@ consumer surface: detailed features, numeric limits, format-usage masks, display
 safe unknowns and the matching English report. Focused942 closes the renderer-independent shader
 diagnostic value/parser/exception contract; the existing compiler demo retains live-driver
 evidence. Focused943 closes the ordinary shader dialect/language selection matrix, including
-stage-specific device support, invalid identities and the descriptor-binding helper. Continue the
+stage-specific device support, invalid identities and the descriptor-binding helper. Focused944
+adds direct native unsupported-3D policy evidence and records CNA-DEMOS-ISSUE-104 for STUB's
+missing warned Texture3D null object; do not infer other factory/draw paths from it. Continue the
 next coherent public CNA header family. The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame

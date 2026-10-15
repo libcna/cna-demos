@@ -15,6 +15,42 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-104 -- STUB does not provide the promised WarnAndStub Texture3D null object
+
+- **Area/API:** `CNA::Unsupported3DGraphicsCallBehavior`,
+  `GraphicsDevice::{Set,Get}Unsupported3DGraphicsCallBehavior`, and `Texture3D` on the STUB
+  renderer.
+- **Demo/reproduction:** run `graphics.device.supports_capability --automated --renderer STUB`.
+  The fresh HiDef device reports `GraphicsCapability::ThreeD == false` and the default `Throw`
+  policy correctly refuses a valid 1x1x1 volume. Select `WarnAndStub`, create two otherwise valid
+  1x1x1 Color volumes, upload one red texel to the first, read it back, and capture CNA warnings.
+- **Observed:** policy set/get, the unchanged capability answer and argument validation all work.
+  Both volume constructors return, but the first `SetData` throws `System::NotSupportedException`:
+  `Texture3D::SetDataPointerEXT: this graphics renderer creates no volume texture resource`.
+  No RENDER warning naming `CreateTexture3D` is emitted. The demo therefore has five passing and
+  two failing controls on STUB, reproduced byte-for-byte in ten runs with stdout SHA-256
+  `dce912aeca46cd7c617f6b234398a44f15fb60cf4d109ce1b62707e52a08bde9` and empty stderr.
+- **Expected/contract:** the public policy says `WarnAndStub` logs one warning per unsupported
+  renderer operation and returns usable no-op resources whose later SetData/GetData calls remain
+  safe. Two creations of the same unsupported operation should produce one RENDER warning; the
+  null object should accept the upload and return deterministic zero/transparent data.
+- **Cause observed in source:** `Texture3D` deliberately bypasses its capability refusal under
+  `WarnAndStub`, then asks the renderer for storage. STUB does not override `CreateTexture3D`, so
+  it inherits `IGraphicsRenderer`'s unconditional `nullptr` result. That path neither invokes
+  `HandleUnsupported3DCall` nor constructs `NoOpTexture3DRenderer`; the public wrapper survives
+  construction with a null renderer and refuses the first transfer.
+- **Controls/scope:** ten SOFTWARE and ten OPENGLES3/Xvfb runs pass all five applicable controls
+  with stable stdout hashes `e0cef59accec93d66bbc0938db50c781d849da30b493dab8df410103ec17ecd2`
+  and `de1d45804b6b0eabfa8d56e97ecce3dc37143eee6e74b6d389ce7d84775355c7`,
+  respectively, and empty stderr. This runtime claim is limited to Texture3D on STUB; other
+  unsupported factories and draws require their own audit.
+- **Evidence/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. Public contract and implementation excerpts are
+  `/tmp/checkpoint-944-unsupported3d/source.txt`, SHA-256
+  `42afcf412220b921f89ce61ce56f7bce194542bd66f94d1c71911f62e48d8c91`.
+  No CNA source was modified, no workaround was added, and no upstream message or visual-quality
+  claim was made.
+
 ### CNA-DEMOS-ISSUE-103 -- C content loaders discard canonical `ContentLoadException` identity
 
 - **Area/API:** the C exception-detail contract in `CNA/C/core.h` and the typed
