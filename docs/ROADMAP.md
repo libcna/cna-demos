@@ -9929,3 +9929,21 @@ passes. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fie
 routes because these are CNA extensions. Complete938 remains the full baseline. Evidence:
 `/tmp/checkpoint-939-logger-*`. Continue the next coherent native public-header audit without
 duplicating semantically identical wrappers or the already exhaustive C adapter.
+
+## Focused940-native-platform-capability-matrix
+
+New `core.platform.capability_matrix` adds the667th catalog ID and demonstrates the platform
+decision surface a portable Game consumes. It proves the Game-owned platform is the installed
+ambient instance with a nonempty implementation name; repeated capability reads return one cached
+object; all31 capability identities are unique, ordered and stably named; every focused platform
+query agrees with the cached aggregate; and the default aggregate safely reports every optional
+feature unsupported.
+
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass5/5 with byte-identical stdout SHA-256
+`77da04600192540017570b48c1f22bbb62fa42569818142b8b8de660bcfa604f` and empty stderr. The changed
+object compiles without warnings in a `-j3` build, metadata is667/0 and the exact SOFTWARE CTest
+passes. XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 routes;
+Complete938's older full
+reports correctly mark the new ID absent. Evidence:`/tmp/checkpoint-940-platform-*`. Individual
+feature behavior remains with its focused demos or platform/manual disposition. Continue the next
+coherent native public-header family.

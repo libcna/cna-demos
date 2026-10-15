@@ -3789,3 +3789,25 @@ SOFTWARE CTest passes, the warning-free build uses at most three jobs and metada
 Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes because
 the Logger family is CNA-specific. Complete938 remains the complete-runtime baseline. Evidence:
 `/tmp/checkpoint-939-logger-*`. No CNA defect appeared.
+
+### Focused940 native platform capability matrix
+
+New `core.platform.capability_matrix` adds the667th stable ID. Five controls demonstrate the
+ordinary platform capability decision surface: the Game-owned platform is also the installed
+ambient platform and has a name; the Game caches one `PlatformCapabilities` object; all31
+`PlatformCapability` values are unique, in declaration order and have stable names; every focused
+`IPlatform::Supports` answer agrees with the cached aggregate; and a default aggregate reports all
+optional capabilities unsupported.
+
+This establishes how an application discovers and caches platform support without pretending that
+one Xvfb host exercises every advertised feature. Clipboard, text input, devices, power, dialogs,
+tray, camera, windows and renderer services keep their own behavioral evidence and environment or
+manual limits. The matrix does not justify one new demo per Boolean field.
+
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass5/5 with byte-identical stdout SHA-256
+`77da04600192540017570b48c1f22bbb62fa42569818142b8b8de660bcfa604f` and empty stderr. The changed
+object compiles without warnings in a build using at most three jobs, metadata is667/0 and the exact
+SOFTWARE CTest passes.
+Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes because
+this family is CNA-specific. Complete938 remains the full baseline and correctly leaves the new ID
+absent. Evidence:`/tmp/checkpoint-940-platform-*`. No CNA defect appeared.

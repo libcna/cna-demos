@@ -68,12 +68,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-666 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core5,
+667 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core6,
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform3 and c_api177. Kinds are170 console,294 game and202 standalone;
-630 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete938's full runtime reports and includes all666
-catalog IDs in both renderer suites.
+diagnostics6, cnaext4, platform3 and c_api177. Kinds are170 console,295 game and202 standalone;
+631 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses Complete938's full runtime reports; they include all666
+baseline IDs in both renderer suites and correctly mark the post-baseline capability-matrix ID
+absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete938's
 full runtime reports are the baseline inputs for the666-ID catalog. Selected semantic
@@ -86,7 +87,8 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete938 exercises all3078 credited C routes and all666 catalog IDs in both full smoke suites.
+Complete938 exercises all3078 credited C routes and all666 baseline catalog IDs in both full smoke
+suites.
 It absorbs focused893-937, including the Video IDs, all public field-value batches through the
 dispositioned Graphics namespace, the complete diagnostics workflow and the canonical C exception
 identity checks through renderer selection/content loading plus the direct ContentReader math,
@@ -253,6 +255,22 @@ warning-free incremental build uses `-j3`; metadata remains666/0 and the exact S
 passes. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205
 routes; the newly named APIs are CNA extensions outside that inventory. Complete938 remains the
 full runtime baseline. Evidence:`/tmp/checkpoint-939-logger-*`. No CNA defect appeared.
+
+Focused **940-native-platform-capability-matrix** adds the667th catalog ID,
+`core.platform.capability_matrix`. Five controls tie the Game-owned platform to the installed
+ambient instance, prove the Game returns one cached capability object, enumerate all31 unique
+capabilities in declaration order with stable names, compare every focused `IPlatform::Supports`
+answer with the cached aggregate and prove a default aggregate safely advertises nothing. This is
+the consumer decision surface; individual clipboard, input, display, camera and other feature
+behavior remains in its focused demos or manual/platform-specific dispositions.
+
+Ten SOFTWARE/Xvfb and ten OPENGLES3/Xvfb runs pass5/5 with byte-identical stdout SHA-256
+`77da04600192540017570b48c1f22bbb62fa42569818142b8b8de660bcfa604f` and empty stderr. The changed
+object compiles without warnings in a `-j3` build; metadata is667/0 and the exact SOFTWARE CTest
+passes. Generated XNA/C totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205
+routes. Complete938
+remains the full runtime baseline, so its reports correctly mark this new ID absent. Evidence:
+`/tmp/checkpoint-940-platform-*`. No physical feature availability or CNA defect is claimed.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -2355,9 +2373,10 @@ absorbs Focused934-937 after Complete933. The native renderer identity/category/
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds
 the EXPERIMENT threshold, general conditional/category delivery and a representative experimental
-conditional wrapper to the existing sink, severity and `WarnIf` workflows. Continue with the next
-coherent public CNA header family, preferring an existing workflow when it already owns the
-behavior. The diagnostics
+conditional wrapper to the existing sink, severity and `WarnIf` workflows. Focused940 adds the
+Game-owned platform capability decision surface: all31 stable names, cached aggregate, focused
+queries and safe aggregate defaults. Continue with the next coherent public CNA header family,
+preferring an existing workflow when it already owns the behavior. The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered

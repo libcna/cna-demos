@@ -6,7 +6,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**666 demos** in 18 categories. Kinds: console 170, game 294, standalone 202. Automation: automated 630, manual 3, smoke-only 33.
+**667 demos** in 18 categories. Kinds: console 170, game 295, standalone 202. Automation: automated 631, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -14,7 +14,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 46 | 46 | 0 | 0 | 33 / 0 / 13 / 0 / 0 | 33 / 0 / 13 / 0 / 0 |
-| core | 5 | 5 | 0 | 0 | 5 / 0 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
+| core | 6 | 6 | 0 | 0 | 5 / 0 / 0 / 0 / 1 | 5 / 0 / 0 / 0 / 1 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
 | diagnostics | 6 | 6 | 0 | 0 | 2 / 4 / 0 / 0 / 0 | 2 / 4 / 0 / 0 / 0 |
@@ -31,6 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `core.platform.capability_matrix`.
+- OPENGLES3: absent from report: `core.platform.capability_matrix`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -461,8 +463,17 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Logger::Trace` -- core.logger.minimum_level
 - `CNA::Logger::Warn` -- core.logger.custom_sink
 - `CNA::Logger::WarnIf` -- core.logger.minimum_level
+- `CNA::Platform::AllCapabilities` -- core.platform.capability_matrix
+- `CNA::Platform::GetCurrentPlatform` -- core.platform.capability_matrix
+- `CNA::Platform::HasCurrentPlatform` -- core.platform.capability_matrix
+- `CNA::Platform::IPlatform::GetName` -- core.platform.capability_matrix
+- `CNA::Platform::IPlatform::Supports` -- core.platform.capability_matrix
 - `CNA::Platform::NativeWindowHandle` -- platform.window.native_handle
 - `CNA::Platform::NativeWindowSystem` -- platform.window.native_handle
+- `CNA::Platform::PlatformCapabilities` -- core.platform.capability_matrix
+- `CNA::Platform::PlatformCapability` -- core.platform.capability_matrix
+- `CNA::Platform::Supports` -- core.platform.capability_matrix
+- `CNA::Platform::ToString` -- core.platform.capability_matrix
 - `CNA::Platform::TryGetCocoa` -- platform.window.native_handle
 - `CNA::Platform::TryGetWayland` -- platform.window.native_handle
 - `CNA::Platform::TryGetWin32` -- platform.window.native_handle
@@ -525,6 +536,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `FileAccess` -- storage.storage_container.file_modes
 - `FileDropEventArgsEXT::Files` -- game.window.file_drop
 - `FileMode` -- storage.storage_container.file_modes
+- `Game::GetPlatformCapabilitiesEXT` -- core.platform.capability_matrix
+- `Game::GetPlatformEXT` -- core.platform.capability_matrix
 - `Game::RunFrameEXT` -- game.lifecycle.host_driven_loop
 - `GameComponentCollection::Add` -- game.components.game_component
 - `GameComponentCollection::Contains` -- game.components.collection_events
