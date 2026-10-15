@@ -9081,3 +9081,24 @@ repetitions, and the clean incremental build uses at most three jobs. No CNA def
 coverage-count change, playback, screenshot or visual-quality claim is made. Evidence:
 `/tmp/checkpoint-888-*`. Continue the public MediaLibrary audit with supported audio formats, tag
 fallbacks and recursive/symlink indexing.
+
+## Focused889-public-music-format-index
+
+New standalone `media.media_library.format_index` exercises all six accepted MediaLibrary audio
+extensions through public Song and group views. Its five new original 150 ms assets use Ogg/OGA
+Vorbis comments, ID3v2 MP3, native-FLAC comments and Ogg-Opus tags; the existing WAV is placed under
+a nested Artist/Album path for fallback metadata. Two generator runs reproduce all new hashes and
+leave the prior four FLAC assets byte-identical. Nine runtime controls prove exact public titles,
+tracks1-5, shared group identity across four tag layouts, first-seen case normalization, Vorbis
+rating80->8, a distinct unrated peer, exact WAV path fallback, two artists/two albums/one genre and
+positive import-time durations. Valid audio bytes under AAC, M4A and BIN extensions stay absent,
+while a self-referential directory symlink terminates without duplicate Songs.
+
+Both direct renderer-labelled runs pass9/9 with byte-identical stdout and stderr; stderr contains
+the same eighteen reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes20
+repetitions. The clean incremental build uses at most three jobs, metadata is657/0, both validator
+self-test suites pass, and generated coverage remains302/329 types,2114/2326 members,169/753 fields
+and3078/3205 C routes. Complete871's older reports correctly mark the two post-baseline Media IDs
+absent. Evidence:`/tmp/checkpoint-889-*`. No CNA defect, playback, listening, malformed-tag,
+screenshot or other-platform claim is made. Audit the public MP3 APIC embedded-art path next, then
+partial/malformed tag fallback and external-directory symlink policy.

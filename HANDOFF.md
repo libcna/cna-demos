@@ -67,13 +67,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-656 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
-content46, input40, storage7, media14, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,292 game and200 standalone;
-620 are automated,33 smoke-only and3 manual. Every declared category has demos.
+657 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core3,
+content46, input40, storage7, media15, gamer services19, net14, devices5, phone1, design4,
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,292 game and201 standalone;
+621 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses complete871's runtime reports for its655-demo baseline;
-Focused887's new playlist ID is explicitly absent there but has separate direct and repeated CTest
-evidence. The surface totals remain302/329 XNA types,2114/2326 XNA members,169/753 fields and
+Focused887 and Focused889's two new IDs are explicitly absent there but have separate direct and
+repeated CTest evidence. The surface totals remain302/329 XNA types,2114/2326 XNA members,169/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -225,6 +225,12 @@ with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. 
 passes with `CNA_GRAPHICS_RENDERER=OPENGLES3`, no Xvfb-backed claim is made. Regenerated coverage
 correctly marks the new ID absent from Complete871's older reports. A new complete checkpoint is
 therefore still due after enough focused work or before the next handoff.
+
+Focused889 adds the657th source/catalog ID, `media.media_library.format_index`. Its generated five-
+format fixture corpus is reproducible byte-for-byte and leaves the older FLAC fixtures unchanged.
+Both direct renderer-labelled processes pass9/9 with byte-identical streams, the exact SOFTWARE
+CTest passes20 repetitions, metadata validates657/0 and the build uses `-j3`. Complete871's reports
+now correctly mark the two post-baseline IDs absent.
 
 Complete859 comparisons report no ID changes, intended check-count growth in six in-process demos
 and exactly one reviewed status/known-issue change: `math.curve.key_collection` adds the sole
@@ -2007,11 +2013,12 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete871 remains the authoritative655-demo full-runtime baseline; Focused887
-adds one separately validated playlist demo and Focused888 completes album-art filename selection.
-Continue the semantic Media audit with MediaLibrary indexing of supported audio formats, tag
-fallbacks and recursive/symlink scanning. Inspect implementation and current fixtures first; add
-one coherent public workflow or extend `music_index` only for behavior that is observably distinct.
-Run a new656-demo full checkpoint before relying on runtime-backed coverage for the new ID.
+and Focused889 add two separately validated MediaLibrary demos, while Focused888 completes folder-
+art filename selection. Continue the semantic Media audit with the untested MP3 ID3v2 APIC embedded-
+art path through public Album.GetAlbumArt/GetThumbnail, preferably by extending the existing
+`album_art` workflow and deterministic generator. Then classify partial/malformed tag fallback and
+external-directory symlink policy. Run a new657-demo full checkpoint before relying on runtime-
+backed coverage for the two new IDs.
 The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
@@ -4637,6 +4644,27 @@ reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes20 repetition
 incremental build uses `-j3`; no CNA defect, new demo, metadata/API count, playback, screenshot or
 visual-quality claim is added. Evidence is under `/tmp/checkpoint-888-*`. Continue with public
 MediaLibrary audio-format, missing-tag and recursive/symlink indexing behavior.
+
+### Focused889-public-music-format-index
+
+New standalone `media.media_library.format_index` supplies one coherent public workflow for the
+library's six accepted extensions. Five new original 150 ms assets exercise Ogg Vorbis, OGA alias,
+ID3v2 MP3, native FLAC and Ogg Opus tags; an existing WAV is copied into a nested Artist/Album path
+to exercise filename fallback. The generator reproduces all five new hashes across two runs and
+leaves the prior four FLAC hashes exact. Runtime checks establish six Songs, public names, tracks
+1-5, four tag-layout routes, shared normalized Artist/Album/Genre identity, case-variant first-seen
+artist spelling, Vorbis rating80->Song rating8, unrated state, exact WAV path fallback, two/two/one
+group counts and positive duration for all six formats. AAC, M4A and BIN spellings over valid audio
+bytes are ignored; a self-referential directory symlink terminates without adding duplicates.
+
+Both direct renderer-labelled runs pass9/9 with byte-identical stdout and the same eighteen
+reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes20 repetitions. The warning-free
+incremental build uses `-j3`, metadata validates657/0, both validator self-test suites pass and
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Complete871's
+older reports correctly mark this and Focused887's playlist ID absent. Evidence is under
+`/tmp/checkpoint-889-*`. No CNA defect, playback, listening, malformed-tag, screenshot or other-
+platform validation is claimed. Audit the MP3 APIC embedded-art branch next, then partial/malformed
+tag fallback and external-directory symlink policy.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
