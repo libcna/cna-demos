@@ -406,10 +406,25 @@ namespace
         reopenedPictures->Dispose();
         rootAlbums->Dispose();
         check(reopenedPictures->getIsDisposedProperty() && rootAlbums->getIsDisposedProperty() &&
-                  reopenedPictures->getCountProperty() == 0 && rootAlbums->getCountProperty() == 0 &&
                   indexedPicture->getNameProperty() == "Panorama.png" &&
                   reopenedSavedAlbum->getNameProperty() == "Saved Pictures",
-              "collection disposal is idempotent and clears each non-owning view without destroying its objects");
+              "collection disposal is idempotent and does not destroy its borrowed objects");
+
+        int pictureCollectionDisposalRefusals = 0;
+        pictureCollectionDisposalRefusals +=
+            ThrowsObjectDisposed([&] { (void)reopenedPictures->getCountProperty(); });
+        pictureCollectionDisposalRefusals +=
+            ThrowsObjectDisposed([&] { (void)(*reopenedPictures)[0]; });
+        check(pictureCollectionDisposalRefusals == 2,
+              "a disposed PictureCollection refuses Count and Item (CNA-DEMOS-ISSUE-098)");
+
+        int albumCollectionDisposalRefusals = 0;
+        albumCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)rootAlbums->getCountProperty(); });
+        albumCollectionDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*rootAlbums)[0]; });
+        check(albumCollectionDisposalRefusals == 2,
+              "a disposed PictureAlbumCollection refuses Count and Item (CNA-DEMOS-ISSUE-098)");
+        std::cout << "Disposed collection refusals: Picture " << pictureCollectionDisposalRefusals
+                  << "/2, PictureAlbum " << albumCollectionDisposalRefusals << "/2\n";
         std::cout << (passed ? "PASSED" : "FAILED") << " (" << checks << " checks)\n";
         return passed ? 0 : 1;
 #endif

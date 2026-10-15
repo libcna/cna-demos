@@ -4566,6 +4566,31 @@ and no playback, screenshot or visual inspection is claimed. Complete871 remains
 baseline. Audit Song and the two picture collection types for the same missing disposal guards
 next, then continue to the next semantic Media gap.
 
+### Focused886-remaining-media-disposal-guards
+
+The installed Windows XNA 4.0 assembly confirms the remaining disposal guards: Song ordinary
+properties/value operations and PictureCollection/PictureAlbumCollection Count, Item and
+GetEnumerator all call ThrowIfDisposed. `media.song.properties` now retains its seven established
+metadata/identity controls, proves repeated disposal and peer isolation, and invokes ten properties,
+both Equals overloads, both operators, hash and text. Pinned CNA reports 0/16 exact refusals because
+Song only sets its flag. The save-picture workflow replaces its stale cleared-count assertion with
+retained-child lifetime evidence and two Count/Item groups. Both picture collections report 0/2:
+Count returns zero and Item throws the wrong bounds exception. The CLR GetEnumerator members are
+source-dispositioned because CNA exposes separate CNAEXT C++ ranges. Both stable demos name
+ISSUE-098; no new ID was added.
+
+SOFTWARE and OPENGLES3-labelled streams are byte-identical for both workflows. Song stderr is empty.
+The picture workflow retains its two reviewed TitleContainer INFO lines and now executes36 controls:
+31 pass, its established ISSUE-041 assertion fails, and four grouped ISSUE-098 assertions fail.
+Each exact known-issue SOFTWARE CTest passes20 consecutive runs. The warning-free full incremental
+build uses `-j3`, metadata validates655/0, both validator self-test suites pass, and coverage
+regenerates byte-identically against the Complete871 reports at302/329 types,2114/2326 members,
+169/753 fields and3078/3205 C routes. Evidence is under `/tmp/checkpoint-886-*`; reference IL is
+`/tmp/checkpoint-886-xna-media-methods.txt`. No CNA source was modified and no playback, screenshot
+or visual inspection is claimed. Complete871 remains the full baseline. The media disposal family
+is now semantically audited; select the next open Media behavior from COVERAGE_AUDIT rather than
+adding disposal variants.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

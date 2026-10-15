@@ -9019,3 +9019,25 @@ coverage remains 302/329 types, 2114/2326 members, 169/753 fields and 3078/3205 
 `38e7093f52d7474bbc6256906519781a1210d7da50a1c667b52716fcf49ca130`. No CNA source was modified
 and no playback, screenshot or visual inspection is claimed. Audit Song and the two picture
 collection types for the same missing guard next.
+
+## Focused886-remaining-media-disposal-guards
+
+The final untested public media disposal families now have exact Windows XNA 4.0 reference evidence
+and runtime probes. `media.song.properties` keeps its seven passing metadata and identity controls,
+proves repeated disposal and live peers, then requires ObjectDisposedException from ten ordinary
+properties, both Equals overloads, both operators, hash and text. Pinned CNA reports 0/16 because
+Song only sets its flag. The save-picture workflow replaces its stale cleared-count expectation
+with retained-child lifetime evidence, then checks Count and Item on disposed PictureCollection and
+PictureAlbumCollection. Both report 0/2: Count returns zero and Item takes the bounds path. The CLR
+GetEnumerator members are source-dispositioned because CNA's C++ surface uses separate CNAEXT range
+adapters. All three families extend ISSUE-098 without new demo IDs.
+
+Both workflows are byte-identical across SOFTWARE and OPENGLES3 labels. Song stderr is empty; the
+picture workflow retains its two reviewed TitleContainer INFO lines and executes 31 passing
+controls, four grouped ISSUE-098 failures and its separate ISSUE-041 failure. Each exact known-issue
+SOFTWARE CTest passes 20 repetitions. The warning-free full incremental `-j3` build, metadata
+655/0, both validator self-test suites and byte-identical coverage regeneration against the
+Complete871 reports pass; counts remain 302/329 types, 2114/2326 members, 169/753 fields and
+3078/3205 C routes. Evidence: `/tmp/checkpoint-886-*`. No CNA source was modified and no playback,
+screenshot or visual inspection is claimed. Return to the remaining semantic Media behavior table
+after this now-complete disposal family audit.

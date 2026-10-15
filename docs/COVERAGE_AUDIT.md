@@ -1144,6 +1144,7 @@ visual or GPU validation.
 | SavePicture byte-vector and Stream overloads | One original 640x320 PNG and its generated thumbnail save successfully. The normal memory stream is consumed. A separate valid 13-byte short-read stream exposes ISSUE-041; the independent control reader proves its full bytes are available. No workaround hides the failing CNA call. |
 | Pictures / SavedPictures / RootPictureAlbum and child album views | Empty initial collections, new Saved Pictures child, its parent identity and counts across library/album views are checked. A fresh library reindexes both saved files. PictureCollection.Item exposes the two names in either filesystem order and PictureAlbumCollection.Item exposes their shared Saved Pictures parent. The workflow then writes an ordinary `Trips/Day One` hierarchy and a fresh library exposes both levels with exact parent links. Each album contains only its own decoded 640x320 picture, whose Album points back to that node and whose owned GetImage stream matches the original PNG. Filesystem-dependent sibling ordering is deliberately not assumed. |
 | Picture Name / Width / Height / Date / Album and token identity | The immediate saved record keeps authored filename/dimensions, the borrowed parent, and a Date bounded by the SavePicture call. Its CNAEXT path token resolves the independent reopened Picture through public MediaLibrary.GetPictureFromToken; an unknown token returns null and the indexed Date is populated. Original/reopened Pictures establish path-based typed/object equality, operators, equal hashes and name text while Preview is unequal. The corresponding Saved Pictures albums establish the same contracts by path and reject a Picture object. Repeated disposal marks only the selected views, but zero of twelve tested Picture operations and zero of nine PictureAlbum operations then produce XNA's required ObjectDisposedException; the two grouped failures expose ISSUE-098. |
+| Picture collection disposal | Repeated disposal marks populated PictureCollection and PictureAlbumCollection views without destroying retained Picture/PictureAlbum entries. Count and Item must then throw ObjectDisposedException; each collection instead reports 0/2 exact refusals because CNA clears the view, returns a zero count and takes the bounds-exception path for Item. Windows XNA also guards GetEnumerator; the CLR member remains source-dispositioned because CNA exposes separate CNAEXT range adapters. These two grouped failures extend ISSUE-098. Evidence: `/tmp/checkpoint-886-picture-collections-*`. |
 | GetImage / GetThumbnail ownership and content | Caller-owned streams use unique_ptr; full image bytes match exactly and the large panorama's thumbnail is smaller with the same 2:1 aspect. Current 128x64 output is observed, not assumed as a universal contract. A fresh indexed 128x64 replacement then returns the exact original PNG bytes from two distinct caller-owned thumbnail streams, proving the no-upscale/no-reencode branch and per-call ownership. The demo next overwrites that indexed file through its public path token; failed thumbnail decoding returns a stream over the exact current corrupt bytes, closing the fallback branch without treating them as an image. Header contradiction is ISSUE-040. CNA deliberately has no thumbnail cache. |
 | Stream positions, premature EOF, unknown length | Source audit at the pinned CNA d23e139de shows the overload allocates the stream's total Length, performs one Read from the current position and ignores its returned count. A nonzero position necessarily produces the same legal short-read mechanism already isolated by ISSUE-041, while premature EOF produces the same ignored-count/zero-padding defect with a stale or contradictory advertised Length; duplicate failing controls would not establish distinct behavior. SharpRuntime Stream makes getLengthProperty pure virtual and defines it as total bytes, so an "unknown length" is not a supported value. A subclass may throw NotSupportedException, which SavePicture naturally propagates before creating a Picture; that capability refusal does not merit a media demo. Later CNA commit a83673fc5 loops to EOF and resizes to received bytes, but this project's validated baseline remains pinned before that fix. |
 | MediaSource selection, tokens, same-name saves and disposal | `media_library.collections` now adopts every raw pointer returned by GetAvailableMediaSources, verifies each actual record has matching nonempty Name/ToString, and constructs its MediaLibrary from the returned Local Device record. The library exposes a distinct copied MediaSource with the same name/type/text, while its existing IsDisposed=false check is now credited. Both focused runs used fresh empty XDG music/picture roots and found zero items, leaving both directories empty. This establishes CNA's one returned desktop source and copy ownership, not wider device enumeration. Picture token lookup is demonstrated by save_picture. Saving `Panorama.png` again with the valid thumbnail bytes leaves the physical file count unchanged but appends a distinct live Picture view. The two views compare equal and share a token because identity is path-based, while each retains its creation-time dimensions. A fresh library resolves that token to one 128x64 record whose stream contains the exact replacement bytes. music_index separately proves that repeated MediaLibrary::Dispose sets IsDisposed without cascading into its borrowed graph. Evidence: `/tmp/checkpoint-645-media-source-*`, `/tmp/checkpoint-646-picture-values-*`, `/tmp/checkpoint-877-*`. |
@@ -1151,14 +1152,16 @@ visual or GPU validation.
 
 ### Song caller-created value identity
 
-`media.song.properties` now creates three caller-owned records: two display names for the same
-file and the same display name for two different files. Typed and System::Object equality, both
-operators and equal hashes establish that Song identity uses the retained file handle rather than
-the display name; null object comparison is false; and ToString returns each independent display
-name. Its original metadata defaults and explicit Dispose/IsDisposed checks remain. SOFTWARE and
-OPENGLES3 pass7/7 with byte-identical stdout and empty stderr, and the focused SOFTWARE CTest
-passes. This is path/value metadata behavior; neither file is played and no decoded or audible
-identity is inferred. Evidence: `/tmp/checkpoint-642-song-values-*`.
+`media.song.properties` creates three caller-owned records: two display names for the same file and
+the same display name for two different files. Typed and System::Object equality, both operators
+and equal hashes establish that Song identity uses the retained file handle rather than the display
+name; null object comparison is false; and ToString returns each independent display name. After
+idempotent disposal and peer-isolation controls, all ten ordinary properties, both Equals
+overloads, both operators, hash and text remain usable. The resulting `0/16` exact refusals expose
+ISSUE-098 while the original seven controls remain passing. Both renderer-labelled streams are
+byte-identical and stderr is empty. This is path/value/lifetime behavior; neither file is played
+and no decoded or audible identity is inferred. Evidence: `/tmp/checkpoint-642-song-values-*` and
+`/tmp/checkpoint-886-song-disposal-*`.
 
 ### MediaLibrary tagged music and shared collection views
 
@@ -2983,3 +2986,16 @@ controls and ten grouped ISSUE-098 failures with byte-identical streams. The CLR
 member is source-dispositioned because CNA exposes only its separate CNAEXT range adapters.
 Evidence: `/tmp/checkpoint-885-*`; reference assembly SHA-256
 `38e7093f52d7474bbc6256906519781a1210d7da50a1c667b52716fcf49ca130`.
+
+### Focused886 remaining media disposal guards
+
+The Windows XNA 4.0 reference IL closes the remaining public media disposal-guard question for
+Song, PictureCollection and PictureAlbumCollection. `media.song.properties` retains its seven
+metadata/identity controls, proves repeated disposal and peer isolation, then calls all sixteen
+ordinary Song operations. Pinned CNA reports 0/16 exact refusals, so the stable demo becomes an
+expected ISSUE-098 failure. The save-picture workflow replaces its stale zero-count expectation
+with retained-child lifetime evidence and two Count/Item groups; both picture collections report
+0/2. It now has 31 passing controls, four grouped ISSUE-098 failures and its separate ISSUE-041
+failure. Both workflows are byte-identical across renderer labels; Song stderr is empty and the
+picture workflow retains its two reviewed INFO lines. CLR GetEnumerator routes are source-
+dispositioned because CNA exposes separate CNAEXT ranges. Evidence: `/tmp/checkpoint-886-*`.

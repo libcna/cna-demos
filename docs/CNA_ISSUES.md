@@ -17,10 +17,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-098 -- Disposed media library types do not enforce their access guards
 
-- **Area/API:** `Picture`, `PictureAlbum`, `Album`, `Artist`, `Genre`, `Playlist`, the five music
-  collection types and `MediaLibrary`; their ordinary post-disposal operations.
-- **Demos:** `media.media_library.save_picture` and `media.media_library.music_index`. Both singular
-  `knownIssue` fields name this issue; the pinned save-picture baseline also retains ISSUE-041.
+- **Area/API:** `Picture`, `PictureAlbum`, `Song`, `Album`, `Artist`, `Genre`, `Playlist`, all seven
+  media collection types and `MediaLibrary`; their ordinary post-disposal operations.
+- **Demos:** `media.media_library.save_picture`, `media.media_library.music_index` and
+  `media.song.properties`. Their singular `knownIssue` fields name this issue; the pinned
+  save-picture baseline also retains ISSUE-041.
 - **Reproduction:** create and cross-index a real PNG in verified private Linux/XDG folders, retain
   live peer objects for comparisons, then dispose one Picture and its containing PictureAlbum
   twice. First prove the flags are set idempotently and sibling objects remain live. Invoke twelve
@@ -41,6 +42,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   library properties, GetPictureFromToken and both SavePicture overloads. The picture operations
   use one-byte inputs and the already verified private XDG root so an unguarded implementation has
   deterministic, isolated side effects.
+- **Remaining-family follow-up:** dispose a caller-created Song twice while retaining two live peer
+  Songs, then invoke all ten ordinary properties plus both Equals overloads, both operators, hash
+  and text. The picture workflow similarly disposes populated PictureCollection and
+  PictureAlbumCollection views twice, retains their borrowed entries, then invokes Count and Item.
 - **Observed:** both renderer-labelled runs report `Picture 0/12, PictureAlbum 0/9`; every grouped
   refusal assertion fails. The other 31 of 34 controls pass except the separately established
   ISSUE-041 short-read assertion, for three total failures. Streams returned by the disposed
@@ -53,24 +58,29 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   token lookup executes and both picture saves complete. The retained child graph correctly stays
   live. Together with the four entity groups, `music_index` has 29 passing controls and ten grouped
   ISSUE-098 failures without changing its stable ID.
+- **Remaining-family observation:** Song reports `0/16`; every property and value operation remains
+  usable. Both picture collections report `0/2`: Count returns zero and Item takes the wrong bounds
+  path. The save-picture workflow keeps 31 passing controls and now has four grouped ISSUE-098
+  failures in addition to the separate ISSUE-041 failure.
 - **Expected/reference:** Windows XNA 4.0 checks disposal before Count, Item and GetEnumerator on
   every collection, before all nine MediaLibrary properties and before each of its three picture
-  methods. Entity ordinary members have the same rule. Only IsDisposed itself remains queryable;
-  repeated Dispose stays safe, and disposing the library must not cascade into previously obtained
-  child views. This was checked directly in the installed Windows assembly whose SHA-256 is
+  methods. All seven entity types' ordinary members have the same rule. Only IsDisposed itself
+  remains queryable; repeated Dispose stays safe, and disposing the library must not cascade into
+  previously obtained child views. This was checked directly in the installed Windows assembly
+  whose SHA-256 is
   `38e7093f52d7474bbc6256906519781a1210d7da50a1c667b52716fcf49ca130`.
-- **Cause observed in source:** all six CNA entities and MediaLibrary only set `isDisposed_ = true`;
-  the five collections clear their pointer arrays and set the flag. None of their ordinary methods
+- **Cause observed in source:** all seven CNA entities and MediaLibrary only set `isDisposed_ = true`;
+  the seven collections clear their pointer arrays and set the flag. None of their ordinary methods
   checks that flag. The non-owning implementation explains the retained child lifetime but does
   not satisfy the public post-disposal operation contract.
 - **Scope/status:** open against clean isolated CNA
   `d23e139de9e5c15511b6be745de290896a69ee37`; the relevant implementation files are unchanged at
-  the later sibling checkout observed during this audit. Both demos' renderer streams are
-  byte-identical; each exact known-issue SOFTWARE CTest passes20 consecutive runs, and all three
+  the later sibling checkout observed during this audit. All three demos' renderer streams are
+  byte-identical; each exact known-issue SOFTWARE CTest passes20 consecutive runs, and all four
   checkpoints have clean full incremental builds and standard validators. Evidence:
-  `/tmp/checkpoint-881-*`, `/tmp/checkpoint-884-*` and `/tmp/checkpoint-885-*`. No CNA source was
-  modified and no upstream message was sent. This is exact exception/state/stream-lifetime
-  evidence; no screenshot or visual judgment is involved.
+  `/tmp/checkpoint-881-*`, `/tmp/checkpoint-884-*`, `/tmp/checkpoint-885-*` and
+  `/tmp/checkpoint-886-*`. No CNA source was modified and no upstream message was sent. This is
+  exact exception/state/stream-lifetime evidence; no screenshot or visual judgment is involved.
 
 ### CNA-DEMOS-ISSUE-097 -- Nearby CurveKey replacement can violate collection ordering
 

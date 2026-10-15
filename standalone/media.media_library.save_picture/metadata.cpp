@@ -13,7 +13,8 @@ CNA_DEMOS_STANDALONE({
              "Picture::ToString", "PictureAlbum::Name", "PictureAlbum::Parent", "PictureAlbum::Pictures",
              "PictureAlbum::Albums", "PictureAlbum::Equals", "PictureAlbum::GetHashCode",
              "PictureAlbum::op_Equality", "PictureAlbum::op_Inequality", "PictureAlbum::ToString",
-             "PictureAlbumCollection::Count", "PictureAlbumCollection::Item", "PictureCollection::Item",
+             "PictureAlbumCollection::Count", "PictureAlbumCollection::Item", "PictureCollection::Count",
+             "PictureCollection::Item",
              "MediaLibrary::GetPictureFromToken", "Picture::Dispose", "Picture::IsDisposed",
              "PictureAlbum::Dispose", "PictureAlbum::IsDisposed", "PictureCollection::Dispose",
              "PictureCollection::IsDisposed", "PictureAlbumCollection::Dispose",
@@ -24,7 +25,7 @@ CNA_DEMOS_STANDALONE({
     .restrictions = "Standalone program initializes private XDG paths before CNA/SDL first use. Linux/XDG resolution is required; "
                     "otherwise skipped before accessing a library. "
                     "Private generated files only; nested-album, same-name replacement and disposal behavior is observed before library destruction. "
-                    "Short reads expose CNA-DEMOS-ISSUE-041 on the pinned CNA; disposed Picture/PictureAlbum operations expose CNA-DEMOS-ISSUE-098. Other platforms are untested. "
+                    "Short reads expose CNA-DEMOS-ISSUE-041 on the pinned CNA; disposed Picture/PictureAlbum and picture-collection operations expose CNA-DEMOS-ISSUE-098. Other platforms are untested. "
                     "GetThumbnail's no-resize comment is stale (CNA-DEMOS-ISSUE-040); the normal thumbnail checks pass.",
     .knownIssue = "CNA-DEMOS-ISSUE-098",
 })

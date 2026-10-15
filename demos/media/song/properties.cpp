@@ -6,12 +6,30 @@
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Media/Song.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Media;
 
 namespace
 {
+    template<typename Action>
+    bool ThrowsObjectDisposed(Action&& action)
+    {
+        try
+        {
+            action();
+        }
+        catch (const System::ObjectDisposedException&)
+        {
+            return true;
+        }
+        catch (...)
+        {
+        }
+        return false;
+    }
+
     void Properties(CnaDemos::DemoContext& ctx)
     {
         // The name is the caller's; the file is any local audio file the platform can decode.
@@ -46,19 +64,48 @@ namespace
         ctx.Check(!song->getIsProtectedProperty() && !song->getIsRatedProperty(), "it is neither DRM-protected nor rated");
         ctx.Check(!song->getIsDisposedProperty(), "IsDisposed is false until Dispose");
         song->Dispose();
-        ctx.Check(song->getIsDisposedProperty(), "Dispose sets IsDisposed");
+        song->Dispose();
+        ctx.Check(song->getIsDisposedProperty() && !renamed->getIsDisposedProperty() &&
+                      !namesake->getIsDisposedProperty(),
+                  "Dispose is idempotent and leaves peer Song objects live");
+
+        int disposalRefusals = 0;
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->getNameProperty(); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->getAlbumProperty(); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->getArtistProperty(); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->getGenreProperty(); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->getDurationProperty(); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->getIsProtectedProperty(); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->getIsRatedProperty(); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->getPlayCountProperty(); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->getRatingProperty(); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->getTrackNumberProperty(); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->Equals(renamed.get()); });
+        disposalRefusals += ThrowsObjectDisposed([&]
+        {
+            (void)song->Equals(static_cast<const System::Object*>(renamed.get()));
+        });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)(*song == *renamed); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)(*song != *namesake); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->GetHashCode(); });
+        disposalRefusals += ThrowsObjectDisposed([&] { (void)song->ToString(); });
+        ctx.Check(disposalRefusals == 16,
+                  "a disposed Song refuses properties and value operations (CNA-DEMOS-ISSUE-098)");
+        ctx.Print("Disposed Song refusals: {}/16", disposalRefusals);
     }
 }
 
 CNA_DEMOS_CONSOLE(Properties, {
     .id = "media.song.properties",
     .title = "Song properties",
-    .description = "Creates a Song from a file with Song::FromUri and prints its properties: Name, Duration, track "
-                   "number, play count, rating; album, artist and genre exist only for media-library songs.",
+    .description = "Creates a Song from a file with Song::FromUri; checks identity, metadata defaults and the disposed-object refusal contract.",
     .apis = {"Song::FromUri", "Song::Name", "Song::Duration", "Song::TrackNumber", "Song::PlayCount", "Song::Rating",
              "Song::Album", "Song::Artist", "Song::Genre", "Song::IsProtected", "Song::IsRated", "Song::IsDisposed",
              "Song::Dispose", "Song::Equals", "Song::GetHashCode", "Song::op_Equality", "Song::op_Inequality",
              "Song::ToString"},
     .tags = {"media", "music", "song", "metadata"},
     .assets = {"music/rising.wav", "sounds/tone_440.wav"},
+    .restrictions = "Uses caller-created local-file songs; library grouping and playback are separate demos. "
+                    "CNA-DEMOS-ISSUE-098: disposed Song operations remain usable instead of throwing ObjectDisposedException.",
+    .knownIssue = "CNA-DEMOS-ISSUE-098",
 })

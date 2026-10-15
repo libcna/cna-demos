@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended CNA-DEMOS-ISSUE-098 to Song and both picture collection views: none of twenty tested
+  ordinary operations produces the required ObjectDisposedException.
 - Extended CNA-DEMOS-ISSUE-098 through all five music collection views and MediaLibrary: none of
   ten collection operations or twelve library operations produces the required disposal refusal.
 - Extended CNA-DEMOS-ISSUE-098 to disposed Album, Artist, Genre and Playlist views: none of 37
