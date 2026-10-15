@@ -9827,3 +9827,15 @@ repetitions, with byte-identical stdout hash
 `c51873402c61efa4028feafe84bc33e6012825ed89f342aaf1422d648ec9fe3c` and empty stderr. The exact
 known-issue SOFTWARE CTest passes ten repetitions. Generated inventory totals remain unchanged
 because this hardened helper is CNA-specific. Evidence:`/tmp/checkpoint-931-content-exact-*`.
+
+## Focused932-ContentReader-count-and-byte-limits
+
+The owned-level workflow now applies public `CheckCollectionElementCount` before its row loop and
+`CheckDecodedByteSize` before its tile allocation. Two deterministic XNB fixtures declare
+10,000,001 rows and268,435,457 bytes; both real `ContentManager::ReadAsset` paths raise contextual
+`ContentLoadException` before iteration, allocation or resource publication. Ten SOFTWARE and ten
+OPENGLES3-labelled runs retain the sole expected ISSUE-011 failure among24 controls with the same
+stable stdout hash and empty stderr; the exact known-issue SOFTWARE CTest passes ten repetitions.
+Generated totals remain unchanged because both helpers are CNA-specific. Evidence:
+`/tmp/checkpoint-932-content-limits-*`. Run the next complete663-demo checkpoint before another
+focused behavior batch.

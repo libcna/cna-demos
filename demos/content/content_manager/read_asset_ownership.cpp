@@ -44,6 +44,7 @@ namespace
         TilesPtr Read(ContentReader& input, std::optional<TilesPtr>) override
         {
             const int count = input.ReadInt32();
+            input.CheckDecodedByteSize(count, TilesReaderName);
             if (count < 0 || count > 1024) throw ContentLoadException("Invalid tile byte count");
             auto bytes = input.ReadBytesExactOrThrow(count, TilesReaderName);
             if (auto tiles = canonical_.lock(); tiles && tiles->bytes == bytes) return tiles;
@@ -64,6 +65,12 @@ namespace
         {
             Level level;
             level.name = input.ReadString();
+            const int rows = input.ReadInt32();
+            input.CheckCollectionElementCount(rows, LevelReaderName);
+            level.tiles.reset();
+            // This demo's ordinary level schema has no row list. The extra zero count is present so
+            // an untrusted collection declaration is checked before reading the owned resources.
+            if (rows != 0) throw ContentLoadException("Unexpected level row count");
             level.tiles = input.ReadObject<TilesPtr>();
             level.alias = input.ReadObject<TilesPtr>();
             level.absent = input.ReadObject<TilesPtr>();
@@ -167,6 +174,37 @@ namespace
         ctx.Check(exactReadRefused && truncatedRecordCalls == 0 && truncated.streams.opened == 1 &&
                       truncated.streams.destroyed == 1,
                   "ReadBytesExactOrThrow rejects a short declared tile blob before publishing a resource");
+
+        PackManager excessiveRows(readFixture("assets/ownership/oversized_rows.xnb"));
+        bool rowLimitRefused = false;
+        try { (void)excessiveRows.ReadOwned("level", {}); }
+        catch (const ContentLoadException& error)
+        {
+            const std::string message = error.what();
+            rowLimitRefused = message.find(LevelReaderName) != std::string::npos &&
+                              message.find("invalid element count (10000001)") != std::string::npos;
+        }
+        ctx.Check(rowLimitRefused && excessiveRows.streams.opened == 1 && excessiveRows.streams.destroyed == 1,
+                  "CheckCollectionElementCount rejects an oversized row list before entering its read loop");
+
+        PackManager excessiveBytes(readFixture("assets/ownership/oversized_tiles.xnb"));
+        int excessiveByteRecordCalls = 0;
+        bool byteLimitRefused = false;
+        try
+        {
+            (void)excessiveBytes.ReadTiles("tiles", [&](std::shared_ptr<System::IDisposable>) {
+                ++excessiveByteRecordCalls;
+            });
+        }
+        catch (const ContentLoadException& error)
+        {
+            const std::string message = error.what();
+            byteLimitRefused = message.find(TilesReaderName) != std::string::npos &&
+                               message.find("invalid decoded byte size (268435457)") != std::string::npos;
+        }
+        ctx.Check(byteLimitRefused && excessiveByteRecordCalls == 0 && excessiveBytes.streams.opened == 1 &&
+                      excessiveBytes.streams.destroyed == 1,
+                  "CheckDecodedByteSize rejects an oversized tile blob before allocation or publication");
 
         PackManager pack(bytes); // retain the same authored bytes for the default-recorder comparison
         // The callback is per typed read occurrence. This caller wants exactly-once disposal, so
@@ -297,14 +335,16 @@ namespace
 CNA_DEMOS_CONSOLE(ReadAssetOwnership, {
     .id = "content.content_manager.read_asset_ownership",
     .title = "Control packed asset lifetime",
-    .description = "Reads a packed level repeatedly through ReadAsset, rejects a truncated declared byte blob, records "
-                   "its nested disposable tiles, deduplicates aliased ownership, and checks failure cleanup against "
-                   "the default recorder.",
+    .description = "Reads a packed level repeatedly through ReadAsset, bounds its declared collections and byte blobs, "
+                   "rejects truncated or oversized payloads, records its nested disposable tiles, deduplicates aliased "
+                   "ownership, and checks failure cleanup against the default recorder.",
     .apis = {"ContentManager::ReadAsset", "ContentManager::OpenStream", "ContentManager::Unload", "ContentManager::Dispose",
-             "ContentReader::ReadObject", "ContentReader::ReadBytesExactOrThrow", "ContentTypeReader::Read",
+             "ContentReader::ReadObject", "ContentReader::CheckCollectionElementCount",
+             "ContentReader::CheckDecodedByteSize", "ContentReader::ReadBytesExactOrThrow", "ContentTypeReader::Read",
              "ContentTypeReaderManager::AddTypeCreator"},
     .tags = {"content", "xnb", "pack-file", "lifetime", "dispose", "callback"},
-    .assets = {"ownership/level.xnb", "ownership/truncated_tiles.xnb"},
-    .restrictions = "Supplied and absent callbacks with typed shared_ptr IDisposable children; exact byte-blob success and truncation; default tracking reproduces ISSUE-011. Raw/untyped and shared-resource disposal discovery remain separate contracts.",
+    .assets = {"ownership/level.xnb", "ownership/truncated_tiles.xnb", "ownership/oversized_rows.xnb",
+               "ownership/oversized_tiles.xnb"},
+    .restrictions = "Supplied and absent callbacks with typed shared_ptr IDisposable children; collection/blob limits and exact truncation; default tracking reproduces ISSUE-011. Raw/untyped and shared-resource disposal discovery remain separate contracts.",
     .knownIssue = "CNA-DEMOS-ISSUE-011",
 })

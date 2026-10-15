@@ -475,6 +475,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `ContentManager::RegisterTypeReader` -- content.custom.loose_file_reader
 - `ContentManifestEntry` -- content.content_manager.manifest
 - `ContentManifestReaderUsage` -- content.content_manager.manifest
+- `ContentReader::CheckCollectionElementCount` -- content.content_manager.read_asset_ownership
+- `ContentReader::CheckDecodedByteSize` -- content.content_manager.read_asset_ownership
 - `ContentReader::ReadBoundingSphere` -- content.xnb.custom_type_reader
 - `ContentReader::ReadBytesExactOrThrow` -- content.content_manager.read_asset_ownership
 - `ContentReader::ReadInt32` -- content.xnb.custom_type_reader, content.xnb.shared_resources

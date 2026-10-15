@@ -2354,11 +2354,14 @@ valid open, completing the distinct temporary modal-state decision. Leave except
 now. Focused930 adds direct authored-XNB evidence for public `ContentReader::ReadBoundingSphere`,
 and Focused931 uses `ReadBytesExactOrThrow` in a real owned-tile reader and proves physical
 truncation fails before publishing a resource. Both are CNA/FNA reader helpers outside the XNA
-inventory, so generated totals remain unchanged. The coherent ContentReader math/blob audit is now
-closed; inherited primitive reads are already represented by actual schemas and do not justify one
-control per numeric width. Return to the broader hand-maintained disposition tables for the
-highest-value ordinary public behavior that is neither already demonstrated nor explicitly
-classified as trivial, platform/service/manual or implementation machinery.
+inventory, so generated totals remain unchanged. Focused932 adds actual oversized collection and
+decoded-byte declarations through the two public limit helpers. The coherent ContentReader
+math/blob/limit audit is now closed; inherited primitive reads are already represented by actual
+schemas and do not justify one control per numeric width. HIGHEST PRIORITY: run a complete
+663-demo build/runtime checkpoint absorbing focused927-932, then return to the broader
+hand-maintained disposition tables for the highest-value ordinary public behavior that is neither
+already demonstrated nor explicitly classified as trivial, platform/service/manual or
+implementation machinery.
 Keep constructors/finalizers, CLR collection plumbing and service-only paths classified rather than
 inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
@@ -2659,6 +2662,22 @@ Metadata remains663/0 and generated totals remain303/329 types,2114/2326 members
 and3078/3205 routes. The deterministic truncated fixture SHA-256 is
 `8372f26ed80680997daf02fecabd319233e6d26e49a3ee8803448b981010d5f8`. Evidence:
 `/tmp/checkpoint-931-content-exact-*`. No new CNA defect appeared.
+
+### Focused932-ContentReader-count-and-byte-limits
+
+The same owned-level workflow now applies public `CheckCollectionElementCount` before its Level row
+loop and `CheckDecodedByteSize` before its tile-byte allocation. Two deterministic XNB fixtures
+declare10,000,001 rows and268,435,457 decoded bytes respectively. Both actual
+`ContentManager::ReadAsset` paths raise contextual `ContentLoadException` before iteration,
+allocation or disposable publication. The ordinary level fixture gains a zero row-count field and
+retains all previous alias, ownership and failure behavior.
+
+Ten SOFTWARE and ten OPENGLES3-labelled runs retain the sole expected ISSUE-011 failure among24
+controls (23 pass/1 expected fail); stdout stays byte-identical with SHA-256
+`c51873402c61efa4028feafe84bc33e6012825ed89f342aaf1422d648ec9fe3c` and stderr is empty. The exact
+known-issue SOFTWARE CTest passes ten repetitions; the warning-free incremental build uses `-j3`.
+Metadata remains663/0 and generated totals remain303/329 types,2114/2326 members,674/753 fields
+and3078/3205 routes. Evidence:`/tmp/checkpoint-932-content-limits-*`. No new CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
