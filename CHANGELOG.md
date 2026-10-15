@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a rigid glTF node-instance workflow covering shared-mesh placement, hierarchical TRS,
+  explicit matrices, odd/even mirrors, selected-scene exclusion, unsupported GPU-instancing
+  diagnostics and determinant-aware culling on both renderers.
 - Refreshed the complete runtime baseline at 650 demos: all 663 enabled CTest entries complete
   without failure, and both SOFTWARE and OPENGLES3 execute every catalog ID without unexpected
   failures or passes.

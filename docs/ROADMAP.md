@@ -224,7 +224,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (25 demos)
+## Phase 7 -- models, animation, glTF 🟨 (26 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -278,6 +278,9 @@ a check that all authored colors remain visible and that a blank texture row can
   explicit device selection and exact black/green/red PBR reflection pixels (7 checks on both GL paths).
 - ✅ `graphics.model.skin_weight_import`: normalized UBYTE weights, USHORT joints, malformed-sum
   repair, extra influence-set truncation and zero-sum reporting with readback and pixels (21 checks).
+- ✅ `graphics.model.node_instances`: one shared rigid mesh placed through hierarchical TRS, an
+  explicit matrix and odd/even composed mirrors; exact hierarchy/report diagnostics, default-scene
+  exclusion, unsupported GPU-instancing loss and determinant-aware culling pass on both renderers.
 - Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
@@ -8300,3 +8303,21 @@ a CNA defect. A sandbox-only storage/clipboard/socket failure set was likewise e
 documented private-Xvfb, writable-XDG run passed. No new screenshot, listening, physical-input,
 external-service or manual visual-quality validation was performed. Continue the glTF node-instance
 placement, transform and diagnostic-semantics audit.
+
+## Focused845-rigid-glTF-node-instances
+
+New `graphics.model.node_instances` places one shared rigid glTF mesh through nested TRS, an
+explicit matrix, odd/even composed mirrors and a node declaring optional
+`EXT_mesh_gpu_instancing`. Fifteen controls verify exact public bone/world transforms, five named
+mesh placements, selected-scene structure, exclusion of a second-scene decoy and three distinct
+actionable diagnostics. The fixed-cull control drops only the odd mirror; determinant-aware
+per-placement culling draws all retained copies while unsupported GPU translations remain absent.
+
+SOFTWARE and OPENGLES3 pass15/15. Their inspected800x480 captures are byte-identical with SHA-256
+`f4e8a92a42fb319ae08963b481a3105a7fac7305cce3b2efe359ad4c93a1f3d5`. The warning-free `-j3`
+build, exact SOFTWARE CTest, metadata651/0 and both tool self-test suites pass. Temporary coverage
+remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. The initial colored-
+unlit fixture produced unrelated layout information and the first aggregate oracle omitted the
+UnsupportedFeature occurrence; both were demo corrections, not CNA defects. Evidence:
+`/tmp/checkpoint-845-node-instances-*` and `/tmp/checkpoint-845-coverage.md`. Audit the no-scenes/
+first-scene fallback and remaining node-graph boundaries next.

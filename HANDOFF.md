@@ -18,7 +18,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 25), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
+* In progress: 7 (models/glTF, 26), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
@@ -67,10 +67,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-650 project-built catalog demos in18 categories: math78, game33, graphics179, audio23, core3,
+651 project-built catalog demos in18 categories: math78, game33, graphics180, audio23, core3,
 content46, input40, storage7, media13, gamer services19, net14, devices5, phone1, design4,
-diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,288 game and199 standalone;
-614 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics2, cnaext4, platform2 and c_api177. Kinds are163 console,289 game and199 standalone;
+615 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md is runtime-backed by complete844 at650 demos,302/329 XNA
 types,2114/2326 XNA members,169/753 fields and3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -185,6 +185,11 @@ Focused842 completes the structured glTF import-report public contract: every st
 field, both severities, all six diagnostic kinds, exact aggregates and the empty compiled default.
 Focused843 repairs the C material-variant consumer after the shared fixture deepened: explicit
 PointClamp and a PBR hue oracle restore its30/30 cross-renderer contract.
+Focused845 adds a distinct rigid-node-instance workflow: one shared glTF mesh is placed through
+hierarchical TRS, an explicit matrix and odd/even composed mirrors while default-scene selection
+excludes a decoy. Exact public hierarchy/transforms/report diagnostics and determinant-aware
+culling produce five checked placements on both renderers; unsupported GPU-instance transforms
+remain visibly absent and explicitly reported.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
@@ -219,6 +224,23 @@ routes. Tested SHA-256: `cna-demos`
 `build/linux-full/reports/checkpoint-844-complete-*`. Pixel checks were programmatic; no screenshot,
 listening test, physical input, external service session or manual visual-quality inspection was
 performed.
+
+Focused **845-rigid-glTF-node-instances** is staged after Complete844. The new
+`graphics.model.node_instances` loads one shared rigid mesh through nested TRS, an explicit glTF
+matrix, odd/even composed mirrors and a node declaring optional `EXT_mesh_gpu_instancing`. It
+verifies exact bone hierarchy/world axes, five named mesh placements, default-scene exclusion,
+source-scene report counts and three actionable loss diagnostics. A fixed cull mode drops the odd
+mirror as reported; determinant-aware per-placement culling draws all five retained placements,
+while the excluded-scene decoy and two unsupported GPU-instance transforms remain clear.
+SOFTWARE and OPENGLES3 pass15/15. Their manually inspected800x480 screenshots are byte-identical,
+SHA-256 `f4e8a92a42fb319ae08963b481a3105a7fac7305cce3b2efe359ad4c93a1f3d5`. The warning-free
+incremental build uses `-j3`, the exact SOFTWARE CTest passes, metadata is651/0, and validator/
+checkpoint self-tests pass5/5 and4/4. Temporary coverage remains302/329 types,2114/2326 members,
+169/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-845-node-instances-*` and
+`/tmp/checkpoint-845-coverage.md`. The first run exposed two demo-oracle mistakes: an unlit colored
+layout added unrelated informational diagnostics, and UnsupportedFeature correctly contributes to
+DroppedFeatureCount. Both were corrected without a CNA issue. Audit the no-scenes/first-scene
+fallback and remaining node-graph boundaries next.
 
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
@@ -1797,10 +1819,10 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused745-843
-are absorbed. Continue the glTF importer behavior audit with node-instance placement, transform
-and diagnostic semantics, extending existing focused demos unless a distinct public concept needs
-a new ID. The complete checkpoint and harness findings are recorded in section7.
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845 is
+the validated651-demo staged state. Continue the glTF importer behavior audit with the no-scenes/
+first-scene fallback and remaining node-graph boundaries, extending the new focused demo where the
+concept remains coherent. The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset
@@ -3571,6 +3593,28 @@ serial. The authoritative `-j3` ranges pass; this was a harness scheduling defec
 Evidence:`build/linux-full/reports/checkpoint-844-complete-*`. No new screenshot, listening,
 physical-input, service or manual visual-quality validation was performed. Resume the glTF node-
 instance placement/transform/diagnostic audit next.
+
+### Focused845-rigid-glTF-node-instances
+
+New `graphics.model.node_instances` imports one shared rigid mesh at five selected-scene nodes:
+nested TRS, an explicit glTF matrix, one odd composed mirror, one even composed mirror and a node
+with optional `EXT_mesh_gpu_instancing`. Fifteen controls verify exact public hierarchy/world axes,
+per-placement names and parent bones, source-scene report counts, default-scene exclusion and the
+distinct `ignored-extension`, `gpu-instancing-dropped` and `mirrored-winding-unapplied`
+diagnostics. A fixed glTF cull choice visibly omits the odd mirror exactly as reported; switching
+the public rasterizer state by each placement's world determinant draws all five retained copies.
+The non-default-scene decoy and two unsupported GPU translations remain clear.
+
+SOFTWARE and OPENGLES3 pass15/15. Both actual800x480 screenshots were inspected and are byte-
+identical with SHA-256 `f4e8a92a42fb319ae08963b481a3105a7fac7305cce3b2efe359ad4c93a1f3d5`.
+The `-j3` build, exact SOFTWARE CTest, metadata651/0 and validator/checkpoint self-tests5/5 and4/4
+pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C
+routes. Evidence:`/tmp/checkpoint-845-node-instances-*` and `/tmp/checkpoint-845-coverage.md`.
+The first run used a colored-unlit layout whose intentional missing Normal slot added five
+unrelated information entries; moving orange to the material factor isolated the intended three
+warnings. The next run expected only the two DroppedData occurrences, but public aggregate
+semantics also count the UnsupportedFeature occurrence. Both were demo-fixture/oracle corrections,
+not CNA defects. Audit the no-scenes/first-scene fallback and remaining node-graph boundaries next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

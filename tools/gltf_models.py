@@ -13,9 +13,10 @@ assets/models/ that is loaded as a loose glTF file at run time.
   animation "Bend" that rotates UpperJoint back and forth. It has NORMAL and COLOR_0, so CNA gives it a
   SkinnedEffect.
 * turntable.gltf, morph_flag.gltf, camera_rig.gltf, textured_crate.gltf, lit_sphere.gltf,
-  slide_rig.gltf, loose_paint_toy.gltf -- node-animation clips, morph targets with a weights animation,
-  glTF cameras, an embedded base-colour texture, KHR_lights_punctual lights,
-  STEP/LINEAR/CUBICSPLINE samplers, KHR_materials_variants; see each function.
+  slide_rig.gltf, loose_paint_toy.gltf, loose_node_instances.gltf -- node-animation clips, morph
+  targets with a weights animation, glTF cameras, an embedded base-colour texture,
+  KHR_lights_punctual lights, STEP/LINEAR/CUBICSPLINE samplers, KHR_materials_variants and rigid
+  shared-mesh placement; see each function.
 """
 
 import base64
@@ -772,6 +773,55 @@ def multiple_skins(path: Path) -> None:
     doc.save(path)
 
 
+def node_instances(path: Path) -> None:
+    """One rigid mesh placed through TRS, a matrix, odd/even composed mirrors and one optional
+    EXT_mesh_gpu_instancing node. A second scene carries a decoy that the selected scene excludes."""
+    doc = Document()
+    positions = [(-.1, -.07, .5), (.1, -.07, .5), (.1, .07, .5), (-.1, .07, .5)]
+    primitive = {
+        "attributes": {
+            "POSITION": doc.accessor(positions, "VEC3", minmax=True),
+            "NORMAL": doc.accessor([(0, 0, 1)] * 4, "VEC3"),
+        },
+        "indices": doc.accessor([0, 1, 2, 0, 2, 3], "SCALAR", UNSIGNED_SHORT,
+                                ELEMENT_ARRAY_BUFFER),
+        "material": 0,
+    }
+    doc.gltf["meshes"] = [{"name": "SharedMarker", "primitives": [primitive]}]
+    # A material factor keeps the fixture orange without selecting CNA's coloured-unlit stride,
+    # whose intentional lack of a Normal slot would add an unrelated vertex-layout diagnostic for
+    # every placement and obscure the node-instancing diagnostics this fixture is meant to expose.
+    doc.gltf["materials"] = [{"name": "Orange", "pbrMetallicRoughness": {
+        "baseColorFactor": [1, .5, 0, 1]}, "extensions": {"KHR_materials_unlit": {}}}]
+
+    quarter_turn = math.sin(math.pi / 4)
+    instance_translations = doc.accessor([(-.28, 0, 0), (.28, 0, 0)], "VEC3", target=None)
+    doc.gltf["nodes"] = [
+        {"name": "TrsParent", "translation": [-.55, .35, 0], "children": [1]},
+        {"name": "TrsInstance", "mesh": 0, "translation": [.15, 0, 0],
+         "rotation": [0, 0, quarter_turn, quarter_turn], "scale": [.6, 1.2, 1]},
+        # Column-major glTF matrix: -90 degrees around Z, nonuniform XY scale and translation.
+        {"name": "MatrixInstance", "mesh": 0,
+         "matrix": [0, -.6, 0, 0, 1.2, 0, 0, 0, 0, 0, 1, 0, .4, .35, 0, 1]},
+        {"name": "MirrorParent", "scale": [-1, 1, 1], "children": [4]},
+        {"name": "MirroredInstance", "mesh": 0, "translation": [.4, -.35, 0]},
+        {"name": "DoubleMirrorParent", "scale": [-1, 1, 1], "children": [6]},
+        {"name": "EvenMirrorInstance", "mesh": 0, "translation": [-.4, -.35, 0],
+         "scale": [-1, 1, 1]},
+        {"name": "GpuInstance", "mesh": 0, "translation": [0, -.65, 0],
+         "extensions": {"EXT_mesh_gpu_instancing": {
+             "attributes": {"TRANSLATION": instance_translations}}}},
+        {"name": "OffScene", "mesh": 0},
+    ]
+    doc.gltf["extensionsUsed"] = ["KHR_materials_unlit", "EXT_mesh_gpu_instancing"]
+    doc.gltf["scenes"] = [
+        {"name": "Selected", "nodes": [0, 2, 3, 5, 7]},
+        {"name": "Decoy", "nodes": [8]},
+    ]
+    doc.gltf["scene"] = 0
+    doc.save(path)
+
+
 def imported_topology(path: Path) -> None:
     doc = Document()
     shapes = [
@@ -831,4 +881,5 @@ def write_all(content_root: Path, assets_root: Path) -> None:
     specular_sampler_quad(assets_root / "models" / "loose_specular_samplers.gltf")
     skin_weight_forms(assets_root / "models" / "loose_skin_weight_forms.gltf")
     multiple_skins(assets_root / "models" / "loose_multi_skin.gltf")
+    node_instances(assets_root / "models" / "loose_node_instances.gltf")
     imported_topology(assets_root / "models" / "loose_topology.gltf")
