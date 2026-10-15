@@ -127,6 +127,8 @@ namespace
 
             Video mismatch(mediaPath.string(), &getGraphicsDeviceProperty(), 1000, 159, 90,
                            10.0f, VideoSoundtrackType::MusicAndDialog);
+            ctx.Check(mismatch.getVideoSoundtrackTypeProperty() == VideoSoundtrackType::MusicAndDialog,
+                      "trusted metadata retains the combined music-and-dialog classification");
             VideoPlayer mismatchPlayer;
             ctx.Check(ThrowsExactly<System::InvalidOperationException>([&] {
                           mismatchPlayer.Play(&mismatch);
@@ -149,6 +151,7 @@ CNA_DEMOS_GAME(UriAndMetadataDemo, {
                    "reporting and decoded-metadata validation.",
     .apis = {"Video::Video", "Video::FromUriEXT", "Video::Width", "Video::Height",
              "Video::FramesPerSecond", "Video::Duration", "Video::VideoSoundtrackType",
+             "VideoSoundtrackType::Dialog", "VideoSoundtrackType::MusicAndDialog",
              "VideoPlayer::Play", "VideoPlayer::State", "VideoPlayer::Video"},
     .tags = {"media", "video", "uri", "metadata", "validation"},
     .needs = CnaDemos::Need::Video,

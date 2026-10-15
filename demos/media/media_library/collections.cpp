@@ -27,6 +27,7 @@ namespace
         for (MediaSource* source : MediaSource::GetAvailableMediaSources())
             sources.emplace_back(source);
         bool sourceRecordsAreNamed = !sources.empty();
+        bool sourceRecordsAreLocal = !sources.empty();
         for (const auto& source : sources)
         {
             ctx.Print("media source: {} ({})", source->getNameProperty(),
@@ -34,8 +35,11 @@ namespace
                                                                                            : "WindowsMediaConnect");
             sourceRecordsAreNamed = sourceRecordsAreNamed && !source->getNameProperty().empty() &&
                 source->ToString() == source->getNameProperty();
+            sourceRecordsAreLocal = sourceRecordsAreLocal &&
+                source->getMediaSourceTypeProperty() == MediaSourceType::LocalDevice;
         }
         ctx.Check(sourceRecordsAreNamed, "every returned media source has matching nonempty name and text");
+        ctx.Check(sourceRecordsAreLocal, "every available CNA desktop media source is a LocalDevice");
 
         const MediaLibrary library(sources.front().get());
         const MediaSource* selectedSource = library.getMediaSourceProperty();
@@ -63,7 +67,8 @@ CNA_DEMOS_CONSOLE(Collections, {
              "MediaLibrary::Playlists", "MediaLibrary::Pictures", "MediaLibrary::IsDisposed",
              "MediaLibrary::MediaSource",
              "AlbumCollection::Count", "ArtistCollection::Count", "GenreCollection::Count", "PlaylistCollection::Count", "PictureCollection::Count",
-             "MediaSource::MediaSourceType", "MediaSource::ToString", "MediaSourceType"},
+             "MediaSource::MediaSourceType", "MediaSource::ToString", "MediaSourceType",
+             "MediaSourceType::LocalDevice"},
     .tags = {"media", "library", "music", "pictures"},
     .automation = CnaDemos::Automation::SmokeOnly,
 })

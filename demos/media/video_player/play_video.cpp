@@ -49,8 +49,9 @@ namespace
                       : soundtrack == VideoSoundtrackType::Dialog ? "Dialog"
                                                                   : "MusicAndDialog");
             ctx.Check(video_->getWidthProperty() == 160 && video_->getHeightProperty() == 120 &&
-                          video_->getFramesPerSecondProperty() == 15.0f,
-                      "the metadata describes the 160x120, 15 fps clip");
+                          video_->getFramesPerSecondProperty() == 15.0f &&
+                          soundtrack == VideoSoundtrackType::Music,
+                      "the metadata describes the 160x120, 15 fps music clip");
 
             player_ = std::make_unique<VideoPlayer>();
             player_->Play(&*video_);
@@ -137,7 +138,7 @@ CNA_DEMOS_GAME(PlayVideoDemo, {
     .apis = {"Video::Width", "Video::Height", "Video::FramesPerSecond", "Video::Duration", "VideoPlayer::VideoPlayer",
              "VideoPlayer::Play", "VideoPlayer::GetTexture", "VideoPlayer::State", "VideoPlayer::PlayPosition",
              "VideoPlayer::Video", "VideoPlayer::Stop", "MediaState",
-             "Video::VideoSoundtrackType", "VideoSoundtrackType"},
+             "Video::VideoSoundtrackType", "VideoSoundtrackType", "VideoSoundtrackType::Music"},
     .tags = {"media", "video", "cutscene", "texture"},
     .needs = CnaDemos::Need::Video | CnaDemos::Need::Audio,
     .frames = 600,

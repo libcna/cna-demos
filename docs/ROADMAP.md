@@ -9219,3 +9219,18 @@ compiler warnings; the build uses at most three jobs, metadata is659/0, and cove
 `/tmp/checkpoint-895-*`. No network request, audio,
 screenshot or visual judgment occurred. The public Video/VideoPlayer family now has a complete
 semantic disposition; continue the next explicit high-value public behavior gap outside it.
+
+## Focused896-public-Media-enum-values
+
+The public Media field audit closes all eight inventory values by runtime evidence or explicit
+disposition without adding an ID. Existing workflows now name and directly check all three
+MediaState transitions, the Music/Dialog/MusicAndDialog metadata values and CNA desktop's
+LocalDevice source. WindowsMediaConnect remains intentionally uncredited because pinned CNA never
+creates it and rejects it as a MediaLibrary source; a numeric cast would add no public behavior.
+
+SOFTWARE and OPENGLES3 focused runs pass the new positive checks and preserve exactly the established
+ISSUE-099/101 failures. The four exact SOFTWARE CTests pass ten repetitions, compilation is clean
+with at most three jobs, metadata is659/0 and both validator self-test suites pass. Generated
+coverage moves169->175/753 fields, with Media at7/8; types, non-field members and C routes remain
+302/329,2114/2326 and3078/3205. Evidence:`/tmp/checkpoint-896-*`. Continue the semantic public-field
+audit with the next high-value namespace, starting from Input's behavior-rich existing workflows.

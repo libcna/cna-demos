@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the public Media enum-value audit: seven of eight values now have direct behavioral
+  evidence, while WindowsMediaConnect remains explicitly platform-unsupported by CNA.
 - Added Video URI and trusted-metadata failure coverage, recording CNA-DEMOS-ISSUE-101 for missing
   URI resolution and silently ignored deferred file-open failures.
 - Added deterministic public multi-track Video selection coverage and recorded

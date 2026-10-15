@@ -18,11 +18,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
-* In progress: 7 (models/glTF, 30), 8 (content, 52), 9 (audio 26 incl. 10 C++ XACT plus a complete
-  semantic C XACT route audit, media 15 incl. a compiled video and song plus C video asset/player audits),
+* In progress: 7 (models/glTF, 30), 8 (content, 52), 9 (audio 23 incl. 10 C++ XACT plus a complete
+  semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
 * In progress too: 13 (devices 5, phone 1, design 4, diagnostics 2 + logger 2, cnaext 4).
-* In progress: 14 (C API, 175 standalone C demos in the source tree; `linux-full` builds CNA with
+* In progress: 14 (C API, 177 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
 * In progress: 15 (type decisions and deeper public-member/behavior tables in docs/COVERAGE_AUDIT.md;
   comprehensive semantic coverage is not yet established).
@@ -71,9 +71,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-895
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-896
 overlays for all659 catalog demos.
-The surface totals remain302/329 XNA types,2114/2326 XNA members,169/753 fields and
+The surface totals are302/329 XNA types,2114/2326 XNA members,175/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -322,6 +322,20 @@ audio, screenshot or visual judgment occurred. `Video::setDurationProperty` is a
 CNAEXT setter and does not justify another behavior demo. The public Video/VideoPlayer construction,
 transport, frame, selection, disposal and failure inventory is now dispositioned. **Next:** resume
 the next explicit high-value public behavior gap outside this family.
+
+Focused **896-public-Media-enum-values** completes the semantic decision for all eight public
+runtime fields in the Media namespace without adding an ID. Existing workflows now explicitly
+name and check the three MediaState values, all three VideoSoundtrackType values and CNA desktop's
+LocalDevice media source. WindowsMediaConnect stays intentionally uncredited because pinned CNA
+neither creates nor accepts it; checking only its integer would not demonstrate public behavior.
+
+The new positive controls pass on SOFTWARE and OPENGLES3 while the Video workflows retain exactly
+their reviewed ISSUE-099/101 failures. All four exact SOFTWARE CTests pass ten repetitions, the
+clean build uses `-j3`, metadata validates659/0, and validator self-tests pass5/5 and4/4. Generated
+coverage moves169->175/753 fields and Media reaches7/8; types, non-field members and C routes remain
+302/329,2114/2326 and3078/3205. Evidence:`/tmp/checkpoint-896-*`. **Next:** continue the semantic
+public-field audit with Input's existing behavior-rich workflows; name values only where an actual
+control distinguishes them, and explicitly disposition the rest.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
@@ -1962,14 +1976,14 @@ export CCACHE_DIR=/rv/cnaccache CCACHE_BASEDIR=/rv
 # Configure a new/changed environment; reuse the existing build otherwise.
 cmake --preset linux-full -DCMAKE_CXX_COMPILER=g++-14 -DCMAKE_C_COMPILER=gcc-14 \
   -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
-cmake --build --preset linux-full -j4
+cmake --build --preset linux-full -j3
 # Complete checkpoint: isolate both the outer CTest/SOFTWARE phase and the script's GL child.
-JOBS=4 SDL_AUDIO_DRIVER=dummy SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY \
+JOBS=3 SDL_AUDIO_DRIVER=dummy SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY \
   xvfb-run -a -s "-screen 0 1280x1024x24" tools/validate.sh
 # Individual diagnostic commands (not a replacement for the complete checkpoint):
 export XDG_RUNTIME_DIR=/tmp/xdg-runtime; mkdir -p -m 700 $XDG_RUNTIME_DIR
 build/linux-full/bin/cna-demos --validate
-ctest --test-dir build/linux-full -j4
+ctest --test-dir build/linux-full -j3
 SDL_AUDIO_DRIVER=dummy build/linux-full/bin/cna-demos --smoke --renderer SOFTWARE --report /tmp/r.json
 SDL_AUDIO_DRIVER=dummy SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY \
   xvfb-run -a -s "-screen 0 1280x1024x24" build/linux-full/bin/cna-demos --smoke --renderer OPENGLES3
@@ -2085,12 +2099,15 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete892 is the authoritative657-demo full-runtime baseline and absorbs every
-focused batch through891. The MediaLibrary table now has runtime or explicit disposition for its
-remaining semantic rows. Audit the public Video/VideoPlayer behavior against the two existing video
-workflows and pinned CNA source; extend an existing demo only for a distinct observable gap, and
-record trivial, platform, decoder-quality or manual-only behavior without inflating the catalog.
-The complete checkpoint and harness findings are recorded in section7.
+HIGHEST PRIORITY: Complete892 remains the authoritative657-demo full-runtime baseline; focused893-
+896 extend the current catalog to659 IDs and close Video/VideoPlayer plus all eight public Media
+field decisions. Continue the semantic public-field audit with `Microsoft.Xna.Framework.Input`,
+where extensive existing keyboard, mouse, gamepad and touch workflows exercise many of the202
+currently uncredited enum values. Add metadata only when a real control distinguishes the value;
+otherwise record the value as trivial, platform/hardware-specific or intentionally unrepresented.
+Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
+commit, push and immediately continue. Run the next full checkpoint after enough focused change or
+before another handoff that would make Complete892 too stale.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

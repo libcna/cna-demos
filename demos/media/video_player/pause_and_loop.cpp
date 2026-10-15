@@ -299,7 +299,8 @@ CNA_DEMOS_GAME(PauseAndLoopDemo, {
     .description = "Audits VideoPlayer defaults and validation, then plays a compiled video with looping, pause/resume, "
                    "frame generations, raw-video ownership and complete disposal guards.",
     .apis = {"VideoPlayer::IsLooped", "VideoPlayer::Pause", "VideoPlayer::Resume", "VideoPlayer::Volume",
-             "VideoPlayer::IsMuted", "VideoPlayer::PlayPosition", "VideoPlayer::State", "MediaState::Paused",
+             "VideoPlayer::IsMuted", "VideoPlayer::PlayPosition", "VideoPlayer::State",
+             "MediaState::Stopped", "MediaState::Playing", "MediaState::Paused",
              "VideoPlayer::Play", "VideoPlayer::GetTexture", "VideoPlayer::Video", "VideoPlayer::Dispose",
              "VideoPlayer::IsDisposed", "Video::FromUriEXT", "Video::getFileNameProperty",
              "Video::getGraphicsDeviceProperty", "Video::GetTypeName", "VideoPlayer::GetFrameGenerationEXT",

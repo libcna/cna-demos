@@ -1258,6 +1258,25 @@ metadata, transport, frame, track, lifetime, disposal and failure surface now ha
 disposition. Evidence:`/tmp/checkpoint-895-*`. No network request, audio, screenshot or visual
 judgment occurred.
 
+### Media public enum values
+
+All eight runtime-inventory fields in `Microsoft.Xna.Framework.Media` now have a semantic decision.
+The established `pause_and_loop` workflow directly observes `MediaState::Stopped`, `Playing` and
+`Paused` across construction, playback, pause/resume, stopping and dependent-Video destruction.
+The compiled-video workflow now requires its authored/default `VideoSoundtrackType::Music`; the
+trusted-metadata workflow reads back explicit `Dialog` and `MusicAndDialog` values before its
+separate failure checks. The desktop MediaLibrary workflow requires every returned source to be a
+`MediaSourceType::LocalDevice` and still verifies that its copied library source preserves the
+same value.
+
+`MediaSourceType::WindowsMediaConnect` remains intentionally uncredited. Pinned CNA only creates
+LocalDevice sources, and its public MediaLibrary constructor rejects any other source type; merely
+casting the numeric constant would not demonstrate a usable media-source behavior. The focused
+runs pass the new positive controls on SOFTWARE and OPENGLES3 while retaining exactly the existing
+ISSUE-099/101 failures. The four exact SOFTWARE CTests pass ten repetitions, metadata validates
+659/0 and the field total moves169->175/753, leaving Media at7/8. Evidence:
+`/tmp/checkpoint-896-*`. No new ID, CNA issue, listening, screenshot or visual claim is made.
+
 ### Network simulation (measurement boundaries)
 
 | Members / behavior | Decision and evidence |
