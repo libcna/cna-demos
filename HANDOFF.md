@@ -406,6 +406,20 @@ routes. Evidence:`/tmp/checkpoint-856-animation-player-validation-*` and
 `/tmp/checkpoint-856-coverage.md`. No graphics device, screenshot or visual inspection was used.
 Audit empty, duplicate and unsorted SkinnedModelEXT tracks plus target-space disposition next.
 
+Focused **857-SkinnedModelEXT-track-omission-and-disposition** extends
+`graphics.model.palette_sampling` from nineteen to twenty controls. One empty in-range, one
+negative-index and one past-end track are appended beside its valid motion; all are safely skipped
+and the exact one-second palette remains unchanged. SOFTWARE and OPENGLES3 pass20/20 with identical
+output. The adjacent contract audit closes the rest: unsorted keys violate the documented ascending-
+time precondition, duplicate input-time behavior is already covered through real glTF import,
+duplicate tracks have no promised merge rule, and target-space refusal is documented only for the
+cross-space `ApplyClipToBonesEXT` route. No demo presents those invalid hand-authored inputs as
+supported. The `-j3` build, exact SOFTWARE CTest, metadata655/0 and self-tests5/5 and4/4 pass;
+temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
+Evidence:`/tmp/checkpoint-857-palette-sampling-*` and `/tmp/checkpoint-857-coverage.md`. No graphics
+device, screenshot or visual inspection was used. No CNA issue appeared. The focused Model/
+animation remainder is dispositioned; run the complete655-demo checkpoint next.
+
 Focused **745-Texture3D-coordinate-and-mip-filtering** is staged after Complete744. The existing
 `graphics.texture3d.sampler_coordinates` now uses a4x4x2 mipmapped Color volume. Four exact
 slice-zero U/V texel centres preserve White/Yellow/Cyan/Magenta row order, while authored uniform
@@ -1983,7 +1997,7 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-856
+HIGHEST PRIORITY: Complete844 is the current650-demo full-build/runtime baseline; focused845-857
 form the validated655-demo staged state. The glTF scene/node-graph audit is closed with
 CNA-DEMOS-ISSUE-092 retained. Rigid animation channel loss, resampling, duplicate/nonzero times,
 generated clip names and public malformed-sampler refusals now have exact evidence;
@@ -1994,8 +2008,10 @@ CNA-DEMOS-ISSUE-031 on both compiled and loose interpolation carriers. Multi-ski
 every channel across its two palettes, while CNA-DEMOS-ISSUE-095 records false aggregate loss from
 the unreconciled palette-local reports. Multiple-part routing now covers every effect in each
 independent palette. AnimationPlayer required-array and borrowed-data validation now has exact
-evidence; CNA-DEMOS-ISSUE-096 records the silent partial-root-prefix fallback. Audit empty,
-duplicate and unsorted SkinnedModelEXT tracks plus target-space disposition next.
+evidence; CNA-DEMOS-ISSUE-096 records the silent partial-root-prefix fallback. Empty/out-of-range
+track handling and the remaining invalid-input/target-space dispositions close the focused Model/
+animation remainder. Run a complete655-demo `-j3` build, CTest and SOFTWARE/OPENGLES3 checkpoint
+against the pinned CNA before selecting the next uncovered family.
 The complete checkpoint and harness findings are recorded in section7.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
@@ -4003,6 +4019,21 @@ pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields a
 routes. Evidence:`/tmp/checkpoint-856-animation-player-validation-*` and
 `/tmp/checkpoint-856-coverage.md`. No graphics device, screenshot or visual inspection was used.
 Audit empty, duplicate and unsorted SkinnedModelEXT tracks plus target-space disposition next.
+
+### Focused857-SkinnedModelEXT-track-omission-and-disposition
+
+`graphics.model.palette_sampling` now passes20/20 under SOFTWARE and OPENGLES3. An empty in-range,
+negative-index and past-end track are temporarily appended to the valid clip and safely leave its
+one-second palette unchanged. Unsorted keys violate the documented ascending-time precondition;
+duplicate-time import behavior already has real glTF evidence, duplicate tracks have no promised
+merge rule, and only the cross-space `ApplyClipToBonesEXT` route documents a target-space refusal.
+Those invalid hand-authored variants are dispositioned rather than presented as supported inputs.
+
+The `-j3` build, exact SOFTWARE CTest, metadata655/0 and validator/checkpoint self-tests5/5 and4/4
+pass. Temporary coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C
+routes. Evidence:`/tmp/checkpoint-857-palette-sampling-*` and `/tmp/checkpoint-857-coverage.md`. No
+graphics device, screenshot or visual inspection was used. No CNA issue appeared. The focused
+Model/animation remainder is dispositioned; run the complete655-demo checkpoint next.
 
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.

@@ -8524,3 +8524,26 @@ CTest, metadata655/0 and both self-test suites pass. Temporary coverage remains3
 `/tmp/checkpoint-856-animation-player-validation-*` and `/tmp/checkpoint-856-coverage.md`. No
 graphics device, screenshot or visual inspection was used. Audit empty, duplicate and unsorted
 SkinnedModelEXT tracks plus target-space disposition next.
+
+## Focused857-SkinnedModelEXT-track-omission-and-disposition
+
+`graphics.model.palette_sampling` grows from nineteen to twenty controls. Its authored clip now
+temporarily carries an empty in-range track plus nonempty negative-index and past-end tracks;
+`ComputeBoneTransformsEXT` skips all three and reproduces the exact valid one-second palette.
+SOFTWARE and OPENGLES3 pass20/20 with identical output.
+
+The adjacent source/API audit closes the remaining variants without inflating demos. BoneTrackEXT
+requires ascending key times; malformed unsorted hand-authored arrays are outside that public
+precondition. Duplicate input-time handling is already demonstrated through the real glTF importer,
+while duplicate tracks for one bone have no promised merge rule and belong in producer validation.
+Only `ApplyClipToBonesEXT`, whose argument can carry either index space, documents a target-space
+refusal. AnimationPlayer and SkinnedModelEXT are palette carriers and expose no such exception
+contract, so a SceneNode clip deliberately inserted into their palette collections is invalid
+application routing rather than behavior to endorse in a demo.
+
+The `-j3` build, exact SOFTWARE CTest, metadata655/0 and both self-test suites pass. Temporary
+coverage remains302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-857-palette-sampling-*` and `/tmp/checkpoint-857-coverage.md`. No graphics device,
+screenshot or visual inspection was used. No CNA issue appeared. The focused Model/animation
+remainder is now dispositioned; run the complete655-demo checkpoint before selecting the next
+highest-priority uncovered public type/member family.

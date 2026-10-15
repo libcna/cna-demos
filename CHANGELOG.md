@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended palette sampling with safe omission of empty, negative-index and past-end tracks, and
+  dispositioned unsorted, duplicate and wrong-target-space hand-authored inputs by public contract.
 - Added an AnimationPlayer borrowed-data validation workflow and recorded CNA-DEMOS-ISSUE-096:
   a nonempty partial skeleton root-prefix array is silently treated as all identity.
 - Extended the multi-skin workflow to two primitive/material parts per placement, proving selective

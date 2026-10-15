@@ -115,6 +115,25 @@ namespace
                     if (!Near(Vector3::Transform(point, palette[i]), Vector3::Transform(point, expected[i]))) return false;
             return true;
         };
+
+        // A hand-authored clip can contain sparse or irrelevant tracks. Empty tracks and indices
+        // outside this palette are omissions, not permission to read outside the bone arrays.
+        BoneTrackEXT empty;
+        empty.BoneIndex = 1;
+        BoneTrackEXT negative;
+        negative.BoneIndex = -2;
+        negative.Keys = {{TimeSpan::Zero, Vector3(100, 100, 100)}};
+        BoneTrackEXT pastEnd;
+        pastEnd.BoneIndex = model.BoneCount;
+        pastEnd.Keys = {{TimeSpan::Zero, Vector3(200, 200, 200)}};
+        auto& tracks = model.Clips.at("TurnAndReach").Tracks;
+        const std::size_t authoredTrackCount = tracks.size();
+        tracks.insert(tracks.end(), {empty, negative, pastEnd});
+        model.ComputeBoneTransformsEXT("TurnAndReach", TimeSpan::FromSeconds(1), false, palette);
+        ctx.Check(samePose(middle),
+                  "empty, negative-index and past-end tracks are skipped without changing valid motion");
+        tracks.resize(authoredTrackCount);
+
         model.ComputeBoneTransformsEXT("TurnAndReach", TimeSpan::FromSeconds(3), true, palette);
         ctx.Check(samePose(middle), "looping at 3 seconds wraps to the 1-second pose");
         model.ComputeBoneTransformsEXT("TurnAndReach", TimeSpan::FromSeconds(-1), true, palette);
@@ -149,7 +168,7 @@ namespace
 CNA_DEMOS_CONSOLE(PaletteSampling, {
     .id = "graphics.model.palette_sampling",
     .title = "Sample a hierarchical skin palette",
-    .description = "Samples translation, scale and rotation through a three-bone hierarchy, preserves an untracked bind pose, "
+    .description = "Samples translation, scale and rotation through a three-bone hierarchy, preserves untracked and safely skipped track state, "
                    "distinguishes AnimationPlayer local/world/skin coordinates, compares looped and clamped time, and rejects invalid clip/skeleton requests.",
     .apis = {"Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::ComputeBoneTransformsEXT",
              "Microsoft::Xna::Framework::Graphics::SkinnedModelEXT::ParentBoneIndices",
