@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended multi-artifact content publication with two concurrent compiler invocations targeting
+  one output root, proving that the contender is refused before writing and the lease owner can
+  publish a complete set followed by an unchanged skip.
 - Extended the morph-target workflow to prove that weight uploads leave imported mesh bounds
   caller-managed and that updating `ModelMesh::BoundingSphere` immediately expands the aggregate
   `Model::BoundingSphereEXT` around the stretched vertices.

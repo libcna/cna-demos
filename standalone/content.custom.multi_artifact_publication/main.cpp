@@ -3,16 +3,19 @@
 #include <algorithm>
 #include <atomic>
 #include <chrono>
+#include <condition_variable>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <iterator>
 #include <memory>
+#include <mutex>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <thread>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -32,6 +35,11 @@ namespace
     constexpr const char* RewardsType = "CnaDemos.EncounterRewards";
     constexpr auto DataChunk = Cnb::MakeChunkId('D', 'A', 'T', 'A');
     std::atomic<int> writes{0};
+    std::mutex importGateMutex;
+    std::condition_variable importGateChanged;
+    bool holdNextImport = false;
+    bool importReachedGate = false;
+    bool releaseImport = false;
     struct TemporaryDirectory
     {
         std::filesystem::path path;
@@ -62,6 +70,14 @@ namespace
                 throw std::runtime_error("An encounter needs 1..100 waves.");
             file >> std::ws;
             if (!file.eof()) throw std::runtime_error("An encounter contains one wave count.");
+            std::unique_lock gateLock(importGateMutex);
+            if (holdNextImport)
+            {
+                importReachedGate = true;
+                importGateChanged.notify_all();
+                importGateChanged.wait(gateLock, [] { return releaseImport; });
+                holdNextImport = false;
+            }
             return Pipeline::ContentValue::Create(SourceType, waves);
         }
     };
@@ -234,6 +250,57 @@ int main()
             check(Pipeline::RunContentCompiler(arguments, factory) == 0 && writes == afterRecovery &&
                   ReadText(manifestPath) == recoveredManifest,
                   "the recovered complete artifact set is eligible for the next unchanged skip");
+            // Hold one real invocation inside its importer. RunContentCompiler acquires the
+            // output-root lease before any importer runs, so a second invocation can now prove
+            // that it refuses the shared destination before creating an artifact.
+            const auto concurrentOutput = directory / "concurrent-output";
+            const std::vector<std::filesystem::path> concurrentArguments{
+                "build", source, "-o", concurrentOutput, "--format", "cnb", "--workers", "1"};
+            const int writesBeforeConcurrency = writes.load();
+            {
+                std::lock_guard gateLock(importGateMutex);
+                holdNextImport = true;
+                importReachedGate = false;
+                releaseImport = false;
+            }
+            int leaseOwnerStatus = -1;
+            std::thread leaseOwner([&] {
+                leaseOwnerStatus = Pipeline::RunContentCompiler(concurrentArguments, factory);
+            });
+            bool ownerReachedImporter = false;
+            {
+                std::unique_lock gateLock(importGateMutex);
+                ownerReachedImporter = importGateChanged.wait_for(
+                    gateLock, std::chrono::seconds(5), [] { return importReachedGate; });
+            }
+            const int contenderStatus = ownerReachedImporter
+                ? Pipeline::RunContentCompiler(concurrentArguments, factory)
+                : -1;
+            const bool contenderPublished =
+                std::filesystem::exists(concurrentOutput / "arena.cnb") ||
+                std::filesystem::exists(concurrentOutput / "rewards/arena.cnb") ||
+                std::filesystem::exists(concurrentOutput / "support/briefing.txt") ||
+                std::filesystem::exists(concurrentOutput / Pipeline::ContentBuildManifestFileName);
+            {
+                std::lock_guard gateLock(importGateMutex);
+                releaseImport = true;
+            }
+            importGateChanged.notify_all();
+            leaseOwner.join();
+            check(ownerReachedImporter && contenderStatus == 1 && !contenderPublished &&
+                      writes == writesBeforeConcurrency + 1,
+                  "a concurrent build for the same output root is refused before publishing or writing");
+            check(leaseOwnerStatus == 0 &&
+                      ReadCount(concurrentOutput / "arena.cnb", EncounterType) == 4 &&
+                      ReadCount(concurrentOutput / "rewards/arena.cnb", RewardsType) == 100 &&
+                      ReadText(concurrentOutput / "support/briefing.txt") == "Protect the north gate.\n" &&
+                      std::filesystem::is_regular_file(
+                          concurrentOutput / Pipeline::ContentBuildManifestFileName),
+                  "the lease owner publishes its complete artifact set after the contender is refused");
+            const int writesAfterConcurrency = writes.load();
+            check(Pipeline::RunContentCompiler(concurrentArguments, factory) == 0 &&
+                      writes == writesAfterConcurrency,
+                  "releasing the output lease permits an unchanged follow-up invocation to skip");
             // The fixed support destination belongs to one encounter. A second source would
             // claim that same path even though its two CNB names are distinct; the graph refuses it.
             const auto beforeConflictPrimary = ReadText(primary), beforeConflictCompanion = ReadText(companion);

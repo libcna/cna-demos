@@ -336,11 +336,12 @@ a check that all authored colors remain visible and that a blank texture row can
   Nine checks cover exact endpoints without warnings, null sinks, import failure and repair.
   Concurrent logger callbacks and CLI verbosity are not established by these synchronous builds.
   ✅ `content.custom.multi_artifact_publication`: a real compiler node publishes two declared CNB
-  schemas plus a briefing through native AddDeploymentFile. Fourteen focused checks cover digests,
+  schemas plus a briefing through native AddDeploymentFile. Seventeen focused checks cover digests,
   XREF/ownership, skips, missing companion recovery, changed support input, Publish failure/retry,
-  graph refusal of two nodes claiming one destination, and clean with/without its manifest.
+  graph refusal of two nodes claiming one destination, same-root concurrent compiler refusal and
+  recovery, and clean with/without its manifest.
   The failed deployment leaves newly published CNBs and the older manifest; no whole-node rollback
-  or crash/concurrent-publisher guarantee is claimed.
+  or independent-process/crash-consistency guarantee is claimed.
   ✅ `content.custom.dependency_graph`: strong build edges versus runtime-only XREFs, actual
   incremental propagation of effective fingerprints with unchanged parent bytes, fresh runtime
   budgets, cycle/missing-node refusal and repaired skipping. Sixteen focused checks also verify
@@ -8623,3 +8624,19 @@ and OPENGLES3 Xvfb runs pass9/9 with byte-identical stdout and empty stderr, and
 CTest passes. The `-j3` build, metadata, both self-test suites and temporary coverage are green;
 coverage remains655 demos,302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes.
 Evidence:`/tmp/checkpoint-862-*`. No screenshot or manual visual inspection was performed.
+
+## Focused863-same-root-content-compiler-lease
+
+`content.custom.multi_artifact_publication` grows from fourteen to seventeen child controls. One
+real compiler invocation is held inside its importer after acquiring the output-root lease. A
+simultaneous in-process invocation for that same destination is refused before its writer runs or
+any CNB, support file or manifest appears. The lease owner then publishes the complete set, and an
+unchanged follow-up invocation skips without another writer call.
+
+Both renderer-labelled direct runs pass, with only the workflow's expected blocked-publication,
+active-lease and graph-conflict diagnostics on stderr. The exact SOFTWARE CTest passes five
+consecutive repetitions, and normalized stdout/stderr are identical between selections. The full
+incremental `-j3` build, metadata and both self-test suites pass; temporary coverage stays at655
+demos,302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. This closes
+same-process same-root contention; independent compiler processes and crash consistency remain
+separate gaps. Evidence:`/tmp/checkpoint-863-*`. No screenshot or visual inspection was performed.

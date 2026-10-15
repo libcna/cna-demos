@@ -4112,6 +4112,28 @@ or manual visual inspection was performed.
 Continue with the next explicit public-behavior gap from the audit. Preserve Complete859 as the
 last complete baseline until enough focused work accumulates to justify another full checkpoint.
 
+### Focused863-same-root-content-compiler-lease
+
+The existing `content.custom.multi_artifact_publication` standalone workflow grows from fourteen
+to seventeen child controls. A bounded importer gate holds one real `RunContentCompiler` call only
+after it owns the destination lease. A simultaneous second call for the same output root returns
+failure before entering the writer or creating either CNB, the deployment file or the manifest.
+Releasing the gate lets the owner publish the complete four-file state, and the following unchanged
+invocation skips without another writer call.
+
+SOFTWARE and OPENGLES3 renderer-labelled direct runs pass. Their stderr contains the three expected
+diagnostics already exercised by the workflow: blocked deployment publication, active output lease
+and graph ownership conflict. The exact SOFTWARE CTest passes five consecutive repetitions. The
+normalized stdout and stderr are identical between selections. The full incremental `-j3` build,
+metadata655/0 and both self-test suites pass. Temporary coverage remains302/329 types,2114/2326
+members,169/753 fields and3078/3205 C routes; no new CNA problem appeared. This proves two
+concurrent in-process compiler invocations and the public result/artifact boundary.
+Independent-process contention and crash consistency remain explicit gaps. Evidence is under
+`/tmp/checkpoint-863-*`; no screenshot or visual inspection was performed.
+
+Continue with the next high-value behavior gap after committing and pushing this batch. Do not
+promote it to a complete checkpoint by itself.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
