@@ -4502,6 +4502,25 @@ validator self-test suites pass, and regenerated coverage is byte-identical at30
 Complete871 remains the full baseline. Audit the remaining embedded-art branch and album disposal
 contract before moving beyond the media-library table.
 
+### Focused883-embedded-album-art
+
+The deterministic music generator now authors `track_embedded.flac`, a third unique tagged album
+whose FLAC PICTURE block contains the existing original128x128 gradient PNG byte-for-byte. A second
+generator run reproduces the exact FLAC hash and leaves all three older tracks unchanged. The
+album-art workflow grows12->14 controls: with no folder image, HasArt is true, GetAlbumArt extracts
+the exact embedded PNG, two GetThumbnail calls return distinct caller-owned streams with the same
+bytes, and public SavePicture decodes those bytes as128x128. A fresh library after adding a folder
+cover to that album returns the folder bytes instead, proving folder-over-embedded precedence.
+
+SOFTWARE and OPENGLES3-labelled direct runs pass14/14 with byte-identical stdout and stderr; stderr
+contains the same fourteen reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes20
+consecutive runs. The warning-free full incremental build uses `-j3`, metadata validates655/0, both
+validator self-test suites pass, and regenerated coverage is byte-identical at302/329 types,
+2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is under
+`/tmp/checkpoint-883-*`. No new CNA defect, playback, screenshot or visual inspection is claimed.
+Complete871 remains the full baseline. Audit Album/Artist/Genre/Playlist disposed-object refusal as
+the next media-library behavior; ISSUE-098 establishes the parallel Picture family contract.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining

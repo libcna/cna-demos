@@ -504,8 +504,9 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `media.media_library.album_art`: private tagged folders establish folder-art/no-art behavior,
   exact original bytes, large-image downscaling and caller-owned streams beyond library lifetime.
   Case-insensitive `cover`-before-`folder` selection, two independent byte-identical thumbnails for
-  an already-small64x64 PNG and exact corrupt-cover fallback bytes are also covered. Embedded art,
-  other filename families and non-Linux platforms remain separate.
+  an already-small64x64 PNG and exact corrupt-cover fallback bytes are also covered. A generated
+  FLAC PICTURE block proves exact embedded PNG extraction, independent thumbnail ownership and
+  folder-over-embedded priority. Other filename families and non-Linux platforms remain separate.
 
 
 ## Phase 10 -- input ✅ (39 demos: keyboard, mouse, text input, clipboard, gamepad, touch, CNAEXT devices)
@@ -8962,3 +8963,19 @@ runs. The warning-free full incremental `-j3` build, metadata 655/0, both valida
 and byte-identical coverage regeneration pass; coverage remains 302/329 types, 2114/2326 members,
 169/753 fields and 3078/3205 C routes. Evidence:`/tmp/checkpoint-882-*`. No new CNA defect,
 playback, screenshot or visual inspection is claimed.
+
+## Focused883-embedded-album-art
+
+The original music-fixture generator now emits a deterministic fourth FLAC whose unique tagged
+album carries the existing128x128 gradient PNG in a PICTURE block. Regeneration is byte-identical
+and leaves the three older track files unchanged. The album-art workflow grows from twelve to
+fourteen controls: without folder art the album reports HasArt, GetAlbumArt extracts the exact PNG,
+two independent GetThumbnail streams preserve it byte-for-byte, and SavePicture publicly decodes
+it as128x128. Adding a folder cover before a fresh scan makes that file win over the embedded image.
+
+Both renderer-labelled direct runs pass14/14 with byte-identical stdout and stderr; stderr contains
+the same fourteen reviewed TitleContainer INFO lines. The exact SOFTWARE CTest passes twenty
+consecutive runs. The warning-free full incremental `-j3` build, metadata 655/0, both validator
+self-test suites and byte-identical coverage regeneration pass; coverage remains 302/329 types,
+2114/2326 members, 169/753 fields and 3078/3205 C routes. Evidence:`/tmp/checkpoint-883-*`. No new
+CNA defect, playback, screenshot or visual inspection is claimed.

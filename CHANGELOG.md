@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a deterministic tagged FLAC with byte-exact embedded PNG art, covering extraction,
+  thumbnail ownership and folder-over-embedded album-art precedence.
 - Extended album-art coverage with case-insensitive cover-over-folder priority, independent
   already-small thumbnail streams and exact corrupt-file fallback bytes.
 - Added disposed Picture and PictureAlbum refusal coverage, exposing CNA-DEMOS-ISSUE-098: CNA

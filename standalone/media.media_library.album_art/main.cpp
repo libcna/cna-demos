@@ -111,12 +111,15 @@ namespace
         }
         check(pictureIsPrivate && musicIsPrivate, "both media roots resolve to private fixture directories before library access");
 
-        const auto covered = music / "covered", bare = music / "bare";
+        const auto covered = music / "covered", bare = music / "bare", embedded = music / "embedded";
         std::filesystem::create_directory(covered);
         std::filesystem::create_directory(bare);
-        // The private folders hold one tagged album each; only one gets an authored cover.
+        std::filesystem::create_directory(embedded);
+        // The private folders hold one tagged album each; one gets a folder cover, one has no art,
+        // and one carries an embedded FLAC PICTURE block.
         for (const auto& [name, folder] : std::vector<std::pair<std::string, std::filesystem::path>>{
-                 {"track_a.flac", covered}, {"track_c.flac", bare}})
+                 {"track_a.flac", covered}, {"track_c.flac", bare},
+                 {"track_embedded.flac", embedded}})
         {
             const auto input = TitleContainer::OpenStream("assets/media/library_music/" + name);
             const auto bytes = ReadBytes(*input);
@@ -127,6 +130,8 @@ namespace
         }
         const auto coverInput = TitleContainer::OpenStream("assets/media/library_panorama.png");
         const auto encoded = ReadBytes(*coverInput);
+        const auto embeddedArtInput = TitleContainer::OpenStream("assets/textures/gradient.png");
+        const auto embeddedArtBytes = ReadBytes(*embeddedArtInput);
         {
             std::ofstream output(covered / "cover.png", std::ios::binary);
             output.write(reinterpret_cast<const char*>(encoded.data()), static_cast<std::streamsize>(encoded.size()));
@@ -139,19 +144,23 @@ namespace
         {
             MediaLibrary library;
             auto* albums = library.getAlbumsProperty();
-            if (!check(albums && albums->getCountProperty() == 2,
-                       "two private tagged folders create two albums")) return 1;
+            if (!check(albums && albums->getCountProperty() == 3,
+                       "three private tagged folders create three albums")) return 1;
             Album* withArt = nullptr;
             Album* withoutArt = nullptr;
+            Album* withEmbeddedArt = nullptr;
             for (int i = 0; i < albums->getCountProperty(); ++i)
             {
                 auto* album = (*albums)[i];
                 if (!album || !album->getArtistProperty()) continue;
                 if (album->getArtistProperty()->getNameProperty() == "Demo Ensemble") withArt = album;
                 if (album->getArtistProperty()->getNameProperty() == "Second Ensemble") withoutArt = album;
+                if (album->getArtistProperty()->getNameProperty() == "Embedded Ensemble")
+                    withEmbeddedArt = album;
             }
-            if (!check(withArt && withoutArt && withArt->getHasArtProperty() && !withoutArt->getHasArtProperty(),
-                       "HasArt distinguishes the album with a folder cover from the bare album")) return 1;
+            if (!check(withArt && withoutArt && withEmbeddedArt && withArt->getHasArtProperty() &&
+                           !withoutArt->getHasArtProperty() && withEmbeddedArt->getHasArtProperty(),
+                       "HasArt distinguishes folder, embedded and missing album art")) return 1;
             bool missingOriginal = false, missingThumbnail = false;
             try { std::unique_ptr<System::IO::Stream> unused(withoutArt->GetAlbumArt()); }
             catch (const System::InvalidOperationException&) { missingOriginal = true; }
@@ -172,6 +181,18 @@ namespace
                   "GetThumbnail produces a smaller decodable image with the original aspect ratio");
             if (preview) std::cout << "Album thumbnail: " << preview->getWidthProperty() << 'x'
                                    << preview->getHeightProperty() << '\n';
+
+            std::unique_ptr<System::IO::Stream> embeddedOriginal(withEmbeddedArt->GetAlbumArt());
+            std::unique_ptr<System::IO::Stream> firstEmbeddedThumbnail(withEmbeddedArt->GetThumbnail());
+            std::unique_ptr<System::IO::Stream> secondEmbeddedThumbnail(withEmbeddedArt->GetThumbnail());
+            const auto embeddedThumbnailBytes = ReadBytes(*firstEmbeddedThumbnail);
+            Picture* embeddedPreview = library.SavePicture("EmbeddedAlbumPreview.png", embeddedThumbnailBytes);
+            check(ReadBytes(*embeddedOriginal) == embeddedArtBytes &&
+                      firstEmbeddedThumbnail != secondEmbeddedThumbnail &&
+                      embeddedThumbnailBytes == embeddedArtBytes &&
+                      ReadBytes(*secondEmbeddedThumbnail) == embeddedArtBytes && embeddedPreview &&
+                      embeddedPreview->getWidthProperty() == 128 && embeddedPreview->getHeightProperty() == 128,
+                  "embedded art and its independent thumbnail streams preserve the exact decodable PNG");
         }
         // Album and Picture pointers are now invalid; the independently owned streams survive.
         original->setPositionProperty(0);
@@ -186,7 +207,8 @@ namespace
         for (const auto& [path, bytes] :
              std::vector<std::pair<std::filesystem::path, const std::vector<std::uint8_t>*>>{
                  {bare / "COVER.PNG", &preferredBytes},
-                 {bare / "FoLdEr.PnG", &lowerPriorityBytes}})
+                 {bare / "FoLdEr.PnG", &lowerPriorityBytes},
+                 {embedded / "cover.png", &preferredBytes}})
         {
             std::ofstream output(path, std::ios::binary);
             output.write(reinterpret_cast<const char*>(bytes->data()),
@@ -197,6 +219,7 @@ namespace
 
         MediaLibrary priorityLibrary;
         Album* priorityAlbum = nullptr;
+        Album* folderOverrideAlbum = nullptr;
         for (Album* candidate : *priorityLibrary.getAlbumsProperty())
         {
             if (candidate && candidate->getArtistProperty() &&
@@ -204,12 +227,21 @@ namespace
             {
                 priorityAlbum = candidate;
             }
+            if (candidate && candidate->getArtistProperty() &&
+                candidate->getArtistProperty()->getNameProperty() == "Embedded Ensemble")
+            {
+                folderOverrideAlbum = candidate;
+            }
         }
         if (!check(priorityAlbum && priorityAlbum->getHasArtProperty(),
                    "case-insensitive album-art candidates make the formerly bare album report art")) return 1;
         std::unique_ptr<System::IO::Stream> preferredArt(priorityAlbum->GetAlbumArt());
         check(ReadBytes(*preferredArt) == preferredBytes,
               "cover names outrank folder names independently of filename case");
+        std::unique_ptr<System::IO::Stream> folderOverrideArt(
+            folderOverrideAlbum ? folderOverrideAlbum->GetAlbumArt() : nullptr);
+        check(folderOverrideAlbum && folderOverrideArt && ReadBytes(*folderOverrideArt) == preferredBytes,
+              "folder cover art takes precedence over a member track's embedded image");
         std::unique_ptr<System::IO::Stream> firstSmallThumbnail(priorityAlbum->GetThumbnail());
         std::unique_ptr<System::IO::Stream> secondSmallThumbnail(priorityAlbum->GetThumbnail());
         const auto firstSmallBytes = ReadBytes(*firstSmallThumbnail);
