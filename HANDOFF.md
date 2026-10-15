@@ -71,9 +71,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and201 standalone;
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-898
+Coverage: generated docs/COVERAGE.md uses complete892's runtime reports plus focused893-899
 overlays for all659 catalog demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,209/753 fields and
+The surface totals are302/329 XNA types,2114/2326 XNA members,224/753 fields and
 3078/3205 public C ABI routes. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -364,6 +364,19 @@ validator self-tests pass5/5 and4/4. Coverage moves184->209/753 fields and Input
 other totals remain302/329 types,2114/2326 members and3078/3205 C routes. Evidence:
 `/tmp/checkpoint-898-*`. **Next:** audit all15 Input.Touch enum values through authored touch
 locations and queued GestureSamples, then disposition the much larger Keys constant family.
+
+Focused **899-all-Input.Touch-enum-values** extends the gesture queue from6 to14 controls. It
+combines all ten nonempty GestureType flags, proves None is the empty mask and replays one sample of
+each type with exact ordered timestamps, both positions and both deltas. The stable touch-value
+workflow already meaningfully constructs all four TouchLocationState values, which are now named.
+
+Both renderer-labelled console runs pass14 gesture and17 touch-value controls with byte-identical
+output and empty stderr. Both exact SOFTWARE CTests pass20 repetitions; the warning-free build uses
+`-j3`, metadata validates659/0 and validator self-tests pass5/5 and4/4. Coverage moves209->224/753
+fields and Input.Touch closes at15/15; non-field members remain2114/2326 because the secondary
+GestureSample properties were already credited. Evidence:`/tmp/checkpoint-899-*`. **Next:** audit
+the160 Keys constants by semantic family, separating deterministic value/name/state evidence from
+physical key delivery.
 
 Historical focused detail follows. Focused **845-rigid-glTF-node-instances** was staged after
 Complete844. The new
@@ -2128,11 +2141,11 @@ process-level features; static CNA on CMake < 3.29.
 ## 14. Next task
 
 HIGHEST PRIORITY: Complete892 remains the authoritative657-demo full-runtime baseline; focused893-
-898 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
-closed at7/8 by evidence/disposition and Input reaches34/202 after all small-state and Buttons
-values. Audit all15 `Microsoft.Xna.Framework.Input.Touch` fields next: four TouchLocationState
-values are already authored, and the GestureSample queue can distinguish every GestureType without
-physical input. Then disposition the160 Keys constants rather than crediting unused names.
+899 extend the current catalog to659 IDs and advance the semantic public-field audit. Media is
+closed at7/8, Input reaches34/202, and Input.Touch is complete at15/15. Audit the160 public Keys
+constants next by semantic family. Use deterministic KeyboardState and name/round-trip behavior
+where it adds evidence, preserve manual physical-delivery boundaries, and do not credit constants
+merely because they can be cast or listed.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete892 too stale.

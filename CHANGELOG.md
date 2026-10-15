@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed all 15 Input.Touch enum values by replaying every GestureType with full two-point
+  payloads and naming every authored TouchLocationState.
 - Extended the authored GamePadState workflow to distinguish all 25 public Buttons flags through
   physical component properties, stick directions and trigger thresholds.
 - Audited Input's small state enums through authored mouse/keyboard values, keyboard-emulated and

@@ -9266,3 +9266,18 @@ SOFTWARE CTest passes20 repetitions. The warning-free build uses at most three j
 Input reaches34/202; types, non-field members and C routes remain302/329,2114/2326 and3078/3205.
 Evidence:`/tmp/checkpoint-898-*`. Audit the15 Input.Touch enum values next through authored touch
 locations and queued gesture samples before deciding how to disposition the160 Keys constants.
+
+## Focused899-all-Input.Touch-enum-values
+
+The stable gesture-queue workflow grows6->14 controls and now combines every nonempty GestureType,
+proves None is the empty mask and replays all ten gesture identities in order. Each sample preserves
+its unique timestamp, both positions and both deltas. The existing touch-value workflow already
+constructs Invalid, Released, Pressed and Moved through meaningful current/history and collection
+paths, so metadata now names all four values without another check or ID.
+
+SOFTWARE and OPENGLES3 console runs pass14 and17 controls with byte-identical output and empty
+stderr. Both exact SOFTWARE CTests pass20 repetitions. The warning-free build uses at most three
+jobs, metadata is659/0 and both validator suites pass. Coverage moves209->224/753 fields and closes
+Input.Touch at15/15; the XNA member total remains2114/2326 because both secondary GestureSample
+payload properties were already credited. Evidence:`/tmp/checkpoint-899-*`. Audit the160 Keys
+constants by semantic families next; do not turn a name table into a false physical-input claim.

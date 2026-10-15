@@ -103,6 +103,8 @@ CNA_DEMOS_CONSOLE(TouchValues, {
              "TouchCollection::Count", "TouchCollection::IsReadOnly", "TouchCollection::FindById",
              "TouchCollection::Contains", "TouchCollection::CopyTo", "TouchCollection::IndexOf",
              "TouchCollection::Item", "TouchCollection::Add", "TouchCollection::Insert",
-             "TouchCollection::Remove", "TouchCollection::RemoveAt", "TouchCollection::Clear"},
+             "TouchCollection::Remove", "TouchCollection::RemoveAt", "TouchCollection::Clear",
+             "TouchLocationState::Invalid", "TouchLocationState::Released",
+             "TouchLocationState::Pressed", "TouchLocationState::Moved"},
     .tags = {"touch", "multitouch", "finger", "testing", "value", "collection"},
 })

@@ -950,6 +950,24 @@ to1545/2326; the Touch namespace is41/48 with every remaining member disposition
 `/tmp/checkpoint-650-touch-*` and `/tmp/checkpoint-650-coverage.md`. No touch hardware, screenshot or
 visual inspection was used.
 
+### Input.Touch public enum values
+
+`input.touch.touch_values` already constructs and distinguishes Invalid, Released, Pressed and
+Moved through previous-location sentinels, current/history states and collection mutations; its
+metadata now names all four TouchLocationState values. The gesture-queue workflow now combines all
+ten nonempty GestureType flags and proves None remains the empty mask, then enqueues one sample of
+each nonempty type. Ten distinct timestamps, primary/secondary positions and primary/secondary
+deltas return in exact order, so HorizontalDrag, VerticalDrag and both completion values are
+observed through the same public queue as the familiar tap/drag/pinch values. This is deterministic
+replay/queue evidence and does not claim that a recognizer produced the gestures from touch motion.
+
+Both renderer-labelled console runs pass14 gesture and17 touch-value controls with byte-identical
+output and empty stderr. Both exact SOFTWARE CTests pass20 repetitions. The clean `-j3` build,
+metadata659/0 and both validator suites pass. Generated fields move209->224/753 and Input.Touch
+reaches15/15; the two secondary payload properties were already credited elsewhere, so the non-
+field member total remains2114/2326. Evidence:`/tmp/checkpoint-899-*`. No touch hardware,
+rendering, screenshot or visual judgment is involved.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and
