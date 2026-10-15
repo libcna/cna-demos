@@ -4,7 +4,7 @@
 CNA_DEMOS_STANDALONE({
     .id = "media.media_library.save_picture",
     .title = "Save pictures and read image and thumbnail streams",
-    .description = "Uses an isolated Linux media library to save an original panorama, check picture/album views and disposal, "
+    .description = "Uses an isolated Linux media library to save an original panorama, check picture/album views and disposed-object refusals, "
                    "discover a nested album tree, replace a same-name picture, read independent image/thumbnail streams, check small/corrupt thumbnail fallbacks, and expose incomplete short reads.",
     .apis = {"MediaLibrary::SavePicture", "MediaLibrary::Pictures", "MediaLibrary::SavedPictures",
              "MediaLibrary::RootPictureAlbum", "Picture::Name", "Picture::Width", "Picture::Height",
@@ -24,7 +24,7 @@ CNA_DEMOS_STANDALONE({
     .restrictions = "Standalone program initializes private XDG paths before CNA/SDL first use. Linux/XDG resolution is required; "
                     "otherwise skipped before accessing a library. "
                     "Private generated files only; nested-album, same-name replacement and disposal behavior is observed before library destruction. "
-                    "Short reads expose CNA-DEMOS-ISSUE-041; other platforms are untested. "
+                    "Short reads expose CNA-DEMOS-ISSUE-041 on the pinned CNA; disposed Picture/PictureAlbum operations expose CNA-DEMOS-ISSUE-098. Other platforms are untested. "
                     "GetThumbnail's no-resize comment is stale (CNA-DEMOS-ISSUE-040); the normal thumbnail checks pass.",
-    .knownIssue = "CNA-DEMOS-ISSUE-041",
+    .knownIssue = "CNA-DEMOS-ISSUE-098",
 })

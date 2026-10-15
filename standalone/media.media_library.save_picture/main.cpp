@@ -22,6 +22,7 @@
 #include "Microsoft/Xna/Framework/Media/PictureAlbumCollection.hpp"
 #include "Microsoft/Xna/Framework/Media/PictureCollection.hpp"
 #include "System/IO/MemoryStream.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Media;
@@ -76,6 +77,23 @@ namespace
                    static_cast<std::streamsize>(bytes.size()));
         file.close();
         if (!file) throw std::runtime_error("Could not write the nested picture fixture");
+    }
+
+    template<typename Action>
+    bool ThrowsObjectDisposed(Action&& action)
+    {
+        try
+        {
+            action();
+        }
+        catch (const System::ObjectDisposedException&)
+        {
+            return true;
+        }
+        catch (...)
+        {
+        }
+        return false;
     }
 #endif
 
@@ -334,9 +352,51 @@ namespace
         album->Dispose();
         check(picture->getIsDisposedProperty() && album->getIsDisposedProperty() &&
                   !preview->getIsDisposedProperty() && !chunked->getIsDisposedProperty() &&
-                  !replacement->getIsDisposedProperty() && picture->getAlbumProperty() == album &&
-                  album->getPicturesProperty()->getCountProperty() == 4,
-              "object disposal is idempotent, marks only that borrowed view and preserves its relationships");
+                  !replacement->getIsDisposedProperty(),
+              "object disposal is idempotent and marks only the selected borrowed views");
+
+        int pictureDisposalRefusals = 0;
+        pictureDisposalRefusals += ThrowsObjectDisposed([&] { (void)picture->getNameProperty(); });
+        pictureDisposalRefusals += ThrowsObjectDisposed([&] { (void)picture->getAlbumProperty(); });
+        pictureDisposalRefusals += ThrowsObjectDisposed([&] { (void)picture->getWidthProperty(); });
+        pictureDisposalRefusals += ThrowsObjectDisposed([&] { (void)picture->getHeightProperty(); });
+        pictureDisposalRefusals += ThrowsObjectDisposed([&] { (void)picture->getDateProperty(); });
+        pictureDisposalRefusals += ThrowsObjectDisposed([&]
+        {
+            std::unique_ptr<System::IO::Stream> disposedImage(picture->GetImage());
+        });
+        pictureDisposalRefusals += ThrowsObjectDisposed([&]
+        {
+            std::unique_ptr<System::IO::Stream> disposedThumbnail(picture->GetThumbnail());
+        });
+        pictureDisposalRefusals += ThrowsObjectDisposed([&] { (void)picture->Equals(indexedPicture); });
+        pictureDisposalRefusals += ThrowsObjectDisposed([&]
+        {
+            (void)picture->Equals(static_cast<const System::Object*>(indexedPicture));
+        });
+        pictureDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*picture == *indexedPicture); });
+        pictureDisposalRefusals += ThrowsObjectDisposed([&] { (void)picture->GetHashCode(); });
+        pictureDisposalRefusals += ThrowsObjectDisposed([&] { (void)picture->ToString(); });
+        check(pictureDisposalRefusals == 12,
+              "a disposed Picture refuses properties, streams and value operations (CNA-DEMOS-ISSUE-098)");
+
+        int albumDisposalRefusals = 0;
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)album->getNameProperty(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)album->getAlbumsProperty(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)album->getParentProperty(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)album->getPicturesProperty(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)album->Equals(reopenedSavedAlbum); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&]
+        {
+            (void)album->Equals(static_cast<const System::Object*>(reopenedSavedAlbum));
+        });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)(*album == *reopenedSavedAlbum); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)album->GetHashCode(); });
+        albumDisposalRefusals += ThrowsObjectDisposed([&] { (void)album->ToString(); });
+        check(albumDisposalRefusals == 9,
+              "a disposed PictureAlbum refuses properties and value operations (CNA-DEMOS-ISSUE-098)");
+        std::cout << "Disposed refusals: Picture " << pictureDisposalRefusals
+                  << "/12, PictureAlbum " << albumDisposalRefusals << "/9\n";
 
         auto* reopenedPictures = reopened.getPicturesProperty();
         check(!reopenedPictures->getIsDisposedProperty() && !rootAlbums->getIsDisposedProperty(),

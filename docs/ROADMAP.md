@@ -495,8 +495,10 @@ a check that all authored colors remain visible and that a blank texture row can
   128x64 PNG remains byte-identical through two independently owned thumbnail streams; after
   external corruption, thumbnail decoding falls back to the exact current file bytes.
   A valid stream delivering 13-byte chunks exposes ISSUE-041: SavePicture reads once and writes
-  a zero-padded image. ISSUE-040 records stale thumbnail comments separately. Other platforms,
-  premature/unknown-length streams and further disposal contracts remain unaudited. Same-name
+  a zero-padded image. ISSUE-040 records stale thumbnail comments separately. Other platforms and
+  premature/unknown-length streams remain source-dispositioned. Disposed Picture and PictureAlbum
+  operations expose ISSUE-098: CNA keeps all tested properties, streams and value operations live
+  instead of throwing ObjectDisposedException. Same-name
   saves replace one file while the live library retains distinct equal snapshot views; a fresh
   library observes only the latest dimensions and bytes.
 
@@ -8923,3 +8925,18 @@ invalidated Picture/PictureAlbum view question. The warning-free incremental `-j
 655/0, both validator self-test suites and byte-identical coverage regeneration pass; counts remain
 302/329 types, 2114/2326 members, 169/753 fields and 3078/3205 C routes. Evidence:
 `/tmp/checkpoint-880-*`. No runtime, screenshot or visual validation was used for this disposition.
+
+## Focused881-disposed-picture-refusal
+
+The existing picture-library demo corrects its earlier assumption that disposal should leave
+relationships readable. Windows XNA guards ordinary Picture and PictureAlbum properties, streams
+and value operations with ObjectDisposedException. CNA only sets IsDisposed. The revised workflow
+retains a passing repeated-disposal and sibling-isolation control, then exercises twelve Picture
+and nine PictureAlbum operations after disposal. Both renderer labels observe zero exact refusals;
+two grouped ISSUE-098 assertions fail alongside the established ISSUE-041 short-read assertion, so
+31 of 34 controls pass. Metadata names ISSUE-098 as the primary expected failure because the later
+CNA source fix for ISSUE-041 is outside the pinned baseline. The exact known-issue SOFTWARE CTest
+passes twenty consecutive runs. The warning-free full incremental `-j3` build, metadata 655/0, both
+validator self-test suites and byte-identical coverage regeneration pass; coverage remains 302/329
+types, 2114/2326 members, 169/753 fields and 3078/3205 C routes. Evidence:
+`/tmp/checkpoint-881-*`. No screenshot or visual inspection was used.

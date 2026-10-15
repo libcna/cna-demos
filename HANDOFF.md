@@ -4460,6 +4460,28 @@ source/documentation disposition. Continue with the remaining Picture/PictureAlb
 invalidated-view question. Determine whether post-Dispose getters have a specified refusal contract
 before adding runtime assertions.
 
+### Focused881-disposed-picture-refusal
+
+The disposal question exposed CNA-DEMOS-ISSUE-098 and corrected an earlier demo expectation. XNA's
+Picture and PictureAlbum implementations guard their ordinary public properties, image streams and
+value operations with `ThrowIfDisposed`; CNA's `Dispose` methods only set the flag and no tested
+member checks it. The demo retains a passing idempotence/sibling-isolation control, then executes
+all twelve relevant Picture operations and nine PictureAlbum operations after repeated disposal.
+Both renderer labels report0/12 and0/9 exact ObjectDisposedException refusals, so two grouped
+assertions fail alongside the established ISSUE-041 short-read assertion. The previous assertion
+that disposed views preserve readable relationships was a demo bug and is removed. Metadata now
+names ISSUE-098 as the primary expected failure because ISSUE-041 is fixed in later CNA source but
+remains present in the pinned baseline.
+
+SOFTWARE and OPENGLES3-labelled runs are byte-identical on both streams and each pass31 of34
+controls, with only ISSUE-041 and the two ISSUE-098 groups failing. The exact known-issue SOFTWARE
+CTest passes20 consecutive runs. The warning-free full incremental build uses `-j3`, metadata
+validates655/0, both validator self-test suites pass, and regenerated coverage is byte-identical at
+302/329 types,2114/2326 members,169/753 fields and3078/3205 C routes. Evidence is under
+`/tmp/checkpoint-881-*`. No CNA source was modified and no screenshot or visual inspection was
+used. Complete871 remains the full baseline. Continue with the explicit Album art filename-
+selection and small/corrupt-thumbnail fallback gaps.
+
 Historical audit detail follows. Focused711 projected the632-demo staged catalog to2102/2326 XNA
 members and157/753 fields at301/329 types.
 Effect, EffectParameter, EffectAnnotation, EffectPass and EffectTechnique have no remaining
