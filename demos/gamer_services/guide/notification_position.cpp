@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MS-PL
 // Guide::NotificationPosition: where the Guide's notifications (sign-ins, achievements) appear.
+#include <algorithm>
+#include <array>
 #include <chrono>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <thread>
@@ -25,15 +28,36 @@ namespace
 {
     const Color Background(20, 22, 30);
 
-    // Counts the pixels in a region that are not the background: the notification's footprint.
-    int Covered(const CnaDemos::BackBufferPixels& pixels, int x0, int y0, int x1, int y1)
+    constexpr std::array<NotificationPosition, 9> Positions = {
+        NotificationPosition::TopLeft, NotificationPosition::TopCenter, NotificationPosition::TopRight,
+        NotificationPosition::CenterLeft, NotificationPosition::Center, NotificationPosition::CenterRight,
+        NotificationPosition::BottomLeft, NotificationPosition::BottomCenter, NotificationPosition::BottomRight};
+
+    struct Footprint
     {
         int covered = 0;
-        for (int y = y0; y < y1; ++y)
-            for (int x = x0; x < x1; ++x)
+        int minX = std::numeric_limits<int>::max(), minY = std::numeric_limits<int>::max();
+        int maxX = -1, maxY = -1;
+    };
+
+    Footprint FindFootprint(const CnaDemos::BackBufferPixels& pixels)
+    {
+        Footprint result;
+        for (int y = 0; y < pixels.Height(); ++y)
+        {
+            for (int x = 0; x < pixels.Width(); ++x)
+            {
                 if (!CnaDemos::Near(pixels.At(x, y), Background, 4))
-                    ++covered;
-        return covered;
+                {
+                    ++result.covered;
+                    result.minX = std::min(result.minX, x);
+                    result.minY = std::min(result.minY, y);
+                    result.maxX = std::max(result.maxX, x);
+                    result.maxY = std::max(result.maxY, y);
+                }
+            }
+        }
+        return result;
     }
 
     class NotificationPositionDemo final : public CnaDemos::GamerServicesDemo
@@ -44,7 +68,7 @@ namespace
             // Set before the profile signs in, so its "signed in" notification already uses it.
             // (XNA's default is BottomCenter.)
             defaultPosition_ = Guide::getNotificationPositionProperty();
-            Guide::setNotificationPositionProperty(NotificationPosition::TopRight);
+            Guide::setNotificationPositionProperty(Positions.front());
         }
 
     protected:
@@ -54,8 +78,8 @@ namespace
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             ctx.Check(defaultPosition_ == NotificationPosition::BottomCenter, "notifications start at BottomCenter");
-            ctx.Check(Guide::getNotificationPositionProperty() == NotificationPosition::TopRight,
-                      "NotificationPosition is now TopRight");
+            ctx.Check(Guide::getNotificationPositionProperty() == NotificationPosition::TopLeft,
+                      "NotificationPosition is now TopLeft");
 
             const bool screenSaverBefore = Guide::getIsScreenSaverEnabledProperty();
             Guide::setIsScreenSaverEnabledProperty(!screenSaverBefore);
@@ -69,9 +93,13 @@ namespace
         {
             GraphicsDevice& device = getGraphicsDeviceProperty();
             device.Clear(Background);
-            spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
-            spriteBatch_->DrawString(*font_, "Guide notifications: TopRight", Vector2(40.0f, 220.0f), Color::White);
-            spriteBatch_->End();
+            if (checked_)
+            {
+                spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
+                spriteBatch_->DrawString(*font_, "Guide notifications: all nine positions checked",
+                                         Vector2(40.0f, 220.0f), Color::White);
+                spriteBatch_->End();
+            }
             // Inspect the overlay from its first frames instead of waiting a fixed frame count.
             // A small bounded observation cadence also lets an unthrottled run animate the toast.
             if (!checked_) std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -87,14 +115,17 @@ namespace
                 const auto now = std::chrono::steady_clock::now();
                 if (!observationStarted_) observationStarted_ = now;
                 const CnaDemos::BackBufferPixels pixels(getGraphicsDeviceProperty());
-                topRight_ = Covered(pixels, 500, 0, 800, 150);
-                bottomCenter_ = Covered(pixels, 250, 330, 550, 480);
+                const Footprint footprint = FindFootprint(pixels);
                 ++observations_;
-                // Observe either region: a misplaced toast must fail as soon as it is visible.
-                // A missing toast remains a failure at the deadline or the end of a short run.
-                if (topRight_ > 500 || bottomCenter_ > 500 ||
-                    now - *observationStarted_ >= std::chrono::seconds(2))
-                    CheckPosition();
+                if (footprint.covered > 500)
+                {
+                    CheckPosition(pixels, footprint);
+                }
+                else if (now - *observationStarted_ >= std::chrono::seconds(2))
+                {
+                    Context().Check(false, "the sign-in notification became visible within two seconds");
+                    checked_ = true;
+                }
             }
             DemoGame::EndDraw();
         }
@@ -103,26 +134,42 @@ namespace
         {
             if (Context().Automated())
             {
-                if (!checked_) CheckPosition();
+                Context().Check(positionIndex_ == Positions.size(),
+                                "the live notification was observed at all nine positions");
                 Context().Check(observations_ > 0, "the notification was looked at during the run");
             }
             DemoGame::EndRun();
         }
 
     private:
-        void CheckPosition()
+        void CheckPosition(const CnaDemos::BackBufferPixels& pixels, const Footprint& footprint)
         {
-            checked_ = true;
-            Context().Print("notification pixels: {} at the top right, {} at the bottom centre; observed {} frame(s)",
-                            topRight_, bottomCenter_, observations_);
-            Context().Check(topRight_ > 500 && bottomCenter_ == 0,
-                            "the sign-in notification appears at the top right, not at the bottom centre");
+            const auto expected = Positions[positionIndex_];
+            const int ordinal = static_cast<int>(expected);
+            const int centreX = (footprint.minX + footprint.maxX) / 2;
+            const int centreY = (footprint.minY + footprint.maxY) / 2;
+            const int observedColumn = std::min(2, centreX * 3 / pixels.Width());
+            const int observedRow = std::min(2, centreY * 3 / pixels.Height());
+            Context().Print("position {}: {} pixels, bounds ({}, {})-({}, {})", ordinal, footprint.covered,
+                            footprint.minX, footprint.minY, footprint.maxX, footprint.maxY);
+            Context().Check(Guide::getNotificationPositionProperty() == expected &&
+                                observedColumn == ordinal % 3 && observedRow == ordinal / 3,
+                            "notification position " + std::to_string(ordinal) + " selects its rendered grid cell");
+            ++positionIndex_;
+            if (positionIndex_ == Positions.size())
+            {
+                checked_ = true;
+            }
+            else
+            {
+                Guide::setNotificationPositionProperty(Positions[positionIndex_]);
+            }
         }
 
         NotificationPosition defaultPosition_ = NotificationPosition::BottomCenter;
         bool checked_ = false;
+        std::size_t positionIndex_ = 0;
         int observations_ = 0;
-        int topRight_ = 0, bottomCenter_ = 0;
         std::optional<std::chrono::steady_clock::time_point> observationStarted_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
@@ -132,9 +179,13 @@ namespace
 CNA_DEMOS_GAME(NotificationPositionDemo, {
     .id = "gamer_services.guide.notification_position",
     .title = "Where notifications appear",
-    .description = "Moves the Guide's notifications from BottomCenter to TopRight, verifies the rendered sign-in "
-                   "notification there, and toggles then restores the platform screen-saver state.",
+    .description = "Moves one live sign-in notification through all nine NotificationPosition grid cells, verifies "
+                   "each rendered placement, and toggles then restores the platform screen-saver state.",
     .apis = {"Guide::NotificationPosition", "Guide::IsScreenSaverEnabled", "NotificationPosition",
+             "NotificationPosition::TopLeft", "NotificationPosition::TopCenter", "NotificationPosition::TopRight",
+             "NotificationPosition::CenterLeft", "NotificationPosition::Center", "NotificationPosition::CenterRight",
+             "NotificationPosition::BottomLeft", "NotificationPosition::BottomCenter",
+             "NotificationPosition::BottomRight",
              "GamerServicesComponent"},
     .tags = {"gamer-services", "guide", "notification", "overlay"},
     .frames = 30,

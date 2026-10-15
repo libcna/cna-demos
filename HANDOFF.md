@@ -73,8 +73,8 @@ diagnostics2, cnaext4, platform2 and c_api177. Kinds are164 console,294 game and
 623 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses complete912's full runtime reports for all659 catalog
 demos.
-The surface totals are302/329 XNA types,2114/2326 XNA members,661/753 fields and
-3078/3205 public C ABI routes. GamerServices field coverage is147/223 after Focused914; Complete912's
+The surface totals are302/329 XNA types,2114/2326 XNA members,674/753 fields and
+3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete912's
 full runtime reports remain the baseline inputs for the unchanged659-ID catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -295,6 +295,22 @@ metadata is659/0 and coverage moves639->661/753 fields, GamerServices125->147/22
 `/tmp/checkpoint-914-gamer-services-*.json` and `/tmp/checkpoint-914-coverage.md`. **Next:** complete the13 observable
 Guide field values by moving one live notification through all nine positions and rendering all four message-box icons,
 then formally disposition the57 synonymous presence labels and six service-account policy/zone values.
+
+Focused **915-rendered-Guide-field-values** adds the final13 observable GamerServices values without a new
+ID. One live sign-in toast moves through all nine NotificationPosition grid cells; both renderers report the same exact
+bounds and9882 changed pixels at every position. Four real BeginShowMessageBox operations render None, Error, Warning
+and Alert before automated completion; every pair differs in the icon/card region (minimum1619 SOFTWARE and421
+OPENGLES3 pixels in the category runs), while preserving callback/choice/visibility behavior.
+
+Both complete Guide-category runs pass5/5; the changed demos pass15/15 and14/14 on both renderers, and both exact
+SOFTWARE CTests pass ten repetitions. The warning-free build uses `-j3`, metadata is659/0 and both validator suites
+pass. Coverage moves661->674/753 fields and GamerServices147->160/223. Its remaining63 values are intentionally
+uncredited after source/behavior disposition:57 GamerPresenceMode labels feed the same private service-string
+publication path, Blocked/FriendsOnly require service account policy, and four named GamerZone values require a
+service profile. Evidence:`/tmp/checkpoint-915-guide-*.json` and `/tmp/checkpoint-915-coverage.md`. Pixel checks were
+programmatic; no screenshot or manual visual-quality claim was made. **Next:** return to the deeper public
+member/behavior audit; select the highest-value undispositioned non-field gap from the generated inventory and existing
+coverage-audit tables rather than adding enum/count variants.
 
 Focused **893-public-VideoPlayer-contracts** extends the stable
 `media.video_player.pause_and_loop` ID from12 to27 controls. Both renderer labels pass21 controls
@@ -2305,14 +2321,16 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline; Focused914
-is the latest validated field-only delta. Current field coverage is661/753 and GamerServices is
-147/223. Complete the13 observable Guide values next: move the live sign-in notification through all
-nine NotificationPosition placements with rendered-position checks, and render/differentiate all four
-MessageBoxIcon values. Then close the GamerServices field disposition:57 unused GamerPresenceMode
-labels share the already-demonstrated storage/publish behavior, while Blocked/FriendsOnly and the four
-named GamerZone values require service-controlled account data. Keep these uncredited unless a real
-public behavior path distinguishes them in this environment.
+HIGHEST PRIORITY: Complete912 is the authoritative659-demo full-build/full-runtime baseline; Focused915
+is the latest validated field-only delta. Current field coverage is674/753 and GamerServices is
+semantically dispositioned at160/223: all observable local/avatar/Guide values are covered, while its
+remaining63 values require service-account data or repeat the same presence publication behavior.
+The complete field audit now leaves only previously dispositioned environment/platform values in
+other namespaces (eight hardware GamePadType identities, five remote Net states, two renderer device-
+loss states and WindowsMediaConnect). Return to the deeper public member/behavior audit. Use the
+inventory and docs/COVERAGE_AUDIT.md to choose the highest-value undispositioned behavior, prefer an
+existing workflow, and keep constructors/finalizers, CLR collection plumbing and service-only paths
+classified rather than inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
 commit, push and immediately continue. Run the next full checkpoint after enough focused change or
 before another handoff that would make Complete912 too stale.

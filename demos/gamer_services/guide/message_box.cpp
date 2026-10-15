@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: MS-PL
 // Guide::BeginShowMessageBox / EndShowMessageBox: a system message box, answered asynchronously.
+#include <algorithm>
 #include <any>
+#include <array>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <string>
 
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/GamerServicesDemo.hpp"
+#include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/Guide.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/GuideAlreadyVisibleException.hpp"
@@ -26,6 +30,8 @@ using namespace Microsoft::Xna::Framework::Graphics;
 namespace
 {
     constexpr const char* Buttons[] = {"Save", "Quit", "Cancel"};
+    constexpr std::array<MessageBoxIcon, 4> Icons = {
+        MessageBoxIcon::None, MessageBoxIcon::Error, MessageBoxIcon::Warning, MessageBoxIcon::Alert};
 
     class MessageBoxDemo final : public CnaDemos::GamerServicesDemo
     {
@@ -55,17 +61,7 @@ namespace
 
             if (updates_ == 3)
             {
-                // The answer arrives through the callback; the game keeps running meanwhile.
-                // The caller owns the returned IAsyncResult and deletes it after EndShowMessageBox.
-                pending_ = Guide::BeginShowMessageBox(
-                    PlayerIndex::One, "Leave the level?", "Progress since the last checkpoint is lost.",
-                    {Buttons[0], Buttons[1], Buttons[2]}, 0, MessageBoxIcon::Warning,
-                    [this](System::IAsyncResult& result) {
-                        choice_ = Guide::EndShowMessageBox(&result);
-                        state_ = std::any_cast<std::string>(result.getAsyncStateProperty());
-                        answered_ = true;
-                    },
-                    std::string("leave-level"));
+                StartBox();
                 ctx.Check(Guide::getIsVisibleProperty(), "the Guide is visible while the box waits for an answer");
 
                 // One Guide screen at a time.
@@ -82,25 +78,44 @@ namespace
                 ctx.Check(refused, "a second message box is refused with GuideAlreadyVisibleException");
             }
 
-            // Unattended, "click" Quit; interactively a person answers with the mouse, the
-            // keyboard (arrows, Enter, Escape) or a controller (D-pad, A, B).
-            if (ctx.Automated() && updates_ == 30 && Guide::getHasPendingMessageBoxEXTProperty())
-            {
-                Guide::SimulateMessageBoxClickEXT(1);
-            }
-
             if (answered_ && pending_ != nullptr)
             {
                 delete pending_;
                 pending_ = nullptr;
                 ctx.Print("answer: {}", choice_ ? Buttons[*choice_] : "cancelled (no button)");
                 ctx.Check(!Guide::getIsVisibleProperty(), "the Guide is hidden again once answered");
-                ctx.Check(state_ == "leave-level", "the callback received the state object passed to Begin");
+                ctx.Check(state_ == "icon-" + std::to_string(iconIndex_),
+                          "the callback received the state object passed to Begin");
                 if (ctx.Automated())
                 {
                     ctx.Check(choice_ == 1, "EndShowMessageBox returned the index of the button chosen (Quit)");
                 }
+                ++iconIndex_;
+                answered_ = false;
+                if (iconIndex_ < Icons.size())
+                {
+                    StartBox();
+                }
+                else if (!iconPixelsChecked_)
+                {
+                    CheckIconPixels();
+                }
             }
+        }
+
+        void EndDraw() override
+        {
+            if (pending_ != nullptr && !captures_[iconIndex_])
+            {
+                captures_[iconIndex_].emplace(getGraphicsDeviceProperty());
+                // Unattended, "click" Quit after each icon has actually been rendered;
+                // interactively a person answers with mouse, keyboard or controller.
+                if (Context().Automated())
+                {
+                    Guide::SimulateMessageBoxClickEXT(1);
+                }
+            }
+            DemoGame::EndDraw();
         }
 
         void Draw(const GameTime& gameTime) override
@@ -122,11 +137,60 @@ namespace
         }
 
     private:
+        void StartBox()
+        {
+            // The answer arrives through the callback; the game keeps running meanwhile.
+            // The caller owns the returned IAsyncResult and deletes it after EndShowMessageBox.
+            pending_ = Guide::BeginShowMessageBox(
+                PlayerIndex::One, "Leave the level?", "Progress since the last checkpoint is lost.",
+                {Buttons[0], Buttons[1], Buttons[2]}, 0, Icons[iconIndex_],
+                [this](System::IAsyncResult& result) {
+                    choice_ = Guide::EndShowMessageBox(&result);
+                    state_ = std::any_cast<std::string>(result.getAsyncStateProperty());
+                    answered_ = true;
+                },
+                std::string("icon-") + std::to_string(iconIndex_));
+        }
+
+        static int RegionDifferences(const CnaDemos::BackBufferPixels& left,
+                                     const CnaDemos::BackBufferPixels& right)
+        {
+            int differences = 0;
+            for (int y = left.Height() / 4; y < left.Height() * 3 / 4; ++y)
+            {
+                for (int x = 0; x < left.Width() / 3; ++x)
+                {
+                    differences += CnaDemos::Near(left.At(x, y), right.At(x, y), 2) ? 0 : 1;
+                }
+            }
+            return differences;
+        }
+
+        void CheckIconPixels()
+        {
+            int minimumDifference = std::numeric_limits<int>::max();
+            for (std::size_t left = 0; left < captures_.size(); ++left)
+            {
+                for (std::size_t right = left + 1; right < captures_.size(); ++right)
+                {
+                    minimumDifference = std::min(minimumDifference,
+                        RegionDifferences(*captures_[left], *captures_[right]));
+                }
+            }
+            Context().Print("minimum pairwise icon-region difference: {} pixels", minimumDifference);
+            Context().Check(minimumDifference > 100,
+                            "None, Error, Warning and Alert produce distinct rendered message boxes");
+            iconPixelsChecked_ = true;
+        }
+
         int updates_ = 0;
+        std::size_t iconIndex_ = 0;
         System::IAsyncResult* pending_ = nullptr;
         bool answered_ = false;
+        bool iconPixelsChecked_ = false;
         std::optional<int> choice_;
         std::string state_;
+        std::array<std::optional<CnaDemos::BackBufferPixels>, Icons.size()> captures_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
     };
@@ -135,10 +199,11 @@ namespace
 CNA_DEMOS_GAME(MessageBoxDemo, {
     .id = "gamer_services.guide.message_box",
     .title = "Guide message box",
-    .description = "Shows a three-button warning box with Guide::BeginShowMessageBox while the game keeps running; "
-                   "the callback calls EndShowMessageBox for the chosen button (unattended runs click Quit with "
-                   "SimulateMessageBoxClickEXT), and a second box is refused while one is up.",
+    .description = "Shows three-button boxes with every MessageBoxIcon while the game keeps running and verifies "
+                   "their distinct rendered regions; callbacks call EndShowMessageBox for each chosen button "
+                   "(unattended runs click Quit), and a second box is refused while one is up.",
     .apis = {"Guide::BeginShowMessageBox", "Guide::EndShowMessageBox", "Guide::IsVisible", "MessageBoxIcon",
+             "MessageBoxIcon::None", "MessageBoxIcon::Error", "MessageBoxIcon::Warning", "MessageBoxIcon::Alert",
              "GuideAlreadyVisibleException", "Guide::HasPendingMessageBoxEXT", "Guide::SimulateMessageBoxClickEXT",
              "Guide::ResetPendingMessageBoxForTestingEXT", "IAsyncResult::AsyncState"},
     .tags = {"gamer-services", "guide", "dialog", "message-box", "async", "ui"},

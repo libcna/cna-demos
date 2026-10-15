@@ -1232,6 +1232,24 @@ controls and retain only the established ISSUE-085 stream-column failure. This m
 639->661/753 and GamerServices125->147/223. Evidence:
 `/tmp/checkpoint-914-gamer-services-*.json`.
 
+### Guide notification positions, message-box icons and final GamerServices field disposition
+
+A single live sign-in toast now traverses all nine NotificationPosition cells. Back-buffer footprints
+under both renderers are identical:9882 non-background pixels with distinct exact bounds for every
+row and column. Four asynchronous message boxes render None, Error, Warning and Alert before their
+simulated choice; pairwise comparison in the icon/card region distinguishes every rendering while
+the existing visibility, callback state, selected index and overlapping-dialog refusal controls
+remain active. The changed workflows pass14 and15 controls, the full Guide category passes5/5 on both
+renderers, and ten repeated SOFTWARE CTests are stable.
+
+GamerServices reaches160/223 fields. The remaining63 are a deliberate semantic remainder. Fifty-
+seven GamerPresenceMode labels map to canned service strings but otherwise use the same setter,
+revision and publication path already exercised by None, AtMenu and Stage; pinned CNA exposes no
+local public readback of the formatted string. GamerPrivilegeSetting::Blocked/FriendsOnly and the
+four named GamerZone values are supplied only by a configured service account, whereas the local
+profile paths establish Everyone and Unknown. Integer round-trips would not demonstrate those
+policies. Evidence:`/tmp/checkpoint-915-guide-*.json`.
+
 ### OcclusionQuery (result observation and resource lifetime)
 
 Source review at CNA `e842e7473`: public OcclusionQuery.hpp, Xna/OcclusionQuery.cpp and

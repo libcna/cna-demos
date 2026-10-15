@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed every observable Guide notification-position and message-box-icon value with actual
+  overlay pixels; dispositioned service-only and synonymous GamerServices field values.
 - Covered all game-default and leaderboard enum values through isolated stored profiles, exact
   leaderboard identities and persisted outcomes; classified presence and account-only policies.
 - Completed all public avatar preset, body, skeleton, expression and renderer-state values through

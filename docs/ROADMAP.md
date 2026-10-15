@@ -9548,3 +9548,24 @@ metadata is659/0 and coverage moves639->661/753 fields, GamerServices125->147/22
 `/tmp/checkpoint-914-gamer-services-*.json` and `/tmp/checkpoint-914-coverage.md`. Complete the13
 rendered Guide position/icon values next, then disposition the57 synonymous presence labels and six
 service-account-only privilege/zone values.
+
+
+## Focused915-rendered-Guide-field-values
+
+The two stable Guide workflows close all13 observable UI field values. One actual sign-in toast is
+moved through each NotificationPosition while still live. Programmatic back-buffer bounds classify
+every left/center/right and top/center/bottom cell; SOFTWARE and OPENGLES3 produce the same9882
+changed pixels and exact bounds at all nine positions. The message-box workflow opens four real
+asynchronous boxes with None, Error, Warning and Alert, captures each after the Guide overlay draws,
+then completes it through the existing public callback/End contract. Every pair has a distinct
+icon/card region, with minimum1619 differing SOFTWARE pixels and421 OPENGLES3 pixels in the complete
+Guide-category runs.
+
+Both Guide-category runs pass5/5; the changed workflows pass15/15 and14/14 on both renderers. Their
+exact SOFTWARE CTests pass ten repetitions. The warning-free build uses at most three jobs, metadata
+is659/0 and both validator suites pass. Coverage moves661->674/753 fields and GamerServices
+147->160/223. The remaining57 GamerPresenceMode labels share the same private service publication
+path already shown by three lifecycle values; Blocked/FriendsOnly and the four named GamerZone values
+come only from service-controlled account records. They are intentionally uncredited. Evidence:
+`/tmp/checkpoint-915-guide-*.json` and `/tmp/checkpoint-915-coverage.md`. Resume the deeper public
+member/behavior audit rather than adding value-name-only controls.
