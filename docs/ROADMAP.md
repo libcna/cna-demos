@@ -10617,3 +10617,27 @@ extension appendix. Evidence:`/tmp/checkpoint-992-xna-model-*`. The first compil
 namespace for CNA's bridge contexts; correcting that demo qualification resolved the build and no
 CNA defect appeared. Finish the remaining `XnaPipelineBridge` context/logger and direct
 `RegisterXnaXnbOutput` audit next.
+
+## Focused993-XNA-bridge-contexts-and-logging
+
+The stable `content.custom.xna_pipeline_components` workflow adds one passing control and closes
+the remaining public bridge-context and logger behavior. A real registered import reads the
+intermediate/output directories and emits Info through `XnaBridgeLogger`. The registered processor
+reads the build configuration, intermediate/output directories, exact output filename, one
+effective parameter, Windows Phone platform and HiDef profile; it emits Important and Warning,
+including a help link. The retained build result proves exactly those three messages and their
+canonical Import/Process stage and component context. Existing Convert, AddDependency and
+AddOutputFile behavior remains exercised; `nested_builds` already drives the two protected nested-
+build forwarding implementations. Canonical context aliases carry no independent behavior.
+
+The final warning-free incremental build uses at most three jobs and metadata remains691/0. Ten
+exact SOFTWARE CTests and ten direct runs under each renderer label report34 passes and the same
+two expected ISSUE-047/048 failures. All20 direct outputs have normalized SHA-256
+`adc4bbe3750291decde800329d5a00d47ff296013fbc9484606dcd9b828f3b3b`; stderr is empty. Four
+CLI/catalog tests and validator/checkpoint self-tests5/5 and4/4 pass. Runtime coverage totals
+remain303/329 XNA types,2114/2326 members,674/753 fields and3078/3205 C routes;31 direct public
+names enter the build-time extension appendix. The first build repeated the already tracked
+ISSUE-057 missing-owner staging warning; the candidate vanished without artifact loss and an
+immediate unchanged retry was warning-free. No new CNA defect appeared. Evidence:
+`/tmp/checkpoint-993-*`. Audit direct `RegisterXnaXnbOutput` registration next in the existing XML
+XNB workflow.

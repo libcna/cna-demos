@@ -1538,6 +1538,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   unchanged `-j3` retry is warning-free. The retry log is
   `/tmp/checkpoint-878-build-retry.log`; the initial diagnostic was observed in the interactive
   build output and was not redirected to a file.
+- **Recurrence on Focused993:** the first `-j3` build compiles and links the bridge-context
+  extension, but the content-project step reports `owner metadata is absent or is not a regular
+  file` for `cna_content_stage_v1_23_18dc22105b79a260_0`. The candidate is absent on later
+  inspection, no artifact loss is observed, and an immediate unchanged `-j3` retry is warning-free.
+  The diagnostic was observed in the interactive build output and was not redirected to a file.
 - **Handling:** keep the warning gate and original failure visible, retry the unchanged documented
   full validation after recording the defect, and retain this issue even if scheduling permits a
   clean retry. The eleven OcclusionQuery controls already pass on both renderers independently.
@@ -2857,7 +2862,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   warnings and inspect `result.parameters.Values()`.
 - **Observed:** the build succeeds, warns once for each rejected parameter and emits bytes equal
   to the default bounds. Nevertheless, both rejected entries remain in `result.parameters`.
-  The current focused demo has 33 passing checks and two failures (this discrepancy plus older
+  The current focused demo has 34 passing checks and two failures (this discrepancy plus older
   ISSUE-047) under both displayless SOFTWARE and OPENGLES3 selections. A valid Padding override survives
   removal of the unknown parameter; a missing processor input still refuses the build.
 - **Cause verified in source:** RunImportAndProcess computes a local `effective` set and supplies

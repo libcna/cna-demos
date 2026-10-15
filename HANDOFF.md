@@ -3500,9 +3500,9 @@ HIGHEST PRIORITY: Complete990 is the authoritative691-demo full-build/full-runti
 absorbs Focused982-989 after Complete981. Focused991 directly closes the platform/parameter
 conversion, adapter-metadata, attribute-free registration and `PipelineComponentScanner` portions
 of `XnaPipelineBridge.hpp` in the stable custom-pipeline demo. Focused992 directly closes the
-one-function `XnaModelBridge.hpp` conversion in the stable model-source demo. Finish the remaining
-bridge context/logger and direct `RegisterXnaXnbOutput` dispositions by extending existing
-workflows before adding an ID.
+one-function `XnaModelBridge.hpp` conversion in the stable model-source demo. Focused993 closes the
+remaining public bridge contexts and logger through the real custom-pipeline workflow. Audit
+direct `RegisterXnaXnbOutput` registration in the existing XML XNB workflow before adding an ID.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3614,6 +3614,19 @@ self-test suites pass; all20 direct outputs have SHA-256
 `572b1f47c9ec41ddf98102ad4c1bdf7de1076b2f0a275718e46c6ef9279d9b52`. Continue the remaining
 bridge context/logger and direct XNB-output registration audit. Evidence:
 `/tmp/checkpoint-992-xna-model-*`.
+Focused993 closes the context/logger remainder in `content.custom.xna_pipeline_components` through
+a real Windows Phone/HiDef build. The importer and processor read every observable bridge
+environment property and emit exactly three contextual messages across Info, Important and Warning,
+including help-link formatting. Existing Convert/AddDependency/AddOutputFile behavior remains;
+`nested_builds` covers the protected nested-build forwarders, and the canonical context aliases
+carry no behavior. The warning-free retry `-j3` build, metadata691/0, ten exact SOFTWARE CTests,
+ten direct runs per renderer label, four CLI/catalog tests and both self-test suites pass. Direct
+runs report34 passes/two established expected failures with normalized stdout SHA-256
+`adc4bbe3750291decde800329d5a00d47ff296013fbc9484606dcd9b828f3b3b` and empty stderr. The first
+build repeated open ISSUE-057; its candidate vanished without artifact loss and the unchanged retry
+was clean. Runtime totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C
+routes;31 public names enter the build-time appendix. Audit direct `RegisterXnaXnbOutput` next.
+Evidence:`/tmp/checkpoint-993-*`.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

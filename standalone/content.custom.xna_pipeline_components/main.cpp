@@ -22,8 +22,10 @@
 #include "CNA/Content/Cnb/CnbDocument.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
 #include "CNA/Content/Pipeline/XnaPipelineBridge.hpp"
+#include "Microsoft/Xna/Framework/Content/Pipeline/ContentIdentity.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/InvalidContentException.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/PipelineComponentScanner.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsProfile.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
 
@@ -73,6 +75,9 @@ namespace
             RoutePoints route;
             route.sourceDirectory = sourcePath.parent_path();
             route.importerIntermediateDirectory = context.getIntermediateDirectoryProperty();
+            const auto outputDirectory = context.getOutputDirectoryProperty();
+            if (!outputDirectory.empty())
+                context.getLoggerProperty().LogMessage("importer output directory {0}", outputDirectory);
             float x, y;
             while (source >> x)
             {
@@ -121,6 +126,8 @@ namespace
     public:
         bool getExportSummaryProperty() const { return exportSummary_; }
         void setExportSummaryProperty(bool value) { exportSummary_ = value; }
+        bool getAuditBridgeProperty() const { return auditBridge_; }
+        void setAuditBridgeProperty(bool value) { auditBridge_ = value; }
         float getPaddingProperty() const { return padding_; }
         void setPaddingProperty(float value)
         {
@@ -129,6 +136,8 @@ namespace
         }
         static void DescribeParameters(Xna::ProcessorParameterBindings<RouteBoundsProcessor>& parameters)
         {
+            parameters.Add<bool>("AuditBridge", &RouteBoundsProcessor::getAuditBridgeProperty,
+                                 &RouteBoundsProcessor::setAuditBridgeProperty);
             parameters.Add<bool>("ExportSummary", &RouteBoundsProcessor::getExportSummaryProperty,
                                  &RouteBoundsProcessor::setExportSummaryProperty);
             parameters.Add<float>("Padding", &RouteBoundsProcessor::getPaddingProperty,
@@ -155,6 +164,17 @@ namespace
             bounds.buildConfiguration = context.getBuildConfigurationProperty();
             bounds.importerIntermediateDirectory = input.importerIntermediateDirectory;
             bounds.processorIntermediateDirectory = context.getIntermediateDirectoryProperty();
+            if (auditBridge_)
+            {
+                auto& logger = context.getLoggerProperty();
+                logger.LogImportantMessage("processor output {0} below {1}",
+                    context.getOutputFilenameProperty(), context.getOutputDirectoryProperty());
+                logger.LogWarning("https://example.invalid/route-bridge", Xna::ContentIdentity{},
+                    "processor parameters {0}; profile {1}",
+                    context.getParametersProperty().getCountProperty(),
+                    context.getTargetProfileProperty()
+                        == Microsoft::Xna::Framework::Graphics::GraphicsProfile::HiDef ? "HiDef" : "Reach");
+            }
             if (!bounds.processorIntermediateDirectory.empty())
             {
                 const std::filesystem::path scratch(std::u8string(
@@ -189,6 +209,7 @@ namespace
             return bounds;
         }
     private:
+        bool auditBridge_ = false;
         bool exportSummary_ = false;
         float padding_ = 0.0f;
     };
@@ -374,10 +395,11 @@ int main()
                   boundsMetadata->Attribute().getDisplayNameProperty() == "Compute route bounds" &&
                   boundsMetadata->InputTypeName() == RoutePoints::XnaTypeName &&
                   boundsMetadata->OutputTypeName() == BoundsType &&
-                  boundsMetadata->Parameters().getCountProperty() == 2 &&
+                  boundsMetadata->Parameters().getCountProperty() == 3 &&
+                  boundsMetadata->Parameters().Find("AuditBridge") &&
                   boundsMetadata->Parameters().Find("ExportSummary") &&
                   boundsMetadata->Parameters().Find("Padding"),
-              "the processor adapter exposes its declared types, attribute and two parameter bindings");
+              "the processor adapter exposes its declared types, attribute and three parameter bindings");
         check(hiddenMetadata && hiddenMetadata->XnaClassName() == HiddenScaleName &&
                   hiddenMetadata->Catalog() == HiddenCatalog && !hiddenMetadata->HasAttribute() &&
                   hiddenMetadata->InputTypeName() == RoutePoints::XnaTypeName &&
@@ -396,7 +418,7 @@ int main()
                   scanner.getProcessorAttributesProperty().count(HiddenScaleName) == 0 &&
                   scanner.getProcessorInputTypesProperty().at(BoundsName) == RoutePoints::XnaTypeName &&
                   scanner.getProcessorOutputTypesProperty().at(BoundsName) == BoundsType &&
-                  scanner.getProcessorParametersProperty().at(BoundsName).getCountProperty() == 2,
+                  scanner.getProcessorParametersProperty().at(BoundsName).getCountProperty() == 3,
               "scanner dictionaries preserve registration attributes, types and parameter descriptions");
         check(!scanner.Update({}) && scanner.Update({RouteCatalog}) &&
                   scanner.getImporterNamesProperty() == std::vector<std::string>{ImporterName} &&
@@ -511,9 +533,14 @@ int main()
             auto environmentRequest = request;
             environmentRequest.sourceRoot = sources;
             environmentRequest.environment.targetPlatform = Pipeline::ContentTargetPlatform::WindowsPhone;
+            environmentRequest.environment.targetProfile =
+                Microsoft::Xna::Framework::Graphics::GraphicsProfile::HiDef;
             environmentRequest.environment.buildConfiguration = "Profile";
             environmentRequest.environment.intermediateDirectory = directory / "intermediate";
-            const auto environmentBounds = ReadCompiledBounds(pipeline.Build(environmentRequest));
+            environmentRequest.environment.outputDirectory = directory / "bridge-output";
+            environmentRequest.parameters.Set("AuditBridge", true);
+            const auto environmentBuilt = pipeline.Build(environmentRequest);
+            const auto environmentBounds = ReadCompiledBounds(environmentBuilt);
             check(environmentBounds.bounds.targetPlatform == Xna::TargetPlatform::WindowsPhone &&
                       environmentBounds.writerTargetPlatform == Pipeline::ContentTargetPlatform::WindowsPhone,
                   "the target platform reaches the XNA processor and environment-aware native writer");
@@ -527,6 +554,30 @@ int main()
                       ReadText(environmentRequest.environment.intermediateDirectory /
                                "route-bounds.environment.txt") == "Profile\n2\n",
                   "one intermediate directory reaches all three stages and holds the processor's scratch file");
+            const auto expectedOutputDirectory = environmentRequest.environment.outputDirectory.generic_string();
+            const auto expectedOutputFilename =
+                (environmentRequest.environment.outputDirectory / "route_bounds.cnb").generic_string();
+            bool importerInfo = false, processorImportant = false, processorWarning = false;
+            for (const auto& message : environmentBuilt.messages)
+            {
+                importerInfo |= message.level == Pipeline::ContentLogLevel::Info
+                    && message.stage == Pipeline::ContentPipelineStage::Import
+                    && message.component == ImporterName
+                    && message.text == "importer output directory " + expectedOutputDirectory;
+                processorImportant |= message.level == Pipeline::ContentLogLevel::Important
+                    && message.stage == Pipeline::ContentPipelineStage::Process
+                    && message.component == BoundsName
+                    && message.text == "processor output " + expectedOutputFilename
+                        + " below " + expectedOutputDirectory;
+                processorWarning |= message.level == Pipeline::ContentLogLevel::Warning
+                    && message.stage == Pipeline::ContentPipelineStage::Process
+                    && message.component == BoundsName
+                    && message.text == "processor parameters 1; profile HiDef "
+                        "(https://example.invalid/route-bridge)";
+            }
+            check(environmentBuilt.messages.size() == 3u && importerInfo
+                      && processorImportant && processorWarning,
+                  "bridge context directories, output filename, parameters and HiDef profile reach all three logger levels with stage context");
             auto summary = request; summary.sourceRoot = sources;
             summary.parameters.Set("ExportSummary", true);
             summary.environment.outputDirectory = directory / "output";
