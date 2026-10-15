@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a focused effect-source build workflow covering compiler-service identity and request
+  propagation, transitive includes, structured diagnostics, real Effect XNB output and deterministic
+  unavailable, failed, invalid-bytecode, profile, platform and CNB refusal paths.
 - Completed the XML source-route registration contract with multi-compiler extension, exact
   idempotence, a real second-compiler XML/XNB/runtime path and pre-mutation null refusal.
 - Directly audited `RegisterXnaXnbOutput` inventory, collision, idempotence, writer identity/schema,

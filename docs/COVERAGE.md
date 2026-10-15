@@ -6,14 +6,14 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**691 demos** in 19 categories. Kinds: console 187, game 296, standalone 208. Automation: automated 655, manual 3, smoke-only 33.
+**692 demos** in 19 categories. Kinds: console 187, game 296, standalone 209. Automation: automated 656, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 66 | 66 | 0 | 0 | 52 / 0 / 14 / 0 / 0 | 52 / 0 / 14 / 0 / 0 |
+| content | 67 | 67 | 0 | 0 | 52 / 0 / 14 / 0 / 1 | 52 / 0 / 14 / 0 / 1 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -32,6 +32,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
+- SOFTWARE: absent from report: `content.effect.source_pipeline`.
+- OPENGLES3: absent from report: `content.effect.source_pipeline`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -657,8 +659,35 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::DirectXFileObject::references` -- content.model.directx_file_reader
 - `CNA::Content::Pipeline::DirectXFileObject::strings` -- content.model.directx_file_reader
 - `CNA::Content::Pipeline::DirectXFileObject::type` -- content.model.directx_file_reader
+- `CNA::Content::Pipeline::EffectCompileRequest` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectCompileResult` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectCompilerDiagnostic` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectCompilerDiagnostic::ToString` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectCompilerIdentity` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectCompilerIdentity::ToString` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectCompilerService::Available` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectCompilerService::Compile` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectCompilerService::Identity` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectCompilerService::UnavailableReason` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectDebugParameter` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectDefinesParameter` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectProfileParameter` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceImporter::Identity` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceImporter::Import` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceImporter::OutputTypes` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceImporter::SourceExtensions` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceInclude` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceProcessor::EffectSourceProcessor` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceProcessor::Identity` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceProcessor::InputType` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceProcessor::OutputType` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceProcessor::Process` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceProcessor::ValidateParameters` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceProfile` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::EffectSourceProfileName` -- content.effect.source_pipeline
 - `CNA::Content::Pipeline::EncodeBlockCompressedImage` -- content.texture_processor.block_compression
 - `CNA::Content::Pipeline::ExpandCharacterRegions` -- content.sprite_font.pipeline_contract
+- `CNA::Content::Pipeline::ExternalEffectCompilerOptions` -- content.effect.source_pipeline
 - `CNA::Content::Pipeline::FbxFile` -- content.model.fbx_file_reader
 - `CNA::Content::Pipeline::FbxFile::Find` -- content.model.fbx_file_reader
 - `CNA::Content::Pipeline::FbxFile::binary` -- content.model.fbx_file_reader
@@ -723,6 +752,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ImportedAnimationClipType` -- content.cnj.pipeline_assets
 - `CNA::Content::Pipeline::ImportedCompiledEffect` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::ImportedCompiledEffectType` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::ImportedEffectSource` -- content.effect.source_pipeline
+- `CNA::Content::Pipeline::ImportedEffectSourceType` -- content.effect.source_pipeline
 - `CNA::Content::Pipeline::ImportedFontDescriptionType` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::ImportedImage` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::ImportedImageType` -- content.texture_processor.pipeline_contract
@@ -744,6 +775,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::IsFontRasterizationAvailable` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::MakeBlockCompressionTextureEncoder` -- content.texture_processor.block_compression
 - `CNA::Content::Pipeline::MakeContentBuildManifestEntry` -- content.custom.build_manifest
+- `CNA::Content::Pipeline::MakeExternalEffectCompiler` -- content.effect.source_pipeline
 - `CNA::Content::Pipeline::MakeProcessedSoundEffect` -- content.sound_effect.imported_pcm
 - `CNA::Content::Pipeline::ModelContentWriter::Identity` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::ModelContentWriter::InputType` -- content.model.pipeline_contract
@@ -756,6 +788,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ModelProcessor::Process` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::ModelProcessor::ValidateParameters` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::NextPowerOfTwoDimension` -- content.texture_processor.pipeline_contract
+- `CNA::Content::Pipeline::ParseEffectCompilerDiagnostics` -- content.effect.source_pipeline
 - `CNA::Content::Pipeline::ParseFontDescription` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::PremultiplyRgbaAlpha` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::ProbedVideoMetadata` -- content.video.pipeline_components
@@ -786,6 +819,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::RegisterBuiltInContentPipeline` -- content.custom.incremental_compiler
 - `CNA::Content::Pipeline::RegisterCnjContentPipeline` -- content.cnj.pipeline_assets, content.custom.source_root_capabilities
 - `CNA::Content::Pipeline::RegisterCompiledEffectContentPipeline` -- content.xnb.output_pipeline
+- `CNA::Content::Pipeline::RegisterEffectSourceContentPipeline` -- content.effect.source_pipeline
 - `CNA::Content::Pipeline::RegisterModelContentPipeline` -- content.model.pipeline_contract
 - `CNA::Content::Pipeline::RegisterSongContentPipeline` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::RegisterSoundEffectContentPipeline` -- content.sound_effect.pipeline_components
@@ -802,6 +836,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::RegisterXnbOutputContentPipeline` -- content.xnb.output_pipeline
 - `CNA::Content::Pipeline::ResampleRgbaImage` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::RunContentCompiler` -- content.custom.dependency_graph, content.custom.incremental_compiler, content.custom.multi_artifact_publication, content.custom.xml_xnb_pipeline
+- `CNA::Content::Pipeline::ScanEffectSourceIncludes` -- content.effect.source_pipeline
 - `CNA::Content::Pipeline::SetFontSearchDirectoriesEXT` -- content.sprite_font.pipeline_contract
 - `CNA::Content::Pipeline::SongContentWriter::Identity` -- content.song.pipeline_components
 - `CNA::Content::Pipeline::SongContentWriter::InputType` -- content.song.pipeline_components
@@ -872,6 +907,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::ToOpaqueData` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ToProcessorParameters` -- content.custom.xna_pipeline_components
 - `CNA::Content::Pipeline::ToXnaTargetPlatform` -- content.custom.xna_pipeline_components
+- `CNA::Content::Pipeline::TryParseEffectSourceProfile` -- content.effect.source_pipeline
 - `CNA::Content::Pipeline::TryParseTextureBuildFormat` -- content.texture_processor.pipeline_contract
 - `CNA::Content::Pipeline::VideoContentWriter::Identity` -- content.video.pipeline_components
 - `CNA::Content::Pipeline::VideoContentWriter::InputType` -- content.video.pipeline_components

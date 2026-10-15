@@ -789,9 +789,10 @@ rather than adding a CLI-options-only demo.
 | Pre-built-registry RunContentCompiler overload | A service-free registry executes the full incremental workflow. FX and XMA selections are both refused before discovery because they could not have configured that already-built registry; the factory overload is named and no component runs. ISSUE-106 records that the XMA refusal's text still names only the two FX options. XNB container settings are intentionally excluded from option equality because the coordinator can add/apply writers after parsing. |
 
 All ordinary `ContentCompiler.hpp` declarations now have runtime evidence or an explicit
-integration/boundary disposition. The remaining external effect compiler, XMA encoder and font-host
-results require their own portable assets or controlled tools; option propagation alone does not
-claim those outputs.
+integration/boundary disposition. Focused996 now covers the effect compiler seam and source route
+with a controlled service and committed genuine bytecode, while external compiler execution remains
+tool-dependent. XMA encoder and font-host results still require portable assets or controlled tools;
+option propagation alone does not claim those outputs.
 
 #### `CnjContentPipeline.hpp` declaration-level disposition
 
@@ -4974,3 +4975,28 @@ and only established ISSUE-090/111, with normalized stdout SHA-256
 unchanged. Evidence:`/tmp/checkpoint-995-authoritative-*`. No GPU, visual, external compiler or
 genuine-XNA behavior is claimed. This closes the one-function `XnaXmlSourceContentPipeline.hpp`
 contract.
+
+### Effect compiler service and source-pipeline audit
+
+Focused996 adds the renderer-free `content.effect.source_pipeline` standalone and dispositions the
+public `EffectCompilerService.hpp` and `EffectSourceContentPipeline.hpp` surfaces through one real
+authored route. Exact profile names and strict parsing, structured diagnostic parsing/rendering,
+compiler identity, include scanning and the explicitly missing-executable external factory are
+checked directly. A private source includes two files transitively; the registered importer records
+all three canonical dependencies and the processor sends the controlled service exact source and
+include paths, sorted defines, HiDef and disabled debug output. That service returns the committed
+genuine Effect Framework binary, which reaches the registered XNB writer with the expected runtime
+asset identity and staged import/process messages.
+
+The same route refuses null and malformed parameters, an unavailable service before Compile, a
+structured compiler failure, success with an invalid signature, Reach output containing a shader-
+model-three token, Windows Phone before Compile and the documented CNB absence. Source review
+corrected two demo assumptions: the writer identity is `CNA.XnbEffectWriter`, and CNB writer
+selection occurs after processing, so the controlled compiler is called before the absence is
+reported. The warning-free `-j3` build, metadata692/0, ten exact SOFTWARE CTests, ten direct runs
+under each renderer label and self-tests5/5 plus4/4 pass. Every direct run reports19/19 with stdout
+SHA-256 `b40f196da937673d2cf0521e15097d7557906ff4d0995f25bb85256a348e3b2b` and empty stderr.
+Generated runtime totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C
+routes;34 public names enter the extension appendix. Evidence:
+`/tmp/checkpoint-996-effect-source/*`. No new CNA defect, external compiler execution, GPU, visual,
+runtime Effect load or genuine-XNA behavior is claimed.

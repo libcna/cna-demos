@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: MS-PL
+#include "CnaDemos/Demo.hpp"
+
+CNA_DEMOS_STANDALONE({
+    .id = "content.effect.source_pipeline",
+    .title = "Compile effect source through a build service",
+    .description = "Builds an authored effect with a transitive include tree through CNA's public effect compiler seam, "
+                   "verifies profile, defines, diagnostics and XNB routing, and exercises deterministic refusal paths.",
+    .apis = {"CNA::Content::Pipeline::EffectSourceProfile",
+             "CNA::Content::Pipeline::EffectSourceProfileName",
+             "CNA::Content::Pipeline::TryParseEffectSourceProfile",
+             "CNA::Content::Pipeline::EffectCompilerDiagnostic",
+             "CNA::Content::Pipeline::EffectCompilerDiagnostic::ToString",
+             "CNA::Content::Pipeline::ParseEffectCompilerDiagnostics",
+             "CNA::Content::Pipeline::EffectCompileRequest",
+             "CNA::Content::Pipeline::EffectCompileResult",
+             "CNA::Content::Pipeline::EffectCompilerIdentity",
+             "CNA::Content::Pipeline::EffectCompilerIdentity::ToString",
+             "CNA::Content::Pipeline::EffectCompilerService::Identity",
+             "CNA::Content::Pipeline::EffectCompilerService::Available",
+             "CNA::Content::Pipeline::EffectCompilerService::UnavailableReason",
+             "CNA::Content::Pipeline::EffectCompilerService::Compile",
+             "CNA::Content::Pipeline::ExternalEffectCompilerOptions",
+             "CNA::Content::Pipeline::MakeExternalEffectCompiler",
+             "CNA::Content::Pipeline::ImportedEffectSourceType",
+             "CNA::Content::Pipeline::EffectProfileParameter",
+             "CNA::Content::Pipeline::EffectDefinesParameter",
+             "CNA::Content::Pipeline::EffectDebugParameter",
+             "CNA::Content::Pipeline::EffectSourceInclude",
+             "CNA::Content::Pipeline::ImportedEffectSource",
+             "CNA::Content::Pipeline::ScanEffectSourceIncludes",
+             "CNA::Content::Pipeline::EffectSourceImporter::Identity",
+             "CNA::Content::Pipeline::EffectSourceImporter::SourceExtensions",
+             "CNA::Content::Pipeline::EffectSourceImporter::OutputTypes",
+             "CNA::Content::Pipeline::EffectSourceImporter::Import",
+             "CNA::Content::Pipeline::EffectSourceProcessor::EffectSourceProcessor",
+             "CNA::Content::Pipeline::EffectSourceProcessor::Identity",
+             "CNA::Content::Pipeline::EffectSourceProcessor::InputType",
+             "CNA::Content::Pipeline::EffectSourceProcessor::OutputType",
+             "CNA::Content::Pipeline::EffectSourceProcessor::ValidateParameters",
+             "CNA::Content::Pipeline::EffectSourceProcessor::Process",
+             "CNA::Content::Pipeline::RegisterEffectSourceContentPipeline"},
+    .tags = {"content", "pipeline", "effect", "shader", "compiler", "xnb", "cnaext"},
+    .assets = {"effects/CnaConformanceEffect.fx", "effects/CnaConformanceEffect.fxb"},
+    .restrictions = "Build-time CPU workflow in a separate process; requires CNA::ContentPipelineBuild. A controlled in-process "
+                    "service returns the committed genuine compiler output. The external factory is tested only with an explicitly "
+                    "missing executable; no Microsoft fxc, GPU, runtime Effect load or genuine-XNA comparison is claimed.",
+})

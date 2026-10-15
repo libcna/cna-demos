@@ -3504,8 +3504,9 @@ one-function `XnaModelBridge.hpp` conversion in the stable model-source demo. Fo
 remaining public bridge contexts and logger through the real custom-pipeline workflow. Focused994
 closes direct `RegisterXnaXnbOutput` registration and records ISSUE-111 for ignored environment
 targets. Focused995 closes the `XnaXmlSourceContentPipeline.hpp` multi-compiler extension and
-null-refusal contract. Audit the remaining Effect compiler/source and XMA encoder build-time
-service headers next, reusing existing effect/audio workflows where practical.
+null-refusal contract. Focused996 closes the portable Effect compiler/source service contract with
+a new real-build workflow. Audit `XmaEncoderService.hpp` next, then run the complete post-990
+checkpoint for every added ID.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -3656,6 +3657,23 @@ SHA-256 is `2be8ac174e57aa7e88203f9a6fc49adcb3064b25343b3cffc24b3e8e71b944d7` an
 `df194fd20910f4cf1206a8a06e8a4429fa6194cb7ada323069f3b791395e6d89`. Runtime totals remain
 303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes. Audit the remaining Effect
 compiler/source and XMA encoder service headers next. Evidence:`/tmp/checkpoint-995-authoritative-*`.
+Focused996 adds the renderer-free `content.effect.source_pipeline` standalone with19 controls.
+Profiles and diagnostics retain exact public forms; the include scanner ignores comments/strings;
+an explicitly missing external executable yields the stable unavailable service. A private
+three-file transitive include graph then runs through the registered importer, processor, a
+controlled compiler service returning the committed genuine Effect Framework binary, and the real
+XNB writer. The result proves request source/include paths, sorted defines, profile/debug overrides,
+all dependencies and staged messages. Null/malformed parameters, unavailable/failed services,
+invalid signature, Reach shader-model-three, Windows Phone and deliberate CNB absence are refused
+at their exact boundaries. The first writer-name and pre-write CNB assumptions were demo errors:
+source review confirmed `CNA.XnbEffectWriter`, and `Build` processes before writer selection.
+The warning-free `-j3` build, metadata692/0, ten exact SOFTWARE CTests, ten direct runs per renderer
+label and both self-test suites pass. Every direct run reports19/19 with stdout SHA-256
+`b40f196da937673d2cf0521e15097d7557906ff4d0995f25bb85256a348e3b2b` and empty stderr. Runtime
+totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes;34 names enter
+the build-time appendix. No new CNA defect, external compiler execution, GPU, visual, runtime
+Effect load or genuine-XNA behavior is claimed. Audit `XmaEncoderService.hpp` next, then run the
+complete post-990 checkpoint. Evidence:`/tmp/checkpoint-996-effect-source/*`.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

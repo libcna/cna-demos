@@ -10686,3 +10686,28 @@ self-tests5/5 plus4/4 pass. Runtime totals remain303/329 XNA types,2114/2326 mem
 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-995-authoritative-*`. No new CNA defect,
 GPU, visual, external compiler or genuine-XNA claim. Audit the remaining Effect compiler/source
 and XMA encoder build-time service headers next.
+
+## Focused996-Effect-compiler-service-and-source-pipeline
+
+The new renderer-free `content.effect.source_pipeline` standalone closes the public
+`EffectCompilerService.hpp` and `EffectSourceContentPipeline.hpp` contract in one coherent authored
+build. It covers exact profile names/parsing, structured diagnostic parsing/rendering, service
+identity and request/result carriers, include scanning, the missing-executable external factory,
+registered importer/processor metadata and a real Effect XNB route. A controlled service returns
+the repository's committed genuine Effect Framework bytecode while retaining the exact canonical
+source/include paths, sorted defines, HiDef override and explicit debug policy. The build records
+the primary source plus two transitive includes and all three staged messages.
+
+Focused refusals cover null/malformed parameters, unavailable and failed services, a false-success
+invalid signature, Reach output containing a shader-model-three token, Windows Phone and the
+documented CNB absence. The first writer-name and pre-write CNB assumptions belonged to the demo;
+source review established `CNA.XnbEffectWriter` and that the coordinator processes before selecting
+the absent writer. The warning-free `-j3` build and metadata692/0 pass. Ten exact SOFTWARE CTests,
+ten direct runs under each renderer label and validator/checkpoint self-tests5/5 plus4/4 pass. Each
+direct run reports19/19 with stdout SHA-256
+`b40f196da937673d2cf0521e15097d7557906ff4d0995f25bb85256a348e3b2b` and empty stderr. Runtime
+inventory totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes;34
+public names enter the build-time extension appendix. Evidence:
+`/tmp/checkpoint-996-effect-source/*`. No new CNA defect, external compiler execution, GPU, visual,
+runtime Effect load or genuine-XNA behavior is claimed. Audit `XmaEncoderService.hpp` next, then
+run the complete post-990 checkpoint for every added ID.
