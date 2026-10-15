@@ -2345,13 +2345,13 @@ build. Remaining unit/accuracy/category/resource-kind enum permutations are stor
 shown by representative values; maximum-depth, malformed-binary and multi-thread saturation are
 CNA unit/stress-test territory. Resume the broader inventory and docs/COVERAGE_AUDIT.md with the
 highest-value undispositioned public behavior; prefer extending an existing workflow where coherent.
-The resumed audit adds real `ArgumentException(name)` and parameterless `InvalidOperationException`
-C diagnostic evidence to renderer selection, then exposes CNA-DEMOS-ISSUE-103 when a native
+The resumed audit adds real `ArgumentException(name)`, parameterless `InvalidOperationException`
+and `ObjectDisposedException` C diagnostic evidence, then exposes CNA-DEMOS-ISSUE-103 when a native
 ContentLoadException is flattened to untyped IO by the C content adapter. Audit the existing
-`c_api.net.local_session_state` post-disposal operation next: exact `ObjectDisposedException`
-identity would let bindings distinguish a permanently dead handle from a temporary invalid state.
-If the public route cannot expose that decision, document the source/runtime disposition and move
-to the next undispositioned behavior rather than enumerating exception class names.
+`c_api.gamer.guide_social_offline` service refusal next: exact
+`GamerServicesNotAvailableException` identity distinguishes an unavailable account service from a
+generic unsupported API. If the public route cannot expose that decision, document the source/
+runtime disposition and move to the next undispositioned behavior rather than enumerating names.
 Keep constructors/finalizers, CLR collection plumbing and service-only paths classified rather than
 inflating metadata.
 Keep compilation at `-j3` or less. After a coherent field batch, validate, update this section,
@@ -2561,6 +2561,23 @@ pointer; the older skip and current pass are both valid capability outcomes. No 
 known-issue or failure-message changes appear. Generated coverage remains302/329 types,2114/2326
 members,674/753 fields and3078/3205 C routes, with no absent IDs. Evidence:
 `build/linux-full/reports/checkpoint-926-complete-*`.
+
+### Focused927-C-ObjectDisposedException-identity
+
+The stable `c_api.net.local_session_state` workflow grows30->31 controls. Its existing idempotent
+session disposal is now separated from the post-disposal `Update`: the public route returns exact
+INVALID_STATE/category STATE and retains `System.ObjectDisposedException` through the common C
+exception barrier. A binding can therefore distinguish a permanently disposed handle from another
+temporary invalid-state refusal without parsing a message. The public error-info and exception-type
+size/copy routes are called directly with the exact byte count and a caller-added terminator.
+
+Ten SOFTWARE and ten OPENGLES3-labelled renderer-free runs pass31/31 with byte-identical stdout
+SHA-256 `8a5e3e94fdab552781048034533b77ae0088ca12eb2543d671ee6eec2d58330b`
+and empty stderr. The exact SOFTWARE CTest passes ten repetitions; the warning-free incremental
+build uses `-j3`, metadata is663/0 and validator/checkpoint self-tests pass5/5 and4/4. Generated
+surface totals remain302/329 types,2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:
+`/tmp/checkpoint-927-net-*` and `/tmp/checkpoint-927-net-exception-source.txt`. No socket, renderer,
+external service or manual validation is claimed, and no CNA defect appeared.
 
 Historical task narrative follows. Complete744 was the preceding baseline; focused745-815 close the
 texture/render-target lifetimes, ContentManager disposal, CNB/CNJ registration and ReadAsset

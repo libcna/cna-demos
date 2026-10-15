@@ -9756,3 +9756,18 @@ and SOFTWARE's keyboard/mouse workflow takes its complete42-check path because t
 exposes the desktop-global pointer. Failed-assertion multiplicities otherwise remain exact at92 and
 96. Generated coverage remains302/329 types,2114/2326 members,674/753 fields and3078/3205 C routes.
 Evidence: `build/linux-full/reports/checkpoint-926-complete-*`.
+
+## Focused927-C-ObjectDisposedException-identity
+
+The stable `c_api.net.local_session_state` workflow separates its idempotent disposal check from a
+real post-disposal `Update`. The C route preserves INVALID_STATE/category STATE together with exact
+`System.ObjectDisposedException`, so a binding can distinguish a dead session handle from another
+invalid state without message parsing. It uses the public error-info and exact-size exception-type
+copy routes directly.
+
+Ten SOFTWARE and ten OPENGLES3-labelled renderer-free runs pass31/31 with byte-identical stdout
+SHA-256 `8a5e3e94fdab552781048034533b77ae0088ca12eb2543d671ee6eec2d58330b`
+and empty stderr. The exact SOFTWARE CTest passes ten repetitions; the warning-free build uses at
+most three jobs, metadata is663/0 and both validator suites pass. Generated coverage remains
+302/329 types,2114/2326 members,674/753 fields and3078/3205 routes. Evidence:
+`/tmp/checkpoint-927-net-*`. No CNA issue appeared.

@@ -3577,3 +3577,18 @@ SOFTWARE's keyboard/mouse workflow moves from its valid no-desktop-pointer skip 
 pass because this Xvfb instance exposes the global pointer and cursor paths. Generated coverage
 remains302/329 types,2114/2326 members,674/753 fields and3078/3205 C routes, with no absent IDs.
 Evidence: `build/linux-full/reports/checkpoint-926-complete-*`.
+
+### Focused927 ObjectDisposedException identity through the C boundary
+
+The stable `c_api.net.local_session_state` workflow now proves that its real post-disposal `Update`
+retains the native `System.ObjectDisposedException` alongside INVALID_STATE/category STATE. This is
+a distinct binding decision: the handle is permanently dead rather than temporarily unable to
+advance. The demo calls the public error-info and exception-type size/copy routes directly with the
+exact byte capacity and a caller terminator.
+
+Ten SOFTWARE and ten OPENGLES3-labelled renderer-free runs pass31/31 with byte-identical stdout
+SHA-256 `8a5e3e94fdab552781048034533b77ae0088ca12eb2543d671ee6eec2d58330b`
+and empty stderr. The exact SOFTWARE CTest passes ten repetitions; the warning-free build uses
+`-j3`, metadata is663/0 and both validator suites pass. Surface totals remain302/329 types,
+2114/2326 members,674/753 fields and3078/3205 C routes. Evidence:`/tmp/checkpoint-927-net-*` and
+`/tmp/checkpoint-927-net-exception-source.txt`. No CNA defect appeared.

@@ -18,6 +18,7 @@ int main(int argc, char** argv)
 {
     static const char Player[] = "Local State Player";
     static const char TypeName[] = "Microsoft.Xna.Framework.Net.NetworkSession";
+    static const char DisposedType[] = "System.ObjectDisposedException";
     CnaDemo demo;
     CNA_SignedInGamerHandle signed_in = CNA_INVALID_HANDLE;
     CNA_NetworkSessionPropertiesHandle source_properties = CNA_INVALID_HANDLE;
@@ -311,14 +312,40 @@ cleanup:
         (void)cna_network_gamer_destroy(local);
     }
     if (session != CNA_INVALID_HANDLE) {
+        CNA_ErrorInfo error_info;
+        CNA_Result update_result;
+        uint64_t exception_bytes = UINT64_MAX;
+        uint64_t exception_copied = UINT64_MAX;
+        char exception_type[64] = {0};
+        int copied_exception = 0;
+
         cna_demo_check(
             &demo,
             cna_network_session_dispose(session) == CNA_RESULT_SUCCESS &&
                 cna_network_session_dispose(session) == CNA_RESULT_SUCCESS &&
                 cna_network_session_get_is_disposed(session, &flag) == CNA_RESULT_SUCCESS &&
-                flag == CNA_TRUE &&
-                cna_network_session_update(session) == CNA_RESULT_INVALID_STATE,
-            "session disposal is idempotent and prevents further updates");
+                flag == CNA_TRUE,
+            "session disposal is idempotent and marks the session disposed");
+        update_result = cna_network_session_update(session);
+        memset(&error_info, 0, sizeof(error_info));
+        error_info.struct_size = (uint32_t)sizeof(error_info);
+        error_info.struct_version = UINT32_C(1);
+        if (cna_error_get_last_exception_type_size_ext(&exception_bytes) == CNA_RESULT_SUCCESS &&
+            exception_bytes == sizeof(DisposedType) - 1U &&
+            cna_error_copy_last_exception_type_ext(
+                exception_type, exception_bytes, &exception_copied) == CNA_RESULT_SUCCESS &&
+            exception_copied == exception_bytes) {
+            exception_type[exception_bytes] = '\0';
+            copied_exception = 1;
+        }
+        cna_demo_check(
+            &demo,
+            update_result == CNA_RESULT_INVALID_STATE &&
+                cna_error_get_last_info(&error_info) == CNA_RESULT_SUCCESS &&
+                error_info.result == CNA_RESULT_INVALID_STATE &&
+                error_info.category == CNA_ERROR_CATEGORY_STATE && copied_exception &&
+                memcmp(exception_type, DisposedType, sizeof(DisposedType)) == 0,
+            "Update on a disposed session retains ObjectDisposedException for a binding to rethrow");
         cna_demo_check(
             &demo,
             cna_network_session_destroy(session) == CNA_RESULT_SUCCESS &&
