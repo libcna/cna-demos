@@ -68,13 +68,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-667 project-built catalog demos in18 categories: math78, game33, graphics184, audio23, core6,
+668 project-built catalog demos in18 categories: math78, game33, graphics185, audio23, core6,
 content46, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, cnaext4, platform3 and c_api177. Kinds are170 console,295 game and202 standalone;
-631 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, cnaext4, platform3 and c_api177. Kinds are171 console,295 game and202 standalone;
+632 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete938's full runtime reports; they include all666
-baseline IDs in both renderer suites and correctly mark the post-baseline capability-matrix ID
-absent.
+baseline IDs in both renderer suites and correctly mark the two post-baseline IDs absent.
 The surface totals are303/329 XNA types,2114/2326 XNA members,674/753 fields and
 3078/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete938's
 full runtime reports are the baseline inputs for the666-ID catalog. Selected semantic
@@ -290,6 +289,24 @@ SOFTWARE CTest passes. Generated totals remain303/329 types,2114/2326 members,67
 3078/3205 C routes because this family is CNA-specific. Complete938 remains the full baseline and
 contains the earlier three-control form of this stable ID. Evidence:
 `/tmp/checkpoint-941-capability-final-*`. No pixel, visual-quality or CNA-defect claim is made.
+
+Focused **942-portable-shader-diagnostic-parser** adds the668th catalog ID,
+`graphics.shader_effect.diagnostic_parser`. Nine renderer-free controls construct and retain an
+owned diagnostic, parse six trimmed records from colon, numeric-source and both parenthesized
+location forms, carry VS/FS stage markers across continuation lines, distinguish information,
+warning and default-error severities and preserve zero when no location exists. Whitespace-only
+input stays empty. Invalid severity/stage/location/message values and an invalid fallback stage are
+refused. `ShaderCompilationExceptionEXT` owns the complete list, emits a stable first-record plus
+remaining-count summary and refuses an empty list. This complements the existing live GLSL
+compiler demo rather than replacing its renderer-produced evidence.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass9/9 with byte-identical stdout SHA-256
+`55befe4d294f126a9c9352edd678eeae9da9468974bba22baeee0e2cc99a8484` and empty stderr. The changed
+object compiles without warnings in a `-j3` build, metadata is668/0 and the exact SOFTWARE CTest
+passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C routes;
+Complete938 remains the full baseline and correctly marks this new ID absent. Evidence:
+`/tmp/checkpoint-942-diagnostic-*`. No real shader compilation, pixel or CNA-defect claim is made
+for this parser-only batch.
 
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
@@ -2396,8 +2413,10 @@ conditional wrapper to the existing sink, severity and `WarnIf` workflows. Focus
 Game-owned platform capability decision surface: all31 stable names, cached aggregate, focused
 queries and safe aggregate defaults. Focused941 closes the ordinary native renderer-profile
 consumer surface: detailed features, numeric limits, format-usage masks, display color spaces,
-safe unknowns and the matching English report. Continue with the next coherent public CNA header
-family, preferring an existing workflow when it already owns the behavior. The diagnostics
+safe unknowns and the matching English report. Focused942 closes the renderer-independent shader
+diagnostic value/parser/exception contract; the existing compiler demo retains live-driver
+evidence. Audit shader dialect/language selection next, including stage-specific device support and
+the descriptor-binding helper, then continue the next coherent public CNA header family. The diagnostics
 public behavior audit is now
 semantically complete for ordinary consumers: build/runtime modes, explicit/macro metrics, frame
 history, zones/markers, provider cursors, bounded recording/export, resource metadata, registered

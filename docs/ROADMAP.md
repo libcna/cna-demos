@@ -9967,3 +9967,20 @@ CTest passes. Generated XNA/C totals are unchanged because this is CNA-specific.
 remains the full baseline with the earlier three-control form of the stable ID. Evidence:
 `/tmp/checkpoint-941-capability-final-*`. No pixel or visual-quality result is claimed. Continue the
 next coherent native public-header family.
+
+## Focused942-portable-shader-diagnostic-parser
+
+New renderer-free `graphics.shader_effect.diagnostic_parser` adds the668th catalog ID and covers
+the public diagnostic value/parser/exception contract independently of vendor compilers. Nine
+controls prove owned authored values; exact parsing of colon, numeric-source and two parenthesized
+location forms; persistent VS/FS stage markers; information, warning and default-error severity;
+zero locations when unavailable; empty whitespace input; constructor and fallback-stage refusal;
+and an exception that owns all six records while summarizing the first plus five remaining.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass9/9 with byte-identical stdout SHA-256
+`55befe4d294f126a9c9352edd678eeae9da9468974bba22baeee0e2cc99a8484` and empty stderr. The changed
+object compiles without warnings in a `-j3` build, metadata is668/0 and the exact SOFTWARE CTest
+passes. Generated XNA/C totals remain unchanged; Complete938 correctly marks both post-baseline IDs
+absent. Evidence:`/tmp/checkpoint-942-diagnostic-*`. The existing compiler-diagnostics demo keeps
+the separate live GLSL failure and retained-program evidence. Audit shader dialect/language and
+stage-specific device selection next.

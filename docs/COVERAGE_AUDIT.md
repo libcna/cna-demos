@@ -3837,3 +3837,28 @@ object compiles without warnings with at most three jobs, metadata remains667/0 
 SOFTWARE CTest passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and
 3078/3205 C routes because this family is CNA-specific. Complete938 retains the prior three-check
 result for this stable ID. Evidence:`/tmp/checkpoint-941-capability-final-*`. No CNA defect appeared.
+
+### Focused942 portable shader diagnostic parser
+
+New renderer-free `graphics.shader_effect.diagnostic_parser` adds the668th stable ID. An authored
+`ShaderDiagnosticEXT` owns and returns every value after caller strings change. A six-line compiler
+log then covers `file:line:column`, numeric source-id/line, `source:line(column)` and
+`file(line,column)` locations; VS/FS markers persist for continuation lines; information, warning
+and default-error severities remain distinct; and unavailable locations stay zero. Every record
+owns its common source label and trimmed text after the source log is overwritten. Whitespace-only
+logs produce no synthetic record.
+
+The value constructor refuses invalid severity, stage, negative location, column-without-line and
+empty-message inputs, while the parser refuses an invalid fallback stage. A
+`ShaderCompilationExceptionEXT` owns all six diagnostics after the source vector is cleared,
+retains the structured fifth location and produces a stable first-record summary ending in the
+remaining count; an empty diagnostic list is refused. This closes the renderer-independent public
+diagnostic contract. The existing `graphics.shader_effect.compiler_diagnostics` workflow still
+provides the distinct live GLSL compiler, renderer-owned log and retained valid-program evidence.
+
+Ten SOFTWARE-labelled and ten OPENGLES3-labelled runs pass9/9 with byte-identical stdout SHA-256
+`55befe4d294f126a9c9352edd678eeae9da9468974bba22baeee0e2cc99a8484` and empty stderr. The changed
+object compiles without warnings with at most three jobs, metadata is668/0 and the exact SOFTWARE
+CTest passes. Generated totals remain303/329 types,2114/2326 members,674/753 fields and3078/3205 C
+routes because this family is CNA-specific. Complete938 correctly leaves this new ID absent.
+Evidence:`/tmp/checkpoint-942-diagnostic-*`. No CNA defect appeared.

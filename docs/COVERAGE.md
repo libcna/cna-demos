@@ -6,7 +6,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**667 demos** in 18 categories. Kinds: console 170, game 295, standalone 202. Automation: automated 631, manual 3, smoke-only 33.
+**668 demos** in 18 categories. Kinds: console 171, game 295, standalone 202. Automation: automated 632, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | diagnostics | 6 | 6 | 0 | 0 | 2 / 4 / 0 / 0 / 0 | 2 / 4 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 23 / 7 / 2 / 1 / 0 | 30 / 0 / 2 / 1 / 0 |
 | gamer_services | 19 | 18 | 0 | 1 | 16 / 0 / 2 / 1 / 0 | 16 / 0 / 2 / 1 / 0 |
-| graphics | 184 | 184 | 0 | 0 | 146 / 26 / 12 / 0 / 0 | 167 / 3 / 14 / 0 / 0 |
+| graphics | 185 | 185 | 0 | 0 | 146 / 26 / 12 / 0 / 1 | 167 / 3 / 14 / 0 / 1 |
 | input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
 | math | 78 | 78 | 0 | 0 | 74 / 0 / 4 / 0 / 0 | 74 / 0 / 4 / 0 / 0 |
 | media | 17 | 16 | 1 | 0 | 11 / 0 / 6 / 0 / 0 | 11 / 0 / 6 / 0 / 0 |
@@ -31,8 +31,8 @@ Generated 2026-10-15 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `core.platform.capability_matrix`.
-- OPENGLES3: absent from report: `core.platform.capability_matrix`.
+- SOFTWARE: absent from report: `core.platform.capability_matrix`, `graphics.shader_effect.diagnostic_parser`.
+- OPENGLES3: absent from report: `core.platform.capability_matrix`, `graphics.shader_effect.diagnostic_parser`.
 
 ## XNA 4.0 API surface demonstrated
 
@@ -502,13 +502,18 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::RendererLimit` -- graphics.device.capability_report
 - `CNA::RendererLimitValue` -- graphics.device.capability_report
 - `CNA::SetAssemblyTitleEXT` -- platform.window.assembly_title
-- `CNA::ShaderCompilationExceptionEXT::getDiagnostics` -- graphics.shader_effect.portable_package
-- `CNA::ShaderDiagnosticEXT::getColumn` -- graphics.shader_effect.compiler_diagnostics
-- `CNA::ShaderDiagnosticEXT::getLine` -- graphics.shader_effect.compiler_diagnostics
-- `CNA::ShaderDiagnosticEXT::getMessage` -- graphics.shader_effect.compiler_diagnostics
-- `CNA::ShaderDiagnosticEXT::getSeverity` -- graphics.shader_effect.compiler_diagnostics
-- `CNA::ShaderDiagnosticEXT::getSourceLabel` -- graphics.shader_effect.compiler_diagnostics
-- `CNA::ShaderDiagnosticEXT::getStage` -- graphics.shader_effect.compiler_diagnostics
+- `CNA::ShaderCompilationExceptionEXT::ShaderCompilationExceptionEXT` -- graphics.shader_effect.diagnostic_parser
+- `CNA::ShaderCompilationExceptionEXT::getDiagnostics` -- graphics.shader_effect.diagnostic_parser, graphics.shader_effect.portable_package
+- `CNA::ShaderDiagnosticEXT::ShaderDiagnosticEXT` -- graphics.shader_effect.diagnostic_parser
+- `CNA::ShaderDiagnosticEXT::getColumn` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.diagnostic_parser
+- `CNA::ShaderDiagnosticEXT::getLine` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.diagnostic_parser
+- `CNA::ShaderDiagnosticEXT::getMessage` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.diagnostic_parser
+- `CNA::ShaderDiagnosticEXT::getSeverity` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.diagnostic_parser
+- `CNA::ShaderDiagnosticEXT::getSourceLabel` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.diagnostic_parser
+- `CNA::ShaderDiagnosticEXT::getStage` -- graphics.shader_effect.compiler_diagnostics, graphics.shader_effect.diagnostic_parser
+- `CNA::ShaderDiagnosticEXT::parseCompilerLog` -- graphics.shader_effect.diagnostic_parser
+- `CNA::ShaderDiagnosticSeverityEXT` -- graphics.shader_effect.diagnostic_parser
+- `CNA::ShaderStageEXT` -- graphics.shader_effect.diagnostic_parser
 - `CNA::TargetPlatform` -- core.platform.host_identity
 - `CNA::getCurrentDesktopOS` -- core.platform.host_identity
 - `CNA::getCurrentGraphicsBackendCategory` -- core.renderer.metadata
