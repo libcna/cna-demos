@@ -185,6 +185,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbByteReader::ReadCount` -- content.custom.cnb_read_limits, content.custom.pipeline_components
 - `CNA::Content::Cnb::CnbByteReader::ReadString` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbByteReader::RequireExhausted` -- content.custom.cnb_loader
+- `CNA::Content::Cnb::CnbCurveChunk::Header` -- content.cnj.curve
+- `CNA::Content::Cnb::CnbCurveChunk::Keys` -- content.cnj.curve
+- `CNA::Content::Cnb::CnbCurveKeyStride` -- content.cnj.curve
+- `CNA::Content::Cnb::CnbCurveSchemaVersion` -- content.cnj.curve
 - `CNA::Content::Cnb::CnbDocument::ChunkAt` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ChunkCount` -- content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbDocument::ChunkData` -- content.custom.cnb_read_limits
@@ -253,7 +257,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::CnbWriter::SetMetadata` -- content.custom.cnb_loader, content.custom.cnb_read_limits
 - `CNA::Content::Cnb::CnbWriter::WriteToFile` -- content.custom.cnb_external_references, content.custom.cnb_loader
 - `CNA::Content::Cnb::DecodeAnimationClipFromCnb` -- content.cnj.pipeline_assets
-- `CNA::Content::Cnb::DecodeCurveFromCnb` -- content.xnb.pipeline_transcode
+- `CNA::Content::Cnb::DecodeCurveFromCnb` -- content.cnj.curve, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeModelFromCnb` -- content.model.pipeline_contract
 - `CNA::Content::Cnb::DecodeModelV2FromCnb` -- content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeSongFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
@@ -264,6 +268,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Cnb::DecodeTextureCubeFromCnb` -- content.cnj.pipeline_assets, content.texture_processor.pipeline_contract, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DecodeVideoFromCnb` -- content.media.cnb_codec, content.xnb.pipeline_transcode
 - `CNA::Content::Cnb::DefaultCnbReadLimits` -- content.custom.cnb_read_limits
+- `CNA::Content::Cnb::EncodeCurveToCnb` -- content.cnj.curve
 - `CNA::Content::Cnb::EncodeSongToCnb` -- content.media.cnb_codec
 - `CNA::Content::Cnb::EncodeSoundEffectToCnb` -- content.sound_effect.cnb_codec
 - `CNA::Content::Cnb::EncodeSpriteFontToCnb` -- content.cnj.sprite_font

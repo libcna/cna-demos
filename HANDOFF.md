@@ -889,6 +889,30 @@ evidence; no screenshot, raster-quality, host-font portability or genuine-XNA ex
 added. Audit the adjacent public `CnbCurveCodec.hpp` contract next, reusing the existing CNJ Curve
 runtime workflow and adding only missing codec behavior.
 
+Focused **970-CNB-Curve-codec-disposition** extends the stable `content.cnj.curve` demo from5 to12
+controls without adding a catalog ID and dispositions all six public `CnbCurveCodec.hpp`
+declarations. It freezes the `CRVH`/`CRVK` IDs, schema1 and 20-byte key stride. The real
+project-built asset has exact Curve identity, canonical type/logical name metadata and one of each
+schema chunk; direct decoding equals the separately loaded `ContentManager` value.
+
+The authored bounce encodes twice byte-identically and restores both loop policies and every key
+position, value, tangent and continuity. A compact matrix round-trips all five persisted loop
+values and both continuity values, while an empty Curve retains a valid zero-row table and safe
+defaults. Independently built containers prove refusals for wrong asset identity, future schema,
+missing/duplicate mandatory chunks, invalid loop/continuity ordinals and a header/key-byte count
+mismatch. Shared hostile container layout remains the existing `CnbDocument` audit.
+
+The warning-free incremental build uses at most three jobs. Ten SOFTWARE-labelled and ten
+OPENGLES3-labelled runs pass12/12 with byte-identical stdout SHA-256
+`04d2f709e49c42aaf380a5c3b12cbd15468a260278cc6e7f4860d9222bba3196` and empty stderr. The exact
+SOFTWARE CTest passes20 repetitions; metadata remains683/0 and the validator/checkpoint self-tests
+pass5/5 and4/4. Generated XNA/C totals remain unchanged; the CNA-extension appendix gains five
+names and extends the already credited decoder. Complete956 still marks eight post-baseline IDs
+absent. Evidence:`/tmp/checkpoint-970-curve/*` and `/tmp/checkpoint-970-curve-report.json`. No CNA
+issue, screenshot, visual-quality or genuine-XNA execution claim is added. Audit the adjacent
+public `CnbAnimationClipCodec.hpp` contract next, reusing the existing CNJ AnimationClip and runtime
+model-animation evidence.
+
 Focused887 adds the656th source/catalog ID, `media.media_library.playlist_import`. Its warning-free
 incremental build and metadata validation pass, both direct renderer-labelled processes pass9/9
 with byte-identical streams, and its exact SOFTWARE CTest passes20 repetitions. The available
@@ -3023,8 +3047,10 @@ round trips and relationship refusals while retaining renderer-backed layout/dra
 adds the separate build-time source-pipeline workflow and closes all44 public
 `SpriteFontContentPipeline.hpp` declarations through a licensed real face, exact discovery,
 rasterization, CNB/XNB and font-sheet behavior; it records ISSUE-108 for inverted direct ranges.
-Audit `CnbCurveCodec.hpp` next, reusing the existing CNJ Curve runtime workflow and adding only
-missing codec behavior. The earlier native
+Focused970 extends the stable CNJ Curve workflow and closes all six public `CnbCurveCodec.hpp`
+declarations through exact real-asset metadata, deterministic complete-key round trips, every
+persisted enum and representative schema refusals. Audit `CnbAnimationClipCodec.hpp` next, reusing
+the existing CNJ AnimationClip and runtime model-animation evidence. The earlier native
 renderer identity/category/maturity,
 renderer-selection/fallback, compile-target/mobile/Apple/desktop-OS and process-wide assembly-title
 families now have direct C++ evidence. Focused939 closes the ordinary native Logger audit: it adds

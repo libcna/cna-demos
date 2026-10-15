@@ -941,6 +941,22 @@ runtime owner or an explicit safety-boundary disposition. Synthetic cube/volume/
 decoded on CPU; existing demos retain actual source import and GPU behavior, and no screenshot,
 visual-quality or genuine-XNA container claim is added.
 
+#### `CnbCurveCodec.hpp` declaration-level disposition
+
+The pinned header exposes six public declarations: two schema chunk IDs, the schema version and key
+stride, plus the encoder and decoder. Focused970 extends the stable `content.cnj.curve` workflow
+because it already owns the authored CNJ, compiled CNB, runtime object and evaluation semantics.
+
+| Declaration family | Disposition |
+|---|---|
+| CnbCurveChunk values, schema and key stride | `CRVH`, `CRVK`, schema 1 and the 20-byte five-field key row are asserted exactly. The real project-built asset has one of each schema chunk, the Curve asset identity, exact canonical type/logical name metadata and a direct decode equal to the `ContentManager` result. |
+| EncodeCurveToCnb and DecodeCurveFromCnb | The real three-key bounce encodes twice byte-identically and restores both loop policies plus every position, value, tangent and continuity. A compact matrix round-trips all five persisted loop values and both continuity values; an empty Curve separately retains a valid zero-row key table and safe defaults. Wrong asset identity, future schema, missing/duplicate mandatory chunks, invalid loop and continuity ordinals, and a header/key-byte count mismatch are refused through independently constructed valid containers. Generic malformed table/checksum/limit cases remain the shared `CnbDocument` audit. |
+
+All six public declarations now have direct native schema and round-trip evidence. Existing math
+Curve demos retain detailed evaluation, tangent, collection and loop behavior; the XNB transcode
+workflow retains a separate genuine-XNB source. This extension adds no screenshot, visual or
+genuine-XNA execution claim.
+
 #### `CnbSpriteFontCodec.hpp` declaration-level disposition
 
 The pinned header exposes 21 public declarations: five chunk identifiers, six schema/stride/limit

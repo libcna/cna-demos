@@ -335,6 +335,9 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.model.pipeline_contract` (all 33 public Model pipeline declarations dispositioned
   through real owned glTF staging, component/schema identities, deterministic primary Model and
   generated Texture2D/AnimationClip CNBs plus typed runtime references),
+  ✅ `content.cnj.curve` (all six public Curve codec declarations through exact compiled metadata,
+  deterministic complete-key round trips, every loop/continuity value, empty data and
+  representative schema refusals while retaining the original runtime evaluation),
   ✅ `content.sprite_font.pipeline_contract` (all 44 public source-pipeline declarations
   dispositioned in a separate build-time process through exact XML parsing/search, a committed OFL
   TrueType face, strict/compatible rasterization, deterministic CNB/XNB builds and synthetic
