@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added an invariant intermediate-XML scalar workflow for canonical special and round-trip floating
+  text, Decimal/TimeSpan/DateTime forms, enum/flags spelling and representative lexical/range
+  refusals.
 - Added an intermediate-XML collection workflow that contrasts packed scalar/vector sequences with
   element-per-item strings, nullable/dynamic objects, ordered dictionaries and jagged lists, with
   round trips and malformed-shape refusals.

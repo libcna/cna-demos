@@ -6710,3 +6710,24 @@ Evidence:`/tmp/checkpoint-1086-intermediate-collections/*`. No new CNA issue or 
 The next measured-corpus behavior absent from project demos is intermediate scalar grammar. Audit a
 coherent authored configuration for invariant special floats/precision, time/date/decimal and
 enum/flags spelling plus representative lexical/range refusals; do not create numeric-type variants.
+
+### Focused1087 intermediate XML invariant scalar formats
+
+New `content.custom.intermediate_scalar_formats` keeps the invariant scalar grammar in one authored
+settings object. Its exact compact output establishes lower-case Boolean, decimal integer,
+canonical signed-zero/NaN/infinity, XNA's measured Single/Double round-trip precision, Decimal,
+ISO 8601 TimeSpan, UTC DateTime and exact enum/flags text. Round trip retains ordinary values,
+DateTime kind, signed zero, both special-value classes and typed flags.
+
+Seven malformed variants cover high-value boundaries without numeric-width variants: Boolean and
+enum case, Int32 range, lower-case NaN, Decimal exponent syntax, non-ISO TimeSpan syntax and a
+flags list without commas are refused. Five runs under each renderer label pass15/15 with common
+stdout SHA-256 `a41bb598300bed59f3971651fa39090d6376d9d93001c7e3a7dabe4743c2483e` and empty stderr. The
+warning-free `-j3` build, metadata714/0, eleven related CTests and self-tests all pass. Coverage
+contains all714 IDs while surface totals stay307/329 types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`/tmp/checkpoint-1087-intermediate-scalars/*`. No new CNA issue or
+fresh XNA run.
+
+The next format-level gap is framework value-type text: ordinary component tuples share scalar
+tokens while Color uses packed ARGB hexadecimal text. Audit a coherent representative object,
+exact round trips and wrong-token/form refusals rather than adding one demo for every math type.

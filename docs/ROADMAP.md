@@ -12129,3 +12129,28 @@ Continue the serializer audit with the unrepresented invariant scalar grammar: c
 floating values and round-trip precision, time/date/decimal text, enum/flags spelling and
 representative lexical/range refusals. Keep one authored configuration and a small set of
 high-value representatives rather than enumerating every numeric type.
+
+## Focused1087 intermediate XML invariant scalar formats
+
+New `content.custom.intermediate_scalar_formats` serializes one authored settings object rather
+than creating numeric-width variants. Eight positive controls prove lower-case Boolean and decimal
+integer text; canonical `-0`, `NaN` and `INF`; the genuine-XNA round-trip forms
+`0.333333343` and `0.33333333333333331`; invariant Decimal, ISO 8601 TimeSpan and UTC DateTime
+text; exact enum and comma-space flags spelling; and typed round trip including signed zero,
+special values and DateTime kind. Seven malformed documents reject Boolean case drift, Int32
+overflow, lower-case NaN, Decimal exponent notation, a .NET-style TimeSpan, enum case drift and a
+flags list without a comma.
+
+The clean incremental build is warning-free with `-j3`; metadata validates714/0. Ten related
+SOFTWARE intermediate-XML demos plus the catalog parser pass11/11; validator/comparator self-tests
+pass5/5 and4/4. Five runs under each renderer label pass15/15 with byte-identical stdout SHA-256
+`a41bb598300bed59f3971651fa39090d6376d9d93001c7e3a7dabe4743c2483e` and empty stderr. Generated
+coverage merges Focused1085-1087 into Complete1084, contains all714 IDs and remains307/329 types,
+2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1087-intermediate-scalars/*`. No CNA issue, fresh XNA execution or rendered result
+is claimed.
+
+Continue the measured serializer grammar with framework value types. Use one coherent authored
+geometry/configuration object to distinguish ordinary whitespace-separated component tuples from
+Color's packed hexadecimal form, preserve exact round trips and reject representative wrong token
+counts/forms. Do not duplicate every math type whose only difference is tuple width.

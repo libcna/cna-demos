@@ -11639,3 +11639,28 @@ grammar missing from project demos: canonical special floating values and round-
 time/date/decimal text, enum/flags spelling and representative lexical/range refusals. Keep one
 authored configuration and a small set of high-value representatives rather than numeric-type
 variants. Keep every compile at three jobs or fewer.
+
+## Focused1087-intermediate-XML-invariant-scalars
+
+The714th catalog ID, `content.custom.intermediate_scalar_formats`, uses one authored settings
+object to cover invariant scalar grammar without numeric-width variants. Eight positive controls
+check lower-case Boolean and decimal integer text; canonical `-0`, `NaN` and `INF`; genuine-XNA
+Single/Double round-trip precision; Decimal, ISO 8601 TimeSpan and UTC DateTime; exact enum/flags
+spelling; and typed round trip including DateTime kind and special values. Seven malformed variants
+reject Boolean case drift, Int32 overflow, lower-case NaN, Decimal exponent notation, .NET-style
+TimeSpan text, enum case drift and flags without a comma.
+
+The clean incremental build is warning-free with `-j3`; metadata validates714/0. Ten related
+SOFTWARE intermediate-XML demos plus the catalog parser pass11/11, and validator/comparator
+self-tests pass5/5 and4/4. Five runs under each renderer label pass15/15 with byte-identical stdout
+SHA-256 `a41bb598300bed59f3971651fa39090d6376d9d93001c7e3a7dabe4743c2483e` and empty stderr. Generated
+coverage merges Focused1085-1087 with Complete1084, contains all714 IDs and remains307/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1087-intermediate-scalars/*`. No CNA issue, fresh genuine-XNA execution,
+rendering, screenshot or manual visual claim was made.
+
+Next, commit and push this batch, then continue the measured intermediate serializer grammar with
+framework value types: one coherent geometry/configuration object should distinguish ordinary
+whitespace-separated tuples from Color's packed hexadecimal form, round-trip exact values and
+reject representative wrong token counts/forms. Avoid per-math-type variants. Keep every compile
+at three jobs or fewer.
