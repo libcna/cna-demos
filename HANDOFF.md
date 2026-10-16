@@ -73,12 +73,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,296 game and210
 standalone; 674 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1075's full runtime reports and includes all710
+Coverage: generated docs/COVERAGE.md uses Complete1080's full runtime reports and includes all710
 catalog IDs in both renderer suites. It incorporates every focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
-Curve and Matrix audits in Focused1063-1074, including ISSUE-124 through ISSUE-140.
+Curve and Matrix audits in Focused1063-1074 and the root Framework audits in Focused1076-1078,
+including ISSUE-124 through ISSUE-145.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
-3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1075's
+3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1080's
 full runtime reports are the baseline inputs for the710-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -89,7 +90,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1075 exercises all3079 credited C routes and all710 catalog IDs in both full smoke
+Complete1080 exercises all3079 credited C routes and all710 catalog IDs in both full smoke
 suites.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
 through Focused1002, including the production StorageDeviceNotConnectedException path.
@@ -11433,3 +11434,32 @@ failed full CTest log. No listening, visual or screenshot claim was made.
 Commit and push this demo fix, then rerun the complete710-demo checkpoint. Compare both complete
 renderer reports with Complete1075 and account for every Focused1076-1079 assertion/status change.
 Keep every compile at no more than three jobs.
+
+## Complete1080-710-demo-behavior-checkpoint
+
+The complete checkpoint at source `50363f0` against pinned CNA `d23e139` builds warning-free with
+`-j3`, validates metadata710/0 and passes all723 enabled CTests; the three manual tests remain
+disabled. SOFTWARE is550 pass/108 expected fail/49 skip/3 not run and OPENGLES3 is590/110/7/3.
+Both reports cover all710 catalog IDs and contain no unexpected pass or failure.
+
+Comparison with Complete1075 accounts for every Focused1076-1079 change. Five existing Game IDs
+move from pass to their new expected ISSUE-141 through ISSUE-145 status, while nine existing IDs
+gain the reviewed controls and OPENGLES3 file-drop gains its two deterministic carrier checks.
+Both renderers add the same ten documented failed assertions: SOFTWARE171->181 and
+OPENGLES3 176->186. No ID or unrelated status/assertion changes. After replacing the four per-run
+temporary path suffixes, dropping blank lines and removing host GTK/X-protocol diagnostics, each
+renderer's stderr is byte-identical to Complete1075. Validator and checkpoint-comparator self-tests
+pass5/5 and4/4.
+
+Generated runtime-backed coverage remains307/329 XNA types,2128/2326 members,674/753 fields and
+3079/3205 public C routes. Archived result SHA-256 values are
+`88374bd064bd2adc64f62b0d7e22cdb87dee3331c888dc0734d1538b9f1c25e7` for SOFTWARE and
+`5132918d552c424dc6970e9e0df31b6bc9f8ab8d7d89d4fc96c1033a252989a3` for OPENGLES3. Evidence is
+under `build/linux-full/reports/checkpoint-1080-complete-*`, including raw and normalized stderr,
+comparison logs, self-tests and the complete hash manifest. No visual, listening, physical-device
+or external-service claim was made.
+
+Next, select the highest-value deterministic public-member/behavior family not yet semantically
+closed in `docs/COVERAGE_AUDIT.md`. Start by reconciling the current CNA headers, existing demo
+controls and explicit dispositions; extend an existing coherent workflow before adding an ID.
+Keep every compile at three jobs or fewer.

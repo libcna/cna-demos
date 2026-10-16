@@ -6583,3 +6583,23 @@ waves and ten OPENGLES3/Xvfb runs all pass six controls with byte-identical stdo
 `-j3` build, all15 CLI CTests, metadata710/0 and self-tests5/5 plus4/4 pass. Evidence:
 `/tmp/checkpoint-1079-visualization-wall-clock/*`, including the failed complete CTest log. No
 listening, rendered-pixel or visual claim was made. Retry the complete710-demo checkpoint next.
+
+### Complete1080 710-demo behavior checkpoint
+
+The complete checkpoint at source `50363f0` against pinned CNA `d23e139` builds warning-free with
+`-j3`, validates710 demos with no metadata problem and passes all723 enabled CTests; three manual
+tests remain disabled. SOFTWARE is550 pass/108 expected fail/49 skip/3 not run and OPENGLES3 is
+590/110/7/3. Both reports contain all710 IDs and no unexpected result.
+
+Relative to Complete1075, the five Game IDs that now expose ISSUE-141 through ISSUE-145 move from
+pass to expected fail, nine IDs carry the reviewed added controls and OPENGLES3 file-drop gains two
+carrier checks. Both renderers add exactly the same ten documented failed assertions
+(SOFTWARE171->181, OPENGLES3 176->186); there is no unrelated status, issue marker, ID or assertion
+change. Normalized stderr is byte-identical to Complete1075 after replacing four temporary path
+suffixes, removing blank lines and removing host-only GTK/X-protocol diagnostics. Validator and
+checkpoint-comparator self-tests pass5/5 and4/4.
+
+Runtime-backed coverage remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205
+public C routes. Evidence:`build/linux-full/reports/checkpoint-1080-complete-*`. Continue the
+semantic audit from the highest-value deterministic family that is not yet dispositioned; these
+surface totals still do not establish comprehensive behavior coverage.

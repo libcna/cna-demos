@@ -11970,3 +11970,22 @@ SHA-256 `474e21e223b75703e7a8349d92e4b30cbc2f2393a3a121be4b9a61eb4d314abf` and e
 Evidence:`/tmp/checkpoint-1079-visualization-wall-clock/*`; it retains the failed full CTest log.
 No listening, screenshot or rendered-pixel claim was made. Retry the complete710-demo checkpoint
 at this source commit next.
+
+## Complete1080 710-demo behavior checkpoint
+
+Pinned CNA `d23e139` at source `50363f0` builds warning-free with `-j3`, metadata validates710/0
+and all723 enabled CTests pass; three manual tests remain disabled. Full SOFTWARE is550 pass/108
+expected fail/49 skip/3 not run and OPENGLES3 is590/110/7/3. Both cover every710 catalog ID with
+no unexpected result.
+
+Comparison with Complete1075 accounts for all Focused1076-1079 changes. The five new expected
+ISSUE-141 through ISSUE-145 statuses, every added control and OPENGLES3's two file-drop carrier
+checks are the only result differences. Both renderers add the same ten documented failed
+assertions, moving SOFTWARE171->181 and OPENGLES3 176->186. Normalized stderr is byte-identical to
+Complete1075 after the same temporary-path and host-diagnostic filtering. Validator and comparator
+self-tests pass5/5 and4/4.
+
+Runtime-backed coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C
+routes. Evidence:`build/linux-full/reports/checkpoint-1080-complete-*`. Continue the deeper
+public-member/behavior audit with the highest-value deterministic family not yet semantically
+closed, preserving the three-job build limit.

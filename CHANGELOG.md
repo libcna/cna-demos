@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete 710-demo checkpoint after the root Framework audits: all 723 enabled
+  CTests and both renderer smoke suites satisfy their expected-status contracts, with the ten
+  ISSUE-141 through ISSUE-145 assertions as the only changes from Complete1075.
 - Made MediaPlayer visualization phase changes follow real mixer time, eliminating a fixed-step
   catch-up race exposed by the complete three-job CTest run while preserving finite failure bounds.
 - Completed the deterministic root title-content and event/value-carrier audit, recording ISSUE-145
