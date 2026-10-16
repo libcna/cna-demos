@@ -1355,8 +1355,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Logger::Warn` -- core.logger.custom_sink
 - `CNA::Logger::WarnIf` -- core.logger.minimum_level
 - `CNA::Platform::AllCapabilities` -- core.platform.capability_matrix
+- `CNA::Platform::Describe` -- platform.window.native_handle
 - `CNA::Platform::GetCurrentPlatform` -- core.platform.capability_matrix
 - `CNA::Platform::HasCurrentPlatform` -- core.platform.capability_matrix
+- `CNA::Platform::HasNativeWindow` -- platform.window.native_handle
 - `CNA::Platform::IPlatform::GetName` -- core.platform.capability_matrix
 - `CNA::Platform::IPlatform::Supports` -- core.platform.capability_matrix
 - `CNA::Platform::NativeWindowHandle` -- platform.window.native_handle
@@ -1364,8 +1366,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Platform::PlatformCapabilities` -- core.platform.capability_matrix
 - `CNA::Platform::PlatformCapability` -- core.platform.capability_matrix
 - `CNA::Platform::Supports` -- core.platform.capability_matrix
-- `CNA::Platform::ToString` -- core.platform.capability_matrix
+- `CNA::Platform::ToString` -- core.platform.capability_matrix, platform.window.native_handle
+- `CNA::Platform::TryGetAndroid` -- platform.window.native_handle
 - `CNA::Platform::TryGetCocoa` -- platform.window.native_handle
+- `CNA::Platform::TryGetUIKit` -- platform.window.native_handle
 - `CNA::Platform::TryGetWayland` -- platform.window.native_handle
 - `CNA::Platform::TryGetWin32` -- platform.window.native_handle
 - `CNA::Platform::TryGetX11` -- platform.window.native_handle

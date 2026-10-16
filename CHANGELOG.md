@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the caller-facing `CNA::Platform` header audit and deepened the native-window workflow
+  with presence/description helpers, mobile decoders, atomic malformed-handle refusal and
+  windowless-system boundaries.
 - Covered the C++ `CNA::Devices` compatibility layer's four support gates and Clipboard text
   interoperability, and fixed the clipboard demo to restore initially empty clipboard and primary-
   selection state instead of leaving demo text behind.

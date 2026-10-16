@@ -12021,3 +12021,33 @@ Commit and push this batch. Continue the CNA-specific public-header/member audit
 surface: reconcile CurrentPlatform, capability, native-window, event, factory and provider types
 against existing demos, adding controls only for deterministic caller-visible behavior. Keep every
 compile at three jobs or fewer.
+
+## Focused1101-CNA-Platform-native-window-contracts
+
+The existing `platform.window.native_handle` workflow grows7->11 reported controls. Its real
+window retains legacy GameWindow/Mouse/TouchPanel token routing, current-system decoding and
+cross-system refusal. New controls tie the real value to `HasNativeWindow` and address-free
+`Describe`, exercise UIKit and Android decoders with non-dereferenced stand-ins, prove incomplete
+X11 refusal is atomic, and reject Unknown/Web/Headless/Terminal even if irrelevant fields are set.
+
+Five OPENGLES3/Xvfb runs pass11/11 with empty stderr. Real handle addresses and the X11 XID vary;
+after replacing those printed tokens, stdout is byte-identical at SHA-256
+`66dfda5a3d9217c5b926e2376bed11240f7938b6fce1ffea84487ceda2f5e870`. SOFTWARE retains the
+declared no-window skip. The warning-free incremental build uses `-j3`; metadata remains716/0, the
+catalog parser passes and validator/comparator self-tests pass5/5 plus4/4. Generated coverage
+merges the focused OPENGLES3 result into Focused1100 plus Complete1099, contains all716 IDs and
+stays307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1101-native-window-contracts/*`. No actual UIKit, Android, Cocoa, Wayland or Win32
+window, screenshot or manual visual result is claimed.
+
+The public platform-header audit is now dispositioned. CurrentPlatform/capabilities and native
+window helpers have direct caller-facing coverage. Entrypoint needs Android/iOS target builds;
+PlatformFactory/exceptions are backend construction and conformance; PlatformEvent and
+WindowDescription are transport inputs whose translated Game/Input behavior is already covered;
+IPlatform and its window, graphics, system, input and camera provider interfaces are implemented by
+CNA backends and belong to CNA's parameterized conformance suite. KeyCode/Scancode and provider
+records are similarly represented through the public Input layers rather than duplicated.
+
+Commit and push this batch. Continue the CNA-specific header audit with the next module containing
+undispositioned caller-facing members, extending existing workflows where practical. Keep every
+compile at three jobs or fewer.

@@ -688,10 +688,12 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 - ✅ `cnaext.*` (4): AsciiPostProcessEffect (every renderer), CRTEffect and DepthEffect (shader
   renderers), DebugDraw.
 - `platform.*`: ✅ renderer selection with fallback chain (standalone), ✅
-  `platform.window.native_handle` (GameWindow::Handle, typed NativeWindowHandle); renderer
+  `platform.window.native_handle` (GameWindow::Handle, every typed NativeWindowHandle decoder,
+  presence/description and malformed/windowless boundaries); renderer
   capability profiles are `graphics.device.capability_report`, while
   `core.platform.capability_matrix` covers the public static platform/capability decision surface.
-  Low-level `IPlatform` provider services are CNA implementation interfaces rather than game APIs.
+  Low-level `IPlatform` provider services, PlatformEvent transport and WindowDescription are CNA
+  implementation interfaces rather than game APIs; entrypoint behavior requires target builds.
 
 ## Phase 14 -- bindings 🟨 (26 C API demos)
 The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks
@@ -757,8 +759,9 @@ Walk COVERAGE.md's backlog and the CNA-specific headers; for each remaining type
 part of another demo, or not independently meaningful (record why). ✅ First passes: the
 decisions for every XNA type without a demo are in [COVERAGE_AUDIT.md](COVERAGE_AUDIT.md), demos
 that already showed a type now name it, and new demos cover the effect interfaces and the
-graphics device service. Remaining: the candidates COVERAGE_AUDIT.md lists, the CNA-specific
-headers. Member/behavior audit covers initial reviews of Quaternion, EffectParameter, Curve,
+graphics device service. The CNA-specific Devices and Platform headers now have explicit
+member/behavior dispositions; other CNA-specific headers remain. Member/behavior audit covers
+initial reviews of Quaternion, EffectParameter, Curve,
 ContentManager, Texture2D, audio/XACT and CNA binary-content writer/document/cursor APIs
 (including overload, ownership and output-observation limitations); this is not a comprehensive member audit. Add screenshot references for
 deterministic demos and run the visual-regression comparison across renderers.

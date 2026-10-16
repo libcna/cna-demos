@@ -7007,3 +7007,31 @@ and3079/3205 C routes. Evidence:`/tmp/checkpoint-1100-devices-wrappers/*`.
 
 Continue with the CNA platform headers. Distinguish the caller-facing static capability/native-
 window/event contracts from `IPlatform` provider interfaces implemented by CNA backends.
+
+### Focused1101 CNA::Platform native-window contracts and header audit
+
+`platform.window.native_handle` grows7->11 reported controls. Its real window still proves the
+legacy token, Mouse/TouchPanel routing, current-system typed decoder and cross-system refusal. It
+now also checks `HasNativeWindow` and address-free `Describe`, exercises UIKit and Android typed
+decoders with non-dereferenced stand-ins, proves incomplete X11 refusal leaves the output untouched,
+and rejects Unknown/Web/Headless/Terminal even when irrelevant fields are populated.
+
+Five OPENGLES3/Xvfb runs pass11/11 with empty stderr. Actual handle addresses and XIDs necessarily
+vary; after replacing those printed tokens, normalized stdout is byte-identical at SHA-256
+`66dfda5a3d9217c5b926e2376bed11240f7938b6fce1ffea84487ceda2f5e870`. SOFTWARE retains its
+declared no-window skip. The warning-free `-j3` build, metadata716/0, catalog parser and both
+self-test suites pass. Coverage stays307/329 types,2128/2326 members,674/753 fields and3079/3205 C
+routes across all716 IDs. Evidence:`/tmp/checkpoint-1101-native-window-contracts/*`.
+
+| `CNA::Platform` area | Coverage decision |
+|---|---|
+| CurrentPlatform and capabilities | The capability matrix proves the Game-owned/ambient identity, cached complete snapshot, every named capability and focused queries. Set/Reset and Detail subsystem pins are lifecycle/test hooks that must not replace the live Game platform inside a demo. |
+| NativeWindowHandle and NativeWindowSystem | The native-window workflow covers every typed decoder, actual desktop routing, presence, address-free description, cross-system and malformed refusal, and windowless identities. Only X11 was physically exercised; mobile/Cocoa/Wayland/Win32 decoder inputs are deterministic value contracts. |
+| Entrypoint | A preprocessing/build-target contract for Android and iOS. It has no runtime behavior on this Linux target and requires those target builds rather than a demo. |
+| PlatformFactory and platform exceptions | Backend construction and conformance infrastructure. Creating alternate platform implementations or constructing exception text is CNA unit-test work, not a game concept; real game-facing support choices use capability gates. |
+| PlatformEvent and WindowDescription | Backend-to-runtime transport records. Game, GameWindow and Input demos cover the translated caller-facing events and settings; manually constructing transport variants would not demonstrate OS delivery. |
+| IPlatform, IPlatformWindow, graphics/system/input/camera provider interfaces | Contracts implemented by CNA backends. Their lifecycle, batching, ownership and refusal rules belong to CNA's parameterized platform conformance suite; games consume the XNA and CNA extension layers already demonstrated. |
+| KeyCode, Scancode and provider value records | Backend vocabulary translated into public keyboard, mouse, gamepad, joystick, touch, haptics and sensor APIs. Those caller surfaces have direct C++/C demos; duplicating provider records would expose implementation plumbing. |
+
+Continue the CNA-specific header audit with the next public module whose caller-facing members are
+not already dispositioned; prefer an existing workflow over a new catalog ID.
