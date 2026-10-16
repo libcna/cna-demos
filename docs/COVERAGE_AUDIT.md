@@ -5534,3 +5534,24 @@ OPENGL33/Xvfb runs pass9/9 with byte-identical stdout SHA-256
 totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1021-cube-compressed-alpha/*`. Pixels were read programmatically; no screenshot or
 manual visual inspection was performed.
+
+### Complete1022 behavior checkpoint
+
+The complete documented validation at cna-demos `219f8b3` and pinned CNA `d23e139de` uses no more
+than three jobs. The build is warning-free, metadata is693/0 and all706 enabled CTests pass in
+246.34s; three manual tests remain disabled. SOFTWARE reports586 pass/56 expected fail/48 skip/3
+manual and OPENGLES3/Xvfb reports625/58/7/3. Both contain all693 unique IDs with no unexpected
+result.
+
+Against Complete1014, ISSUE-114 is the sole status and failed-assertion change, once on each
+renderer. The Focused1015-1021 edits have their intended positive check-count changes. The one
+additional successful `game.window.title` Update on OPENGLES3 is an existing fixed-timestep
+scheduling variance seen in Complete717; twenty isolated reruns each execute ten checks. Normalized
+stderr remains byte-identical, and validator/comparator self-tests pass5/5 and4/4.
+
+Generated coverage stays307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence is `build/linux-full/reports/checkpoint-1022-complete-*`; result hashes are
+`8ce257fffc8781c7f3651cb604536c41d6480d07ca5ef4bff8b8b3dce2aa9b57` and
+`178f5eecb6295359832b135fdb58f7e1ac8cda557058548c167663610aab0026`. No screenshot, listening
+test, physical input, external service session or manual visual inspection was performed. Continue
+the semantic behavior audit outside the absorbed Focused1015-1021 slices.

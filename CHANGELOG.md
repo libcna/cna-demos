@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete 693-demo behavior baseline after seven focused extensions: all 706 enabled
+  CTests and both renderer smoke suites pass with only the reviewed ISSUE-114 status delta and no
+  unexpected result.
 - Extended custom cube sampling through authored DXT3 explicit alpha and DXT5 endpoint alpha with
   exact blended framebuffer values on both GLSL dialects.
 - Added PNG/JPEG export controls proving that fully transparent texels lose hidden RGB while the

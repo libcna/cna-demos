@@ -11180,3 +11180,23 @@ validator/comparator self-tests pass5/5 and4/4. Counts remain307/329 XNA types,2
 674/753 fields and3079/3205 C routes. Evidence:`/tmp/checkpoint-1021-cube-compressed-alpha/*`.
 Pixels were read programmatically; no screenshot or manual visual inspection was performed, and no
 CNA issue was found. Continue the deterministic behavior audit outside compressed cube sampling.
+
+## Complete1022-693-demo-behavior-checkpoint
+
+The full documented validation at cna-demos `219f8b3` and pinned CNA `d23e139de` uses at most three
+jobs. Its build is warning-free, metadata is693/0 and all706 enabled CTests pass in246.34s; three
+manual tests remain disabled. SOFTWARE reports586 pass/56 expected fail/48 skip/3 manual and
+OPENGLES3/Xvfb reports625/58/7/3. Both contain all693 catalog IDs with no unexpected result.
+
+Complete1014 comparison isolates the intended Focused1015-1021 changes. ISSUE-114 is the sole
+status and failed-assertion delta, once per renderer, while all edited demos have their reviewed
+check-count increases. OPENGLES3's one extra successful `game.window.title` Update is the existing
+fixed-timestep variance also recorded in Complete717; twenty isolated reruns each execute ten
+checks. Normalized stderr is unchanged. Validator/comparator self-tests pass5/5 and4/4.
+
+Generated totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence is `build/linux-full/reports/checkpoint-1022-complete-*`; result SHA-256 values are
+`8ce257fffc8781c7f3651cb604536c41d6480d07ca5ef4bff8b8b3dce2aa9b57` and
+`178f5eecb6295359832b135fdb58f7e1ac8cda557058548c167663610aab0026`. No screenshot, listening
+test, physical input, external service session or manual visual inspection was performed. Resume
+the deterministic behavior audit outside the absorbed Focused1015-1021 slices.

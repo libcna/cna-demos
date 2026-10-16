@@ -10,7 +10,7 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
-| audio | 23 | 20 | 2 | 1 | 21 / 0 / 1 / 1 / 0 | 21 / 0 / 1 / 1 / 0 |
+| audio | 23 | 20 | 2 | 1 | 20 / 0 / 2 / 1 / 0 | 20 / 0 / 2 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 68 | 68 | 0 | 0 | 54 / 0 / 14 / 0 / 0 | 54 / 0 / 14 / 0 / 0 |

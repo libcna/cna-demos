@@ -73,10 +73,10 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and210
 standalone; 657 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1014's full runtime reports; they include all693
+Coverage: generated docs/COVERAGE.md uses Complete1022's full runtime reports; they include all693
 catalog IDs in both renderer suites with no absent IDs.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
-3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1014's
+3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1022's
 full runtime reports are the baseline inputs for the693-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -87,7 +87,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1014 exercises all3079 credited C routes and all693 catalog IDs in both full smoke
+Complete1022 exercises all3079 credited C routes and all693 catalog IDs in both full smoke
 suites.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
 through Focused1002, including the production StorageDeviceNotConnectedException path.
@@ -229,31 +229,32 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **1014-693-demo-behavior-checkpoint** is the current full-build and full-runtime baseline.
-It tests cna-demos `0fd7d713a7372a80d9ce0d1427d9e42f0a1bc5fd` against the isolated CNA worktree
+Complete **1022-693-demo-behavior-checkpoint** is the current full-build and full-runtime baseline.
+It tests cna-demos `219f8b3391c6122d12a7d90480489015693862e1` against the isolated CNA worktree
 `/tmp/cna-demos-cna-d23`, exact commit `d23e139de9e5c15511b6be745de290896a69ee37`; do not silently
 reconfigure it to the moving sibling. Every build/test invocation used at most three jobs. The
-build is warning-free, metadata is693/0 and all706 enabled CTests pass in366.19s; three manual tests
+build is warning-free, metadata is693/0 and all706 enabled CTests pass in246.34s; three manual tests
 remain disabled.
 
-SOFTWARE reports587 pass/55 expected fail/48 skip/3 manual. OPENGLES3/private-Xvfb reports
-626/57/7/3. Both reports contain all693 unique catalog IDs with zero unexpected failures or
-unexpected passes. Compared with Complete1003, the only status/failed-assertion changes are the
-reviewed ISSUE-113 query overlap on both renderers and ISSUE-112 secondary render-target context
-failure on OPENGLES3. Five existing demos have intended positive check-count increases from
-Focused1004-1013. Normalized stderr is otherwise byte-identical to Complete1003. Validator and
-checkpoint-comparison self-tests pass5/5 and4/4.
+SOFTWARE reports586 pass/56 expected fail/48 skip/3 manual. OPENGLES3/private-Xvfb reports
+625/58/7/3. Both reports contain all693 unique catalog IDs with zero unexpected failures or
+unexpected passes. Compared with Complete1014, only ISSUE-114 changes a status and adds one failed
+assertion per renderer; the six positive focused extensions have their intended check-count
+increases. OPENGLES3 also schedules one extra successful `game.window.title` Update, an existing
+fixed-timestep variance already present in Complete717; twenty isolated reruns all execute ten
+checks. Normalized stderr is byte-identical to Complete1014. Validator and checkpoint-comparison
+self-tests pass5/5 and4/4.
 
 Generated coverage is307/329 types,2128/2326 non-field members,674/753 fields and3079/3205 C
 routes. Tested SHA-256: `cna-demos`
-`606180c89cea606bd30243c0b02a81b03333f325a01bd28631ef2c844403541d`, `libcna.so`
+`4fbadc6974f04234ec970607b100124ad71720c4e4b97812d09a1e9431481801`, `libcna.so`
 `624de5687262040f91736857226b38392f5a5375099c92a0d221b6236b8aa25d`, and `libcna_c_api.so`
 `813bf0a2095524183bbaca66f6fbcc1fbdfcfcd5ddd8148c8ec6ce3138ebee24`. Report hashes are SOFTWARE
-`c8581dc7f4dd4404cb4be6a00dd450840c1c4ab06ba1641fe135f85c6bbd2b80` and OPENGLES3
-`dc069865df7b395d0697f5f944bc6ee81a8d27e99b6bde878a033936a7a63453`; catalog hash is
-`e6cc865681b80f1fc42b7a321514eaca0d2e576df06d26373456e4d03eca0d85` and generated coverage hash
-is `73a626718ad4c4a10aa5db62bb068dc4549a74fc25ded602dbe8f93ccf3313f4`. Immutable evidence is
-`build/linux-full/reports/checkpoint-1014-complete-*`. No screenshot, listening test, physical
+`8ce257fffc8781c7f3651cb604536c41d6480d07ca5ef4bff8b8b3dce2aa9b57` and OPENGLES3
+`178f5eecb6295359832b135fdb58f7e1ac8cda557058548c167663610aab0026`; catalog hash is
+`976c558c4d1d447c1e7ec8484d07b9c12ed9c4a3e76935694cc7d365ea487173` and generated coverage hash
+is `ac32dba9c2bbfc1bb49510a3b291083ebf694585f64047f0bc3436eefa9fc43f`. Immutable evidence is
+`build/linux-full/reports/checkpoint-1022-complete-*`. No screenshot, listening test, physical
 input, external service session or manual visual-quality inspection was performed.
 
 Focused **939-native-logger-general-and-experiment** extends the stable
@@ -3513,24 +3514,17 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete1014 is the authoritative693-demo full-build/full-runtime baseline at
-cna-demos `0fd7d71` against pinned CNA `d23e139de`. It absorbs Focused1004-1013: deterministic
-ShaderEffect call-order/ownership/no-op boundaries, bound RenderTargetCube destruction, the corrected
-3079th credited C route, the WebGPU-only uniform-block disposition, active OcclusionQuery disposal,
-cross-device RenderTarget2D moves, distinct-query overlap ISSUE-113, secondary EasyGL context
-ISSUE-112 and bound VertexDeclaration disposal. The complete warning-free three-job run passes all
+HIGHEST PRIORITY: Complete1022 is the authoritative693-demo full-build/full-runtime baseline at
+cna-demos `219f8b3` against pinned CNA `d23e139de`. It absorbs Focused1015-1021: SkinnedEffect
+texture ownership/disposal, SpriteFont atlas lifetime, nonterminal SoundEffect loop release
+ISSUE-114, live DynamicSoundEffect format refusals, SkinnedEffect composed alpha, transparent-RGB
+image export and compressed-cube alpha sampling. The complete warning-free three-job run passes all
 706 enabled CTests and both693-ID smoke suites with no unexpected result.
 
 Resume the deeper semantic behavior audit: reconcile explicit residual gaps in
 `docs/COVERAGE_AUDIT.md` against pinned CNA d23e139de and prioritize reachable deterministic behavior
-that strengthens an existing coherent demo. Focused1015 closes the explicit SkinnedEffect
-clone/raw-texture/disposal ownership gap, Focused1016 closes SpriteFont's caller-atlas disposal
-boundary, Focused1017 closes the nonterminal SoundEffect release audit while recording ISSUE-114,
-Focused1018 closes both live dynamic-audio format-switch refusals, and Focused1019 closes the
-explicit SkinnedEffect vertex/material/texture-alpha interaction gap. Focused1020 closes the
-Texture2D PNG/JPEG transparent-RGB normalization gap, and Focused1021 closes actual DXT3/DXT5 cube
-alpha sampling on both GLSL dialects. Choose the next gap outside those completed slices. Revisit
-the126 intentionally
+that strengthens an existing coherent demo. Choose the next gap outside the Focused1015-1021
+ownership, audio-transport and texture-alpha slices now absorbed by Complete1022. Revisit the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
@@ -9843,7 +9837,7 @@ and publish the consolidated remaining-member dispositions.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is1014-693-demo-behavior-checkpoint; exact results, hashes and
+Current complete baseline is1022-693-demo-behavior-checkpoint; exact results, hashes and
 evidence are in section7. Use its693-demo reports as the comparison baseline.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
@@ -9857,8 +9851,8 @@ complete502. The complete504 checkpoint binary was built with clean CNA `f37f8d1
 externally during smoke to clean `fbd8e64a3` through CI/CMake-test/docs/tooling-only changes, while
 both production library hashes stayed unchanged. Complete504, complete524, complete719,
 Complete926, Complete933 and Complete938 remain immutable historical comparison evidence;
-Complete981, Complete990, Complete998 and Complete1003 remain immutable historical comparison
-evidence; Complete1014 is the current full-runtime baseline.
+Complete981, Complete990, Complete998, Complete1003 and Complete1014 remain immutable historical
+comparison evidence; Complete1022 is the current full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.
 
@@ -10148,3 +10142,27 @@ totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C r
 `7e65db00e6bb9d5283dfa0f8c4e193b82eb868335b37cf0212296c4baf51051a`. Pixel validation was
 programmatic; no screenshot or manual visual inspection was performed, and no CNA issue was found.
 Continue with the next deterministic behavior gap outside compressed cube sampling.
+
+## Complete1022-693-demo-behavior-checkpoint
+
+The full documented validation at cna-demos `219f8b3` and pinned CNA `d23e139de` completes with a
+warning-free three-job build, metadata693/0 and all706 enabled CTests passing in246.34s; three
+manual tests remain disabled. SOFTWARE reports586 pass/56 expected fail/48 skip/3 manual, while
+OPENGLES3/Xvfb reports625/58/7/3. Both reports contain all693 unique catalog IDs with no unexpected
+failure or unexpected pass.
+
+Comparison with Complete1014 contains the reviewed Focused1015-1021 deltas. ISSUE-114 changes only
+`audio.sound_effect.loop_region` from pass to expected failure and adds exactly its one documented
+assertion on each renderer. The seven edited demos have their intended check-count increases;
+OPENGLES3 also runs one extra successful `game.window.title` Update, an existing fixed-timestep
+variance already captured by Complete717. Twenty isolated reruns execute ten checks each. After
+normalizing temporary-directory IDs and X protocol serial/resource values, stderr is byte-identical
+to Complete1014. Validator/comparator self-tests pass5/5 and4/4.
+
+Generated coverage remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C
+routes. Immutable evidence is `build/linux-full/reports/checkpoint-1022-complete-*`; SOFTWARE and
+OPENGLES3 result SHA-256 values are
+`8ce257fffc8781c7f3651cb604536c41d6480d07ca5ef4bff8b8b3dce2aa9b57` and
+`178f5eecb6295359832b135fdb58f7e1ac8cda557058548c167663610aab0026`. No screenshot, listening
+test, physical input, external service session or manual visual inspection was performed. Continue
+the deterministic behavior audit outside the now-absorbed Focused1015-1021 slices.
