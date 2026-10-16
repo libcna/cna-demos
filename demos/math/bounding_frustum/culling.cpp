@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MS-PL
-// View-frustum culling with BoundingFrustum.
+// BoundingFrustum construction, camera culling, planes, matrix mutation and value identity.
 #include <any>
-#include <vector>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/BoundingFrustum.hpp"
 #include "Microsoft/Xna/Framework/BoundingSphere.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
+#include "Microsoft/Xna/Framework/Plane.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -16,64 +16,73 @@ namespace
 {
     void BoundingFrustumCulling(CnaDemos::DemoContext& ctx)
     {
-        // The camera's frustum is built from view * projection.
-        const Matrix view = Matrix::CreateLookAt(Vector3(0.0f, 0.0f, 10.0f), Vector3::Zero, Vector3::Up);
-        const Matrix projection = Matrix::CreatePerspectiveFieldOfView(MathHelper::PiOver4, 4.0f / 3.0f, 1.0f, 100.0f);
-        const BoundingFrustum frustum(view * projection);
+        const Matrix view =
+            Matrix::CreateLookAt(Vector3(0.0f, 0.0f, 10.0f), Vector3::Zero, Vector3::Up);
+        const Matrix projection =
+            Matrix::CreatePerspectiveFieldOfView(MathHelper::PiOver4, 4.0f / 3.0f, 1.0f, 100.0f);
+        const BoundingFrustum camera(view * projection);
 
-        const BoundingSphere ahead(Vector3(0.0f, 0.0f, 0.0f), 1.0f);
+        const BoundingSphere ahead(Vector3::Zero, 1.0f);
         const BoundingSphere behind(Vector3(0.0f, 0.0f, 20.0f), 1.0f);
-        const BoundingSphere onEdge(Vector3(0.0f, 0.0f, 9.0f), 0.5f);    // centred on the near plane (z = 10 - 1)
+        const BoundingSphere onNearPlane(Vector3(0.0f, 0.0f, 9.0f), 0.5f);
+        ctx.Check(camera.Contains(ahead) == ContainmentType::Contains &&
+                      camera.Contains(behind) == ContainmentType::Disjoint &&
+                      camera.Contains(onNearPlane) == ContainmentType::Intersects,
+                  "camera containment distinguishes visible, culled and near-plane-crossing spheres");
+        ctx.Check(camera.Intersects(ahead) && !camera.Intersects(behind) &&
+                      camera.Intersects(onNearPlane),
+                  "camera intersection is the matching boolean culling view");
 
-        // Draw only what the camera can see.
-        ctx.Check(frustum.Contains(ahead) == ContainmentType::Contains, "an object in front is visible");
-        ctx.Check(frustum.Contains(behind) == ContainmentType::Disjoint, "an object behind the camera is culled");
-        ctx.Check(frustum.Contains(onEdge) == ContainmentType::Intersects, "an object crossing the near plane is partly visible");
-        ctx.Check(frustum.Intersects(ahead) && !frustum.Intersects(behind), "Intersects gives the yes/no version");
-
-        // The frustum's planes and corners.
-        ctx.Print("near plane = {}", frustum.getNearProperty().ToString());
-        ctx.Print("far plane  = {}", frustum.getFarProperty().ToString());
-        const std::vector<Vector3> corners = frustum.GetCorners();
-        ctx.Print("{} corners; first near corner {}", corners.size(), corners.front().ToString());
-        ctx.Check(corners.size() == static_cast<std::size_t>(BoundingFrustum::CornerCount), "a frustum has 8 corners");
-        ctx.Check(frustum.getMatrixProperty() == view * projection, "Matrix returns the matrix it was built from");
-
-        // The identity matrix makes all six clipping planes exact and easy to inspect.
         const BoundingFrustum identity(Matrix::getIdentityProperty());
+        ctx.Check(identity.getMatrixProperty() == Matrix::getIdentityProperty(),
+                  "Matrix retains the exact combined matrix supplied at construction");
+        ctx.Check(identity.getNearProperty() == Plane(0.0f, 0.0f, -1.0f, 0.0f) &&
+                      identity.getFarProperty() == Plane(0.0f, 0.0f, 1.0f, -1.0f),
+                  "identity near and far planes bound Z from zero through one");
         ctx.Check(identity.getLeftProperty() == Plane(-1.0f, 0.0f, 0.0f, -1.0f) &&
                       identity.getRightProperty() == Plane(1.0f, 0.0f, 0.0f, -1.0f),
-                  "identity left and right planes bound X from -1 through 1");
+                  "identity left and right planes bound X from minus one through one");
         ctx.Check(identity.getTopProperty() == Plane(0.0f, 1.0f, 0.0f, -1.0f) &&
                       identity.getBottomProperty() == Plane(0.0f, -1.0f, 0.0f, -1.0f),
-                  "identity top and bottom planes bound Y from -1 through 1");
+                  "identity top and bottom planes bound Y from minus one through one");
 
-        const BoundingFrustum sameIdentity(Matrix::getIdentityProperty());
-        const BoundingFrustum changed(Matrix::CreateTranslation(1.0f, 0.0f, 0.0f));
-        ctx.Check(identity.Equals(sameIdentity) && identity.Equals(std::any{sameIdentity}) &&
+        BoundingFrustum mutableFrustum(Matrix::getIdentityProperty());
+        const Matrix shiftedMatrix = Matrix::CreateTranslation(-10.0f, 0.0f, 0.0f);
+        mutableFrustum.setMatrixProperty(shiftedMatrix);
+        ctx.Check(mutableFrustum.getMatrixProperty() == shiftedMatrix &&
+                      mutableFrustum.Contains(Vector3(0.0f, 0.0f, 0.5f)) == ContainmentType::Disjoint &&
+                      mutableFrustum.Contains(Vector3(10.0f, 0.0f, 0.5f)) == ContainmentType::Contains,
+                  "setting Matrix recomputes all planes and corners for the translated frustum");
+
+        const BoundingFrustum equal(Matrix::getIdentityProperty());
+        const BoundingFrustum changed(shiftedMatrix);
+        ctx.Check(identity.Equals(equal) && identity.Equals(std::any{equal}) &&
                       !identity.Equals(std::any{42}) && !identity.Equals(std::any{}),
                   "typed and boxed equality accept only the same frustum matrix");
-        ctx.Check(identity == sameIdentity && identity != changed &&
-                      identity.GetHashCode() == sameIdentity.GetHashCode(),
-                  "frustum operators and hashes follow matrix identity");
+        ctx.Check(identity == equal && identity != changed &&
+                      identity.GetHashCode() == equal.GetHashCode(),
+                  "frustum operators and equal hashing follow matrix identity");
+
+        ctx.Print("identity frustum = {}", identity.ToString());
         ctx.Check(identity.ToString() ==
-                      "{Near:{Normal:{X:-0 Y:-0 Z:-1} D:-0} Far:{Normal:{X:0 Y:0 Z:1} D:-1} "
-                      "Left:{Normal:{X:-1 Y:-0 Z:-0} D:-1} Right:{Normal:{X:1 Y:0 Z:0} D:-1} "
-                      "Top:{Normal:{X:0 Y:1 Z:0} D:-1} Bottom:{Normal:{X:-0 Y:-1 Z:-0} D:-1}}",
-                  "ToString lists all six clipping planes in canonical order");
+                      "{Near:{Normal:{X:0 Y:0 Z:-1} D:0} Far:{Normal:{X:0 Y:0 Z:1} D:-1} "
+                      "Left:{Normal:{X:-1 Y:0 Z:0} D:-1} Right:{Normal:{X:1 Y:0 Z:0} D:-1} "
+                      "Top:{Normal:{X:0 Y:1 Z:0} D:-1} Bottom:{Normal:{X:0 Y:-1 Z:0} D:-1}}",
+                  "ToString lists the six clipping planes in XNA's canonical signed-zero form");
     }
 }
 
 CNA_DEMOS_CONSOLE(BoundingFrustumCulling, {
     .id = "math.bounding_frustum.culling",
-    .title = "View-frustum culling",
-    .description = "Builds a BoundingFrustum from a camera's view and projection matrices and classifies objects "
-                   "as visible, culled or partly visible; prints its planes and corners.",
+    .title = "View-frustum construction and culling",
+    .description = "Builds camera and identity BoundingFrustums, observes all six planes and matrix mutation, performs "
+                   "sphere culling, and checks matrix-based identity, hashing and exact XNA text.",
     .apis = {"BoundingFrustum::BoundingFrustum", "BoundingFrustum::Contains", "BoundingFrustum::Intersects",
              "BoundingFrustum::Near", "BoundingFrustum::Far", "BoundingFrustum::Left",
              "BoundingFrustum::Right", "BoundingFrustum::Top", "BoundingFrustum::Bottom",
-             "BoundingFrustum::GetCorners", "BoundingFrustum::CornerCount", "BoundingFrustum::Matrix", "BoundingFrustum::Equals",
-             "BoundingFrustum::GetHashCode", "BoundingFrustum::ToString", "BoundingFrustum::op_Equality",
-             "BoundingFrustum::op_Inequality"},
-    .tags = {"culling", "camera", "frustum"},
+             "BoundingFrustum::Matrix", "BoundingFrustum::Equals", "BoundingFrustum::GetHashCode",
+             "BoundingFrustum::ToString", "BoundingFrustum::op_Equality", "BoundingFrustum::op_Inequality"},
+    .tags = {"culling", "camera", "frustum", "value-semantics"},
+    .restrictions = "CNA-DEMOS-ISSUE-135 records negative zeros in identity-frustum ToString output.",
+    .knownIssue = "CNA-DEMOS-ISSUE-135",
 })

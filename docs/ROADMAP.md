@@ -11764,3 +11764,21 @@ and both self-test suites pass. Coverage totals remain unchanged; Complete1056's
 runtime results predate these assertions. Evidence:`/tmp/checkpoint-1070-color-members/*`. The
 meaningful Color audit is complete; continue with BoundingFrustum public-member and behavior
 coverage.
+
+## Focused1071 BoundingFrustum members and boundaries
+
+Three focused console demos raise the catalog to708 and math to93. `containment` has eight
+controls, `corners` four and `intersections` six; existing camera `culling` is reorganized to ten.
+Genuine XNA anchors Matrix mutation and all planes, value identity/text, exact corner order and
+output refusal, every point/box/sphere/frustum containment family, volume/plane intersections and
+Ray value/output behavior. CNA matches the ordinary geometry but exposes four issue groups:
+ISSUE-131 now also covers frustum-to-Ray outside entry and boundary starts, ISSUE-133 covers point
+boundary/equal-frustum containment, ISSUE-134 the wrong short-corner exception family and
+ISSUE-135 derived negative zeros in ToString.
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. After the configure-only
+warning, the clean `-j3` build, metadata708/0, all four exact CTests and both self-test suites pass.
+Coverage totals remain unchanged and Complete1056 marks the three new IDs absent while its culling
+result predates the new assertions. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`.
+The meaningful BoundingFrustum audit is complete; continue with the next unaudited deterministic
+math value family selected from the public-member inventory.

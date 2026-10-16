@@ -241,6 +241,18 @@ d23.
 
 The meaningful Color public-member/behavior audit is complete at pinned d23.
 
+### BoundingFrustum
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Construction, Matrix, planes and value identity | Focused1071 grows `math.bounding_frustum.culling` from its camera-culling core to ten controls. Camera sphere containment/intersection remains, while identity construction exposes Matrix and all six planes. Setting Matrix recomputes planes/corners and moves containment. Typed/boxed/operator equality, changed matrices and equal hashing complete the identity contract. CNA matches genuine XNA except identity ToString retains derived negative zeros, recorded as ISSUE-135. Exact platform-native hash values remain intentionally unasserted beyond equal values. |
+| CornerCount and GetCorners | New focused `math.bounding_frustum.corners` has four controls. The value form returns the exact near-clockwise then far-clockwise eight-corner order. A guarded ten-element output overwrites exactly eight positions. A seven-element output is refused atomically, but CNA throws `std::out_of_range` rather than XNA's framework ArgumentOutOfRangeException, recorded as ISSUE-134. |
+| Contains | New focused `math.bounding_frustum.containment` has eight controls spanning point/box/sphere value and output forms plus frustum values. Interiors, crossings, tangent volumes, gaps and nested/overlapping/distant frusta otherwise match. Under ISSUE-133, CNA treats an exact-plane point as Intersects, stops before another plane can reject a boundary/outside point, and calls a distinct equal-matrix frustum Intersects even though self-containment is Contains. |
+| Intersects | New focused `math.bounding_frustum.intersections` has six controls covering box/sphere value/output forms, frustum booleans, all plane classifications and Ray value/output paths. Volume, plane, interior-ray and miss behavior match. Outside ray entry remains absent and a boundary start reaches the unimplemented branch instead of returning zero, extending ISSUE-131 from the reciprocal Ray workflow. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`. |
+| CNA-only DebugDisplayString | This protected-style diagnostic convenience concatenates the same six already observed Plane values. It is absent from the XNA public inventory and does not justify a duplicate runnable assertion or XNA member credit. |
+
+The meaningful BoundingFrustum public-member/behavior audit is complete at pinned d23.
+
 Focused651 adds twelve member credits without new IDs, moving temporary coverage1545->1557/2326.
 All three IDs have byte-identical renderer outputs and empty stderr; all focused CTests pass.
 Evidence:`/tmp/checkpoint-651-*` and `/tmp/checkpoint-651-coverage.md`. No rendering, screenshot or
@@ -6359,3 +6371,33 @@ Complete1056 results predate the new assertions. Genuine-XNA stdout SHA-256 is
 display-cookie warning. Evidence:`/tmp/checkpoint-1070-color-members/*`. No renderer or visual
 claim was made. The meaningful Color audit is complete; continue with BoundingFrustum public
 members and behavior.
+
+### Focused1071 BoundingFrustum members and boundaries
+
+Three new focused console demos raise the catalog to708, math to93, console to202 and automated to
+672. `math.bounding_frustum.containment` has eight controls, `corners` four and `intersections`
+six. Existing `culling` is reorganized to ten. Together they cover construction and Matrix
+mutation, all six planes, typed/boxed/operator identity and text, exact corner order and guarded
+output, all point/box/sphere/frustum containment paths, volume/frustum/plane intersections and Ray
+value/output behavior.
+
+Genuine Windows XNA 4.0 exposes four CNA issue groups. The known outside-entry defect also affects
+the frustum-to-Ray value/output forms, while a boundary start throws from the same unimplemented
+path (extended ISSUE-131). Point boundary classification and separate equal-frustum containment
+produce two grouped failures under ISSUE-133. A short corner output throws `std::out_of_range`
+rather than framework ArgumentOutOfRangeException (ISSUE-134), and identity ToString preserves
+derived negative zeros absent from XNA (ISSUE-135). The remaining23 controls match.
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. Stdout SHA-256 values are
+`b992d9fff505d9c7cb4d570c61e48f58da240ab812a9c752f7d03317a377edfc` for construction/culling,
+`f34222c1098c09cddd7424489b68b10ab72039129d18e8aeacb29dd4d903f46f` for corners,
+`7185a83c49f10519a1cd1abbc9a7713ecd741c4f1046c974c18268ee899356f7` for containment and
+`2d4546b32ce4d995ce1ab7df72899f4fa168a3294a6c1f338c1abfad5a132254` for intersections. After
+the configure-only vendored-Draco warning, the clean `-j3` build, metadata708/0, all four exact
+SOFTWARE CTests and self-tests5/5 plus4/4 pass. Coverage remains307/329 types,2128/2326 members,
+674/753 fields and3079/3205 C routes; Complete1056 marks the three new IDs absent and its culling
+result predates these assertions. Genuine-XNA stdout SHA-256 is
+`08fee55dc0e7ae468ce61e88f5057c2ad03d2c4007427b1443f1fad49d94e0b7`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`. No renderer or
+visual claim was made. The meaningful BoundingFrustum audit is complete; continue with the next
+unaudited deterministic math value family selected from the public-member inventory.

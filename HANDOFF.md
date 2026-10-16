@@ -69,19 +69,21 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-705 project-built catalog demos in19 categories: math90, game33, graphics185, audio23, core6,
+708 project-built catalog demos in19 categories: math93, game33, graphics185, audio23, core6,
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are199 console,296 game and210
-standalone; 669 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are202 console,296 game and210
+standalone; 672 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; they include all695
 baseline catalog IDs in both renderer suites. The six new `math.vector4.*` IDs and new
 `math.bounding_sphere.containment_boundaries`, `math.ray.value_identity`,
-`math.ray.frustum_intersection` and `math.plane.intersections` are explicitly absent until the next
-complete checkpoint. The
+`math.ray.frustum_intersection`, `math.plane.intersections`,
+`math.bounding_frustum.containment`, `math.bounding_frustum.corners` and
+`math.bounding_frustum.intersections` are explicitly absent until the next complete checkpoint. The
 baseline results for `math.point.basics`, all four `math.rectangle.*`, all four
 `math.bounding_box.*`, the three older `math.bounding_sphere.*` IDs, `math.ray.intersects`, the
-two older `math.plane.*` IDs and four console `math.color.*` IDs predate Focused1063-1070's deeper
-member assertions and ISSUE-124 through ISSUE-132 where applicable.
+two older `math.plane.*` IDs, four console `math.color.*` IDs and
+`math.bounding_frustum.culling` predate Focused1063-1071's deeper member assertions and ISSUE-124
+through ISSUE-135 where applicable.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -11131,3 +11133,35 @@ affected Complete1056 results predate the new assertions. Genuine-XNA stdout SHA
 display-cookie warning. Evidence:`/tmp/checkpoint-1070-color-members/*`. No renderer or visual
 claim was made. The meaningful Color audit is complete; continue with BoundingFrustum public
 members and behavior.
+
+## Focused1071-BoundingFrustum-members-and-boundaries
+
+Three new focused console demos raise the catalog to708, math to93, console to202 and automated to
+672. `math.bounding_frustum.containment` has eight controls, `corners` four and `intersections`
+six. Existing `culling` is reorganized to ten. Together they cover construction and Matrix
+mutation, all six planes, typed/boxed/operator identity and text, exact corner order and guarded
+output, every point/box/sphere/frustum containment family, volume/frustum/plane intersections and
+Ray value/output behavior.
+
+Genuine Windows XNA 4.0 exposes four issue groups. The known outside-entry defect also affects
+frustum-to-Ray value/output forms and a boundary start throws from the same unimplemented path,
+extending ISSUE-131. Point boundary classification and separate equal-frustum containment produce
+two grouped failures under ISSUE-133. A short corner output throws `std::out_of_range` rather than
+framework ArgumentOutOfRangeException (ISSUE-134), and identity ToString preserves derived
+negative zeros absent from XNA (ISSUE-135). All remaining23 controls match.
+
+The configure-only vendored-Draco warning is unchanged; the clean follow-up `-j3` build is
+warning-free. Metadata is708/0, all four exact SOFTWARE CTests and validator/comparator
+self-tests5/5 plus4/4 pass. Ten runs per demo and renderer label are byte-stable with empty stderr.
+Stdout SHA-256 values are `b992d9fff505d9c7cb4d570c61e48f58da240ab812a9c752f7d03317a377edfc`
+for construction/culling, `f34222c1098c09cddd7424489b68b10ab72039129d18e8aeacb29dd4d903f46f`
+for corners, `7185a83c49f10519a1cd1abbc9a7713ecd741c4f1046c974c18268ee899356f7`
+for containment and `2d4546b32ce4d995ce1ab7df72899f4fa168a3294a6c1f338c1abfad5a132254`
+for intersections. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C
+routes; Complete1056 marks the three new IDs absent and its culling result predates these assertions.
+Genuine-XNA stdout SHA-256 is `08fee55dc0e7ae468ce61e88f5057c2ad03d2c4007427b1443f1fad49d94e0b7`;
+its stderr is only the host display-cookie warning. Evidence:
+`/tmp/checkpoint-1071-bounding-frustum-members/*`. No renderer or visual claim was made. The
+meaningful BoundingFrustum audit is complete. Select the next unaudited deterministic math value
+family from the public-member inventory, prefer deepening existing demos, and run the next full
+checkpoint after enough focused change.

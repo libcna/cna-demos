@@ -15,6 +15,72 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-135 -- BoundingFrustum identity text preserves derived negative zeros
+
+- **Area/API:** `Microsoft::Xna::Framework::BoundingFrustum::ToString` and the six planes derived
+  from its Matrix.
+- **Demo/reproduction:** run `math.bounding_frustum.culling`. Construct a BoundingFrustum from the
+  identity Matrix, inspect every plane, then compare the exact six-plane text beside matrix
+  mutation, camera culling and value-identity controls.
+- **Observed:** CNA emits negative zeros in the Near, Left and Bottom planes, for example
+  `Near:{Normal:{X:-0 Y:-0 Z:-1} D:-0}`. This is the sole expected failure among ten controls.
+- **Expected/reference:** genuine Windows XNA 4.0 emits positive zero for those components:
+  `Near:{Normal:{X:0 Y:0 Z:-1} D:0}`. Plane values, order and all adjacent behavior otherwise
+  match.
+- **Cause/suggested repair:** `CreatePlanes` negates zero-valued identity-matrix components and
+  normalization preserves their sign. Canonicalize zero components while deriving or formatting
+  the planes so public text matches XNA without changing nonzero values.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`. After
+  the configure-only vendored-Draco warning, the clean warning-free three-job build, all four
+  exact SOFTWARE CTests, metadata708/0 and self-tests5/5 plus4/4 pass; ten runs per demo and
+  renderer label reproduce only the five documented BoundingFrustum assertions with empty
+  stderr. No CNA source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-134 -- BoundingFrustum short corner output throws the wrong exception family
+
+- **Area/API:** `Microsoft::Xna::Framework::BoundingFrustum::GetCorners(std::vector<Vector3>&)`.
+- **Demo/reproduction:** run `math.bounding_frustum.corners`. Read the identity frustum's corner
+  vector and guarded ten-element output, then pass a seven-element output initialized to sentinels.
+- **Observed:** CNA atomically preserves the short output but throws `std::out_of_range`. The exact
+  framework-exception assertion is the sole expected failure among four controls.
+- **Expected/reference:** genuine Windows XNA 4.0 throws `System::ArgumentOutOfRangeException` for
+  the undersized destination and leaves it unchanged. The eight-corner order and guarded output
+  behavior match CNA.
+- **Cause/suggested repair:** replace the direct `std::out_of_range("corners")` with CNA's
+  framework `System::ArgumentOutOfRangeException`, retaining the existing pre-write size check.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`. The
+  focused build and stability evidence are shared with ISSUE-135. No CNA source was modified and
+  no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-133 -- BoundingFrustum boundary and equal-instance containment differ from XNA
+
+- **Area/API:** `Microsoft::Xna::Framework::BoundingFrustum::Contains(Vector3)` and
+  `BoundingFrustum::Contains(BoundingFrustum)`.
+- **Demo/reproduction:** run `math.bounding_frustum.containment`. Test identity-frustum interior,
+  exterior and exact-plane points through value/output forms, then compare self and a distinct
+  frustum constructed from the same identity Matrix. Adjacent controls cover boxes, spheres,
+  nested, overlapping and distant frusta.
+- **Observed:** CNA returns Intersects for a point exactly on a plane instead of Contains. Because
+  its point loop stops at the first exact plane, `(2,0,0)` is also Intersects instead of Disjoint
+  even though a side plane excludes it. A distinct equal-matrix frustum is Intersects while the
+  pointer-identical object is Contains. Two grouped assertions fail among eight controls.
+- **Expected/reference:** genuine Windows XNA 4.0 returns Contains for the boundary point,
+  Disjoint for the boundary-plane point excluded by another plane, and Contains for both self and
+  a distinct geometrically equal frustum.
+- **Cause/suggested repair:** point containment should continue across exact planes and return
+  Contains after all six nonpositive classifications; it must not treat equality as an early
+  Intersects result. Frustum containment also needs geometric equality/complete containment rather
+  than relying on a pointer-only fast path before treating boundary-plane corners as overlap.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`. The
+  focused build and stability evidence are shared with ISSUE-135. No CNA source was modified and
+  no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-132 -- Color nonfinite interpolation and multiplication differ from XNA
 
 - **Area/API:** `Microsoft::Xna::Framework::Color::Lerp` and `Color::Multiply`/the XNA
@@ -40,27 +106,32 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   ten runs per demo and renderer label reproduce only the two documented assertions with empty
   stderr. No CNA source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-131 -- Ray cannot enter a BoundingFrustum from outside
+### CNA-DEMOS-ISSUE-131 -- BoundingFrustum ray intersection omits outside entry and boundary start
 
 - **Area/API:** `Microsoft::Xna::Framework::Ray::Intersects(BoundingFrustum)` and the delegated
   `BoundingFrustum::Intersects(Ray)` implementation.
-- **Demo/reproduction:** run `math.ray.frustum_intersection`. Cast +Z rays from `(0,0,-3)`,
-  `(3,0,-3)` and the interior point `(0,0,0.5)` through an identity-matrix frustum.
-- **Observed:** CNA returns no value for the first ray because it rejects every outside origin
-  without testing where the ray enters. The miss and inside-zero controls pass, leaving one
-  expected failure among three.
-- **Expected/reference:** genuine Windows XNA 4.0 returns entry parameter3, no value and parameter0
-  respectively.
+- **Demo/reproduction:** run `math.ray.frustum_intersection` and
+  `math.bounding_frustum.intersections`. Cast +Z rays from `(0,0,-3)`, `(3,0,-3)`, the interior
+  point `(0,0,0.5)` and boundary point `(0,0,0)` through an identity-matrix frustum, covering both
+  Ray-to-frustum and frustum-to-Ray value/output calls.
+- **Observed:** CNA returns no value for the entering ray because it rejects every outside origin
+  without testing where the ray enters. It throws `System::NotImplementedException` for the
+  boundary start because point containment classifies it as Intersects. Interior zero and the
+  distant miss pass. Each workflow retains one grouped expected failure, among three and six
+  controls respectively.
+- **Expected/reference:** genuine Windows XNA 4.0 returns entry parameter3, no value, parameter0
+  for the interior start and parameter0 for the boundary start; the frustum value/output forms
+  agree.
 - **Cause/suggested repair:** the delegated frustum method only classifies the ray origin and its
   remaining intersection branch is explicitly unimplemented. Clip the ray parameter interval
   against all six frustum planes, returning the first nonnegative entry when the interval survives.
 - **Evidence/status:** open against pinned CNA
   `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1068-ray-members/*`. After the
-  configure-only vendored-Draco warning, the clean warning-free three-job build, all three exact
-  SOFTWARE CTests, metadata704/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
-  label reproduce only the three documented Ray assertions with empty stderr. No CNA source was
-  modified and no upstream message was sent.
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1068-ray-members/*` and
+  `/tmp/checkpoint-1071-bounding-frustum-members/*`. The clean warning-free three-job focused
+  builds, exact SOFTWARE CTests, metadata through708/0 and self-tests5/5 plus4/4 pass; ten runs per
+  demo and renderer label reproduce only the documented assertions with empty stderr. No CNA
+  source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-130 -- zero-direction Ray inside a BoundingBox returns no hit
 

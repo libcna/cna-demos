@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed BoundingFrustum public-member/behavior coverage, extended ISSUE-131 through both ray
+  call directions and recorded ISSUE-133 through ISSUE-135 for containment, exception and text
+  differences from genuine XNA.
 - Completed Color public-member/behavior coverage and recorded ISSUE-132 for NaN Lerp and
   positive-infinite Multiply conversion differences from genuine XNA.
 - Completed Plane and PlaneIntersectionType member/behavior coverage with XNA-referenced
