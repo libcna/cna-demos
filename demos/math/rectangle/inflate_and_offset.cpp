@@ -25,17 +25,34 @@ namespace
         ctx.Check(box.X == 100, "Offset(Point) moves it too");
 
         // Location replaces the corner directly.
-        box.setLocationProperty(Point(0, 0));
-        ctx.Print("after Location = 0,0  = {}", box.ToString());
-        ctx.Check(box == Rectangle(0, 0, 50, 24), "setting Location keeps the size");
+        box.setLocationProperty(Point(-20, 30));
+        ctx.Print("after Location = -20,30 = {}", box.ToString());
+        ctx.Check(box == Rectangle(-20, 30, 50, 24), "setting a signed Location keeps the size");
+
+        Rectangle shrink(10, 20, 10, 8);
+        shrink.Inflate(-2, -3);
+        ctx.Check(shrink == Rectangle(12, 23, 6, 2),
+                  "negative Inflate values shrink symmetrically");
+
+        Rectangle overShrink(10, 20, 10, 8);
+        overShrink.Inflate(-6, -5);
+        ctx.Check(overShrink == Rectangle(16, 25, -2, -2),
+                  "Inflate permits shrinking past zero into negative sizes");
+
+        Rectangle byPoint(-10, 8, 7, 9);
+        Rectangle byCoordinates = byPoint;
+        byPoint.Offset(Point(4, -11));
+        byCoordinates.Offset(4, -11);
+        ctx.Check(byPoint == Rectangle(-6, -3, 7, 9) && byCoordinates == byPoint,
+                  "both Offset overloads preserve size and agree for signed movement");
     }
 }
 
 CNA_DEMOS_CONSOLE(RectangleInflateAndOffset, {
     .id = "math.rectangle.inflate_and_offset",
     .title = "Grow and move a rectangle",
-    .description = "Grows a Rectangle on every side with Inflate, moves it with both Offset overloads and "
-                   "repositions it through the Location property.",
+    .description = "Grows and shrinks a Rectangle with Inflate, including negative sizes, then moves it with both "
+                   "Offset overloads and the Location property.",
     .apis = {"Rectangle::Inflate", "Rectangle::Offset", "Rectangle::Location"},
     .tags = {"rectangle", "layout"},
 })

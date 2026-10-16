@@ -76,8 +76,8 @@ standalone; 665 are automated,33 smoke-only and3 manual. Every declared category
 Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; they include all695
 baseline catalog IDs in both renderer suites. The six new `math.vector4.*` focused IDs are
 explicitly absent until the next complete checkpoint; its `math.point.basics` result also predates
-the new ISSUE-124 assertion, and its `math.rectangle.intersect_and_union` result predates the new
-ISSUE-125 assertion.
+the new ISSUE-124 assertion, while all four `math.rectangle.*` results predate the Focused1064-1065
+assertions under ISSUE-124/125.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -10957,3 +10957,27 @@ routes and is byte-identical to the Complete1056-backed report. Genuine-XNA stdo
 display-cookie warning. Evidence:`/tmp/checkpoint-1064-rectangle-combination/*`. No renderer or
 visual claim was made. Continue with Rectangle construction, edge/center, containment and
 mutation boundaries.
+
+## Focused1065-Rectangle-value-and-boundaries
+
+The remaining three Rectangle demos are deepened without new IDs. `edges_and_center` grows8->13,
+`contains`8->11 and `inflate_and_offset`4->7 controls. Genuine Windows XNA 4.0 confirms signed
+edges/centers, exact all-zero emptiness, value/text identity, point and rectangle output
+containment, zero/negative-size algebra, negative Inflate through zero, both Offset forms and
+signed Location mutation. CNA matches all of those. XNA hashes Rectangle by unchecked addition of
+all four fields while CNA XORs them, extending ISSUE-124 with the sole grouped failure in the
+thirteen-control value workflow.
+
+The clean incremental `-j3` build is warning-free. Metadata is701/0, all three exact SOFTWARE
+CTests and validator/comparator self-tests5/5 plus4/4 pass. Ten runs per demo and renderer label
+are byte-stable with empty stderr: hashes are `e80f3150f854306da2d1d45094103c5bac29f2848ba81b2e18ee2a8054ce5a15`
+for value/edges, `d855de0bc7a3fd6a8b5e447c5aa78b0dc2ced3478a9a17fe5867f49517afa2d3`
+for containment and `69802b4913ad955bba3ada73c2ce0548f6da3e733c31fad841b6545259362173`
+for mutation. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C
+routes and is byte-identical to the Complete1056-backed report. Genuine-XNA probe stdout SHA-256
+is `2eb0bb955527a193e6b89c1cac3ea039317ac6f9da1cefc79b35cc97b09826d3`; its stderr is only the
+host display-cookie warning. Evidence:`/tmp/checkpoint-1065-rectangle-value-boundaries/*`. No
+renderer or visual claim was made. Signed coordinate/size overflow is intentionally not executed
+because CNA's present C++ arithmetic would be undefined. The meaningful Rectangle audit is
+complete; continue with the remaining BoundingBox/BoundingSphere/Ray member and behavior
+dispositions.

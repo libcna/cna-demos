@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed Rectangle value, containment and mutation boundary coverage and extended ISSUE-124
+  from Point to Rectangle's XOR hash mismatch against XNA's unchecked field sum.
 - Extended Rectangle intersection/union coverage through output aliasing and edge/disjoint/Empty
   boundaries, recording ISSUE-125 for CNA's aliased Union corruption.
 - Completed the Point value audit and recorded ISSUE-124 for CNA's XOR hash versus XNA's unchecked

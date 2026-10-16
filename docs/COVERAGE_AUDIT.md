@@ -194,9 +194,11 @@ The meaningful Point public-member/behavior audit is complete at pinned d23.
 | Members / behavior | Decision and evidence |
 |---|---|
 | Intersects, Intersect and Union | Focused1064 grows `math.rectangle.intersect_and_union` from six to ten controls. Value and output forms agree for ordinary overlap; Intersects excludes an edge-only touch, Intersect permits either input alias and returns Empty for disjoint bounds, and Union includes Empty's origin. Genuine XNA also permits either input to alias Union's output. CNA stores output X/Y before reading the offset aliased input's Right/Bottom and corrupts the far edge, producing one grouped failure under ISSUE-125. Evidence:`/tmp/checkpoint-1064-rectangle-combination/*`. |
-| Construction, fields, edges, center, emptiness and identity | Existing `edges_and_center` demonstrates the ordinary value surface. Audit signed, degenerate and limit behavior next rather than duplicating ordinary construction. |
-| Contains | Existing `contains` demonstrates points, edges and rectangles. Audit zero/negative-size and output forms next. |
-| Inflate and Offset | Existing `inflate_and_offset` demonstrates ordinary mutation. Audit shrinking, over-shrinking and output/alias boundaries next while avoiding undefined signed overflow in C++. |
+| Construction, fields, edges, center, emptiness and identity | Focused1065 grows `edges_and_center` from eight to thirteen controls. Default and four-field construction, public fields, Location, all edges, Center, exact all-zero IsEmpty, Empty, typed/boxed/operator equality and signed ToString now cover ordinary, negative-position, negative-odd-size and degenerate values. XNA sums all four fields for GetHashCode with unchecked 32-bit wrap; CNA XORs them, extending ISSUE-124 with one grouped failure. Equal-value hashing still passes. |
+| Contains | Focused1065 grows `contains` from eight to eleven controls. Point and rectangle output forms overwrite both false and true results. Points retain inclusive Left/Top and exclusive Right/Bottom; zero-size rectangles remain contained through the far edge, negative-size rectangles can be algebraically contained (including by themselves), while negative-size and Empty bounds contain no points. CNA matches genuine XNA throughout. |
+| Inflate, Offset and Location mutation | Focused1065 grows `inflate_and_offset` from four to seven controls. Positive Inflate, negative shrinking and over-shrinking into a negative size all match. Point and coordinate Offset forms agree for signed movement, and a signed Location assignment preserves size. Coordinate/size arithmetic that overflows a signed 32-bit field is intentionally not executed because the current C++ implementation would invoke undefined behavior; this platform-language boundary does not justify a runnable demo until CNA defines wrapping explicitly. Evidence:`/tmp/checkpoint-1065-rectangle-value-boundaries/*`. |
+
+The meaningful Rectangle public-member/behavior audit is complete at pinned d23.
 
 ### BoundingBox, BoundingSphere and Ray value identity
 
@@ -6152,3 +6154,25 @@ byte-identical to the Complete1056-backed report. Genuine-XNA stdout SHA-256 is
 display-cookie warning. Evidence:`/tmp/checkpoint-1064-rectangle-combination/*`. No renderer or
 visual claim was made. Continue with Rectangle construction, edge/center, containment and mutation
 boundaries.
+
+### Focused1065 Rectangle value and boundaries
+
+The remaining three Rectangle demos deepen without new IDs. `edges_and_center` grows8->13,
+`contains`8->11 and `inflate_and_offset`4->7 controls. Genuine Windows XNA 4.0 confirms signed
+edges/centers, exact all-zero emptiness, value/text identity, both containment output forms,
+zero/negative-size algebra, negative Inflate through zero, both Offset forms and signed Location.
+CNA matches all of those. XNA hashes Rectangle by unchecked addition of all four fields while CNA
+XORs them, extending ISSUE-124 with the sole grouped failure in the value workflow.
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. Stdout SHA-256 values are
+`e80f3150f854306da2d1d45094103c5bac29f2848ba81b2e18ee2a8054ce5a15` for value/edges,
+`d855de0bc7a3fd6a8b5e447c5aa78b0dc2ced3478a9a17fe5867f49517afa2d3` for containment and
+`69802b4913ad955bba3ada73c2ce0548f6da3e733c31fad841b6545259362173` for mutation. The clean
+incremental `-j3` build, metadata701/0, all three exact SOFTWARE CTests and self-tests5/5 plus4/4
+pass. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes and is
+byte-identical to the Complete1056-backed report. Genuine-XNA probe stdout SHA-256 is
+`2eb0bb955527a193e6b89c1cac3ea039317ac6f9da1cefc79b35cc97b09826d3`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1065-rectangle-value-boundaries/*`. No renderer
+or visual claim was made. Signed coordinate/size overflow is intentionally not executed because
+CNA's current C++ arithmetic would be undefined. The meaningful Rectangle audit is complete;
+continue with remaining BoundingBox/BoundingSphere/Ray member and behavior dispositions.

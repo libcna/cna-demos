@@ -25,9 +25,31 @@ namespace
         ctx.Check(button.Contains(Rectangle(110, 55, 50, 20)), "a smaller rectangle inside is contained");
         ctx.Check(!button.Contains(Rectangle(250, 55, 100, 20)), "a rectangle sticking out is not contained");
 
-        bool result = false;
+        bool result = true;
+        button.Contains(Point(300, 70), result);
+        const bool outputOutside = result;
         button.Contains(Point(120, 70), result);
-        ctx.Check(result, "the by-reference overload reports the same");
+        ctx.Check(!outputOutside && result, "the point output overload overwrites false and true results");
+
+        bool rectangleResult = true;
+        button.Contains(Rectangle(250, 55, 100, 20), rectangleResult);
+        const bool outputPartial = rectangleResult;
+        button.Contains(Rectangle(110, 55, 50, 20), rectangleResult);
+        ctx.Check(!outputPartial && rectangleResult,
+                  "the rectangle output overload overwrites false and true results");
+
+        const Rectangle bounds(0, 0, 10, 10);
+        ctx.Check(bounds.Contains(Rectangle(10, 10, 0, 0)) &&
+                      !bounds.Contains(Rectangle(11, 5, 0, 0)) &&
+                      Rectangle::Empty.Contains(Rectangle::Empty),
+                  "zero-sized rectangles are contained through the inclusive far boundary");
+
+        const Rectangle negativeSize(10, 20, -5, -7);
+        ctx.Check(bounds.Contains(Rectangle(5, 5, -2, -3)) &&
+                      negativeSize.Contains(negativeSize) &&
+                      !negativeSize.Contains(Point(8, 17)) &&
+                      !Rectangle::Empty.Contains(Point::Zero),
+                  "negative sizes can contain rectangles algebraically but contain no points");
         ctx.Print("Contains checks done for {}", button.ToString());
     }
 }
@@ -35,8 +57,8 @@ namespace
 CNA_DEMOS_CONSOLE(RectangleContains, {
     .id = "math.rectangle.contains",
     .title = "Point and rectangle containment",
-    .description = "Hit-tests points and rectangles with Rectangle::Contains, showing that Left/Top are inclusive "
-                   "and Right/Bottom exclusive.",
+    .description = "Hit-tests points, ordinary rectangles and zero/negative-size bounds through value and output "
+                   "forms, showing inclusive rectangle bounds and exclusive point Right/Bottom edges.",
     .apis = {"Rectangle::Contains"},
     .tags = {"rectangle", "hit-test", "mouse"},
 })

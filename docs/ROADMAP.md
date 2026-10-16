@@ -11681,3 +11681,16 @@ clean incremental `-j3` build, metadata701/0, exact known-issue CTest and both s
 pass. Coverage totals remain unchanged and the Complete1056-backed report is byte-identical.
 Evidence:`/tmp/checkpoint-1064-rectangle-combination/*`. Continue with Rectangle construction,
 edge/center, containment and mutation boundaries.
+
+## Focused1065 Rectangle value and boundaries
+
+The remaining three Rectangle demos deepen without new IDs: `edges_and_center` grows8->13,
+`contains`8->11 and `inflate_and_offset`4->7 controls. Genuine XNA anchors signed edges/centers,
+exact emptiness, both containment output forms, zero/negative-size behavior, negative Inflate,
+both Offset forms and signed Location. CNA matches all except GetHashCode: XNA uses unchecked
+addition of all four fields while CNA XORs them, extending ISSUE-124 with one grouped failure.
+Ten runs per demo and renderer label are byte-stable with empty stderr. The clean incremental
+`-j3` build, metadata701/0, all three exact CTests and both self-test suites pass. Coverage totals
+remain unchanged and the Complete1056-backed report is byte-identical. Evidence:
+`/tmp/checkpoint-1065-rectangle-value-boundaries/*`. The meaningful Rectangle audit is complete;
+continue with remaining BoundingBox/BoundingSphere/Ray member and behavior dispositions.
