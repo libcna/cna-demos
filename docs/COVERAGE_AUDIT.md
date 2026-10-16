@@ -134,7 +134,7 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | Members / behavior | Decision and evidence |
 |---|---|
 | Constructor, Identity, CreateFromAxisAngle, CreateFromRotationMatrix, CreateFromYawPitchRoll | Existing `from_axis_angle` and `from_yaw_pitch_roll` demonstrate orientation construction and matrix conversion; no separate constructor demo needed. |
-| Concatenate, Multiply, operator multiply | Existing `concatenate` checks sequential vector transforms and noncommuting rotations. Scalar multiplication is component scaling, not a rotation composition; explain it when discussing normalization rather than creating another demo. |
+| Concatenate, Multiply, operator multiply | `concatenate` checks sequential vector transforms and noncommuting rotations. Focused1041 adds an exact arbitrary nonunit reversed Hamilton product, value/output/operator parity, both identity directions, zero operands and negative/zero scalar multiplication. Scalar multiplication is component scaling rather than rotation composition; the existing ID now makes that distinction directly. Evidence: `/tmp/checkpoint-1041-quaternion-concatenate-algebra/*`. |
 | Inverse, Conjugate | Existing `inverse_and_conjugate` checks undoing a rotation and the unit-quaternion precondition for replacing inverse by conjugate. |
 | Normalize, Length, LengthSquared | Existing `normalize` demonstrates accumulated drift and both normalization forms. LengthSquared is a trivial squared norm; can be named and checked there if extended. |
 | Lerp, Slerp | Existing `slerp` checks constant versus uneven angular speed. Negative-dot inputs and antipodal representations deserve the `double_cover` demo. |
@@ -5760,3 +5760,12 @@ build's demo-only `Matrix::Identity` spelling was corrected to the actual CNA ge
 renderer label are byte-stable with empty stderr; final build, metadata, exact CTest and both self-
 test suites pass. Coverage totals are unchanged. Evidence:
 `/tmp/checkpoint-1040-quaternion-rotation-matrix-branches/*`.
+
+### Focused1041 Quaternion concatenate/multiply algebra
+
+`math.quaternion.concatenate` now proves the reversed Hamilton product with arbitrary nonunit
+values and covers value/output/operator parity, two-sided identity behavior, negative scalar
+component scaling and zero operands. Genuine Windows XNA 4.0 supplies exact bit-level reference
+values and CNA matches all ten controls. Ten runs per renderer label are byte-stable with empty
+stderr; the clean `-j3` build, metadata, exact CTest and both self-test suites pass. Coverage totals
+remain unchanged. Evidence:`/tmp/checkpoint-1041-quaternion-concatenate-algebra/*`.

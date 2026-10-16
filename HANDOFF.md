@@ -10457,3 +10457,22 @@ OPENGLES3-labelled runs pass15/15 with byte-identical stdout SHA-256
 `62ec4755e191f5908c11756c8bec5163064ffa417f9c06481822fb605e544ed2` and empty stderr. Coverage
 totals remain unchanged. Evidence:`/tmp/checkpoint-1040-quaternion-rotation-matrix-branches/*`.
 No CNA issue was found. Continue with the next deterministic behavior gap.
+
+## Focused1041-Quaternion-concatenate-algebra
+
+`math.quaternion.concatenate` grows from three to ten controls without a new ID. Genuine Windows
+XNA 4.0 anchors the exact arbitrary nonunit result `(-17.5,11,12.5,-18)`, proving that
+`Concatenate(a,b)` is `Multiply(b,a)`. Value, output and operator forms agree; Identity is neutral
+on both sides; negative scalar multiplication scales X/Y/Z/W component-wise; zero scaling and
+zero operands yield the zero quaternion. CNA matches every result.
+
+The first incremental build scavenged one stale content-stage entry and emitted its owner-metadata
+warning; the clean follow-up three-job build has no warning. An initially mis-invoked comparator
+self-test failed only because module execution omitted `tools` from its import path; direct script
+execution passes4/4. Metadata is693/0, the exact SOFTWARE CTest and validator self-tests5/5 pass,
+and ten SOFTWARE plus ten OPENGLES3-labelled runs pass10/10 with byte-identical stdout SHA-256
+`edafe6e76ec847a123feb7356b5cc427849e9fbd2a87d1583ba7bc4fa60145a8` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1041-quaternion-concatenate-algebra/*`. No rendering or visual claim was made and
+no CNA issue was found. Next audit `Quaternion::Divide` on zero and extreme finite divisors, where
+its duplicated reciprocal-norm implementation may extend ISSUE-119.

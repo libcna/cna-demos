@@ -11385,3 +11385,12 @@ used the wrong Identity spelling and was corrected to `getIdentityProperty()`. T
 free `-j3` build, metadata693/0, exact CTest, ten runs per renderer label and both self-test suites
 pass with stable stdout and empty stderr. Evidence:
 `/tmp/checkpoint-1040-quaternion-rotation-matrix-branches/*`.
+
+## Focused1041 Quaternion concatenate/multiply algebra
+
+`math.quaternion.concatenate` adds an XNA-referenced arbitrary nonunit product, output-overload
+parity, both identity directions, scalar scaling and zero operands. All ten controls match genuine
+Windows XNA 4.0. The final warning-free `-j3` build, metadata693/0, exact CTest, ten runs per
+renderer label and both self-test suites pass with stable stdout and empty stderr. Coverage remains
+unchanged. Evidence:`/tmp/checkpoint-1041-quaternion-concatenate-algebra/*`. Next audit Divide's
+zero and extreme finite divisors as a possible second public path for ISSUE-119.

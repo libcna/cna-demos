@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Quaternion concatenation and multiplication through an exact nonunit reversed Hamilton
+  product, both identity directions, output overloads, scalar component scaling and zero operands
+  against Windows XNA 4.0.
 - Exercised every Quaternion rotation-matrix conversion branch with identity and three half turns,
   plus zero/scale nonrotation inputs and output-overload parity against Windows XNA 4.0.
 - Extended Quaternion yaw/pitch/roll construction through zero, 2-Pi/4-Pi representation periods,
