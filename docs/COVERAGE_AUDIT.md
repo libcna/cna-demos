@@ -173,9 +173,10 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | Length, LengthSquared, Distance, DistanceSquared and Normalize | New focused `magnitude_range` covers ordinary and zero member/static/output normalization plus ordinary value/output Distance. Genuine Windows XNA keeps sole-X `1e20` and `1e-30` Length/Distance finite and normalizes both to UnitX even when the separately returned squared result is infinity or zero. CNA loses exactly those six observable results under ISSUE-118. Evidence:`/tmp/checkpoint-1057-vector4-magnitude-range/*`. |
 | Component bounds and arithmetic | New focused `component_bounds` covers ordinary/reversed/NaN Clamp, signed-zero Min/Max ties, component/scalar signed-zero division and all Add/Subtract/Multiply/Negate named, operator and output forms. CNA matches XNA except that reversed Clamp resolves to the maximum and equal-zero Min/Max preserve the first operand, extending ISSUE-122 with two failures. Evidence:`/tmp/checkpoint-1059-vector4-component-bounds/*`. |
 | Dot | New focused `dot` covers ordinary signed products, orthogonal axes, homogeneous W, infinity-times-zero NaN and the output form. Genuine XNA preserves opposite `1e20*1e20` products until they cancel and then returns the finite Z/W sum7; CNA narrows both products to infinities and returns NaN under ISSUE-123. Evidence:`/tmp/checkpoint-1060-vector4-dot-range/*`. |
+| Lerp, SmoothStep, Barycentric, CatmullRom and Hermite | New focused `interpolation` keeps the existing in-range `color_math` examples and adds genuine-XNA negative/above-one behavior. Lerp and the three geometric forms extrapolate, SmoothStep clamps to the nonzero endpoints, Lerp/SmoothStep propagate NaN through all four components and meaningful output forms agree. CNA matches all seven controls. Evidence:`/tmp/checkpoint-1061-vector4-interpolation/*`. |
 
-Interpolation and matrix/quaternion array transforms remain the next Vector4 audit rows; existing broad
-`color_math` and `homogeneous_transform` coverage will be retained where it is already meaningful.
+Matrix/quaternion transforms and arrays remain the next Vector4 audit row; existing broad
+`homogeneous_transform` coverage will be retained where it is already meaningful.
 
 ### BoundingBox, BoundingSphere and Ray value identity
 
@@ -6062,3 +6063,18 @@ Ten runs per renderer label are byte-identical with stdout SHA-256
 Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; Complete1056
 marks the four new Vector4 IDs absent. Evidence:`/tmp/checkpoint-1060-vector4-dot-range/*`. No
 renderer or visual claim was made. Continue with Vector4 interpolation boundaries.
+
+### Focused1061 Vector4 interpolation boundaries
+
+New focused console demo `math.vector4.interpolation` raises the catalog to700 and math to85.
+Genuine Windows XNA 4.0 establishes that Lerp, Barycentric, CatmullRom and Hermite extrapolate at
+negative and above-one amounts, while SmoothStep clamps to its nonzero endpoints. Lerp/SmoothStep
+propagate NaN through all four components and meaningful output forms agree. CNA matches all seven
+controls.
+
+Ten runs per renderer label pass with byte-identical stdout SHA-256
+`b6090f3cbab399d839a2756834cffab1558992bd454b43b811b292eabb6a72f5` and empty stderr. The clean
+`-j3` build, metadata700/0, exact SOFTWARE CTest and self-tests5/5 plus4/4 pass. Coverage remains
+307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; Complete1056 marks the five
+new Vector4 IDs absent. Evidence:`/tmp/checkpoint-1061-vector4-interpolation/*`. No renderer or
+visual claim was made. Continue with Vector4 matrix/quaternion output and array boundaries.

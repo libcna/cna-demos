@@ -11633,3 +11633,15 @@ empty stderr. The clean `-j3` build, metadata699/0, exact known-issue CTest and 
 suites pass. Coverage totals remain unchanged and Complete1056 marks the four new Vector4 IDs
 absent. Evidence:`/tmp/checkpoint-1060-vector4-dot-range/*`. Continue with Vector4 interpolation
 boundaries.
+
+## Focused1061 Vector4 interpolation boundaries
+
+New `math.vector4.interpolation` raises the catalog to700 and math to85. Genuine Windows XNA 4.0
+establishes that Lerp, Barycentric, CatmullRom and Hermite extrapolate outside `[0,1]`, while
+SmoothStep clamps to its nonzero endpoints. Lerp/SmoothStep propagate NaN through all four
+components and meaningful output forms agree; CNA matches all seven controls. Ten runs per
+renderer label pass with byte-identical stdout and empty stderr. The clean `-j3` build,
+metadata700/0, exact CTest and both self-test suites pass. Coverage totals remain unchanged and
+Complete1056 marks the five new Vector4 IDs absent. Evidence:
+`/tmp/checkpoint-1061-vector4-interpolation/*`. Continue with Vector4 matrix/quaternion output and
+array boundaries.
