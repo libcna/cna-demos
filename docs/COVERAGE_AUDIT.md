@@ -5750,3 +5750,13 @@ periods, preserved orientation, NaN propagation and the output overload. Genuine
 supplies the reference and CNA matches all eight controls. Ten runs per renderer label are byte-
 stable with empty stderr; build, metadata, exact CTest and both self-test suites pass. Coverage
 totals are unchanged. Evidence:`/tmp/checkpoint-1039-quaternion-ypr-periods/*`.
+
+### Focused1040 Quaternion rotation-matrix branches
+
+`math.quaternion.from_yaw_pitch_roll` now executes the positive-trace and all three dominant-
+diagonal `CreateFromRotationMatrix` branches. It also covers zero and scale nonrotation inputs and
+the output overload against genuine Windows XNA 4.0. CNA matches all fifteen controls. The first
+build's demo-only `Matrix::Identity` spelling was corrected to the actual CNA getter. Ten runs per
+renderer label are byte-stable with empty stderr; final build, metadata, exact CTest and both self-
+test suites pass. Coverage totals are unchanged. Evidence:
+`/tmp/checkpoint-1040-quaternion-rotation-matrix-branches/*`.

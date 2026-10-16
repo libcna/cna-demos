@@ -10441,3 +10441,19 @@ pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass8/8 with byte-identical s
 totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1039-quaternion-ypr-periods/*`. No rendering or visual claim was made and no CNA
 issue was found. Continue with the next deterministic behavior gap outside Euler construction.
+
+## Focused1040-Quaternion-rotation-matrix-branches
+
+`math.quaternion.from_yaw_pitch_roll` grows from eight to fifteen controls without a new ID.
+Identity and 180-degree X/Y/Z matrices execute the positive-trace and all three dominant-diagonal
+`CreateFromRotationMatrix` branches and round-trip their matrices. Genuine Windows XNA 4.0 also
+anchors its unvalidated nonrotation behavior: zero matrix yields `(0.5,0,0,0)`, scale(2,3,4) yields
+W=sqrt(2.5), and the output overload preserves that nonunit result. CNA matches every case.
+
+The first build used nonexistent `Matrix::Identity`; replacing it with CNA's actual
+`Matrix::getIdentityProperty()` fixed this demo compile error. The final warning-free three-job
+build, metadata693/0, exact SOFTWARE CTest and self-tests5/5 plus4/4 pass. Ten SOFTWARE and ten
+OPENGLES3-labelled runs pass15/15 with byte-identical stdout SHA-256
+`62ec4755e191f5908c11756c8bec5163064ffa417f9c06481822fb605e544ed2` and empty stderr. Coverage
+totals remain unchanged. Evidence:`/tmp/checkpoint-1040-quaternion-rotation-matrix-branches/*`.
+No CNA issue was found. Continue with the next deterministic behavior gap.

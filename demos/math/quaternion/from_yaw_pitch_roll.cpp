@@ -49,14 +49,41 @@ namespace
         Quaternion byReference;
         Quaternion::CreateFromYawPitchRoll(0.6f, -0.2f, 0.3f, byReference);
         ctx.Check(byReference == q, "the output overload matches the value result");
+
+        // CreateFromRotationMatrix has separate trace/X/Y/Z-dominant branches. Identity exercises
+        // the trace branch; half turns make each diagonal branch dominant.
+        ctx.Check(Quaternion::CreateFromRotationMatrix(Matrix::getIdentityProperty()) == Quaternion::Identity,
+                  "identity uses the positive-trace conversion branch");
+        for (const Matrix& halfTurn : {Matrix::CreateRotationX(MathHelper::Pi),
+                                       Matrix::CreateRotationY(MathHelper::Pi),
+                                       Matrix::CreateRotationZ(MathHelper::Pi)})
+        {
+            const Quaternion converted = Quaternion::CreateFromRotationMatrix(halfTurn);
+            ctx.CheckNear(CnaDemos::MaxDifference(Matrix::CreateFromQuaternion(converted), halfTurn),
+                          0.0, 1e-6, "a half turn survives its dominant-diagonal conversion branch");
+        }
+
+        // XNA neither validates nor normalizes a matrix passed as a rotation matrix.
+        const Quaternion zeroMatrix = Quaternion::CreateFromRotationMatrix(Matrix());
+        ctx.Check(zeroMatrix == Quaternion(0.5f, 0.0f, 0.0f, 0.0f),
+                  "the zero matrix follows the X-dominant formula and yields a half-length value");
+        const Matrix scale = Matrix::CreateScale(2.0f, 3.0f, 4.0f);
+        const Quaternion scaleResult = Quaternion::CreateFromRotationMatrix(scale);
+        ctx.Check(scaleResult.X == 0.0f && scaleResult.Y == 0.0f && scaleResult.Z == 0.0f &&
+                      std::abs(scaleResult.W - std::sqrt(2.5f)) < 1e-6f,
+                  "a scale matrix follows the trace formula without normalizing the result");
+        Quaternion scaleByReference;
+        Quaternion::CreateFromRotationMatrix(scale, scaleByReference);
+        ctx.Check(scaleByReference == scaleResult,
+                  "the rotation-matrix output overload preserves the nonrotation result");
     }
 }
 
 CNA_DEMOS_CONSOLE(QuaternionFromYawPitchRoll, {
     .id = "math.quaternion.from_yaw_pitch_roll",
     .title = "Quaternions and rotation matrices",
-    .description = "Builds yaw/pitch/roll rotations, demonstrates quaternion 2-Pi/4-Pi representation periods, "
-                   "NaN propagation and conversion/output overload parity.",
+    .description = "Builds Euler rotations, demonstrates representation periods and exercises all rotation-matrix "
+                   "conversion branches, including nonrotation inputs and output overloads.",
     .apis = {"Quaternion::CreateFromYawPitchRoll", "Quaternion::CreateFromRotationMatrix", "Matrix::CreateFromQuaternion"},
     .tags = {"quaternion", "matrix", "conversion"},
 })

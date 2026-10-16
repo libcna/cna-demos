@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Exercised every Quaternion rotation-matrix conversion branch with identity and three half turns,
+  plus zero/scale nonrotation inputs and output-overload parity against Windows XNA 4.0.
 - Extended Quaternion yaw/pitch/roll construction through zero, 2-Pi/4-Pi representation periods,
   NaN propagation and output-overload parity against Windows XNA 4.0.
 - Extended Quaternion axis-angle construction through scaled and zero axes, zero/NaN angles and

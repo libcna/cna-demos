@@ -11375,3 +11375,13 @@ NaN and output-overload controls. CNA matches all eight orientation/component re
 free `-j3` build, metadata693/0, exact CTest, ten runs per renderer label and both self-test suites
 pass with stable stdout and empty stderr. Coverage remains unchanged. Evidence:
 `/tmp/checkpoint-1039-quaternion-ypr-periods/*`.
+
+## Focused1040 Quaternion rotation-matrix branches
+
+The same yaw/pitch/roll workflow grows8->15 controls. Identity and three half turns execute all
+four `CreateFromRotationMatrix` branches; zero and scale matrices establish XNA's nonvalidation and
+nonunit results, including output-overload parity. CNA matches all controls. An initial demo build
+used the wrong Identity spelling and was corrected to `getIdentityProperty()`. The final warning-
+free `-j3` build, metadata693/0, exact CTest, ten runs per renderer label and both self-test suites
+pass with stable stdout and empty stderr. Evidence:
+`/tmp/checkpoint-1040-quaternion-rotation-matrix-branches/*`.
