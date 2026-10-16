@@ -11350,3 +11350,12 @@ float squared-length sum overflows; this remains CNA-DEMOS-ISSUE-118. The warnin
 metadata693/0, exact known-issue CTest, ten runs per renderer label and both self-test suites pass
 with stable stdout and empty stderr. Coverage remains unchanged. Evidence:
 `/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`.
+
+## Focused1037 Quaternion inverse extremes
+
+`math.quaternion.inverse_and_conjugate` adds nonunit, output-overload, zero and huge/tiny finite
+controls against genuine Windows XNA 4.0. CNA matches nine of eleven; its float squared-length path
+loses both extreme finite reciprocal results, retained as CNA-DEMOS-ISSUE-119. The warning-free
+`-j3` build, metadata693/0, exact known-issue CTest, ten runs per renderer label and both self-test
+suites pass with stable stdout and empty stderr. Coverage remains unchanged. Evidence:
+`/tmp/checkpoint-1037-quaternion-inverse-boundaries/*`.

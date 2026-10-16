@@ -5724,3 +5724,12 @@ to UnitX; CNA's float norm overflows and returns zero, retained as CNA-DEMOS-ISS
 renderer label reproduce exactly that one failure with stable stdout and empty stderr; build,
 metadata, exact known-issue CTest and both self-test suites pass. Coverage totals are unchanged.
 Evidence:`/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`.
+
+### Focused1037 Quaternion inverse extremes
+
+`math.quaternion.inverse_and_conjugate` now covers ordinary nonunit scaling, value/output parity,
+zero and sole-component magnitudes `1e20` and `1e-20`. Genuine Windows XNA 4.0 keeps both inverse
+results finite; CNA returns zero or infinity/NaNs, retained as CNA-DEMOS-ISSUE-119. Ten runs per
+renderer label reproduce exactly two failures with stable stdout and empty stderr; build, metadata,
+exact known-issue CTest and both self-test suites pass. Coverage totals are unchanged. Evidence:
+`/tmp/checkpoint-1037-quaternion-inverse-boundaries/*`.

@@ -10398,3 +10398,17 @@ The warning-free three-job build, metadata693/0, exact known-issue SOFTWARE CTes
 `3f2159f33444a81d069aebfb93f14eb6f578ffe017f28ecec9690e519dff3521` and empty stderr. Coverage
 totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`. Continue with the next deterministic gap.
+
+## Focused1037-Quaternion-inverse-extremes
+
+`math.quaternion.inverse_and_conjugate` grows from four to eleven controls without a new ID.
+Ordinary nonunit conjugate/inverse scaling, both output overloads and the four-NaN zero inverse
+match genuine Windows XNA 4.0. XNA also maps sole-X values `1e20 -> -1e-20` and
+`1e-20 -> -1e20`; CNA's float squared-length path returns signed zero for the first and infinity/
+NaNs for the second. Both failures remain visible under the coherent `CNA-DEMOS-ISSUE-119`.
+
+The warning-free three-job build, metadata693/0, exact known-issue SOFTWARE CTest and self-tests
+5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3-labelled runs have byte-identical stdout SHA-256
+`1f0b0b34596445f20e45e8fcbc02bc5a57c99614e64837913559b53f124feca2` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1037-quaternion-inverse-boundaries/*`. Continue with the next deterministic gap.
