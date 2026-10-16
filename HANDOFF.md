@@ -10654,3 +10654,21 @@ routes; Complete1045 marks only this new ID absent. Evidence:
 audit is complete at pinned d23; trivial component output forwards are explicitly dispositioned.
 Continue with the next deterministic value family, beginning with Vector3 numeric identity and
 range behavior.
+
+## Focused1051-Vector3-magnitude-range
+
+`math.vector3.normalize` grows from five to fourteen controls and `math.vector3.distance` from
+three to eight. Genuine Windows XNA 4.0 keeps sole-X `1e20` and `1e-30` Length/Distance finite and
+normalizes both to UnitX through static, output and member forms even when the squared result is
+infinity or zero. Ordinary, zero, `1e-20`, output and separately rounded squared controls all match.
+
+CNA's direct float squared sums lose exactly four normalization-workflow and two distance-workflow
+results, extending ISSUE-118. The clean three-job build, metadata695/0, both exact known-issue
+SOFTWARE CTests and self-tests5/5 plus4/4 pass. Ten runs per demo and renderer label retain only
+those expected failures: normalize14 controls/four failures with stdout SHA-256
+`77d561ce5644f14f2e01280e5b2bac596a2eded058bb72d775d119a8e8caf027`; distance8/two with
+`140c65864970df2005c08f7fd5f1d6a1c57aefbfd5f774107d35fa4acba9fc7a`. Stderr is empty. Coverage
+remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; regeneration against
+Complete1045 inputs is byte-identical. Evidence:`/tmp/checkpoint-1051-vector3-magnitude-range/*`.
+No renderer or visual claim was made. Continue Vector3 signed-zero identity and component-bound
+behavior, then interpolation and transform arrays.

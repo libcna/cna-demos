@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Vector3 Length, Distance and normalization through ordinary, zero and extreme finite
+  ranges, expanding CNA-DEMOS-ISSUE-118 to six Vector3 manifestations.
 - Added a focused Vector2 component-boundary demo and recorded CNA-DEMOS-ISSUE-122 for reversed
   Clamp resolution and signed-zero Min/Max tie ordering against Windows XNA 4.0.
 - Extended Vector2 transforms through output aliasing, quaternion rotation, full/ranged arrays,

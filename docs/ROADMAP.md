@@ -11503,3 +11503,15 @@ warning, the clean `-j3` build is warning-free; metadata695/0, the exact known-i
 self-test suites pass. Coverage totals remain unchanged and Complete1045 marks only the new ID
 absent. Evidence:`/tmp/checkpoint-1050-vector2-component-bounds/*`. The Vector2 behavior audit is
 complete at pinned d23. Continue with Vector3 numeric identity and range behavior.
+
+## Focused1051 Vector3 magnitude range
+
+`math.vector3.normalize` grows5->14 controls and `math.vector3.distance` grows3->8. Genuine Windows
+XNA 4.0 keeps sole-X `1e20`/`1e-30` Length and Distance finite and normalizes both to UnitX in
+static, output and member forms even when squared results become infinity or zero. CNA loses exactly
+four normalization-workflow and two distance-workflow results through direct float squared sums,
+extending ISSUE-118. Ten runs per demo and renderer label reproduce only those expected failures
+with stable stdout and empty stderr; the clean `-j3` build, metadata695/0, both exact known-issue
+CTests and both self-test suites pass. Coverage totals remain unchanged and the Complete1045-backed
+report is byte-identical. Evidence:`/tmp/checkpoint-1051-vector3-magnitude-range/*`. Continue with
+Vector3 signed-zero identity and component-bound behavior.

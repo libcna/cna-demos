@@ -154,6 +154,17 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | Lerp, SmoothStep, Barycentric, CatmullRom and Hermite | `toolbox_2d` shows ordinary in-range gameplay uses and spline endpoints. Focused1048 adds genuine-XNA negative and above-one amounts: Lerp and all three geometric forms extrapolate, SmoothStep clamps to its endpoints, and both Lerp/SmoothStep propagate NaN to both components. Meaningful output overloads agree. CNA matches all six new controls. Evidence:`/tmp/checkpoint-1048-vector2-interpolation/*`. |
 | Matrix/quaternion Transform, TransformNormal and arrays | `transform` distinguishes translated points from normals. Focused1049 adds value/output/alias parity, quaternion rotation, all six whole/range array families, guarded windows, both same-array overlap directions, atomic invalid positive windows and zero length at one-past-end indices. CNA matches XNA except that its shared range check rejects the negative length XNA treats as an empty range, recorded as ISSUE-121. Evidence:`/tmp/checkpoint-1049-vector2-transform-arrays/*`. |
 
+### Vector3
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Constructors, constants and directions | Existing `arithmetic` and `constants` cover the default, scalar, Vector2-plus-Z and three-component constructors plus Zero/One, axes and all signed XNA directions. Constructor identity needs no new ID. |
+| Length, LengthSquared, Distance, DistanceSquared and Normalize | Focused1051 grows `normalize`5->14 and `distance`3->8 controls. Ordinary, zero, `1e-20`, output and squared results match. Genuine Windows XNA retains finite `1e20`/`1e-30` Length and Distance and normalizes both to UnitX; CNA loses exactly four normalization-workflow and two distance-workflow results under ISSUE-118. Evidence:`/tmp/checkpoint-1051-vector3-magnitude-range/*`. |
+| Equality, hash and component bounds | Ordinary exact identity and text are covered by `equality_and_string`; ordinary Clamp/Min/Max by `clamp_min_max`. Signed-zero hash and tie ordering plus reversed/NaN Clamp remain to be audited against the Vector2 findings. |
+| Arithmetic, Dot, Cross and Reflect | Separate demos cover ordinary named/operator arithmetic, orthogonal/parallel dot and cross products and unit-normal reflection. IEEE division, nonunit/zero reflection, output aliasing and extreme cancellation remain to be dispositioned. |
+| Interpolation | Separate Lerp, SmoothStep, Barycentric, CatmullRom and Hermite demos cover ordinary in-range geometry. Outside-range, NaN and output behavior remain to be reconciled without creating one demo per spelling. |
+| Matrix/quaternion Transform, TransformNormal and arrays | Existing focused IDs cover ordinary point, normal, quaternion and array paths. Output aliasing, overlap, invalid windows and the shared negative-length check remain to be audited. |
+
 ### BoundingBox, BoundingSphere and Ray value identity
 
 | Members / behavior | Decision and evidence |
@@ -5886,3 +5897,15 @@ exact known-issue CTest and self-tests5/5 plus4/4 pass. Generated coverage remai
 Evidence:`/tmp/checkpoint-1050-vector2-component-bounds/*`. This closes the meaningful Vector2
 public-member/behavior table at pinned d23; trivial component output forwards are dispositioned
 above. No renderer or visual claim was made.
+
+### Focused1051 Vector3 magnitude range
+
+`math.vector3.normalize` grows5->14 controls and `math.vector3.distance` grows3->8. Genuine Windows
+XNA 4.0 keeps sole-X `1e20` and `1e-30` Length/Distance finite and normalizes both to UnitX in
+static, output and member forms even when their squared counterparts become infinity or zero. CNA
+loses exactly four normalization-workflow and two distance-workflow results through its direct
+float squared sums, extending ISSUE-118. Ten runs per demo and renderer label reproduce only those
+expected failures with stable stdout and empty stderr. The clean `-j3` build, metadata695/0, both
+exact known-issue CTests and self-tests5/5 plus4/4 pass. Generated coverage remains unchanged and
+byte-identical against Complete1045 inputs. Evidence:`/tmp/checkpoint-1051-vector3-magnitude-range/*`.
+No renderer or visual claim was made.

@@ -126,22 +126,24 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `/tmp/checkpoint-1042-quaternion-divide-boundaries/*`. Exact known-issue CTests, metadata693/0 and
   self-tests5/5 plus4/4 pass. No CNA source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-118 -- Vector2 and Quaternion magnitude operations lose extreme finite ranges
+### CNA-DEMOS-ISSUE-118 -- Vector and Quaternion magnitude operations lose extreme finite ranges
 
 - **Area/API:** `Microsoft::Xna::Framework::Quaternion::Length`/`Normalize` and
-  `Vector2::Length`/`Distance`/`Normalize`, including static/member/output forms.
-- **Demo/reproduction:** run `math.quaternion.normalize` and `math.vector2.length`. Measure
-  sole-component `1e20` and `1e-30` values and normalize the same finite inputs. The Vector2 demo
-  also measures value/output Distance from zero. Ordinary magnitude and normalization plus zero and
-  separately rounded squared-magnitude controls distinguish the range defect from normal behavior.
-- **Observed:** CNA returns infinity for both `Length(1e20)` paths and zero for both
-  `Length(1e-30)` paths. Quaternion normalization loses the huge value. Every Vector2 normalization
-  form loses both extremes, while Vector2 Distance likewise returns infinity or zero. Quaternion
-  retains exactly three expected failures among eleven controls; Vector2 retains six among eighteen
-  on ten SOFTWARE and ten OPENGLES3-labelled runs. The separately returned `LengthSquared` and
-  `DistanceSquared` intentionally overflow to infinity or underflow to zero and match XNA.
+  `Vector2`/`Vector3::Length`/`Distance`/`Normalize`, including static/member/output forms.
+- **Demo/reproduction:** run `math.quaternion.normalize`, `math.vector2.length`,
+  `math.vector3.normalize` and `math.vector3.distance`. Measure sole-component `1e20` and `1e-30`
+  values, normalize the same finite inputs and measure value/output Distance from zero. Ordinary
+  magnitude/normalization, zero and separately rounded squared-magnitude controls distinguish the
+  range defect from normal behavior.
+- **Observed:** CNA returns infinity for every tested `Length(1e20)` path and zero for every
+  `Length(1e-30)` path. Quaternion normalization loses the huge value. Every Vector2 and Vector3
+  normalization form loses both extremes, while both vector Distance paths likewise return
+  infinity or zero. Quaternion retains three expected failures among eleven controls; Vector2
+  retains six among eighteen; Vector3 normalization retains four among fourteen and distance two
+  among eight. The separately returned `LengthSquared` and `DistanceSquared` intentionally overflow
+  to infinity or underflow to zero and match XNA.
 - **Expected/reference:** genuine Windows XNA 4.0 returns the original finite magnitudes from
-  Length and Vector2 Distance even when their squared counterparts are infinity or zero. It
+  Length and vector Distance even when their squared counterparts are infinity or zero. It
   normalizes each sole positive component to UnitX in every tested public form. XNA and CNA both
   return NaN components when normalizing zero.
 - **Suggested repair/scope:** calculate square-root magnitudes with sufficient intermediate range
@@ -151,7 +153,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   from the installed Windows XNA 4.0 assembly under Wine; no renderer or visual claim is involved.
 - **Evidence/status:** `/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`,
   `/tmp/checkpoint-1043-quaternion-length-range/*` and
-  `/tmp/checkpoint-1046-vector2-magnitude-range/*`; exact known-issue CTests, metadata694/0 and
+  `/tmp/checkpoint-1046-vector2-magnitude-range/*` and
+  `/tmp/checkpoint-1051-vector3-magnitude-range/*`; exact known-issue CTests, metadata695/0 and
   self-tests5/5 plus4/4 pass. The earlier Quaternion exact-equality tiny assertion was a corrected
   over-strict demo oracle, not a second CNA issue. No CNA source was modified and no upstream
   message was sent.
