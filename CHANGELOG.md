@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Quaternion normalization through zero and extreme finite magnitudes and recorded
+  CNA-DEMOS-ISSUE-118 for overflow that collapses a huge finite quaternion to zero.
 - Extended Quaternion Slerp/Lerp through exact antipodes, unclamped extrapolation, zero endpoints
   and output-overload parity against genuine Windows XNA 4.0.
 - Refreshed the complete 693-demo behavior baseline after Focused1023-1033: all 706 enabled CTests

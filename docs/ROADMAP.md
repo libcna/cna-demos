@@ -11341,3 +11341,12 @@ and output-overload controls. CNA matches all twelve exact orientation/magnitude
 warning-free `-j3` build, metadata693/0, exact CTest, ten runs per renderer label and both self-test
 suites pass with stable stdout and empty stderr. Coverage remains unchanged. Evidence:
 `/tmp/checkpoint-1035-quaternion-interpolation-boundaries/*`.
+
+## Focused1036 Quaternion normalization extremes
+
+`math.quaternion.normalize` adds output-overload, zero, tiny and huge finite controls against
+genuine Windows XNA 4.0. CNA matches the first six but collapses `(1e20,0,0,0)` to zero when its
+float squared-length sum overflows; this remains CNA-DEMOS-ISSUE-118. The warning-free `-j3` build,
+metadata693/0, exact known-issue CTest, ten runs per renderer label and both self-test suites pass
+with stable stdout and empty stderr. Coverage remains unchanged. Evidence:
+`/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`.

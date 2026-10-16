@@ -5715,3 +5715,12 @@ Genuine Windows XNA 4.0 supplies the exact reference and CNA matches all twelve 
 per renderer label are byte-stable with empty stderr; build, metadata, exact CTest and both self-
 test suites pass. Coverage totals are unchanged. Evidence:
 `/tmp/checkpoint-1035-quaternion-interpolation-boundaries/*`.
+
+### Focused1036 Quaternion normalization extremes
+
+`math.quaternion.normalize` now covers ordinary output-overload parity, zero static/member NaNs,
+tiny finite normalization and a huge finite value. Genuine Windows XNA 4.0 normalizes the latter
+to UnitX; CNA's float norm overflows and returns zero, retained as CNA-DEMOS-ISSUE-118. Ten runs per
+renderer label reproduce exactly that one failure with stable stdout and empty stderr; build,
+metadata, exact known-issue CTest and both self-test suites pass. Coverage totals are unchanged.
+Evidence:`/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`.

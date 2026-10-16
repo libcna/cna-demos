@@ -15,6 +15,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-118 -- Quaternion normalization overflows on large finite components
+
+- **Area/API:** `Microsoft::Xna::Framework::Quaternion::Normalize`, static/member/output forms.
+- **Demo/reproduction:** run `math.quaternion.normalize`. Normalize
+  `Quaternion(1e20,0,0,0)` with the static API. Ordinary accumulated drift, an explicit nonunit
+  value, zero and `1e-20` inputs provide adjacent controls.
+- **Observed:** CNA returns `(0,0,0,0)`: squaring `1e20f` overflows the float length sum to infinity,
+  its reciprocal square root becomes zero and multiplication erases the finite input. This is the
+  sole expected failure among seven checks on ten SOFTWARE and ten OPENGLES3-labelled runs.
+- **Expected/reference:** genuine Windows XNA 4.0 returns `(1,0,0,0)` with length1 for the same
+  finite input. It also returns four NaNs for zero and identity for the tiny-W case; CNA matches
+  those classifications semantically (the tiny result differs only within the accepted tolerance).
+- **Suggested repair/scope:** accumulate the magnitude with sufficient range or use a scaled norm
+  so finite representable quaternion components do not overflow before normalization. Open against
+  pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed
+  Windows XNA 4.0 assembly under Wine; no renderer or visual claim is involved.
+- **Evidence/status:** `/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`; exact known-issue
+  CTest, metadata693/0 and self-tests5/5 plus4/4 pass. The first exact-equality tiny assertion was a
+  corrected over-strict demo oracle, not a second CNA issue. No CNA source was modified and no
+  upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-117 -- Perspective accepts Pi despite XNA's strict field-of-view bound
 
 - **Area/API:** `Microsoft::Xna::Framework::Matrix::CreatePerspectiveFieldOfView`.

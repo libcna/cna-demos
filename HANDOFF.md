@@ -10383,3 +10383,18 @@ pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass12/12 with byte-identical
 totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1035-quaternion-interpolation-boundaries/*`. No rendering or visual claim was made
 and no CNA issue was found. Continue with the next deterministic behavior gap outside interpolation.
+
+## Focused1036-Quaternion-normalization-extremes
+
+`math.quaternion.normalize` grows from three to seven controls without a new ID. It adds ordinary
+nonunit output-overload parity, zero static/member NaNs and a tiny finite input, then uses genuine
+Windows XNA 4.0 to establish that `(1e20,0,0,0)` must normalize to UnitX. CNA's float squared-length
+sum overflows and collapses that finite value to zero; the sole discrepancy remains visible as
+`CNA-DEMOS-ISSUE-118`. The first tiny-input exact-equality assertion was corrected to a semantic
+unit tolerance after CNA returned the expected orientation with ordinary rounding.
+
+The warning-free three-job build, metadata693/0, exact known-issue SOFTWARE CTest and self-tests
+5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3-labelled runs have byte-identical stdout SHA-256
+`3f2159f33444a81d069aebfb93f14eb6f578ffe017f28ecec9690e519dff3521` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`. Continue with the next deterministic gap.
