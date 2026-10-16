@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Texture2D::SaveAsPng and SaveAsJpeg: encode a texture as an image file, here into memory.
+#include <array>
 #include <cmath>
 #include <cstddef>
 #include <cstdlib>
@@ -92,6 +93,32 @@ namespace
             Context().Check(source_.getWidthProperty() == width && source_.getHeightProperty() == height &&
                             Pixels(source_) == original, "resized exports leave the source texture unchanged");
 
+            // XNA's save overloads use nearest-neighbor source coordinates rather than filtering.
+            // A 2x2 -> 3x3 resize distinguishes floor(dst * src / dst) on both axes.
+            Texture2D tinySource(device, 2, 2);
+            const std::array<Color, 4> tinyPixels{
+                Color(10, 20, 30), Color(40, 50, 60),
+                Color(70, 80, 90), Color(100, 110, 120)};
+            tinySource.SetData(tinyPixels.data(), 4);
+            const std::array<Color, 9> expectedNearest{
+                tinyPixels[0], tinyPixels[0], tinyPixels[1],
+                tinyPixels[0], tinyPixels[0], tinyPixels[1],
+                tinyPixels[2], tinyPixels[2], tinyPixels[3]};
+            System::IO::MemoryStream nearestPng, nearestJpeg;
+            tinySource.SaveAsPng(&nearestPng, 3, 3);
+            tinySource.SaveAsJpeg(&nearestJpeg, 3, 3);
+            nearestPng.setPositionProperty(0);
+            Context().Check(Pixels(Texture2D::FromStream(device, nearestPng)) ==
+                                std::vector<Color>(expectedNearest.begin(), expectedNearest.end()),
+                            "PNG resizing uses XNA's nearest source texel mapping on both axes");
+
+            Texture2D expectedTexture(device, 3, 3);
+            expectedTexture.SetData(expectedNearest.data(), 9);
+            System::IO::MemoryStream expectedJpeg;
+            expectedTexture.SaveAsJpeg(&expectedJpeg, 3, 3);
+            Context().Check(nearestJpeg.ToArray() == expectedJpeg.ToArray(),
+                            "JPEG resizing encodes the same nearest-neighbor image as an authored target-sized texture");
+
             // XNA canonicalizes RGB only when alpha is exactly zero. Keep the two halves far wider
             // than a JPEG block so its lossy colour boundary cannot affect the center samples.
             Texture2D alphaSource(device, 64, 32);
@@ -160,7 +187,8 @@ CNA_DEMOS_GAME(SaveAsImageDemo, {
     .id = "graphics.texture2d.save_as_image",
     .title = "Save a texture as PNG or JPEG",
     .description = "Encodes textures into memory streams with Texture2D::SaveAsPng (lossless) and SaveAsJpeg "
-                   "(lossy), checks resized output and transparent-RGB normalization, and verifies sources stay unchanged.",
+                   "(lossy), checks exact XNA nearest-neighbor resizing and transparent-RGB normalization, and verifies "
+                   "sources stay unchanged.",
     .apis = {"Texture2D::SaveAsPng", "Texture2D::SaveAsJpeg", "Texture2D::FromStream", "Texture2D::Width",
              "Texture2D::Height"},
     .tags = {"texture", "png", "jpeg", "save", "screenshot"},

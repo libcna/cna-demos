@@ -11216,3 +11216,18 @@ validator/comparator self-tests pass5/5 and4/4. Counts remain307/329 XNA types,2
 `/tmp/checkpoint-1023-texture3d-vector-sampling/*`. Pixel validation was programmatic; no screenshot
 or manual visual inspection was performed, and no CNA issue was found. Continue the deterministic
 behavior audit outside sampled volume formats.
+
+## Focused1024-Texture2D-save-nearest-resize
+
+The existing `graphics.texture2d.save_as_image` workflow adds two controls for XNA's exact save
+resize rule. A distinct four-colour2x2 image becomes the predicted3x3 nearest-neighbor pattern under
+floor-based source coordinates. The PNG decodes to those exact nine pixels; the resized JPEG bytes
+match an encoding of a separately authored Texture2D carrying the expected3x3 image. This verifies
+both public encoders without relying on approximate JPEG decoding.
+
+The warning-free three-job build, metadata693/0 and exact SOFTWARE CTest pass. Ten SOFTWARE and ten
+OPENGLES3/Xvfb runs pass12/12 with byte-identical stdout and empty stderr; validator/comparator
+self-tests pass5/5 and4/4. Counts remain307/329 XNA types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`/tmp/checkpoint-1024-save-nearest/*`. Public decoded pixels and
+encoded bytes supplied the validation; no screenshot or manual visual inspection was performed,
+and no CNA issue was found. Continue the deterministic behavior audit outside image resizing.

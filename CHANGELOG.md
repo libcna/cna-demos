@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added an exact 2x2-to-3x3 discriminator for XNA's nearest-neighbor PNG/JPEG save resizing,
+  including byte-identical JPEG output from an independently authored expected image.
 - Extended the real sampler3D workflow with a Vector4 volume whose signed and above-one channels
   survive upload and produce exact remapped framebuffer values on both GLSL dialects.
 - Refreshed the complete 693-demo behavior baseline after seven focused extensions: all 706 enabled

@@ -3524,8 +3524,9 @@ image export and compressed-cube alpha sampling. The complete warning-free three
 Resume the deeper semantic behavior audit: reconcile explicit residual gaps in
 `docs/COVERAGE_AUDIT.md` against pinned CNA d23e139de and prioritize reachable deterministic behavior
 that strengthens an existing coherent demo. Focused1023 closes Texture3D's explicit non-Color
-sampling gap with signed/HDR Vector4 values on both GLSL dialects. Choose the next gap outside the
-Focused1015-1023 ownership, audio-transport and texture-format slices. Revisit the126 intentionally
+sampling gap with signed/HDR Vector4 values on both GLSL dialects, and Focused1024 closes exact
+PNG/JPEG resize mapping. Choose the next gap outside the Focused1015-1024 ownership,
+audio-transport and texture-format slices. Revisit the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
@@ -10184,3 +10185,21 @@ and empty stderr. Generated totals remain307/329 XNA types,2128/2326 members,674
 `84b0920762ccab97956878cba29386acc430b7749ee8f7f76d7a04b577b1480a`. Pixels were read
 programmatically; no screenshot or manual visual inspection was performed, and no CNA issue was
 found. Continue with the next deterministic behavior gap outside sampled volume formats.
+
+## Focused1024-Texture2D-save-nearest-resize
+
+`graphics.texture2d.save_as_image` grows from ten to twelve controls without a new ID or metadata
+credit. A four-colour 2x2 source saved at3x3 distinguishes XNA's
+`floor(destination*source/destination)` texel mapping on both axes. Decoding the PNG yields the
+exact authored nine-pixel pattern. The resized JPEG is byte-identical to a JPEG made from a
+separate Texture2D containing that expected3x3 pattern, proving the same pre-encode resize without
+using lossy decoded-pixel tolerances.
+
+The warning-free `-j3` build, metadata693/0, exact SOFTWARE CTest and validator/comparator self-
+tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass12/12 with byte-identical stdout
+SHA-256 `0daa1217e538c59a72ab6bc76c2fc77905554c0b579da43f344cf48c19a2f829` and empty stderr.
+Generated totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`/tmp/checkpoint-1024-save-nearest/*`; source SHA-256
+`bb1bbed31884c5c65814fa3853c3919982ceeaa8537ffb1b20eb7c7cc4fa8405`. Validation used encoded
+bytes and decoded public pixels; no screenshot or manual visual inspection was performed, and no
+CNA issue was found. Continue with the next deterministic behavior gap outside image resizing.
