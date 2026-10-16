@@ -12476,3 +12476,27 @@ complete Design category passes30/30 checks under both SOFTWARE and OPENGLES3. C
 Commit and push this batch. Next audit Diagnostics, Inspector and CNAEXT public headers, starting
 with an installed-header inventory and mapping each caller-facing behavior to the existing demos.
 Keep every compile at three jobs or fewer.
+
+## Focused1118-Diagnostics-Inspector-CNAEXT-public-header-consolidation
+
+Phase13 is semantically complete. The pinned source installs two public Diagnostics headers,
+three public Inspector headers, and eleven public graphics-ext headers plus two internal ASCII
+helpers. The existing six Diagnostics, three Inspector and four CNAEXT workflows, the portable
+shader-package workflow and the complete DebugDraw C audit cover every ordinary caller-facing
+member/behavior. No extra ID is warranted. Remaining hostile-input fuzzing, timeout/concurrency
+stress, real remote exposure, renderer-specific shader binaries and visual-quality checks have
+explicit unit, stress, renderer or manual dispositions.
+
+The clean `diagnostics-full` build uses `-j3`, validates716/0 metadata and passes all six exact
+FULL Diagnostics CTests; its direct category run passes62 checks with empty stderr. Ordinary
+`linux-full` gives two Diagnostics passes/four declared OFF-mode skips, three passing Inspector
+loopback CTests and the expected CNAEXT capability split. Both Inspector-labelled category runs
+pass56 checks byte-identically with empty stderr; CNAEXT passes two/skips two on SOFTWARE and
+passes all four on OPENGLES3. Metadata is719/0 and catalog/validator/comparator checks pass.
+Coverage remains308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1118-diagnostics-inspector-cnaext-public-headers/*`. No remote, stress/fuzz,
+screenshot or manual visual result is claimed.
+
+Commit and push this documentation-only consolidation. Then run the full719-demo `linux-full`
+checkpoint with `JOBS=3` against the pinned CNA source, archive and compare both renderer reports,
+update generated coverage and handoff state, and continue to the next real public behavior gap.

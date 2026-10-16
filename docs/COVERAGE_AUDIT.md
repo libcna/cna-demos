@@ -7478,3 +7478,29 @@ complete Design category runs pass30/30 checks under SOFTWARE and OPENGLES3. Cov
 308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1117-design-public-headers/*`. No IDE property grid, generated source compilation,
 screenshot or manual result is claimed.
+
+### Focused1118 Diagnostics, Inspector and CNAEXT public-header consolidation
+
+The final Phase 13 source inventory consolidates three previously deep-audited modules without
+adding synthetic catalog entries. Diagnostics installs two public headers; Inspector installs
+three; graphics-ext installs eleven public headers and two implementation helpers below
+`CNA/Internal`. Every caller-facing declaration has a semantic disposition:
+
+| Module | Consolidated disposition |
+|---|---|
+| Diagnostics | The six profiler workflows cover build/runtime modes, direct metric/name handles, samples and snapshots, manual/RAII frames, sources and failure isolation, resource metadata and stable IDs, provider cursors, zones/markers, recordings and both exporters, bounded histories, producer drops and malformed-use containment. Enum-label permutations, hostile binary input, maximum-depth and multithread saturation remain CNA unit/stress scope. |
+| Inspector | The three workflows cover every protocol carrier/configuration field, strict version-one codecs and bounds, authenticated Agent/Client lifecycle through real loopback sockets, selective snapshots and cursor events, rate/pending/cooldown backpressure, reconnect, and explicit asynchronous previews. Hostile-input fuzzing, timeout-window stress and real remote security exposure remain CNA unit/stress/manual scope. |
+| CNAEXT graphics | The four CNAEXT workflows plus the portable shader-package workflow cover both ASCII modes and Draw overloads, every CRT/depth/dither selection, state validation and typed cloning, DebugDraw C++ rendering plus the complete C geometry/lifecycle route set, and owned textual/binary shader values, package validation, selection and live GL use. Renderer-specific binary execution, non-GL shader languages and visual-quality judgment retain their renderer/build/manual dispositions. The two ASCII implementation headers are not caller APIs. |
+
+The `diagnostics-full` build is warning-free with `-j3`, validates716/0 metadata (the three optional
+Inspector demos are absent from that preset), and passes all six exact Diagnostics CTests. Its
+direct SOFTWARE category run passes all six demos and62 checks with empty stderr. In ordinary
+`linux-full`, Diagnostics has two passes and four declared OFF-mode skips; all three Inspector
+CTests pass, and both renderer-labelled Inspector category runs pass23/23,13/13 and20/20 with
+byte-identical stdout and empty stderr. CNAEXT has two passes and two declared custom-effect skips
+on SOFTWARE, while all four demos pass on OPENGLES3 with4,5,1 and5 checks. The capability log and
+GTK/Xvfb warnings are expected environment output rather than failed assertions. Metadata is
+719/0; the catalog parser and validator/comparator self-tests pass. Generated coverage remains
+308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1118-diagnostics-inspector-cnaext-public-headers/*`. No remote Inspector exposure,
+stress/fuzz result, screenshot or manual visual claim is made.

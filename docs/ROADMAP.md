@@ -666,17 +666,20 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032 and -033).
 - Remaining net: voice (manual).
 
-## Phase 13 -- devices, phone, design, diagnostics, Inspector, platform, CNA extensions 🟨 (25 demos)
-- ✅ `devices.*` (5): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
-  AccelerometerFailedException, Environment::DeviceType), CNAEXT keyboard-emulated accelerometer,
-  VibrateController, CNA::Devices SystemInfo/Locale/PowerInfo, ✅ DisplayInfo (content scale, safe
-  area). The existing clipboard text workflow now proves `CNA::Devices::Clipboard` and
+## Phase 13 -- devices, phone, design, diagnostics, Inspector, platform, CNA extensions ✅ (28 demos)
+- ✅ `devices.*` (6): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
+  AccelerometerFailedException, Environment::DeviceType), all public sensor reading and event-value
+  types, CNAEXT keyboard-emulated accelerometer, VibrateController, CNA::Devices
+  SystemInfo/Locale/PowerInfo, and DisplayInfo (content scale, safe area). The existing clipboard
+  text workflow proves `CNA::Devices::Clipboard` and
   `CNA::Input::Clipboard` interoperability plus exact nonempty/empty state restoration; the core
   capability matrix proves MessageBox, FileDialog, Camera and SystemTray support-gate parity.
-  Remaining: Compass/Gyroscope/Motion readings, native dialog interaction, URL launching, camera
-  frames and system-tray lifecycle/clicks require hardware, external applications or manual UI.
-- ✅ `phone.*` (1): PhoneApplicationService lifecycle with AttachEXT and State. Remaining:
-  notification channels (need a push service: manual).
+  Compass/Gyroscope/Motion live readings, native dialog interaction, URL launching, camera frames
+  and system-tray lifecycle/clicks require hardware, external applications or manual UI.
+- ✅ `phone.*` (2): PhoneApplicationService lifecycle with AttachEXT and State, plus an actual
+  loopback raw/toast notification channel with all priorities, registry state and caller-thread
+  delivery. Focus-driven activation/deactivation and visible/background shell delivery remain
+  manual/platform scope.
 - ✅ `design.*` (4): text round trip and which types parse, cultures, property descriptors and
   CreateInstance, InstanceDescriptor.
 - ✅ `diagnostics.*` (6) and `core.logger.*` (2): diagnostics build/runtime modes, counters and
@@ -693,9 +696,9 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   CRTEffect (complete parameter/clamp/clone contract), DepthEffect (every depth/dither choice and
   clone contract on shader renderers), DebugDraw (C++ scene plus exact C geometry/lifecycle), and
   the ShaderCodeEXT/ShaderPackageEXT value, validation and live-selection contracts.
-- `platform.*`: ✅ renderer selection with fallback chain (standalone), ✅
-  `platform.window.native_handle` (GameWindow::Handle, every typed NativeWindowHandle decoder,
-  presence/description and malformed/windowless boundaries); renderer
+- ✅ `platform.*` (3): renderer selection with fallback chain (standalone), assembly-title
+  resolution, and `platform.window.native_handle` (GameWindow::Handle, every typed
+  NativeWindowHandle decoder, presence/description and malformed/windowless boundaries); renderer
   capability profiles are `graphics.device.capability_report`, while
   `core.platform.capability_matrix` covers the public static platform/capability decision surface.
   Low-level `IPlatform` provider services, PlatformEvent transport and WindowDescription are CNA
@@ -12764,3 +12767,26 @@ Design category runs pass30/30 checks under SOFTWARE and OPENGLES3. Coverage rem
 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1117-design-public-headers/*`. Continue with the public Diagnostics, Inspector and
 CNAEXT surfaces, keeping implementation-only instrumentation distinct from caller APIs.
+
+## Focused1118 Diagnostics, Inspector and CNAEXT public-header consolidation
+
+The final Phase13 inventory confirms two public Diagnostics headers, three public Inspector
+headers, and eleven public graphics-ext headers plus two internal ASCII helpers. The six
+Diagnostics, three Inspector and four CNAEXT workflows, together with the existing portable shader
+package workflow and exact DebugDraw C route audit, already cover every ordinary caller-facing
+behavior. No new ID is justified. Fuzzing, timing/concurrency stress, real remote exposure,
+renderer-specific shader binaries and visual-quality judgments retain explicit unit, stress,
+renderer or manual dispositions.
+
+The warning-free `diagnostics-full` build uses `-j3`, validates716/0 metadata and passes all six
+FULL Diagnostics CTests plus a62-check direct category run. The ordinary719-demo build passes its
+two diagnostics controls with four declared OFF-mode skips, all three Inspector loopback tests,
+and the complete CNAEXT set according to renderer capability: two passes/two skips on SOFTWARE and
+four passes on OPENGLES3. Both Inspector-labelled runs pass56 checks byte-identically. Catalog and
+validator/comparator self-tests pass; generated totals remain308/329 XNA types,2128/2326 members,
+674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1118-diagnostics-inspector-cnaext-public-headers/*`.
+
+Phase13 is now semantically complete at28 focused demos. Run a complete719-demo `linux-full`
+checkpoint next so the two post-Complete1099 additions and all intervening member-level audits
+have one current end-to-end baseline before continuing the next uncovered public behavior.
