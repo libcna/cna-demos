@@ -73,24 +73,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,296 game and210
 standalone; 674 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; they include all695
-baseline catalog IDs in both renderer suites. The six new `math.vector4.*` IDs and new
-`math.bounding_sphere.containment_boundaries`, `math.ray.value_identity`,
-`math.ray.frustum_intersection`, `math.plane.intersections`,
-`math.bounding_frustum.containment`, `math.bounding_frustum.corners` and
-`math.bounding_frustum.intersections`, `math.curve.key_value_identity` and
-`math.curve.key_ordering` are explicitly absent until the next complete checkpoint. The
-baseline results for `math.point.basics`, all four `math.rectangle.*`, all four
-`math.bounding_box.*`, the three older `math.bounding_sphere.*` IDs, `math.ray.intersects`, the
-two older `math.plane.*` IDs, four console `math.color.*` IDs, `math.bounding_frustum.culling` and
-all three `math.math_helper.*` IDs and the five older `math.curve.*` IDs predate Focused1063-1073's
-deeper member assertions and ISSUE-124 through ISSUE-138 where applicable. The seven edited
-`math.matrix.*` IDs (`identity`, `create_world`, `element_operations`, `transpose`, `invert`,
-`transform_by_quaternion` and `reflection_and_shadow`) likewise predate Focused1074's assertions
-and ISSUE-139/-140. A complete710-demo checkpoint is the immediate next task.
+Coverage: generated docs/COVERAGE.md uses Complete1075's full runtime reports and includes all710
+catalog IDs in both renderer suites. It incorporates every focused assertion through the complete
+Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
+Curve and Matrix audits in Focused1063-1074, including ISSUE-124 through ISSUE-140.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
-3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
-full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
+3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1075's
+full runtime reports are the baseline inputs for the710-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -100,7 +89,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1056 exercises all3079 credited C routes and all695 catalog IDs in both full smoke
+Complete1075 exercises all3079 credited C routes and all710 catalog IDs in both full smoke
 suites.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
 through Focused1002, including the production StorageDeviceNotConnectedException path.
@@ -11276,3 +11265,35 @@ The meaningful Matrix audit is complete. Run the overdue complete710-demo checkp
 Focused1074 source commit next. Compare it to Complete1056, regenerate runtime-backed coverage,
 and then continue with the highest-priority remaining semantic public-member/behavior gap. Keep
 all builds at no more than three jobs.
+
+## Complete1075-710-demo-behavior-checkpoint
+
+The complete checkpoint at source commit `f35c185` uses pinned CNA
+`d23e139de9e5c15511b6be745de290896a69ee37` and no more than three build jobs. The clean build is
+warning-free after CNA's unchanged configure-only vendored-Draco warning; metadata validation is
+710/0 and all723 enabled CTests pass, with the three manual tests disabled. The SOFTWARE suite is
+555 passed,103 expected failed,49 skipped and3 not run. OPENGLES3 under Xvfb is595 passed,105
+expected failed,7 skipped and3 not run. Both reports cover all710 IDs and contain no unexpected
+pass or failure.
+
+Comparison with Complete1056 adds the15 intended Focused1057-1073 IDs and only the reviewed
+status/check changes from Focused1063-1074. Failed assertions rise132->171 under SOFTWARE and
+137->176 under OPENGLES3; the39 additions are identical across renderers and map to the documented
+ISSUE-118 through ISSUE-140 assertions. There is no unrelated result change. After replacing the
+four per-run temporary path suffixes and removing host GTK/X-protocol diagnostics, each renderer's
+stderr is byte-identical to Complete1056. Validator and checkpoint-comparator self-tests pass5/5
+and4/4.
+
+Generated coverage now has current runtime evidence for every catalog ID and remains307/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes. Archived result SHA-256 values are
+`e04eee79ccb4458259f06e36e68399f8b4c258063b9e03a336a64e3b389b6fd3` for SOFTWARE and
+`22fdfea2b6988249714741de156a8c5f472e76dcb909b0ee303d00c4fd5dcbc0` for OPENGLES3. Evidence is
+under `build/linux-full/reports/checkpoint-1075-complete-*`, including comparison logs, normalized
+stderr and a complete hash manifest. The first sandboxed validation attempt produced19 environment
+failures because the sandbox denied home-directory writes, local sockets and desktop APIs; the
+required unrestricted run is the clean checkpoint above. No visual, listening, physical-device or
+external-service claim was made.
+
+Next, select the highest-value remaining semantic public-member/behavior family from the inventory
+in `docs/COVERAGE_AUDIT.md`; disposition existing coverage before adding controls or a focused demo.
+Keep every future compile at three jobs or fewer.

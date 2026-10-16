@@ -6504,3 +6504,20 @@ Curve results predate these assertions. Genuine-XNA main/supplement stdout SHA-2
 host display-cookie warning. Evidence:`/tmp/checkpoint-1073-curve-members/*`. No renderer or visual
 claim was made. The meaningful Curve family audit is complete; consolidate the Matrix public-member
 disposition next and add controls only for concrete residual behavior gaps.
+
+### Complete1075 710-demo behavior checkpoint
+
+The full checkpoint at source `f35c185` against pinned CNA `d23e139` validates metadata710/0 and
+passes all723 enabled CTests with three manual tests disabled. SOFTWARE is555 passed/103 expected
+failed/49 skipped/3 not run; OPENGLES3 is595/105/7/3. All710 IDs are present and neither report
+contains an unexpected result. Relative to Complete1056, the15 new IDs and all result/check changes
+are exactly the reviewed Focused1063-1074 work. Both renderers add the same39 failed assertions
+(SOFTWARE132->171, OPENGLES3 137->176); there is no unrelated status change.
+
+After normalizing four temporary path suffixes and removing host GTK/X-protocol diagnostics, both
+stderr streams are byte-identical to Complete1056. Coverage remains307/329 XNA types,2128/2326
+members,674/753 fields and3079/3205 public C routes, now with current runtime evidence for every
+catalog ID. Self-tests pass5/5 and4/4. Evidence:
+`build/linux-full/reports/checkpoint-1075-complete-*`. Continue the semantic public-member audit
+from the highest-value undispositioned family rather than inferring comprehensive coverage from
+these surface totals.

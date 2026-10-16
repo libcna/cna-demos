@@ -11852,3 +11852,19 @@ the two directly demonstrated CNA extensions. Complete1056's seven affected resu
 assertions. Evidence:`/tmp/checkpoint-1074-matrix-members/*`. No renderer or visual claim was made.
 Run a complete710-demo checkpoint next, then resume the highest-priority semantic member/behavior
 gap from the remaining public inventory.
+
+## Complete1075 710-demo behavior checkpoint
+
+Pinned CNA `d23e139` at source `f35c185` builds cleanly with `-j3`, metadata validates710/0 and all
+723 enabled CTests pass; three manual tests remain disabled. Full SOFTWARE is555 pass/103 expected
+fail/49 skip/3 not run and OPENGLES3 is595/105/7/3. Both cover every710 catalog ID without an
+unexpected result. Comparison with Complete1056 accounts for all15 new IDs and every reviewed
+Focused1063-1074 status/check change; the same39 documented assertions are added under both
+renderers and no unrelated result changes.
+
+Normalized stderr for each renderer is byte-identical to Complete1056 after removing host-only
+GTK/X-protocol diagnostics and normalizing four temporary path suffixes. Validator and comparator
+self-tests pass5/5 and4/4. Runtime-backed coverage remains307/329 types,2128/2326 members,674/753
+fields and3079/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-1075-complete-*`.
+Continue with the highest-value remaining semantic public-member/behavior family, first
+dispositioning its existing demos and intentional gaps. Keep builds at no more than three jobs.
