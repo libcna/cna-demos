@@ -12248,3 +12248,24 @@ Next determine whether one document combining Resources and ExternalReferences a
 ordering contract absent from the separate shared-resource and external-reference demos. Extend an
 existing workflow only if it does. Primitive-root documents and alternative type-name spellings are
 syntax variants unless source/corpus review exposes distinct caller-visible behavior.
+
+## Focused1092 intermediate XML combined sections
+
+`content.custom.intermediate_external_references` now includes a live shared Profile and grows from
+nine to twelve passing controls while retaining its sole ISSUE-046 failure. Its emitted document
+contains both Resources and ExternalReferences in the required order, its canonicalized round trip
+restores the shared value as a fresh object alongside relocated wrappers, and reversing the two
+sections is rejected. No new catalog ID was added.
+
+The warning-free `-j3` build validates metadata716/0. Twelve related SOFTWARE intermediate-XML
+demos plus the catalog parser pass13/13; validator/comparator self-tests pass5/5 and4/4. Five runs
+under each renderer label preserve exactly12 passes and one ISSUE-046 failure with common stdout
+SHA-256 `891c49364e54a4aadaf8bb35a1cec4409b271978d5076de9933b2f5e7cc02b8d` and empty stderr.
+Coverage contains all716 IDs and remains307/329 types,2128/2326 members,674/753 fields and3079/3205
+C routes. Evidence:`/tmp/checkpoint-1092-intermediate-combined-sections/*`. No new CNA issue or
+fresh XNA/rendered result is claimed.
+
+Finish the envelope syntax disposition next: expanded empty sections versus rejected self-closing
+sections and processing-instruction versus DOCTYPE handling are distinct measured boundaries that
+fit the existing serializer workflow. Treat embedded BOM placement as the XML reader's syntax
+contract unless source/corpus review reveals a framework mismatch.

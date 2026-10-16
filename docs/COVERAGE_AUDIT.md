@@ -6810,3 +6810,24 @@ and custom-object serializers already exercised, and alternate aliases/type spel
 choices covered by polymorphic and external-reference workflows. Audit one combined Resources plus
 ExternalReferences document next because their required relative ordering cannot be inferred from
 the existing separate-section demos.
+
+### Focused1092 intermediate XML combined sections
+
+The external-reference demo now contains a live shared Profile, so one real document exercises both
+optional root sections. It grows9->12 passing controls: Resources precede ExternalReferences, the
+canonicalized deserialize restores the shared value as a fresh object alongside relocated external
+wrappers, and a reversed pair is rejected. Its existing ISSUE-046 failure remains the only failed
+assertion and no catalog ID was added.
+
+Five runs under each renderer label retain12 passes plus that expected failure with common stdout
+SHA-256 `891c49364e54a4aadaf8bb35a1cec4409b271978d5076de9933b2f5e7cc02b8d` and empty stderr. The
+warning-free `-j3` build, metadata716/0, thirteen related CTests and both self-test suites pass.
+Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes across all716
+IDs. Evidence:`/tmp/checkpoint-1092-intermediate-combined-sections/*`. No new CNA issue or fresh
+XNA run.
+
+The remaining distinct envelope grammar is empty-section element shape and XML-node handling:
+expanded empty Resources/ExternalReferences are accepted, self-closing forms are refused, comments
+and processing instructions are skipped, and DOCTYPE is refused. These belong as controls in the
+existing serializer demo; BOM placement remains an XML-reader syntax detail unless a mismatch is
+observed.

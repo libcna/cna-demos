@@ -31,11 +31,12 @@ namespace
     {
         static constexpr std::string_view XnaTypeName = "CnaDemos.External.Scene";
         const std::string& GetTypeName() const override { static const std::string name(XnaTypeName); return name; }
-        std::shared_ptr<Profile> preview;
+        std::shared_ptr<Profile> preview, shared;
         std::shared_ptr<Reference> primary, again, other, absent;
         static void DescribeContent(ContentTypeDescriptor<Scene>& type)
         {
             type.Field("Preview", &Scene::preview);
+            type.Field("Shared", &Scene::shared).SharedResource();
             type.Field("Primary", &Scene::primary);
             type.Field("Again", &Scene::again);
             type.Field("Other", &Scene::other);
@@ -61,6 +62,7 @@ int main()
         const auto bossFile = (sourceRoot / "profiles" / "boss.xml").generic_string();
         auto authored = std::make_shared<Scene>();
         authored->preview = std::make_shared<Profile>(); authored->preview->health = 90;
+        authored->shared = std::make_shared<Profile>(); authored->shared->health = 75;
         authored->primary = std::make_shared<Reference>(guardFile);
         authored->again = std::make_shared<Reference>(guardFile);
         authored->other = std::make_shared<Reference>(bossFile);
@@ -75,8 +77,13 @@ int main()
               xml.find(sourceRoot.generic_string()) == std::string::npos,
               "the source document location makes absolute targets relative in the emitted XML");
         const auto health = xml.find("<Health>90</Health>");
-        check(health != std::string::npos && xml.find("<Health>", health + 1) == std::string::npos,
+        check(health != std::string::npos && xml.find("<Health>90</Health>", health + 1) == std::string::npos,
               "the preview is embedded once; external references contain filenames rather than copies of its fields");
+        const auto resources = xml.find("  <Resources>");
+        const auto externals = xml.find("  <ExternalReferences>");
+        check(resources != std::string::npos && externals != std::string::npos && resources < externals &&
+              xml.find("<Health>75</Health>", resources) < externals,
+              "a combined document emits shared Resources before ExternalReferences");
         bool roundTrip = false;
         try
         {
@@ -107,7 +114,8 @@ int main()
         if (changed != 2) throw std::runtime_error("Expected two external target declarations");
         std::unique_ptr<System::Xml::XmlReader> reader(System::Xml::XmlReader::CreateFromString(canonical));
         const auto moved = IntermediateSerializer::Deserialize<Scene>(*reader, movedFile.generic_string());
-        if (!moved || !moved->primary || !moved->again || !moved->other) throw std::runtime_error("Missing relocated references");
+        if (!moved || !moved->shared || !moved->primary || !moved->again || !moved->other)
+            throw std::runtime_error("Missing relocated references");
         check(moved->primary->getFilenameProperty() == (movedRoot / "profiles" / "guard.xml").generic_string() &&
               moved->other->getFilenameProperty() == (movedRoot / "profiles" / "boss.xml").generic_string(),
               "deserialization resolves relative targets against the new document location");
@@ -115,6 +123,8 @@ int main()
               "equal external filenames preserve separate reference wrappers rather than shared object identity");
         check(!moved->absent && moved->preview && moved->preview != authored->preview && moved->preview->health == 90,
               "the null reference remains absent and the inline preview restores its own data");
+        check(moved->shared != authored->shared && moved->shared->health == 75,
+              "the shared resource is restored as a fresh object alongside relocated external wrappers");
         const auto refuse = [&](const std::string& input, const std::string& relocation, const char* diagnostic, const char* message) {
             bool refused = false;
             try
@@ -140,6 +150,22 @@ int main()
         const auto type = wrong.find("TargetType=\"") + std::string_view("TargetType=\"").size();
         wrong.replace(type, Profile::XnaTypeName.size(), "System.String");
         refuse(wrong, movedFile.generic_string(), "wrong type for external reference", "a known but incompatible target type is refused");
+
+        std::string reversed = canonical;
+        const auto resourcesStart = reversed.find("  <Resources>");
+        const auto resourcesEndMarker = reversed.find("  </Resources>\n", resourcesStart);
+        const auto externalsStart = reversed.find("  <ExternalReferences>", resourcesStart);
+        const auto externalsEndMarker = reversed.find("  </ExternalReferences>\n", externalsStart);
+        if (resourcesStart == std::string::npos || resourcesEndMarker == std::string::npos ||
+            externalsStart == std::string::npos || externalsEndMarker == std::string::npos)
+            throw std::runtime_error("Missing combined document sections");
+        const auto resourcesEnd = resourcesEndMarker + std::string_view("  </Resources>\n").size();
+        const auto externalsEnd = externalsEndMarker + std::string_view("  </ExternalReferences>\n").size();
+        const std::string resourcesBlock = reversed.substr(resourcesStart, resourcesEnd - resourcesStart);
+        const std::string externalsBlock = reversed.substr(externalsStart, externalsEnd - externalsStart);
+        reversed.replace(resourcesStart, externalsEnd - resourcesStart, externalsBlock + resourcesBlock);
+        refuse(reversed, movedFile.generic_string(), "Resources",
+               "ExternalReferences cannot precede Resources in a combined document");
         return passed ? 0 : 1;
     }
     catch (const std::exception& error)

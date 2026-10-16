@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the intermediate external-reference workflow with a live shared resource, exact
+  Resources-before-ExternalReferences ordering and reversed-section rejection.
 - Extended the core intermediate serializer workflow with tolerant namespace, attribute and comment
   handling plus strict root/Asset/Resources envelope-name, multiplicity and ordering checks.
 - Extended the intermediate framework-value workflow with exact keyed and empty Curve XML,

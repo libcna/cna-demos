@@ -73,7 +73,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and215
 standalone; 680 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1091
+Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1092
 results and includes all716 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
@@ -92,7 +92,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete1084 exercises all3079 credited C routes and its711 catalog IDs in both full smoke suites;
-Focused1085-1091 execute the five new IDs and every edited workflow separately under both renderer
+Focused1085-1092 execute the five new IDs and every edited workflow separately under both renderer
 labels.
 Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
 Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
@@ -11766,3 +11766,29 @@ and ExternalReferences must preserve the required Asset, Resources, ExternalRefe
 reject a reversed pair. Add controls to an existing ID if that combined contract is absent; treat
 root primitive and type-name spelling variants as represented syntax unless source/corpus review
 finds distinct caller-visible behavior. Keep every compile at three jobs or fewer.
+
+## Focused1092-intermediate-XML-combined-sections
+
+The existing `content.custom.intermediate_external_references` workflow now owns one live shared
+Profile in addition to its embedded Profile and external wrappers. It grows9->12 passing controls
+while retaining its single ISSUE-046 expected failure. Exact emitted structure proves that a
+document containing both sections writes Resources before ExternalReferences; the canonicalized
+round trip restores the shared object as a fresh instance alongside relocated external wrappers,
+and a document with the two sections reversed is refused. No catalog ID was added.
+
+The clean incremental build is warning-free with `-j3`; metadata remains716/0. Twelve related
+SOFTWARE intermediate-XML demos plus the catalog parser pass13/13, and validator/comparator
+self-tests pass5/5 and4/4. Five runs under each renderer label retain exactly12 passes and one
+ISSUE-046 failure with byte-identical stdout SHA-256
+`891c49364e54a4aadaf8bb35a1cec4409b271978d5076de9933b2f5e7cc02b8d` and empty stderr. Generated
+coverage merges the focused result into Complete1084 plus Focused1085-1091, contains all716 IDs and
+remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1092-intermediate-combined-sections/*`. No new CNA issue, fresh genuine-XNA
+execution, rendering, screenshot or manual visual claim was made.
+
+Commit and push this batch, then finish the remaining envelope syntax disposition. The measured
+format distinguishes expanded empty Resources/ExternalReferences from rejected self-closing forms
+and skips processing instructions while refusing DOCTYPE. Add these boundaries to the existing
+serializer workflow if absent; byte-order-mark placement is an XML-reader detail and should be
+documented rather than multiplied into demos unless review finds a CNA/XNA mismatch. Keep every
+compile at three jobs or fewer.

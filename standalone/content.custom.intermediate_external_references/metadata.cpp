@@ -4,8 +4,9 @@
 CNA_DEMOS_STANDALONE({
     .id = "content.custom.intermediate_external_references",
     .title = "Relocate XML external asset references",
-    .description = "Serializes external profile filenames beside an embedded preview, distinguishes equal references "
-                   "from shared instances, relocates the document, and rejects unresolved or mistyped references.",
+    .description = "Serializes external profile filenames beside embedded and shared profiles, proves Resources precede "
+                   "ExternalReferences, distinguishes equal references from shared instances, relocates the document, "
+                   "and rejects reversed, unresolved or mistyped references.",
     .apis = {"Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize",
              "Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::ExternalReference",
