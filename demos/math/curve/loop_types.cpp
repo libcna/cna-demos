@@ -32,11 +32,19 @@ namespace
             {CurveLoopType::Linear, "Linear"}};
 
         ctx.Print("PostLoop       Evaluate(1.25)  Evaluate(2.25)");
+        bool postLoopReadback = true;
         for (const auto& [mode, name] : modes)
         {
             ramp.setPostLoopProperty(mode);
+            postLoopReadback = postLoopReadback && ramp.getPostLoopProperty() == mode;
             ctx.Print("{:<12} {:15.3f} {:15.3f}", name, ramp.Evaluate(1.25f), ramp.Evaluate(2.25f));
         }
+        ctx.Check(static_cast<int>(CurveLoopType::Constant) == 0 &&
+                      static_cast<int>(CurveLoopType::Cycle) == 1 &&
+                      static_cast<int>(CurveLoopType::CycleOffset) == 2 &&
+                      static_cast<int>(CurveLoopType::Oscillate) == 3 &&
+                      static_cast<int>(CurveLoopType::Linear) == 4 && postLoopReadback,
+                  "all five CurveLoopType ordinals round-trip through PostLoop");
 
         ramp.setPostLoopProperty(CurveLoopType::Constant);
         ctx.Check(ramp.Evaluate(5.0f) == 1.0f, "Constant holds the last value");

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // How CurveTangent (Flat, Linear, Smooth) shapes a curve between its keys.
+#include <stdexcept>
+
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Curve.hpp"
 #include "Microsoft/Xna/Framework/CurveKey.hpp"
@@ -21,9 +23,47 @@ namespace
 
     void CurveTangents(CnaDemos::DemoContext& ctx)
     {
+        ctx.Check(static_cast<int>(CurveTangent::Flat) == 0 &&
+                      static_cast<int>(CurveTangent::Linear) == 1 &&
+                      static_cast<int>(CurveTangent::Smooth) == 2,
+                  "CurveTangent exposes XNA's exact Flat, Linear and Smooth ordinals");
+
+        Curve empty;
+        empty.ComputeTangents(CurveTangent::Flat);
+        empty.ComputeTangents(CurveTangent::Linear, CurveTangent::Smooth);
+        Curve single;
+        single.getKeysProperty().Add(CurveKey(2.0f, 7.0f, 4.0f, 5.0f));
+        bool singleModesZero = true;
+        for (const CurveTangent mode : {CurveTangent::Flat, CurveTangent::Linear, CurveTangent::Smooth})
+        {
+            single.ComputeTangents(mode);
+            const CurveKey& key = single.getKeysProperty().getItemProperty(0);
+            singleModesZero = singleModesZero && key.getTangentInProperty() == 0.0f &&
+                key.getTangentOutProperty() == 0.0f;
+        }
+        ctx.Check(empty.getKeysProperty().getCountProperty() == 0 && singleModesZero,
+                  "whole-curve tangent computation is a no-op for empty and zeroes every single-key mode");
+
         const Curve flat = MakeCurve(CurveTangent::Flat);
         const Curve linear = MakeCurve(CurveTangent::Linear);
         const Curve smooth = MakeCurve(CurveTangent::Smooth);
+
+        ctx.Check(flat.getKeysProperty().getItemProperty(0).getTangentInProperty() == 0.0f &&
+                      flat.getKeysProperty().getItemProperty(0).getTangentOutProperty() == 0.0f &&
+                      flat.getKeysProperty().getItemProperty(1).getTangentInProperty() == 0.0f &&
+                      flat.getKeysProperty().getItemProperty(1).getTangentOutProperty() == 0.0f &&
+                      flat.getKeysProperty().getItemProperty(2).getTangentInProperty() == 0.0f &&
+                      flat.getKeysProperty().getItemProperty(2).getTangentOutProperty() == 0.0f,
+                  "Flat assigns zero incoming and outgoing tangents to every key");
+        ctx.Check(linear.getKeysProperty().getItemProperty(0).getTangentOutProperty() == 10.0f &&
+                      linear.getKeysProperty().getItemProperty(1).getTangentInProperty() == 10.0f &&
+                      linear.getKeysProperty().getItemProperty(1).getTangentOutProperty() == 0.0f &&
+                      linear.getKeysProperty().getItemProperty(2).getTangentInProperty() == 0.0f,
+                  "Linear uses adjacent value differences and zeroes missing endpoint neighbours");
+        ctx.CheckNear(smooth.getKeysProperty().getItemProperty(1).getTangentInProperty(),
+                      10.0 / 3.0, 1e-6, "Smooth weights the middle incoming tangent by key spacing");
+        ctx.CheckNear(smooth.getKeysProperty().getItemProperty(1).getTangentOutProperty(),
+                      20.0 / 3.0, 1e-6, "Smooth weights the middle outgoing tangent by key spacing");
 
         ctx.Print("position  Flat     Linear   Smooth");
         for (const float p : {0.25f, 0.5f, 0.75f, 1.5f, 2.0f})
@@ -47,6 +87,29 @@ namespace
         edited.ComputeTangents(CurveTangent::Linear, CurveTangent::Flat);
         ctx.CheckNear(edited.Evaluate(0.5f), 3.75, 1e-4, "asymmetric whole-curve tangents shift the midpoint below five");
         ctx.Print("Edited midpoint: {} (incoming Linear, outgoing Flat)", edited.Evaluate(0.5f));
+
+        const CurveKey firstBeforeInvalid = edited.getKeysProperty().getItemProperty(0);
+        bool negativeRejected = false;
+        bool pastEndRejected = false;
+        try
+        {
+            edited.ComputeTangent(-1, CurveTangent::Flat);
+        }
+        catch (const std::out_of_range&)
+        {
+            negativeRejected = true;
+        }
+        try
+        {
+            edited.ComputeTangent(edited.getKeysProperty().getCountProperty(), CurveTangent::Flat);
+        }
+        catch (const std::out_of_range&)
+        {
+            pastEndRejected = true;
+        }
+        ctx.Check(negativeRejected && pastEndRejected &&
+                      edited.getKeysProperty().getItemProperty(0) == firstBeforeInvalid,
+                  "C++ ComputeTangent rejects both invalid index directions without changing keys");
 
         // Linear: straight segments. Flat: zero slope at every key (ease in and out).
         ctx.CheckNear(linear.Evaluate(0.25f), 2.5, 1e-4, "Linear moves at constant speed");

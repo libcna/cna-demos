@@ -69,21 +69,22 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-708 project-built catalog demos in19 categories: math93, game33, graphics185, audio23, core6,
+710 project-built catalog demos in19 categories: math95, game33, graphics185, audio23, core6,
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are202 console,296 game and210
-standalone; 672 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,296 game and210
+standalone; 674 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; they include all695
 baseline catalog IDs in both renderer suites. The six new `math.vector4.*` IDs and new
 `math.bounding_sphere.containment_boundaries`, `math.ray.value_identity`,
 `math.ray.frustum_intersection`, `math.plane.intersections`,
 `math.bounding_frustum.containment`, `math.bounding_frustum.corners` and
-`math.bounding_frustum.intersections` are explicitly absent until the next complete checkpoint. The
+`math.bounding_frustum.intersections`, `math.curve.key_value_identity` and
+`math.curve.key_ordering` are explicitly absent until the next complete checkpoint. The
 baseline results for `math.point.basics`, all four `math.rectangle.*`, all four
 `math.bounding_box.*`, the three older `math.bounding_sphere.*` IDs, `math.ray.intersects`, the
 two older `math.plane.*` IDs, four console `math.color.*` IDs, `math.bounding_frustum.culling` and
-all three `math.math_helper.*` IDs predate Focused1063-1072's deeper member assertions and
-ISSUE-124 through ISSUE-136 where applicable.
+all three `math.math_helper.*` IDs and the five older `math.curve.*` IDs predate Focused1063-1073's
+deeper member assertions and ISSUE-124 through ISSUE-138 where applicable.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -11192,3 +11193,41 @@ results predate these assertions. Genuine-XNA stdout SHA-256 is
 display-cookie warning. Evidence:`/tmp/checkpoint-1072-math-helper-members/*`. No renderer or visual
 claim was made. The meaningful MathHelper audit is complete. Audit the remaining Curve family
 public members and boundary behavior next, deepening its existing five workflows where practical.
+
+## Focused1073-Curve-members-and-boundaries
+
+Two new focused console demos, `math.curve.key_value_identity` and `key_ordering`, raise the catalog
+to710, math to95, console to204 and automated to674. Existing `evaluate` grows3->7 controls,
+`key_collection` becomes20 after moving three value controls and adding two boundary controls,
+`loop_types` grows16->17, `step_continuity`4->6 and `tangents`9->16. Together76 controls cover every
+Curve, CurveKey and CurveKeyCollection public member/enum plus meaningful ordinary, duplicate,
+nonfinite, clone, tangent, loop and collection boundaries.
+
+Genuine Windows XNA 4.0 matches68 controls and supplies runtime evidence for three older issues:
+Step segments retain ISSUE-002's two failures, Linear post-loop retains ISSUE-036's sole failure,
+and nearby indexed replacement retains ISSUE-097's ordering failure. CurveKey signed-zero hashing
+extends ISSUE-120 with one failure. New ISSUE-137 records NaN CompareTo's grouped failure and
+ISSUE-138 records two Evaluate failures for NaN and an exact duplicate position. XNA collection
+clones share mutable CurveKey objects; CNA stores values and explicitly documents a deep C++ clone,
+so that measured adaptation remains a passing CNA contract. Vector/index exceptions likewise keep
+their documented C++ `std::out_of_range` mapping rather than claiming CLR exception parity.
+
+The configure-only vendored-Draco warning is unchanged; the clean follow-up `-j3` build is
+warning-free. Metadata is710/0, all seven exact SOFTWARE CTests and validator/comparator
+self-tests5/5 plus4/4 pass. Ten runs per demo and renderer label are byte-stable with empty stderr.
+Stdout SHA-256 values are `e7d0ec67311f4216b432920c139f53ead018c426a9c48a9e29c8142d2f630489`
+for evaluation, `7d0cbd86be8a576f7e686e4bfea56c848016d18cd08bb5a51d10c9daecad90a1`
+for collections, `565627a9cc1738468c29da82d98a90cb1b65831f7ba519799589430c301190bd`
+for ordering, `c30ef0a16c391ed328c2362703498597090b2a849c6df456482ae5869ffa959c`
+for value identity, `d8975cf8a4f259115cd4889d74e4b879471db741e2b508a071af6fc4f4ed7727`
+for loops, `2b679db507fbb48302332bd76721e51ffaf21cb10a5614afd19e9f9e55e29dfa`
+for Step and `cee059057f7a5a5dd1f59a386af18b5569005d42fe68c80db50aea294bc58a1f`
+for tangents. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes;
+Complete1056 marks the two new IDs absent and its five older Curve results predate these assertions.
+Genuine-XNA main/supplement stdout SHA-256 values are
+`352a3257e912da6b25cb09bb8f3fe514dfb650781f2f3ee285cd6216dc699ef3` and
+`c97dfc882b165a0c972008d056f2e85b43d22d6e06b2b998b9ee1139ded6a5c6`; stderr contains only the
+host display-cookie warning. Evidence:`/tmp/checkpoint-1073-curve-members/*`. No renderer or visual
+claim was made. The meaningful Curve family audit is complete. Consolidate the Matrix public-member
+disposition next against Focused1023-1033 and the existing Matrix demos; add controls only for
+concrete residual behavior gaps.

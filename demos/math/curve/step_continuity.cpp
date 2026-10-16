@@ -12,6 +12,10 @@ namespace
 {
     void CurveStepContinuity(CnaDemos::DemoContext& ctx)
     {
+        ctx.Check(static_cast<int>(CurveContinuity::Smooth) == 0 &&
+                      static_cast<int>(CurveContinuity::Step) == 1,
+                  "CurveContinuity exposes XNA's exact Smooth and Step ordinals");
+
         // A sprite-sheet frame index over time (seconds): frames must not blend.
         Curve frame;
         frame.getKeysProperty().Add(CurveKey(0.0f, 0.0f, 0.0f, 0.0f, CurveContinuity::Step));
@@ -24,7 +28,11 @@ namespace
             ctx.Print("t = {:.1f} s -> frame {}", t, frame.Evaluate(t));
         }
 
-        // XNA documents Step as: "Specifying a position between the two points returns this point."
+        ctx.Check(frame.Evaluate(0.0f) == 0.0f && frame.Evaluate(1.0f) == 1.0f &&
+                      frame.Evaluate(2.0f) == 2.0f && frame.Evaluate(3.0f) == 3.0f,
+                  "Step evaluation still passes exactly through every key");
+
+        // Genuine XNA holds the preceding key throughout every in-range segment.
         ctx.Check(frame.Evaluate(0.5f) == 0.0f, "between keys 0 and 1, the first key's value is held");
         ctx.Check(frame.Evaluate(1.5f) == 1.0f, "between keys 1 and 2, the value of key 1 is held");
         ctx.Check(frame.Evaluate(2.5f) == 2.0f, "between keys 2 and 3, the value of key 2 is held");

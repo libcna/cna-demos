@@ -463,15 +463,19 @@ keeps 37. Stable selected runtime hashes and exact skip/compiler stderr deltas a
 
 | Members / behavior | Decision and evidence |
 |---|---|
-| Curve constructor, Keys, Evaluate | Existing `math.curve.evaluate` constructs a brightness timeline and checks keys and interpolation. `key_collection` now checks zero for empty curves and a nonzero single-key value on both sides of its position. |
-| ComputeTangents | Existing `tangents` compares Flat/Linear/Smooth. `tangents` also computes different incoming/outgoing modes and checks the resulting midpoint (3.75). |
-| ComputeTangent | `tangents` now changes one key with separate modes, checks the untouched neighbor and midpoint 6.25, then restores Flat with the single-mode overload. |
-| PreLoop, PostLoop | `loop_types` checks all pre/post modes, explicit endpoint slopes and negative CycleOffset/Oscillate boundaries. Linear post-loop has one confirmed failure (ISSUE-036); the original demo expected the wrong first-key behavior. |
-| Curve Clone, IsConstant | Existing `key_collection` checks independence after removals and the transition to a single key. No separate clone demo. |
-| Collection constructor, Add, Item, Count, IndexOf, Remove, RemoveAt, Clear | Existing `key_collection` demonstrates sorted insertion and editing. Focused860 adds stable insertion of three equal-position keys, same-position replacement in place, sorted reinsertion after an ordinary position change and atomic refusal in both invalid index directions. CNA-DEMOS-ISSUE-097 records the remaining compatibility defect: the implementation's epsilon shortcut can leave a nearby-position replacement in descending order. |
-| Collection Clone, Contains, CopyTo, IsReadOnly | Clone fits existing copy/edit checks if extended; Contains is the boolean counterpart of demonstrated IndexOf. CopyTo and IsReadOnly are ordinary collection mechanics, intentionally without independent demos. They remain uncredited until actually shown. |
-| GetEnumerator, explicit IEnumerable.GetEnumerator | C# iteration machinery; C++ uses range iteration/indexing. No independent demo. |
-| Step continuity | Existing `step_continuity` is a failing compatibility example (ISSUE-002), not a successful implementation of Step. |
+| Curve construction, Keys, IsConstant and Evaluate | Focused1073 grows `math.curve.evaluate` to seven controls and keeps empty/single-key cases in `key_collection`. A new Curve has empty Keys, Constant loops, IsConstant and zero evaluation even at NaN; one key supplies its value everywhere. Three-key Linear interpolation passes exact keys, midpoint and constant-loop infinities. CNA returns zero rather than NaN for a nonconstant NaN position and NaN rather than the first value at an exact duplicate position, recorded as ISSUE-138. |
+| Curve Clone | `key_collection` proves structural and key-value independence after removals and value edits, matching CNA's public header promise of a deep C++ copy. Genuine XNA 4.0 instead clones the collection structure while retaining shared mutable CurveKey object identities. This is recorded as an intentional language/API adaptation: CNA stores CurveKey values and explicitly documents deep copying, so the demo demonstrates CNA's actual contract rather than failing it against CLR reference identity. |
+| CurveKey constructors, properties, Clone, equality and hash | New focused `key_value_identity` has six controls for all three constructors; read-only Position and mutable Value/TangentIn/TangentOut/Continuity; Clone; typed/boxed/operators; ordinary hashing and NaN equality. CNA matches genuine XNA except a negative-zero Position hashes differently from its equal positive-zero peer, extending ISSUE-120. |
+| CurveKey CompareTo | New focused `key_ordering` has four controls for ordinary/equal positions, infinities, signed zero and NaN. XNA returns positive one whenever either compared Position is NaN; CNA's two ordered comparisons both fail and it returns zero, recorded as ISSUE-137. |
+| ComputeTangents and ComputeTangent | `tangents` grows to sixteen controls. Flat zeroes all slopes, Linear uses adjacent value differences, Smooth weights both sides by position spacing, and exact evaluations distinguish them. Empty and single-key whole-curve calls, both symmetric/asymmetric overloads, a single-key edit, untouched neighbors and atomic invalid-index refusal are covered. CNA matches all genuine-XNA tangent values. C++ maps invalid indices to `std::out_of_range`; the equivalent CLR calls throw ArgumentOutOfRangeException. |
+| PreLoop, PostLoop and CurveLoopType | `loop_types` grows to seventeen controls and covers exact enum ordinals/readback plus all five pre/post modes, explicit endpoint slopes and negative CycleOffset/Oscillate boundaries. Genuine XNA runtime confirms every positive control. CNA's Linear post-loop reads the first key's outgoing tangent instead of the last key's, the sole ISSUE-036 failure. |
+| CurveContinuity | `step_continuity` grows to six controls, exposes both enum ordinals, exact-key passage and a live Step-to-Smooth mutation. Genuine XNA holds the preceding key at all three in-segment samples; CNA switches to the following key in segments beyond absolute position one, retaining two ISSUE-002 failures. |
+| Collection construction, mutation, lookup and copying | `key_collection` has twenty controls for constructor/Count/IsReadOnly, sorted/equal-position Add, get/set Item, IndexOf/Contains, guarded CopyTo, Clone, Remove/RemoveAt/Clear and empty/single Curve transitions. Invalid C++ vector destinations and both index directions are refused atomically with `std::out_of_range`; genuine XNA uses ArgumentOutOfRangeException for indices/negative CopyTo and ArgumentException for insufficient capacity. The public CNA header does not promise CLR exception identities for this vector adapter, so these are documented C++ mappings rather than claimed XNA exception parity. |
+| Collection nearby replacement | Ordinary movement reinserts in order and exact-position replacement stays among duplicate peers. CNA's epsilon in-place shortcut can move a key beyond its next neighbor, while genuine XNA reinserts the same measured values in ascending order; this remains ISSUE-097. |
+| GetEnumerator and CNA range adapters | CLR generic/non-generic enumerators are inventory artifacts. Existing workflows use deterministic indexed access; CNA's `begin`/`end`/`cbegin`/`cend` are C++ extensions and do not justify CLR member credit or another demo. Evidence:`/tmp/checkpoint-1073-curve-members/*`. |
+
+The meaningful Curve, CurveKey, CurveKeyCollection and enum public-member/behavior audit is
+complete at pinned d23.
 
 ### Game loop, services and window callbacks
 
@@ -6440,3 +6444,39 @@ affected results predate these assertions. Genuine-XNA stdout SHA-256 is
 display-cookie warning. Evidence:`/tmp/checkpoint-1072-math-helper-members/*`. No renderer or
 visual claim was made. The meaningful MathHelper audit is complete; audit the remaining Curve
 family public members and boundaries next.
+
+### Focused1073 Curve members and boundaries
+
+Two new focused console demos, `math.curve.key_value_identity` and `key_ordering`, raise the catalog
+to710, math to95, console to204 and automated to674. Existing `evaluate` grows from three to seven
+controls, `key_collection` retains twenty after moving three value controls and adding two boundary
+controls, `loop_types` grows16->17, `step_continuity`4->6 and `tangents`9->16. Together76 controls
+cover every Curve, CurveKey and CurveKeyCollection public member/enum plus meaningful ordinary,
+duplicate, nonfinite, clone, tangent, loop and collection boundaries.
+
+Genuine Windows XNA 4.0 matches68 controls and turns three older source/document judgments into
+runtime evidence: Step segments retain ISSUE-002's two failures, Linear post-loop retains the sole
+ISSUE-036 failure, and nearby indexed replacement retains ISSUE-097's ordering failure. CurveKey
+signed-zero hashing extends ISSUE-120 with one failure. New ISSUE-137 records NaN CompareTo's one
+grouped failure and ISSUE-138 records two Evaluate failures for NaN and an exact duplicate
+position. XNA's collection clones share mutable CurveKey reference objects; CNA stores values and
+explicitly documents a deep C++ clone, so that measured language/API adaptation remains a passing
+CNA contract rather than another issue.
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. Stdout SHA-256 values are
+`e7d0ec67311f4216b432920c139f53ead018c426a9c48a9e29c8142d2f630489` for evaluation,
+`7d0cbd86be8a576f7e686e4bfea56c848016d18cd08bb5a51d10c9daecad90a1` for collections,
+`565627a9cc1738468c29da82d98a90cb1b65831f7ba519799589430c301190bd` for ordering,
+`c30ef0a16c391ed328c2362703498597090b2a849c6df456482ae5869ffa959c` for value identity,
+`d8975cf8a4f259115cd4889d74e4b879471db741e2b508a071af6fc4f4ed7727` for loops,
+`2b679db507fbb48302332bd76721e51ffaf21cb10a5614afd19e9f9e55e29dfa` for Step and
+`cee059057f7a5a5dd1f59a386af18b5569005d42fe68c80db50aea294bc58a1f` for tangents. After the
+configure-only vendored-Draco warning, the clean `-j3` build, metadata710/0, all seven exact
+SOFTWARE CTests and self-tests5/5 plus4/4 pass. Coverage remains307/329 types,2128/2326 members,
+674/753 fields and3079/3205 C routes; Complete1056 marks the two new IDs absent and its five older
+Curve results predate these assertions. Genuine-XNA main/supplement stdout SHA-256 values are
+`352a3257e912da6b25cb09bb8f3fe514dfb650781f2f3ee285cd6216dc699ef3` and
+`c97dfc882b165a0c972008d056f2e85b43d22d6e06b2b998b9ee1139ded6a5c6`; stderr contains only the
+host display-cookie warning. Evidence:`/tmp/checkpoint-1073-curve-members/*`. No renderer or visual
+claim was made. The meaningful Curve family audit is complete; consolidate the Matrix public-member
+disposition next and add controls only for concrete residual behavior gaps.

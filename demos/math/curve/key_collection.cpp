@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: MS-PL
 // Managing curve keys: CurveKeyCollection keeps keys sorted by position.
-#include <any>
 #include <stdexcept>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Curve.hpp"
-#include "Microsoft/Xna/Framework/CurveContinuity.hpp"
 #include "Microsoft/Xna/Framework/CurveKey.hpp"
 #include "Microsoft/Xna/Framework/CurveKeyCollection.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
@@ -44,19 +42,6 @@ namespace
         ctx.Check(keys.Contains(CurveKey(1.0f, 10.0f)) && !keys.Contains(CurveKey(1.0f, 99.0f)),
                   "Contains compares the complete key, not its position alone");
 
-        const CurveKey& middle = keys.getItemProperty(1);
-        const CurveKey clonedKey = middle.Clone();
-        const CurveKey changedKey(1.0f, 10.0f, 1.0f, 0.0f, CurveContinuity::Smooth);
-        ctx.Check(middle.Equals(clonedKey) && middle.Equals(std::any{clonedKey}) &&
-                      !middle.Equals(std::any{42}) && !middle.Equals(std::any{}),
-                  "a cloned key has typed and boxed value identity");
-        ctx.Check(middle == clonedKey && middle != changedKey && middle.GetHashCode() == clonedKey.GetHashCode(),
-                  "key operators and hashes include tangents and continuity");
-        ctx.Check(middle.CompareTo(keys.getItemProperty(0)) > 0 &&
-                      middle.CompareTo(keys.getItemProperty(2)) < 0 &&
-                      middle.CompareTo(CurveKey(1.0f, 99.0f)) == 0,
-                  "CompareTo orders only by position, independently of the key value");
-
         const CurveKey sentinel(-1.0f, -1.0f);
         std::vector<CurveKey> copied(5, sentinel);
         keys.CopyTo(copied, 1);
@@ -64,6 +49,29 @@ namespace
                       copied[2] == keys.getItemProperty(1) && copied[3] == keys.getItemProperty(2) &&
                       copied[4] == sentinel,
                   "CopyTo writes the ordered keys at the requested destination index");
+
+        std::vector<CurveKey> shortCopy(3, sentinel);
+        const std::vector<CurveKey> shortBefore = shortCopy;
+        bool negativeCopyRejected = false;
+        bool shortCopyRejected = false;
+        try
+        {
+            keys.CopyTo(shortCopy, -1);
+        }
+        catch (const std::out_of_range&)
+        {
+            negativeCopyRejected = true;
+        }
+        try
+        {
+            keys.CopyTo(shortCopy, 1);
+        }
+        catch (const std::out_of_range&)
+        {
+            shortCopyRejected = true;
+        }
+        ctx.Check(negativeCopyRejected && shortCopyRejected && shortCopy == shortBefore,
+                  "C++ CopyTo rejects negative or insufficient destinations atomically");
 
         CurveKeyCollection orderedKeys;
         orderedKeys.Add(CurveKey(1.0f, 10.0f));
@@ -115,6 +123,46 @@ namespace
                       orderedKeys.getItemProperty(3) == CurveKey(1.5f, 15.0f),
                   "invalid indexed replacements throw without changing the collection");
 
+        bool negativeReadRejected = false;
+        bool pastEndReadRejected = false;
+        bool negativeRemoveRejected = false;
+        bool pastEndRemoveRejected = false;
+        try
+        {
+            static_cast<void>(orderedKeys.getItemProperty(-1));
+        }
+        catch (const std::out_of_range&)
+        {
+            negativeReadRejected = true;
+        }
+        try
+        {
+            static_cast<void>(orderedKeys.getItemProperty(orderedKeys.getCountProperty()));
+        }
+        catch (const std::out_of_range&)
+        {
+            pastEndReadRejected = true;
+        }
+        try
+        {
+            orderedKeys.RemoveAt(-1);
+        }
+        catch (const std::out_of_range&)
+        {
+            negativeRemoveRejected = true;
+        }
+        try
+        {
+            orderedKeys.RemoveAt(orderedKeys.getCountProperty());
+        }
+        catch (const std::out_of_range&)
+        {
+            pastEndRemoveRejected = true;
+        }
+        ctx.Check(negativeReadRejected && pastEndReadRejected && negativeRemoveRejected &&
+                      pastEndRemoveRejected && orderedKeys.getCountProperty() == 5,
+                  "C++ Item and RemoveAt reject both invalid index directions without mutation");
+
         CurveKeyCollection nearbyKeys;
         const float epsilon = MathHelper::MachineEpsilonFloat;
         nearbyKeys.Add(CurveKey(0.0f, 0.0f));
@@ -132,12 +180,12 @@ namespace
         ctx.Check(keys.Remove(CurveKey(1.0f, 10.0f)), "Remove deletes an equal key");
         ctx.Check(curve.getIsConstantProperty(), "one key left: the curve is constant");
         ctx.Check(copy.getKeysProperty().getCountProperty() == 3 && keyCopy.getCountProperty() == 3,
-                  "Curve and key-collection clones made independent copies");
+                  "CNA's documented C++ Curve and collection clones own independent key values");
         keys.getItemProperty(0).setValueProperty(7.0f);
         ctx.Check(curve.Evaluate(-5.0f) == 7.0f && curve.Evaluate(5.0f) == 7.0f,
                   "a single key supplies its value at every position");
         ctx.Check(copy.getKeysProperty().getItemProperty(0).getValueProperty() == 0.0f,
-                  "editing a key value also leaves the cloned curve unchanged");
+                  "editing a key value leaves CNA's documented deep Curve clone unchanged");
         keys.Clear();
         ctx.Check(keys.getCountProperty() == 0, "Clear removes every key");
     }
@@ -152,9 +200,8 @@ CNA_DEMOS_CONSOLE(CurveKeyCollectionDemo, {
              "CurveKeyCollection::IndexOf", "CurveKeyCollection::Contains", "CurveKeyCollection::CopyTo",
              "CurveKeyCollection::Clone", "CurveKeyCollection::IsReadOnly", "CurveKeyCollection::RemoveAt",
              "CurveKeyCollection::Remove", "CurveKeyCollection::Clear", "CurveKeyCollection::Count",
-             "Curve::IsConstant", "Curve::Clone", "CurveKey::Position", "CurveKey::Value", "CurveKey::Clone",
-             "CurveKey::CompareTo", "CurveKey::Equals", "CurveKey::GetHashCode", "CurveKey::op_Equality",
-             "CurveKey::op_Inequality", "Curve::Keys", "Curve::Evaluate"},
+             "Curve::IsConstant", "Curve::Clone", "CurveKey::Position", "CurveKey::Value",
+             "Curve::Keys", "Curve::Evaluate"},
     .tags = {"curve", "collection"},
     .restrictions = "CNA-DEMOS-ISSUE-097 records that a nearby-position indexed replacement can violate the "
                     "collection's promised ascending order.",

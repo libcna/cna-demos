@@ -11797,3 +11797,23 @@ build, metadata708/0, all three exact CTests and both self-test suites pass. Cov
 unchanged; Complete1056's three affected results predate these assertions. Evidence:
 `/tmp/checkpoint-1072-math-helper-members/*`. The meaningful MathHelper audit is complete; audit
 the remaining Curve family public members and boundaries next.
+
+## Focused1073 Curve members and boundaries
+
+New focused `math.curve.key_value_identity` and `key_ordering` raise the catalog to710 and math to
+95. Existing evaluation grows3->7 controls, key collection21->20 after separating value identity,
+loop modes16->17, Step continuity4->6 and tangents9->16. Across76 controls, genuine XNA anchors
+all Curve/CurveKey/collection members, enum ordinals, ordinary/nonfinite/duplicate evaluation,
+clone semantics, tangent overloads, loop modes and collection boundaries.
+
+Sixty-eight controls match. Runtime XNA confirms old ISSUE-002, ISSUE-036 and ISSUE-097. CurveKey
+signed-zero hashing extends ISSUE-120; new ISSUE-137 records NaN CompareTo and ISSUE-138 records
+NaN/exact-duplicate evaluation. CNA's documented deep C++ clone intentionally differs from XNA's
+shared CurveKey object identity, and vector/index exception types are documented C++ mappings.
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. After the configure-only
+warning, the clean `-j3` build, metadata710/0, all seven exact CTests and both self-test suites
+pass. Coverage totals remain unchanged; Complete1056 marks two new IDs absent and its five older
+Curve results predate these assertions. Evidence:`/tmp/checkpoint-1073-curve-members/*`. The
+meaningful Curve family audit is complete; consolidate the Matrix public-member disposition next
+and add controls only for concrete residual behavior gaps.
