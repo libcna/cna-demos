@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Vector2 transforms through output aliasing, quaternion rotation, full/ranged arrays,
+  same-array overlap and refusal boundaries, recording CNA-DEMOS-ISSUE-121 for negative lengths.
 - Extended Vector2 interpolation through unclamped Lerp/Barycentric/CatmullRom/Hermite, clamped
   SmoothStep, NaN propagation and output-overload parity against Windows XNA 4.0.
 - Extended Vector2 equality/hash coverage through positive/negative-zero pairs, expanding

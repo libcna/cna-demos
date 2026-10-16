@@ -10613,3 +10613,21 @@ remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; reg
 Complete1045 inputs is byte-identical. Evidence:`/tmp/checkpoint-1048-vector2-interpolation/*`.
 No renderer or visual claim was made. Continue with Vector2 matrix/quaternion transform output,
 array, overlap and refusal boundaries.
+
+## Focused1049-Vector2-transform-arrays
+
+`math.vector2.transform` grows from two to sixteen controls without a new ID. Genuine Windows XNA
+4.0 anchors matrix point/normal and quaternion value/output/alias behavior, all six whole/range
+array paths, guarded subranges and forward writes for both same-array overlap directions. Ordinary
+invalid positive windows are refused atomically; zero length accepts both one-past-end indices.
+
+XNA also accepts negative length as an empty range for the matrix, quaternion and normal families.
+CNA's shared range helper explicitly rejects all three, retained as the sole grouped failure under
+new CNA-DEMOS-ISSUE-121. The clean three-job build, metadata694/0, exact known-issue SOFTWARE CTest
+and self-tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3-labelled runs retain exactly one
+expected failure among16 controls, with byte-identical stdout SHA-256
+`49d94e15321d669f5d9175e47cf2f251591e03fe5ddccba5f95e1f5fabfdfc1b` and empty stderr. Coverage
+remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; regenerating it against
+Complete1045 inputs is byte-identical. Evidence:`/tmp/checkpoint-1049-vector2-transform-arrays/*`.
+No renderer or visual claim was made. Audit the remaining Vector2 arithmetic/reflection/clamp
+boundaries, then close or explicitly disposition the family.

@@ -15,6 +15,33 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-121 -- Vector2 range transforms reject XNA's negative-length no-op
+
+- **Area/API:** range overloads of `Microsoft::Xna::Framework::Vector2::Transform` for Matrix and
+  Quaternion plus `Vector2::TransformNormal` for Matrix.
+- **Demo/reproduction:** run `math.vector2.transform`. Apply each range overload with valid zero
+  source/destination indices and `length=-1` to a guarded destination array. Adjacent controls cover
+  full arrays, nonempty subranges, both directions of same-array overlap, ordinary invalid source/
+  destination windows and zero length at one-past-end indices.
+- **Observed:** CNA throws `std::out_of_range` for all three negative-length calls before writing.
+  The demo retains exactly this grouped expected failure among sixteen controls; every other value,
+  alias, array, overlap, guard and refusal result matches the XNA reference.
+- **Expected/reference:** genuine Windows XNA 4.0 accepts `length=-1` for all three overload
+  families as an empty range and leaves every destination element unchanged. It also accepts zero
+  length with both indices exactly one past the array ends, while rejecting the separately tested
+  negative source index and overlong positive source/destination windows before any write.
+- **Cause/suggested repair:** Vector2's shared local `CheckArrayRange` explicitly rejects
+  `length < 0`, whereas XNA reaches a zero-iteration loop for the observed valid-index calls.
+  Preserve the positive-window validation and the one-past-end zero case while matching the
+  observed negative-length no-op. Vector3 and Vector4 contain duplicated checks and should be
+  audited before assuming or changing their public behavior.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1049-vector2-transform-arrays/*`. The
+  warning-free three-job build, exact known-issue CTest, metadata694/0 and self-tests5/5 plus4/4
+  pass; ten runs per renderer label reproduce only the one grouped assertion with empty stderr. No
+  CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-120 -- Equal signed-zero Vector2 and Quaternion values have unequal hashes
 
 - **Area/API:** `Microsoft::Xna::Framework::Vector2` and `Quaternion` typed/boxed/operator equality

@@ -152,7 +152,7 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | Length, LengthSquared, Distance, DistanceSquared and Normalize | Focused1046 extends `length` from5 to18 controls. Ordinary and zero member/static/output normalization matches XNA. Genuine Windows XNA keeps `1e20` and `1e-30` Length/Distance values finite and normalizes both to UnitX even when the squared result is infinity or zero. CNA's direct float squared sums lose all six observable results, extending ISSUE-118. Evidence:`/tmp/checkpoint-1046-vector2-magnitude-range/*`. |
 | Arithmetic, Reflect, Clamp and equality/hash | `toolbox_2d` demonstrates named/operator component arithmetic, an ordinary unit-normal reflection, component bounds and typed/boxed/operator equality with equal ordinary hashes. Focused1047 proves signed-zero values compare equal in every form but CNA's raw-bit hash differs from XNA under ISSUE-120. Output arithmetic forwards are component assignments and do not independently justify checks. Evidence:`/tmp/checkpoint-1047-vector2-signed-zero-hash/*`. |
 | Lerp, SmoothStep, Barycentric, CatmullRom and Hermite | `toolbox_2d` shows ordinary in-range gameplay uses and spline endpoints. Focused1048 adds genuine-XNA negative and above-one amounts: Lerp and all three geometric forms extrapolate, SmoothStep clamps to its endpoints, and both Lerp/SmoothStep propagate NaN to both components. Meaningful output overloads agree. CNA matches all six new controls. Evidence:`/tmp/checkpoint-1048-vector2-interpolation/*`. |
-| Matrix/quaternion Transform, TransformNormal and arrays | `transform` distinguishes translated points from normals for one matrix value. Quaternion rotation, output forms, bounded arrays, overlap and refusal semantics remain to be audited; do not infer them from the C ABI Vector2 workflow. |
+| Matrix/quaternion Transform, TransformNormal and arrays | `transform` distinguishes translated points from normals. Focused1049 adds value/output/alias parity, quaternion rotation, all six whole/range array families, guarded windows, both same-array overlap directions, atomic invalid positive windows and zero length at one-past-end indices. CNA matches XNA except that its shared range check rejects the negative length XNA treats as an empty range, recorded as ISSUE-121. Evidence:`/tmp/checkpoint-1049-vector2-transform-arrays/*`. |
 
 ### BoundingBox, BoundingSphere and Ray value identity
 
@@ -5859,3 +5859,15 @@ only its prior ISSUE-120 hash failure. Ten runs per renderer label are byte-stab
 stderr; the clean `-j3` build, metadata694/0, exact known-issue CTest and self-tests5/5 plus4/4
 pass. Generated coverage remains unchanged and byte-identical against Complete1045 inputs.
 Evidence:`/tmp/checkpoint-1048-vector2-interpolation/*`. No renderer or visual claim was made.
+
+### Focused1049 Vector2 transform arrays
+
+`math.vector2.transform` grows2->16 controls. Genuine Windows XNA 4.0 anchors matrix point/normal
+and quaternion value/output/alias behavior, all six full/range array paths, guarded subranges and
+forward same-array overlap. Ordinary invalid positive windows are atomic, and zero length accepts
+one-past-end indices. XNA also treats negative length as an empty range for matrix, quaternion and
+normal paths; CNA explicitly rejects it, recorded as ISSUE-121. Ten runs per renderer label retain
+only that grouped expected failure with byte-identical stdout and empty stderr. The warning-free
+`-j3` build, metadata694/0, exact known-issue CTest and self-tests5/5 plus4/4 pass. Generated
+coverage remains unchanged and byte-identical against Complete1045 inputs. Evidence:
+`/tmp/checkpoint-1049-vector2-transform-arrays/*`. No renderer or visual claim was made.
