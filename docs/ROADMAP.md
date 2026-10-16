@@ -12665,3 +12665,33 @@ plus validator/comparator self-tests pass5/5 and4/4. Generated coverage remains3
 media-quality, screenshot or manual result is claimed. Continue with the public XNA Graphics
 surface and its six remaining types/54 members, consolidating prior deep audits before adding any
 new behavior.
+
+## Focused1114 Graphics public-header audit
+
+All133 public XNA Graphics headers and18 public CNA Graphics-related headers now have a consolidated
+semantic disposition. The186 Graphics workflows already cover the coherent adapter, device,
+resource, state, texture, render-target, sprite, effect, shader, query, model, glTF, animation,
+skinning and packed-vector surface; Focused1102,1103 and1107 cover the CNA extension, selection and
+capability groups.
+
+The exact generated remainder is six types,54 members and two fields. Four nested Model enumerator
+types plus the display/effect/model collection aliases are CLR machinery represented by real C++
+range traversal. Five protected stock-effect `OnApply` overrides are reached by pass application,
+with the base hook contract directly proven by the custom-effect workflow. Finalizers map to native
+lifetime, `ModelMesh::Tag` duplicates the arbitrary payload behavior already established on Model
+and ModelMeshPart, and the explicit interface spellings alias demonstrated stock APIs.
+
+DeviceLost, Lost/NotReset and the two exception payloads remain backend-specific. SOFTWARE and
+OPENGLES3 provide no public deterministic loss trigger. Source review confirms that DirectX9 and
+WebGPU do implement renderer loss callbacks, DirectX9 throws `DeviceLostException`, and CNA has no
+production `DeviceNotResetException` throw site. It also exposes CNA-DEMOS-ISSUE-153: the public
+DeviceLost comment incorrectly says the event is never raised on desktop despite those implemented
+paths. No synthetic demo or metadata credit is added.
+
+All186 SOFTWARE Graphics CTests pass in136.81s, including26 declared capability skips. The
+warning-free incremental build uses `-j3`; metadata remains717/0 and catalog/validator/comparator
+self-tests pass. Coverage stays308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C
+routes. Evidence:`/tmp/checkpoint-1114-graphics-public-headers/*`. No DirectX9/WebGPU runtime,
+physical device loss, screenshot or manual visual claim is made. Continue with the public Media
+XNA header surface and its14 residual collection-enumerator members/one field, adding behavior only
+for a genuine caller-visible gap.

@@ -7344,3 +7344,39 @@ described above. No new ID or metadata credit is warranted. All73 SOFTWARE Conte
 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1113-content-public-headers/*`. No external proprietary compiler, GPU visual,
 media-quality, screenshot or manual result is claimed.
+
+### Focused1114 Graphics public-header audit
+
+The installed public Graphics surface comprises133 XNA-namespace headers and18 CNA-namespace
+headers: five renderer-selection values in core, `GraphicsCapability` and
+`VertexTypeRegistryEXT` in graphics, and11 graphics-extension headers. The186 stable Graphics
+workflows cover adapter/device/display lifecycle, resources and buffers, state, textures and render
+targets, SpriteBatch/font, stock/custom/PBR effects, shaders, queries, models, glTF, animation,
+skinning and packed vectors. Focused1102,1103 and1107 already disposition the CNA extension,
+renderer-selection and capability headers. The parallel C audits remain complete where applicable,
+including `effects.h`290/290, `graphics_ext.h`42/42, `models.h`216/216,
+`render_target.h`12/12 and `graphics_state.h`14/14; partially credited C headers retain their
+prior route-level dispositions rather than receiving blanket credit from this audit.
+
+The generated XNA remainder is exactly six types,54 non-field members and two enum values:
+
+| Residual family | Coverage decision |
+|---|---|
+| Four nested Model collection `Enumerator` types and collection `GetEnumerator` spellings | These are CLR iterator shapes. Loaded-model workflows already traverse real bones, meshes, mesh parts and effects through their public C++ ranges, including ownership and mutation behavior. |
+| DisplayMode/effect collection enumerator aliases | Public workflows already enumerate real display modes, effect parameters, techniques and passes. The generated generic/non-generic CLR names have no separate C++ behavior. |
+| Five stock-effect `OnApply` hooks | Real pass application reaches each stock effect's override. `graphics.effect.custom_apply_lifecycle` separately derives from `Effect` and proves the protected virtual hook contract directly. |
+| GraphicsDevice/GraphicsResource finalizers | Explicit Dispose, destruction, event and cross-resource lifetime workflows establish the native C++ lifetime contract. |
+| `ModelMesh::Tag` | This is another arbitrary caller payload carrier. Model and ModelMeshPart Tag workflows already demonstrate storage, retrieval, dynamic type and imported ownership; repeating the same value slot on a mesh would add no Graphics behavior. |
+| Explicit `IEffectLights`/`IVertexType` aliases | Stock effect lighting and all four stock vertex declarations are exercised through their ordinary public C++ surface. The CLR-mangled interface names expose no additional entry point. |
+| DeviceLost, Lost/NotReset and device-loss exceptions | SOFTWARE and OPENGLES3 expose no public deterministic loss trigger. Pinned CNA's DirectX9 and WebGPU renderers do implement loss callbacks and internal renderer test seams; DirectX9 uses `DeviceLostException`, while `DeviceNotResetException` has no production throw site. These remain platform/backend-specific instead of being simulated by constructing payloads. |
+
+The source review also finds CNA-DEMOS-ISSUE-153: the public `DeviceLost` comment says the event is
+never raised on desktop, contradicting the implemented DirectX9/WebGPU callback paths and CNA's own
+renderer examples. This is a documentation defect, not a failure of the current SOFTWARE tests.
+
+All186 SOFTWARE Graphics CTests pass in136.81s with26 declared capability skips and no failures.
+The warning-free incremental build remains limited to `-j3`; metadata is717/0 and the catalog plus
+validator/comparator self-tests pass. Coverage remains308/329 XNA types,2128/2326 members,
+674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1114-graphics-public-headers/*`. No DirectX9/WebGPU execution, physical device
+loss, compiled-shader capability behind a skip, screenshot or manual visual result is claimed.

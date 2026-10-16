@@ -73,8 +73,9 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services20, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are205 console,297 game and215
 standalone; 683 are automated,31 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md merges Focused1112 metadata into Complete1099's full reports
-and includes all717 catalog IDs in both renderer columns. It incorporates every
+Coverage: generated docs/COVERAGE.md merges Focused1112 metadata into Complete1099's full reports;
+the semantic public-header audit is current through Focused1114 and includes all717 catalog IDs in
+both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
 Curve and Matrix audits in Focused1063-1074 and the root Framework audits in Focused1076-1078,
@@ -12380,3 +12381,34 @@ Commit and push this documentation-only audit. Next consolidate the public XNA G
 starting from its six uncredited types and54 residual members and reusing the completed capability,
 resource, effect, model, texture and renderer-specific audits. Keep every compile at three jobs or
 fewer.
+
+## Focused1114-Graphics-public-header-audit
+
+All133 public XNA Graphics headers and18 public CNA Graphics-related headers are now dispositioned.
+The186 existing Graphics workflows cover the coherent adapter/device/display, resource/buffer,
+state, texture/render-target, sprite/font, effect/shader/query, model/glTF/animation/skinning and
+packed-vector surface. Focused1102,1103 and1107 already cover CNA graphics extensions, renderer
+selection and capability contracts; the route-level C audits retain their exact prior status.
+
+The generated remainder is six types,54 non-field members and two fields. Four nested Model
+enumerators plus display/effect/model collection `GetEnumerator` spellings are CLR aliases of real
+C++ ranges already traversed. Five stock-effect `OnApply` hooks are reached by real pass application
+and the base hook is directly proven by the custom effect. Finalizers map to demonstrated native
+lifetime; `ModelMesh::Tag` repeats arbitrary payload behavior already established on Model and
+ModelMeshPart; explicit interface spellings alias the demonstrated stock-lighting/vertex APIs.
+
+DeviceLost, GraphicsDeviceStatus Lost/NotReset and the device-loss exceptions stay backend-specific.
+SOFTWARE and OPENGLES3 expose no public deterministic trigger. Pinned CNA's DirectX9 and WebGPU
+renderers do have loss callbacks/test seams and DirectX9 production throws DeviceLostException;
+DeviceNotResetException has no production throw site. Source review records CNA-DEMOS-ISSUE-153:
+the public DeviceLost comment says desktop never raises it, contradicting those implemented paths.
+
+All186 SOFTWARE Graphics CTests pass in136.81s with26 declared capability skips and no failures.
+The warning-free incremental build uses `-j3`; metadata is717/0 and catalog/validator/comparator
+self-tests pass. Coverage remains308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C
+routes. Evidence:`/tmp/checkpoint-1114-graphics-public-headers/*`. No DirectX9/WebGPU runtime,
+physical loss, screenshot or manual visual claim is made.
+
+Commit and push this batch. Next audit the public Media XNA headers and its14 residual collection
+enumerator members/one residual field, reusing the17 stable media workflows and adding behavior only
+for a real caller-visible gap. Keep every compile at three jobs or fewer.

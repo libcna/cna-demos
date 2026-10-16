@@ -15,6 +15,30 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-153 -- GraphicsDevice DeviceLost comment contradicts implemented desktop backends
+
+- **Area/API:** public `GraphicsDevice::DeviceLost` event documentation in
+  `modules/graphics/include/Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp`.
+- **Observed contract conflict:** the public comment says the event is "never raised on desktop".
+  `GraphicsDevice::createRenderer` nevertheless converts a renderer `Lost` callback into
+  `GraphicsDeviceStatus::Lost` and raises this exact event. Both DirectX9 and WebGPU call that
+  callback from their implemented loss paths; their renderer examples also exercise the
+  deterministic `DebugSimulateContextLoss` seam. DirectX9 additionally throws
+  `DeviceLostException` while the device remains lost.
+- **Current cna-demos boundary:** the pinned `linux-full` build contains SOFTWARE and OPENGLES3,
+  which provide no public deterministic loss trigger. `graphics.device.owned_lifecycle` therefore
+  truthfully observes zero DeviceLost events and Normal status through caller-initiated resets.
+  This audit adds no synthetic event, exception or metadata credit and makes no DirectX9/WebGPU
+  runtime claim.
+- **Expected:** describe DeviceLost as renderer/platform dependent and identify the backends that
+  can report it, instead of promising that desktop never raises it. Nearby implementation comments
+  that still say every renderer except DirectX9 leaves the status Normal should also account for
+  WebGPU's callback path.
+- **Evidence/status:** source-confirmed documentation defect at pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; evidence is under
+  `/tmp/checkpoint-1114-graphics-public-headers/*`. Open; no CNA source was modified, no runtime
+  knownIssue marker is needed and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-152 -- StorageContainer ignores the requested FileShare policy
 
 - **Area/API:** `StorageContainer::OpenFile(file, mode, access, fileShare)` in
