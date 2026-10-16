@@ -15,6 +15,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-136 -- MathHelper Min and Max lose a NaN first operand
+
+- **Area/API:** `Microsoft::Xna::Framework::MathHelper::Min` and `MathHelper::Max`.
+- **Demo/reproduction:** run `math.math_helper.scalar_functions`. Call each helper with NaN as the
+  first and second operand beside ordinary values and both signed-zero orders.
+- **Observed:** CNA returns the numeric second operand when the first operand is NaN; both
+  `Min(NaN, 7)` and `Max(NaN, 7)` return7. A NaN second operand propagates normally. The grouped
+  assertion is the sole expected failure among nine controls.
+- **Expected/reference:** genuine Windows XNA 4.0 returns NaN for all four operand orders. Its
+  ordinary and signed-zero results match CNA, including selection of the second operand for equal
+  positive/negative zeros.
+- **Cause/suggested repair:** CNA implements both helpers as a single comparison and ternary. A
+  comparison with a NaN first operand is false, so it selects the numeric second operand. Detect a
+  NaN in either operand before the ordered comparison and propagate it as XNA does.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1072-math-helper-members/*`. The clean
+  warning-free three-job build, all three exact SOFTWARE CTests, metadata708/0 and self-tests5/5
+  plus4/4 pass; ten runs per demo and renderer label reproduce only the documented grouped
+  assertion with empty stderr. No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-135 -- BoundingFrustum identity text preserves derived negative zeros
 
 - **Area/API:** `Microsoft::Xna::Framework::BoundingFrustum::ToString` and the six planes derived

@@ -129,6 +129,19 @@ rows record focused follow-ups against the then-current checkout. Consult HANDOF
 checkpoint's evidence for the actually tested artifacts, rather than treating this whole audit
 as one atomic API snapshot. Planned work is not counted as completed or runtime-validated.
 
+### MathHelper
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Constants, ToRadians and ToDegrees | Focused1072 grows `math.math_helper.angles` to six controls. E, Log10E, Log2E, Pi, PiOver2, PiOver4 and TwoPi match XNA's exact float bits. Degree/radian conversion covers ordinary and tiny values plus negative-zero sign preservation. CNA matches genuine XNA. |
+| WrapAngle | The same workflow checks positive and negative zero, both interval endpoints, the adjacent float outside each endpoint, positive/negative three-Pi, the largest finite float, infinity and NaN. It establishes `(-Pi, Pi]`, XNA's rounding after whole turns and nonfinite propagation without relying only on approximate degrees. CNA matches throughout. |
+| Clamp, Min and Max | `math.math_helper.scalar_functions` covers ordinary and reversed float Clamp, NaN values/bounds, signed zero, plus CNA's public integer overload. Min/Max select XNA's second operand on signed-zero ties. CNA loses a NaN first operand by selecting the numeric second operand while XNA propagates either NaN, recorded as ISSUE-136. |
+| Distance and Lerp | Ordinary Distance, same-sign infinities and overflowing opposite extrema distinguish finite, NaN and infinity results. Lerp covers extrapolation, wide finite cancellation, NaN and positive-infinite amounts. CNA matches genuine XNA. |
+| SmoothStep, CatmullRom, Hermite and Barycentric | `math.math_helper.curves` grows to six controls. It covers ordinary easing, finite clamping, exact/middle endpoints, extrapolation and NaN. Hermite additionally checks the epsilon-adjacent float immediately below and above one and the half-epsilon near zero. CNA matches XNA's exact results. |
+| CNA-exposed internal helpers | MachineEpsilonFloat, WithinEpsilon, integer Clamp and ClosestMSAAPower are public only because C++ lacks XNA's assembly-internal visibility. The scalar workflow observes the strict half-machine-epsilon threshold, NaN rejection, ordered integer clamping and power-of-two MSAA flooring over zero through17. These are meaningful CNA extension checks and intentionally receive no XNA inventory credit. Evidence:`/tmp/checkpoint-1072-math-helper-members/*`. |
+
+The meaningful MathHelper public-member/behavior audit is complete at pinned d23.
+
 ### Quaternion
 
 | Members / behavior | Decision and evidence |
@@ -6401,3 +6414,29 @@ result predates these assertions. Genuine-XNA stdout SHA-256 is
 display-cookie warning. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`. No renderer or
 visual claim was made. The meaningful BoundingFrustum audit is complete; continue with the next
 unaudited deterministic math value family selected from the public-member inventory.
+
+### Focused1072 MathHelper members and boundaries
+
+All three existing MathHelper console demos deepen without new IDs. `angles` grows from four to
+six controls, `scalar_functions` from seven to nine and `curves` from five to six. Together they
+cover every XNA public constant and method through exact constants and conversions, WrapAngle
+boundaries, Clamp/Min/Max signed-zero and NaN behavior, Distance/Lerp ranges and all scalar curve
+endpoints, extrapolation and nonfinite behavior. The four CNA-public XNA-internal helpers also have
+direct semantic controls.
+
+Genuine Windows XNA 4.0 matches CNA for20 of21 controls. CNA's ternary Min/Max implementation loses
+a NaN first operand and returns the numeric second operand; XNA propagates NaN from either operand,
+recorded as ISSUE-136. Reversed Clamp, signed-zero tie choice, large-angle modulo, exact Hermite
+epsilon boundaries and every other measured path match.
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. Stdout SHA-256 values are
+`0729e8d2f9533a798cc6ee11e72f1b0f55c8397b46868221fe5e83ed43763407` for angles,
+`c8b7a3bbe40c715a2024728d3d0ad4b837e850c436df2f8fee915ce5772a8dd1` for scalar functions and
+`daa97e62bda6d79dbd395adfbc5ad034933cb3fa7c7ef72c3b265f58c70539dc` for curves. The clean `-j3`
+build, metadata708/0, all three exact SOFTWARE CTests and self-tests5/5 plus4/4 pass. Coverage
+remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; Complete1056's three
+affected results predate these assertions. Genuine-XNA stdout SHA-256 is
+`e4e653af0e63b74d1223b4a681c5e4b4013f7e84ef01cd5251d5d081cf52ec98`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1072-math-helper-members/*`. No renderer or
+visual claim was made. The meaningful MathHelper audit is complete; audit the remaining Curve
+family public members and boundaries next.

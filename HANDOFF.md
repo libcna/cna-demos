@@ -81,9 +81,9 @@ baseline catalog IDs in both renderer suites. The six new `math.vector4.*` IDs a
 `math.bounding_frustum.intersections` are explicitly absent until the next complete checkpoint. The
 baseline results for `math.point.basics`, all four `math.rectangle.*`, all four
 `math.bounding_box.*`, the three older `math.bounding_sphere.*` IDs, `math.ray.intersects`, the
-two older `math.plane.*` IDs, four console `math.color.*` IDs and
-`math.bounding_frustum.culling` predate Focused1063-1071's deeper member assertions and ISSUE-124
-through ISSUE-135 where applicable.
+two older `math.plane.*` IDs, four console `math.color.*` IDs, `math.bounding_frustum.culling` and
+all three `math.math_helper.*` IDs predate Focused1063-1072's deeper member assertions and
+ISSUE-124 through ISSUE-136 where applicable.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -11165,3 +11165,30 @@ its stderr is only the host display-cookie warning. Evidence:
 meaningful BoundingFrustum audit is complete. Select the next unaudited deterministic math value
 family from the public-member inventory, prefer deepening existing demos, and run the next full
 checkpoint after enough focused change.
+
+## Focused1072-MathHelper-members-and-boundaries
+
+All three existing MathHelper console demos deepen without new IDs. `angles` grows4->6 controls,
+`scalar_functions`7->9 and `curves`5->6. Together they cover every XNA public constant and method
+through exact constant bits and conversions, WrapAngle boundaries, Clamp/Min/Max signed-zero and
+NaN behavior, Distance/Lerp ranges and every scalar curve's endpoints, extrapolation and nonfinite
+behavior. MachineEpsilonFloat, WithinEpsilon, integer Clamp and ClosestMSAAPower are XNA-internal
+but CNA-public and now have direct semantic controls too.
+
+Genuine Windows XNA 4.0 matches CNA for20 of21 controls. CNA's ternary Min/Max implementation loses
+a NaN first operand and returns the numeric second operand; XNA propagates NaN from either operand,
+recorded as ISSUE-136. Reversed Clamp, signed-zero tie choice, largest-finite WrapAngle, exact
+Hermite epsilon boundaries and every other measured path match.
+
+The clean incremental `-j3` build is warning-free. Metadata is708/0, all three exact SOFTWARE
+CTests and validator/comparator self-tests5/5 plus4/4 pass. Ten runs per demo and renderer label
+are byte-stable with empty stderr. Stdout SHA-256 values are
+`0729e8d2f9533a798cc6ee11e72f1b0f55c8397b46868221fe5e83ed43763407` for angles,
+`c8b7a3bbe40c715a2024728d3d0ad4b837e850c436df2f8fee915ce5772a8dd1` for scalar functions and
+`daa97e62bda6d79dbd395adfbc5ad034933cb3fa7c7ef72c3b265f58c70539dc` for curves. Coverage remains
+307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; Complete1056's three affected
+results predate these assertions. Genuine-XNA stdout SHA-256 is
+`e4e653af0e63b74d1223b4a681c5e4b4013f7e84ef01cd5251d5d081cf52ec98`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1072-math-helper-members/*`. No renderer or visual
+claim was made. The meaningful MathHelper audit is complete. Audit the remaining Curve family
+public members and boundary behavior next, deepening its existing five workflows where practical.

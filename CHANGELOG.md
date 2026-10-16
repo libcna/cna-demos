@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed MathHelper public-member/behavior coverage and recorded ISSUE-136 for Min/Max losing
+  a NaN first operand instead of propagating it as genuine XNA does.
 - Completed BoundingFrustum public-member/behavior coverage, extended ISSUE-131 through both ray
   call directions and recorded ISSUE-133 through ISSUE-135 for containment, exception and text
   differences from genuine XNA.

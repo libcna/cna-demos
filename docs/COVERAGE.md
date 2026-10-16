@@ -1586,6 +1586,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `LeaderboardEntry::RankingEXT` -- gamer_services.leaderboard.paging
 - `LooseFileContentTypeReader::GetExtensions` -- content.content_manager.asset_precedence, content.custom.loose_file_reader
 - `LooseFileContentTypeReader::Read` -- content.content_manager.asset_precedence, content.custom.loose_file_reader
+- `MathHelper::ClosestMSAAPower` -- math.math_helper.scalar_functions
+- `MathHelper::MachineEpsilonFloat` -- math.math_helper.scalar_functions
+- `MathHelper::WithinEpsilon` -- math.math_helper.scalar_functions
 - `MediaQueue::Add` -- media.media_player.queue_and_repeat
 - `MediaQueue::Clear` -- media.media_player.queue_and_repeat
 - `MediaQueue::MediaQueue` -- media.media_player.queue_and_repeat

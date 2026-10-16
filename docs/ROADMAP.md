@@ -11782,3 +11782,18 @@ Coverage totals remain unchanged and Complete1056 marks the three new IDs absent
 result predates the new assertions. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`.
 The meaningful BoundingFrustum audit is complete; continue with the next unaudited deterministic
 math value family selected from the public-member inventory.
+
+## Focused1072 MathHelper members and boundaries
+
+All three existing MathHelper demos deepen without adding IDs: angles grows4->6 controls, scalar
+functions7->9 and curves5->6. Genuine XNA anchors exact constant bits and angle conversions,
+WrapAngle endpoint/large/nonfinite behavior, Clamp/Min/Max signed-zero and NaN rules, Distance and
+Lerp ranges, and every scalar curve across endpoints, extrapolation and NaN. CNA's public internal
+helpers also receive direct semantic checks. CNA matches20 of21 controls; new ISSUE-136 records
+Min/Max returning the numeric second operand instead of propagating a NaN first operand.
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. The warning-free `-j3`
+build, metadata708/0, all three exact CTests and both self-test suites pass. Coverage totals remain
+unchanged; Complete1056's three affected results predate these assertions. Evidence:
+`/tmp/checkpoint-1072-math-helper-members/*`. The meaningful MathHelper audit is complete; audit
+the remaining Curve family public members and boundaries next.
