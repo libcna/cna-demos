@@ -10579,3 +10579,20 @@ remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; reg
 Complete1045 inputs is byte-identical. Evidence:`/tmp/checkpoint-1046-vector2-magnitude-range/*`.
 No renderer or visual claim was made. Continue Vector2 with signed-zero equality/hash consistency,
 then interpolation and transform/array boundaries.
+
+## Focused1047-Vector2-signed-zero-hash
+
+`math.vector2.toolbox_2d` grows from twelve to fourteen controls without a new ID. Genuine Windows
+XNA 4.0 establishes that UnitX with a negative-zero Y and Zero with a negative-zero X compare equal
+through typed, boxed and both operator forms and retain equal hashes. CNA agrees on every equality
+form but hashes raw zero sign bits, extending ISSUE-120 from Quaternion to Vector2. The ordinary
+hash/equality pair remains as a positive control; exactly the new signed-zero hash assertion fails.
+
+The clean three-job build, metadata694/0, exact known-issue SOFTWARE CTest and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs retain exactly one expected failure among14
+controls, with byte-identical stdout SHA-256
+`e30724d862cadd59f977f583f201486c878647cdf50ebb428d9f151deff77bb2` and empty stderr. Coverage
+remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; regenerating it against
+Complete1045 inputs is byte-identical. Evidence:`/tmp/checkpoint-1047-vector2-signed-zero-hash/*`.
+No renderer or visual claim was made. Continue Vector2 interpolation/extrapolation and then
+matrix/quaternion transform-array boundaries.

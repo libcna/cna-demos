@@ -85,6 +85,17 @@ namespace
         ctx.Check(player == samePlayer && player != movedPlayer &&
                       player.GetHashCode() == samePlayer.GetHashCode(),
                   "Vector2 equality operators and hashes follow both components");
+
+        const Vector2 signedZeroUnitX(1.0f, -0.0f);
+        const Vector2 signedZeroOrigin(-0.0f, 0.0f);
+        ctx.Check(Vector2::UnitX.Equals(signedZeroUnitX) &&
+                      Vector2::UnitX.Equals(std::any{signedZeroUnitX}) &&
+                      Vector2::UnitX == signedZeroUnitX && !(Vector2::UnitX != signedZeroUnitX) &&
+                      Vector2::Zero.Equals(signedZeroOrigin) && Vector2::Zero == signedZeroOrigin,
+                  "positive and negative zero compare equal through every Vector2 equality form");
+        ctx.Check(Vector2::UnitX.GetHashCode() == signedZeroUnitX.GetHashCode() &&
+                      Vector2::Zero.GetHashCode() == signedZeroOrigin.GetHashCode(),
+                  "XNA gives equal signed-zero Vector2 values equal hash codes");
     }
 }
 
@@ -101,4 +112,6 @@ CNA_DEMOS_CONSOLE(Toolbox2D, {
              "Vector2::op_Addition", "Vector2::op_Division", "Vector2::op_Equality", "Vector2::op_Inequality",
              "Vector2::op_Multiply", "Vector2::op_Subtraction", "Vector2::op_UnaryNegation"},
     .tags = {"vector", "2d", "math", "gameplay"},
+    .restrictions = "CNA-DEMOS-ISSUE-120 records unequal hashes for equal signed-zero Vector2 values.",
+    .knownIssue = "CNA-DEMOS-ISSUE-120",
 })

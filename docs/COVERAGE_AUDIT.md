@@ -150,7 +150,7 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 |---|---|
 | Constructors, constants and components | `length` covers the zero default, two-component and replicated-scalar constructors plus Zero, One, UnitX and UnitY with direct X/Y observation. |
 | Length, LengthSquared, Distance, DistanceSquared and Normalize | Focused1046 extends `length` from5 to18 controls. Ordinary and zero member/static/output normalization matches XNA. Genuine Windows XNA keeps `1e20` and `1e-30` Length/Distance values finite and normalizes both to UnitX even when the squared result is infinity or zero. CNA's direct float squared sums lose all six observable results, extending ISSUE-118. Evidence:`/tmp/checkpoint-1046-vector2-magnitude-range/*`. |
-| Arithmetic, Reflect, Clamp and equality/hash | `toolbox_2d` demonstrates named/operator component arithmetic, an ordinary unit-normal reflection, component bounds and typed/boxed/operator equality with equal ordinary hashes. Output arithmetic forwards are component assignments and do not independently justify checks. Signed-zero hash consistency remains the next value-identity boundary. |
+| Arithmetic, Reflect, Clamp and equality/hash | `toolbox_2d` demonstrates named/operator component arithmetic, an ordinary unit-normal reflection, component bounds and typed/boxed/operator equality with equal ordinary hashes. Focused1047 proves signed-zero values compare equal in every form but CNA's raw-bit hash differs from XNA under ISSUE-120. Output arithmetic forwards are component assignments and do not independently justify checks. Evidence:`/tmp/checkpoint-1047-vector2-signed-zero-hash/*`. |
 | Lerp, SmoothStep, Barycentric, CatmullRom and Hermite | `toolbox_2d` shows ordinary in-range gameplay uses, including spline endpoints. Amounts outside `[0,1]`, SmoothStep clamping and NaN propagation remain to be dispositioned against XNA. |
 | Matrix/quaternion Transform, TransformNormal and arrays | `transform` distinguishes translated points from normals for one matrix value. Quaternion rotation, output forms, bounded arrays, overlap and refusal semantics remain to be audited; do not infer them from the C ABI Vector2 workflow. |
 
@@ -5837,3 +5837,14 @@ stdout and empty stderr. The warning-free `-j3` build, metadata694/0, exact know
 self-tests5/5 plus4/4 pass. Generated coverage remains307/329 types,2128/2326 members,674/753
 fields and3079/3205 C routes and is byte-identical against the Complete1045 inputs. Evidence:
 `/tmp/checkpoint-1046-vector2-magnitude-range/*`. No renderer or visual claim was made.
+
+### Focused1047 Vector2 signed-zero hash
+
+The existing `math.vector2.toolbox_2d` grows from twelve to fourteen controls. Genuine Windows XNA
+4.0 makes UnitX/negative-zero-Y and Zero/negative-zero-X pairs equal through typed, boxed and
+operator forms and gives each pair equal hashes. CNA preserves every equality result but hashes the
+raw zero sign, extending ISSUE-120 from Quaternion to Vector2. Ten runs per renderer label retain
+only this one expected failure with byte-identical stdout and empty stderr. The warning-free `-j3`
+build, metadata694/0, exact known-issue CTest and self-tests5/5 plus4/4 pass. Generated coverage is
+unchanged and byte-identical against Complete1045 inputs. Evidence:
+`/tmp/checkpoint-1047-vector2-signed-zero-hash/*`. No renderer or visual claim was made.

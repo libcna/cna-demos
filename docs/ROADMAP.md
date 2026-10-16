@@ -11456,3 +11456,14 @@ clean `-j3` build, metadata694/0, exact known-issue CTest and both self-test sui
 totals remain unchanged and the Complete1045-backed generated report is byte-identical. Evidence:
 `/tmp/checkpoint-1046-vector2-magnitude-range/*`. Audit Vector2 signed-zero identity next, followed
 by interpolation and transform/array boundaries.
+
+## Focused1047 Vector2 signed-zero hash
+
+`math.vector2.toolbox_2d` grows12->14 controls. Genuine Windows XNA 4.0 keeps equal hashes for
+UnitX/negative-zero-Y and Zero/negative-zero-X pairs after all typed, boxed and operator equality
+forms accept them. CNA preserves equality but hashes the raw sign bit, extending ISSUE-120 from
+Quaternion to Vector2. Ten runs per renderer label retain only this one expected failure with
+byte-identical stdout and empty stderr; the clean `-j3` build, metadata694/0, exact known-issue
+CTest and both self-test suites pass. Coverage totals remain unchanged and the Complete1045-backed
+report is byte-identical. Evidence:`/tmp/checkpoint-1047-vector2-signed-zero-hash/*`. Continue with
+Vector2 interpolation/extrapolation and transform-array boundaries.
