@@ -11322,3 +11322,14 @@ controls established against genuine Windows XNA 4.0. CNA matches all eleven exa
 axis and translation results. The warning-free `-j3` build, metadata693/0, exact CTest, ten runs per
 renderer label and both self-test suites pass with stable stdout and empty stderr. Coverage remains
 unchanged. Evidence:`/tmp/checkpoint-1033-matrix-create-world-boundaries/*`.
+
+## Complete1034 693-demo behavior checkpoint
+
+The complete `-j3` validation at source `96a2f84` and pinned CNA `d23e139de` passes metadata693/0,
+all706 enabled CTests and both full renderer suites. SOFTWARE is583/59/48/3 and OPENGLES3 is
+622/61/7/3, with all693 unique IDs and no unexpected result. Complete1022 comparison contains only
+the eleven Focused1023-1033 check-count increases, three reviewed pass-to-expected-failure changes
+for ISSUE-115/116/117 and their five exact new assertions. Twenty isolated `game.window.title`
+runs confirm its known10/11-check timing variance. Normalized stderr is unchanged; self-tests pass
+5/5 plus4/4. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`build/linux-full/reports/checkpoint-1034-complete-*`.

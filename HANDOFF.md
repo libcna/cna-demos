@@ -10346,3 +10346,25 @@ pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass11/11 with byte-identical
 totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1033-matrix-create-world-boundaries/*`. No rendering or visual claim was made and
 no CNA issue was found. Continue with the next deterministic behavior gap outside world matrices.
+
+## Complete1034-693-demo-behavior-checkpoint
+
+The full documented validation at cna-demos `96a2f84` and pinned CNA `d23e139de` uses at most three
+jobs. Its build is warning-free, metadata is693/0 and all706 enabled CTests pass in307.60s; three
+manual tests remain disabled. SOFTWARE reports583 pass/59 expected fail/48 skip/3 manual and
+OPENGLES3/Xvfb reports622/61/7/3. Both contain all693 unique catalog IDs with no unexpected result.
+
+Complete1022 comparison isolates Focused1023-1033. The eleven edited demos have only their reviewed
+check-count increases. `math.matrix.decompose`, `.invert` and `.perspective` move pass->expected
+failure under ISSUE-115/116/117 and add exactly five documented failed assertions per renderer;
+every older failed assertion/status remains. OPENGLES3 `game.window.title` executes10 rather than11
+checks in this full run; twenty isolated reruns all pass and yield ten checks19 times and eleven
+once, confirming the known fixed-timestep variance. Normalized stderr is byte-identical to
+Complete1022. Validator/comparator self-tests pass5/5 and4/4.
+
+Generated totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence is `build/linux-full/reports/checkpoint-1034-complete-*`; SOFTWARE and OPENGLES3 result
+SHA-256 values are `d8112479f735d9200de7fda1b4867e7c8362b92534b7094ec4589c303d88a5ed` and
+`abf15ddb02909f182aaf937cc089a9b4d11caf776fdbdd1962535ff006b19b3a`. No screenshot, listening
+test, physical input, external service session or manual visual inspection was performed. Resume
+the deterministic behavior audit outside the absorbed Focused1023-1033 slices.

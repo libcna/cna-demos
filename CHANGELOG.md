@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete 693-demo behavior baseline after Focused1023-1033: all 706 enabled CTests
+  and both renderer smoke suites pass with only the reviewed ISSUE-115/116/117 status changes.
 - Extended Matrix world construction through nonunit, zero and parallel directions, exact XNA
   NaN-axis behavior and value/output overload parity.
 - Extended Matrix look-at coverage through the output overload and exact XNA NaN/finite behavior

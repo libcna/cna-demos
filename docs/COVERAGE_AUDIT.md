@@ -5695,3 +5695,14 @@ become NaN while position and affine constants remain valid; CNA matches all ele
 runs per renderer label are byte-stable with empty stderr; build, metadata, exact CTest and both
 self-test suites pass. Coverage totals are unchanged. Evidence:
 `/tmp/checkpoint-1033-matrix-create-world-boundaries/*`.
+
+### Complete1034 behavior checkpoint
+
+Full validation at source `96a2f84` and pinned CNA `d23e139de` passes metadata693/0, all706 enabled
+CTests and both693-ID renderer suites. SOFTWARE reports583/59/48/3 and OPENGLES3 622/61/7/3 with
+no unexpected result. Against Complete1022, the eleven edited workflows have only intended count
+growth; ISSUE-115/116/117 account for exactly three status changes and five new failed assertions
+per renderer. The remaining GL10/11 title-check difference is reproduced across twenty isolated
+passing runs. Normalized stderr matches and tool self-tests pass. Coverage remains307/329 types,
+2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-1034-complete-*`.
