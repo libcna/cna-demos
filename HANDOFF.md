@@ -3527,8 +3527,9 @@ that strengthens an existing coherent demo. Focused1015 closes the explicit Skin
 clone/raw-texture/disposal ownership gap, Focused1016 closes SpriteFont's caller-atlas disposal
 boundary, Focused1017 closes the nonterminal SoundEffect release audit while recording ISSUE-114,
 Focused1018 closes both live dynamic-audio format-switch refusals, and Focused1019 closes the
-explicit SkinnedEffect vertex/material/texture-alpha interaction gap. Choose the next gap outside
-those completed slices. Revisit the126 intentionally
+explicit SkinnedEffect vertex/material/texture-alpha interaction gap. Focused1020 closes the
+Texture2D PNG/JPEG transparent-RGB normalization gap. Choose the next gap outside those completed
+slices. Revisit the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
@@ -10109,3 +10110,20 @@ Evidence:`/tmp/checkpoint-1019-skinned-alpha/*`; source SHA-256
 `02789565df2131e7b58d148debb2f0d50ecb53c7093047e3821ad940e7460766`. Pixel validation was
 programmatic; no screenshot or manual visual inspection was performed, and no CNA issue was found.
 Continue with the next deterministic behavior gap outside the completed SkinnedEffect alpha slice.
+
+## Focused1020-Texture2D-save-transparent-RGB
+
+`graphics.texture2d.save_as_image` now closes the explicit image-export alpha-normalization gap. A
+64x32 source splits the same magenta RGB between alpha0 and alpha128. The PNG round trip converts
+every fully transparent texel to exact transparent black while preserving every partial-alpha
+magenta texel. JPEG drops alpha but retains the distinction as opaque black and magenta center
+samples, far from the compression boundary. The original full-size/resized exports stay intact.
+
+The warning-free `-j3` build, metadata693/0, exact SOFTWARE CTest and validator/comparator self-
+tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass10/10 with byte-identical
+stdout SHA-256 `0daa1217e538c59a72ab6bc76c2fc77905554c0b579da43f344cf48c19a2f829` and empty stderr.
+Generated totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`/tmp/checkpoint-1020-save-alpha/*`; source SHA-256
+`786a6ee69b5f05422eab8aae641bc2d50750e1cb075e362c6234ba8077a6857f`. Validation used decoded
+public texture pixels; no screenshot or manual visual inspection was performed, and no CNA issue
+was found. Continue with the next deterministic behavior gap outside image-export normalization.

@@ -87,7 +87,7 @@ Console demos with checks; each shows one operation family.
   a licensed, reproducible font fixture.
 - ✅ (10 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg` (including requested output
-  dimensions and unchanged source), `LevelCount`. Remaining:
+  dimensions, transparent-RGB normalization and unchanged source), `LevelCount`. Remaining:
   float/HDR formats and broader direct compressed-block updates.
   ✅ `graphics.texture2d.dds_stream`: packed offset/short reads, original DXT1 mip-chain block
   readback, fit/crop Color conversions, malformed-chain refusal and actual pixels (14 checks).
@@ -11147,3 +11147,18 @@ tests pass5/5 and4/4. Counts remain307/329 XNA types,2128/2326 members,674/753 f
 C routes. Evidence:`/tmp/checkpoint-1019-skinned-alpha/*`. Pixel validation was programmatic; no
 screenshot or manual visual inspection was performed, and no CNA issue was found. Continue the
 deterministic behavior audit outside this completed alpha interaction.
+
+## Focused1020-Texture2D-save-transparent-RGB
+
+The existing image-export demo grows from eight to ten controls. A generated 64x32 texture carries
+magenta RGB in both halves, with alpha0 on the left and alpha128 on the right. PNG decoding proves
+that XNA-compatible export clears hidden RGB only for exactly transparent texels and preserves the
+partial-alpha colour. JPEG's opaque decoded center samples independently show black versus magenta
+after alpha is discarded. The wide solid halves keep both samples away from lossy block boundaries.
+
+The warning-free three-job build, metadata693/0 and exact SOFTWARE CTest pass. Ten SOFTWARE and ten
+OPENGLES3/Xvfb runs pass10/10 with byte-identical stdout and empty stderr; validator/comparator
+self-tests pass5/5 and4/4. Counts remain307/329 XNA types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`/tmp/checkpoint-1020-save-alpha/*`. Validation used public decoded
+pixels; no screenshot or manual visual inspection was performed, and no CNA issue was found.
+Continue the deterministic behavior audit outside this completed export-normalization slice.

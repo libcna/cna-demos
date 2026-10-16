@@ -91,6 +91,36 @@ namespace
                             "the JPEG stream encodes the requested 64x32 output dimensions");
             Context().Check(source_.getWidthProperty() == width && source_.getHeightProperty() == height &&
                             Pixels(source_) == original, "resized exports leave the source texture unchanged");
+
+            // XNA canonicalizes RGB only when alpha is exactly zero. Keep the two halves far wider
+            // than a JPEG block so its lossy colour boundary cannot affect the center samples.
+            Texture2D alphaSource(device, 64, 32);
+            std::vector<Color> alphaPixels(64 * 32);
+            for (int y = 0; y < 32; ++y)
+                for (int x = 0; x < 64; ++x)
+                    alphaPixels[static_cast<std::size_t>(y * 64 + x)] =
+                        x < 32 ? Color(255, 0, 255, 0) : Color(255, 0, 255, 128);
+            alphaSource.SetData(alphaPixels.data(), static_cast<int>(alphaPixels.size()));
+            System::IO::MemoryStream alphaPng, alphaJpeg;
+            alphaSource.SaveAsPng(&alphaPng, 64, 32);
+            alphaSource.SaveAsJpeg(&alphaJpeg, 64, 32);
+            alphaPng.setPositionProperty(0);
+            alphaJpeg.setPositionProperty(0);
+            const std::vector<Color> pngAlphaPixels = Pixels(Texture2D::FromStream(device, alphaPng));
+            const std::vector<Color> jpegAlphaPixels = Pixels(Texture2D::FromStream(device, alphaJpeg));
+            std::vector<Color> expectedPng = alphaPixels;
+            for (int y = 0; y < 32; ++y)
+                for (int x = 0; x < 32; ++x)
+                    expectedPng[static_cast<std::size_t>(y * 64 + x)] = Color(0, 0, 0, 0);
+            Context().Check(pngAlphaPixels == expectedPng,
+                            "PNG clears RGB only for alpha zero and preserves RGB when alpha is nonzero");
+            const Color jpegTransparent = jpegAlphaPixels[16 * 64 + 16];
+            const Color jpegPartial = jpegAlphaPixels[16 * 64 + 48];
+            Context().Check(jpegTransparent.getRProperty() <= 4 && jpegTransparent.getGProperty() <= 4 &&
+                                jpegTransparent.getBProperty() <= 4 && jpegTransparent.getAProperty() == 255 &&
+                                jpegPartial.getRProperty() >= 250 && jpegPartial.getGProperty() <= 5 &&
+                                jpegPartial.getBProperty() >= 250 && jpegPartial.getAProperty() == 255,
+                            "JPEG drops alpha after normalizing transparent RGB but retains nonzero-alpha colour");
             Context().Print("Both thumbnail streams decode to 64x32; all images below are drawn at 2x their own size.");
         }
 
@@ -129,8 +159,8 @@ namespace
 CNA_DEMOS_GAME(SaveAsImageDemo, {
     .id = "graphics.texture2d.save_as_image",
     .title = "Save a texture as PNG or JPEG",
-    .description = "Encodes a texture into memory streams with Texture2D::SaveAsPng (lossless) and SaveAsJpeg "
-                   "(lossy), decodes full-size and 64x32 exports with FromStream, and verifies the source stays unchanged.",
+    .description = "Encodes textures into memory streams with Texture2D::SaveAsPng (lossless) and SaveAsJpeg "
+                   "(lossy), checks resized output and transparent-RGB normalization, and verifies sources stay unchanged.",
     .apis = {"Texture2D::SaveAsPng", "Texture2D::SaveAsJpeg", "Texture2D::FromStream", "Texture2D::Width",
              "Texture2D::Height"},
     .tags = {"texture", "png", "jpeg", "save", "screenshot"},

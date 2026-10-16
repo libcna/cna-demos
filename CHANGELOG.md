@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added PNG/JPEG export controls proving that fully transparent texels lose hidden RGB while the
+  same colour with nonzero alpha survives image encoding.
 - Extended the SkinnedEffect vertex-color scene with exact framebuffer controls for vertex alpha
   alone and its multiplication by material and texture alpha.
 - Added both live-playing DynamicSoundEffectInstance format-switch refusals with long queued
