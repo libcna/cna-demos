@@ -12227,3 +12227,24 @@ Next reconcile the remaining measured document/root/type-name grammar in format 
 against the existing serializer, polymorphism, shared-resource, external-reference and type-
 serializer demos. Add or extend a workflow only for a semantic gap; explicitly disposition alias,
 ordering or primitive-root variants already demonstrated by those workflows or CNA's corpus tests.
+
+## Focused1091 intermediate XML document envelope
+
+The existing `content.custom.intermediate_serializer` grows16->23 controls without another catalog
+ID. A typed deserialize accepts a default namespace, unknown root/member attributes and comments,
+and resolves an Asset without `Type` from the caller's declared root type. Separate malformed
+documents reject wrong-case `XnaContent`, a renamed Asset, Resources before Asset, a second Asset
+and an unknown trailing root child.
+
+The clean incremental build is warning-free with `-j3`; metadata remains716/0. Twelve related
+SOFTWARE intermediate-XML demos plus the catalog parser pass13/13; validator/comparator self-tests
+pass5/5 and4/4. Five runs under each renderer label pass23/23 with byte-identical stdout SHA-256
+`279d275187c742dc3fef25ddcf0c7ed692919007ece88a9e0fa9e455432aa866` and empty stderr. Generated
+coverage contains all716 IDs and remains307/329 types,2128/2326 members,674/753 fields and3079/3205
+C routes. Evidence:`/tmp/checkpoint-1091-intermediate-envelope/*`. No CNA issue, fresh XNA
+execution or rendered result is claimed.
+
+Next determine whether one document combining Resources and ExternalReferences adds a distinct
+ordering contract absent from the separate shared-resource and external-reference demos. Extend an
+existing workflow only if it does. Primitive-root documents and alternative type-name spellings are
+syntax variants unless source/corpus review exposes distinct caller-visible behavior.

@@ -69,12 +69,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-713 project-built catalog demos in19 categories: math95, game33, graphics186, audio23, core6,
-content70, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and212
-standalone; 677 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1086
-results and includes all713 catalog IDs in both renderer columns. It incorporates every
+716 project-built catalog demos in19 categories: math95, game33, graphics186, audio23, core6,
+content73, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and215
+standalone; 680 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1091
+results and includes all716 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
 Curve and Matrix audits in Focused1063-1074 and the root Framework audits in Focused1076-1078,
@@ -92,7 +92,8 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete1084 exercises all3079 credited C routes and its711 catalog IDs in both full smoke suites;
-Focused1085-1086 execute the two new IDs separately under both renderer labels.
+Focused1085-1091 execute the five new IDs and every edited workflow separately under both renderer
+labels.
 Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
 Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
@@ -11740,3 +11741,28 @@ and type-name grammar in format sections1-3 and7-9 against the existing serializ
 shared-resource, external-reference and type-serializer demos. Add or extend behavior only for a
 semantic gap; disposition namespace aliases, ordering and primitive-root variants already covered
 or too trivial to justify. Keep every compile at three jobs or fewer.
+
+## Focused1091-intermediate-XML-envelope
+
+The existing `content.custom.intermediate_serializer` ID grows16->23 passing controls without a
+new catalog ID. A typed deserialize now proves that the document accepts a default namespace,
+unknown root/member attributes and inter-member comments, and that Asset may omit `Type` when the
+caller's declared root type supplies it. Five malformed variants establish that `XnaContent` and
+`Asset` names are case-sensitive/fixed, Resources cannot precede Asset, a second Asset is refused
+and an unknown trailing root child is refused.
+
+The clean incremental build is warning-free with `-j3`; metadata remains716/0. Twelve related
+SOFTWARE intermediate-XML demos plus the catalog parser pass13/13, and validator/comparator
+self-tests pass5/5 and4/4. Five runs under each renderer label pass23/23 with byte-identical stdout
+SHA-256 `279d275187c742dc3fef25ddcf0c7ed692919007ece88a9e0fa9e455432aa866` and empty stderr. Generated
+coverage merges the focused result into Complete1084 plus Focused1085-1090, contains all716 IDs and
+remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1091-intermediate-envelope/*`. No CNA issue, fresh genuine-XNA execution,
+rendering, screenshot or manual visual claim was made.
+
+Commit and push this batch, then inspect the existing shared-resource and external-reference
+workflows for the one remaining envelope-level question: one document containing both Resources
+and ExternalReferences must preserve the required Asset, Resources, ExternalReferences order and
+reject a reversed pair. Add controls to an existing ID if that combined contract is absent; treat
+root primitive and type-name spelling variants as represented syntax unless source/corpus review
+finds distinct caller-visible behavior. Keep every compile at three jobs or fewer.

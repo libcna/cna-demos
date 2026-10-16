@@ -60,6 +60,20 @@ namespace
             type.Field("RuntimeScore", &Encounter::runtimeScore).Ignore();
         }
     };
+
+    std::shared_ptr<Encounter> DeserializeEncounter(const std::string& xml)
+    {
+        std::unique_ptr<System::Xml::XmlReader> reader(System::Xml::XmlReader::CreateFromString(xml));
+        return IntermediateSerializer::Deserialize<Encounter>(*reader, "");
+    }
+
+    std::string Replaced(std::string text, std::string_view from, std::string_view to)
+    {
+        const std::size_t at = text.find(from);
+        if (at == std::string::npos) throw std::logic_error("Expected XML marker was not found");
+        text.replace(at, from.size(), to);
+        return text;
+    }
 }
 
 int main()
@@ -125,14 +139,29 @@ int main()
         check(xml.find("<Hint") == std::string::npos && xml.find("RuntimeScore") == std::string::npos,
               "absent optional and ignored fields are omitted from the XML");
 
-        std::unique_ptr<System::Xml::XmlReader> reader(System::Xml::XmlReader::CreateFromString(xml));
-        const auto loaded = IntermediateSerializer::Deserialize<Encounter>(*reader, "");
+        const auto loaded = DeserializeEncounter(xml);
         check(loaded && loaded->name == "Gatekeeper" && loaded->health == 90 && loaded->loot == authored->loot &&
               loaded->patrol == authored->patrol && loaded->objective == "Recover the key",
               "the authored encounter values round trip through intermediate XML");
         check(loaded && loaded->hint == "Look for the key" && loaded->reinforcements == std::vector<std::int32_t>{9} &&
                   loaded->runtimeScore == 0,
               "absent Optional values keep scalar and collection constructor defaults while ignored state is not copied");
+
+        const std::string rootOpen = "<XnaContent xmlns:CnaDemos=\"CnaDemos\">";
+        std::string annotated = Replaced(
+            xml, rootOpen,
+            "<XnaContent xmlns:CnaDemos=\"CnaDemos\" xmlns=\"urn:ignored\" Build=\"debug\">");
+        annotated = Replaced(annotated, "<Name>Gatekeeper</Name>",
+                             "<Name Source=\"designer\">Gatekeeper</Name>\n    <!-- reviewed -->");
+        const auto annotatedLoaded = DeserializeEncounter(annotated);
+        check(annotatedLoaded && annotatedLoaded->name == "Gatekeeper" && annotatedLoaded->health == 90 &&
+                  annotatedLoaded->loot == authored->loot,
+              "default namespaces, unknown attributes and inter-member comments are ignored");
+
+        const auto noAssetType = DeserializeEncounter(
+            Replaced(xml, "<Asset Type=\"CnaDemos:Encounter\">", "<Asset>"));
+        check(noAssetType && noAssetType->name == "Gatekeeper" && noAssetType->health == 90,
+              "a typed Deserialize call can use its declared root type when Asset omits Type");
 
         // Absence means keep the default; an explicit Null means clear it. A present value wins.
         const auto lootStart = xml.find("<Loot>");
@@ -185,6 +214,51 @@ int main()
             }
             check(rejected, expectation);
         }
+
+        const auto rejectsEnvelope = [&](const std::string& input, std::string_view expectation) {
+            bool rejected = false;
+            try
+            {
+                (void)DeserializeEncounter(input);
+            }
+            catch (const InvalidContentException& error)
+            {
+                rejected = true;
+                std::cout << "Invalid envelope: " << error.what() << '\n';
+            }
+            check(rejected, expectation);
+        };
+
+        rejectsEnvelope(
+            Replaced(Replaced(xml, "<XnaContent ", "<xnacontent "),
+                     "</XnaContent>", "</xnacontent>"),
+            "the XnaContent root name is case-sensitive");
+        rejectsEnvelope(
+            Replaced(Replaced(xml, "<Asset Type=\"CnaDemos:Encounter\">",
+                              "<Item Type=\"CnaDemos:Encounter\">"),
+                     "</Asset>", "</Item>"),
+            "the required Asset element cannot be renamed");
+
+        std::string resourcesBeforeAsset = xml;
+        const std::size_t rootEnd = resourcesBeforeAsset.find('>', resourcesBeforeAsset.find("<XnaContent"));
+        if (rootEnd == std::string::npos) throw std::logic_error("Serialized XML has no XnaContent start tag");
+        resourcesBeforeAsset.insert(rootEnd + 1, "\n  <Resources></Resources>");
+        rejectsEnvelope(resourcesBeforeAsset, "Resources cannot precede the required Asset");
+
+        const std::size_t assetStart = xml.find("  <Asset ");
+        const std::size_t assetEnd = xml.find("  </Asset>");
+        if (assetStart == std::string::npos || assetEnd == std::string::npos)
+            throw std::logic_error("Serialized XML has no complete Asset block");
+        const std::size_t assetAfter = assetEnd + std::string_view("  </Asset>\n").size();
+        const std::string assetBlock = xml.substr(assetStart, assetAfter - assetStart);
+        std::string duplicateAsset = xml;
+        duplicateAsset.insert(duplicateAsset.find("</XnaContent>"), assetBlock);
+        rejectsEnvelope(duplicateAsset, "the document rejects a second Asset element");
+
+        std::string trailingElement = xml;
+        trailingElement.insert(trailingElement.find("</XnaContent>"), "  <Unexpected />\n");
+        rejectsEnvelope(trailingElement, "the document rejects an unknown trailing root child");
+
         authored->objective.reset();
         bool rejectedNullWrite = false;
         try

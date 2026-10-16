@@ -6791,3 +6791,22 @@ Audit the remaining document envelope, root-value and type-name corpus against e
 before adding anything. Namespace-alias spellings, section ordering and primitive-root variants
 need an explicit coverage disposition if their behavior is already subsumed; only a distinct
 caller-facing contract warrants another control or ID.
+
+### Focused1091 intermediate XML document envelope
+
+`content.custom.intermediate_serializer` now covers the document envelope and grows16->23 passing
+controls. Typed deserialization accepts a default namespace, unknown attributes and comments, and
+uses the declared root type when Asset omits `Type`. It rejects wrong-case `XnaContent`, a renamed
+Asset, Resources before Asset, duplicate Asset and an unknown trailing root child.
+
+Five runs under each renderer label pass23/23 with common stdout SHA-256
+`279d275187c742dc3fef25ddcf0c7ed692919007ece88a9e0fa9e455432aa866` and empty stderr. The
+warning-free `-j3` build, metadata716/0, thirteen related CTests and both self-test suites pass.
+Coverage still contains all716 IDs at307/329 types,2128/2326 members,674/753 fields and3079/3205 C
+routes. Evidence:`/tmp/checkpoint-1091-intermediate-envelope/*`. No new CNA issue or fresh XNA run.
+
+The ordinary root-value variants do not add a new contract beyond the scalar, framework, collection
+and custom-object serializers already exercised, and alternate aliases/type spellings are syntax
+choices covered by polymorphic and external-reference workflows. Audit one combined Resources plus
+ExternalReferences document next because their required relative ordering cannot be inferred from
+the existing separate-section demos.
