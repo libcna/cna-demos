@@ -3524,9 +3524,9 @@ ISSUE-112 and bound VertexDeclaration disposal. The complete warning-free three-
 Resume the deeper semantic behavior audit: reconcile explicit residual gaps in
 `docs/COVERAGE_AUDIT.md` against pinned CNA d23e139de and prioritize reachable deterministic behavior
 that strengthens an existing coherent demo. Focused1015 closes the explicit SkinnedEffect
-clone/raw-texture/disposal ownership gap, and Focused1016 closes SpriteFont's caller-atlas disposal
-boundary. Choose the next gap outside the completed ShaderEffect/OcclusionQuery/RenderTarget/
-VertexDeclaration/SkinnedEffect ownership and SpriteFont atlas slices. Revisit the126 intentionally
+clone/raw-texture/disposal ownership gap, Focused1016 closes SpriteFont's caller-atlas disposal
+boundary and Focused1017 closes the nonterminal SoundEffect release audit while recording
+ISSUE-114. Choose the next gap outside those completed slices. Revisit the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
@@ -10053,3 +10053,23 @@ and ten OPENGLES3/Xvfb runs pass9/9 with byte-identical stdout SHA-256
 remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1016-sprite-font-atlas/*`. Pixel validation is programmatic; no screenshot or manual
 visual inspection was performed. No CNA issue was found. Continue with the next deterministic gap.
+
+## Focused1017-nonterminal-SoundEffect-loop-release
+
+`audio.sound_effect.loop_region` now authors a0.25s intro,0.25s loop and separate0.75s tail. It
+stays Playing beyond the complete1.25s buffer duration, pauses, receives `Stop(false)` and resumes.
+The half-second discriminator should lie inside the tail regardless of the position within the
+released loop. Instead, pinned CNA is already Stopped: ISSUE-114 records that the mixer uses the
+authored loop end as its complete `maxFrame`, while release only disables repetition and cannot
+enter post-loop frames. The other six controls pass.
+
+The first expanded fixture accidentally kept the old exact-end invalid length after adding the
+tail; that length had become valid. Moving it one sample beyond the new complete buffer fixed this
+demo bug and leaves only ISSUE-114. The warning-free `-j3` build, metadata693/0 and exact SOFTWARE
+CTest expected-failure contract pass. Ten SOFTWARE and ten OPENGLES3-labelled dummy-audio runs
+execute seven controls with six passes plus exactly ISSUE-114, byte-identical stdout SHA-256
+`3803ae6a2baace31e55b69cd6d039f96345ae3cb24eb5b408fe5b550f1b8de7d` and empty stderr. Counts
+remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1017-loop-tail-*`; source-audit SHA-256
+`555186469793313cdce5f5c501a3058e516227b4a09a43fc7cd66cf70da97232`. No listening or audible-
+quality claim was made. Continue with the next deterministic behavior gap.

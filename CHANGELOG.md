@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the authored SoundEffect loop workflow through `Stop(false)` at a nonterminal region
+  and recorded CNA-DEMOS-ISSUE-114 for dropping the remaining buffer tail.
 - Proved that SpriteFont keeps an independent live Texture2D value handle after explicit disposal
   of the caller's atlas, including exact retained texels and rendered glyph placement.
 - Extended the SkinnedEffect clone-ownership workflow through non-owning raw texture aliases,

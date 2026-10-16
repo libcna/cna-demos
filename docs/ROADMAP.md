@@ -525,7 +525,8 @@ a check that all authored colors remain visible and that a blank texture row can
 ## Phase 9 -- audio and media 🟨 (audio: 23 demos incl. 10 XACT, media: 15 incl. video)
 - ✅ `audio.sound_effect.*`: Play, Play(volume, pitch, pan), MasterVolume, PCM buffer
   constructor, GetSampleDuration/GetSampleSizeInBytes, ✅ `audio.sound_effect.loop_region` (loop
-  points), ✅ `audio.sound_effect.from_stream` (loose WAV; ISSUE-029).
+  points and nonterminal `Stop(false)` release; ISSUE-114 drops the authored tail),
+  ✅ `audio.sound_effect.from_stream` (loose WAV; ISSUE-029).
 - ✅ `audio.sound_effect_instance.*`: playback state, looping, volume/pitch/pan, Apply3D
   (smoke-only: hearing is the check).
   ✅ `audio.sound_effect_instance.lifetime`: temporary-wrapper data retention, moving a playing
@@ -11109,3 +11110,13 @@ closes the deferred shared-storage lifecycle disposition without duplicating gen
 tests or adding an ID. The warning-free three-job build, metadata693/0 and exact SOFTWARE CTest
 pass; ten runs per renderer pass9/9 with byte-identical stdout and empty stderr. No CNA issue was
 found. Continue with the next reachable deterministic gap.
+
+## Focused1017-nonterminal-SoundEffect-loop-release
+
+The authored loop-region demo now separates a0.75s tail from its0.25s repeating region and releases
+that loop through `Stop(false)`. Six controls pass, but CNA is already Stopped at a half-second
+point that must still lie inside the tail. ISSUE-114 records the mixer `maxFrame` design that drops
+all post-loop frames. Ten runs per renderer label reproduce exactly this failure with empty stderr;
+the exact SOFTWARE expected-failure CTest, metadata693/0 and warning-free three-job build pass. The
+first invalid-range failure was a corrected fixture boundary after lengthening the sound, not a CNA
+defect. No listening or audible-quality claim is made. Continue the deterministic behavior audit.

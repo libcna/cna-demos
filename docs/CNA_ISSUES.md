@@ -15,6 +15,39 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-114 -- Releasing a nonterminal SoundEffect loop drops its authored tail
+
+- **Area/API:** `Microsoft::Xna::Framework::Audio::SoundEffectInstance::Stop(false)`, authored
+  SoundEffect loop regions and the CNA mixer track end/loop state.
+- **Demo/reproduction:** run `audio.sound_effect.loop_region` with dummy audio. Its generated mono
+  PCM contains a 0.25 s intro, a 0.25 s loop region and a separate 0.75 s tail. Let the loop run
+  beyond the complete 1.25 s buffer duration, pause it, call `Stop(false)`, resume and inspect state
+  after 0.5 s. The remaining loop pass is at most 0.25 s, while the tail alone is 0.75 s.
+- **Observed:** the instance is already Stopped at the half-second discriminator. Ten SOFTWARE and
+  ten OPENGLES3-labelled runs reproduce exactly this one failed assertion; the other six controls
+  pass and stderr is empty. Pause/release preserves the configured loop property, the released
+  track reaches Stopped, immediate Stop still works after replay, and invalid loop coordinates are
+  still refused.
+- **Expected/contract:** `Stop(false)` exits the loop and allows the current sound to finish. FNA
+  forwards it to `FAudioSourceVoice_ExitLoop`, so after the current loop pass playback continues
+  from the authored loop end through the buffer tail. The instance must still be Playing after
+  0.5 s and then stop naturally after the 0.75 s tail.
+- **Cause observed in source:** CNA implements an authored loop end by setting the mixer track's
+  `maxFrame` to `loopStart + loopLength`; the mixer treats that value as the whole pass/track end.
+  `Stop(false)` only changes `loopsRemaining` to zero. The next read therefore ends at `maxFrame`
+  and has no state that can expose the real audio end or enter the post-loop frames.
+- **Demo correction:** the first expanded fixture reused the old exact-end invalid length, which
+  became valid after adding the tail and caused a second failed assertion. Changing the refusal
+  probe to one sample beyond the new complete buffer restored all three invalid-coordinate checks.
+  This was a demo bug; the retained tail failure is independent and reproducible.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`, using SDL dummy audio on Linux. State and timing are
+  observed; no audible sample-content, click-free transition, hardware-device or renderer claim is
+  made. Evidence: `/tmp/checkpoint-1017-loop-tail-*`; the corrected unmarked demo and source audit
+  SHA-256 values are `a9b78da5da33a8e934b2077a1e87bfba956febc6ce99e16f1390c2d73ba45ca9`
+  and `555186469793313cdce5f5c501a3058e516227b4a09a43fc7cd66cf70da97232`.
+  No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-113 -- A second OcclusionQuery Begin ignores the active-query contract
 
 - **Area/API:** `Microsoft::Xna::Framework::Graphics::OcclusionQuery::Begin`, its shared public
