@@ -12500,3 +12500,24 @@ screenshot or manual visual result is claimed.
 Commit and push this documentation-only consolidation. Then run the full719-demo `linux-full`
 checkpoint with `JOBS=3` against the pinned CNA source, archive and compare both renderer reports,
 update generated coverage and handoff state, and continue to the next real public behavior gap.
+
+## Focused1119-Guide-notification-lifetime-scaling
+
+The first full719-demo checkpoint attempt passed all732 enabled CTests but its SOFTWARE smoke
+found a real demo timing defect. `gamer_services.guide.notification_position` attempted nine full
+back-buffer readbacks while moving one live sign-in toast. CNA expires each toast after four
+seconds, and slow SOFTWARE runs consistently lost it after CenterLeft. Do not mark this expected
+or record it as a CNA issue.
+
+The stable ID now round-trips all nine public position values and pixel-checks three representative
+rendered anchors (TopLeft, Center, BottomRight). Three real offline profiles queue public sign-in
+toasts so slow readback does not depend on one toast lifetime. Ten consecutive exact SOFTWARE
+CTests pass, including runs over12 seconds. Five OPENGLES3/Xvfb runs pass9/9 byte-identically with
+empty stderr; one captured SOFTWARE run passes9/9 with exact anchor bounds and empty stderr. The
+warning-free incremental build stays at `-j3`, metadata remains719/0 and no CNA defect is claimed.
+Evidence:`/tmp/checkpoint-1119-guide-notification-duration-*`.
+
+Commit and push this project-side fix. Restart the complete719-demo checkpoint from the corrected
+source. Run the long SOFTWARE and OPENGLES3 smoke phases as separately monitored jobs if necessary
+to avoid another tool-session lifetime termination; only call the checkpoint complete when both
+structured reports contain all719 IDs with no unexpected result.

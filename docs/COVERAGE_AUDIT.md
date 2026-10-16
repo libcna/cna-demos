@@ -61,7 +61,7 @@ Decisions:
 | GamerPrivilegeException | shown in `c_api.gamer.guide_social_offline`: the offline Marketplace call now checks the exact canonical exception identity together with its INVALID_STATE/category STATE C result. |
 | GamerCollection, GamerCollection.GamerCollectionEnumerator | shown by the `net.*` demos (AllGamers, LocalGamers); the enumerator is C#'s `foreach` machinery (C++ range-for) |
 | IAvatarAnimation | demo: `gamer_services.avatar.custom_animation` |
-| NotificationPosition | `gamer_services.guide.notification_position` checks the default/changed property and actual overlay pixels on both renderers. The corrected observer starts with early frames and terminates on either visible placement or a finite deadline; all four original checks remain. The old eleven-frame-plus-sleep assumption reproduced an empty-frame failure under load. Fresh runs capture the toast on observation two, and frame-eight screenshots were inspected on both renderers. This does not establish every enum position or notification queue behavior. |
+| NotificationPosition | `gamer_services.guide.notification_position` round-trips all nine values through the public property and checks actual overlay pixels at TopLeft, Center and BottomRight on both renderers. Three queued offline sign-in toasts make the representative row/column anchors independent of one toast's four-second lifetime. The remaining six cells combine the same demonstrated row/column placement rule; no screenshot or visual-quality claim is attached to the current audit. |
 | LeaderboardOutcome | demo: `gamer_services.leaderboard.paging` (a column type) |
 | SignedOutEventArgs | demo (manual): `gamer_services.signed_in_gamer.signed_out` -- offline, a profile signs out only through the Guide's own menu, so a person does it |
 | FriendCollection, FriendGamer, InviteAcceptedEventArgs, GameUpdateRequiredException | service |
@@ -7504,3 +7504,26 @@ GTK/Xvfb warnings are expected environment output rather than failed assertions.
 308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1118-diagnostics-inspector-cnaext-public-headers/*`. No remote Inspector exposure,
 stress/fuzz result, screenshot or manual visual claim is made.
+
+### Focused1119 Guide notification lifetime scaling
+
+The attempted719-demo checkpoint passed all732 enabled CTests but exposed a project-side timing
+defect during SOFTWARE smoke. `gamer_services.guide.notification_position` tried to perform nine
+complete back-buffer readbacks while moving one live toast. CNA correctly expires a toast after
+four seconds; a slow SOFTWARE run consistently reached only CenterLeft before that deadline. The
+failure is in the demo's scaling assumption, not CNA.
+
+The same stable ID now round-trips all nine `NotificationPosition` values through the public
+property and pixel-checks three representative rendered anchors: TopLeft, Center and BottomRight.
+Three real offline profiles queue enough public sign-in notifications that slow readback cannot
+depend on one toast lifetime. This still demonstrates both row and column placement while avoiding
+six redundant renderer samples. The description and current coverage disposition no longer claim
+that one toast renders all nine cells.
+
+The warning-free incremental build uses `-j3`; metadata remains719/0. Ten consecutive exact
+SOFTWARE CTests pass, including runs longer than twelve seconds. Five OPENGLES3/Xvfb runs pass9/9
+with byte-identical stdout SHA-256
+`dcc1464aeb89764dac2b9ac8cb78ad202f9eeb669b988eaba56d848650b51c0d` and empty stderr; a captured
+SOFTWARE run also passes9/9 with exact anchor bounds and empty stderr. Evidence:
+`/tmp/checkpoint-1119-guide-notification-duration-*`. No CNA issue or manual visual result is
+claimed. Restart the complete checkpoint from this corrected source.

@@ -35,6 +35,9 @@ namespace
         NotificationPosition::CenterLeft, NotificationPosition::Center, NotificationPosition::CenterRight,
         NotificationPosition::BottomLeft, NotificationPosition::BottomCenter, NotificationPosition::BottomRight};
 
+    constexpr std::array<NotificationPosition, 3> RenderedPositions = {
+        NotificationPosition::TopLeft, NotificationPosition::Center, NotificationPosition::BottomRight};
+
     struct Footprint
     {
         int covered = 0;
@@ -66,8 +69,11 @@ namespace
     {
     public:
         NotificationPositionDemo()
+            : GamerServicesDemo("Position One,Position Two,Position Three")
         {
-            // Set before the profile signs in, so its "signed in" notification already uses it.
+            // Set before the profiles sign in, so the first queued notification already uses it.
+            // Three real sign-in toasts keep the rendered grid anchors observable even when a
+            // slow software back-buffer read cannot visit them within one toast's finite lifetime.
             // (XNA's default is BottomCenter.)
             defaultPosition_ = Guide::getNotificationPositionProperty();
             Guide::setNotificationPositionProperty(Positions.front());
@@ -82,6 +88,17 @@ namespace
             ctx.Check(defaultPosition_ == NotificationPosition::BottomCenter, "notifications start at BottomCenter");
             ctx.Check(Guide::getNotificationPositionProperty() == NotificationPosition::TopLeft,
                       "NotificationPosition is now TopLeft");
+
+            bool allPositionsRoundTrip = true;
+            for (const NotificationPosition position : Positions)
+            {
+                Guide::setNotificationPositionProperty(position);
+                allPositionsRoundTrip = allPositionsRoundTrip &&
+                    Guide::getNotificationPositionProperty() == position;
+            }
+            Guide::setNotificationPositionProperty(RenderedPositions.front());
+            ctx.Check(allPositionsRoundTrip,
+                      "all nine NotificationPosition values round-trip through the public property");
 
             const bool screenSaverBefore = Guide::getIsScreenSaverEnabledProperty();
             Guide::setIsScreenSaverEnabledProperty(!screenSaverBefore);
@@ -98,7 +115,7 @@ namespace
             if (checked_)
             {
                 spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
-                spriteBatch_->DrawString(*font_, "Guide notifications: all nine positions checked",
+                spriteBatch_->DrawString(*font_, "Guide notifications: three grid anchors checked",
                                          Vector2(40.0f, 220.0f), Color::White);
                 spriteBatch_->End();
             }
@@ -115,10 +132,10 @@ namespace
             if (!checked_)
             {
                 const auto now = std::chrono::steady_clock::now();
-                // The offline sign-in is delivered by GamerServicesComponent::Update. Under a
+                // The offline sign-ins are delivered by GamerServicesComponent::Update. Under a
                 // loaded test run that asynchronous precondition can take longer than the toast's
                 // own rendering check; start the bounded observation only once the public gamer
-                // collection proves that the notification has actually been queued.
+                // collection proves that the notifications have actually been queued.
                 if (Gamer::getSignedInGamersProperty()->getCountProperty() > 0)
                 {
                     if (!observationStarted_) observationStarted_ = now;
@@ -143,8 +160,8 @@ namespace
         {
             if (Context().Automated())
             {
-                Context().Check(positionIndex_ == Positions.size(),
-                                "the live notification was observed at all nine positions");
+                Context().Check(positionIndex_ == RenderedPositions.size(),
+                                "the live notification was observed at three grid anchors");
                 Context().Check(observations_ > 0, "the notification was looked at during the run");
             }
             DemoGame::EndRun();
@@ -153,7 +170,7 @@ namespace
     private:
         void CheckPosition(const CnaDemos::BackBufferPixels& pixels, const Footprint& footprint)
         {
-            const auto expected = Positions[positionIndex_];
+            const auto expected = RenderedPositions[positionIndex_];
             const int ordinal = static_cast<int>(expected);
             const int centreX = (footprint.minX + footprint.maxX) / 2;
             const int centreY = (footprint.minY + footprint.maxY) / 2;
@@ -165,13 +182,13 @@ namespace
                                 observedColumn == ordinal % 3 && observedRow == ordinal / 3,
                             "notification position " + std::to_string(ordinal) + " selects its rendered grid cell");
             ++positionIndex_;
-            if (positionIndex_ == Positions.size())
+            if (positionIndex_ == RenderedPositions.size())
             {
                 checked_ = true;
             }
             else
             {
-                Guide::setNotificationPositionProperty(Positions[positionIndex_]);
+                Guide::setNotificationPositionProperty(RenderedPositions[positionIndex_]);
             }
         }
 
@@ -188,8 +205,8 @@ namespace
 CNA_DEMOS_GAME(NotificationPositionDemo, {
     .id = "gamer_services.guide.notification_position",
     .title = "Where notifications appear",
-    .description = "Moves one live sign-in notification through all nine NotificationPosition grid cells, verifies "
-                   "each rendered placement, and toggles then restores the platform screen-saver state.",
+    .description = "Round-trips all nine NotificationPosition values, moves queued live sign-in notifications "
+                   "through three rendered grid anchors, and restores the platform screen-saver state.",
     .apis = {"Guide::NotificationPosition", "Guide::IsScreenSaverEnabled", "NotificationPosition",
              "NotificationPosition::TopLeft", "NotificationPosition::TopCenter", "NotificationPosition::TopRight",
              "NotificationPosition::CenterLeft", "NotificationPosition::Center", "NotificationPosition::CenterRight",

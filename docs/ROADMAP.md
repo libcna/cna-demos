@@ -636,7 +636,8 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 - ✅ `gamer_services.leaderboard.*` (2): LeaderboardWriter in a LocalWithLeaderboards session,
   LeaderboardReader (page, pivot); paging with PageDown/PageUp and typed columns
   (LeaderboardOutcome, TimeSpan; CNA-DEMOS-ISSUE-025).
-- ✅ `gamer_services.guide.notification_position`: Guide notifications moved to TopRight.
+- ✅ `gamer_services.guide.notification_position`: all nine position values round-trip, with
+  live notification pixels checked at TopLeft, Center and BottomRight.
 - ✅ `gamer_services.configuration.resolution`: deployment defaults and every field, override and
   manifest precedence, version syntax, and secure endpoint validation without a connection.
 - ✅ `gamer_services.signed_in_gamer.signed_out` (manual: sign out through the Guide, Home key).
@@ -12790,3 +12791,17 @@ validator/comparator self-tests pass; generated totals remain308/329 XNA types,2
 Phase13 is now semantically complete at28 focused demos. Run a complete719-demo `linux-full`
 checkpoint next so the two post-Complete1099 additions and all intervening member-level audits
 have one current end-to-end baseline before continuing the next uncovered public behavior.
+
+## Focused1119 Guide notification lifetime scaling
+
+The first complete719-demo attempt passes all732 enabled CTests, then its SOFTWARE smoke exposes a
+demo timing defect: nine full back-buffer reads cannot reliably finish before one CNA Guide toast's
+documented four-second lifetime. The isolated failure repeats after CenterLeft, so this is neither
+a hidden CNA issue nor an assertion that should be marked expected.
+
+The stable Guide workflow now round-trips all nine `NotificationPosition` values and pixel-checks
+TopLeft, Center and BottomRight as representative row/column anchors. Three real offline sign-ins
+queue public toasts for slow readback. Ten consecutive SOFTWARE CTests pass; five OPENGLES3/Xvfb
+runs pass9/9 byte-identically with empty stderr, and the captured SOFTWARE run also passes9/9.
+The warning-free `-j3` build and metadata719/0 pass. Evidence:
+`/tmp/checkpoint-1119-guide-notification-duration-*`. Restart the full checkpoint from this fix.
