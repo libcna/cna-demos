@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Properties and inherited XML configuration",
     .description = "Describes a dungeon configuration with a validated property, a get-only room collection, "
                    "inherited name, flattened spawn coordinates and bare packed route text; checks setter dispatch, "
-                   "constructor defaults, base-before-derived ordering and the empty flattened-list boundary.",
+                   "constructor defaults, strict base-before-derived ordering and the empty flattened-list boundary.",
     .apis = {"Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentTypeDescriptor::Property",

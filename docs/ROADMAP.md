@@ -12373,3 +12373,26 @@ XNA/rendered result is claimed.
 Next close the remaining type/member semantics: missing `Type` on an abstract declared member and
 strict positional member order are distinct; full/assembly aliases, primitive roots and boxed
 missing-Type are already meaningfully represented or dispositioned.
+
+## Focused1098 intermediate XML type/member boundaries
+
+`content.custom.intermediate_polymorphism` grows8->10 passing controls: a missing `Type` on an
+abstract Spawn is refused at abstract construction, and an undeclared namespace prefix is refused
+at type lookup. `content.custom.intermediate_properties` grows8->9 passing controls by proving that
+otherwise valid inherited and derived members are refused when their descriptor order is reversed.
+
+Five runs under each renderer label are byte-stable with empty stderr. Polymorphism's stdout
+SHA-256 is `aabbadc83c8931e87681fed66bfd2ba988689c288fb2c84eff04a54cb23f4aa2`; properties' is
+`1b6236b55563bda434d3fce6d47d2c675d4d4868066f6408a472425b9febd51b`. The warning-free `-j3`
+build, metadata716/0, thirteen related CTests and both self-test suites pass. Coverage remains
+307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes across all716 IDs; content
+remains56 pass/17 expected fail. Evidence:
+`/tmp/checkpoint-1098-intermediate-type-member-boundaries/*`. No new CNA issue or fresh XNA/rendered
+result is claimed.
+
+The measured intermediate format is now semantically dispositioned: alias and root spelling
+variants reuse demonstrated serializers; boxed missing-Type and value grammars already have direct
+controls; shared/external tables, opaque dictionaries and envelope composition are covered;
+multidimensional arrays lack a distinct C++ carrier; deep parser/writer ceilings belong to CNA's
+hardening suite; and RuntimeType/TypeVersion metadata has no serialization consumer. Continue with
+the highest-value remaining public-member/behavior gap in the coverage audit.

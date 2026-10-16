@@ -73,7 +73,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and215
 standalone; 680 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1097
+Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1098
 results and includes all716 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
@@ -92,7 +92,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete1084 exercises all3079 credited C routes and its711 catalog IDs in both full smoke suites;
-Focused1085-1097 execute the five new IDs and every edited workflow separately under both renderer
+Focused1085-1098 execute the five new IDs and every edited workflow separately under both renderer
 labels.
 Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
 Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
@@ -11919,4 +11919,39 @@ Commit and push this batch. Finish the type/member semantics audit by extending 
 only where the missing-Type behavior of abstract members and strict positional member ordering are
 not yet observable. Full/assembly-qualified aliases and primitive-root spellings remain intentional
 syntax variants; boxed missing-Type is already refused by the collections workflow. Keep every
+compile at three jobs or fewer.
+
+## Focused1098-intermediate-XML-type-member-boundaries
+
+The existing `content.custom.intermediate_polymorphism` workflow grows8->10 passing controls. An
+abstract declared Spawn without `Type` is refused at the abstract-instantiation gate, and a
+concrete type using an undeclared namespace prefix is refused at type lookup. The existing
+`content.custom.intermediate_properties` workflow grows8->9 passing controls by swapping inherited
+Name and derived Difficulty in otherwise valid XML and proving that deserialization requires the
+descriptor's positional order.
+
+This closes the format-level audit without multiplying syntax-only demos. Full and
+assembly-qualified aliases, CLR versus keyword names and primitive/framework/custom root spellings
+are equivalent accepted spellings or applications of serializers already demonstrated. Boxed
+missing-Type refusal is in the collections workflow; ordinary scalar/framework widths are covered
+by representative grammar workflows; multidimensional arrays have no distinct C++ carrier; and
+the measured 200-level graph plus CNA's 500-level XML parser and 1024-level writer boundaries belong
+to hardening rather than another user-facing demo. Shared/external tables, opaque dictionaries,
+nulls, attributes, collections, resources and root composition now have coherent behavior coverage.
+Descriptor RuntimeType/TypeVersion remain intentionally undisplayed metadata until CNA gives them
+a serialization consumer.
+
+The clean incremental build is warning-free with `-j3`; metadata remains716/0. Twelve related
+SOFTWARE intermediate-XML demos plus the catalog parser pass13/13, and validator/comparator
+self-tests pass5/5 and4/4. Five runs under each renderer label pass10/10 for polymorphism and9/9 for
+properties with respective byte-identical stdout SHA-256 values
+`aabbadc83c8931e87681fed66bfd2ba988689c288fb2c84eff04a54cb23f4aa2` and
+`1b6236b55563bda434d3fce6d47d2c675d4d4868066f6408a472425b9febd51b`; every stderr is empty.
+Generated coverage contains all716 IDs and remains307/329 XNA types,2128/2326 members,674/753
+fields and3079/3205 C routes; content remains56 pass/17 expected fail per renderer. Evidence:
+`/tmp/checkpoint-1098-intermediate-type-member-boundaries/*`. No new CNA issue, fresh genuine-XNA
+execution or rendered result is claimed.
+
+Commit and push this batch. Then select the highest-value remaining semantic public-member/behavior
+gap from `docs/COVERAGE_AUDIT.md`; prefer extending a coherent existing workflow and keep every
 compile at three jobs or fewer.

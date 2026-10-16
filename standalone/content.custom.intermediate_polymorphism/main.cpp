@@ -147,6 +147,32 @@ int main()
             }
             check(rejected, expectation);
         }
+
+        const auto rejectsChangedType = [&](std::string changed, std::string_view expectation,
+                                            std::string_view diagnostic) {
+            bool rejected = false;
+            try
+            {
+                std::unique_ptr<System::Xml::XmlReader> badReader(System::Xml::XmlReader::CreateFromString(changed));
+                (void)IntermediateSerializer::Deserialize<SpawnList>(*badReader, "");
+            }
+            catch (const InvalidContentException& error)
+            {
+                rejected = std::string(error.what()).find(diagnostic) != std::string::npos;
+                std::cout << "Rejected type form: " << error.what() << '\n';
+            }
+            check(rejected, expectation);
+        };
+
+        std::string missingType = xml;
+        missingType.erase(at, originalType.size());
+        rejectsChangedType(std::move(missingType),
+                           "an abstract declared member without Type cannot choose a concrete instance", "abstract");
+
+        std::string undeclaredAlias = xml;
+        undeclaredAlias.replace(at, originalType.size(), "Type=\"Missing:EnemySpawn\"");
+        rejectsChangedType(std::move(undeclaredAlias),
+                           "a Type prefix must be declared in XML namespace scope", "EnemySpawn");
         return passed ? 0 : 1;
     }
     catch (const std::exception& error)

@@ -5,7 +5,8 @@ CNA_DEMOS_STANDALONE({
     .id = "content.custom.intermediate_polymorphism",
     .title = "A polymorphic XML spawn list",
     .description = "Serializes enemy and treasure definitions through an abstract Spawn list, restores concrete types "
-                   "and inherited fields, preserves nulls, and refuses unknown, unrelated or abstract type declarations.",
+                   "and inherited fields, preserves nulls, and refuses missing, unscoped, unknown, unrelated or "
+                   "abstract type declarations.",
     .apis = {"Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::TypeSerializerFor",

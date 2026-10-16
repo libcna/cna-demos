@@ -157,6 +157,29 @@ int main()
               emptyXml.find("<Reward>5</Reward>") != std::string::npos && emptyFlattenedRejected,
               "an empty flattened packed collection has no XML spelling and blocks the following member on read");
 
+        std::string reordered = xml;
+        const std::string nameElement = "<Name>Vault</Name>";
+        const std::string difficultyElement = "<Difficulty>3</Difficulty>";
+        const auto orderedName = reordered.find(nameElement);
+        const auto orderedDifficulty = reordered.find(difficultyElement);
+        if (orderedName == std::string::npos || orderedDifficulty == std::string::npos || orderedName >= orderedDifficulty)
+            throw std::runtime_error("Expected ordered Name and Difficulty members");
+        reordered.replace(orderedDifficulty, difficultyElement.size(), nameElement);
+        reordered.replace(orderedName, nameElement.size(), difficultyElement);
+        bool reorderedRejected = false;
+        try
+        {
+            std::unique_ptr<System::Xml::XmlReader> reorderedReader(System::Xml::XmlReader::CreateFromString(reordered));
+            (void)IntermediateSerializer::Deserialize<DungeonConfiguration>(*reorderedReader, "");
+        }
+        catch (const InvalidContentException& error)
+        {
+            reorderedRejected = std::string(error.what()).find("Name") != std::string::npos;
+            std::cout << "Rejected reordered members: " << error.what() << '\n';
+        }
+        check(reorderedRejected,
+              "deserialization requires inherited fields and derived properties in descriptor order");
+
         std::string invalid = xml;
         if (difficultyAt == std::string::npos) throw std::runtime_error("Expected authored difficulty missing");
         invalid.replace(difficultyAt, std::string_view("<Difficulty>3</Difficulty>").size(), "<Difficulty>0</Difficulty>");
