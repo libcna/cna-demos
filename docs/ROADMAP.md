@@ -11694,3 +11694,17 @@ Ten runs per demo and renderer label are byte-stable with empty stderr. The clea
 remain unchanged and the Complete1056-backed report is byte-identical. Evidence:
 `/tmp/checkpoint-1065-rectangle-value-boundaries/*`. The meaningful Rectangle audit is complete;
 continue with remaining BoundingBox/BoundingSphere/Ray member and behavior dispositions.
+
+## Focused1066 BoundingBox members and boundaries
+
+All four BoundingBox demos deepen without new IDs: point/corner creation grows6->13 controls,
+containment4->8, intersections11->16 and merge2->4. Genuine XNA anchors default and point-set
+construction, exact/guarded corners with atomic refusal, all containment/intersection value and
+output families, frustum behavior, CreateFromSphere output and CreateMerged aliasing. CNA matches
+except that ToString doubles the outer braces (new ISSUE-126) and BoundingBox::Contains reports a
+distant frustum as Intersects instead of Disjoint (new ISSUE-127). Ten runs per demo and renderer
+label are byte-stable with empty stderr. The clean incremental `-j3` build, metadata701/0, all four
+exact CTests and both self-test suites pass. Coverage totals remain unchanged and the
+Complete1056-backed report is byte-identical. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`.
+The meaningful BoundingBox audit is complete; continue with BoundingSphere, beginning with the
+measured negative-radius constructor refusal, then output/intersection/transform boundaries.

@@ -5,7 +5,9 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/BoundingBox.hpp"
+#include "Microsoft/Xna/Framework/BoundingFrustum.hpp"
 #include "Microsoft/Xna/Framework/BoundingSphere.hpp"
+#include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Plane.hpp"
 #include "Microsoft/Xna/Framework/PlaneIntersectionType.hpp"
 #include "Microsoft/Xna/Framework/Ray.hpp"
@@ -51,14 +53,63 @@ namespace
         ctx.Check(crate.Intersects(floorBelow) == PlaneIntersectionType::Front,
                   "the crate is in front of a plane below it");
         ctx.Check(crate.Intersects(ceiling) == PlaneIntersectionType::Back, "and behind a plane above it");
+
+        const BoundingBox overlapBox(Vector3(1.0f), Vector3(3.0f));
+        const BoundingBox touchingBox(Vector3(2.0f, 0.0f, 0.0f), Vector3(4.0f, 2.0f, 2.0f));
+        const BoundingBox missedBox(Vector3(3.0f), Vector3(4.0f));
+        bool overlapOutput = false;
+        bool touchingOutput = false;
+        bool missedOutput = true;
+        crate.Intersects(overlapBox, overlapOutput);
+        crate.Intersects(touchingBox, touchingOutput);
+        crate.Intersects(missedBox, missedOutput);
+        ctx.Check(overlapOutput && touchingOutput && !missedOutput,
+                  "box output intersections preserve overlap, contact and separation");
+
+        const BoundingSphere tangentSphere(Vector3(3.0f, 1.0f, 1.0f), 1.0f);
+        const BoundingSphere missedSphere(Vector3(3.01f, 1.0f, 1.0f), 1.0f);
+        bool tangentSphereOutput = false;
+        bool missedSphereOutput = true;
+        crate.Intersects(tangentSphere, tangentSphereOutput);
+        crate.Intersects(missedSphere, missedSphereOutput);
+        ctx.Check(tangentSphereOutput && !missedSphereOutput,
+                  "sphere output intersections include exact tangency and exclude a gap");
+
+        std::optional<float> rayHitOutput;
+        std::optional<float> rayMissOutput = 99.0f;
+        const Ray outputHitRay(Vector3(-3.0f, 1.0f, 1.0f), Vector3::UnitX);
+        const Ray outputMissRay(Vector3(-3.0f, 3.0f, 1.0f), Vector3::UnitX);
+        crate.Intersects(outputHitRay, rayHitOutput);
+        crate.Intersects(outputMissRay, rayMissOutput);
+        ctx.Check(rayHitOutput == 3.0f && !rayMissOutput.has_value(),
+                  "ray output intersections overwrite hit distance and miss state");
+
+        PlaneIntersectionType frontOutput = PlaneIntersectionType::Back;
+        PlaneIntersectionType crossingOutput = PlaneIntersectionType::Back;
+        PlaneIntersectionType backOutput = PlaneIntersectionType::Front;
+        crate.Intersects(floorBelow, frontOutput);
+        crate.Intersects(floorAt, crossingOutput);
+        crate.Intersects(ceiling, backOutput);
+        ctx.Check(frontOutput == PlaneIntersectionType::Front &&
+                      crossingOutput == PlaneIntersectionType::Intersecting &&
+                      backOutput == PlaneIntersectionType::Back,
+                  "plane output intersections overwrite all three classifications");
+
+        const BoundingFrustum identityFrustum(Matrix::getIdentityProperty());
+        const BoundingBox huge(Vector3(-2.0f), Vector3(2.0f));
+        const BoundingBox half(Vector3(-2.0f), Vector3(0.0f, 2.0f, 2.0f));
+        const BoundingBox far(Vector3(10.0f), Vector3(11.0f));
+        ctx.Check(huge.Intersects(identityFrustum) && half.Intersects(identityFrustum) &&
+                      !far.Intersects(identityFrustum),
+                  "frustum intersection accepts enclosing and clipped boxes but rejects a distant box");
     }
 }
 
 CNA_DEMOS_CONSOLE(BoundingBoxIntersects, {
     .id = "math.bounding_box.intersects",
     .title = "Box collision tests",
-    .description = "Tests a BoundingBox with BoundingBox::Intersects against boxes (overlap, touching, separated), "
-                   "spheres, rays (the hit distance, or none) and planes (Front, Back, Intersecting).",
+    .description = "Tests BoundingBox intersections with boxes, spheres, rays, planes and a frustum through value "
+                   "and output forms, including contact, miss and all plane classifications.",
     .apis = {"BoundingBox::Intersects", "BoundingBox::BoundingBox", "PlaneIntersectionType", "PlaneIntersectionType::Back", "Ray::Ray",
              "Plane::Plane"},
     .tags = {"collision", "box", "aabb", "ray", "picking"},

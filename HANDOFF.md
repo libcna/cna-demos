@@ -77,7 +77,8 @@ Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; t
 baseline catalog IDs in both renderer suites. The six new `math.vector4.*` focused IDs are
 explicitly absent until the next complete checkpoint; its `math.point.basics` result also predates
 the new ISSUE-124 assertion, while all four `math.rectangle.*` results predate the Focused1064-1065
-assertions under ISSUE-124/125.
+assertions under ISSUE-124/125. Its four `math.bounding_box.*` results likewise predate the
+Focused1066 assertions under ISSUE-126/127.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -10981,3 +10982,31 @@ renderer or visual claim was made. Signed coordinate/size overflow is intentiona
 because CNA's present C++ arithmetic would be undefined. The meaningful Rectangle audit is
 complete; continue with the remaining BoundingBox/BoundingSphere/Ray member and behavior
 dispositions.
+
+## Focused1066-BoundingBox-members-and-boundaries
+
+All four existing BoundingBox demos deepen without new IDs: `create_from_points` grows6->13,
+`contains`4->8, `intersects`11->16 and `merge`2->4 controls. The batch covers default/Min-Max
+construction, empty/single/multiple point sets, exact and guarded corner output with atomic short
+refusal, identity, all containment and intersection value/output families, frustum paths,
+CreateFromSphere output and CreateMerged aliasing. CNA matches genuine Windows XNA 4.0 except two
+new issues: ToString emits an extra outer brace pair (ISSUE-126), and a distant identity frustum is
+misclassified as Intersects rather than Disjoint by BoundingBox::Contains (ISSUE-127).
+
+The clean incremental `-j3` build is warning-free. Metadata is701/0, all four exact SOFTWARE
+CTests and validator/comparator self-tests5/5 plus4/4 pass. Ten runs per demo and renderer label
+are byte-stable with empty stderr. Stdout SHA-256 values are
+`22315b138374ce532284d5a866e4cac7e8c4f2c3638deadab997fa2614dd43a2` for point/corner creation,
+`b56f6e89fe93f9be716542b44f5cc5b84c51f969304e6810732a92bc339f6ee3` for containment,
+`a59be8f4c2bbcd334ee27d4f48ee8aa56350d536adbd8523eaa3eea797107b00` for intersections and
+`2ae915a3f1f3e55422cdda0c899c06c0a07a37f4cc9d6ed5713d3e2102411d66` for merge. Coverage
+remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes and is byte-identical
+to the Complete1056-backed report. Genuine-XNA probe stdout SHA-256 is
+`625e457e0406259310ca71153bcd076f2b31900ba5ff86074e8b56a0e5180d65`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`. No renderer or
+visual claim was made. The meaningful BoundingBox audit is complete.
+
+The same genuine-XNA probe establishes the next exact priority: a negative BoundingSphere radius
+throws ArgumentException, while pinned CNA's constructor stores it without validation. Continue
+with BoundingSphere constructor refusal, output forms, intersections and transform boundaries,
+then Ray.

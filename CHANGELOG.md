@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed BoundingBox member/behavior coverage and recorded ISSUE-126 for doubled ToString
+  braces and ISSUE-127 for distant-frustum containment misclassification.
 - Completed Rectangle value, containment and mutation boundary coverage and extended ISSUE-124
   from Point to Rectangle's XOR hash mismatch against XNA's unchecked field sum.
 - Extended Rectangle intersection/union coverage through output aliasing and edge/disjoint/Empty

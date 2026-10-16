@@ -15,6 +15,48 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-127 -- BoundingBox Contains misclassifies a distant frustum as Intersects
+
+- **Area/API:** `Microsoft::Xna::Framework::BoundingBox::Contains(BoundingFrustum)`.
+- **Demo/reproduction:** run `math.bounding_box.contains`. Classify an identity-matrix frustum
+  against an enclosing box `[-2,2]`, a half-width clipping box and a distant box `[10,11]`, beside
+  point/box/sphere value and output controls.
+- **Observed:** CNA returns Contains, Intersects and Intersects respectively. The distant frustum
+  has no overlap but is reported as Intersects, producing the sole grouped failure among eight
+  controls.
+- **Expected/reference:** genuine Windows XNA 4.0 returns Contains, Intersects and Disjoint. The
+  adjacent point, box and sphere classifications, including exact tangency, all match.
+- **Cause/suggested repair:** the implementation examines only frustum corners and returns
+  Intersects as soon as a second corner is outside. First reject separation through the frustum's
+  plane-based box intersection/containment test, then use the corner pass only to distinguish a
+  fully contained frustum from a partial intersection.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`. The clean
+  warning-free three-job build, all four exact SOFTWARE CTests, metadata701/0 and self-tests5/5
+  plus4/4 pass; ten runs per demo and renderer label reproduce only the two documented BoundingBox
+  assertions with empty stderr. No CNA source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-126 -- BoundingBox ToString adds an extra pair of outer braces
+
+- **Area/API:** `Microsoft::Xna::Framework::BoundingBox::ToString`.
+- **Demo/reproduction:** run `math.bounding_box.create_from_points`. Alongside default and
+  `(Min,Max)` construction, exact corner order/output/refusal, point-set boundaries and value
+  identity, format the box with Min `(-3,-1,-6)` and Max `(2,4,2)`.
+- **Observed:** CNA returns `{{Min:{X:-3 Y:-1 Z:-6} Max:{X:2 Y:4 Z:2}}}`. The workflow retains
+  this sole expected failure among thirteen controls.
+- **Expected/reference:** genuine Windows XNA 4.0 returns
+  `{Min:{X:-3 Y:-1 Z:-6} Max:{X:2 Y:4 Z:2}}`, with one outer brace pair. All adjacent value,
+  construction, corner and point-set behavior matches.
+- **Cause/suggested repair:** the `std::ostringstream` literal uses doubled braces as though it
+  were a composite-format string. Emit one literal opening and closing brace instead.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`. The clean
+  warning-free three-job build, all four exact SOFTWARE CTests, metadata701/0 and self-tests5/5
+  plus4/4 pass; ten runs per demo and renderer label reproduce only the two documented BoundingBox
+  assertions with empty stderr. No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-125 -- Rectangle Union corrupts bounds when output aliases the offset input
 
 - **Area/API:** output overload of `Microsoft::Xna::Framework::Rectangle::Union`.

@@ -24,14 +24,31 @@ namespace
         ctx.Print("CreateFromSphere(centre 5, radius 2) = {}", aroundBall.ToString());
         ctx.Check(aroundBall.Min == Vector3(3.0f, 3.0f, 3.0f) && aroundBall.Max == Vector3(7.0f, 7.0f, 7.0f),
                   "the box extends one radius from the centre on every axis");
+
+        BoundingBox aroundBallOutput;
+        const BoundingSphere ball(Vector3(5.0f, 5.0f, 5.0f), 2.0f);
+        BoundingBox::CreateFromSphere(ball, aroundBallOutput);
+        ctx.Check(aroundBallOutput == aroundBall,
+                  "the CreateFromSphere output form agrees with the value form");
+
+        BoundingBox mergedOutput;
+        BoundingBox::CreateMerged(body, arm, mergedOutput);
+        BoundingBox aliasLeft = body;
+        BoundingBox otherLeft = arm;
+        BoundingBox::CreateMerged(aliasLeft, otherLeft, aliasLeft);
+        BoundingBox otherRight = body;
+        BoundingBox aliasRight = arm;
+        BoundingBox::CreateMerged(otherRight, aliasRight, aliasRight);
+        ctx.Check(mergedOutput == model && aliasLeft == model && aliasRight == model,
+                  "CreateMerged output may safely alias either input");
     }
 }
 
 CNA_DEMOS_CONSOLE(BoundingBoxMerge, {
     .id = "math.bounding_box.merge",
     .title = "Merge bounding boxes",
-    .description = "Combines the bounds of two parts with BoundingBox::CreateMerged and encloses a sphere with "
-                   "BoundingBox::CreateFromSphere.",
+    .description = "Combines two boxes and encloses a sphere through value and output forms, including both "
+                   "CreateMerged input-alias directions.",
     .apis = {"BoundingBox::CreateMerged", "BoundingBox::CreateFromSphere"},
     .tags = {"bounds", "aabb"},
 })

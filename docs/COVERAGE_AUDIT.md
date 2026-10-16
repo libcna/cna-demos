@@ -200,11 +200,14 @@ The meaningful Point public-member/behavior audit is complete at pinned d23.
 
 The meaningful Rectangle public-member/behavior audit is complete at pinned d23.
 
-### BoundingBox, BoundingSphere and Ray value identity
+### BoundingBox, BoundingSphere and Ray
 
 | Members / behavior | Decision and evidence |
 |---|---|
-| BoundingBox equality, operators and hash | `math.bounding_box.create_from_points` already compares the generated bounds with its exact manual min/max constructor. It now also uses typed/boxed equality, rejects wrong and empty boxes, checks equal hashes and makes a one-coordinate maximum change observably unequal. The workflow passes6 controls on both renderer selections. |
+| BoundingBox construction, point sets, corners and value identity | Focused1066 grows `math.bounding_box.create_from_points` from six to thirteen controls. It covers default and Min/Max construction, public fields, empty/single/multiple point sets, CornerCount, exact corner order, guarded output storage and atomic short-buffer rejection, typed/boxed/operator equality and equal hashing. CNA matches genuine XNA except ToString: CNA emits a doubled outer brace pair because its stream literal retains composite-format escaping, recorded as ISSUE-126. Exact platform-native hash values are intentionally not asserted; the public equal-value contract is. |
+| BoundingBox containment | Focused1066 grows `math.bounding_box.contains` from four to eight controls. Point, box and sphere value/output forms cover inclusive faces, contained/crossing/disjoint values and inside/outside tangency. Identity-frustum containment distinguishes an enclosing, clipping and distant box in XNA; CNA misclassifies the distant frustum as Intersects because its corner loop never establishes separation, recorded as ISSUE-127. |
+| BoundingBox intersections | Focused1066 grows `math.bounding_box.intersects` from eleven to sixteen controls. Box and sphere value/output paths include overlap, exact contact and a gap; ray output overwrites both hit and miss state; plane output covers Front/Intersecting/Back; frustum intersection covers enclosing, clipped and distant boxes. CNA matches genuine XNA throughout. |
+| BoundingBox creation/merge output and alias behavior | Focused1066 grows `math.bounding_box.merge` from two to four controls. CreateFromSphere value/output forms agree. CreateMerged value/output results agree and its output may alias either input without corrupting Min/Max. CNA matches genuine XNA. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`. |
 | BoundingSphere equality, operators and hash | `math.bounding_sphere.create` compares the actual CreateFromBoundingBox result with an independently constructed copy through typed/boxed equality, both operators and equal hashes, rejects wrong/empty boxes and distinguishes an expanded radius. Its existing point/box/merge construction remains intact; totals are9 controls on both selections. |
 | Ray equality, operators and hash | `math.ray.intersects` compares the real +X casting ray with an independent copy through typed/boxed equality, both operators and equal hashes, rejects wrong/empty boxes and distinguishes a +Y direction. Its box/sphere/plane hit distances remain intact; totals are8 controls on both selections. |
 | BoundingSphere.Contains and CreateFromFrustum | `math.bounding_sphere.create` now distinguishes Contains/Intersects/Disjoint for points and spheres, and verifies unambiguous box/frustum containment. CreateFromFrustum builds from an identity frustum and numerically encloses all eight actual corners within 1e-5 without asserting an unspecified minimum sphere. The first focused check incorrectly required strict `Contains` for each boundary corner; Ritter construction plus float rounding can put a corner just outside strict classification, so that was a demo assumption and was replaced by the geometric tolerance check already used by the C audit. |
@@ -218,6 +221,10 @@ Focused652 extends the sphere workflow from9 to12 controls and adds the two rema
 credits, moving temporary coverage1557->1559/2326. SOFTWARE and OPENGLES3 are byte-identical passes
 with empty stderr and the focused CTest passes. Evidence:`/tmp/checkpoint-652-*` and
 `/tmp/checkpoint-652-coverage.md`. No rendering or visual inspection was used.
+
+The meaningful BoundingBox public-member/behavior audit is complete at pinned d23. Continue with
+BoundingSphere, beginning with constructor refusal and then output/intersection/transform
+boundaries, followed by Ray.
 
 ### EffectParameter
 
@@ -6176,3 +6183,27 @@ display-cookie warning. Evidence:`/tmp/checkpoint-1065-rectangle-value-boundarie
 or visual claim was made. Signed coordinate/size overflow is intentionally not executed because
 CNA's current C++ arithmetic would be undefined. The meaningful Rectangle audit is complete;
 continue with remaining BoundingBox/BoundingSphere/Ray member and behavior dispositions.
+
+### Focused1066 BoundingBox members and boundaries
+
+All four existing BoundingBox demos deepen without new IDs. `create_from_points` grows6->13,
+`contains`4->8, `intersects`11->16 and `merge`2->4 controls. Genuine Windows XNA 4.0 anchors
+default/Min-Max construction, empty/single/multiple point sets, exact/guarded corner output with
+atomic short refusal, value identity, all containment and intersection value/output families,
+frustum behavior, CreateFromSphere output and CreateMerged aliasing. CNA matches except for two
+new issues: ToString emits an extra outer brace pair (ISSUE-126), and a distant identity frustum is
+misclassified as Intersects rather than Disjoint by BoundingBox::Contains (ISSUE-127).
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. Stdout SHA-256 values are
+`22315b138374ce532284d5a866e4cac7e8c4f2c3638deadab997fa2614dd43a2` for point/corner creation,
+`b56f6e89fe93f9be716542b44f5cc5b84c51f969304e6810732a92bc339f6ee3` for containment,
+`a59be8f4c2bbcd334ee27d4f48ee8aa56350d536adbd8523eaa3eea797107b00` for intersections and
+`2ae915a3f1f3e55422cdda0c899c06c0a07a37f4cc9d6ed5713d3e2102411d66` for merge. The clean
+incremental `-j3` build, metadata701/0, all four exact SOFTWARE CTests and self-tests5/5 plus4/4
+pass. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes and is
+byte-identical to the Complete1056-backed report. Genuine-XNA probe stdout SHA-256 is
+`625e457e0406259310ca71153bcd076f2b31900ba5ff86074e8b56a0e5180d65`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`. No renderer or
+visual claim was made. The meaningful BoundingBox audit is complete. Continue with BoundingSphere,
+beginning with the measured negative-radius constructor refusal, then output/intersection/transform
+boundaries, followed by Ray.
