@@ -5804,3 +5804,14 @@ and both self-test suites pass. Generated coverage remains307/329 types,2128/232
 fields and3079/3205 C routes; Complete1034 reports explicitly mark this sole post-baseline ID
 absent. Evidence:`/tmp/checkpoint-1044-quaternion-signed-zero-hash/*`. The Quaternion public-member
 and behavior audit is complete at this revision; trivial output forwards are dispositioned above.
+
+### Complete1045 behavior checkpoint
+
+The complete `-j3` checkpoint at source `8c8e3c1` and pinned CNA `d23e139de` validates all694
+catalog IDs on both renderer selections. All707 enabled CTests pass. SOFTWARE is580/63/48/3 and
+OPENGLES3 is619/65/7/3 with no unexpected result. Complete1034 comparison retains every prior ID,
+failed assertion and status; the sole new ID and seven edited Quaternion workflows add exactly the
+reviewed ISSUE-118/119/120 outcomes and eight failed assertions per renderer. Both title rows run
+ten checks. Normalized stderr matches Complete1034 byte for byte; self-tests pass5/5 plus4/4.
+Generated coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`build/linux-full/reports/checkpoint-1045-complete-*`.

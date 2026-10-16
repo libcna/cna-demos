@@ -73,12 +73,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are188 console,296 game and210
 standalone; 658 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1034's full runtime reports; they include all693
-then-current catalog IDs in both renderer suites. The new post-baseline
-`math.quaternion.value_identity` is explicitly absent until the next complete checkpoint.
+Coverage: generated docs/COVERAGE.md uses Complete1045's full runtime reports; they include all694
+current catalog IDs in both renderer suites with no absent result.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
-3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1034's
-full runtime reports are the baseline inputs for the693-ID checkpoint catalog. Selected semantic
+3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1045's
+full runtime reports are the baseline inputs for the694-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -88,7 +87,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1034 exercises all3079 credited C routes and all693 baseline catalog IDs in both full smoke
+Complete1045 exercises all3079 credited C routes and all694 catalog IDs in both full smoke
 suites.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
 through Focused1002, including the production StorageDeviceNotConnectedException path.
@@ -230,30 +229,33 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **1034-693-demo-behavior-checkpoint** is the current full-build and full-runtime baseline.
-It tests cna-demos `96a2f84` against the isolated CNA worktree
+Complete **1045-694-demo-behavior-checkpoint** is the current full-build and full-runtime baseline.
+It tests cna-demos `8c8e3c1` against the isolated CNA worktree
 `/tmp/cna-demos-cna-d23`, exact commit `d23e139de9e5c15511b6be745de290896a69ee37`; do not silently
 reconfigure it to the moving sibling. Every build/test invocation used at most three jobs. The
-build is warning-free, metadata is693/0 and all706 enabled CTests pass in307.60s; three manual tests
+build is warning-free, metadata is694/0 and all707 enabled CTests pass; three manual tests
 remain disabled.
 
-SOFTWARE reports583 pass/59 expected fail/48 skip/3 manual. OPENGLES3/private-Xvfb reports
-622/61/7/3. Both reports contain all693 unique catalog IDs with zero unexpected results. Compared
-with Complete1022, the eleven edited workflows have only their intended check-count increases;
-ISSUE-115/116/117 account for exactly three pass-to-expected-failure changes and five new failed
-assertions per renderer. OPENGLES3 executes ten rather than eleven successful
-`game.window.title` checks; twenty isolated reruns reproduce the known10/11 fixed-timestep
-variance. Normalized stderr is byte-identical to Complete1022. Validator and checkpoint-comparison
-self-tests pass5/5 and4/4.
+SOFTWARE reports580 pass/63 expected fail/48 skip/3 manual. OPENGLES3/private-Xvfb reports
+619/65/7/3. Both reports contain all694 unique catalog IDs with zero unexpected results. Compared
+with Complete1034, all693 old IDs remain, `math.quaternion.value_identity` is the sole new ID and
+the seven edited Quaternion workflows have only their reviewed check-count increases.
+ISSUE-118/119/120 account for the four intended expected-failure statuses and exactly eight new
+failed assertions per renderer; every older failed assertion and status remains. Both renderers
+execute ten successful `game.window.title` checks, matching the comparison baseline. Normalized
+stderr is byte-identical to Complete1034. Validator and checkpoint-comparison self-tests pass5/5
+and4/4.
 
 Generated coverage is307/329 types,2128/2326 non-field members,674/753 fields and3079/3205 C
 routes. Result hashes are SOFTWARE
-`d8112479f735d9200de7fda1b4867e7c8362b92534b7094ec4589c303d88a5ed` and OPENGLES3
-`abf15ddb02909f182aaf937cc089a9b4d11caf776fdbdd1962535ff006b19b3a`; the generated checkpoint
-coverage hash is `20e8958ed11ab0ce8f09f191142fb6bae2708fdeb42d4529209fa2f5b2db4b3f`. Immutable evidence is
-`build/linux-full/reports/checkpoint-1034-complete-*`. Focused1035-1042 are validated after this
-complete baseline and remain to be absorbed by the next full checkpoint. No screenshot, listening
-test, physical input, external service session or manual visual-quality inspection was performed.
+`e33973b9d3bddf241106f73208dda808c2a74bf4ffb49e5faf5bd64ca748d496` and OPENGLES3
+`6363dd992123142ca7b912ae7484e38631c75b9dc489d088fa9dcf524fb9547a`; the generated checkpoint
+coverage hash is `c91cd475656f133b033a97bb900481de0aca2f8fc68b972e82217085699eed83`. Immutable evidence is
+`build/linux-full/reports/checkpoint-1045-complete-*`. Two earlier attempts were manually stopped
+after redirected stdout paused at a block-buffer boundary; stderr and isolated reruns showed the
+suite was still progressing, and the uninterrupted final run passed. This was a monitoring error,
+not a demo or CNA defect. No screenshot, listening test, physical input, external service session
+or manual visual-quality inspection was performed.
 
 Focused **939-native-logger-general-and-experiment** extends the stable
 `core.logger.minimum_level` workflow from four to seven controls. It proves that TRACE admits the
@@ -10535,3 +10537,26 @@ The Quaternion public-member/behavior audit is complete at pinned CNA d23: all m
 and boundaries are demonstrated; Add/Subtract/Negate/Dot output forms are trivial source-reviewed
 forwards and do not justify redundant checks. Next run a complete694-demo checkpoint absorbing
 Focused1035-1044, then continue the next deterministic public-member/behavior family.
+
+## Complete1045-694-demo-behavior-checkpoint
+
+The full documented validation at cna-demos `8c8e3c1` and pinned CNA `d23e139de` uses at most three
+jobs. Its clean build is warning-free, metadata is694/0 and all707 enabled CTests pass; three manual
+tests remain disabled. SOFTWARE reports580 pass/63 expected fail/48 skip/3 manual and
+OPENGLES3/Xvfb reports619/65/7/3. Both contain all694 unique catalog IDs with no unexpected result.
+
+Complete1034 comparison preserves all693 old IDs and adds only
+`math.quaternion.value_identity`. The seven edited Quaternion workflows have their reviewed count
+growth; three prior passes and the new demo become expected failures under ISSUE-118/119/120, with
+exactly eight documented new failed assertions per renderer and no lost old assertion or status.
+Both `game.window.title` rows execute ten checks. Normalized stderr is byte-identical to
+Complete1034, and validator/comparator self-tests pass5/5 plus4/4. Generated coverage is307/329
+types,2128/2326 members,674/753 fields and3079/3205 C routes.
+
+Evidence is `build/linux-full/reports/checkpoint-1045-complete-*`; SOFTWARE and OPENGLES3 result
+SHA-256 values are `e33973b9d3bddf241106f73208dda808c2a74bf4ffb49e5faf5bd64ca748d496`
+and `6363dd992123142ca7b912ae7484e38631c75b9dc489d088fa9dcf524fb9547a`. Two earlier validation
+attempts were manually interrupted because redirected stdout stopped at a block-buffer boundary;
+stderr and isolated runs showed normal progress, and the final uninterrupted run passed. This was
+a monitoring mistake, not a demo or CNA defect. No visual, listening, physical-input or external-
+service validation was performed. Continue the next deterministic public-member/behavior family.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete 694-demo behavior baseline after the Quaternion audit: all 707 enabled
+  CTests and both renderer smoke suites pass with only the reviewed ISSUE-118/119/120 deltas.
 - Added a focused Quaternion value-identity demo and recorded CNA-DEMOS-ISSUE-120 for unequal
   hashes from equal positive/negative-zero components.
 - Extended Quaternion magnitude coverage through ordinary, subnormal, overflowed-square and

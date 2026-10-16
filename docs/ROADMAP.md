@@ -11432,3 +11432,15 @@ The Quaternion public-member/behavior table is now closed at pinned d23: all mea
 and boundaries have demo evidence, while trivial Add/Subtract/Negate/Dot output forwards are
 source-reviewed dispositions. Run the complete694-demo checkpoint, then continue the next
 deterministic member/behavior family.
+
+## Complete1045 694-demo behavior checkpoint
+
+Full `-j3` validation at source `8c8e3c1` and pinned CNA `d23e139de` passes metadata694/0, all707
+enabled CTests and both694-ID renderer suites. SOFTWARE reports580/63/48/3 and OPENGLES3
+619/65/7/3, with no unexpected result. Against Complete1034, all693 old IDs remain and the sole new
+ID plus seven edited Quaternion workflows produce only reviewed count/status changes. ISSUE-
+118/119/120 account for exactly eight new failed assertions per renderer; all older assertions and
+statuses remain. Both title rows execute ten checks, normalized stderr is unchanged and tool self-
+tests pass5/5 plus4/4. Coverage remains307/329 types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-1045-complete-*`. Continue the
+next deterministic public-member/behavior family.
