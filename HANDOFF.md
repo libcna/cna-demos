@@ -12295,3 +12295,34 @@ Commit and push this documentation-only audit. Next audit the public Gamer Servi
 where the generated inventory still has eight uncredited types and74 uncredited members. Reuse the
 existing20 workflows and add behavior only for a real locally reachable gap. Keep every compile at
 three jobs or fewer.
+
+## Focused1111-Gamer-Services-public-header-audit
+
+The module's one public CNA configuration header,51 public XNA headers and16 internal headers are
+now dispositioned as a complete installed inventory. Focused1106 already covers configuration.
+The20 existing workflows cover achievements, the full ordinary avatar value/animation/rendering
+path, local identity/profile/default/presence/privilege/sign-in behavior, Guide dialogs/overlays/
+notifications/trial state, offline leaderboard persistence/paging and component/dispatcher
+lifecycle. The C audit remains237/239 with only physical headset and delivered-invitation delay
+intentionally uncredited.
+
+A fresh calculation against the pinned inventory confirms eight missing types,74 non-field members
+and63 fields. They are all semantic boundaries already identified by the deeper audits: service
+friend/update/invite/network payloads; CLR collection aliases and native finalizers; framework-
+created constructors/events; service lookups/social screens/avatar/title-update delivery; headset
+state;57 equivalent presence labels; and service-only privilege/zone values. No locally reachable
+member was overlooked, so no synthetic ID or metadata credit was added.
+
+The warning-free incremental build remains constrained to `-j3`; metadata stays717/0. Eighteen
+enabled SOFTWARE Gamer Services CTests pass inside the restricted sandbox. The screen-saver test
+fails only because that sandbox blocks real SDL/X11 state mutation and passes unchanged when
+rerun outside it. The manual sign-out CTest remains disabled. Catalog parsing and validator/
+comparator self-tests pass5/5 and4/4. Generated coverage remains307/329 XNA types,2128/2326
+members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1111-gamer-services-public-headers/*`. No service, real social exchange, headset,
+avatar-editor change, title update, screenshot or new manual result is claimed.
+
+Commit and push this audit. Next consolidate the public XNA Audio header surface, starting from its
+three uncredited environment exceptions and seven residual members, while preserving the existing
+audio/XACT workflows and CNA provider-contract disposition. Keep every compile at three jobs or
+fewer.

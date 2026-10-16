@@ -7263,3 +7263,33 @@ with local socket access. The catalog parser and validator/comparator self-tests
 Generated coverage remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes
 across all717 IDs. Evidence:`/tmp/checkpoint-1110-net-public-headers/*`. No online-service,
 remote-machine, voice, injected-link-loss, screenshot or manual result is claimed.
+
+### Focused1111 Gamer Services public-header audit
+
+The module installs one caller-facing `CNA::GamerServices` configuration header, 16
+`CNA/Internal/GamerServices` implementation headers and 51 public XNA headers. Focused1106 covers
+the configuration surface. The public XNA declarations have this consolidated disposition:
+
+| Public family | Coverage decision |
+|---|---|
+| Achievement and collection | The award workflow uses a real local catalog and profile to read metadata/picture streams, award synchronously/asynchronously, persist state and enumerate the resulting collection. Generated explicit-interface aliases describe the same collection mechanics and have no distinct C++ entry points. |
+| Avatar values, animation and renderer | Five avatar workflows cover valid/invalid/owned description bytes, random body types, all31 presets, custom animation timing, all71 transforms and55 named bones, complete facial values, renderer state/bind pose/lights/transforms and actual draws. Finalizers are native destruction mechanics; `AvatarDescription::Changed` requires a service/editor revision with no public offline mutation path. |
+| Gamer identity, profile, defaults, presence and privileges | Real local profiles cover exact identity, tags, profile values, all locally supplied defaults, sign-in/out events, collection access, presence publication/value mutation, party-size zero and privilege refusals. Gamertag/partner-token lookup, friend graph, positive guest/party/headset state and service-supplied zones/policies need account service or hardware. The57 other presence labels feed the same already-demonstrated private service-string publication path. |
+| Guide, component and dispatcher | Existing workflows cover component initialization/update gating, dispatcher/window state, trial mode, all notification positions, screen-saver control, keyboard/message dialogs, sign-in overlay and exact offline refusals for social screens. `InstallingTitleUpdate`, accepted invites and invitation delay have no offline production event; social success requires identities and user interaction. Framework-created payload and exception constructors add no failed-operation behavior. |
+| Leaderboards and `PropertyDictionary` | Offline writer/read/paging workflows cover all keys/outcomes, typed dictionary columns, persistence, identities, entries and page movement. Generated collection aliases duplicate demonstrated C++ dictionary operations. Service-ranked rows and invite-linked callbacks remain service scope. |
+| Friend and network/update payloads | `FriendCollection`, `FriendGamer`, `InviteAcceptedEventArgs`, `GameUpdateRequiredException`, `NetworkException` and `NetworkNotAvailableException` are service/environment-created results. Manufacturing them through internal factories or constructors would not exercise retrieval, invitation, update or failed-network behavior. System Link's current wrong exception category remains CNA-DEMOS-ISSUE-018. |
+
+Recomputing the pinned inventory gives exactly eight uncredited types,74 non-field members and63
+fields. Each appears in the families above; no new reachable omission was found. The C adapter
+remains237/239 with `cna_signed_in_gamer_is_headset` requiring a physical/service headset state and
+`cna_guide_delay_notifications` requiring a delivered online invitation.
+
+The warning-free incremental build stays limited to `-j3`; metadata remains717/0. Of the20
+SOFTWARE Gamer Services CTests, the manual sign-out workflow remains disabled. Eighteen enabled
+tests pass in the restricted sandbox. `guide.notification_position` cannot mutate the real SDL/X11
+screen saver there, then passes unchanged outside that restriction; this is an execution-
+environment limitation rather than a demo or CNA failure. The catalog parser and validator/
+comparator self-tests pass5/5 and4/4. Generated coverage remains307/329 XNA types,2128/2326
+members,674/753 fields and3079/3205 C routes across all717 IDs. Evidence:
+`/tmp/checkpoint-1111-gamer-services-public-headers/*`. No online service, friend/invite exchange,
+headset, avatar-editor mutation, title update, screenshot or new manual result is claimed.

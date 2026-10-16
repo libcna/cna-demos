@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the public Gamer Services header audit across the configuration facade, 51 XNA
+  headers and their nested inventory types; confirmed every residual type/member/value as an
+  existing local workflow, a CLR/native-lifetime alias, or a concrete service, hardware, event or
+  environment boundary, with both remaining C routes likewise dispositioned.
 - Completed the 23-header public Net audit: mapped local session lifecycle, discovery/transport,
   packets, gamers/machines, event payloads and enums to the existing focused workflows; retained
   voice, invites, guest identity, leaderboard callbacks and transport-loss states as explicit

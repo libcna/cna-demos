@@ -12577,3 +12577,32 @@ validator/comparator self-tests pass5/5 and4/4. Generated coverage remains307/32
 `/tmp/checkpoint-1110-net-public-headers/*`. No online service, remote machine, voice device,
 transport-loss injection, screenshot or manual result is claimed. Continue with the public Gamer
 Services XNA headers and add behavior only for concrete, locally reachable gaps.
+
+## Focused1111 Gamer Services public-header audit
+
+The installed surface comprises one public `CNA::GamerServices` header, 16 internal implementation
+headers and 51 public XNA headers. The configuration header is complete through Focused1106. The
+20 stable Gamer Services workflows cover achievements; avatar descriptions, animations, pose and
+rendering; local profile identity/defaults/presence/privileges/sign-in/out; Guide dialog, overlay,
+notification and trial state; offline leaderboard writing/reading/paging; and component/dispatcher
+lifecycle. The separate C audit demonstrates237/239 routes and gives the remaining headset and
+invitation-delay observations explicit hardware/service dispositions.
+
+The current generated remainder was recalculated from the pinned inventory: eight types, 74
+non-field members and63 enum values. The eight types are service friend/update/invite/network
+payloads plus GamerCollection's CLR shape, already represented semantically by real roster ranges.
+The74 members are collection aliases, native finalizers, framework-created constructors/events,
+online lookup/social/friend/invite calls, positive headset state and service avatar/title-update
+delivery. The63 values are57 presence labels sharing one already-demonstrated publication path,
+two service privilege policies and four service gamer zones. No locally reachable behavior was
+missing, so this audit adds no synthetic demo or metadata credit.
+
+The warning-free incremental build remains limited to `-j3`; metadata remains717/0. Eighteen
+enabled SOFTWARE Gamer Services CTests pass in the restricted sandbox, and the one host-state test
+fails there because the sandbox prevents SDL/X11 screen-saver mutation, then passes unchanged
+outside that restriction. The sole manual sign-out test remains disabled by metadata. The catalog
+parser and validator/comparator self-tests pass5/5 and4/4. Generated coverage remains307/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes across all717 IDs. Evidence:
+`/tmp/checkpoint-1111-gamer-services-public-headers/*`. No online service, real friend/invite,
+headset, avatar-editor change, title update, screenshot or new manual result is claimed. Continue
+with the public XNA Audio header surface and its three uncredited environment exceptions.
