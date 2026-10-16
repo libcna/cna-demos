@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Proved that representative zero-count ShaderEffect array updates and a missing uniform name
+  preserve previously uploaded state on both GLSL dialects.
 - Covered cross-device RenderTarget2D move ownership, binding and payload behavior, and recorded
   CNA-DEMOS-ISSUE-112 for a missing secondary EasyGL render-target context lease.
 - Extended the OcclusionQuery lifecycle through disposal during an active Begin/End pair and proved

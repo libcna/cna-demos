@@ -158,6 +158,9 @@ Begin/End pair and proves later SOFTWARE/EasyGL queries still complete; both tes
 Focused1010 closes the RenderTarget2D cross-device move gap and records CNA-DEMOS-ISSUE-112: a
 secondary EasyGL SetRenderTarget omits its renderer-context lease, so its following Clear does not
 reach the target. SOFTWARE passes17/17; OPENGLES3 retains exactly that expected failure.
+Focused1011 closes the reachable ShaderEffect no-op boundary: representative zero-count vec3/mat4
+updates and a missing scalar name preserve the previously uploaded state and exact pixels on both
+GLSL dialects. Negative raw C++ pointer lengths remain intentionally uninvoked.
 Focused824 adds the actual `PbrEffect` image-based-lighting draw path: invalid fallback, diffuse
 irradiance, intensity scaling, BRDF lookup and roughness-selected prefiltered cube mips.
 Focused825 extends the existing skinned-PBR model with the parallel complete environment bundle and
@@ -4039,6 +4042,25 @@ batch run reports one expected failure and no unexpected pass. Counts remain307/
 `/tmp/checkpoint-1010-render-target-cross-device/*`. Readback was programmatic; no screenshot or
 manual visual inspection was performed. Audit invalid-count and missing-name ShaderEffect uniform
 behavior next; strengthen an existing shader demo rather than adding setter variants.
+
+## Focused1011 ShaderEffect no-op uniform boundaries
+
+`graphics.shader_effect.uniform_palettes` now follows its valid first-panel uploads with zero-count
+vec3 and mat4 array calls backed by destructive buffers, then writes a zero vec4 under a name absent
+from the linked program. The unchanged exact Red/Lime pixels prove that both representative empty
+array paths and missing-name lookup preserve the live values. The later update and composed-tint
+panels remain unchanged.
+
+Signed negative C++ counts represent invalid raw pointer lengths and are outside the public
+contract; invoking them would not be a safe behavior test. The C wrapper already covers its
+documented empty, null and negative validation across all four array families. The warning-free
+`-j3` build, metadata693/0 and exact SOFTWARE capability-skip CTest pass. Ten OPENGLES3 and ten
+OPENGL33/Xvfb runs pass6/6 with identical stdout SHA-256
+`9cd702a22644957a8d309aada617979e0a0afd346ef29355cd8df30ac4b2faf8` and empty stderr. Counts
+remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1011-shader-noop-uniforms/*`. Pixel validation was programmatic; no screenshot or
+manual visual inspection was performed. No CNA issue was found. Select the next explicit reachable
+member/behavior gap outside ShaderEffect.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

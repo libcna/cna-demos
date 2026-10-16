@@ -186,7 +186,8 @@ a check that all authored colors remain visible and that a blank texture row can
   capability skip. Full 461 passes 474 enabled CTests and both smokes; all old failures are retained.
 - ✅ `graphics.shader_effect.uniform_palettes`: six GL checks verify two matrix/vec3 entries,
   explicit payload layout/counts, caller-buffer overwrite, same-program updates, a parent matrix
-  and all four channels of a premultiplied tint. The image
+  and all four channels of a premultiplied tint. Representative vec3/mat4 zero-count updates and a
+  missing scalar name also preserve the prior exact pixels. The image
   was inspected; SOFTWARE capability skip. Together with `sample_kernel`, all four public array
   setter families now have sampled behavior; C validates their empty/invalid count contracts.
 - ✅ `graphics.shader_effect.compiler_diagnostics`: seven GL checks retain raw/owned diagnostics
@@ -11014,3 +11015,19 @@ stderr. The batch runner reports one expected failure and no unexpected pass. Co
 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1010-render-target-cross-device/*`. No screenshot or manual visual inspection was
 performed. Audit invalid-count and missing-name ShaderEffect uniform behavior next.
+
+## Focused1011-ShaderEffect-no-op-uniform-boundaries
+
+The existing uniform-palette scene now follows its valid first-panel uploads with zero-count vec3
+and mat4 array updates carrying destructive buffers and a zero-valued vec4 under a missing uniform
+name. Its unchanged exact Red/Lime pixels prove that representative empty vector/matrix updates and
+missing-name lookup preserve live state. Signed negative C++ pointer lengths remain outside the
+declared contract; the C wrapper already validates empty, null and negative cases for all four
+array families.
+
+The warning-free `-j3` build, metadata693/0 and exact SOFTWARE capability-skip CTest pass. Ten
+OPENGLES3 and ten OPENGL33/Xvfb runs pass6/6 with byte-identical stdout SHA-256
+`9cd702a22644957a8d309aada617979e0a0afd346ef29355cd8df30ac4b2faf8` and empty stderr. Counts
+remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1011-shader-noop-uniforms/*`. No screenshot or manual visual inspection was
+performed. Move to the next explicit reachable member/behavior gap outside ShaderEffect.

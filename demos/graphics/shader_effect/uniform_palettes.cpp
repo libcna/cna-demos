@@ -128,6 +128,14 @@ void main() { FragColor = vec4(tint * sceneTint.rgb, 1.0) * sceneTint.a; }
                 else shader_->SetUniformVec4("sceneTint", 1, 1, 1, 1);
                 shader_->SetUniformMat4Array("transforms", matrices.data(), 2); // two matrices, not 32 floats
                 shader_->SetUniformVec3Array("paletteColors", colors.data(), 2); // two vectors, not 6 floats
+                if (row == 0)
+                {
+                    const std::array<float, 32> ignoredMatrices{};
+                    const std::array<float, 6> ignoredColors{};
+                    shader_->SetUniformMat4Array("transforms", ignoredMatrices.data(), 0);
+                    shader_->SetUniformVec3Array("paletteColors", ignoredColors.data(), 0);
+                    shader_->SetUniformVec4("missingSceneTint", 0, 0, 0, 0);
+                }
                 sceneValues.fill(0); matrices.fill(0); colors.fill(0); // caller storage can change after the upload
                 if (row == 0) shader_->Apply();
                 device.DrawPrimitives(PrimitiveType::TriangleList, 0, 2);
@@ -144,7 +152,7 @@ void main() { FragColor = vec4(tint * sceneTint.rgb, 1.0) * sceneTint.a; }
                 const CnaDemos::BackBufferPixels screen(device);
                 Context().Check(CnaDemos::Near(screen.At(width / 4, rowHeight / 2), Color::Red, 0) &&
                                 CnaDemos::Near(screen.At(width * 3 / 4, rowHeight / 2), Color::Lime, 0),
-                                "pre-Apply scalar and array uploads render both initial palette values after caller buffers change");
+                                "pre-Apply values survive caller-buffer changes, zero-count updates and a missing uniform name");
                 Context().Check(CnaDemos::Near(screen.At(width / 4, rowHeight * 3 / 2), Color::Magenta, 0) &&
                                 CnaDemos::Near(screen.At(width * 3 / 4, rowHeight * 3 / 2), Color::Cyan, 0),
                                 "updating the same program swaps the two matrix translations and replaces both color entries");
@@ -185,6 +193,6 @@ CNA_DEMOS_GAME(UniformPaletteDemo, {
     .frames = 1,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "GLSL only. Counts are two matrices/two vec3 values; no invalid array count, missing-uniform, "
-                    "uniform-block or other renderer-dialect behavior is inferred.",
+    .restrictions = "GLSL only. Vec3/mat4 zero-count updates and one missing scalar name are ignored; negative "
+                    "C++ pointer counts, uniform blocks and other renderer dialects are not inferred.",
 })
