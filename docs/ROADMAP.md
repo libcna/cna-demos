@@ -11621,3 +11621,15 @@ metadata698/0, exact known-issue CTest and both self-test suites pass. Coverage 
 unchanged and Complete1056 marks the three new Vector4 IDs absent. Evidence:
 `/tmp/checkpoint-1059-vector4-component-bounds/*`. Continue with Vector4 Dot range and
 interpolation.
+
+## Focused1060 Vector4 Dot range
+
+New `math.vector4.dot` raises the catalog to699 and math to84. Genuine Windows XNA 4.0 retains
+opposite `1e20*1e20` products until cancellation, then adds the finite Z/W terms and returns
+exactly7 through both Dot forms. CNA narrows both products to infinities and returns NaN, extending
+ISSUE-123 with the sole failure among five controls. Ordinary signed products, orthogonal axes,
+homogeneous W and infinity-times-zero NaN match. Ten runs per renderer label are byte-stable with
+empty stderr. The clean `-j3` build, metadata699/0, exact known-issue CTest and both self-test
+suites pass. Coverage totals remain unchanged and Complete1056 marks the four new Vector4 IDs
+absent. Evidence:`/tmp/checkpoint-1060-vector4-dot-range/*`. Continue with Vector4 interpolation
+boundaries.
