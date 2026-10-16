@@ -11490,3 +11490,16 @@ byte-identical stdout and empty stderr; the clean `-j3` build, metadata694/0, ex
 CTest and both self-test suites pass. Coverage totals remain unchanged and the Complete1045-backed
 report is byte-identical. Evidence:`/tmp/checkpoint-1049-vector2-transform-arrays/*`. Audit the
 remaining Vector2 arithmetic/reflection/clamp boundaries, then disposition the family.
+
+## Focused1050 Vector2 component boundaries
+
+New `math.vector2.component_bounds` raises the catalog to695 and math to80. Genuine Windows XNA
+4.0 resolves reversed Clamp bounds to the minimum and makes Min/Max choose their second operand on
+equal signed-zero ties. CNA instead returns the reversed maximum and retains the first operand,
+recorded together as ISSUE-122. NaN Clamp placement, signed-zero division and unit/zero/scaled-
+normal reflection all match. Ten runs per renderer label retain exactly two expected failures among
+seven controls with byte-identical stdout and empty stderr. After the configure-only vendored-Draco
+warning, the clean `-j3` build is warning-free; metadata695/0, the exact known-issue CTest and both
+self-test suites pass. Coverage totals remain unchanged and Complete1045 marks only the new ID
+absent. Evidence:`/tmp/checkpoint-1050-vector2-component-bounds/*`. The Vector2 behavior audit is
+complete at pinned d23. Continue with Vector3 numeric identity and range behavior.

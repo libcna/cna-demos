@@ -69,12 +69,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-694 project-built catalog demos in19 categories: math79, game33, graphics185, audio23, core6,
+695 project-built catalog demos in19 categories: math80, game33, graphics185, audio23, core6,
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are188 console,296 game and210
-standalone; 658 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are189 console,296 game and210
+standalone; 659 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete1045's full runtime reports; they include all694
-current catalog IDs in both renderer suites with no absent result.
+then-current catalog IDs in both renderer suites. New post-baseline
+`math.vector2.component_bounds` is explicitly absent until the next complete checkpoint.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1045's
 full runtime reports are the baseline inputs for the694-ID checkpoint catalog. Selected semantic
@@ -87,7 +88,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1045 exercises all3079 credited C routes and all694 catalog IDs in both full smoke
+Complete1045 exercises all3079 credited C routes and all694 baseline catalog IDs in both full smoke
 suites.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
 through Focused1002, including the production StorageDeviceNotConnectedException path.
@@ -10631,3 +10632,25 @@ remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; reg
 Complete1045 inputs is byte-identical. Evidence:`/tmp/checkpoint-1049-vector2-transform-arrays/*`.
 No renderer or visual claim was made. Audit the remaining Vector2 arithmetic/reflection/clamp
 boundaries, then close or explicitly disposition the family.
+
+## Focused1050-Vector2-component-boundaries
+
+New focused console demo `math.vector2.component_bounds` raises the catalog to695 and math to80.
+Genuine Windows XNA 4.0 resolves reversed Clamp bounds to the supplied minimum and makes Min/Max
+select their second operand when equal positive/negative zeros expose the tie. CNA instead returns
+the reversed maximum and preserves the first tied operand, recorded together as new ISSUE-122.
+Three NaN Clamp placements, component/scalar signed-zero division and unit/zero/scaled-normal
+reflection including output aliasing all match XNA.
+
+The source addition required CMake regeneration. The sandboxed build could not create CNA's shared
+SDL lock; the authorized three-job retry configured and built, with only the existing vendored-
+Draco CMP0148 developer warning. The clean follow-up three-job build is warning-free. Metadata is
+695/0, the exact known-issue SOFTWARE CTest and self-tests5/5 plus4/4 pass. Ten SOFTWARE and ten
+OPENGLES3-labelled runs retain exactly two expected failures among seven controls with byte-
+identical stdout SHA-256 `2081e7f18965a70b6306492d6c902c139da5fdc098895dbe753e3848a02b4d21`
+and empty stderr. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C
+routes; Complete1045 marks only this new ID absent. Evidence:
+`/tmp/checkpoint-1050-vector2-component-bounds/*`. The meaningful Vector2 public-member/behavior
+audit is complete at pinned d23; trivial component output forwards are explicitly dispositioned.
+Continue with the next deterministic value family, beginning with Vector3 numeric identity and
+range behavior.

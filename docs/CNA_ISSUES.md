@@ -15,6 +15,35 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-122 -- Vector2 component bounds differ at reversed ranges and signed-zero ties
+
+- **Area/API:** `Microsoft::Xna::Framework::Vector2::Clamp`, `Vector2::Min` and `Vector2::Max`,
+  including their output overloads.
+- **Demo/reproduction:** run `math.vector2.component_bounds`. Clamp `(5,-5)` between per-component
+  minimum `(10,10)` and maximum `(0,0)`, then call Min and Max with `(+0,+0)`/`(-0,-0)` in both
+  orders. NaN bounds, component/scalar zero division and unit/zero/scaled-normal reflection are
+  adjacent controls.
+- **Observed:** CNA resolves the reversed Clamp interval to its maximum `(0,0)` rather than its
+  minimum `(10,10)`. CNA Min and Max also preserve their first operand when equal zeros differ only
+  by sign, opposite XNA's second-operand result. These are exactly two expected failures among seven
+  controls on each tested renderer label.
+- **Expected/reference:** genuine Windows XNA 4.0 resolves both reversed components to the supplied
+  minimum in value and output Clamp forms. Both Min and Max select their second operand when the
+  comparison is equal: positive-then-negative order therefore returns negative zero, and reversing
+  the operands returns positive zero. Value and output forms agree. XNA and CNA match on the three
+  distinct NaN Clamp placements and every division/reflection control.
+- **Cause/suggested repair:** CNA's `ClampScalar` composes `std::max(value,min)` then
+  `std::min(...,max)`, which returns the maximum for reversed bounds; XNA caps against maximum first
+  and then floors against minimum. CNA's direct `std::min`/`std::max` preserve the first operand on
+  equality, whereas XNA's ordered comparisons fall through to the second. Preserve those orders
+  explicitly rather than relying on the standard algorithms' tie policy.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1050-vector2-component-bounds/*`. The clean
+  warning-free three-job build, exact known-issue CTest, metadata695/0 and self-tests5/5 plus4/4
+  pass; ten runs per renderer label reproduce only the two documented assertions with empty stderr.
+  No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-121 -- Vector2 range transforms reject XNA's negative-length no-op
 
 - **Area/API:** range overloads of `Microsoft::Xna::Framework::Vector2::Transform` for Matrix and

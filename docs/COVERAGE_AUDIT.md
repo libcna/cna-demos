@@ -150,7 +150,7 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 |---|---|
 | Constructors, constants and components | `length` covers the zero default, two-component and replicated-scalar constructors plus Zero, One, UnitX and UnitY with direct X/Y observation. |
 | Length, LengthSquared, Distance, DistanceSquared and Normalize | Focused1046 extends `length` from5 to18 controls. Ordinary and zero member/static/output normalization matches XNA. Genuine Windows XNA keeps `1e20` and `1e-30` Length/Distance values finite and normalizes both to UnitX even when the squared result is infinity or zero. CNA's direct float squared sums lose all six observable results, extending ISSUE-118. Evidence:`/tmp/checkpoint-1046-vector2-magnitude-range/*`. |
-| Arithmetic, Reflect, Clamp and equality/hash | `toolbox_2d` demonstrates named/operator component arithmetic, an ordinary unit-normal reflection, component bounds and typed/boxed/operator equality with equal ordinary hashes. Focused1047 proves signed-zero values compare equal in every form but CNA's raw-bit hash differs from XNA under ISSUE-120. Output arithmetic forwards are component assignments and do not independently justify checks. Evidence:`/tmp/checkpoint-1047-vector2-signed-zero-hash/*`. |
+| Arithmetic, Reflect, Clamp and equality/hash | `toolbox_2d` demonstrates named/operator component arithmetic and ordinary typed/boxed/operator identity. Focused1047 proves signed-zero equality with CNA's hash mismatch under ISSUE-120. New `component_bounds` adds reversed/NaN Clamp, signed-zero Min/Max ties, IEEE component/scalar division and unit/zero/scaled-normal reflection with output/alias forms. CNA's reversed Clamp and equal-zero tie order differ under ISSUE-122; the other five controls match. Add/Subtract/Multiply/Negate/Dot output forwards are component assignments and do not independently justify checks. Evidence:`/tmp/checkpoint-1047-vector2-signed-zero-hash/*` and `/tmp/checkpoint-1050-vector2-component-bounds/*`. |
 | Lerp, SmoothStep, Barycentric, CatmullRom and Hermite | `toolbox_2d` shows ordinary in-range gameplay uses and spline endpoints. Focused1048 adds genuine-XNA negative and above-one amounts: Lerp and all three geometric forms extrapolate, SmoothStep clamps to its endpoints, and both Lerp/SmoothStep propagate NaN to both components. Meaningful output overloads agree. CNA matches all six new controls. Evidence:`/tmp/checkpoint-1048-vector2-interpolation/*`. |
 | Matrix/quaternion Transform, TransformNormal and arrays | `transform` distinguishes translated points from normals. Focused1049 adds value/output/alias parity, quaternion rotation, all six whole/range array families, guarded windows, both same-array overlap directions, atomic invalid positive windows and zero length at one-past-end indices. CNA matches XNA except that its shared range check rejects the negative length XNA treats as an empty range, recorded as ISSUE-121. Evidence:`/tmp/checkpoint-1049-vector2-transform-arrays/*`. |
 
@@ -5871,3 +5871,18 @@ only that grouped expected failure with byte-identical stdout and empty stderr. 
 `-j3` build, metadata694/0, exact known-issue CTest and self-tests5/5 plus4/4 pass. Generated
 coverage remains unchanged and byte-identical against Complete1045 inputs. Evidence:
 `/tmp/checkpoint-1049-vector2-transform-arrays/*`. No renderer or visual claim was made.
+
+### Focused1050 Vector2 component boundaries
+
+New focused console demo `math.vector2.component_bounds` raises the catalog to695 and math to80.
+Genuine Windows XNA 4.0 resolves a reversed Clamp interval to its minimum and makes Min/Max select
+their second operand when equal signed zeros expose the tie. CNA instead returns the reversed
+maximum and preserves the first tied operand, recorded together as ISSUE-122. Three NaN Clamp
+placements, component/scalar signed-zero division and unit/zero/scaled-normal reflection including
+output aliasing all match XNA. Ten runs per renderer label retain exactly those two failures among
+seven controls with byte-identical stdout and empty stderr. The clean `-j3` build, metadata695/0,
+exact known-issue CTest and self-tests5/5 plus4/4 pass. Generated coverage remains307/329 types,
+2128/2326 members,674/753 fields and3079/3205 C routes; Complete1045 marks only this new ID absent.
+Evidence:`/tmp/checkpoint-1050-vector2-component-bounds/*`. This closes the meaningful Vector2
+public-member/behavior table at pinned d23; trivial component output forwards are dispositioned
+above. No renderer or visual claim was made.
