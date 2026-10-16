@@ -11645,3 +11645,16 @@ metadata700/0, exact CTest and both self-test suites pass. Coverage totals remai
 Complete1056 marks the five new Vector4 IDs absent. Evidence:
 `/tmp/checkpoint-1061-vector4-interpolation/*`. Continue with Vector4 matrix/quaternion output and
 array boundaries.
+
+## Focused1062 Vector4 transforms and arrays
+
+New `math.vector4.transform` raises the catalog to701 and math to86. Genuine Windows XNA 4.0
+anchors Vector2/3 implicit W, authored Vector4 W, all matrix/quaternion value/output/alias and
+full/range array forms, guarded destinations, both overlap directions, atomic invalid windows and
+zero length at one-past-end indices. XNA accepts negative lengths as empty ranges; CNA rejects
+both families, extending ISSUE-121 with the sole grouped failure among twelve controls. Ten runs
+per renderer label retain only that failure with byte-identical stdout and empty stderr. The clean
+`-j3` build, metadata701/0, exact known-issue CTest and both self-test suites pass. Coverage totals
+remain unchanged and Complete1056 marks the six new Vector4 IDs absent. Evidence:
+`/tmp/checkpoint-1062-vector4-transforms/*`. The meaningful Vector4 public-member/behavior audit is
+complete at pinned d23; continue with the next deterministic value family.

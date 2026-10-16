@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added focused Vector4 matrix/quaternion transform and array coverage, extending ISSUE-121 with
+  its negative-length behavior and completing the Vector4 public-member audit.
 - Added focused Vector4 interpolation coverage for extrapolation, clamping, NaN and output forms.
 - Added focused Vector4 Dot range coverage and extended ISSUE-123 with wide-product cancellation.
 - Added focused Vector4 component-bound and arithmetic coverage, extending ISSUE-122 with reversed
