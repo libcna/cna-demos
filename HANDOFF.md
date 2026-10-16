@@ -11410,3 +11410,26 @@ names. Complete1075's three affected results predate these controls. Evidence:
 The deterministic root Framework audit is now complete. Select the highest-value deterministic
 semantic family from the remaining uncovered-member inventory next, dispositioning existing demos
 before adding controls or a focused ID. Keep every compile at three jobs or fewer.
+
+## Focused1079-MediaPlayer-visualization-wall-clock-stability
+
+The first complete-checkpoint attempt after Focused1078 passed its warning-free build and
+metadata710/0, then found one failure among723 enabled CTests. Under the full three-job load,
+`media.media_player.visualization` let fixed-step GameTime cross its750ms phase boundary before the
+dummy audio callback produced a first FFT buffer. Its first-tone energy and ordered-band assertions
+failed. This is a demo scheduling defect: isolated unchanged CNA capture succeeds when given real
+mixer time, so no CNA issue was recorded.
+
+The demo now measures phase dwell time with `steady_clock`, requires at least750ms plus a nonzero
+capture, and retains a four-second wall-clock deadline that still runs the checks if visualization
+is truly broken. The larger frame guard only accommodates both deadlines; ordinary runs exit in
+about1.7s. Twenty consecutive exact SOFTWARE CTests, thirty runs in ten simultaneous three-process
+waves and ten OPENGLES3/Xvfb runs pass all six controls with byte-identical stdout SHA-256
+`474e21e223b75703e7a8349d92e4b30cbc2f2393a3a121be4b9a61eb4d314abf` and empty stderr. The clean
+incremental build used `-j3`; metadata710/0, all15 CLI CTests and validator/comparator self-tests5/5
+plus4/4 pass. Evidence:`/tmp/checkpoint-1079-visualization-wall-clock/*`, including the original
+failed full CTest log. No listening, visual or screenshot claim was made.
+
+Commit and push this demo fix, then rerun the complete710-demo checkpoint. Compare both complete
+renderer reports with Complete1075 and account for every Focused1076-1079 assertion/status change.
+Keep every compile at no more than three jobs.

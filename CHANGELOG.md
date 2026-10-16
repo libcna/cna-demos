@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Made MediaPlayer visualization phase changes follow real mixer time, eliminating a fixed-step
+  catch-up race exposed by the complete three-job CTest run while preserving finite failure bounds.
 - Completed the deterministic root title-content and event/value-carrier audit, recording ISSUE-145
   for TitleContainer rooted-name acceptance and missing/empty exception differences from XNA.
 - Completed GameTime, LaunchParameters and GameServiceContainer behavior coverage, recording

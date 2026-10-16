@@ -11951,3 +11951,22 @@ constructors/setter. Complete1075's three affected results predate these control
 `/tmp/checkpoint-1078-root-values/*`. No visual or manual interaction claim was made. Continue with
 the highest-value deterministic semantic family selected from the remaining uncovered member
 inventory; keep all compiles at no more than three jobs.
+
+## Focused1079 MediaPlayer visualization wall-clock stability
+
+The complete-checkpoint attempt after Focused1078 passed its build and metadata validation but
+failed one of723 enabled CTests. Under the full three-job load,
+`media.media_player.visualization` advanced fixed-step GameTime past its750ms phase boundary before
+the dummy audio callback supplied a first FFT buffer, so first-tone energy and the relative band
+ordering failed. This is a demo scheduling defect rather than a newly observed CNA behavior bug.
+
+The existing six-control workflow now measures phase dwell time with `steady_clock`, waits for a
+nonzero mixer capture after at least750ms and retains a four-second wall-clock deadline so a broken
+capture path still reaches visible assertions. Its frame limit only accommodates both deadlines;
+normal runs exit after about1.7s. Twenty exact SOFTWARE CTest repetitions, thirty runs arranged as
+ten simultaneous three-process waves, and ten OPENGLES3/Xvfb runs pass with byte-identical stdout
+SHA-256 `474e21e223b75703e7a8349d92e4b30cbc2f2393a3a121be4b9a61eb4d314abf` and empty stderr. The clean
+`-j3` build, metadata710/0, all15 CLI CTests and validator/comparator self-tests5/5 plus4/4 pass.
+Evidence:`/tmp/checkpoint-1079-visualization-wall-clock/*`; it retains the failed full CTest log.
+No listening, screenshot or rendered-pixel claim was made. Retry the complete710-demo checkpoint
+at this source commit next.

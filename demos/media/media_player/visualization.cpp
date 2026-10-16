@@ -2,6 +2,7 @@
 // MediaPlayer visualization: the playing music's spectrum and waveform, every frame.
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <cmath>
 #include <memory>
 #include <optional>
@@ -69,6 +70,7 @@ namespace
             MediaPlayer::setIsVisualizationEnabledProperty(true);
             MediaPlayer::setIsRepeatingProperty(true);
             MediaPlayer::Play(tone440_.get());
+            phaseStarted_ = Clock::now();
         }
 
         void UnloadContent() override
@@ -104,8 +106,15 @@ namespace
             }
             peak_ = std::max(peak_, energy);
 
-            const double totalSeconds = gameTime.getTotalGameTimeProperty().getTotalSecondsProperty();
-            if (phase_ == 0 && totalSeconds > 0.75)
+            const double phaseSeconds =
+                std::chrono::duration<double>(Clock::now() - phaseStarted_).count();
+            const bool captureReady = strongestMagnitude_[phase_] > 0.0f;
+            // Fixed-step GameTime may catch up faster than the audio callback under a loaded
+            // parallel test run. Give the real mixer at least 750 ms and wait for its first
+            // nonzero capture, with a finite wall-clock deadline that still exposes a broken
+            // visualization path instead of silently reaching the automated frame limit.
+            const bool finishPhase = phaseSeconds > 0.75 && (captureReady || phaseSeconds > 4.0);
+            if (phase_ == 0 && finishPhase)
             {
                 Context().Check(strongestMagnitude_[0] > 0.0f,
                                 "the first playing tone produces a nonzero spectrum");
@@ -114,9 +123,9 @@ namespace
                 MediaPlayer::Play(tone660_.get());
                 MediaPlayer::setIsVisualizationEnabledProperty(true);
                 phase_ = 1;
-                phaseStartSeconds_ = totalSeconds;
+                phaseStarted_ = Clock::now();
             }
-            else if (!checked_ && phase_ == 1 && totalSeconds - phaseStartSeconds_ > 0.75)
+            else if (!checked_ && phase_ == 1 && finishPhase)
             {
                 Context().Print("strongest spectrum so far: {:.2f} (sum of the 256 bands)", peak_);
                 Context().Print("dominant tone bands: 440 Hz -> {}, 660 Hz -> {}",
@@ -158,6 +167,8 @@ namespace
         }
 
     private:
+        using Clock = std::chrono::steady_clock;
+
         std::unique_ptr<Song> tone440_;
         std::unique_ptr<Song> tone660_;
         VisualizationData data_;
@@ -169,7 +180,7 @@ namespace
         bool sawPositiveSample_ = false;
         bool sawNegativeSample_ = false;
         int phase_ = 0;
-        double phaseStartSeconds_ = 0.0;
+        Clock::time_point phaseStarted_{};
         bool checked_ = false;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
@@ -188,6 +199,6 @@ CNA_DEMOS_GAME(VisualizationDemo, {
              "VisualizationData::Samples", "MediaPlayer::IsRepeating"},
     .tags = {"media", "music", "spectrum", "visualizer", "fft"},
     .needs = CnaDemos::Need::Audio,
-    .frames = 120,
+    .frames = 600,
     .assets = {"fonts/pixel_font.cnb", "sounds/tone_440.wav", "sounds/tone_660.wav"},
 })
