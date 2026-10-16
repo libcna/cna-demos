@@ -3466,14 +3466,16 @@ Focused823 compared the641-demo catalog after focused822 with the exact3205 decl
 clean `d23e139de` CNA headers. Its original difference was127 routes. Focused1007 repeats the exact
 inventory against the current693-demo catalog and the same pinned headers, and corrects one
 classification: `cna_content_manager_create_resource` was already executed meaningfully by the CNB
-loader-registry workflow. The remaining126 routes retain explicit decisions below; only executed,
-meaningful behavior is credited, so generated coverage is3079/3205.
+loader-registry workflow. Focused1121 credits the two Texture2D reflection routes only after the
+decoded-video workflow starts checking their exact value and buffer behavior. The remaining124
+routes retain explicit decisions below; only executed, meaningful behavior is credited, so
+generated coverage is3081/3205.
 
 | Class | Count | Exact disposition |
 |---|---:|---|
-| Fixed type-name reflection | 84 | Fourteen headers contain size/copy pairs returning constant canonical names: `audio.h`8, `graphics.h`2, `graphics_device.h`2, `index_resources.h`2, `media.h`8, `media_library.h`26, `runtime_components.h`4, `runtime_graphics_manager.h`4, `sensors.h`8, `storage.h`2, `texture.h`2, `texture_volume.h`4, `vertex_resources.h`4 and `xact.h`8. Representative value and handle workflows already prove exact sizing, zero-capacity queries, atomic short-buffer refusal and unterminated exact copies. Add one to an existing workflow only when its text is material to that concept; independent controls for all pairs would be count inflation. |
+| Fixed type-name reflection | 82 | Thirteen headers contain size/copy pairs returning constant canonical names: `audio.h`8, `graphics.h`2, `graphics_device.h`2, `index_resources.h`2, `media.h`8, `media_library.h`26, `runtime_components.h`4, `runtime_graphics_manager.h`4, `sensors.h`8, `storage.h`2, `texture_volume.h`4, `vertex_resources.h`4 and `xact.h`8. Representative value and handle workflows already prove exact sizing, zero-capacity queries, atomic short-buffer refusal and unterminated exact copies. Add one to an existing workflow only when its text is material to that concept; independent controls for all pairs would be count inflation. |
 | Explicit test-only hooks | 21 | `core_ext.h` contributes `cna_graphics_renderer_reset_selection_for_tests_ext`. `sensors.h` contributes ten Accelerometer and ten Gyroscope hooks for subsystem-held/connected probes, started-instance registration, forced dispatch, event-watch failure injection, swallowed-exception inspection and disposal cleanup. They support CNA's own unit tests and are not application behavior. |
-| Already meaningfully demonstrated | 1 | `cna_content_manager_create_resource` successfully creates the resource-backed manager used by `c_api.content.cnb_loader_registry`, which passes it through repeated custom and built-in loader invocations, observes a live callback-scoped manager and destroys the owner. Embedded-resource loads remain an explicitly unsupported behavior, but that does not make the successful constructor a placeholder. Focused1007 adds the previously missing metadata credit. |
+| Already meaningfully demonstrated | 3 | `cna_content_manager_create_resource` successfully creates the resource-backed manager used by `c_api.content.cnb_loader_registry`, which passes it through repeated custom and built-in loader invocations, observes a live callback-scoped manager and destroys the owner. Focused1007 adds its previously missing metadata credit. Focused1121 adds `cna_texture2d_get_type_name_byte_count` and `cna_texture2d_copy_type_name` to the decoded-video workflow: the borrowed frame must identify itself as `Texture2D`, exact-copy without a terminator, reject a short buffer atomically and become invalid after the next player call. |
 | Manual/platform/service or externally observable production behavior | 21 | These remain real API, but the current automated environment cannot establish their positive behavior honestly. Exact decisions follow below. |
 
 | Header and routes | Decision |
@@ -7556,3 +7558,27 @@ No prior failed assertion was removed. Catalog/validator/comparator self-tests p
 Evidence is archived under `build/linux-full/reports/checkpoint-1120-complete-*`; the19 source
 reports per renderer remain under `checkpoint-1120-parts`. No screenshot, listening, physical
 input, remote service or new manual result is claimed.
+
+### Focused1121 smallest residual C-route audit and Texture2D identity
+
+The exact pinned-header/catalog difference is rederived at124 routes after this batch. The first
+six residual headers now have a source-backed decision for every route. The sole `core_ext.h` gap
+is explicitly documented as a renderer-selection test reset that games must not call.
+`cna_gamepad_get_state_with_dead_zone` remains a physical-controller check: this host's disconnected
+neutral state cannot distinguish its three modes, while `c_api.input.gamepad` already proves every
+algorithm with controlled analog values through `cna_gamepad_apply_dead_zone`. The SpriteBatch,
+IndexBuffer and StorageContainer pairs only copy their fixed native type names; their live handle
+workflows already demonstrate the objects, and duplicating the established text-buffer contract
+would add no behavior.
+
+The Texture2D pair is different in the existing decoded-video workflow because the borrowed frame
+handle's dynamic identity and one-call lifetime are central to the concept. The stable
+`c_api.media.video_player` ID now verifies the exact `Texture2D` bytes, no implicit terminator,
+atomic short-buffer refusal and invalidation after the next player call. This adds both routes,
+completes `texture.h` at21/21 and moves generated C coverage3079->3081/3205 without a new demo.
+
+The warning-free incremental build uses `-j3`; metadata validates719/0. The exact SOFTWARE CTest
+passes, and direct SOFTWARE plus OPENGLES3/Xvfb runs pass33/33 controls. Validator and checkpoint
+self-tests pass5/5 and4/4. Runtime-backed renderer statuses still use the complete1120 reports;
+only catalog API credit changes. No frame pixels, audible output, screenshot or manual result is
+claimed, and no CNA issue was found. Evidence:`/tmp/focused-1121-*`.

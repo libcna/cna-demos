@@ -128,6 +128,7 @@ static CNA_Result load_content(
     CNA_CallbackError* out_error)
 {
     static const char PlayerType[] = "Microsoft.Xna.Framework.Media.VideoPlayer";
+    static const char TextureType[] = "Texture2D";
     State* state = (State*)context;
     CNA_Handle device = CNA_INVALID_HANDLE;
     CNA_Handle first_texture = CNA_INVALID_HANDLE;
@@ -259,6 +260,23 @@ static CNA_Result load_content(
         "the first real decode publishes a versioned frame and nonzero generation");
     first_texture = first.texture;
     state->last_generation = first.generation;
+    memset(text, 0xA5, sizeof(text));
+    cna_demo_check(
+        state->demo,
+        cna_texture2d_get_type_name_byte_count(first_texture, &bytes) == CNA_RESULT_SUCCESS &&
+            bytes == sizeof(TextureType) - 1U &&
+            cna_texture2d_copy_type_name(first_texture, text, bytes, &copied) ==
+                CNA_RESULT_SUCCESS &&
+            copied == bytes && memcmp(text, TextureType, (size_t)bytes) == 0 &&
+            (unsigned char)text[bytes] == 0xA5U,
+        "the borrowed video frame reports the exact unterminated Texture2D type name");
+    memcpy(before, text, sizeof(text));
+    cna_demo_check(
+        state->demo,
+        cna_texture2d_copy_type_name(first_texture, text, bytes - 1U, &copied) ==
+                CNA_RESULT_BUFFER_TOO_SMALL &&
+            copied == bytes && memcmp(text, before, sizeof(text)) == 0,
+        "a short frame type-name destination is rejected atomically");
     cna_demo_check(
         state->demo,
         cna_texture2d_get_type_name_byte_count(first_texture, &bytes) == CNA_RESULT_SUCCESS &&

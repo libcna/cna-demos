@@ -4,8 +4,8 @@
 CNA_DEMOS_STANDALONE({
     .id = "c_api.media.video_player",
     .title = "Decoded video playback in C",
-    .description = "A C game drives a real decoded VideoPlayer through configuration, borrowed frames, pause and "
-                   "resume, an observed loop, replay generation and disposed lifetime behavior.",
+    .description = "A C game drives a real decoded VideoPlayer through configuration, borrowed Texture2D type "
+                   "identity, pause and resume, an observed loop, replay generation and disposed lifetime behavior.",
     .apis = {"cna_video_player_create", "cna_video_player_get_is_disposed",
              "cna_video_player_get_is_looped", "cna_video_player_set_is_looped",
              "cna_video_player_get_is_muted", "cna_video_player_set_is_muted",
@@ -17,6 +17,7 @@ CNA_DEMOS_STANDALONE({
              "cna_video_player_set_audio_track_ext", "cna_video_player_set_video_track_ext",
              "cna_video_player_dispose", "cna_video_player_destroy",
              "cna_video_player_get_type_name_size", "cna_video_player_copy_type_name",
+             "cna_texture2d_get_type_name_byte_count", "cna_texture2d_copy_type_name",
              "CNA_VideoFrameEXT", "CNA_MediaState"},
     .tags = {"c", "binding", "media", "video", "player", "decode", "lifetime"},
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::Video | CnaDemos::Need::Audio,

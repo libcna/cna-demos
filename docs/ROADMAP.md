@@ -12828,3 +12828,24 @@ Continue the behavior-level audit with the126 residual public C routes. Generate
 inventory first, then disposition the smallest residual headers (`core_ext.h`, `input.h`,
 `graphics.h`, `index_resources.h`, `storage.h`, `texture.h`) before adding any demo. Prefer an
 existing workflow wherever a route reaches already-demonstrated behavior.
+
+## Focused1121 smallest residual C-route audit and Texture2D identity
+
+The ten routes across the six smallest residual headers are fully dispositioned. The
+`core_ext.h` reset is explicitly test-only, and the live `input.h` dead-zone overload needs a
+physical non-neutral controller to distinguish modes; the existing controlled analog transform
+already proves all three algorithms. SpriteBatch, IndexBuffer and StorageContainer each expose a
+fixed type-name pair whose objects and shared text-buffer behavior are already represented, so
+independent checks would only inflate metadata.
+
+The decoded-video demo now uses both residual `texture.h` routes to prove that its borrowed frame
+has exact dynamic identity `Texture2D`, exact unterminated copy semantics, atomic short-buffer
+refusal and the already-demonstrated next-call invalidation. Both renderer runs pass33/33, the exact
+SOFTWARE CTest passes, the `-j3` build is warning-free, metadata is719/0 and both tool self-test
+suites pass. `texture.h` reaches21/21 and total C route coverage reaches3081/3205. No new ID or CNA
+issue is warranted.
+
+Continue with the hardware/service/platform residual set in `gamer_services.h`, `devices.h`,
+`input_haptics.h`, `input_joystick.h` and `input_devices.h`. Recheck each positive path against the
+current host and existing workflows before retaining a manual disposition; do not credit a call
+whose success cannot be observed.

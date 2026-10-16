@@ -12550,3 +12550,27 @@ residual public C routes, starting with the smallest residual headers: `core_ext
 (one each), then `graphics.h`, `index_resources.h`, `storage.h` and `texture.h` (two each). Reuse
 existing workflows for already-demonstrated behavior and add a focused route only for a real gap.
 Keep every compilation at three jobs or fewer.
+
+## Focused1121-smallest-residual-C-routes-and-Texture2D-identity
+
+The exact residual inventory was regenerated from the719-demo catalog and pinned CNA
+`d23e139de`. All ten routes in the first six headers now have current dispositions. The only
+`core_ext.h` route is explicitly test-only. The `input.h` live dead-zone overload still needs a
+physical non-neutral controller to distinguish modes; controlled `cna_gamepad_apply_dead_zone`
+coverage remains the honest automated proof. SpriteBatch, IndexBuffer and StorageContainer each
+have a fixed reflection pair already represented by live object workflows plus shared text-buffer
+contract coverage, so they remain intentionally uncredited.
+
+`c_api.media.video_player` now makes its existing borrowed-frame type probe meaningful: it checks
+the exact `Texture2D` bytes, unterminated exact copy, atomic short-buffer refusal and next-call
+handle invalidation. Direct SOFTWARE and OPENGLES3/Xvfb runs pass33/33, the exact SOFTWARE CTest
+passes, the warning-free build uses `-j3`, metadata is719/0 and validator/comparator self-tests pass
+5/5 and4/4. Generated coverage is308/329 types,2128/2326 members,674/753 fields and3081/3205 C
+routes; `texture.h` is21/21. Complete1120 remains the runtime-status baseline. No pixels, listening,
+screenshot or manual result is claimed; no CNA issue was found. Evidence:`/tmp/focused-1121-*`.
+
+Commit and push this batch. Next audit the remaining hardware/service/platform production routes:
+`gamer_services.h`2, `devices.h`3, `input_haptics.h`3, `input_joystick.h`3 and
+`input_devices.h`6. Verify the pinned implementation, host capabilities and existing focused demos
+before retaining manual dispositions. Then continue with the remaining graphics/runtime fixed-name
+and externally observed routes. Keep every compilation at three jobs or fewer.
