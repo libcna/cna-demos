@@ -10827,8 +10827,9 @@ The seven Audio gaps remain four CLR finalizers plus three exception constructor
 SoundEffectInstance/XACT lifetime workflows already exercise deterministic disposal and native
 destruction. A fresh-process invalid SDL audio-driver probe reaches CNA's real
 `NoAudioHardwareException` route and the runner correctly reports the declared audio requirement as
-a skip. Microphone absence remains manual, while CNA still has no production throw of
-`InstancePlayLimitException`; direct construction would be synthetic. The seven Content gaps remain
+a skip. Physical microphone capture remains manual; source review now clarifies that CNA/FNA never
+throw `NoMicrophoneConnectedException` or `InstancePlayLimitException` from production Audio code,
+so direct construction would be synthetic. The seven Content gaps remain
 nominal serializer attribute wrappers. Real intermediate descriptor workflows already establish
 collection item names, ignored members, polymorphic runtime types and versioned readers; CNA's C++
 serializer consumes those descriptors rather than wrapper instances.
@@ -12606,3 +12607,32 @@ types,2128/2326 members,674/753 fields and3079/3205 C routes across all717 IDs. 
 `/tmp/checkpoint-1111-gamer-services-public-headers/*`. No online service, real friend/invite,
 headset, avatar-editor change, title update, screenshot or new manual result is claimed. Continue
 with the public XNA Audio header surface and its three uncredited environment exceptions.
+
+## Focused1112 Audio public-header audit
+
+The Audio module installs two public CNA backend-provider headers,11 internal implementation
+headers,19 public `Microsoft.Xna.Framework.Audio` headers and the root `FrameworkDispatcher`
+bridge. Focused1105 already assigns the provider interfaces and value formats to CNA's backend
+conformance tests plus the translated SoundEffect/DynamicSoundEffectInstance/Microphone workflows.
+The23 Audio demos cover the caller surface across PCM/file/stream construction, sample arithmetic,
+playback state and ownership, 3D values, streaming buffers, microphone availability/capture,
+AudioEngine/categories/Cues/banks, variables, authored limits and renderer details.
+
+A fresh source and generated-inventory audit confirms seven non-field gaps: four CLR finalizers and
+the three exception constructors. Native ownership is already demonstrated. A fresh-process
+invalid SDL driver makes `audio.sound_effect.from_pcm_buffer` reach CNA's real
+`NoAudioHardwareException`; the relevant header/API is now visible in that existing source and the
+runner reports a declared skip with exit77. This moves generated type coverage without claiming a
+synthetic constructor. CNA/FNA production Audio code never throws `InstancePlayLimitException` or
+`NoMicrophoneConnectedException`: ordinary SoundEffect reports false, XACT stops/refuses the new
+Cue, and missing microphone hardware gives an empty list/null default. Their payload constructors
+remain unit-test/support scope.
+
+All22 enabled SOFTWARE Audio CTests pass with the dummy backend; the microphone workflow remains
+manual/disabled. After the metadata-only edit, the focused PCM CTest passes and the invalid-driver
+probe again produces the exact skip. The warning-free build uses `-j3`; metadata is717/0 and the
+catalog parser plus validator/comparator self-tests pass5/5 and4/4. Regenerated coverage is308/329
+XNA types,2128/2326 members,674/753 fields and3079/3205 C routes; Audio is17/19 types and114/121
+members. Evidence:`/tmp/checkpoint-1112-audio-public-headers/*`. No listening, acoustic quality,
+physical microphone, output-device removal or screenshot result is claimed. Continue with the
+public Content headers and their four nominal serializer-wrapper types.

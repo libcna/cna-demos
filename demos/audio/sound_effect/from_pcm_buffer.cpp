@@ -7,6 +7,7 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Audio/AudioChannels.hpp"
+#include "Microsoft/Xna/Framework/Audio/NoAudioHardwareException.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundEffect.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "System/ArgumentException.hpp"
@@ -34,6 +35,9 @@ namespace
             pcm.push_back(static_cast<SharpRuntime::bytecs>((value >> 8) & 0xFF));
         }
 
+        // Opening the first audio-backed object is also CNA's production
+        // NoAudioHardwareException boundary. The runner maps that exception to a declared skip
+        // because this demo names Need::Audio.
         SoundEffect tone(pcm, sampleRate, AudioChannels::Mono);
         const double seconds = tone.getDurationProperty().getTotalSecondsProperty();
         ctx.Print("{} bytes of PCM -> Duration {:.4f} s", pcm.size(), seconds);
@@ -95,7 +99,8 @@ CNA_DEMOS_CONSOLE(FromPcmBuffer, {
     .description = "Synthesises 16-bit PCM, exercises whole-buffer and aligned-window construction, and checks "
                    "SoundEffect sample-helper rounding, invalid inputs, duration and playback.",
     .apis = {"SoundEffect::SoundEffect", "SoundEffect::Duration", "SoundEffect::GetSampleDuration",
-             "SoundEffect::GetSampleSizeInBytes", "SoundEffect::Play", "AudioChannels::Mono", "AudioChannels::Stereo"},
+             "SoundEffect::GetSampleSizeInBytes", "SoundEffect::Play", "AudioChannels::Mono", "AudioChannels::Stereo",
+             "NoAudioHardwareException"},
     .tags = {"audio", "pcm", "synthesis", "procedural"},
     .needs = CnaDemos::Need::Audio,
 })

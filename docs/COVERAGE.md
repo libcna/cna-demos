@@ -35,14 +35,14 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## XNA 4.0 API surface demonstrated
 
-- **Types with at least one demo: 307 of 329** (93.3 %).
+- **Types with at least one demo: 308 of 329** (93.6 %).
 - **Methods, properties, constructors and events named by a demo: 2128 of 2326** (91.5 %).
 - Fields and enum values named by a demo: 674 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 42 / 42 | 635 / 643 | 78 / 78 |
-| `Microsoft.Xna.Framework.Audio` | 16 / 19 | 114 / 121 | 11 / 11 |
+| `Microsoft.Xna.Framework.Audio` | 17 / 19 | 114 / 121 | 11 / 11 |
 | `Microsoft.Xna.Framework.Content` | 7 / 11 | 41 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 51 / 51 | 2 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 44 / 52 | 170 / 244 | 160 / 223 |
@@ -58,7 +58,7 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
-- `Microsoft.Xna.Framework.Audio`: InstancePlayLimitException, NoAudioHardwareException, NoMicrophoneConnectedException
+- `Microsoft.Xna.Framework.Audio`: InstancePlayLimitException, NoMicrophoneConnectedException
 - `Microsoft.Xna.Framework.Content`: ContentSerializerCollectionItemNameAttribute, ContentSerializerIgnoreAttribute, ContentSerializerRuntimeTypeAttribute, ContentSerializerTypeVersionAttribute
 - `Microsoft.Xna.Framework.GamerServices`: FriendCollection, FriendGamer, GameUpdateRequiredException, GamerCollection, GamerCollection.GamerCollectionEnumerator, InviteAcceptedEventArgs, NetworkException, NetworkNotAvailableException
 - `Microsoft.Xna.Framework.Graphics`: DeviceLostException, DeviceNotResetException, ModelBoneCollection.Enumerator, ModelEffectCollection.Enumerator, ModelMeshCollection.Enumerator, ModelMeshPartCollection.Enumerator

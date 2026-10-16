@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the public Audio header audit and credited `NoAudioHardwareException` through the
+  existing PCM demo's real fresh-process device-open failure; clarified that CNA/FNA production
+  Audio never throws the remaining microphone/instance-limit payloads, while retaining their real
+  empty-list, false-return and Cue-state behavior instead of synthetic constructors.
 - Completed the public Gamer Services header audit across the configuration facade, 51 XNA
   headers and their nested inventory types; confirmed every residual type/member/value as an
   existing local workflow, a CLR/native-lifetime alias, or a concrete service, hardware, event or

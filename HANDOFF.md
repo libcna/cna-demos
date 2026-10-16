@@ -73,13 +73,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services20, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are205 console,297 game and215
 standalone; 683 are automated,31 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md merges Focused1109 results into Complete1099's full reports
+Coverage: generated docs/COVERAGE.md merges Focused1112 metadata into Complete1099's full reports
 and includes all717 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
 Curve and Matrix audits in Focused1063-1074 and the root Framework audits in Focused1076-1078,
 including ISSUE-124 through ISSUE-145.
-The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
+The surface totals are308/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1099
 plus the focused updates are the current baseline inputs. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
@@ -12326,3 +12326,31 @@ Commit and push this audit. Next consolidate the public XNA Audio header surface
 three uncredited environment exceptions and seven residual members, while preserving the existing
 audio/XACT workflows and CNA provider-contract disposition. Keep every compile at three jobs or
 fewer.
+
+## Focused1112-Audio-public-header-audit
+
+The two public CNA provider headers,11 internal headers,19 public Audio XNA headers and root
+FrameworkDispatcher bridge now have a consolidated disposition. The existing23 workflows cover
+ordinary SoundEffect/instance/streaming/3D/microphone and XACT engine/category/Cue/bank/variable/
+limit/renderer behavior. CNA's backend conformance suite owns the provider-level callback, format,
+enumeration and I/O contracts already translated by those workflows.
+
+The exact generated remainder is seven members: four CLR finalizers and three exception
+constructors. Native lifetime is already demonstrated. A fresh-process invalid SDL driver proves
+the real `NoAudioHardwareException` boundary in `audio.sound_effect.from_pcm_buffer`; that stable
+source now names the header/API and its metadata credits the type. The runner reports SKIPPED with
+exit77 because the demo declares Audio. CNA/FNA production Audio never throws
+`InstancePlayLimitException` or `NoMicrophoneConnectedException`: limit behavior is a false return
+or stopped/refused Cue and missing capture hardware is an empty list/null default. Synthetic
+payload construction remains intentionally uncredited.
+
+All22 enabled SOFTWARE Audio CTests pass under dummy audio; the manual microphone test stays
+disabled. The focused PCM CTest and invalid-driver skip pass after the warning-free `-j3` rebuild.
+Metadata is717/0 and catalog/validator/comparator checks pass. Regenerated coverage is308/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes; Audio reaches17/19 types and114/121
+members. Evidence:`/tmp/checkpoint-1112-audio-public-headers/*`. No listening, physical capture,
+live output removal, screenshot or new manual result is claimed.
+
+Commit and push this batch. Next audit the public Content headers and the four nominal serializer
+wrapper types/seven residual members, using the real descriptor and intermediate-XML workflows as
+the semantic baseline. Keep every compile at three jobs or fewer.
