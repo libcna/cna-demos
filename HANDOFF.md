@@ -73,12 +73,11 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are189 console,296 game and210
 standalone; 659 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1045's full runtime reports; they include all694
-then-current catalog IDs in both renderer suites. New post-baseline
-`math.vector2.component_bounds` is explicitly absent until the next complete checkpoint.
+Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; they include all695
+current catalog IDs in both renderer suites.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
-3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1045's
-full runtime reports are the baseline inputs for the694-ID checkpoint catalog. Selected semantic
+3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
+full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -88,7 +87,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1045 exercises all3079 credited C routes and all694 baseline catalog IDs in both full smoke
+Complete1056 exercises all3079 credited C routes and all695 catalog IDs in both full smoke
 suites.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
 through Focused1002, including the production StorageDeviceNotConnectedException path.
@@ -10757,3 +10756,35 @@ or visual claim was made.
 The meaningful Vector3 public-member/behavior audit is complete at pinned d23. Direct component
 output forwards are source-reviewed and do not justify duplicate checks. Continue with the next
 deterministic value family.
+
+## Complete1056-695-demo-behavior-checkpoint
+
+The full documented validation at cna-demos `43f910e` and pinned CNA `d23e139de` uses at most three
+jobs. Its clean build is warning-free, metadata is695/0 and all708 enabled CTests pass; three manual
+tests remain disabled. SOFTWARE reports569 pass/74 expected fail/49 skip/3 manual and OPENGLES3/
+Xvfb reports609/76/7/3. Both contain all695 unique catalog IDs with no unexpected result.
+
+Complete1045 comparison preserves all694 old IDs and adds only `math.vector2.component_bounds`.
+Ten old Vector2/3 workflows deliberately move from pass to known-issue failure and twelve other
+edited workflows only grow their reviewed check counts. ISSUE-118 through -123 account for exactly
+23 documented new failed assertions per renderer:109->132 SOFTWARE and114->137 OPENGLES3. The sole
+unrelated status change is `c_api.input.keyboard_mouse` pass->skip on SOFTWARE because no global
+desktop pointer was available; its OPENGLES3/Xvfb run passes, and the demo explicitly reports this
+requirement rather than failing. Normalized stderr is byte-identical to Complete1045 after removing
+per-run temporary IDs, one host GTK startup warning and nondeterministic X protocol diagnostics.
+Validator/comparator self-tests pass5/5 plus4/4. Generated coverage remains307/329 types,
+2128/2326 members,674/753 fields and3079/3205 C routes.
+
+The first sandboxed full attempt produced20 environmental CTest failures because loopback/ENet and
+system temporary paths were blocked. Repeating outside the sandbox removed19 and exposed one real
+cna-demos regression: the fixed `--list-ids` test still expected `math.vector2.length` without its
+new ISSUE-118 marker. Commit `43f910e` corrects that fixture; its exact test and the final full run
+pass. The configure-only vendored-Draco CMP0148 warning remains external, while the clean follow-up
+and final checkpoint builds are warning-free.
+
+Evidence is `build/linux-full/reports/checkpoint-1056-complete-*`; SOFTWARE and OPENGLES3 result
+SHA-256 values are `27ca7fdf3d68aedca27812593e0b8ef33f95f0c3fa23ee7777ebe8b5cb7f4c76`
+and `d3afdf8c54f379539128e00257b7301102627276167314dd95d8496ebfa11f46`. No visual, listening,
+physical-input or external-service validation was performed. Continue with the Vector4 public-
+member/behavior audit, beginning with magnitude/range behavior before identity, component bounds,
+interpolation and transform arrays.

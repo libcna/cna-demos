@@ -11479,35 +11479,6 @@ both self-test suites pass. Coverage totals remain unchanged and the Complete104
 byte-identical. Evidence:`/tmp/checkpoint-1048-vector2-interpolation/*`. Continue with Vector2
 matrix/quaternion transform output, array, overlap and refusal boundaries.
 
-## Focused1054 Vector3 transform arrays
-
-`math.vector3.transform` grows3->4 controls, `transform_normal`2->3,
-`transform_quaternion`2->4 and `transform_array`2->10. Genuine Windows XNA 4.0 anchors matrix,
-normal and quaternion value/output/alias parity, every full/range array family, guarded subranges,
-both directions of same-array overlap, atomic invalid positive windows and zero length at one-past-
-end indices. XNA also accepts negative length as an empty matrix/quaternion/normal range; CNA's
-shared check rejects all three, extending ISSUE-121 with the sole grouped failure. Ten runs per
-demo and renderer label retain only that expected failure with byte-identical stdout and empty
-stderr. The clean `-j3` build, metadata695/0, all four exact CTests and both self-test suites pass.
-Coverage totals remain unchanged and the Complete1045-backed report is byte-identical. Evidence:
-`/tmp/checkpoint-1054-vector3-transform-arrays/*`. Audit the remaining Vector3 Dot/Cross numeric
-boundaries, then close or explicitly disposition the family.
-
-## Focused1055 Vector3 product range
-
-`math.vector3.dot` grows5->6 controls and `math.vector3.cross` grows5->8. Genuine Windows XNA 4.0
-keeps `1e20 * 1e20` products in a wide intermediate: opposite Dot terms cancel before a final
-`+1`, parallel Cross terms cancel to exact zero, and a partly huge Cross retains finite X/Y plus
-zero Z. CNA narrows each product to float first and instead combines infinities into NaN, recorded
-as new ISSUE-123. Ordinary Cross output aliasing matches. Dot retains one expected failure and
-Cross two; ten runs per demo and renderer label are byte-stable with empty stderr. The clean `-j3`
-build, metadata695/0, both exact CTests and both self-test suites pass. Coverage totals remain
-unchanged and the Complete1045-backed report is byte-identical. Evidence:
-`/tmp/checkpoint-1055-vector3-product-range/*`.
-
-The meaningful Vector3 public-member/behavior audit is complete at pinned d23. Continue with the
-next deterministic value family.
-
 ## Focused1049 Vector2 transform arrays
 
 `math.vector2.transform` grows2->16 controls. Genuine Windows XNA 4.0 anchors matrix point/normal
@@ -11570,3 +11541,45 @@ byte-stable with empty stderr; the clean `-j3` build, metadata695/0, all five ex
 self-test suites pass. Coverage totals remain unchanged and the Complete1045-backed report is
 byte-identical. Evidence:`/tmp/checkpoint-1053-vector3-interpolation/*`. Continue with Vector3
 matrix/quaternion transform output, array, overlap and refusal boundaries.
+
+## Focused1054 Vector3 transform arrays
+
+`math.vector3.transform` grows3->4 controls, `transform_normal`2->3,
+`transform_quaternion`2->4 and `transform_array`2->10. Genuine Windows XNA 4.0 anchors matrix,
+normal and quaternion value/output/alias parity, every full/range array family, guarded subranges,
+both directions of same-array overlap, atomic invalid positive windows and zero length at one-past-
+end indices. XNA also accepts negative length as an empty matrix/quaternion/normal range; CNA's
+shared check rejects all three, extending ISSUE-121 with the sole grouped failure. Ten runs per
+demo and renderer label retain only that expected failure with byte-identical stdout and empty
+stderr. The clean `-j3` build, metadata695/0, all four exact CTests and both self-test suites pass.
+Coverage totals remain unchanged and the Complete1045-backed report is byte-identical. Evidence:
+`/tmp/checkpoint-1054-vector3-transform-arrays/*`. Audit the remaining Vector3 Dot/Cross numeric
+boundaries, then close or explicitly disposition the family.
+
+## Focused1055 Vector3 product range
+
+`math.vector3.dot` grows5->6 controls and `math.vector3.cross` grows5->8. Genuine Windows XNA 4.0
+keeps `1e20 * 1e20` products in a wide intermediate: opposite Dot terms cancel before a final
+`+1`, parallel Cross terms cancel to exact zero, and a partly huge Cross retains finite X/Y plus
+zero Z. CNA narrows each product to float first and instead combines infinities into NaN, recorded
+as new ISSUE-123. Ordinary Cross output aliasing matches. Dot retains one expected failure and
+Cross two; ten runs per demo and renderer label are byte-stable with empty stderr. The clean `-j3`
+build, metadata695/0, both exact CTests and both self-test suites pass. Coverage totals remain
+unchanged and the Complete1045-backed report is byte-identical. Evidence:
+`/tmp/checkpoint-1055-vector3-product-range/*`.
+
+The meaningful Vector3 public-member/behavior audit is complete at pinned d23. Continue with the
+next deterministic value family.
+
+## Complete1056 695-demo behavior checkpoint
+
+The authoritative `-j3` checkpoint at source `43f910e` and pinned CNA `d23e139de` passes
+metadata695/0, all708 enabled CTests and both695-ID renderer suites; three manual tests remain
+disabled. SOFTWARE reports569 pass/74 expected fail/49 skip/3 manual and OPENGLES3 reports
+609/76/7/3, with no unexpected result. Complete1045 comparison preserves all old IDs; the sole new
+ID plus reviewed Vector2/3 changes account for exactly23 added failed assertions per renderer.
+SOFTWARE's unrelated input pass->skip is the demo's declared missing-desktop-pointer requirement
+and passes under OPENGLES3/Xvfb. Normalized stderr is unchanged and both self-test suites pass.
+Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-1056-complete-*`. Continue with Vector4 magnitude/range,
+identity, component-bound, interpolation and transform-array behavior.

@@ -11,7 +11,7 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 20 / 0 / 2 / 1 / 0 | 20 / 0 / 2 / 1 / 0 |
-| c_api | 177 | 176 | 1 | 0 | 166 / 0 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
+| c_api | 177 | 176 | 1 | 0 | 165 / 1 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 68 | 68 | 0 | 0 | 54 / 0 / 14 / 0 / 0 | 54 / 0 / 14 / 0 / 0 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
@@ -23,7 +23,7 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | graphics | 185 | 185 | 0 | 0 | 146 / 26 / 13 / 0 / 0 | 166 / 3 / 16 / 0 / 0 |
 | input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
 | inspector | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
-| math | 80 | 80 | 0 | 0 | 68 / 0 / 11 / 0 / 1 | 68 / 0 / 11 / 0 / 1 |
+| math | 80 | 80 | 0 | 0 | 58 / 0 / 22 / 0 / 0 | 58 / 0 / 22 / 0 / 0 |
 | media | 17 | 16 | 1 | 0 | 11 / 0 / 6 / 0 / 0 | 11 / 0 / 6 / 0 / 0 |
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
@@ -32,8 +32,6 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
-- SOFTWARE: absent from report: `math.vector2.component_bounds`.
-- OPENGLES3: absent from report: `math.vector2.component_bounds`.
 
 ## XNA 4.0 API surface demonstrated
 

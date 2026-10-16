@@ -5973,3 +5973,16 @@ The meaningful Vector3 public-member/behavior table is complete at pinned d23. C
 constants, identity, component arithmetic, magnitudes, interpolation, transforms and product
 operations now have boundary evidence; direct component output forwards are source-reviewed and do
 not justify duplicate controls. Continue with the next deterministic value family.
+
+### Complete1056 695-demo behavior checkpoint
+
+The authoritative three-job checkpoint at source `43f910e` and pinned CNA `d23e139de` passes
+metadata695/0, all708 enabled CTests and both695-ID renderer suites; three manual CTests remain
+disabled. SOFTWARE reports569/74/49/3 and OPENGLES3 reports609/76/7/3, with no unexpected result.
+Against Complete1045, all694 old IDs remain and the sole new ID plus reviewed Vector2/3 status and
+check-count changes account for exactly23 new failed assertions per renderer. SOFTWARE's unrelated
+`c_api.input.keyboard_mouse` pass->skip is a declared missing-desktop-pointer requirement; its
+OPENGLES3/Xvfb run passes. Normalized stderr is unchanged and tool self-tests pass5/5 plus4/4.
+Generated coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`build/linux-full/reports/checkpoint-1056-complete-*`. No visual, listening, physical-
+input or external-service validation was performed. Begin the Vector4 behavior table next.

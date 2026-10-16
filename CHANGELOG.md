@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete checkpoint at 695 demos: all 708 enabled CTests and both full renderer
+  smoke suites pass their expected-status contracts, with Vector2/3 behavior changes reviewed.
+- Fixed the `--list-ids` CLI test fixture to expect the ISSUE-118 marker now carried by
+  `math.vector2.length`.
 - Extended Vector3 Dot and Cross through output aliasing and huge-product cancellation, recording
   CNA-DEMOS-ISSUE-123 for premature float overflow against Windows XNA 4.0.
 - Extended Vector3 matrix, quaternion and normal transforms through output aliasing, full/ranged
