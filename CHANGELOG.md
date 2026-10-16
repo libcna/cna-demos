@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added an intermediate-XML collection workflow that contrasts packed scalar/vector sequences with
+  element-per-item strings, nullable/dynamic objects, ordered dictionaries and jagged lists, with
+  round trips and malformed-shape refusals.
 - Added a build-time `OpaqueDataDictionary` workflow for heterogeneous typed lookup, exact
   XNA-measured intermediate XML, ordered round trip and invalid key/type boundaries; it records
   CNA-DEMOS-ISSUE-146 for CNA's broader null-value exception.

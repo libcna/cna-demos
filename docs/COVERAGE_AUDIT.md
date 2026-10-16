@@ -6690,3 +6690,23 @@ The next serializer audit target is built-in collection shape rather than anothe
 variant: packed scalar/vector sequences, element-per-item reference values, dictionary key/value
 order, jagged collections and malformed-shape rejection are present in CNA's measured XNA corpus
 but absent from the project intermediate-XML demos.
+
+### Focused1086 intermediate XML collection shapes
+
+New `content.custom.intermediate_collections` uses one route manifest to demonstrate the built-in
+shape decision. Integer and Vector3 sequences are packed text; strings, nullable values and boxed
+objects are separate items with preserved whitespace, `Null` and dynamic `Type`; dictionaries emit
+Key then Value in insertion order; jagged integer lists use packed inner Item text; an empty packed
+list is self-closing. Both all-value round trip and dictionary ordering are checked directly.
+
+Six malformed documents distinguish the grammars: child items in a packed list, packed string
+text, a boxed item without `Type`, Value before Key, a duplicate key and an incomplete final
+Vector3 are all rejected. Five runs under each renderer label pass14/14 with common normalized
+stdout SHA-256 `799f4df448636e1d41435d7182948975f380f5af2392d29b51f7b19c9e6ebfce` and empty stderr. The
+warning-free `-j3` build, metadata713/0, related CTests and self-tests pass. Coverage contains all713
+IDs while surface totals stay307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`/tmp/checkpoint-1086-intermediate-collections/*`. No new CNA issue or fresh XNA run.
+
+The next measured-corpus behavior absent from project demos is intermediate scalar grammar. Audit a
+coherent authored configuration for invariant special floats/precision, time/date/decimal and
+enum/flags spelling plus representative lexical/range refusals; do not create numeric-type variants.

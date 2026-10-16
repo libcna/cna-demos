@@ -441,6 +441,9 @@ a check that all authored colors remain visible and that a blank texture row can
   shortcut exposes the partial-registration failure recorded as ISSUE-088 (9/10 child checks).
   ✅ `content.custom.intermediate_properties`: inherited-member ordering, validated setter
   dispatch, get-only collections appending constructor defaults and flattened spawn coordinates.
+  ✅ `content.custom.intermediate_collections`: one route manifest contrasts packed scalar/vector
+  sequences with element-per-item strings, nullable/dynamic objects, insertion-ordered dictionary
+  entries, jagged lists and an empty collection, including representative malformed shapes.
   ✅ `content.custom.opaque_data_dictionary`: one heterogeneous processor-parameter sheet covers
   typed/default lookup, stable insertion order and replacement, exact XNA-measured compact XML,
   dynamic type attributes, round trip and invalid key/type/value boundaries. ISSUE-146 records
@@ -12102,3 +12105,27 @@ Continue the Phase8 serializer audit with the still-undemonstrated built-in coll
 packed scalar/vector lists versus element-per-item strings/objects, dictionary key/value ordering,
 jagged collections and representative malformed-shape refusals. First reconcile the existing
 intermediate demos and XNA corpus so this remains one coherent workflow rather than type variants.
+
+## Focused1086 intermediate XML collection shapes
+
+New `content.custom.intermediate_collections` serializes one route manifest instead of creating a
+demo per container or element type. Fourteen checks cover packed integer and fixed-width Vector3
+sequences, whitespace-preserving string items, nullable `Null` and object `Type` attributes,
+insertion-ordered Key/Value dictionary entries, packed inner items in a jagged list, the self-closing
+empty form, complete round trip and dictionary order retention. It rejects child elements in a
+packed list, packed text in a string list, a dynamic object without `Type`, Value-before-Key,
+duplicate keys and a partial final Vector3.
+
+The clean `-j3` build is warning-free and metadata validates713/0. All nine intermediate-XML
+SOFTWARE CTests plus the catalog parser pass; validator/comparator self-tests pass5/5 and4/4. Five
+runs under each renderer label pass14/14 with common normalized stdout SHA-256
+`799f4df448636e1d41435d7182948975f380f5af2392d29b51f7b19c9e6ebfce` and empty stderr. Generated
+coverage merges Focused1085-1086 into Complete1084, contains all713 IDs and remains307/329 types,
+2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1086-intermediate-collections/*`. No CNA issue, fresh XNA execution or rendered
+result is claimed.
+
+Continue the serializer audit with the unrepresented invariant scalar grammar: canonical special
+floating values and round-trip precision, time/date/decimal text, enum/flags spelling and
+representative lexical/range refusals. Keep one authored configuration and a small set of
+high-value representatives rather than enumerating every numeric type.

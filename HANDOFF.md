@@ -69,12 +69,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-712 project-built catalog demos in19 categories: math95, game33, graphics186, audio23, core6,
-content69, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and211
-standalone; 676 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085's new
-result and includes all712 catalog IDs in both renderer columns. It incorporates every
+713 project-built catalog demos in19 categories: math95, game33, graphics186, audio23, core6,
+content70, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and212
+standalone; 677 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1086
+results and includes all713 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
 Curve and Matrix audits in Focused1063-1074 and the root Framework audits in Focused1076-1078,
@@ -92,7 +92,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete1084 exercises all3079 credited C routes and its711 catalog IDs in both full smoke suites;
-Focused1085 executes the new ID separately under both renderer labels.
+Focused1085-1086 execute the two new IDs separately under both renderer labels.
 Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
 Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
@@ -11614,3 +11614,28 @@ still-undemonstrated built-in collection grammar: packed scalar/vector lists ver
 item strings/objects, dictionary key/value order, jagged collections and representative malformed-
 shape refusals. Reconcile the existing intermediate demos and measured XNA corpus first; keep it a
 single coherent workflow rather than per-type variants. Keep every compile at three jobs or fewer.
+
+## Focused1086-intermediate-XML-collection-shapes
+
+The713th catalog ID, `content.custom.intermediate_collections`, uses one authored route manifest to
+close the built-in collection-shape gap without per-type variants. Fourteen passing controls cover
+packed integers and Vector3s, whitespace-preserving string items, nullable `Null` and dynamic-object
+`Type` attributes, insertion-ordered dictionary Key/Value items, packed jagged inner lists, the
+self-closing empty form, complete value round trip and retained dictionary order. Six malformed
+documents distinguish the contracts: child elements in packed data, packed string text, a dynamic
+object without `Type`, Value before Key, duplicate keys and a partial final Vector3 are refused.
+
+The clean incremental build is warning-free with `-j3`; metadata validates713/0. All nine related
+SOFTWARE intermediate-XML CTests plus the catalog parser pass, and validator/comparator self-tests
+pass5/5 and4/4. Five runs under each renderer label pass14/14 with common normalized stdout SHA-256
+`799f4df448636e1d41435d7182948975f380f5af2392d29b51f7b19c9e6ebfce` and empty stderr. Generated
+coverage merges Focused1085-1086 with Complete1084, contains all713 IDs and remains307/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1086-intermediate-collections/*`. No CNA issue, fresh genuine-XNA execution,
+rendering, screenshot or manual visual claim was made.
+
+Next, commit and push this batch, then continue the Phase8 serializer audit with invariant scalar
+grammar missing from project demos: canonical special floating values and round-trip precision,
+time/date/decimal text, enum/flags spelling and representative lexical/range refusals. Keep one
+authored configuration and a small set of high-value representatives rather than numeric-type
+variants. Keep every compile at three jobs or fewer.
