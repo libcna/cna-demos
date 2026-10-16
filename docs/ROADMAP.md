@@ -11444,3 +11444,15 @@ statuses remain. Both title rows execute ten checks, normalized stderr is unchan
 tests pass5/5 plus4/4. Coverage remains307/329 types,2128/2326 members,674/753 fields and
 3079/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-1045-complete-*`. Continue the
 next deterministic public-member/behavior family.
+
+## Focused1046 Vector2 magnitude range
+
+`math.vector2.length` grows5->18 controls. Genuine Windows XNA 4.0 keeps sole-X `1e20` and `1e-30`
+Length/Distance finite and normalizes both to UnitX through static, output and member forms while
+their squared counterparts become infinity or zero. CNA loses exactly the six extreme magnitude
+results through the same direct float squared-sum root cause as ISSUE-118. Ten runs per renderer
+label reproduce only those six expected failures with byte-identical stdout and empty stderr; the
+clean `-j3` build, metadata694/0, exact known-issue CTest and both self-test suites pass. Coverage
+totals remain unchanged and the Complete1045-backed generated report is byte-identical. Evidence:
+`/tmp/checkpoint-1046-vector2-magnitude-range/*`. Audit Vector2 signed-zero identity next, followed
+by interpolation and transform/array boundaries.

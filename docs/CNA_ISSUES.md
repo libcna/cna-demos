@@ -67,29 +67,35 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `/tmp/checkpoint-1042-quaternion-divide-boundaries/*`. Exact known-issue CTests, metadata693/0 and
   self-tests5/5 plus4/4 pass. No CNA source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-118 -- Quaternion length and normalization lose extreme finite magnitudes
+### CNA-DEMOS-ISSUE-118 -- Vector2 and Quaternion magnitude operations lose extreme finite ranges
 
-- **Area/API:** `Microsoft::Xna::Framework::Quaternion::Length` and `Quaternion::Normalize`,
-  static/member/output normalization forms.
-- **Demo/reproduction:** run `math.quaternion.normalize`. Measure sole-component `1e20` and `1e-30`
-  values, then normalize `Quaternion(1e20,0,0,0)`. Ordinary magnitude, accumulated drift, zero and
-  `1e-20` controls distinguish both range ends from normal behavior.
-- **Observed:** CNA returns infinity for `Length(1e20)` and zero for `Length(1e-30)`. It also
-  normalizes the huge input to `(0,0,0,0)`. These are exactly three expected failures among eleven
-  controls on ten SOFTWARE and ten OPENGLES3-labelled runs. The separately returned
-  `LengthSquared` correctly overflows to infinity or underflows to zero in the two cases.
-- **Expected/reference:** genuine Windows XNA 4.0 returns the original finite magnitude from
-  `Length` even when `LengthSquared` is respectively infinity or zero, and normalizes the huge value
-  to `(1,0,0,0)`. It also returns four NaNs when normalizing zero and identity for the `1e-20` W
-  case; CNA matches those adjacent classifications semantically.
-- **Suggested repair/scope:** calculate the square-root norm with sufficient intermediate range or
-  use a scaled norm before returning Length or its reciprocal for Normalize. Open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine; no renderer or visual claim is involved.
-- **Evidence/status:** `/tmp/checkpoint-1036-quaternion-normalize-boundaries/*` and
-  `/tmp/checkpoint-1043-quaternion-length-range/*`; exact known-issue CTest, metadata693/0 and
-  self-tests5/5 plus4/4 pass. The earlier exact-equality tiny assertion was a corrected over-strict
-  demo oracle, not a second CNA issue. No CNA source was modified and no upstream message was sent.
+- **Area/API:** `Microsoft::Xna::Framework::Quaternion::Length`/`Normalize` and
+  `Vector2::Length`/`Distance`/`Normalize`, including static/member/output forms.
+- **Demo/reproduction:** run `math.quaternion.normalize` and `math.vector2.length`. Measure
+  sole-component `1e20` and `1e-30` values and normalize the same finite inputs. The Vector2 demo
+  also measures value/output Distance from zero. Ordinary magnitude and normalization plus zero and
+  separately rounded squared-magnitude controls distinguish the range defect from normal behavior.
+- **Observed:** CNA returns infinity for both `Length(1e20)` paths and zero for both
+  `Length(1e-30)` paths. Quaternion normalization loses the huge value. Every Vector2 normalization
+  form loses both extremes, while Vector2 Distance likewise returns infinity or zero. Quaternion
+  retains exactly three expected failures among eleven controls; Vector2 retains six among eighteen
+  on ten SOFTWARE and ten OPENGLES3-labelled runs. The separately returned `LengthSquared` and
+  `DistanceSquared` intentionally overflow to infinity or underflow to zero and match XNA.
+- **Expected/reference:** genuine Windows XNA 4.0 returns the original finite magnitudes from
+  Length and Vector2 Distance even when their squared counterparts are infinity or zero. It
+  normalizes each sole positive component to UnitX in every tested public form. XNA and CNA both
+  return NaN components when normalizing zero.
+- **Suggested repair/scope:** calculate square-root magnitudes with sufficient intermediate range
+  or use a scaled norm before returning Length/Distance or a normalization reciprocal. The repeated
+  direct float squared-sum implementations expose the same range defect across these value types.
+  Open against pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran
+  from the installed Windows XNA 4.0 assembly under Wine; no renderer or visual claim is involved.
+- **Evidence/status:** `/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`,
+  `/tmp/checkpoint-1043-quaternion-length-range/*` and
+  `/tmp/checkpoint-1046-vector2-magnitude-range/*`; exact known-issue CTests, metadata694/0 and
+  self-tests5/5 plus4/4 pass. The earlier Quaternion exact-equality tiny assertion was a corrected
+  over-strict demo oracle, not a second CNA issue. No CNA source was modified and no upstream
+  message was sent.
 
 ### CNA-DEMOS-ISSUE-117 -- Perspective accepts Pi despite XNA's strict field-of-view bound
 

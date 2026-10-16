@@ -10560,3 +10560,22 @@ attempts were manually interrupted because redirected stdout stopped at a block-
 stderr and isolated runs showed normal progress, and the final uninterrupted run passed. This was
 a monitoring mistake, not a demo or CNA defect. No visual, listening, physical-input or external-
 service validation was performed. Continue the next deterministic public-member/behavior family.
+
+## Focused1046-Vector2-magnitude-range
+
+`math.vector2.length` grows from five to eighteen controls without a new ID. Genuine Windows XNA
+4.0 establishes that sole-X `1e20` and `1e-30` values retain finite Length and Distance and
+normalize to UnitX through static, output and member forms, even though the separately returned
+LengthSquared/DistanceSquared values are infinity or zero. Ordinary `(3,4)` and zero normalization,
+the replicated-scalar constructor and the squared results are adjacent positive controls.
+
+CNA's direct float squared-sum paths lose all six extreme Length, Distance and normalization
+results, extending the existing root-cause ISSUE-118 rather than creating a duplicate. The clean
+three-job build, metadata694/0, exact known-issue SOFTWARE CTest and self-tests5/5 plus4/4 pass.
+Ten SOFTWARE and ten OPENGLES3-labelled runs retain exactly six expected failures among18 controls,
+with byte-identical stdout SHA-256
+`394cdef957e8d46a2aca2f32785ebdf5bc8af39e0868cea1f9930a45e8208a48` and empty stderr. Coverage
+remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; regenerating it against
+Complete1045 inputs is byte-identical. Evidence:`/tmp/checkpoint-1046-vector2-magnitude-range/*`.
+No renderer or visual claim was made. Continue Vector2 with signed-zero equality/hash consistency,
+then interpolation and transform/array boundaries.

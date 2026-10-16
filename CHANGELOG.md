@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Vector2 magnitude coverage through ordinary, zero and extreme finite Length, Distance and
+  normalization behavior, expanding CNA-DEMOS-ISSUE-118 to six Vector2 range-loss manifestations.
 - Refreshed the complete 694-demo behavior baseline after the Quaternion audit: all 707 enabled
   CTests and both renderer smoke suites pass with only the reviewed ISSUE-118/119/120 deltas.
 - Added a focused Quaternion value-identity demo and recorded CNA-DEMOS-ISSUE-120 for unequal
