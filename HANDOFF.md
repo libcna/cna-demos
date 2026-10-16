@@ -3528,8 +3528,9 @@ clone/raw-texture/disposal ownership gap, Focused1016 closes SpriteFont's caller
 boundary, Focused1017 closes the nonterminal SoundEffect release audit while recording ISSUE-114,
 Focused1018 closes both live dynamic-audio format-switch refusals, and Focused1019 closes the
 explicit SkinnedEffect vertex/material/texture-alpha interaction gap. Focused1020 closes the
-Texture2D PNG/JPEG transparent-RGB normalization gap. Choose the next gap outside those completed
-slices. Revisit the126 intentionally
+Texture2D PNG/JPEG transparent-RGB normalization gap, and Focused1021 closes actual DXT3/DXT5 cube
+alpha sampling on both GLSL dialects. Choose the next gap outside those completed slices. Revisit
+the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
@@ -10127,3 +10128,23 @@ Evidence:`/tmp/checkpoint-1020-save-alpha/*`; source SHA-256
 `786a6ee69b5f05422eab8aae641bc2d50750e1cb075e362c6234ba8077a6857f`. Validation used decoded
 public texture pixels; no screenshot or manual visual inspection was performed, and no CNA issue
 was found. Continue with the next deterministic behavior gap outside image-export normalization.
+
+## Focused1021-TextureCube-compressed-alpha-sampling
+
+`graphics.texture_cube.sampler_ownership` now connects the existing exact DXT3/DXT5 block
+transfers to actual `samplerCube` execution. An authored DXT3 block uses explicit alpha8/15 over
+red; a DXT5 block selects alpha endpoint64 over blue. NonPremultiplied blending over black yields
+exact RGBA(136,0,0,192) and (0,0,64,207), proving both colour and alpha decoding. Unsupported
+compressed formats omit only this conditional control; the original Color cube workflow remains.
+
+The first test expected alpha255 and failed while RGB was already exact. The preset applies
+SourceAlpha/InverseSourceAlpha to the alpha channel too, so `a*a + 1*(1-a)` predicts192/207. This
+was corrected as a demo oracle error, not a CNA defect. The warning-free `-j3` build, metadata693/0,
+exact SOFTWARE CTest skip and validator/comparator self-tests5/5 plus4/4 pass. Ten OPENGLES3 and ten
+OPENGL33/Xvfb runs pass9/9 with byte-identical stdout SHA-256
+`d1d27c31318a9e9e969b5f902332dfc883e03f425271a2dcedd120dbb0b33d47` and empty stderr. Generated
+totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1021-cube-compressed-alpha/*`; source SHA-256
+`7e65db00e6bb9d5283dfa0f8c4e193b82eb868335b37cf0212296c4baf51051a`. Pixel validation was
+programmatic; no screenshot or manual visual inspection was performed, and no CNA issue was found.
+Continue with the next deterministic behavior gap outside compressed cube sampling.

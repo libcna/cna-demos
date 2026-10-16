@@ -142,8 +142,9 @@ a check that all authored colors remain visible and that a blank texture row can
   actual slice centers, point versus 3:1 linear filtering, and Clamp versus W-only Wrap on unit1.
   SOFTWARE capability skip; mips, other formats and varying X/Y remain separate.
   ✅ `graphics.texture_cube.sampler_ownership`: shared full-face edits, independent wrapper names,
-  source disposal and actual custom cube sampling of all six faces. Five GL checks pass, image
-  inspected and stderr empty; SOFTWARE capability skip. Full 462 passes 475 enabled CTests and
+  source disposal, actual custom cube sampling of all six faces and DXT3/DXT5 alpha decoding. Nine
+  GL checks pass; the earlier image was inspected and focused compressed-alpha stderr is empty.
+  SOFTWARE capability skip. Full 462 passes 475 enabled CTests and
   both smokes while retaining every old 37/41 failed assertion.
   🟨 `graphics.texture_cube.dds_streams`: full and prefixed RGB24 cubes/mips and ordinary
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
@@ -11162,3 +11163,20 @@ self-tests pass5/5 and4/4. Counts remain307/329 XNA types,2128/2326 members,674/
 3079/3205 C routes. Evidence:`/tmp/checkpoint-1020-save-alpha/*`. Validation used public decoded
 pixels; no screenshot or manual visual inspection was performed, and no CNA issue was found.
 Continue the deterministic behavior audit outside this completed export-normalization slice.
+
+## Focused1021-TextureCube-compressed-alpha-sampling
+
+The existing custom cube-sampler demo grows from eight to nine controls. It uploads one authored
+DXT3 alpha8/15 red block and one DXT5 alpha-endpoint64 blue block to every face, samples +X through
+the actual GLSL `samplerCube` path and uses NonPremultiplied blending over black. Both GLSL dialects
+produce exact RGBA(136,0,0,192) and (0,0,64,207). This connects the separate compressed-byte
+round-trip evidence to renderer decoding without another demo ID.
+
+The initial alpha255 expectation ignored the preset's alpha-channel SourceAlpha blend and was a
+corrected demo oracle error; the observed RGB already matched the decoded source alpha. The
+warning-free three-job build, metadata693/0 and exact SOFTWARE CustomEffects skip pass. Ten
+OPENGLES3 and ten OPENGL33/Xvfb runs pass9/9 with byte-identical stdout and empty stderr;
+validator/comparator self-tests pass5/5 and4/4. Counts remain307/329 XNA types,2128/2326 members,
+674/753 fields and3079/3205 C routes. Evidence:`/tmp/checkpoint-1021-cube-compressed-alpha/*`.
+Pixels were read programmatically; no screenshot or manual visual inspection was performed, and no
+CNA issue was found. Continue the deterministic behavior audit outside compressed cube sampling.

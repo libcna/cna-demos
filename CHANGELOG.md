@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended custom cube sampling through authored DXT3 explicit alpha and DXT5 endpoint alpha with
+  exact blended framebuffer values on both GLSL dialects.
 - Added PNG/JPEG export controls proving that fully transparent texels lose hidden RGB while the
   same colour with nonzero alpha survives image encoding.
 - Extended the SkinnedEffect vertex-color scene with exact framebuffer controls for vertex alpha

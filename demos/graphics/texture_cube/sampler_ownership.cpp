@@ -26,12 +26,27 @@
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Graphics/TextureCube.hpp"
 #include "Microsoft/Xna/Framework/Graphics/TextureFilter.hpp"
+#include "System/NotSupportedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
 
 namespace
 {
+    std::array<std::uint8_t, 16> Dxt3HalfRed()
+    {
+        // Explicit alpha nibbles 8/15, followed by a solid RGB565 red DXT colour block.
+        return {0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+                0x00, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    }
+
+    std::array<std::uint8_t, 16> Dxt5QuarterBlue()
+    {
+        // Alpha endpoint zero is 64 and every selector chooses it; the colour block is solid blue.
+        return {0x40, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    }
+
     constexpr const char* Vertex = R"(
 layout(location = 0) in vec2 aPos;
 uniform mat4 projection;
@@ -109,6 +124,24 @@ void main() { FragColor = textureLod(retainedCube, direction, lod); }
                                       whiteMip.data(), 0, 4);
                 replacement_->SetData(static_cast<CubeMapFace>(face), 2, nullptr,
                                       whiteMip.data(), 0, 1);
+            }
+            try
+            {
+                dxt3_.emplace(device, 4, false, SurfaceFormat::Dxt3);
+                dxt5_.emplace(device, 4, false, SurfaceFormat::Dxt5);
+                const auto dxt3Block = Dxt3HalfRed();
+                const auto dxt5Block = Dxt5QuarterBlue();
+                for (int face = 0; face < 6; ++face)
+                {
+                    dxt3_->SetData(static_cast<CubeMapFace>(face), dxt3Block.data(), 16);
+                    dxt5_->SetData(static_cast<CubeMapFace>(face), dxt5Block.data(), 16);
+                }
+            }
+            catch (const System::NotSupportedException&)
+            {
+                dxt3_.reset();
+                dxt5_.reset();
+                Context().Print("DXT3/DXT5 cube sampling is unavailable on this renderer.");
             }
             batch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
@@ -188,6 +221,25 @@ void main() { FragColor = textureLod(retainedCube, direction, lod); }
                           nullptr, nullptr, shader_.get());
             batch_->Draw(*white_, Rectangle(190, 160, 50, 50), Color::White);
             batch_->End();
+            if (dxt3_ && dxt5_)
+            {
+                device.getSamplerStatesProperty()(1, SamplerState::PointClamp);
+                const std::array<std::pair<TextureCube*, Rectangle>, 2> compressed{{
+                    {&*dxt3_, Rectangle(600, 430, 60, 30)},
+                    {&*dxt5_, Rectangle(700, 430, 60, 30)}}};
+                for (const auto& [cube, destination] : compressed)
+                {
+                    shader_->Apply();
+                    shader_->SetTexture(1, *cube);
+                    shader_->SetUniformInt("retainedCube", 1);
+                    shader_->SetUniformVec3("direction", 1.0f, 0.0f, 0.0f);
+                    shader_->SetUniformFloat("lod", 0.0f);
+                    batch_->Begin(SpriteSortMode::Deferred, &BlendState::NonPremultiplied,
+                                  &SamplerState::PointClamp, nullptr, nullptr, shader_.get());
+                    batch_->Draw(*white_, destination, Color::White);
+                    batch_->End();
+                }
+            }
             batch_->Begin();
             batch_->DrawString(*font_, "Copied cube after original disposal", Vector2(80, 20), Color::White);
             for (int face = 0; face < 6; ++face)
@@ -215,6 +267,15 @@ void main() { FragColor = textureLod(retainedCube, direction, lod); }
                                 "point versus linear mip filtering selects mip1 or blends mip1/mip2 at LOD1.25");
                 Context().Check(screen.At(120, 185) == Color::Red && screen.At(215, 185) == Color::White,
                                 "rebinding unit one replaces the red survivor cube with the white cube");
+                if (dxt3_ && dxt5_)
+                {
+                    const Color dxt3 = screen.At(630, 445);
+                    const Color dxt5 = screen.At(730, 445);
+                    Context().Print("compressed alpha centers: DXT3 {}; DXT5 {}", dxt3.ToString(), dxt5.ToString());
+                    Context().Check(CnaDemos::Near(dxt3, Color(136, 0, 0, 192), 1) &&
+                                        CnaDemos::Near(dxt5, Color(0, 0, 64, 207), 1),
+                                    "samplerCube decodes DXT3 explicit alpha and DXT5 interpolated alpha before blending");
+                }
             }
             DemoGame::Draw(time);
         }
@@ -222,6 +283,8 @@ void main() { FragColor = textureLod(retainedCube, direction, lod); }
         std::unique_ptr<ShaderEffect> shader_;
         std::optional<TextureCube> survivor_;
         std::optional<TextureCube> replacement_;
+        std::optional<TextureCube> dxt3_;
+        std::optional<TextureCube> dxt5_;
         std::unique_ptr<SpriteBatch> batch_;
         std::optional<SpriteFont> font_;
         std::optional<Texture2D> white_;
@@ -231,7 +294,8 @@ void main() { FragColor = textureLod(retainedCube, direction, lod); }
 CNA_DEMOS_GAME(CubeSamplerOwnershipDemo, {
     .id = "graphics.texture_cube.sampler_ownership",
     .title = "Copied cube lifetime and custom sampling",
-    .description = "Samples a copied cube's faces and oriented +X corners, compares point and linear mip selection, then replaces the cube already bound to the same ShaderEffect unit.",
+    .description = "Samples a copied cube's faces and oriented +X corners, compares point and linear mip selection, "
+                   "samples DXT3/DXT5 alpha, then replaces the cube already bound to the same ShaderEffect unit.",
     .apis = {"TextureCube::TextureCube", "TextureCube::SetData", "TextureCube::GetData", "GraphicsResource::Dispose", "GraphicsResource::Name",
              "ShaderEffect::SetTexture", "ShaderEffect::SetUniformInt", "ShaderEffect::SetUniformVec3",
              "ShaderEffect::SetUniformFloat", "SamplerState::Filter", "TextureFilter::LinearMipPoint",
@@ -241,5 +305,7 @@ CNA_DEMOS_GAME(CubeSamplerOwnershipDemo, {
     .frames = 1,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "GLSL source compilation and cube sampling required. Authored Color levels establish face selection, +X orientation, binding replacement and explicit-LOD mip filtering, not cube seams or physical GPU readback.",
+    .restrictions = "GLSL source compilation and cube sampling required. DXT3/DXT5 sampling runs when both formats "
+                    "are supported. Authored levels establish face selection, +X orientation, binding replacement, "
+                    "explicit-LOD mip filtering and compressed alpha, not cube seams or physical GPU readback.",
 })
