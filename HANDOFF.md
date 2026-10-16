@@ -69,16 +69,17 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-702 project-built catalog demos in19 categories: math87, game33, graphics185, audio23, core6,
+704 project-built catalog demos in19 categories: math89, game33, graphics185, audio23, core6,
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are196 console,296 game and210
-standalone; 666 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are198 console,296 game and210
+standalone; 668 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; they include all695
 baseline catalog IDs in both renderer suites. The six new `math.vector4.*` IDs and new
-`math.bounding_sphere.containment_boundaries` are explicitly absent until the next complete
-checkpoint. The baseline results for `math.point.basics`, all four `math.rectangle.*`, all four
-`math.bounding_box.*` and the three older `math.bounding_sphere.*` IDs predate Focused1063-1067's
-new assertions under ISSUE-124 through ISSUE-129.
+`math.bounding_sphere.containment_boundaries`, `math.ray.value_identity` and
+`math.ray.frustum_intersection` are explicitly absent until the next complete checkpoint. The
+baseline results for `math.point.basics`, all four `math.rectangle.*`, all four
+`math.bounding_box.*`, the three older `math.bounding_sphere.*` IDs and `math.ray.intersects`
+predate Focused1063-1068's new assertions under ISSUE-124 through ISSUE-131.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -11041,3 +11042,33 @@ routes; Complete1056 marks the new containment ID absent. Genuine-XNA stdout SHA
 host display-cookie warning. Evidence:`/tmp/checkpoint-1067-bounding-sphere-members/*`. No
 renderer or visual claim was made. The meaningful BoundingSphere audit is complete; continue with
 Ray value, text, output-intersection and direction-boundary behavior.
+
+## Focused1068-Ray-members-and-boundaries
+
+Two new focused console demos, `math.ray.value_identity` and `math.ray.frustum_intersection`, raise
+the catalog to704, math to89, console to198 and automated to668. Value identity has five controls;
+the reorganized `math.ray.intersects` has fifteen intersection-only controls; frustum intersection
+has three. Together they cover default/authored fields, typed/boxed/operator identity and hash,
+exact text, box/sphere/plane value/output paths, forward/reverse/tangent/behind/interior/miss cases,
+unit/nonunit/zero directions, plane tolerance and frustum entry/miss/interior behavior.
+
+Genuine Windows XNA 4.0 exposes three CNA differences. Ray ToString shares BoundingBox's doubled
+outer-brace mistake, extending ISSUE-126 with the value workflow's sole failure. A zero-direction
+ray inside a box returns no value instead of zero (ISSUE-130, the sole intersection failure). A ray
+starting outside a frustum never receives its entry parameter because CNA only classifies the
+origin and leaves clipping unimplemented (ISSUE-131, the sole frustum failure). All other measured
+paths match, including XNA's exact authored nonunit-direction parameters.
+
+The configure-only vendored-Draco warning is unchanged; the clean follow-up `-j3` build is
+warning-free. Metadata is704/0, all three exact SOFTWARE CTests and validator/comparator
+self-tests5/5 plus4/4 pass. Ten runs per demo and renderer label are byte-stable with empty stderr.
+Stdout SHA-256 values are `c9cd4fc9287c1c8bd5acf615b1cdce5a849a551d5b1b55fa3f3590c1aa3bf086`
+for value identity, `29883c8c255cd1e419d88eabff31a0ab710dd703b6054738e1a15f6cc4d5ffce`
+for box/sphere/plane intersections and
+`bc9501fc96703f1618c82bc3af63488fe41cb6ff76d70b2d11c151bec9658ba3` for frustum intersection.
+Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; Complete1056
+marks both new Ray IDs absent. Genuine-XNA stdout SHA-256 is
+`a5f07fbab456ee3cafcd4547a7421df429082eaf9e9b5397bb6bf7fc576f7754`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1068-ray-members/*`. No renderer or visual claim
+was made. The meaningful Ray audit is complete; continue with the next deterministic public value
+family.

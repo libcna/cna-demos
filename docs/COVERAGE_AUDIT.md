@@ -212,7 +212,9 @@ The meaningful Rectangle public-member/behavior audit is complete at pinned d23.
 | BoundingSphere containment | New focused `containment_boundaries` has six controls spanning point/sphere/box value/output forms and frustum values. Ordinary interiors, crossings and gaps match. CNA differs at three XNA boundaries under ISSUE-129: an exact surface point is Intersects rather than Disjoint, a larger concentric sphere is Contains rather than Intersects, and a distant frustum is Intersects rather than Disjoint. |
 | BoundingSphere intersections | Focused1067 grows `math.bounding_sphere.intersects` from four to ten controls. Box, sphere, frustum, ray and plane paths cover value/output overlap, contact, miss and all plane classifications. CNA matches except exact external sphere tangency, which XNA excludes and CNA includes under ISSUE-129. |
 | BoundingSphere Transform | Focused1067 grows `math.bounding_sphere.transform` from two to five controls. Uniform placement, signed nonuniform scale using the largest absolute axis, value/output/source-alias parity and zero-scale collapse all match XNA. Evidence:`/tmp/checkpoint-1067-bounding-sphere-members/*`. |
-| Ray equality, operators and hash | `math.ray.intersects` compares the real +X casting ray with an independent copy through typed/boxed equality, both operators and equal hashes, rejects wrong/empty boxes and distinguishes a +Y direction. Its box/sphere/plane hit distances remain intact; totals are8 controls on both selections. |
+| Ray construction and value identity | New focused `math.ray.value_identity` has five controls for default/authored construction, public Position/Direction fields, typed/boxed/operator equality, changed values and equal hashing. CNA matches genuine XNA except ToString, whose stream literal produces an extra outer brace pair under the extended ISSUE-126. Exact platform-native hash values and signed-zero composition already covered through Vector3 do not justify duplicate assertions. |
+| Ray box, sphere and plane intersections | Focused1068 moves identity out of `math.ray.intersects` and grows its intersection surface to fifteen controls. Value/output paths cover forward/reverse, hit/miss/interior, tangent/behind, unit/nonunit/zero directions and plane tolerance. CNA matches XNA except a zero-direction ray positioned inside a box returns no value instead of zero, recorded as ISSUE-130. Nonunit sphere results intentionally show that XNA consumes the authored direction without normalization. |
+| Ray frustum intersection | New focused `math.ray.frustum_intersection` covers an outside entry, parallel offset miss and interior start. CNA passes the latter two but rejects every outside origin instead of calculating the entry parameter; its delegated frustum implementation leaves the clipping branch unimplemented. The sole failure is ISSUE-131. Evidence:`/tmp/checkpoint-1068-ray-members/*`. |
 | BoundingSphere CreateFromFrustum | `math.bounding_sphere.create` builds from an identity frustum and numerically encloses all eight actual corners within 1e-5 without asserting an unspecified minimum sphere. The earlier strict-Contains assumption remains correctly replaced by the geometric tolerance because Ritter construction plus float rounding can put a boundary corner just outside strict classification. |
 
 Focused651 adds twelve member credits without new IDs, moving temporary coverage1545->1557/2326.
@@ -231,6 +233,9 @@ boundaries, followed by Ray.
 
 The meaningful BoundingSphere public-member/behavior audit is complete at pinned d23. Continue
 with Ray value, text, output-intersection and direction-boundary behavior.
+
+The meaningful Ray public-member/behavior audit is complete at pinned d23. Continue with the next
+deterministic public value family.
 
 ### EffectParameter
 
@@ -6244,3 +6249,32 @@ its stderr is only the host display-cookie warning. Evidence:
 `/tmp/checkpoint-1067-bounding-sphere-members/*`. No renderer or visual claim was made. The
 meaningful BoundingSphere audit is complete; continue with Ray value, text, output-intersection
 and direction-boundary behavior.
+
+### Focused1068 Ray members and boundaries
+
+Two new focused console demos, `math.ray.value_identity` and `math.ray.frustum_intersection`, raise
+the catalog to704, math to89, console to198 and automated to668. Value identity has five controls;
+the reorganized `math.ray.intersects` has fifteen intersection-only controls; frustum intersection
+has three. Together they cover default/authored fields, typed/boxed/operator identity and hash,
+exact text, box/sphere/plane value/output paths, forward/reverse/tangent/behind/interior/miss cases,
+unit/nonunit/zero directions, plane tolerance and frustum entry/miss/interior behavior.
+
+Genuine Windows XNA 4.0 exposes three CNA differences. Ray ToString shares BoundingBox's doubled
+outer-brace mistake, extending ISSUE-126 with the value workflow's sole failure. A zero-direction
+ray inside a box returns no value instead of zero (ISSUE-130, the sole intersection failure). A ray
+starting outside a frustum never receives its entry parameter because CNA only classifies the
+origin and leaves clipping unimplemented (ISSUE-131, the sole frustum failure). All other measured
+paths match, including XNA's exact authored nonunit-direction parameters.
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. Stdout SHA-256 values are
+`c9cd4fc9287c1c8bd5acf615b1cdce5a849a551d5b1b55fa3f3590c1aa3bf086` for value identity,
+`29883c8c255cd1e419d88eabff31a0ab710dd703b6054738e1a15f6cc4d5ffce` for box/sphere/plane
+intersections and `bc9501fc96703f1618c82bc3af63488fe41cb6ff76d70b2d11c151bec9658ba3`
+for frustum intersection. After the configure-only vendored-Draco warning, the clean `-j3` build,
+metadata704/0, all three exact SOFTWARE CTests and self-tests5/5 plus4/4 pass. Coverage remains
+307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; Complete1056 marks both new
+Ray IDs absent. Genuine-XNA stdout SHA-256 is
+`a5f07fbab456ee3cafcd4547a7421df429082eaf9e9b5397bb6bf7fc576f7754`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1068-ray-members/*`. No renderer or visual claim
+was made. The meaningful Ray audit is complete; continue with the next deterministic public value
+family.

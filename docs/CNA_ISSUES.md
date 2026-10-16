@@ -15,6 +15,50 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-131 -- Ray cannot enter a BoundingFrustum from outside
+
+- **Area/API:** `Microsoft::Xna::Framework::Ray::Intersects(BoundingFrustum)` and the delegated
+  `BoundingFrustum::Intersects(Ray)` implementation.
+- **Demo/reproduction:** run `math.ray.frustum_intersection`. Cast +Z rays from `(0,0,-3)`,
+  `(3,0,-3)` and the interior point `(0,0,0.5)` through an identity-matrix frustum.
+- **Observed:** CNA returns no value for the first ray because it rejects every outside origin
+  without testing where the ray enters. The miss and inside-zero controls pass, leaving one
+  expected failure among three.
+- **Expected/reference:** genuine Windows XNA 4.0 returns entry parameter3, no value and parameter0
+  respectively.
+- **Cause/suggested repair:** the delegated frustum method only classifies the ray origin and its
+  remaining intersection branch is explicitly unimplemented. Clip the ray parameter interval
+  against all six frustum planes, returning the first nonnegative entry when the interval survives.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1068-ray-members/*`. After the
+  configure-only vendored-Draco warning, the clean warning-free three-job build, all three exact
+  SOFTWARE CTests, metadata704/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
+  label reproduce only the three documented Ray assertions with empty stderr. No CNA source was
+  modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-130 -- zero-direction Ray inside a BoundingBox returns no hit
+
+- **Area/API:** `Microsoft::Xna::Framework::Ray::Intersects(BoundingBox)`.
+- **Demo/reproduction:** run `math.ray.intersects`. Cast zero-direction rays from inside and
+  outside `(4,-1,-1)..(6,1,1)` beside unit/nonunit and forward/reverse rays plus sphere, plane and
+  frustum value/output controls.
+- **Observed:** CNA returns an empty optional for both zero-direction rays. The inside case is the
+  sole expected failure among fifteen controls; the outside miss is correct.
+- **Expected/reference:** genuine Windows XNA 4.0 returns parameter zero for the inside position
+  and no value for the outside position. Its other unit, nonunit, tangent, behind, tolerance and
+  output cases match the focused expectations.
+- **Cause/suggested repair:** when all direction components are effectively zero and every origin
+  coordinate lies inside the box, the slab routine leaves `tMin` empty. Return zero for that
+  contained stationary ray instead of forwarding the empty interval.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1068-ray-members/*`. After the
+  configure-only vendored-Draco warning, the clean warning-free three-job build, all three exact
+  SOFTWARE CTests, metadata704/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
+  label reproduce only the three documented Ray assertions with empty stderr. No CNA source was
+  modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-129 -- BoundingSphere boundary classifications differ from XNA
 
 - **Area/API:** `Microsoft::Xna::Framework::BoundingSphere::Contains` for points, spheres and
@@ -86,25 +130,28 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   plus4/4 pass; ten runs per demo and renderer label reproduce only the two documented BoundingBox
   assertions with empty stderr. No CNA source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-126 -- BoundingBox ToString adds an extra pair of outer braces
+### CNA-DEMOS-ISSUE-126 -- BoundingBox and Ray ToString add an extra outer brace pair
 
-- **Area/API:** `Microsoft::Xna::Framework::BoundingBox::ToString`.
-- **Demo/reproduction:** run `math.bounding_box.create_from_points`. Alongside default and
-  `(Min,Max)` construction, exact corner order/output/refusal, point-set boundaries and value
-  identity, format the box with Min `(-3,-1,-6)` and Max `(2,4,2)`.
-- **Observed:** CNA returns `{{Min:{X:-3 Y:-1 Z:-6} Max:{X:2 Y:4 Z:2}}}`. The workflow retains
-  this sole expected failure among thirteen controls.
+- **Area/API:** `Microsoft::Xna::Framework::BoundingBox::ToString` and `Ray::ToString`.
+- **Demo/reproduction:** run `math.bounding_box.create_from_points` and `math.ray.value_identity`.
+  The box formats Min `(-3,-1,-6)` and Max `(2,4,2)`; the ray formats position `(-1,2,-3)` and
+  direction `(4,-5,6)` beside their construction and value-identity controls.
+- **Observed:** CNA returns `{{Min:{X:-3 Y:-1 Z:-6} Max:{X:2 Y:4 Z:2}}}` and
+  `{{Position:{X:-1 Y:2 Z:-3} Direction:{X:4 Y:-5 Z:6}}}`. Each workflow retains this sole
+  expected failure, among thirteen and five controls respectively.
 - **Expected/reference:** genuine Windows XNA 4.0 returns
-  `{Min:{X:-3 Y:-1 Z:-6} Max:{X:2 Y:4 Z:2}}`, with one outer brace pair. All adjacent value,
-  construction, corner and point-set behavior matches.
-- **Cause/suggested repair:** the `std::ostringstream` literal uses doubled braces as though it
-  were a composite-format string. Emit one literal opening and closing brace instead.
+  `{Min:{X:-3 Y:-1 Z:-6} Max:{X:2 Y:4 Z:2}}` and
+  `{Position:{X:-1 Y:2 Z:-3} Direction:{X:4 Y:-5 Z:6}}`, each with one outer brace pair. All
+  adjacent value, construction, corner, point-set and identity behavior matches.
+- **Cause/suggested repair:** both `std::ostringstream` literals use doubled braces as though they
+  were composite-format strings. Emit one literal opening and closing brace in each implementation.
 - **Evidence/status:** open against pinned CNA
   `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`. The clean
-  warning-free three-job build, all four exact SOFTWARE CTests, metadata701/0 and self-tests5/5
-  plus4/4 pass; ten runs per demo and renderer label reproduce only the two documented BoundingBox
-  assertions with empty stderr. No CNA source was modified and no upstream message was sent.
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*` and
+  `/tmp/checkpoint-1068-ray-members/*`. The clean warning-free three-job focused builds, exact
+  SOFTWARE CTests, metadata through704/0 and self-tests5/5 plus4/4 pass; ten runs per demo and
+  renderer label reproduce only the documented assertions with empty stderr. No CNA source was
+  modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-125 -- Rectangle Union corrupts bounds when output aliases the offset input
 

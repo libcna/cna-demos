@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed Ray value/intersection coverage, extended ISSUE-126 to Ray text and recorded ISSUE-130
+  for stationary box hits plus ISSUE-131 for outside-frustum entry.
 - Completed BoundingSphere member/behavior coverage, adding focused containment boundaries and
   recording ISSUE-128 for argument validation and ISSUE-129 for boundary classifications.
 - Completed BoundingBox member/behavior coverage and recorded ISSUE-126 for doubled ToString

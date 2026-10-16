@@ -11722,3 +11722,17 @@ metadata702/0, all four exact CTests and both self-test suites pass. Coverage to
 unchanged and Complete1056 marks the new ID absent. Evidence:
 `/tmp/checkpoint-1067-bounding-sphere-members/*`. The meaningful BoundingSphere audit is complete;
 continue with Ray value, text, output-intersection and direction-boundary behavior.
+
+## Focused1068 Ray members and boundaries
+
+New `math.ray.value_identity` and `math.ray.frustum_intersection` raise the catalog to704 and math
+to89. Value identity has five controls, reorganized box/sphere/plane intersections fifteen and
+frustum intersection three. Genuine XNA anchors default/authored fields, identity/text, all
+value/output hit families, unit/nonunit/zero directions and frustum entry/miss/interior behavior.
+CNA doubles Ray ToString's outer braces (extending ISSUE-126), misses a stationary ray inside a box
+(new ISSUE-130) and cannot compute an outside-frustum entry (new ISSUE-131). Ten runs per demo and
+renderer label are byte-stable with empty stderr. After the configure-only warning, the clean
+`-j3` build, metadata704/0, all three exact CTests and both self-test suites pass. Coverage totals
+remain unchanged and Complete1056 marks both new IDs absent. Evidence:
+`/tmp/checkpoint-1068-ray-members/*`. The meaningful Ray audit is complete; continue with the next
+deterministic public value family.
