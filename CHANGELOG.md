@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the 102-header Content module audit across public CNB/runtime/build-time surfaces and
+  internal XNB/import implementation; retained four nominal serializer attribute wrappers as
+  intentionally uncredited because CNA's C++ serializer consumes the already demonstrated public
+  descriptor API instead of those wrapper instances.
 - Completed the public Audio header audit and credited `NoAudioHardwareException` through the
   existing PCM demo's real fresh-process device-open failure; clarified that CNA/FNA production
   Audio never throws the remaining microphone/instance-limit payloads, while retaining their real

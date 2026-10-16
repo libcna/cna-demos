@@ -7321,3 +7321,26 @@ and the fresh invalid-driver probe again reports the exact skip with no checks e
 717/0; the catalog parser and validator/comparator self-tests pass5/5 and4/4. Fields remain674/753
 and C routes3079/3205. Evidence:`/tmp/checkpoint-1112-audio-public-headers/*`. No listening,
 acoustic-quality, physical capture, live device-removal, screenshot or new manual result is claimed.
+
+### Focused1113 Content public-header audit
+
+The Content module installs41 public `CNA::Content` headers,45 implementation headers below
+`CNA/Internal`, and16 public XNA runtime headers. Their semantic disposition is:
+
+| Public family | Coverage decision |
+|---|---|
+| ContentManager, ResourceContentManager, manifests and exceptions | Existing manager workflows cover roots, stream overrides, asset precedence, caches, shared ownership, unload/disposal, multiple managers, embedded resources, missing assets and real `ContentLoadException` paths. Manifest workflows cover typed entries, dependencies and variant selection. |
+| ContentReader, ContentTypeReader/manager and runtime reader extensions | Custom-reader, version, existing-object, shared/external-resource, object-dictionary and loose-file workflows cover reader registration/resolution, generic reads, type versions, ownership and unsupported-reader boundaries. The C `content.h` and `content_readers.h` audits are complete. |
+| Public CNB format/codecs/registry/writer/import values | CNB loader, limit, external-reference and asset codec workflows cover document/chunk primitives, hashes, compression, arithmetic, byte readers/writers, registry identity/collision/ownership, writer output, texture/sound/font/media/model/curve/animation codecs and CNJ conversion. The C `cnb.h` audit is272/272. Format-only helpers that add no separate application concept remain assigned to these coherent workflows and CNA unit tests. |
+| Public build-time Pipeline | Focused957-998 disposition every public pipeline header through configuration/manifests, dependency/incremental/nested builds, publication, diagnostics and concrete texture/model/font/audio/song/video/effect/XML/XNB/CNJ processors plus external service boundaries. Build-only or unavailable proprietary tools retain their explicit environment dispositions. |
+| `ForeignContentObjectEXT`, `ObjectDictionaryEXT`, `ImportedSound` | The XNB object-dictionary and compiled/imported sound workflows cover their real runtime/build-time payload, ownership and conversion paths rather than isolated value construction. |
+| Four nominal serializer attribute wrappers | CNA defines the XNA-shaped collection-item, ignore, runtime-type and type-version wrapper values, but production C++ serialization registers and consumes `ContentTypeDescriptor`/`ContentMemberDescriptor`. Intermediate workflows already prove each corresponding behavior through emitted XML, round trips and refusals. Constructing wrappers unused by that path would add no serialization behavior. |
+| Internal CNJ/glTF/XNB headers | These45 headers implement canonical envelopes, source loading, glTF callbacks, built-in readers/writers, compression, limits and type tables behind the public workflows. They are implementation contracts rather than additional application APIs. |
+
+The generated remainder is exactly the four wrapper types and seven constructor/property members
+described above. No new ID or metadata credit is warranted. All73 SOFTWARE Content CTests pass in
+49.85s, including their expected-known-issue contracts. The warning-free `-j3` build, metadata
+717/0, catalog parser and validator/comparator self-tests5/5 plus4/4 pass. Coverage remains308/329
+XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1113-content-public-headers/*`. No external proprietary compiler, GPU visual,
+media-quality, screenshot or manual result is claimed.

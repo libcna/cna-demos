@@ -12636,3 +12636,32 @@ XNA types,2128/2326 members,674/753 fields and3079/3205 C routes; Audio is17/19 
 members. Evidence:`/tmp/checkpoint-1112-audio-public-headers/*`. No listening, acoustic quality,
 physical microphone, output-device removal or screenshot result is claimed. Continue with the
 public Content headers and their four nominal serializer-wrapper types.
+
+## Focused1113 Content public-header audit
+
+All102 installed Content headers now have a consolidated disposition:41 public `CNA::Content`
+CNB/import/build-time headers,45 internal CNJ/glTF/XNB implementation headers and16 public XNA
+runtime headers. The73 Content workflows cover ContentManager/ResourceContentManager ownership,
+cache/unload/stream/manifest behavior; custom/runtime readers; loose files; complete XNB and CNB
+format/loading/writing boundaries; CNJ/intermediate XML serialization; external/shared resources;
+dependency and incremental builds; and every supported asset pipeline family. Focused957-998
+already completed the public build-time Pipeline surface. The C audits remain complete at
+`content.h`32/32, `content_readers.h`62/62 and `cnb.h`272/272.
+
+The exact generated remainder is four types and seven members: constructors plus three value
+properties on `ContentSerializerCollectionItemNameAttribute`, `ContentSerializerIgnoreAttribute`,
+`ContentSerializerRuntimeTypeAttribute` and `ContentSerializerTypeVersionAttribute`. Production
+source only defines their nominal values; CNA's C++ serializer registers and consumes the public
+`ContentTypeDescriptor`/`ContentMemberDescriptor` forms instead. Existing intermediate workflows
+already demonstrate renamed collection items, ignored members, polymorphic runtime types and
+versioned readers through actual emitted XML, round trips and refusal paths. Constructing the four
+unused wrappers would add no serialization behavior, so no demo or metadata credit is added.
+
+All73 SOFTWARE Content CTests pass in49.85s, including the expected-known-issue contracts. The
+warning-free incremental build remains limited to `-j3`; metadata stays717/0, and catalog parsing
+plus validator/comparator self-tests pass5/5 and4/4. Generated coverage remains308/329 XNA types,
+2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1113-content-public-headers/*`. No external proprietary compiler, GPU visual,
+media-quality, screenshot or manual result is claimed. Continue with the public XNA Graphics
+surface and its six remaining types/54 members, consolidating prior deep audits before adding any
+new behavior.

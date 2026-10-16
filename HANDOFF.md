@@ -12354,3 +12354,29 @@ live output removal, screenshot or new manual result is claimed.
 Commit and push this batch. Next audit the public Content headers and the four nominal serializer
 wrapper types/seven residual members, using the real descriptor and intermediate-XML workflows as
 the semantic baseline. Keep every compile at three jobs or fewer.
+
+## Focused1113-Content-public-header-audit
+
+All102 installed Content headers are now dispositioned:41 public CNA CNB/import/build-time
+headers,45 internal CNJ/glTF/XNB implementation headers and16 public XNA runtime headers. The73
+existing workflows cover manager ownership/cache/unload/streams/manifests, runtime/custom readers,
+XNB/CNB format and registry behavior, CNJ/intermediate serialization, shared/external resources,
+dependency/incremental builds and every supported asset pipeline. Focused957-998 already completed
+the build-time Pipeline group, while the parallel C audits remain32/32,62/62 and272/272.
+
+The exact XNA remainder is four types/seven members: the collection-item-name, ignore, runtime-type
+and type-version attribute wrappers. Production source defines their nominal values but the C++
+serializer consumes `ContentTypeDescriptor`/`ContentMemberDescriptor`, whose corresponding emitted
+XML, round-trip and refusal behavior is already demonstrated. Wrapper-only construction would add
+no serialization behavior, so the generated gap is intentional and no ID/credit is added.
+
+All73 SOFTWARE Content CTests pass in49.85s with expected-known-issue contracts intact. The
+warning-free incremental build remains `-j3`; metadata is717/0 and catalog/validator/comparator
+checks pass. Coverage remains308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C
+routes. Evidence:`/tmp/checkpoint-1113-content-public-headers/*`. No proprietary external compiler,
+GPU visual, media-quality, screenshot or manual result is claimed.
+
+Commit and push this documentation-only audit. Next consolidate the public XNA Graphics surface,
+starting from its six uncredited types and54 residual members and reusing the completed capability,
+resource, effect, model, texture and renderer-specific audits. Keep every compile at three jobs or
+fewer.
