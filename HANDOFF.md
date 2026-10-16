@@ -73,15 +73,15 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and215
 standalone; 680 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1098
-results and includes all716 catalog IDs in both renderer columns. It incorporates every
+Coverage: generated docs/COVERAGE.md uses Complete1099's full716-ID reports and includes every
+catalog ID in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
 Curve and Matrix audits in Focused1063-1074 and the root Framework audits in Focused1076-1078,
 including ISSUE-124 through ISSUE-145.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
-3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1084's
-full runtime reports are the baseline inputs for the711-ID checkpoint catalog. Selected semantic
+3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1099's
+full runtime reports are the current baseline inputs. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -91,9 +91,8 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1084 exercises all3079 credited C routes and its711 catalog IDs in both full smoke suites;
-Focused1085-1098 execute the five new IDs and every edited workflow separately under both renderer
-labels.
+Complete1099 exercises all3079 credited C routes and all716 catalog IDs in both full smoke suites;
+it subsumes the separately validated Focused1085-1098 changes.
 Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
 Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
@@ -11792,6 +11791,38 @@ and skips processing instructions while refusing DOCTYPE. Add these boundaries t
 serializer workflow if absent; byte-order-mark placement is an XML-reader detail and should be
 documented rather than multiplied into demos unless review finds a CNA/XNA mismatch. Keep every
 compile at three jobs or fewer.
+
+## Complete1099-716-demo-behavior-checkpoint
+
+The complete checkpoint at source `cfe5a3d` against pinned CNA `d23e139` builds warning-free with
+`-j3`, validates metadata716/0 and passes all729 enabled CTests in440.48s; the three manual tests
+remain disabled. SOFTWARE is554 pass/111 expected fail/48 skip/3 not run and OPENGLES3 is
+593/113/7/3. Both reports cover all716 catalog IDs with no unexpected pass or failure.
+
+Against Complete1084, five new IDs are present: collections, framework values and scalar formats
+pass, while text values and OpaqueDataDictionary retain their declared ISSUE-147 and ISSUE-146
+failures. The existing intermediate serializer moves to its declared ISSUE-148 status. Eight added
+failed assertions per renderer are exactly the reviewed ISSUE-146 through ISSUE-149 differences;
+failed-assertion totals move181->189 on SOFTWARE and186->194 on OPENGLES3, with no removed
+assertion. The expanded external-reference, framework, polymorphism, property, serializer and
+shared-resource controls are all present in the full logs. SOFTWARE's C keyboard/mouse demo also
+moves from skip to pass because this Xvfb run exposed a desktop pointer, enabling its four existing
+warp/cursor controls; this is environment availability rather than a source behavior change.
+
+After replacing the four per-run temporary path suffixes, dropping blank lines and removing host
+GTK/X-protocol diagnostics, each renderer's stderr is byte-identical to Complete1084. Validator
+and checkpoint-comparator self-tests pass5/5 and4/4. Generated runtime-backed coverage remains
+307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 public C routes. Archived result
+SHA-256 values are `6888ac1e57576e3686125bb52073effdcb7faa61e7c4f8e91639eaff132e9f3f`
+for SOFTWARE and `2270a16ac1a42b142421b73946c0637811181d53799f154e07131bc3e5dd9dc4`
+for OPENGLES3. Evidence is under `build/linux-full/reports/checkpoint-1099-complete-*`, including
+raw and normalized stderr, comparison logs, self-tests and the complete hash manifest. No
+screenshot, manual visual, listening, physical-device or external-service claim was made.
+
+Commit and push this checkpoint. Then continue Phase13 by extending existing coherent workflows
+with the deterministic C++ `CNA::Devices` compatibility wrappers: capability-gate parity for
+MessageBox, FileDialog, SystemTray and Camera, plus Clipboard interoperability and exact state
+restoration. Keep every compile at three jobs or fewer.
 
 ## Focused1093-intermediate-XML-envelope-syntax
 

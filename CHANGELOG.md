@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete checkpoint at 716 demos after closing the intermediate-XML format audit;
+  all 729 enabled CTests and both full renderer smoke suites satisfy their expected-status
+  contracts, with every new ISSUE-146 through ISSUE-149 assertion accounted for.
 - Completed the intermediate XML type/member boundary audit with missing/unscoped polymorphic
   Type refusals and strict positional member-order rejection, and explicitly dispositioned the
   remaining format variants without adding duplicate demos.

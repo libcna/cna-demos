@@ -464,8 +464,9 @@ a check that all authored colors remain visible and that a blank texture row can
   ✅ `content.custom.cnb_read_limits`: container inspection, independent writer/reader byte
   budgets, opaque schema count/string limits, compressed expansion when supported, and checksum
   rejection despite valid magic.
-  Remaining: deeper serializer behaviors, composite asset builds and the member/behavior gaps
-  in COVERAGE_AUDIT.md; this phase is not comprehensively covered.
+  Intermediate XML format semantics and nested/composite build graphs now have direct coverage.
+  Remaining member/behavior decisions and environment limits are recorded in COVERAGE_AUDIT.md;
+  this phase is not comprehensively covered.
 - ✅ `content.xnb.shared_resources`: deferred binary graph fixups, shared versus inline identity,
   forward/weak backward edges, null references, cache/manager isolation, malformed index/type
   refusal and released ownership (15 console checks). Direct low-level orchestration remains
@@ -12396,3 +12397,22 @@ controls; shared/external tables, opaque dictionaries and envelope composition a
 multidimensional arrays lack a distinct C++ carrier; deep parser/writer ceilings belong to CNA's
 hardening suite; and RuntimeType/TypeVersion metadata has no serialization consumer. Continue with
 the highest-value remaining public-member/behavior gap in the coverage audit.
+
+## Complete1099 716-demo behavior checkpoint
+
+The full validation at `cfe5a3d` against pinned CNA `d23e139` is warning-free with `-j3`, validates
+metadata716/0 and passes all729 enabled CTests in440.48s; three manual tests remain disabled.
+SOFTWARE reports554 pass/111 expected fail/48 skip/3 not run and OPENGLES3 reports
+593/113/7/3. Every catalog ID is present with no unexpected result.
+
+Comparison with Complete1084 accounts for all five new intermediate-XML IDs, the serializer's new
+expected status and all eight added ISSUE-146 through ISSUE-149 assertions per renderer. No failed
+assertion was removed. The SOFTWARE C keyboard/mouse workflow changed from skip to pass solely
+because the current Xvfb exposed a desktop pointer, so four already-authored warp/cursor checks
+could run. Normalized stderr is byte-identical to Complete1084 on both renderers. Self-tests pass
+5/5 and4/4. Coverage stays307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`build/linux-full/reports/checkpoint-1099-complete-*`.
+
+Continue Phase13 with deterministic C++ `CNA::Devices` wrapper behavior. Add support-gate parity to
+the existing capability matrix and exercise Clipboard interoperability in its existing text demo,
+including restoration when the clipboard was initially empty.

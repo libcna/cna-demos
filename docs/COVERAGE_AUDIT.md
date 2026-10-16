@@ -6960,3 +6960,22 @@ The measured format sections now have this semantic disposition:
 
 Continue with the highest-value remaining semantic public-member/behavior gap rather than adding
 intermediate XML syntax variants.
+
+### Complete1099 716-demo behavior checkpoint
+
+The complete `-j3` validation at source `cfe5a3d` and pinned CNA `d23e139` passes metadata716/0 and
+all729 enabled CTests; three manual tests remain disabled. Full smoke results are SOFTWARE
+554 pass/111 expected fail/48 skip/3 not run and OPENGLES3 593/113/7/3, with no unexpected result.
+
+The Complete1084 comparison accounts for the five new IDs and all focused edits. The only new
+failed assertions are the eight reviewed ISSUE-146 through ISSUE-149 controls per renderer; none
+were removed. SOFTWARE additionally executes four existing C keyboard/mouse desktop-pointer
+controls that its earlier environment skipped. Both normalized stderr files are byte-identical to
+Complete1084. Validator/comparator self-tests pass5/5 and4/4. Coverage remains307/329 types,
+2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-1099-complete-*`.
+
+The next deterministic public behavior gap is the C++ `CNA::Devices` compatibility layer. Its
+MessageBox, FileDialog, SystemTray and Camera support properties should agree with the underlying
+platform capability matrix, and its Clipboard properties should interoperate with the already
+demonstrated `CNA::Input::Clipboard` implementation while preserving the caller's prior state.
