@@ -12051,3 +12051,30 @@ records are similarly represented through the public Input layers rather than du
 Commit and push this batch. Continue the CNA-specific header audit with the next module containing
 undispositioned caller-facing members, extending existing workflows where practical. Keep every
 compile at three jobs or fewer.
+
+## Focused1102-CNA-Graphics-retro-effect-member-contracts
+
+The three existing retro-effect workflows now cover their meaningful caller-facing members.
+ASCII grows1->4 controls for the 8x8 default, invalid-size atomicity, configured cell/mode readback
+and100x40 output grid; it executes the viewport Draw in colour and the rectangle Draw in monochrome.
+CRT grows1->5 controls for all defaults, clamp bounds, mask identities, the complete authored state
+and independent correctly typed cloning. Depth grows1->5 controls for defaults, all seven depth
+modes, all three dither choices and independent correctly typed cloning; eight panels now execute
+every depth mode, including Grayscale4Bit and Palette256.
+
+The warning-free incremental build uses `-j3`; metadata remains716/0. Three exact SOFTWARE CTests
+plus the catalog parser pass, with CRT/Depth retaining declared CustomEffects skips. Validator and
+comparator self-tests pass5/5 and4/4. Five SOFTWARE and five OPENGLES3 ASCII runs pass4/4 with
+common stdout SHA-256 `01698650181204a26e45f795ef99c1b88e7a70a2ca9fc1876ad7631cf84f83bd`.
+Five OPENGLES3 CRT runs pass5/5 at
+`369751d2cd91ebc6f8c4265491be667aaabd156dc73311c4646f04d158b5c623`; five Depth runs pass5/5 at
+`2e0318cf3186c06d97e44ba1a794b7a8ac3687ecf86d8b27d5c68370c904200c`. Every focused stderr is
+empty. Merged coverage contains all716 IDs and stays307/329 XNA types,2128/2326 members,674/753
+fields and3079/3205 C routes. Evidence:`/tmp/checkpoint-1102-graphics-ext-members/*`. No screenshot
+or manual visual inspection was performed.
+
+The retro-effect classes are now dispositioned. DebugDraw's exact C binding evidence already drives
+the same C++ implementation through the remaining geometry/lifecycle accessors. Continue inside
+graphics-ext with the existing `graphics.shader_effect.portable_package` workflow: close the
+ShaderCodeEXT binary/text ownership, accessor and validation boundary plus the package/binding value
+accessors, without adding a new ID. Keep every compile at three jobs or fewer.

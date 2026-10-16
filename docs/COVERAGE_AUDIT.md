@@ -7035,3 +7035,39 @@ routes across all716 IDs. Evidence:`/tmp/checkpoint-1101-native-window-contracts
 
 Continue the CNA-specific header audit with the next public module whose caller-facing members are
 not already dispositioned; prefer an existing workflow over a new catalog ID.
+
+### Focused1102 CNA::Graphics retro-effect member contracts
+
+The three existing retro-effect workflows now expose their caller-visible state rather than only
+setting values before a draw. `cnaext.ascii_post_process.scene` grows1->4 controls: the documented
+8x8 source-cell default, atomic rejection of a zero dimension, configured 8x12/colour readback and
+the resulting100x40 grid. Its colour pass uses the viewport overload, then the rectangle overload
+draws the same source in BlackWhite mode over the right half. `cnaext.crt_effect.full_screen`
+grows1->5 controls: all defaults, independent [0,1] clamps, every mask identity, complete authored
+readback, and an independently mutable correctly typed clone. `cnaext.depth_effect.color_reduction`
+grows1->5 controls: defaults, all seven depth modes, all three dither choices and a correctly typed
+independent clone. Its eight drawn panels now include Grayscale4Bit and Palette256 as well as the
+previous representative colour, greyscale, palette and Bayer cases.
+
+The warning-free incremental build uses `-j3`; metadata remains716/0. The three exact SOFTWARE
+CTests and catalog parser pass, with the shader demos retaining their declared skips; validator and
+comparator self-tests pass5/5 and4/4. Five runs per available renderer path pass with empty stderr.
+ASCII is byte-identical across SOFTWARE and OPENGLES3 at SHA-256
+`01698650181204a26e45f795ef99c1b88e7a70a2ca9fc1876ad7631cf84f83bd`; CRT is stable at
+`369751d2cd91ebc6f8c4265491be667aaabd156dc73311c4646f04d158b5c623`; Depth is stable at
+`2e0318cf3186c06d97e44ba1a794b7a8ac3687ecf86d8b27d5c68370c904200c`. Merged coverage contains
+all716 IDs and remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`/tmp/checkpoint-1102-graphics-ext-members/*`. The scenes were executed, but no screenshot
+or manual visual inspection was performed.
+
+| `CNA::Graphics` graphics-ext area | Coverage decision |
+|---|---|
+| AsciiPostProcessEffect / AsciiQuantizeMode | Both quantizers and both Draw forms execute in one coherent comparison. Cell defaults, valid readback, invalid atomicity and post-draw grid size are direct controls. Destination pixels and arbitrary non-divisible cell sizes are renderer-output details rather than separate demos. |
+| CRTEffect / CRTMaskType | Every public parameter, clamp boundary, mask identity, type identity and independent clone is checked before the real full-screen shader draw. Protected OnApply is reached through SpriteBatch. No rendered-pixel or visual-quality claim is made. |
+| DepthEffect / DepthEffectMode / DitherMode | Every mode value is both selected and drawn, every dither value is selected, and default/readback/type/clone behavior is checked. Protected OnApply and lazy palette construction are reached by the real panels. No rendered-pixel or visual-quality claim is made. |
+| DebugDraw | The C++ scene demonstrates normal batching and visualization. `c_api.graphics.debug_draw` already drives the same implementation through all public lifecycle, mode, geometry and vertex-inspection routes with exact coordinates and clamped sphere counts; duplicating those assertions in the C++ scene would add no behavior. Deleted copy operations and destruction are compile-time/RAII contracts. |
+| CNAEXT.hpp and Internal ASCII headers | CNAEXT.hpp is the umbrella include already exercised by every scene. `CNA/Internal` headers are implementation details and excluded from caller-facing coverage. |
+| ShaderCodeEXT / ShaderPackageEXT family | Portable package selection and compiler diagnostics already cover owned textual variants, stage lookup, deterministic language choice, incomplete/ambiguous refusal and binding use. The remaining owned binary/text accessor and constructor-validation boundary is the next focused audit; it belongs in the existing portable-package workflow. |
+
+Continue by closing that ShaderCodeEXT/ShaderPackageEXT value boundary without adding a catalog ID,
+then move to the next CNA-specific public module.

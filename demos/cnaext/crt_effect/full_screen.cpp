@@ -36,6 +36,25 @@ namespace
             const auto& pp = device.getPresentationParametersProperty();
             scene_ = std::make_unique<RenderTarget2D>(device, pp.getBackBufferWidthProperty(), pp.getBackBufferHeightProperty());
             crt_ = std::make_unique<CNA::Graphics::CRTEffect>(device);
+            Context().Check(crt_->getScanlineIntensity() == 0.3f && crt_->getCurvature() == 0.08f &&
+                                crt_->getVignetteIntensity() == 0.25f && crt_->getMaskIntensity() == 0.35f &&
+                                crt_->getMaskType() == CNA::Graphics::CRTMaskType::ApertureGrille,
+                            "all five CRT parameters start at their documented moderate defaults");
+            crt_->setScanlineIntensity(-1.0f);
+            crt_->setCurvature(2.0f);
+            crt_->setVignetteIntensity(-1.0f);
+            crt_->setMaskIntensity(2.0f);
+            Context().Check(crt_->getScanlineIntensity() == 0.0f && crt_->getCurvature() == 1.0f &&
+                                crt_->getVignetteIntensity() == 0.0f && crt_->getMaskIntensity() == 1.0f,
+                            "numeric parameters clamp independently to their zero and one bounds");
+            bool everyMaskReadsBack = true;
+            for (const auto mask : {CNA::Graphics::CRTMaskType::None, CNA::Graphics::CRTMaskType::ShadowMask,
+                                    CNA::Graphics::CRTMaskType::ApertureGrille})
+            {
+                crt_->setMaskType(mask);
+                everyMaskReadsBack = everyMaskReadsBack && crt_->getMaskType() == mask;
+            }
+            Context().Check(everyMaskReadsBack, "all three sub-pixel mask choices round-trip");
             // Every part is tunable; these are on the strong side so the screenshot shows them.
             crt_->setScanlineIntensity(0.6f);
             crt_->setMaskType(CNA::Graphics::CRTMaskType::ApertureGrille);
@@ -43,8 +62,24 @@ namespace
             crt_->setCurvature(0.15f);
             crt_->setVignetteIntensity(0.5f);
             Context().Check(crt_->getMaskType() == CNA::Graphics::CRTMaskType::ApertureGrille &&
-                                crt_->getScanlineIntensity() == 0.6f,
-                            "the settings read back");
+                                crt_->getScanlineIntensity() == 0.6f && crt_->getMaskIntensity() == 0.4f &&
+                                crt_->getCurvature() == 0.15f && crt_->getVignetteIntensity() == 0.5f,
+                            "the complete authored CRT configuration reads back");
+
+            std::unique_ptr<Effect> cloneOwner(crt_->Clone());
+            auto* clone = dynamic_cast<CNA::Graphics::CRTEffect*>(cloneOwner.get());
+            const bool cloneRetained = clone && clone != crt_.get() && clone->GetTypeName() == "CNA.Graphics.CRTEffect" &&
+                clone->getScanlineIntensity() == 0.6f && clone->getMaskIntensity() == 0.4f &&
+                clone->getCurvature() == 0.15f && clone->getVignetteIntensity() == 0.5f &&
+                clone->getMaskType() == CNA::Graphics::CRTMaskType::ApertureGrille;
+            if (clone)
+            {
+                clone->setScanlineIntensity(0.9f);
+                clone->setMaskType(CNA::Graphics::CRTMaskType::None);
+            }
+            Context().Check(cloneRetained && crt_->getScanlineIntensity() == 0.6f &&
+                                crt_->getMaskType() == CNA::Graphics::CRTMaskType::ApertureGrille,
+                            "Clone returns an independent CRTEffect with the complete current configuration");
         }
 
         void Update(GameTime& gameTime) override
@@ -94,8 +129,12 @@ CNA_DEMOS_GAME(CrtDemo, {
     .description = "Draws a scene into a RenderTarget2D, then shows the whole frame through CNA's CRTEffect as one "
                    "full-screen SpriteBatch quad: scanlines, an aperture-grille mask, screen curvature and a vignette.",
     .apis = {"CNA::Graphics::CRTEffect::CRTEffect", "CNA::Graphics::CRTEffect::setScanlineIntensity",
+             "CNA::Graphics::CRTEffect::getScanlineIntensity", "CNA::Graphics::CRTEffect::getCurvature",
              "CNA::Graphics::CRTEffect::setMaskType", "CNA::Graphics::CRTEffect::setMaskIntensity",
+             "CNA::Graphics::CRTEffect::getMaskType", "CNA::Graphics::CRTEffect::getMaskIntensity",
              "CNA::Graphics::CRTEffect::setCurvature", "CNA::Graphics::CRTEffect::setVignetteIntensity",
+             "CNA::Graphics::CRTEffect::getVignetteIntensity", "CNA::Graphics::CRTEffect::Clone",
+             "CNA::Graphics::CRTEffect::GetTypeName",
              "CNA::Graphics::CRTMaskType", "SpriteBatch::Begin"},
     .tags = {"cnaext", "post-process", "crt", "retro", "shader", "render-target"},
     .needs = CnaDemos::Need::CustomEffects,
