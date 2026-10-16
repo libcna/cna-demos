@@ -11717,3 +11717,26 @@ Next, commit and push this batch, then extend the existing
 `content.custom.intermediate_framework_values` ID with Curve's distinct intermediate grammar:
 required PreLoop/PostLoop elements, packed five-token keys, empty keys and representative malformed
 forms. Do not add a Curve-only ID. Keep every compile at three jobs or fewer.
+
+## Focused1090-intermediate-XML-Curve-format
+
+The existing `content.custom.intermediate_framework_values` ID grows14->20 passing controls. Its
+geometry settings now emit exact required Constant/Linear loop elements and two packed five-token
+Curve key records, round-trip both modes and every key field, and prove that a default Curve retains
+Constant modes with self-closing `<Keys />`. Missing loop elements, a partial key record and unknown
+`Bouncy` continuity are refused. No Curve-only ID was added.
+
+The clean incremental build is warning-free with `-j3`; metadata remains716/0. Twelve related
+SOFTWARE intermediate-XML demos plus the catalog parser pass13/13, and validator/comparator
+self-tests pass5/5 and4/4. Five runs under each renderer label pass20/20 with byte-identical stdout
+SHA-256 `d2a563d8c25d9a4c084b41dd25594055be57beec83f5345190e931da40373d51` and empty stderr. Generated
+coverage merges the focused result into Complete1084 plus Focused1085-1089, contains all716 IDs and
+remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1090-intermediate-curve-format/*`. No CNA issue, fresh genuine-XNA execution,
+rendering, screenshot or manual visual claim was made.
+
+Next, commit and push this batch, then audit the remaining measured document envelope, root-value
+and type-name grammar in format sections1-3 and7-9 against the existing serializer, polymorphism,
+shared-resource, external-reference and type-serializer demos. Add or extend behavior only for a
+semantic gap; disposition namespace aliases, ordering and primitive-root variants already covered
+or too trivial to justify. Keep every compile at three jobs or fewer.

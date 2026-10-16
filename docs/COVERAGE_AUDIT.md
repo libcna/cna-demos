@@ -6772,3 +6772,22 @@ contains all716 IDs while surface totals stay307/329 types,2128/2326 members,674
 Curve remains the distinct framework-value serialization grammar: required loop elements and
 packed five-token keys. Add that behavior to the existing framework-values demo, including empty
 and malformed forms, rather than creating another catalog ID.
+
+### Focused1090 intermediate XML Curve format
+
+`content.custom.intermediate_framework_values` now covers Curve's distinct structure and grows
+14->20 controls. Exact output and round trip preserve required Constant/Linear loop modes and two
+packed `position value tangentIn tangentOut Continuity` records. A default Curve retains Constant
+modes and self-closing empty Keys. Missing modes, a four-token partial key and unknown continuity
+are each refused.
+
+Five runs under each renderer label pass20/20 with common stdout SHA-256
+`d2a563d8c25d9a4c084b41dd25594055be57beec83f5345190e931da40373d51` and empty stderr. The
+warning-free `-j3` build, metadata716/0, thirteen related CTests and self-tests all pass. Coverage
+still contains all716 IDs at307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`/tmp/checkpoint-1090-intermediate-curve-format/*`. No new CNA issue or fresh XNA run.
+
+Audit the remaining document envelope, root-value and type-name corpus against existing workflows
+before adding anything. Namespace-alias spellings, section ordering and primitive-root variants
+need an explicit coverage disposition if their behavior is already subsumed; only a distinct
+caller-facing contract warrants another control or ID.

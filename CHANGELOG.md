@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the intermediate framework-value workflow with exact keyed and empty Curve XML,
+  loop/key round trips and missing-loop, partial-key and unknown-continuity refusals.
 - Added an intermediate-XML text workflow for empty/null, whitespace, multiline, escaped and
   Unicode strings plus exact character widths; it records CNA-DEMOS-ISSUE-147 for CNA's NUL-output
   exception category.

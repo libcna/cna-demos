@@ -12205,3 +12205,25 @@ Continue without another ID by extending `content.custom.intermediate_framework_
 remaining distinct framework grammar: Curve's required PreLoop/PostLoop elements and packed
 five-token keys, including empty and representative malformed forms. Ordinary math tuple widths
 remain intentionally represented rather than exhaustively repeated.
+
+## Focused1090 intermediate XML Curve format
+
+The existing `content.custom.intermediate_framework_values` grows14->20 controls without another
+catalog ID. Its authored geometry object now writes a Curve as required PreLoop/PostLoop elements
+plus two packed five-token key records, then round-trips both modes and every key field. A separate
+default Curve writes both Constant modes and self-closing `<Keys />` and returns empty. Missing
+loops, a partial key record and an unknown `Bouncy` continuity are refused with the measured
+format boundaries.
+
+The clean incremental build is warning-free with `-j3`; metadata remains716/0. Twelve related
+SOFTWARE intermediate-XML demos plus the catalog parser pass13/13; validator/comparator self-tests
+pass5/5 and4/4. Five runs under each renderer label pass20/20 with byte-identical stdout SHA-256
+`d2a563d8c25d9a4c084b41dd25594055be57beec83f5345190e931da40373d51` and empty stderr. Generated
+coverage contains all716 IDs and remains307/329 types,2128/2326 members,674/753 fields and3079/3205
+C routes. Evidence:`/tmp/checkpoint-1090-intermediate-curve-format/*`. No CNA issue, fresh XNA
+execution or rendered result is claimed.
+
+Next reconcile the remaining measured document/root/type-name grammar in format sections1-3 and7-9
+against the existing serializer, polymorphism, shared-resource, external-reference and type-
+serializer demos. Add or extend a workflow only for a semantic gap; explicitly disposition alias,
+ordering or primitive-root variants already demonstrated by those workflows or CNA's corpus tests.

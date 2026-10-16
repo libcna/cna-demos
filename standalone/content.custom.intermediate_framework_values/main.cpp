@@ -10,6 +10,7 @@
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/InvalidContentException.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/Serialization/Intermediate/IntermediateSerializer.hpp"
+#include "Microsoft/Xna/Framework/Curve.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Ray.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
@@ -21,6 +22,10 @@
 
 using Microsoft::Xna::Framework::BoundingBox;
 using Microsoft::Xna::Framework::Color;
+using Microsoft::Xna::Framework::Curve;
+using Microsoft::Xna::Framework::CurveContinuity;
+using Microsoft::Xna::Framework::CurveKey;
+using Microsoft::Xna::Framework::CurveLoopType;
 using Microsoft::Xna::Framework::Matrix;
 using Microsoft::Xna::Framework::Ray;
 using Microsoft::Xna::Framework::Rectangle;
@@ -30,6 +35,16 @@ using namespace Microsoft::Xna::Framework::Content::Pipeline::Serialization::Int
 
 namespace
 {
+    Curve MakeMotionCurve()
+    {
+        Curve curve;
+        curve.setPreLoopProperty(CurveLoopType::Constant);
+        curve.setPostLoopProperty(CurveLoopType::Linear);
+        curve.getKeysProperty().Add(CurveKey(0.0f, 0.0f, 0.0f, 1.0f, CurveContinuity::Smooth));
+        curve.getKeysProperty().Add(CurveKey(1.0f, 2.0f, 1.0f, 0.0f, CurveContinuity::Step));
+        return curve;
+    }
+
     struct GeometrySettings final : System::Object
     {
         static constexpr std::string_view XnaTypeName = "CnaDemos.GeometrySettings";
@@ -45,6 +60,7 @@ namespace
         Rectangle viewport{1, 2, 30, 40};
         BoundingBox bounds{Vector3(-1.0f, -2.0f, -3.0f), Vector3(1.0f, 2.0f, 3.0f)};
         Ray probe{Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f)};
+        Curve motion = MakeMotionCurve();
 
         static void DescribeContent(ContentTypeDescriptor<GeometrySettings>& type)
         {
@@ -54,6 +70,7 @@ namespace
             type.Field("Viewport", &GeometrySettings::viewport);
             type.Field("Bounds", &GeometrySettings::bounds);
             type.Field("Probe", &GeometrySettings::probe);
+            type.Field("Motion", &GeometrySettings::motion);
         }
     };
 
@@ -103,6 +120,9 @@ int main()
         const std::string bounds = "<Bounds><Min>-1 -2 -3</Min><Max>1 2 3</Max></Bounds>";
         const std::string probe =
             "<Probe><Position>0 0 0</Position><Direction>0 0 1</Direction></Probe>";
+        const std::string motion =
+            "<Motion><PreLoop>Constant</PreLoop><PostLoop>Linear</PostLoop>"
+            "<Keys>0 0 0 1 Smooth 1 2 1 0 Step</Keys></Motion>";
 
         check(xml.find(origin) != std::string::npos && xml.find(transform) != std::string::npos,
               "vectors and matrices use fixed-width whitespace-separated component tuples");
@@ -110,6 +130,8 @@ int main()
               "Color uses packed ARGB hexadecimal text while Rectangle uses four decimal integers");
         check(xml.find(bounds) != std::string::npos && xml.find(probe) != std::string::npos,
               "BoundingBox and Ray retain their named nested vector members");
+        check(xml.find(motion) != std::string::npos,
+              "Curve writes required loop modes and five packed tokens per key");
 
         const auto restored = Deserialize(xml);
         check(restored && restored->origin == authored->origin && restored->transform == authored->transform &&
@@ -117,6 +139,26 @@ int main()
               "packed vector, matrix, Color and Rectangle values round-trip exactly");
         check(restored && restored->bounds == authored->bounds && restored->probe == authored->probe,
               "structured BoundingBox and Ray values round-trip exactly");
+        check(restored && restored->motion.getPreLoopProperty() == CurveLoopType::Constant &&
+                  restored->motion.getPostLoopProperty() == CurveLoopType::Linear &&
+                  restored->motion.getKeysProperty().getCountProperty() == 2 &&
+                  restored->motion.getKeysProperty().getItemProperty(0) ==
+                      authored->motion.getKeysProperty().getItemProperty(0) &&
+                  restored->motion.getKeysProperty().getItemProperty(1) ==
+                      authored->motion.getKeysProperty().getItemProperty(1),
+              "Curve loop modes and complete key records round-trip exactly");
+
+        auto emptyCurveValue = std::make_shared<GeometrySettings>();
+        emptyCurveValue->motion = Curve{};
+        const std::string emptyCurveXml = Serialize(emptyCurveValue);
+        const std::string emptyMotion =
+            "<Motion><PreLoop>Constant</PreLoop><PostLoop>Constant</PostLoop><Keys /></Motion>";
+        const auto emptyCurveRestored = Deserialize(emptyCurveXml);
+        check(emptyCurveXml.find(emptyMotion) != std::string::npos && emptyCurveRestored &&
+                  emptyCurveRestored->motion.getKeysProperty().getCountProperty() == 0 &&
+                  emptyCurveRestored->motion.getPreLoopProperty() == CurveLoopType::Constant &&
+                  emptyCurveRestored->motion.getPostLoopProperty() == CurveLoopType::Constant,
+              "an empty Curve keeps both default loop modes and a self-closing Keys element");
 
         const std::string permissive = Replaced(
             Replaced(xml, origin, "<Origin>1\t2\n3</Origin>"), tint, "<Tint>280a141e</Tint>");
@@ -159,6 +201,14 @@ int main()
         rejects(Replaced(xml, probe,
                          "<Probe><Position>0 0 0</Position><Direction>0 1</Direction></Probe>"),
                 "Ray rejects a partial Direction vector");
+        rejects(Replaced(xml, motion,
+                         "<Motion><Keys>0 0 0 1 Smooth 1 2 1 0 Step</Keys></Motion>"),
+                "Curve rejects missing loop-mode elements");
+        rejects(Replaced(xml, "<Keys>0 0 0 1 Smooth 1 2 1 0 Step</Keys>",
+                         "<Keys>0 0 0 1</Keys>"),
+                "Curve rejects a partial five-token key record");
+        rejects(Replaced(xml, "Smooth 1 2 1 0 Step", "Bouncy 1 2 1 0 Step"),
+                "Curve rejects an unknown continuity name");
 
         return passed ? 0 : 1;
     }
