@@ -12154,3 +12154,27 @@ Continue the measured serializer grammar with framework value types. Use one coh
 geometry/configuration object to distinguish ordinary whitespace-separated component tuples from
 Color's packed hexadecimal form, preserve exact round trips and reject representative wrong token
 counts/forms. Do not duplicate every math type whose only difference is tuple width.
+
+## Focused1088 intermediate XML framework value formats
+
+New `content.custom.intermediate_framework_values` uses one geometry settings object to cover the
+distinct framework grammars without a demo per math type. Six positive controls establish exact
+Vector3 and sixteen-component Matrix tuples, packed ARGB Color versus decimal Rectangle text,
+nested BoundingBox/Ray members, complete typed round trip, and normalization of accepted tuple
+tabs/newlines plus lower-case Color hex. Eight malformed documents reject vector commas and short
+tuples, a short Matrix, prefixed and component-list Color forms, a floating Rectangle component, a
+BoundingBox without Max and a partial Ray direction.
+
+The clean incremental build is warning-free with `-j3`; metadata validates715/0. Eleven related
+SOFTWARE intermediate-XML demos plus the catalog parser pass12/12; validator/comparator self-tests
+pass5/5 and4/4. Five runs under each renderer label pass14/14 with byte-identical stdout SHA-256
+`8996c2b3828587352e560f17c1c170b3d8c7644eae142b6475fc1a02f6f7ed69` and empty stderr. Generated
+coverage merges Focused1085-1088 into Complete1084, contains all715 IDs and remains307/329 types,
+2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1088-intermediate-framework-values/*`. No CNA issue, fresh XNA execution or
+rendered result is claimed.
+
+Continue the measured format audit with string and character fidelity: preserved leading/trailing
+space and line endings, XML escaping, Unicode, empty versus null reference text, single-character
+forms and representative invalid character widths. Keep these in one authored text resource rather
+than adding encoding variants.

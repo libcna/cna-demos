@@ -6731,3 +6731,24 @@ fresh XNA run.
 The next format-level gap is framework value-type text: ordinary component tuples share scalar
 tokens while Color uses packed ARGB hexadecimal text. Audit a coherent representative object,
 exact round trips and wrong-token/form refusals rather than adding one demo for every math type.
+
+### Focused1088 intermediate XML framework value formats
+
+New `content.custom.intermediate_framework_values` captures the distinct framework-value grammar in
+one geometry configuration. Exact output and typed round trip cover a Vector3, translation Matrix,
+packed ARGB Color, integer Rectangle and nested BoundingBox/Ray. A second read/write cycle proves
+that accepted tuple tabs/newlines and lower-case Color digits normalize to canonical spaces and
+upper case.
+
+Eight malformed variants distinguish format boundaries: vector commas/short width, a fifteen-value
+Matrix, `0x` and component-list Color forms, a floating Rectangle component, missing BoundingBox
+Max and a partial Ray direction are refused. Five runs under each renderer label pass14/14 with
+common stdout SHA-256 `8996c2b3828587352e560f17c1c170b3d8c7644eae142b6475fc1a02f6f7ed69` and empty stderr. The
+warning-free `-j3` build, metadata715/0, twelve related CTests and self-tests all pass. Coverage
+contains all715 IDs while surface totals stay307/329 types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`/tmp/checkpoint-1088-intermediate-framework-values/*`. No new CNA
+issue or fresh XNA run.
+
+The next measured format gap is reference-string and character fidelity: whitespace/newlines,
+escaping, Unicode, empty/null distinction and one-character width deserve one coherent text asset,
+not encoding variants.

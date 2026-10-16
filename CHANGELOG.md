@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added an intermediate-XML framework-value workflow for fixed-width vector/matrix tuples, packed
+  ARGB Color text, integer rectangles, structured BoundingBox/Ray values, normalization and
+  representative malformed forms.
 - Added an invariant intermediate-XML scalar workflow for canonical special and round-trip floating
   text, Decimal/TimeSpan/DateTime forms, enum/flags spelling and representative lexical/range
   refusals.

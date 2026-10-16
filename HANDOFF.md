@@ -11664,3 +11664,27 @@ framework value types: one coherent geometry/configuration object should disting
 whitespace-separated tuples from Color's packed hexadecimal form, round-trip exact values and
 reject representative wrong token counts/forms. Avoid per-math-type variants. Keep every compile
 at three jobs or fewer.
+
+## Focused1088-intermediate-XML-framework-values
+
+The715th catalog ID, `content.custom.intermediate_framework_values`, uses one geometry settings
+object to cover distinct framework grammars without per-type demos. Six positive controls establish
+exact Vector3/Matrix tuples, packed ARGB Color versus decimal Rectangle text, nested BoundingBox and
+Ray members, complete typed round trip, and canonical normalization of accepted tuple whitespace
+and lower-case Color hex. Eight malformed variants reject commas/short vectors, a short Matrix,
+prefixed/component-list Color, a floating Rectangle component, missing BoundingBox Max and a
+partial Ray direction.
+
+The clean incremental build is warning-free with `-j3`; metadata validates715/0. Eleven related
+SOFTWARE intermediate-XML demos plus the catalog parser pass12/12, and validator/comparator
+self-tests pass5/5 and4/4. Five runs under each renderer label pass14/14 with byte-identical stdout
+SHA-256 `8996c2b3828587352e560f17c1c170b3d8c7644eae142b6475fc1a02f6f7ed69` and empty stderr. Generated
+coverage merges Focused1085-1088 with Complete1084, contains all715 IDs and remains307/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1088-intermediate-framework-values/*`. No CNA issue, fresh genuine-XNA execution,
+rendering, screenshot or manual visual claim was made.
+
+Next, commit and push this batch, then continue the measured intermediate format audit with string
+and character fidelity: leading/trailing space and line endings, XML escaping, Unicode, empty/null
+reference text, exact one-character forms and representative invalid widths. Keep one authored text
+resource rather than encoding variants. Keep every compile at three jobs or fewer.
