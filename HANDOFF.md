@@ -3525,8 +3525,9 @@ Resume the deeper semantic behavior audit: reconcile explicit residual gaps in
 `docs/COVERAGE_AUDIT.md` against pinned CNA d23e139de and prioritize reachable deterministic behavior
 that strengthens an existing coherent demo. Focused1023 closes Texture3D's explicit non-Color
 sampling gap with signed/HDR Vector4 values on both GLSL dialects, and Focused1024 closes exact
-PNG/JPEG resize mapping. Choose the next gap outside the Focused1015-1024 ownership,
-audio-transport and texture-format slices. Revisit the126 intentionally
+PNG/JPEG resize mapping. Focused1025 closes the explicit SpriteBatch crop-origin and signed-scale/
+flip composition gap, including default winding culling. Choose the next gap outside the
+Focused1015-1025 ownership, audio-transport, texture-format and sprite-transform slices. Revisit the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
@@ -10203,3 +10204,23 @@ Evidence:`/tmp/checkpoint-1024-save-nearest/*`; source SHA-256
 `bb1bbed31884c5c65814fa3853c3919982ceeaa8537ffb1b20eb7c7cc4fa8405`. Validation used encoded
 bytes and decoded public pixels; no screenshot or manual visual inspection was performed, and no
 CNA issue was found. Continue with the next deterministic behavior gap outside image resizing.
+
+## Focused1025-SpriteBatch-crop-scale-effects-composition
+
+`graphics.sprite_batch.sprite_effects` now closes the explicit crop-origin and signed-scale/flip
+interaction gap. A generated four-colour crop begins at nonzero source X yet rotates/scales about
+its own centre. One negative scale axis is absent under default winding culling, appears mirrored
+under CullNone and returns to its original pixel order when FlipHorizontally mirrors UVs too. Two
+negative axes plus both flip flags produce the same cancellation in both dimensions.
+
+The first draft incorrectly expected one-axis-negative sprites to survive the default rasterizer.
+An inspected failed screenshot and source review isolated winding culling; making CullNone explicit
+fixed the demo oracle without a CNA issue. The warning-free `-j3` build, metadata693/0, exact
+SOFTWARE CTest and validator/comparator self-tests5/5 plus4/4 pass. Ten SOFTWARE and ten
+OPENGLES3/Xvfb runs pass6/6 with byte-identical stdout SHA-256
+`1993ea6cb3f5724ce8a2660fef3ac792e309a8c1daca0e0210409a4eb543254a` and empty stderr. Generated
+totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1025-sprite-effects-composition/*`; source SHA-256
+`3210d1627c81a121ac61ffa4f0e679c3280800d2dba4e449beaf94070d50a42d`. Final controls use
+programmatic readback; no visual-quality claim is made. Continue with the next deterministic gap
+outside the completed SpriteBatch transform slice.

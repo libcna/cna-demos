@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the SpriteBatch flip workflow with a nonzero source crop, crop-relative origin,
+  negative per-axis scales, default winding culling and the cancellation of geometry mirrors by
+  matching texture-coordinate effects.
 - Added an exact 2x2-to-3x3 discriminator for XNA's nearest-neighbor PNG/JPEG save resizing,
   including byte-identical JPEG output from an independently authored expected image.
 - Extended the real sampler3D workflow with a Vector4 volume whose signed and above-one channels

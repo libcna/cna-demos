@@ -11231,3 +11231,22 @@ self-tests pass5/5 and4/4. Counts remain307/329 XNA types,2128/2326 members,674/
 3079/3205 C routes. Evidence:`/tmp/checkpoint-1024-save-nearest/*`. Public decoded pixels and
 encoded bytes supplied the validation; no screenshot or manual visual inspection was performed,
 and no CNA issue was found. Continue the deterministic behavior audit outside image resizing.
+
+## Focused1025-SpriteBatch-crop-scale-effects-composition
+
+The existing `graphics.sprite_batch.sprite_effects` workflow grows from three to six controls. A
+four-colour2x2 region beginning at source X=1 proves that its centre origin is measured inside the
+crop. One negative scale axis reverses winding and is culled by the default rasterizer; with
+CullNone it mirrors geometry, and the matching SpriteEffects flag mirrors UVs back to the original
+arrangement. Two negative axes combined with both flip flags establish the same cancellation on
+both dimensions.
+
+The first draft expected the one-axis cases to survive default culling. Its inspected diagnostic
+screenshot and renderer/source review showed the missing winding precondition, so the accepted
+workflow uses explicit CullNone and no CNA issue is recorded. The warning-free three-job build,
+metadata693/0 and exact SOFTWARE CTest pass. Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass6/6 with
+byte-identical stdout and empty stderr; validator/comparator self-tests pass5/5 and4/4. Counts
+remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1025-sprite-effects-composition/*`. Final evidence is programmatic pixel readback;
+no visual-quality claim is made. Continue the deterministic behavior audit outside the completed
+SpriteBatch transform interaction.
