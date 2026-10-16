@@ -7380,3 +7380,33 @@ validator/comparator self-tests pass. Coverage remains308/329 XNA types,2128/232
 674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1114-graphics-public-headers/*`. No DirectX9/WebGPU execution, physical device
 loss, compiled-shader capability behind a skip, screenshot or manual visual result is claimed.
+
+### Focused1115 Media public-header audit
+
+The Media module installs24 public XNA headers and12 implementation headers below
+`CNA/Internal/Media`; it has no separate public `CNA::Media` header. All24 inventory types already
+have runtime-backed demo credit. The17 Media workflows cover source/library construction, private
+music and picture indexing, tags and formats, album/artist/genre/playlist relationships, art and
+thumbnails, picture saving, disposal and retained ownership, Song construction/metadata, MediaQueue
+mutation, MediaPlayer transport/events/volume/repeat/shuffle/visualization, and Video/VideoPlayer
+construction, metadata, frames, tracks, transport, disposal and failure behavior. The internal
+parsers, indexes, saved-picture store, thumbnailer, decoder and visualization helpers remain
+implementation contracts reached by those public workflows and CNA's focused unit tests.
+
+The generated remainder has no missing type,14 non-field members and one field. The members are
+the generic/non-generic `GetEnumerator` spellings on Album, Artist, Genre, PictureAlbum, Picture,
+Playlist and Song collections. CNA exposes C++ `begin`/`end` instead; existing controlled-library
+workflows range-iterate the real populated collections and separately cover count, indexing,
+relationships, disposal and ownership. Naming unavailable CLR aliases would add no behavior.
+`MediaSourceType::WindowsMediaConnect` is the lone field: CNA only creates `LocalDevice` sources
+and its MediaLibrary constructor rejects every other type. Focused896 already records that a numeric
+constant check would not demonstrate a usable source. The adjacent C audits remain
+`media_player.h`41/41 and `media_library.h`122/148; the latter's26 residual routes are the previously
+dispositioned fixed reflection type-name pairs.
+
+All17 SOFTWARE Media CTests pass in25.40s, including the six expected-known-issue contracts and one
+smoke-only controlled-library test. The warning-free incremental build remains `-j3`; metadata is
+717/0 and catalog/validator/comparator self-tests pass. Coverage remains308/329 XNA types,
+2128/2326 members,674/753 fields and3079/3205 C routes; Media remains24/24 types,178/192 members
+and7/8 fields. Evidence:`/tmp/checkpoint-1115-media-public-headers/*`. No host-library mutation,
+listening, network media source, screenshot or manual visual result is claimed.

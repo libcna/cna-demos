@@ -12695,3 +12695,26 @@ routes. Evidence:`/tmp/checkpoint-1114-graphics-public-headers/*`. No DirectX9/W
 physical device loss, screenshot or manual visual claim is made. Continue with the public Media
 XNA header surface and its14 residual collection-enumerator members/one field, adding behavior only
 for a genuine caller-visible gap.
+
+## Focused1115 Media public-header audit
+
+All24 public XNA Media headers now have a consolidated disposition; the other12 module headers are
+internal parser/index/decoder/visualization contracts. The17 existing workflows cover every public
+type and the meaningful library, entity, collection, player, queue, song, picture and video
+behavior using controlled private media roots and authored assets.
+
+The exact generated remainder is14 members and one field. The members are the generic/non-generic
+CLR `GetEnumerator` names for seven collections; CNA exposes C++ ranges, and populated workflows
+already traverse those ranges while checking indexing, relationships, ownership and disposal.
+`MediaSourceType::WindowsMediaConnect` is intentionally uncredited because CNA creates only
+LocalDevice and rejects another source type. No demo or metadata credit is added. The C audits stay
+`media_player.h`41/41 and `media_library.h`122/148, whose26 remaining fixed type-name routes have
+already been semantically dispositioned.
+
+All17 SOFTWARE Media CTests pass in25.40s. The warning-free incremental build uses `-j3`; metadata
+remains717/0 and catalog/validator/comparator self-tests pass. Coverage stays308/329 XNA types,
+2128/2326 members,674/753 fields and3079/3205 C routes; Media is24/24 types,178/192 members and7/8
+fields. Evidence:`/tmp/checkpoint-1115-media-public-headers/*`. No host-library mutation, listening,
+network media source, screenshot or manual visual claim is made. Continue with the public Devices
+and Phone header surfaces, using existing sensor/camera/location workflows and keeping hardware-
+only values explicit.

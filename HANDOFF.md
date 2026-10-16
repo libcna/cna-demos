@@ -12412,3 +12412,31 @@ physical loss, screenshot or manual visual claim is made.
 Commit and push this batch. Next audit the public Media XNA headers and its14 residual collection
 enumerator members/one residual field, reusing the17 stable media workflows and adding behavior only
 for a real caller-visible gap. Keep every compile at three jobs or fewer.
+
+## Focused1115-Media-public-header-audit
+
+All24 public XNA Media headers are now dispositioned; the other12 module headers are internal
+parser/index/decoder/visualization contracts. All24 XNA inventory types already have runtime-backed
+credit. The17 stable workflows cover private music/picture libraries, sources, tags/formats,
+entity relationships, collections, art/thumbnails, saves, disposal/ownership, Songs, MediaQueue,
+MediaPlayer transport/events/settings/visualization and Video/VideoPlayer lifecycle and failures.
+
+The generated remainder is14 members and one field. The members are generic/non-generic CLR
+`GetEnumerator` names on seven collections. CNA instead exposes public C++ `begin`/`end`, and the
+controlled populated-library workflows already range-iterate these collections while establishing
+their count/index/relationship/lifetime behavior. `MediaSourceType::WindowsMediaConnect` remains
+uncredited: CNA creates only LocalDevice and rejects any other MediaLibrary source, so a numeric
+constant check would demonstrate no usable behavior. C coverage remains `media_player.h`41/41 and
+`media_library.h`122/148, with its26 trivial fixed type-name routes already dispositioned.
+
+All17 SOFTWARE Media CTests pass in25.40s with the reviewed expected-known-issue contracts intact.
+The warning-free incremental build uses `-j3`; metadata is717/0 and catalog/validator/comparator
+self-tests pass. Coverage stays308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C
+routes; Media is24/24 types,178/192 members and7/8 fields. Evidence:
+`/tmp/checkpoint-1115-media-public-headers/*`. No host-library mutation, listening, network media
+source, screenshot or manual visual claim is made.
+
+Commit and push this batch. Next consolidate the public Devices and Phone headers, mapping their
+remaining types/members/values to the existing camera, sensors, accelerometer and vibration
+workflows and retaining physical/mobile-only behavior as explicit manual scope. Keep every compile
+at three jobs or fewer.
