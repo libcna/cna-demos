@@ -6979,3 +6979,31 @@ The next deterministic public behavior gap is the C++ `CNA::Devices` compatibili
 MessageBox, FileDialog, SystemTray and Camera support properties should agree with the underlying
 platform capability matrix, and its Clipboard properties should interoperate with the already
 demonstrated `CNA::Input::Clipboard` implementation while preserving the caller's prior state.
+
+### Focused1100 CNA::Devices compatibility wrappers
+
+`core.platform.capability_matrix` now has9 controls: all four `CNA::Devices` support properties
+match their cached platform capabilities. `input.clipboard.text` now has6 controls and uses both
+public wrappers against one clipboard, then restores the exact prior text or absence for both the
+clipboard and primary selection. This closes the old demo-side leak when the initial clipboard was
+empty.
+
+Five runs per available renderer path are byte-stable with empty stderr. The capability matrix
+passes on SOFTWARE and OPENGLES3 with stdout SHA-256
+`77da04600192540017570b48c1f22bbb62fa42569818142b8b8de660bcfa604f`; clipboard passes on
+OPENGLES3 at `86cff04879ec5a61e5c414fd9a2197af6e32f8312e1afc2f9d483b609ccb99e4`.
+SOFTWARE correctly skips the window-dependent clipboard demo. The `-j3` build, metadata716/0,
+targeted CTests and self-tests pass. Coverage stays307/329 types,2128/2326 members,674/753 fields
+and3079/3205 C routes. Evidence:`/tmp/checkpoint-1100-devices-wrappers/*`.
+
+| `CNA::Devices` area | Coverage decision |
+|---|---|
+| SystemInfo, Locale, PowerInfo, DisplayInfo | Existing device workflows read the public values; additional platform permutations need other systems. |
+| Clipboard | Text get/set/has and interoperability with the richer Input wrapper are automated, including exact state restoration. MIME and primary-selection behavior remain directly covered by Input demos. |
+| MessageBox and FileDialog | Support decisions are automated. Opening native modal/asynchronous UI and user choice require manual interaction; filter fields are trivial request data. |
+| SystemTray | Support decision is automated. Native icon/menu lifetime, appearance and click delivery require a desktop tray and manual interaction. |
+| Camera | Backend support decision is automated. Device enumeration may legitimately be empty; permissions, states, dimensions and frames require physical hardware/manual testing. Camera value records and enums do not justify independent demos. |
+| UrlLauncher | Success only reports that an external handler launched; observing a browser/file handler is an external-service/manual test. Empty and malformed no-crash probes belong in CNA's unit tests. |
+
+Continue with the CNA platform headers. Distinguish the caller-facing static capability/native-
+window/event contracts from `IPlatform` provider interfaces implemented by CNA backends.

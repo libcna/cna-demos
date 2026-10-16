@@ -663,11 +663,14 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 - Remaining net: voice (manual).
 
 ## Phase 13 -- devices, phone, design, diagnostics, Inspector, platform, CNA extensions 🟨 (25 demos)
-- ✅ `devices.*` (4): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
+- ✅ `devices.*` (5): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
   AccelerometerFailedException, Environment::DeviceType), CNAEXT keyboard-emulated accelerometer,
   VibrateController, CNA::Devices SystemInfo/Locale/PowerInfo, ✅ DisplayInfo (content scale, safe
-  area). Remaining: Compass/Gyroscope/Motion readings (hardware), CNA devices-ext clipboard, message box, file dialog,
-  URL launcher (file:// only), camera, system tray (manual).
+  area). The existing clipboard text workflow now proves `CNA::Devices::Clipboard` and
+  `CNA::Input::Clipboard` interoperability plus exact nonempty/empty state restoration; the core
+  capability matrix proves MessageBox, FileDialog, Camera and SystemTray support-gate parity.
+  Remaining: Compass/Gyroscope/Motion readings, native dialog interaction, URL launching, camera
+  frames and system-tray lifecycle/clicks require hardware, external applications or manual UI.
 - ✅ `phone.*` (1): PhoneApplicationService lifecycle with AttachEXT and State. Remaining:
   notification channels (need a push service: manual).
 - ✅ `design.*` (4): text round trip and which types parse, cultures, property descriptors and
@@ -686,8 +689,9 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   renderers), DebugDraw.
 - `platform.*`: ✅ renderer selection with fallback chain (standalone), ✅
   `platform.window.native_handle` (GameWindow::Handle, typed NativeWindowHandle); renderer
-  capability profiles are `graphics.device.capability_report`. Remaining: platform capabilities
-  (`CNA::Platform::IPlatform` serves CNA's own static API rather than games).
+  capability profiles are `graphics.device.capability_report`, while
+  `core.platform.capability_matrix` covers the public static platform/capability decision surface.
+  Low-level `IPlatform` provider services are CNA implementation interfaces rather than game APIs.
 
 ## Phase 14 -- bindings 🟨 (26 C API demos)
 The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks

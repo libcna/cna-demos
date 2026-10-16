@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MS-PL
-// CNAEXT Clipboard: put text on the system clipboard and read it back.
+// CNAEXT Clipboard: both public wrappers share one system clipboard and preserve its prior state.
 #include <memory>
 #include <optional>
 #include <string>
 
+#include "CNA/Devices/Clipboard.hpp"
 #include "CNA/Input/Clipboard.hpp"
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
@@ -15,7 +16,8 @@
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
-using CNA::Input::Clipboard;
+using DeviceClipboard = CNA::Devices::Clipboard;
+using InputClipboard = CNA::Input::Clipboard;
 
 namespace
 {
@@ -29,24 +31,45 @@ namespace
 
             // The clipboard belongs to the desktop, so keep what the person had copied.
             const std::optional<std::string> previous =
-                Clipboard::HasTextEXT() ? std::optional(Clipboard::GetTextEXT()) : std::nullopt;
+                InputClipboard::HasTextEXT() ? std::optional(InputClipboard::GetTextEXT()) : std::nullopt;
+            const std::optional<std::string> previousPrimary =
+                InputClipboard::HasPrimarySelectionTextEXT()
+                    ? std::optional(InputClipboard::GetPrimarySelectionTextEXT())
+                    : std::nullopt;
 
             const std::string copied = "Score: 12345 -- copied by cna-demos";
-            Clipboard::SetTextEXT(copied);
-            Context().Check(Clipboard::HasTextEXT(), "after SetTextEXT the clipboard has text");
-            read_ = Clipboard::GetTextEXT();
-            Context().Print("GetTextEXT: \"{}\"", read_);
-            Context().Check(read_ == copied, "GetTextEXT returns the text that was set (UTF-8)");
+            Context().Check(DeviceClipboard::setTextProperty(copied),
+                            "the CNA::Devices compatibility wrapper sets UTF-8 clipboard text");
+            Context().Check(DeviceClipboard::getHasTextProperty() &&
+                                DeviceClipboard::getTextProperty() == copied,
+                            "the CNA::Devices compatibility properties read back the text");
+            Context().Check(InputClipboard::HasTextEXT() && InputClipboard::GetTextEXT() == copied,
+                            "CNA::Input observes text written through CNA::Devices");
+
+            read_ = "Shared by CNA::Input and CNA::Devices";
+            InputClipboard::SetTextEXT(read_);
+            Context().Check(DeviceClipboard::getHasTextProperty() &&
+                                DeviceClipboard::getTextProperty() == read_,
+                            "CNA::Devices observes text written through CNA::Input");
+            Context().Print("shared clipboard text: \"{}\"", read_);
 
             // X11 and Wayland also have a "primary selection": the last selected text, pasted
             // with the middle mouse button. Elsewhere it is not available.
-            Clipboard::SetPrimarySelectionTextEXT("selected text");
-            primary_ = Clipboard::HasPrimarySelectionTextEXT();
-            Context().Print("primary selection {}", primary_ ? "available: \"" + Clipboard::GetPrimarySelectionTextEXT() + "\""
-                                                             : std::string("not available on this platform"));
+            InputClipboard::SetPrimarySelectionTextEXT("selected text");
+            primary_ = InputClipboard::HasPrimarySelectionTextEXT();
+            Context().Print("primary selection {}",
+                            primary_ ? "available: \"" + InputClipboard::GetPrimarySelectionTextEXT() + "\""
+                                     : std::string("not available on this platform"));
 
-            if (previous)
-                Clipboard::SetTextEXT(*previous);
+            Context().Check(DeviceClipboard::setTextProperty(previous.value_or("")) &&
+                                DeviceClipboard::getHasTextProperty() == previous.has_value() &&
+                                (!previous || DeviceClipboard::getTextProperty() == *previous),
+                            "the prior clipboard text or empty state is restored exactly");
+            InputClipboard::SetPrimarySelectionTextEXT(previousPrimary.value_or(""));
+            Context().Check(InputClipboard::HasPrimarySelectionTextEXT() == previousPrimary.has_value() &&
+                                (!previousPrimary ||
+                                 InputClipboard::GetPrimarySelectionTextEXT() == *previousPrimary),
+                            "the prior primary-selection text or empty state is restored exactly");
         }
 
         void Draw(const GameTime& gameTime) override
@@ -74,12 +97,13 @@ namespace
 CNA_DEMOS_GAME(ClipboardTextDemo, {
     .id = "input.clipboard.text",
     .title = "Clipboard text (CNAEXT)",
-    .description = "Copies text with Clipboard::SetTextEXT, reads it back with GetTextEXT and HasTextEXT, tries the "
-                   "X11/Wayland primary selection, then restores the text that was on the clipboard before.",
+    .description = "Writes and reads text across CNA::Devices::Clipboard and CNA::Input::Clipboard, tries the "
+                   "X11/Wayland primary selection, then restores both prior text states including empty ones.",
     .apis = {"CNA::Input::Clipboard::SetTextEXT", "CNA::Input::Clipboard::GetTextEXT",
              "CNA::Input::Clipboard::HasTextEXT", "CNA::Input::Clipboard::SetPrimarySelectionTextEXT",
              "CNA::Input::Clipboard::GetPrimarySelectionTextEXT",
-             "CNA::Input::Clipboard::HasPrimarySelectionTextEXT"},
+             "CNA::Input::Clipboard::HasPrimarySelectionTextEXT", "CNA::Devices::Clipboard::Text",
+             "CNA::Devices::Clipboard::HasText"},
     .tags = {"clipboard", "copy", "paste", "text", "cnaext"},
     .needs = CnaDemos::Need::Window,
     .frames = 3,

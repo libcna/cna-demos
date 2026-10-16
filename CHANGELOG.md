@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Covered the C++ `CNA::Devices` compatibility layer's four support gates and Clipboard text
+  interoperability, and fixed the clipboard demo to restore initially empty clipboard and primary-
+  selection state instead of leaving demo text behind.
 - Refreshed the complete checkpoint at 716 demos after closing the intermediate-XML format audit;
   all 729 enabled CTests and both full renderer smoke suites satisfy their expected-status
   contracts, with every new ISSUE-146 through ISSUE-149 assertion accounted for.

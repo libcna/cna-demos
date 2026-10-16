@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: MS-PL
 // The live platform capability snapshot used by games to choose portable code paths.
+#include "CNA/Devices/Camera.hpp"
+#include "CNA/Devices/FileDialog.hpp"
+#include "CNA/Devices/MessageBox.hpp"
+#include "CNA/Devices/SystemTray.hpp"
 #include "CNA/Platform/CurrentPlatform.hpp"
 #include "CNA/Platform/PlatformCapabilities.hpp"
 #include "CNA/Platform/PlatformCapability.hpp"
@@ -90,6 +94,19 @@ namespace
             ctx.Check(liveQueriesMatch,
                       "the platform's focused capability queries agree with the cached complete snapshot");
 
+            ctx.Check(CNA::Devices::MessageBox::getIsSupportedProperty() ==
+                          Platform::Supports(capabilities, Platform::PlatformCapability::MessageBox),
+                      "MessageBox::IsSupported agrees with the cached platform capability");
+            ctx.Check(CNA::Devices::FileDialog::getIsSupportedProperty() ==
+                          Platform::Supports(capabilities, Platform::PlatformCapability::NativeFileDialog),
+                      "FileDialog::IsSupported agrees with the cached platform capability");
+            ctx.Check(CNA::Devices::SystemTray::getIsSupportedProperty() ==
+                          Platform::Supports(capabilities, Platform::PlatformCapability::Tray),
+                      "SystemTray::IsSupported agrees with the cached platform capability");
+            ctx.Check(CNA::Devices::Camera::getIsSupportedProperty() ==
+                          Platform::Supports(capabilities, Platform::PlatformCapability::Camera),
+                      "Camera::IsSupported agrees with the cached platform capability");
+
             const Platform::PlatformCapabilities safeDefaults;
             bool everyDefaultIsUnsupported = true;
             for (const Platform::PlatformCapability capability : all)
@@ -106,12 +123,15 @@ CNA_DEMOS_GAME(CapabilityMatrixDemo, {
     .id = "core.platform.capability_matrix",
     .title = "Platform capability matrix",
     .description = "Reads the Game-owned platform's cached capability snapshot, enumerates all named capabilities, "
-                   "and compares every cached answer with the platform's focused Supports query.",
+                   "compares every cached answer with the platform's focused Supports query, and verifies the "
+                   "MessageBox, FileDialog, SystemTray and Camera compatibility gates.",
     .apis = {"Game::GetPlatformEXT", "Game::GetPlatformCapabilitiesEXT", "CNA::Platform::IPlatform::GetName",
              "CNA::Platform::IPlatform::Supports", "CNA::Platform::PlatformCapability",
              "CNA::Platform::PlatformCapabilities", "CNA::Platform::AllCapabilities",
              "CNA::Platform::Supports", "CNA::Platform::ToString", "CNA::Platform::HasCurrentPlatform",
-             "CNA::Platform::GetCurrentPlatform"},
+             "CNA::Platform::GetCurrentPlatform", "CNA::Devices::MessageBox::IsSupported",
+             "CNA::Devices::FileDialog::IsSupported", "CNA::Devices::SystemTray::IsSupported",
+             "CNA::Devices::Camera::IsSupported"},
     .tags = {"platform", "capabilities", "portability", "cnaext"},
     .frames = 3,
 })

@@ -11792,38 +11792,6 @@ serializer workflow if absent; byte-order-mark placement is an XML-reader detail
 documented rather than multiplied into demos unless review finds a CNA/XNA mismatch. Keep every
 compile at three jobs or fewer.
 
-## Complete1099-716-demo-behavior-checkpoint
-
-The complete checkpoint at source `cfe5a3d` against pinned CNA `d23e139` builds warning-free with
-`-j3`, validates metadata716/0 and passes all729 enabled CTests in440.48s; the three manual tests
-remain disabled. SOFTWARE is554 pass/111 expected fail/48 skip/3 not run and OPENGLES3 is
-593/113/7/3. Both reports cover all716 catalog IDs with no unexpected pass or failure.
-
-Against Complete1084, five new IDs are present: collections, framework values and scalar formats
-pass, while text values and OpaqueDataDictionary retain their declared ISSUE-147 and ISSUE-146
-failures. The existing intermediate serializer moves to its declared ISSUE-148 status. Eight added
-failed assertions per renderer are exactly the reviewed ISSUE-146 through ISSUE-149 differences;
-failed-assertion totals move181->189 on SOFTWARE and186->194 on OPENGLES3, with no removed
-assertion. The expanded external-reference, framework, polymorphism, property, serializer and
-shared-resource controls are all present in the full logs. SOFTWARE's C keyboard/mouse demo also
-moves from skip to pass because this Xvfb run exposed a desktop pointer, enabling its four existing
-warp/cursor controls; this is environment availability rather than a source behavior change.
-
-After replacing the four per-run temporary path suffixes, dropping blank lines and removing host
-GTK/X-protocol diagnostics, each renderer's stderr is byte-identical to Complete1084. Validator
-and checkpoint-comparator self-tests pass5/5 and4/4. Generated runtime-backed coverage remains
-307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 public C routes. Archived result
-SHA-256 values are `6888ac1e57576e3686125bb52073effdcb7faa61e7c4f8e91639eaff132e9f3f`
-for SOFTWARE and `2270a16ac1a42b142421b73946c0637811181d53799f154e07131bc3e5dd9dc4`
-for OPENGLES3. Evidence is under `build/linux-full/reports/checkpoint-1099-complete-*`, including
-raw and normalized stderr, comparison logs, self-tests and the complete hash manifest. No
-screenshot, manual visual, listening, physical-device or external-service claim was made.
-
-Commit and push this checkpoint. Then continue Phase13 by extending existing coherent workflows
-with the deterministic C++ `CNA::Devices` compatibility wrappers: capability-gate parity for
-MessageBox, FileDialog, SystemTray and Camera, plus Clipboard interoperability and exact state
-restoration. Keep every compile at three jobs or fewer.
-
 ## Focused1093-intermediate-XML-envelope-syntax
 
 The existing `content.custom.intermediate_serializer` grows23->29 controls. Twenty-five pass:
@@ -11985,4 +11953,71 @@ execution or rendered result is claimed.
 
 Commit and push this batch. Then select the highest-value remaining semantic public-member/behavior
 gap from `docs/COVERAGE_AUDIT.md`; prefer extending a coherent existing workflow and keep every
+compile at three jobs or fewer.
+
+## Complete1099-716-demo-behavior-checkpoint
+
+The complete checkpoint at source `cfe5a3d` against pinned CNA `d23e139` builds warning-free with
+`-j3`, validates metadata716/0 and passes all729 enabled CTests in440.48s; the three manual tests
+remain disabled. SOFTWARE is554 pass/111 expected fail/48 skip/3 not run and OPENGLES3 is
+593/113/7/3. Both reports cover all716 catalog IDs with no unexpected pass or failure.
+
+Against Complete1084, five new IDs are present: collections, framework values and scalar formats
+pass, while text values and OpaqueDataDictionary retain their declared ISSUE-147 and ISSUE-146
+failures. The existing intermediate serializer moves to its declared ISSUE-148 status. Eight added
+failed assertions per renderer are exactly the reviewed ISSUE-146 through ISSUE-149 differences;
+failed-assertion totals move181->189 on SOFTWARE and186->194 on OPENGLES3, with no removed
+assertion. The expanded external-reference, framework, polymorphism, property, serializer and
+shared-resource controls are all present in the full logs. SOFTWARE's C keyboard/mouse demo also
+moves from skip to pass because this Xvfb run exposed a desktop pointer, enabling its four existing
+warp/cursor controls; this is environment availability rather than a source behavior change.
+
+After replacing the four per-run temporary path suffixes, dropping blank lines and removing host
+GTK/X-protocol diagnostics, each renderer's stderr is byte-identical to Complete1084. Validator
+and checkpoint-comparator self-tests pass5/5 and4/4. Generated runtime-backed coverage remains
+307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 public C routes. Archived result
+SHA-256 values are `6888ac1e57576e3686125bb52073effdcb7faa61e7c4f8e91639eaff132e9f3f`
+for SOFTWARE and `2270a16ac1a42b142421b73946c0637811181d53799f154e07131bc3e5dd9dc4`
+for OPENGLES3. Evidence is under `build/linux-full/reports/checkpoint-1099-complete-*`, including
+raw and normalized stderr, comparison logs, self-tests and the complete hash manifest. No
+screenshot, manual visual, listening, physical-device or external-service claim was made.
+
+Commit and push this checkpoint. Then continue Phase13 by extending existing coherent workflows
+with the deterministic C++ `CNA::Devices` compatibility wrappers: capability-gate parity for
+MessageBox, FileDialog, SystemTray and Camera, plus Clipboard interoperability and exact state
+restoration. Keep every compile at three jobs or fewer.
+
+## Focused1100-CNA-Devices-wrapper-contracts
+
+The existing `core.platform.capability_matrix` workflow grows5->9 controls. MessageBox,
+FileDialog, SystemTray and Camera `IsSupported` properties now each agree with the corresponding
+cached MessageBox, NativeFileDialog, Tray and Camera platform capability. This covers the safe
+decision surface without opening a native dialog, tray icon or physical camera.
+
+The existing `input.clipboard.text` workflow grows2->6 controls and proves both directions of
+interoperability between `CNA::Devices::Clipboard` properties and `CNA::Input::Clipboard` EXT
+methods. It captures both clipboard and primary-selection text, exercises the shared backend, then
+restores an exact prior string or the initially empty state. Restoring the empty state fixes a demo
+side effect: the old code restored only a nonempty prior clipboard and otherwise left its sample
+text behind.
+
+The warning-free incremental build uses `-j3`; metadata remains716/0. The core SOFTWARE CTest and
+catalog parser pass, while the SOFTWARE clipboard CTest retains its declared no-window skip.
+Validator/comparator self-tests pass5/5 and4/4. Five direct capability runs on each renderer label
+pass9/9 with common stdout SHA-256
+`77da04600192540017570b48c1f22bbb62fa42569818142b8b8de660bcfa604f`; five OPENGLES3/Xvfb
+clipboard runs pass6/6 at
+`86cff04879ec5a61e5c414fd9a2197af6e32f8312e1afc2f9d483b609ccb99e4`. Every successful run has
+empty stderr. An initial sandboxed Xvfb attempt could not open its allocated display; repeating the
+documented X11 invocation with GUI permission passed, so this was an execution-environment failure,
+not a demo or CNA defect.
+
+Generated coverage merges the focused reports into Complete1099, contains all716 IDs and remains
+307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1100-devices-wrappers/*`. No native dialog, URL launch, tray interaction, camera
+frame, screenshot, manual visual or physical-device claim was made.
+
+Commit and push this batch. Continue the CNA-specific public-header/member audit with the platform
+surface: reconcile CurrentPlatform, capability, native-window, event, factory and provider types
+against existing demos, adding controls only for deterministic caller-visible behavior. Keep every
 compile at three jobs or fewer.

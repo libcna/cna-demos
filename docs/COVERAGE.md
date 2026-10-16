@@ -1013,16 +1013,22 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Content::Pipeline::XnbVideoProcessor::Process` -- content.xnb.pipeline_transcode
 - `CNA::Content::Pipeline::XnbVideoProcessor::ValidateParameters` -- content.xnb.pipeline_transcode
 - `CNA::DesktopOS` -- core.platform.host_identity
+- `CNA::Devices::Camera::IsSupported` -- core.platform.capability_matrix
+- `CNA::Devices::Clipboard::HasText` -- input.clipboard.text
+- `CNA::Devices::Clipboard::Text` -- input.clipboard.text
 - `CNA::Devices::DisplayInfo::ContentScale` -- devices.display_info.scale_and_safe_area
 - `CNA::Devices::DisplayInfo::SafeArea` -- devices.display_info.scale_and_safe_area
+- `CNA::Devices::FileDialog::IsSupported` -- core.platform.capability_matrix
 - `CNA::Devices::Locale::PreferredLocales` -- devices.system.machine_info
 - `CNA::Devices::LocaleInfo` -- devices.system.machine_info
+- `CNA::Devices::MessageBox::IsSupported` -- core.platform.capability_matrix
 - `CNA::Devices::PowerInfo::BatteryPercent` -- devices.system.machine_info
 - `CNA::Devices::PowerInfo::SecondsRemaining` -- devices.system.machine_info
 - `CNA::Devices::PowerInfo::State` -- devices.system.machine_info
 - `CNA::Devices::PowerState` -- devices.system.machine_info
 - `CNA::Devices::SystemInfo::LogicalCpuCoreCount` -- devices.system.machine_info
 - `CNA::Devices::SystemInfo::SystemRamMegabytes` -- devices.system.machine_info
+- `CNA::Devices::SystemTray::IsSupported` -- core.platform.capability_matrix
 - `CNA::Diagnostics::Accuracy` -- diagnostics.profiler.counters, diagnostics.profiler.frame_sources, diagnostics.profiler.resource_metadata
 - `CNA::Diagnostics::BeginFrame` -- diagnostics.profiler.bounded_history, diagnostics.profiler.frame_sources
 - `CNA::Diagnostics::BeginZone` -- diagnostics.profiler.trace_recording
