@@ -16,7 +16,7 @@ plan written.
 CMake integration, registry, metadata, runner, DemoGame, browser, CLI, catalog JSON, validation,
 CTest discovery, screenshots, coverage report, CI, pilot demos in 7 categories.
 
-## Phase 2 -- math (`math.*`) ✅ (78 math demos + 6 packed-vector demos)
+## Phase 2 -- math (`math.*`) ✅ (79 math demos + 6 packed-vector demos)
 Console demos with checks; each shows one operation family.
 - `math.vector2.*`, `math.vector3.*`, `math.vector4.*`: construction and constants, arithmetic
   operators, `Dot`, `Cross` (Vector3), `Normalize`, `Distance`/`DistanceSquared`, `Lerp`,
@@ -28,7 +28,8 @@ Console demos with checks; each shows one operation family.
   `CreateShadow`, `Invert`, `Transpose`, `Decompose`, multiplication order, `Lerp`. ≈ 18
 - `math.quaternion.*`: axis-angle, yaw/pitch/roll, `Slerp`/`Lerp`, `Concatenate`, `Conjugate`,
   `Inverse`, `Normalize`, rotating a vector. ✅ `double_cover`: sign ambiguity, stable orientation
-  comparisons, aligned blending and relative rotations. ≈ 8
+  comparisons, aligned blending and relative rotations. ✅ `value_identity`: constructor forms,
+  typed/boxed equality and the signed-zero hash contract. ≈ 9
 - `math.math_helper.*`: `ToRadians`/`ToDegrees`, `Clamp`, `Lerp`, `SmoothStep`, `WrapAngle`,
   `Hermite`, `CatmullRom`, `Barycentric`, `Distance`, constants. ≈ 6
 - `math.point.*`, `math.rectangle.*`: `Contains`, `Intersects`, `Intersect`, `Union`, `Inflate`,
@@ -11416,3 +11417,18 @@ known-issue CTest, ten runs per renderer label and both self-test suites pass; e
 exactly three expected failures among11 controls with stable stdout and empty stderr. Coverage is
 unchanged. Evidence:`/tmp/checkpoint-1043-quaternion-length-range/*`. Audit signed-zero
 equality/hash consistency next, then disposition trivial constructor and output forwards.
+
+## Focused1044 Quaternion signed-zero identity
+
+New `math.quaternion.value_identity` raises the catalog to694 and covers default/vector-scalar
+construction plus typed, boxed and operator equality. Genuine XNA keeps equal hashes across zero's
+sign bit; CNA equality accepts the values but its raw-bit hash differs, recorded as ISSUE-120. The
+clean `-j3` follow-up build, metadata694/0, exact known-issue CTest, ten runs per renderer label and
+both self-test suites pass; every run retains exactly one expected failure among five controls with
+stable stdout and empty stderr. Coverage counts remain unchanged, while Complete1034 reports mark
+this sole new ID absent. Evidence:`/tmp/checkpoint-1044-quaternion-signed-zero-hash/*`.
+
+The Quaternion public-member/behavior table is now closed at pinned d23: all meaningful branches
+and boundaries have demo evidence, while trivial Add/Subtract/Negate/Dot output forwards are
+source-reviewed dispositions. Run the complete694-demo checkpoint, then continue the next
+deterministic member/behavior family.

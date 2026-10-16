@@ -14,7 +14,7 @@ capability has a demo. See docs/PROJECT.md.
 
 Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMAP.md):
 
-* Complete: Phase 0-1 (research, infrastructure), 2 (math, 78 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
+* Complete: Phase 0-1 (research, infrastructure), 2 (math, 79 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
@@ -69,14 +69,15 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-693 project-built catalog demos in19 categories: math78, game33, graphics185, audio23, core6,
+694 project-built catalog demos in19 categories: math79, game33, graphics185, audio23, core6,
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are187 console,296 game and210
-standalone; 657 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1022's full runtime reports; they include all693
-catalog IDs in both renderer suites with no absent IDs.
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are188 console,296 game and210
+standalone; 658 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses Complete1034's full runtime reports; they include all693
+then-current catalog IDs in both renderer suites. The new post-baseline
+`math.quaternion.value_identity` is explicitly absent until the next complete checkpoint.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
-3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1022's
+3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1034's
 full runtime reports are the baseline inputs for the693-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
@@ -87,7 +88,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1022 exercises all3079 credited C routes and all693 catalog IDs in both full smoke
+Complete1034 exercises all3079 credited C routes and all693 baseline catalog IDs in both full smoke
 suites.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
 through Focused1002, including the production StorageDeviceNotConnectedException path.
@@ -10509,3 +10510,28 @@ totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C route
 `/tmp/checkpoint-1043-quaternion-length-range/*`. No rendering or visual claim was made. Next audit
 Quaternion equality/hash consistency at signed zero, then close trivial constructor/output-overload
 dispositions rather than adding redundant checks.
+
+## Focused1044-Quaternion-signed-zero-identity
+
+New console demo `math.quaternion.value_identity` raises the catalog to694 and math to79. Its five
+controls cover the all-zero default versus Identity, four-scalar versus vector-plus-scalar
+construction, and typed/boxed/operator equality. Genuine Windows XNA 4.0 hashes equal values
+identically when one component changes only from positive to negative zero. CNA equality also says
+the values are equal, but its raw-bit hash differs; the sole assertion remains visible as new
+`CNA-DEMOS-ISSUE-120`.
+
+The source addition first triggered CMake regeneration; the sandboxed attempt could not create
+CNA's shared prebuilt-SDL lock, while the authorized retry configured and built successfully. That
+configure emitted the existing vendored-Draco CMP0148 developer warning; the clean follow-up
+three-job build has no warning. Metadata is694/0, the exact known-issue SOFTWARE CTest and
+self-tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3-labelled runs retain exactly one
+expected assertion among five controls, with byte-identical stdout SHA-256
+`a0da8f21da50c698311b1af84894657310510ef4d6a7924cdddeffaa4e20d367` and empty stderr. Generated
+coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; Complete1034
+reports explicitly mark only this post-baseline ID absent. Evidence:
+`/tmp/checkpoint-1044-quaternion-signed-zero-hash/*`. No rendering or visual claim was made.
+
+The Quaternion public-member/behavior audit is complete at pinned CNA d23: all meaningful overloads
+and boundaries are demonstrated; Add/Subtract/Negate/Dot output forms are trivial source-reviewed
+forwards and do not justify redundant checks. Next run a complete694-demo checkpoint absorbing
+Focused1035-1044, then continue the next deterministic public-member/behavior family.

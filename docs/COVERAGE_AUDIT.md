@@ -133,7 +133,7 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 
 | Members / behavior | Decision and evidence |
 |---|---|
-| Constructor, Identity, CreateFromAxisAngle, CreateFromRotationMatrix, CreateFromYawPitchRoll | Existing `from_axis_angle` and `from_yaw_pitch_roll` demonstrate orientation construction and matrix conversion; no separate constructor demo needed. |
+| Constructor, Identity, CreateFromAxisAngle, CreateFromRotationMatrix, CreateFromYawPitchRoll | `value_identity` covers default, four-component and vector-plus-scalar construction and distinguishes the all-zero default from Identity. `from_axis_angle` and `from_yaw_pitch_roll` demonstrate orientation construction and all matrix-conversion branches. |
 | Concatenate, Multiply, operator multiply | `concatenate` checks sequential vector transforms and noncommuting rotations. Focused1041 adds an exact arbitrary nonunit reversed Hamilton product, value/output/operator parity, both identity directions, zero operands and negative/zero scalar multiplication. Scalar multiplication is component scaling rather than rotation composition; the existing ID now makes that distinction directly. Evidence: `/tmp/checkpoint-1041-quaternion-concatenate-algebra/*`. |
 | Inverse, Conjugate | Existing `inverse_and_conjugate` checks undoing a rotation and the unit-quaternion precondition for replacing inverse by conjugate. |
 | Normalize, Length, LengthSquared | `normalize` demonstrates accumulated drift plus member/static/output normalization. Focused1043 distinguishes ordinary and subnormal squared norms from a finite `Length` whose separately returned `LengthSquared` overflows or underflows; CNA loses both finite lengths and the huge normalization under ISSUE-118. Evidence: `/tmp/checkpoint-1043-quaternion-length-range/*`. |
@@ -141,8 +141,8 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | Negate, unary negation, Dot, Add, operator addition, equality / inequality | Demonstrated in `double_cover`: distinguish component equality from orientation equality; negate all four components, choose a common hemisphere before normalized blending, and show that adding antipodes gives zero and cannot be normalized meaningfully. |
 | Divide, operator division | `double_cover` checks `Divide(target, start)` as the additional rotation after start, including different axes so an order error cannot pass accidentally. Focused1042 adds an exact nonunit quotient, value/output/operator and multiply-by-inverse relations, identity, zero numerator/divisor and extreme finite divisors. The latter extend ISSUE-119 through Divide's duplicated reciprocal-norm path. Evidence: `/tmp/checkpoint-1042-quaternion-divide-boundaries/*`. |
 | Subtract, operator subtraction | Trivial component arithmetic; does not compute the relative orientation. Explain that distinction with Divide; no independent demo. |
-| Equals, GetHashCode, ToString | Exact value equality and formatting follow the existing math value-type demos; hashing needs no independent demo. Quaternion text is already printed in `inverse_and_conjugate`. |
-| Output-reference overloads | Existing `math.vector3.by_reference_overloads` explains the C++ calling convention. Audit quaternion aliasing only if an actual defect or distinct behavior emerges; do not duplicate every return-value demo. |
+| Equals, GetHashCode, ToString | `value_identity` covers typed, boxed and operator equality, ordinary equal hashing and signed-zero equality. CNA hashes raw zero sign bits and violates equal-value hash consistency under ISSUE-120. Quaternion text remains visible in `inverse_and_conjugate`; generic formatting is covered by `math.formatting.to_string`. |
+| Output-reference overloads | Meaningful composition, construction, interpolation, inverse, conjugate and normalization output forms are exercised by the focused demos. Source review confirms Add/Subtract/Negate write independent components and Dot only forwards its scalar result; duplicating those trivial forwards adds no behavior. Cross-component operations cache inputs before output writes, so no distinct aliasing defect emerged. |
 
 ### BoundingBox, BoundingSphere and Ray value identity
 
@@ -5791,3 +5791,16 @@ the existing huge normalization failure. Ten runs per renderer label retain exac
 expected failures among11 controls with byte-stable stdout and empty stderr; the warning-free
 `-j3` build, metadata, exact known-issue CTest and both self-test suites pass. Coverage totals
 remain unchanged. Evidence:`/tmp/checkpoint-1043-quaternion-length-range/*`.
+
+### Focused1044 Quaternion signed-zero identity
+
+New focused console demo `math.quaternion.value_identity` covers the all-zero default versus
+Identity, four-scalar versus vector-plus-scalar construction, and typed/boxed/operator equality.
+Genuine Windows XNA 4.0 gives equal hashes to values that differ only by a zero sign bit. CNA's raw
+bit hash disagrees despite every equality form returning true, retained as CNA-DEMOS-ISSUE-120.
+Ten runs per renderer label retain exactly that one expected failure among five controls with
+byte-stable stdout and empty stderr; the clean `-j3` build, metadata694/0, exact known-issue CTest
+and both self-test suites pass. Generated coverage remains307/329 types,2128/2326 members,674/753
+fields and3079/3205 C routes; Complete1034 reports explicitly mark this sole post-baseline ID
+absent. Evidence:`/tmp/checkpoint-1044-quaternion-signed-zero-hash/*`. The Quaternion public-member
+and behavior audit is complete at this revision; trivial output forwards are dispositioned above.

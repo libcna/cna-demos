@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a focused Quaternion value-identity demo and recorded CNA-DEMOS-ISSUE-120 for unequal
+  hashes from equal positive/negative-zero components.
 - Extended Quaternion magnitude coverage through ordinary, subnormal, overflowed-square and
   underflowed-square cases, expanding CNA-DEMOS-ISSUE-118 to finite `Length` range loss.
 - Extended Quaternion division through nonunit, identity and zero behavior and added its extreme

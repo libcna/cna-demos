@@ -15,6 +15,31 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-120 -- Equal signed-zero Quaternion values have unequal hashes
+
+- **Area/API:** `Microsoft::Xna::Framework::Quaternion::Equals`, equality operators and
+  `GetHashCode`.
+- **Demo/reproduction:** run `math.quaternion.value_identity`. Compare Identity with an otherwise
+  identical value whose X component is `-0.0f`, and compare the default zero value with one whose W
+  component is `-0.0f`. Ordinary four-scalar/vector-scalar construction and typed/boxed/operator
+  equality are adjacent positive controls.
+- **Observed:** CNA correctly treats positive and negative zero as equal through every equality
+  form, but hashes their raw IEEE-754 bits. Identity hashes to `1065353216` while its signed-X-zero
+  equal hashes to `-1082130432`; zero hashes to0 while its signed-W-zero equal hashes to
+  `-2147483648`. This is the sole expected failure among five controls.
+- **Expected/reference:** genuine Windows XNA 4.0 treats the same values as equal and returns equal
+  hashes: `1065353216` for both Identity forms and0 for both zero forms. The equality/hash invariant
+  therefore holds regardless of zero's sign bit.
+- **Cause/suggested repair:** CNA's `FloatHash` copies each float's raw bits, while float equality
+  equates both zeros. Canonicalize either zero sign to the same hash before combining components;
+  preserve the rule that every pair accepted by `Equals` has the same hash.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1044-quaternion-signed-zero-hash/*`.
+  The warning-free three-job build, exact known-issue CTest, metadata694/0 and self-tests5/5 plus4/4
+  pass; ten runs per renderer label reproduce only the one hash assertion with empty stderr. No CNA
+  source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-119 -- Quaternion inverse and division lose extreme finite magnitudes
 
 - **Area/API:** `Microsoft::Xna::Framework::Quaternion::Inverse` and `Quaternion::Divide`, value
