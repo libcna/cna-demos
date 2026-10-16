@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Refreshed the complete 693-demo behavior baseline: all 706 enabled CTests and both renderer smoke
+  suites pass with every catalog ID present, only reviewed issue deltas and no unexpected result.
 - Extended the custom-vertex workflow through disposal of the declaration behind an actively bound
   vertex buffer, including shared resource identity and separate exact buffered/user-draw pixels.
 - Added the distinct-active OcclusionQuery discriminator and recorded CNA-DEMOS-ISSUE-113 for the

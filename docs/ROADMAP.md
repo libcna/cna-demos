@@ -11064,3 +11064,25 @@ routes. Evidence:`/tmp/checkpoint-1013-vertex-declaration-active-dispose/*`; sou
 `3b57be6da20550cd67b0d9a9e45dad808bed9e9d74e15db26907e2d0f64d30db`. Both pixel checks were
 programmatic; no screenshot or manual visual inspection was performed. Run the next complete 693-
 demo checkpoint before selecting another behavior gap.
+
+## Complete1014-693-demo-behavior-checkpoint
+
+The full documented validation at cna-demos `0fd7d71` and pinned CNA `d23e139de` completes with a
+warning-free three-job build, metadata693/0 and all706 enabled CTests passing in366.19s; three
+manual tests remain disabled. SOFTWARE reports587 pass/55 expected fail/48 skip/3 manual, while
+OPENGLES3/Xvfb reports626/57/7/3. Both reports contain all693 unique catalog IDs with no unexpected
+failure or unexpected pass.
+
+Comparison with Complete1003 contains only reviewed Focused1004-1013 deltas: ISSUE-113 changes the
+OcclusionQuery scene to expected fail on both renderers, ISSUE-112 changes RenderTarget2D only on
+OPENGLES3, and the corresponding failed-assertion counts rise by exactly one each. Five existing
+demos have intended check-count increases. Normalized stderr is unchanged. Validator/comparator
+self-tests pass5/5 and4/4.
+
+Generated coverage remains307/329 XNA types,2128/2326 members and674/753 fields, with3079/3205 C
+routes after Focused1007's correction. Immutable evidence is
+`build/linux-full/reports/checkpoint-1014-complete-*`; SOFTWARE and OPENGLES3 result SHA-256 values
+are `c8581dc7f4dd4404cb4be6a00dd450840c1c4ab06ba1641fe135f85c6bbd2b80` and
+`dc069865df7b395d0697f5f944bc6ee81a8d27e99b6bde878a033936a7a63453`. No screenshot, listening
+test, physical input, external service session or manual visual inspection was performed. Resume
+the deterministic behavior audit outside the completed graphics-lifecycle slices.

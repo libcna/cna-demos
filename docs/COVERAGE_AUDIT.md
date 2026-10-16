@@ -5396,3 +5396,21 @@ remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. 
 `3b57be6da20550cd67b0d9a9e45dad808bed9e9d74e15db26907e2d0f64d30db`. No screenshot or manual
 visual inspection was performed, and no CNA issue was found. Run a complete checkpoint before the
 next behavior batch.
+
+### Complete1014 behavior checkpoint
+
+The complete documented validation at cna-demos `0fd7d71` and pinned CNA `d23e139de` uses at most
+three jobs. The build is warning-free, metadata is693/0 and all706 enabled CTests pass in366.19s;
+three manual tests remain disabled. SOFTWARE reports587 pass/55 expected fail/48 skip/3 manual and
+OPENGLES3/Xvfb reports626/57/7/3. Both contain all693 unique catalog IDs with no unexpected result.
+
+Complete1003 comparison isolates only the reviewed Focused1004-1013 changes: ISSUE-113 on both
+renderers, ISSUE-112 on OPENGLES3 and the intended positive control increases in five existing
+demos. Each new issue contributes exactly its documented assertion. Normalized stderr remains
+byte-identical. Validator/comparator self-tests pass5/5 and4/4. Generated totals are307/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-1014-complete-*`; result SHA-256 values are
+`c8581dc7f4dd4404cb4be6a00dd450840c1c4ab06ba1641fe135f85c6bbd2b80` and
+`dc069865df7b395d0697f5f944bc6ee81a8d27e99b6bde878a033936a7a63453`. No screenshot, listening
+test, physical input, external service session or manual visual inspection was performed. Continue
+the deterministic behavior audit outside the completed graphics-lifecycle slices.
