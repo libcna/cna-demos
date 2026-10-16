@@ -6831,3 +6831,22 @@ expanded empty Resources/ExternalReferences are accepted, self-closing forms are
 and processing instructions are skipped, and DOCTYPE is refused. These belong as controls in the
 existing serializer demo; BOM placement remains an XML-reader syntax detail unless a mismatch is
 observed.
+
+### Focused1093 intermediate XML envelope syntax
+
+The serializer demo now has29 controls. Twenty-five pass: expanded empty root sections, DOCTYPE
+refusal and all previously covered descriptor, default/null and envelope behaviors. Four expected
+failures expose ISSUE-148. Against the genuine-XNA corpus, CNA/tinyxml2 rejects an in-element
+processing instruction that should be skipped, but accepts self-closing empty Resources,
+self-closing empty ExternalReferences and a BOM-prefixed in-memory string that should be refused.
+
+Five runs per renderer label retain25 passes/four expected failures with common stdout SHA-256
+`14b2df51f0183a618f4635aa3ae11a7d4bdfac5bbf70c8c40c407fd05f1ccb4b` and empty stderr. The clean
+`-j3` build, metadata716/0, thirteen related CTests and both self-test suites pass. Coverage stays
+307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes across all716 IDs; the content
+status row becomes56 pass/17 expected fail per renderer. Evidence:
+`/tmp/checkpoint-1093-intermediate-envelope-syntax/*`. No CNA source change or fresh XNA run.
+
+Document-envelope coverage is now coherent. Audit format sections2-12 against every existing
+intermediate demo and classify remaining corpus forms semantically; ordinary root/type spelling
+variants stay intentionally represented rather than repeated.

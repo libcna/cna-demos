@@ -158,6 +158,21 @@ int main()
                   annotatedLoaded->loot == authored->loot,
               "default namespaces, unknown attributes and inter-member comments are ignored");
 
+        bool processingInstructionAccepted = false;
+        try
+        {
+            const auto instructionLoaded = DeserializeEncounter(
+                Replaced(xml, "<Name>Gatekeeper</Name>",
+                         "<?pi x?>\n    <Name>Gatekeeper</Name>"));
+            processingInstructionAccepted = instructionLoaded && instructionLoaded->name == "Gatekeeper";
+        }
+        catch (const std::exception& error)
+        {
+            std::cout << "Processing instruction refusal: " << error.what() << '\n';
+        }
+        check(processingInstructionAccepted,
+              "processing instructions between elements are skipped (CNA-DEMOS-ISSUE-148)");
+
         const auto noAssetType = DeserializeEncounter(
             Replaced(xml, "<Asset Type=\"CnaDemos:Encounter\">", "<Asset>"));
         check(noAssetType && noAssetType->name == "Gatekeeper" && noAssetType->health == 90,
@@ -245,6 +260,20 @@ int main()
         resourcesBeforeAsset.insert(rootEnd + 1, "\n  <Resources></Resources>");
         rejectsEnvelope(resourcesBeforeAsset, "Resources cannot precede the required Asset");
 
+        const std::string expandedEmptySections = Replaced(
+            xml, "</XnaContent>",
+            "  <Resources></Resources>\n  <ExternalReferences></ExternalReferences>\n</XnaContent>");
+        const auto expandedLoaded = DeserializeEncounter(expandedEmptySections);
+        check(expandedLoaded && expandedLoaded->name == "Gatekeeper" && expandedLoaded->health == 90,
+              "expanded empty Resources and ExternalReferences sections are accepted in order");
+
+        rejectsEnvelope(
+            Replaced(xml, "</XnaContent>", "  <Resources />\n</XnaContent>"),
+            "a self-closing empty Resources section is refused");
+        rejectsEnvelope(
+            Replaced(xml, "</XnaContent>", "  <ExternalReferences />\n</XnaContent>"),
+            "a self-closing empty ExternalReferences section is refused");
+
         const std::size_t assetStart = xml.find("  <Asset ");
         const std::size_t assetEnd = xml.find("  </Asset>");
         if (assetStart == std::string::npos || assetEnd == std::string::npos)
@@ -258,6 +287,22 @@ int main()
         std::string trailingElement = xml;
         trailingElement.insert(trailingElement.find("</XnaContent>"), "  <Unexpected />\n");
         rejectsEnvelope(trailingElement, "the document rejects an unknown trailing root child");
+        rejectsEnvelope(
+            Replaced(xml, "<XnaContent ", "<!DOCTYPE XnaContent>\n<XnaContent "),
+            "a DOCTYPE node is refused instead of being treated as document content");
+
+        bool embeddedBomRejected = false;
+        try
+        {
+            (void)DeserializeEncounter(std::string("\xEF\xBB\xBF") + xml);
+        }
+        catch (const InvalidContentException& error)
+        {
+            embeddedBomRejected = true;
+            std::cout << "Embedded BOM refusal: " << error.what() << '\n';
+        }
+        check(embeddedBomRejected,
+              "an in-memory UTF-8 BOM before the XML declaration is refused (CNA-DEMOS-ISSUE-148)");
 
         authored->objective.reset();
         bool rejectedNullWrite = false;

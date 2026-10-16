@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the intermediate document-envelope syntax boundary with expanded/empty sections,
+  processing instructions, DOCTYPE and BOM input; recorded CNA-DEMOS-ISSUE-148 for four XML
+  substrate differences from the measured XNA contract.
 - Extended the intermediate external-reference workflow with a live shared resource, exact
   Resources-before-ExternalReferences ordering and reversed-section rejection.
 - Extended the core intermediate serializer workflow with tolerant namespace, attribute and comment

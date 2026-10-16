@@ -12269,3 +12269,24 @@ Finish the envelope syntax disposition next: expanded empty sections versus reje
 sections and processing-instruction versus DOCTYPE handling are distinct measured boundaries that
 fit the existing serializer workflow. Treat embedded BOM placement as the XML reader's syntax
 contract unless source/corpus review reveals a framework mismatch.
+
+## Focused1093 intermediate XML envelope syntax
+
+`content.custom.intermediate_serializer` grows23->29 controls. Twenty-five pass, including expanded
+empty Resources/ExternalReferences, DOCTYPE refusal and every prior descriptor/envelope behavior.
+Four expected failures record new ISSUE-148: CNA rejects XNA's accepted in-element processing
+instruction but accepts self-closing empty Resources, self-closing empty ExternalReferences and an
+in-memory BOM that the genuine-XNA corpus rejects.
+
+The warning-free `-j3` build validates metadata716/0. Twelve related SOFTWARE intermediate-XML
+demos plus the catalog parser pass13/13 with five expected-known-issue cases; self-tests pass5/5 and
+4/4. Five runs per renderer label preserve exactly25 passes/four ISSUE-148 failures with common
+stdout SHA-256 `14b2df51f0183a618f4635aa3ae11a7d4bdfac5bbf70c8c40c407fd05f1ccb4b` and empty stderr. Coverage
+contains all716 IDs at307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; content
+is56 pass/17 expected fail on each renderer. Evidence:
+`/tmp/checkpoint-1093-intermediate-envelope-syntax/*`. No fresh XNA or rendered result is claimed.
+
+The document-envelope audit is now semantically covered. Reconcile sections2-12 of the measured
+format against the scalar, collection, polymorphism, shared/external-resource, property,
+type-serializer, existing-instance and opaque-data demos. Extend existing IDs only for distinct
+missing contracts.

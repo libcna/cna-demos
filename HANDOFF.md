@@ -73,7 +73,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and215
 standalone; 680 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1092
+Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1093
 results and includes all716 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
@@ -92,7 +92,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete1084 exercises all3079 credited C routes and its711 catalog IDs in both full smoke suites;
-Focused1085-1092 execute the five new IDs and every edited workflow separately under both renderer
+Focused1085-1093 execute the five new IDs and every edited workflow separately under both renderer
 labels.
 Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
 Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
@@ -11792,3 +11792,29 @@ and skips processing instructions while refusing DOCTYPE. Add these boundaries t
 serializer workflow if absent; byte-order-mark placement is an XML-reader detail and should be
 documented rather than multiplied into demos unless review finds a CNA/XNA mismatch. Keep every
 compile at three jobs or fewer.
+
+## Focused1093-intermediate-XML-envelope-syntax
+
+The existing `content.custom.intermediate_serializer` grows23->29 controls. Twenty-five pass:
+expanded empty Resources/ExternalReferences deserialize in the required order, DOCTYPE is refused,
+and every prior descriptor, null/default and envelope control remains green. Four expected failures
+record new CNA-DEMOS-ISSUE-148: CNA/tinyxml2 refuses the in-element processing instruction that XNA
+accepts, while CNA accepts self-closing empty Resources, self-closing empty ExternalReferences and
+an in-memory UTF-8 BOM before the declaration that the checked-in genuine-XNA corpus refuses.
+
+The clean incremental build is warning-free with `-j3`; metadata remains716/0. Twelve related
+SOFTWARE intermediate-XML demos plus the catalog parser pass13/13, now with five expected-known-
+issue tests, and validator/comparator self-tests pass5/5 and4/4. Five runs under each renderer label
+retain exactly25 passes and four ISSUE-148 failures with byte-identical stdout SHA-256
+`14b2df51f0183a618f4635aa3ae11a7d4bdfac5bbf70c8c40c407fd05f1ccb4b` and empty stderr. Generated
+coverage merges the focused result into Complete1084 plus Focused1085-1092, contains all716 IDs and
+remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes; the content row
+changes from57 pass/16 expected fail to56/17 on both renderer labels. Evidence:
+`/tmp/checkpoint-1093-intermediate-envelope-syntax/*`. No CNA/sharp-runtime source was modified and
+no fresh genuine-XNA execution, rendering, screenshot or manual visual claim was made.
+
+Commit and push this batch. Then reconcile the remaining intermediate-format sections against all
+existing workflows and their assertions, beginning with null/polymorphic/type-name behavior rather
+than adding format variants. Record an explicit semantic disposition and extend an existing demo
+only where the corpus exposes a caller-visible contract that is still absent. Keep every compile at
+three jobs or fewer.

@@ -7,7 +7,8 @@ CNA_DEMOS_STANDALONE({
     .description = "Uses public content descriptors and ContentSerializerAttribute to serialize a game-owned "
                    "encounter with renamed, optional, collection and ignored fields. Distinguishes absent, "
                    "present and explicit-null hints, preserves implicit member names and optional collection "
-                   "defaults, validates tolerant metadata and strict XnaContent envelope ordering, refuses a null "
+                   "defaults, validates tolerant metadata/node handling and strict XnaContent envelope shapes/order, "
+                   "refuses a null "
                    "required objective on read/write, and rejects missing or ignored fields.",
     .apis = {"ContentSerializerAttribute::ContentSerializerAttribute", "ContentSerializerAttribute::AllowNull",
              "ContentSerializerAttribute::Clone", "ContentSerializerAttribute::CollectionItemName",
@@ -24,5 +25,7 @@ CNA_DEMOS_STANDALONE({
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Ignore"},
     .tags = {"content", "custom", "xml", "serialization", "pipeline", "cnaext"},
     .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild. An unavailable "
-                    "tool is reported as NOT RUN.",
+                    "tool is reported as NOT RUN. ISSUE-148: CNA rejects an in-element processing instruction and "
+                    "accepts self-closing empty sections and an in-memory UTF-8 BOM that XNA rejects.",
+    .knownIssue = "CNA-DEMOS-ISSUE-148",
 })

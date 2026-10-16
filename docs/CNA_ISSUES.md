@@ -15,6 +15,31 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-148 -- intermediate XML substrate disagrees on envelope node forms
+
+- **Area/API:** `IntermediateSerializer::Deserialize<T>` and its `System::Xml::XmlReader`
+  substrate while reading the XNA intermediate document envelope.
+- **Demo/reproduction:** run `content.custom.intermediate_serializer`. Its envelope controls place
+  `<?pi x?>` between Asset members, append self-closing empty Resources or ExternalReferences, and
+  pass an in-memory UTF-8 BOM immediately before the XML declaration.
+- **Observed:** CNA rejects the processing instruction before `IntermediateReader` can skip it,
+  reporting tinyxml2's `XML_ERROR_PARSING_DECLARATION`. It accepts both self-closing empty root
+  sections and the in-memory BOM. These are four expected failures; twenty-five controls covering
+  serializer attributes, ordinary metadata tolerance, required envelope structure and rejection
+  paths still pass.
+- **Expected/reference:** the checked-in genuine-XNA corpus accepts the processing instruction and
+  rejects `<Resources />`, `<ExternalReferences />` and the BOM-prefixed in-memory string. CNA's
+  `docs/xna-intermediate-xml-format.md` records the same XNA behavior and separately lists all four
+  CNA substrate differences.
+- **Cause/suggested repair:** CNA's corpus test explicitly exempts the processing-instruction case
+  as a tinyxml2 substrate limit and deliberately allows the other three rejected-XNA inputs.
+  Preserve the reader's comment/PI skipping and DTD prohibition, but adapt or pre-validate the XML
+  substrate so these four public `Deserialize` results match XNA.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` with the current sharp-runtime dependency on Linux.
+  Focused evidence is under `/tmp/checkpoint-1093-intermediate-envelope-syntax/*`. No CNA or
+  sharp-runtime source was modified, and no fresh XNA execution or upstream message is claimed.
+
 ### CNA-DEMOS-ISSUE-147 -- intermediate NUL character reports XmlException instead of ArgumentException
 
 - **Area/API:** `IntermediateSerializer::Serialize<char16_t>` through the content-pipeline
