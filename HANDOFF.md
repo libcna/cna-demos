@@ -73,7 +73,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and215
 standalone; 680 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1096
+Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1097
 results and includes all716 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
@@ -92,7 +92,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete1084 exercises all3079 credited C routes and its711 catalog IDs in both full smoke suites;
-Focused1085-1096 execute the five new IDs and every edited workflow separately under both renderer
+Focused1085-1097 execute the five new IDs and every edited workflow separately under both renderer
 labels.
 Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
 Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
@@ -11894,3 +11894,29 @@ Commit and push this batch. Continue with the parallel external-reference table 
 existing workflow: empty wrappers/filenames, missing or unknown TargetType, inline filenames and
 unreferenced valid entries. Preserve the relocation/identity checks and ISSUE-046; avoid path-
 separator variants already represented. Keep every compile at three jobs or fewer.
+
+## Focused1097-intermediate-XML-external-reference-boundaries
+
+The existing `content.custom.intermediate_external_references` workflow grows12->19 passing
+controls while retaining its one ISSUE-046 expected failure. An authored empty wrapper emits
+`<Empty />`, adds no table row and restores as a nonnull wrapper with an empty filename, distinct
+from the null member. New refusal controls cover a referenced empty filename, missing TargetType,
+unknown TargetType and an inline filename. An unreferenced but valid table entry is ignored without
+changing the resolved wrappers. Existing relocation, identity, shared-section order and malformed
+ID/type controls remain.
+
+The clean incremental build is warning-free with `-j3`; metadata remains716/0. Twelve related
+SOFTWARE intermediate-XML demos plus the catalog parser pass13/13 with five known-issue tests, and
+validator/comparator self-tests pass5/5 and4/4. Five runs per renderer label retain exactly19
+passes and one ISSUE-046 failure with byte-identical stdout SHA-256
+`7854724adda2510e393c1e511a2ee8d6fda15a4046a8df9e9fd1d6ff7b185485` and empty stderr. Generated
+coverage contains all716 IDs and stays307/329 XNA types,2128/2326 members,674/753 fields and
+3079/3205 C routes; content remains56 pass/17 expected fail. Evidence:
+`/tmp/checkpoint-1097-intermediate-external-reference-boundaries/*`. No new CNA issue, fresh XNA
+execution or rendered result is claimed.
+
+Commit and push this batch. Finish the type/member semantics audit by extending existing workflows
+only where the missing-Type behavior of abstract members and strict positional member ordering are
+not yet observable. Full/assembly-qualified aliases and primitive-root spellings remain intentional
+syntax variants; boxed missing-Type is already refused by the collections workflow. Keep every
+compile at three jobs or fewer.

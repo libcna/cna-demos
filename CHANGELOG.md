@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed external-reference table boundaries for empty versus null wrappers, empty filenames,
+  required/known TargetType, inline filename rejection and unused valid entries.
 - Deepened intermediate shared-resource coverage with constructor-default retention for empty/null
   members, opaque exact IDs and missing ID/Type plus whitespace-reference refusals.
 - Extended the intermediate property workflow with packed-list `FlattenContent`: bare sibling

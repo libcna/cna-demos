@@ -12352,3 +12352,24 @@ result is claimed.
 Audit the corresponding external-reference table boundaries next in its existing ID: empty wrapper
 and filename forms, required/known TargetType, inline filename rejection and an unused valid entry.
 Relocation separators already have representative coverage.
+
+## Focused1097 intermediate XML external-reference boundaries
+
+`content.custom.intermediate_external_references` grows12->19 passing controls and keeps its one
+ISSUE-046 expected failure. It now distinguishes a null member from an empty nonnull wrapper, which
+emits no table row and restores with an empty filename. A referenced empty filename, absent or
+unknown TargetType and inline filename are refused. An unused valid entry is tolerated without
+changing resolved wrappers. Existing relocation, identity and combined-section order stay covered.
+
+The warning-free `-j3` build validates metadata716/0. Twelve related SOFTWARE intermediate-XML
+demos plus the catalog parser pass13/13 with five known-issue tests; self-tests pass5/5 and4/4.
+Five runs per renderer label preserve19 passes/one expected failure with common stdout SHA-256
+`7854724adda2510e393c1e511a2ee8d6fda15a4046a8df9e9fd1d6ff7b185485` and empty stderr. Coverage
+contains all716 IDs at307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; content
+remains56 pass/17 expected fail. Evidence:
+`/tmp/checkpoint-1097-intermediate-external-reference-boundaries/*`. No new CNA issue or fresh
+XNA/rendered result is claimed.
+
+Next close the remaining type/member semantics: missing `Type` on an abstract declared member and
+strict positional member order are distinct; full/assembly aliases, primitive roots and boxed
+missing-Type are already meaningfully represented or dispositioned.

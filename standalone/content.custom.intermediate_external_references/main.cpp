@@ -32,7 +32,7 @@ namespace
         static constexpr std::string_view XnaTypeName = "CnaDemos.External.Scene";
         const std::string& GetTypeName() const override { static const std::string name(XnaTypeName); return name; }
         std::shared_ptr<Profile> preview, shared;
-        std::shared_ptr<Reference> primary, again, other, absent;
+        std::shared_ptr<Reference> primary, again, other, empty, absent;
         static void DescribeContent(ContentTypeDescriptor<Scene>& type)
         {
             type.Field("Preview", &Scene::preview);
@@ -40,6 +40,7 @@ namespace
             type.Field("Primary", &Scene::primary);
             type.Field("Again", &Scene::again);
             type.Field("Other", &Scene::other);
+            type.Field("Empty", &Scene::empty);
             type.Field("Absent", &Scene::absent);
         }
     };
@@ -66,6 +67,7 @@ int main()
         authored->primary = std::make_shared<Reference>(guardFile);
         authored->again = std::make_shared<Reference>(guardFile);
         authored->other = std::make_shared<Reference>(bossFile);
+        authored->empty = std::make_shared<Reference>();
         System::Xml::XmlWriterSettings settings; settings.Indent = true; settings.NewLineChars = "\n";
         std::unique_ptr<System::Xml::XmlWriter> writer(System::Xml::XmlWriter::CreateToString(settings));
         IntermediateSerializer::Serialize<Scene>(*writer, authored, sourceFile.generic_string());
@@ -84,6 +86,8 @@ int main()
         check(resources != std::string::npos && externals != std::string::npos && resources < externals &&
               xml.find("<Health>75</Health>", resources) < externals,
               "a combined document emits shared Resources before ExternalReferences");
+        check(xml.find("<Empty />") != std::string::npos,
+              "an external wrapper with no filename is an empty member and adds no table entry");
         bool roundTrip = false;
         try
         {
@@ -114,7 +118,7 @@ int main()
         if (changed != 2) throw std::runtime_error("Expected two external target declarations");
         std::unique_ptr<System::Xml::XmlReader> reader(System::Xml::XmlReader::CreateFromString(canonical));
         const auto moved = IntermediateSerializer::Deserialize<Scene>(*reader, movedFile.generic_string());
-        if (!moved || !moved->shared || !moved->primary || !moved->again || !moved->other)
+        if (!moved || !moved->shared || !moved->primary || !moved->again || !moved->other || !moved->empty)
             throw std::runtime_error("Missing relocated references");
         check(moved->primary->getFilenameProperty() == (movedRoot / "profiles" / "guard.xml").generic_string() &&
               moved->other->getFilenameProperty() == (movedRoot / "profiles" / "boss.xml").generic_string(),
@@ -123,6 +127,8 @@ int main()
               "equal external filenames preserve separate reference wrappers rather than shared object identity");
         check(!moved->absent && moved->preview && moved->preview != authored->preview && moved->preview->health == 90,
               "the null reference remains absent and the inline preview restores its own data");
+        check(moved->empty->getFilenameProperty().empty(),
+              "an empty external wrapper restores as an object with no filename rather than a null reference");
         check(moved->shared != authored->shared && moved->shared->health == 75,
               "the shared resource is restored as a fresh object alongside relocated external wrappers");
         const auto refuse = [&](const std::string& input, const std::string& relocation, const char* diagnostic, const char* message) {
@@ -150,6 +156,58 @@ int main()
         const auto type = wrong.find("TargetType=\"") + std::string_view("TargetType=\"").size();
         wrong.replace(type, Profile::XnaTypeName.size(), "System.String");
         refuse(wrong, movedFile.generic_string(), "wrong type for external reference", "a known but incompatible target type is refused");
+
+        std::string missingTargetType = canonical;
+        const auto targetAttribute = missingTargetType.find(" TargetType=\"");
+        const auto targetAttributeEnd = targetAttribute == std::string::npos
+            ? std::string::npos
+            : missingTargetType.find('"', targetAttribute + std::string_view(" TargetType=\"").size());
+        if (targetAttribute == std::string::npos || targetAttributeEnd == std::string::npos)
+            throw std::runtime_error("Missing emitted TargetType attribute");
+        missingTargetType.erase(targetAttribute, targetAttributeEnd - targetAttribute + 1);
+        refuse(missingTargetType, movedFile.generic_string(), "TargetType",
+               "every external table entry requires a TargetType attribute");
+
+        std::string unknownTargetType = canonical;
+        const auto unknownType = unknownTargetType.find("TargetType=\"") + std::string_view("TargetType=\"").size();
+        unknownTargetType.replace(unknownType, Profile::XnaTypeName.size(), "No.Such.Type");
+        refuse(unknownTargetType, movedFile.generic_string(), "No.Such.Type",
+               "an unregistered external TargetType is refused before fixups are applied");
+
+        std::string emptyFilename = canonical;
+        const auto externalStart = emptyFilename.find("<ExternalReference ");
+        const auto filenameStart = emptyFilename.find('>', externalStart);
+        const auto filenameEnd = emptyFilename.find("</ExternalReference>", filenameStart);
+        if (externalStart == std::string::npos || filenameStart == std::string::npos || filenameEnd == std::string::npos)
+            throw std::runtime_error("Missing external filename entry");
+        emptyFilename.erase(filenameStart + 1, filenameEnd - filenameStart - 1);
+        refuse(emptyFilename, movedFile.generic_string(), "cannot be null",
+               "a referenced external table entry cannot have an empty filename");
+
+        std::string inlineFilename = canonical;
+        const auto primaryStart = inlineFilename.find("<Primary>");
+        const auto primaryContent = primaryStart == std::string::npos
+            ? std::string::npos
+            : primaryStart + std::string_view("<Primary>").size();
+        const auto primaryEnd = inlineFilename.find("</Primary>", primaryContent);
+        if (primaryStart == std::string::npos || primaryEnd == std::string::npos)
+            throw std::runtime_error("Missing Primary wrapper");
+        inlineFilename.replace(primaryContent, primaryEnd - primaryContent, "..\\profiles\\guard.xml");
+        refuse(inlineFilename, movedFile.generic_string(), "invalid XmlNodeType",
+               "an external filename cannot be written inline in its member wrapper");
+
+        std::string unusedEntry = canonical;
+        const auto externalsEndForUnused = unusedEntry.find("  </ExternalReferences>");
+        if (externalsEndForUnused == std::string::npos) throw std::runtime_error("Missing external table end");
+        unusedEntry.insert(externalsEndForUnused,
+            "    <ExternalReference ID=\"#Unused\" TargetType=\"CnaDemos.External.Profile\">"
+            "..\\profiles\\unused.xml</ExternalReference>\n");
+        std::unique_ptr<System::Xml::XmlReader> unusedReader(System::Xml::XmlReader::CreateFromString(unusedEntry));
+        const auto unusedLoaded = IntermediateSerializer::Deserialize<Scene>(*unusedReader, movedFile.generic_string());
+        check(unusedLoaded && unusedLoaded->primary && unusedLoaded->other && unusedLoaded->empty &&
+              unusedLoaded->primary->getFilenameProperty() ==
+                  (movedRoot / "profiles" / "guard.xml").generic_string(),
+              "an unreferenced valid external table entry is ignored without changing resolved wrappers");
 
         std::string reversed = canonical;
         const auto resourcesStart = reversed.find("  <Resources>");
