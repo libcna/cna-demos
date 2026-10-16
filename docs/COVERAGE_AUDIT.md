@@ -228,6 +228,19 @@ The meaningful Rectangle public-member/behavior audit is complete at pinned d23.
 The meaningful Plane and PlaneIntersectionType public-member/behavior audit is complete at pinned
 d23.
 
+### Color
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Construction, R/G/B/A, identity, hash and text | Focused1070 grows `math.color.construct` from eight to ten controls. Default, int, float, Vector3 and Vector4 forms cover alpha defaults, integer saturation, nearest-even byte rounding and NaN/infinity conversion. All four mutable channels preserve neighboring packed bits and copy semantics. Typed/boxed/operator identity, changed channels, equal hashing, the packed low-32-bit hash pattern and exact text complete the value contract. CNA matches genuine XNA. |
+| PackedValue and IPackedVector | `math.color.packed_value` grows four->five controls. PackedValue reads/writes exact AABBGGRR channel layout; Transparent is zero. Interface packing covers fractional nearest-even rounding, saturation, NaN and both infinities. CNA matches genuine XNA. |
+| Lerp and normalized vector conversion | `math.color.lerp_and_vectors` grows five->seven controls. Lerp covers negative/zero/one/above-one and both infinite endpoint clamps plus four-channel fractional truncation. ToVector3/4 expose exact normalized channels and the Vector4 round trip restores every byte. CNA matches except a NaN Lerp amount produces transparent black instead of XNA's first input, recorded as ISSUE-132. |
+| Multiply and FromNonPremultiplied | `math.color.premultiplied_alpha` grows five->nine controls. Named/operator multiplication covers negative, zero, fractional, identity, saturating finite, NaN and positive-infinite scales. Integer premultiplication covers zero/partial/opaque/out-of-range alpha; Vector4 covers post-product rounding and clamping, while ordinary construction remains deliberately straight. CNA matches except positive-infinite Multiply products are zeroed rather than saturated, the second ISSUE-132 manifestation. |
+| Named colors | `math.color.named_colors` keeps one coherent chart for all141 public names. It checks unique names, Transparent and all opaque alphas, canonical CornflowerBlue, XNA's two aliases and actual back-buffer swatches. Per-name demos or 141 duplicate numeric assertions would add no useful behavior; exact constants remain visible through the chart and source table. |
+| CNA-only conveniences | Byte constructors, left-scalar multiplication and DebugDisplayString are mechanical C++ conveniences around the same packed channels. They do not justify independent workflows; the XNA audit neither claims nor needs member credit for them. Evidence:`/tmp/checkpoint-1070-color-members/*`. |
+
+The meaningful Color public-member/behavior audit is complete at pinned d23.
+
 Focused651 adds twelve member credits without new IDs, moving temporary coverage1545->1557/2326.
 All three IDs have byte-identical renderer outputs and empty stderr; all focused CTests pass.
 Evidence:`/tmp/checkpoint-651-*` and `/tmp/checkpoint-651-coverage.md`. No rendering, screenshot or
@@ -6316,3 +6329,33 @@ its stderr is only the host display-cookie warning. Evidence:
 `/tmp/checkpoint-1069-plane-members/*`. No renderer or visual claim was made. The meaningful Plane
 and PlaneIntersectionType audit is complete; continue with Color value construction, packing,
 conversion and arithmetic behavior.
+
+### Focused1070 Color members and boundaries
+
+Four existing console demos deepen without new IDs. `math.color.construct` grows from eight to ten
+controls, `lerp_and_vectors` from five to seven, `packed_value` from four to five and
+`premultiplied_alpha` from five to nine. Together they cover every public scalar/vector
+constructor, nonfinite clamping, all mutable channels, identity/hash/text, packed read/write and
+interface conversion, interpolation boundaries, normalized vector conversion, scalar
+multiplication and both straight-to-premultiplied families. The 141-name game workflow already
+provides the coherent named-color disposition and remains unchanged.
+
+Genuine Windows XNA 4.0 exposes two manifestations of one conversion defect. A NaN Lerp amount
+returns the first input in XNA, while CNA returns transparent black. Positive-infinite Multiply
+saturates every nonzero product to255 in XNA, while CNA likewise returns transparent black. CNA's
+shared nonfinite helper maps both operation-specific cases to zero; ISSUE-132 records the two sole
+failures among31 controls. All finite boundaries, constructor/packed NaN and infinities, NaN
+Multiply and the remaining vector/premultiplication behavior match.
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. Stdout SHA-256 values are
+`2bd01b77b522db25854f65784671281a6d985754857902c37ca2caa14f9e1b14` for construction,
+`d11f4221600fb0c1fc4cfd275c1843b3550812e990c2eb038b48719daf13eacf` for Lerp/vectors,
+`b49aefe66d4271f8fe9dc901276f0a65ce88d6ce3cdbeaa21c18cd21ea89dc73` for packed values and
+`65f6b0e4906f58f74bd1346a929d759e8341a3fe88fbc83940c887fd975e7811` for premultiplication. The
+clean `-j3` build, metadata705/0, all four exact SOFTWARE CTests and self-tests5/5 plus4/4 pass.
+Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; the affected
+Complete1056 results predate the new assertions. Genuine-XNA stdout SHA-256 is
+`69ffe065742761438060f3711e46e561488e71416b41eb97ffd2f6619b078fab`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1070-color-members/*`. No renderer or visual
+claim was made. The meaningful Color audit is complete; continue with BoundingFrustum public
+members and behavior.

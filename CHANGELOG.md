@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed Color public-member/behavior coverage and recorded ISSUE-132 for NaN Lerp and
+  positive-infinite Multiply conversion differences from genuine XNA.
 - Completed Plane and PlaneIntersectionType member/behavior coverage with XNA-referenced
   construction, dot-output, volume classification, normalization, transform and alias boundaries.
 - Completed Ray value/intersection coverage, extended ISSUE-126 to Ray text and recorded ISSUE-130

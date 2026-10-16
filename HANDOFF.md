@@ -79,9 +79,9 @@ baseline catalog IDs in both renderer suites. The six new `math.vector4.*` IDs a
 `math.ray.frustum_intersection` and `math.plane.intersections` are explicitly absent until the next
 complete checkpoint. The
 baseline results for `math.point.basics`, all four `math.rectangle.*`, all four
-`math.bounding_box.*`, the three older `math.bounding_sphere.*` IDs, `math.ray.intersects` and the
-two older `math.plane.*` IDs predate Focused1063-1069's deeper member assertions and ISSUE-124
-through ISSUE-131 where applicable.
+`math.bounding_box.*`, the three older `math.bounding_sphere.*` IDs, `math.ray.intersects`, the
+two older `math.plane.*` IDs and four console `math.color.*` IDs predate Focused1063-1070's deeper
+member assertions and ISSUE-124 through ISSUE-132 where applicable.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -11101,3 +11101,33 @@ routes; Complete1056 marks the new Plane ID absent. Genuine-XNA stdout SHA-256 i
 display-cookie warning. Evidence:`/tmp/checkpoint-1069-plane-members/*`. No renderer or visual
 claim was made. The meaningful Plane and PlaneIntersectionType audit is complete; continue with
 Color value construction, packing, conversion and arithmetic behavior.
+
+## Focused1070-Color-members-and-boundaries
+
+Four existing console demos deepen without new IDs: `math.color.construct` grows8->10 controls,
+`lerp_and_vectors`5->7, `packed_value`4->5 and `premultiplied_alpha`5->9. Together they cover every
+public scalar/vector constructor, nonfinite clamping, all mutable channels, identity/hash/text,
+packed read/write and interface conversion, interpolation boundaries, normalized vectors, scalar
+multiplication and both straight-to-premultiplied families. The 141-name game workflow remains the
+coherent named-color disposition.
+
+Genuine Windows XNA 4.0 exposes two manifestations of one conversion defect. A NaN Lerp amount
+returns the first input in XNA, while CNA returns transparent black. Positive-infinite Multiply
+saturates every nonzero product to255 in XNA, while CNA again returns transparent black. CNA's
+shared nonfinite helper maps both operation-specific cases to zero; ISSUE-132 records the two sole
+failures among31 controls. All finite boundaries, constructor/packed NaN and infinities, NaN
+Multiply and the remaining vector/premultiplication behavior match.
+
+The clean incremental `-j3` build is warning-free. Metadata is705/0, all four exact SOFTWARE
+CTests and validator/comparator self-tests5/5 plus4/4 pass. Ten runs per demo and renderer label
+are byte-stable with empty stderr. Stdout SHA-256 values are
+`2bd01b77b522db25854f65784671281a6d985754857902c37ca2caa14f9e1b14` for construction,
+`d11f4221600fb0c1fc4cfd275c1843b3550812e990c2eb038b48719daf13eacf` for Lerp/vectors,
+`b49aefe66d4271f8fe9dc901276f0a65ce88d6ce3cdbeaa21c18cd21ea89dc73` for packed values and
+`65f6b0e4906f58f74bd1346a929d759e8341a3fe88fbc83940c887fd975e7811` for premultiplication.
+Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; the four
+affected Complete1056 results predate the new assertions. Genuine-XNA stdout SHA-256 is
+`69ffe065742761438060f3711e46e561488e71416b41eb97ffd2f6619b078fab`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1070-color-members/*`. No renderer or visual
+claim was made. The meaningful Color audit is complete; continue with BoundingFrustum public
+members and behavior.

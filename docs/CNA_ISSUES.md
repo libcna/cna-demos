@@ -15,6 +15,31 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-132 -- Color nonfinite interpolation and multiplication differ from XNA
+
+- **Area/API:** `Microsoft::Xna::Framework::Color::Lerp` and `Color::Multiply`/the XNA
+  `Color * float` operator.
+- **Demo/reproduction:** run `math.color.lerp_and_vectors` and
+  `math.color.premultiplied_alpha`. Lerp `(10,20,30,40)` toward `(110,220,130,240)` with a NaN
+  amount; multiply `(10,20,30,40)` by positive infinity. Adjacent controls cover negative, zero,
+  ordinary, large finite and both infinite endpoint factors plus NaN multiplication.
+- **Observed:** CNA returns transparent black for both cases. Each focused workflow retains that
+  sole expected failure, among seven and nine controls respectively.
+- **Expected/reference:** genuine Windows XNA 4.0 treats the NaN Lerp amount like zero and returns
+  the first color `(10,20,30,40)`. It saturates every positive-infinite multiplication product to
+  255, returning `(255,255,255,255)`. NaN multiplication maps to zero and the measured finite and
+  infinite Lerp clamps otherwise match CNA.
+- **Cause/suggested repair:** CNA's shared `SafeFloatToIntcs` helper maps every nonfinite channel
+  result to zero. Preserve the operation-specific XNA rules: make a NaN Lerp amount select the
+  first input, and saturate positive-infinite Multiply products to 255 while retaining zero for
+  NaN/negative results.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1070-color-members/*`. The warning-free
+  three-job build, all four exact SOFTWARE CTests, metadata705/0 and self-tests5/5 plus4/4 pass;
+  ten runs per demo and renderer label reproduce only the two documented assertions with empty
+  stderr. No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-131 -- Ray cannot enter a BoundingFrustum from outside
 
 - **Area/API:** `Microsoft::Xna::Framework::Ray::Intersects(BoundingFrustum)` and the delegated

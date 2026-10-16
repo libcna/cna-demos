@@ -11749,3 +11749,18 @@ warning, the clean `-j3` build, metadata705/0, all three exact CTests and both s
 Coverage totals remain unchanged and Complete1056 marks the new ID absent. Evidence:
 `/tmp/checkpoint-1069-plane-members/*`. The meaningful Plane audit is complete; continue with
 Color value construction, packing, conversion and arithmetic behavior.
+
+## Focused1070 Color members and boundaries
+
+Four existing console demos deepen without new IDs: construction grows8->10 controls,
+Lerp/vector conversion5->7, packed values4->5 and multiplication/premultiplication5->9. Genuine
+XNA anchors every scalar/vector constructor, channel mutation, packed layout/interface conversion,
+identity/text/hash pattern, interpolation clamp, normalized conversion, finite/nonfinite scalar
+multiplication and both premultiplication families. CNA matches29 of31 controls. New ISSUE-132
+records NaN Lerp returning transparent black rather than the first input and positive-infinite
+Multiply zeroing channels rather than saturating them. Ten runs per demo and renderer label are
+byte-stable with empty stderr. The warning-free `-j3` build, metadata705/0, all four exact CTests
+and both self-test suites pass. Coverage totals remain unchanged; Complete1056's four affected
+runtime results predate these assertions. Evidence:`/tmp/checkpoint-1070-color-members/*`. The
+meaningful Color audit is complete; continue with BoundingFrustum public-member and behavior
+coverage.
