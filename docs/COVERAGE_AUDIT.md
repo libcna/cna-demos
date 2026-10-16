@@ -5677,3 +5677,12 @@ Genuine Windows XNA 4.0 establishes the exact finite/infinity/NaN classification
 all ten controls. Ten runs per renderer label are byte-stable with empty stderr; build, metadata,
 exact CTest and both self-test suites pass. Coverage totals are unchanged. Evidence:
 `/tmp/checkpoint-1031-matrix-orthographic-boundaries/*`.
+
+### Focused1032 Matrix LookAt degenerate bases
+
+`math.matrix.look_at` now covers the output overload and exact XNA component behavior for
+coincident camera/target positions and zero, parallel or antiparallel up vectors. CNA matches all
+eight controls, including which basis/translation components remain finite and which become NaN.
+Ten runs per renderer label are byte-stable with empty stderr; build, metadata, exact CTest and
+both self-test suites pass. Coverage totals are unchanged. Evidence:
+`/tmp/checkpoint-1032-matrix-look-at-degenerate/*`.

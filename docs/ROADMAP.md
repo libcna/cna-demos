@@ -11306,3 +11306,11 @@ reversed-range and output-overload controls. CNA matches all ten exact finite/in
 The warning-free `-j3` build, metadata693/0, exact CTest, ten runs per renderer label and both
 self-test suites pass with stable stdout and empty stderr. Coverage is unchanged. Evidence:
 `/tmp/checkpoint-1031-matrix-orthographic-boundaries/*`.
+
+## Focused1032 Matrix LookAt degenerate bases
+
+`math.matrix.look_at` adds output-overload parity and XNA-referenced coincident-position, zero-up,
+parallel-up and antiparallel-up controls. CNA matches all eight exact finite/NaN component results.
+The warning-free `-j3` build, metadata693/0, exact CTest, ten runs per renderer label and both
+self-test suites pass with stable stdout and empty stderr. Coverage is unchanged. Evidence:
+`/tmp/checkpoint-1032-matrix-look-at-degenerate/*`.

@@ -10317,3 +10317,18 @@ pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass10/10 with byte-identical
 totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1031-matrix-orthographic-boundaries/*`. No rendering or visual claim was made and
 no CNA issue was found. Continue with the next deterministic behavior gap.
+
+## Focused1032-Matrix-LookAt-degenerate-bases
+
+`math.matrix.look_at` grows from four to eight controls without a new ID. Genuine Windows XNA 4.0
+establishes the exact public boundary: coincident camera/target yields a NaN 3x3 basis and NaN
+translation while retaining affine constants; zero, parallel and antiparallel up vectors leave the
+normalized viewing column/depth finite but publish NaN lateral columns. The output overload also
+matches the ordinary value. CNA matches every component classification and value.
+
+The warning-free three-job build, metadata693/0, exact SOFTWARE CTest and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass8/8 with byte-identical stdout SHA-256
+`d76c56cc4fee468cabe68f8953e7afb4c15b8d64b35c9b6903a68d91c197edc7` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1032-matrix-look-at-degenerate/*`. No rendering or visual claim was made and no
+CNA issue was found. Continue with the next deterministic behavior gap outside look-at matrices.
