@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the Point value audit and recorded ISSUE-124 for CNA's XOR hash versus XNA's unchecked
+  coordinate sum.
 - Added focused Vector4 matrix/quaternion transform and array coverage, extending ISSUE-121 with
   its negative-length behavior and completing the Vector4 public-member audit.
 - Added focused Vector4 interpolation coverage for extrapolation, clamping, NaN and output forms.

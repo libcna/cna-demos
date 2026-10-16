@@ -75,7 +75,8 @@ diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are195 console,
 standalone; 665 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; they include all695
 baseline catalog IDs in both renderer suites. The six new `math.vector4.*` focused IDs are
-explicitly absent until the next complete checkpoint.
+explicitly absent until the next complete checkpoint; its `math.point.basics` result also predates
+the new ISSUE-124 assertion.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -10914,3 +10915,24 @@ claim was made.
 The meaningful Vector4 public-member/behavior audit is complete at pinned d23. Direct component
 output forwards are source-reviewed and do not justify duplicate controls. Continue with the next
 deterministic public value family.
+
+## Focused1063-Point-value-contract
+
+Existing `math.point.basics` grows from five to ten controls without a new ID. Genuine Windows XNA
+4.0 confirms default/two-coordinate construction, Zero field/property, mutable X/Y copy semantics,
+typed/boxed/operator equality, wrong/empty boxed rejection and signed-int-limit text. XNA computes
+Point hash as unchecked 32-bit `X + Y`; CNA uses `X ^ Y`, causing the sole grouped failure and new
+ISSUE-124. Equal-value hashing still passes. CNA-only component add/subtract/multiply/nonzero-divide
+operators also pass and now appear in generated coverage's declared-extension list rather than as
+XNA member credits.
+
+The clean `-j3` build is warning-free. Metadata is701/0, the exact known-issue SOFTWARE CTest and
+validator/comparator self-tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3-labelled runs
+retain only the expected hash failure with byte-identical stdout SHA-256
+`352fcf01ec4245d54d63fd47aad6118aaff6f0a4d685b11ae98bbc4a833c48e4` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Genuine-XNA
+stdout SHA-256 is `e662b67fedbc647194173a3b6c91230747ad5e8363e1da436aaa7fee10ed2bfa`;
+its stderr is only the host display-cookie warning. Evidence:
+`/tmp/checkpoint-1063-point-value-contract/*`. No renderer or visual claim was made. The meaningful
+Point public-member/behavior audit is complete; continue with Rectangle value and boundary
+behavior.

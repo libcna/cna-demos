@@ -15,6 +15,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-124 -- Point GetHashCode uses XOR instead of XNA's unchecked sum
+
+- **Area/API:** `Microsoft::Xna::Framework::Point::GetHashCode`.
+- **Demo/reproduction:** run `math.point.basics`. Alongside default, constructor, public-field,
+  typed/boxed/operator equality and equal-hash controls, compare hashes for `(3,7)`, `(5,-2)`,
+  `(INT_MAX,1)` and `(INT_MIN,-1)`.
+- **Observed:** CNA computes `X ^ Y`, producing4 for `(3,7)` and a different value for three of
+  the four focused samples. The workflow retains this one grouped expected failure among ten
+  controls; equal Points still receive equal hashes.
+- **Expected/reference:** genuine Windows XNA 4.0 computes the unchecked 32-bit sum `X + Y`: the
+  four samples return10,3,`INT_MIN` and `INT_MAX` respectively. Default/value semantics, boxed
+  rejection, signed-limit text and CNA's separate component arithmetic extensions all pass.
+- **Cause/suggested repair:** replace the XOR with explicitly wrapping 32-bit addition so the
+  `INT_MAX + 1` result is defined in C++ and matches CLR unchecked arithmetic.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1063-point-value-contract/*`. The clean
+  warning-free three-job build, exact known-issue CTest, metadata701/0 and self-tests5/5 plus4/4
+  pass; ten runs per renderer label reproduce only the documented assertion with empty stderr.
+  No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-123 -- Vector Dot and Cross lose XNA's wide product cancellation
 
 - **Area/API:** `Microsoft::Xna::Framework::Vector3::Dot`, `Vector3::Cross` and `Vector4::Dot`,

@@ -1834,6 +1834,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `PhoneApplicationService::Launching` -- phone.phone_application_service.lifecycle
 - `PhoneApplicationService::State` -- phone.phone_application_service.lifecycle
 - `Picture::TokenEXT` -- media.media_library.save_picture
+- `Point::op_Addition` -- math.point.basics
+- `Point::op_Division` -- math.point.basics
+- `Point::op_Multiply` -- math.point.basics
+- `Point::op_Subtraction` -- math.point.basics
 - `PreparingDeviceSettingsEventArgs::getGraphicsDeviceInformationEXT` -- game.graphics_device_manager.preparing_device_settings
 - `PropertyDictionary::Add` -- gamer_services.leaderboard.paging
 - `PropertyDictionary::Clear` -- gamer_services.leaderboard.paging

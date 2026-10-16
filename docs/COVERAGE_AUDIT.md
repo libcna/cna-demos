@@ -179,6 +179,16 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 The meaningful Vector4 public-member/behavior table is complete at pinned d23. Direct component
 output forwards are source-reviewed and do not justify duplicate controls.
 
+### Point
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Constructors, Zero, X/Y, equality and text | Focused1063 grows `math.point.basics` from five to ten controls. It now covers default/two-coordinate construction, the Zero field/property, mutable public coordinates with copy value semantics, typed/boxed/operator equality including wrong/empty boxes, and exact signed-int-limit text. CNA matches genuine XNA throughout. |
+| GetHashCode | Equal-value hashing still holds, but genuine XNA uses unchecked 32-bit `X + Y` while CNA uses `X ^ Y`. Four ordinary, signed and wrapping samples expose one grouped failure under ISSUE-124. Evidence:`/tmp/checkpoint-1063-point-value-contract/*`. |
+| CNA-only arithmetic operators | Add, subtract, multiply and nonzero divide operate component-wise in one grouped control. They are absent from the XNA inventory, so generated coverage lists them as declared CNA extensions rather than XNA member credits. Integer overflow and division by zero are intentionally not exercised because C++ would make those expressions undefined. |
+
+The meaningful Point public-member/behavior audit is complete at pinned d23.
+
 ### BoundingBox, BoundingSphere and Ray value identity
 
 | Members / behavior | Decision and evidence |
@@ -6097,3 +6107,20 @@ Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C ro
 marks the six new Vector4 IDs absent. Evidence:`/tmp/checkpoint-1062-vector4-transforms/*`. No
 renderer or visual claim was made. The meaningful Vector4 audit is complete; continue with the
 next deterministic public value family.
+
+### Focused1063 Point value contract
+
+Existing `math.point.basics` grows5->10 controls without a new ID. Genuine Windows XNA 4.0
+confirms default/Zero, mutable-field copy semantics, typed/boxed/operator equality, wrong/empty
+boxed rejection and signed-int-limit text. It hashes Point as unchecked 32-bit `X + Y`; CNA uses
+`X ^ Y`, so ordinary, signed and wrapping samples produce one grouped failure recorded as new
+ISSUE-124. Equal values still hash equally. CNA-only component add/subtract/multiply/nonzero-divide
+operators pass and are explicitly listed as extensions outside the XNA inventory.
+
+Ten runs per renderer label retain only the hash failure with byte-identical stdout SHA-256
+`352fcf01ec4245d54d63fd47aad6118aaff6f0a4d685b11ae98bbc4a833c48e4` and empty stderr. The clean
+`-j3` build, metadata701/0, exact known-issue SOFTWARE CTest and self-tests5/5 plus4/4 pass.
+Coverage totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; its
+generated CNA-extension list gains the four arithmetic operators. Evidence:
+`/tmp/checkpoint-1063-point-value-contract/*`. No renderer or visual claim was made. The meaningful
+Point audit is complete; continue with Rectangle value and boundary behavior.

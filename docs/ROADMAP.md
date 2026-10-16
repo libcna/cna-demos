@@ -11658,3 +11658,15 @@ per renderer label retain only that failure with byte-identical stdout and empty
 remain unchanged and Complete1056 marks the six new Vector4 IDs absent. Evidence:
 `/tmp/checkpoint-1062-vector4-transforms/*`. The meaningful Vector4 public-member/behavior audit is
 complete at pinned d23; continue with the next deterministic value family.
+
+## Focused1063 Point value contract
+
+`math.point.basics` grows5->10 controls. Genuine Windows XNA 4.0 confirms default/Zero, mutable-
+field copy semantics, typed/boxed/operator equality, wrong/empty boxed rejection and signed-limit
+text. XNA hashes Point by unchecked 32-bit `X + Y`; CNA uses XOR, yielding one grouped failure
+recorded as new ISSUE-124. Equal hashes for equal values and CNA-only component arithmetic pass.
+Ten runs per renderer label retain only the expected failure with byte-identical stdout and empty
+stderr. The clean `-j3` build, metadata701/0, exact known-issue CTest and both self-test suites
+pass. Coverage totals remain unchanged; the four CNA-only operators join the generated extension
+list. Evidence:`/tmp/checkpoint-1063-point-value-contract/*`. The meaningful Point audit is
+complete; continue with Rectangle value and boundary behavior.
