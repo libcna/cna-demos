@@ -15,6 +15,34 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-144 -- LaunchParameters drops empty values and silently ignores duplicate Add
+
+- **Area/API:** `Microsoft::Xna::Framework::LaunchParameters` parsing and `Add`.
+- **Demo/reproduction:** run `game.launch_parameters.parse`. Parse
+  `/level:3 -difficulty:hard --windowed /level:9 plain:value /mixed:a:b -Case:Upper
+  -case:lower /empty:`, then add one manual entry and add the same key again. The demo also uses
+  Game's mutable and const LaunchParameters property views and directly inserts empty keys/values.
+- **Observed:** CNA returns six parsed entries. It drops `windowed` because no colon exists and
+  drops `empty` because the colon has no following byte. Its public Add uses `unordered_map::emplace`
+  and silently leaves the first value when the key already exists. The grouped empty-value and
+  duplicate-refusal assertions are the two expected failures among eight controls.
+- **Expected/reference:** genuine Windows XNA 4.0 produces eight entries: both `windowed` and
+  `empty` exist with empty-string values. It accepts the flagged and flagless forms, preserves the
+  second colon in `mixed=a:b`, treats Case/case separately and keeps the first level. A direct
+  duplicate Add throws ArgumentException and preserves the original value; empty direct keys and
+  values are legal.
+- **Cause/suggested repair:** Parse currently requires at least three trimmed bytes and a colon with
+  a following value. Retain every nonempty trimmed flag, using an empty value when no colon or an
+  ending colon is present. Add must explicitly reject an existing key before emplacing, preferably
+  with `System::ArgumentException` to match the public XNA dictionary contract.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed Windows
+  assemblies under Wine with stdout SHA-256
+  `7d93f63eb37698c996890a600f17e10bb7fb45405e2d0226e23c00dbce57c0d6` and empty stderr. Focused
+  evidence is under `/tmp/checkpoint-1077-root-helpers/*`; the warning-free three-job build,
+  metadata710/0 and three exact SOFTWARE CTests pass. No CNA source was modified and no upstream
+  message was sent.
+
 ### CNA-DEMOS-ISSUE-143 -- GameComponentCollection differs on Insert validation and null Clear events
 
 - **Area/API:** `Microsoft::Xna::Framework::GameComponentCollection::Insert` and `Clear`.

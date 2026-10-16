@@ -11894,3 +11894,27 @@ new direct collection/CompareTo CNA extension names. Evidence:
 `/tmp/checkpoint-1076-game-components/*`. Audit the remaining deterministic root Framework helper
 types next, beginning GameTime, LaunchParameters and GameServiceContainer, before returning to
 platform-dependent lifecycle paths.
+
+## Focused1077 deterministic root Framework helpers
+
+Three existing IDs deepen without increasing the catalog. `game.game_time.constructors` grows to
+five controls, `game.launch_parameters.parse` to eight and `game.services.service_container` to
+nine. GameTime now covers ordinary, negative and extreme times through all constructors. Launch
+parameters cover flagged/flagless, duplicate, case, colon and empty forms, direct Add and a real
+Game property's mutable/const identity. Services cover typed/runtime lookup, multiple assignable
+keys, duplicate/null refusal, exact removal, missing removal, CNA move semantics and real component
+consumption.
+
+Genuine Windows XNA 4.0 matches20 controls. ISSUE-144 records the two launch differences: CNA
+drops `--windowed` and `/empty:` instead of retaining empty values and silently ignores a duplicate
+Add instead of throwing ArgumentException. Service exception families remain documented C++
+precondition mappings; the normal template path enforces assignability at compile time, while the
+public runtime void-pointer overload cannot reproduce CLR reflection and is intentionally not fed
+a mismatched pointer.
+
+The clean incremental build uses no more than three jobs. Metadata is710/0, all three exact
+SOFTWARE CTests, all15 CLI CTests and validator/comparator self-tests pass. Ten runs per changed demo and renderer
+are byte-stable with empty stderr. Coverage remains307/329 types,2128/2326 members,674/753 fields
+and3079/3205 C routes and adds LaunchParameters::Add to the declared CNA-extension list. Evidence:
+`/tmp/checkpoint-1077-root-helpers/*`. Audit TitleContainer/TitleLocation and the remaining
+deterministic root event-argument/value carriers next.

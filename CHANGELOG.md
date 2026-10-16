@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed GameTime, LaunchParameters and GameServiceContainer behavior coverage, recording
+  ISSUE-144 for dropped empty launch values and silent duplicate insertion.
 - Completed GameComponent/DrawableGameComponent/collection behavior coverage, recording ISSUE-141
   through ISSUE-143 for repeated disposal events, protected change-hook dispatch and collection
   validation/null-clear differences from genuine XNA.

@@ -19,11 +19,20 @@ namespace
 
         const TimeSpan step = TimeSpan::FromTicks(166667); // one 60 Hz frame, as XNA's default step
         const GameTime frame(TimeSpan::FromSeconds(10.0), step);
-        ctx.Check(frame.getTotalGameTimeProperty() == TimeSpan::FromSeconds(10.0) && frame.getElapsedGameTimeProperty() == step,
+        ctx.Check(frame.getTotalGameTimeProperty() == TimeSpan::FromSeconds(10.0) &&
+                      frame.getElapsedGameTimeProperty() == step && !frame.getIsRunningSlowlyProperty(),
                   "GameTime(total, elapsed) keeps both times");
 
+        const GameTime boundary(TimeSpan::MinValue, TimeSpan::MaxValue);
+        ctx.Check(boundary.getTotalGameTimeProperty() == TimeSpan::MinValue &&
+                      boundary.getElapsedGameTimeProperty() == TimeSpan::MaxValue &&
+                      !boundary.getIsRunningSlowlyProperty(),
+                  "negative and extreme TimeSpan values are retained without validation or clamping");
+
         const GameTime slow(TimeSpan::FromSeconds(10.0), step, true);
-        ctx.Check(slow.getIsRunningSlowlyProperty(), "the third argument sets IsRunningSlowly");
+        ctx.Check(slow.getTotalGameTimeProperty() == TimeSpan::FromSeconds(10.0) &&
+                      slow.getElapsedGameTimeProperty() == step && slow.getIsRunningSlowlyProperty(),
+                  "the third argument sets IsRunningSlowly without changing either time");
 
         // Stepping a simple simulation by hand, ten frames of 1/60 s.
         double position = 0.0;
@@ -42,8 +51,8 @@ namespace
 CNA_DEMOS_CONSOLE(Constructors, {
     .id = "game.game_time.constructors",
     .title = "Making GameTime values",
-    .description = "Builds GameTime values with its three constructors -- empty, total and elapsed, and with "
-                   "IsRunningSlowly -- and steps a small simulation by hand, as a unit test of game logic would.",
+    .description = "Builds GameTime values with all three constructors, including negative/extreme times and the "
+                   "slow-running flag, then steps a small simulation by hand.",
     .apis = {"GameTime::GameTime", "GameTime::TotalGameTime", "GameTime::ElapsedGameTime", "GameTime::IsRunningSlowly"},
     .tags = {"time", "testing", "simulation"},
 })

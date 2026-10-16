@@ -517,6 +517,19 @@ complete at pinned d23.
 The meaningful public GameComponent/DrawableGameComponent/interface/collection family audit is
 complete at pinned d23. Focused1076 changes four existing IDs and adds no demo-count inflation.
 
+### GameTime, LaunchParameters and GameServiceContainer
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| GameTime constructors and properties | `game.game_time.constructors` grows to five controls covering the zero default, ordinary two-argument values and false slow flag, TimeSpan MinValue/MaxValue without validation, all three arguments together and a ten-step simulation. Genuine XNA retains the same negative/extreme ticks exactly. Live fixed/variable/slow/reset timing remains in the dedicated `game.time_step.*` workflows; Game's private setters are not public demo surface. |
+| Launch parsing | `game.launch_parameters.parse` grows to eight controls and feeds CNA's explicit C++ argument-vector constructor the same sequence passed to genuine XNA's process command line. Leading flag trimming, flagless pairs, the first colon, case-sensitive keys and first-duplicate wins pass. CNA drops a valueless flag and an explicit empty value that XNA retains, the first ISSUE-144 failure. |
+| Launch dictionary and Game property | The demo now obtains mutable and const references from a real Game and proves an edit is shared. Direct Add accepts new, empty-key and empty-value entries. Genuine XNA rejects a duplicate Add with ArgumentException; CNA's emplace silently preserves the first value, ISSUE-144's second failure. The explicit vector constructor is a deterministic CNA extension, while the default constructor is exercised through Game. |
+| Service construction, lookup and type keys | `game.services.service_container` grows to nine controls. Empty typed/runtime lookups return null. A provider is registered under concrete and base keys and retrieved by exact pointer; XNA likewise permits the same assignable object under distinct keys. A real GameComponent consumes and mutates the Game.Services entry. |
+| Service validation, removal and CNA move | Null and duplicate typed registrations are refused without replacing the original; removing a missing key is harmless and removing one key leaves the others until selected. CNA maps these C++ preconditions to `std::invalid_argument`, so no CLR exception-identity claim is made. Moving a CNA container transfers both type keys and pointers. The raw `type_info`/void-pointer overload cannot reproduce XNA reflection's assignability check; ordinary templates enforce type compatibility at compile time, and a deliberately mismatched void pointer would not be a coherent usage demo. The container remains non-owning by documented C++ design. |
+
+The meaningful public behavior of these three deterministic root helpers is complete at pinned
+d23. Focused1077 changes three existing IDs and adds no demo.
+
 ### Game loop, services and window callbacks
 
 | Members / behavior | Decision and evidence |

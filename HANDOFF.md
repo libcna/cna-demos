@@ -11338,3 +11338,37 @@ extension names. Complete1075's four affected results predate these controls. Ev
 The meaningful component family audit is complete. Audit the remaining deterministic root
 Framework helpers next, beginning GameTime, LaunchParameters and GameServiceContainer. Keep all
 compiles at no more than three jobs.
+
+## Focused1077-deterministic-root-Framework-helpers
+
+Three existing IDs deepen without a new catalog entry: `game.game_time.constructors` has five
+controls, `game.launch_parameters.parse` eight and `game.services.service_container` nine. The
+batch dispositions every public GameTime constructor/property, LaunchParameters parsing/Add plus
+the actual Game property, and the meaningful typed/runtime service-container paths including CNA
+move semantics. Service assignability is enforced at compile time by the normal templates; the
+raw runtime void-pointer overload's documented lack of CLR reflection is intentionally not tested
+with an invalid pointer.
+
+Genuine Windows XNA 4.0 matches20 of22 controls. New ISSUE-144 records both LaunchParameters
+differences: CNA drops valueless `--windowed` and explicit `/empty:` arguments that XNA stores with
+empty strings, and public Add silently ignores a duplicate rather than throwing ArgumentException.
+Negative and extreme GameTime ticks, case/colon/first-value parsing, direct empty dictionary keys,
+distinct service keys, null/duplicate refusal, removal and real component consumption all pass.
+
+The clean incremental build used `-j3` and is warning-free. Metadata is710/0, all three exact
+SOFTWARE CTests, all15 CLI CTests and validator/comparator self-tests5/5 plus4/4 pass. Ten runs of every changed demo
+under SOFTWARE and OPENGLES3/Xvfb are byte-stable with empty stderr. Stdout SHA-256 values in
+GameTime/LaunchParameters/services order are
+`f37d92417a7122d23611c25033cbc3ea18f2d0ee0971e5d8c77e3fa54d69cef3`,
+`6cc40937af1fdb912710b5723733e0d3e5928c5a3c927e4a1d379e3b7272abdf` and
+`6c63fe70c4cc5685faa3204cb1d5aa5d7dcfae0ef2360e55bd909a3d0878632d`.
+Genuine-XNA main/supplement stdout SHA-256 values are
+`7d93f63eb37698c996890a600f17e10bb7fb45405e2d0226e23c00dbce57c0d6` and
+`e2460d2df7cfe35a4c1f9898049f88be3195ae9f560d46d28d37c97bb4ca3c1e`; both stderr streams are
+empty. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes and
+adds LaunchParameters::Add to the declared CNA extensions. Complete1075's three results predate
+these controls. Evidence:`/tmp/checkpoint-1077-root-helpers/*`. No visual or manual claim was made.
+
+The meaningful audit of these three root helpers is complete. Audit TitleContainer/TitleLocation
+and the remaining deterministic root event-argument/value carriers next. Keep every compile at
+three jobs or fewer.

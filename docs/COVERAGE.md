@@ -1588,6 +1588,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Keyboard::GetModStateEXT` -- input.keyboard.modifiers
 - `Keyboard::GetScancodeFromNameEXT` -- input.keyboard.key_names
 - `Keyboard::GetScancodeNameEXT` -- input.keyboard.key_names
+- `LaunchParameters::Add` -- game.launch_parameters.parse
 - `LaunchParameters::ContainsKey` -- game.launch_parameters.parse
 - `LeaderboardEntry::RankingEXT` -- gamer_services.leaderboard.paging
 - `LooseFileContentTypeReader::GetExtensions` -- content.content_manager.asset_precedence, content.custom.loose_file_reader
