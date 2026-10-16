@@ -147,7 +147,7 @@ xvfb-run -a ctest --test-dir build/linux-multi -L display
 ```
 
 There are CLI/registry tests and one test per demo (discovered automatically). Unattended
-classifications, SKIPPED semantics, screenshots and the planned visual-regression system are
+classifications, SKIPPED semantics, screenshots and the reviewed visual-regression pilot are
 described in [docs/AUTOMATION.md](docs/AUTOMATION.md). `python3 tools/coverage_report.py` regenerates
 [docs/COVERAGE.md](docs/COVERAGE.md) (developer tool; not needed to build).
 
@@ -169,7 +169,7 @@ described in [docs/AUTOMATION.md](docs/AUTOMATION.md). `python3 tools/coverage_r
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | how it is built and how it runs |
 | [docs/DEMO_AUTHORING.md](docs/DEMO_AUTHORING.md) | how to add a demo |
 | [docs/AUTOMATION.md](docs/AUTOMATION.md) | unattended runs, CTest, screenshots, CI |
-| [docs/ROADMAP.md](docs/ROADMAP.md) | coverage areas still to do |
+| [docs/ROADMAP.md](docs/ROADMAP.md) | phase completion and explicit residual boundaries |
 | [docs/COVERAGE.md](docs/COVERAGE.md) | generated coverage report |
 | [docs/CNA_ISSUES.md](docs/CNA_ISSUES.md) | CNA problems found by demos |
 | [PLAN.md](PLAN.md), [HANDOFF.md](HANDOFF.md) | implementation plan and current state |

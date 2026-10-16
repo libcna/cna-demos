@@ -10,7 +10,8 @@ import unittest
 
 
 class ValidateScriptTests(unittest.TestCase):
-    def run_validation(self, failure="", warning=False, split_streams=False, with_gl=False):
+    def run_validation(self, failure="", warning=False, split_streams=False, with_gl=False,
+                       with_visual=False):
         with tempfile.TemporaryDirectory(prefix="cna-validate-test-") as directory:
             root = Path(directory)
             (root / "tools").mkdir()
@@ -35,7 +36,7 @@ with open(os.environ["TRACE"], "a") as trace:
     trace.write(stage + "\\n")
 if name == "xvfb-run":
     os.environ["DISPLAY"] = ":private-test-xvfb"
-    os.execv(sys.argv[4], sys.argv[4:])  # skip -a -s and its screen argument
+    os.execvp(sys.argv[4], sys.argv[4:])  # skip -a -s and its screen argument
 if stage == "renderers":
     print("OPENGLES3")
     sys.exit(0)
@@ -68,11 +69,23 @@ if stage == "smoke":
                 path.chmod(0o755)
             (root / "tools/coverage_report.py").write_text(
                 'import os\nwith open(os.environ["TRACE"], "a") as f: f.write("coverage\\n")\n')
+            (root / "tools/test_visual_regression.py").write_text(
+                'import os, sys\n'
+                'with open(os.environ["TRACE"], "a") as f: f.write("visual-unit\\n")\n'
+                'sys.exit(9 if os.environ["FAILURE"] == "visual-unit" else 0)\n')
+            (root / "tools/visual_regression.py").write_text(
+                'import os, sys\n'
+                'with open(os.environ["TRACE"], "a") as f: f.write("visual\\n")\n'
+                'if "OPENGLES3" in sys.argv and (os.environ.get("DISPLAY") != ":private-test-xvfb" '
+                'or os.environ.get("WAYLAND_DISPLAY") is not None): sys.exit(12)\n'
+                'sys.exit(9 if os.environ["FAILURE"] == "visual" else 0)\n')
             trace = root / "trace"
             env = dict(os.environ, PATH=str(root / "commands") + os.pathsep + os.environ["PATH"],
                        TRACE=str(trace), FAILURE=failure, WARNING=str(int(warning)),
                        SPLIT_STREAMS=str(int(split_streams)),
                        SKIP_GL=str(int(not with_gl)), JOBS="1", XDG_RUNTIME_DIR=str(root / "xdg"),
+                       XDG_DATA_HOME=str(root / "xdg-data"),
+                       VISUAL_REGRESSION=str(int(with_visual)),
                        WAYLAND_DISPLAY="cna-test-inherited-wayland", SDL_VIDEO_DRIVER="wayland",
                        DISPLAY=":inherited-test-display")
             result = subprocess.run(["bash", str(root / "tools/validate.sh")], cwd=root,
@@ -104,6 +117,18 @@ if stage == "smoke":
         result, stages = self.run_validation(split_streams=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual(stages[-1], "coverage")
+
+    def test_visual_regression_stage_uses_private_x11(self):
+        result, stages = self.run_validation(with_gl=True, with_visual=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(stages, ["cmake", "validate", "ctest", "smoke", "renderers",
+                                  "xvfb-run", "smoke", "coverage", "visual-unit",
+                                  "xvfb-run", "visual"])
+
+    def test_visual_regression_failure_propagates(self):
+        result, stages = self.run_validation(failure="visual", with_visual=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(stages[-3:], ["coverage", "visual-unit", "visual"])
 
     def test_failure_stops_at_each_stage(self):
         order = ["cmake", "validate", "ctest", "smoke"]

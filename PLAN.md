@@ -66,7 +66,8 @@ Open decisions (to settle when the phase needs them):
   `tools/gltf_models.py` (original glTF with embedded buffers) and XNB files are built from
   generated sources by `cna_add_content(... FORMAT xnb)`; nothing is copied from CNA's corpus.
 * ~~C API demo preset~~ -- implemented: `linux-full` enables `CNA_BUILD_C_API=ON`, and the
-  `c_api` standalone family covers the Phase 14 areas. Deeper C ABI member coverage remains open.
+  `c_api` standalone family covers the Phase 14 areas. The declaration audit is complete:3082
+  routes have direct credit and all123 residual routes have explicit semantic dispositions.
 * ~~Inspector build integration~~ -- implemented: `linux-full` enables `CNA_BUILD_INSPECTOR=ON`
   and the conditional `inspector` category links `CNA::Inspector`; smaller presets keep CNA's
   compiled-out default and omit that category.
@@ -87,4 +88,6 @@ copy-paste drift, wrong metadata, hidden API calls, missing checks.
 
 ## 4. Phase status
 
-See the status markers in [docs/ROADMAP.md](docs/ROADMAP.md). Phases 0 and 1 are complete.
+See the status markers in [docs/ROADMAP.md](docs/ROADMAP.md). The CNA-native Phases0-15 are
+complete for pinned CNA `d23e139de`; future changes are maintenance against the recorded residual
+classifications and complete-checkpoint discipline.

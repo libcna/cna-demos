@@ -5,7 +5,8 @@
 #
 # Usage: tools/validate.sh [preset]            (default preset: linux-full)
 # Environment: CNA_ROOT (default ../cna), SKIP_GL=1 to skip the Xvfb OPENGLES3 run,
-# JOBS to override build/test parallelism (default: nproc).
+# VISUAL_REGRESSION=1 to compare approved screenshots, and JOBS to override build/test
+# parallelism (default: nproc).
 # Reports are written to build/<preset>/reports/.
 set -euo pipefail
 
@@ -23,7 +24,9 @@ rm -f "$reports/results-SOFTWARE.json" "$reports/results-OPENGLES3.json" \
       "$reports/smoke-SOFTWARE.stderr.log" "$reports/smoke-OPENGLES3.stderr.log"
 
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/cna-demos-xdg}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$reports/xdg-data}"
 mkdir -p -m 700 "$XDG_RUNTIME_DIR"
+mkdir -p "$XDG_DATA_HOME"
 
 echo "== build ($preset)"
 if ! cmake --build --preset "$preset" -j"$jobs" > "$reports/build.log" 2>&1; then
@@ -48,6 +51,7 @@ grep -E "tests passed|tests failed|\*\*\*Failed|Not Run" "$reports/ctest.log" ||
 # Keep stderr separate: CNA logger writes can land inside buffered stdout assertion lines.
 # Preserve both streams verbatim; compare_checkpoints.py reads the stdout assertion log.
 results=()
+ran_gl=0
 echo "== smoke: SOFTWARE"
 SDL_AUDIO_DRIVER=dummy "$bin" --smoke --quiet --renderer SOFTWARE --report "$reports/results-SOFTWARE.json" \
     2> "$reports/smoke-SOFTWARE.stderr.log" | tee "$reports/smoke-SOFTWARE.log" | grep -A50 "^Summary"
@@ -61,7 +65,25 @@ if [[ "${SKIP_GL:-0}" != "1" ]] && "$bin" --renderers | grep -qx OPENGLES3 && co
         "$bin" --smoke --quiet --renderer OPENGLES3 --report "$reports/results-OPENGLES3.json" \
         2> "$reports/smoke-OPENGLES3.stderr.log" | tee "$reports/smoke-OPENGLES3.log" | grep -A50 "^Summary"
     results+=(--results "OPENGLES3=$reports/results-OPENGLES3.json")
+    ran_gl=1
 fi
 
 echo "== coverage"
 python3 "$root/tools/coverage_report.py" --exe "$bin" --cna-root "$cna_root" "${results[@]}" --output "$root/docs/COVERAGE.md"
+
+if [[ "${VISUAL_REGRESSION:-0}" == "1" ]]; then
+    echo "== visual-regression unit tests"
+    python3 "$root/tools/test_visual_regression.py"
+    visual_args=(--exe "$bin" --references "$root/references" --output "$reports/visual-regression"
+                 --renderer SOFTWARE)
+    if [[ "$ran_gl" == "1" ]]; then
+        visual_args+=(--renderer OPENGLES3)
+        echo "== visual regression: SOFTWARE + OPENGLES3 (Xvfb)"
+        SDL_AUDIO_DRIVER=dummy SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY \
+            xvfb-run -a -s "-screen 0 1280x1024x24" \
+            python3 "$root/tools/visual_regression.py" "${visual_args[@]}"
+    else
+        echo "== visual regression: SOFTWARE"
+        SDL_AUDIO_DRIVER=dummy python3 "$root/tools/visual_regression.py" "${visual_args[@]}"
+    fi
+fi

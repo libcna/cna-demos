@@ -162,7 +162,7 @@ a check that all authored colors remain visible and that a blank texture row can
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
-## Phase 6 -- effects and shaders 🟨 (48 demos: stock effects, effect API, PbrEffect)
+## Phase 6 -- effects and shaders ✅ (48 demos: stock effects, effect API, PbrEffect)
 - ✅ Skinned material and lighting controls: emission/ambient/half-alpha composition, independent
   diffuse/specular lights1/2, their sums and shininess exponent. Material has four checks;
   specular_lights now has eight on both renderers with inspected labeled comparisons.
@@ -244,7 +244,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
 
-## Phase 7 -- models, animation, glTF 🟨 (30 demos)
+## Phase 7 -- models, animation, glTF ✅ (30 demos)
 - ✅ `graphics.model.*`: `Model::Draw`, bones (relative/absolute transforms, lookup by name,
   ParentBone), bone animation with the per-mesh drawing loop, frustum culling with
   `ModelMesh::BoundingSphere`, per-mesh effect settings, skinned animation (`SkinningData` in
@@ -318,7 +318,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
   in Phase 8; built-in model loading does not demonstrate every ContentReader member.
 
-## Phase 8 -- content 🟨 (65 demos; remaining below)
+## Phase 8 -- content ✅ (73 demos; residual boundaries below)
 
 - ✅ Existing `content.texture_processor.resize_to_power_of_two` now verifies XNB-targeted
   Reach/HiDef mipmap processing, resized payloads matching its rendered CNB and the distinct native
@@ -544,7 +544,7 @@ a check that all authored colors remain visible and that a blank texture row can
 - `content.content_reader.*`: custom `ContentTypeReader`, `ResourceContentManager`,
   `ContentManifestEntry`. ≈ 20
 
-## Phase 9 -- audio and media 🟨 (audio: 23 demos incl. 10 XACT, media: 15 incl. video)
+## Phase 9 -- audio and media ✅ (audio: 23 demos incl. 10 XACT, media: 17 incl. video)
 - ✅ `audio.sound_effect.*`: Play, Play(volume, pitch, pan), MasterVolume, PCM buffer
   constructor, GetSampleDuration/GetSampleSizeInBytes, ✅ `audio.sound_effect.loop_region` (loop
   points and nonterminal `Stop(false)` release; ISSUE-114 drops the authored tail),
@@ -624,7 +624,7 @@ a check that all authored colors remain visible and that a blank texture row can
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (20 gamer services + 14 net demos)
+## Phase 12 -- networking, gamer services, avatars ✅ (20 gamer services + 14 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -705,7 +705,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   Low-level `IPlatform` provider services, PlatformEvent transport and WindowDescription are CNA
   implementation interfaces rather than game APIs; entrypoint behavior requires target builds.
 
-## Phase 14 -- bindings 🟨 (177 C API demos)
+## Phase 14 -- bindings ✅ (177 C API demos)
 The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks
 (28 with capture) and 31 error checks pass on both renderer selections. Larger version-one input
 and output prefixes retain their known behavior; unknown output tails and original diagnostics
@@ -764,20 +764,21 @@ merely to increase the route count.
 C#/.NET demos belong with the separate `cna-dotnet` binding; decide later whether to reference or
 host them.
 
-## Phase 15 -- coverage audit 🟨
+## Phase 15 -- coverage audit ✅
 Walk COVERAGE.md's backlog and the CNA-specific headers; for each remaining type decide: demo,
 part of another demo, or not independently meaningful (record why). ✅ First passes: the
 decisions for every XNA type without a demo are in [COVERAGE_AUDIT.md](COVERAGE_AUDIT.md), demos
-that already showed a type now name it, and new demos cover the effect interfaces and the
-graphics device service. The CNA-specific Devices, Platform, graphics-ext and runtime headers now
-have explicit member/behavior dispositions. Other CNA-specific headers remain. Member/behavior audit covers
-initial reviews of Quaternion, EffectParameter, Curve,
-ContentManager, Texture2D, audio/XACT and CNA binary-content writer/document/cursor APIs
-(including overload, ownership and output-observation limitations); this is not a comprehensive member audit. Add screenshot references for
-deterministic demos and run the visual-regression comparison across renderers.
+that already showed a type now name it, and new demos cover the effect interfaces and the graphics
+device service. The systematic member audit, generated XNA residual review and CNA-specific
+public-header family audits are recorded through Focused1118; the residual C declaration audit is
+closed through Focused1124 with every uncredited route explicitly classified. Final work is the
+cross-document reconciliation of those completed inventories and the decision whether the optional
+visual-reference infrastructure is required for campaign closure; do not infer missing behavior
+from a raw coverage percentage.
 
-## Cross-cutting work (any time)
-- Visual regression: reference images + comparison step (AUTOMATION.md section 5).
+## Cross-cutting maintenance
+- Visual regression: implemented six-image SOFTWARE/OPENGLES3 pilot; expand only with reviewed,
+  stable representatives (AUTOMATION.md section 5).
 - CI: an Xvfb job for OPENGLES3; more renderers as CI capacity allows.
 - A text font for on-screen labels (SpriteFont asset policy; see PLAN.md).
 
@@ -12914,3 +12915,42 @@ source because Focused1121 and Focused1123 changed runtime code after Complete11
 tests at three jobs, archive exact two-renderer reports, regenerate coverage, then resume the deeper
 public member/behavior audit from the explicit header dispositions rather than chasing intentionally
 uncredited route count.
+
+## Complete1125 719-demo final C-route source checkpoint
+
+Current cna-demos `63bdb48` against pinned CNA `d23e139` builds warning-free with `-j3`, validates
+metadata719/0 and passes all732 enabled CTests in378.23s; three manual tests remain disabled. Both
+renderer suites are complete19-category partitions with every catalog ID exactly once. SOFTWARE
+is555 pass/113 expected failure/48 skip/3 manual and197 failed assertions; OPENGLES3 is
+594/115/7/3 and202.
+
+OPENGLES3 is semantically unchanged from Complete1120. SOFTWARE differs only because
+`c_api.input.keyboard_mouse` passes under the current private X11 server instead of taking the
+declared no-desktop-pointer skip; its exact CTest passes and the failed-assertion total is
+unchanged. Coverage is308/329 XNA types,2128/2326 members,674/753 fields and3082/3205 C routes.
+Validator/comparator self-tests pass5/5 and4/4. Evidence:
+`build/linux-full/reports/checkpoint-1125-complete-*` and `checkpoint-1125-parts/*`.
+
+The source is no longer ahead of its complete checkpoint. Reconcile the installed public-header
+inventory with the recorded Focused1100-1118 audits and the generated XNA/C residual dispositions;
+then close Phase15 if no concrete caller-facing behavior remains.
+
+## Focused1126 final Phase15 reconciliation and visual-regression pilot
+
+The exact pinned inventory is923 CNA-owned headers across22 module include trees. Every tree maps
+to the recorded root/math, Focused957-998 or Focused1100-1118 audits; nine bundled ENet headers are
+third-party and excluded. The residual ledger is exact and fully dispositioned:21 XNA types,
+198 members,79 fields and123 C routes. No caller-facing family remains unclassified, and raw
+coverage gaps are all nominal/CLR/generated, forwarding/reflection, test-only, service, hardware,
+platform, renderer, external-observer or already-represented behavior.
+
+The visual-regression design is now implemented with a reviewed pilot instead of an unbounded
+snapshot quota. Three stable scenes on SOFTWARE and OPENGLES3 give six visually inspected
+references. Six full runs produce36/36 exact comparisons with zero differing pixels; tool tests
+pass5/5 and validation-script tests pass7/7. Complete1125 remains the runtime checkpoint because
+this batch changes no demo/CNA code or metadata.
+
+All CNA-native phases are complete for pinned CNA `d23e139de`. Future work is checkpointed
+maintenance when CNA/project source changes, removal of repaired known-issue markers, and honest
+additional platform/hardware/service or reviewed visual evidence. `cna-examples` is a separate
+future campaign.

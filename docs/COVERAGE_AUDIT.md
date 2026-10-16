@@ -7671,3 +7671,72 @@ warning-free incremental build uses `-j3`, metadata validates719/0 and tool self
 4/4. Generated C coverage reaches3082/3205 and `graphics_device.h`81/84. Runtime status columns
 remain based on Complete1120. No context loss, GPU-debugger capture, full-screen transition,
 screenshot or manual result is claimed; no CNA issue was found. Evidence:`/tmp/focused-1123/*`.
+
+### Complete1125 final C-route source checkpoint
+
+The authoritative `63bdb48` source against pinned CNA
+`d23e139de9e5c15511b6be745de290896a69ee37` now has a complete post-Focused1124 checkpoint. The
+warning-free `-j3` build validates719/0 metadata and all732 enabled CTests pass in378.23s; three
+manual tests remain disabled. Nineteen category partitions per renderer are schema-checked and
+merged in catalog order, with all719 IDs exactly once and no unexpected result.
+
+SOFTWARE reports555 pass,113 expected failure,48 skip and3 manual; OPENGLES3 reports594/115/7/3.
+OPENGLES3 is semantically unchanged from Complete1120, including202 failed assertions. SOFTWARE
+retains197 failed assertions and differs only because `c_api.input.keyboard_mouse` now passes under
+a private X11 server that exposes a desktop pointer; Complete1120's server did not and produced the
+declared environment skip. The exact CTest also passes, so no CNA issue is recorded.
+
+Generated coverage is308/329 XNA types,2128/2326 members,674/753 fields and3082/3205 C routes.
+Validator and comparator self-tests pass5/5 and4/4. Evidence is archived under
+`build/linux-full/reports/checkpoint-1125-complete-*` and `checkpoint-1125-parts/*`. No screenshot,
+listening, physical-device, service-session, external-debugger or new manual result is claimed.
+
+### Focused1126 final public-surface reconciliation and visual-regression pilot
+
+The pinned CNA module include trees contain exactly923 CNA-owned `.h`/`.hpp` files; the nine
+additional include candidates below `third_party/enet` are third-party transport headers and are
+not CNA public API. Every module tree maps to a completed source/member audit:
+
+| Pinned module inventory | Headers | Recorded disposition |
+|---|---:|---|
+| core + math | 49 | XNA/root member and field passes, complete math value/behavior batches, and Focused934-947/999 |
+| platform + runtime | 53 | Focused1101 and1104; provider/internal contracts explicitly separated from caller behavior |
+| graphics + graphics-ext + renderer backends | 245 | Focused1102-1103,1107 and1114; all55 renderer headers are `CNA/Internal` backend contracts |
+| input | 56 | Focused1108 plus the complete XNA Input/Touch and hardware-boundary audits |
+| audio | 33 | Focused1105 and1112, including provider contracts and production exception paths |
+| media | 36 | Focused1115;12 `CNA/Internal/Media` headers remain implementation details |
+| content + content-pipeline | 209 | Focused957-998 and1113 across runtime, CNB/CNJ/XNB and build-time surfaces |
+| storage | 3 | Focused1109 and the residual generated member pass |
+| gamer-services | 68 | Focused1106 and1111, with online/social/hardware paths explicitly service/manual |
+| net | 30 | Focused1110, including local/system-link behavior and remote/voice dispositions |
+| devices + devices-ext | 51 | Focused1100 and1116 across compatibility wrappers, values and physical/manual paths |
+| phone | 9 | Focused1116, including loopback delivery and focus/shell manual boundaries |
+| design | 16 | Focused1117; the two internal registration helpers are implementation contracts |
+| diagnostics + inspector | 5 | Focused1118, with stress/fuzz/remote-security limits explicit |
+| c-api | 60 | The route audits through Focused1124, including the declaration-free umbrella |
+| **Total** | **923** | **No module tree or caller-facing family is unclassified.** |
+
+The generated residual ledger also balances exactly. The21 uncredited XNA types are two Audio
+exceptions absent from production throw paths, four nominal serializer wrappers, eight
+GamerServices service/CLR shapes, six Graphics device-loss/CLR iterator shapes and one Net service
+event type. The198 uncredited members are the exact8 root +7 Audio +7 Content +74 GamerServices +
+54 Graphics +1 Touch +14 Media +31 Net +2 Storage families closed by Focused999-1002. The79
+uncredited fields are8 hardware GamePad types,5 remote Net outcomes,2 device-loss states,1
+unconstructible Media source and63 service-owned GamerServices values. The123 C routes remain the
+exact82 fixed type-name forwards,21 test hooks and20 hardware/service/platform/external-observer
+routes closed by Focused1124. None is an undispositioned behavior gap.
+
+The former visual-regression infrastructure gap is now a bounded working pilot rather than a
+promise to snapshot every deterministic demo. `tools/visual_regression.py` validates catalog
+eligibility, captures by renderer, performs exact or explicitly budgeted RGBA comparison and keeps
+actual/log/diff evidence. Five unit tests cover equality, tolerance, pixel budgets, dimension
+refusal, diff masks and selection; two new validation-script tests cover private-X11 routing and
+failure propagation. The clear, SpriteBatch texture and compiled SpriteFont references were
+visually inspected on SOFTWARE and OPENGLES3, are byte-identical across renderers, and pass six
+complete comparator runs (36 exact image comparisons) with zero differing pixels. Evidence:
+`build/linux-full/reports/checkpoint-1126-visual-regression*` and `references/`.
+
+No CNA defect was found and no demo/API credit changed. Together with Complete1125 this closes the
+CNA-native Phase15 campaign: all remaining limits are explicit platform, renderer, hardware,
+service, manual, stress/fuzz, generated/CLR, forwarding/reflection, test-only or implementation
+plumbing dispositions rather than unexamined public surface.

@@ -6,6 +6,19 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed the CNA-native Phase15 campaign with an exact reconciliation of923 CNA-owned headers
+  across22 module trees plus every generated residual:21 XNA types,198 members,79 fields and123 C
+  routes all have explicit evidence-backed dispositions, with no unclassified caller-facing API.
+- Added a guarded visual-regression comparator and six reviewed SOFTWARE/OPENGLES3 references for
+  clear, SpriteBatch texture and compiled SpriteFont output. Six full pilot runs pass36/36 exact
+  comparisons; five comparator tests and seven validation-script tests cover image policies,
+  private-X11 routing and failure propagation.
+- Established Complete1125 at cna-demos `63bdb48` against pinned CNA `d23e139`: the warning-free
+  `-j3` build validates719/0 metadata, all732 enabled CTests pass, and complete category-partitioned
+  SOFTWARE and OPENGLES3 reports contain all719 IDs exactly once. SOFTWARE is555/113/48/3 and
+  OPENGLES3 is594/115/7/3; comparison with Complete1120 preserves197/202 failed assertions and has
+  one reviewed environment-only `c_api.input.keyboard_mouse` SKIPPED->PASSED transition. Generated
+  coverage is308/329 XNA types,2128/2326 members,674/753 fields and3082/3205 C routes.
 - Completed the 102-header Content module audit across public CNB/runtime/build-time surfaces and
   internal XNB/import implementation; retained four nominal serializer attribute wrappers as
   intentionally uncredited because CNA's C++ serializer consumes the already demonstrated public

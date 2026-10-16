@@ -201,23 +201,25 @@ Record results with the level they actually reached -- never more:
 `docs/COVERAGE.md` shows the "Run on <renderer>" columns from `--report` files; HANDOFF.md
 lists which renderers and platforms were exercised in the last session.
 
-## 5. Screenshots and the future visual-regression system
+## 5. Screenshots and visual regression
 
-Implemented now:
+Implemented:
 
 * `cna-demos <id> --automated --screenshot out.png` saves the **last** frame of a Game demo as PNG.
   It reads the back buffer with `GraphicsDevice::GetBackBufferData` before `Present` and writes it
   with `Texture2D::SaveAsPng` -- both CNA APIs (HiDef profile, see ARCHITECTURE.md section 3).
 * `deterministic = true` marks demos whose frame N depends only on N.
-
-Intended extension (not built yet), designed so it needs no change to demos:
-
-```text
-for each deterministic demo D and renderer R:
-    cna-demos D --automated --renderer R --screenshot actual/R/D.png
-    compare actual/R/D.png with references/R/D.png (per-channel tolerance, max differing pixels)
-    report: identical / within tolerance / different (+ diff image)
-```
+* `tools/visual_regression.py` captures approved deterministic Game demos, compares RGBA pixels
+  with `references/<renderer>/<id>.png`, and retains actual images, stdout/stderr and highlighted
+  mismatch masks. It rejects catalog entries that are non-deterministic or have an active known
+  issue. Exact comparison is the default; reviewed per-channel tolerance and differing-pixel
+  budgets are available explicitly.
+* The initial reviewed pilot covers clear colour, a SpriteBatch texture and compiled SpriteFont
+  rendering on SOFTWARE and OPENGLES3. All six committed references are exact across repeated
+  private-X11 runs. `references/README.md` records the approval/update rule.
+* `VISUAL_REGRESSION=1 tools/validate.sh` runs the comparator after the ordinary checkpoint. It
+  uses a private X11 server automatically when the OPENGLES3 smoke stage ran; `SKIP_GL=1` limits
+  it to SOFTWARE.
 
 Design decisions already taken to keep this cheap:
 
@@ -228,8 +230,9 @@ Design decisions already taken to keep this cheap:
   performance counter advances exactly one step per Update. Not built: it depends on the
   internals of `Game::Tick`'s waiting loop and is worth doing only with CNA's maintainers;
 * references are per renderer (renderers legitimately differ in rasterisation details);
-* the comparison tool can be a small CNA-free program or script; references belong in a separate
-  directory (`references/<renderer>/<id>.png`) with a README describing how they were approved.
+* expanding the pilot requires reviewing each actual image and adding only stable, meaningful
+  representatives. The `deterministic` marker is eligibility, not a requirement to snapshot all
+  158 eligible Game demos.
 
 ## 6. Continuous integration
 

@@ -18,6 +18,9 @@ only, honest results, English everywhere.**
    `ctest`.
 4. Regenerate the coverage report if you have a CNA checkout:
    `python3 tools/coverage_report.py --exe <build>/bin/cna-demos --cna-root ../cna`.
+5. If a deterministic graphical result is intentionally covered by the visual pilot, run
+   `VISUAL_REGRESSION=1 JOBS=3 tools/validate.sh`; never replace a reference without inspecting
+   and documenting the changed image.
 
 ## Rules
 
