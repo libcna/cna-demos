@@ -15,6 +15,33 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-123 -- Vector3 Dot and Cross lose XNA's wide product cancellation
+
+- **Area/API:** `Microsoft::Xna::Framework::Vector3::Dot` and `Vector3::Cross`, including their
+  output overloads.
+- **Demo/reproduction:** run `math.vector3.dot` and `math.vector3.cross`. Dot
+  `(1e20,1e20,1)` with `(1e20,-1e20,1)`, cross an all-`1e20` vector with itself, then cross
+  `(1e20,1e20,1)` with `(1e20,1e20,2)`. Ordinary angles, projections, perpendiculars, triangle
+  normals and output aliasing remain adjacent positive controls.
+- **Observed:** CNA narrows each multiplication before addition/subtraction. The Dot products
+  become positive and negative infinity and combine to NaN instead of cancelling before the final
+  `+1`. Cross likewise subtracts equal infinities: the parallel result has three NaN components,
+  and the partially huge result loses its otherwise exact zero Z component. Dot retains exactly one
+  expected failure among six controls; Cross retains two among eight on each renderer label.
+- **Expected/reference:** genuine Windows XNA 4.0 returns exactly `1.0f` through both Dot forms,
+  exact `Vector3::Zero` through both parallel Cross forms, and `(1e20,-1e20,0)` for the partially
+  huge Cross. Its 32-bit x87 evaluation retains the finite products beyond float range until each
+  sum/difference is complete, then narrows once.
+- **Cause/suggested repair:** compute each Dot accumulation and Cross product difference in a wider
+  intermediate and narrow only its final scalar/component, following the already measured approach
+  used by CNA's Vector3 matrix transforms. Keep Cross inputs cached so output aliasing remains safe.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1055-vector3-product-range/*`. The clean
+  warning-free three-job build, both exact known-issue CTests, metadata695/0 and self-tests5/5 plus4/4
+  pass; ten runs per demo and renderer label reproduce only the three documented assertions
+  with empty stderr. No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-122 -- Vector2/3 component bounds differ at reversed ranges and signed-zero ties
 
 - **Area/API:** `Microsoft::Xna::Framework::Vector2` and `Vector3` `Clamp`, `Min` and `Max`,

@@ -11493,6 +11493,21 @@ Coverage totals remain unchanged and the Complete1045-backed report is byte-iden
 `/tmp/checkpoint-1054-vector3-transform-arrays/*`. Audit the remaining Vector3 Dot/Cross numeric
 boundaries, then close or explicitly disposition the family.
 
+## Focused1055 Vector3 product range
+
+`math.vector3.dot` grows5->6 controls and `math.vector3.cross` grows5->8. Genuine Windows XNA 4.0
+keeps `1e20 * 1e20` products in a wide intermediate: opposite Dot terms cancel before a final
+`+1`, parallel Cross terms cancel to exact zero, and a partly huge Cross retains finite X/Y plus
+zero Z. CNA narrows each product to float first and instead combines infinities into NaN, recorded
+as new ISSUE-123. Ordinary Cross output aliasing matches. Dot retains one expected failure and
+Cross two; ten runs per demo and renderer label are byte-stable with empty stderr. The clean `-j3`
+build, metadata695/0, both exact CTests and both self-test suites pass. Coverage totals remain
+unchanged and the Complete1045-backed report is byte-identical. Evidence:
+`/tmp/checkpoint-1055-vector3-product-range/*`.
+
+The meaningful Vector3 public-member/behavior audit is complete at pinned d23. Continue with the
+next deterministic value family.
+
 ## Focused1049 Vector2 transform arrays
 
 `math.vector2.transform` grows2->16 controls. Genuine Windows XNA 4.0 anchors matrix point/normal

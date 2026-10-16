@@ -10736,3 +10736,24 @@ with byte-identical stdout and empty stderr. Their stdout SHA-256 values are
 Complete1045-backed report. Evidence:`/tmp/checkpoint-1054-vector3-transform-arrays/*`. No renderer
 or visual claim was made. Audit the remaining Vector3 Dot/Cross numeric boundaries, then close or
 explicitly disposition the family.
+
+## Focused1055-Vector3-product-range
+
+`math.vector3.dot` grows from five to six controls and `math.vector3.cross` from five to eight.
+Genuine Windows XNA 4.0 keeps `1e20 * 1e20` products in a wide intermediate: opposite Dot terms
+cancel before a final `+1`, parallel Cross terms cancel to exact zero, and a partly huge Cross
+retains finite X/Y plus zero Z. CNA narrows each product to float first and instead combines
+infinities into NaN, recorded as new ISSUE-123. Ordinary Cross output aliasing matches.
+
+The clean three-job build, metadata695/0, both exact SOFTWARE CTests and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs per demo are byte-identical with empty stderr.
+Dot retains one expected failure among six controls with stdout SHA-256
+`bded3a0807761421ed7a3eee701a6e70cf5707eb8e9369cb411a137251c4a7ea`; Cross retains two among
+eight with `7d13126c3ffa0849b99eb82adbcbcecdae78319f756fc7d56fde6c9880ba3d5b`. Generated coverage
+remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes and is byte-identical to
+the Complete1045-backed report. Evidence:`/tmp/checkpoint-1055-vector3-product-range/*`. No renderer
+or visual claim was made.
+
+The meaningful Vector3 public-member/behavior audit is complete at pinned d23. Direct component
+output forwards are source-reviewed and do not justify duplicate checks. Continue with the next
+deterministic value family.

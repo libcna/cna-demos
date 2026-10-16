@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Vector3 Dot and Cross through output aliasing and huge-product cancellation, recording
+  CNA-DEMOS-ISSUE-123 for premature float overflow against Windows XNA 4.0.
 - Extended Vector3 matrix, quaternion and normal transforms through output aliasing, full/ranged
   arrays, overlap and refusal boundaries, expanding CNA-DEMOS-ISSUE-121.
 - Extended all five Vector3 interpolation families through extrapolation, clamping, NaN and

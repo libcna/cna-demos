@@ -33,14 +33,23 @@ namespace
         float byReference = 0.0f;
         Vector3::Dot(point, Vector3::One, byReference);
         ctx.Check(byReference == 12.0f, "the by-reference overload writes 3 + 4 + 5");
+
+        const Vector3 hugeA(1e20f, 1e20f, 1.0f);
+        const Vector3 hugeB(1e20f, -1e20f, 1.0f);
+        float cancelledOutput = 0.0f;
+        Vector3::Dot(hugeA, hugeB, cancelledOutput);
+        ctx.Check(Vector3::Dot(hugeA, hugeB) == 1.0f && cancelledOutput == 1.0f,
+                  "XNA retains wide opposite huge products until they cancel before narrowing");
     }
 }
 
 CNA_DEMOS_CONSOLE(Vector3Dot, {
     .id = "math.vector3.dot",
     .title = "Vector3 dot product",
-    .description = "Uses Vector3::Dot to measure the angle between directions, decide which side a vector "
-                   "points to, and project a point onto an axis.",
+    .description = "Uses Vector3::Dot for angles, facing and projection, then exercises wide-intermediate "
+                   "cancellation through value and output forms.",
     .apis = {"Vector3::Dot", "Vector3::Normalize", "MathHelper::ToDegrees"},
-    .tags = {"vector", "angle", "projection"},
+    .tags = {"vector", "angle", "projection", "precision"},
+    .restrictions = "CNA-DEMOS-ISSUE-123 records loss of XNA's wide Dot intermediates.",
+    .knownIssue = "CNA-DEMOS-ISSUE-123",
 })

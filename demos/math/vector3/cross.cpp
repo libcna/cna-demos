@@ -29,14 +29,35 @@ namespace
         const Vector3 n = Vector3::Cross(u, v);
         ctx.CheckNear(Vector3::Dot(n, u), 0.0, 1e-5, "Cross(u, v) is perpendicular to u");
         ctx.CheckNear(Vector3::Dot(n, v), 0.0, 1e-5, "Cross(u, v) is perpendicular to v");
+
+        Vector3 output;
+        Vector3::Cross(u, v, output);
+        Vector3 alias = u;
+        Vector3::Cross(alias, v, alias);
+        ctx.Check(output == n && alias == n,
+                  "the output overload matches the value form and may alias its first input");
+
+        const Vector3 hugeParallel(1e20f);
+        Vector3 hugeParallelOutput;
+        Vector3::Cross(hugeParallel, hugeParallel, hugeParallelOutput);
+        ctx.Check(Vector3::Cross(hugeParallel, hugeParallel) == Vector3::Zero &&
+                      hugeParallelOutput == Vector3::Zero,
+                  "XNA cancels equal huge products before narrowing a parallel cross product");
+
+        const Vector3 hugeA(1e20f, 1e20f, 1.0f);
+        const Vector3 hugeB(1e20f, 1e20f, 2.0f);
+        ctx.Check(Vector3::Cross(hugeA, hugeB) == Vector3(1e20f, -1e20f, 0.0f),
+                  "XNA preserves finite terms and exact cancellation in a partly huge cross product");
     }
 }
 
 CNA_DEMOS_CONSOLE(Vector3Cross, {
     .id = "math.vector3.cross",
     .title = "Vector3 cross product",
-    .description = "Uses Vector3::Cross to get a vector perpendicular to two others and to compute the normal "
-                   "of a triangle in XNA's right-handed system.",
+    .description = "Uses Vector3::Cross for perpendiculars and triangle normals, including output aliasing and "
+                   "wide-intermediate cancellation.",
     .apis = {"Vector3::Cross", "Vector3::Normalize", "Vector3::Dot"},
-    .tags = {"vector", "normal", "perpendicular"},
+    .tags = {"vector", "normal", "perpendicular", "precision"},
+    .restrictions = "CNA-DEMOS-ISSUE-123 records loss of XNA's wide Cross intermediates.",
+    .knownIssue = "CNA-DEMOS-ISSUE-123",
 })
