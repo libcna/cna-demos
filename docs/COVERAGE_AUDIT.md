@@ -7145,3 +7145,23 @@ semantic demos:
 This source audit adds no `.apis` credit and does not change the generated XNA/C totals. Internal
 implementation headers and backend-provider contracts remain outside ordinary application coverage.
 Continue with the next module whose public members have an undispositioned caller-facing behavior.
+
+### Focused1106 Gamer Services deployment configuration
+
+New renderer-free `gamer_services.configuration.resolution` closes the sole public
+`CNA/GamerServices` header. It keeps `Configuration`, `setConfigurationOverride`,
+`resolveConfiguration` and `validateConfiguration` visible while covering every field default and
+exact owned override value. Removing the override resolves an isolated manifest with every field,
+so no user or repository configuration participates. Numeric dotted versions, HTTPS, explicitly
+enabled numeric loopback HTTP, and representative remote/hostname HTTP, credential, path, query and
+missing-game-ID refusals establish the validation boundary without constructing a service backend
+or opening a socket. Builds without service transport take the header's explicit unavailability
+path. The demo restores an offline override before exit and owns its process.
+
+Five SOFTWARE-labelled and five OPENGLES3-labelled runs pass9/9 with identical stdout SHA-256
+`9cc903cba0452efb136c6ee315bc91fab62d6747edb42b553c6122bd2f61183f`
+and empty stderr. The warning-free `-j3` build, metadata717/0, exact CTest, catalog parser and both
+self-test suites pass. Merged coverage contains all717 IDs and keeps the generated XNA/C totals at
+307/329 types,2128/2326 members,674/753 fields and3079/3205 routes; eleven names enter the CNA
+extension appendix. Evidence:`/tmp/checkpoint-1106-gamer-services-configuration/*`. No service,
+network, renderer, screenshot or manual result is claimed.

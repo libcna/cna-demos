@@ -12156,3 +12156,27 @@ screenshot or manual visual result is claimed.
 
 Commit and push this documentation-only audit, then continue with the next public module that has a
 real caller-facing behavior gap. Keep every compile at three jobs or fewer.
+
+## Focused1106-CNA-GamerServices-configuration
+
+New renderer-free `gamer_services.configuration.resolution` closes the module's sole public CNA
+header in nine controls. It demonstrates every `Configuration` default and field, offline
+validation, an exact complete programmatic override, override removal into an isolated full title
+manifest, numeric dotted version validation, valid HTTPS and opted-in numeric-loopback HTTP, and
+representative remote/hostname HTTP, credential, path, query and missing-game-ID refusals. The
+service backend is never created, no socket opens, the process is isolated and an offline override
+is restored before exit. Targets without a compiled service transport take its explicit refusal
+path.
+
+The warning-free incremental build uses `-j3`; metadata is717/0. The exact SOFTWARE CTest and
+catalog parser pass. Five SOFTWARE-labelled and five OPENGLES3-labelled runs pass9/9 with common
+stdout SHA-256 `9cc903cba0452efb136c6ee315bc91fab62d6747edb42b553c6122bd2f61183f`
+and empty stderr. Validator/comparator self-tests pass5/5 and4/4. Merged coverage contains all717
+IDs at307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes; eleven
+`CNA::GamerServices` names enter the extension appendix. Evidence:
+`/tmp/checkpoint-1106-gamer-services-configuration/*`. No service, network, renderer, screenshot or
+manual result is claimed.
+
+Commit and push this batch. Next consolidate the eight public `CNA::Graphics` headers against the
+already completed Focused940-945 workflows, then move to the larger `CNA::Input` surface and add
+behavior only for a concrete gap. Keep every compile at three jobs or fewer.

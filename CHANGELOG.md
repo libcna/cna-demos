@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a renderer-free Gamer Services deployment-configuration demo covering offline defaults,
+  every public field, exact overrides, manifest fallback, version syntax, and HTTPS/numeric-
+  loopback endpoint validation without opening a connection.
 - Dispositioned the small CNA module surfaces: `audio` exposes backend-provider contracts covered
   by CNA conformance tests and translated through existing SoundEffect/Microphone demos; `media`
   and `design` expose only internal CNA headers; the completed diagnostics and Inspector audits

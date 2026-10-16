@@ -624,7 +624,7 @@ a check that all authored colors remain visible and that a blank texture row can
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (19 gamer services + 22 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (20 gamer services + 22 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -637,6 +637,8 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   LeaderboardReader (page, pivot); paging with PageDown/PageUp and typed columns
   (LeaderboardOutcome, TimeSpan; CNA-DEMOS-ISSUE-025).
 - ✅ `gamer_services.guide.notification_position`: Guide notifications moved to TopRight.
+- ✅ `gamer_services.configuration.resolution`: deployment defaults and every field, override and
+  manifest precedence, version syntax, and secure endpoint validation without a connection.
 - ✅ `gamer_services.signed_in_gamer.signed_out` (manual: sign out through the Guide, Home key).
 - Remaining gamer services: `AvatarDescription::Changed` (manual at most: offline, only the Guide's
   own avatar editor changes a profile's stored avatar); `Guide::DelayNotifications` is service-only
@@ -12475,3 +12477,23 @@ The audit does not change the716-demo catalog or generated totals:307/329 XNA ty
 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1105-small-module-disposition/*`. Continue with the next public module containing
 an actual caller-facing member/behavior gap.
+
+## Focused1106 Gamer Services deployment configuration
+
+New renderer-free `gamer_services.configuration.resolution` makes the module's only public CNA
+header visible in a coherent application workflow. Nine controls cover all seven `Configuration`
+field defaults; valid offline operation; exact ownership of a complete programmatic override;
+removal of that override into an isolated title manifest containing every field; numeric dotted
+version validation; valid HTTPS and explicit numeric-loopback HTTP endpoints; and rejection of
+remote/hostname HTTP, credential, path, query and missing-title inputs. It restores a forced offline
+override before exit and never creates a backend or opens a connection. Targets compiled without
+the service transport retain an explicit alternate validation control.
+
+The warning-free incremental build uses `-j3`; metadata is717/0. The exact SOFTWARE demo CTest and
+catalog parser pass. Five SOFTWARE-labelled and five OPENGLES3-labelled runs pass9/9 with identical
+stdout SHA-256 `9cc903cba0452efb136c6ee315bc91fab62d6747edb42b553c6122bd2f61183f`
+and empty stderr. Merged coverage contains all717 IDs and remains307/329 XNA types,2128/2326
+members,674/753 fields and3079/3205 C routes; eleven `CNA::GamerServices` names enter the extension
+appendix. Evidence:`/tmp/checkpoint-1106-gamer-services-configuration/*`. Continue with the public
+`CNA::Graphics` header disposition already supported by Focused940-945, then the broader input
+surface.
