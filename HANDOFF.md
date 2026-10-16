@@ -12521,3 +12521,32 @@ Commit and push this project-side fix. Restart the complete719-demo checkpoint f
 source. Run the long SOFTWARE and OPENGLES3 smoke phases as separately monitored jobs if necessary
 to avoid another tool-session lifetime termination; only call the checkpoint complete when both
 structured reports contain all719 IDs with no unexpected result.
+
+## Complete1120-719-demo-behavior-checkpoint
+
+The authoritative checkpoint is cna-demos `ffb08d1` against pinned CNA `d23e139`. Its warning-free
+build uses `-j3`, metadata validates719/0 and all732 enabled CTests pass in642.52s; three manual
+tests remain disabled. The repaired Guide workflow passes in the full suite in9.51s.
+
+An uninterrupted smoke exceeds this tool environment's process lifetime. Two attempts were
+externally terminated with truncated logs and no completed report, so they are not evidence. The
+complete renderer runs instead use one process per top-level category with the same binary,
+renderer, `--automated --quiet` behavior and Xvfb/network environment. Schema/duplicate/extra/
+absent checks merge all19 category reports in catalog order and prove all719 IDs occur exactly once
+per renderer.
+
+SOFTWARE reports554 pass,113 expected fail,49 skip and3 manual; OPENGLES3 reports594/115/7/3. Both
+have zero unexpected failures and unexpected passes. The SOFTWARE C keyboard/mouse standalone is
+an environmental skip because this Xvfb exposed no desktop pointer. Comparison with Complete1099
+finds exactly the three new passing IDs, reviewed member-audit check changes, the Guide14->9 fix and
+Storage ISSUE-151/152. Those eight documented Storage assertions move failed totals189->197 and
+194->202; no old failure disappears. Coverage remains308/329 XNA types,2128/2326 members,674/753
+fields and3079/3205 C routes. Catalog/validator/comparator self-tests pass. Evidence:
+`build/linux-full/reports/checkpoint-1120-complete-*` and `checkpoint-1120-parts/*`. No screenshot,
+listening, physical input, service or new manual result is claimed.
+
+Commit and push the generated coverage and checkpoint documentation. Then audit the exact126
+residual public C routes, starting with the smallest residual headers: `core_ext.h` and `input.h`
+(one each), then `graphics.h`, `index_resources.h`, `storage.h` and `texture.h` (two each). Reuse
+existing workflows for already-demonstrated behavior and add a focused route only for a real gap.
+Keep every compilation at three jobs or fewer.

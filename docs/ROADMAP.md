@@ -624,7 +624,7 @@ a check that all authored colors remain visible and that a blank texture row can
 `GetFileNames`, `SetAppNameEXT`/`GetStorageRootEXT`, `TitleContainer.OpenStream`. ≈ 8
 (Demos write under a temporary storage root and clean up.)
 
-## Phase 12 -- networking, gamer services, avatars 🟨 (20 gamer services + 22 net demos)
+## Phase 12 -- networking, gamer services, avatars 🟨 (20 gamer services + 14 net demos)
 Offline throughout: `CnaDemos::GamerServicesDemo` forces CNA's offline mode, uses the demos' own
 profile store and signs in "Demo Player"; every such demo runs in its own process (`ownProcess`).
 - ✅ `gamer_services.*` (10): signed-in gamers + SignedIn, Guide message box, keyboard input
@@ -705,7 +705,7 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   Low-level `IPlatform` provider services, PlatformEvent transport and WindowDescription are CNA
   implementation interfaces rather than game APIs; entrypoint behavior requires target builds.
 
-## Phase 14 -- bindings 🟨 (26 C API demos)
+## Phase 14 -- bindings 🟨 (177 C API demos)
 The compatible-prefix batch extends existing host/error demos without adding IDs: 26 host checks
 (28 with capture) and 31 error checks pass on both renderer selections. Larger version-one input
 and output prefixes retain their known behavior; unknown output tails and original diagnostics
@@ -12805,3 +12805,26 @@ queue public toasts for slow readback. Ten consecutive SOFTWARE CTests pass; fiv
 runs pass9/9 byte-identically with empty stderr, and the captured SOFTWARE run also passes9/9.
 The warning-free `-j3` build and metadata719/0 pass. Evidence:
 `/tmp/checkpoint-1119-guide-notification-duration-*`. Restart the full checkpoint from this fix.
+
+## Complete1120 719-demo behavior checkpoint
+
+The current `ffb08d1` source against pinned CNA `d23e139` builds warning-free with `-j3`, validates
+metadata719/0 and passes all732 enabled CTests in642.52s; three manual tests remain disabled. The
+two renderer smoke suites are run in19 top-level-category partitions because the environment
+terminates a single long tool session before one uninterrupted `--smoke` can finish. Every part
+uses the same binary, renderer, `--automated --quiet` behavior and Xvfb/network environment; schema,
+duplicate/extra/absent-ID checks prove each merged report contains all719 catalog IDs exactly once.
+
+SOFTWARE is554 pass/113 expected fail/49 skip/3 manual; OPENGLES3 is594/115/7/3, with no unexpected
+result. SOFTWARE's C keyboard/mouse path has only an environment skip because the current Xvfb did
+not expose a desktop pointer. Comparison with Complete1099 finds exactly three new passing IDs,
+the reviewed member-audit check increases, the Guide14->9 timing correction and the two documented
+Storage issue transitions. The eight new Storage assertions move failed-assertion totals189->197
+and194->202; none was removed. Coverage remains308/329 types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-1120-complete-*` and
+`checkpoint-1120-parts/*`.
+
+Continue the behavior-level audit with the126 residual public C routes. Generate their exact pinned
+inventory first, then disposition the smallest residual headers (`core_ext.h`, `input.h`,
+`graphics.h`, `index_resources.h`, `storage.h`, `texture.h`) before adding any demo. Prefer an
+existing workflow wherever a route reaches already-demonstrated behavior.

@@ -7527,3 +7527,32 @@ with byte-identical stdout SHA-256
 SOFTWARE run also passes9/9 with exact anchor bounds and empty stderr. Evidence:
 `/tmp/checkpoint-1119-guide-notification-duration-*`. No CNA issue or manual visual result is
 claimed. Restart the complete checkpoint from this corrected source.
+
+### Complete1120 719-demo behavior checkpoint
+
+The authoritative checkpoint at cna-demos commit `ffb08d1` remains pinned to CNA
+`d23e139de9e5c15511b6be745de290896a69ee37`. The warning-free build uses `-j3`, metadata validates
+719/0, and all732 enabled CTests pass in642.52s; three manual tests remain disabled. The repaired
+Guide workflow passes inside that suite in9.51s.
+
+One uninterrupted `--smoke` exceeds this environment's tool-session lifetime. Two attempts were
+externally terminated in the same catalog region with truncated output and no completed JSON, so
+neither is claimed as evidence. The authoritative renderer runs use the same binary, renderer,
+`--automated --quiet` behavior and Xvfb/network environment in one process per top-level category.
+Their19 category JSONs are checked for schema, duplicates, extras and missing catalog IDs, then
+merged in exact catalog order. Both merged reports contain every719 ID exactly once.
+
+SOFTWARE reports554 pass,113 expected failure,49 skip and3 manual; OPENGLES3 reports594/115/7/3.
+Neither has an unexpected failure or unexpected pass. The SOFTWARE C keyboard/mouse standalone is
+a declared environment skip because this Xvfb instance exposed no desktop pointer; its authored
+checks and metadata are unchanged. Coverage stays308/329 XNA types,2128/2326 members,674/753 fields
+and3079/3205 C routes.
+
+Comparison with Complete1099 accounts for the three passing Devices, Gamer Services configuration
+and Phone notification IDs. All member-level audit check-count changes are present, including the
+reviewed Guide14->9 stabilization. The only semantic status additions are Storage ISSUE-151 and
+ISSUE-152: their eight documented failed assertions raise SOFTWARE189->197 and OPENGLES3194->202.
+No prior failed assertion was removed. Catalog/validator/comparator self-tests pass5/5 and4/4.
+Evidence is archived under `build/linux-full/reports/checkpoint-1120-complete-*`; the19 source
+reports per renderer remain under `checkpoint-1120-parts`. No screenshot, listening, physical
+input, remote service or new manual result is claimed.
