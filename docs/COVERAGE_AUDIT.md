@@ -7239,3 +7239,27 @@ Every stderr is empty. Merged coverage contains all717 IDs and remains307/329 XN
 2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1109-storage-public-headers/*`. No removable-device event, renderer, screenshot or
 manual result is claimed.
+
+### Focused1110 Net public-header audit
+
+The Net module installs seven internal provider/transport headers and 23 public XNA headers. The
+internal ENet backend, discovery, host-handle, library, protocol, packet-codec and voice contracts
+are not application APIs. Every caller-facing header has the following semantic disposition:
+
+| Public family | Coverage decision |
+|---|---|
+| `PacketReader`, `PacketWriter`, `SendDataOptions` | `net.packet.send_and_receive` writes and reads scalar, string, color, vector, quaternion and matrix state; verifies length/position/rewind and sender identity; and sends the meaningful local modes. Chat is exercised as a transport flag without claiming audible voice. The C buffer/send/receive routes are complete in the three Net C headers. |
+| `NetworkSessionProperties` | `net.network_session.session_properties` covers the fixed eight optional slots, indexing, read-only session view, lookup, copying, mutation refusals, C++ iteration and the public cursor contract. Ten generated CLR interface aliases have no separate callable C++ behavior. |
+| `NetworkSession` and session enums | The existing local, async-create, online-type, private-slot, game-flow, simulated-condition, find/join, refusal and host-departure workflows cover useful overloads and lifecycle: create/find/join, async result state, rosters, host/readiness/game state, disposal, session properties, latency/loss, removal and end reasons. Accepted invites, online leaderboard events, service sign-out, true transport loss and a remote host's terminal closure require their corresponding service/transport environments. Constants and unused enum permutations do not justify independent demos. |
+| `NetworkGamer`, `LocalNetworkGamer`, `NetworkMachine` | Real local and two-process sessions cover identity, host/local/ready state, Tag, machine membership/removal, packets and party-invite refusal. Positive guest and voice states require service guest identity, capture hardware and another participant; constant-false getter checks would not demonstrate those behaviors. |
+| `AvailableNetworkSession`, its collection, `QualityOfService` | The two-process find/join workflow covers advertised counts/properties, collection access/lifetime, copied entries, QoS availability and join behavior, including refusal after listing disposal. Other QoS values depend on a real remote link. |
+| Event arguments, join exception and remaining enums | Real raised events expose game-start/end, gamer-join/leave, host-change and session-end payload properties. The refusal workflow catches and serializes a production `NetworkSessionJoinException`. Their framework-created constructors remain intentionally uncredited; enum fields are credited only where behavior reaches them. |
+| `WriteLeaderboardsEventArgs` | CNA creates this payload only from `FinalizeServiceLeaderboards` for persisted online leaderboard gameplay. Its Gamer/IsLeaving properties and the three leaderboard events remain service/manual. Constructing the internal factory payload would not demonstrate the persistence path. |
+
+The warning-free incremental build uses `-j3`; metadata remains717/0. Exact SOFTWARE CTests pass
+for game flow, local session and session properties in the sandbox. Packet send/receive first
+reports `Failed to create ENet host` under the sandbox's network restriction and passes when rerun
+with local socket access. The catalog parser and validator/comparator self-tests pass5/5 and4/4.
+Generated coverage remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes
+across all717 IDs. Evidence:`/tmp/checkpoint-1110-net-public-headers/*`. No online-service,
+remote-machine, voice, injected-link-loss, screenshot or manual result is claimed.

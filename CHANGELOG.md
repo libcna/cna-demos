@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the 23-header public Net audit: mapped local session lifecycle, discovery/transport,
+  packets, gamers/machines, event payloads and enums to the existing focused workflows; retained
+  voice, invites, guest identity, leaderboard callbacks and transport-loss states as explicit
+  hardware/service/manual boundaries instead of manufacturing synthetic coverage.
 - Completed the three-header Storage public audit with full synchronous selector/container result
   state, the fourth selector overload, real disconnected-exception serialization and canonical
   container identity; recorded CNA-DEMOS-ISSUE-151 for all post-dispose operations remaining usable

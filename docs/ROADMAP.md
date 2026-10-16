@@ -12551,3 +12551,29 @@ exact SOFTWARE CTests pass their expected contracts. Generated coverage stays307
 production raiser and remains manual/platform-specific. Evidence:
 `/tmp/checkpoint-1109-storage-public-headers/*`. Continue with the public Net module surface,
 starting from CNA-specific headers and existing session/packet workflows.
+
+## Focused1110 Net public-header audit
+
+All 23 caller-facing Net headers now have an explicit semantic disposition. The fourteen existing
+Net workflows cover the complete useful packet reader/writer value path; local gamer, roster,
+machine and session ownership; fixed session properties; synchronous and asynchronous creation,
+find and join; availability/QoS; ready/game transitions; host departure and removal; simulated
+conditions; exception serialization; and the relevant enum/event payload values. The complete C
+adapter audits remain at `net.h` 51/51, `net_gamers.h` 33/33 and `net_sessions.h` 104/104. The seven
+installed `CNA/Internal/Net` headers are implementation contracts rather than caller-facing APIs.
+
+`WriteLeaderboardsEventArgs` remains the sole uncredited Net type because CNA creates it only while
+persisting service-backed leaderboard gameplay. The same honest boundary covers leaderboard
+events, accepted-invite operations, positive guest/voice state, service identity loss and real
+transport/remote-host end reasons. Constants, private constructors, framework-created payload
+constructors and CLR alias entries do not justify synthetic demos. No new demo or metadata credit
+was added.
+
+The warning-free incremental build uses `-j3`; metadata remains717/0. Three local SOFTWARE Net
+CTests pass inside the sandbox. The System Link packet test cannot create its ENet/UDP host in the
+network-restricted sandbox and passes when rerun outside that restriction. The catalog parser and
+validator/comparator self-tests pass5/5 and4/4. Generated coverage remains307/329 XNA types,
+2128/2326 members,674/753 fields and3079/3205 C routes across all717 IDs. Evidence:
+`/tmp/checkpoint-1110-net-public-headers/*`. No online service, remote machine, voice device,
+transport-loss injection, screenshot or manual result is claimed. Continue with the public Gamer
+Services XNA headers and add behavior only for concrete, locally reachable gaps.

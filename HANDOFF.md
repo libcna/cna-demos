@@ -73,7 +73,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services20, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are205 console,297 game and215
 standalone; 683 are automated,31 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md merges Focused1108 results into Complete1099's full reports
+Coverage: generated docs/COVERAGE.md merges Focused1109 results into Complete1099's full reports
 and includes all717 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
@@ -12264,3 +12264,34 @@ renderer, screenshot or manual claim is made.
 Commit and push this batch. Then audit the public Net module surface, beginning with CNA-specific
 headers and mapping each caller-facing declaration to existing session/packet workflows before
 adding behavior. Keep every compile at three jobs or fewer.
+
+## Focused1110-Net-public-header-audit
+
+All23 public XNA Net headers are explicitly dispositioned; the other seven installed Net headers
+are below `CNA/Internal/Net` and are provider/transport implementation contracts. The fourteen
+stable Net workflows already cover the coherent caller surface: packet serialization and all
+meaningful local delivery options; session properties and cursor behavior; local and two-process
+session creation/find/join/refusal; async state; roster, gamer and machine ownership; ready/game
+transitions; simulated conditions; host departure/removal; disposal; availability/QoS; real event
+payload properties; and production join-exception serialization. The parallel C route audits stay
+complete at51/51,33/33 and104/104.
+
+No synthetic ID was added. `WriteLeaderboardsEventArgs` remains the only uncredited Net type: CNA
+constructs it inside `FinalizeServiceLeaderboards` only for service-backed persisted gameplay.
+Leaderboard events, accepted invitations, positive guest/voice state, service sign-out and real
+transport/remote-host terminal reasons retain explicit service/hardware/manual dispositions.
+Framework-only payload constructors, constants, unused enum identities and CLR aliases add no
+independent application behavior.
+
+The warning-free incremental build uses `-j3`; metadata remains717/0. Exact SOFTWARE game-flow,
+local-session and session-properties CTests pass in the sandbox. Packet send/receive cannot create
+an ENet host under the network-restricted sandbox, then passes when rerun with local socket access.
+The catalog parser and validator/comparator self-tests pass5/5 and4/4. Generated coverage remains
+307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes across all717 IDs.
+Evidence:`/tmp/checkpoint-1110-net-public-headers/*`. No service, remote-machine, voice,
+transport-loss, screenshot or manual result is claimed.
+
+Commit and push this documentation-only audit. Next audit the public Gamer Services XNA headers,
+where the generated inventory still has eight uncredited types and74 uncredited members. Reuse the
+existing20 workflows and add behavior only for a real locally reachable gap. Keep every compile at
+three jobs or fewer.
