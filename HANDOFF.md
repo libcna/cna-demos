@@ -73,7 +73,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and215
 standalone; 680 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1095
+Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1096
 results and includes all716 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
@@ -92,7 +92,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete1084 exercises all3079 credited C routes and its711 catalog IDs in both full smoke suites;
-Focused1085-1095 execute the five new IDs and every edited workflow separately under both renderer
+Focused1085-1096 execute the five new IDs and every edited workflow separately under both renderer
 labels.
 Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
 Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
@@ -11871,3 +11871,26 @@ an empty or `Null=true` shared member must leave a constructor-owned default una
 resource IDs have exact missing/duplicate/type/whitespace rules. Add only the meaningful identity
 and validation boundaries absent from its current graph/cycle coverage. Keep every compile at
 three jobs or fewer.
+
+## Focused1096-intermediate-XML-shared-resource-boundaries
+
+The existing `content.custom.intermediate_shared_resources` workflow grows20->25 passing controls.
+Boss now has a visible constructor-owned default: both the writer's empty shared reference and an
+authored `Null=true` member leave that object unassigned while other aliases still fix up. A
+custom `GuardTable` ID proves IDs are opaque exact strings and need neither `#` nor generated
+numbering. Three new malformed graphs prove surrounding whitespace is significant and every
+Resource requires ID and Type; existing missing, duplicate and incompatible-resource checks remain.
+
+The clean incremental build is warning-free with `-j3`; metadata remains716/0. Twelve related
+SOFTWARE intermediate-XML demos plus the catalog parser pass13/13, and validator/comparator
+self-tests pass5/5 and4/4. Five runs per renderer label pass25/25 with byte-identical stdout SHA-256
+`692e430d54e3610ed7e2559d4fa0ee17d30238dd95469d117b0bedb9ed0ca863` and empty stderr. Generated
+coverage contains all716 IDs and stays307/329 XNA types,2128/2326 members,674/753 fields and
+3079/3205 C routes; content remains56 pass/17 expected fail. Evidence:
+`/tmp/checkpoint-1096-intermediate-shared-resource-boundaries/*`. No CNA issue, fresh XNA execution
+or rendered result is claimed.
+
+Commit and push this batch. Continue with the parallel external-reference table boundaries in its
+existing workflow: empty wrappers/filenames, missing or unknown TargetType, inline filenames and
+unreferenced valid entries. Preserve the relocation/identity checks and ISSUE-046; avoid path-
+separator variants already represented. Keep every compile at three jobs or fewer.

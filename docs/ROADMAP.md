@@ -12331,3 +12331,24 @@ No CNA issue or fresh XNA/rendered result is claimed.
 Next deepen the existing shared-resource workflow with the constructor-default meaning of empty and
 `Null=true` shared members plus still-uncovered resource-ID/type validation boundaries. Preserve
 its graph/cycle focus and avoid syntax-only variants that add no caller-visible behavior.
+
+## Focused1096 intermediate XML shared-resource boundaries
+
+`content.custom.intermediate_shared_resources` grows20->25 passing controls. Empty and
+`Null=true` shared Boss elements both preserve a visible constructor-owned default while other
+references fix up. An exact custom ID without `#` resolves both aliases. Whitespace in reference
+text is refused, and Resources without ID or Type are refused; the existing missing, duplicate and
+wrong-type graphs stay covered.
+
+The warning-free `-j3` build validates metadata716/0. Twelve related SOFTWARE intermediate-XML
+demos plus the catalog parser pass13/13; self-tests pass5/5 and4/4. Five runs per renderer label
+pass25/25 with common stdout SHA-256
+`692e430d54e3610ed7e2559d4fa0ee17d30238dd95469d117b0bedb9ed0ca863` and empty stderr. Coverage
+contains all716 IDs at307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; content
+remains56 pass/17 expected fail. Evidence:
+`/tmp/checkpoint-1096-intermediate-shared-resource-boundaries/*`. No CNA issue or fresh XNA/rendered
+result is claimed.
+
+Audit the corresponding external-reference table boundaries next in its existing ID: empty wrapper
+and filename forms, required/known TargetType, inline filename rejection and an unused valid entry.
+Relocation separators already have representative coverage.

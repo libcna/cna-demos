@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Deepened intermediate shared-resource coverage with constructor-default retention for empty/null
+  members, opaque exact IDs and missing ID/Type plus whitespace-reference refusals.
 - Extended the intermediate property workflow with packed-list `FlattenContent`: bare sibling
   text, ignored item naming, nonempty round trip and the unrepresentable empty-list boundary.
 - Extended intermediate null semantics through Null=false/content precedence, value-member and

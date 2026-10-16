@@ -6890,3 +6890,21 @@ issue or fresh XNA run.
 Shared-resource identity/cycles are already strong, but empty/Null members retaining constructor
 defaults and the remaining resource-ID/type validation boundaries are still distinct caller-facing
 contracts. Extend the existing shared-resource ID rather than creating variants.
+
+### Focused1096 intermediate XML shared-resource boundaries
+
+The shared-resource workflow now has25 passing controls. Its Boss constructor default survives both
+empty and `Null=true` shared member forms, while other aliases still resolve. A no-hash custom ID
+proves exact opaque matching. Whitespace around a reference, a Resource without ID and a Resource
+without Type are refused alongside the existing missing/duplicate/incompatible graph controls.
+
+Five runs per renderer label share stdout SHA-256
+`692e430d54e3610ed7e2559d4fa0ee17d30238dd95469d117b0bedb9ed0ca863` and empty stderr. The clean
+`-j3` build, metadata716/0, thirteen related CTests and both self-test suites pass. Coverage stays
+307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes across716 IDs; content remains
+56 pass/17 expected fail. Evidence:`/tmp/checkpoint-1096-intermediate-shared-resource-boundaries/*`.
+No CNA issue or fresh XNA run.
+
+The matching external-reference workflow still lacks empty-wrapper/filename behavior, required and
+unknown TargetType checks, inline-filename rejection and unused-entry tolerance. Extend that ID
+next; its existing relocation and path-separator controls are sufficient.

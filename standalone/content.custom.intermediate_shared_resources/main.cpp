@@ -60,7 +60,13 @@ namespace
         }
         std::shared_ptr<LootTable> guard;
         std::shared_ptr<LootTable> patrol;
-        std::shared_ptr<LootTable> boss;
+        static std::shared_ptr<LootTable> ConstructorBoss()
+        {
+            auto value = std::make_shared<LootTable>();
+            value->items = {"Constructor default"};
+            return value;
+        }
+        std::shared_ptr<LootTable> boss = ConstructorBoss();
         std::shared_ptr<LootTable> inlineFirst;
         std::shared_ptr<LootTable> inlineSecond;
         static void DescribeContent(ContentTypeDescriptor<LevelLoot>& type)
@@ -134,16 +140,30 @@ int main()
         check(loaded->patrol->items.size() == 3 && loaded->boss->items.size() == 2 &&
               loaded->inlineFirst->items.size() == 2 && common->items.size() == 2,
               "a shared table edit reaches its alias while independent and authored tables stay unchanged");
-        // A missing table is a null reference, not another shared resource with empty contents.
+        // An empty shared reference leaves the newly constructed member unassigned. Give Boss a
+        // visible constructor value so this differs observably from assigning a null pointer.
         authored->boss.reset();
         std::unique_ptr<System::Xml::XmlWriter> nullWriter(System::Xml::XmlWriter::CreateToString(settings));
         IntermediateSerializer::Serialize<LevelLoot>(*nullWriter, authored, "");
         const auto nullXml = nullWriter->ToString();
         std::unique_ptr<System::Xml::XmlReader> nullReader(System::Xml::XmlReader::CreateFromString(nullXml));
         const auto withoutBoss = IntermediateSerializer::Deserialize<LevelLoot>(*nullReader, "");
-        check(withoutBoss && !withoutBoss->boss && withoutBoss->guard &&
+        check(withoutBoss && withoutBoss->boss &&
+              withoutBoss->boss->items == std::vector<std::string>{"Constructor default"} && withoutBoss->guard &&
               withoutBoss->guard == withoutBoss->patrol && nullXml.find("#Resource2") == std::string::npos,
-              "a null shared table stays null without adding a resource or breaking the other aliases");
+              "an empty shared reference keeps the constructor-owned table without adding a resource");
+
+        std::string explicitNullXml = nullXml;
+        const auto emptyBoss = explicitNullXml.find("<Boss />");
+        if (emptyBoss == std::string::npos) throw std::runtime_error("Expected empty Boss reference missing");
+        explicitNullXml.replace(emptyBoss, std::string_view("<Boss />").size(), "<Boss Null=\"true\" />");
+        std::unique_ptr<System::Xml::XmlReader> explicitNullReader(
+            System::Xml::XmlReader::CreateFromString(explicitNullXml));
+        const auto explicitNullBoss = IntermediateSerializer::Deserialize<LevelLoot>(*explicitNullReader, "");
+        check(explicitNullBoss && explicitNullBoss->boss &&
+              explicitNullBoss->boss->items == std::vector<std::string>{"Constructor default"} &&
+              explicitNullBoss->guard == explicitNullBoss->patrol,
+              "Null=true on a shared member also keeps its constructor value and preserves other fixups");
 
         // Corrupt only the reference graph, keeping otherwise valid authored XML. No Internal
         // parser is needed: IntermediateSerializer must reject the bad graph before returning it.
@@ -152,6 +172,23 @@ int main()
             if (at == std::string::npos) throw std::runtime_error("Expected authored XML fragment missing");
             document.replace(at, from.size(), to);
         };
+
+        std::string customId = xml;
+        std::size_t customAt = 0;
+        int customCount = 0;
+        while ((customAt = customId.find("#Resource1", customAt)) != std::string::npos)
+        {
+            customId.replace(customAt, std::string_view("#Resource1").size(), "GuardTable");
+            customAt += std::string_view("GuardTable").size();
+            ++customCount;
+        }
+        if (customCount != 3) throw std::runtime_error("Expected two references and one resource ID");
+        std::unique_ptr<System::Xml::XmlReader> customIdReader(System::Xml::XmlReader::CreateFromString(customId));
+        const auto customLoaded = IntermediateSerializer::Deserialize<LevelLoot>(*customIdReader, "");
+        check(customLoaded && customLoaded->guard && customLoaded->guard == customLoaded->patrol &&
+              customLoaded->guard->items == common->items,
+              "shared IDs are opaque exact strings and need neither a hash nor the generated naming pattern");
+
         std::vector<std::pair<std::string, std::string>> invalidGraphs;
         std::string missing = xml;
         replaceOne(missing, "<Guard>#Resource1</Guard>", "<Guard>#Missing</Guard>");
@@ -168,6 +205,16 @@ int main()
         wrongType.replace(resourceBegin, resourceEnd + std::string_view("</Resource>").size() - resourceBegin,
                           "<Resource ID=\"#Resource1\" Type=\"string\">Coin</Resource>");
         invalidGraphs.emplace_back(std::move(wrongType), "a resolved resource must have the declared loot-table type");
+        std::string whitespaceReference = xml;
+        replaceOne(whitespaceReference, "<Guard>#Resource1</Guard>", "<Guard> #Resource1 </Guard>");
+        invalidGraphs.emplace_back(std::move(whitespaceReference),
+                                   "shared reference text is matched exactly rather than trimmed");
+        std::string missingId = xml;
+        replaceOne(missingId, " ID=\"#Resource1\"", "");
+        invalidGraphs.emplace_back(std::move(missingId), "every Resource requires an ID attribute");
+        std::string missingType = xml;
+        replaceOne(missingType, " Type=\"CnaDemos:LootTable\"", "");
+        invalidGraphs.emplace_back(std::move(missingType), "every Resource requires a Type attribute");
         for (const auto& [invalidXml, message] : invalidGraphs)
         {
             bool rejected = false;
