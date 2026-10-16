@@ -11479,6 +11479,20 @@ both self-test suites pass. Coverage totals remain unchanged and the Complete104
 byte-identical. Evidence:`/tmp/checkpoint-1048-vector2-interpolation/*`. Continue with Vector2
 matrix/quaternion transform output, array, overlap and refusal boundaries.
 
+## Focused1054 Vector3 transform arrays
+
+`math.vector3.transform` grows3->4 controls, `transform_normal`2->3,
+`transform_quaternion`2->4 and `transform_array`2->10. Genuine Windows XNA 4.0 anchors matrix,
+normal and quaternion value/output/alias parity, every full/range array family, guarded subranges,
+both directions of same-array overlap, atomic invalid positive windows and zero length at one-past-
+end indices. XNA also accepts negative length as an empty matrix/quaternion/normal range; CNA's
+shared check rejects all three, extending ISSUE-121 with the sole grouped failure. Ten runs per
+demo and renderer label retain only that expected failure with byte-identical stdout and empty
+stderr. The clean `-j3` build, metadata695/0, all four exact CTests and both self-test suites pass.
+Coverage totals remain unchanged and the Complete1045-backed report is byte-identical. Evidence:
+`/tmp/checkpoint-1054-vector3-transform-arrays/*`. Audit the remaining Vector3 Dot/Cross numeric
+boundaries, then close or explicitly disposition the family.
+
 ## Focused1049 Vector2 transform arrays
 
 `math.vector2.transform` grows2->16 controls. Genuine Windows XNA 4.0 anchors matrix point/normal

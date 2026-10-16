@@ -10713,3 +10713,26 @@ Their stdout SHA-256 values are `1ade78a55b610674b583e2c88ca6d16e0ae97c670c4de73
 C routes and is byte-identical to the Complete1045-backed report. Evidence:
 `/tmp/checkpoint-1053-vector3-interpolation/*`. No renderer or visual claim was made. Continue with
 Vector3 matrix/quaternion transform output, array, overlap and refusal boundaries.
+
+## Focused1054-Vector3-transform-arrays
+
+`math.vector3.transform` grows from three to four controls, `transform_normal` from two to three,
+`transform_quaternion` from two to four and `transform_array` from two to ten. Genuine Windows XNA
+4.0 anchors matrix, normal and quaternion value/output/alias parity, every full/range array family,
+guarded subranges, both directions of same-array overlap, atomic invalid positive windows and zero
+length at one-past-end indices. XNA also accepts negative length as an empty matrix/quaternion/
+normal range; CNA's shared check rejects all three, extending ISSUE-121 with the sole grouped
+failure. The initial quaternion control accidentally reused a Y-axis rotation with a Z-axis
+expected result; correcting the demo input made it pass and exposed no CNA defect.
+
+The clean three-job build, metadata695/0, all four exact SOFTWARE CTests and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs per demo retain only the expected array failure
+with byte-identical stdout and empty stderr. Their stdout SHA-256 values are
+`22dc689ce53059bfc2613b3bfc7285c3e5f23c253a662aafac2c1388d767272c` (matrix),
+`bb3770b2c51d567c3d0f448bc4dad79d7b1c059043f1fa12c7391b802026a81f` (normal),
+`a282d868100a263c0e313da004ceafbc919f549b3b9870b063f7140e3d426867` (quaternion) and
+`afd11d5f206c8c65795b2f10bebedd1803f7913941c2585e25788aa30290e7ff` (arrays). Coverage remains
+307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes and is byte-identical to the
+Complete1045-backed report. Evidence:`/tmp/checkpoint-1054-vector3-transform-arrays/*`. No renderer
+or visual claim was made. Audit the remaining Vector3 Dot/Cross numeric boundaries, then close or
+explicitly disposition the family.

@@ -31,6 +31,16 @@ namespace
         ctx.Print("origin, rotate then translate = {}", b.ToString());
         ctx.CheckNear(Vector3::Distance(a, Vector3(0.0f, 0.0f, -5.0f)), 0.0, 1e-5, "translate-then-rotate swings the offset to -Z");
         ctx.CheckNear(Vector3::Distance(b, Vector3(5.0f, 0.0f, 0.0f)), 0.0, 1e-5, "rotate-then-translate keeps the offset on +X");
+
+        const Matrix scaleAndTranslate = Matrix::CreateScale(2.0f, 3.0f, 4.0f) *
+                                         Matrix::CreateTranslation(5.0f, -7.0f, 11.0f);
+        const Vector3 authored(2.0f, -3.0f, 4.0f);
+        Vector3 output;
+        Vector3::Transform(authored, scaleAndTranslate, output);
+        Vector3 alias = authored;
+        Vector3::Transform(alias, scaleAndTranslate, alias);
+        ctx.Check(output == Vector3(9.0f, -16.0f, 27.0f) && alias == output,
+                  "matrix output transforms may alias their input safely");
     }
 }
 

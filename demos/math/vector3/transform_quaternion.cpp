@@ -21,6 +21,19 @@ namespace
         // The same rotation as a matrix gives the same result.
         const Vector3 viaMatrix = Vector3::Transform(Vector3::Forward, Matrix::CreateFromQuaternion(rotation));
         ctx.CheckNear(Vector3::Distance(rotated, viaMatrix), 0.0, 1e-6, "quaternion and matrix rotations agree");
+
+        const Vector3 authored(2.0f, -3.0f, 4.0f);
+        const Quaternion planarRotation =
+            Quaternion::CreateFromAxisAngle(Vector3::UnitZ, MathHelper::PiOver2);
+        const Vector3 value = Vector3::Transform(authored, planarRotation);
+        Vector3 output;
+        Vector3::Transform(authored, planarRotation, output);
+        Vector3 alias = authored;
+        Vector3::Transform(alias, planarRotation, alias);
+        ctx.CheckNear(Vector3::Distance(value, Vector3(3.0f, 2.0f, 4.0f)), 0.0, 1e-5,
+                      "the quaternion preserves Z while rotating the XY components");
+        ctx.Check(output == value && alias == value,
+                  "quaternion output transforms match the value form and may alias their input");
     }
 }
 

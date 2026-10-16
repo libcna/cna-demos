@@ -163,7 +163,7 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | Equality, hash and component bounds | Focused1052 grows `equality_and_string` to seven controls and `clamp_min_max` to six. Typed, boxed and operator equality accept signed-zero UnitX and origin pairs, but CNA raw-bit hashing violates equal-value hash consistency under ISSUE-120. Genuine XNA resolves reversed Clamp ranges to the minimum and chooses the second operand for signed-zero Min/Max ties; CNA differs in both cases under ISSUE-122. Three NaN placements and ordinary identity/text/bounds match. Evidence:`/tmp/checkpoint-1052-vector3-identity-bounds/*`. |
 | Arithmetic, Dot, Cross and Reflect | Focused1052 grows `arithmetic` to ten controls and `reflect` to five. Component and scalar signed-zero division retain XNA's infinity signs and zero-over-zero NaN through value/output forms. Reflection leaves the incident vector unchanged for a zero normal, does not normalize a scaled normal, and permits its output to alias the normal. Separate demos already cover ordinary named/operator arithmetic, orthogonal/parallel Dot/Cross and unit-normal reflection. Trivial output forwards do not justify duplicate controls; extreme Dot/Cross cancellation remains to be dispositioned. Evidence:`/tmp/checkpoint-1052-vector3-identity-bounds/*`. |
 | Interpolation | Focused1053 extends the five existing Lerp, SmoothStep, Barycentric, CatmullRom and Hermite IDs. Genuine XNA and CNA agree that Lerp and the three geometric forms extrapolate outside `[0,1]`, while SmoothStep clamps to its endpoints; Lerp/SmoothStep propagate NaN to all components and every meaningful output overload matches. Evidence:`/tmp/checkpoint-1053-vector3-interpolation/*`. |
-| Matrix/quaternion Transform, TransformNormal and arrays | Existing focused IDs cover ordinary point, normal, quaternion and array paths. Output aliasing, overlap, invalid windows and the shared negative-length check remain to be audited. |
+| Matrix/quaternion Transform, TransformNormal and arrays | Focused1054 extends the four existing transform IDs through matrix/normal/quaternion output aliasing, every full/range array family, guarded subranges, both same-array overlap directions, atomic invalid positive windows and zero length at one-past-end indices. CNA matches XNA except that its shared range check rejects the negative length XNA treats as an empty range, extending ISSUE-121. Evidence:`/tmp/checkpoint-1054-vector3-transform-arrays/*`. |
 
 ### BoundingBox, BoundingSphere and Ray value identity
 
@@ -5937,3 +5937,21 @@ coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C ro
 byte-identical to the Complete1045-backed report. Evidence:
 `/tmp/checkpoint-1053-vector3-interpolation/*`. No renderer or visual claim was made. Continue with
 Vector3 matrix/quaternion transform output, array, overlap and refusal boundaries.
+
+### Focused1054 Vector3 transform arrays
+
+`math.vector3.transform` grows3->4 controls, `transform_normal`2->3,
+`transform_quaternion`2->4 and `transform_array`2->10. Genuine Windows XNA 4.0 anchors matrix,
+normal and quaternion value/output/alias parity, every full/range array family, guarded subranges,
+both directions of same-array overlap, atomic invalid positive windows and zero length at one-past-
+end indices. XNA also accepts negative length as an empty matrix/quaternion/normal range; CNA's
+shared check rejects all three, extending ISSUE-121 with the sole grouped failure. The initial
+quaternion control accidentally reused a Y-axis rotation with a Z-axis expected result; correcting
+the demo input made it pass and exposed no CNA defect.
+
+The clean `-j3` build, metadata695/0, all four exact CTests and self-tests5/5 plus4/4 pass. Ten runs
+per demo and renderer label retain only the expected array failure with byte-identical stdout and
+empty stderr. Generated coverage remains307/329 types,2128/2326 members,674/753 fields and
+3079/3205 C routes and is byte-identical to the Complete1045-backed report. Evidence:
+`/tmp/checkpoint-1054-vector3-transform-arrays/*`. No renderer or visual claim was made. Audit the
+remaining Vector3 Dot/Cross numeric boundaries, then close or explicitly disposition the family.

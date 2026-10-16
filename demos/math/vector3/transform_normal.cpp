@@ -23,6 +23,16 @@ namespace
         ctx.Print("TransformNormal(UnitX, world) = {}", asDirection.ToString());
         ctx.CheckNear(Vector3::Distance(asPosition, Vector3(100.0f, 1.0f, 0.0f)), 0.0, 1e-4, "Transform includes the translation");
         ctx.CheckNear(Vector3::Distance(asDirection, Vector3::UnitY), 0.0, 1e-6, "TransformNormal only rotates");
+
+        const Matrix scaleAndTranslate = Matrix::CreateScale(2.0f, 3.0f, 4.0f) *
+                                         Matrix::CreateTranslation(5.0f, -7.0f, 11.0f);
+        const Vector3 authored(2.0f, -3.0f, 4.0f);
+        Vector3 output;
+        Vector3::TransformNormal(authored, scaleAndTranslate, output);
+        Vector3 alias = authored;
+        Vector3::TransformNormal(alias, scaleAndTranslate, alias);
+        ctx.Check(output == Vector3(4.0f, -9.0f, 16.0f) && alias == output,
+                  "the output overload omits translation and may alias its input");
         // Note: for matrices with non-uniform scale, surface normals need the inverse transpose.
     }
 }
