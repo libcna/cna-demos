@@ -15,6 +15,72 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-143 -- GameComponentCollection differs on Insert validation and null Clear events
+
+- **Area/API:** `Microsoft::Xna::Framework::GameComponentCollection::Insert` and `Clear`.
+- **Demo/reproduction:** run `game.components.collection_events`. Insert an already-present
+  component at an index beyond Count, then separately add a null entry and clear the collection.
+  The adjacent controls cover ordinary Add/Insert/index/ranges, duplicate rejection, RemoveAt,
+  forward Clear events, handler exceptions, real Game.Components integration and CNA's owning
+  shared-pointer overload.
+- **Observed:** CNA checks for a duplicate before validating the index and throws
+  `System::ArgumentException`; it also omits `ComponentRemoved` when Clear encounters a null entry.
+  These are the two expected failures among eleven controls. All collection state remains valid.
+- **Expected/reference:** genuine Windows XNA 4.0 checks the index first and throws
+  `ArgumentOutOfRangeException` for both a unique and duplicate item at the same invalid index.
+  Add and individual Remove/RemoveAt keep null entries event-silent, but Clear raises one
+  ComponentRemoved event whose payload remains null while the original collection is observable.
+- **Cause/suggested repair:** `InsertItem` calls IndexOf before its index guard; reverse those two
+  validations. `ClearItems` explicitly skips null components while XNA's clear loop raises for
+  every slot; preserve the current non-null forward ordering and pre-clear state while including
+  the null payload.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed Windows
+  XNA 4.0 assemblies under Wine; its main/supplement stdout SHA-256 values are
+  `8451183b8213ab34134f42a33854043537168fb12e0ba8370b58747781c86251` and
+  `44d60bfbf83d4b0c09bc2c26a5bb81c3022116ca46ff58347689893a1234250`. Evidence:
+  `/tmp/checkpoint-1076-game-components/*`. The warning-free three-job build and five exact
+  SOFTWARE CTests pass. No CNA source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-142 -- component change events bypass and precede their protected hooks
+
+- **Area/API:** GameComponent `EnabledChanged`/`UpdateOrderChanged` and DrawableGameComponent
+  `VisibleChanged`/`DrawOrderChanged`, together with their four protected `On*Changed` hooks.
+- **Demo/reproduction:** run `game.components.change_events`. For all four properties, record the
+  protected override and public event order; repeat with overrides that deliberately omit their
+  base hook. Default state, repeated-value silence, sender/EventArgs identity and the CNA interface
+  event accessors are adjacent controls.
+- **Observed:** CNA raises each public event first and calls the protected override second. The
+  public event still fires when an override omits its base call. The grouped ordering and
+  suppression assertions are the two expected failures among eight controls.
+- **Expected/reference:** genuine Windows XNA 4.0 calls each protected hook first; the base hook
+  dispatches the public event. The observed order is hook then event, and an override that does not
+  call base suppresses that event. All calls use the component sender and EventArgs.Empty.
+- **Cause/suggested repair:** CNA's property setters directly raise the public event before calling
+  the hook, while the four base hook implementations are empty. Move event dispatch into the base
+  hooks and have each setter call only its corresponding hook, retaining repeated-value guards.
+- **Evidence/status:** open against pinned CNA d23e139 on Linux. The genuine-XNA evidence and
+  hashes are shared with ISSUE-143 under `/tmp/checkpoint-1076-game-components/*`. The focused
+  build and exact CTests are clean; no CNA source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-141 -- repeated GameComponent Dispose suppresses XNA's repeated event
+
+- **Area/API:** `Microsoft::Xna::Framework::GameComponent::Dispose` and `Disposed`.
+- **Demo/reproduction:** run `game.components.game_component`; after ordinary Game initialization,
+  five updates and disablement, subscribe to Disposed and call Dispose twice.
+- **Observed:** CNA's first call raises Disposed and the second returns without another event. The
+  XNA repeated-event assertion is the sole expected failure among five controls.
+- **Expected/reference:** genuine Windows XNA 4.0 raises Disposed on both explicit calls, with the
+  component sender and EventArgs.Empty each time. This is distinct from resource cleanup, which
+  implementations may still guard independently.
+- **Cause/suggested repair:** `GameComponent::Dispose(bool)` returns immediately when its private
+  `disposed_` flag is set, suppressing the second managed-style event. If XNA parity is intended,
+  keep cleanup/destructor safety idempotent while raising Disposed for every explicit Dispose call;
+  otherwise document the public event divergence as an intentional CNA adaptation.
+- **Evidence/status:** open against pinned CNA d23e139 on Linux. The genuine-XNA main probe and
+  focused CNA evidence are shared with ISSUE-142/-143. No CNA source was modified and no upstream
+  message was sent.
+
 ### CNA-DEMOS-ISSUE-140 -- Matrix CreateShadow does not normalize its plane
 
 - **Area/API:** `Microsoft::Xna::Framework::Matrix::CreateShadow`, value and output overloads.

@@ -11868,3 +11868,29 @@ self-tests pass5/5 and4/4. Runtime-backed coverage remains307/329 types,2128/232
 fields and3079/3205 C routes. Evidence:`build/linux-full/reports/checkpoint-1075-complete-*`.
 Continue with the highest-value remaining semantic public-member/behavior family, first
 dispositioning its existing demos and intentional gaps. Keep builds at no more than three jobs.
+
+## Focused1076 GameComponent family members and collection boundaries
+
+Four existing IDs deepen without increasing the catalog. `game.components.change_events` now has
+eight controls, `collection_events` eleven, `game_component` five and `update_and_draw_order`
+three. Together with the unchanged drawable workflow, they disposition GameComponent,
+DrawableGameComponent, IGameComponent/IUpdateable/IDrawable, collection event args and CNA's direct
+collection/ownership adapters. New behavior covers exact defaults and event arguments, protected
+hook dispatch, repeated disposal, complete collection mutation/bounds/events, shared ownership,
+live order re-sorting and CNA CompareTo consistency.
+
+Genuine Windows XNA 4.0 establishes five failures in three issue groups. ISSUE-141 records CNA
+suppressing XNA's second Disposed event. ISSUE-142 records change events firing before and
+independently of protected hooks. ISSUE-143 records duplicate validation preceding an invalid
+Insert index and Clear omitting XNA's null removal payload. The ordinary lifecycle, event state,
+mutation, throwing-handler and CNA ownership controls pass.
+
+The warning-free incremental build uses `-j3`; metadata is710/0 and all five exact component
+SOFTWARE CTests, all15 CLI CTests and both validator/comparator self-test suites pass. Ten runs per changed demo and
+renderer are stable with empty stderr after a demo bug was corrected: fixed-step OPENGLES3 may run
+multiple Updates before a Draw, so the order demo now counts those passes independently. Generated
+coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; it lists the
+new direct collection/CompareTo CNA extension names. Evidence:
+`/tmp/checkpoint-1076-game-components/*`. Audit the remaining deterministic root Framework helper
+types next, beginning GameTime, LaunchParameters and GameServiceContainer, before returning to
+platform-dependent lifecycle paths.

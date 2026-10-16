@@ -501,6 +501,22 @@ keeps 37. Stable selected runtime hashes and exact skip/compiler stderr deltas a
 The meaningful Curve, CurveKey, CurveKeyCollection and enum public-member/behavior audit is
 complete at pinned d23.
 
+### GameComponent, DrawableGameComponent and component collections
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Construction, Game, defaults and interfaces | `game.components.game_component` constructs a real component owned by its DemoGame, verifies the exact Game identity and observes Initialize/Update through IGameComponent/IUpdateable. `change_events` now checks the enabled/visible true and update/draw-order zero defaults before mutation. IDrawable and IUpdateable properties/events are exercised through the concrete components rather than synthetic interface implementations. |
+| Enabled, Visible and order changes | `change_events` retains repeated-value silence and all four external/protected callback counts. It now also checks the exact component sender and EventArgs::Empty through every event and hook, plus the CNA interface accessors' identity with the public event objects. Genuine XNA calls each protected hook before the event and lets an override suppress dispatch by omitting base; CNA raises first and independently, producing two grouped failures under ISSUE-142. |
+| UpdateOrder, DrawOrder and CompareTo | `update_and_draw_order` proves initial ascending execution rather than insertion order, then changes both properties after registration and observes re-sorting on the next independent update and draw passes. Separate counters tolerate legitimate fixed-step catch-up before Draw. CNA's additional public CompareTo has no genuine-XNA public counterpart; the demo checks its observable antisymmetry and equal-order grouping without claiming XNA credit. |
+| Initialize, Update and Draw filtering | `game_component` is initialized once and updates until disabled. `drawable_game_component` loads each component once, draws only the visible one, exposes the live GraphicsDevice and unloads once under CNA's guarded disposal. The live Game order workflow calls the component Update and Draw paths rather than invoking them only as isolated no-ops. |
+| Dispose and native destruction | `game_component` calls public Dispose twice. Genuine XNA raises Disposed twice with the component sender and EventArgs.Empty; CNA's global disposed guard raises once, the sole ISSUE-141 failure. CLR Finalize remains mapped to the already exercised C++ destructor path and does not justify a synthetic metadata call. |
+| Collection construction, access and mutation | `collection_events` grows to eleven controls for empty construction, Count, Add, Insert, Item, Contains, IndexOf, Remove, RemoveAt and Clear. Mutable/const CNA ranges retain exact order. Duplicate and invalid-index operations preserve state; handler exceptions propagate after insertion remains visible. Genuine XNA validates an invalid index before duplicate identity, while CNA reverses them, one ISSUE-143 failure. |
+| Collection events and EventArgs | ComponentAdded observes an already-inserted item. RemoveAt observes the item already absent; Clear emits forward removals while the complete pre-clear collection stays visible. EventArgs explicitly retains both ordinary and null pointers and Game.Components exposes the same payloads. XNA uniquely emits a null removal during Clear while keeping individual null Add/Remove silent; CNA skips it, ISSUE-143's second failure. |
+| CNA shared ownership adaptation | A component added through `shared_ptr<IGameComponent>` remains alive after the caller releases its owner, remains live throughout ComponentRemoved, and is destroyed immediately after the collection releases it. Raw-pointer behavior and the real Game.Components integration remain adjacent. These C++ overload/range methods are listed as declared CNA extensions and receive no invented XNA member credit. |
+
+The meaningful public GameComponent/DrawableGameComponent/interface/collection family audit is
+complete at pinned d23. Focused1076 changes four existing IDs and adds no demo-count inflation.
+
 ### Game loop, services and window callbacks
 
 | Members / behavior | Decision and evidence |

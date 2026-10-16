@@ -1453,10 +1453,18 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Game::GetPlatformCapabilitiesEXT` -- core.platform.capability_matrix
 - `Game::GetPlatformEXT` -- core.platform.capability_matrix
 - `Game::RunFrameEXT` -- game.lifecycle.host_driven_loop
-- `GameComponentCollection::Add` -- game.components.game_component
+- `GameComponent::CompareTo` -- game.components.update_and_draw_order
+- `GameComponentCollection::Add` -- game.components.collection_events, game.components.game_component
+- `GameComponentCollection::Clear` -- game.components.collection_events
 - `GameComponentCollection::Contains` -- game.components.collection_events
+- `GameComponentCollection::Count` -- game.components.collection_events
 - `GameComponentCollection::IndexOf` -- game.components.collection_events
+- `GameComponentCollection::Insert` -- game.components.collection_events
+- `GameComponentCollection::Item` -- game.components.collection_events
 - `GameComponentCollection::Remove` -- game.components.collection_events
+- `GameComponentCollection::RemoveAt` -- game.components.collection_events
+- `GameComponentCollection::begin` -- game.components.collection_events
+- `GameComponentCollection::end` -- game.components.collection_events
 - `GamePad::ExcludeAxisDeadZone` -- input.gamepad.dead_zones
 - `GamePad::GetAccelerometerEXT` -- input.gamepad.motion_sensors
 - `GamePad::GetButtonLabelEXT` -- input.gamepad.device_info

@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed GameComponent/DrawableGameComponent/collection behavior coverage, recording ISSUE-141
+  through ISSUE-143 for repeated disposal events, protected change-hook dispatch and collection
+  validation/null-clear differences from genuine XNA.
 - Refreshed the complete checkpoint at 710 demos: all 723 enabled CTests and both full renderer
   smoke suites satisfy their expected-status contracts, with every Focused1063-1074 change
   reviewed against the 695-demo baseline and no unrelated runtime or normalized-stderr change.

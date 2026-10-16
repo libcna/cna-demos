@@ -11297,3 +11297,44 @@ external-service claim was made.
 Next, select the highest-value remaining semantic public-member/behavior family from the inventory
 in `docs/COVERAGE_AUDIT.md`; disposition existing coverage before adding controls or a focused demo.
 Keep every future compile at three jobs or fewer.
+
+## Focused1076-GameComponent-family-members-and-collection-boundaries
+
+Four existing Game IDs deepen without a new catalog entry: `change_events` has eight controls,
+`collection_events` eleven, `game_component` five and `update_and_draw_order` three. Together with
+the unchanged drawable workflow, they disposition GameComponent, DrawableGameComponent, their
+three XNA interfaces, collection event args and CNA's direct C++ collection/ownership API. Added
+checks cover exact defaults/sender/EventArgs, protected-hook dispatch, repeated Dispose, every
+collection mutation and validation boundary, event-visible state, throwing handlers, null entries,
+CNA shared ownership, live order re-sorting and CompareTo consistency.
+
+Genuine Windows XNA 4.0 exposes five failures in three groups. ISSUE-141 records CNA raising only
+one Disposed event for two explicit calls where XNA raises twice. ISSUE-142 records all four public
+change events firing before and independently of their protected hooks instead of being dispatched
+by the base hook. ISSUE-143 records invalid duplicate Insert reporting ArgumentException instead
+of index-first ArgumentOutOfRangeException and Clear omitting XNA's null ComponentRemoved payload.
+The remaining22 focused controls pass.
+
+The warning-free incremental build used `-j3`; metadata is710/0. All five exact component
+SOFTWARE CTests, all15 CLI CTests and validator/comparator self-tests5/5 plus4/4 pass. Ten runs of each changed demo
+under both renderer labels are byte-stable with empty stderr. The order demo initially failed only
+under OPENGLES3 because its draft shared an Update/Draw counter and legitimate fixed-step catch-up
+performed two Updates before the first Draw; separate pass counters correct that demo defect.
+Stdout SHA-256 values in change/collection/component/order sequence are
+`99dda7dbe6209387b527382347d32888bec721b41df8221afcc999e08f06218b`,
+`23b1be49a4b950e31e6df8fda2c47e19b1bae45447147edf04fc6c36e02d88df`,
+`84607956b67e1b22572cdbd14897ea33d9ffadc484753e144e7c3281933c6771` and
+`cc2dc9f5030553a0000c4a5bfae7af1f5577f01e4b2df43a5170ed62618eef9`.
+
+Genuine-XNA main/supplement/EventArgs stdout SHA-256 values are
+`8451183b8213ab34134f42a33854043537168fb12e0ba8370b58747781c86251` and
+`44d60bfbf83d4b0c09bc2c26a5bb81c3022116ca46ff58347689893a1234250` and
+`2495d7563a75918b8322cff3e5c7efc55b8e9d5ef0cd7d0ddf3adb31168c27b4`; the first two stderr
+streams contain only the host display-cookie warning and the third is empty. Coverage remains307/329 types,2128/2326
+members,674/753 fields and3079/3205 C routes and now lists the direct collection and CompareTo CNA
+extension names. Complete1075's four affected results predate these controls. Evidence:
+`/tmp/checkpoint-1076-game-components/*`. No visual or manual interaction claim was made.
+
+The meaningful component family audit is complete. Audit the remaining deterministic root
+Framework helpers next, beginning GameTime, LaunchParameters and GameServiceContainer. Keep all
+compiles at no more than three jobs.

@@ -65,7 +65,8 @@ namespace
             Context().Check(&counter_->getGameProperty() == this, "a component knows its Game");
             counter_->Dispose();
             counter_->Dispose();
-            Context().Check(disposedEvents_ == 1, "Dispose is idempotent and raises Disposed exactly once");
+            Context().Check(disposedEvents_ == 2,
+                            "genuine XNA raises Disposed for each explicit Dispose call");
         }
 
     private:
@@ -79,10 +80,12 @@ CNA_DEMOS_GAME(GameComponentDemo, {
     .id = "game.components.game_component",
     .title = "A game component",
     .description = "Adds a GameComponent to Game.Components so the game initializes and updates it, then disables "
-                   "it through its Enabled property.",
+                   "and repeatedly disposes it while observing XNA's public event contract.",
     .apis = {"GameComponent::GameComponent", "GameComponent::Initialize", "GameComponent::Update",
              "GameComponent::Dispose", "GameComponent::Disposed", "GameComponent::Enabled", "GameComponent::Game",
              "IGameComponent::Initialize", "IUpdateable::Update", "Game::Components", "GameComponentCollection::Add"},
     .tags = {"component", "architecture"},
     .frames = 10,
+    .restrictions = "CNA-DEMOS-ISSUE-141 records repeated Dispose suppressing XNA's repeated Disposed event.",
+    .knownIssue = "CNA-DEMOS-ISSUE-141",
 })

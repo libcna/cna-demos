@@ -64,6 +64,78 @@ namespace
         }
     };
 
+    class ComponentDispatchProbe final : public GameComponent
+    {
+    public:
+        ComponentDispatchProbe(Game& game, std::vector<std::string>& trace, bool forward)
+            : GameComponent(game), trace_(trace), forward_(forward)
+        {
+        }
+
+        bool canonicalArguments = true;
+
+    protected:
+        void OnEnabledChanged(System::Object* sender, const System::EventArgs& args) override
+        {
+            trace_.push_back("enabled hook");
+            canonicalArguments = canonicalArguments && sender == this && &args == &System::EventArgs::Empty;
+            if (forward_)
+            {
+                GameComponent::OnEnabledChanged(sender, args);
+            }
+        }
+
+        void OnUpdateOrderChanged(System::Object* sender, const System::EventArgs& args) override
+        {
+            trace_.push_back("order hook");
+            canonicalArguments = canonicalArguments && sender == this && &args == &System::EventArgs::Empty;
+            if (forward_)
+            {
+                GameComponent::OnUpdateOrderChanged(sender, args);
+            }
+        }
+
+    private:
+        std::vector<std::string>& trace_;
+        bool forward_;
+    };
+
+    class DrawableDispatchProbe final : public DrawableGameComponent
+    {
+    public:
+        DrawableDispatchProbe(Game& game, std::vector<std::string>& trace, bool forward)
+            : DrawableGameComponent(game), trace_(trace), forward_(forward)
+        {
+        }
+
+        bool canonicalArguments = true;
+
+    protected:
+        void OnVisibleChanged(System::Object* sender, const System::EventArgs& args) override
+        {
+            trace_.push_back("visible hook");
+            canonicalArguments = canonicalArguments && sender == this && &args == &System::EventArgs::Empty;
+            if (forward_)
+            {
+                DrawableGameComponent::OnVisibleChanged(sender, args);
+            }
+        }
+
+        void OnDrawOrderChanged(System::Object* sender, const System::EventArgs& args) override
+        {
+            trace_.push_back("draw hook");
+            canonicalArguments = canonicalArguments && sender == this && &args == &System::EventArgs::Empty;
+            if (forward_)
+            {
+                DrawableGameComponent::OnDrawOrderChanged(sender, args);
+            }
+        }
+
+    private:
+        std::vector<std::string>& trace_;
+        bool forward_;
+    };
+
     class ChangeEventsDemo final : public CnaDemos::DemoGame
     {
     public:
@@ -122,6 +194,82 @@ namespace
             ctx.Check(spawner_->timerRestarts == 1, "the spawner's OnEnabledChanged saw it switched back on");
             ctx.Check(spawner_->updateOrderChanges == 1 && hud_->drawOrderChanges == 1 && hud_->visibleChanges == 2,
                       "protected order and visibility callbacks observe each corresponding real change");
+
+            std::vector<std::string> dispatchTrace;
+            ComponentDispatchProbe component(*this, dispatchTrace, true);
+            DrawableDispatchProbe drawable(*this, dispatchTrace, true);
+            bool canonicalEventArguments = true;
+            component.EnabledChanged += [&component, &dispatchTrace, &canonicalEventArguments](
+                                            System::Object* sender, const System::EventArgs& args) {
+                dispatchTrace.push_back("enabled event");
+                canonicalEventArguments = canonicalEventArguments && sender == &component &&
+                    &args == &System::EventArgs::Empty;
+            };
+            component.UpdateOrderChanged += [&component, &dispatchTrace, &canonicalEventArguments](
+                                                System::Object* sender, const System::EventArgs& args) {
+                dispatchTrace.push_back("order event");
+                canonicalEventArguments = canonicalEventArguments && sender == &component &&
+                    &args == &System::EventArgs::Empty;
+            };
+            drawable.VisibleChanged += [&drawable, &dispatchTrace, &canonicalEventArguments](
+                                           System::Object* sender, const System::EventArgs& args) {
+                dispatchTrace.push_back("visible event");
+                canonicalEventArguments = canonicalEventArguments && sender == &drawable &&
+                    &args == &System::EventArgs::Empty;
+            };
+            drawable.DrawOrderChanged += [&drawable, &dispatchTrace, &canonicalEventArguments](
+                                             System::Object* sender, const System::EventArgs& args) {
+                dispatchTrace.push_back("draw event");
+                canonicalEventArguments = canonicalEventArguments && sender == &drawable &&
+                    &args == &System::EventArgs::Empty;
+            };
+
+            ctx.Check(component.getEnabledProperty() && component.getUpdateOrderProperty() == 0 &&
+                          drawable.getVisibleProperty() && drawable.getDrawOrderProperty() == 0,
+                      "component change properties start at XNA's enabled, visible and zero-order defaults");
+            component.setEnabledProperty(false);
+            component.setEnabledProperty(false);
+            component.setUpdateOrderProperty(-7);
+            component.setUpdateOrderProperty(-7);
+            drawable.setVisibleProperty(false);
+            drawable.setVisibleProperty(false);
+            drawable.setDrawOrderProperty(9);
+            drawable.setDrawOrderProperty(9);
+            const std::vector<std::string> xnaDispatch = {
+                "enabled hook", "enabled event", "order hook", "order event",
+                "visible hook", "visible event", "draw hook", "draw event"};
+            ctx.Check(dispatchTrace == xnaDispatch,
+                      "XNA change hooks run before the public events they dispatch");
+            ctx.Check(canonicalEventArguments && component.canonicalArguments && drawable.canonicalArguments,
+                      "change hooks and events receive the component sender and EventArgs::Empty");
+            ctx.Check(&component.getEnabledChangedEvent() == &component.EnabledChanged &&
+                          &component.getUpdateOrderChangedEvent() == &component.UpdateOrderChanged &&
+                          &drawable.getVisibleChangedEvent() == &drawable.VisibleChanged &&
+                          &drawable.getDrawOrderChangedEvent() == &drawable.DrawOrderChanged,
+                      "the CNA interface event accessors expose the same public event objects");
+
+            std::vector<std::string> suppressedTrace;
+            ComponentDispatchProbe suppressingComponent(*this, suppressedTrace, false);
+            DrawableDispatchProbe suppressingDrawable(*this, suppressedTrace, false);
+            int suppressedEvents = 0;
+            suppressingComponent.EnabledChanged += [&suppressedEvents](System::Object*, const System::EventArgs&) {
+                ++suppressedEvents;
+            };
+            suppressingComponent.UpdateOrderChanged += [&suppressedEvents](System::Object*, const System::EventArgs&) {
+                ++suppressedEvents;
+            };
+            suppressingDrawable.VisibleChanged += [&suppressedEvents](System::Object*, const System::EventArgs&) {
+                ++suppressedEvents;
+            };
+            suppressingDrawable.DrawOrderChanged += [&suppressedEvents](System::Object*, const System::EventArgs&) {
+                ++suppressedEvents;
+            };
+            suppressingComponent.setEnabledProperty(false);
+            suppressingComponent.setUpdateOrderProperty(1);
+            suppressingDrawable.setVisibleProperty(false);
+            suppressingDrawable.setDrawOrderProperty(1);
+            ctx.Check(suppressedEvents == 0 && suppressedTrace.size() == 4,
+                      "an override that omits its XNA base hook suppresses the corresponding public event");
         }
 
     private:
@@ -135,9 +283,8 @@ namespace
 CNA_DEMOS_GAME(ChangeEventsDemo, {
     .id = "game.components.change_events",
     .title = "Component change events",
-    .description = "Pauses and reorders two components and logs GameComponent::EnabledChanged/UpdateOrderChanged and "
-                   "DrawableGameComponent::VisibleChanged/DrawOrderChanged; the component itself reacts through the "
-                   "OnEnabledChanged hook.",
+    .description = "Pauses and reorders components, checks default state and exact event arguments, and demonstrates "
+                   "the ordering and override-dispatch contract of all four protected change hooks.",
     .apis = {"GameComponent::EnabledChanged", "GameComponent::UpdateOrderChanged", "GameComponent::OnEnabledChanged",
              "GameComponent::OnUpdateOrderChanged", "DrawableGameComponent::VisibleChanged",
              "DrawableGameComponent::DrawOrderChanged", "DrawableGameComponent::OnVisibleChanged",
@@ -148,4 +295,6 @@ CNA_DEMOS_GAME(ChangeEventsDemo, {
              "IDrawable::VisibleChanged", "IDrawable::DrawOrder", "IDrawable::DrawOrderChanged"},
     .tags = {"component", "event", "pause"},
     .frames = 3,
+    .restrictions = "CNA-DEMOS-ISSUE-142 records public events firing before and independently of their XNA hooks.",
+    .knownIssue = "CNA-DEMOS-ISSUE-142",
 })
